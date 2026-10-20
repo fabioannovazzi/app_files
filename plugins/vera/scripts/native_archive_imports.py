@@ -298,17 +298,53 @@ def inspect_upload(base: Path, core: Any, folder: Path, engagement: str) -> dict
 
 
 def audit_engagement(core: Any, folder: Path, engagement: str) -> dict:
-    """Inspect every actor's durable intent, without adopting unreceipted files."""
-    directory = _directory(core, folder, engagement)
-    rows = [
-        inspect_upload(base, core, folder, engagement)
-        for base in sorted(directory.glob("*/upload-*"))
-    ]
+    """Isolate invalid transport records; only validated rows supply source data."""
+    rows, blocked, collection_issues = [], [], []
+    try:
+        directory = _directory(core, folder, engagement)
+        owners = sorted(directory.iterdir()) if directory.exists() else []
+    except (OSError, ValueError):
+        owners = []
+        collection_issues.append({"issue_code": "unavailable_import_collection"})
+    for home in owners:
+        try:
+            if home.is_symlink() or not home.is_dir():
+                raise ValueError("Import owner storage is not an ordinary directory")
+            uploads = sorted(
+                path for path in home.iterdir() if path.name.startswith("upload-")
+            )
+        except (OSError, ValueError):
+            collection_issues.append({"issue_code": "unavailable_import_owner"})
+            continue
+        for base in uploads:
+            try:
+                rows.append(inspect_upload(base, core, folder, engagement))
+            except (
+                OSError,
+                ValueError,
+                KeyError,
+                TypeError,
+                IndexError,
+                core.ledger.LedgerError,
+            ):
+                # Never read labels or ownership claims from an invalid manifest.
+                # The namespace locates the damaged record; it cannot authorize use.
+                blocked.append(
+                    {
+                        "owner_ref": home.name,
+                        "upload_ref": base.name,
+                        "status": "blocked",
+                        "available": False,
+                        "issue_code": "invalid_import_record",
+                    }
+                )
     return {
         "rows": rows,
-        "recovery_required": any(
-            row["status"] in {"import_recovery", "chunk_recovery"} for row in rows
-        ),
+        "blocked_uploads": blocked,
+        "collection_issues": collection_issues,
+        "complete": not blocked and not collection_issues,
+        "recovery_required": bool(blocked or collection_issues)
+        or any(row["status"] in {"import_recovery", "chunk_recovery"} for row in rows),
     }
 
 
@@ -367,6 +403,11 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
             for row in audit["rows"]
             if row["owner"] == identity
         ]
+        rows.extend(
+            {key: value for key, value in issue.items() if key != "owner_ref"}
+            for issue in audit["blocked_uploads"]
+            if issue["owner_ref"] == fingerprint(identity)
+        )
         return {
             "client_id": args["client_id"],
             "engagement_id": args["engagement_id"],
@@ -374,6 +415,7 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
             "scope_revision": current["scope_revision"],
             "can_import": reviewer() and engagement["status"] == "open",
             "recovery_required": audit["recovery_required"],
+            "inventory_complete": audit["complete"],
             "rows": rows[offset : offset + 30],
             "offset": offset,
             "total": len(rows),
@@ -518,10 +560,8 @@ def dispatch(root: Path, tool: str, args: dict, api: Any) -> dict:
                     ).items()
                     if k != "owner"
                 }
-            if audit["recovery_required"]:
-                raise ValueError(
-                    "Resolve the retained interrupted import before starting another"
-                )
+            # Independent requests have distinct owned references. Keep interrupted
+            # uploads available for their own recovery without blocking this one.
             base.mkdir(mode=0o700, parents=True)
             if captured is not None:
                 api.atomic_json(base / "original-note.json", captured)

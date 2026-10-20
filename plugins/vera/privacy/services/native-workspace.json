@@ -75,7 +75,7 @@
     },
     {
       "id": "owned-archive-directory-and-setup",
-      "control": "Project paginated directory labels/lifecycle only, without private contact values, input manifests or raw absolute roots. Setup requires an explicit app choice and calls the maintained OS chooser/access diagnostic, accepting no path argument; cancellation does not save configuration. Explicit refresh invokes the existing index/recovery services without changing customer sources/ledger. Unregistered folders, imports, upstream-artifact handoffs, source qualification, specialist execution, later lifecycle/finalization and missing Bilancio case binding remain specialist-led. Native engagement creation, exact imported-input run preparation and lifecycle start use separately signed app scopes and maintained APIs as described below. For unavailable Treasury session source paths, retain portable run identity but mark specialist recovery required; never rewrite receipts or session bytes. Reuse an existing canonical Bilancio case connection only when exact client folder/client/engagement/run and native/canonical actor/tenant coincide and the maintained case service separately authorizes the case. Refuse absent, ambiguous or unavailable connections; archive membership alone never authorizes a case. Every read/write repeats connection validation; canonical reviewer and approval gates remain independent.",
+      "control": "Project paginated directory labels/lifecycle only, without private contact values, input manifests or raw absolute roots. Setup requires an explicit app choice and calls the maintained OS chooser/access diagnostic, accepting no path argument; cancellation does not save configuration. Explicit refresh invokes the existing index/recovery services without changing customer sources/ledger. Unregistered folders, imports, upstream-artifact handoffs, source qualification, specialist execution, later lifecycle/finalization and missing Bilancio case binding remain specialist-led. Native engagement creation, exact imported-input run preparation and lifecycle start use separately signed app scopes and maintained APIs as described below. For unavailable Treasury session source paths, retain portable run identity but mark specialist recovery required; never rewrite receipts or session bytes. Reuse an existing canonical Bilancio case connection only when exact client folder/client/engagement/run and native/canonical actor/tenant coincide and the maintained case service separately authorizes the case. Refuse absent, ambiguous or unavailable connections; archive membership alone never authorizes a case. Every read/write repeats connection validation; canonical reviewer and approval gates remain independent. Live verified client discovery is independent of content-index freshness; unrelated folder changes do not remove selection or engagement-creation actions.",
       "implemented_by": [
         "scripts/native_archive_navigation.py",
         "scripts/native_workspace.py",
@@ -347,7 +347,7 @@
     },
     {
       "id": "owned-native-file-transport",
-      "control": "App-only selected File bytes require explicit roles and confirmation, configured reviewer authority, signed current owned engagement scope and serialized native writes. Receive at most 64 MiB per file in 64 KiB chunks with exact offsets, durable private intents and complete SHA-256 validation. Do not accept an original OS path, classify document content, create a run or call a model/provider. Use the unchanged public importer and its byte/role deduplication for conservation and explicit recovery of a known interrupted intent. Refuse changed, missing, linked or foreign receipts; pending uncertain writes block new imports and run preparation. Reopening retains progress and roles but never confirmation. Local filesystem administration and ordinary selected host/account processing remain trust boundaries.",
+      "control": "App-only selected File bytes require explicit roles and confirmation, configured reviewer authority, signed current owned engagement scope and serialized native writes. Receive at most 64 MiB per file in 64 KiB chunks with exact offsets, durable private intents and complete SHA-256 validation. Do not accept an original OS path, classify document content, create a run or call a model/provider. Use the unchanged public importer and its byte/role deduplication for conservation and explicit recovery of a known interrupted intent. Refuse changed, missing, linked or foreign receipts; unrelated interrupted or invalid uploads are reported independently and do not block another owned upload or preparation from verified ledger inputs. Reopening retains progress and roles but never confirmation. Local filesystem administration and ordinary selected host/account processing remain trust boundaries.",
       "implemented_by": [
         "scripts/native_archive_imports.py",
         "scripts/native_archive_navigation.py",
@@ -854,7 +854,7 @@
     },
     {
       "id": "invalid-archive-run-projection",
-      "control": "A run whose integrity validation fails is represented only by its ordinary directory identifier and a fixed blocked label. Invalid contents never supply selectable preparation artifacts, execution authorization or closure controls.",
+      "control": "Unavailable client, engagement, input, run and upload records remain visible as unavailable inventory entries. Invalid manifest fields never supply selectable sources, execution authorization or closure controls. Upload entries use only the storage namespace reference and a fixed issue code, filtered to the configured actor before app delivery; invalid file labels and ownership claims are not trusted. Directory, upload and preparation details are returned in app-only workspace metadata; the model-facing response retains the existing status and count summary. Collection failures explicitly mark inventory incomplete. Source use remains subject to the exact selected record validation.",
       "implemented_by": [
         "scripts/native_archive_navigation.py"
       ],
@@ -1095,7 +1095,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "0265a5c99538af4489b0dbc2415cad4f08e51bc6c71fe80ebf1e6b977ea39b0f",
+    "source_fingerprint": "660f8276ff24c75161a1b65414b1a0be8473b3d4c9445017d05fd468076446fa",
     "reviewed_at": "2026-10-20"
   },
   "governed_repository_paths": [

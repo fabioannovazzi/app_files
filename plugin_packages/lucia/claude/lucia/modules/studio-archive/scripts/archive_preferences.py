@@ -13,7 +13,13 @@ from pathlib import Path
 from threading import RLock, local
 from typing import Any, Iterator
 
-__all__ = ["PROFILE_ENV", "profile_directory", "read_json", "registry_lock"]
+__all__ = [
+    "PROFILE_ENV",
+    "file_lock",
+    "profile_directory",
+    "read_json",
+    "registry_lock",
+]
 PROFILE_ENV = "VERA_STUDIO_ARCHIVE_PROFILE_DIR"
 _LOCK = RLock()
 _HELD = local()
@@ -83,7 +89,7 @@ def read_json(path: Path) -> dict[str, Any] | None:
     return payload
 
 
-def _acquire_registry_lock(descriptor: int, deadline: float) -> None:
+def _acquire_file_lock(descriptor: int, deadline: float, label: str) -> None:
     """Wait briefly for genuine contention; never remove or steal an OS lock."""
     while True:
         try:
@@ -110,10 +116,30 @@ def _acquire_registry_lock(descriptor: int, deadline: float) -> None:
             remaining = deadline - time.monotonic()
             if remaining <= 0:
                 raise TimeoutError(
-                    "Archive identity registry is busy; retry after the other "
-                    "operation finishes. No lock was removed or client changed."
+                    f"Archive {label} is busy; retry after the other operation "
+                    "finishes. No lock was removed or client changed."
                 ) from exc
             time.sleep(min(0.05, remaining))
+
+
+@contextmanager
+def file_lock(
+    path: Path, *, label: str, timeout_seconds: float = 10.0
+) -> Iterator[int]:
+    """Protect a bounded operation with a real, ordinary-file OS lock."""
+    if any(parent.is_symlink() for parent in (path, *path.parents)):
+        raise ValueError(f"Archive {label} lock cannot use symbolic links.")
+    descriptor = os.open(
+        path, os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600
+    )
+    try:
+        observed = os.fstat(descriptor)
+        if not stat.S_ISREG(observed.st_mode) or observed.st_nlink != 1:
+            raise ValueError(f"Archive {label} lock must be an ordinary file.")
+        _acquire_file_lock(descriptor, time.monotonic() + timeout_seconds, label)
+        yield descriptor
+    finally:
+        os.close(descriptor)
 
 
 @contextmanager
@@ -135,25 +161,20 @@ def registry_lock(
             if parent.is_symlink():
                 raise ValueError("Archive identity storage cannot be a symbolic link.")
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
-        directory.parent.chmod(0o700)
-        directory.chmod(0o700)
+        if os.name == "posix":
+            for private in (directory.parent, directory):
+                if stat.S_IMODE(private.stat().st_mode) != 0o700:
+                    private.chmod(0o700)
         lock_path = directory / ".identities.lock"
-        if lock_path.is_symlink():
-            raise ValueError("Archive identity lock cannot be a symbolic link.")
-        descriptor = os.open(
-            lock_path, os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600
-        )
-        try:
-            observed = os.fstat(descriptor)
-            if not stat.S_ISREG(observed.st_mode) or observed.st_nlink != 1:
-                raise ValueError("Archive identity lock must be an ordinary file.")
-            _acquire_registry_lock(descriptor, deadline)
+        with file_lock(
+            lock_path,
+            label="identity registry",
+            timeout_seconds=max(0.0, deadline - time.monotonic()),
+        ):
             _HELD.paths = held | {directory}
             try:
                 yield directory
             finally:
                 _HELD.paths = held
-        finally:
-            os.close(descriptor)
     finally:
         _LOCK.release()

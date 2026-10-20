@@ -1232,7 +1232,12 @@ def test_fresh_private_state_recovers_client_engagement_input_and_run(
         "input_count": 1,
         "run_count": 1,
         "private_identity_values_recovered": False,
+        "blocked_clients": [],
+        "blocked_engagements": [],
+        "blocked_inputs": [],
         "blocked_runs": [],
+        "collection_issues": [],
+        "navigation_issues": [],
         "recovery_complete": True,
     }
     assert listed["engagements"][0]["engagement_id"] == client_case.engagement_id
@@ -1370,7 +1375,7 @@ def test_input_from_another_engagement_cannot_be_bound(
         )
 
 
-def test_unreceipted_entry_inside_input_ledger_is_rejected(
+def test_unreceipted_entry_is_reported_without_hiding_verified_inputs(
     client_case: SimpleNamespace,
     archive_core: ModuleType,
 ) -> None:
@@ -1383,11 +1388,19 @@ def test_unreceipted_entry_inside_input_ledger_is_rejected(
     )
     (inputs_root / "unreceipted.txt").write_text("not controlled\n", encoding="utf-8")
 
-    with pytest.raises(archive_core.ArchiveError, match="invalid entry"):
-        archive_core.list_studio_client_engagements(
-            client_case.client_id,
-            state_dir=client_case.state_dir,
-        )
+    result = archive_core.list_studio_client_engagements(
+        client_case.client_id,
+        state_dir=client_case.state_dir,
+    )
+
+    engagement = result["engagements"][0]
+    assert [row["input_id"] for row in engagement["imports"]] == [
+        client_case.imported["input_id"]
+    ]
+    assert engagement["blocked_inputs"][0]["entry_name"] == "unreceipted.txt"
+    assert engagement["blocked_inputs"][0]["available"] is False
+    assert engagement["ledger_complete"] is False
+    assert (inputs_root / "unreceipted.txt").read_text() == "not controlled\n"
 
 
 def test_cancel_close_and_retention_report_do_not_delete_run(

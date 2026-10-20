@@ -190,11 +190,93 @@ def test_same_request_cannot_replace_invalid_run_but_unrelated_preparation_works
     assert len(core.ledger.inspect_runs(client, eid)["runs"]) == 2
 
 
-def test_unknown_header_still_blocks_new_work_to_preserve_idempotency(archive):
+def test_unknown_header_cannot_create_a_duplicate_of_an_existing_request(archive):
     core, client, cid, eid, first, second, state, path = archive
     (path.parent / "run.json").write_text("{}")
     input_id = core.ledger.list_inputs(client, eid)[0]["input_id"]
-    with pytest.raises(core.ledger.LedgerError, match="Run manifest shape"):
+    with pytest.raises(core.ledger.LedgerError, match="request identity"):
         core.ledger.prepare_run(
-            client, cid, eid, "new-workflow", "1.0.0", input_ids=[input_id]
+            client,
+            cid,
+            eid,
+            "sales-plan",
+            "1.0.0",
+            input_ids=[input_id],
+            label="Plan",
+            purpose="Synthetic test",
         )
+
+
+def test_known_request_replays_when_an_unrelated_run_header_is_invalid(archive):
+    core, client, cid, eid, first, second, state, path = archive
+    header = path.parent / "run.json"
+    header.write_bytes(b"{}")
+    input_id = core.ledger.list_inputs(client, eid)[0]["input_id"]
+
+    result = core.ledger.prepare_run(
+        client,
+        cid,
+        eid,
+        "financial-analysis",
+        "1.0.0",
+        input_ids=[input_id],
+        label="Analysis",
+        purpose="Synthetic test",
+    )
+
+    assert result["status"] == "already_prepared"
+    assert result["run"]["run_id"] == second["run"]["run_id"]
+    assert result["blocked_runs"][0]["run_id"] == first["run"]["run_id"]
+    assert header.read_bytes() == b"{}"
+
+
+def test_incidental_file_does_not_prevent_allocating_independent_run(archive):
+    core, client, cid, eid, first, second, state, path = archive
+    incidental = path.parent.parent / ".DS_Store"
+    incidental.write_bytes(b"synthetic directory metadata")
+    input_id = core.ledger.list_inputs(client, eid)[0]["input_id"]
+
+    result = core.ledger.prepare_run(
+        client, cid, eid, "independent-workflow", "1.0.0", input_ids=[input_id]
+    )
+
+    assert result["status"] == "prepared"
+    assert result["blocked_runs"][0]["entry_name"] == ".DS_Store"
+    assert incidental.read_bytes() == b"synthetic directory metadata"
+
+
+@pytest.mark.parametrize("linked_source", ["snapshot", "execution"])
+def test_linked_input_parent_cannot_supply_run_execution_context(
+    archive, tmp_path, linked_source
+):
+    core, client, cid, eid, first, second, state, path = archive
+    engagement = client / "Vera/engagements" / eid
+    parents = {
+        "snapshot": engagement / "inputs",
+        "execution": Path(second["run_root"]) / "inputs",
+    }
+    source = parents[linked_source]
+    outside = tmp_path / "Outside source bytes"
+    source.rename(outside)
+    source.symlink_to(outside, target_is_directory=True)
+    run_manifest = Path(second["run_root"]) / "run.json"
+    before = run_manifest.read_bytes()
+
+    with pytest.raises(core.ledger.LedgerError, match="real directory"):
+        core.ledger.load_run(client, eid, second["run"]["run_id"])
+
+    assert core.ledger.load_engagement_manifest(client, eid)["status"] == "open"
+    assert run_manifest.read_bytes() == before
+
+
+def test_retention_inventory_keeps_valid_runs_and_reports_damaged_records(archive):
+    core, client, cid, eid, first, second, state, path = archive
+    before = path.read_bytes()
+
+    report = core.ledger.retention_report(client)
+
+    assert [row["run_id"] for row in report["runs"]] == [second["run"]["run_id"]]
+    assert report["blocked_runs"][0]["run_id"] == first["run"]["run_id"]
+    assert report["complete"] is False
+    assert report["destructive_action_performed"] is False
+    assert path.read_bytes() == before

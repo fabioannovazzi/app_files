@@ -223,6 +223,7 @@ EXPECTED_CLIENT_WORKFLOW_IDS = (
 @pytest.fixture(autouse=True)
 def archive_script_imports(monkeypatch: pytest.MonkeyPatch) -> None:
     """Keep component sibling imports available across monkeypatched tests."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
     monkeypatch.syspath_prepend(str(COMPONENT_ROOT / "scripts"))
 
 
@@ -2794,10 +2795,12 @@ def test_vera_registers_archive_as_embedded_workflow() -> None:
     ).is_file()
 
 
-def test_interleaved_process_cannot_reconfigure_claimed_state(
+def test_another_session_cannot_reconfigure_existing_state(
     archive_core: ModuleType,
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    monkeypatch.setenv(archive_core.SESSION_ENV, "original-session")
     root_a = tmp_path / "client-a"
     root_b = tmp_path / "client-b"
     root_a.mkdir()
@@ -2822,10 +2825,12 @@ def test_interleaved_process_cannot_reconfigure_claimed_state(
         capture_output=True,
         text=True,
         check=False,
+        env={**os.environ, archive_core.SESSION_ENV: "different-session"},
+        timeout=15,
     )
 
     assert contender.returncode != 0
-    assert "state is in use by another process" in contender.stderr
+    assert "configuration changed during this run" in contender.stderr
     assert archive_core._load_config(state).archive_root == root_a
 
 

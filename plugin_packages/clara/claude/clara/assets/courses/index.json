@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "30f5bbb1e98a119288ca51e1b22f3287e6a1a324c100e22dbdf1e052c49b4c3e",
+      "sha256": "a08760ce43dc2de8ed4f67d07a61a0f58ef6b17ff8236531ff0ef2184adc0f67",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "366221d74d4ad32cdc8922fda6195b87e08d47e3b7bcf36a07997d3d7966d41f",
+      "sha256": "7720b306e33490767324189138a91214141812138ab0e89b5c8fbe3980459bfd",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "7508be00b88e77abd62b605fc3dccfdb1f0a4fca4bd97b7212e329a58fa79075",
+      "sha256": "4d23dbbf2e6fbc9f8d72960d71e58fe7482619f9728af29897ee5dd9ebb36e04",
       "languages": [
         "it",
         "en",
@@ -135,7 +135,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "cb73c05728ee7811b336b053afccf4b11dfc54677d00c9f5d418cccecb10971b",
+      "sha256": "dfb726dac80252129f3b69f3a8b8007b68618fd77f6c050c3eb38c068a92ffef",
       "languages": [
         "it",
         "en",
@@ -163,7 +163,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "b09f40459da4abc3006b9fdb17a3a2ad72255674b8de17e0554e53f4e3d1ba9e",
+      "sha256": "84c2c18673033a58e7fbdbf4f2b072190f0857ff53e59a909cf23f19664c5da8",
       "languages": [
         "it",
         "en",

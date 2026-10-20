@@ -50,6 +50,9 @@ __all__ = [
     "fail_run",
     "finalize_run",
     "find_client_manifests",
+    "inspect_client_manifests",
+    "inspect_engagements",
+    "inspect_inputs",
     "import_document",
     "inspect_runs",
     "list_engagements",
@@ -250,6 +253,20 @@ def _ordinary_file(path: Path, *, label: str) -> os.stat_result:
     if path.is_symlink() or not stat.S_ISREG(observed.st_mode) or observed.st_nlink < 1:
         raise LedgerError(f"{label} must be a regular non-symlink file.")
     return observed
+
+
+def _contained_input_path(root: Path, path: Path) -> Path:
+    """Reject redirected parent directories before reading a bound source."""
+    try:
+        relative = path.relative_to(root)
+    except ValueError as exc:
+        raise LedgerError("Bound input must stay inside its selected archive.") from exc
+    directory = root
+    for part in relative.parts[:-1]:
+        directory = _ordinary_directory(
+            directory / part, label="bound input parent directory"
+        )
+    return path
 
 
 def _engagement_thread_lock(path: Path) -> Any:
@@ -482,6 +499,7 @@ def load_client_manifest(client_root: Path) -> dict[str, Any]:
     """Load and validate one portable customer-folder identity."""
 
     root = _ordinary_directory(client_root, label="client folder")
+    _ordinary_directory(root / LEDGER_DIRECTORY, label="Vera ledger directory")
     payload = _validate_seal(
         _read_json(_client_manifest_path(root), label="client manifest"),
         label="client manifest",
@@ -532,6 +550,51 @@ def find_client_manifests(
     return tuple(sorted(found, key=lambda item: item["client_id"]))
 
 
+def inspect_client_manifests(
+    scoped_roots: Sequence[tuple[str, Path]],
+) -> dict[str, Any]:
+    """Inventory independent clients without trusting damaged or duplicate IDs."""
+
+    found: list[dict[str, Any]] = []
+    blocked: list[dict[str, Any]] = []
+    by_client: dict[str, list[dict[str, Any]]] = {}
+    for scope_id, root in scoped_roots:
+        try:
+            records = find_client_manifests([(scope_id, root)])
+        except (LedgerError, OSError):
+            blocked.append(
+                {
+                    "scope_id": scope_id,
+                    "issue_code": "invalid_client_record",
+                    "reason": "Client identity is unavailable or invalid; original records are preserved.",
+                    "available": False,
+                }
+            )
+            continue
+        for record in records:
+            by_client.setdefault(record["client_id"], []).append(record)
+    for records in by_client.values():
+        if len(records) == 1:
+            found.extend(records)
+            continue
+        # Duplicate validated IDs are ambiguous only for those customer folders.
+        for record in records:
+            blocked.append(
+                {
+                    "scope_id": record["scope_id"],
+                    "client_id": record["client_id"],
+                    "issue_code": "duplicate_client_identity",
+                    "reason": "The same stable client ID appears in more than one customer folder.",
+                    "available": False,
+                }
+            )
+    return {
+        "clients": sorted(found, key=lambda item: item["client_id"]),
+        "blocked_clients": sorted(blocked, key=lambda item: item["scope_id"]),
+        "complete": not blocked,
+    }
+
+
 def _validate_engagement_manifest(
     payload: Mapping[str, Any], *, expected_client_id: str | None = None
 ) -> dict[str, Any]:
@@ -580,11 +643,19 @@ def load_engagement_manifest(client_root: Path, engagement_id: str) -> dict[str,
     engagement_id = _identifier(
         engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE
     )
-    path = _engagement_root(client_root.resolve(), engagement_id) / "engagement.json"
-    return _validate_engagement_manifest(
-        _read_json(path, label="engagement manifest"),
+    _ordinary_directory(
+        _engagements_root(client_root.resolve()), label="engagement ledger directory"
+    )
+    directory = _ordinary_directory(
+        _engagement_root(client_root.resolve(), engagement_id), label="engagement"
+    )
+    manifest = _validate_engagement_manifest(
+        _read_json(directory / "engagement.json", label="engagement manifest"),
         expected_client_id=client["client_id"],
     )
+    if manifest["engagement_id"] != engagement_id:
+        raise LedgerError("Engagement directory and manifest IDs disagree.")
+    return manifest
 
 
 def create_engagement(
@@ -674,6 +745,80 @@ def list_engagements(client_root: Path, client_id: str) -> tuple[dict[str, Any],
     )
 
 
+def _inspect_collection(
+    root: Path,
+    *,
+    prefix: str,
+    maximum: int,
+    identifier_key: str,
+    issue_code: str,
+    read_record: Any,
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Validate children independently; never follow an invalid collection entry."""
+
+    try:
+        directory = _ordinary_directory(root, label="ledger collection")
+        entries = sorted(directory.iterdir(), key=lambda item: item.name)
+        if len(entries) > maximum:
+            raise LedgerError("Ledger collection exceeds its supported size.")
+    except (LedgerError, OSError):
+        return [], [
+            {
+                "entry_name": root.name,
+                "issue_code": "unavailable_collection",
+                "reason": "Collection cannot be inspected; original files are preserved.",
+                "available": False,
+            }
+        ]
+    pattern = re.compile(rf"^{re.escape(prefix)}_[0-9a-f]{{24}}$")
+    valid, blocked = [], []
+    for entry in entries:
+        identifier = (
+            {identifier_key: entry.name} if pattern.fullmatch(entry.name) else {}
+        )
+        try:
+            if not identifier:
+                raise LedgerError("Unexpected collection entry.")
+            _ordinary_directory(entry, label="ledger record")
+            valid.append(read_record(entry.name))
+        except (LedgerError, OSError):
+            blocked.append(
+                {
+                    **identifier,
+                    "entry_name": entry.name,
+                    "issue_code": issue_code,
+                    "reason": "Record is unavailable or invalid; original files are preserved.",
+                    "available": False,
+                }
+            )
+    return valid, blocked
+
+
+def inspect_engagements(client_root: Path, client_id: str) -> dict[str, Any]:
+    """List validated engagements and unavailable siblings without repairing data."""
+
+    client = load_client_manifest(client_root)
+    if client["client_id"] != client_id:
+        raise LedgerError("Customer folder belongs to another client.")
+    valid, blocked = _inspect_collection(
+        _engagements_root(client_root.resolve()),
+        prefix="eng",
+        maximum=_MAX_RUNS,
+        identifier_key="engagement_id",
+        issue_code="invalid_engagement_record",
+        read_record=lambda identifier: load_engagement_manifest(
+            client_root, identifier
+        ),
+    )
+    return {
+        "engagements": sorted(
+            valid, key=lambda item: (item["created_at"], item["engagement_id"])
+        ),
+        "blocked_engagements": blocked,
+        "complete": not blocked,
+    }
+
+
 def _validate_input_receipt(
     payload: Mapping[str, Any],
     *,
@@ -740,9 +885,11 @@ def load_input_receipt(
     client = load_client_manifest(client_root)
     engagement = load_engagement_manifest(client_root, engagement_id)
     input_id = _identifier(input_id, label="input_id", pattern=_INPUT_ID_RE)
-    input_root = (
-        _engagement_root(client_root.resolve(), engagement_id) / "inputs" / input_id
+    inputs_root = _ordinary_directory(
+        _engagement_root(client_root.resolve(), engagement_id) / "inputs",
+        label="engagement input directory",
     )
+    input_root = inputs_root / input_id
     _ordinary_directory(input_root, label="input snapshot")
     receipt = _validate_input_receipt(
         _read_json(input_root / "receipt.json", label="input receipt"),
@@ -829,6 +976,29 @@ def list_inputs(client_root: Path, engagement_id: str) -> tuple[dict[str, Any], 
     return tuple(
         sorted(receipts, key=lambda item: (item["imported_at"], item["input_id"]))
     )
+
+
+def inspect_inputs(client_root: Path, engagement_id: str) -> dict[str, Any]:
+    """Expose valid sources beside damaged receipts; selected use stays strict."""
+
+    load_engagement_manifest(client_root, engagement_id)
+    valid, blocked = _inspect_collection(
+        _engagement_root(client_root.resolve(), engagement_id) / "inputs",
+        prefix="input",
+        maximum=_MAX_INPUTS,
+        identifier_key="input_id",
+        issue_code="invalid_input_record",
+        read_record=lambda identifier: load_input_receipt(
+            client_root, engagement_id, identifier
+        ),
+    )
+    return {
+        "inputs": sorted(
+            valid, key=lambda item: (item["imported_at"], item["input_id"])
+        ),
+        "blocked_inputs": blocked,
+        "complete": not blocked,
+    }
 
 
 def _stable_copy(
@@ -931,10 +1101,9 @@ def import_document(
             _engagement_root(root, engagement_id) / "inputs",
             label="engagement input directory",
         )
-        for input_dir in _iter_manifest_directories(
-            inputs_root, prefix="input", maximum=_MAX_INPUTS
-        ):
-            receipt = load_input_receipt(root, engagement_id, input_dir.name)
+        inventory = inspect_inputs(root, engagement_id)
+        for receipt in inventory["inputs"]:
+            input_dir = inputs_root / receipt["input_id"]
             if receipt["role"] == role and receipt["sha256"] == source_sha256:
                 if receipt["byte_count"] != source_stat.st_size:
                     raise LedgerError(
@@ -963,6 +1132,8 @@ def import_document(
                     "imported_path": receipt["path"],
                     "original_preserved": True,
                     "source_archive_mutated": added_name,
+                    "blocked_inputs": inventory["blocked_inputs"],
+                    "deduplication_complete": inventory["complete"],
                 }
         input_id = _new_id("input")
         target = inputs_root / input_id
@@ -1004,6 +1175,8 @@ def import_document(
             "imported_path": receipt["path"],
             "original_preserved": True,
             "source_archive_mutated": True,
+            "blocked_inputs": inventory["blocked_inputs"],
+            "deduplication_complete": inventory["complete"],
         }
 
 
@@ -1518,7 +1691,10 @@ def _load_run_paths(
         engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE
     )
     run_id = _identifier(run_id, label="run_id", pattern=_RUN_ID_RE)
-    run_root = _run_root(root, engagement_id, run_id)
+    runs_root = _ordinary_directory(
+        _engagement_root(root, engagement_id) / "runs", label="workflow runs directory"
+    )
+    run_root = runs_root / run_id
     _ordinary_directory(run_root, label="workflow run")
     return (
         run_root,
@@ -1559,7 +1735,7 @@ def load_run(
     context = _validate_context(_read_json(context_path, label="run context"), run)
     resolved_bindings: list[dict[str, Any]] = []
     for binding in inputs["inputs"]:
-        source = root / binding["source_relative_path"]
+        source = _contained_input_path(root, root / binding["source_relative_path"])
         if verify_inputs:
             byte_count, sha256 = _stable_file_identity(
                 source,
@@ -1571,7 +1747,9 @@ def load_run(
                 )
         else:
             _ordinary_file(source, label="bound workflow input")
-        execution = run_root / binding["execution_relative_path"]
+        execution = _contained_input_path(
+            run_root, run_root / binding["execution_relative_path"]
+        )
         if verify_inputs:
             execution_byte_count, execution_sha256 = _stable_file_identity(
                 execution,
@@ -1584,7 +1762,9 @@ def load_run(
                 raise LedgerError("Run execution input no longer matches its receipt.")
         else:
             _ordinary_file(execution, label="run execution input")
-        receipt_path = root / binding["receipt_relative_path"]
+        receipt_path = _contained_input_path(
+            root, root / binding["receipt_relative_path"]
+        )
         _ordinary_file(receipt_path, label="bound workflow input receipt")
         if binding["kind"] == "import":
             receipt = _validate_input_receipt(
@@ -1670,32 +1850,49 @@ def load_run(
     }
 
 
-def _run_headers(client_root: Path, engagement_id: str) -> list[dict[str, Any]]:
-    """Validate ownership and immutable request identities before selecting a run.
-
-    A malformed header still blocks selection: it could conceal an existing
-    idempotency key. Invalid inputs in an unrelated run do not affect selection.
-    """
+def _inspect_run_headers(
+    client_root: Path, engagement_id: str
+) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
+    """Inspect request identities without loading unrelated execution inputs."""
     client = load_client_manifest(client_root)
     load_engagement_manifest(client_root, engagement_id)
     runs_root = _engagement_root(client_root.resolve(), engagement_id) / "runs"
-    result = []
-    for directory in _iter_manifest_directories(
-        runs_root, prefix="run", maximum=_MAX_RUNS
-    ):
+
+    def read_header(identifier: str) -> dict[str, Any]:
         header = _validate_run_manifest(
-            _read_json(directory / "run.json", label="run manifest")
+            _read_json(runs_root / identifier / "run.json", label="run manifest")
         )
         if (
             header["client_id"] != client["client_id"]
             or header["engagement_id"] != engagement_id
-            or header["run_id"] != directory.name
+            or header["run_id"] != identifier
         ):
             raise LedgerError(
                 "Run header belongs to another client, engagement or directory."
             )
-        result.append(header)
-    return result
+        return header
+
+    return _inspect_collection(
+        runs_root,
+        prefix="run",
+        maximum=_MAX_RUNS,
+        identifier_key="run_id",
+        issue_code="invalid_run_header",
+        read_record=read_header,
+    )
+
+
+def _run_headers(client_root: Path, engagement_id: str) -> list[dict[str, Any]]:
+    """Require complete request identity when reconstructing workflow history."""
+    headers, issues = _inspect_run_headers(client_root, engagement_id)
+    if any(
+        "run_id" in issue or issue["issue_code"] == "unavailable_collection"
+        for issue in issues
+    ):
+        raise LedgerError(
+            "Run request identity is incomplete; original records are preserved."
+        )
+    return headers
 
 
 def _iter_runs(client_root: Path, engagement_id: str) -> list[dict[str, Any]]:
@@ -1757,32 +1954,33 @@ def inspect_runs(
 
     load_engagement_manifest(client_root, engagement_id)
     runs_root = _engagement_root(client_root.resolve(), engagement_id) / "runs"
-    runs: list[dict[str, Any]] = []
-    blocked: list[dict[str, Any]] = []
-    for directory in _iter_manifest_directories(
-        runs_root, prefix="run", maximum=_MAX_RUNS
-    ):
-        try:
-            runs.append(
-                load_run(
-                    client_root,
-                    engagement_id,
-                    directory.name,
-                    verify_inputs=verify_inputs,
-                )
-            )
-        except LedgerError:
-            # Do not promote fields or paths read from an unvalidated record.
-            blocked.append(
-                {
-                    "run_id": directory.name,
-                    "issue_code": "invalid_run_record",
-                    "reason": "Run integrity validation failed; original records are preserved.",
-                    "available": False,
-                }
-            )
+    runs, issues = _inspect_collection(
+        runs_root,
+        prefix="run",
+        maximum=_MAX_RUNS,
+        identifier_key="run_id",
+        issue_code="invalid_run_record",
+        read_record=lambda identifier: load_run(
+            client_root, engagement_id, identifier, verify_inputs=verify_inputs
+        ),
+    )
+    blocked = [
+        {
+            "run_id": issue["run_id"],
+            "issue_code": "invalid_run_record",
+            "reason": "Run integrity validation failed; original records are preserved.",
+            "available": False,
+        }
+        for issue in issues
+        if "run_id" in issue
+    ]
     runs.sort(key=lambda item: (item["run"]["created_at"], item["run"]["run_id"]))
-    return {"runs": runs, "blocked_runs": blocked, "complete": not blocked}
+    return {
+        "runs": runs,
+        "blocked_runs": blocked,
+        "collection_issues": [issue for issue in issues if "run_id" not in issue],
+        "complete": not issues,
+    }
 
 
 def _workflow_history_locked(
@@ -1982,7 +2180,8 @@ def prepare_run(
             raise LedgerError("Selected client and engagement do not match.")
         if engagement["status"] != "open":
             raise LedgerError("A workflow cannot be prepared in a closed engagement.")
-        for run in _run_headers(root, engagement_id):
+        headers, header_issues = _inspect_run_headers(root, engagement_id)
+        for run in headers:
             if run["idempotency_key"] != stored_key:
                 continue
             existing = load_run(root, engagement_id, run["run_id"])
@@ -1999,7 +2198,21 @@ def prepare_run(
                 raise LedgerError(
                     "Idempotency key is already bound to a different run request."
                 )
-            return {"status": "already_prepared", **existing}
+            # Replaying a verified existing request creates no second run. Only
+            # allocation needs proof that a damaged header hides no prior request.
+            return {
+                "status": "already_prepared",
+                **existing,
+                "blocked_runs": header_issues,
+            }
+        if any(
+            "run_id" in issue or issue["issue_code"] == "unavailable_collection"
+            for issue in header_issues
+        ):
+            raise LedgerError(
+                "Run request identity is incomplete; cannot establish whether this "
+                "request already has a run. Original records are preserved."
+            )
         runs_root = _ordinary_directory(
             _engagement_root(root, engagement_id) / "runs",
             label="workflow runs directory",
@@ -2078,7 +2291,7 @@ def prepare_run(
         except (LedgerError, OSError):
             shutil.rmtree(run_root, ignore_errors=True)
             raise
-        return {"status": "prepared", **loaded}
+        return {"status": "prepared", **loaded, "blocked_runs": header_issues}
 
 
 @cache
@@ -2605,21 +2818,42 @@ def retention_report(
         raise LedgerError("older_than_days cannot be negative.")
     now = as_of or datetime.now(timezone.utc)
     rows: list[dict[str, Any]] = []
-    for engagement in list_engagements(root, client["client_id"]):
-        for loaded in _iter_runs(root, engagement["engagement_id"]):
+    engagements = inspect_engagements(root, client["client_id"])
+    blocked_runs: list[dict[str, Any]] = []
+    collection_issues: list[dict[str, Any]] = []
+    for engagement in engagements["engagements"]:
+        inventory = inspect_runs(root, engagement["engagement_id"])
+        blocked_runs.extend(
+            {"engagement_id": engagement["engagement_id"], **issue}
+            for issue in inventory["blocked_runs"]
+        )
+        collection_issues.extend(
+            {"engagement_id": engagement["engagement_id"], **issue}
+            for issue in inventory["collection_issues"]
+        )
+        for loaded in inventory["runs"]:
             run = loaded["run"]
             try:
                 updated = datetime.fromisoformat(run["updated_at"])
-            except ValueError as exc:
-                raise LedgerError("Run updated_at is not ISO formatted.") from exc
-            if updated.tzinfo is None:
-                updated = updated.replace(tzinfo=timezone.utc)
-            age_days = max(0, (now - updated).days)
-            size_bytes = sum(
-                path.lstat().st_size
-                for path in Path(loaded["run_root"]).rglob("*")
-                if path.is_file() and not path.is_symlink()
-            )
+                if updated.tzinfo is None:
+                    updated = updated.replace(tzinfo=timezone.utc)
+                age_days = max(0, (now - updated).days)
+                size_bytes = sum(
+                    path.lstat().st_size
+                    for path in Path(loaded["run_root"]).rglob("*")
+                    if path.is_file() and not path.is_symlink()
+                )
+            except (OSError, ValueError):
+                blocked_runs.append(
+                    {
+                        "engagement_id": engagement["engagement_id"],
+                        "run_id": run["run_id"],
+                        "issue_code": "unavailable_retention_metadata",
+                        "reason": "Run age or storage could not be inspected; original files are preserved.",
+                        "available": False,
+                    }
+                )
+                continue
             candidate = (
                 older_than_days is not None
                 and age_days >= older_than_days
@@ -2635,7 +2869,7 @@ def retention_report(
                         run["run_id"],
                     )
                     artifact_integrity = "valid"
-                except LedgerError as exc:
+                except (LedgerError, OSError) as exc:
                     artifact_integrity = "invalid"
                     artifact_issue = str(exc)
             rows.append(
@@ -2659,4 +2893,10 @@ def retention_report(
         "older_than_days": older_than_days,
         "destructive_action_performed": False,
         "runs": rows,
+        "blocked_engagements": engagements["blocked_engagements"],
+        "blocked_runs": blocked_runs,
+        "collection_issues": collection_issues,
+        "complete": engagements["complete"]
+        and not blocked_runs
+        and not collection_issues,
     }

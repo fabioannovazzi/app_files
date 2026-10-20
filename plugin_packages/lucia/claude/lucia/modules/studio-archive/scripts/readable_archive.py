@@ -183,7 +183,14 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
                 "e versioni. Queste pagine sono ricostruibili dal ledger tecnico: "
                 "non sostituiscono documenti, ricevute o revisioni.</p><section><h2>Pratiche</h2><ul>"
             )
-            engagements = ledger.list_engagements(root, client["client_id"])
+            engagement_inventory = ledger.inspect_engagements(root, client["client_id"])
+            engagements = engagement_inventory["engagements"]
+            for issue in engagement_inventory["blocked_engagements"]:
+                body += (
+                    "<li>Pratica non disponibile: <code>"
+                    + html.escape(issue["entry_name"])
+                    + "</code>. Registri originali conservati.</li>"
+                )
             run_count = 0
             for engagement in engagements:
                 eid = engagement["engagement_id"]
@@ -207,9 +214,22 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
                     f"<p>Stato: {engagement['status']} · ID: <code>{eid}</code></p>"
                     "<section><h2>Documenti acquisiti nella pratica</h2>"
                 )
-                detail += _input_table(page, list(ledger.list_inputs(root, eid)), root)
+                input_inventory = ledger.inspect_inputs(root, eid)
+                detail += _input_table(page, input_inventory["inputs"], root)
+                for issue in input_inventory["blocked_inputs"]:
+                    detail += (
+                        '<p class="warning">Documento non disponibile: <code>'
+                        + html.escape(issue["entry_name"])
+                        + "</code>. Originale e ricevuta conservati.</p>"
+                    )
                 detail += "</section><section><h2>Attività ed esecuzioni</h2><ul>"
                 inventory = ledger.inspect_runs(root, eid)
+                for issue in inventory["collection_issues"]:
+                    detail += (
+                        "<li>Elemento non riconosciuto: <code>"
+                        + html.escape(issue["entry_name"])
+                        + "</code>. File originale conservato.</li>"
+                    )
                 for issue in inventory["blocked_runs"]:
                     detail += (
                         "<li>Attività non disponibile: <code>"

@@ -144,7 +144,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "513571979941cdb682d0eff50fc86f7950f6a06c57a5e8e7f9ec411af86d9668"
+      "sha256": "58775161a7b27e05cf7175f33a0b16f649871e44603340c81a815e08cc1e3d1b"
     },
     {
       "path": "scripts/public_http.py",

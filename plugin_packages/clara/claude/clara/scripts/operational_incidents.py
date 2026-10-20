@@ -278,14 +278,15 @@ def execution_identity(
     return result
 
 
-def diagnostic_directory() -> Path:
+def diagnostic_directory(*, create: bool = True) -> Path:
     """Keep unreviewed helper stderr private and outside professional folders."""
-    directory = _state_path().parent / "helper-diagnostics"
+    directory = _state_path(create=create).parent / "helper-diagnostics"
     if directory.is_symlink():
         raise ValueError("Diagnostic directory must not be a symbolic link")
-    directory.mkdir(mode=0o700, exist_ok=True)
-    if os.name == "posix" and stat.S_IMODE(directory.stat().st_mode) != 0o700:
-        directory.chmod(0o700)
+    if create:
+        directory.mkdir(mode=0o700, exist_ok=True)
+        if os.name == "posix" and stat.S_IMODE(directory.stat().st_mode) != 0o700:
+            directory.chmod(0o700)
     return directory
 
 
@@ -366,8 +367,8 @@ def _serialized(function):
     return wrapper
 
 
-def _read() -> dict[str, Any]:
-    path = _state_path()
+def _read(*, create: bool = True) -> dict[str, Any]:
+    path = _state_path(create=create)
     if path.exists():
         metadata = path.lstat()
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
@@ -1601,17 +1602,24 @@ def reporting_credentials() -> dict[str, str]:
     return credentials
 
 
-@_serialized
 def local_context() -> dict[str, Any]:
-    """Read durable local identity without contacting a server or running a helper."""
-    state = _read()
-    _write(state)
+    """Read an atomic identity snapshot; serialize only its first creation."""
+    path = _state_path(create=False)
+    if path.exists():
+        state = _read(create=False)
+    else:
+        # Atomic replacement makes subsequent reads coherent without a write lock.
+        # First creation must still serialize so concurrent hosts retain one ID.
+        with _state_lock():
+            state = _read()
+            if not path.exists():
+                _write(state)
     return {
         "credentials": state["credentials"],
         "queued": len(state["outbox"]),
         "client_status": _reporter_status(),
         "pending_diagnostics": _pending_diagnostics(),
-        "outbox_path": str(_state_path()),
+        "outbox_path": str(path),
         "host_binding": state.get("host_binding"),
     }
 
@@ -1620,7 +1628,7 @@ def _pending_diagnostics() -> list[str]:
     """Expose private review pointers without reading their retained stderr."""
     return [
         str(path)
-        for path in diagnostic_directory().glob("*.json")
+        for path in diagnostic_directory(create=False).glob("*.json")
         if not path.name.endswith(".technical.json")
     ]
 

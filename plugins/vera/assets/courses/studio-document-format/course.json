@@ -490,12 +490,12 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "592e9c64d9ea965a70fa864a869705e90ac7ee82dd3356ebd22d8b452a59803a"
+      "sha256": "e8a121118757bf9eab21c391e5ab2303aa65843229741926efec46d7b49930f8"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-      "sha256": "f5ca3c7295c3dcb78f211cb7fe7bb399a73db5888a77a876a2a969af00e4a58a"
+      "sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",
@@ -510,7 +510,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "7236f1465961136dda8a1589ce607f998d6a0718be13b94a7f2a1463f100d4d1"
+      "sha256": "68bb514f6b4c70de07889962982bd8fd092393d7a6f760c78a99d142c0018375"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -530,7 +530,7 @@
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
-      "sha256": "1f36b8dbce69fa821becdf926e757efaaf2f2d445ebe1ad3afc7452bc8a086f8"
+      "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",

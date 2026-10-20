@@ -26,6 +26,30 @@ from modules.operational_incidents.store import IncidentStore
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_existing_local_context_is_readable_without_private_state_writes(
+    tmp_path, monkeypatch, product
+):
+    module, _, _ = client(tmp_path, monkeypatch, product)
+    existing = module.local_context()
+    state_path = Path(existing["outbox_path"])
+    before = state_path.read_bytes()
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host permits reading existing state, not writing it")
+
+    monkeypatch.setattr(module, "_state_lock", denied)
+    monkeypatch.setattr(module, "_write", denied)
+    monkeypatch.setattr(Path, "mkdir", denied)
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    observed = module.local_context()
+
+    assert observed["credentials"] == existing["credentials"]
+    assert observed["outbox_path"] == existing["outbox_path"]
+    assert state_path.read_bytes() == before
+
+
 @pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_private_incident_state_reuses_identity_when_chmod_is_denied(

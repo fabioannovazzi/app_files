@@ -30,6 +30,7 @@ from email.utils import getaddresses
 from functools import wraps
 from html.parser import HTMLParser
 from pathlib import Path
+from threading import Lock, RLock
 from typing import Any, Callable, Iterator, Mapping, Sequence
 
 
@@ -123,6 +124,10 @@ CONFIG_FILENAME = "config.json"
 SESSION_ENV = "VERA_STUDIO_ARCHIVE_SESSION_ID"
 _PROCESS_SESSION = f"{os.getpid()}-{secrets.token_hex(16)}"
 _STATE_LEASES: dict[Path, tuple[Any, bytes | None]] = {}
+_STATE_BINDINGS: dict[Path, tuple[Any, Any]] = {}
+_STATE_MUTEXES: dict[Path, Any] = {}
+_STATE_DEPTH: dict[Path, int] = {}
+_STATE_MUTEX_GUARD = Lock()
 _CONFIGURATION_CHANGED = (
     "Studio Archive configuration changed during this run, "
     "re-validate before continuing."
@@ -148,40 +153,54 @@ def _check_configuration(state: Path) -> None:
 
 
 def _claim_state(state: Path) -> None:
-    """Hold an OS lock until process exit, covering the entire read/use window."""
+    """Pin one operation; keep archive/session identity across later operations."""
     state = state.resolve()
     if state in _STATE_LEASES:
         _check_configuration(state)
         return
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
-    handle = (state / ".config.lock").open("a+b")
+    lease = preferences.file_lock(state / ".config.lock", label="configuration")
     try:
-        if os.name == "nt":
-            import msvcrt
-
-            handle.seek(0)
-            handle.write(b"0")
-            handle.flush()
-            handle.seek(0)
-            msvcrt.locking(handle.fileno(), msvcrt.LK_NBLCK, 1)
-        else:
-            import fcntl
-
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-    except OSError as exc:
-        handle.close()
-        raise ArchiveError(
-            "Studio Archive state is in use by another process; "
-            "use an isolated session state directory or retry after it finishes."
-        ) from exc
+        lease.__enter__()
+    except (OSError, ValueError) as exc:
+        raise ArchiveError(f"Studio Archive configuration unavailable: {exc}") from exc
     path = state / CONFIG_FILENAME
-    _STATE_LEASES[state] = (handle, path.read_bytes() if path.exists() else None)
+    try:
+        content = path.read_bytes() if path.exists() else None
+        binding = _configuration_binding(content)
+        if state in _STATE_BINDINGS and binding != _STATE_BINDINGS[state]:
+            raise ArchiveError(_CONFIGURATION_CHANGED)
+    except (OSError, ArchiveError):
+        lease.__exit__(None, None, None)
+        raise
+    if content is not None:
+        _STATE_BINDINGS[state] = binding
+    _STATE_LEASES[state] = (lease, content)
+
+
+def _configuration_binding(content: bytes | None) -> tuple[Any, Any]:
+    """Scope changes may refresh between calls; archive and chat cannot switch."""
+    if content is None:
+        return None, None
+    try:
+        payload = json.loads(content)
+    except (ValueError, UnicodeError) as exc:
+        raise ArchiveError("Studio Archive configuration is unreadable.") from exc
+    if not isinstance(payload, dict):
+        raise ArchiveError("Studio Archive configuration is malformed.")
+    return payload.get("archive_root"), payload.get("session_id")
+
+
+def _release_state_lease(state: Path) -> None:
+    lease = _STATE_LEASES.pop(state, None)
+    if lease is not None:
+        lease[0].__exit__(None, None, None)
 
 
 def _release_state_leases() -> None:
-    for handle, _ in _STATE_LEASES.values():
-        handle.close()
-    _STATE_LEASES.clear()
+    for state in tuple(_STATE_LEASES):
+        _release_state_lease(state)
+    _STATE_BINDINGS.clear()
 
 
 atexit.register(_release_state_leases)
@@ -524,7 +543,8 @@ def _state_dir(
     if create:
         selected.mkdir(parents=True, exist_ok=True, mode=0o700)
         try:
-            selected.chmod(0o700)
+            if os.name == "posix" and stat.S_IMODE(selected.stat().st_mode) != 0o700:
+                selected.chmod(0o700)
         except OSError as exc:
             raise ArchiveError(f"Could not secure Studio Archive state: {exc}") from exc
     elif selected.exists() and not selected.is_dir():
@@ -631,14 +651,12 @@ def _remember_approved_root(state: Path, root: Path) -> None:
             "Private archive profile must be outside the source archive."
         )
     profile.mkdir(parents=True, exist_ok=True, mode=0o700)
-    profile.chmod(0o700)
-    _write_private_json(
-        profile / "approved-archive.json",
-        {
-            "schema_version": 1,
-            "archive_root": str(root),
-        },
-    )
+    if os.name == "posix" and stat.S_IMODE(profile.stat().st_mode) != 0o700:
+        profile.chmod(0o700)
+    path = profile / "approved-archive.json"
+    payload = {"schema_version": 1, "archive_root": str(root)}
+    if preferences.read_json(path) != payload:
+        _write_private_json(path, payload)
 
 
 def _restore_approved_root(state: Path) -> None:
@@ -706,13 +724,14 @@ def _write_private_json(path: Path, payload: dict[str, Any]) -> None:
             handle.write("\n")
             handle.flush()
             os.fsync(handle.fileno())
-        temporary.chmod(0o600)
+        if os.name == "posix" and stat.S_IMODE(temporary.stat().st_mode) != 0o600:
+            temporary.chmod(0o600)
         written_bytes = temporary.read_bytes() if path.name == CONFIG_FILENAME else None
         temporary.replace(path)
-        path.chmod(0o600)
         if path.name == CONFIG_FILENAME:
             state = path.parent.resolve()
             _STATE_LEASES[state] = (_STATE_LEASES[state][0], written_bytes)
+            _STATE_BINDINGS[state] = _configuration_binding(written_bytes)
     finally:
         if temporary.exists():
             temporary.unlink()
@@ -994,7 +1013,7 @@ def configure_archive(
         archive_root=root,
         scopes=scopes,
     ):
-        if os.name == "posix":
+        if os.name == "posix" and stat.S_IMODE(config_path.stat().st_mode) != 0o600:
             config_path.chmod(0o600)
         _remember_approved_root(private_state, root)
         return studio_archive_status(state_dir=private_state)
@@ -1448,15 +1467,39 @@ def _normalize_engagement_label(value: str) -> str:
 def _discover_ledger_clients(config: ArchiveConfig) -> tuple[dict[str, Any], ...]:
     """Read portable client IDs from exact top-level customer folders."""
 
+    return tuple(_client_inventory(config)["clients"])
+
+
+def _client_inventory(
+    config: ArchiveConfig,
+    records: Sequence[ClientIdentity] = (),
+) -> dict[str, Any]:
+    """Keep unavailable folders local to their scope; never adopt conflicting IDs."""
+
     scoped_roots = [
-        (scope.scope_id, _resolve_scope_root(config.archive_root, scope))
+        (scope.scope_id, config.archive_root / scope.relative_dir)
         for scope in config.scopes
         if scope.relative_dir != "."
     ]
-    try:
-        return ledger.find_client_manifests(scoped_roots)
-    except ledger.LedgerError as exc:
-        raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
+    inventory = ledger.inspect_client_manifests(scoped_roots)
+    owners = {record.scope_id: record.client_id for record in records}
+    valid = []
+    for found in inventory["clients"]:
+        owner = owners.get(found["scope_id"])
+        if owner is not None and owner != found["client_id"]:
+            inventory["blocked_clients"].append(
+                {
+                    "scope_id": found["scope_id"],
+                    "issue_code": "conflicting_client_identity",
+                    "reason": "Customer-folder identity conflicts with the registered client.",
+                    "available": False,
+                }
+            )
+        else:
+            valid.append(found)
+    inventory["clients"] = valid
+    inventory["complete"] = not inventory["blocked_clients"]
+    return inventory
 
 
 @_identity_transaction
@@ -1474,14 +1517,9 @@ def _synchronize_client_identities(
     by_client = {record.client_id: record for record in records}
     by_scope = {record.scope_id: record for record in records}
     changed = False
-    for found in _discover_ledger_clients(config):
+    for found in _client_inventory(config, records)["clients"]:
         client_id = found["client_id"]
         scope_id = found["scope_id"]
-        scope_owner = by_scope.get(scope_id)
-        if scope_owner is not None and scope_owner.client_id != client_id:
-            raise ArchiveError(
-                "A customer-folder manifest conflicts with the private client registry."
-            )
         existing = by_client.get(client_id)
         if existing is None:
             replacement = ClientIdentity(
@@ -1677,10 +1715,24 @@ def list_studio_clients(
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
     records = _synchronize_client_identities(private_state, config)
+    inventory = _client_inventory(config, records)
+    blocked = {issue["scope_id"]: issue for issue in inventory["blocked_clients"]}
     records_by_scope = {record.scope_id: record for record in records}
     active_scope_ids = {scope.scope_id for scope in config.scopes}
     clients = [
-        _client_directory_record(records_by_scope.get(scope.scope_id), scope=scope)
+        (
+            {
+                **_client_directory_record(
+                    records_by_scope.get(scope.scope_id), scope=scope
+                ),
+                **blocked[scope.scope_id],
+                "registration_status": "blocked",
+            }
+            if scope.scope_id in blocked
+            else _client_directory_record(
+                records_by_scope.get(scope.scope_id), scope=scope
+            )
+        )
         for scope in config.scopes
     ]
     orphaned = [
@@ -1708,6 +1760,8 @@ def list_studio_clients(
         ),
         "orphaned_profile_count": len(orphaned),
         "clients": clients,
+        "blocked_clients": inventory["blocked_clients"],
+        "directory_complete": inventory["complete"],
         "orphaned_profiles": orphaned,
         "private_identity_values_returned": False,
         "gmail_connector_called": False,
@@ -1787,6 +1841,7 @@ def get_studio_client_folder(
     # A content-index refresh is separate and must not gate an unrelated client.
     config, _ = _current_scope_view(stored_config)
     identities = _synchronize_client_identities(private_state, config)
+    inventory = _client_inventory(config, identities)
     identity = next(
         (item for item in identities if item.client_id == client_id),
         None,
@@ -1801,12 +1856,29 @@ def get_studio_client_folder(
         raise ArchiveError(
             "The registered client folder is missing; relink it before continuing."
         )
+    issue = next(
+        (
+            item
+            for item in inventory["blocked_clients"]
+            if item["scope_id"] == scope.scope_id
+        ),
+        None,
+    )
+    if issue is not None:
+        raise ArchiveError(f"Selected client is unavailable: {issue['reason']}")
     if scope.relative_dir == ".":
         raise ArchiveError(
             "The archive root scope is not a client folder; select one immediate "
             "top-level client directory."
         )
     client_root = _resolve_scope_root(config.archive_root, scope)
+    # Selection must verify this exact identity again, not trust a cached pointer.
+    try:
+        manifest = ledger.load_client_manifest(client_root)
+    except (ledger.LedgerError, OSError) as exc:
+        raise ArchiveError(f"Selected client identity is unavailable: {exc}") from exc
+    if manifest["client_id"] != client_id:
+        raise ArchiveError("Selected customer folder belongs to another client.")
     binding = build_studio_client_folder_binding(
         studio_client_id=identity.client_id,
         scope_id=scope.scope_id,
@@ -1998,7 +2070,7 @@ def _readable_after_write(
                 result["readable_archive"] = refresh_readable_archive(
                     Path(folder["client_root"]), ledger
                 )
-            except (ledger.LedgerError, OSError, UnicodeError) as exc:
+            except (ArchiveError, ledger.LedgerError, OSError, UnicodeError) as exc:
                 # Ledger mutation remains committed; expose the separate view failure.
                 result["readable_archive"] = {
                     "status": "unavailable",
@@ -3137,6 +3209,7 @@ def prepare_studio_client_workflow(
         "input_manifest": prepared["input_manifest"],
         "client_engagement": prepared["context"],
         "client_engagement_path": prepared["context_path"],
+        "blocked_runs": prepared.get("blocked_runs", []),
     }
 
 
@@ -3377,18 +3450,24 @@ def import_studio_client_document(
             source_path,
             role,
         )
-        receipts = ledger.list_inputs(client_root, engagement_id)
+        inventory = ledger.inspect_inputs(client_root, engagement_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Controlled document import failed: {exc}") from exc
     return {
         "status": imported["status"],
         "client_id": client_id,
-        "engagement": {**engagement, "imports": list(receipts)},
+        "engagement": {
+            **engagement,
+            "imports": inventory["inputs"],
+            "blocked_inputs": inventory["blocked_inputs"],
+            "ledger_complete": inventory["complete"],
+        },
         "input_receipt": imported["receipt"],
         "input_id": imported["receipt"]["input_id"],
         "imported_path": imported["imported_path"],
         "original_preserved": True,
         "source_archive_mutated": imported["source_archive_mutated"],
+        "deduplication_complete": imported["deduplication_complete"],
     }
 
 
@@ -3431,14 +3510,16 @@ def list_studio_client_engagements(
     ]
     client_root = Path(folder["client_root"])
     try:
-        stored_engagements = ledger.list_engagements(client_root, client_id)
+        engagement_inventory = ledger.inspect_engagements(client_root, client_id)
+        stored_engagements = engagement_inventory["engagements"]
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Customer-folder ledger is invalid: {exc}") from exc
     engagements: list[dict[str, Any]] = []
     for engagement in stored_engagements:
         engagement_id = engagement["engagement_id"]
         try:
-            imports = list(ledger.list_inputs(client_root, engagement_id))
+            input_inventory = ledger.inspect_inputs(client_root, engagement_id)
+            imports = input_inventory["inputs"]
             inventory = ledger.inspect_runs(
                 client_root, engagement_id, verify_inputs=False
             )
@@ -3531,17 +3612,23 @@ def list_studio_client_engagements(
             {
                 **engagement,
                 "imports": imports,
+                "blocked_inputs": input_inventory["blocked_inputs"],
                 "workflow_run_count": len(workflow_runs)
                 + len(inventory["blocked_runs"]),
                 "workflow_runs": workflow_runs,
                 "blocked_runs": inventory["blocked_runs"],
-                "ledger_complete": inventory["complete"],
+                "collection_issues": inventory["collection_issues"],
+                "ledger_complete": inventory["complete"]
+                and input_inventory["complete"],
             }
         )
     return {
         "client_id": client_id,
         "engagement_count": len(engagements),
         "engagements": engagements,
+        "blocked_engagements": engagement_inventory["blocked_engagements"],
+        "ledger_complete": engagement_inventory["complete"]
+        and all(item["ledger_complete"] for item in engagements),
     }
 
 
@@ -3767,63 +3854,102 @@ def recover_studio_client_ledger(
 
     private_state = _state_dir(state_dir)
     stored = _load_config(private_state, validate_scope_roots=False)
-    current, scopes_changed = _current_scope_view(stored)
-    if scopes_changed:
-        raise ArchiveError("Refresh the archive before recovering customer folders.")
+    current, _ = _current_scope_view(stored)
     identities = _synchronize_client_identities(private_state, current)
+    client_inventory = _client_inventory(current, identities)
     engagement_count = 0
     input_count = 0
     run_count = 0
     blocked_runs: list[dict[str, Any]] = []
-    for identity in identities:
-        scope = next(
-            (item for item in current.scopes if item.scope_id == identity.scope_id),
-            None,
-        )
-        if scope is None:
-            continue
-        root = _resolve_scope_root(current.archive_root, scope)
-        client_manifest = root / ledger.LEDGER_DIRECTORY / "client.json"
-        if not client_manifest.is_file():
-            continue
+    blocked_engagements: list[dict[str, Any]] = []
+    blocked_inputs: list[dict[str, Any]] = []
+    collection_issues: list[dict[str, Any]] = []
+    navigation_issues: list[dict[str, Any]] = []
+    for client in client_inventory["clients"]:
+        client_id = client["client_id"]
+        root = Path(client["client_root"])
         try:
-            engagements = ledger.list_engagements(root, identity.client_id)
-            for engagement in engagements:
+            catalogue = list_studio_client_engagements(
+                client_id, state_dir=private_state
+            )
+            blocked_engagements.extend(
+                {"client_id": client_id, **issue}
+                for issue in catalogue["blocked_engagements"]
+            )
+            for engagement in catalogue["engagements"]:
                 engagement_count += 1
-                input_count += len(
-                    ledger.list_inputs(root, engagement["engagement_id"])
+                input_count += len(engagement["imports"])
+                owner = {
+                    "client_id": client_id,
+                    "engagement_id": engagement["engagement_id"],
+                }
+                blocked_inputs.extend(
+                    {**owner, **issue} for issue in engagement["blocked_inputs"]
                 )
-                inventory = ledger.inspect_runs(root, engagement["engagement_id"])
-                runs = inventory["runs"]
                 blocked_runs.extend(
-                    {
-                        "client_id": identity.client_id,
-                        "engagement_id": engagement["engagement_id"],
-                        **issue,
-                    }
-                    for issue in inventory["blocked_runs"]
+                    {**owner, **issue} for issue in engagement["blocked_runs"]
                 )
-                for loaded in runs:
-                    if loaded["run"]["status"] in {
-                        "ready_for_review",
-                        "completed",
-                    }:
-                        ledger.validate_run_artifacts(
-                            root,
-                            engagement["engagement_id"],
-                            loaded["run"]["run_id"],
+                collection_issues.extend(
+                    {**owner, **issue} for issue in engagement["collection_issues"]
+                )
+                for run in engagement["workflow_runs"]:
+                    unavailable = not run["inputs_valid"] or (
+                        run["status"]
+                        in {
+                            "ready_for_review",
+                            "completed",
+                        }
+                        and not run["artifacts_available"]
+                    )
+                    if unavailable:
+                        blocked_runs.append(
+                            {
+                                **owner,
+                                "run_id": run["run_id"],
+                                "issue_code": "invalid_run_evidence",
+                                "reason": run["input_issue"] or run["artifact_issue"],
+                                "available": False,
+                            }
                         )
-                run_count += len(runs)
-        except ledger.LedgerError as exc:
-            raise ArchiveError(f"Customer-folder recovery failed: {exc}") from exc
+                    else:
+                        run_count += 1
+        except (ArchiveError, ledger.LedgerError, OSError) as exc:
+            client_inventory["blocked_clients"].append(
+                {
+                    "client_id": client_id,
+                    "scope_id": client["scope_id"],
+                    "issue_code": "client_recovery_unavailable",
+                    "reason": str(exc),
+                    "available": False,
+                }
+            )
+            continue
         from readable_archive import refresh_readable_archive
 
-        refresh_readable_archive(root, ledger)
+        try:
+            refresh_readable_archive(root, ledger)
+        except (ledger.LedgerError, OSError, UnicodeError) as exc:
+            navigation_issues.append({"client_id": client_id, "reason": str(exc)})
+    complete = not any(
+        (
+            client_inventory["blocked_clients"],
+            blocked_engagements,
+            blocked_inputs,
+            blocked_runs,
+            collection_issues,
+            navigation_issues,
+        )
+    )
     return {
-        "status": "recovered_with_issues" if blocked_runs else "recovered",
-        "recovery_complete": not blocked_runs,
+        "status": "recovered" if complete else "recovered_with_issues",
+        "recovery_complete": complete,
+        "blocked_clients": client_inventory["blocked_clients"],
+        "blocked_engagements": blocked_engagements,
+        "blocked_inputs": blocked_inputs,
         "blocked_runs": blocked_runs,
-        "client_count": len(_discover_ledger_clients(current)),
+        "collection_issues": collection_issues,
+        "navigation_issues": navigation_issues,
+        "client_count": len(client_inventory["clients"]),
         "engagement_count": engagement_count,
         "input_count": input_count,
         "run_count": run_count,
@@ -5924,15 +6050,29 @@ def open_archive_source(
 
 
 def _verify_run_configuration(function: Callable[..., Any]) -> Callable[..., Any]:
-    """Verify the pinned configuration before returning any public operation."""
+    """Serialize each session operation, including nested calls, and release it."""
 
     @wraps(function)
     def checked(*args: Any, **kwargs: Any) -> Any:
-        result = function(*args, **kwargs)
-        state = _state_dir(kwargs.get("state_dir"))
-        if state in _STATE_LEASES:
-            _check_configuration(state)
-        return result
+        state = _state_dir(
+            args[0] if function.__name__ == "_load_config" else kwargs.get("state_dir")
+        )
+        with _STATE_MUTEX_GUARD:
+            mutex = _STATE_MUTEXES.setdefault(state, RLock())
+        with mutex:
+            depth = _STATE_DEPTH.get(state, 0)
+            _STATE_DEPTH[state] = depth + 1
+            try:
+                result = function(*args, **kwargs)
+                if state in _STATE_LEASES:
+                    _check_configuration(state)
+                return result
+            finally:
+                if depth:
+                    _STATE_DEPTH[state] = depth
+                else:
+                    _STATE_DEPTH.pop(state, None)
+                    _release_state_lease(state)
 
     return checked
 
@@ -5941,3 +6081,5 @@ for _operation_name in __all__:
     _operation = globals()[_operation_name]
     if callable(_operation) and not isinstance(_operation, type):
         globals()[_operation_name] = _verify_run_configuration(_operation)
+
+_load_config = _verify_run_configuration(_load_config)

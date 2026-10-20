@@ -104,6 +104,137 @@ def _lock_process(base: Path, mode: str) -> subprocess.Popen:
     )
 
 
+@pytest.mark.parametrize("failed_operation", [False, True])
+def test_finished_operation_releases_configuration_for_same_chat(
+    tmp_path: Path, failed_operation: bool
+) -> None:
+    """A resident host must allow later commands and see their updated scopes."""
+    root = tmp_path / "Studio"
+    root.mkdir()
+    script = """
+import json,sys
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+import archive_core as a
+state,root=Path(sys.argv[2]),Path(sys.argv[3])
+a.configure_archive(root,state_dir=state)
+if sys.argv[4]=='fail':
+    try:
+        a.get_studio_client_folder('client_'+'0'*24,state_dir=state)
+    except a.ArchiveError:
+        pass
+    else:
+        raise AssertionError('Missing selected client unexpectedly resolved')
+print('ready',flush=True)
+sys.stdin.readline()
+print(json.dumps(a.list_studio_clients(state_dir=state)),flush=True)
+"""
+    owner = subprocess.Popen(
+        [
+            sys.executable,
+            "-u",
+            "-c",
+            script,
+            str(SCRIPTS),
+            str(tmp_path / "shared"),
+            str(root),
+            "fail" if failed_operation else "succeed",
+        ],
+        env=_environment(tmp_path, "shared"),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        assert owner.stdout.readline().strip() == "ready"
+
+        created = _run(tmp_path, "shared", "create", "Synthetic later command")
+
+        output, error = owner.communicate("continue\n", timeout=10)
+        assert owner.returncode == 0, error
+        directory = json.loads(output)
+        assert directory["registered_client_count"] == 1
+        assert directory["clients"][0]["client_id"] == created["client_id"]
+    finally:
+        if owner.poll() is None:
+            owner.kill()
+            owner.communicate()
+
+
+def test_configuration_change_waits_for_active_operation_to_return(tmp_path: Path):
+    """Nested reads retain the outer operation's lock until its result is ready."""
+    root = tmp_path / "Studio"
+    replacement = tmp_path / "Replacement"
+    root.mkdir()
+    replacement.mkdir()
+    script = """
+import json,sys
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+import archive_core as a
+state,root=Path(sys.argv[2]),Path(sys.argv[3])
+if sys.argv[4]=='hold':
+    a.configure_archive(root,state_dir=state)
+    original=a._current_scope_view
+    def hold(config):
+        print('ready',flush=True)
+        sys.stdin.readline()
+        return original(config)
+    a._current_scope_view=hold
+    result=a.studio_archive_status(state_dir=state)
+else:
+    print('ready',flush=True)
+    result=a.configure_archive(root,state_dir=state)
+print(json.dumps(result),flush=True)
+"""
+    command = [
+        sys.executable,
+        "-u",
+        "-c",
+        script,
+        str(SCRIPTS),
+        str(tmp_path / "shared"),
+    ]
+    environment = _environment(tmp_path, "shared")
+    owner = subprocess.Popen(
+        [*command, str(root), "hold"],
+        env=environment,
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    contender = None
+    try:
+        assert owner.stdout.readline().strip() == "ready"
+        contender = subprocess.Popen(
+            [*command, str(replacement), "configure"],
+            env=environment,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        )
+        assert contender.stdout.readline().strip() == "ready"
+        time.sleep(0.15)
+        assert contender.poll() is None
+
+        output, error = owner.communicate("continue\n", timeout=5)
+
+        assert owner.returncode == 0, error
+        assert json.loads(output)["configured"] is True
+        output, error = contender.communicate(timeout=5)
+        assert contender.returncode == 0, error
+        assert json.loads(output)["configured"] is True
+        config = json.loads((tmp_path / "shared/config.json").read_bytes())
+        assert config["archive_root"] == str(replacement)
+    finally:
+        for process in (owner, contender):
+            if process is not None and process.poll() is None:
+                process.kill()
+                process.communicate()
+
+
 def test_registry_contention_waits_for_owner_instead_of_failing(tmp_path: Path) -> None:
     owner = _lock_process(tmp_path, "hold")
     contender = None

@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
-      "sha256": "7236f1465961136dda8a1589ce607f998d6a0718be13b94a7f2a1463f100d4d1"
+      "sha256": "68bb514f6b4c70de07889962982bd8fd092393d7a6f760c78a99d142c0018375"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -514,5 +514,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "769b6e13fcbdf697372efa0fd0765df7b512ae1211f0bfa30665409335b68ec5"
+  "canonical_course_sha256": "f5a4f3cc13aef9812cf3bc15ee4834c9be9e723f4af68b5d8ec22a80c8904f8a"
 }
