@@ -145,7 +145,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
       "repository_path": "plugins/vera/scripts/archive_report_store.py",
-      "sha256": "4923b2de70536d3f581d9daa67970737ee736b78b4ec143e49c7499858a3c1cd"
+      "sha256": "5daf6b21e744bd4c5b4e9ad645dc910f6cfabe2c3615f56b319f61034f4216dc"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",

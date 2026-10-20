@@ -174,7 +174,7 @@ def _database(path: Path) -> Iterator[sqlite3.Connection]:
             if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
                 raise ValueError("Reporting database must be an ordinary private file")
     connection = sqlite3.connect(path, timeout=15)
-    if os.name == "posix":
+    if os.name == "posix" and stat.S_IMODE(path.stat().st_mode) != 0o600:
         path.chmod(0o600)
     connection.row_factory = sqlite3.Row
     try:

@@ -119,6 +119,24 @@ def test_ocr_upgrade_reuses_interpreter_and_remains_enabled(tmp_path):
     assert len(list(path.parent.glob("venv*"))) == 1
 
 
+@pytest.mark.skipif(os.name == "nt", reason="POSIX permission-change behavior")
+def test_private_runtime_directory_can_repair_without_chmod(tmp_path, monkeypatch):
+    module, selection, api, runner, _ = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    api.dependencies_available = False
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    ok, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ok, detail
+    assert api.dependencies_available
+
+
 def test_failed_package_update_invalidates_ready_receipt_and_keeps_features(tmp_path):
     module, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")

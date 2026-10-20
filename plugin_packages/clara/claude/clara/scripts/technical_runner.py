@@ -14,6 +14,7 @@ import json
 import logging
 import os
 import runpy
+import stat
 import sys
 from pathlib import Path
 from types import TracebackType
@@ -241,7 +242,10 @@ def main() -> int:
                 }.get(sys.platform, "unknown"),
             }
             with destination.open("x", encoding="utf-8") as sink:
-                if os.name == "posix":
+                if (
+                    os.name == "posix"
+                    and stat.S_IMODE(destination.stat().st_mode) != 0o600
+                ):
                     destination.chmod(0o600)
                 json.dump(payload, sink)
     return result

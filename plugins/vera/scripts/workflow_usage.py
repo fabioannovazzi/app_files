@@ -10,6 +10,7 @@ import logging
 import os
 import runpy
 import sqlite3
+import stat
 import sys
 import time
 from contextlib import redirect_stdout
@@ -55,7 +56,7 @@ def _database() -> sqlite3.Connection:
         raise ValueError("Usage state must be an ordinary private file")
     connection = sqlite3.connect(path, timeout=5)
     connection.row_factory = sqlite3.Row
-    if os.name == "posix":
+    if os.name == "posix" and stat.S_IMODE(path.stat().st_mode) != 0o600:
         path.chmod(0o600)
     connection.execute(
         "CREATE TABLE IF NOT EXISTS runs (run_id TEXT PRIMARY KEY, owner TEXT NOT NULL, pipeline TEXT NOT NULL, sample_kind TEXT NOT NULL)"

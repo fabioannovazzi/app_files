@@ -766,6 +766,32 @@ def test_first_suggestion_prompt_reservation_persists_to_both_state_stores(
     assert (stable_root / "vera" / "state.json").stat().st_mode & 0o777 == 0o600
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+@pytest.mark.parametrize("client_path", [CLARA_CLIENT, VERA_CLIENT])
+def test_private_change_request_state_persists_when_chmod_is_denied(
+    tmp_path, monkeypatch, client_path
+):
+    client = load_client(client_path)
+    stable_root = tmp_path / "stable"
+    plugin_root = write_plugin(tmp_path, "vera")
+    monkeypatch.setenv("MPARANZA_CHANGE_REQUEST_DATA", str(stable_root))
+    monkeypatch.setattr(client.tempfile, "gettempdir", lambda: str(tmp_path))
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+    monkeypatch.setattr(os, "fchmod", denied)
+
+    result = client.reserve_suggestion_prompt(plugin_root, now=1_000.0)
+
+    assert result["ask"] is True
+    assert (
+        read_state(stable_root / "vera/state.json")["suggestion_prompt_reserved_at"]
+        == 1_000.0
+    )
+
+
 @pytest.mark.parametrize("failed_store", ["stable", "plugin_data"])
 def test_suggestion_prompt_reservation_succeeds_with_one_writable_state_store(
     tmp_path: Path,

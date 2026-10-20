@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/journal-sampling/references/pdf-recovery.md",
-      "sha256": "2956b5d797a9c09bae360779d07db6427e1b189331d3445cba419ac58a4ae8c3"
+      "sha256": "e0abc5dc0e62beded4b717d4b8b536c202eed658384233b00d998ba589dcd71b"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "edf06889f7cc2eb304f0c43b6d0f56d35711814b54e62db14d32263e97fa32cf"
+      "sha256": "474a8a5cff0a87698517b49f1bb56163e0febb959efb2a0be3c37af17bf0a4b0"
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/references/geneva.md",
@@ -561,5 +561,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d323dac23a6aa5e96e661d80bbf843644bc6c3d3c83b3779d5400fc2589780b8"
+  "canonical_course_sha256": "3421efb3aa7e1464b4192a6056d2b665ad7ac39891a0a0025f39f61df30e8c75"
 }

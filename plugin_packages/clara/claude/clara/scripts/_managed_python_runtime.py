@@ -266,7 +266,7 @@ def _directory_is_writable(path: Path, *, private: bool) -> bool:
     probe_path: Path | None = None
     try:
         path.mkdir(mode=0o700, parents=True, exist_ok=True)
-        if private:
+        if private and stat.S_IMODE(path.stat().st_mode) != 0o700:
             path.chmod(0o700)
         with tempfile.NamedTemporaryFile(
             dir=path,

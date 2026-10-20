@@ -51,8 +51,11 @@ Current user requests take precedence over saved preferences.
 
 # Journal-Bank Reconciliation
 
-Use `vera_workspace_open` when callable and the exact Studio Archive run is
-authorised through the owned archive or a trusted operator binding.
+When the user chooses the native review panel, use `vera_workspace_open` when
+callable and the exact Studio Archive run is authorised through the owned archive
+or a trusted operator binding. The panel is optional: ordinary chat preparation
+uses the persistent specialist route below, with recorded agent review of routine
+source mappings. Do not require panel confirmation to prepare or deliver drafts.
 Read `../vera/references/native-workspace.md` before the handoff. The panel opens
 the maintained review service; explanations use only its selected-case projection
 with exact identifiers omitted by default. Retain the source-bound mapping,

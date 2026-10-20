@@ -8,6 +8,7 @@ import json
 import logging
 import os
 import re
+import stat
 import subprocess
 import sys
 import time
@@ -20,7 +21,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 14
+POLICY_REVISION = 15
 SETUP_WAIT_SECONDS = 1800
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
@@ -369,7 +370,7 @@ def ensure(selection: Any, path: Path, api: Any, runner: Any) -> tuple[bool, Pat
         )
     try:
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-        if os.name != "nt":
+        if os.name != "nt" and stat.S_IMODE(path.parent.stat().st_mode) != 0o700:
             path.parent.chmod(0o700)
         with _writer(path.parent / "runtime.lock"):
             # Probe under the writer lease without taking a nested reader lease.

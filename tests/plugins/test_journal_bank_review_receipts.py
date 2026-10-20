@@ -182,7 +182,7 @@ def _decisions(recipe: dict) -> dict:
         "direction_value_mapping": {},
     }
     return {
-        "reviewer_ref": "reviewer.synthetic",
+        "reviewer_ref": "agent.synthetic",
         "reviewed_on": "2026-10-08",
         "bank": {
             "files": {key: copy.deepcopy(decision) for key in recipe["bank"]["files"]}
@@ -267,6 +267,14 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
         decisions,
     )
     assert sealed.returncode == 0, sealed.stderr
+    sealed_recipe = json.loads(recipe.read_text())
+    assert (
+        sealed_recipe["bank"]["files"]["bank.pdf"]["mapping_decision"]["reviewer_ref"]
+        == "agent.synthetic"
+    )
+    assert (
+        sealed_recipe["relationship"]["decision"]["reviewer_ref"] == "agent.synthetic"
+    )
     reinspection = run(
         "inspect_inputs.py",
         sources["bank"],

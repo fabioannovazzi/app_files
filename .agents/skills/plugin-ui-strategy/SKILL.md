@@ -30,12 +30,17 @@ hosted artifact apps, or general-purpose model-generated calculations.
 Use chat when the choice is simple, the answer is free-form, or the cost of a
 wrong default is low.
 
-Use Plan-mode native choices when there are a few discrete setup decisions that
-must be fixed before work starts:
+Use native choices only for unresolved material decisions that need the user's
+judgment. Inspect available evidence first and honor choices already supplied:
 
-- research angle, framework, risk posture, output format, source posture;
-- input/output scope, mapping mode, sampling strategy, review threshold;
-- "before doing anything else, choose among these three things" moments.
+- a research objective or output scope with materially different interpretations;
+- a consequential assumption the source evidence cannot establish;
+- an external action whose authorization is still missing.
+
+The agent reviews routine source mappings, formats and technical settings and
+records that review as agent work. Do not turn an internal receipt, an available
+widget or an inferable setting into a mandatory user decision. Preparation and
+delivery of drafts do not require professional adoption, signature or filing.
 
 Use a local HTML UI when chat or a single native widget would make the process
 materially worse:
@@ -127,8 +132,8 @@ Good local HTML UI uses:
   pre-work choice genuinely improves the run.
 - HTML is a small local app, not just a static artifact, when decisions must
   flow back into the script.
-- Do not hide unresolved assumptions inside generated prompts or reports. Show
-  them before execution when they materially change the outcome.
+- State material assumptions and ask only where the missing decision prevents
+  a useful, correctly labelled draft. Preserve unresolved issues in the result.
 - Treat `partial` and `blocked` as first-class workflow states, not as buried
   caveats. Missing required evidence, source files, or deterministic outputs
   should block or partially block the relevant path rather than trigger model

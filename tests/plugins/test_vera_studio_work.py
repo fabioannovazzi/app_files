@@ -152,6 +152,21 @@ def test_capture_reopens_in_new_session_with_same_identity_and_source(service):
         reopened.close()
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+def test_private_ledger_reopens_and_records_when_chmod_is_denied(service, monkeypatch):
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    reopened = load_service().StudioWork(service.path.parent)
+    try:
+        item = capture(reopened)
+        assert service.record(item["id"])["source"] == "Fictional spoken user request"
+    finally:
+        reopened.close()
+
+
 def test_report_workspace_is_durable_and_retry_safe(service):
     args = {"request_key": "report", "label": "Daily planning"}
     first = service.dispatch("report_workspace", args)

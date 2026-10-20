@@ -11,7 +11,11 @@ python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation r
 The decisions file contains exactly `reviewer_ref`, `reviewed_on`, `bank`,
 `journal`, and `relationship`. Obtain the reviewer and date from the actual
 review: an identifier matching `^[A-Za-z0-9][A-Za-z0-9._-]*$` and a real
-`YYYY-MM-DD` date. Never invent them.
+`YYYY-MM-DD` date. The reviewer may be the agent that inspected the evidence;
+record an explicit identifier such as `agent.codex` and its actual review date.
+Human review is not required for routine mappings used to prepare and deliver
+drafts. Do not attribute agent work to a professional or treat a mapping receipt
+as adoption, signing, filing or authorization for an external action.
 
 Each side has `files`, keyed by every exact source-relative filename from
 inspection. Each file requires `header_rows` (one-based), `mapping`,
