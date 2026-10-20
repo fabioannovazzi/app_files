@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "5c15e7b5363f37557fde4cedc53d9d6360050a26630930a92f8fd7f4593a53d5",
+  "catalogue_fingerprint": "e10793e12bb95d1fb6d28a0755332d7ea11ad01ac732e90eef24df52bb681036",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -483,6 +483,11 @@
     "previous_catalogue_fingerprint": "82fe8dabdd6b1c037b8b26eb0d194316508a723fd91fc98768ddaf87de9d954c",
     "scope": "Preserves the merged legal/tax model policy and all Geneva dispositions. The native calendar dropdown correction changes mechanical UI event handling only. All entrypoint hashes match the integrated main catalogue; no new Geneva professional acceptance is claimed.",
     "version": "0.1.382"
+  },
+  "native_cancellation_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "5c15e7b5363f37557fde4cedc53d9d6360050a26630930a92f8fd7f4593a53d5",
+    "scope": "All 55 wrapper entrypoints and recorded jurisdiction dispositions are unchanged. Correct the native process-group cancellation order after a reproduced macOS EPERM. No new professional or installed-host acceptance is claimed.",
+    "version": "0.1.448"
   },
   "native_deployment_snapshot_review": {
     "basis": "Reviewed native workspace source, retained producer methods, explicit jurisdiction and professional-review boundaries, privacy register and synthetic source regressions. Existing Geneva dispositions and qualification limits are retained; no additional Geneva client or installed native-host acceptance is claimed.",

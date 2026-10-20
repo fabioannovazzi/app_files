@@ -222,7 +222,38 @@ def test_reused_job_id_cannot_launch_a_different_command(installed, tmp_path):
     assert not (tmp_path / "other-counter").exists()
 
 
-def test_cancel_stops_the_owned_helper_and_detached_descendant(installed, tmp_path):
+@pytest.mark.parametrize(
+    "group_signal_delay",
+    [
+        0,
+        pytest.param(
+            0.05,
+            marks=pytest.mark.skipif(
+                os.name == "nt", reason="POSIX process-group scheduling"
+            ),
+        ),
+    ],
+)
+def test_cancel_stops_the_owned_helper_and_detached_descendant(
+    installed, tmp_path, group_signal_delay
+):
+    if group_signal_delay:
+        # Let an individually killed launcher reach its zombie state before the
+        # group signal. macOS rejects signals to an empty, unreaped group with
+        # EPERM; cancellation must not create that state itself.
+        source = installed / "scripts/native_execution.py"
+        source.write_text(
+            source.read_text().replace(
+                'if __name__ == "__main__":',
+                "_original_killpg = os.killpg\n"
+                "def _delayed_killpg(pid, sig):\n"
+                f"    time.sleep({group_signal_delay!r})\n"
+                "    return _original_killpg(pid, sig)\n"
+                "os.killpg = _delayed_killpg\n\n"
+                'if __name__ == "__main__":',
+            )
+        )
+        write_index(installed)
     args = request(
         tmp_path,
         arguments=[str(tmp_path / "counter"), "5", "--child"],

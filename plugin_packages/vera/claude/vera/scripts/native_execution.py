@@ -403,15 +403,19 @@ def _stop(child: subprocess.Popen, stderr: Any) -> None:
         descendants = [child.pid]
         for parent in descendants:
             descendants.extend(pid for pid, owner in parents.items() if owner == parent)
+        # Signal the launcher's group while its leader is still alive. On macOS,
+        # signalling an empty group whose killed leader is not yet reaped can
+        # return EPERM. Still stop each recorded descendant, including Luna's
+        # separate group, and preserve genuine permission failures.
+        try:
+            os.killpg(child.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
         for pid in reversed(descendants):
             try:
                 os.kill(pid, signal.SIGKILL)
             except ProcessLookupError:
                 continue
-        try:
-            os.killpg(child.pid, signal.SIGKILL)
-        except ProcessLookupError:
-            pass
     child.wait(timeout=10)
 
 
