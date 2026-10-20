@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "bb14624524e285f2e8d7909b7a0575e6b56327a647ccc37fa6be728c7092c1a7",
+      "sha256": "cf83c72593d33b0006734bc3227b00446a1eb3804245b64e92d4f84165d58227",
       "languages": [
         "it",
         "en"
@@ -342,7 +342,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "ac79f9adbf29d82bf2ec8241b448242bbe72f33afb060f9c97296f27deec5d6c",
+      "sha256": "2e6993a1397f14db290cd7fd1e61c8eea4936d52fd482cc41fb964220f3d4940",
       "languages": [
         "it",
         "en",
@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "6bcbbbd32fdd84bed54588fdcd7feb97e44675f578ee6f205db8f24c96a97f4b",
+      "sha256": "3ba80ccd72486f2ccba816f23201a6b91c7581a7016a022c98f15fc1fff2c37a",
       "languages": [
         "it",
         "en",
@@ -741,7 +741,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "f7feea2eecc87acbcd78a35a042bda459ebb1529bda567df85581f564e25f379",
+      "sha256": "1fe3a4bf1c8849bf84a092c7de505d7dde3c4e1064f751feab0e1c6a2b39960c",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "777a5d56c74eb9e16259255183a2bf05d8007594f0c1b44d52cba2f01d2a123f",
+      "sha256": "3d924696771c357b323d13b237e41a476e1249c8289c9c365b7f3825bf272d97",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "36358a2216b948628704d95d6746bdf41de885b30e0377b21b72d3100bb74979",
+      "sha256": "471e6c152e271e945aacc4de0ec8b0f74d8ced667e65f7b3a1c7dd929f958d67",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1049,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "c76babec841cf1965099e868fd489d89810eee595aa11bc1f757573d2005b639",
+      "sha256": "9a69137e2af4a9eacfaef09280b9830470f0472819592f8fe6f5569ad00f8c56",
       "languages": [
         "it",
         "en",
@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "f5f83a78269e6c42148a361d51848482dadf948528d917abed24b4dda9877fd3",
+      "sha256": "93b7c7c371bcd3f2f6f05323f6e852ed54847758b2acfb15f9ea48e279e8eecf",
       "languages": [
         "it",
         "en",

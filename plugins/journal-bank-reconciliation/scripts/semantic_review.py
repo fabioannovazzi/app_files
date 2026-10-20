@@ -4834,6 +4834,40 @@ def _apply_resolution_funnel(
     write_json(_safe_output_path(semantic, RESOLUTION_APPLICATION_NAME), application)
     write_json(_safe_output_path(semantic, RESOLUTION_FUNNEL_NAME), funnel)
     write_json(_safe_output_path(semantic, HUMAN_REVIEW_QUEUE_NAME), queue)
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        for name, payload, selected, aggregate_only in (
+            (RESOLUTION_APPLICATION_NAME, application, assignments, False),
+            (RESOLUTION_FUNNEL_NAME, funnel, assignments, True),
+            (HUMAN_REVIEW_QUEUE_NAME, queue, review_queue, False),
+        ):
+            # Summaries expose amount/currency/unit aggregates; review documents
+            # additionally copy the selected bank and candidate journal evidence.
+            source_records = [
+                {
+                    "record_id": evidence["transaction_id"],
+                    "fields": (
+                        ["amount_abs", "currency", "unit"]
+                        if aggregate_only
+                        else list(review_context_fields)
+                    ),
+                }
+                for item in selected
+                for evidence in (
+                    [item["bank_evidence"]]
+                    if aggregate_only
+                    else [item["bank_evidence"], *item["candidate_journal_evidence"]]
+                )
+            ]
+            recorder.register_row_projection(
+                "journal-bank-reconciliation",
+                _safe_output_path(semantic, name),
+                payload,
+                source_records,
+                artifact_sha256=hashlib.sha256(_json_bytes(payload)).hexdigest(),
+            )
     _write_operational_review_payload(
         reconciliation,
         semantic,

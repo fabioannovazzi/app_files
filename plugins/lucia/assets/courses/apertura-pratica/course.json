@@ -159,7 +159,7 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/lucia/scripts/archive_reporting.py",
-      "sha256": "0ff08ada91584f479e7afd978685ce745cc08d52bf59153c74deac9533b7dcb6"
+      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
     },
     {
       "path": "scripts/diagnostic_context.py",

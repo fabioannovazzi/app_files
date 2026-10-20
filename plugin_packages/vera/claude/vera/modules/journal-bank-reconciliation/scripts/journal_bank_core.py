@@ -4868,6 +4868,9 @@ def _register_transaction_origins(
                     "direction": fields.get("direction") or amount_columns,
                     "transaction_id": [],
                     "side": [],
+                    "source_file": [],
+                    "source_sheet": [],
+                    "source_row": [],
                 }
             )
             for row in frame.iter_rows(named=True):
@@ -6035,6 +6038,56 @@ def _relationship_residual_frame(
     if not records:
         return pl.DataFrame(schema={field: pl.Utf8 for field in RESIDUAL_COLUMNS})
     return pl.DataFrame(records, infer_schema_length=None).select(RESIDUAL_COLUMNS)
+
+
+def _register_residual_projection(
+    output_dir: Path, residuals: pl.DataFrame, matches: pl.DataFrame
+) -> None:
+    """Keep residual cell dependencies, including both sides of each allocation."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None or not recorder.is_recording(
+        "journal-bank-reconciliation", output_dir
+    ):
+        return
+    counterparts: dict[str, list[str]] = {}
+    for match in matches.iter_rows(named=True):
+        bank_id = str(match["bank_transaction_id"])
+        journal_id = str(match["journal_transaction_id"])
+        counterparts.setdefault(bank_id, []).append(journal_id)
+        counterparts.setdefault(journal_id, []).append(bank_id)
+    cells = []
+    for row in residuals.iter_rows(named=True):
+        record_id = str(row["transaction_id"])
+
+        def own(field: str) -> list[dict[str, Any]]:
+            return [{"record_id": record_id, "fields": [field]}]
+
+        allocated = (
+            [
+                {"record_id": item, "fields": ["amount_abs"]}
+                for item in (record_id, *counterparts[record_id])
+            ]
+            if record_id in counterparts
+            else []
+        )
+        origins = {
+            "side": [],
+            "record_ref": [],
+            "transaction_id": [],
+            "record_amount": own("amount_abs"),
+            "allocated_amount": allocated,
+            "residual": allocated or own("amount_abs"),
+            "currency": own("currency"),
+            "unit": own("unit"),
+            "entity_ref": own("entity_ref"),
+            "party_ref": own("party_ref"),
+        }
+        cells.append([origins[field] for field in RESIDUAL_COLUMNS])
+    recorder.register_table_projection(
+        "journal-bank-reconciliation", output_dir / "relationship_residuals.csv", cells
+    )
 
 
 def _material_value(value: object, field: str) -> dict[str, str]:
@@ -7440,6 +7493,7 @@ def run_reconciliation(
         ),
         source_receipts,
     )
+    _register_residual_projection(output_dir, relationship_residuals, matches)
     return ReconciliationRunResult(
         matches=matches,
         unmatched_bank=unmatched_bank,

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import csv
 import json
 import os
 import shutil
@@ -522,6 +523,118 @@ def test_edited_worker_receipt_cannot_reuse_producer_provenance(
     read_artifact(loaded, path)
     report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
 
+    assert report["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in report["errors"]
+    )
+
+
+@pytest.mark.skipif(
+    sys.platform != "darwin", reason="Exercises the macOS worker launch path"
+)
+@pytest.mark.parametrize(
+    ("artifact_name", "expected_cells"),
+    [
+        ("resolution_funnel.json", 6),
+        ("human_review_queue.json", 4),
+        ("semantic_resolution_application.json", 20),
+    ],
+)
+def test_semantic_result_artifacts_preserve_source_lineage(
+    reconciled_case, monkeypatch, tmp_path, artifact_name, expected_cells
+):
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = reconciled_case
+    result, _ = run_worker_case(loaded, monkeypatch, tmp_path, run_pipeline=True)
+    path = result["resolution_application"].parent / artifact_name
+
+    read_artifact(loaded, path)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == "complete", report["errors"]
+    inputs = [item for item in report["sources"] if item["role"] == "input"]
+    assert sum(item["sent_cells"] for item in inputs) == expected_cells
+    assert sum(item["not_sent_cells"] for item in inputs) == 25 - expected_cells
+
+
+@pytest.mark.parametrize(
+    ("offset", "limit", "columns", "expected_cells"),
+    [
+        (2, 1, None, 1),
+        (0, 1, [3], 1),
+        (0, 1, [5], 2),
+        (3, 1, [5], 2),
+        (0, None, [3], 5),
+        (2, 1, [0, 1, 2], 0),
+        (9, 1, None, 0),
+    ],
+)
+def test_residual_csv_reads_count_only_selected_cell_origins(
+    reconciled_case, offset, limit, columns, expected_cells
+):
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = reconciled_case
+    path = Path(loaded["calculation_dir"]) / "relationship_residuals.csv"
+
+    read_artifact(loaded, path, offset=offset, limit=limit, columns=columns)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == "complete", report["errors"]
+    inputs = [item for item in report["sources"] if item["role"] == "input"]
+    assert sum(item["sent_cells"] for item in inputs) == expected_cells
+    assert sum(item["not_sent_cells"] for item in inputs) == 25 - expected_cells
+
+
+def test_edited_residual_csv_does_not_inherit_source_lineage(reconciled_case):
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = reconciled_case
+    path = Path(loaded["calculation_dir"]) / "relationship_residuals.csv"
+    with path.open(newline="") as handle:
+        rows = list(csv.reader(handle))
+    rows[3][5] = "7"
+    with path.open("w", newline="") as handle:
+        csv.writer(handle).writerows(rows)
+
+    read_artifact(loaded, path, offset=2, limit=1)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in report["errors"]
+    )
+
+
+@pytest.mark.skipif(
+    sys.platform != "darwin", reason="Exercises the macOS worker launch path"
+)
+@pytest.mark.parametrize(
+    "artifact_name",
+    [
+        "resolution_funnel.json",
+        "human_review_queue.json",
+        "semantic_resolution_application.json",
+    ],
+)
+def test_edited_semantic_artifact_does_not_inherit_source_lineage(
+    reconciled_case, monkeypatch, tmp_path, artifact_name
+):
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = reconciled_case
+    result, _ = run_worker_case(loaded, monkeypatch, tmp_path, run_pipeline=True)
+    path = result["resolution_application"].parent / artifact_name
+    payload = json.loads(path.read_text())
+    payload["unregistered_note"] = "Case information added after generation"
+    path.write_text(json.dumps(payload))
+
+    read_artifact(loaded, path)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
     assert report["collection_status"] == "incomplete"
     assert any(
         error.startswith("derived_output_lineage_unavailable:")

@@ -84,7 +84,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "0e0700fcd91308a90dd0d202250ee34c2eda9736f58e34047aa95d9aaf22896a"
+      "sha256": "b38f33964a317e190115bd8453fd33ac23b693f6b672938b655d7f28fad3c6bc"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "dfe8dcf6c3275d6252288aa7c9f5846e4f8676c64d08a1fab985466f9a4f51f6"
+      "sha256": "54df1ee665054ef99f7505fb4b3c4f2ba8d3931938637d6256be5235b6b0bc45"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/windows_worker_process.py",

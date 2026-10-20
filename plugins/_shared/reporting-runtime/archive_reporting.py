@@ -298,6 +298,11 @@ def record_send(
         if item["kind"] == "prepared_metadata"
     }
     projections = [item for item in retained if item["kind"] == "prepared_projection"]
+    table_projections = {
+        (item["artifact_path"], item["artifact_sha256"]): item
+        for item in retained
+        if item["kind"] == "prepared_table_projection"
+    }
     unmapped = False
     whole_projection = next(
         (item for item in projections if item["data_sha256"] == digest(response)),
@@ -319,7 +324,11 @@ def record_send(
                     and set(piece) == {"data", "vera_reporting"}
                     and digest(piece["data"]) == selection["data_sha256"]
                 ):
-                    selections.append({**selection, "basis": "vera_registered_packet"})
+                    artifact_selection = {
+                        **selection,
+                        "basis": "vera_registered_packet",
+                    }
+                    selections.append(artifact_selection)
                     projection = next(
                         (
                             item
@@ -345,8 +354,33 @@ def record_send(
                         and selection["stop"] == projected_source["quantity"]
                         and selection["columns"] == [0]
                     ):
-                        selections[-1]["source_lineage_verified"] = True
+                        artifact_selection["source_lineage_verified"] = True
                         selections.extend(projection["selections"])
+                    table = (
+                        table_projections.get(
+                            (projected_source["path"], selection["source_sha256"])
+                        )
+                        if projected_source is not None
+                        else None
+                    )
+                    if (
+                        table is not None
+                        and projected_source is not None
+                        and table["unit"] == selection["unit"]
+                        and len(table["cells"]) == projected_source["quantity"]
+                        and table["columns"] == projected_source["columns"]
+                    ):
+                        # The exact file hash binds the producer's output-cell
+                        # map. Only cells actually returned can add input origins.
+                        artifact_selection["source_lineage_verified"] = True
+                        selections.extend(
+                            origin
+                            for row in table["cells"][
+                                selection["start"] : selection["stop"]
+                            ]
+                            for column in selection["columns"]
+                            for origin in row[column]
+                        )
                     mapped = True
                 if metadata.get(binding.get("token")) == digest(
                     {
