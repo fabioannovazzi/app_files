@@ -112,7 +112,7 @@ Before declaring an unfamiliar journal or bank statement layout unsupported, fol
 `../../references/pdf-recovery.md`. Use the maintained inspection, trial and
 freeze actions in the existing inspection command. The host agent diagnoses,
 revises source-bound recipes or writes a run-local source-reference adapter
-within a persistent four-attempt budget. Keep ordinary host inspection and
+with distinct evidence-based attempts retained in the run. Keep ordinary host inspection and
 reasoning available. Independent checks reconstruct source amounts, enforce
 coverage and accounting controls, and replay frozen code. Retain readable partial
 entries and explicit unresolved issues; block population-dependent operations.
@@ -188,6 +188,13 @@ blocked until supported inputs or a reviewed PDF-table or registration-layout ma
 
 ## First Run Workflow
 
+The agent reviews routine source mappings and relationship settings from the
+actual source evidence. Record the agent's identity and review date; do not wait
+for a professional to confirm an unambiguous header, sign or delimiter. Ask only
+for a material ambiguity the evidence cannot resolve. These technical decisions
+authorize preparation of reviewable workpapers, not human approval, professional
+adoption, signing, filing or external actions.
+
 1. Ask for the bank file/folder, journal or ledger file/folder, sample file when the user wants to restrict the population, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Use the script defaults for amount tolerance and date window unless the user provides stricter thresholds or the data requires a different assumption.
 2. Run dependency checks from the plugin directory:
 
@@ -208,10 +215,11 @@ Add `--sample <sample-file>` when a sample movement list is provided.
 4. Read `inspection.json`, `input_receipts.json`,
    `source_qualifications.json`, and `suggested_recipe.json`. Do not run
    reconciliation while any source reports `unsupported_source_layout`. A
-   source with `needs_review` has emitted zero rows. Ask the smallest needed
-   question about the physical header, monetary role, CSV field delimiter,
+   source with `needs_review` has emitted zero rows. Review the physical header,
+   monetary role, CSV field delimiter,
    decimal/thousands separators, ambiguous day/month date convention, or
-   perimeter field. Treat the three separators as separate inputs. For a PDF,
+   perimeter field from available evidence; ask the smallest needed question
+   only when a material ambiguity remains. Treat the three separators as separate inputs. For a PDF,
    explicitly review the recovered physical header, incoming/outgoing sign
    roles, and all running-balance or total columns. A PDF with no qualified
    physical column grid must use the dedicated reviewed registration adapter, if its supported structure is present; it cannot be approved merely by changing a table mapping.
@@ -247,7 +255,9 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    requires the current `journal_bank.relationship.v3` relationship receipt;
    older receipts predate grouped reference allocation and are stale. Do not treat the
    generated proposal as reviewed. Supply the actual `reviewer_ref` and
-   `reviewed_on` explicitly; never invent them. From the installed Vera root:
+   `reviewed_on` explicitly. For agent review use an identifier such as
+   `agent.codex` and the actual review date; never claim a human reviewed it.
+   From the installed Vera root:
 
 ```bash
 python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <client_engagement_path> --output-dir <client-run-output> --recipe <client-run-output>/suggested_recipe.json --decisions <client-run-output>/review_decisions.json

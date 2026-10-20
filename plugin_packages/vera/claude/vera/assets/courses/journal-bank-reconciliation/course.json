@@ -40,11 +40,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/pdf-recovery.md",
-      "sha256": "81b2fee4777a99bc79247a0e5fe323e909279659fcbb8af260e390010f5d8799"
+      "sha256": "9a89db2670d0085779240b66aa85d9c7de4d770fbcddb60fa93e784fb2697fb9"
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "a387406183240e1a33d134863055fa78d29d53d114ed90c579ce0cd756eec90f"
+      "sha256": "476436b711c570802598db961574ffd3fa95796e9098844d143c8a85cdc3ba3f"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "4c3039bc2fdee7ed9052a4be1d62e9a6ae2f7c59372f1e94bd3ab8994af09159"
+      "sha256": "2401440c8e4f17f07050eaf1bda99ff554d556dedc060adf255529b3efe1a696"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "5ce11a115f6cfa707849f5242c857b8299b337d90bd26ffb3dd7eef5134edfd1"
+      "sha256": "46a9f97197edda3ecdd76a97c3688d43c21ef4c55118211205a77a8e57375e3a"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -164,7 +164,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "84561bb9daff74bf5c8db0d527ed530fa07cbed22b7f7824ba985b2e5122c27c"
+      "sha256": "c301a916ed7b76a69aeeb447d1b9c13303dc8a372a34eb2895c050033b995f35"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -593,5 +593,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c5f6874d7cc4b2c1b21b6062a69c10e3692f7f5c7e30878e967d3b6a4d6c7ca3"
+  "canonical_course_sha256": "1ee19f320766f81f32e1949dd5887b4057fd0fac2821311d53502e559a003390"
 }

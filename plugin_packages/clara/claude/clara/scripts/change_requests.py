@@ -215,7 +215,8 @@ def _prepare_private_temporary_directory(state_dir: Path) -> None:
             raise PermissionError(
                 f"Temporary state path has the wrong owner: {directory}"
             )
-        directory.chmod(0o700)
+        if stat.S_IMODE(details.st_mode) != 0o700:
+            directory.chmod(0o700)
         if stat.S_IMODE(directory.lstat().st_mode) != 0o700:
             raise PermissionError(f"Temporary state path is not private: {directory}")
 
@@ -236,11 +237,12 @@ def _open_state_lock(state_dir: Path) -> tuple[Any, Any]:
         get_uid = getattr(os, "getuid", None)
         if callable(get_uid) and details.st_uid != get_uid():
             raise PermissionError(f"State lock has the wrong owner: {lock_path}")
-        fchmod = getattr(os, "fchmod", None)
-        if callable(fchmod):
-            fchmod(descriptor, 0o600)
-        else:
-            lock_path.chmod(0o600)
+        if stat.S_IMODE(details.st_mode) != 0o600:
+            fchmod = getattr(os, "fchmod", None)
+            if callable(fchmod):
+                fchmod(descriptor, 0o600)
+            else:
+                lock_path.chmod(0o600)
         lock_file = os.fdopen(descriptor, "r+b")
         descriptor = -1
         try:
@@ -454,9 +456,9 @@ def _write_one_state(path: Path, state: dict[str, Any]) -> None:
         ) as temporary:
             temporary.write(serialized)
             temporary_path = Path(temporary.name)
-        temporary_path.chmod(0o600)
+        if stat.S_IMODE(temporary_path.stat().st_mode) != 0o600:
+            temporary_path.chmod(0o600)
         temporary_path.replace(path)
-        path.chmod(0o600)
     finally:
         if temporary_path is not None and temporary_path.exists():
             temporary_path.unlink()

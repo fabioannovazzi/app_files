@@ -129,6 +129,25 @@ def test_unexpected_exception_preserves_source_chain_and_real_exit(tmp_path):
     assert data["events"][0]["technical_frames"][0]["file"] == "helper.py"
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+def test_private_diagnostic_preserves_original_failure_when_chmod_is_denied(
+    tmp_path,
+):
+    completed, data = execute(
+        tmp_path,
+        "import os\nfrom pathlib import Path\n"
+        "os.umask(0o077)\n"
+        "def denied(*args, **kwargs):\n"
+        "    raise PermissionError('Host denies permission changes')\n"
+        "Path.chmod = denied\n"
+        "raise RuntimeError('Synthetic helper failure')\n",
+    )
+
+    assert completed.returncode == 1
+    assert data["events"][0]["message"] == "Synthetic helper failure"
+    assert "PermissionError" not in completed.stderr
+
+
 def test_logged_exception_records_caught_underlying_cause(tmp_path):
     source = "import logging\ntry:\n    raise ValueError('Required research artifact role missing or repeated')\nexcept ValueError as error:\n    logging.error('%s',error)\n    raise SystemExit(1)\n"
     completed, data = execute(tmp_path, source)

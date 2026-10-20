@@ -1,6 +1,7 @@
 # Vera execution-block audit — 20 October 2026
 
-Status: in progress. This document is not a release or acceptance claim.
+Status: in progress. The first repair set is deployed; normal-chat acceptance
+remains incomplete.
 
 ## Mandate and acceptance
 
@@ -26,14 +27,17 @@ repairs take place in the main Astra chat.
 | A changed Python platform label required a manual rebuild | `_shared_python_runtime.ready` and `_install`; former `test_actual_interpreter_mismatch_rejected_before_mutation` | Check the current CPython interpreter, declared package versions and native component imports. Compatible changes reuse the environment without rewriting installation history; failed imports remain unavailable after failed repair. |
 | Installed-version acceptance rejected all local candidates | `scripts/check_installed_product.py`, `.agents/skills/plugin-release/SKILL.md` and its local-installation rejection test | Accept one enabled matching candidate. An optional exact plugin registration checks a particular distribution; local acceptance never proves Marketplace rollout. Keep version and current-session skill checks. |
 | The test-harness instruction could be read as forbidding requested product repairs | `AGENTS.md`, Coding Practices | Clarify that fixing import/fixture defects in tests is separate from fixing an observed production defect. Existing rejection tests are not product authority. |
-| Mapping-review text leaves agent versus professional review unclear | `journal-bank-reconciliation/SKILL.md`, `seal_review_receipts.py`, `journal_bank_core.build_mapping_review_receipt` docstring; first chat's recovered approval rejection | Inspection continues. Automated approval review rejected proposed clarification as removal of human-review safeguards. Exact user clarification requested; no rejected edit applied. |
-| UI strategy includes “before doing anything else” setup choices | `.agents/skills/plugin-ui-strategy/SKILL.md` | Candidate instruction change, pending resolution of the rejected instruction patch. The same skill already prohibits ceremonial continuation requests. |
+| Mapping-review text leaves agent versus professional review unclear | `journal-bank-reconciliation/SKILL.md`, `seal_review_receipts.py`, `journal_bank_core.build_mapping_review_receipt` docstring; first chat's recovered approval rejection | Fabio explicitly authorized recorded agent review of routine source mappings for draft preparation/delivery on 20 October. Instructions now distinguish agent review from human adoption/signing/filing/external action. The existing engine accepts and retains the actual agent reviewer identity; source, Codex and Cowork receipt/reconciliation regressions pass without fabricated human approval. |
+| UI strategy includes “before doing anything else” setup choices | `.agents/skills/plugin-ui-strategy/SKILL.md` | Revised after the explicit authorization: inspect first, infer routine technical choices and ask only for unresolved material user decisions. The native bank panel is an optional human-review route, not a prerequisite to ordinary chat preparation. |
 | Reporting imposed an Archive prerequisite on non-Archive model operations | `mcp/workspace.cjs`, `native_workspace._reporting_case`; 14 Transformation source-MCP failures returned “Vera could not bind this request to its outgoing-data record” | Pass the actual operation from the MCP server. Transformation and practice-review workspaces do not acquire an unrelated Archive reporting prerequisite. Eligible Archive workflows retain their binding and recording checks. The first previously failing complete context/stage/adoption case passes after repair. |
 | Shipped operational guidance still declared repaired native routes unavailable | `skills/vera/references/native-workspace.md`, `privacy/services/native-workspace.json`; current communication lock exclusion, resolved transformation replay directory and initial-adapter code identity | Replace obsolete failure counts and unapplied-repair statements with the inspected current behavior. Communication source/UI tests pass; the first full Transformation source-MCP case passes. Keep installed-host acceptance separate. |
 | Patent Box guidance still demanded a signature and firm mandate before calculation, although the producer now requires the user's exact proposal confirmation | `patent_box/proposal_review.py`; `test_patent_box_real_local_review_does_not_authorize_calculation`; native guide and service declaration | Align guidance with the existing proposal-confirmation contract. Human confirmation remains required; signed-document formalities are a separate optional route. No agent approval is substituted. |
 | PDF layout recovery has fixed lifetime caps despite evidence-based revisions | `vera_journal_pdf/recovery.py`: four attempts and twelve inspections; shared `pdf-recovery.md` | Removed lifetime count gates. Distinct evidence-based trials and inspections can continue; duplicate recipes, source integrity, full replay and per-call evidence bounds remain enforced. Five focused regressions passed, including a valid trial after 100 previous trials and a thirteenth inspection. |
 | Rating Legalità refuses evidence processing for absent mandate/data-governance review or an overdue review date | `rating-legalita/scripts/practice_controls.py:practice_summary`, called before evidence assessment by `rating_case.py` | Confirmed execution gate. Its professional-review requirements remain under review; no removal or replacement with agent approval has been applied. |
 | New shared-runtime integration initially restored the old restriction during a build | `sync_reporting_runtime.py` copies `_shared/reporting-runtime/_shared_python_runtime.py` into all three products | Corrected the canonical shared source, then synchronized all copies. Product-copy edits alone were insufficient. Rebuilding must preserve the repaired shared source. |
+| Normal chat re-applied private file modes and failed before inspection | Third bank-test chat `01a15896-41d1-7d40-b1fc-f4e3ba121466`; `archive_report_store._database`, incident state/diagnostic directories and usage reporting | The report DB already had mode 0600 and the incident directory mode 0700. Both chmod operations were denied. A focused repair now checks actual modes before changing them; genuinely broader permissions still require correction. Source regressions and fresh-chat retesting remain in progress. |
+| The same no-op permission changes affected other persistent paths | Managed-runtime directory selection, shared-runtime repair, technical diagnostics, Studio Work and Vera/Clara change-request state | Reuse the already-correct private mode. Preserve required correction of insecure modes, identity, atomic writes, source checks and access boundaries. Fourteen focused regression cases pass. |
+| Specialist instructions still imposed the removed PDF lifetime limit | Bank and sampling skills and their registration-PDF references | Removed the remaining four-attempt wording. Distinct evidence-based recovery, source qualification and replay remain required. |
 
 The policy number is Mparanza installation metadata, not a Python version.
 The local environment identifies CPython 3.12. This audit has not established
@@ -103,7 +107,51 @@ capabilities and authorization for external actions require separate evidence.
 - Changed-file Mypy (including the 29-file managed-runtime configuration and
   native routing), medium/high Bandit and formatting checks passed after
   integration. Remote CI and installed normal-chat acceptance remain outstanding.
-- No deployment or successful normal-chat acceptance is claimed yet.
+- PR #882 passed all 87 remote CI checks and was merged as
+  `ae9132e527271792e0a5b91e8b100d2453dad0ec`. The server fast-forwarded to that
+  exact commit and restarted normally. Its worktree was clean; the public Vera
+  Cowork ZIP returned HTTP 200 and matched the tested SHA-256
+  `318d1947e26f147b78688c521e7ee8ae474b9adb0ac816a46cb004b39669fb77`.
+- Codex's supported install command enabled Vera 0.1.438 at `vera@mp-vera`.
+  All 2,180 installed package files matched the tested ZIP, with no extra files.
+  Repository cleanup then showed one local branch, one remote branch, one
+  registered worktree and zero stashes.
+- The next separate GPT-6.1 Sol bank chat stopped on the permission errors above.
+  It created/imported its synthetic sources but did not perform reconciliation.
+  No second pipeline was started.
+- That failed run, `run_836ad00dd71a2d784c307f95`, automatically generated and
+  delivered a readable privacy report in the final chat response. Its outcome
+  is `failed`, collection is complete, and its server proof independently
+  verified against Vera userID `0ed4a818-1877-4652-8515-787c64de17a5` and report
+  SHA-256 `ea67aedb67612ec68fe01d3753b47c7a4c1b3e5a11e3dc805227ebb8ae3238f6`.
+  This proves reporting for that failed attempt, not successful bank acceptance.
+- A non-mutating SQLite transaction probe against the failed run was available
+  and left its database bytes unchanged. It does not establish that every
+  subsequent helper output write is permitted. The complete normal flow must
+  still be retested after repair.
+- The broader permission regression run initially passed 228 tests; nine
+  failures were pre-rebuild package drift and one native-host test needed a
+  loopback socket unavailable in the default test sandbox. These failures are
+  recorded pending rebuilt-package and permitted-loopback reruns.
+- The three managed PDF mapping cases (source, Codex and Cowork) preserve
+  `agent.synthetic` in both mapping and relationship receipts, then complete
+  reconciliation and reject changed source bytes. No human-review flag is
+  invented.
+- The test chat relayed Fabio's instruction to resume the same client,
+  engagement and failed run after repair. The Archive lifecycle supports the
+  existing failed-to-running transition. Preserve the imported inputs and
+  existing privacy-report history; do not create a replacement case or run.
+- Vera 0.1.439, Clara 0.1.318 and Lucia 0.1.142 now build successfully for
+  Codex, Cowork and Antigravity, including MCP startup checks and synchronized
+  runtime sources. These are package results, not installed acceptance.
+- The affected reporting, incident, usage, change-request and Studio Work suite
+  passed all 241 tests after permitting its local-loopback integration test.
+  The rebuilt managed-runtime suite passed all 270 tests with 82.68% measured
+  coverage. The previously stale package-policy cases now pass.
+- Mypy passed the 29-file runtime configuration and the changed incident,
+  usage, diagnostic, change-request, report-store and Studio Work services.
+  Formatting, medium/high Bandit, shared lock equality, coordinated revision
+  and the inspected 55-entry localization binding checks passed.
 
 ## Related work
 
@@ -114,5 +162,6 @@ as `eb2065b62`; its integration has passed the local checks above. Preserve its
 hash-checked dependency locks, installed-inventory checks and serialized setup,
 while retaining capability-based reuse and removal of policy-number rejection.
 This audit uses revision 14 solely as installation history. Current candidates
-are Vera 0.1.438, Clara 0.1.317 and Lucia 0.1.141; none has been deployed by this
-audit. The process that wrote the local policy-13 file has not been established.
+were Vera 0.1.438, Clara 0.1.317 and Lucia 0.1.141; these packages were deployed
+through PR #882 as recorded above. The process that wrote the local policy-13
+file has not been established.

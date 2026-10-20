@@ -34,6 +34,50 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+def test_private_report_database_can_record_without_changing_permissions(
+    tmp_path, monkeypatch
+):
+    from archive_report_store import RunStore
+
+    store = RunStore(tmp_path / "run")
+    store.save({"status": "running"})
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    store.event("first-send", {"characters": 12})
+
+    [event] = store.events()
+    assert event["event_id"] == "first-send"
+    assert event["characters"] == 12
+    assert store.state() == {"status": "running"}
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+def test_nonprivate_report_database_still_requires_permission_repair(
+    tmp_path, monkeypatch
+):
+    from archive_report_store import RunStore
+
+    store = RunStore(tmp_path / "run")
+    store.save({"status": "running"})
+    store.path.chmod(0o644)
+    before = store.path.read_bytes()
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    with pytest.raises(PermissionError, match="permission changes"):
+        store.save({"status": "complete"})
+
+    assert store.path.read_bytes() == before
+
+
 @pytest.mark.parametrize(
     "operation",
     [

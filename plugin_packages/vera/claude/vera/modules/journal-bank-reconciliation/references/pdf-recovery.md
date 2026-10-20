@@ -180,7 +180,7 @@ amounts, invent text, emit its own qualification or choose its own controls.
 
 Add `agent_adapter: {"path": "<absolute run-local .py>", "sha256": "<code hash>"}`
 to the layout and run the ordinary trial. Each distinct adapter/recipe revision
-uses the same four-attempt budget. Record the diagnosis, source evidence and
+retains each distinct evidence-based attempt. Record the diagnosis, source evidence and
 change in `--pdf-reason`. The runner snapshots the code, runs it in a separate
 Python process with a 60-second limit, and checks source/checker hashes before
 and after execution. This is not an operating-system sandbox; normal host
@@ -277,7 +277,7 @@ These coordinates are synthetic examples, not defaults for customer documents.
 ### Reviewed negative amounts
 
 Negative postings require both optional keys below in the layout. Record the
-professional's decision in the ordinary source-mapping review; the recovery
+agent's or human reviewer's decision in the ordinary source-mapping review; the recovery
 trial and freeze do not approve accounting semantics. Do not add these choices
 merely to make a failed trial pass.
 

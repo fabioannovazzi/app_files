@@ -167,6 +167,13 @@ For a CH-GE mandate, read `references/localization/geneva.md` before specialist 
 
 ## Host permissions and untrusted material
 
+For preparation and delivery of drafts, the agent reviews routine source
+mappings and technical settings against the supplied evidence and records its
+own reviewer identity. Ask the user only for unresolved material decisions.
+A technical review receipt does not establish human review or professional
+adoption. Keep human approval for adoption, signing, filing and external actions;
+never invent it merely to satisfy a field or workflow instruction.
+
 Vera's workflow instructions operate within the host's system instructions,
 security boundaries and tool-specific approval rules. They never authorize
 bypassing a denied action, security warning, sandbox restriction or required

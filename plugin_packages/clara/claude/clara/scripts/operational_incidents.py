@@ -101,7 +101,7 @@ def _state_path(*, create: bool = True) -> Path:
         raise ValueError("Incident state must not traverse symbolic links")
     if create:
         base.mkdir(parents=True, exist_ok=True, mode=0o700)
-        if os.name == "posix":
+        if os.name == "posix" and stat.S_IMODE(base.stat().st_mode) != 0o700:
             base.chmod(0o700)
     return base / "state.json"
 
@@ -144,7 +144,7 @@ def _host_credentials() -> dict[str, str] | None:
             return value
         value = {"device_id": str(uuid4()), "device_key": secrets.token_urlsafe(32)}
         with path.open("x", encoding="utf-8") as handle:
-            if os.name == "posix":
+            if os.name == "posix" and stat.S_IMODE(path.stat().st_mode) != 0o600:
                 path.chmod(0o600)
             json.dump(value, handle)
         return value
@@ -284,7 +284,7 @@ def diagnostic_directory() -> Path:
     if directory.is_symlink():
         raise ValueError("Diagnostic directory must not be a symbolic link")
     directory.mkdir(mode=0o700, exist_ok=True)
-    if os.name == "posix":
+    if os.name == "posix" and stat.S_IMODE(directory.stat().st_mode) != 0o700:
         directory.chmod(0o700)
     return directory
 
@@ -303,7 +303,7 @@ def retain_diagnostic(path: Path, receipt: dict[str, Any]) -> Path:
             },
             handle,
         )
-    if os.name == "posix":
+    if os.name == "posix" and stat.S_IMODE(target.stat().st_mode) != 0o600:
         target.chmod(0o600)
     return target
 
@@ -347,7 +347,7 @@ def _state_lock():
     if path.is_symlink() or (path.exists() and path.stat().st_nlink != 1):
         raise ValueError("Incident lock must be an ordinary private file")
     connection = sqlite3.connect(path, timeout=2)
-    if os.name == "posix":
+    if os.name == "posix" and stat.S_IMODE(path.stat().st_mode) != 0o600:
         path.chmod(0o600)
     try:
         connection.execute("BEGIN IMMEDIATE")
@@ -395,7 +395,7 @@ def _write(state: dict[str, Any]) -> None:
     ) as handle:
         json.dump(state, handle, ensure_ascii=False)
         temporary = Path(handle.name)
-    if os.name == "posix":
+    if os.name == "posix" and stat.S_IMODE(temporary.stat().st_mode) != 0o600:
         temporary.chmod(0o600)
     temporary.replace(path)
 

@@ -6,6 +6,15 @@
     "scope": "Canonical manifest/version refresh above the merged model-advisory release. All current main skill entrypoint bytes and jurisdiction judgments are preserved. Hosted incident followup and actionable operator alerts establish no additional professional or Geneva acceptance.",
     "version": "0.1.399"
   },
+  "agent_mapping_review_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "eba91f1a749f59bbcf6debd9bdc3110985372c479ed876bcbd3584c76c3b3980",
+    "reviewed_entrypoints": [
+      "journal-bank-reconciliation",
+      "vera"
+    ],
+    "scope": "Agent attribution for routine source mappings and optional native bank review. Professional adoption, signature, filing and external-action approval remain separate; no jurisdiction scope or disposition changes.",
+    "version": "0.1.439"
+  },
   "agentic_pdf_recovery_release_binding_20261019": {
     "changed_entrypoints": [
       "journal-bank-reconciliation",
@@ -115,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "5a09df447a45e934b5f10b83443fe82a1a5276e03d68650c6a8eab79ab77a6b6",
+  "catalogue_fingerprint": "130285ffe5e067875d02e00d7b9a8debd72c66199ccea9c581a2dc5d289b1ed7",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -564,6 +573,11 @@
     "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
     "scope": "Preserves both parent release source reviews and all existing Geneva target judgments. Combined entrypoint changes retain bounded PDF recovery and the main host-reporting fix. No new jurisdiction or professional acceptance is claimed.",
     "version": "0.1.413"
+  },
+  "private_permission_reuse_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "5a09df447a45e934b5f10b83443fe82a1a5276e03d68650c6a8eab79ab77a6b6",
+    "scope": "Version-only entrypoint binding. Private-mode reuse changes no skill entrypoint or jurisdiction disposition.",
+    "version": "0.1.439"
   },
   "rating_legalita_release_binding": {
     "added_skills": [

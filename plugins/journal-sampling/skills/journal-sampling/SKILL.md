@@ -241,7 +241,7 @@ Before declaring a registration-style journal layout unsupported, follow
 `../../references/pdf-recovery.md`. Use the maintained inspection, trial and
 freeze actions in the existing inspection command. The host agent diagnoses,
 revises source-bound recipes or writes a run-local source-reference adapter
-within a persistent four-attempt budget. Keep ordinary host inspection and
+with distinct evidence-based attempts retained in the run. Keep ordinary host inspection and
 reasoning available. Independent checks reconstruct source amounts, enforce
 coverage and accounting controls, and replay frozen code. Retain readable partial
 entries and explicit unresolved issues; block population-dependent operations.

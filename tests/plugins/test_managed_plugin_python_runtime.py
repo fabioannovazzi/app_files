@@ -584,6 +584,34 @@ def test_codex_approved_command_uses_same_runtime_as_sandboxed_command(
     )
 
 
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+def test_private_runtime_selection_does_not_move_when_chmod_is_denied(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    runtime = load_runtime()
+    plugin_root = tmp_path / "vera"
+    plugin_root.mkdir()
+    monkeypatch.delenv("CLAUDE_PLUGIN_DATA", raising=False)
+    monkeypatch.delenv("PLUGIN_DATA", raising=False)
+    monkeypatch.setenv("CODEX_SANDBOX", "seatbelt")
+    monkeypatch.setattr(runtime.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(runtime.Path, "home", lambda: tmp_path / "home")
+    original = runtime.plugin_data_dir(plugin_root)
+    chmod = Path.chmod
+
+    def denied_on_original(path, mode, **kwargs):
+        if path == original:
+            raise PermissionError("Host denies permission changes")
+        return chmod(path, mode, **kwargs)
+
+    monkeypatch.setattr(Path, "chmod", denied_on_original)
+
+    selected = runtime.plugin_data_dir(plugin_root)
+
+    assert selected == original
+    assert not (tmp_path / "home").exists()
+
+
 def test_marketplace_version_folder_uses_stable_manifest_plugin_name(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,

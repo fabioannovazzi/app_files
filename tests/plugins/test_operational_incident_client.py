@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import os
 import subprocess
+import sys
 import urllib.error
 from pathlib import Path
 from uuid import uuid4
@@ -22,6 +24,58 @@ from modules.operational_incidents.contracts import (
 from modules.operational_incidents.store import IncidentStore
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_private_incident_state_reuses_identity_when_chmod_is_denied(
+    tmp_path, monkeypatch, product
+):
+    module, _, _ = client(tmp_path, monkeypatch, product)
+    existing = module.local_context()
+    before = Path(existing["outbox_path"]).read_bytes()
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    observed = module.local_context()
+
+    assert observed["credentials"] == existing["credentials"]
+    assert Path(observed["outbox_path"]).read_bytes() == before
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_private_usage_database_keeps_recording_when_chmod_is_denied(
+    tmp_path, monkeypatch, product
+):
+    module, _, _ = client(tmp_path, monkeypatch, product)
+    usage = sys.modules["workflow_usage"]
+    existing = module.local_context()["credentials"]
+
+    def offline(*args, **kwargs):
+        raise OSError("Synthetic offline transport")
+
+    monkeypatch.setattr(usage, "_send", offline)
+    first_run, next_run = str(uuid4()), str(uuid4())
+    pipelines = json.loads((usage.ROOT / "usage/pipelines.json").read_text())[
+        "pipelines"
+    ]
+    pipeline = next(iter(pipelines))
+    usage.start(first_run, pipeline=pipeline, host="codex", sample_kind="agent_test")
+
+    def denied(*args, **kwargs):
+        raise PermissionError("Host denies permission changes")
+
+    monkeypatch.setattr(Path, "chmod", denied)
+
+    usage.start(next_run, pipeline=pipeline, host="codex", sample_kind="agent_test")
+
+    assert usage.status(next_run, remote=False)["queued"] == 1
+    assert usage.status(first_run, remote=False)["queued"] == 1
+    assert module.reporting_credentials() == existing
 
 
 def test_reporting_reads_existing_identity_without_rewriting_private_state(

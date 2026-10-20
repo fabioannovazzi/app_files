@@ -2418,7 +2418,7 @@ def build_mapping_review_receipt(
     pdf_registration_layout: dict[str, Any] | None = None,
     pdf_bank_layout: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Seal a professional mapping decision against source bytes and adapter."""
+    """Bind an attributed agent or human mapping review to source bytes and adapter."""
 
     if isinstance(potential_monetary_columns, (str, bytes)) or isinstance(
         excluded_monetary_columns,

@@ -44,7 +44,7 @@
     {
       "path": "modules/journal-sampling/references/pdf-recovery.md",
       "repository_path": "plugins/journal-sampling/references/pdf-recovery.md",
-      "sha256": "e67384ca6ce9464466530a0c23911b6d276071a40790566a9614cb0816f0d4a8"
+      "sha256": "7ba98558d342b64ee24b7caec82d4825449b529c4567830f921be1fd2f48dc79"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "4bb86703a826037aaa366efe53c0ebe7a944b14e931c89eda8d9cb483cb87161"
+      "sha256": "b82c3df4f7e1dd95450b81f9720ff7a47f6674d2c4372847d4e04b521602ba7b"
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",

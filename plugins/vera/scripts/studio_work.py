@@ -11,6 +11,7 @@ import json
 import logging
 import os
 import sqlite3
+import stat
 import sys
 import uuid
 from datetime import date, datetime, timezone
@@ -174,7 +175,8 @@ class StudioWork:
             raise ValueError("Studio work storage must not use symlinks")
         root.mkdir(parents=True, exist_ok=True, mode=0o700)
         self.path.touch(mode=0o600, exist_ok=True)
-        self.path.chmod(0o600)
+        if stat.S_IMODE(self.path.stat().st_mode) != 0o600:
+            self.path.chmod(0o600)
         self.db = sqlite3.connect(self.path, timeout=15, isolation_level=None)
         self.db.row_factory = sqlite3.Row
         self.db.executescript(
@@ -197,7 +199,6 @@ class StudioWork:
                 action TEXT NOT NULL, body TEXT NOT NULL);
             """
         )
-        self.path.chmod(0o600)
 
     def close(self) -> None:
         """Release the owned database connection."""
