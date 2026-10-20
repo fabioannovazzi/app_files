@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/scripts/luna_worker.py",
-      "sha256": "6444e6f41e7fd9daa39e4b2d094e77c4104d1c261538a2efd22968e62367a408"
+      "sha256": "f75236be85ec5a68a26fcaaad698c08d971df903f34776df25d92e1597374927"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/reviewed_invoices.py",
@@ -610,5 +610,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7dd31e9f996bfc138c1b03323a067b53f94147c825e2a41ca2833257ad136cde"
+  "canonical_course_sha256": "bcfb528af95ba11063aee66e27e0fd3e949349173a9eda0f2f1a13eca63fb7be"
 }

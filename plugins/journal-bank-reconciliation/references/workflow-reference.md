@@ -294,8 +294,10 @@ Only the main Codex chat may orchestrate the optional model pass. It keeps its
 existing model and invokes `semantic_review.py run-worker`, which requests one
 separate ephemeral `gpt-5.6-luna` process at max reasoning for the complete
 selected packet. Never reconstruct or run the underlying `codex exec` command
-directly. The launcher is fail-closed to the pinned macOS build, Codex CLI and
-hash, Seatbelt and canary hashes, and deny-default profile hash. It uses a
+directly. The launcher checks actual isolation and required CLI capabilities on the
+current macOS and Codex, without fixed external version/build/hash gates.
+It records executable snapshots per run and rejects concurrent changes.
+The Vera-owned deny-default policy hash remains fixed. It uses a
 mode-`0700` capsule, prompt stdin, bounded parent capture, a read-only inner
 sandbox, ignored project rules, absent-or-empty global Codex instructions, and
 enumerated feature disables. Exact-read and outside-read-denial canaries run
@@ -307,7 +309,7 @@ matching, ledger replay, assurance, or final review.
 The boundary permits exact Codex authentication and installation-ID access and
 outbound network access, so the packet is transmitted to the OpenAI Codex
 service. The installation-ID file has the narrow write permission required by
-the pinned build but must remain byte-identical. The capsule is deleted after
+the running Codex build but must remain byte-identical. The capsule is deleted after
 the turn. The response, JSONL, stderr, and content-bound launch receipt are
 published together only after packet, source, runtime-input, executable, and
 boundary checks replay successfully.
