@@ -105,8 +105,13 @@ Before reporting a fix as working for a user:
      --skill-path <currently-exposed-SKILL.md>
    ```
 
-   This command rejects missing, disabled, duplicate, local or wrong-version
-   installations and missing or stale exposed skills. Run its unit regressions
+   This command rejects missing, disabled, duplicate or wrong-version
+   installations and missing or stale exposed skills. A deliberately selected
+   local candidate is valid for local acceptance. Add
+   `--expected-plugin-id vera@openai-curated-remote` (or the selected product's
+   actual registration) when verifying a specific distribution. A local pass
+   does not prove that an official Marketplace installation updated.
+   Run its unit regressions
    in CI; run the live command on the acceptance host after installation.
 3. After replacing an obsolete installation, use a fresh conversation and
    repeat the check there. Never substitute the new cache path into an old
@@ -117,11 +122,13 @@ Before reporting a fix as working for a user:
    prompting; a later request must reopen that saved report without rerunning
    the analysis. Backend receipts and saved file paths do not prove delivery.
 
-When repairing an authorized stale local installation, install the official
-plugin first, verify it is enabled at the expected version, and only then remove
-the obsolete local plugin registration and marketplace entry. Preserve user
-case files and tutorial data. Use supported plugin-management commands; never
-edit a generated cache or approve hook trust on the user's behalf.
+Update the user's selected distribution through supported plugin-management
+commands. Do not replace an intentional local installation with an official one
+or require Marketplace publication merely to test a local release candidate.
+If the user requests migration to the official distribution, install and verify
+it before removing the obsolete local registration. Preserve user case files
+and tutorial data. Never edit a generated cache or approve hook trust on the
+user's behalf.
 
 The release is not accepted on every user's computer merely because it passed
 on one host. Older copies, declined updates, disabled hooks and already-open

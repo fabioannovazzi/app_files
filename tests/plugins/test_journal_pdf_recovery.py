@@ -458,25 +458,58 @@ def test_recovery_requires_successful_exact_recipe_and_rejects_stale_source(
         recovery(source, out, "freeze", currency="EUR", layout=layout)
 
 
-def test_recovery_limits_attempts_and_retains_invalid_recipes(recovery, tmp_path):
+@pytest.mark.parametrize("prior_attempts", [4, 100])
+def test_recovery_accepts_new_evidence_after_prior_failures_and_keeps_history(
+    recovery, tmp_path, prior_attempts
+):
     source = tmp_path / "grid.pdf"
     layout = write_grid_pdf(source, pages=1)
     out = tmp_path / "out"
-    for number in range(4):
-        layout["rule_characters"]["tolerance"] = str(2 + number)
-        result = recovery(
+    invalid = copy.deepcopy(layout)
+    for number in range(prior_attempts):
+        invalid["rule_characters"]["tolerance"] = str(2 + number)
+        recovery(
             source,
             out,
             "trial",
             currency="EUR",
-            layout=layout,
+            layout=invalid,
             reason="Investigating rule geometry",
         )
-        assert result["diagnostics"]["reason"] == "invalid_reviewed_layout"
-    assert result["status"] == "exhausted"
-    with pytest.raises(ValueError, match="budget exhausted"):
-        recovery(source, out, "trial", currency="EUR", layout=layout, reason="retry")
-    assert len(list((out / "pdf_recovery").glob("attempt-*.json"))) == 4
+    retained = (out / "pdf_recovery/attempt-01.json").read_bytes()
+
+    result = recovery(
+        source,
+        out,
+        "trial",
+        currency="EUR",
+        layout=layout,
+        reason="Use the inspected source's complete physical layout",
+    )
+
+    assert result["status"] == "ready_to_freeze"
+    assert result["qualified"] is False
+    assert (
+        len(list((out / "pdf_recovery").glob("attempt-*.json"))) == prior_attempts + 1
+    )
+    assert (out / "pdf_recovery/attempt-01.json").read_bytes() == retained
+
+
+def test_recovery_can_inspect_more_than_twelve_regions_without_resetting_history(
+    recovery, tmp_path
+):
+    source = tmp_path / "grid.pdf"
+    write_grid_pdf(source, pages=1)
+    out = tmp_path / "out"
+    for _ in range(12):
+        recovery(source, out, "inspect", currency="EUR", pages=[1])
+    retained = (out / "pdf_recovery/inspection-01.json").read_bytes()
+
+    result = recovery(source, out, "inspect", currency="EUR", pages=[1])
+
+    assert result["status"] == "evidence_only"
+    assert len(list((out / "pdf_recovery").glob("inspection-*.json"))) == 13
+    assert (out / "pdf_recovery/inspection-01.json").read_bytes() == retained
 
 
 def test_recovery_does_not_repeat_an_identical_recipe(recovery, tmp_path):

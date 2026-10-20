@@ -20,8 +20,6 @@ __all__ = [
     "inspect_pdf_regions",
     "write_readable_entries",
 ]
-MAX_ATTEMPTS = 4
-MAX_INSPECTIONS = 12
 
 
 def write_readable_entries(path: Path, rows: list[dict[str, Any]]) -> None:
@@ -221,7 +219,7 @@ def recover_pdf(
     manifest = {
         "schema_version": "vera.pdf_recovery.v1",
         **identity,
-        "max_attempts": MAX_ATTEMPTS,
+        "max_attempts": None,
     }
     if manifest_path.exists():
         _file_digest(manifest_path)
@@ -233,7 +231,11 @@ def recover_pdf(
         _save(manifest_path, manifest)
     attempts = []
     previous = _digest(manifest)
-    for number, path in enumerate(sorted(root.glob("attempt-*.json")), 1):
+    history = sorted(
+        root.glob("attempt-*.json"),
+        key=lambda path: int(path.stem.removeprefix("attempt-")),
+    )
+    for number, path in enumerate(history, 1):
         _file_digest(path)
         event = json.loads(path.read_text())
         if (
@@ -252,8 +254,6 @@ def recover_pdf(
         attempts.append(event)
     if action in {"inspect", "inventory"}:
         existing = sorted(root.glob("inspection-*.json"))
-        if len(existing) >= MAX_INSPECTIONS:
-            raise ValueError("PDF recovery inspection budget exhausted")
         try:
             if action == "inventory":
                 from .adapter import source_inventory
@@ -359,8 +359,8 @@ def recover_pdf(
                 return receipt
         raise ValueError("Recovery recipe is already frozen; do not overwrite it")
     if action == "trial":
-        if len(attempts) >= MAX_ATTEMPTS:
-            raise ValueError("PDF recovery attempt budget exhausted")
+        # A distinct evidence-based revision can succeed after earlier failures.
+        # Counts are history, not a reason to refuse inspection or a new trial.
         if any(e["layout_sha256"] == layout_digest for e in attempts):
             raise ValueError(
                 "Identical recovery recipe already tried; inspect evidence before revising"
@@ -461,11 +461,7 @@ def recover_pdf(
             for item in attempts
             if item.get("readable_row_count", 0)
         ],
-        "status": (
-            "ready_to_freeze"
-            if diagnostics["accepted"]
-            else ("exhausted" if len(attempts) + 1 == MAX_ATTEMPTS else "revise_layout")
-        ),
+        "status": ("ready_to_freeze" if diagnostics["accepted"] else "revise_layout"),
     }
     _save(root / f"attempt-{len(attempts)+1:02}.json", result)
     result = {

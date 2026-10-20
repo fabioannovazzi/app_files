@@ -14,7 +14,10 @@ LOGGER = logging.getLogger(__name__)
 
 
 def inspect_installation(
-    inventory: dict[str, Any], product: str, expected_version: str
+    inventory: dict[str, Any],
+    product: str,
+    expected_version: str,
+    expected_plugin_id: str | None = None,
 ) -> list[str]:
     """Compare exact host identities, not cache directories or semantic claims."""
     if not isinstance(inventory, dict):
@@ -36,15 +39,10 @@ def inspect_installation(
         ]
     entry = enabled[0]
     failures = []
-    source = entry.get("source")
-    if (
-        entry.get("pluginId") != f"{product}@openai-curated-remote"
-        or not isinstance(source, dict)
-        or source.get("source") != "remote"
-    ):
+    if expected_plugin_id is not None and entry.get("pluginId") != expected_plugin_id:
         failures.append(
-            f"{product} uses {entry.get('pluginId')}, not the official Marketplace "
-            "installation. A local copy is not updated by Marketplace publication."
+            f"Enabled {product}: {entry.get('pluginId')}; "
+            f"expected installation {expected_plugin_id}."
         )
     if entry.get("version") != expected_version:
         failures.append(
@@ -79,6 +77,10 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("product", choices=("vera", "clara", "lucia"))
     parser.add_argument("--expected-version", required=True)
     parser.add_argument(
+        "--expected-plugin-id",
+        help="Expected registered installation, when testing a particular distribution.",
+    )
+    parser.add_argument(
         "--skill-path",
         type=Path,
         required=True,
@@ -95,7 +97,10 @@ def main(argv: list[str] | None = None) -> int:
             check=True,
         )
         failures = inspect_installation(
-            json.loads(result.stdout), args.product, args.expected_version
+            json.loads(result.stdout),
+            args.product,
+            args.expected_version,
+            args.expected_plugin_id,
         )
         failures.extend(
             inspect_skill(args.skill_path, args.product, args.expected_version)
@@ -109,7 +114,7 @@ def main(argv: list[str] | None = None) -> int:
             LOGGER.error(failure)
         return 1
     LOGGER.info(
-        "%s %s: one enabled official installation and matching exposed skill. "
+        "%s %s: one enabled installation and matching exposed skill. "
         "User-visible behavior still requires the acceptance run.",
         args.product,
         args.expected_version,

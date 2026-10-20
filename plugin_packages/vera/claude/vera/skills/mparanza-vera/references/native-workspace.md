@@ -10,6 +10,11 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Native workspace in Claude
 
+Use the callable tools and current returned state to determine availability.
+Historical development checkpoint results do not disable a repaired route.
+When a current operation fails, retain its exact error and use the maintained
+specialist route while addressing that failure.
+
 ## Variance Analysis
 
 `vera_workspace_variance_setup` consumes exact registered source and comparison
@@ -1275,24 +1280,18 @@ writes, orphaned retained bytes and changed historical receipts need ordinary
 recovery and never repeat automatically.
 
 Local declared review remains `LOCAL_OPERATOR_ASSERTION_NOT_PROFESSIONAL_AUTHENTICATION`;
-synthetic review stays labelled `SYNTHETIC_ACCEPTANCE`. Real calculation still
-requires the producer's current-source/reviewed-rule checks and actual external
-professional signature plus firm-issued mandate. Native actor identity and a
-review ticket are not that mandate. No real authority configuration, signing
-keys or certificate policy is created. Formalities reuse the existing external
-firm configuration; approval, signed dossier formalities, statutory retention,
-tax filing and technical Archive completion remain distinct.
+synthetic review stays labelled `SYNTHETIC_ACCEPTANCE`. Real calculation requires
+the producer's current-source/reviewed-rule checks and the user's recorded
+confirmation of the exact current proposal. The native local review label alone
+does not provide that confirmation. The optional signed-document formalities
+route uses an existing external firm configuration; it is separate from draft
+calculation, dossier preparation, tax filing and technical Archive completion.
 
-The new source suite has 12 passes and one retained failure. Actual fictional
-Archive/MCP cases produce the unchanged synthetic deduction and Word/PDF draft,
-retain earlier bytes, restore private drafts without consent, refuse viewer
-writes and real calculation based only on local review, and reject stale drafts
-or altered outputs. A separate domain API check rejects a pending producer
-intent before closure. The actual MCP closure route still fails earlier because
-its existing injected API has no `digest`; the previously prepared source
-correction remains unapplied under AGENTS.md. Shared `workspace.js` also retains
-its earlier syntax fault. These checks do not prove rendered native controls,
-model-context handoff, installed-host acceptance or professional UAT.
+The source adapter preserves earlier bytes, restores private drafts without
+consent, refuses viewer writes and calculation without the exact proposal
+confirmation, and rejects stale drafts or altered outputs. Pending producer
+intents must be resolved before Archive closure. Source regressions do not prove
+installed-host acceptance or professional UAT.
 
 ### Patent Box — typed controls checkpoint, 8 October 2026
 
@@ -1303,21 +1302,12 @@ fresh model authoring and new PDF cell extraction remain specialist tasks.
 Changes clear confirmation, and review/calculation require the selected full
 proposal and review preview. Saved incomplete fields reopen without consent.
 Six app-only routes include full bounded PDF/Word byte delivery with matching
-SHA-256 and byte count. Signed decision and mandate references must already
-exist in the owned output; native import and positive signed acceptance remain
-pending.
+SHA-256 and byte count. A selected signed-document formalities operation requires
+its actual retained decision and mandate references.
 
-The source/UI selection has 20 passes and one retained shared closure `digest`
-failure. A standalone browser probe against the actual source MCP and a fictional
-Archive run retained a labelled synthetic review, produced the unchanged draft
-calculation and Word/PDF files, and preserved all seven prior output hashes.
-Both draft links passed client byte verification; two supported browser download
-attempts timed out, so browser download completion is unverified. This probe
-loaded the maintained component independently because shared `workspace.js`
-still has its previously retained syntax fault. It does not prove installed
-native host, model authoring, real professional acceptance or release readiness.
-The wider Bandi selection has 29 passes and 20 failures at its previously
-documented missing `output_dir` context loader; its correction remains unapplied.
+Verify displayed files and their downloads in the active host. A local source
+or component test does not establish installed native-host behavior, model
+authoring, professional acceptance or release readiness.
 
 ### Patent Box — specialist authoring checkpoint, 8 October 2026
 
@@ -1359,7 +1349,13 @@ The fresh fictional browser probe also qualified literal question and selection 
 
 Communications belong to the existing private studio-wide workspace, never a client engagement. The new six app-only routes use the trusted host `VERA_COMMUNICATION_WORKSPACE_BINDINGS` JSON file with tenant_id, actor_id and exact bindings[{work_ref,workspace,workspace_id,run_id}]. They do not scan prior history, client directories or mailboxes, initialize a second profile store, call a model, send or publish. The maintained public helpers retain semantic-matrix, render, profile-promotion, package and validation contracts, including no_publish completion without inventing package approval. Uncertain write intents are retained and must not be retried automatically.
 
-This adapter is currently **unqualified**: 1/13 actual source checks passed; 12 failed because the native evidence revision includes the public writer's mutable PID/time lock file. Correction 14 is prepared but unapplied under AGENTS.md. The independent event UI on a declared fictional transport passed 5/5; this does not establish source operation or native-host acceptance. Continue the maintained file-based specialist workflow until the source defect is corrected and regression-qualified. Initial native intake, separate model phases, model-data-report delivery, browser/installed-host checks, independent Cowork checks and release are pending. Evidence: `docs/releases/2026-10-08-native-workspace-communication-review-evidence.json`.
+The evidence revision excludes only the maintained writer's two fixed PID/time
+lock locations, while retaining their path/link checks and the hashes of actual
+work records. Routine lock updates therefore do not invalidate the selected
+review. Use the optional panel for the bound existing run; initial intake and
+model phases use the maintained specialist workflow. Source/UI tests exercise
+the public recorders and exact retry behavior; verify installed-host behavior
+in the actual host.
 
 
 ## Studio-wide website review checkpoint
@@ -1463,13 +1459,10 @@ review gates remain outstanding; no new release ZIP, deployment or Marketplace
 publication is qualified by this checkpoint. See
 `docs/releases/2026-10-08-native-workspace-transformation-evidence.json`.
 
-The subsequent initial-setup checkpoint passed 102 distinct source/UI/public
-cases and created and resumed a deliberately fictional case through the actual
-source MCP and standalone browser. The ordinary case revision currently omits
-the two new initial adapters from its code identity; its prepared repair is
-unapplied under AGENTS.md. Shared ticket/renderer repairs, full package checks
-and installed-host acceptance remain pending. See
-`docs/releases/2026-10-08-native-workspace-transformation-initial-evidence.json`.
+The ordinary case revision includes both initial-setup adapters in its code
+identity. Creation and resumption use the public synthetic-case store and
+preserve the exact case identity. Verify installed-host operation separately
+from source tests.
 
 The source-import editor chooses among exact host-bound files without a default.
 Literal evidence id, source reference, origin and locator use the same private
@@ -1497,16 +1490,16 @@ and hashes; original bytes require a separate model read. No automatic source
 relevance choice or anonymization occurs.
 
 Private proposal code permits only the granted `update_case`, `put`, `branch`
-or `import_evidence` preparation. It intends to replay the unchanged producer
+or `import_evidence` preparation. It replays the unchanged producer
 on a disposable complete case copy, retain all proposals and permit a separately
 confirmed copy into completely empty canonical edit fields. Operator attribution,
 review decision and execution consent remain empty. Public conservation,
 submission, separate review and export retain their original human actions.
-Current Mac source staging fails before replay because the temporary-directory
-alias violates the strict path guard. Its one-line candidate correction resolves
-only the helper-created directory and remains unapplied under AGENTS.md. The
-candidate-only probe exercises isolated valid/invalid replay and unchanged
-source-link rejection; it does not qualify canonical MCP staging or adoption.
+The helper resolves its own temporary-directory path before replay, including
+the macOS temporary-directory alias. Original source links remain subject to
+the existing checks. Transformation uses its own synthetic workspace and is
+outside the fixed privacy-report pipeline list; its model-visible routes do
+not require an unrelated Studio Archive run.
 
 Request preparation is retained before optional host `ui/message` dispatch.
 Unsupported hosts display a copyable prompt. A prepared request blocks automatic
@@ -1514,13 +1507,9 @@ duplicate dispatch after reopening, and never claims model receipt or execution.
 Withdrawal blocks model access while preserving the complete private ledger.
 Interrupted private request writes retain uncertainty and refuse repetition.
 
-Current evidence retains six source staging failures; thirty fictional UI
-event cases pass, including seven new authoring cases. Explicit context, source
-selection, scope changes, expiry, viewer refusal and interrupted request checks
-are narrower than working proposal staging. Whole shared renderer/ticket repairs,
-readable model-data report integration, localization, fresh independent packages,
-actual model execution and installed-host acceptance remain pending. Evidence:
-`docs/releases/2026-10-08-native-workspace-transformation-author-evidence.json`.
+Source regressions cover explicit context, proposal staging and adoption,
+selected sources, scope changes, expiry, viewer refusal and interrupted requests.
+They do not establish actual model execution or installed-host acceptance.
 
 The later panel-language checkpoint adds 247 fixed interface-copy entries for
 Italian, English, French, German and Spanish. All five views set their own
@@ -1532,18 +1521,10 @@ The localized copyable model request retains its exact opaque references and
 tool/field names. Panel language is session state, not a new case-language,
 jurisdiction or professional-treatment decision.
 
-Fifty-six fictional UI cases pass, including 26 language cases. Fresh actual
-source MCP tests pass 62/68 with the same six staging failures, and 46 unchanged
-public regressions are retained separately. A current standalone source-MCP
-browser with the real shared dropdown helper verifies all five 390px views,
-literal draft recovery without consent and complete 73-item alternatives.
-The French question view retains only the selected source and saves no model
-grant or public write. This is component/browser evidence, not installed-host
-or actual model acceptance. Temporary browser/processes are closed afterward.
-The Mac staging, ordinary initialization-hash, shared renderer/ticket and
-desktop nested-grid repairs remain unapplied. Full model-data report and
-independent package/host/release gates remain pending. Evidence:
-`docs/releases/2026-10-08-native-workspace-transformation-localization-evidence.json`.
+Exercise the localized views in the active host, including narrow layouts,
+complete alternatives and literal draft recovery. Changing language must
+preserve the selected sources without creating a model grant or public write.
+Component tests do not establish installed-host or actual model acceptance.
 
 ## Rating di legalità — source checkpoint, 8 October 2026
 

@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/journal-sampling/references/pdf-recovery.md",
-      "sha256": "5d8c82e6f5cb162779d68fe1dccc2c5be1c8ae2328c688cc93172f8b952da67a"
+      "sha256": "2956b5d797a9c09bae360779d07db6427e1b189331d3445cba419ac58a4ae8c3"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -124,7 +124,7 @@
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -148,7 +148,7 @@
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "modules/journal-sampling/vendor/modules/vera_journal_pdf/rules.py",
@@ -276,7 +276,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -316,7 +316,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -561,5 +561,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "40c7a11ef4d0509278ce5c3e14d5abbbf1e9ee3c2baa891e9e62e8a9f4d3005f"
+  "canonical_course_sha256": "d323dac23a6aa5e96e661d80bbf843644bc6c3d3c83b3779d5400fc2589780b8"
 }

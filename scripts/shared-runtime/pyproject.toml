@@ -71,7 +71,8 @@ dependencies = [
   "xlsxwriter",
   "xlsxwriter>=3.2",
   "chardet>=3,<6",
-  "tzdata>=2024.1"
+  "tzdata>=2024.1",
+  "packaging>=23"
 ]
 [project.optional-dependencies]
 ocr = [

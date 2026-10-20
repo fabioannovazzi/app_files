@@ -33,17 +33,38 @@ def entry(*, version="0.1.253", marketplace="openai-curated-remote", enabled=Tru
         [],
         [entry(enabled=False)],
         [entry(version="0.1.219")],
-        [entry(marketplace="mp-vera")],
         [entry(), entry(marketplace="mp-vera")],
     ],
 )
-def test_rejects_missing_disabled_stale_local_and_duplicate_installations(installed):
+def test_rejects_missing_disabled_stale_and_duplicate_installations(installed):
     assert checker.inspect_installation({"installed": installed}, "vera", "0.1.253")
 
 
 def test_accepts_one_official_version_and_ignores_disabled_old_installation():
     inventory = {"installed": [entry(), entry(marketplace="mp-vera", enabled=False)]}
     assert checker.inspect_installation(inventory, "vera", "0.1.253") == []
+
+
+def test_accepts_the_enabled_local_candidate_without_marketplace_publication():
+    inventory = {"installed": [entry(marketplace="mp-vera")]}
+
+    failures = checker.inspect_installation(
+        inventory, "vera", "0.1.253", "vera@mp-vera"
+    )
+
+    assert failures == []
+
+
+def test_local_candidate_does_not_prove_the_official_distribution_updated():
+    inventory = {"installed": [entry(marketplace="mp-vera")]}
+
+    failures = checker.inspect_installation(
+        inventory, "vera", "0.1.253", "vera@openai-curated-remote"
+    )
+
+    assert failures == [
+        "Enabled vera: vera@mp-vera; expected installation vera@openai-curated-remote."
+    ]
 
 
 def test_missing_inventory_is_not_a_pass():

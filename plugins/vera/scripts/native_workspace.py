@@ -2623,8 +2623,15 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     return current
 
 
-def _reporting_case(args: dict[str, Any]) -> dict[str, Any]:
+def _reporting_case(args: dict[str, Any]) -> dict[str, Any] | None:
     """Resolve the same authorised work binding used by the actual operation."""
+    # These dispatch routes have their own workspaces and no Archive run.
+    # Their workflows are outside the fixed 13-pipeline reporting scope.
+    # The MCP server supplies the actual operation, never a caller override.
+    if args.get("operation", "").startswith(
+        ("vera_workspace_transformation_", "vera_workspace_practice_")
+    ):
+        return None
     config = configuration()
     if config["mode"] == "studio-archive":
         from native_archive_navigation import resolve_binding
@@ -2645,6 +2652,8 @@ def bind_model_output(args: dict[str, Any]) -> dict[str, Any] | None:
     from archive_emit import bind_output
 
     loaded = _reporting_case(args)
+    if loaded is None:
+        return None
     return bind_output(
         loaded["run"]["workflow_id"], {"client_engagement": loaded["context_path"]}
     )
@@ -2655,6 +2664,8 @@ def record_model_output(args: dict[str, Any]) -> dict[str, Any]:
     from archive_emit import record_output
 
     loaded = _reporting_case(args)
+    if loaded is None:
+        return {"recorded": False}
     record_output(
         loaded["run"]["workflow_id"],
         {"client_engagement": loaded["context_path"]},

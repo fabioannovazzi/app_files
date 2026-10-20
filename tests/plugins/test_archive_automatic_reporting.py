@@ -34,6 +34,48 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+@pytest.mark.parametrize(
+    "operation",
+    [
+        "vera_workspace_transformation_author_context",
+        "vera_workspace_transformation_author_stage",
+        "vera_workspace_practice_context",
+    ],
+)
+def test_non_archive_model_response_does_not_require_an_archive_run(
+    monkeypatch, operation
+):
+    import native_workspace
+
+    def no_archive():
+        raise PermissionError("No Archive workspace is connected")
+
+    monkeypatch.setattr(native_workspace, "configuration", no_archive)
+    args = {"operation": operation, "work_ref": "separately-authorized-work"}
+
+    binding = native_workspace.bind_model_output(args)
+
+    assert binding is None
+
+
+def test_reportable_model_response_still_requires_its_authorized_archive(
+    monkeypatch,
+):
+    import native_workspace
+
+    def no_archive():
+        raise PermissionError("No Archive workspace is connected")
+
+    monkeypatch.setattr(native_workspace, "configuration", no_archive)
+    args = {
+        "operation": "vera_workspace_bank_explain",
+        "work_ref": "unconnected-bank-run",
+    }
+
+    with pytest.raises(PermissionError, match="No Archive workspace"):
+        native_workspace.bind_model_output(args)
+
+
 @pytest.fixture(autouse=True)
 def reporting_runtime(tmp_path, monkeypatch, archive_script_imports):
     import archive_report_receipt

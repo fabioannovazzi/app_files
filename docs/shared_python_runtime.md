@@ -9,19 +9,26 @@ share native binaries or this filesystem environment.
 `requirements-shared-core.txt` is the union of the products and their non-OCR
 optional requirements. `requirements-shared-ocr.txt` enables OCR in the same
 interpreter after approval. Enabled OCR persists across subsequent updates.
-macOS uses the checked-in Python 3.12 constraints. Windows/Linux resolve the same
-published requirements; native acceptance must be tested on those hosts.
+Fresh installation and dependency repair use the published, SHA-256-checked
+shared lock files on every supported platform. Platform markers select native
+variants; native acceptance must still be tested on those hosts.
 
 All three products must ship byte-identical shared recipes, constraints and
 `_shared_python_runtime.py`. Increment `POLICY_REVISION` together whenever any of
-these files changes. Older policies cannot replace newer ones, and conflicting
-recipes with the same revision are rejected before modifying installed packages.
+these files changes. The revision records installation history; it never decides
+whether a workflow can run. Reuse a completed environment when its actual package
+inventory matches its completed installation receipt, its package versions
+satisfy the declared requirements, and the selected component's imports work,
+even if another product installed a newer or different recipe. Reuse leaves the
+existing policy, receipt and enabled OCR unchanged. Only a missing dependency,
+an incompatible package, changed installed inventory or an incomplete
+installation triggers managed repair.
 
 Launch setup from base Python through `scripts/managed_python_runtime.py install`.
 Use `--requirements requirements-shared-ocr.txt install` to enable approved OCR.
 Run workflow helpers through the same launcher. Managed Python processes hold a
-reader lease until exit; setup requires the exclusive lock and returns a busy
-error after 60 seconds if workflows are still running. Externally activated OCR
+reader lease until exit; setup requires the exclusive lock and waits up to
+30 minutes if workflows or another installer are still running. Externally activated OCR
 also holds a reader lease. The startup hook is concurrency protection, not an
 isolation or security boundary between client matters.
 
@@ -49,8 +56,9 @@ compatibility still requires acceptance testing on each supported platform.
 ## Launcher-independent interpreter identity (policy revision 4)
 
 For an existing environment, readiness and setup probe that environment's Python
-executable. They verify CPython 3.12 and compare its platform with both the ready
-receipt and feature policy. They do not infer native compatibility from the
+executable. They verify CPython 3.12 and record its platform when installing.
+The ready receipt and feature policy must describe the same completed
+installation. They do not infer native compatibility from the
 Python used to launch the command. On cold start, discovery or automatic
 provisioning selects Python first; its verified identity is recorded in policy,
 and the created venv is checked against that identity before installing packages.
@@ -59,23 +67,29 @@ The identity probe uses `-I -S`: it ignores caller Python configuration and does
 not load site hooks, including the managed reader lease. This prevents a probe
 from deadlocking while setup owns the writer lock. Actual workflow processes
 still take the normal reader lease. An unavailable interpreter, wrong Python
-implementation/minor version, or recorded platform mismatch fails before receipt
-or policy mutation. A real platform change still requires explicit maintenance.
+implementation/minor version fails before receipt or policy mutation. A changed
+platform label does not require a rebuild: the selected interpreter, declared
+package versions and component imports are checked directly. Compatible reuse
+preserves installation history. If a dependency really fails, setup repairs it
+under the same writer lock and records the current interpreter identity.
 
 Revision 4 updates the backend hash, so the first upgrade from revision 3 follows
 the existing serialized recipe-update path after active workflows finish, keeps
 the same interpreter and enabled OCR, and validates before restoring readiness.
-Deploy the three product packages together; older policies cannot downgrade it.
+Deploy the three product packages together. Compatible environments are reused
+without changing their recorded installation history.
 No shared runtime is rebuilt merely because the launcher's platform differs.
 
 
 ## Revision 7: repair the LIPE recipe upgrade
 
 The LIPE release added `tzdata>=2024.1` while keeping revision 6. Machines
-already using the preceding revision-6 recipe correctly rejected this conflict.
-Revision 7 lets the managed installer upgrade that existing environment under
+already using the preceding revision-6 recipe rejected this conflict.
+Revision 7 originally let the managed installer upgrade that existing environment under
 its writer lock, retain enabled OCR and validate dependencies before restoring
-readiness. Do not remove metadata or create a separate environment to bypass it.
+readiness. Current execution checks the installed dependencies directly instead
+of rejecting a recipe revision. Do not remove metadata or create a separate
+environment to bypass a failed installation.
 
 `scripts/check_shared_runtime_revision.py --base-ref <previous-commit>` rejects
 changed shared recipes, macOS constraints or backend code without a strictly

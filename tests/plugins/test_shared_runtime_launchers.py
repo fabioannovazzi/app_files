@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import importlib.metadata
 import importlib.util
 import json
 import os
@@ -9,6 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import packaging
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -124,11 +126,20 @@ def installed_fixture(tmp_path, product, monkeypatch):
     site = path / (
         "Lib/site-packages" if os.name == "nt" else "lib/python3.12/site-packages"
     )
+    # Requirement inspection runs inside the managed interpreter. Supply its
+    # declared parser dependency without downloading packages in this fixture.
+    shutil.copytree(Path(packaging.__file__).parent, site / "packaging")
+    distribution = importlib.metadata.distribution("packaging")
+    metadata_file = next(item for item in distribution.files if item.name == "METADATA")
+    shutil.copytree(
+        Path(distribution.locate_file(metadata_file)).parent,
+        site / metadata_file.parent.name,
+    )
     (site / "_mparanza_runtime_guard.py").write_text(shared.GUARD)
     (site / "00_mparanza_runtime.pth").write_text("import _mparanza_runtime_guard\n")
     data = {
         "features": ["core", "ocr"],
-        "installed_distributions": [],
+        "installed_distributions": api._resolved_dependencies(path),
         "recipes": shared._recipes(root, {"core", "ocr"}),
         "runtime_key": api.runtime_key(str(api.runtime_python(path))),
         "revision": shared.POLICY_REVISION,

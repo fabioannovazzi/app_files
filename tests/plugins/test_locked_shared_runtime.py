@@ -97,9 +97,9 @@ def test_inventory_drift_requires_repair_and_install_uses_hash_lock(tmp_path):
     shared, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = tmp_path / "runtime/venv"
     assert shared.ensure(selection, path, api, runner)[0]
-    assert shared.ready(selection, path, api)
+    assert shared.ready(selection, path, api, runner)
     api._resolved_dependencies = lambda _: [{"name": "numpy", "version": "999"}]
-    assert not shared.ready(selection, path, api)
+    assert not shared.ready(selection, path, api, runner)
     install = next(call for call in calls if "install" in call)
     assert "--require-hashes" in install
     assert install[-1].endswith("requirements-shared-core.lock")
@@ -140,7 +140,7 @@ def test_upgrade_removes_obsolete_managed_packages_and_retains_installer(tmp_pat
     ok, _, detail = shared.ensure(selection, path, api, install)
     assert ok, detail
     assert removed[0][-1] == "old-plugin-dep"
-    assert shared.ready(selection, path, api)
+    assert shared.ready(selection, path, api, runner)
 
 
 def test_concurrent_setup_waits_then_reuses_completed_install(tmp_path):

@@ -9,6 +9,9 @@
     "scripts/managed_python_runtime.py",
     "skills/lucia/SKILL.md",
     "scripts/_shared_python_runtime.py",
+    "scripts/_locked_dependencies.py",
+    "requirements-shared-core.lock",
+    "requirements-shared-ocr.lock",
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
@@ -43,7 +46,7 @@
       "controls": [
         "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
         "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
-        "Readiness probes the managed interpreter locally with isolated Python and site loading disabled, verifies CPython 3.12 and its platform against both receipt and policy, and validates common recipes and enabled features independently of the initial launcher.",
+        "Readiness probes the managed CPython 3.12 interpreter locally with isolated Python and site loading disabled, checks completed installation metadata, then checks the selected declared package versions and component imports in that interpreter. Recipe revisions, backend bytes and historical platform labels do not block a compatible environment. Compatible reuse leaves installation receipts unchanged; actual missing or incompatible dependencies require serialized repair.",
         "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
       ]
     },
@@ -168,6 +171,6 @@
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "997d824e4a2d05aee470d8e95c140cae89eb51ce7de105034954f53d4a8777bb"
+    "source_fingerprint": "65695a19b811642f1b757cb33c319e3cf6a32fd68272ff35c04f935494090e05"
   }
 }

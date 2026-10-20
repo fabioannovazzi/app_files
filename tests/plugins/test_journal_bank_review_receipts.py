@@ -48,7 +48,16 @@ def _runtime_environment(root: Path, tmp_path: Path) -> dict[str, str]:
         "installed_distributions": runtime._resolved_dependencies(target),
     }
     (target / shared.RECEIPT).write_text(json.dumps(receipt))
-    (runtime_root / shared.POLICY).write_text(json.dumps({"runtime_key": key}))
+    (runtime_root / shared.POLICY).write_text(
+        json.dumps(
+            {
+                "runtime_key": key,
+                "features": receipt["features"],
+                "recipes": receipt["recipes"],
+                "revision": shared.POLICY_REVISION,
+            }
+        )
+    )
     return {
         **os.environ,
         "MPARANZA_RUNTIME_ROOT": str(runtime_root),

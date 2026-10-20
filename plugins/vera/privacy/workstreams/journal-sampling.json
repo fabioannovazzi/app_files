@@ -52,7 +52,7 @@
       {
         "id": "registration-pdf-layout-review",
         "purpose": "Review the physical layout of a text-PDF accounting journal before local reconstruction",
-        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most ten reconstructed postings for sampling. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests. During layout recovery, the model can request up to three pages or regions per inspection, with at most 300 words and 1,200 characters with coordinates per page, and images of requested regions. It also receives proposed recipes and trial diagnostics; the history stays in the case workspace. Four trials and twelve inspections are allowed. This data is not anonymized and this procedure does not send it to developers. Local negative-amount eligibility scans retain every unsupported notation or unreviewed sign location in the diagnostics. Recovery responses expose at most 50 issues with page, row, amount band, printed token, notation and reason; full retained diagnostics can be opened for a specific unresolved question. Recipes expose both reviewed negative notation and sign semantics. No additional model API call or external destination is introduced.",
+        "content": "Bounded PDF layout evidence: at most 300 words from each of the first two and final pages, capped at 100 characters per word, their x/top coordinates, page dimensions, source SHA-256, page count and truncation status. Layout coordinates and printed header/footer labels are reviewed by the host model; no column semantics are inferred from number clusters. A dry-run preview contains at most ten reconstructed postings for sampling. Entire registration reconstruction and exact debit/credit closure run locally, preserving source page/row lineage. Case names and accounting text in the sampled words are not anonymized. The helper makes no direct model API calls or new external-service requests. During layout recovery, the model can request up to three pages or regions per inspection, with at most 300 words and 1,200 characters with coordinates per page, and images of requested regions. It also receives proposed recipes and trial diagnostics; the history stays in the case workspace. Distinct evidence-based trials and targeted inspections retain their complete history without a fixed lifetime count; each inspection keeps the same per-call page, word and character bounds. This data is not anonymized and this procedure does not send it to developers. Local negative-amount eligibility scans retain every unsupported notation or unreviewed sign location in the diagnostics. Recovery responses expose at most 50 issues with page, row, amount band, printed token, notation and reason; full retained diagnostics can be opened for a specific unresolved question. Recipes expose both reviewed negative notation and sign semantics. No additional model API call or external destination is introduced.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -142,10 +142,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-19",
+    "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "028173a31b6440c9e298c0868efa96f5d597a9df968e23579a28e2484d6a2786"
+    "source_fingerprint": "6a0a266d89c595d1a10ed496044f185115c6161a952f561095a01924ebbd253b"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

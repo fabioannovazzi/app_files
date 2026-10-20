@@ -60,10 +60,11 @@ def _decimal(value: object, *, label: str, non_negative: bool = True) -> Decimal
     return result
 
 
-def _optional_identifier(value: object, *, label: str) -> str | None:
+def _optional_reference(value: object, *, label: str) -> str | None:
+    """Preserve source labels for exact equality; these are not paths or IDs."""
     if value is None:
         return None
-    return _identifier(value, label=label)
+    return _text(value, label=label)
 
 
 def _record(value: object, *, label: str) -> dict[str, Any]:
@@ -84,12 +85,10 @@ def _record(value: object, *, label: str) -> dict[str, Any]:
         "amount": decimal_text(amount),
         "currency": _identifier(item["currency"], label=f"{label}.currency"),
         "unit": _identifier(item["unit"], label=f"{label}.unit"),
-        "entity_ref": _optional_identifier(
+        "entity_ref": _optional_reference(
             item["entity_ref"], label=f"{label}.entity_ref"
         ),
-        "party_ref": _optional_identifier(
-            item["party_ref"], label=f"{label}.party_ref"
-        ),
+        "party_ref": _optional_reference(item["party_ref"], label=f"{label}.party_ref"),
     }
 
 

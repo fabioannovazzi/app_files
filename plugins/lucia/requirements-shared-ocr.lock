@@ -699,6 +699,7 @@ packaging==26.3 \
     #   kaleido
     #   matplotlib
     #   modelscope
+    #   mparanza-shared-runtime
     #   paddlex
     #   plotly
     #   xarray

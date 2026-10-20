@@ -431,6 +431,7 @@ packaging==26.3 \
     #   datashader
     #   kaleido
     #   matplotlib
+    #   mparanza-shared-runtime
     #   plotly
     #   xarray
 pandas==3.0.5 \

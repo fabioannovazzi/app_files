@@ -25,7 +25,12 @@ managed workflow packages under the exclusive installation lock, runs pip check
 and the selected component's dependency check, then publishes its ready receipt.
 Installer tools pip/setuptools/wheel may remain unless explicitly governed by the
 lock. Subsequent launches compare actual installed distributions with that
-receipt. Inherited PYTHONPATH and user site-packages cannot alter helper imports.
+receipt and check the selected component's requirements and imports. A different
+plugin's recipe, policy revision or recorded platform label alone does not
+invalidate a compatible installation. Reuse preserves the existing receipt and
+policy; actual missing/incompatible dependencies or inventory drift trigger
+serialized repair from the published lock. Inherited PYTHONPATH and user
+site-packages cannot alter helper imports.
 Failure leaves the ready receipt invalid. Running workflows hold reader leases;
 setup waits up to 30 minutes for another setup/workflow to finish. A waiting
 installer rechecks readiness and reuses a completed installation.
