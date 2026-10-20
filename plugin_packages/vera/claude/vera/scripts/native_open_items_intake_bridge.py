@@ -4,13 +4,14 @@ from __future__ import annotations
 
 import json
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
 from typing import Any
 
 __all__ = ["main"]
 
 
-def main() -> None:
+def _execute() -> dict[str, Any]:
     """Retain all public outputs; source meaning stays explicitly reviewed."""
     root = Path(sys.argv[1])
     sys.path.insert(0, str(root / "scripts"))
@@ -56,6 +57,13 @@ def main() -> None:
         }
     else:
         raise ValueError("Unknown Open-item intake operation")
+    return result
+
+
+def main() -> None:
+    """Reserve stdout for JSON; retain dependency diagnostics on stderr."""
+    with redirect_stdout(sys.stderr):
+        result = _execute()
     sys.stdout.write(json.dumps(result, ensure_ascii=False))
 
 

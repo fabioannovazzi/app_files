@@ -64,12 +64,12 @@
     {
       "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
       "repository_path": "plugins/open-item-reconciliation/references/tabular-source-layout.md",
-      "sha256": "34798022e35e817335022cf8e6bbb4baf1a52a1591e352080cb4113d9f3e9894"
+      "sha256": "fbd2ab2c30ab8999069affabd317f6351d2207adbecae9970a157e24f2ebb21f"
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "92be695a5f3559c85e834c4f82a2616717f87b9e45c5eac2aa27ae51734665ba"
+      "sha256": "a3046b13d6b57543f3a0e47a40d0e7e0d25fb07a839d3ba34af024f2ad15529c"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -79,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "502420950c6b30ccd7c39b7b27c53db5fa27a16efe16a894c9dcaf0d34bb0d8b"
+      "sha256": "4a44d415747a5d0a3ae0e2e1a02b00069790eae9a1ca579f94bee3be7ce8f4e7"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "0070418c1b9daccec05849da05ecec2069d5f40a630af9a89c27db38bf12e79e"
+      "sha256": "9bf91378dba0f8cb359a666c224409dc84baa72070f2992fc3223c3b42f7f71b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",

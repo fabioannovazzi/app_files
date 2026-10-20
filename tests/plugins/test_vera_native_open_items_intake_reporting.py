@@ -48,6 +48,7 @@ def test_native_intake_calculates_multi_party_csv_with_recorded_agent_review(
         del choice["reviewer_ref"]
         del choice["reviewed_on"]
         choice["perimeter"]["party_ref"] = None
+        choice["money"]["thousands_separator"] = None
         choice["tabular"]["columns"]["party_ref"] = "PartyX"
     ledger = _load_customer_ledger()
     client = tmp_path / "Fictional CSV client"

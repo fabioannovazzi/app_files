@@ -21,6 +21,22 @@ For every source, record a `reviewed_source_decisions` entry with exactly:
   `0.01`;
 - `date.order`: exactly `day_first` or `month_first`.
 
+The accepted `direction_policy` values are `customer`, `supplier`, `receivable`,
+`payable`, `debit`, `credit`, `source_signed` and `not_applicable`. Open-item
+populations require a direction other than `not_applicable`. The accepted
+`allocation_policy` values are `one_to_one`, `one_to_many`, `many_to_one`,
+`many_to_many` and `not_applicable`; declaring a shape does not prove a match.
+Choose these from the supplied source meaning, not from filename patterns.
+
+Money separators are `"."`, `","` or JSON `null`; use `null` for an absent
+thousands separator, not an empty string or a space. Decimal and thousands
+separators cannot be identical when both are declared. `reported_unit` and
+`perimeter.unit` are explicit nonempty unit labels; preserve the same reviewed
+unit across sources being compared. `entity_ref` and `party_ref` can be null
+when the evidence does not supply a common identity; a mapped row party follows
+the tabular contract below. These source-review choices can be recorded by the
+agent and do not imply human approval.
+
 For `reviewed_tabular_accounting_v1`, add exactly one `tabular` object with
 reviewed header/row/sheet/delimiter selectors, canonical columns and explicit
 evidence-type choices. Follow `tabular-source-layout.md`. It admits bounded

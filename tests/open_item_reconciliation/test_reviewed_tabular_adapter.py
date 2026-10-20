@@ -94,6 +94,75 @@ def reviewed(assurance, path, value):
     return receipts, decisions[path.name]
 
 
+@pytest.mark.parametrize(
+    "key_style", ["relative", "absolute", "absolute_native", "both_identical"]
+)
+def test_nested_source_review_keeps_exact_receipt_identity(tmp_path, key_style):
+    a = load_assurance()
+    source = tmp_path / "inputs"
+    path = source / "imports/input_a/population.csv"
+    path.parent.mkdir(parents=True)
+    write_source(path)
+    relative = path.relative_to(source).as_posix()
+    choice = spec(path)
+    keys = {
+        "relative": [relative],
+        "absolute": [path.as_posix()],
+        "absolute_native": [str(path)],
+        "both_identical": [relative, path.as_posix(), str(path)],
+    }[key_style]
+    receipts = a.build_source_receipts(source, [path])
+
+    decisions, errors = a.build_reviewed_source_decisions(
+        input_root=source,
+        source_receipts=receipts,
+        adapter_families={relative: "reviewed_tabular_accounting_v1"},
+        assumptions={
+            "assurance_run_date": "2026-10-21",
+            "reviewed_source_decisions": {key: choice for key in keys},
+        },
+    )
+
+    assert errors == {}
+    assert list(decisions) == [relative]
+    assert decisions[relative]["content"]["source_path"] == relative
+    assert decisions[relative]["source_artifact_refs"] == [receipts[0]["artifact_id"]]
+
+
+@pytest.mark.parametrize(
+    "key_style", ["foreign_absolute", "basename", "conflicting_aliases"]
+)
+def test_nested_source_review_does_not_substitute_other_mapping(tmp_path, key_style):
+    a = load_assurance()
+    source = tmp_path / "inputs"
+    path = source / "imports/input_a/population.csv"
+    path.parent.mkdir(parents=True)
+    write_source(path)
+    relative = path.relative_to(source).as_posix()
+    choice = spec(path)
+    conflicting = copy.deepcopy(choice)
+    conflicting["perimeter"]["party_ref"] = "party.other"
+    selections = {
+        "foreign_absolute": {str(tmp_path / "other_run/inputs" / relative): choice},
+        "basename": {path.name: choice},
+        "conflicting_aliases": {relative: choice, path.as_posix(): conflicting},
+    }[key_style]
+    receipts = a.build_source_receipts(source, [path])
+
+    decisions, errors = a.build_reviewed_source_decisions(
+        input_root=source,
+        source_receipts=receipts,
+        adapter_families={relative: "reviewed_tabular_accounting_v1"},
+        assumptions={
+            "assurance_run_date": "2026-10-21",
+            "reviewed_source_decisions": selections,
+        },
+    )
+
+    assert decisions == {}
+    assert list(errors) == [relative]
+
+
 @pytest.mark.parametrize("suffix", [".csv", ".xlsx"])
 @pytest.mark.parametrize("role", ["open_items", "bank_statement", "journal"])
 def test_reviewed_columns_drive_source_rows_without_header_guessing(
@@ -233,9 +302,20 @@ def test_party_column_cannot_be_blank_or_contradict_a_fixed_party(
         a.read_reviewed_tabular_source(path, decision)
 
 
-@pytest.mark.parametrize("language", ["it", "en", "es", "de", "fr"])
+@pytest.mark.parametrize(
+    "language, decision_key_style",
+    [
+        ("it", "relative"),
+        ("en", "relative"),
+        ("es", "relative"),
+        ("de", "relative"),
+        ("fr", "relative"),
+        ("it", "absolute"),
+        ("it", "absolute_posix"),
+    ],
+)
 def test_multi_party_exports_reconcile_later_payments_and_replay_source_parties(
-    tmp_path, language
+    tmp_path, language, decision_key_style
 ):
     a = load_assurance()
     raw = load_script_module("multi_party_raw", SCRIPTS / "raw_input_runner.py")
@@ -276,6 +356,15 @@ def test_multi_party_exports_reconcile_later_payments_and_replay_source_parties(
             bank.name: bank_spec,
         },
     }
+    if decision_key_style.startswith("absolute"):
+        assumptions["reviewed_source_decisions"] = {
+            (
+                (source / name).as_posix()
+                if decision_key_style == "absolute_posix"
+                else str(source / name)
+            ): decision
+            for name, decision in assumptions["reviewed_source_decisions"].items()
+        }
     extracted = raw.extract_normalized_records(
         source, assumptions, output_dir=tmp_path / "extracted"
     )
@@ -621,9 +710,12 @@ def test_representative_reviewed_exports_replay_the_full_settlement_case(tmp_pat
     )
 
 
-@pytest.mark.parametrize("alter_request_amount", [False, True])
+@pytest.mark.parametrize(
+    "alter_request_amount, decision_key_style",
+    [(False, "relative"), (True, "relative"), (False, "absolute")],
+)
 def test_representative_managed_raw_producer_replays_followup_workbook(
-    tmp_path, monkeypatch, alter_request_amount
+    tmp_path, monkeypatch, alter_request_amount, decision_key_style
 ):
     import json
     from decimal import Decimal
@@ -680,6 +772,11 @@ def test_representative_managed_raw_producer_replays_followup_workbook(
         Path(b["path"]).relative_to(source).as_posix(): reviewed[Path(b["path"]).name]
         for b in context["input_bindings"]
     }
+    if decision_key_style == "absolute":
+        assumptions["reviewed_source_decisions"] = {
+            str(source / name): decision
+            for name, decision in assumptions["reviewed_source_decisions"].items()
+        }
     output = Path(context["output_dir"]) / "reconciliation"
     if alter_request_amount:
         from openpyxl import load_workbook

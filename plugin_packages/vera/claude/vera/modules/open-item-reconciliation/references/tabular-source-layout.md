@@ -30,7 +30,11 @@ Reviewed receipts remain unsigned and do not authenticate that label.
    population only when that scope is justified. Do not omit difficult rows.
 2. Record the existing source decision fields: role, adapter, reviewer/date,
    accounting perimeter, cent-only money convention and date order. Add the
-   `tabular` object below. Use exact current source paths as decision keys.
+   `tabular` object below. Key each decision by its complete path relative to
+   the context's `input_dir` (including `imports/<input_id>/`) or by that exact
+   current file's absolute path. Both identify the same byte-bound source.
+   A basename alone is insufficient for nested imports. Do not reuse another
+   run's absolute paths or supply conflicting reviews under both path forms.
 3. For each canonical field choose the exact source header. Do not infer
    missing values, silently discard relevant columns or overwrite source party,
    entity, currency or units to agree with a desired result. For a source with

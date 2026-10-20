@@ -61,6 +61,13 @@ GROUP_FIELDS = {
     },
     "date": {"order"},
 }
+# These explicit nulls are admitted by the producer's source-decision contract.
+NULLABLE_GROUP_FIELDS = {
+    ("perimeter", "entity_ref"),
+    ("perimeter", "party_ref"),
+    ("money", "decimal_separator"),
+    ("money", "thousands_separator"),
+}
 LANGUAGES = {"it", "en", "fr", "de", "es"}
 PREFIX = "vera_workspace_open_items_intake_"
 # Base64 and JSON must fit the shared MCP bridge's existing 8 MiB envelope.
@@ -190,9 +197,7 @@ def validate_fields(value: object, inputs: dict[str, Any]) -> dict[str, Any]:
                             or any(
                                 (not isinstance(v, str) or len(v) > 1_000)
                                 and not (
-                                    field == "perimeter"
-                                    and k == "party_ref"
-                                    and v is None
+                                    (field, k) in NULLABLE_GROUP_FIELDS and v is None
                                 )
                                 for k, v in content.items()
                             )

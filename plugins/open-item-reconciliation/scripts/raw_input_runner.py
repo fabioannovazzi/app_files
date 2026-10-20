@@ -584,6 +584,8 @@ def _requested_source_adapter_families(
         if not isinstance(value, dict):
             value = mapping.get(path.as_posix())
         if not isinstance(value, dict):
+            value = mapping.get(str(path))
+        if not isinstance(value, dict):
             families[_source_name(path, assumptions)] = ""
         elif value.get("schema_version") == "vera.reviewed_decision_receipt.v1":
             families[_source_name(path, assumptions)] = str(

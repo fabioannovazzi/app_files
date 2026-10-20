@@ -56,11 +56,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
-      "sha256": "59c1d37c3e04717c95893e36f546de625881548826796106d65b523c4b578ce6"
+      "sha256": "a56f4ece1d7fc6e537313a8b783027288bd4d99cf4f5bf27a298bcb5dbce50c2"
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "b6b441a8dff04bfbb7b26347e57edcecc022ff0a6bdf36ec6fbf07cdea77b469"
+      "sha256": "303e1ed6e3703e878bf9242c54e5dda3bd55d9a869b412112ba4295e9d4182a5"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "502420950c6b30ccd7c39b7b27c53db5fa27a16efe16a894c9dcaf0d34bb0d8b"
+      "sha256": "4a44d415747a5d0a3ae0e2e1a02b00069790eae9a1ca579f94bee3be7ce8f4e7"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "0070418c1b9daccec05849da05ecec2069d5f40a630af9a89c27db38bf12e79e"
+      "sha256": "9bf91378dba0f8cb359a666c224409dc84baa72070f2992fc3223c3b42f7f71b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "df0063dae1b8e2ccee7545139a753f92358c13dee90b656ed6bdcd07a0fadb07"
+  "canonical_course_sha256": "45bd8755fb9a5e480a075e1ee194953232792778eff3b051b4084c10d6d9ca10"
 }

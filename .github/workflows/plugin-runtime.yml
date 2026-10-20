@@ -443,7 +443,7 @@ jobs:
           MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/identity
           MPARANZA_INCIDENT_DEVICE_DIR: ${{ runner.temp }}/reporting-open-item-native/device
           VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/registry
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_native_open_items_intake.py tests/plugins/test_vera_native_open_items_intake_reporting.py tests/plugins/test_vera_native_open_items_regeneration.py tests/plugins/test_vera_native_open_items_intake_ui.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_native_open_items_intake.py tests/plugins/test_vera_native_open_items_intake_reporting.py tests/plugins/test_vera_native_open_items_regeneration.py tests/plugins/test_vera_native_open_items_intake_ui.py tests/plugins/test_vera_native_open_item_bridge_io.py
       - name: Build the checksum-verified official taxonomy for local OIC execution
         shell: bash
         run: |

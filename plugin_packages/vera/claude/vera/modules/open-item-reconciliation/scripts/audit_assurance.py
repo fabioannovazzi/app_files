@@ -737,11 +737,23 @@ def _validate_source_boundary(
 def _source_decision_input(
     assumptions: Mapping[str, Any],
     relative_path: str,
+    *,
+    input_root: Path,
 ) -> Mapping[str, Any] | None:
+    """Resolve only the relative or exact current absolute identity of a receipt."""
     decisions = assumptions.get("reviewed_source_decisions")
     if not isinstance(decisions, Mapping):
         return None
-    value = decisions.get(relative_path)
+    # Both public spellings identify these same source bytes. A basename or an
+    # absolute path from another run must never supply this source's review.
+    absolute = input_root / relative_path
+    keys = dict.fromkeys((relative_path, absolute.as_posix(), str(absolute)))
+    values = [decisions[key] for key in keys if key in decisions]
+    if any(value != values[0] for value in values[1:]):
+        raise AssuranceRunError(
+            f"Conflicting relative and absolute source decisions for {relative_path}"
+        )
+    value = values[0] if values else None
     return value if isinstance(value, Mapping) else None
 
 
@@ -1019,7 +1031,13 @@ def build_reviewed_source_decisions(
     decisions: dict[str, dict[str, Any]] = {}
     errors: dict[str, str] = {}
     for relative_path, receipt in sorted(receipt_by_path.items()):
-        supplied = _source_decision_input(assumptions, relative_path)
+        try:
+            supplied = _source_decision_input(
+                assumptions, relative_path, input_root=root
+            )
+        except AssuranceRunError as exc:
+            errors[relative_path] = str(exc)
+            continue
         if supplied is None:
             errors[relative_path] = (
                 "A reviewed source-decision receipt with an explicit perimeter "
