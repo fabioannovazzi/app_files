@@ -621,6 +621,145 @@ def test_wrong_ack_never_discards_local_event(installed_client, monkeypatch):
     assert result["delivered"] == 0
 
 
+def _queue_unrelated_prerelease(usage, monkeypatch):
+    """Retain a historical event the current server cannot accept."""
+    run = str(uuid4())
+    with monkeypatch.context() as context:
+        context.setattr(usage, "_version", lambda: "0.1.406-folder-intake.1")
+        usage.start(
+            run, "archive-organization", sample_kind="agent_test", deliver=False
+        )
+    return run
+
+
+def _retained_usage_events(usage, run):
+    """Read exact stored payloads and acknowledgements for preservation checks."""
+    connection = usage._database()
+    try:
+        return [
+            tuple(row)
+            for row in connection.execute(
+                "SELECT event_id,payload,receipt FROM events WHERE run_id=? ORDER BY sequence",
+                (run,),
+            )
+        ]
+    finally:
+        connection.close()
+
+
+def test_start_delivers_only_current_task_with_unrelated_invalid_backlog(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+    transport = usage._send
+    sent = []
+
+    def capture(operation, payload):
+        sent.append(payload["event"]["run_id"])
+        return transport(operation, payload)
+
+    monkeypatch.setattr(usage, "_send", capture)
+    current = str(uuid4())
+
+    result = usage.start(current, "journal-sampling", sample_kind="agent_test")
+
+    assert result["delivery"] == {"delivered": 1, "queued": 0, "blocked": {}}
+    assert sent == [current]
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_outcome_delivery_ignores_unrelated_invalid_backlog(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    current = str(uuid4())
+    usage.start(current, "journal-sampling", sample_kind="agent_test")
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+
+    result = usage.record(current, "completed")
+
+    assert result["delivery"] == {"delivered": 1, "queued": 0, "blocked": {}}
+    assert usage.status(current)["remote"]["state"] == "completed"
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_scoped_flush_cli_preserves_unrelated_invalid_backlog(
+    installed_client, monkeypatch, capsys
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+    current = str(uuid4())
+    usage.start(current, "journal-sampling", sample_kind="agent_test", deliver=False)
+
+    code = usage.main(["flush", "--run-id", current])
+
+    assert code == 0
+    assert json.loads(capsys.readouterr().out) == {
+        "delivered": 1,
+        "queued": 0,
+        "blocked": {},
+    }
+    assert usage.status(current)["local_events"][0]["acknowledged"] is True
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_scoped_pending_cli_exposes_only_selected_task(
+    installed_client, monkeypatch, capsys
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+    current = str(uuid4())
+    usage.start(current, "journal-sampling", sample_kind="agent_test", deliver=False)
+
+    code = usage.main(["pending", "--run-id", current])
+
+    body = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert body["queued"] == 1
+    assert [event["run_id"] for event in body["events"]] == [current]
+    assert (
+        usage.status(current, remote=False)["local_events"][0]["acknowledged"] is False
+    )
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_selected_invalid_event_remains_pending_and_reports_delivery_failure(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    selected = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, selected)
+
+    result = usage.flush(run_id=selected)
+
+    assert result == {
+        "delivered": 0,
+        "queued": 1,
+        "blocked": {selected: "HTTPError"},
+    }
+    assert _retained_usage_events(usage, selected) == original
+
+
+def test_startup_context_keeps_backlog_diagnostic_without_other_task_identifiers(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+
+    context = usage.startup_context()
+
+    assert unrelated not in context
+    assert "workflow_usage.py flush --run-id <retained-uuid>" in context
+    assert "Pending events across retained tasks: 1" in context
+    assert _retained_usage_events(usage, unrelated) == original
+
+
 def test_receipt_version_is_independent_of_current_reporting_version(
     setup, installed_client, tmp_path
 ):

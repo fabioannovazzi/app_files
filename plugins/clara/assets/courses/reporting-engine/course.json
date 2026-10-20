@@ -244,7 +244,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/clara/scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/reporting-engine/SKILL.md",

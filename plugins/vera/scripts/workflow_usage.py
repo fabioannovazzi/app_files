@@ -101,6 +101,17 @@ def _pending(
     ).fetchall()
 
 
+def _queued_count(connection: sqlite3.Connection, run_id: str | None = None) -> int:
+    """Count the same delivery scope; other tasks cannot make this task pending."""
+    if run_id is None:
+        return connection.execute(
+            "SELECT COUNT(*) FROM events WHERE receipt IS NULL"
+        ).fetchone()[0]
+    return connection.execute(
+        "SELECT COUNT(*) FROM events WHERE receipt IS NULL AND run_id=?", (run_id,)
+    ).fetchone()[0]
+
+
 def _match_ack(row: sqlite3.Row, owner: str, reply: dict[str, Any]) -> None:
     digest = hashlib.sha256(row["payload"].encode()).hexdigest()
     expected = {
@@ -115,18 +126,16 @@ def _match_ack(row: sqlite3.Row, owner: str, reply: dict[str, Any]) -> None:
         raise ValueError("Usage acknowledgement does not match queued evidence")
 
 
-def pending() -> dict[str, Any]:
-    """Expose exact pending events for the independent authenticated connector."""
+def pending(*, run_id: str | None = None) -> dict[str, Any]:
+    """Expose exact events in the selected scope for authenticated delivery."""
     connection = _database()
     try:
         credentials, _ = _owner()
-        rows = _pending(connection)
+        rows = _pending(connection, run_id)
         return {
             "credentials": credentials,
             "events": [json.loads(row["payload"]) for row in rows],
-            "queued": connection.execute(
-                "SELECT COUNT(*) FROM events WHERE receipt IS NULL"
-            ).fetchone()[0],
+            "queued": _queued_count(connection, run_id),
         }
     finally:
         connection.close()
@@ -156,7 +165,7 @@ def acknowledge(reply: dict[str, Any]) -> dict[str, Any]:
 
 
 def flush(*, run_id: str | None = None) -> dict[str, Any]:
-    """Replay retained bytes; acknowledge only the exact event and owner hash."""
+    """Replay and report only the selected scope, preserving exact owner/hash."""
     credentials, _ = _owner()
     connection = _database()
     delivered = 0
@@ -189,9 +198,7 @@ def flush(*, run_id: str | None = None) -> dict[str, Any]:
                     (_json(reply), row["event_id"]),
                 )
             delivered += 1
-        queued = connection.execute(
-            "SELECT COUNT(*) FROM events WHERE receipt IS NULL"
-        ).fetchone()[0]
+        queued = _queued_count(connection, run_id)
         return {"delivered": delivered, "queued": queued, "blocked": blocked}
     finally:
         connection.close()
@@ -531,16 +538,18 @@ def stamp_report(run_id: str, report_path: Path, output_dir: Path) -> dict[str, 
 
 
 def startup_context() -> str:
-    """Expose pending count and opaque run IDs without network or user comments."""
+    """Expose a diagnostic backlog count without selecting unrelated task IDs."""
     connection = _database()
     try:
-        pending = connection.execute(
-            "SELECT DISTINCT run_id FROM events WHERE receipt IS NULL LIMIT 100"
-        ).fetchall()
         return (
-            f"{product_name(ROOT).title()} workflow usage: follow {installed_reference_path('workflow-usage.md', ROOT)} for every substantive task, including AI-only work. One primary task UUID; Studio Archive is infrastructure. Flush the durable usage outbox at task startup and after outcomes. Pending run IDs: "
-            + json.dumps([row["run_id"] for row in pending])
-            + ". Never infer stars or completion; record the user's actual answer after delivery."
+            f"{product_name(ROOT).title()} workflow usage: follow "
+            f"{installed_reference_path('workflow-usage.md', ROOT)} for every substantive "
+            "task, including AI-only work. One primary task UUID; Studio Archive is "
+            "infrastructure. Start/record saves and delivers only that task's events. "
+            "Retry delivery with workflow_usage.py flush --run-id <retained-uuid>. "
+            f"Pending events across retained tasks: {_queued_count(connection)}. "
+            "Unrelated pending events are not a prerequisite for current work. "
+            "Never infer stars or completion; record the user's actual answer after delivery."
         )
     finally:
         connection.close()
@@ -583,8 +592,12 @@ def main(argv: list[str] | None = None) -> int:
     stamp.add_argument("--run-id", required=True)
     stamp.add_argument("--report", type=Path, required=True)
     stamp.add_argument("--output-dir", type=Path, required=True)
-    commands.add_parser("flush")
-    commands.add_parser("pending")
+    for command in ("flush", "pending"):
+        scoped = commands.add_parser(command)
+        scoped.add_argument(
+            "--run-id",
+            help="Select this task's events; omitted for whole-outbox maintenance",
+        )
     ack = commands.add_parser("ack")
     ack.add_argument("--receipt", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -615,11 +628,11 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "stamp-report":
             result = stamp_report(args.run_id, args.report, args.output_dir)
         elif args.command == "pending":
-            result = pending()
+            result = pending(run_id=args.run_id)
         elif args.command == "ack":
             result = acknowledge(json.loads(args.receipt.read_text(encoding="utf-8")))
         else:
-            result = flush()
+            result = flush(run_id=args.run_id)
     except (OSError, ValueError, KeyError, sqlite3.Error) as error:
         LOGGER.error(
             "Usage reporting unavailable (%s); preserve the original task and queued events",

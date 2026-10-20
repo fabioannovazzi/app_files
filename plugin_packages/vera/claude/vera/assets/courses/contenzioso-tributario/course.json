@@ -85,11 +85,11 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
-      "sha256": "77bd5ec0b087df1fa23bc654be4d4b1094f86a8e80852a5c48da469a652412ff"
+      "sha256": "abab4ecb7434d1ae8373316c223615ca6a89feea3fdab1e92df60b4159c7fdd3"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -574,5 +574,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f69fdd588eb4b55d74e5eb4d24e512ebce68a14d42dc2750673a921b6bd17cbd"
+  "canonical_course_sha256": "ada8120cc148f0a730a21452f612df3f50f1b516392e5db3ecf2fc418f1d185c"
 }

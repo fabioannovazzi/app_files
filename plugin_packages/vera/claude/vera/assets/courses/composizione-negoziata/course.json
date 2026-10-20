@@ -113,7 +113,7 @@
     },
     {
       "path": "skills/mparanza-composizione-negoziata/SKILL.md",
-      "sha256": "b32905f5d78504294e6fae9b145177d0fb23ddec12c8aa20a3ad68dae6f9369a"
+      "sha256": "6a1e1850f9a2ec93f270ed4c3496d3b09ea42edb93ff65d2cbf5d4ec0df173d9"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -837,5 +837,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "77346e877107584d486b119ccd8d7691f4a9580dcba715b7e8f0911354e8d0f9"
+  "canonical_course_sha256": "cb9f73959d25a94e61980a475e051403a5834a250704bfeee7ac9b3c527ff173"
 }

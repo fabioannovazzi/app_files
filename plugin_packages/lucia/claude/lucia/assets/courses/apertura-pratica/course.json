@@ -152,7 +152,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/mparanza-apertura-pratica/SKILL.md",
@@ -553,5 +553,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d53d40aa6f44b2fcdabe48dbadaccd0ef9ca4f3ff2702f1cfc24dda49f1f005d"
+  "canonical_course_sha256": "45e5dfc69fc2edce30b46d2f73b2ae8b998509e96a8e520298776d481829fb64"
 }

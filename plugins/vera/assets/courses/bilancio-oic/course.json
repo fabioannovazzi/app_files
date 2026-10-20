@@ -417,12 +417,12 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/bilancio-oic/SKILL.md",
       "repository_path": "plugins/vera/skills/bilancio-oic/SKILL.md",
-      "sha256": "9752f77643d4becfdfff9133649664c70954815e02a9b14e2b867d9176b725dd"
+      "sha256": "570e1fbde34cae4ba9560e0633540c2426f564d35da5632d047d0e3fad1b2867"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

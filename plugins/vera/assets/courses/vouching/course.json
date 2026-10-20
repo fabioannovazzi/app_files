@@ -215,7 +215,7 @@
     {
       "path": "skills/vouching/SKILL.md",
       "repository_path": "plugins/vera/skills/vouching/SKILL.md",
-      "sha256": "75e50817a0dee24e7ba8d37cc8fdd0b6ccbbe770ab6b09c8370820ff84361941"
+      "sha256": "3dadb59125584ee539600474daf79501351b0256c188a724bf06aed59e97a358"
     },
     {
       "path": "vendor/modules/__init__.py",

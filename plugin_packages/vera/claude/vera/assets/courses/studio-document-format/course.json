@@ -529,7 +529,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "c9c8809c9fb7a1a8ad8f87abeeed61934baa67db73a36608d1fa0c08849242e5"
+      "sha256": "cf9d572148a150216415b20240f43d3a86711a6b32380847f68e012deb47f16a"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",
@@ -918,5 +918,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "608e11c0f0bfd02141df916437a394556d0a0dd1cef90e1113a0088f4292b9b8"
+  "canonical_course_sha256": "5c8c3f4826628d17ccc9d2bc729b34a3477af52ff880960c6309336b90bb618a"
 }

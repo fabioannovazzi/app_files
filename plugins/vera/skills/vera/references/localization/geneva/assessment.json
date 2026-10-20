@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "c16377c453bbb0102e7f79292cb4a7a8519bf1273aa60e280485ffd42d36247f",
+  "catalogue_fingerprint": "55f633ef17112ff4fa3db60b488170bbdcfe564de62f464a22171bb75d76572c",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1919,6 +1919,10 @@
     "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy.",
     "version": "0.1.422"
   },
+  "studio_archive_architecture_release_binding_20261020": {
+    "basis": "All skill IDs, paths and skill entrypoint hashes are unchanged from the 0.1.439 catalogue. Rebind only the product-manifest version fingerprint; Geneva applicability judgments and acceptance status remain unchanged.",
+    "version": "0.1.441"
+  },
   "studio_archive_concurrency_release_binding": {
     "date": "2026-10-17",
     "scope": "Product manifest version binding updated. Vera skill entrypoint bytes and existing Geneva dispositions are unchanged. Shared archive runtime now serializes registry writes with bounded waits and refreshes directory metadata independently of the content index. No new jurisdiction or host acceptance is claimed.",
@@ -1971,6 +1975,62 @@
     "reporting_currency": "CHF unless evidence specifies otherwise",
     "subdivision": "Canton of Geneva",
     "user_scope": "Generalist fiduciary serving SMEs; assumed example profile, not a surveyed firm"
+  },
+  "task_scoped_usage_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "c16377c453bbb0102e7f79292cb4a7a8519bf1273aa60e280485ffd42d36247f",
+    "reviewed_entrypoints": [
+      "adeguati-assetti",
+      "adversarial-opinion",
+      "agenzia-acquisition",
+      "aml-review",
+      "archive-organization",
+      "avviso-intake",
+      "bandi-agevolazioni",
+      "bilancio-oic",
+      "browser-automation",
+      "business-planning",
+      "business-valuation",
+      "centrale-rischi-review",
+      "composizione-negoziata",
+      "comunicazione-professionale",
+      "concordato-plan-review",
+      "contenzioso-tributario",
+      "datev-invoice-start",
+      "dati-fiscali-strutturati",
+      "deep-research",
+      "email-cliente",
+      "esg-reporting-assurance",
+      "fatture-xml-check",
+      "financial-analysis",
+      "financial-report-builder",
+      "fusione-guidata",
+      "invoice-xml",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "lipe",
+      "management-control-pack",
+      "new-client",
+      "open-item-reconciliation",
+      "organizzazione-lavoro",
+      "patent-box-review",
+      "posizioni-negoziali",
+      "presenza-digitale-studio",
+      "previdenza-inps",
+      "purchase-invoice-review",
+      "quesito-legale-fiscale",
+      "rating-legalita",
+      "registro-imprese-sari",
+      "sales-plan",
+      "scissione-guidata",
+      "studio-document-format",
+      "trasformazione",
+      "treasury-forecast",
+      "variance-analysis",
+      "vera",
+      "vouching"
+    ],
+    "scope": "Only the task-usage instruction block changes in these 49 entrypoints: current-task start/outcome delivery and scoped retries replace global backlog flushing. All 55 function IDs/paths and all text outside those blocks are preserved. Existing Geneva dispositions and professional acceptance limits remain unchanged.",
+    "version": "0.1.442"
   },
   "tax_course_main_integration_binding_20261014": {
     "main_commit": "26075c11d6104c2806527a690188de806ea1f292",
@@ -2085,9 +2145,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "studio_archive_architecture_release_binding_20261020": {
-    "version": "0.1.441",
-    "basis": "All skill IDs, paths and skill entrypoint hashes are unchanged from the 0.1.439 catalogue. Rebind only the product-manifest version fingerprint; Geneva applicability judgments and acceptance status remain unchanged."
   }
 }

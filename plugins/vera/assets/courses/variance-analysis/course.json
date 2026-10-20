@@ -584,12 +584,12 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
-      "sha256": "1133c455587cd8a6e96e5a8ade424c7c8a5512f539266b8061ba85c1a6513327"
+      "sha256": "352ce76c0a47a20940ae7a0b98589192b4fad7dae8c8f71a7865a5c34e4b0f16"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

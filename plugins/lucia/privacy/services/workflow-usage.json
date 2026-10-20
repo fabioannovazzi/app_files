@@ -54,7 +54,8 @@
         "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
         "Authenticated event acknowledgements and run status expose the original owner's proven Computer ID and whether an actual signed receipt is linked. Missing linkage remains explicit and returns bounded follow-up instructions. Neither reporting gap changes the professional outcome or authorizes broader host access.",
         "When local HTTPS is unavailable, the authenticated connector can stamp the exact retained receipt request for an owned run. The allow-list admits only receipt UUID, product/version, schema and report digest. It returns the same signed proof; a separate verified receipt event links it to the original run. No report or source contents are transmitted.",
-        "Connector-owned workflow acknowledgements return a random 15-minute proof scoped only to binding that original run to a native computer. The existing native helper adds its private computer capability and observed app. The server stores only the ticket hash, checks product, expiry and app, rejects re-binding, and never replaces the original owner or associates all runs from one saved connection with one computer. The proof cannot authorize other reporting operations. Exact event replay obtains a fresh proof without another event."
+        "Connector-owned workflow acknowledgements return a random 15-minute proof scoped only to binding that original run to a native computer. The existing native helper adds its private computer capability and observed app. The server stores only the ticket hash, checks product, expiry and app, rejects re-binding, and never replaces the original owner or associates all runs from one saved connection with one computer. The proof cannot authorize other reporting operations. Exact event replay obtains a fresh proof without another event.",
+        "Ordinary startup and outcome delivery select only the retained task UUID. Scoped flush and connector inspection return only that task's pending events/count; unrelated retained events cannot make its delivery pending. Startup context exposes only a diagnostic backlog count, without unrelated task IDs. Whole-outbox maintenance is separate; historical event bytes and owner/hash acknowledgement checks are preserved."
       ]
     },
     {
@@ -145,7 +146,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "f32e753d14abb6bb541070b6745cf998686d08be715af5bc42ac65ea4fc8b6ac"
+    "source_fingerprint": "31eb7dd809b6cf66ca1a4b4ae234ca839f558c84a30a063a2dde4a1d60491beb"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

@@ -136,7 +136,7 @@
     },
     {
       "path": "skills/mparanza-treasury-forecast/SKILL.md",
-      "sha256": "9d20436dce3690257d886796faf392044e18f4be27d7dd9b61c8356c259ede0f"
+      "sha256": "7803f3fa1c21da069561f03d900f3ed0bfe52aec99dde9e28413b3dafebcbb63"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -450,5 +450,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "84e4ce831371777f62476635f0dffbc7097c1ad7ac3a8f54a40331e24c771cee"
+  "canonical_course_sha256": "933bf6b6e6b23c895fb23c2fd5b64abe0b52e6940866f739b49d3387be81cfcd"
 }

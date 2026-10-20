@@ -138,9 +138,11 @@ The server proof binds the report hash to the same Archive run and existing Vera
 userID. No agent-authored phase file or separate usage-task receipt link is needed.
 Other pipelines and chat-only tasks do not get this report. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
-process. Synthetic/agent tests are marked and excluded. Flush pending delivery
-at task startup and after outcomes. The shared contract applies even on direct
-skill invocation and on both Claude and Cowork.
+process. Synthetic/agent tests are marked and excluded. Start and record deliver
+only the retained task's events. Retry with
+`workflow_usage.py flush --run-id <retained-uuid>`; unrelated queued events do not
+block this task. The shared contract applies even on direct skill invocation
+and on both Claude and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 

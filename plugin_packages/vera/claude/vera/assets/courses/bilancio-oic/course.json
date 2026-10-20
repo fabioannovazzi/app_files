@@ -338,11 +338,11 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "e695c5dce9efad51764fcbc4e1f0d0b3078a1d3150d56748c26822f51fc66d01"
+      "sha256": "51e8bd55f6dee219450b732cc8675e6f0cb44e28db6001c72411c01609912ef3"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -680,5 +680,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ce7b3394d7247581afab02e9b88048c4a915139186094a55423015ae7a943697"
+  "canonical_course_sha256": "1257efa37766d995d85bf7e002b42a89924525fc509e2d8ba76025cba64d18e0"
 }

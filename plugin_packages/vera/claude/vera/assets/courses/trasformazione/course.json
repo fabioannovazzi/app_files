@@ -125,11 +125,11 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/mparanza-trasformazione/SKILL.md",
-      "sha256": "2688dbbbf8628d7f018547f3aa7b119994912ab76880098657f8c2a7fbc84e44"
+      "sha256": "f3a7f3ca59fe9befceadf5957cfa49857b1c7d4c5960375c1b40c58991d355e0"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -550,5 +550,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5a524dae5be0425c39e544865a880814cfa65b5a485a35a6d0a8396737a2596b"
+  "canonical_course_sha256": "da70ae0361f91296fcefcbba579c784376a99d4c351bfca7595a53c73cace6ea"
 }

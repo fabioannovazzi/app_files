@@ -100,12 +100,12 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
     },
     {
       "path": "skills/contenzioso-tributario/SKILL.md",
       "repository_path": "plugins/vera/skills/contenzioso-tributario/SKILL.md",
-      "sha256": "0c769a5f55c15135449d7022de09f01d3590be2f83c6f9250a5217da1eae4c9a"
+      "sha256": "0fe3bf9f6bbf99216ba0591cc76e0ff2c6b80d9e3e74082f83a8c9a0aca98f52"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

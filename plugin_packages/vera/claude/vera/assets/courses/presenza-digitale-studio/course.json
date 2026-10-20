@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "02ee8882d20be416ff474210f3922730a8cba85d9ee07fb8c3bbe0997938f898"
+      "sha256": "f031a5647fadec6f0d3e847f5ce12fd646e7174d428abfe0fbc43bc9f0abc0a5"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -554,5 +554,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "dc7ce4bf9a9e70642429bf09901c04fd7191a29d54e32b0c790dcafa71634d01"
+  "canonical_course_sha256": "30b4c715feec69f36f803326324ad5996b01b0ae7432c65e53f7ff11528fb4db"
 }
