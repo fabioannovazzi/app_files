@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
-      "sha256": "2a4322ba4b248a3eca1d16158d315296a4ae51bddcddc4089983eba1795f12cf"
+      "sha256": "8e41a9094e4710f2339a19f642c26bc43df4c76b3044fe4440dd334a95a2b324"
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
@@ -141,7 +141,7 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -165,7 +165,7 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_journal_pdf/rules.py",
@@ -177,7 +177,7 @@
     },
     {
       "path": "skills/mparanza-vouching/SKILL.md",
-      "sha256": "f6244e15e215ed7327749c0abb245c23611fc24f7954caf4b826839d13446ae9"
+      "sha256": "3d374368f59a5a17c27c62b1dd43dd9f41b21ffca5ea0ba602087694f6603f42"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -293,7 +293,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -333,7 +333,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -650,5 +650,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bef6a205855855432105ce896142b21806cd565a397fc6d638f138f26d60df33"
+  "canonical_course_sha256": "2a40ca728c723ecfa96fbb1a9f02dfda8a47d36ec17ab54071d96ec1d4e781f5"
 }

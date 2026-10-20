@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/SKILL.md",
-      "sha256": "03ebe5fca5cdf1584cbfc627ce54a2c8687c272076b285288a9bffbb5162c53f"
+      "sha256": "94725b40b032dd01dd8d0fb99da332932656686038cb60cb39e20132fd25d3f5"
     },
     {
       "path": "modules/adeguati-assetti/skills/mparanza-adeguati-assetti/references/geneva.md",
@@ -137,7 +137,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-adeguati-assetti/SKILL.md",
-      "sha256": "be7e9051fef39df07eaea83cf976d566e64901b3653becd195a62d9f84658226"
+      "sha256": "621782ed05657d84029bc317b2466368283d1752a65dcd05c76f07408f9f2a46"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -269,7 +269,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -309,7 +309,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -983,5 +983,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "879baa1ab381c4e63716b1bb31de08fce249b62a480629147adbb099aaa30572"
+  "canonical_course_sha256": "bd5203d0385f897ef06792e6a907507ad657fab9b92bffc3b4e2449612534752"
 }

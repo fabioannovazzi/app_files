@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "783066b90c53146c2c8878640944761deab3914b5919b6c7f95771459397a6cb"
+      "sha256": "d0b34523172e1842e833259bc974471c6848b697f003ed4c031c6ff88804acd4"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -109,7 +109,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/SKILL.md",
-      "sha256": "f6a8341573c773c547af5a898b6a89b7087e5f05f3f344363f2bb9e2eacc0f18"
+      "sha256": "7f442ac49fbcc615365b656e49ee77a7323390a4448e8e9b79f793bf12549ab9"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/adversarial-scope.md",
@@ -153,7 +153,7 @@
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -177,7 +177,7 @@
     },
     {
       "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
-      "sha256": "0793bb00c7a73765d26f65acc5575290224e709d9824991b2ccfa80d09ae20eb"
+      "sha256": "04c53fc5efd5463df18ecf4ca94497514504b2bf94fb8037e66a7c6f4c062f85"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -305,7 +305,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -345,7 +345,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -870,5 +870,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "42675faa35eb46b9c678e93fefc1dbd7b7e8727aa83e5acc9eb3b414c15ecb5f"
+  "canonical_course_sha256": "487c0751bd9942bb69763953e0ea644077657a33722be496c01372fd9bb18fe6"
 }

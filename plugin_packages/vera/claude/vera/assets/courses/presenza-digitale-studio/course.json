@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "c30ccbff1c142370afd844bf29101b52b4087f552c3b57a4b1b74e85d6957fef"
+      "sha256": "293b6079def36430e335f7329f7c435de160a213496fbfdb961ae4dc7ef4e4e2"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/agents/openai.yaml",
@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "bb6da466bd3d448b8cdaa9f562be119972b2488d236f18f9baccda932aab091c"
+      "sha256": "02ee8882d20be416ff474210f3922730a8cba85d9ee07fb8c3bbe0997938f898"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -253,7 +253,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -293,7 +293,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -554,5 +554,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8273c6589b243ea14144f295bf800b6621f4b1447f2ca8b96a29ce146bbf7187"
+  "canonical_course_sha256": "dc7ce4bf9a9e70642429bf09901c04fd7191a29d54e32b0c790dcafa71634d01"
 }

@@ -45,6 +45,7 @@ def _runtime_environment(root: Path, tmp_path: Path) -> dict[str, str]:
         "features": ["core"],
         "runtime_key": key,
         "recipes": shared._recipes(root, {"core"}),
+        "installed_distributions": runtime._resolved_dependencies(target),
     }
     (target / shared.RECEIPT).write_text(json.dumps(receipt))
     (runtime_root / shared.POLICY).write_text(

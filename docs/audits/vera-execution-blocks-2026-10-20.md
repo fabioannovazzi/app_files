@@ -31,7 +31,9 @@ repairs take place in the main Astra chat.
 | Reporting imposed an Archive prerequisite on non-Archive model operations | `mcp/workspace.cjs`, `native_workspace._reporting_case`; 14 Transformation source-MCP failures returned “Vera could not bind this request to its outgoing-data record” | Pass the actual operation from the MCP server. Transformation and practice-review workspaces do not acquire an unrelated Archive reporting prerequisite. Eligible Archive workflows retain their binding and recording checks. The first previously failing complete context/stage/adoption case passes after repair. |
 | Shipped operational guidance still declared repaired native routes unavailable | `skills/vera/references/native-workspace.md`, `privacy/services/native-workspace.json`; current communication lock exclusion, resolved transformation replay directory and initial-adapter code identity | Replace obsolete failure counts and unapplied-repair statements with the inspected current behavior. Communication source/UI tests pass; the first full Transformation source-MCP case passes. Keep installed-host acceptance separate. |
 | Patent Box guidance still demanded a signature and firm mandate before calculation, although the producer now requires the user's exact proposal confirmation | `patent_box/proposal_review.py`; `test_patent_box_real_local_review_does_not_authorize_calculation`; native guide and service declaration | Align guidance with the existing proposal-confirmation contract. Human confirmation remains required; signed-document formalities are a separate optional route. No agent approval is substituted. |
-| PDF layout recovery has fixed lifetime caps despite evidence-based revisions | `vera_journal_pdf/recovery.py`: four attempts and twelve inspections; shared `pdf-recovery.md` | Outstanding repair candidate. Current counts stop further distinct trials and inspections without establishing that another evidence-based revision is invalid. Per-call evidence bounds and source/replay checks require separate preservation. |
+| PDF layout recovery has fixed lifetime caps despite evidence-based revisions | `vera_journal_pdf/recovery.py`: four attempts and twelve inspections; shared `pdf-recovery.md` | Removed lifetime count gates. Distinct evidence-based trials and inspections can continue; duplicate recipes, source integrity, full replay and per-call evidence bounds remain enforced. Five focused regressions passed, including a valid trial after 100 previous trials and a thirteenth inspection. |
+| Rating Legalità refuses evidence processing for absent mandate/data-governance review or an overdue review date | `rating-legalita/scripts/practice_controls.py:practice_summary`, called before evidence assessment by `rating_case.py` | Confirmed execution gate. Its professional-review requirements remain under review; no removal or replacement with agent approval has been applied. |
+| New shared-runtime integration initially restored the old restriction during a build | `sync_reporting_runtime.py` copies `_shared/reporting-runtime/_shared_python_runtime.py` into all three products | Corrected the canonical shared source, then synchronized all copies. Product-copy edits alone were insufficient. Rebuilding must preserve the repaired shared source. |
 
 The policy number is Mparanza installation metadata, not a Python version.
 The local environment identifies CPython 3.12. This audit has not established
@@ -67,6 +69,9 @@ capabilities and authorization for external actions require separate evidence.
   passed before this audit; those tests did not prove installed workflow success.
 - Modified source accepted the actual policy-13 bank-reconciliation runtime;
   policy and ready-receipt SHA-256 values were unchanged.
+- Repeated that read-only live probe after integrating PR #879's dependency locks
+  and inventory validation: readiness passed, with installed revision 13 and
+  source revision 14; both metadata files remained unchanged.
 - Runtime and managed-launcher regressions passed after removing platform-label
   gating (118 selected tests). Compatible changed-platform cases, real dependency
   failure and unavailable-interpreter metadata preservation are covered.
@@ -80,17 +85,34 @@ capabilities and authorization for external actions require separate evidence.
 - Four focused reporting-scope regressions pass after the routing repair,
   including refusal for an eligible bank run without its authorized Archive.
   The previously failing full Transformation context/stage/adoption case passes.
-- Changed-file Mypy (including the 29-file managed-runtime configuration),
-  medium/high Bandit and formatting checks passed before the native routing edit;
-  the final source still requires its full checks.
+- After integrating main and rebuilding contracts/packages, the broader source
+  regression run passed 351 tests (automatic reporting, Transformation routes,
+  PDF recovery, relationship assurance and installed-product checking).
+- The integrated managed-runtime suite passed all 268 tests with 82.77% measured
+  coverage. Its launcher fixture now supplies the declared requirement parser
+  inside the isolated test interpreter; 18 failures from the empty fixture were
+  repaired in tests, without weakening production readiness checks.
+- All 68 Archive closure tests passed after regeneration, including the earlier
+  failures caused by stale packaged privacy dependencies.
+- Final packages built successfully for Vera 0.1.438, Clara 0.1.317 and Lucia
+  0.1.141 across Codex, Cowork and Antigravity. Shared dependency lock exports,
+  coordinated revision, source synchronization and the 55-entry Geneva catalogue
+  checks passed. Declaring the requirement parser directly changed no dependency
+  version pins. Its lock files and evaluator are now included in the runtime
+  service's governed source inventory.
+- Changed-file Mypy (including the 29-file managed-runtime configuration and
+  native routing), medium/high Bandit and formatting checks passed after
+  integration. Remote CI and installed normal-chat acceptance remain outstanding.
 - No deployment or successful normal-chat acceptance is claimed yet.
 
 ## Related work
 
-Open PR #879 (`fix/shared-runtime-equivalence`, inspected head
+PR #879 (`fix/shared-runtime-equivalence`, inspected head
 `dffe70a179e76c37e30e04a3acfcf33b9b4d314f`) also changes the shared installer
-and uses policy 13. It retains the newer-policy rejection. Its source is not
-merged into this branch or used as installed-host evidence. This audit uses
-revision 14 solely as installation history and must reconcile any main-branch
-advance before release. The process that wrote the local policy-13 file has
-not been established.
+and uses policy 13. It retained the newer-policy rejection. It merged into main
+as `eb2065b62`; its integration has passed the local checks above. Preserve its
+hash-checked dependency locks, installed-inventory checks and serialized setup,
+while retaining capability-based reuse and removal of policy-number rejection.
+This audit uses revision 14 solely as installation history. Current candidates
+are Vera 0.1.438, Clara 0.1.317 and Lucia 0.1.141; none has been deployed by this
+audit. The process that wrote the local policy-13 file has not been established.

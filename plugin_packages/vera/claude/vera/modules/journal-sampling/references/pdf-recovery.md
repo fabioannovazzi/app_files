@@ -20,15 +20,16 @@ No helper calls a model or changes the installed plugin. A local recovery is
 not a reusable product fix. OCR-only sources cannot qualify through this text
 word-reference contract; preserve their readable evidence and unresolved status.
 
-## Same case, bounded attempts
+## Same case, retained recovery history
 
 Keep the same running Studio Archive context and immutable journal input. Use
 only the workflow's existing output directory. The recovery tools write its
 `pdf_recovery` child, retaining source and implementation hashes, inspection
-artifacts, every candidate recipe and its diagnostics. Four distinct trials and
-twelve targeted inspections are permitted. Identical recipes cannot be retried.
-Do not reset the history or create another run to evade those limits. A changed
-source or implementation invalidates the session.
+artifacts, every candidate recipe and its diagnostics. Continue targeted
+inspection and distinct recipe revisions while new evidence supports progress;
+there is no fixed lifetime attempt or inspection count. Identical recipes cannot
+be retried. Preserve the history in the same run. A changed source or
+implementation invalidates the session.
 
 1. Read the ordinary inspection and rejection reasons. Inspect the failed page
    and adjacent pages with `--pdf-recovery inspect --pdf-pages N ...`; at most
@@ -66,7 +67,7 @@ source or implementation invalidates the session.
    `source_sha256`, into the ordinary workflow recipe. Reinspect, obtain the
    existing source-mapping decision receipt, normalize and continue through all
    existing replay/qualification and downstream gates.
-5. If inspection or trial limits are exhausted, or evidence remains ambiguous,
+5. If the evidence cannot resolve the remaining problem or work is stopped,
    retain the full recovery history, report the specific remaining problem and
    deliver the readable CSV and its unresolved issues, then close the run with
    its existing failed/blocked lifecycle. Do not adjust

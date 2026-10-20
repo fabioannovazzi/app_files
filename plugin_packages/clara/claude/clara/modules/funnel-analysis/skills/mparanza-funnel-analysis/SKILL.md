@@ -5,13 +5,20 @@ description: Use when a user wants Claude to turn a CSV plus explicit ordered st
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -93,7 +100,7 @@ Use Cowork-native UI artifacts as part of the workflow:
 2. Run dependency checks from the plugin directory:
 
 ```bash
-python scripts/check_dependencies.py
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module funnel-analysis run scripts/check_dependencies.py
 ```
 
 If requirements are missing, install from `requirements.txt` only when the
@@ -105,7 +112,7 @@ environment allows it, or explain what dependency capability is missing.
 4. Run the deterministic table:
 
 ```bash
-python scripts/run_funnel_analysis.py <input-file> --output-dir <output-dir> --recipe <recipe.json> --language <en|it|fr|de|es>
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module funnel-analysis run scripts/run_funnel_analysis.py <input-file> --output-dir <output-dir> --recipe <recipe.json> --language <en|it|fr|de|es>
 ```
 
 5. Review `funnel_stage_table_chart_context.json`,

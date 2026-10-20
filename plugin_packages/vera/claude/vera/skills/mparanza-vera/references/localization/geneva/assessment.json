@@ -115,7 +115,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "85fbcfb8b1465d64b6638083eefe14613cd82a22fcfcdc0db822d028c0dc6f55",
+  "catalogue_fingerprint": "5a09df447a45e934b5f10b83443fe82a1a5276e03d68650c6a8eab79ab77a6b6",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -637,7 +637,7 @@
       "common_work": "Assess responsibilities, processes and information using policies, statements and actual operating evidence.",
       "disposition": "Adapt",
       "function_id": "adeguati-assetti",
-      "geneva_application": "Review whether a Geneva client\u2019s organisation and financial monitoring support its work and decisions.",
+      "geneva_application": "Review whether a Geneva client’s organisation and financial monitoring support its work and decisions.",
       "implementation": "CH-GE evidence-based organisation review with Swiss framework basis and same-jurisdiction history.",
       "implementation_status": "adapted_with_documented_scope",
       "name": "Organisation and controls assessment",
@@ -699,7 +699,7 @@
       "common_work": "Review identity/ownership evidence, changes and unusual transactions with persistent professional decisions.",
       "disposition": "Adapt",
       "function_id": "aml-review",
-      "geneva_application": "Support a Geneva fiduciary\u2019s review where the actual activity and mandate make the relevant obligations applicable.",
+      "geneva_application": "Support a Geneva fiduciary’s review where the actual activity and mandate make the relevant obligations applicable.",
       "implementation": "CH-GE source/mandate-applicability contract, same-jurisdiction history and explicit block on Italian scoring.",
       "implementation_status": "adapted_with_documented_scope",
       "name": "AML evidence review",
@@ -719,7 +719,7 @@
       "common_work": "Review duplicates and filing proposals, record decisions and apply or reverse approved moves.",
       "disposition": "Use",
       "function_id": "archive-organization",
-      "geneva_application": "Organise a selected Geneva client folder under the firm\u2019s own filing policy.",
+      "geneva_application": "Organise a selected Geneva client folder under the firm’s own filing policy.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Archive Organisation",
@@ -800,7 +800,7 @@
       "common_work": "Learn, validate and run an authorized bounded process with recorded evidence and bindings.",
       "disposition": "Use",
       "function_id": "browser-automation",
-      "geneva_application": "The same acquisition method can be used for a Geneva firm\u2019s actual supported web process.",
+      "geneva_application": "The same acquisition method can be used for a Geneva firm’s actual supported web process.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Browser/process automation",
@@ -820,7 +820,7 @@
       "common_work": "Assess customers, demand, prices, operations, economics, cash, alternatives and financing, preserving successive revisions.",
       "disposition": "Adapt",
       "function_id": "business-planning",
-      "geneva_application": "Help a Geneva fiduciary evaluate a client\u2019s investment, expansion or financing decision.",
+      "geneva_application": "Help a Geneva fiduciary evaluate a client’s investment, expansion or financing decision.",
       "implementation": "French report presentation and number formatting; existing CHF calculations retained.",
       "implementation_status": "adapted_with_documented_scope",
       "name": "Business Planning",
@@ -855,7 +855,7 @@
       "adaptation_layers": [
         "unresolved source equivalence"
       ],
-      "common_work": "Normalize a Banca d\u2019Italia risk report and produce source-supported debt and resource analysis.",
+      "common_work": "Normalize a Banca d’Italia risk report and produce source-supported debt and resource analysis.",
       "disposition": "Unresolved",
       "function_id": "centrale-rischi-review",
       "geneva_application": "The debt-analysis purpose is recognizable, but no equivalent Swiss report contract has been established.",
@@ -894,10 +894,10 @@
       "adaptation_layers": [
         "source and voice configuration"
       ],
-      "common_work": "Select relevant developments and prepare reviewed, source-backed client or public communications in the firm\u2019s voice.",
+      "common_work": "Select relevant developments and prepare reviewed, source-backed client or public communications in the firm’s voice.",
       "disposition": "Use",
       "function_id": "comunicazione-professionale",
-      "geneva_application": "Explain a relevant Swiss/Geneva development to the firm\u2019s actual audience in French.",
+      "geneva_application": "Explain a relevant Swiss/Geneva development to the firm’s actual audience in French.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Professional communication",
@@ -956,7 +956,7 @@
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Specific DATEV/ECONS invoice starter",
-      "required_change": "Inspect the firm\u2019s application and task before deciding whether this starter applies. Retain the general browser/process-acquisition function; do not infer a Swiss connector or rule out every possible DATEV use.",
+      "required_change": "Inspect the firm’s application and task before deciding whether this starter applies. Retain the general browser/process-acquisition function; do not infer a Swiss connector or rule out every possible DATEV use.",
       "role": "function",
       "sources": [],
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance."
@@ -1063,7 +1063,7 @@
       "common_work": "Prepare reviewed P&L, working-capital, concentration and fixed financial due-diligence calculations.",
       "disposition": "Use",
       "function_id": "financial-analysis",
-      "geneva_application": "Explain a Geneva client\u2019s results, capital requirements or transaction evidence under the same calculation contracts.",
+      "geneva_application": "Explain a Geneva client’s results, capital requirements or transaction evidence under the same calculation contracts.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Financial Analysis",
@@ -1116,7 +1116,7 @@
       "verification": "Inspected source and synthetic numerical, archive and review regressions only; no Swiss merger assessment, legal validation or client acceptance."
     },
     {
-      "acceptance_example": "Review a selected recipient\u2019s accepted structured invoice specification and source-to-field coverage before deciding or implementing an adapter.",
+      "acceptance_example": "Review a selected recipient’s accepted structured invoice specification and source-to-field coverage before deciding or implementing an adapter.",
       "adaptation_layers": [
         "unresolved output contract"
       ],
@@ -1144,10 +1144,10 @@
       "common_work": "Compare bank movements with accounting entries and explain matched and unmatched items.",
       "disposition": "Adapt",
       "function_id": "journal-bank-reconciliation",
-      "geneva_application": "Apply the same matching and review method to a Geneva firm\u2019s bank and ledger exports.",
+      "geneva_application": "Apply the same matching and review method to a Geneva firm’s bank and ledger exports.",
       "implementation": "Reviewed French textual dates use additive adapter v8; currencies remain explicitly source-mapped.",
       "implementation_status": "adapted_with_documented_scope",
-      "name": "Bank\u2013journal reconciliation",
+      "name": "Bank–journal reconciliation",
       "required_change": "Remove the unresolved-currency EUR fallback for target runs; use evidenced currency. Qualify actual Swiss dates, numbers and references. Textual-month locale handling currently supports Italian only; extend it if French month-name inputs are accepted. Add CAMT parsing only if selected inputs require it.",
       "role": "function",
       "sources": [
@@ -1169,7 +1169,7 @@
       "implementation": "Source-evidenced currency and Swiss export qualification instructions; no new sampling algorithm.",
       "implementation_status": "adapted_with_documented_scope",
       "name": "Journal Sampling",
-      "required_change": "French is already supported. Replace the instruction to assume EUR when absent; qualify the source export\u2019s posting identity, amounts and signs. Sampling logic is shared.",
+      "required_change": "French is already supported. Replace the instruction to assume EUR when absent; qualify the source export’s posting identity, amounts and signs. Sampling logic is shared.",
       "role": "function",
       "sources": [
         "ledgers",
@@ -1387,11 +1387,11 @@
       "common_work": "Create or refresh an informational professional website from verified firm materials.",
       "disposition": "Use",
       "function_id": "presenza-digitale-studio",
-      "geneva_application": "Present a Geneva fiduciary\u2019s actual team and services in French.",
+      "geneva_application": "Present a Geneva fiduciary’s actual team and services in French.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Firm website",
-      "required_change": "Configure verified firm facts, terminology and relevant notices. Do not invent services or qualifications; the website workflow does not expand Vera\u2019s professional catalogue.",
+      "required_change": "Configure verified firm facts, terminology and relevant notices. Do not invent services or qualifications; the website workflow does not expand Vera’s professional catalogue.",
       "role": "function",
       "sources": [
         "profession"
@@ -1445,7 +1445,7 @@
       "common_work": "Compare a supplier-invoice population with booked accounting and explain omissions, duplicates and differences.",
       "disposition": "Adapt",
       "function_id": "purchase-invoice-review",
-      "geneva_application": "Review a Geneva client\u2019s supplier invoices against its accounting export.",
+      "geneva_application": "Review a Geneva client’s supplier invoices against its accounting export.",
       "implementation": "Reviewed Swiss document population adapter feeding the existing matching, arithmetic and semantic audit; exact source and extraction-review hashes checked.",
       "implementation_status": "adapted_with_documented_scope",
       "name": "Purchase-invoice population review",
@@ -1579,7 +1579,7 @@
       "verification": "Source scope and synthetic unsupported-route tests inspected; no current Swiss legal-source assessment or Geneva professional acceptance performed."
     },
     {
-      "acceptance_example": "Register a synthetic client with a punctuated CHE identifier; import French text and a scan; retrieve only that client\u2019s evidence and resume the same engagement. Check French OCR quality and identifier equivalence explicitly.",
+      "acceptance_example": "Register a synthetic client with a punctuated CHE identifier; import French text and a scan; retrieve only that client’s evidence and resume the same engagement. Check French OCR quality and identifier equivalence explicitly.",
       "adaptation_layers": [
         "language",
         "Swiss identifier format"
@@ -1645,7 +1645,7 @@
       "common_work": "Forecast liquidity from reviewed balances, open items and timed cash movements.",
       "disposition": "Adapt",
       "function_id": "treasury-forecast",
-      "geneva_application": "Maintain a Geneva client\u2019s expected cash position.",
+      "geneva_application": "Maintain a Geneva client’s expected cash position.",
       "implementation": "CHF forecast/update arithmetic with currency-safe records and currency-correct HTML, Markdown, XLSX and live review. Fixed interface prose remains Italian.",
       "implementation_status": "adapted_with_documented_scope",
       "name": "Treasury Forecast",
@@ -1664,7 +1664,7 @@
       "common_work": "Explain actual/budget/forecast or prior-period changes with reproducible calculations and reviewed interpretation.",
       "disposition": "Use",
       "function_id": "variance-analysis",
-      "geneva_application": "Analyse a Geneva client\u2019s performance deviations.",
+      "geneva_application": "Analyse a Geneva client’s performance deviations.",
       "implementation": "Existing function retained with the recorded qualification limits.",
       "implementation_status": "existing_or_unresolved_as_assessed",
       "name": "Variance Analysis",
@@ -1727,6 +1727,11 @@
     "scope": "Only the canonical manifest version changes the catalogue identity. All 55 skill entrypoint hashes are unchanged. Runtime metadata write recovery preserves existing Geneva dispositions and does not establish additional jurisdiction or host acceptance.",
     "version": "0.1.418"
   },
+  "runtime_reuse_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "78842c354e4384a818ddb5a0a191794b659ea22050d832388f71e24baa6f1912",
+    "scope": "Manifest version binding after runtime reuse, PDF recovery and native reporting repairs. All catalogued skill entrypoint bytes and existing jurisdiction dispositions are unchanged. Source and package checks establish no new professional or Geneva acceptance.",
+    "version": "0.1.438"
+  },
   "schema": "vera.localization.assessment.v1",
   "scissione_course_release_binding": {
     "integrated_main": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
@@ -1768,6 +1773,11 @@
     "reviewed_at": "2026-10-12",
     "version": "0.1.363"
   },
+  "shared_runtime_locked_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "85fbcfb8b1465d64b6638083eefe14613cd82a22fcfcdc0db822d028c0dc6f55",
+    "scope": "Manifest-only catalogue identity refresh; all skill entrypoint bytes and existing professional/jurisdiction findings are unchanged. Shared dependency locks and the scatter export legend correction establish no new Geneva capability.",
+    "version": "0.1.437"
+  },
   "source_binding_update": {
     "date": "2026-10-14",
     "fresh_geneva_acceptance": false,
@@ -1795,7 +1805,7 @@
     "exports": {
       "basis": "Provides vendor documentation for export qualification; no customer-specific compatibility has been tested.",
       "consulted": "2026-09-27",
-      "title": "Cr\u00e9sus: exchanging accounting data",
+      "title": "Crésus: exchanging accounting data",
       "url": "https://support.cresus.ch/manuels/cresus-comptabilite/?sid=232"
     },
     "fusione_p0": {

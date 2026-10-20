@@ -180,7 +180,7 @@ def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
     assert not any("beautify" in name.lower() for name in clara_entries)
 
 
-def test_clara_cowork_bootstraps_declared_python_dependencies(
+def test_clara_cowork_does_not_install_during_session_start(
     clara_entries,
 ) -> None:
     hooks = json.loads(clara_entries["hooks/hooks.json"])
@@ -190,20 +190,19 @@ def test_clara_cowork_bootstraps_declared_python_dependencies(
         {
             "type": "command",
             "command": (
-                'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/'
-                'bootstrap_python_dependencies.py"'
-            ),
-            "timeout": 240,
-        },
-        {
-            "type": "command",
-            "command": (
                 'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/check_change_requests.py"'
             ),
             "timeout": 10,
         },
     ]
     assert "scripts/bootstrap_python_dependencies.py" in clara_entries
+    scatter = clara_entries[
+        "modules/scatter-bubble-analysis/skills/mparanza-scatter-bubble-analysis/SKILL.md"
+    ].decode()
+    assert "python scripts/check_dependencies.py" not in scatter
+    assert (
+        "--module scatter-bubble-analysis run scripts/check_dependencies.py" in scatter
+    )
     requirements = clara_entries["requirements.txt"].decode("utf-8")
     assert "-r modules/reporting-engine/requirements.txt" in requirements
     reporting_requirements = clara_entries[

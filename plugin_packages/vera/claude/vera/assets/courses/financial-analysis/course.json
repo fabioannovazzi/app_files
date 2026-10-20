@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/financial-analysis/skills/mparanza-financial-analysis/SKILL.md",
-      "sha256": "5486bab7b8e7f484ebac7723544aecd137d3eb9e79ac64cecae49aed42b5c323"
+      "sha256": "4e2cb23a1036bbf0d74e681c17e291781ad0a3d6d7b06279b0d625179fb53c76"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/__init__.py",
@@ -129,7 +129,7 @@
     },
     {
       "path": "modules/financial-analysis/vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -157,7 +157,7 @@
     },
     {
       "path": "skills/mparanza-financial-analysis/SKILL.md",
-      "sha256": "1f9f1982878ef7ab67f8b31b96844cdf35d295ad50eb0c15efd1a44e5a6dd5c1"
+      "sha256": "3c95fdc743d791382f2d7521a6b9cc84f033b70636fdce51b36e1b17abdfb62b"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -277,7 +277,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -317,7 +317,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -562,5 +562,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "38a40042ee3cd1a86d4b9df3c11c978743c0f11ac1bb7f478a3dc25132383d80"
+  "canonical_course_sha256": "91d163c0cd8043bcb7855acac9eddfe0b2cbaee589337f43cfec22bebf1abf20"
 }

@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/scissione-guidata/skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "7b3167b3a434a91179b73b2453b3fd831573932d65ce7a2831adce02daec8afa"
+      "sha256": "980b990f1ac601f7ec355c830cacc13e0d150c2b13066db30b86f5dbe2c3d3c4"
     },
     {
       "path": "modules/scissione-guidata/vendor/modules/__init__.py",
@@ -89,7 +89,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "eda57ffec8f6f31f6824a4b21dfbb3f63a10632d3c30a5b41913313236443d95"
+      "sha256": "04a9f7fc97e5ac5cec9995c67af60bb7987a647007ebf297ce4b047b5845a5ea"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -221,7 +221,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -261,7 +261,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -546,5 +546,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2f791a4b8b7a3a9a9340ee519e3023db206e8c50fc77f8a61ac1461685369ca1"
+  "canonical_course_sha256": "711af71b88aa7345a2c63e18672d1331dbbb35043987c24e07e3ea9f8900fdf1"
 }

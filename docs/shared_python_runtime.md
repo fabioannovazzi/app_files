@@ -9,23 +9,26 @@ share native binaries or this filesystem environment.
 `requirements-shared-core.txt` is the union of the products and their non-OCR
 optional requirements. `requirements-shared-ocr.txt` enables OCR in the same
 interpreter after approval. Enabled OCR persists across subsequent updates.
-macOS uses the checked-in Python 3.12 constraints. Windows/Linux resolve the same
-published requirements; native acceptance must be tested on those hosts.
+Fresh installation and dependency repair use the published, SHA-256-checked
+shared lock files on every supported platform. Platform markers select native
+variants; native acceptance must still be tested on those hosts.
 
 All three products must ship byte-identical shared recipes, constraints and
 `_shared_python_runtime.py`. Increment `POLICY_REVISION` together whenever any of
 these files changes. The revision records installation history; it never decides
 whether a workflow can run. Reuse a completed environment when its actual package
-versions and the selected component's imports satisfy the declared requirements,
+inventory matches its completed installation receipt, its package versions
+satisfy the declared requirements, and the selected component's imports work,
 even if another product installed a newer or different recipe. Reuse leaves the
 existing policy, receipt and enabled OCR unchanged. Only a missing dependency,
-an incompatible package or an incomplete installation triggers managed repair.
+an incompatible package, changed installed inventory or an incomplete
+installation triggers managed repair.
 
 Launch setup from base Python through `scripts/managed_python_runtime.py install`.
 Use `--requirements requirements-shared-ocr.txt install` to enable approved OCR.
 Run workflow helpers through the same launcher. Managed Python processes hold a
-reader lease until exit; setup requires the exclusive lock and returns a busy
-error after 60 seconds if workflows are still running. Externally activated OCR
+reader lease until exit; setup requires the exclusive lock and waits up to
+30 minutes if workflows or another installer are still running. Externally activated OCR
 also holds a reader lease. The startup hook is concurrency protection, not an
 isolation or security boundary between client matters.
 

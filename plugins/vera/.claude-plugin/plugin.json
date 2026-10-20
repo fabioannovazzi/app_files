@@ -65,6 +65,6 @@
     "./agents/vera.md",
     "./agents/passive-invoice-reviewer.md"
   ],
-  "version": "0.1.410",
+  "version": "0.1.411",
   "privacyPolicyUrl": "https://mparanza.com/privacy"
 }

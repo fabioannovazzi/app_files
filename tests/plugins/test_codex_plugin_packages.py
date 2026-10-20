@@ -427,6 +427,7 @@ def extracted_clara_plugin(tmp_path_factory: pytest.TempPathFactory) -> Path:
         "recipes": shared._recipes(root, {"core"}),
         "revision": shared.POLICY_REVISION,
         "runtime_key": runtime.runtime_key(runtime.runtime_python(target)),
+        "installed_distributions": runtime._resolved_dependencies(target),
     }
     (target / shared.RECEIPT).write_text(json.dumps(receipt), encoding="utf-8")
     (target.parent / shared.POLICY).write_text(json.dumps(receipt), encoding="utf-8")

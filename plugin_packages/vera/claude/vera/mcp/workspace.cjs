@@ -769,7 +769,7 @@ function handle(message) {
       let binding = null;
       if (reporting) {
         try {
-          binding = bridge("__bind_model_output", { work_ref: args.work_ref });
+          binding = bridge("__bind_model_output", { work_ref: args.work_ref, operation: definition.name });
         } catch {
           return response({ isError: true, content: [{ type: "text", text:
             "Vera could not bind this request to its outgoing-data record. The case payload was not returned." }] });
@@ -785,7 +785,7 @@ function handle(message) {
       if (reporting) {
         const { _meta, ...modelPayload } = result;
         try {
-          bridge("__record_model_output", { work_ref: args.work_ref, payload: modelPayload, binding });
+          bridge("__record_model_output", { work_ref: args.work_ref, operation: definition.name, payload: modelPayload, binding });
         } catch {
           throw new Error("Vera could not save this run's outgoing-data record. The case payload was not returned.");
         }

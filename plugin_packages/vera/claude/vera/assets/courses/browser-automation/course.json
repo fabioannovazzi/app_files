@@ -205,11 +205,11 @@
     },
     {
       "path": "modules/browser-automation/skills/mparanza-browser-automation/SKILL.md",
-      "sha256": "2ae6ac6ca45e0241b38ebcfbfbbb1e0f8cdb229d6bbe6d937e0eb18945ff143f"
+      "sha256": "537697f495a7a70edc1146c5c4620bb5e03812813e660ccdaf737ec6ba14ac54"
     },
     {
       "path": "skills/mparanza-browser-automation/SKILL.md",
-      "sha256": "c1961fa8436d860caaa2080a259a5bcfecca1be530fccbfda9b67efe78a4a576"
+      "sha256": "8b8966a315f1bc3fb3ce4f7c9be920b3c5823ac8bc9f88a626d607ed38a6bd76"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -329,7 +329,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -369,7 +369,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -590,5 +590,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "aa3870a824dc81b09bace3e536aa924ee7a51849d03de38dfe54f95a095a4d85"
+  "canonical_course_sha256": "8618520dce9978930c3acc662cb04eede5ea47cc655c6f2470029be895201265"
 }

@@ -281,7 +281,7 @@
     },
     {
       "path": "modules/patent-box-review/skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "cefb5eb43943ed336ae4856d6b854aa33f76b920205a0000a69158624d67d4d7"
+      "sha256": "249656cdc7ecbb3733a2c084c77ce562a6b240488dff217802561878133f2143"
     },
     {
       "path": "modules/patent-box-review/templates/declaration_bridge.csv",
@@ -333,7 +333,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -345,7 +345,7 @@
     },
     {
       "path": "skills/mparanza-patent-box-review/SKILL.md",
-      "sha256": "6a1a94a1dc93557a68066e2b824fa90411754b3c4facfe9b5d78367efbd78ddb"
+      "sha256": "6da5ded617eb84e2f0518d67ab86000b2d1a09825ab69e9c9673198edc391cdd"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -465,7 +465,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -505,7 +505,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -774,5 +774,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ec9c7c01d3a43382c148acefc43cb24f2718641d87659448054b2e6a7fb25262"
+  "canonical_course_sha256": "0021802838ee24872857c656e4ed95fcea79c916ecc9c97ecab1150532497c57"
 }

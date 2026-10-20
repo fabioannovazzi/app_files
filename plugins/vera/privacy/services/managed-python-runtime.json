@@ -77,6 +77,9 @@
     "scripts/managed_python_runtime.py",
     "skills/vera/SKILL.md",
     "scripts/_shared_python_runtime.py",
+    "scripts/_locked_dependencies.py",
+    "requirements-shared-core.lock",
+    "requirements-shared-ocr.lock",
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
@@ -94,7 +97,7 @@
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-20",
-    "source_fingerprint": "d73bfcc5cfc3476ef31e701fa11441bbe97896cc74c498bf813970dfeb38a1a2"
+    "source_fingerprint": "bb31c9ad84bb4b4cf786649fc6c81978b4dcd4cdabca6c9049a4626a8407c113"
   },
   "runtime_profiles": [
     "openai-codex",

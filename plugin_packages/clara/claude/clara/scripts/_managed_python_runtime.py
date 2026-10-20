@@ -463,6 +463,8 @@ def runtime_environment(target: Path) -> dict[str, str]:
     )
     environment["VIRTUAL_ENV"] = str(target)
     environment.pop("PYTHONHOME", None)
+    environment.pop("PYTHONPATH", None)
+    environment["PYTHONNOUSERSITE"] = "1"
     environment["MPARANZA_MANAGED_RUNTIME_VERIFY"] = "1"
     return environment
 

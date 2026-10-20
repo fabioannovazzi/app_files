@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/sales-plan/skills/mparanza-sales-plan/SKILL.md",
-      "sha256": "c48efd71d60f47343d3da5af63424fe2703ec9e50d6ca554b6a942ada94274a3"
+      "sha256": "1ec18d14e90efd2bedec7ba8019da4991f99b1ca25e6ed4089fb9b89ce5dc63a"
     },
     {
       "path": "modules/sales-plan/vendor/modules/__init__.py",
@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/sales-plan/vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "modules/sales-plan/vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -105,7 +105,7 @@
     },
     {
       "path": "skills/mparanza-sales-plan/SKILL.md",
-      "sha256": "b01b98eeb5f037f918ed88b59efb10121119468fd419416471c0d988e299ed3b"
+      "sha256": "58950711171f33195c9af67af794e52cf9b917d4441220589e39e7e332fb673f"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -225,7 +225,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
-      "sha256": "f82a09e2d98cd6472c7aa33b9b4004100c9c64750de3b809ed5143467d20b1b4"
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
@@ -265,7 +265,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "8fc5711a9b225cb9d3bae1eb7ca2f6a372bd45ce8325cd4142ceb24f10197332"
+      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -510,5 +510,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4059630b4f7039b550899468dd7fe0c67c21f44a469979617b85d9553c59f1b5"
+  "canonical_course_sha256": "d003e67a5bab9b13bc6475d4ba74f4b188a17450e76a9bc34c9b1a4add7247ad"
 }

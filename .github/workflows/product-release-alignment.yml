@@ -27,7 +27,7 @@ jobs:
           node-version: '22'
       - name: Install plugin build dependencies
         run: python -m pip install -r scripts/requirements-plugin-build.txt
-      - run: python -m pip install pytest pytest-cov beautifulsoup4 pyyaml black==25.1.0 isort==6.0.1 mypy bandit
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 pyyaml black==25.1.0 isort==6.0.1 mypy bandit uv==0.12.10
       - name: Reject shared recipe changes without a policy revision upgrade
         env:
           BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
@@ -39,6 +39,8 @@ jobs:
           fi
       - name: Test shared runtime release revision guard
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_shared_runtime_revision.py
+      - name: Verify shared dependency lock exports
+        run: python scripts/lock_shared_runtime.py --check
       - name: Verify website ZIP version labels
         run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection

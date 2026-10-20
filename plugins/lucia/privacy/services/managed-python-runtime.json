@@ -9,6 +9,9 @@
     "scripts/managed_python_runtime.py",
     "skills/lucia/SKILL.md",
     "scripts/_shared_python_runtime.py",
+    "scripts/_locked_dependencies.py",
+    "requirements-shared-core.lock",
+    "requirements-shared-ocr.lock",
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
@@ -168,6 +171,6 @@
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "1401262d779de73e226c240021fdf9d142f69872f7798e3d0df44955e5a92473"
+    "source_fingerprint": "65695a19b811642f1b757cb33c319e3cf6a32fd68272ff35c04f935494090e05"
   }
 }

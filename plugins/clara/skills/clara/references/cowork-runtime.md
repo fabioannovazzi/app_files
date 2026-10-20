@@ -32,15 +32,20 @@ use automatic incident reporting for an observed technical failure. Do not fall 
 
 ## Cowork execution contract
 
-Use connected files first. Clara's trusted `SessionStart` hook installs the
-package's exact declared Python requirements into Clara's user-scoped plugin
-data directory and exposes that directory to the Cowork sandbox through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with the
-useful file-based work and state the limitation. Browser, computer-control,
-MCP, and local review-server capabilities are optional enhancements, never
-completion gates.
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. Browser, computer-control, MCP, and local review-server capabilities remain optional.
 
 Do not invoke Clara's hosted voice, external interview, transcription, deck
 feedback capture, or custom version-update services. Do not claim
@@ -98,12 +103,9 @@ workflow ran when it did not.
 
 1. Inspect the connected folder and identify the case root, source materials,
    existing Clara records, requested output, and unresolved material choices.
-2. Run `python scripts/check_dependencies.py` before local Python helpers. The
-   trusted startup bootstrap should already have installed the declared
-   requirements in the user sandbox. If dependencies are still missing,
-   rerun `python scripts/bootstrap_python_dependencies.py`, then repeat the
-   check. If bootstrap fails, continue with a transparent file-first workflow
-   and record the affected capability.
+2. Run the selected module's dependency check through the managed launcher
+   shown above. It completes setup before execution. If setup fails, record
+   the concrete error and affected capability; never continue with ambient Python.
 3. Initialize or validate the case with `scripts/init_case.py` and
    `scripts/validate_workspace.py` when appropriate.
 4. Register source material with `scripts/index_materials.py`. Preserve exact

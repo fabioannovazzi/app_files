@@ -15,6 +15,10 @@ FILES = (
     "requirements-shared-core.txt",
     "requirements-shared-ocr.txt",
     "constraints-shared-macos-py312.txt",
+    "requirements-shared-core.lock",
+    "requirements-shared-ocr.lock",
+    "scripts/_locked_dependencies.py",
+    "scripts/_python_bootstrap.py",
     "scripts/_shared_python_runtime.py",
 )
 BACKEND = FILES[-1]
@@ -48,7 +52,13 @@ def verify_policy(root: Path, previous: Callable[[str], bytes] | None = None) ->
     revision = _revision(canonical[BACKEND])
     if previous is not None:
         for product in PRODUCTS:
-            old = {name: previous(f"plugins/{product}/{name}") for name in FILES}
+            old = {}
+            for name in FILES:
+                try:
+                    old[name] = previous(f"plugins/{product}/{name}")
+                except (KeyError, subprocess.CalledProcessError):
+                    # A newly introduced contract file still requires a revision bump.
+                    old[name] = b""
             old_revision = _revision(old[BACKEND])
             if revision < old_revision:
                 raise ValueError(f"{product}: shared runtime revision cannot decrease")
@@ -79,7 +89,9 @@ def main(argv: list[str] | None = None) -> int:
 
             def read_previous(path: str) -> bytes:
                 return subprocess.check_output(
-                    ["git", "show", f"{baseline}:{path}"], cwd=args.root
+                    ["git", "show", f"{baseline}:{path}"],
+                    cwd=args.root,
+                    stderr=subprocess.PIPE,
                 )
 
             previous = read_previous

@@ -385,7 +385,7 @@ dependency checker and only already-installed dependencies; do not assume that a
 standalone module script provisions them.
 
 The managed launcher provisions and reuses one user-scoped CPython 3.12
-environment per OS host with the published shared requirements, outside client
+environment per OS host with the published, hash-checked dependency locks, outside client
 folders. Modules and products share this dependency environment; it does not
 isolate client matters. This declared dependency setup is authorized as
 part of running the workflow; never install arbitrary packages or use ambient
