@@ -281,9 +281,13 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    `reconciliation_matches.csv`, `unmatched_bank.csv`, and
    `unmatched_journal.csv` through the deterministic validators and expose
    their paths in the local workbench; do not load their complete row contents
-   into model context. Run
-   `journal_bank_core.validate_material_value_ledger` against the output
-   directory before relying on native values. Report matched count, unmatched
+   into model context. `run_reconciliation.py` already runs
+   `journal_bank_core.validate_material_value_ledger` before completing.
+   The published `semantic_review.py prepare` and `run-all` commands replay the
+   current values and receipts again before preparing a worker. Use those
+   commands through the installed managed execution service/runtime when a
+   fresh replay is needed; do not import the core with an unrelated shell
+   Python or install dependencies there. Report matched count, unmatched
    bank count, unmatched journal count, residual or withheld gates, stage
    counts, unresolved/manual-review issues, and output paths.
    `material_value_ledger.json` is intentionally absent when source
@@ -298,8 +302,14 @@ bank movements. Anthropic Cowork and other runtimes skip it and continue with
 the normal review handoff. The purpose is to remove as much routine human work
 as the user's required certainty permits, not merely to attach suggestions.
 
-Before preparation, record the minimum certainty the user requires to remove a
-movement from human review. The ordered sufficiency levels are `classified`,
+Preparing and delivering a draft does not require a user decision about clearing
+the review queue. Reuse an explicitly established clearance policy when one
+exists; otherwise omit `--required-level` and record the preparation default,
+`perfect_match`, without attributing it to the user. Luna still analyses the
+eligible residuals, and its judgments remain available for review. Ask about a
+lower clearance threshold only when the user requests that operational policy;
+professional adoption, signature, filing and external actions remain separate.
+The ordered sufficiency levels are `classified`,
 `candidate_match`, `beneficiary_match`, `identifier_match`, and
 `perfect_match`. They form a cumulative “at least” funnel by count and gross
 absolute value. Each movement has one highest level, while funnel totals count
@@ -324,9 +334,12 @@ worker for the bounded packet produced for that run.
 ```bash
 python scripts/semantic_review.py run-all <output-dir>/reconciliation \
   --output-dir <output-dir>/semantic-review \
-  --required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match> \
   --client-engagement <client_engagement_path>
 ```
+
+Pass `--required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match>`
+only to apply an explicitly established clearance policy. Its omission does not
+skip the worker or any source, output-receipt or material-value validation.
 
 An explicitly reviewed alternative may be supplied to `prepare` or `run-all`
 with `--worker-selection <receipt.json>`. Use the shared reviewed-decision

@@ -47,8 +47,8 @@ def retained_job(tmp_path, monkeypatch, loaded, stdout, stderr=""):
     (job / "result.json").write_text(
         json.dumps({"state": "completed", "returncode": 0})
     )
-    (job / "stdout.txt").write_text(stdout)
-    (job / "stderr.txt").write_text(stderr)
+    (job / "stdout.txt").write_bytes(stdout.encode("utf-8"))
+    (job / "stderr.txt").write_bytes(stderr.encode("utf-8"))
     return module, {"operation": "status", "job_id": job_id}
 
 
@@ -113,11 +113,14 @@ def test_first_delivery_after_run_closure_remains_explicitly_blocked(
     assert store.events() == before
 
 
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
 def test_running_preview_returns_available_text_without_claiming_completion(
-    archive_core, client_case, tmp_path, monkeypatch
+    archive_core, client_case, tmp_path, monkeypatch, line_ending
 ):
     loaded = start(archive_core, client_case, "open-item-reconciliation")
-    module, args = retained_job(tmp_path, monkeypatch, loaded, "Preview ready\n")
+    module, args = retained_job(
+        tmp_path, monkeypatch, loaded, f"Preview ready{line_ending}"
+    )
     job = module._jobs() / args["job_id"]
     (job / "result.json").unlink()
     (job / "heartbeat").touch()
@@ -131,4 +134,7 @@ def test_running_preview_returns_available_text_without_claiming_completion(
     metadata, streams = result["structuredContent"]["output"]
     assert metadata["state"] == "running"
     assert "returncode" not in metadata
-    assert streams == {"stdout": "Preview ready\n", "stderr": "Local startup\n"}
+    assert streams == {
+        "stdout": f"Preview ready{line_ending}",
+        "stderr": "Local startup\n",
+    }

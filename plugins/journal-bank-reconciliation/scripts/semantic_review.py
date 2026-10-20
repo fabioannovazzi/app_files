@@ -188,7 +188,10 @@ RESOLUTION_LEVELS = (
     "perfect_match",
 )
 RESOLUTION_RANK = {level: rank for rank, level in enumerate(RESOLUTION_LEVELS)}
-DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
+# Draft preparation must not imply permission to clear semantic residuals.
+# Only deterministic replay can reach this level; an explicit lower policy
+# can change the review queue without changing the underlying reconciliation.
+DEFAULT_REQUIRED_RESOLUTION_LEVEL = "perfect_match"
 
 LEGACY_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
 PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
@@ -5038,7 +5041,7 @@ def run_semantic_resolution_pipeline(
     reconciliation_dir: Path,
     semantic_output_dir: Path,
     *,
-    required_resolution_level: str,
+    required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
     codex_bin: Path | None = None,
     client_engagement: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
@@ -5178,8 +5181,11 @@ def _parser() -> argparse.ArgumentParser:
     prepare.add_argument(
         "--required-level",
         choices=RESOLUTION_LEVELS[1:],
-        required=True,
-        help="Minimum certainty that removes a bank movement from human review.",
+        default=DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+        help=(
+            "Minimum certainty that removes a bank movement from human review. "
+            "Defaults to perfect_match, retaining semantic residuals for draft review."
+        ),
     )
     _add_client_engagement_argument(prepare)
     run_all = subparsers.add_parser(
@@ -5191,8 +5197,11 @@ def _parser() -> argparse.ArgumentParser:
     run_all.add_argument(
         "--required-level",
         choices=RESOLUTION_LEVELS[1:],
-        required=True,
-        help="Minimum certainty that removes a bank movement from human review.",
+        default=DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+        help=(
+            "Minimum certainty that removes a bank movement from human review. "
+            "Defaults to perfect_match, retaining semantic residuals for draft review."
+        ),
     )
     run_all.add_argument("--codex-bin", type=Path)
     run_all.add_argument(

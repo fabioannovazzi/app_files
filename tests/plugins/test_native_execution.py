@@ -240,7 +240,7 @@ def test_cancel_stops_the_owned_helper_and_detached_descendant(installed, tmp_pa
         )
         repeated = call(args)
 
-    assert output(cancelled)[0]["state"] == "cancelled"
+    assert output(cancelled)[0]["state"] == "cancelled", cancelled
     assert output(cancelled)[0]["returncode"] != 0
     assert repeated == cancelled
     assert (tmp_path / "counter").read_text() == "run\n"

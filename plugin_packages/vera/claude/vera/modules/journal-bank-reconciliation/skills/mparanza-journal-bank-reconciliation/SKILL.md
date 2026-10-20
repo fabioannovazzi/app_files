@@ -281,9 +281,13 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    `reconciliation_matches.csv`, `unmatched_bank.csv`, and
    `unmatched_journal.csv` through the deterministic validators and expose
    their paths in the local workbench; do not load their complete row contents
-   into model context. Run
-   `journal_bank_core.validate_material_value_ledger` against the output
-   directory before relying on native values. Report matched count, unmatched
+   into model context. `run_reconciliation.py` already runs
+   `journal_bank_core.validate_material_value_ledger` before completing.
+   The published `semantic_review.py prepare` and `run-all` commands replay the
+   current values and receipts again before preparing a worker. Use those
+   commands through the installed managed execution service/runtime when a
+   fresh replay is needed; do not import the core with an unrelated shell
+   Python or install dependencies there. Report matched count, unmatched
    bank count, unmatched journal count, residual or withheld gates, stage
    counts, unresolved/manual-review issues, and output paths.
    `material_value_ledger.json` is intentionally absent when source

@@ -8807,6 +8807,47 @@ def test_operational_review_path_only_handoff_is_read_only_and_preserves_strict_
     assert _tree_snapshot(reconciliation_dir) == before
 
 
+@pytest.mark.parametrize(
+    ("policy_arguments", "expected_level"),
+    [([], "perfect_match"), (["--required-level", "classified"], "classified")],
+)
+def test_semantic_prepare_cli_allows_drafts_without_a_clearance_decision(
+    tmp_path: Path,
+    policy_arguments: list[str],
+    expected_level: str,
+) -> None:
+    _, _, reconciliation, semantic, context_path, _ = (
+        _prepare_managed_ambiguous_semantic_run(tmp_path)
+    )
+    before = _tree_snapshot(reconciliation)
+
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            str(SEMANTIC_REVIEW_PATH),
+            "prepare",
+            str(reconciliation),
+            "--output-dir",
+            str(semantic),
+            "--client-engagement",
+            str(context_path),
+            *policy_arguments,
+        ],
+        capture_output=True,
+        check=False,
+        text=True,
+        timeout=120,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    graph = json.loads((semantic / "residual_candidate_graph.json").read_text())
+    assert graph["resolution_policy"]["required_level"] == expected_level
+    assert len(graph["selected_components"]) == 1
+    assert (semantic / "luna_prompt.md").is_file()
+    assert _tree_snapshot(reconciliation) == before
+
+
 def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     tmp_path: Path,
 ) -> None:
@@ -8836,7 +8877,7 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     )
     assert result["worker_required"] is True
     assert result["selected_component_count"] == 1
-    assert result["required_resolution_level"] == "classified"
+    assert result["required_resolution_level"] == "perfect_match"
     assert result["human_review_count"] == 2
     assert graph["resolution_policy"]["perfect_match_authority"] == (
         "deterministic_replay_only"
@@ -8996,15 +9037,15 @@ def test_semantic_prepare_assigns_deterministic_matches_only_to_perfect_level(
     operational_review = json.loads(
         (semantic_dir / "operational_review_payload.json").read_text(encoding="utf-8")
     )
-    assert applied["summary"]["human_review_count"] == 0
+    assert applied["summary"]["human_review_count"] == 1
     assert {item["highest_level_reached"] for item in applied["assignments"]} == {
         "classified",
         "perfect_match",
     }
-    assert operational_review["summary"]["bank_human_review_count"] == 0
-    assert not any(
-        item["item_type"] == "unmatched_bank" for item in operational_review["items"]
-    )
+    assert operational_review["summary"]["bank_human_review_count"] == 1
+    assert [item["item_type"] for item in operational_review["items"]] == [
+        "unmatched_bank"
+    ]
 
 
 def test_semantic_tolerant_deterministic_match_is_not_perfect(
@@ -9314,7 +9355,9 @@ def test_semantic_validate_applies_certainty_funnel_without_changing_strict_ledg
     _, semantic_review, reconciliation_dir, semantic_dir = (
         _prepare_ambiguous_semantic_run(tmp_path)
     )
-    semantic_review.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    semantic_review.prepare_semantic_review(
+        reconciliation_dir, semantic_dir, required_resolution_level="classified"
+    )
     graph = json.loads(
         (semantic_dir / "residual_candidate_graph.json").read_text(encoding="utf-8")
     )
@@ -9403,8 +9446,14 @@ def test_semantic_validate_applies_certainty_funnel_without_changing_strict_ledg
     assert _tree_snapshot(reconciliation_dir) == authoritative_before
 
 
-def test_semantic_classification_clears_review_at_classified_threshold(
+@pytest.mark.parametrize(
+    ("policy", "expected_review_count"),
+    [({}, 2), ({"required_resolution_level": "classified"}, 0)],
+)
+def test_semantic_classification_retains_draft_review_unless_clearance_is_explicit(
     tmp_path: Path,
+    policy: dict[str, str],
+    expected_review_count: int,
 ) -> None:
     _, semantic_review, reconciliation_dir, semantic_dir = (
         _prepare_ambiguous_semantic_run(tmp_path)
@@ -9412,7 +9461,7 @@ def test_semantic_classification_clears_review_at_classified_threshold(
     semantic_review.prepare_semantic_review(
         reconciliation_dir,
         semantic_dir,
-        required_resolution_level="classified",
+        **policy,
     )
     graph_path = semantic_dir / "residual_candidate_graph.json"
     graph = json.loads(graph_path.read_text(encoding="utf-8"))
@@ -9447,13 +9496,16 @@ def test_semantic_classification_clears_review_at_classified_threshold(
     operational_review = json.loads(
         (semantic_dir / "operational_review_payload.json").read_text(encoding="utf-8")
     )
-    assert application["summary"]["human_review_count"] == 0
+    assert application["summary"]["human_review_count"] == expected_review_count
     assert {
         (item["highest_level_reached"], item["classification"])
         for item in application["assignments"]
     } == {("classified", "payroll")}
-    assert operational_review["items"] == []
-    assert operational_review["summary"]["bank_human_review_count"] == 0
+    assert len(operational_review["items"]) == expected_review_count
+    assert (
+        operational_review["summary"]["bank_human_review_count"]
+        == expected_review_count
+    )
     assert operational_review["summary"]["journal_human_review_count"] == 0
     assert operational_review["summary"]["unmatched_journal_context_count"] == 2
 
@@ -13102,11 +13154,11 @@ def test_semantic_pipeline_preserves_reviewed_selection_through_generation(
     result = semantic.run_semantic_resolution_pipeline(
         reconciliation,
         output,
-        required_resolution_level="classified",
         worker_selection=review,
     )
 
     assert result["batch_count"] == 1
+    assert result["human_review_count"] == 2
     command = captured["command"]
     assert command[command.index("--model") + 1] == "gpt-6-astra"
     assert 'model_reasoning_effort="high"' in command

@@ -268,8 +268,12 @@ perimeter are never matched.
 ## Codex-Only Residual Resolution Funnel
 
 After a qualified deterministic run, `semantic_review.py prepare` projects the
-unmatched partitions into a bounded candidate graph and records the user's
-required certainty threshold. Preparation first validates the current output
+unmatched partitions into a bounded candidate graph. Without an explicit
+clearance policy, preparation defaults to `perfect_match`: it does not require a
+user choice, still prepares the worker and retains semantic residuals for draft
+review. An explicitly supplied `--required-level` applies the established
+clearance policy; the default must not be described as a user decision.
+Preparation first validates the current output
 receipts and material-value ledger replay.
 An edge exists only when the core candidate predicate accepts the exact amount
 and reviewed currency, unit, entity, party, and direction perimeter, and the
