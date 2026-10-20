@@ -49,7 +49,7 @@ jobs:
             x86_64) VERA_CODEX_TARGET=x86_64-apple-darwin ;;
             *) echo "No official Codex binary target for this runner architecture"; exit 1 ;;
           esac
-          CODEX_NATIVE=$(find "$RUNNER_TEMP/codex-current/node_modules/@openai" -type f -path "*/$VERA_CODEX_TARGET/codex/codex" -perm -111 -print -quit)
+          CODEX_NATIVE=$(find "$RUNNER_TEMP/codex-current/node_modules/@openai" -type f -path "*/$VERA_CODEX_TARGET/*/codex" -perm -111 -print -quit)
           test -n "$CODEX_NATIVE"
           echo "VERA_TEST_CODEX_BIN=$CODEX_NATIVE" >> "$GITHUB_ENV"
       - name: Verify live allow and deny boundaries with current Codex and macOS
