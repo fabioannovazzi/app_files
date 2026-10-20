@@ -5,13 +5,20 @@ description: Use for a recurring management-control pack from reviewed exports, 
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -162,8 +169,8 @@ Start with a visible checklist and Run Intake table. Run the dependency check,
 then inspect the complete files locally:
 
 ```bash
-python scripts/check_dependencies.py
-python scripts/inspect_inputs.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module management-control-pack run scripts/check_dependencies.py
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module management-control-pack run scripts/inspect_inputs.py \
   --input <bound-export> [--input <bound-export> ...] \
   --client-engagement <context.json> \
   --output-dir <run-output>/inspection
@@ -191,7 +198,7 @@ the deterministic runner never infers one from the source values.
 Run the fixed calculation and rendering pipeline:
 
 ```bash
-python scripts/run_pack.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module management-control-pack run scripts/run_pack.py \
   --input <bound-export> [--input <bound-export> ...] \
   --recipe <run-output>/inspection/reviewed_recipe.json \
   --client-engagement <context.json> \
@@ -226,7 +233,7 @@ transmission; a genuinely separate model read remains a separate phase.
 Then validate and assemble the reviewed draft:
 
 ```bash
-python scripts/finalize_pack.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module management-control-pack run scripts/finalize_pack.py \
   --pack <run-output>/pack/management_control_pack.json \
   --commentary <run-output>/pack/management_commentary.json \
   --client-engagement <context.json> \
@@ -251,7 +258,7 @@ source completeness, business causation, or approval.
 Open the final interactive HTML in Claude through the bound local preview:
 
 ```bash
-python scripts/preview_report.py --client-engagement <context.json> --report <run-output>/pack/final/management_control_dashboard_reviewed.html
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module management-control-pack run scripts/preview_report.py --client-engagement <context.json> --report <run-output>/pack/final/management_control_dashboard_reviewed.html
 ```
 
 Keep that process running and open its exact printed HTTP URL with a browser

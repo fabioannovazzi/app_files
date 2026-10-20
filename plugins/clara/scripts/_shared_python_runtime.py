@@ -5,7 +5,9 @@ from __future__ import annotations
 import errno
 import hashlib
 import json
+import logging
 import os
+import re
 import subprocess
 import sys
 import time
@@ -18,7 +20,8 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 12
+POLICY_REVISION = 13
+SETUP_WAIT_SECONDS = 1800
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
 # while readers are running. This is concurrency protection, not a sandbox.
@@ -112,23 +115,25 @@ def _read(path: Path) -> dict[str, Any]:
 def _recipes(root: Path, features: set[str]) -> dict[str, str]:
     if not features <= {"core", "ocr"}:
         raise ValueError("Unrecognized shared runtime feature")
-    constraint = _constraint(root)
-    lock_bytes = (constraint.read_bytes() if constraint else b"") + Path(
-        __file__
-    ).read_bytes()
+    implementation = Path(__file__).read_bytes()
     return {
         name: hashlib.sha256(
-            (root / f"requirements-shared-{name}.txt").read_bytes() + lock_bytes
+            (root / f"requirements-shared-{name}.txt").read_bytes()
+            + _lock_file(root, name).read_bytes()
+            + implementation
         ).hexdigest()
         for name in sorted(features)
     }
 
 
-def _constraint(root: Path) -> Path | None:
-    if sys.platform == "darwin":
-        path = root / "constraints-shared-macos-py312.txt"
-        return path if path.is_file() else None
-    return None
+def _lock_file(root: Path, feature: str) -> Path:
+    """All hosts install the same reviewed lock; never resolve an unlocked recipe."""
+    path = root / f"requirements-shared-{feature}.lock"
+    if not path.is_file() or path.is_symlink():
+        raise ValueError(
+            f"Published shared dependency lock is missing or unsafe: {path}"
+        )
+    return path
 
 
 def ready(selection: Any, path: Path, api: Any) -> bool:
@@ -143,6 +148,8 @@ def ready(selection: Any, path: Path, api: Any) -> bool:
             and receipt["recipes"] == _recipes(selection.plugin_root, features)
             and api.runtime_python(path).is_file()
             and (path / "pyvenv.cfg").is_file()
+            and receipt.get("installed_distributions")
+            == api._resolved_dependencies(path)
             and receipt["runtime_key"]
             == policy.get("runtime_key")
             == api.runtime_key(api.runtime_python(path))
@@ -234,7 +241,7 @@ def _write(path: Path, value: dict[str, Any]) -> None:
 
 
 @contextmanager
-def _writer(path: Path, timeout: float = 60) -> Iterator[None]:
+def _writer(path: Path, timeout: float = SETUP_WAIT_SECONDS) -> Iterator[None]:
     """Wait for installers and running managed Python readers to finish."""
     import stat
 
@@ -248,6 +255,7 @@ def _writer(path: Path, timeout: float = 60) -> Iterator[None]:
         if info.st_size == 0:
             os.write(fd, b"1")
         deadline = time.monotonic() + timeout
+        announced = False
         while True:
             try:
                 if sys.platform == "win32":
@@ -263,9 +271,15 @@ def _writer(path: Path, timeout: float = 60) -> Iterator[None]:
             except OSError as error:
                 if error.errno not in {errno.EACCES, errno.EAGAIN, errno.EDEADLK}:
                     raise
+                if not announced:
+                    logging.getLogger(__name__).info(
+                        "Waiting for shared Python setup or running workflows to finish."
+                    )
+                    announced = True
                 if time.monotonic() >= deadline:
                     raise OSError(
-                        "Shared runtime is busy; close running workflows and retry."
+                        f"Shared runtime is busy after {timeout:g} seconds; "
+                        "setup or a running workflow still holds its lock. Retry after it finishes."
                     )
                 time.sleep(0.05)
         yield
@@ -372,14 +386,17 @@ def _install(
     pip, environment, detail = api._bootstrap_pip(path, runner=run)
     if pip is None:
         return False, path, detail
-    command = [*pip, "install", "--disable-pip-version-check", "--no-input"]
-    for feature in sorted(features):
-        command.extend(
-            ["-r", str(selection.plugin_root / f"requirements-shared-{feature}.txt")]
-        )
-    constraint = _constraint(selection.plugin_root)
-    if constraint is not None:
-        command.extend(["-c", str(constraint)])
+    # The OCR lock includes core and is generated from the same resolution.
+    lock = _lock_file(selection.plugin_root, "ocr" if "ocr" in features else "core")
+    command = [
+        *pip,
+        "install",
+        "--disable-pip-version-check",
+        "--no-input",
+        "--require-hashes",
+        "-r",
+        str(lock),
+    ]
     installed = run(
         command,
         env=environment,
@@ -394,6 +411,9 @@ def _install(
             path,
             api._network_permission_detail(api._process_detail(installed)),
         )
+    _reconcile_locked_inventory(
+        selection.plugin_root, path, lock, api, run, pip, environment
+    )
     checked = run(
         [*pip, "check"],
         env=environment,
@@ -439,6 +459,78 @@ def _install(
         },
     )
     return True, path, f"Shared Mparanza runtime installed at {path}"
+
+
+def _reconcile_locked_inventory(
+    root: Path,
+    path: Path,
+    lock: Path,
+    api: Any,
+    run: Any,
+    pip: list[str],
+    environment: dict[str, str],
+) -> None:
+    """Validate target-platform pins and remove obsolete managed dependencies."""
+    inspected = run(
+        [
+            str(api.runtime_python(path)),
+            "-I",
+            "-S",
+            str(root / "scripts/_locked_dependencies.py"),
+            str(lock),
+        ],
+        env=environment,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    if inspected.returncode:
+        raise ValueError(
+            "Cannot verify the shared dependency lock: "
+            + api._process_detail(inspected)
+        )
+    expected = json.loads(inspected.stdout)
+    if not isinstance(expected, dict) or not all(
+        isinstance(name, str) and isinstance(version, str)
+        for name, version in expected.items()
+    ):
+        raise ValueError("Invalid resolved dependency lock")
+
+    def inventory() -> dict[str, str]:
+        return {
+            re.sub(r"[-_.]+", "-", item["name"]).lower(): item["version"]
+            for item in api._resolved_dependencies(path)
+        }
+
+    actual = inventory()
+    differences = [
+        f"{name}: expected {version}, found {actual.get(name, 'missing')}"
+        for name, version in expected.items()
+        if actual.get(name) != version
+    ]
+    if differences:
+        raise ValueError(
+            "Shared dependency versions differ from the published lock: "
+            + "; ".join(differences)
+        )
+    # These are installer tools, not workflow dependencies, unless the lock
+    # explicitly requires them. The complete workflow graph must match the lock.
+    obsolete = sorted(actual.keys() - expected.keys() - {"pip", "setuptools", "wheel"})
+    if obsolete:
+        removed = run(
+            [*pip, "uninstall", "--yes", *obsolete],
+            env=environment,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=120,
+        )
+        if removed.returncode or set(obsolete) & inventory().keys():
+            raise ValueError(
+                "Could not remove obsolete shared dependencies: "
+                + api._process_detail(removed)
+            )
 
 
 def _base_python(path: Path, api: Any, run: Any) -> str:

@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
-      "sha256": "4f77cc9099c19db5d15e7aab47016b4f6eb48b4e7cfec4d4b13ae678be7a565e"
+      "sha256": "e24a7e97f36bdf8095e406f4b478fa07527457419ee64ce84f9842e3ef4300fa"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/agents/openai.yaml",
@@ -181,7 +181,7 @@
     },
     {
       "path": "skills/mparanza-studio-archive/SKILL.md",
-      "sha256": "2878f8157ecb007fbeedb9288d07eae252a7317eab2a621dd205d3dbf454471f"
+      "sha256": "d3d84fa9323025e65de24075a5a297375fd241a209953bfa0c77b60dbd4d1711"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

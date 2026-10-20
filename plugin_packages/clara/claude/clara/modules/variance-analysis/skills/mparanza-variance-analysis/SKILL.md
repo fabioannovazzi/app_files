@@ -5,13 +5,20 @@ description: Use when a user wants Claude to inspect a sales or management-accou
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -202,7 +209,7 @@ For year-to-date and rolling periods, the plugin prepares a synthetic two-bucket
 2. Run dependency checks from the plugin directory:
 
 ```bash
-python scripts/check_dependencies.py
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module variance-analysis run scripts/check_dependencies.py
 ```
 
 If requirements are missing, install from `requirements.txt` only when the environment allows it, or explain what dependency capability is missing.
@@ -213,7 +220,7 @@ fallback in chart audit metadata.
 3. Run deterministic inspection:
 
 ```bash
-python scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de|es>
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module variance-analysis run scripts/inspect_inputs.py <input-file> --output-dir <output-dir> --language <it|en|fr|de|es>
 ```
 
 Managed Vera runs also pass `--client-engagement <absolute-context.json>` to
@@ -226,7 +233,7 @@ execution.
    ambiguous, inspect only the named columns needed to resolve it:
 
 ```bash
-python scripts/inspect_column_values.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module variance-analysis run scripts/inspect_column_values.py \
   --input <input-file> \
   --column <ambiguous-column> \
   --output <output-dir>/targeted_column_inspection.json \
@@ -240,13 +247,13 @@ python scripts/inspect_column_values.py \
 6. Run deterministic variance:
 
 ```bash
-python scripts/run_variance.py <input-file> --output-dir <output-dir>/variance --recipe <output-dir>/suggested_recipe.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module variance-analysis run scripts/run_variance.py <input-file> --output-dir <output-dir>/variance --recipe <output-dir>/suggested_recipe.json
 ```
 
 When chart images are not needed, use the structured data-only mode:
 
 ```bash
-python scripts/run_variance.py <input-file> --output-dir <output-dir>/variance_data --recipe <output-dir>/suggested_recipe.json --artifact-mode data_only
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module variance-analysis run scripts/run_variance.py <input-file> --output-dir <output-dir>/variance_data --recipe <output-dir>/suggested_recipe.json --artifact-mode data_only
 ```
 
 The run writes `waterfall.png`, `pvm_decomposition_ladder.png`, root-cause outputs, and `waterfall_small_multiples.png` by default when the standard variance has a useful reporting dimension. When at least two dimensions are mapped it can also write `exploded_variance_bridge.png` plus `exploded_variance_bridge_spec.json`, `exploded_variance_bridge_chart_data.json`, and `exploded_variance_bridge_context.json`; use the JSON spec/context as the native artifact payload and the PNG as the slide fallback. It also writes `pvm_decomposition_ladder.csv`, `pvm_decomposition_ladder_context.json`, `waterfall_small_multiples_summary.csv`, and `waterfall_small_multiples_context.json` so Claude can interpret the analysis from data rather than chart pixels. The PVM ladder uses the legacy different-calculations waterfall pattern: the same total movement is shown as combined Price & Units & Mix, then Price plus Units & Mix, then Price / Units / Mix separately, with the legacy `Δ%` total movement label retained. The small-multiples chart uses the legacy fixed-dimension variance pattern: each panel repeats the compact Price / Units & Mix / Balance bridge for one selected member of the chosen dimension. The dimension is only the panel split, never the row structure inside a standard-variance small multiple. Add `--waterfall-small-multiples` only to force small multiples for a non-default reporting dimension. Add `--no-waterfall-chart` only for explicit debug/table-only runs.
@@ -260,7 +267,7 @@ Chart colors follow the project role-color convention: Plan/Budget/Forecast open
    source matches using only reviewed mapped columns:
 
 ```bash
-python scripts/model_use.py \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module variance-analysis run scripts/model_use.py \
   --manifest <output-dir>/variance/model_use_manifest.json \
   --input <input-file> \
   --recipe <output-dir>/variance/used_recipe.json \

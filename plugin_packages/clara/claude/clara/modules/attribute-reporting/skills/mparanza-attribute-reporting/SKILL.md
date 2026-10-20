@@ -5,13 +5,20 @@ description: Use when a user wants Claude to run or continue the local retail sc
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -105,7 +112,7 @@ Use these visible artifacts in chat:
 From the plugin directory, run:
 
 ```bash
-python scripts/check_dependencies.py
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/check_dependencies.py
 ```
 
 The checker reads `requirements.txt` and only reports missing packages. It never installs packages at runtime. If a requirement is missing, use the declared requirements file only when the environment allows installation; otherwise explain the missing capability.
@@ -115,9 +122,9 @@ The checker reads `requirements.txt` and only reports missing packages. It never
 Create the run outside every Git repository before fetching data. `run_state.py` fixes the stage order, writes a hash-bound receipt for each stage, and invalidates downstream receipts if an earlier artifact changes. Use `status` before continuing an interrupted run. Record `partial`, `blocked`, or `failed` honestly; never turn missing evidence into a completed receipt.
 
 ```bash
-python scripts/run_state.py init <private-run-dir> --retailer <retailer> --category <category> --author-agent-id <author-agent-id> --server-origin https://mparanza.com
-python scripts/run_state.py status <private-run-dir>
-python scripts/run_state.py record <private-run-dir> <stage> --status complete --artifact <run-relative-artifact>
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/run_state.py init <private-run-dir> --retailer <retailer> --category <category> --author-agent-id <author-agent-id> --server-origin https://mparanza.com
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/run_state.py status <private-run-dir>
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/run_state.py record <private-run-dir> <stage> --status complete --artifact <run-relative-artifact>
 ```
 
 The fixed stages are intake, server snapshot, image hydration, mapping tasks, mapping decisions, mapping review, mapping apply, rebuilt package, report preparation, report authoring, report render, semantic review, browser QA, and correctness. Receipts and their artifacts must remain inside the private run directory. Authentication material is never a run artifact.
@@ -148,37 +155,37 @@ This is the default production path when current database data is acceptable.
 Representative commands follow. Global authentication flags precede the bridge subcommand. Create `<private-auth-dir>` outside `<run>`, every Git repository, and every plugin cache with directory mode `0700`. The first authenticated command below consumes a private magic link and writes a `0600` session jar; reuse that jar without the magic-link flag for all later commands. If a current jar already exists, omit `--magic-link-file` from the first command too.
 
 ```bash
-python scripts/server_bridge_client.py --magic-link-file <private-auth-dir>/magic-link.txt --session-file <private-auth-dir>/mparanza-session.cookies taxonomy <category> --output <run>/server/taxonomy.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-evidence --retailer <retailer> --category <category> --taxonomy <run>/server/taxonomy.json --output <run>/server/preliminary-job.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies poll-evidence <preliminary-job-id> --output <run>/server/preliminary-status.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies download-evidence <preliminary-job-id> --output <run>/server/preliminary.zip --receipt <run>/server/preliminary-download.json
-python scripts/server_bridge_client.py extract-evidence --archive <run>/server/preliminary.zip --output <run>/preliminary-package --receipt <run>/server/preliminary-extraction.json
-python scripts/hydrate_images.py <run>/preliminary-package
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-workset --evidence-job-id <preliminary-job-id> --taxonomy <run>/server/taxonomy.json --output <run>/mapping/workset.json --tasks-output <run>/mapping/mapping_tasks.public.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --magic-link-file <private-auth-dir>/magic-link.txt --session-file <private-auth-dir>/mparanza-session.cookies taxonomy <category> --output <run>/server/taxonomy.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-evidence --retailer <retailer> --category <category> --taxonomy <run>/server/taxonomy.json --output <run>/server/preliminary-job.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies poll-evidence <preliminary-job-id> --output <run>/server/preliminary-status.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies download-evidence <preliminary-job-id> --output <run>/server/preliminary.zip --receipt <run>/server/preliminary-download.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py extract-evidence --archive <run>/server/preliminary.zip --output <run>/preliminary-package --receipt <run>/server/preliminary-extraction.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/hydrate_images.py <run>/preliminary-package
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-workset --evidence-job-id <preliminary-job-id> --taxonomy <run>/server/taxonomy.json --output <run>/mapping/workset.json --tasks-output <run>/mapping/mapping_tasks.public.json
 # Explicit correction only: append --mapping-mode correction --correction-reason "<user-supplied audit reason>".
 # If workset.status is no_work and its complete unresolved coverage is zero, stop the mapping branch here:
-# python scripts/prepare_run.py <run>/preliminary-package --output-dir <run>/report --author-agent-id <codex-agent-id> --download-receipt <run>/server/preliminary-download.json --extraction-receipt <run>/server/preliminary-extraction.json --no-work-workset <run>/mapping/workset.json --require-browser-qa
+# python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/prepare_run.py <run>/preliminary-package --output-dir <run>/report --author-agent-id <codex-agent-id> --download-receipt <run>/server/preliminary-download.json --extraction-receipt <run>/server/preliminary-extraction.json --no-work-workset <run>/mapping/workset.json --require-browser-qa
 # Do not run bind, decision, review, submit, rebuilt-job, or rebuilt-package commands in that branch.
-python scripts/bind_mapping_images.py <run>/mapping/mapping_tasks.public.json --image-manifest <run>/preliminary-package/local_image_manifest.json --output <run>/mapping/mapping_tasks.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/bind_mapping_images.py <run>/mapping/mapping_tasks.public.json --image-manifest <run>/preliminary-package/local_image_manifest.json --output <run>/mapping/mapping_tasks.json
 # For a large workset, shard before delegation, then merge every completed decision shard.
-python scripts/mapping_shards.py shard-tasks <run>/mapping/mapping_tasks.json --output-dir <run>/mapping/task-shards --max-tasks-per-shard 40
-python scripts/mapping_shards.py merge-decisions <run>/mapping/mapping_tasks.json <run>/mapping/task-shards/mapping_task_shards.json <decision-shard>... --coordinator-agent-id <mapping-coordinator-id> --output <run>/mapping/mapping_decisions.json
-python scripts/validate_mapping_decisions.py <run>/mapping/mapping_tasks.json <run>/mapping/mapping_decisions.json --output <run>/mapping/validated_mappings.json
-python scripts/prepare_mapping_review.py <run>/mapping/mapping_tasks.json <run>/mapping/mapping_decisions.json <run>/mapping/validated_mappings.json --reviewer-agent-id <different-codex-agent-id> --output <run>/mapping/mapping_review.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/mapping_shards.py shard-tasks <run>/mapping/mapping_tasks.json --output-dir <run>/mapping/task-shards --max-tasks-per-shard 40
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/mapping_shards.py merge-decisions <run>/mapping/mapping_tasks.json <run>/mapping/task-shards/mapping_task_shards.json <decision-shard>... --coordinator-agent-id <mapping-coordinator-id> --output <run>/mapping/mapping_decisions.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/validate_mapping_decisions.py <run>/mapping/mapping_tasks.json <run>/mapping/mapping_decisions.json --output <run>/mapping/validated_mappings.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/prepare_mapping_review.py <run>/mapping/mapping_tasks.json <run>/mapping/mapping_decisions.json <run>/mapping/validated_mappings.json --reviewer-agent-id <different-codex-agent-id> --output <run>/mapping/mapping_review.json
 # For a large review, shard the untouched template, delegate every slice, then merge all reviewed slices.
-python scripts/mapping_shards.py shard-review <run>/mapping/mapping_review.json --output-dir <run>/mapping/review-shards --max-reviews-per-shard 40
-python scripts/mapping_shards.py merge-review <run>/mapping/mapping_review.json <run>/mapping/review-shards/mapping_review_shards.json <review-shard>... --coordinator-agent-id <independent-review-coordinator-id> --summary <coordinator-summary> --output <run>/mapping/mapping_review.json
-python scripts/validate_mapping_review.py <run>/mapping/mapping_tasks.json <run>/mapping/mapping_decisions.json <run>/mapping/validated_mappings.json <run>/mapping/mapping_review.json --output <run>/mapping/mapping_review_validation.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies submit --workset <run>/mapping/workset.json --mapping-tasks <run>/mapping/mapping_tasks.json --decisions <run>/mapping/mapping_decisions.json --validated <run>/mapping/validated_mappings.json --mapping-review <run>/mapping/mapping_review.json --mapping-review-validation <run>/mapping/mapping_review_validation.json --output <run>/server/mapping-submission.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-evidence --retailer <retailer> --category <category> --taxonomy <run>/server/taxonomy.json --mapping-submission-id <operation-id> --output <run>/server/rebuilt-job.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies poll-evidence <rebuilt-job-id> --output <run>/server/rebuilt-status.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies download-evidence <rebuilt-job-id> --output <run>/server/rebuilt.zip --receipt <run>/server/rebuilt-download.json
-python scripts/server_bridge_client.py extract-evidence --archive <run>/server/rebuilt.zip --output <run>/rebuilt-package --receipt <run>/server/rebuilt-extraction.json
-python scripts/hydrate_images.py <run>/rebuilt-package
-python scripts/prepare_run.py <run>/rebuilt-package --output-dir <run>/report --author-agent-id <codex-agent-id> --download-receipt <run>/server/rebuilt-download.json --extraction-receipt <run>/server/rebuilt-extraction.json --require-browser-qa
-python scripts/render_report.py <run>/report
-python scripts/browser_qa.py <run>/report
-python scripts/check_report.py <run>/report
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/mapping_shards.py shard-review <run>/mapping/mapping_review.json --output-dir <run>/mapping/review-shards --max-reviews-per-shard 40
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/mapping_shards.py merge-review <run>/mapping/mapping_review.json <run>/mapping/review-shards/mapping_review_shards.json <review-shard>... --coordinator-agent-id <independent-review-coordinator-id> --summary <coordinator-summary> --output <run>/mapping/mapping_review.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/validate_mapping_review.py <run>/mapping/mapping_tasks.json <run>/mapping/mapping_decisions.json <run>/mapping/validated_mappings.json <run>/mapping/mapping_review.json --output <run>/mapping/mapping_review_validation.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies submit --workset <run>/mapping/workset.json --mapping-tasks <run>/mapping/mapping_tasks.json --decisions <run>/mapping/mapping_decisions.json --validated <run>/mapping/validated_mappings.json --mapping-review <run>/mapping/mapping_review.json --mapping-review-validation <run>/mapping/mapping_review_validation.json --output <run>/server/mapping-submission.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-evidence --retailer <retailer> --category <category> --taxonomy <run>/server/taxonomy.json --mapping-submission-id <operation-id> --output <run>/server/rebuilt-job.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies poll-evidence <rebuilt-job-id> --output <run>/server/rebuilt-status.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies download-evidence <rebuilt-job-id> --output <run>/server/rebuilt.zip --receipt <run>/server/rebuilt-download.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py extract-evidence --archive <run>/server/rebuilt.zip --output <run>/rebuilt-package --receipt <run>/server/rebuilt-extraction.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/hydrate_images.py <run>/rebuilt-package
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/prepare_run.py <run>/rebuilt-package --output-dir <run>/report --author-agent-id <codex-agent-id> --download-receipt <run>/server/rebuilt-download.json --extraction-receipt <run>/server/rebuilt-extraction.json --require-browser-qa
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/render_report.py <run>/report
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/browser_qa.py <run>/report
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/check_report.py <run>/report
 ```
 
 The sharding commands are conditional: skip them for a genuinely bounded single-agent workset. When review sharding is used, replace `mapping_review.json` with the mechanically merged artifact before validation and submission. Repeat each poll command until its status artifact says `ready`; polling also reschedules a `pending` or abandoned `running` build after a server-worker restart. Do not download a pending, running, or failed job. Record every stage and receipt in `run_state.py` as it completes. Treat the rebuilt extraction receipt and rebuilt `local_image_manifest.json` as rebuilt-package evidence; authentication files remain outside the run ledger.

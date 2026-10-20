@@ -112,7 +112,7 @@
     },
     {
       "path": "modules/variance-analysis/skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "616130ad64387a2abe0b2860d5fc90dcf86c427bd3c75c734121c48ca17e2769"
+      "sha256": "41e132a8931939f7f8480dd4b0c907dd2322550174f2874baf50de8f51da6df8"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/__init__.py",
@@ -476,7 +476,7 @@
     },
     {
       "path": "skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "f4ce2aa4b5314757a26a6212eea9889435854c9b5e162cbe0ea14f379f70aee6"
+      "sha256": "1b64372547b16806f019d5d7817a1484302b5228b6d72e23c874924a48154019"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

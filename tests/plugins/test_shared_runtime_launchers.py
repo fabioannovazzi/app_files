@@ -87,6 +87,8 @@ def installed_fixture(tmp_path, product, monkeypatch):
         "requirements.txt",
         "requirements-shared-core.txt",
         "requirements-shared-ocr.txt",
+        "requirements-shared-core.lock",
+        "requirements-shared-ocr.lock",
     ):
         (root / name).write_text("# isolated empty recipe\n")
     child = root / "modules" / component
@@ -97,6 +99,7 @@ def installed_fixture(tmp_path, product, monkeypatch):
     (child / "scripts/check_dependencies.py").write_text(
         "import json,sys\nprint(json.dumps({'version':list(sys.version_info[:2]), 'prefix':sys.prefix}))\n"
     )
+    (scripts / "_locked_dependencies.py").write_text('print("{}")\n')
     (root / "execution-files.json").write_text(
         json.dumps(
             {
@@ -125,6 +128,7 @@ def installed_fixture(tmp_path, product, monkeypatch):
     (site / "00_mparanza_runtime.pth").write_text("import _mparanza_runtime_guard\n")
     data = {
         "features": ["core", "ocr"],
+        "installed_distributions": [],
         "recipes": shared._recipes(root, {"core", "ocr"}),
         "runtime_key": api.runtime_key(str(api.runtime_python(path))),
         "revision": shared.POLICY_REVISION,

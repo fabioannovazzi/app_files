@@ -30,6 +30,8 @@ def fixture_runtime(tmp_path):
     root.mkdir()
     (root / "requirements-shared-core.txt").write_text("# core\n")
     (root / "requirements-shared-ocr.txt").write_text("# ocr\n")
+    (root / "requirements-shared-core.lock").write_text("# empty test lock\n")
+    (root / "requirements-shared-ocr.lock").write_text("# empty test lock\n")
     selection = SimpleNamespace(
         plugin_root=root, requirements_files=[root / "requirements.txt"]
     )
@@ -50,7 +52,16 @@ def fixture_runtime(tmp_path):
         calls.append(command)
         if "venv" in command:
             return subprocess.run(command, **kwargs)
-        return subprocess.CompletedProcess(command, 0, "", "")
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            (
+                "{}"
+                if any("_locked_dependencies.py" in str(arg) for arg in command)
+                else ""
+            ),
+            "",
+        )
 
     return module, selection, api, runner, calls
 
@@ -342,6 +353,9 @@ def test_unready_interpreter_refuses_workflow_execution(tmp_path):
         "requirements-shared-core.txt",
         "requirements-shared-ocr.txt",
         "constraints-shared-macos-py312.txt",
+        "requirements-shared-core.lock",
+        "requirements-shared-ocr.lock",
+        "scripts/_locked_dependencies.py",
         "scripts/_shared_python_runtime.py",
         "scripts/_python_bootstrap.py",
     ],
@@ -364,6 +378,9 @@ def test_every_host_package_contains_the_shared_runtime_policy(product, host):
             "requirements-shared-core.txt",
             "requirements-shared-ocr.txt",
             "constraints-shared-macos-py312.txt",
+            "requirements-shared-core.lock",
+            "requirements-shared-ocr.lock",
+            "scripts/_locked_dependencies.py",
             "scripts/_shared_python_runtime.py",
             "scripts/_python_bootstrap.py",
         )

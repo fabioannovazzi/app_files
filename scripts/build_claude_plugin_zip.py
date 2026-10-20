@@ -415,7 +415,7 @@ dependency checker and only already-installed dependencies; do not assume that a
 standalone module script provisions them.
 
 The managed launcher provisions and reuses one user-scoped CPython 3.12
-environment per OS host with the published shared requirements, outside client
+environment per OS host with the published, hash-checked dependency locks, outside client
 folders. Modules and products share this dependency environment; it does not
 isolate client matters. This declared dependency setup is authorized as
 part of running the workflow; never install arbitrary packages or use ambient
@@ -679,10 +679,9 @@ or the narrowest specialist skill for
 Retailer Signals, Brand Fit, reporting and charting, HTML presentations, or
 claim-basis review.
 
-At session start, Clara installs its exact declared Python requirements into
-its user-scoped plugin data directory and exposes them to the Cowork sandbox.
-If that trusted bootstrap fails, file-based work remains available and Clara
-must state which Python-backed capability is unavailable.
+Clara's managed launcher installs and verifies the published dependency lock
+before each Python workflow. Startup does not launch a competing installer.
+If setup fails, file-based work remains available and Clara reports the error.
 
 This Cowork package does not include voice interviews, transcription, hosted
 deck capture, custom version updates, or image generation. It can submit an
@@ -691,13 +690,20 @@ The consultant retains professional judgement and approval.
 """
 CLARA_COWORK_EXECUTION_CONTRACT = """## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -2697,6 +2703,18 @@ def _project_clara_cowork_skill(
     text = text.replace("OpenAI or another model API", "an external model API")
     text = text.replace("OpenAI API", "external model API")
     text = text.replace("OpenAI", "an external model provider")
+    parts = Path(relative_path).parts
+    if len(parts) > 2 and parts[0] == "modules":
+        # Component examples must use the same managed route as the contract.
+        # In particular the dependency checker itself does not self-relaunch.
+        text = re.sub(
+            r"\bpython(?:3)? (scripts/(?!managed_python_runtime\.py)[\w/.-]+\.py)",
+            lambda match: (
+                'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" '
+                f"--module {parts[1]} run {match.group(1)}"
+            ),
+            text,
+        )
     forbidden = (
         "developers.openai.com",
         "check_for_update.py",
@@ -2853,14 +2871,6 @@ def _validate_clara_cowork_entries(
                 {
                     "matcher": "startup|resume",
                     "hooks": [
-                        {
-                            "type": "command",
-                            "command": (
-                                'python3 "${CLAUDE_PLUGIN_ROOT}/scripts/'
-                                'bootstrap_python_dependencies.py"'
-                            ),
-                            "timeout": 240,
-                        },
                         {
                             "type": "command",
                             "command": (
@@ -3214,6 +3224,8 @@ def _lucia_package_entries(
             "requirements.txt",
             "requirements-shared-core.txt",
             "requirements-shared-ocr.txt",
+            "requirements-shared-core.lock",
+            "requirements-shared-ocr.lock",
             "constraints-shared-macos-py312.txt",
         }:
             entries[name] = content

@@ -111,7 +111,7 @@ def bootstrap_dependencies(
 
 
 def main() -> int:
-    """Run the fail-open SessionStart dependency bootstrap."""
+    """Run an explicit managed dependency setup request."""
 
     root = plugin_root()
     data_dir = plugin_data_dir()
@@ -128,6 +128,7 @@ def main() -> int:
             "Python-backed workflows must rerun the dependency bootstrap."
         )
         print(json.dumps({"systemMessage": message}))
+        return 1
     return 0
 
 

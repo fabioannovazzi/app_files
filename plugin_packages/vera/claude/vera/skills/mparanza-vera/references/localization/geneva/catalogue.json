@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-20/usa-vera-per-una-riconciliazione-bancaria/work/vera-source/plugins/vera",
-  "version": "0.1.436",
-  "captured_at": "2026-10-20T06:50:08.976557+00:00",
-  "catalogue_fingerprint": "85fbcfb8b1465d64b6638083eefe14613cd82a22fcfcdc0db822d028c0dc6f55",
-  "manifest_sha256": "dd3ecc784062197fb41835ee2a056c29a56fc93eb988ef59e2b786794c7e9bd1",
+  "root": "/Users/fabio/Documents/Codex/2026-10-19-clara-0-1-307-in-cowork/shared-runtime-fix/plugins/vera",
+  "version": "0.1.437",
+  "captured_at": "2026-10-20T07:40:54.119932+00:00",
+  "catalogue_fingerprint": "78842c354e4384a818ddb5a0a191794b659ea22050d832388f71e24baa6f1912",
+  "manifest_sha256": "d13d3b7ba9ec7dbd2e3549a4b8f7154390ef9376ff84e26e0ed043c65e33d472",
   "entries": [
     {
       "function_id": "adeguati-assetti",

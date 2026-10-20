@@ -1043,6 +1043,10 @@ def _write_captured_figures(
         _apply_scatter_title_contract(export_fig, recipe, selected_periods)
         color_dimension = recipe["mappings"].get("color_dimension")
         if color_dimension:
+            for trace in export_fig.data:
+                group_title = getattr(trace, "legendgrouptitle", None)
+                if group_title is not None and group_title.text == color_dimension:
+                    group_title.text = None
             export_fig.layout.annotations = tuple(
                 annotation
                 for annotation in export_fig.layout.annotations

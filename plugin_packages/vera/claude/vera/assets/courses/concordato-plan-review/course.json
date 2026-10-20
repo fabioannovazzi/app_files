@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/concordato-plan-review/skills/mparanza-concordato-plan-review/SKILL.md",
-      "sha256": "740920801d657bcaecd41724cd12db7b04774132d35ea63c82989d6f8496ea36"
+      "sha256": "8ca72a7f98df30a024827ab6702d607341d09f26d4dc4f46dac6e587a39ed29b"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/__init__.py",
@@ -149,7 +149,7 @@
     },
     {
       "path": "skills/mparanza-concordato-plan-review/SKILL.md",
-      "sha256": "61fef64779484f494f55b5674448f53d0ddcb0f8f07ed7f5488819c27b264f53"
+      "sha256": "95b85e84a9b0b4fbaf5fa8067bf29d5687521b17a7788c057e7663141d15e2e8"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

@@ -5,13 +5,20 @@ description: Use when a user wants Clara to compare a completed checked Retailer
 
 ## Cowork execution contract
 
-Work from the connected folder and supplied files first. Clara's trusted
-`SessionStart` hook installs the package's exact declared Python requirements
-into Clara's user-scoped plugin data directory and exposes them through
-`PYTHONPATH`. Run the dependency check before Python-backed workflows. Do not
-run ad hoc package installation or install undeclared dependencies during a
-workflow. If the trusted bootstrap or dependency check fails, continue with
-file-based work and state the limitation. MCP tools, browser or computer
+Work from the connected folder and supplied files first. Before Python workflows,
+locate the installed plugin root and run the module through its managed launcher:
+
+```bash
+python3 scripts/managed_python_runtime.py --module <module> run scripts/check_dependencies.py
+python3 scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
+```
+
+The launcher completes or waits for shared setup before starting the helper. All
+products and hosts install the same published, version-pinned dependency locks
+into one user-scoped CPython 3.12 environment per OS host. Session startup does
+not install dependencies. Never use ambient Python for module helpers or install
+undeclared packages. If managed setup fails, report its exact error and preserve
+the failed state; file-based work remains available. MCP tools, browser or computer
 control, and local review servers are optional enhancements, never completion
 gates.
 
@@ -82,7 +89,7 @@ Default output policy: produce the richest natural private local package—trans
 
 ## Dependency Check
 
-Before helper scripts, run `python scripts/check_dependencies.py` from the plugin working directory. It reports missing declared dependencies and never installs packages at runtime.
+Before helper scripts, run `python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/check_dependencies.py` from the plugin working directory. It reports missing declared dependencies and never installs packages at runtime.
 
 ## Installed flow
 
@@ -90,7 +97,7 @@ Before helper scripts, run `python scripts/check_dependencies.py` from the plugi
 2. Create the Brand Fit job. The client derives the source evidence job, report hash, and source verdict from the completed local run:
 
 ```bash
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-brand-fit \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies create-brand-fit \
   --retailer-run <retailer-signals-report-dir> \
   --brand-source-retailer <brand-owned-source> \
   --brand-name <brand-name> \
@@ -102,21 +109,21 @@ Use repeatable `--owned-category-key` or `--retailer-category-key` only when the
 3. Poll, checksum-download, and safely extract the ready job:
 
 ```bash
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies poll-brand-fit <job-id> --output <run>/server/brand-fit-status.json
-python scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies download-brand-fit <job-id> --output <run>/server/brand-fit.zip --receipt <run>/server/brand-fit-download.json
-python scripts/server_bridge_client.py extract-evidence --archive <run>/server/brand-fit.zip --output <run>/brand-fit-package --receipt <run>/server/brand-fit-extraction.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies poll-brand-fit <job-id> --output <run>/server/brand-fit-status.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py --session-file <private-auth-dir>/mparanza-session.cookies download-brand-fit <job-id> --output <run>/server/brand-fit.zip --receipt <run>/server/brand-fit-download.json
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/server_bridge_client.py extract-evidence --archive <run>/server/brand-fit.zip --output <run>/brand-fit-package --receipt <run>/server/brand-fit-extraction.json
 ```
 
 4. Download supported product images to that local package. Retailer anchors and owned-catalogue products are scope-separated so a shared product id cannot silently merge their image evidence:
 
 ```bash
-python scripts/hydrate_images.py <run>/brand-fit-package
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/hydrate_images.py <run>/brand-fit-package
 ```
 
 5. Prepare the local report run. Preparation requires verified transport receipts, an exact `pack_manifest.json`, `package_integrity: pass`, URL-only server sanitization, pinned accepted `mapping_state_snapshot.json` and product-data snapshot scopes, a current-database retailer-presence disclosure, and exact agreement with the checked source-report hash and coherently derived verdict:
 
 ```bash
-python scripts/prepare_brand_fit_run.py <run>/brand-fit-package \
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/prepare_brand_fit_run.py <run>/brand-fit-package \
   --retailer-run <retailer-signals-report-dir> \
   --output-dir <run>/report \
   --author-agent-id <codex-author-id> \
@@ -137,7 +144,7 @@ python scripts/prepare_brand_fit_run.py <run>/brand-fit-package \
 7. Render the draft:
 
 ```bash
-python scripts/render_brand_fit_report.py <run>/report
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/render_brand_fit_report.py <run>/report
 ```
 
 Rendering hash-binds the claim ledger, report model, source report, selected product rows, and local images. It also writes an exact `semantic_review.json` template.
@@ -147,8 +154,8 @@ Rendering hash-binds the claim ledger, report model, source report, selected pro
 9. Run desktop/mobile browser QA, then correctness:
 
 ```bash
-python scripts/browser_qa.py <run>/report
-python scripts/check_brand_fit_report.py <run>/report
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/browser_qa.py <run>/report
+python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module attribute-reporting run scripts/check_brand_fit_report.py <run>/report
 ```
 
 ## Correctness answer

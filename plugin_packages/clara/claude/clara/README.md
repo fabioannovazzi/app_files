@@ -6,10 +6,9 @@ or the narrowest specialist skill for
 Retailer Signals, Brand Fit, reporting and charting, HTML presentations, or
 claim-basis review.
 
-At session start, Clara installs its exact declared Python requirements into
-its user-scoped plugin data directory and exposes them to the Cowork sandbox.
-If that trusted bootstrap fails, file-based work remains available and Clara
-must state which Python-backed capability is unavailable.
+Clara's managed launcher installs and verifies the published dependency lock
+before each Python workflow. Startup does not launch a competing installer.
+If setup fails, file-based work remains available and Clara reports the error.
 
 This Cowork package does not include voice interviews, transcription, hosted
 deck capture, custom version updates, or image generation. It can submit an

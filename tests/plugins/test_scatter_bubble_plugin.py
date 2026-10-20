@@ -1093,6 +1093,40 @@ def test_recipe_preserves_unstated_or_explicit_currency(currency: str) -> None:
     assert recipe["options"]["currency"] == currency
 
 
+@pytest.mark.parametrize("chart", ["scatter", "bubble"])
+def test_export_shows_color_dimension_heading_once(
+    tmp_path: Path, monkeypatch: Any, chart: str
+) -> None:
+    """Keep the color legend title without repeating it as a group heading."""
+    input_path = tmp_path / "sales.csv"
+    weighted_price_frame().write_csv(input_path)
+    recipe = weighted_price_recipe(input_path)
+    recipe["options"]["charts"] = [chart]
+    recipe_path = tmp_path / "recipe.json"
+    recipe_path.write_text(json.dumps(recipe), encoding="utf-8")
+    captured_figures: list[Any] = []
+    patch_plotly_export(monkeypatch)
+    stub_export = legacy_charting._write_legacy_figure
+
+    def capture_export(fig: Any, path: Path) -> tuple[list[Path], dict[str, Any]]:
+        captured_figures.append(fig.to_plotly_json())
+        return stub_export(fig, path)
+
+    monkeypatch.setattr(legacy_charting, "_write_legacy_figure", capture_export)
+
+    core.run_scatter_bubble(input_path, tmp_path / "output", recipe_path)
+
+    assert len(captured_figures) == 1
+    figure = captured_figures[0]
+    assert figure["layout"]["legend"]["title"]["text"] == "Company"
+    assert {
+        trace.get("name") for trace in figure["data"] if trace.get("showlegend")
+    } == {"X", "Y"}
+    assert "Company" not in {
+        trace.get("legendgrouptitle", {}).get("text") for trace in figure["data"]
+    }
+
+
 @pytest.mark.parametrize(
     ("y_metric", "expected_period_title"),
     [("Units", "AC"), ("Sales Growth Rate", "AC vs PY")],
