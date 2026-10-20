@@ -162,7 +162,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4a357492e65c480c0459b487fa5dff62929b1f70503c74a777aeb1a3c7340753"
+    "source_fingerprint": "6204aa9624125d2f7dcd5f3a18c9b0c0a2a3543140dacdf937daaffdac45ffab"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -205,7 +205,7 @@
     },
     {
       "id": "optional-native-followup-predecessor-conservation",
-      "control": "Distinct same-client/engagement/workflow run, whole predecessor SHA snapshot, explicit extra imported receipt choices, saved literal parameters and renewed creation/initialization/model mandate confirmation. Existing public initializer and proposal producer remain authoritative; all new professional confirmations stay pending. Preserve old output bytes/run record, exact registered history mapping, origin marker and whole immutable receipt. Pending/orphan/changed history blocks source and successor use and closure. Candidate source input tuple/list scope normalization is separately qualified but unapplied; real installed host acceptance remains unverified."
+      "control": "Distinct same-client/engagement/workflow run, whole predecessor SHA snapshot, explicit extra imported receipt choices, saved literal parameters and renewed creation/initialization/model mandate confirmation. Existing public initializer and proposal producer remain authoritative; all new professional confirmations stay pending. Preserve old output bytes/run record, exact registered history mapping, origin marker and whole immutable receipt. Pending/orphan/changed history blocks source and successor use and closure. Only verified engagement receipts can be selected. Unrelated damaged input or upload records remain preserved and are disclosed through app-private availability counts and completeness flags; they do not block independent verified-source follow-ups. Predecessor-specific uncertain operations still require recovery. Real installed host acceptance remains unverified."
     }
   ],
   "workstream": "registro-imprese-sari",

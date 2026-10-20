@@ -221,7 +221,11 @@ def read_artifact(
         raise ValueError(
             "Data reads require this Archive run's active reporting record"
         )
-    path = path.expanduser().absolute()
+    path = path.expanduser()
+    if not path.is_absolute():
+        # Resolve against the selected run, never the resident service's cwd.
+        path = Path(loaded["run_root"]) / path
+    path = path.absolute()
     sources = store.sources()
     source = next(
         (item for item in sources if str(path) in item.get("aliases", [item["path"]])),
@@ -294,8 +298,22 @@ def record_send(
         if item["kind"] == "prepared_metadata"
     }
     projections = [item for item in retained if item["kind"] == "prepared_projection"]
+    table_projections = {
+        (item["artifact_path"], item["artifact_sha256"]): item
+        for item in retained
+        if item["kind"] == "prepared_table_projection"
+    }
     unmapped = False
-    for piece in _pieces(response):
+    whole_projection = next(
+        (item for item in projections if item["data_sha256"] == digest(response)),
+        None,
+    )
+    if whole_projection is not None:
+        selections.extend(whole_projection["selections"])
+    # Producers can register a complete MCP envelope or worker submission. Its
+    # exact digest covers all fields; changed envelopes still take the ordinary
+    # per-piece path and cannot inherit the original declaration.
+    for piece in [] if whole_projection is not None else _pieces(response):
         mapped = False
         if isinstance(piece, dict) and isinstance(piece.get("vera_reporting"), dict):
             binding = piece["vera_reporting"]
@@ -306,7 +324,11 @@ def record_send(
                     and set(piece) == {"data", "vera_reporting"}
                     and digest(piece["data"]) == selection["data_sha256"]
                 ):
-                    selections.append({**selection, "basis": "vera_registered_packet"})
+                    artifact_selection = {
+                        **selection,
+                        "basis": "vera_registered_packet",
+                    }
+                    selections.append(artifact_selection)
                     projection = next(
                         (
                             item
@@ -315,14 +337,50 @@ def record_send(
                         ),
                         None,
                     )
-                    if projection is not None and (
-                        selection["unit"] == "documents"
+                    projected_source = next(
+                        (
+                            source
+                            for source in store.sources()
+                            if source["source_id"] == selection["source_id"]
+                            and source["sha256"] == selection["source_sha256"]
+                        ),
+                        None,
+                    )
+                    if (
+                        projection is not None
+                        and projected_source is not None
+                        and selection["unit"] in {"documents", "lines"}
                         and selection["start"] == 0
-                        and selection["stop"] == 1
+                        and selection["stop"] == projected_source["quantity"]
                         and selection["columns"] == [0]
                     ):
-                        selections[-1]["source_lineage_verified"] = True
+                        artifact_selection["source_lineage_verified"] = True
                         selections.extend(projection["selections"])
+                    table = (
+                        table_projections.get(
+                            (projected_source["path"], selection["source_sha256"])
+                        )
+                        if projected_source is not None
+                        else None
+                    )
+                    if (
+                        table is not None
+                        and projected_source is not None
+                        and table["unit"] == selection["unit"]
+                        and len(table["cells"]) == projected_source["quantity"]
+                        and table["columns"] == projected_source["columns"]
+                    ):
+                        # The exact file hash binds the producer's output-cell
+                        # map. Only cells actually returned can add input origins.
+                        artifact_selection["source_lineage_verified"] = True
+                        selections.extend(
+                            origin
+                            for row in table["cells"][
+                                selection["start"] : selection["stop"]
+                            ]
+                            for column in selection["columns"]
+                            for origin in row[column]
+                        )
                     mapped = True
                 if metadata.get(binding.get("token")) == digest(
                     {
@@ -333,6 +391,18 @@ def record_send(
                 ):
                     mapped = True
         if digest(piece) in metadata.values():
+            mapped = True
+        if (
+            isinstance(piece, str)
+            and piece
+            and all(
+                digest(line) in metadata.values()
+                for line in piece.splitlines(keepends=True)
+            )
+        ):
+            # A CLI transport can join several independently declared status
+            # lines. Every byte must still belong to a producer declaration;
+            # one extra line keeps the whole payload explicitly unmapped.
             mapped = True
         for projection in projections:
             if digest(piece) == projection["data_sha256"]:

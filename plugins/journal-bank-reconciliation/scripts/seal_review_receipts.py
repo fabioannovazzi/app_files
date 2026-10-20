@@ -63,6 +63,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 
 import argparse
 import copy
+import hashlib
 import json
 import logging
 import re
@@ -77,6 +78,7 @@ from journal_bank_core import (
     canonical_json_sha256,
     configure_logging,
     inspect_mapping_review_source,
+    log_execution_status,
     read_json,
 )
 from vera_assurance import (
@@ -165,6 +167,14 @@ def seal_review_receipts(
             )
         for index, (source_file, file_recipe) in enumerate(files.items(), start=1):
             choice = reviewed["files"][source_file]
+            # Copied inspection metadata is not review authority. Recompute it
+            # from the current source below, even when the copied value is stale.
+            if isinstance(choice, dict):
+                choice = {
+                    key: value
+                    for key, value in choice.items()
+                    if key != "potential_monetary_columns"
+                }
             if (
                 not isinstance(choice, dict)
                 or not _REQUIRED_MAPPING_FIELDS <= set(choice)
@@ -307,9 +317,11 @@ def main() -> int:
         LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
         return 2
     try:
+        original_recipe = args.recipe.read_bytes()
+        decisions = read_json(args.decisions)
         result = seal_review_receipts(
-            read_json(args.recipe),
-            read_json(args.decisions),
+            json.loads(original_recipe),
+            decisions,
             read_json(receipts_path)["receipts"],
             context,
         )
@@ -332,10 +344,33 @@ def main() -> int:
             temporary.replace(args.recipe)
         finally:
             temporary.unlink(missing_ok=True)
+        # Mapping coordinates and review receipts are metadata. Source labels in
+        # reviewed direction/summary mappings need their own source provenance.
+        if all(
+            not choice.get("direction_value_mapping")
+            and not choice.get("non_movement_summary_labels")
+            and not choice.get("pdf_registration_layout")
+            and not choice.get("pdf_bank_layout")
+            for side in ("bank", "journal")
+            for choice in decisions[side]["files"].values()
+        ):
+            from vera_assurance.contracts import archive_projection_runtime
+
+            recorder = archive_projection_runtime(Path(__file__))
+            if recorder is not None:
+                recorder.register_metadata_revision(
+                    "journal-bank-reconciliation",
+                    args.recipe,
+                    hashlib.sha256(original_recipe).hexdigest(),
+                )
     except (ValueError, KeyError, TypeError, OSError) as exc:
         LOGGER.error("REVIEW_RECEIPTS_BLOCKED: %s", exc)
         return 2
-    LOGGER.info("Sealed reviewed mapping and relationship receipts: %s", args.recipe)
+    log_execution_status(
+        args.output_dir,
+        "Sealed reviewed mapping and relationship receipts: %s",
+        args.recipe,
+    )
     return 0
 
 

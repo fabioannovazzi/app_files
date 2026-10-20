@@ -36,6 +36,12 @@ reviewed fields are `date_locale`, `non_movement_summary_labels`,
 `direction_value_mapping`. Include applicable explicit separator/sign choices;
 omitted fields do not inherit proposed authority.
 
+`potential_monetary_columns` is source-derived inspection metadata, not a
+review decision. Omit it from this input. If it is copied from inspection, the
+sealer ignores the supplied value and recomputes the candidates from current
+source bytes. It cannot hide a monetary column that still needs an explicit
+mapped-or-excluded disposition.
+
 For the synthetic PDF case, use this file decision under each actual filename:
 
 ```json

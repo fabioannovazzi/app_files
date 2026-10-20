@@ -170,8 +170,8 @@
       }));
       if (catalogue.client_id) nav.append(button("← Clienti", () => loadCatalogue()));
       if (catalogue.engagement_id) nav.append(button("← Incarichi del cliente", () => loadCatalogue({ client_id: catalogue.client_id })));
-      if (catalogue.refresh_required) main.append(node("p", "Le cartelle dello studio sono cambiate. Aggiorna registro e fascicoli prima di selezionare un cliente.", "notice"));
       if (catalogue.can_create_engagement) main.append(button("Nuovo incarico", renderNewEngagement));
+      if(catalogue.collection_issues?.length)main.append(node("p","L’elenco dei lavori è incompleto: una parte dell’archivio non è leggibile. I record conservati restano invariati.","notice"));
       if (catalogue.can_prepare) main.append(button("Importa documenti", () => renderImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Appunti del colloquio", () => renderNoteImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Prepara un lavoro", renderPreparation), button("Nuova domanda per il Business plan", () => renderPlanningAuthor({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})));
     }
     const list = node("div", undefined, "works"); search(main, archive ? "Cerca nella pagina corrente" : "Cerca cliente, incarico o funzione", rows); main.append(list);
@@ -183,9 +183,10 @@
         for (const item of selected) {
           const row = node("section", undefined, "work-row"); row.append(node("h2", item.display_name || item.label));
           if (catalogue.level === "clients") {
-            if (item.client_id && !catalogue.refresh_required) row.append(button("Apri incarichi →", () => loadCatalogue({ client_id: item.client_id })));
-            else row.append(node("p", item.client_id ? "Aggiorna il registro per riaprire il fascicolo." : "Cartella non registrata. Conferma il cliente nel percorso Archivio dello studio in chat prima di creare un incarico.", "caption"));
-          } else row.append(button("Apri lavori →", () => loadCatalogue({ client_id: catalogue.client_id, engagement_id: item.engagement_id })));
+            if (item.client_id && item.registration_status === "registered") row.append(button("Apri incarichi →", () => loadCatalogue({ client_id: item.client_id })));
+            else row.append(node("p", item.registration_status === "blocked" ? "Identità del cliente non disponibile o in conflitto. I file sono conservati; gli altri clienti restano accessibili." : "Cartella non registrata. Conferma il cliente nel percorso Archivio dello studio in chat prima di creare un incarico.", "caption"));
+          } else if (item.status === "blocked") row.append(node("p", "Incarico non disponibile. I documenti e i registri originali sono conservati.", "caption"));
+          else row.append(button("Apri lavori →", () => loadCatalogue({ client_id: catalogue.client_id, engagement_id: item.engagement_id })));
           list.append(row);
         }
         if (!selected.length) list.append(node("p", source.length ? "Nessun risultato in questa pagina." : catalogue.level === "clients" ? "Nessun cliente presente nella cartella configurata." : "Nessun incarico salvato per questo cliente.", "empty"));
@@ -351,6 +352,11 @@
       main.append(node('p','Il pannello accetta fino a 64 MiB per file. Per file più grandi usa l’importazione Studio Archive nella chat. Una selezione non ancora inviata va ripetuta dopo la ricarica.','caption'));
     }
     for(const row of setup.rows){
+      if(row.status==='blocked'){
+        const section=node('section');
+        section.append(node('strong','Importazione non disponibile'),node('p',`${row.upload_ref}: le ricevute non sono valide o leggibili. I file originali restano conservati.`,'notice'));
+        retained.append(section);continue;
+      }
       const section=node('section');section.append(node('strong',row.file.name),node('p',`${row.received.toLocaleString('it-IT')} / ${row.file.byte_count.toLocaleString('it-IT')} byte · ${row.status==='imported'?'Importato':row.status==='ready'?'Byte conservati, importazione da confermare':row.status.includes('recovery')?'Importazione interrotta, conferma il recupero':'Trasferimento incompleto'}`),node('p',`Ruolo dichiarato: ${{journal:'Giornale o registro contabile',source:'Documento fonte',support:'Documento di supporto'}[row.file.role]}`));
       if(setup.can_import&&row.status!=='imported'){
         if(row.origin==='user_statement')section.append(button(`Riprendi appunti ${row.file.name}`,()=>renderNoteImport(selected,false,row.upload_ref)));
@@ -360,6 +366,7 @@
       retained.append(section);
     }
     if(!setup.total)retained.append(node('p','Nessuna importazione iniziata da questo revisore.','caption'));
+    if(setup.inventory_complete===false)retained.append(node('p','L’elenco delle importazioni è incompleto: alcune ricevute richiedono recupero. I documenti già registrati e verificati restano utilizzabili.','notice'));
     if(offset||setup.has_more){const previous=button('Importazioni precedenti',()=>{dirty=false;return renderImport(selected,Math.max(0,offset-30));}),next=button('Altre importazioni',()=>{dirty=false;return renderImport(selected,offset+30);});previous.disabled=!offset;next.disabled=!setup.has_more;retained.append(previous,next);}
     confirm=confirmation(main,'Confermo questi file, i ruoli dichiarati e l’incarico. Se il trasferimento è interrotto, riprendo solo gli stessi byte conservati.');
     if(!setup.can_import){confirm.disabled=true;main.append(node('p','Questo incarico non consente nuove importazioni.','notice'));return;}
@@ -457,6 +464,7 @@
     const main = archiveFormShell("Prepara un lavoro", renderCatalogue);
     if (!prepared.can_prepare) { main.append(node("p", "Questo incarico non consente la preparazione di un nuovo lavoro.", "notice")); return; }
     main.append(node("p", "Scegli una funzione e le fonti di questo incarico: documenti importati oppure output sigillati di un altro run, con il ruolo che avranno nel nuovo lavoro. La preparazione conserva copie esatte e la struttura dei gruppi. Esecuzione e revisione professionale sono passaggi successivi.", "sub"));
+    if(prepared.ledger_complete===false)main.append(node("p","L’elenco delle fonti e dei lavori è incompleto. Sono selezionabili soltanto le fonti verificate mostrate qui; gli altri record restano conservati.","notice"));
     const picker = node("details", undefined, "workflow-picker"), chosen = node("summary", "Scegli la funzione"); picker.open = true;
     const choices = node("fieldset", undefined, "workflow-choices"); choices.append(node("legend", "Funzione")); picker.append(chosen, choices); main.append(picker);
     let workflow;
@@ -1088,6 +1096,7 @@
     main.append(node("h1","Nuova bozza dai riscontri"),node("p","Crea una nuova esecuzione nello stesso incarico per rielaborare le modifiche richieste. La domanda con Vera includerà tutte le carte di lavoro precedenti e i documenti che scegli qui. Le approvazioni precedenti rimangono storiche; la nuova bozza richiede un nuovo riesame.","intro"));
     const context={workRef,page,stamp:page.draft_revision,fields:structuredClone(page.fields),saved:JSON.stringify(page.fields),editable:page.can_create&&!page.draft_stale};sariFollowupContext=context;dirty=false;
     if(!page.can_create)main.append(node("p",page.recovery_required?"Creazione incerta: serve recupero nel percorso specialistico.":"Serve un riesame applicato, un incarico aperto e l’autorità di revisore in Studio Archive.","caption"));
+    if(page.input_inventory_complete===false||page.import_inventory_complete===false)main.append(node("p","Alcune registrazioni o importazioni non sono disponibili. Puoi usare le fonti verificate elencate; i record originali restano conservati.","caption"));
     if(page.draft_stale){const confirm=esgConfirmation(main,"Ho confrontato questi campi con fascicolo e documenti correnti. Scarta soltanto la mia domanda incompleta");const reset=button("Scarta domanda precedente",async()=>{if(!confirm.checked)throw new Error("Conferma lo scarto della sola domanda incompleta.");await call("vera_workspace_sari_followup_draft_clear",{...sariReviewAuthority(context),confirmed:true});dirty=false;await openSariFollowup(workRef,offset);});reset.disabled=!page.can_create;main.append(crFields(page.fields),reset);}
     const history=node("details");history.append(node("summary","Carte precedenti e riscontri applicati"),crFields(page.previous_files),crFields(page.applied_review));main.append(history,node("p","Le scelte pubbliche salvate possono essere successive all’ultima applicazione: il pacchetto conserva entrambi i record. Verifica i riscontri che intendi far rielaborare.","caption"));
     const question=node("textarea");question.value=context.fields.question;question.maxLength=4000;question.disabled=!context.editable;question.setAttribute("aria-label","Modifiche da rielaborare con Vera");question.addEventListener("input",()=>{context.fields.question=question.value;sariFollowupChanged(context);});main.append(node("h2","Modifiche da rielaborare"),question);

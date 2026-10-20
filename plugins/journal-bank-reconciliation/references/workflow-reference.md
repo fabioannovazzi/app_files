@@ -26,6 +26,12 @@ reviewed fields are `date_locale`, `non_movement_summary_labels`,
 `direction_value_mapping`. Include applicable explicit separator/sign choices;
 omitted fields do not inherit proposed authority.
 
+`potential_monetary_columns` is source-derived inspection metadata, not a
+review decision. Omit it from this input. If it is copied from inspection, the
+sealer ignores the supplied value and recomputes the candidates from current
+source bytes. It cannot hide a monetary column that still needs an explicit
+mapped-or-excluded disposition.
+
 For the synthetic PDF case, use this file decision under each actual filename:
 
 ```json
@@ -268,8 +274,12 @@ perimeter are never matched.
 ## Codex-Only Residual Resolution Funnel
 
 After a qualified deterministic run, `semantic_review.py prepare` projects the
-unmatched partitions into a bounded candidate graph and records the user's
-required certainty threshold. Preparation first validates the current output
+unmatched partitions into a bounded candidate graph. Without an explicit
+clearance policy, preparation defaults to `perfect_match`: it does not require a
+user choice, still prepares the worker and retains semantic residuals for draft
+review. An explicitly supplied `--required-level` applies the established
+clearance policy; the default must not be described as a user decision.
+Preparation first validates the current output
 receipts and material-value ledger replay.
 An edge exists only when the core candidate predicate accepts the exact amount
 and reviewed currency, unit, entity, party, and direction perimeter, and the
@@ -352,6 +362,14 @@ or packet tampering instead fails without writing a falsely bound status. A
 validated generation remains terminal until a new preparation archives its
 fixed-name artifacts under `semantic-review/history/`. In every failure mode,
 the main Codex chat and deterministic reconciliation remain unchanged.
+
+`run-all` performs that final preparation itself. Its completed batch returns
+the retained `worker_run` and `launch_receipt` paths, also emitted by the CLI as
+`validated worker evidence`. Those files belong to the archived generation;
+the current top-level status and resolution artifacts describe the exhaustive
+result. A terminal `worker_required=false` does not mean the preceding batch
+was skipped. Use the actual returned paths, and read artifact contents through
+the run-bound Archive reader so the privacy report records the delivery.
 
 ## Source Qualification
 

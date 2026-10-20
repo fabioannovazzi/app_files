@@ -32,10 +32,16 @@ def installed(
         "operational_incidents.py",
         "reporting_product.py",
         "technical_runner.py",
+        "workflow_usage.py",
     ):
         shutil.copyfile(
             ROOT / "plugins" / product / "scripts" / name, root / "scripts" / name
         )
+    (root / "usage").mkdir()
+    shutil.copyfile(
+        ROOT / "plugins" / product / "usage/pipelines.json",
+        root / "usage/pipelines.json",
+    )
     for suffix in ("py", "json"):
         filename = f"local_helper_environment.{suffix}"
         shutil.copyfile(ROOT / "scripts" / filename, root / "scripts" / filename)

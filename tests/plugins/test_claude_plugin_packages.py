@@ -514,7 +514,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert ".app.json" not in vera_entries
     assert app_descriptors
     assert all(name.startswith("modules/") for name in app_descriptors)
-    assert "hooks/hooks.json" not in vera_entries
+    assert json.loads(vera_entries["hooks/hooks.json"]) == {"hooks": {}}
     assert "scripts/check_for_update.py" not in vera_entries
     assert "scripts/change_requests.py" not in vera_entries
     assert "scripts/run_component_mcp.cjs" in vera_entries
@@ -539,7 +539,11 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
                     else (
                         "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
                         if name == "veraIncidentHost"
-                        else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                        else (
+                            "${CLAUDE_PLUGIN_ROOT}/scripts/native_execution_mcp.cjs"
+                            if name == "veraExecution"
+                            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                        )
                     )
                 )
             )
@@ -672,14 +676,24 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
                     else (
                         "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
                         if name == "veraIncidentHost"
-                        else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                        else (
+                            "${CLAUDE_PLUGIN_ROOT}/scripts/native_execution_mcp.cjs"
+                            if name == "veraExecution"
+                            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
+                        )
                     )
                 )
             )
         )
         assert len(server["args"]) == (
             1
-            if name in {"veraNativeWorkspace", "studioWork", "veraIncidentHost"}
+            if name
+            in {
+                "veraNativeWorkspace",
+                "studioWork",
+                "veraIncidentHost",
+                "veraExecution",
+            }
             else 2
         )
         assert "cwd" not in server
@@ -1467,13 +1481,18 @@ def test_projected_cowork_runtime_entrypoints_execute(
 
 
 @pytest.mark.parametrize(
-    "workflow_id",
-    ("financial-analysis", "variance-analysis", "sales-plan"),
+    ("workflow_id", "reporting_status"),
+    (
+        ("financial-analysis", "not_applicable"),
+        ("variance-analysis", "available"),
+        ("sales-plan", "not_applicable"),
+    ),
 )
 def test_projected_cowork_studio_archive_portable_ledger_round_trip(
     configured,
     tmp_path: Path,
     workflow_id: str,
+    reporting_status: str,
 ) -> None:
     builder, _, package = configured
     isolated = replace(
@@ -1593,10 +1612,13 @@ def test_projected_cowork_studio_archive_portable_ledger_round_trip(
         "--run-id",
         str(run_id),
     )
-    assert finalized["reporting"]["status"] == (
-        "unavailable" if workflow_id == "variance-analysis" else "not_applicable"
+    assert finalized["reporting"]["status"] == reporting_status
+    assert (output_dir / "model_data_report.json").is_file() == (
+        reporting_status == "available"
     )
-    assert not (output_dir / "model_data_report.json").exists()
+    assert (output_dir / "model_data_report.md").is_file() == (
+        reporting_status == "available"
+    )
 
     recovered_environment = {**environment}
     recovered_environment["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(tmp_path / "state-two")

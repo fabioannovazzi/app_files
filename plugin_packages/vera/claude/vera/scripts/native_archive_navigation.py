@@ -82,7 +82,8 @@ def preparation_catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     folder, engagement = engagement_scope(
         core, args["client_id"], args["engagement_id"]
     )
-    receipts = core.ledger.list_inputs(folder, args["engagement_id"])
+    input_inventory = core.ledger.inspect_inputs(folder, args["engagement_id"])
+    receipts = input_inventory["inputs"]
     from native_archive_imports import audit_engagement
 
     imports = audit_engagement(core, folder, args["engagement_id"])
@@ -157,10 +158,16 @@ def preparation_catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         "upstream_offset": artifact_page["offset"],
         "upstream_has_more": artifact_page["has_more"],
         "upstream_unavailable": unavailable,
-        "can_prepare": reviewer()
-        and engagement["status"] == "open"
-        and not imports["recovery_required"],
+        "collection_issues": inventory["collection_issues"],
+        "ledger_complete": input_inventory["complete"] and inventory["complete"],
+        # Only exact ledger receipts can become run inputs. An interrupted
+        # transport for other bytes cannot invalidate those verified sources.
+        "can_prepare": reviewer() and engagement["status"] == "open",
         "import_recovery_required": imports["recovery_required"],
+        "blocked_import_count": len(imports["blocked_uploads"])
+        + len(imports["collection_issues"]),
+        "import_inventory_complete": imports["complete"],
+        "blocked_inputs": input_inventory["blocked_inputs"],
         "workflow_choices": list(core.VERA_CLIENT_WORKFLOW_IDS),
     }
 
@@ -174,7 +181,10 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         "works": [],
         "configured": clients["configured"],
         "setup_required": not clients["configured"],
-        "refresh_required": clients["scope_configuration_changed"],
+        # Directory discovery already uses live folders; search-index staleness
+        # cannot prevent selecting an independently verified customer.
+        "refresh_required": False,
+        "scope_configuration_changed": clients["scope_configuration_changed"],
         "clients": [],
         "engagements": [],
         "level": "clients",
@@ -189,7 +199,13 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         rows = [
             {
                 key: row.get(key)
-                for key in ("client_id", "display_name", "registration_status")
+                for key in (
+                    "client_id",
+                    "display_name",
+                    "registration_status",
+                    "available",
+                    "reason",
+                )
             }
             for row in clients["clients"]
         ]
@@ -201,7 +217,8 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     if selected is None:
         raise PermissionError("Client is not registered in this archive session")
     folder = client_root(core, selected_client)
-    engagements = core.ledger.list_engagements(folder, selected_client)
+    engagement_inventory = core.ledger.inspect_engagements(folder, selected_client)
+    engagements = engagement_inventory["engagements"]
     base.update(client_id=selected_client, client_label=selected["display_name"])
     if not selected_engagement:
         rows = [
@@ -211,6 +228,15 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
             }
             for row in engagements
         ]
+        rows.extend(
+            {
+                **issue,
+                "label": issue["entry_name"],
+                "status": "blocked",
+                "created_at": "",
+            }
+            for issue in engagement_inventory["blocked_engagements"]
+        )
         result = page(rows, args)
         return {
             **base,
@@ -218,7 +244,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
             "level": "engagements",
             "engagements": result["rows"],
             "scope_revision": fingerprint([selected_client, engagements]),
-            "can_create_engagement": reviewer() and not base["refresh_required"],
+            "can_create_engagement": reviewer(),
         }
     engagement = next(
         (row for row in engagements if row["engagement_id"] == selected_engagement),
@@ -294,6 +320,8 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         "engagement_id": selected_engagement,
         "engagement_label": engagement["label"],
         "engagement_status": engagement["status"],
+        "collection_issues": inventory["collection_issues"],
+        "ledger_complete": inventory["complete"],
         "can_prepare": reviewer() and engagement["status"] == "open",
     }
 
@@ -337,7 +365,7 @@ def create_engagement_once(core: Any, args: dict[str, Any]) -> dict[str, Any]:
             "engagement_id": stored["engagement_id"],
             "label": stored["label"],
         }
-    current = core.ledger.list_engagements(folder, args["client_id"])
+    current = core.ledger.inspect_engagements(folder, args["client_id"])["engagements"]
     if fingerprint([args["client_id"], current]) != args["scope_revision"]:
         raise ValueError("Archive directory changed; reopen the selected client")
     label = args["label"]
@@ -405,10 +433,6 @@ def lifecycle_action(root: Path, tool: str, args: dict[str, Any]) -> dict[str, A
         current = preparation_catalogue(root, args)
         if current["scope_revision"] != args["scope_revision"]:
             raise ValueError("Engagement or inputs changed; reopen the preparation")
-        if current["import_recovery_required"]:
-            raise ValueError(
-                "Resolve the interrupted import before preparing another run"
-            )
         if args["workflow_id"] not in core.VERA_CLIENT_WORKFLOW_IDS:
             raise ValueError("Workflow is not in the maintained Vera engagement gate")
         inputs = args.get("input_ids", [])

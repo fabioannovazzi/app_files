@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "04a9f7fc97e5ac5cec9995c67af60bb7987a647007ebf297ce4b047b5845a5ea"
+      "sha256": "4a94d0a833b51b6bdf56b6b2d4f691486966b9dc7470dc901849c78996502e98"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -546,5 +546,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "711af71b88aa7345a2c63e18672d1331dbbb35043987c24e07e3ea9f8900fdf1"
+  "canonical_course_sha256": "c1f71c9d2c37170193ed3c2df4774878dbfdff139d31f8d0473c8ed2924f31bd"
 }

@@ -213,7 +213,14 @@ python scripts/inspect_inputs.py <managed-bank-input> <managed-journal-input> --
 Add `--sample <sample-file>` when a sample movement list is provided.
 
 4. Read `inspection.json`, `input_receipts.json`,
-   `source_qualifications.json`, and `suggested_recipe.json`. Do not run
+   `source_qualifications.json`, and `suggested_recipe.json`. In an Archive run,
+   discover and use `read_studio_run_artifact` with this run's client,
+   engagement and run IDs and the actual file path. Use that same recorded
+   read for subsequent source and generated-artifact contents needed by the
+   model, including the audit, review notes and worker receipts. Printing them
+   with `cat` or an ad hoc Python read bypasses the report's observation
+   boundary. Local calculations and writing agent decisions may still use
+   local files without displaying their contents. Do not run
    reconciliation while any source reports `unsupported_source_layout`. A
    source with `needs_review` has emitted zero rows. Review the physical header,
    monetary role, CSV field delimiter,
@@ -231,10 +238,12 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    reviewed header rows, mapping, CSV field delimiter, numeric separators,
    `date_convention`, `date_locale` when Italian textual-month dates are
    present, exact `non_movement_summary_labels` when a reviewed tabular total
-   row must be excluded,
-   current `potential_monetary_columns`, and explicit
+   row must be excluded, and explicit
    `excluded_monetary_columns` against the current content-addressed source
-   artifact reference. Supply the exclusions even when empty, and ensure every
+   artifact reference. The sealer derives `potential_monetary_columns` from
+   the current source; it is not an agent decision to supply. If copied from
+   inspection, that informational value is ignored and recomputed.
+   Supply the exclusions even when empty, and ensure every
    potential monetary column is mapped to amount/debit/credit or excluded. Do
    not hand-author or copy a receipt. Only exact supported headers in a
    uniquely profiled comma CSV need no mapping receipt; non-default delimiters
@@ -281,9 +290,13 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    `reconciliation_matches.csv`, `unmatched_bank.csv`, and
    `unmatched_journal.csv` through the deterministic validators and expose
    their paths in the local workbench; do not load their complete row contents
-   into model context. Run
-   `journal_bank_core.validate_material_value_ledger` against the output
-   directory before relying on native values. Report matched count, unmatched
+   into model context. `run_reconciliation.py` already runs
+   `journal_bank_core.validate_material_value_ledger` before completing.
+   The published `semantic_review.py prepare` and `run-all` commands replay the
+   current values and receipts again before preparing a worker. Use those
+   commands through the installed managed execution service/runtime when a
+   fresh replay is needed; do not import the core with an unrelated shell
+   Python or install dependencies there. Report matched count, unmatched
    bank count, unmatched journal count, residual or withheld gates, stage
    counts, unresolved/manual-review issues, and output paths.
    `material_value_ledger.json` is intentionally absent when source

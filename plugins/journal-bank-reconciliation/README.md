@@ -135,9 +135,11 @@ accepts updates without a version or executable allowlist, rejects failed
 filesystem canaries or executable changes during the run, and
 records a content-bound launch receipt. The bounded packet is transmitted to
 the OpenAI Codex service. Raw worker output remains advisory until validation;
-validated decisions update a sibling cumulative certainty funnel and remove
-movements meeting the human-selected threshold from its review queue and
-bank-side operational human-review payload. Unmatched journal rows remain
+validated decisions update a sibling cumulative certainty funnel. Draft
+preparation defaults to `perfect_match`, retaining semantic residuals for review
+without requiring a clearance decision. An explicitly established lower
+threshold can remove qualifying movements from the review queue and bank-side
+operational human-review payload. Unmatched journal rows remain
 available as strict evidence and candidate context without creating a second
 standalone queue. They
 cannot change canonical perfect matches, ledgers, receipts, gates, or report

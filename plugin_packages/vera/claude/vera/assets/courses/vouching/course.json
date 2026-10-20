@@ -177,7 +177,7 @@
     },
     {
       "path": "skills/mparanza-vouching/SKILL.md",
-      "sha256": "3d374368f59a5a17c27c62b1dd43dd9f41b21ffca5ea0ba602087694f6603f42"
+      "sha256": "d78c88b6b70a2faabef3aac3880d5ebb4422f23cc6c4be74ce87c6d5cdbd43f4"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -650,5 +650,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2a40ca728c723ecfa96fbb1a9f02dfda8a47d36ec17ab54071d96ec1d4e781f5"
+  "canonical_course_sha256": "58c3554d58c060fd39f27f5d0dd3780fb6c916d6465ef8db76505b46f17a63ad"
 }

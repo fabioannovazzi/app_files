@@ -99,6 +99,7 @@ from journal_bank_core import (
     canonical_json_sha256,
     configure_logging,
     decimal_text,
+    log_execution_status,
     parse_canonical_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
@@ -187,7 +188,10 @@ RESOLUTION_LEVELS = (
     "perfect_match",
 )
 RESOLUTION_RANK = {level: rank for rank, level in enumerate(RESOLUTION_LEVELS)}
-DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
+# Draft preparation must not imply permission to clear semantic residuals.
+# Only deterministic replay can reach this level; an explicit lower policy
+# can change the review queue without changing the underlying reconciliation.
+DEFAULT_REQUIRED_RESOLUTION_LEVEL = "perfect_match"
 
 LEGACY_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
 PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
@@ -2300,6 +2304,7 @@ def _write_status(
     except OSError:
         pending.unlink(missing_ok=True)
         raise
+    _register_execution_metadata(status_path, payload)
     return status_path
 
 
@@ -2933,6 +2938,7 @@ def _record_model_submission(
     output_schema: Mapping[str, Any],
     model: str,
     workflow_id: str,
+    source_records: list[dict[str, Any]] | None = None,
 ) -> None:
     """Retain the exact submitted prompt locally; never send it to the receipt service."""
     from vera_assurance.contracts import load_client_engagement_context_file
@@ -2975,9 +2981,14 @@ def _record_model_submission(
         raise ValueError(
             "Worker submission requires the Archive start reporting record"
         )
+    submission = {"prompt": prompt, "output_schema": output_schema}
+    if source_records is not None:
+        from archive_projection import register_row_projection
+
+        register_row_projection(workflow_id, output, submission, source_records)
     record_send(
         root,
-        {"prompt": prompt, "output_schema": output_schema},
+        submission,
         channel="model_worker:" + model,
         event_id=secrets.token_hex(24),
     )
@@ -3310,6 +3321,26 @@ def _publish_worker_artifacts(
         raise
 
 
+def _register_execution_metadata(path: Path, payload: dict[str, Any]) -> None:
+    """Bind producer status/receipt bytes, not filenames, as metadata.
+
+    These constructors contain configuration, counts and hashes, not source
+    records or worker answers. Exact bytes prevent edited receipts inheriting
+    that provenance after a generation moves into history.
+    """
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_value(
+            "journal-bank-reconciliation",
+            path,
+            payload,
+            [],
+            artifact_sha256=hashlib.sha256(_json_bytes(payload)).hexdigest(),
+        )
+
+
 def _cleanup_worker_capsule(semantic_dir: Path, capsule: Path) -> None:
     if (
         capsule.parent.resolve() != semantic_dir
@@ -3455,6 +3486,19 @@ def run_semantic_worker(
             output_schema=json.loads(schema_bytes),
             model=graph["requested_worker_configuration"]["model"],
             workflow_id="journal-bank-reconciliation",
+            source_records=[
+                {
+                    "record_id": record["transaction_id"],
+                    "fields": [
+                        field for field in record if field != "truncated_fields"
+                    ],
+                }
+                for component in graph["selected_components"]
+                for record in (
+                    *component["bank_records"],
+                    *component["journal_records"],
+                )
+            ],
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
@@ -3599,6 +3643,7 @@ def run_semantic_worker(
             },
         )
         artifacts_published = True
+        _register_execution_metadata(semantic / LAUNCH_RECEIPT_NAME, receipt)
         status_path = _write_status(
             semantic,
             graph,
@@ -4460,6 +4505,13 @@ def _write_operational_review_payload(
     }
     path = _safe_output_path(semantic, OPERATIONAL_REVIEW_PAYLOAD_NAME)
     write_json(path, payload)
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_private_value(
+            "journal-bank-reconciliation", semantic, payload
+        )
     return path
 
 
@@ -4782,6 +4834,40 @@ def _apply_resolution_funnel(
     write_json(_safe_output_path(semantic, RESOLUTION_APPLICATION_NAME), application)
     write_json(_safe_output_path(semantic, RESOLUTION_FUNNEL_NAME), funnel)
     write_json(_safe_output_path(semantic, HUMAN_REVIEW_QUEUE_NAME), queue)
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        for name, payload, selected, aggregate_only in (
+            (RESOLUTION_APPLICATION_NAME, application, assignments, False),
+            (RESOLUTION_FUNNEL_NAME, funnel, assignments, True),
+            (HUMAN_REVIEW_QUEUE_NAME, queue, review_queue, False),
+        ):
+            # Summaries expose amount/currency/unit aggregates; review documents
+            # additionally copy the selected bank and candidate journal evidence.
+            source_records = [
+                {
+                    "record_id": evidence["transaction_id"],
+                    "fields": (
+                        ["amount_abs", "currency", "unit"]
+                        if aggregate_only
+                        else list(review_context_fields)
+                    ),
+                }
+                for item in selected
+                for evidence in (
+                    [item["bank_evidence"]]
+                    if aggregate_only
+                    else [item["bank_evidence"], *item["candidate_journal_evidence"]]
+                )
+            ]
+            recorder.register_row_projection(
+                "journal-bank-reconciliation",
+                _safe_output_path(semantic, name),
+                payload,
+                source_records,
+                artifact_sha256=hashlib.sha256(_json_bytes(payload)).hexdigest(),
+            )
     _write_operational_review_payload(
         reconciliation,
         semantic,
@@ -4993,6 +5079,7 @@ def validate_semantic_review(
         validated,
         worker_run,
     )
+    _register_execution_metadata(worker_path, worker_run)
     _write_status(semantic, graph, status_value="completed_validated")
     return {
         "validated_suggestions": validated_path,
@@ -5011,7 +5098,7 @@ def run_semantic_resolution_pipeline(
     reconciliation_dir: Path,
     semantic_output_dir: Path,
     *,
-    required_resolution_level: str,
+    required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
     codex_bin: Path | None = None,
     client_engagement: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
@@ -5111,6 +5198,9 @@ def run_semantic_resolution_pipeline(
         "reviewed_bank_count_before": reviewed_count,
         "reviewed_bank_count_after": next_reviewed_count,
         "human_review_count_after": validated["summary"]["human_review_count"],
+        "worker_run": final_preparation["archived_generation"] / WORKER_RUN_NAME,
+        "launch_receipt": final_preparation["archived_generation"]
+        / LAUNCH_RECEIPT_NAME,
     }
     return {
         "batch_count": 1,
@@ -5151,8 +5241,11 @@ def _parser() -> argparse.ArgumentParser:
     prepare.add_argument(
         "--required-level",
         choices=RESOLUTION_LEVELS[1:],
-        required=True,
-        help="Minimum certainty that removes a bank movement from human review.",
+        default=DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+        help=(
+            "Minimum certainty that removes a bank movement from human review. "
+            "Defaults to perfect_match, retaining semantic residuals for draft review."
+        ),
     )
     _add_client_engagement_argument(prepare)
     run_all = subparsers.add_parser(
@@ -5164,8 +5257,11 @@ def _parser() -> argparse.ArgumentParser:
     run_all.add_argument(
         "--required-level",
         choices=RESOLUTION_LEVELS[1:],
-        required=True,
-        help="Minimum certainty that removes a bank movement from human review.",
+        default=DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+        help=(
+            "Minimum certainty that removes a bank movement from human review. "
+            "Defaults to perfect_match, retaining semantic residuals for draft review."
+        ),
     )
     run_all.add_argument("--codex-bin", type=Path)
     run_all.add_argument(
@@ -5286,7 +5382,8 @@ def main() -> int:
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PREPARATION_FAILED: %s", exc)
             return 2
-        LOGGER.info(
+        log_execution_status(
+            args.output_dir,
             "semantic candidate graph prepared: selected=%s deferred=%s worker_required=%s",
             result["selected_component_count"],
             result["deferred_component_count"],
@@ -5306,13 +5403,25 @@ def main() -> int:
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PIPELINE_FAILED: %s", exc)
             return 2
-        LOGGER.info(
+        log_execution_status(
+            args.output_dir,
             "semantic pipeline completed: batches=%s reviewed=%s human_review=%s exhaustive=%s",
             result["batch_count"],
             result["reviewed_bank_count"],
             result["human_review_count"],
             result["exhaustive"],
         )
+        for batch in result["batches"]:
+            log_execution_status(
+                args.output_dir,
+                "validated worker evidence: %s",
+                json.dumps(
+                    {
+                        "worker_run": str(batch["worker_run"]),
+                        "launch_receipt": str(batch["launch_receipt"]),
+                    }
+                ),
+            )
         return 0
     if args.command == "run-worker":
         try:
@@ -5327,7 +5436,8 @@ def main() -> int:
             _record_cli_launch_failure(args, client_engagement)
             LOGGER.error("SEMANTIC_WORKER_LAUNCH_FAILED: %s", exc)
             return 2
-        LOGGER.info(
+        log_execution_status(
+            args.output_dir,
             "isolated Luna worker completed pending validation: %s",
             result["candidate_graph_sha256"],
         )

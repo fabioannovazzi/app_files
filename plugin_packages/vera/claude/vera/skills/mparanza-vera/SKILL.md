@@ -127,9 +127,10 @@ their no-reporting boundary.
 
 Before substantive work, follow `references/workflow-usage.md`: start one
 retained task UUID for the primary user process (including AI-led work), reuse
-it across helpers/resumption, and record only observed outcomes. Discover the
-native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+it across helpers/resumption, and record only observed outcomes. Prefer the
+native `vera_workflow_usage` tool, including deferred tools, for persistence
+and same-task server/Computer ID verification. Reporting failures remain
+explicit and do not invalidate professional work. Privacy reporting applies only to the fixed pipeline list in
 `references/selective-reporting.md`, using the exact Studio Archive run.
 Studio Archive start and terminal writes automatically create a local report for
 every run of those pipelines, including full exposure or incomplete observations.
@@ -137,9 +138,11 @@ The server proof binds the report hash to the same Archive run and existing Vera
 userID. No agent-authored phase file or separate usage-task receipt link is needed.
 Other pipelines and chat-only tasks do not get this report. After delivery ask once for the user's 1–5 stars and optional
 comment; never infer a score. Studio Archive is infrastructure, not another rated
-process. Synthetic/agent tests are marked and excluded. Flush pending delivery
-at task startup and after outcomes. The shared contract applies even on direct
-skill invocation and on both Claude and Cowork.
+process. Synthetic/agent tests are marked and excluded. Start and record deliver
+only the retained task's events. Retry with
+`workflow_usage.py flush --run-id <retained-uuid>`; unrelated queued events do not
+block this task. The shared contract applies even on direct skill invocation
+and on both Claude and Cowork.
 <!-- VERA_WORKFLOW_USAGE_END -->
 
 

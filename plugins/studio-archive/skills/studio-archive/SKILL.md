@@ -846,7 +846,12 @@ generated ZIPs during an archive run.
   permission requirement; do not continue to client or engagement creation.
 - UNC syntax unsupported by the runtime: use a mounted local path; do not retry
   the same non-native UNC syntax indefinitely.
-- Not configured or no index: configure and refresh.
+- No session configuration: recover the previously approved archive through
+  the maintained client-list operation. Use guided setup only when no approved
+  connection can be recovered.
+- No search index or a stale search index: refresh before content search. Client
+  selection, engagement listing, imports and run preparation use live directory
+  identities and must not wait for unrelated content indexing.
 - Unknown or ambiguous scope: stop before search and resolve it.
 - Changed file at open: refresh, rerun the search, and use the new source ID.
 - Missing/unsupported/unreadable material: report partial evidence.
@@ -861,7 +866,7 @@ generated ZIPs during an archive run.
   candidate in the client answer.
 - New task: do not claim the prior task-scoped confirmation was persisted;
   confirm again when the address is not supplied.
-- Client folder was renamed: refresh, then run
+- Client folder was renamed: list clients again, then run
   `recover_studio_client_ledger` when verification is needed. Resume only when
   the same `client_id` is present in the customer-folder manifest; do not infer
   identity from the renamed folder label.
@@ -869,6 +874,13 @@ generated ZIPs during an archive run.
 - A receipt, selected input, upstream artifact, or run manifest is missing or
   changed: stop. Do not substitute another engagement file or silently prepare
   a new run.
+- A different client, engagement, input or run is unavailable: retain its
+  reported issue and original files. Continue the selected work when its own
+  identity and dependencies validate. An incomplete inventory is not an empty
+  archive and must not trigger replacement client or engagement creation.
+- An unrelated native upload is interrupted: retain its recovery record. It
+  does not prevent a separate upload or preparation from already verified
+  ledger receipts. Never select an uncommitted upload as an input.
 - Execution fails: record the failed lifecycle state and reason. Do not expose
   its output folder as available.
 - Artifacts do not close the physical output tree: do not complete the run;

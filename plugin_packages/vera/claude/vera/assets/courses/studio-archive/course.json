@@ -37,11 +37,11 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "1695303aee3fa253cd01dfca3c9d01a729d6dc45caeb6d336d48039b602ac094"
+      "sha256": "4c406591ebadde0f6642202a7396c5bd6aebce22cdc561a24c5980d10eaa02e1"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
-      "sha256": "f5ca3c7295c3dcb78f211cb7fe7bb399a73db5888a77a876a2a969af00e4a58a"
+      "sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",
@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "7236f1465961136dda8a1589ce607f998d6a0718be13b94a7f2a1463f100d4d1"
+      "sha256": "181123d87c5deda2628f1d961f95fa33c0ae4c318356ca3301a3d9383adc4c9a"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
-      "sha256": "1f36b8dbce69fa821becdf926e757efaaf2f2d445ebe1ad3afc7452bc8a086f8"
+      "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
-      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
+      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
@@ -682,5 +682,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a2693412d85a0e924948df2284f42a492d251811e80dc357bc034e19f4464c44"
+  "canonical_course_sha256": "3d924696771c357b323d13b237e41a476e1249c8289c9c365b7f3825bf272d97"
 }

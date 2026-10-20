@@ -213,7 +213,14 @@ python scripts/inspect_inputs.py <managed-bank-input> <managed-journal-input> --
 Add `--sample <sample-file>` when a sample movement list is provided.
 
 4. Read `inspection.json`, `input_receipts.json`,
-   `source_qualifications.json`, and `suggested_recipe.json`. Do not run
+   `source_qualifications.json`, and `suggested_recipe.json`. In an Archive run,
+   discover and use `read_studio_run_artifact` with this run's client,
+   engagement and run IDs and the actual file path. Use that same recorded
+   read for subsequent source and generated-artifact contents needed by the
+   model, including the audit, review notes and worker receipts. Printing them
+   with `cat` or an ad hoc Python read bypasses the report's observation
+   boundary. Local calculations and writing agent decisions may still use
+   local files without displaying their contents. Do not run
    reconciliation while any source reports `unsupported_source_layout`. A
    source with `needs_review` has emitted zero rows. Review the physical header,
    monetary role, CSV field delimiter,
@@ -231,10 +238,12 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    reviewed header rows, mapping, CSV field delimiter, numeric separators,
    `date_convention`, `date_locale` when Italian textual-month dates are
    present, exact `non_movement_summary_labels` when a reviewed tabular total
-   row must be excluded,
-   current `potential_monetary_columns`, and explicit
+   row must be excluded, and explicit
    `excluded_monetary_columns` against the current content-addressed source
-   artifact reference. Supply the exclusions even when empty, and ensure every
+   artifact reference. The sealer derives `potential_monetary_columns` from
+   the current source; it is not an agent decision to supply. If copied from
+   inspection, that informational value is ignored and recomputed.
+   Supply the exclusions even when empty, and ensure every
    potential monetary column is mapped to amount/debit/credit or excluded. Do
    not hand-author or copy a receipt. Only exact supported headers in a
    uniquely profiled comma CSV need no mapping receipt; non-default delimiters
@@ -281,9 +290,13 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    `reconciliation_matches.csv`, `unmatched_bank.csv`, and
    `unmatched_journal.csv` through the deterministic validators and expose
    their paths in the local workbench; do not load their complete row contents
-   into model context. Run
-   `journal_bank_core.validate_material_value_ledger` against the output
-   directory before relying on native values. Report matched count, unmatched
+   into model context. `run_reconciliation.py` already runs
+   `journal_bank_core.validate_material_value_ledger` before completing.
+   The published `semantic_review.py prepare` and `run-all` commands replay the
+   current values and receipts again before preparing a worker. Use those
+   commands through the installed managed execution service/runtime when a
+   fresh replay is needed; do not import the core with an unrelated shell
+   Python or install dependencies there. Report matched count, unmatched
    bank count, unmatched journal count, residual or withheld gates, stage
    counts, unresolved/manual-review issues, and output paths.
    `material_value_ledger.json` is intentionally absent when source
@@ -298,8 +311,14 @@ bank movements. Anthropic Cowork and other runtimes skip it and continue with
 the normal review handoff. The purpose is to remove as much routine human work
 as the user's required certainty permits, not merely to attach suggestions.
 
-Before preparation, record the minimum certainty the user requires to remove a
-movement from human review. The ordered sufficiency levels are `classified`,
+Preparing and delivering a draft does not require a user decision about clearing
+the review queue. Reuse an explicitly established clearance policy when one
+exists; otherwise omit `--required-level` and record the preparation default,
+`perfect_match`, without attributing it to the user. Luna still analyses the
+eligible residuals, and its judgments remain available for review. Ask about a
+lower clearance threshold only when the user requests that operational policy;
+professional adoption, signature, filing and external actions remain separate.
+The ordered sufficiency levels are `classified`,
 `candidate_match`, `beneficiary_match`, `identifier_match`, and
 `perfect_match`. They form a cumulative “at least” funnel by count and gross
 absolute value. Each movement has one highest level, while funnel totals count
@@ -324,9 +343,22 @@ worker for the bounded packet produced for that run.
 ```bash
 python scripts/semantic_review.py run-all <output-dir>/reconciliation \
   --output-dir <output-dir>/semantic-review \
-  --required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match> \
   --client-engagement <client_engagement_path>
 ```
+
+Pass `--required-level <classified|candidate_match|beneficiary_match|identifier_match|perfect_match>`
+only to apply an explicitly established clearance policy. Its omission does not
+skip the worker or any source, output-receipt or material-value validation.
+
+After `run-all`, use its returned `validated worker evidence` paths. Its final
+preparation moves the validated worker files into an actual
+`semantic-review/history/generation.../` directory and leaves the current
+resolution artifacts at the top level. Read the returned worker and launch
+receipts through `read_studio_run_artifact`; do not reconstruct a generation
+name or assume those receipts remain at the top level. `batches=1` records the
+completed worker; terminal `worker_required=false` means no further packet is
+needed. A zero-batch result supplies no new worker-receipt paths. Continue using
+the current resolution funnel, review queue and operational payload.
 
 An explicitly reviewed alternative may be supplied to `prepare` or `run-all`
 with `--worker-selection <receipt.json>`. Use the shared reviewed-decision

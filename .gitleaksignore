@@ -2,3 +2,5 @@
 bc746615bd5f8cdab212c8cc6a499c49321289a1:tests/scripts/test_build_retailer_category_evidence_pack.py:generic-api-key:2958
 # Public ECB 10-year yield-curve series identifier, not a credential; exact historical finding only.
 c8089dc7a5d8bff2272ed59092ce04298d78140a:plugins/business-valuation/references/benchmark-acquisition.md:generic-api-key:94
+# Codex chat UUID returned by create_thread, not an authentication credential; exact historical finding only.
+1a9086ec440bac9da2161b370428582a0ca49875:docs/audits/studio-archive-architecture-2026-10-20.md:generic-api-key:69

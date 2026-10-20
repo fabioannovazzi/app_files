@@ -159,7 +159,12 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/lucia/scripts/archive_reporting.py",
-      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
+      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
+    },
+    {
+      "path": "scripts/diagnostic_context.py",
+      "repository_path": "plugins/lucia/scripts/diagnostic_context.py",
+      "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -174,7 +179,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/lucia/scripts/operational_incidents.py",
-      "sha256": "513571979941cdb682d0eff50fc86f7950f6a06c57a5e8e7f9ec411af86d9668"
+      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -184,7 +189,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/lucia/scripts/workflow_usage.py",
-      "sha256": "345abfbea1fed86e9a23073a8a2165ed78e8d97468e02355ec7daf7a4e4e2b42"
+      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
     },
     {
       "path": "skills/apertura-pratica/SKILL.md",

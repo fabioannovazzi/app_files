@@ -64,6 +64,27 @@ _SESSION = (
 )
 
 
+def _delivery_scope() -> str | None:
+    """Keep an explicitly selected task separate from historical outbox work."""
+    value = os.environ.get("MPARANZA_INCIDENT_TASK_ID")
+    return str(UUID(value)) if value else None
+
+
+def _in_scope(item: dict[str, Any]) -> bool:
+    scope = _delivery_scope()
+    return scope is None or item.get("delivery_scope") == scope
+
+
+def _queue_item(item: dict[str, Any]) -> dict[str, Any]:
+    """Tag only newly created local entries; never relabel retained evidence."""
+    scope = _delivery_scope()
+    return {**item, "delivery_scope": scope} if scope else item
+
+
+def _queued_count(state: dict[str, Any]) -> int:
+    return sum(_in_scope(item) for item in state["outbox"])
+
+
 def _host() -> str:
     configured = os.environ.get("MPARANZA_INCIDENT_HOST")
     if configured in {"codex", "cowork"}:
@@ -251,7 +272,11 @@ def execution_identity(
             encoded.encode(),
             hashlib.sha256,
         ).hexdigest()
-        identifier = state.setdefault("operations", {}).setdefault(key, str(uuid4()))
+        scope = _delivery_scope()
+        operation_key = f"{scope}:{key}" if scope else key
+        identifier = state.setdefault("operations", {}).setdefault(
+            operation_key, str(uuid4())
+        )
         if original_report_id:
             UUID(original_report_id)
             receipt = next(
@@ -278,14 +303,15 @@ def execution_identity(
     return result
 
 
-def diagnostic_directory() -> Path:
+def diagnostic_directory(*, create: bool = True) -> Path:
     """Keep unreviewed helper stderr private and outside professional folders."""
-    directory = _state_path().parent / "helper-diagnostics"
+    directory = _state_path(create=create).parent / "helper-diagnostics"
     if directory.is_symlink():
         raise ValueError("Diagnostic directory must not be a symbolic link")
-    directory.mkdir(mode=0o700, exist_ok=True)
-    if os.name == "posix" and stat.S_IMODE(directory.stat().st_mode) != 0o700:
-        directory.chmod(0o700)
+    if create:
+        directory.mkdir(mode=0o700, exist_ok=True)
+        if os.name == "posix" and stat.S_IMODE(directory.stat().st_mode) != 0o700:
+            directory.chmod(0o700)
     return directory
 
 
@@ -366,8 +392,8 @@ def _serialized(function):
     return wrapper
 
 
-def _read() -> dict[str, Any]:
-    path = _state_path()
+def _read(*, create: bool = True) -> dict[str, Any]:
+    path = _state_path(create=create)
     if path.exists():
         metadata = path.lstat()
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
@@ -433,7 +459,7 @@ def _accept_delivery(state: dict[str, Any], receipt: dict[str, Any]) -> dict[str
         return {
             "acknowledged": True,
             "operation": "progress",
-            "queued": len(state["outbox"]),
+            "queued": _queued_count(state),
         }
     incident_id = str(UUID(receipt["incident_id"]))
     operation = "outcome" if receipt.get("outcome_id") else "report"
@@ -458,7 +484,7 @@ def _accept_delivery(state: dict[str, Any], receipt: dict[str, Any]) -> dict[str
         return {
             "acknowledged": True,
             "operation": operation,
-            "queued": len(state["outbox"]),
+            "queued": _queued_count(state),
         }
     payload = state["outbox"][index]["payload"][operation]
     if operation == "outcome":
@@ -481,6 +507,11 @@ def _accept_delivery(state: dict[str, Any], receipt: dict[str, Any]) -> dict[str
                     "stage": payload["stage"],
                     "host": payload["host"],
                     "report": payload,
+                    **(
+                        {"delivery_scope": state["outbox"][index]["delivery_scope"]}
+                        if "delivery_scope" in state["outbox"][index]
+                        else {}
+                    ),
                 }
             )
     state["outbox"].pop(index)
@@ -492,7 +523,7 @@ def _accept_delivery(state: dict[str, Any], receipt: dict[str, Any]) -> dict[str
     return {
         "acknowledged": True,
         "operation": operation,
-        "queued": len(state["outbox"]),
+        "queued": _queued_count(state),
     }
 
 
@@ -505,13 +536,13 @@ def acknowledge_delivery(receipt: dict[str, Any]) -> dict[str, Any]:
             return {
                 "acknowledged": True,
                 "operation": "report",
-                "queued": len(state["outbox"]),
+                "queued": _queued_count(state),
             }
         _accept_recovery_evidence(state, receipt)
         return {
             "acknowledged": True,
             "operation": "report",
-            "queued": len(state["outbox"]),
+            "queued": _queued_count(state),
         }
     return _accept_delivery(_read(), receipt)
 
@@ -654,6 +685,11 @@ def _expand_success(
             {**item, "payload": {**item["payload"], "report_ids": remaining}}
         )
     index = state["outbox"].index(item)
+    if "delivery_scope" in item:
+        outcomes = [
+            {**outcome, "delivery_scope": item["delivery_scope"]}
+            for outcome in outcomes
+        ]
     state["outbox"][index : index + 1] = outcomes
     _write(state)
     return True
@@ -661,6 +697,8 @@ def _expand_success(
 
 def _flush(state: dict[str, Any]) -> None:
     if _local_delivery_only() or state.get("delivery_mode") == "local-only":
+        return
+    if not any(_in_scope(item) for item in state["outbox"]):
         return
     if not state["registered"]:
         _post("register", {"credentials": state["credentials"]})
@@ -687,7 +725,9 @@ def _flush(state: dict[str, Any]) -> None:
     deadline = time.monotonic() + 16
     delivered = 0
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
-        item = state["outbox"][0]
+        item = next((item for item in state["outbox"] if _in_scope(item)), None)
+        if item is None:
+            break
         if item["operation"] == "observed-success":
             if not _expand_success(state, item):
                 break
@@ -703,7 +743,7 @@ def _flush(state: dict[str, Any]) -> None:
             # Keep rejected evidence locally; an obsolete revision must not block
             # newer failure delivery or falsely close a newer recovery requirement.
             state.setdefault("rejected_outcomes", []).append(item)
-            state["outbox"].pop(0)
+            state["outbox"].remove(item)
             _write(state)
             continue
         if reply.get("evidence_for_report_id"):
@@ -856,29 +896,35 @@ def _report_failure(
                 for index, item in enumerate(state["outbox"])
                 if item["operation"] == "observed-success"
                 and item["payload"]["workflow"] == workflow
+                and _in_scope(item)
             ),
             default=-1,
         )
         retained = [
             item["payload"]["report"]
             for item in state["outbox"][boundary + 1 :]
-            if item.get("fingerprint") == fingerprint
+            if item.get("fingerprint") == fingerprint and _in_scope(item)
         ]
         if retained:
             reports = retained
         else:
             state["outbox"].extend(
-                {
-                    "operation": "report",
-                    "payload": {"report": part},
-                    "fingerprint": fingerprint,
-                }
+                _queue_item(
+                    {
+                        "operation": "report",
+                        "payload": {"report": part},
+                        "fingerprint": fingerprint,
+                    }
+                )
                 for part in reports
             )
         _write(state)
         try:
             _flush(state)
-            if any(item.get("fingerprint") == fingerprint for item in state["outbox"]):
+            if any(
+                item.get("fingerprint") == fingerprint and _in_scope(item)
+                for item in state["outbox"]
+            ):
                 return {
                     "reporting": "queued",
                     "independent_connector": product_name(ROOT) + "_incident_report",
@@ -972,7 +1018,9 @@ def report_pdf_recovery(
     options, _ = parser.parse_known_args(arguments)
     if options.output_dir is None or options.client_engagement is None:
         return
-    context = json.loads(options.client_engagement.read_text(encoding="utf-8"))
+    from diagnostic_context import load_workflow_context
+
+    context = load_workflow_context(options.client_engagement, workflow_id=workflow)
     output = options.output_dir.resolve()
     root = Path(context["output_dir"]).resolve()
     if context.get("workflow_id") != workflow or output not in {
@@ -1246,19 +1294,21 @@ def record_execution_progress(execution: dict[str, str], kind: str) -> None:
         ):
             continue
         state["outbox"].append(
-            {
-                "operation": "progress",
-                "payload": {
-                    "progress": {
-                        "event_id": str(uuid4()),
-                        "incident_id": incident["incident_id"],
-                        "report_id": incident["latest_report_id"],
-                        "remedy_revision": incident["revision"],
-                        "kind": kind,
-                        "operation_id": execution["operation_id"],
-                    }
-                },
-            }
+            _queue_item(
+                {
+                    "operation": "progress",
+                    "payload": {
+                        "progress": {
+                            "event_id": str(uuid4()),
+                            "incident_id": incident["incident_id"],
+                            "report_id": incident["latest_report_id"],
+                            "remedy_revision": incident["revision"],
+                            "kind": kind,
+                            "operation_id": execution["operation_id"],
+                        }
+                    },
+                }
+            )
         )
     _write(state)
     if state["outbox"]:
@@ -1307,7 +1357,9 @@ def verify_original_task(value: dict[str, Any]) -> dict[str, Any]:
     if value.get("input_binding") is not None:
         outcome["input_binding"] = value["input_binding"]
     outcome.update(outcome_id=str(uuid4()), status="recovered", diagnostics=[])
-    state["outbox"].append({"operation": "outcome", "payload": {"outcome": outcome}})
+    state["outbox"].append(
+        _queue_item({"operation": "outcome", "payload": {"outcome": outcome}})
+    )
     _write(state)
     try:
         _flush(state)
@@ -1347,7 +1399,7 @@ def check_incidents(
                 "error_type": type(error).__name__,
                 "message": _clean(str(error)),
                 "credentials": state["credentials"],
-                "queued": len(state["outbox"]),
+                "queued": _queued_count(state),
                 "pending_diagnostics": _pending_diagnostics(),
                 "retained_outcomes": state.get("rejected_outcomes", []),
             }
@@ -1364,10 +1416,20 @@ def check_incidents(
         }
     if remote_status is not None:
         for item in list(state["outbox"]):
-            if item["operation"] == "observed-success":
+            if item["operation"] == "observed-success" and _in_scope(item):
                 _expand_success(state, item, result)
+    selected_incidents = result["incidents"]
+    if _delivery_scope() is not None:
+        selected_reports = {
+            row["report_id"] for row in state["receipts"] if _in_scope(row)
+        }
+        selected_incidents = [
+            incident
+            for incident in selected_incidents
+            if incident["latest_report_id"] in selected_reports
+        ]
     messages = []
-    for incident in result["incidents"]:
+    for incident in selected_incidents:
         if incident["status"] == "recovered":
             continue
         key = f'{incident["incident_id"]}:{incident["revision"]}'
@@ -1454,6 +1516,7 @@ def check_incidents(
                                 "MPARANZA_INCIDENT_HOST",
                                 "MPARANZA_INCIDENT_HOST_SESSION",
                                 "MPARANZA_INCIDENT_DELIVERY",
+                                "MPARANZA_INCIDENT_TASK_ID",
                             )
                             if key in os.environ
                         },
@@ -1493,22 +1556,26 @@ def check_incidents(
             "ready-to-resume" if completed.returncode == 0 else "failed"
         )
         state["outbox"].append(
-            {
-                "operation": "outcome",
-                "payload": {
-                    "outcome": {
-                        "outcome_id": str(uuid4()),
-                        "incident_id": incident["incident_id"],
-                        "report_id": incident["latest_report_id"],
-                        "remedy_revision": incident["revision"],
-                        "status": (
-                            "action-required" if completed.returncode == 0 else "failed"
-                        ),
-                        "execution_succeeded": False,
-                        "diagnostics": diagnostics,
-                    }
-                },
-            }
+            _queue_item(
+                {
+                    "operation": "outcome",
+                    "payload": {
+                        "outcome": {
+                            "outcome_id": str(uuid4()),
+                            "incident_id": incident["incident_id"],
+                            "report_id": incident["latest_report_id"],
+                            "remedy_revision": incident["revision"],
+                            "status": (
+                                "action-required"
+                                if completed.returncode == 0
+                                else "failed"
+                            ),
+                            "execution_succeeded": False,
+                            "diagnostics": diagnostics,
+                        }
+                    },
+                }
+            )
         )
         _write(state)
         if remote_status is None:
@@ -1530,9 +1597,9 @@ def check_incidents(
         "credentials": state["credentials"],
         "retained_outcomes": state.get("rejected_outcomes", []),
         "pending": [
-            item for item in result["incidents"] if item["status"] != "recovered"
+            item for item in selected_incidents if item["status"] != "recovered"
         ],
-        "queued": len(state["outbox"]),
+        "queued": _queued_count(state),
         "pending_diagnostics": _pending_diagnostics(),
     }
 
@@ -1552,6 +1619,7 @@ def record_success(workflow: str, operation: str) -> None:
         if row["workflow"] == workflow
         and row.get("host") == _host()
         and row["stage"] in stages
+        and _in_scope(row)
     ]
     report_ids.extend(
         row["payload"]["report"]["report_id"]
@@ -1560,19 +1628,22 @@ def record_success(workflow: str, operation: str) -> None:
         and row["payload"]["report"]["workflow"] == workflow
         and row["payload"]["report"]["host"] == _host()
         and row["payload"]["report"]["stage"] in stages
+        and _in_scope(row)
     )
     if not report_ids:
         return
     state["outbox"].append(
-        {
-            "operation": "observed-success",
-            "payload": {
-                "report_ids": report_ids,
-                "workflow": workflow,
-                "operation": operation,
-                "product_version": _identity()["product_version"],
-            },
-        }
+        _queue_item(
+            {
+                "operation": "observed-success",
+                "payload": {
+                    "report_ids": report_ids,
+                    "workflow": workflow,
+                    "operation": operation,
+                    "product_version": _identity()["product_version"],
+                },
+            }
+        )
     )
     _write(state)
     # Save the observed result before any network access so outages cannot lose it.
@@ -1601,17 +1672,24 @@ def reporting_credentials() -> dict[str, str]:
     return credentials
 
 
-@_serialized
 def local_context() -> dict[str, Any]:
-    """Read durable local identity without contacting a server or running a helper."""
-    state = _read()
-    _write(state)
+    """Read an atomic identity snapshot; serialize only its first creation."""
+    path = _state_path(create=False)
+    if path.exists():
+        state = _read(create=False)
+    else:
+        # Atomic replacement makes subsequent reads coherent without a write lock.
+        # First creation must still serialize so concurrent hosts retain one ID.
+        with _state_lock():
+            state = _read()
+            if not path.exists():
+                _write(state)
     return {
         "credentials": state["credentials"],
-        "queued": len(state["outbox"]),
+        "queued": _queued_count(state),
         "client_status": _reporter_status(),
         "pending_diagnostics": _pending_diagnostics(),
-        "outbox_path": str(_state_path()),
+        "outbox_path": str(path),
         "host_binding": state.get("host_binding"),
     }
 
@@ -1620,7 +1698,7 @@ def _pending_diagnostics() -> list[str]:
     """Expose private review pointers without reading their retained stderr."""
     return [
         str(path)
-        for path in diagnostic_directory().glob("*.json")
+        for path in diagnostic_directory(create=False).glob("*.json")
         if not path.name.endswith(".technical.json")
     ]
 

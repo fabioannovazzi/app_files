@@ -318,6 +318,39 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
     assert "stale" in "\n".join(stale.bank["files"][0]["limitations"])
 
 
+@pytest.mark.parametrize("copied_candidates", [["Amount", "Balance"], [], ["Stale"]])
+def test_sealing_recomputes_copied_monetary_candidates(
+    tmp_path: Path, copied_candidates: list[str]
+) -> None:
+    core = load_core()
+    sealer = _load(
+        ROOT / "plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py",
+        "seal_review_receipts",
+    )
+    case = _case(tmp_path)
+    output = Path(case["output_dir"])
+    inputs = {
+        item["role"]: Path(item["path"]) for item in case["context"]["input_bindings"]
+    }
+    core.inspect_inputs(inputs["source"], inputs["journal"], output)
+    recipe = json.loads((output / "suggested_recipe.json").read_text())
+    decisions = _decisions(recipe)
+    filename, choice = next(iter(decisions["bank"]["files"].items()))
+    choice["potential_monetary_columns"] = copied_candidates
+    original_decisions = copy.deepcopy(decisions)
+    receipts = json.loads((output / "input_receipts.json").read_text())["receipts"]
+
+    sealed = sealer.seal_review_receipts(recipe, decisions, receipts, case["context"])
+
+    file_recipe = sealed["bank"]["files"][filename]
+    assert file_recipe["potential_monetary_columns"] == ["Amount", "Balance"]
+    assert file_recipe["mapping_decision"]["content"]["potential_monetary_columns"] == [
+        "Amount",
+        "Balance",
+    ]
+    assert decisions == original_decisions
+
+
 @pytest.mark.parametrize(
     "fault, message",
     [
@@ -327,6 +360,14 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
         (
             "balance",
             "potential monetary columns require a complete mapped-or-excluded disposition",
+        ),
+        (
+            "masked_balance",
+            "potential monetary columns require a complete mapped-or-excluded disposition",
+        ),
+        (
+            "unknown_field",
+            "mapping decisions are incomplete or contain unknown fields",
         ),
         (
             "policy",
@@ -358,10 +399,13 @@ def test_sealing_incomplete_decisions_leaves_recipe_unchanged(
         decisions["reviewed_on"] = "today"
     elif fault == "missing_file":
         decisions["bank"]["files"] = {}
-    elif fault == "balance":
-        next(iter(decisions["bank"]["files"].values()))[
-            "excluded_monetary_columns"
-        ] = []
+    elif fault in {"balance", "masked_balance"}:
+        choice = next(iter(decisions["bank"]["files"].values()))
+        choice["excluded_monetary_columns"] = []
+        if fault == "masked_balance":
+            choice["potential_monetary_columns"] = []
+    elif fault == "unknown_field":
+        next(iter(decisions["bank"]["files"].values()))["decimal_seperator"] = ","
     else:
         decisions["relationship"].pop("default_currency")
     receipts = json.loads((output / "input_receipts.json").read_text())["receipts"]

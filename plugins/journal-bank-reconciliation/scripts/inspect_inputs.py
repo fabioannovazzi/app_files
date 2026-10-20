@@ -66,7 +66,12 @@ import json
 import logging
 from pathlib import Path
 
-from journal_bank_core import add_common_args, configure_logging, inspect_inputs
+from journal_bank_core import (
+    add_common_args,
+    configure_logging,
+    inspect_inputs,
+    log_execution_status,
+)
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -169,11 +174,19 @@ def main() -> int:
         language=args.language,
         document_language=args.document_language,
     )
-    LOGGER.info("bank_rows=%s", result.bank["row_count"])
-    LOGGER.info("journal_rows=%s", result.journal["row_count"])
-    LOGGER.info("sample_movements=%s", result.sample["movement_count"])
-    LOGGER.info("wrote %s", args.output_dir / "inspection.json")
-    LOGGER.info("wrote %s", args.output_dir / "suggested_recipe.json")
+    log_execution_status(args.output_dir, "bank_rows=%s", result.bank["row_count"])
+    log_execution_status(
+        args.output_dir, "journal_rows=%s", result.journal["row_count"]
+    )
+    log_execution_status(
+        args.output_dir, "sample_movements=%s", result.sample["movement_count"]
+    )
+    log_execution_status(
+        args.output_dir, "wrote %s", args.output_dir / "inspection.json"
+    )
+    log_execution_status(
+        args.output_dir, "wrote %s", args.output_dir / "suggested_recipe.json"
+    )
     return 0
 
 

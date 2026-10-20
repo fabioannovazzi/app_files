@@ -5,6 +5,7 @@ from __future__ import annotations
 import base64
 import hashlib
 import json
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -12,6 +13,7 @@ import pytest
 from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
 from tests.plugins.test_vera_native_archive_lifecycle import rpc_program
 from tests.plugins.test_vera_native_archive_navigation import registry_workspace
+from tests.plugins.test_vera_native_workspace import NODE, ROOT
 
 __all__ = []
 
@@ -343,7 +345,7 @@ const result={finished,prepared,started,author};
     assert list(Path(loaded["output_dir"]).iterdir()) == []
 
 
-def test_interrupted_import_blocks_new_preparation_until_explicit_recovery(
+def test_interrupted_import_receipt_does_not_block_verified_sources_or_new_uploads(
     import_workspace,
 ):
     env, folder, client, engagement = import_workspace
@@ -352,28 +354,117 @@ def test_interrupted_import_blocks_new_preparation_until_explicit_recovery(
     result = rpc_program(
         env,
         program(
-            client, engagement, data, BEGIN + CHUNKS + FINISH + "const result=begun;"
+            client,
+            engagement,
+            data,
+            BEGIN
+            + CHUNKS
+            + FINISH
+            + "const result={...begun,input_id:finished.input_id};",
         ),
     )
     base = next((folder / ledger.LEDGER_DIRECTORY).rglob(result["upload_ref"]))
     receipt = json.loads((base / "import.json").read_text())
     receipt.pop("result")
     (base / "import.json").write_text(json.dumps(receipt))
-    blocked = rpc_program(
+    retained = (base / "import.json").read_bytes()
+    observed = rpc_program(
         env,
         program(
             client,
             engagement,
             data,
-            """
+            f"""
 const inputs=payload(call('vera_workspace_archive_inputs',selected));
-const denied=call('vera_workspace_archive_import_begin',{...beginArgs,idempotency_key:'new-import-while-uncertain'});
-const prepare=call('vera_workspace_archive_prepare',{...scope(inputs),workflow_id:'aml-review',input_ids:[inputs.rows[0].input_id],upstream_artifacts:[],label:'Fictional refusal',purpose:'Do not use uncertain imports',idempotency_key:'refused-prepare'});
-const result={inputs,denied,prepare};
+const begunNext=payload(call('vera_workspace_archive_import_begin',{{...beginArgs,idempotency_key:'independent-upload'}}));
+const prepared=payload(call('vera_workspace_archive_prepare',{{...scope(inputs),workflow_id:'aml-review',input_ids:[{json.dumps(result["input_id"])}],upstream_artifacts:[],label:'Verified source',purpose:'Use the verified ledger receipt',idempotency_key:'verified-prepare'}}));
+const result={{inputs,begunNext,prepared}};
 """,
         ),
     )
-    assert blocked["inputs"]["can_prepare"] is False
-    assert blocked["inputs"]["import_recovery_required"] is True
-    assert blocked["denied"]["isError"] is True
-    assert blocked["prepare"]["isError"] is True
+    assert observed["inputs"]["can_prepare"] is True
+    assert observed["inputs"]["import_recovery_required"] is True
+    assert observed["begunNext"]["upload_ref"] != result["upload_ref"]
+    loaded = ledger.load_run(folder, engagement, observed["prepared"]["run_id"])
+    assert loaded["input_manifest"]["inputs"][0]["binding_id"] == result["input_id"]
+    assert (base / "import.json").read_bytes() == retained
+
+
+@pytest.mark.parametrize("damaged_record", ["manifest.json", "state.json"])
+def test_damaged_upload_is_reported_without_blocking_valid_sources(
+    import_workspace, damaged_record
+):
+    env, folder, client, engagement = import_workspace
+    data = b"Fictional committed source with independent transport metadata"
+    ledger = _load_customer_ledger()
+    first = rpc_program(
+        env,
+        program(
+            client,
+            engagement,
+            data,
+            BEGIN + CHUNKS + FINISH + "const result={...begun,...finished};",
+        ),
+    )
+    base = next((folder / ledger.LEDGER_DIRECTORY).rglob(first["upload_ref"]))
+    damaged = base / damaged_record
+    damaged.write_bytes(b"{}")
+
+    result = rpc_program(
+        env,
+        program(
+            client,
+            engagement,
+            data,
+            f"""
+const inputs=payload(call('vera_workspace_archive_inputs',selected));
+const begun=payload(call('vera_workspace_archive_import_begin',{{...beginArgs,idempotency_key:'independent-valid-upload'}}));
+const rejected=call('vera_workspace_archive_import_finish',{{...authority(),upload_ref:{json.dumps(first["upload_ref"])}}});
+const prepared=payload(call('vera_workspace_archive_prepare',{{...scope(inputs),workflow_id:'aml-review',input_ids:[{json.dumps(first["input_id"])}],upstream_artifacts:[],label:'Verified source',purpose:'Use committed source independently of transport',idempotency_key:'valid-source-after-upload-damage'}}));
+const result={{setup,inputs,begun,rejected,prepared}};
+""",
+        ),
+    )
+
+    assert result["setup"]["rows"][0]["status"] == "blocked"
+    assert "file" not in result["setup"]["rows"][0]
+    assert result["setup"]["rows"][0]["upload_ref"] == first["upload_ref"]
+    assert result["inputs"]["blocked_import_count"] == 1
+    assert result["inputs"]["can_prepare"] is True
+    assert result["begun"]["upload_ref"] != first["upload_ref"]
+    assert result["rejected"]["isError"] is True
+    run = ledger.load_run(folder, engagement, result["prepared"]["run_id"])
+    assert run["input_manifest"]["inputs"][0]["binding_id"] == first["input_id"]
+    assert damaged.read_bytes() == b"{}"
+    rendered = subprocess.run(
+        [
+            NODE,
+            str(ROOT / "tests/plugins/archive_run_list_ui.cjs"),
+            str(ROOT / "plugins/vera/ui/workspace.js"),
+            "import",
+        ],
+        input=json.dumps(
+            {
+                "catalogue": {
+                    "mode": "studio-archive",
+                    "configured": True,
+                    "level": "runs",
+                    "works": [],
+                    "can_prepare": True,
+                    "client_id": client,
+                    "engagement_id": engagement,
+                    "engagement_label": "Synthetic",
+                },
+                "import_setup": result["setup"],
+            }
+        ),
+        encoding="utf-8",
+        capture_output=True,
+        check=True,
+        timeout=20,
+    )
+    view = json.loads(rendered.stdout)
+    assert "Importazione non disponibile" in view["text"]
+    assert "L’elenco delle importazioni è incompleto" in view["text"]
+    assert view["filePickers"] == 1
+    assert "Completa questa importazione interrotta" not in view["buttons"]

@@ -174,8 +174,10 @@ Every raw-input run must be bound to one exact Studio Archive client folder.
 Do not infer the client from a person's name, a filename, an engagement label,
 or the contents of an accounting file.
 
-1. Call `studio_archive_status`, select one exact client and engagement, and
-   refresh first if Studio Archive reports changed top-level scopes.
+1. Call `studio_archive_status` and select one exact registered client and
+   engagement. Validate that selected identity and its inputs. A changed
+   top-level folder or stale search index does not require a refresh before
+   this work; refresh is needed only for a requested content search.
 2. Import the reviewed sources into that engagement, then call
    `prepare_studio_client_workflow` with workflow ID `open-item-reconciliation`.
    Pass its returned `client_engagement_path` unchanged as

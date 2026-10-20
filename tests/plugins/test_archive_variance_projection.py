@@ -14,6 +14,10 @@ from tests.plugins.test_archive_automatic_reporting import (
     reporting_runtime,
     start,
 )
+from tests.plugins.test_variance_analysis_plugin import (
+    isolate_plugin_imports,
+    load_core,
+)
 
 SCRIPTS = Path(__file__).resolve().parents[2] / "plugins/variance-analysis/scripts"
 
@@ -74,8 +78,6 @@ def test_variance_drilldown_preserves_noncontiguous_source_positions(
 ):
     from archive_report_store import RunStore
     from archive_reporting import read_artifact, snapshot_run
-
-    from tests.plugins.test_variance_analysis_plugin import load_core
 
     monkeypatch.syspath_prepend(str(SCRIPTS))
     core = load_core()

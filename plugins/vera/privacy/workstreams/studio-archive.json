@@ -294,6 +294,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "archive-inventory-availability",
+        "purpose": "Identify unavailable archive records while continuing independently verified client work",
+        "content": "Direct Archive inventory, import, preparation, recovery and retention results may include opaque client, engagement, input and run IDs, directory entry names and labels, issue codes, availability and completeness flags, and recovery or navigation error text. Entry names and dynamic OS error text can contain local names or paths and are not automatically anonymized. Damaged manifest contents do not become selected evidence or usable artifacts. Existing approved-root preferences and private identity aliases stay local. Derived readable pages display unavailable entries and never repair or overwrite the damaged originals. These local helpers add no provider request, connector or external recipient.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -301,7 +310,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "34e76c917f0d93ffa7b4d498f9c7b8801d4783b3b1468f9d61a8e6eb27264196"
+    "source_fingerprint": "20015aaa12c8827441f4353281f94b33dad3fc4bafc0cda6b49a2c80d98fcfec"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -384,7 +393,7 @@
     },
     {
       "id": "session-owned-archive-configuration",
-      "control": "Default private state is isolated by a hash of the host-supplied session identity, with a process-specific identity when the host supplies none. The MCP server passes one stable session identity to its helper commands. Configuration persists its session owner; an OS lock covers each process lifetime after configuration access, other session owners are rejected, and public operations verify that the pinned configuration bytes did not change before returning. An explicit state directory remains subject to these ownership and locking checks. This is local session isolation, not authentication between users or encryption of the derived index."
+      "control": "Default private state is isolated by a hash of the host-supplied session identity, with a process-specific identity when the host supplies none. The MCP server passes one stable session identity to its helper commands. Configuration persists its session owner; an OS lock covers each active public operation, including nested calls, and releases on success or error. Public operations verify the pinned configuration bytes before returning. Between operations, directory scopes may refresh while the approved archive root and session owner remain pinned; another session owner is rejected. An explicit state directory remains subject to these ownership and locking checks. This is local session isolation, not authentication between users or encryption of the derived index."
     },
     {
       "id": "owned-archive-exact-output-closure",
@@ -392,7 +401,7 @@
     },
     {
       "id": "explicit-native-file-import",
-      "control": "Require reviewer authority, an open owned engagement, signed current input scope, explicitly chosen file role and separate user confirmation. Never accept an original browser/model filesystem path or classify document meaning. Actor/tenant/client/engagement-bound private intents retain bounded chunk offsets and SHA-256; verify complete selected-file bytes before calling the unchanged public importer. Exact receipt/byte/role deduplication preserves public import aliases and prevents duplicates during explicit recovery of the same known interrupted intent. Refuse missing, changed, linked, unreceipted or foreign state. Other pending writes block new imports and run preparation until resolved. Reopening does not restore confirmation, select run sources or start a workflow. Ordinary host processing remains separate from this local transport integrity gate."
+      "control": "Require reviewer authority, an open owned engagement, signed current input scope, explicitly chosen file role and separate user confirmation. Never accept an original browser/model filesystem path or classify document meaning. Actor/tenant/client/engagement-bound private intents retain bounded chunk offsets and SHA-256; verify complete selected-file bytes before calling the unchanged public importer. Exact receipt/byte/role deduplication preserves public import aliases and prevents duplicates during explicit recovery of the same known interrupted intent. Refuse missing, changed, linked, unreceipted or foreign state. An interrupted or invalid unrelated transport record is reported without blocking a separately owned upload or preparation from verified ledger inputs. Resuming the selected upload still requires its exact ownership, byte and receipt checks; damaged records supply no file labels or source content. Reopening does not restore confirmation, select run sources or start a workflow. Ordinary host processing remains separate from this local transport integrity gate."
     },
     {
       "id": "literal-user-statement-capture",
@@ -412,7 +421,7 @@
     },
     {
       "id": "isolated-invalid-run-records",
-      "control": "Archive inventories expose only the ordinary run directory identifier and a fixed unavailable status when a run fails integrity validation. No fields or paths from that invalid record are promoted into model context or usable artifacts. Healthy records remain accessible; invalid records are preserved unchanged, and execution, handoff and same-request replay still fail closed."
+      "control": "Archive inventories inspect client, engagement, input and run records independently. Unavailable records expose directory entry names or opaque IDs, fixed issue codes and completeness flags; invalid manifest contents never supply identity, selected sources or artifacts. Duplicate or conflicting client IDs make only the affected folders unavailable. Selected use still validates exact ownership, ordinary parent directories, receipts and bound bytes. Healthy records remain accessible and damaged records remain unchanged. A verified existing request can replay despite unrelated invalid headers; allocation stops if unreadable historical request identity prevents establishing whether that request already exists. Recovery and navigation failures are reported separately from committed ledger mutations."
     }
   ],
   "workstream": "studio-archive",
@@ -428,7 +437,8 @@
           "Per scegliere il cliente, il modello riceve tutti i record con etichetta, stato e ID opachi. Riceve anche il numero di email, nomi legali e codici fiscali registrati, ma non i valori. Se ne fornisci uno, il codice restituisce solo le corrispondenze esatte.",
           "Durante il run, il modello riceve gli ID di cliente, incarico e run e i percorsi locali necessari. Con l’MCP locale, le operazioni restano legate al run corretto. Senza MCP, restano disponibili il ledger e i file canonici, ma Vera non dichiara salvata o applicata una decisione senza un artefatto persistito.",
           "Per rivedere il riordino, il modello riceve l’intero snapshot, entro 5.000 file e 2 GB: percorsi proiettati, nomi, tipi, dimensioni, date, riferimenti opachi e duplicati esatti. Hash grezzi, ID Drive, versioni, capacità e percorsi assoluti restano locali. Dei documenti aperti riceve solo testo limitato.",
-          "La verifica dei documenti salvati legge localmente tutti i byte selezionati. Al modello restituisce ID, nomi, ruoli, percorsi, dimensioni, impronte dei file e delle ricevute ed esiti dei controlli, senza il testo dei documenti. Il confronto con ricevute precedenti verifica la conservazione; non approva il contenuto."
+          "La verifica dei documenti salvati legge localmente tutti i byte selezionati. Al modello restituisce ID, nomi, ruoli, percorsi, dimensioni, impronte dei file e delle ricevute ed esiti dei controlli, senza il testo dei documenti. Il confronto con ricevute precedenti verifica la conservazione; non approva il contenuto.",
+          "Se alcuni registri non sono disponibili, al modello possono arrivare i loro ID o nomi, lo stato di disponibilità e i motivi dell’errore; questi ultimi possono contenere percorsi locali. L’elenco segnala quando è incompleto. Il contenuto dei registri danneggiati non viene utilizzato come fonte e i file originali restano conservati."
         ],
         "en": [
           "Local code indexes the whole supported population, within 50,000 files and 50 GB; the model does not receive the index or an automatic copy of the full archive. If the archive exceeds those limits, refresh stops before search.",
@@ -438,7 +448,8 @@
           "To choose a client, the model receives every record’s label, status, and opaque IDs. It also receives the number of stored email addresses, legal names, and tax identifiers, but not the values. If you supply one, code returns only exact matches.",
           "During a run, the model receives the client, engagement, and run IDs plus the required local paths. With local MCP, operations remain bound to the correct run. Without MCP, the ledger and canonical files remain available, but Vera does not report a decision as saved or applied without a persisted artifact.",
           "To review the organization proposal, the model receives the entire snapshot, within 5,000 files and 2 GB: projected paths, names, types, sizes, dates, opaque references, and exact duplicates. Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local. Only bounded text from opened files is added.",
-          "Verification of saved documents reads all selected bytes locally. It returns IDs, names, roles, paths, sizes, file and receipt hashes, and check results to the model, without document text. Comparison with prior receipts checks preservation; it does not approve the content."
+          "Verification of saved documents reads all selected bytes locally. It returns IDs, names, roles, paths, sizes, file and receipt hashes, and check results to the model, without document text. Comparison with prior receipts checks preservation; it does not approve the content.",
+          "If some records are unavailable, the model may receive their IDs or names, availability status and error reasons; those reasons can contain local paths. The listing states when it is incomplete. Damaged record contents are not used as sources, and original files remain preserved."
         ],
         "fr": [
           "Le code local indexe toute la population prise en charge, dans la limite de 50 000 fichiers et 50 Go ; le modèle ne reçoit ni l’index ni une copie automatique de l’archive complète. Si l’archive dépasse ces limites, l’actualisation s’arrête avant la recherche.",
@@ -448,7 +459,8 @@
           "Pour choisir le client, le modèle reçoit le libellé, le statut et les ID opaques de chaque ligne. Il reçoit aussi le nombre d’adresses e-mail, de noms légaux et d’identifiants fiscaux enregistrés, mais pas les valeurs. Si vous en fournissez une, le code ne renvoie que les correspondances exactes.",
           "Pendant un run, le modèle reçoit les ID du client, de la mission et du run, ainsi que les chemins locaux nécessaires. Avec le MCP local, les opérations restent liées au bon run. Sans MCP, le registre et les fichiers canoniques restent disponibles, mais Vera ne déclare aucune décision enregistrée ou appliquée sans artefact persistant.",
           "Pour revoir le classement, le modèle reçoit le snapshot complet, dans la limite de 5 000 fichiers et 2 Go : chemins projetés, noms, types, tailles, dates, références opaques et doublons exacts. Les empreintes brutes, ID Drive, versions, capacités et chemins absolus restent locaux. Seul le texte limité des fichiers ouverts est ajouté.",
-          "La vérification des documents enregistrés lit localement tous les octets sélectionnés. Elle transmet au modèle les identifiants, noms, rôles, chemins, tailles, empreintes des fichiers et reçus, et résultats des contrôles, sans le texte des documents. La comparaison avec les reçus précédents vérifie la conservation ; elle ne valide pas le contenu."
+          "La vérification des documents enregistrés lit localement tous les octets sélectionnés. Elle transmet au modèle les identifiants, noms, rôles, chemins, tailles, empreintes des fichiers et reçus, et résultats des contrôles, sans le texte des documents. La comparaison avec les reçus précédents vérifie la conservation ; elle ne valide pas le contenu.",
+          "Si certains enregistrements sont indisponibles, le modèle peut recevoir leurs identifiants ou noms, leur état de disponibilité et les motifs de l’erreur ; ces motifs peuvent contenir des chemins locaux. La liste indique lorsqu’elle est incomplète. Le contenu des enregistrements endommagés n’est pas utilisé comme source et les fichiers originaux sont conservés."
         ],
         "de": [
           "Lokaler Code indexiert den gesamten unterstützten Bestand bis zu 50.000 Dateien und 50 GB; das Modell erhält weder den Index noch automatisch eine Kopie des gesamten Archivs. Überschreitet das Archiv diese Grenzen, stoppt die Aktualisierung vor der Suche.",
@@ -458,7 +470,8 @@
           "Zur Auswahl des Mandanten erhält das Modell für jeden Eintrag Bezeichnung, Status und opake IDs. Es erhält außerdem die Anzahl gespeicherter E-Mail-Adressen, rechtlicher Namen und Steuerkennungen, nicht aber die Werte. Wenn Sie einen davon angeben, gibt der Code nur exakte Treffer zurück.",
           "Während eines Runs erhält das Modell Mandanten-, Mandats- und Run-IDs sowie die benötigten lokalen Pfade. Mit lokalem MCP bleiben die Vorgänge an den richtigen Run gebunden. Ohne MCP bleiben Ledger und kanonische Dateien verfügbar; Vera meldet jedoch keine Entscheidung ohne persistiertes Artefakt als gespeichert oder angewendet.",
           "Zur Prüfung der Ablage erhält das Modell den vollständigen Snapshot innerhalb der Grenze von 5.000 Dateien und 2 GB: projizierte Pfade, Namen, Typen, Größen, Daten, opake Referenzen und exakte Duplikate. Rohe Hashes, Drive-IDs, Versionen, Fähigkeiten und absolute Pfade bleiben lokal. Hinzu kommt nur begrenzter Text aus geöffneten Dateien.",
-          "Die Prüfung gespeicherter Dokumente liest alle ausgewählten Bytes lokal. Das Modell erhält IDs, Namen, Rollen, Pfade, Größen, Datei- und Beleg-Hashes sowie Prüfergebnisse, ohne Dokumenttext. Der Vergleich mit früheren Belegen prüft die unveränderte Aufbewahrung; er genehmigt den Inhalt nicht."
+          "Die Prüfung gespeicherter Dokumente liest alle ausgewählten Bytes lokal. Das Modell erhält IDs, Namen, Rollen, Pfade, Größen, Datei- und Beleg-Hashes sowie Prüfergebnisse, ohne Dokumenttext. Der Vergleich mit früheren Belegen prüft die unveränderte Aufbewahrung; er genehmigt den Inhalt nicht.",
+          "Sind einzelne Datensätze nicht verfügbar, kann das Modell deren IDs oder Namen, Verfügbarkeitsstatus und Fehlergründe erhalten; diese Gründe können lokale Pfade enthalten. Eine unvollständige Liste wird als solche gekennzeichnet. Inhalte beschädigter Datensätze werden nicht als Quellen verwendet, und die Originaldateien bleiben erhalten."
         ],
         "es": [
           "El código local indexa toda la población compatible, con un límite de 50.000 archivos y 50 GB; el modelo no recibe el índice ni una copia automática de todo el archivo. Si el archivo supera esos límites, la actualización se detiene antes de la búsqueda.",
@@ -468,7 +481,8 @@
           "Para elegir al cliente, el modelo recibe la etiqueta, el estado y los ID opacos de cada registro. También recibe el número de correos, nombres legales e identificadores fiscales guardados, pero no los valores. Si proporcionas uno, el código devuelve solo las coincidencias exactas.",
           "Durante una ejecución, el modelo recibe los ID de cliente, encargo y ejecución, además de las rutas locales necesarias. Con MCP local, las operaciones permanecen vinculadas a la ejecución correcta. Sin MCP, el registro y los archivos canónicos siguen disponibles, pero Vera no declara una decisión guardada o aplicada sin un artefacto persistido.",
           "Para revisar la organización, el modelo recibe la instantánea completa, dentro del límite de 5.000 archivos y 2 GB: rutas proyectadas, nombres, tipos, tamaños, fechas, referencias opacas y duplicados exactos. Las huellas brutas, los ID de Drive, las versiones, las capacidades y las rutas absolutas permanecen locales. Solo se añade texto limitado de los archivos abiertos.",
-          "La verificación de documentos guardados lee localmente todos los bytes seleccionados. Devuelve al modelo los identificadores, nombres, funciones, rutas, tamaños, huellas de archivos y recibos, y resultados de los controles, sin el texto de los documentos. La comparación con recibos anteriores verifica la conservación; no aprueba el contenido."
+          "La verificación de documentos guardados lee localmente todos los bytes seleccionados. Devuelve al modelo los identificadores, nombres, funciones, rutas, tamaños, huellas de archivos y recibos, y resultados de los controles, sin el texto de los documentos. La comparación con recibos anteriores verifica la conservación; no aprueba el contenido.",
+          "Si algunos registros no están disponibles, el modelo puede recibir sus identificadores o nombres, su estado de disponibilidad y los motivos del error; estos motivos pueden contener rutas locales. La lista indica cuándo está incompleta. El contenido de los registros dañados no se utiliza como fuente y los archivos originales se conservan."
         ]
       }
     }

@@ -121,6 +121,7 @@ def test_complete_task_receipt_feedback_and_operator_metrics(setup):
     assert stamped.status_code == 201
     assert linked.status_code == 200
     assert linked.json()["reporting"]["model_data_receipt"] == "linked"
+    assert linked.json()["reporting"]["model_data_report_scope"] == "archive_run"
     assert report["totals"]["completed"] == 1
     assert report["totals"]["receipt_linked_runs"] == 1
     assert report["totals"]["stars"] == {"1": 0, "2": 1, "3": 0, "4": 0, "5": 0}
@@ -131,7 +132,7 @@ def test_complete_task_receipt_feedback_and_operator_metrics(setup):
     assert len(store.workflow_inspect(str(run_id))["events"]) == 5
 
 
-def test_cowork_completion_exposes_missing_link_and_receipt_without_failing_work(setup):
+def test_cowork_completion_exposes_missing_host_link_and_archive_report_scope(setup):
     store, owner, client = setup
     run_id = uuid4()
     post(client, owner, event(run_id, host="cowork", sample_kind="agent_test"))
@@ -140,7 +141,8 @@ def test_cowork_completion_exposes_missing_link_and_receipt_without_failing_work
 
     assert reply["reporting"]["computer_link"] == "unlinked"
     assert reply["reporting"]["computer_id"] is None
-    assert reply["reporting"]["model_data_receipt"] == "missing"
+    assert reply["reporting"]["model_data_receipt"] == "archive_managed"
+    assert reply["reporting"]["model_data_report_scope"] == "archive_run"
     assert len(reply["reporting"]["next_steps"]) == 2
     assert store.workflow_status(owner, str(run_id))["state"] == "completed"
     assert summarize(store.workflow_overview())["included_user_runs"] == 0
@@ -165,6 +167,7 @@ def test_excluded_vera_task_needs_no_privacy_receipt_or_monitoring_alert(
     response = post(client, owner, event(run_id, 2, "completed")).json()
 
     assert response["reporting"]["model_data_receipt"] == "not_applicable"
+    assert response["reporting"]["model_data_report_scope"] == "not_applicable"
     assert response["reporting"]["model_data_report_eligible"] is False
     assert len(response["reporting"]["next_steps"]) == 1
     assert summarize(store.workflow_overview())["review_candidates"] == []
@@ -187,10 +190,63 @@ def test_native_binding_updates_same_cowork_run_status_without_event_replay(setu
     assert status["sequence"] == 2
     assert status["reporting"]["computer_link"] == "verified"
     assert status["reporting"]["computer_id"] == str(device.device_id)
-    assert status["reporting"]["model_data_receipt"] == "missing"
+    assert status["reporting"]["model_data_receipt"] == "archive_managed"
+    assert status["reporting"]["model_data_report_scope"] == "archive_run"
     assert len(status["reporting"]["next_steps"]) == 1
     assert device.device_key not in json.dumps(status)
     assert owner.installation_key not in json.dumps(status)
+
+
+@pytest.mark.parametrize("outcome", ["completed", "failed", "cancelled"])
+def test_vera_task_status_does_not_infer_missing_archive_receipt(setup, outcome):
+    store, owner, _ = setup
+    run_id = uuid4()
+    device = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="codex"
+    )
+    store.register(owner, device)
+    store.workflow_record(owner, event(run_id, pipeline="journal-bank-reconciliation"))
+    store.workflow_record(owner, event(run_id, 2, outcome))
+
+    status = store.workflow_status(owner, str(run_id))
+
+    assert status["state"] == outcome
+    assert status["receipts"] == []
+    assert status["reporting"]["model_data_receipt"] == "archive_managed"
+    assert status["reporting"]["model_data_report_scope"] == "archive_run"
+    assert status["reporting"]["model_data_report_eligible"] is True
+    assert status["reporting"]["next_steps"] == [
+        "Studio Archive owns automatic report generation and receipt delivery "
+        "for every selected Archive run, including full exposure, zero local remainder "
+        "or incomplete measurements. Inspect that run's saved report and receipt "
+        "when verification is needed. This task status does not establish whether "
+        "an Archive report or receipt exists. No separate usage-task receipt link "
+        "is required; do not rerun work or manufacture evidence."
+    ]
+
+
+@pytest.mark.parametrize(
+    ("product", "pipeline"),
+    [("clara", "business-planning"), ("lucia", "quesito-legale-fiscale")],
+)
+def test_other_products_still_report_missing_task_receipt(setup, product, pipeline):
+    store, _, _ = setup
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    device = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="codex"
+    )
+    run_id = uuid4()
+    store.register(owner, device, product=product)
+    store.workflow_record(owner, event(run_id, product=product, pipeline=pipeline))
+    store.workflow_record(owner, event(run_id, 2, "completed", product=product))
+
+    status = store.workflow_status(owner, str(run_id))
+
+    assert status["reporting"]["model_data_receipt"] == "missing"
+    assert status["reporting"]["model_data_report_scope"] == "usage_task"
+    assert status["reporting"]["model_data_report_eligible"] is True
+    assert len(status["reporting"]["next_steps"]) == 1
+    assert "link it to this same run" in status["reporting"]["next_steps"][0]
 
 
 def test_duplicate_event_ack_refreshes_link_without_changing_acknowledged_bytes(setup):
@@ -619,6 +675,145 @@ def test_wrong_ack_never_discards_local_event(installed_client, monkeypatch):
 
     assert result["queued"] == 1
     assert result["delivered"] == 0
+
+
+def _queue_unrelated_prerelease(usage, monkeypatch):
+    """Retain a historical event the current server cannot accept."""
+    run = str(uuid4())
+    with monkeypatch.context() as context:
+        context.setattr(usage, "_version", lambda: "0.1.406-folder-intake.1")
+        usage.start(
+            run, "archive-organization", sample_kind="agent_test", deliver=False
+        )
+    return run
+
+
+def _retained_usage_events(usage, run):
+    """Read exact stored payloads and acknowledgements for preservation checks."""
+    connection = usage._database()
+    try:
+        return [
+            tuple(row)
+            for row in connection.execute(
+                "SELECT event_id,payload,receipt FROM events WHERE run_id=? ORDER BY sequence",
+                (run,),
+            )
+        ]
+    finally:
+        connection.close()
+
+
+def test_start_delivers_only_current_task_with_unrelated_invalid_backlog(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+    transport = usage._send
+    sent = []
+
+    def capture(operation, payload):
+        sent.append(payload["event"]["run_id"])
+        return transport(operation, payload)
+
+    monkeypatch.setattr(usage, "_send", capture)
+    current = str(uuid4())
+
+    result = usage.start(current, "journal-sampling", sample_kind="agent_test")
+
+    assert result["delivery"] == {"delivered": 1, "queued": 0, "blocked": {}}
+    assert sent == [current]
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_outcome_delivery_ignores_unrelated_invalid_backlog(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    current = str(uuid4())
+    usage.start(current, "journal-sampling", sample_kind="agent_test")
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+
+    result = usage.record(current, "completed")
+
+    assert result["delivery"] == {"delivered": 1, "queued": 0, "blocked": {}}
+    assert usage.status(current)["remote"]["state"] == "completed"
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_scoped_flush_cli_preserves_unrelated_invalid_backlog(
+    installed_client, monkeypatch, capsys
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+    current = str(uuid4())
+    usage.start(current, "journal-sampling", sample_kind="agent_test", deliver=False)
+
+    code = usage.main(["flush", "--run-id", current])
+
+    assert code == 0
+    assert json.loads(capsys.readouterr().out) == {
+        "delivered": 1,
+        "queued": 0,
+        "blocked": {},
+    }
+    assert usage.status(current)["local_events"][0]["acknowledged"] is True
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_scoped_pending_cli_exposes_only_selected_task(
+    installed_client, monkeypatch, capsys
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+    current = str(uuid4())
+    usage.start(current, "journal-sampling", sample_kind="agent_test", deliver=False)
+
+    code = usage.main(["pending", "--run-id", current])
+
+    body = json.loads(capsys.readouterr().out)
+    assert code == 0
+    assert body["queued"] == 1
+    assert [event["run_id"] for event in body["events"]] == [current]
+    assert (
+        usage.status(current, remote=False)["local_events"][0]["acknowledged"] is False
+    )
+    assert _retained_usage_events(usage, unrelated) == original
+
+
+def test_selected_invalid_event_remains_pending_and_reports_delivery_failure(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    selected = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, selected)
+
+    result = usage.flush(run_id=selected)
+
+    assert result == {
+        "delivered": 0,
+        "queued": 1,
+        "blocked": {selected: "HTTPError"},
+    }
+    assert _retained_usage_events(usage, selected) == original
+
+
+def test_startup_context_keeps_backlog_diagnostic_without_other_task_identifiers(
+    installed_client, monkeypatch
+):
+    usage = installed_client
+    unrelated = _queue_unrelated_prerelease(usage, monkeypatch)
+    original = _retained_usage_events(usage, unrelated)
+
+    context = usage.startup_context()
+
+    assert unrelated not in context
+    assert "workflow_usage.py flush --run-id <retained-uuid>" in context
+    assert "Pending events across retained tasks: 1" in context
+    assert _retained_usage_events(usage, unrelated) == original
 
 
 def test_receipt_version_is_independent_of_current_reporting_version(

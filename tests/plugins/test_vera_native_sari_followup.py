@@ -154,6 +154,53 @@ const result={page,created,retry,contextCall,read,after:payload(call('vera_works
 
 
 @pytest.mark.parametrize(
+    "collection,record_name,filename,incomplete_field",
+    [
+        (
+            "inputs",
+            "input_000000000000000000000001",
+            "receipt.json",
+            "input_inventory_complete",
+        ),
+        (
+            ".native-imports/unavailable-owner",
+            "upload-unavailable",
+            "manifest.json",
+            "import_inventory_complete",
+        ),
+    ],
+)
+def test_sari_followup_uses_verified_sources_despite_unrelated_damaged_records(
+    owned_sari, collection, record_name, filename, incomplete_field
+):
+    env, binding, output, _ = owned_sari
+    damaged = (
+        Path(binding["client_root"])
+        / "Vera/engagements"
+        / binding["engagement_id"]
+        / collection
+        / record_name
+        / filename
+    )
+    damaged.parent.mkdir(parents=True)
+    damaged.write_bytes(b"{}")
+    before = output_bytes(output)
+
+    result = rpc_program(
+        env,
+        followup_program(owned_sari)
+        + "const created=payload(call('vera_workspace_sari_followup_create',createArgs));"
+        + "const result={page,created};",
+    )
+
+    assert result["page"]["can_create"] is True
+    assert result["page"][incomplete_field] is False
+    assert result["created"]["run_id"] != binding["run_id"]
+    assert output_bytes(output) == before
+    assert damaged.read_bytes() == b"{}"
+
+
+@pytest.mark.parametrize(
     "invalid",
     [
         "confirmation",

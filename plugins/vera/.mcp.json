@@ -422,6 +422,15 @@
         "--stdio"
       ]
     },
+    "veraExecution": {
+      "title": "Vera · Esecuzione locale",
+      "description": "Run published helpers with persistent diagnostics and recover their retained results across chats.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/native_execution_mcp.cjs"
+      ]
+    },
     "veraIncidentHost": {
       "title": "Vera · Identità tecnica locale",
       "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",

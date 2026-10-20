@@ -513,6 +513,46 @@ def test_read_rejects_empty_column_selection(archive_core, client_case):
         )
 
 
+@pytest.mark.parametrize("relative", [True, False])
+def test_run_artifact_read_uses_selected_run_independent_of_process_directory(
+    archive_core, client_case, tmp_path, monkeypatch, relative
+):
+    loaded = start(archive_core, client_case)
+    artifact = Path(loaded["output_dir"]) / "inspection.json"
+    artifact.write_text('{"candidate_rows": 3}')
+    monkeypatch.chdir(tmp_path)
+    selected_path = "outputs/inspection.json" if relative else str(artifact)
+
+    packet = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        selected_path,
+        state_dir=client_case.state_dir,
+    )
+
+    assert "candidate_rows" in json.dumps(packet["data"])
+    assert packet["vera_reporting"]["run_id"] == loaded["run"]["run_id"]
+
+
+def test_relative_run_artifact_read_cannot_escape_to_another_run(
+    archive_core, client_case
+):
+    first = start(archive_core, client_case)
+    other = start(archive_core, client_case, "report-builder")
+    artifact = Path(other["output_dir"]) / "inspection.json"
+    artifact.write_text('{"other_case": true}')
+
+    with pytest.raises(archive_core.ArchiveError, match="bound input"):
+        archive_core.read_studio_run_artifact(
+            client_case.client_id,
+            client_case.engagement_id,
+            first["run"]["run_id"],
+            f"../{other['run']['run_id']}/outputs/inspection.json",
+            state_dir=client_case.state_dir,
+        )
+
+
 def test_local_only_report_makes_no_transport_call(
     archive_core, client_case, monkeypatch, reporting_runtime
 ):
@@ -738,3 +778,267 @@ def test_unmapped_vera_send_preserves_payload_but_cannot_claim_source_remainder(
     assert "sent_data_has_no_source_coordinates" in report["errors"]
     assert report["sources"][0]["not_sent_quantity"] is None
     assert report["sent_characters"] > 0
+
+
+@pytest.mark.parametrize("extra_field", [False, True])
+def test_complete_producer_envelope_cannot_cover_added_content(
+    archive_core, client_case, extra_field
+):
+    from archive_projection import register_value
+    from archive_reporting import record_send, snapshot_run
+
+    loaded = start(archive_core, client_case)
+    payload = {
+        "content": [{"type": "text", "text": "Prepared 2 rows"}],
+        "structuredContent": {"count": 2},
+        "isError": False,
+    }
+    register_value("variance-analysis", Path(loaded["output_dir"]), payload, [])
+    if extra_field:
+        payload["structuredContent"]["private_value"] = "Unregistered source value"
+    record_send(Path(loaded["run_root"]), payload, channel="test_mcp")
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+
+    assert report["collection_status"] == ("incomplete" if extra_field else "complete")
+
+
+@pytest.mark.parametrize("unregistered_line", ["", "Private case value: 123\n"])
+def test_cli_combined_status_preserves_unknown_lines_as_unmapped(
+    archive_core, client_case, unregistered_line
+):
+    from archive_projection import register_metadata
+    from archive_report_store import RunStore, digest
+    from archive_reporting import record_send, snapshot_run
+
+    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    output = Path(loaded["output_dir"])
+    first = "INFO: bank_rows=3\n"
+    second = "INFO: journal_rows=2\n"
+    register_metadata("journal-bank-reconciliation", output, first)
+    register_metadata("journal-bank-reconciliation", output, second)
+    payload = {"stdout": "", "stderr": first + second + unregistered_line}
+
+    record_send(
+        Path(loaded["run_root"]), payload, channel="cli:journal-bank-reconciliation"
+    )
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    sent = [
+        event
+        for event in RunStore(Path(loaded["run_root"])).events()
+        if event["kind"] == "vera_send"
+    ][-1]
+    assert sent["response_sha256"] == digest(payload)
+    assert sent["selections"] == []
+    assert sent["unmapped"] is bool(unregistered_line)
+    assert report["collection_status"] == (
+        "incomplete" if unregistered_line else "complete"
+    )
+
+
+@pytest.mark.parametrize("limit", [None, 1])
+def test_registered_text_artifact_requires_the_complete_projection_for_lineage(
+    archive_core, client_case, limit
+):
+    from archive_projection import register_value
+    from archive_report_store import file_digest
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    artifact = Path(loaded["output_dir"]) / "review_notes.md"
+    content = "# Review\nTwo matches; one residual.\n"
+    artifact.write_text(content, encoding="utf-8")
+    register_value(
+        "journal-bank-reconciliation",
+        artifact,
+        content,
+        [],
+        artifact_sha256=file_digest(artifact),
+    )
+
+    read_artifact(loaded, artifact, limit=limit)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == (
+        "complete" if limit is None else "incomplete"
+    )
+    assert (
+        next(source for source in report["sources"] if source["role"] == "input")[
+            "sent_cells"
+        ]
+        == 0
+    )
+
+
+@pytest.fixture
+def table_projection_case(archive_core, client_case, tmp_path, request):
+    from archive_projection import register_rows
+    from archive_report_store import RunStore
+
+    source = tmp_path / "table.csv"
+    source.write_text("amount,private_note\n7,PRIVATE_ONE\n7,PRIVATE_TWO\n")
+    sheet_name = None
+    if getattr(request, "param", None) == "xlsx":
+        from openpyxl import Workbook
+
+        source = source.with_suffix(".xlsx")
+        workbook = Workbook()
+        sheet = workbook.active
+        sheet_name = sheet.title
+        sheet.append(["amount", "private_note"])
+        sheet.append([7, "PRIVATE_ONE"])
+        sheet.append([7, "PRIVATE_TWO"])
+        workbook.save(source)
+        workbook.close()
+    client_case.imported = archive_core.import_studio_client_document(
+        client_case.client_id,
+        source,
+        "journal",
+        engagement_id=client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    [measured] = RunStore(Path(loaded["run_root"])).sources()
+    register_rows(
+        "journal-bank-reconciliation",
+        Path(loaded["output_dir"]),
+        {
+            record_id: {
+                "source": {
+                    "source_path": measured["path"],
+                    "source_sha256": measured["sha256"],
+                    "source_column_count": 2,
+                    "sheet_name": sheet_name,
+                },
+                "physical_row": physical_row,
+                "fields": {"amount": [0]},
+            }
+            for record_id, physical_row in (("first", 2), ("second", 3))
+        },
+    )
+    return loaded
+
+
+@pytest.mark.parametrize("first_to_read", [True, False])
+def test_identical_table_bytes_keep_each_producers_source_row(
+    table_projection_case, first_to_read
+):
+    from archive_projection import register_table_projection
+    from archive_report_store import RunStore
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    first = Path(loaded["output_dir"]) / "first.csv"
+    second = first.with_name("second.csv")
+    first.write_text("amount\n7\n")
+    second.write_bytes(first.read_bytes())
+    register_table_projection(
+        "journal-bank-reconciliation",
+        first,
+        [[[{"record_id": "first", "fields": ["amount"]}]]],
+    )
+    register_table_projection(
+        "journal-bank-reconciliation",
+        second,
+        [[[{"record_id": "second", "fields": ["amount"]}]]],
+    )
+
+    read_artifact(loaded, first if first_to_read else second)
+
+    store = RunStore(Path(loaded["run_root"]))
+    sent = [event for event in store.events() if event["kind"] == "vera_send"][-1]
+    [origin] = [
+        selection
+        for selection in sent["selections"]
+        if selection["basis"] == "vera_producer_projection"
+    ]
+    assert origin["start"] == (0 if first_to_read else 1)
+    assert origin["columns"] == [0]
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == "complete", report["errors"]
+    [source] = [item for item in report["sources"] if item["role"] == "input"]
+    assert source["sent_cells"] == 1
+    assert source["not_sent_cells"] == 3
+
+
+@pytest.mark.parametrize(
+    "record",
+    [
+        {"record_id": "unregistered", "fields": ["amount"]},
+        {"record_id": "first", "fields": ["unregistered_field"]},
+    ],
+)
+def test_table_with_missing_source_evidence_remains_unaccounted(
+    table_projection_case, record
+):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    path = Path(loaded["output_dir"]) / "derived.csv"
+    path.write_text("amount\n7\n")
+    register_table_projection("journal-bank-reconciliation", path, [[[record]]])
+
+    read_artifact(loaded, path)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in report["errors"]
+    )
+
+
+@pytest.mark.parametrize("cells", [[], [[[]], [[]]], [[[], []]]])
+def test_table_registration_rejects_incomplete_output_cell_maps(
+    table_projection_case, cells
+):
+    from archive_projection import register_table_projection
+
+    path = Path(table_projection_case["output_dir"]) / "derived.csv"
+    path.write_text("amount\n7\n")
+
+    with pytest.raises(ValueError, match="exact shape"):
+        register_table_projection("journal-bank-reconciliation", path, cells)
+
+
+@pytest.mark.parametrize("table_projection_case", ["xlsx"], indirect=True)
+def test_table_projection_scans_each_workbook_once(table_projection_case, monkeypatch):
+    import openpyxl
+    from archive_projection import register_table_projection
+    from archive_report_store import RunStore
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    path = Path(loaded["output_dir"]) / "derived.csv"
+    path.write_text("amount,copy\n7,7\n7,7\n")
+    original = openpyxl.load_workbook
+    opened = []
+
+    def counted(*args, **kwargs):
+        opened.append(args[0])
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(openpyxl, "load_workbook", counted)
+    first = [{"record_id": "first", "fields": ["amount"]}]
+    second = [{"record_id": "second", "fields": ["amount"]}]
+
+    register_table_projection(
+        "journal-bank-reconciliation", path, [[first, first], [second, second]]
+    )
+
+    assert len(opened) == 1
+    read_artifact(loaded, path, offset=1, limit=1, columns=[0])
+    store = RunStore(Path(loaded["run_root"]))
+    sent = [event for event in store.events() if event["kind"] == "vera_send"][-1]
+    [origin] = [
+        selection
+        for selection in sent["selections"]
+        if selection["basis"] == "vera_producer_projection"
+    ]
+    assert origin["start"] == 2  # Worksheet headers occupy a measured row.
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == "complete", report["errors"]
+    [source] = [item for item in report["sources"] if item["role"] == "input"]
+    assert source["sent_cells"] == 1
+    assert source["not_sent_cells"] == 5

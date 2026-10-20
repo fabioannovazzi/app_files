@@ -188,7 +188,8 @@ def snapshot(binding: dict, loaded: dict, root: Path, api: Any) -> dict:
         )
     if folder.resolve() != Path(binding["client_root"]).resolve():
         raise PermissionError("Registry follow-up belongs to another client folder")
-    imports = list(core.ledger.list_inputs(folder, binding["engagement_id"]))
+    input_inventory = core.ledger.inspect_inputs(folder, binding["engagement_id"])
+    imports = input_inventory["inputs"]
     from native_archive_imports import audit_engagement
 
     import_audit = audit_engagement(core, folder, binding["engagement_id"])
@@ -228,11 +229,9 @@ def snapshot(binding: dict, loaded: dict, root: Path, api: Any) -> dict:
         or applied["review_payload_sha256"] != prior["public"]["review_sha256"]
     ):
         raise ValueError("Registry applied review belongs to another predecessor")
-    recovery = (
-        prior["recovery_required"]
-        or own["recovery_required"]
-        or import_audit["recovery_required"]
-    )
+    # A follow-up uses verified ledger receipts. Unrelated transport records
+    # cannot invalidate those bytes or the predecessor's completed operations.
+    recovery = prior["recovery_required"] or own["recovery_required"]
     can_create = (
         api.configuration()["mode"] == "studio-archive"
         and "REVIEWER" in os.environ.get("VERA_WORKSPACE_ROLES", "").split(",")
@@ -252,6 +251,11 @@ def snapshot(binding: dict, loaded: dict, root: Path, api: Any) -> dict:
         "draft_stale": draft["scope"] != scope,
         "state": own["state"],
         "imports": imports,
+        "input_inventory_complete": input_inventory["complete"],
+        "blocked_input_count": len(input_inventory["blocked_inputs"]),
+        "import_inventory_complete": import_audit["complete"],
+        "blocked_import_count": len(import_audit["blocked_uploads"])
+        + len(import_audit["collection_issues"]),
         "applied": applied,
         "recovery_required": recovery,
         "can_create": can_create,
@@ -325,6 +329,10 @@ def dispatch(
         "run_status": loaded["run"]["status"],
         "can_create": current["can_create"],
         "recovery_required": current["recovery_required"],
+        "input_inventory_complete": current["input_inventory_complete"],
+        "blocked_input_count": current["blocked_input_count"],
+        "import_inventory_complete": current["import_inventory_complete"],
+        "blocked_import_count": current["blocked_import_count"],
         "fields": current["draft"]["fields"],
         "draft_revision": current["draft_revision"],
         "draft_stale": current["draft_stale"],

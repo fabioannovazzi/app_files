@@ -856,7 +856,51 @@ function modelContextIndex(token, context) {
       cases,
     },
     message: "The complete review payload remains in component-only metadata. Use opaque handles to request selected cases.",
+    _private_source_records: [],
+    _private_source_review_sha256: modelContextReviewDigest(context.privatePayload.review_payload),
   };
+}
+
+function modelContextReviewDigest(value) {
+  return crypto.createHash("sha256")
+    .update(JSON.stringify(canonicalJsonValue(value)) + "\n", "utf8").digest("hex");
+}
+
+function modelContextSourceRecords(item, semanticFields, evidence) {
+  // These dependencies mirror the producer's explicit schema transformations;
+  // values are never searched for in unrelated source cells.
+  const fields = new Set([
+    ...Object.keys(semanticFields),
+    ...evidence.flatMap((entry) => Object.keys(entry)),
+  ]);
+  for (const field of ["kind", "status", "stage", "reason"]) fields.delete(field);
+  const data = item.data || {};
+  if (["unmatched_bank", "unmatched_journal"].includes(item.item_type)) {
+    if (fields.delete("requested_document")) {
+      fields.add(data.reference ? "reference" : data.movement_number ? "movement_number" : "amount_signed");
+    }
+    return [{ record_id: data.transaction_id, fields: [...fields] }];
+  }
+  if (item.item_type !== "matched_pair") return null;
+  const bank = new Set();
+  const journal = new Set();
+  for (const field of fields) {
+    if (field === "bank_amount") bank.add("amount_signed");
+    else if (field === "journal_amount") journal.add("amount_signed");
+    else if (field === "amount_delta") {
+      bank.add("amount_signed"); journal.add("amount_signed");
+    } else if (field === "date_diff_days") {
+      bank.add("transaction_date"); journal.add("transaction_date");
+    } else if (field === "shared_references") {
+      for (const target of [bank, journal]) {
+        target.add("reference"); target.add("movement_number");
+      }
+    } else return null; // Unknown data stays explicitly unaccounted for.
+  }
+  return [
+    { record_id: data.bank_transaction_id, fields: [...bank] },
+    { record_id: data.journal_transaction_id, fields: [...journal] },
+  ];
 }
 
 function modelContextCases(args) {
@@ -875,6 +919,8 @@ function modelContextCases(args) {
   if (includeExactIdentifiers) {
     for (const field of MODEL_CONTEXT_EXACT_IDENTIFIER_FIELDS) allowedDataFields.add(field);
   }
+  const sourceRecords = [];
+  let sourceRecordsComplete = true;
   const cases = args.case_handles.map((handle, index) => {
     if (typeof handle !== "string" || !context.handles.has(handle)) {
       throw new Error(`case_handles[${index}] is unknown for this review`);
@@ -882,6 +928,9 @@ function modelContextCases(args) {
     const item = context.handles.get(handle);
     const semanticFields = modelContextProjectObject(item.data, allowedDataFields);
     const evidence = modelContextProjectEvidence(item.evidence, semanticFields, includeExactIdentifiers);
+    const records = modelContextSourceRecords(item, semanticFields, evidence);
+    if (records === null) sourceRecordsComplete = false;
+    else sourceRecords.push(...records);
     return {
       case_handle: handle,
       item_type: item.item_type,
@@ -905,6 +954,10 @@ function modelContextCases(args) {
   };
   if (payloadBytes(result) > MAX_MODEL_CONTEXT_BYTES) {
     throw new Error(`selected case context exceeds ${MAX_MODEL_CONTEXT_BYTES} bytes; request fewer cases`);
+  }
+  if (sourceRecordsComplete) {
+    result._private_source_records = sourceRecords;
+    result._private_source_review_sha256 = modelContextReviewDigest(context.privatePayload.review_payload);
   }
   return result;
 }
@@ -5927,8 +5980,12 @@ function callTool(name, args = {}) {
 
 function toolResult(payload, toolName) {
   const privateReviewPayload = payload?._private_review_payload || null;
+  const sourceRecords = payload?._private_source_records;
+  const sourceReviewSha256 = payload?._private_source_review_sha256;
   const publicPayload = { ...payload };
   delete publicPayload._private_review_payload;
+  delete publicPayload._private_source_records;
+  delete publicPayload._private_source_review_sha256;
   const result = {
     content: [{
       type: "text",
@@ -5947,6 +6004,13 @@ function toolResult(payload, toolName) {
     result._meta = {
       ...toolUiMeta(WIDGET_URI, toolName),
       ...(privateReviewPayload ? { private_review_payload: privateReviewPayload } : {}),
+    };
+  }
+  if (sourceRecords != null) {
+    result._meta = {
+      ...result._meta,
+      vera_source_records: sourceRecords,
+      vera_source_review_sha256: sourceReviewSha256,
     };
   }
   return result;

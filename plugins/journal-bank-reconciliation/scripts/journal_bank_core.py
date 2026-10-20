@@ -861,6 +861,7 @@ __all__ = [
     "build_implementation_artifact_receipts",
     "build_relationship_review_receipt",
     "configure_logging",
+    "log_execution_status",
     "excel_safe_value",
     "format_workbook_sheet",
     "inspect_inputs",
@@ -942,6 +943,21 @@ def configure_logging(verbose: bool = False) -> None:
     # Library object dumps obscure page progress and can create huge logs.
     for name in ("pdfminer", "pdfplumber"):
         logging.getLogger(name).setLevel(logging.WARNING)
+
+
+def log_execution_status(output_dir: Path, message: str, *values: Any) -> None:
+    """Declare one known operational message before its configured log emission."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    rendered = message % values if values else message
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_metadata(
+            "journal-bank-reconciliation",
+            output_dir,
+            "INFO: " + rendered + os.linesep,
+        )
+    LOGGER.info("%s", rendered)
 
 
 def normalize_language(
@@ -4803,6 +4819,188 @@ def _read_sample_movements(
     return values, diagnostics
 
 
+def _register_transaction_origins(
+    output_dir: Path,
+    inputs: Sequence[tuple[str, Path, list[dict[str, Any]], pl.DataFrame]],
+    receipts: Sequence[dict[str, Any]],
+) -> None:
+    """Record mechanical field dependencies from the normalizer's actual mapping."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None or not recorder.is_recording(
+        "journal-bank-reconciliation", output_dir
+    ):
+        return
+    records = {}
+    for side, input_path, diagnostics, frame in inputs:
+        for diagnostic in diagnostics:
+            if diagnostic["parser"] != "tabular":
+                continue
+            receipt = next(
+                item
+                for item in receipts
+                if item["root_id"] == f"source_{side}"
+                and item["path"] == diagnostic["source_file"]
+            )
+            columns = diagnostic["raw_columns"]
+            mapping = diagnostic["mapping"]
+            if any(
+                value is not None and value not in columns for value in mapping.values()
+            ):
+                continue
+            fields = {
+                field: [columns.index(value)] if value is not None else []
+                for field, value in mapping.items()
+            }
+            amount_columns = sorted(
+                {
+                    column
+                    for field in ("amount", "debit", "credit")
+                    for column in fields.get(field, [])
+                }
+            )
+            fields.update(
+                {
+                    "transaction_date": fields["date"],
+                    "amount_signed": amount_columns,
+                    "amount_abs": amount_columns,
+                    "direction": fields.get("direction") or amount_columns,
+                    "transaction_id": [],
+                    "side": [],
+                    "source_file": [],
+                    "source_sheet": [],
+                    "source_row": [],
+                }
+            )
+            for row in frame.iter_rows(named=True):
+                if (
+                    row["source_file"] != diagnostic["source_file"]
+                    or row["source_sheet"] != diagnostic["source_sheet"]
+                ):
+                    continue
+                records[row["transaction_id"]] = {
+                    "source": {
+                        "source_path": str(_input_root(input_path) / receipt["path"]),
+                        "source_sha256": receipt["sha256"],
+                        "source_column_count": len(columns),
+                        "sheet_name": row["source_sheet"],
+                    },
+                    "physical_row": row["source_row"],
+                    "fields": fields,
+                }
+    recorder.register_rows("journal-bank-reconciliation", output_dir, records)
+    recorder.register_private_value(
+        "journal-bank-reconciliation",
+        output_dir,
+        read_json(output_dir / "review_payload.json"),
+    )
+
+
+def _register_inspection_projection(
+    output_dir: Path,
+    inputs: Sequence[tuple[str, Path, list[dict[str, Any]]]],
+    receipts: Sequence[dict[str, Any]],
+    *,
+    sample_path: Path | None,
+    source_snapshot_changed: bool,
+    artifact_name: str = "inspection.json",
+    metadata_files: Sequence[str] = (
+        "input_receipts.json",
+        "source_qualifications.json",
+        "suggested_recipe.json",
+    ),
+) -> None:
+    """Bind the existing tabular preview to its producer-selected source cells."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if (
+        recorder is None
+        or not recorder.is_recording("journal-bank-reconciliation", output_dir)
+        or sample_path is not None
+        or source_snapshot_changed
+    ):
+        return
+    entries = []
+    for side, input_path, diagnostics in inputs:
+        for diagnostic in diagnostics:
+            # Other adapters and value-bearing diagnostic extensions need their
+            # own provenance. Preserve an incomplete report instead of guessing.
+            if (
+                diagnostic["parser"] != "tabular"
+                or diagnostic.get("failure_kind")
+                not in {None, "mapping_review_required"}
+                or diagnostic.get("observed_direction_values")
+                or diagnostic.get("non_movement_summary_labels")
+            ):
+                return
+            receipt = next(
+                (
+                    item
+                    for item in receipts
+                    if item["root_id"] == f"source_{side}"
+                    and item["path"] == diagnostic["source_file"]
+                ),
+                None,
+            )
+            columns = diagnostic["raw_columns"]
+            if receipt is None or any(
+                column is not None and column not in columns
+                for column in diagnostic["mapping"].values()
+            ):
+                return
+            mapped_columns = sorted(
+                {
+                    columns.index(column)
+                    for column in diagnostic["mapping"].values()
+                    if column is not None
+                }
+            )
+            entries.append(
+                {
+                    "source_path": str(_input_root(input_path) / receipt["path"]),
+                    "source_sha256": receipt["sha256"],
+                    "source_column_count": len(columns),
+                    "sheet_name": diagnostic["source_sheet"],
+                    "rows": [
+                        *[
+                            {
+                                "physical_row": number,
+                                "columns": list(range(len(columns))),
+                            }
+                            for number in diagnostic["header_rows"]
+                        ],
+                        *[
+                            {
+                                "physical_row": row["source_row"],
+                                "columns": mapped_columns,
+                            }
+                            for row in diagnostic["preview"]
+                        ],
+                    ],
+                }
+            )
+    recorder.register_projection(
+        "journal-bank-reconciliation", output_dir / artifact_name, entries
+    )
+    # These constructors contain receipts, mappings, controls and counts. Their
+    # source values are absent under the bounded diagnostic conditions above.
+    for name in metadata_files:
+        path = output_dir / name
+        if path.suffix == ".json":
+            recorder.register_projection("journal-bank-reconciliation", path, [])
+        else:
+            content = path.read_bytes()
+            recorder.register_value(
+                "journal-bank-reconciliation",
+                path,
+                content.decode("utf-8"),
+                [],
+                artifact_sha256=hashlib.sha256(content).hexdigest(),
+            )
+
+
 def inspect_inputs(
     bank_path: Path,
     journal_path: Path,
@@ -4975,6 +5173,13 @@ def inspect_inputs(
                 "registration_diagnostics", item.get("bank_diagnostics", {})
             ).get("readable_rows", [])
         ],
+    )
+    _register_inspection_projection(
+        output_dir,
+        (("bank", bank_path, bank_diag), ("journal", journal_path, journal_diag)),
+        source_receipts,
+        sample_path=sample_path,
+        source_snapshot_changed=bool(changed_sources),
     )
     return InspectionResult(
         bank={"row_count": bank_frame.height, "files": bank_diag},
@@ -5833,6 +6038,56 @@ def _relationship_residual_frame(
     if not records:
         return pl.DataFrame(schema={field: pl.Utf8 for field in RESIDUAL_COLUMNS})
     return pl.DataFrame(records, infer_schema_length=None).select(RESIDUAL_COLUMNS)
+
+
+def _register_residual_projection(
+    output_dir: Path, residuals: pl.DataFrame, matches: pl.DataFrame
+) -> None:
+    """Keep residual cell dependencies, including both sides of each allocation."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None or not recorder.is_recording(
+        "journal-bank-reconciliation", output_dir
+    ):
+        return
+    counterparts: dict[str, list[str]] = {}
+    for match in matches.iter_rows(named=True):
+        bank_id = str(match["bank_transaction_id"])
+        journal_id = str(match["journal_transaction_id"])
+        counterparts.setdefault(bank_id, []).append(journal_id)
+        counterparts.setdefault(journal_id, []).append(bank_id)
+    cells = []
+    for row in residuals.iter_rows(named=True):
+        record_id = str(row["transaction_id"])
+
+        def own(field: str) -> list[dict[str, Any]]:
+            return [{"record_id": record_id, "fields": [field]}]
+
+        allocated = (
+            [
+                {"record_id": item, "fields": ["amount_abs"]}
+                for item in (record_id, *counterparts[record_id])
+            ]
+            if record_id in counterparts
+            else []
+        )
+        origins = {
+            "side": [],
+            "record_ref": [],
+            "transaction_id": [],
+            "record_amount": own("amount_abs"),
+            "allocated_amount": allocated,
+            "residual": allocated or own("amount_abs"),
+            "currency": own("currency"),
+            "unit": own("unit"),
+            "entity_ref": own("entity_ref"),
+            "party_ref": own("party_ref"),
+        }
+        cells.append([origins[field] for field in RESIDUAL_COLUMNS])
+    recorder.register_table_projection(
+        "journal-bank-reconciliation", output_dir / "relationship_residuals.csv", cells
+    )
 
 
 def _material_value(value: object, field: str) -> dict[str, str]:
@@ -7216,6 +7471,29 @@ def run_reconciliation(
         paths,
         source_receipts=source_receipts,
     )
+    _register_inspection_projection(
+        output_dir,
+        (("bank", bank_path, bank_diag), ("journal", journal_path, journal_diag)),
+        source_receipts,
+        sample_path=sample_path,
+        source_snapshot_changed=bool(changed_sources),
+        artifact_name="reconciliation_audit.json",
+        metadata_files=(
+            "input_receipts.json",
+            "source_qualifications.json",
+            "assurance_gates.json",
+            "review_notes.md",
+        ),
+    )
+    _register_transaction_origins(
+        output_dir,
+        (
+            ("bank", bank_path, bank_diag, bank),
+            ("journal", journal_path, journal_diag, filtered_journal),
+        ),
+        source_receipts,
+    )
+    _register_residual_projection(output_dir, relationship_residuals, matches)
     return ReconciliationRunResult(
         matches=matches,
         unmatched_bank=unmatched_bank,

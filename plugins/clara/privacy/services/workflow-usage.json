@@ -9,7 +9,9 @@
     "scripts/notarized_run_receipt.py",
     "skills/clara/references/workflow-usage.md",
     "usage/pipelines.json",
-    "scripts/reporting_product.py"
+    "scripts/reporting_product.py",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/technical_runner.py"
   ],
   "governed_repository_paths": [
     "modules/workflow_usage",
@@ -54,7 +56,9 @@
         "The shared implementation binds registrations, OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
         "Authenticated event acknowledgements and run status expose the original owner's proven Computer ID and whether an actual signed receipt is linked. Missing linkage remains explicit and returns bounded follow-up instructions. Neither reporting gap changes the professional outcome or authorizes broader host access.",
         "When local HTTPS is unavailable, the authenticated connector can stamp the exact retained receipt request for an owned run. The allow-list admits only receipt UUID, product/version, schema and report digest. It returns the same signed proof; a separate verified receipt event links it to the original run. No report or source contents are transmitted.",
-        "Connector-owned workflow acknowledgements return a random 15-minute proof scoped only to binding that original run to a native computer. The existing native helper adds its private computer capability and observed app. The server stores only the ticket hash, checks product, expiry and app, rejects re-binding, and never replaces the original owner or associates all runs from one saved connection with one computer. The proof cannot authorize other reporting operations. Exact event replay obtains a fresh proof without another event."
+        "Connector-owned workflow acknowledgements return a random 15-minute proof scoped only to binding that original run to a native computer. The existing native helper adds its private computer capability and observed app. The server stores only the ticket hash, checks product, expiry and app, rejects re-binding, and never replaces the original owner or associates all runs from one saved connection with one computer. The proof cannot authorize other reporting operations. Exact event replay obtains a fresh proof without another event.",
+        "Ordinary startup and outcome delivery select only the retained task UUID. Scoped flush and connector inspection return only that task's pending events/count; unrelated retained events cannot make its delivery pending. Startup context exposes only a diagnostic backlog count, without unrelated task IDs. Whole-outbox maintenance is separate; historical event bytes and owner/hash acknowledgement checks are preserved.",
+        "The native plugin service exposes fixed task start, observed event, status and task-scoped retry operations using the existing local reporter and computer identity. It persists events in the existing user-scoped database without requiring the chat shell to write outside its project. It accepts no client file paths, shell commands, replacement credentials or global queue flush. Storage failures retain structured operation/error evidence and cannot certify delivery or invalidate professional output."
       ]
     },
     {
@@ -139,13 +143,22 @@
         "repository:modules/operational_incidents/api.py"
       ],
       "on_violation": "Unknown or missing fields are not included in the public projection."
+    },
+    {
+      "id": "native-task-persistence",
+      "control": "The indexed native service snapshots the usage client and catalogue with the reporter, technical collector and product metadata. Fixed arguments select one retained task UUID; the existing owner/event/sequence/hash checks govern acknowledgement and replay. Native results do not return installation or computer keys.",
+      "implemented_by": [
+        "scripts/incident_host_mcp.cjs",
+        "scripts/workflow_usage.py"
+      ],
+      "on_violation": "Reject unsupported operations and extra fields before task persistence; preserve queued events and expose source-bound storage errors without raw diagnostic values."
     }
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "1bb74654964adc6be7bcc8f23663db3c581dc42bc320d7203cf11fe45f4e76d1"
+    "source_fingerprint": "0e3c4ac11d6999ae3204221a062f45fe698bf6ec50dcd4a02a7c71c69d0cc7e9"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

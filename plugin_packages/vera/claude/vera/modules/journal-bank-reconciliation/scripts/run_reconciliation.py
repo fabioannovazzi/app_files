@@ -65,7 +65,12 @@ import argparse
 import logging
 from pathlib import Path
 
-from journal_bank_core import add_common_args, configure_logging, run_reconciliation
+from journal_bank_core import (
+    add_common_args,
+    configure_logging,
+    log_execution_status,
+    run_reconciliation,
+)
 from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     load_client_engagement_context_file,
@@ -130,12 +135,24 @@ def main() -> int:
         client_run_id=str(client_context["run_id"]),
         client_run_root=Path(str(client_context["run_root"])),
     )
-    LOGGER.info("matched=%s", result.matches.height)
-    LOGGER.info("unmatched_bank=%s", result.unmatched_bank.height)
-    LOGGER.info("unmatched_journal=%s", result.unmatched_journal.height)
-    LOGGER.info("stage_counts=%s", result.audit["stage_counts"])
-    LOGGER.info("wrote %s", args.output_dir / "journal_bank_reconciliation.xlsx")
-    LOGGER.info("wrote %s", args.output_dir / "reconciliation_audit.json")
+    log_execution_status(args.output_dir, "matched=%s", result.matches.height)
+    log_execution_status(
+        args.output_dir, "unmatched_bank=%s", result.unmatched_bank.height
+    )
+    log_execution_status(
+        args.output_dir, "unmatched_journal=%s", result.unmatched_journal.height
+    )
+    log_execution_status(
+        args.output_dir, "stage_counts=%s", result.audit["stage_counts"]
+    )
+    log_execution_status(
+        args.output_dir,
+        "wrote %s",
+        args.output_dir / "journal_bank_reconciliation.xlsx",
+    )
+    log_execution_status(
+        args.output_dir, "wrote %s", args.output_dir / "reconciliation_audit.json"
+    )
     return 0
 
 

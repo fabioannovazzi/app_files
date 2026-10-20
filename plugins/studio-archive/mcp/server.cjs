@@ -463,7 +463,7 @@ function toolDefinitions() {
       description: "Read a bound input or generated data file for one exact active reporting run. Offset and limit select physical data units; columns are zero-based indices. Vera records the exact selection before returning it. Use for initial inspection and later reads in the 13 reporting pipelines.",
       inputSchema: objectSchema({
         ...runIdentitySchema().properties,
-        path: { type: "string", minLength: 1 },
+        path: { type: "string", minLength: 1, description: "Absolute bound-input/output path, or a path relative to this run's root, such as outputs/inspection.json." },
         offset: { type: "integer", minimum: 0 },
         limit: { type: "integer", minimum: 0 },
         columns: { type: "array", minItems: 1, uniqueItems: true, items: { type: "integer", minimum: 0 } },
