@@ -973,7 +973,9 @@ def report_pdf_recovery(
     options, _ = parser.parse_known_args(arguments)
     if options.output_dir is None or options.client_engagement is None:
         return
-    context = json.loads(options.client_engagement.read_text(encoding="utf-8"))
+    from diagnostic_context import load_workflow_context
+
+    context = load_workflow_context(options.client_engagement, workflow_id=workflow)
     output = options.output_dir.resolve()
     root = Path(context["output_dir"]).resolve()
     if context.get("workflow_id") != workflow or output not in {

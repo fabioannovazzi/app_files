@@ -90,7 +90,7 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/clara/scripts/archive_reporting.py",
-      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
+      "sha256": "b9e795aed6f53858a215fed76ab3893594f354f358c283bf32285a2cd94a507a"
     },
     {
       "path": "scripts/auto_attribute_hosted_transcript.py",
@@ -168,6 +168,11 @@
       "sha256": "ca3c2f11197f17727f5bb98d37482fa5bf204ae3b44fb08cacbbb9facc15263a"
     },
     {
+      "path": "scripts/diagnostic_context.py",
+      "repository_path": "plugins/clara/scripts/diagnostic_context.py",
+      "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
+    },
+    {
       "path": "scripts/finalize_deck_revision_plan.py",
       "repository_path": "plugins/clara/scripts/finalize_deck_revision_plan.py",
       "sha256": "d20c0aa909a3423ab635fd2a75ecdf5ec68fcecc559c730a1ef5b5a3b8fb27e8"
@@ -205,7 +210,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
-      "sha256": "19028997fca298fea7dc5c8abca3ee77e7b16acf7b5cfce694f36b926748c149"
+      "sha256": "7e90445c14129245ca9165e6c908edd8ad0937ac8cc47eee99598ba85ba509cf"
     },
     {
       "path": "scripts/match_feedback_frames_to_deck_slides.py",
@@ -225,7 +230,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "58775161a7b27e05cf7175f33a0b16f649871e44603340c81a815e08cc1e3d1b"
+      "sha256": "1f4119ee0ac966357b7db7ae7d03c71b23c4ca090b982bb98e99b6240b545734"
     },
     {
       "path": "scripts/prepare_voice_deck_revision.py",

@@ -181,11 +181,15 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "f6d04c1a6023b48f8f745c8a7cde4b39f1575382620d5356d03a3ec8a4a1b11c"
+      "sha256": "b9e795aed6f53858a215fed76ab3893594f354f358c283bf32285a2cd94a507a"
     },
     {
       "path": "scripts/check_dependencies.py",
       "sha256": "4556447640d0a39a30131dfe47a36310fbca2afe640f529dd8a13c3776018f89"
+    },
+    {
+      "path": "scripts/diagnostic_context.py",
+      "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
     },
     {
       "path": "scripts/managed_ocr_runtime.py",
@@ -193,7 +197,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "19028997fca298fea7dc5c8abca3ee77e7b16acf7b5cfce694f36b926748c149"
+      "sha256": "7e90445c14129245ca9165e6c908edd8ad0937ac8cc47eee99598ba85ba509cf"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -205,7 +209,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "637f29520e82021a9f8382e97355962030958afed8d0181ec5d14442ab2d77d1"
+      "sha256": "a34acadda9fbeac1f6fb0e4f1a9fd5bf1f419d73738d71da4f6708d848ca566f"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -518,5 +522,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ab4749297a622700d833afdb3ba10fa10b2ca34e409a1919319f9b2ee6e92f55"
+  "canonical_course_sha256": "84de3318e07f7be9f0af884948cd1a7cc656025d837835dccee32e9d0baf30a9"
 }

@@ -513,6 +513,46 @@ def test_read_rejects_empty_column_selection(archive_core, client_case):
         )
 
 
+@pytest.mark.parametrize("relative", [True, False])
+def test_run_artifact_read_uses_selected_run_independent_of_process_directory(
+    archive_core, client_case, tmp_path, monkeypatch, relative
+):
+    loaded = start(archive_core, client_case)
+    artifact = Path(loaded["output_dir"]) / "inspection.json"
+    artifact.write_text('{"candidate_rows": 3}')
+    monkeypatch.chdir(tmp_path)
+    selected_path = "outputs/inspection.json" if relative else str(artifact)
+
+    packet = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        selected_path,
+        state_dir=client_case.state_dir,
+    )
+
+    assert "candidate_rows" in json.dumps(packet["data"])
+    assert packet["vera_reporting"]["run_id"] == loaded["run"]["run_id"]
+
+
+def test_relative_run_artifact_read_cannot_escape_to_another_run(
+    archive_core, client_case
+):
+    first = start(archive_core, client_case)
+    other = start(archive_core, client_case, "report-builder")
+    artifact = Path(other["output_dir"]) / "inspection.json"
+    artifact.write_text('{"other_case": true}')
+
+    with pytest.raises(archive_core.ArchiveError, match="bound input"):
+        archive_core.read_studio_run_artifact(
+            client_case.client_id,
+            client_case.engagement_id,
+            first["run"]["run_id"],
+            f"../{other['run']['run_id']}/outputs/inspection.json",
+            state_dir=client_case.state_dir,
+        )
+
+
 def test_local_only_report_makes_no_transport_call(
     archive_core, client_case, monkeypatch, reporting_runtime
 ):

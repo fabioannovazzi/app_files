@@ -28,6 +28,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_archive_automatic_reporting.py
+          tests/plugins/test_portable_workflow_diagnostics.py
           tests/plugins/test_archive_emission_boundaries.py
           tests/plugins/test_archive_cli_delivery.py
           tests/plugins/test_archive_report_builder_projection.py
@@ -46,6 +47,10 @@ jobs:
           python -m isort --check-only plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/modules/run_receipts/test_archive_binding.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/reporting-runtime/archive_*.py
           python -m bandit -q -ll plugins/_shared/reporting-runtime/archive_*.py
+          python -m black --check plugins/_shared/reporting-runtime/diagnostic_context.py tests/plugins/test_portable_workflow_diagnostics.py
+          python -m isort --check-only plugins/_shared/reporting-runtime/diagnostic_context.py tests/plugins/test_portable_workflow_diagnostics.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/reporting-runtime/diagnostic_context.py
+          python -m bandit -q -ll plugins/_shared/reporting-runtime/diagnostic_context.py
       - run: python scripts/sync_reporting_runtime.py --check
   producer-sends:
     name: Actual Vera producer sends (${{ matrix.os }})

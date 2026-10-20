@@ -81,7 +81,9 @@ def _report_forced_termination(
     if options.output_dir is None or options.client_engagement is None:
         return
     try:
-        context = json.loads(options.client_engagement.read_text(encoding="utf-8"))
+        from diagnostic_context import load_workflow_context
+
+        context = load_workflow_context(options.client_engagement, workflow_id=module)
         if not isinstance(context, dict) or context.get("workflow_id") != module:
             return
         root = Path(context["output_dir"]).resolve()

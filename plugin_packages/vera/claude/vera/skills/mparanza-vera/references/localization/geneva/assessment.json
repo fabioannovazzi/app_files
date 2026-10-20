@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "55f633ef17112ff4fa3db60b488170bbdcfe564de62f464a22171bb75d76572c",
+  "catalogue_fingerprint": "e87d1c04802968a4ff744d1ab307ecf548f4a581f5be0fd4134c392acb8ef0ad",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -573,6 +573,11 @@
     "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
     "scope": "Preserves both parent release source reviews and all existing Geneva target judgments. Combined entrypoint changes retain bounded PDF recovery and the main host-reporting fix. No new jurisdiction or professional acceptance is claimed.",
     "version": "0.1.413"
+  },
+  "portable_archive_diagnostics_release_binding_20261020": {
+    "previous_catalogue_fingerprint": "55f633ef17112ff4fa3db60b488170bbdcfe564de62f464a22171bb75d76572c",
+    "scope": "Only manifest provenance changes: all 55 skill IDs, paths and entrypoint hashes are unchanged. Portable diagnostic-context hydration and run-relative artifact reads add no jurisdiction judgments or professional acceptance.",
+    "version": "0.1.443"
   },
   "private_permission_reuse_release_binding_20261020": {
     "previous_catalogue_fingerprint": "5a09df447a45e934b5f10b83443fe82a1a5276e03d68650c6a8eab79ab77a6b6",

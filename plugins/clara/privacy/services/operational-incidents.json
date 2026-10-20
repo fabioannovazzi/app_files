@@ -14,7 +14,8 @@
     "scripts/verified_execution.py",
     "scripts/technical_runner.py",
     "scripts/incident_host_mcp.cjs",
-    "scripts/reporting_product.py"
+    "scripts/reporting_product.py",
+    "scripts/diagnostic_context.py"
   ],
   "governed_repository_paths": [
     "modules/operational_incidents",
@@ -23,7 +24,8 @@
     "scripts/render_incident_alert.py",
     "scripts/summarize_incident_monitor.py",
     "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py"
+    "scripts/sync_reporting_runtime.py",
+    "plugins/_shared/vendor/modules/vera_assurance"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -106,13 +108,23 @@
         "scripts/operational_incidents.py"
       ],
       "on_violation": "Undeclared environment names are absent from the child environment."
+    },
+    {
+      "id": "portable-diagnostic-run-binding",
+      "control": "Diagnostic collection resolves portable Archive contexts through the maintained identity, manifest and input-receipt verifier. PDF recovery evidence and killed-worker diagnostics use that run's verified output directory; a different run's output is rejected. Context hydration is local and adds no external payload fields.",
+      "implemented_by": [
+        "scripts/diagnostic_context.py",
+        "scripts/operational_incidents.py",
+        "scripts/managed_python_runtime.py"
+      ],
+      "on_violation": "Retain the original execution outcome and report unavailable diagnostics without attributing another run's evidence."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "17ad66b28647d019133e9f81604c66454244886bbcc5ffe867e050baa6fe187b"
+    "source_fingerprint": "fbce130b432179cc3e5558b966c717d1577dcf737485996afac5bc4918afd062"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

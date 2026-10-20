@@ -221,7 +221,11 @@ def read_artifact(
         raise ValueError(
             "Data reads require this Archive run's active reporting record"
         )
-    path = path.expanduser().absolute()
+    path = path.expanduser()
+    if not path.is_absolute():
+        # Resolve against the selected run, never the resident service's cwd.
+        path = Path(loaded["run_root"]) / path
+    path = path.absolute()
     sources = store.sources()
     source = next(
         (item for item in sources if str(path) in item.get("aliases", [item["path"]])),
