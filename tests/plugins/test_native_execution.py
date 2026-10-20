@@ -1,0 +1,306 @@
+"""Exercise native helper persistence, fixed code ownership and actual delivery."""
+
+from __future__ import annotations
+
+import json
+import os
+import platform
+import shutil
+import subprocess
+import sys
+import time
+from contextlib import contextmanager
+from pathlib import Path
+from uuid import uuid4
+
+import pytest
+
+from tests.plugins.test_vera_verified_execution import write_index
+
+__all__: list[str] = []
+ROOT = Path(__file__).resolve().parents[2]
+
+
+@pytest.fixture
+def installed(tmp_path):
+    """Isolate dependency provisioning; keep the real managed incident wrapper."""
+    root = tmp_path / "installed"
+    scripts = root / "scripts"
+    scripts.mkdir(parents=True)
+    for source in (ROOT / "plugins/_shared/reporting-runtime").glob("*.py"):
+        shutil.copyfile(source, scripts / source.name)
+    for name in ("native_execution.py", "native_execution_mcp.cjs"):
+        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, scripts / name)
+    (root / ".codex-plugin").mkdir()
+    (root / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": "vera", "version": "0.1.445"})
+    )
+    (root / "components.json").write_text(
+        json.dumps({"plugins": ["fixture-component"]})
+    )
+    helper = root / "modules/fixture-component/scripts/check_dependencies.py"
+    helper.parent.mkdir(parents=True)
+    helper.write_text(
+        "import json,os,subprocess,sys,time\nfrom pathlib import Path\n"
+        "path=Path(sys.argv[1]); path.write_text(path.read_text()+'run\\n' if path.exists() else 'run\\n')\n"
+        "if '--child' in sys.argv:\n"
+        "    program='import time,sys; from pathlib import Path; time.sleep(2); Path(sys.argv[1]).write_text(\"unexpected\")'\n"
+        "    subprocess.Popen([sys.executable,'-c',program,str(path.with_name('late-child'))], start_new_session=os.name!='nt')\n"
+        "    path.with_name('child-started').touch()\n"
+        "time.sleep(float(sys.argv[2]) if len(sys.argv)>2 else 0)\n"
+        "sys.stdout.write(json.dumps({'result':'fixture helper ran'})+'\\n')\n"
+        "if '--fail' in sys.argv:\n"
+        "    sys.stderr.write('Observed fixture failure\\n'); raise SystemExit(7)\n"
+    )
+    # Runtime provisioning has its own integration suite. This fixture only
+    # replaces environment selection, executing real child processes and the
+    # real incident wrapper/CLI delivery boundary.
+    (scripts / "_managed_python_runtime.py").write_text(
+        "import logging,os,subprocess,sys\nfrom pathlib import Path\nfrom types import SimpleNamespace\n"
+        "LOGGER=logging.getLogger(__name__)\n"
+        "def unused(*a,**k): return None\n"
+        "activate_runtime=dependency_target=ensure_runtime=plugin_data_dir=requirements_fingerprint=runtime_environment=runtime_key=runtime_python=select_runtime=unused\n"
+        "def select_runtime(root,module,requirements=None): return SimpleNamespace(requirement_root=root/'modules'/module)\n"
+        "def main(root,arguments,stderr=None,diagnostic_path=None):\n"
+        "    from archive_cli import run_command\n"
+        "    module=arguments[1]; position=arguments.index('run'); script=root/'modules'/module/arguments[position+1]\n"
+        "    return run_command([sys.executable,str(script),*arguments[position+2:]],plugin_root=root,component=module,arguments=arguments,cwd=script.parent,env=dict(os.environ),stderr=stderr,check=False).returncode\n"
+    )
+    write_index(root)
+    return root
+
+
+def environment(tmp_path):
+    return {
+        **os.environ,
+        "MPARANZA_RUNTIME_ROOT": str(tmp_path / "unused-runtime"),
+        "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incidents"),
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
+        "PATH": str(Path(sys.executable).parent) + os.pathsep + os.environ["PATH"],
+    }
+
+
+@contextmanager
+def native(root, tmp_path):
+    process = subprocess.Popen(
+        ["node", str(root / "scripts/native_execution_mcp.cjs")],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=environment(tmp_path),
+    )
+
+    def call(arguments):
+        request = {
+            "jsonrpc": "2.0",
+            "id": 1,
+            "method": "tools/call",
+            "params": {"name": "vera_execute", "arguments": arguments},
+        }
+        process.stdin.write(json.dumps(request) + "\n")
+        process.stdin.flush()
+        line = process.stdout.readline()
+        assert line, process.stderr.read()
+        return json.loads(line)["result"]
+
+    try:
+        yield call
+    finally:
+        process.stdin.close()
+        process.wait(timeout=15)
+        process.stdout.close()
+        process.stderr.close()
+
+
+def request(tmp_path, **values):
+    return {
+        "operation": "run",
+        "job_id": str(uuid4()),
+        "component": "fixture-component",
+        "task_id": str(uuid4()),
+        "arguments": [str(tmp_path / "counter")],
+        "wait_seconds": 5,
+        **values,
+    }
+
+
+def output(result):
+    return result["structuredContent"]["output"]
+
+
+def test_native_helper_retains_diagnostics_and_runs_once_across_service_restart(
+    installed, tmp_path
+):
+    args = request(
+        tmp_path, arguments=[str(tmp_path / "counter"), "0.3"], wait_seconds=0
+    )
+    with native(installed, tmp_path) as call:
+        started = call(args)
+        assert output(started)[0]["state"] == "running"
+    with native(installed, tmp_path) as call:
+        finished = call(
+            {"operation": "status", "job_id": args["job_id"], "wait_seconds": 5}
+        )
+        repeated = call(args)
+
+    assert output(finished)[0]["state"] == "completed"
+    assert output(finished)[0]["returncode"] == 0
+    assert output(finished)[1]["stderr"] == ""
+    assert json.loads(output(finished)[1]["stdout"]) == {"result": "fixture helper ran"}
+    assert repeated == finished
+    assert (tmp_path / "counter").read_text() == "run\n"
+    state = json.loads((tmp_path / "incidents/state.json").read_text())
+    assert any(key.startswith(args["task_id"] + ":") for key in state["operations"])
+
+
+def test_active_job_survives_removal_of_its_installed_cache(installed, tmp_path):
+    args = request(
+        tmp_path, arguments=[str(tmp_path / "counter"), "0.4"], wait_seconds=0
+    )
+    with native(installed, tmp_path) as call:
+        call(args)
+        shutil.rmtree(installed)
+        finished = call(
+            {"operation": "status", "job_id": args["job_id"], "wait_seconds": 5}
+        )
+
+    assert output(finished)[0]["returncode"] == 0
+    assert (tmp_path / "counter").read_text() == "run\n"
+
+
+def test_failed_helper_keeps_exit_code_and_complete_stderr(installed, tmp_path):
+    with native(installed, tmp_path) as call:
+        result = call(
+            request(
+                tmp_path,
+                arguments=[
+                    str(tmp_path / "counter"),
+                    "0",
+                    "--fail",
+                ],
+            )
+        )
+
+    assert result["isError"] is True
+    assert output(result)[0]["returncode"] == 7
+    assert "Observed fixture failure\n" in output(result)[1]["stderr"]
+    assert (tmp_path / "counter").read_text() == "run\n"
+    state = json.loads((tmp_path / "incidents/state.json").read_text())
+    assert state["outbox"][0]["operation"] == "report"
+
+
+@pytest.mark.parametrize(
+    "fields",
+    [
+        {"script": "../outside.py"},
+        {"script": "/tmp/outside.py"},
+        {"script": "scripts/../../outside.py"},
+        {"script": "scripts/missing.py"},
+        {"component": "not-in-this-package"},
+        {"shell": "whoami"},
+        {"script": "scripts/check_dependencies.py;whoami"},
+    ],
+)
+def test_unowned_commands_are_rejected_before_execution(installed, tmp_path, fields):
+    with native(installed, tmp_path) as call:
+        result = call(request(tmp_path, **fields))
+
+    assert result["isError"] is True
+    assert not (tmp_path / "counter").exists()
+
+
+def test_reused_job_id_cannot_launch_a_different_command(installed, tmp_path):
+    args = request(tmp_path)
+    with native(installed, tmp_path) as call:
+        call(args)
+        result = call({**args, "arguments": [str(tmp_path / "other-counter")]})
+
+    assert result["isError"] is True
+    assert "different execution" in result["content"][0]["text"]
+    assert (tmp_path / "counter").read_text() == "run\n"
+    assert not (tmp_path / "other-counter").exists()
+
+
+def test_cancel_stops_the_owned_helper_and_detached_descendant(installed, tmp_path):
+    args = request(
+        tmp_path,
+        arguments=[str(tmp_path / "counter"), "5", "--child"],
+        wait_seconds=0,
+    )
+    with native(installed, tmp_path) as call:
+        call(args)
+        deadline = time.monotonic() + 3
+        while not (tmp_path / "child-started").exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert (tmp_path / "child-started").exists()
+
+        cancelled = call(
+            {"operation": "cancel", "job_id": args["job_id"], "wait_seconds": 5}
+        )
+        repeated = call(args)
+
+    assert output(cancelled)[0]["state"] == "cancelled"
+    assert output(cancelled)[0]["returncode"] != 0
+    assert repeated == cancelled
+    assert (tmp_path / "counter").read_text() == "run\n"
+    time.sleep(2.2)
+    assert not (tmp_path / "late-child").exists()
+
+
+def test_bootstrap_rejects_changed_owned_code_before_loading_it(installed, tmp_path):
+    source = installed / "scripts/verified_execution.py"
+    source.write_text("raise RuntimeError('Unverified code was loaded')\n")
+
+    result = subprocess.run(
+        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        input="",
+        text=True,
+        capture_output=True,
+        timeout=15,
+        env=environment(tmp_path),
+    )
+
+    assert result.returncode != 0
+    assert "does not match its build index" in result.stderr
+    assert "Unverified code was loaded" not in result.stderr
+    assert not (tmp_path / "incidents").exists()
+
+
+@pytest.mark.skipif(
+    platform.system() != "Darwin" or shutil.which("sandbox-exec") is None,
+    reason="Reproduce the observed macOS chat-shell boundary",
+)
+def test_native_state_writes_work_when_chat_shell_writes_are_denied(
+    installed, tmp_path
+):
+    state = tmp_path / "incidents"
+    state.mkdir()
+    profile = (
+        '(version 1)(allow default)(deny file-write* (subpath "'
+        + str(state.resolve())
+        + '"))'
+    )
+    shell = subprocess.run(
+        [
+            "sandbox-exec",
+            "-p",
+            profile,
+            sys.executable,
+            "-c",
+            "from pathlib import Path; import sys; Path(sys.argv[1]).write_text('test')",
+            str(state / "probe"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=15,
+    )
+
+    with native(installed, tmp_path) as call:
+        result = call(request(tmp_path))
+
+    assert shell.returncode != 0
+    assert "PermissionError" in shell.stderr
+    assert output(result)[0]["state"] == "completed"
+    assert output(result)[1]["stderr"] == ""
+    assert (state / "state.json").is_file()

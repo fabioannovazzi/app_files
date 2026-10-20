@@ -26,6 +26,7 @@ the service below. Review widgets do not upload client documents.
 - `researchSources`: Manage local research subscription choices and review widgets.
 - `studioWork`: Persist studio tasks, deadlines and external-action receipts locally.
 - `varianceAnalysisWidgets`: Review accounting variance calculations and decisions.
+- `veraExecution`: Run published local helpers with retained results and diagnostics, task-scoped incident delivery and cancellation of the owned process tree. Helper output enters the selected host model when returned; it is not uploaded to the incident service.
 - `veraIncidentHost`: Bind local installation/host identity for incident recovery.
 - `veraNativeWorkspace`: Expose local client workspaces, source selection and review tools.
 - `veraSalesPlan`: Describe the Actual-to-Plan workflow and its artifacts.

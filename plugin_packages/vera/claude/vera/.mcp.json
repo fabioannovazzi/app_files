@@ -132,6 +132,12 @@
         "variance-analysis"
       ]
     },
+    "veraExecution": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/native_execution_mcp.cjs"
+      ]
+    },
     "veraIncidentHost": {
       "command": "node",
       "args": [

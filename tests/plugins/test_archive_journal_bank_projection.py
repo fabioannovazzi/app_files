@@ -352,8 +352,9 @@ def test_mcp_records_only_selected_case_fields(
 @pytest.mark.skipif(
     sys.platform != "darwin", reason="Exercises the macOS worker launch path"
 )
+@pytest.mark.parametrize("native_execution", [False, True])
 def test_worker_submission_counts_only_the_unmatched_candidate(
-    reconciled_case, monkeypatch, tmp_path
+    reconciled_case, monkeypatch, tmp_path, native_execution
 ):
     from archive_report_store import RunStore
     from archive_reporting import snapshot_run
@@ -365,6 +366,8 @@ def test_worker_submission_counts_only_the_unmatched_candidate(
     )
 
     load_core()
+    if native_execution:
+        monkeypatch.setenv("VERA_REPORTING_INTERNAL", "1")
     semantic = load_semantic_review()
     loaded = reconciled_case
     output = Path(loaded["calculation_dir"])

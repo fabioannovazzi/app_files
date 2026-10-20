@@ -31,6 +31,7 @@ jobs:
           tests/plugins/test_portable_workflow_diagnostics.py
           tests/plugins/test_archive_emission_boundaries.py
           tests/plugins/test_archive_cli_delivery.py
+          tests/plugins/test_native_execution_reporting.py
           tests/plugins/test_archive_report_builder_projection.py
           tests/plugins/test_archive_report_builder_execution.py
           tests/plugins/test_archive_journal_bank_projection.py
@@ -52,6 +53,10 @@ jobs:
           python -m isort --check-only plugins/_shared/reporting-runtime/diagnostic_context.py tests/plugins/test_portable_workflow_diagnostics.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/reporting-runtime/diagnostic_context.py
           python -m bandit -q -ll plugins/_shared/reporting-runtime/diagnostic_context.py
+          python -m black --check plugins/vera/scripts/native_execution.py tests/plugins/test_native_execution_reporting.py
+          python -m isort --check-only plugins/vera/scripts/native_execution.py tests/plugins/test_native_execution_reporting.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/native_execution.py
+          python -m bandit -q -ll plugins/vera/scripts/native_execution.py
       - run: python scripts/sync_reporting_runtime.py --check
   producer-sends:
     name: Actual Vera producer sends (${{ matrix.os }})

@@ -48,6 +48,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/modules/operational_incidents
           tests/modules/operational_incidents tests/plugins/test_operational_incident_client.py
+          tests/plugins/test_incident_task_scope.py
           tests/plugins/test_pdf_recovery_incidents.py
           tests/plugins/test_vera_integrity_incident_reporting.py tests/plugins/test_vera_verified_execution.py
           tests/plugins/test_incident_technical_runner.py
@@ -119,8 +120,9 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/modules/workflow_usage
           tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py
-      - run: python -m black --check tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py
-      - run: python -m isort --check-only tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py
+          tests/plugins/test_native_execution.py tests/plugins/test_incident_task_scope.py
+      - run: python -m black --check tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py tests/plugins/test_native_execution.py tests/plugins/test_incident_task_scope.py plugins/vera/scripts/native_execution.py
+      - run: python -m isort --check-only tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py tests/plugins/test_native_execution.py tests/plugins/test_incident_task_scope.py plugins/vera/scripts/native_execution.py
 
   reporting-postgres:
     name: Product reporting on PostgreSQL

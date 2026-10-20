@@ -1,5 +1,36 @@
 # Automatic execution preparation
 
+When the installed native `vera_execute` tool is available, use it for component
+dependency checks and the specialist's managed helper commands. The installed
+service owns private diagnostics and incident state; an ordinary restricted chat
+shell may read the installation but cannot write those persistent directories.
+Discover deferred tools before falling back to the shell route below.
+
+For each command retain a new `job_id` UUID, set `operation: run`, the component
+ID, its published relative `script` (for example `scripts/check_dependencies.py`)
+and the helper's `arguments` list. Pass the existing workflow usage UUID as
+`task_id`; a server registration receipt is not an execution prerequisite.
+Client paths in arguments remain absolute. Do not pass a shell command, Python
+expression, alternate executable or the managed launcher's own arguments.
+The service verifies and snapshots the installed code, then uses the same
+managed runtime, source qualification and specialist entrypoints.
+
+An unfinished reply is a retained job, not a failed command. Use
+`operation: status` with the same `job_id` and optionally `wait_seconds: 20`.
+Never generate another job ID just because the host timed out or a chat restarted.
+Read the actual exit code and complete retained stdout/stderr before proceeding.
+Repeating `run` with that same ID and unchanged inputs only retrieves the result.
+If the user stops the work, call `operation: cancel` with that job ID and verify
+its terminal state. Partial outputs and diagnostics remain retained.
+Model-data accounting occurs when the native result is returned, and worker
+submissions retain their own existing evidence. Internal stdout is not itself a
+model send. Incident delivery uses the retained task's scope and leaves other
+tasks' queued incidents untouched.
+When the user has requested no incident transmission, also pass
+`incident_delivery: local-only`; the service retains diagnostics locally.
+
+The remaining shell instructions apply when the native service is unavailable.
+
 For an explicitly requested execution without incident transmission, set
 `MPARANZA_INCIDENT_DELIVERY=local-only` on every managed command, alongside the
 chosen private `MPARANZA_INCIDENT_STATE_DIR`. Diagnostics, identities and queued

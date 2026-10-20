@@ -190,7 +190,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "1f4119ee0ac966357b7db7ae7d03c71b23c4ca090b982bb98e99b6240b545734"
+      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
     },
     {
       "path": "scripts/prepare_voice_deck_revision.py",
@@ -215,7 +215,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/clara/scripts/verified_execution.py",
-      "sha256": "ec854fca344b92ae5208981a1631f5bc2f3ee96d365d62ed36f7f74e7aa19518"
+      "sha256": "285de14194ae93fcd4f08531154e369e748784909a18adbc54c59232a6c1bf9f"
     },
     {
       "path": "scripts/workflow_usage.py",

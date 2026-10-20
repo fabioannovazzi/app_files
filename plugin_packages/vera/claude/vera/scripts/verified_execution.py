@@ -210,7 +210,9 @@ def _validate_module(root: Path, module: str | None) -> None:
         raise ValueError(f"Module integrity check failed: {result.stderr.strip()}")
 
 
-def prepare_execution_root(root: Path, module: str | None) -> Path:
+def prepare_execution_root(
+    root: Path, module: str | None, *, snapshot: bool = False
+) -> Path:
     """Return verified code; recover only authentic-to-index hardlinked bytes.
 
     Fixed digests and exact file inventory are mechanical execution controls.
@@ -218,7 +220,7 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
     """
 
     product = product_name(root)
-    if product == "vera" and module not in ASSURED_MODULES:
+    if product == "vera" and module not in ASSURED_MODULES and not snapshot:
         return root
     root = root.absolute()
     # Repository component sources use sibling roots, not installed modules.
@@ -259,7 +261,7 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
             )
         contents[name] = data
         hardlinks = hardlinks or links > 1
-    if not hardlinks:
+    if not hardlinks and not snapshot:
         _validate_module(root, module)
         return root
 
@@ -283,7 +285,10 @@ def prepare_execution_root(root: Path, module: str | None) -> Path:
     except (OSError, ValueError):
         shutil.rmtree(private)
         raise
-    LOGGER.warning("Vera ha preparato una copia privata verificata del codice.")
+    LOGGER.log(
+        logging.INFO if snapshot else logging.WARNING,
+        "Vera ha preparato una copia privata verificata del codice.",
+    )
     return private
 
 

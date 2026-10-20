@@ -4,7 +4,9 @@
   "display_name": "Vera",
   "role": "internal_engine",
   "governed_paths": [
-    "skills/vera"
+    "skills/vera",
+    "scripts/native_execution.py",
+    "scripts/native_execution_mcp.cjs"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -18,7 +20,7 @@
       {
         "id": "selected-task-evidence",
         "purpose": "Carry out vera using the selected evidence and user instructions",
-        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions.",
+        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork",
@@ -55,7 +57,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "72dc6d06e424fc30056dd0f4b46081353e37e0214ead74b454137d89b306bff9"
+    "source_fingerprint": "0347fc5bfdbf4964f1ba89586bab3443e10f9a9048a16ca87266ee89b1909077"
   },
   "service_ids": [
     "cnc-authenticated-review",
