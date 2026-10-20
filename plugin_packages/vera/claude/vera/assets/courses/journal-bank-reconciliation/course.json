@@ -44,7 +44,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "476436b711c570802598db961574ffd3fa95796e9098844d143c8a85cdc3ba3f"
+      "sha256": "658c8c4233d2500a471303588ffaf9b3188b6da7db7c74115d3231f2850efe46"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -84,7 +84,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
-      "sha256": "54eccc07a9bceccfae261487ebd2ba8bb87d3ccd354cc0074a4cfeb54626f868"
+      "sha256": "a9d70a6ad9a399cffb3795777def38b6e2b71f9708d1a5760985dc230354279e"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "7f77c448f6ec300ca75042025bfbed5ce55b9f1bdf90658a94b0787a4304faaf"
+      "sha256": "a8404b5517317aa02641627a7a33dcc7a9a8722750eeca8093c16751d2180634"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -593,5 +593,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e282474be004531053c53c7aa466a5ed521a25a789cd4e1d8fce2fc2d6924147"
+  "canonical_course_sha256": "6bcbbbd32fdd84bed54588fdcd7feb97e44675f578ee6f205db8f24c96a97f4b"
 }

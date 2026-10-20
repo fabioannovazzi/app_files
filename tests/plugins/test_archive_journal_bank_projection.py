@@ -45,7 +45,10 @@ def run_cli(name, loaded, *arguments):
 
 @pytest.fixture
 def reconciled_case(archive_core, client_case, tmp_path, request):
-    reviewed_balances = getattr(request, "param", None) == "reviewed_balances"
+    reviewed_balances = getattr(request, "param", None) in {
+        "reviewed_balances",
+        "reviewed_balances_copied",
+    }
     sources = {
         "bank": (
             "2026-10-05,500.00,Receipt,INV01,LOCAL_BANK_ONE\n"
@@ -134,6 +137,12 @@ def reconciled_case(archive_core, client_case, tmp_path, request):
         for side in sources:
             for choice in decisions[side]["files"].values():
                 choice["excluded_monetary_columns"] = ["opening_balance", "balance"]
+    if getattr(request, "param", None) == "reviewed_balances_copied":
+        for side in sources:
+            for name, choice in decisions[side]["files"].items():
+                choice["potential_monetary_columns"] = recipe[side]["files"][name][
+                    "potential_monetary_columns"
+                ]
     decisions_path.write_text(json.dumps(decisions))
     if getattr(request, "param", None) == "modified_recipe":
         recipe["unregistered_note"] = "Extra case data outside producer metadata"
@@ -175,7 +184,11 @@ def test_calculation_audit_and_status_have_complete_input_lineage(reconciled_cas
     assert sum(item["not_sent_cells"] for item in inputs) == 5
 
 
-@pytest.mark.parametrize("reconciled_case", ["reviewed_balances"], indirect=True)
+@pytest.mark.parametrize(
+    "reconciled_case",
+    ["reviewed_balances", "reviewed_balances_copied"],
+    indirect=True,
+)
 def test_reviewed_balance_exclusions_preserve_preview_and_recipe_provenance(
     reconciled_case,
 ):

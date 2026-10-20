@@ -238,10 +238,12 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    reviewed header rows, mapping, CSV field delimiter, numeric separators,
    `date_convention`, `date_locale` when Italian textual-month dates are
    present, exact `non_movement_summary_labels` when a reviewed tabular total
-   row must be excluded,
-   current `potential_monetary_columns`, and explicit
+   row must be excluded, and explicit
    `excluded_monetary_columns` against the current content-addressed source
-   artifact reference. Supply the exclusions even when empty, and ensure every
+   artifact reference. The sealer derives `potential_monetary_columns` from
+   the current source; it is not an agent decision to supply. If copied from
+   inspection, that informational value is ignored and recomputed.
+   Supply the exclusions even when empty, and ensure every
    potential monetary column is mapped to amount/debit/credit or excluded. Do
    not hand-author or copy a receipt. Only exact supported headers in a
    uniquely profiled comma CSV need no mapping receipt; non-default delimiters

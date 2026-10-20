@@ -167,6 +167,14 @@ def seal_review_receipts(
             )
         for index, (source_file, file_recipe) in enumerate(files.items(), start=1):
             choice = reviewed["files"][source_file]
+            # Copied inspection metadata is not review authority. Recompute it
+            # from the current source below, even when the copied value is stale.
+            if isinstance(choice, dict):
+                choice = {
+                    key: value
+                    for key, value in choice.items()
+                    if key != "potential_monetary_columns"
+                }
             if (
                 not isinstance(choice, dict)
                 or not _REQUIRED_MAPPING_FIELDS <= set(choice)

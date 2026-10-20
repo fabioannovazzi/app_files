@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "7351003dd4b932c90d185eacc7cd30a0eff1aebae9a885af415f508f0d327fae",
+  "catalogue_fingerprint": "ba1ddc1e2049f6b3f36edb1f7f805b5a40cac6b8236451161f04b830a1368ba7",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2170,5 +2170,10 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
+  },
+  "copied_mapping_metadata_release_binding_20261020": {
+    "version": "0.1.450",
+    "unchanged_entrypoints": 55,
+    "scope": "Release binding only. Component sealer recomputes copied monetary-candidate metadata; no jurisdiction disposition or professional acceptance is changed."
   }
 }
