@@ -1555,6 +1555,37 @@ def _supported_assurance_run(
     )
 
 
+@pytest.mark.parametrize("invalid_sheet", [False, True])
+def test_check_entry_validation_closes_workbook_and_source(
+    monkeypatch, tmp_path, invalid_sheet
+):
+    original_load = openpyxl.load_workbook
+    opened = []
+
+    def tracked_load(filename, *args, **kwargs):
+        workbook = original_load(filename, *args, **kwargs)
+        if kwargs.get("read_only") and str(getattr(filename, "name", "")).endswith(
+            "check_results.xlsx"
+        ):
+            opened.append((workbook, filename))
+            if invalid_sheet:
+                workbook.worksheets[0].title = "Unexpected sheet"
+        return workbook
+
+    monkeypatch.setattr(openpyxl, "load_workbook", tracked_load)
+
+    if invalid_sheet:
+        with pytest.raises(ValueError, match="workbook sheet identity is unstable"):
+            _supported_assurance_run(monkeypatch, tmp_path)
+    else:
+        _supported_assurance_run(monkeypatch, tmp_path)
+
+    assert len(opened) == 1
+    workbook, source = opened[0]
+    assert workbook._archive.fp is None
+    assert source.closed
+
+
 def test_archived_vouching_review_reopens_without_authorizing_writes(
     monkeypatch, tmp_path
 ):

@@ -27,8 +27,9 @@ SCRIPTS = Path(__file__).resolve().parents[2] / "plugins/report-builder/scripts"
         ("report-enti-locali", "local_government_review"),
     ],
 )
+@pytest.mark.parametrize("delivery", ["direct", "launcher"])
 def test_report_builder_cli_retains_its_professional_seal_after_archive_completion(
-    archive_core, client_case, tmp_path, workflow, report_type
+    archive_core, client_case, tmp_path, workflow, report_type, delivery
 ):
     source = tmp_path / "statement.csv"
     source.write_text("line,amount\nRevenue,1234.50\nCost,-234.50\n", encoding="utf-8")
@@ -47,8 +48,18 @@ def test_report_builder_cli_retains_its_professional_seal_after_archive_completi
     )
     assert initial_report["outcome"] == "running"
 
+    boundary = tmp_path / "run_vera_command.py"
+    product = SCRIPTS.parents[1] / "vera"
+    boundary.write_text(
+        "import sys\nfrom pathlib import Path\n"
+        f"sys.path.insert(0, {str(product / 'scripts')!r})\n"
+        "from archive_cli import run_command\n"
+        f"raise SystemExit(run_command(sys.argv[1:], plugin_root=Path({str(product)!r}), "
+        "component='report-builder', arguments=sys.argv[1:], check=False).returncode)\n"
+    )
     built = subprocess.run(
         [
+            *([sys.executable, str(boundary)] if delivery == "launcher" else []),
             sys.executable,
             "-I",
             "-B",
@@ -87,7 +98,7 @@ def test_report_builder_cli_retains_its_professional_seal_after_archive_completi
         },
     }
     saved = subprocess.run(
-        ["node", str(SCRIPTS.parent / "mcp/server.cjs")],
+        ["node", str(product / "scripts/run_component_mcp.cjs"), "report-builder"],
         input=json.dumps(request) + "\n",
         capture_output=True,
         text=True,
@@ -121,7 +132,33 @@ def test_report_builder_cli_retains_its_professional_seal_after_archive_completi
     report = json.loads((output / "model_data_report.json").read_text(encoding="utf-8"))
     assert report["workflow_id"] == workflow
     assert report["outcome"] == "completed"
+    assert {event["channel"] for event in report["emissions"]} >= {
+        "cli:report-builder",
+        "mcp:report-builder",
+    }
+    from archive_report_store import digest
+
+    assert next(
+        event
+        for event in report["emissions"]
+        if event["channel"] == "mcp:report-builder"
+    )["response_sha256"] == digest(response)
+    assert (
+        next(
+            event
+            for event in report["emissions"]
+            if event["channel"] == "cli:report-builder"
+        )["unmapped"]
+        is False
+    )
+    assert (
+        sum(event["channel"] == "cli:report-builder" for event in report["emissions"])
+        == 1
+    )
+    # Actual outgoing payloads are retained even where their derived data does
+    # not yet identify individual source rows. Never invent a local remainder.
     assert report["collection_status"] == "incomplete"
+    assert report["sources"][0]["not_sent_quantity"] is None
     assert (output / "review_integrity.json").read_bytes() == integrity_before
     replayed = subprocess.run(
         [

@@ -18,6 +18,11 @@ automatically started and ended by Studio Archive. It remains local; the server
 receives its hash bound to authenticated Vera userID, Archive run ID and revision.
 Full exposure still yields a report. Missing measurements yield an incomplete
 report. The agent never authors a report-input file or decides report eligibility.
+The measured boundary is what Vera sends through its own producers, independently
+of host hooks, transcripts or other tools. Local report schema 4 records exact
+outgoing payload hashes and measured source coordinates. Server receipt schema 3
+binds the frozen report hash to the existing Vera userID, run and revision. A
+pending receipt is retried through normal Archive use without changing the report.
 The manual build, substantive-work and phase-input rules below apply only to
 Clara and Lucia and to reading historical reports.
 
@@ -141,9 +146,9 @@ invent measurements, or create a new report and present it as the original.
 Retrieving or explaining this saved report is not a new substantive run and does
 not require a report about that retrieval or a new server receipt.
 
-## Automatic server-stamped proof
+## Historical and Clara/Lucia server-stamped proof
 
-Vera preserves receipt request schema `1`: schema version, one random per-run
+Historical Vera reports preserve receipt request schema `1`: schema version, one random per-run
 receipt UUID, the installed product version and the SHA-256 digest of the
 canonical local report. Clara and Lucia use receipt request schema `2`, which
 adds the explicit product as a fifth signed field. The model-data report's schema

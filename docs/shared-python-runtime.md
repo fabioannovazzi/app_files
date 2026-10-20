@@ -76,5 +76,29 @@ transport, hosted voice/video routes and workflow model-context payloads are
 unchanged; stripped PYTHONPATH prevents ambient Python modules from overriding
 the managed code. The affected source fingerprints are refreshed for this
 reviewed setup/instruction delta; other professional and hosted source behavior
-is not newly certified. No provider-account, legal-compliance or native Cowork
-acceptance claim is made. Cowork stays stopped during this engineering work.
+is not newly certified. No provider-account or legal-compliance claim is made.
+
+## Release integration and acceptance (2026-10-20)
+
+The release integrates current main, retaining the newer Vera worker and Codex
+compatibility changes. Candidates are Vera 0.1.437, Clara 0.1.316 and Lucia
+0.1.140. The reviewed integration changes dependency setup and its local
+inventory, the Cowork managed-launch instructions, and redundant exported legend
+headings. Existing model-context classes, hosted routes, recipients and
+permissions remain as declared on main. The affected source fingerprints and
+derived contracts are refreshed for that delta; unchanged professional and
+jurisdiction assessments are preserved.
+
+After the user explicitly requested a native test, Clara 0.1.311 was installed
+privately in Cowork. Its cloud Linux session completed dependency setup, rendered
+all four scatter/bubble charts from the same 12 synthetic rows, and passed a warm
+rerun. The live inventory matched all 97 dependencies in the Codex Linux package
+test, with the same lock and recipe. Cowork used Python 3.12.3; CI used 3.12.14.
+This is native acceptance of that test build, not proof that later versions have
+automatically updated an installed host. The original interrupted process's
+cause remains unknown. Cowork is idle after the tests.
+
+The exported scatter legend now retains one color-dimension title and removes
+only identical trace-group headings. Both scatter and bubble regression tests
+preserve their category entries. The corrected PNG was regenerated locally
+through Clara's legacy renderer; all 12 source rows and plotted values match.

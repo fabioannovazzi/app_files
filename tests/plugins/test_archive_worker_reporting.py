@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from tests.plugins.test_archive_automatic_reporting import (
     archive_core,
     archive_script_imports,
@@ -18,13 +20,16 @@ from tests.plugins.test_journal_bank_reconciliation_plugin import (
 )
 
 
+@pytest.mark.parametrize(
+    "workflow", ["journal-bank-reconciliation", "passive-invoice-audit"]
+)
 def test_archive_worker_retains_exact_prompt_locally_and_marks_missing_lineage(
-    archive_core, client_case, monkeypatch, tmp_path
+    archive_core, client_case, monkeypatch, tmp_path, workflow
 ):
-    from archive_report_store import RunStore, digest
+    from archive_report_store import RunStore, canonical, digest
     from archive_reporting import snapshot_run
 
-    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    loaded = start(archive_core, client_case, workflow)
     output = Path(loaded["output_dir"]) / "worker"
     output.mkdir()
     semantic = load_semantic_review()
@@ -58,19 +63,24 @@ def test_archive_worker_retains_exact_prompt_locally_and_marks_missing_lineage(
         prompt=prompt,
         output_schema={"type": "object"},
         output_dir=output,
-        workflow_id="journal-bank-reconciliation",
+        workflow_id=workflow,
         packet_sha256="a" * 64,
     )
 
     observed = RunStore(Path(loaded["run_root"])).events()
-    submissions = [event for event in observed if event["kind"] == "tool_result"]
+    submissions = [
+        event
+        for event in observed
+        if event["kind"] == "vera_send" and event["channel"].startswith("model_worker:")
+    ]
     assert len(submissions) == 1
-    assert submissions[0]["evidence_basis"] == "submitted_worker_prompt"
-    assert submissions[0]["response_sha256"] == digest(prompt)
-    assert submissions[0]["characters"] == len(prompt)
+    assert submissions[0]["evidence_basis"] == "vera_outgoing_payload"
+    submitted = {"prompt": prompt, "output_schema": {"type": "object"}}
+    assert submissions[0]["response_sha256"] == digest(submitted)
+    assert submissions[0]["characters"] == len(canonical(submitted).decode())
     snapshot = snapshot_run(loaded)
     report_text = Path(snapshot["report_path"]).read_text(encoding="utf-8")
     assert prompt not in report_text
     report = json.loads(report_text)
     assert report["collection_status"] == "incomplete"
-    assert "some_tool_output_has_no_source_coordinates" in report["errors"]
+    assert "sent_data_has_no_source_coordinates" in report["errors"]

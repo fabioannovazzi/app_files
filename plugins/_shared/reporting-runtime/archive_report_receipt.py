@@ -6,6 +6,7 @@ import argparse
 import hashlib
 import html
 import json
+import logging
 import re
 import sqlite3
 import sys
@@ -79,6 +80,8 @@ def _request(report_path: Path, *, persist: bool = True) -> dict[str, Any]:
     )
     from notarized_run_receipt import _plugin_version
 
+    if not isinstance(report["user_id"], str):
+        raise ValueError("The report has no bound Vera userID")
     request = {
         "schema_version": 3,
         "product": "vera",
@@ -169,9 +172,9 @@ def stamp_report(report_path: Path) -> dict[str, Any]:
     try:
         request = _request(report_path)
         receipt_path = report_path.with_name("model_data_receipt.json")
-        from operational_incidents import local_context, workflow_transport
+        from operational_incidents import reporting_credentials, workflow_transport
 
-        credentials = local_context()["credentials"]
+        credentials = reporting_credentials()
         if credentials["installation_id"] != request["user_id"]:
             raise ValueError(
                 "Current Vera userID differs from the run's original machine identity"
@@ -208,35 +211,43 @@ def stamp_report(report_path: Path) -> dict[str, Any]:
         return {"status": "pending", "reason": type(exc).__name__}
 
 
-def retry_pending(registry: Registry) -> None:
+def retry_pending(registry: Registry, *, strict: bool = True) -> None:
     """Retry retained terminal reports; never regenerate or rerun professional work."""
     for root in registry.pending_receipts():
-        if root.is_symlink() or not (root / "run.json").is_file():
-            registry.receipt_result(root, "run_removed")
-            continue
-        with run_lock(root):
-            state = RunStore(root).state()
-            report_path = root / "outputs/model_data_report.json"
-            if (
-                state is None
-                or not state["collection_closed"]
-                or not report_path.is_file()
-            ):
-                registry.receipt_result(root, "pending")
-                continue
-            status_path = root / "model_data_reporting.json"
-            result = (
-                json.loads(status_path.read_text(encoding="utf-8"))
-                if status_path.is_file()
-                else {"status": "available", "report_path": str(report_path)}
-            )
-            from archive_report_seal import checkpoint, reseal
+        try:
+            _retry_one(registry, root)
+        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+            if strict:
+                raise
+            # Keep the failed proof pending and move it behind other retries.
+            # No report or professional artifact is repaired or resealed here.
+            registry.receipt_result(root, "pending")
+            logging.warning("An Archive proof remains pending: %s", type(exc).__name__)
 
-            baseline = checkpoint(root)
-            result["server_receipt"] = stamp_report(report_path)
-            reseal(root, baseline)
-            atomic_json(status_path, result)
-            registry.receipt_result(root, result["server_receipt"]["status"])
+
+def _retry_one(registry: Registry, root: Path) -> None:
+    if root.is_symlink() or not (root / "run.json").is_file():
+        registry.receipt_result(root, "run_removed")
+        return
+    with run_lock(root):
+        state = RunStore(root).state()
+        report_path = root / "outputs/model_data_report.json"
+        if state is None or not state["collection_closed"] or not report_path.is_file():
+            registry.receipt_result(root, "pending")
+            return
+        status_path = root / "model_data_reporting.json"
+        result = (
+            json.loads(status_path.read_text(encoding="utf-8"))
+            if status_path.is_file()
+            else {"status": "available", "report_path": str(report_path)}
+        )
+        from archive_report_seal import checkpoint, reseal
+
+        baseline = checkpoint(root)
+        result["server_receipt"] = stamp_report(report_path)
+        reseal(root, baseline)
+        atomic_json(status_path, result)
+        registry.receipt_result(root, result["server_receipt"]["status"])
 
 
 def verify_report(report_path: Path, *, user_id: str) -> dict[str, Any]:
@@ -278,9 +289,9 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--user-id")
     args = parser.parse_args(argv)
     try:
-        from operational_incidents import local_context
+        from operational_incidents import reporting_credentials
 
-        user_id = args.user_id or local_context()["credentials"]["installation_id"]
+        user_id = args.user_id or reporting_credentials()["installation_id"]
         receipt = verify_report(args.report, user_id=user_id)
         result = {
             "status": "verified",

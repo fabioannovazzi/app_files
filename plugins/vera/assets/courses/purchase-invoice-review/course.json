@@ -45,7 +45,7 @@
     {
       "path": "modules/passive-invoice-audit/scripts/audit_core.py",
       "repository_path": "plugins/passive-invoice-audit/scripts/audit_core.py",
-      "sha256": "a159782e899e421808f2012b76b081205501dfdb13f526c269aea9a881ef065d"
+      "sha256": "d5952320902d07b296f4d463515196b2fd2b26121d9b9c03fcf86f9f6d5dd474"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/check_dependencies.py",
@@ -65,7 +65,7 @@
     {
       "path": "modules/passive-invoice-audit/scripts/luna_worker.py",
       "repository_path": "plugins/passive-invoice-audit/scripts/luna_worker.py",
-      "sha256": "553a0c852234359901332d99a5b287b1e14d073cd75ed34ec576b1c5f7f2db86"
+      "sha256": "5c866c98952764cc59965d020926f16baf72bafba44d36c1ce0f8e590d8fe3b7"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/reviewed_invoices.py",
@@ -75,7 +75,7 @@
     {
       "path": "modules/passive-invoice-audit/scripts/run_audit.py",
       "repository_path": "plugins/passive-invoice-audit/scripts/run_audit.py",
-      "sha256": "5c193e0ebfb063eb6191a9283ab3d2e76f4f417fe2057b12c3b601b36bd8a383"
+      "sha256": "0a645432612361c9985898662d603d85715082d721796532c4c4c708541bb9ab"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/worker_config.json",
@@ -105,7 +105,7 @@
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/decisions.py",
@@ -135,7 +135,7 @@
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "modules/passive-invoice-audit/vendor/modules/vera_assurance/serialization.py",
@@ -385,7 +385,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -415,7 +415,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

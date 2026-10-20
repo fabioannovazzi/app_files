@@ -55,17 +55,17 @@
     {
       "path": "modules/centrale-rischi-review/scripts/finalize_analysis.py",
       "repository_path": "plugins/centrale-rischi-review/scripts/finalize_analysis.py",
-      "sha256": "0e431dd0f42e3aa006b55b0e2c759363fa4c22439ef16b051306987d4c5a5505"
+      "sha256": "db702475dfe7e30da0e59314a4f6f2064c163580e89a779575f58507ef180bf6"
     },
     {
       "path": "modules/centrale-rischi-review/scripts/inspect_inputs.py",
       "repository_path": "plugins/centrale-rischi-review/scripts/inspect_inputs.py",
-      "sha256": "6c9352d76d77ec84ede4a67c1766a473a38dc8431f1f2ed3198dadc179c1a220"
+      "sha256": "f2647d014c0335eff64c9059eb8db7b52ca7f8f97771db6800a0e0841c6d7946"
     },
     {
       "path": "modules/centrale-rischi-review/scripts/run_analysis.py",
       "repository_path": "plugins/centrale-rischi-review/scripts/run_analysis.py",
-      "sha256": "b25a8f5a815094c5b9e874842213d1ef20ee145d15a079efa21f347aa717242a"
+      "sha256": "44ba9cb022207032a944aa572020565f1876c63491690fef7eaae99cdc9a7898"
     },
     {
       "path": "modules/centrale-rischi-review/scripts/run_gold_benchmark.py",
@@ -90,7 +90,7 @@
     {
       "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/decisions.py",
@@ -120,7 +120,7 @@
     {
       "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/serialization.py",
@@ -370,7 +370,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -400,7 +400,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

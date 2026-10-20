@@ -138,6 +138,11 @@ def make_packaged_component(root: Path) -> Path:
     (scripts / "_shared_python_runtime.py").write_bytes(
         RUNTIME_SOURCE.with_name("_shared_python_runtime.py").read_bytes()
     )
+    for source in VERA_MANAGER.parent.glob("archive_*.py"):
+        (scripts / source.name).write_bytes(source.read_bytes())
+    (scripts / "selective_reporting.py").write_bytes(
+        (VERA_MANAGER.parent / "selective_reporting.py").read_bytes()
+    )
     (root / "components.json").write_text(
         json.dumps({"schema_version": 1, "plugins": ["studio-archive"]}) + "\n",
         encoding="utf-8",
@@ -776,6 +781,7 @@ def test_managed_launcher_installs_optional_requirements_and_runs_helper_once(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     runtime = load_runtime()
+    monkeypatch.syspath_prepend(str(VERA_MANAGER.parent))
     plugin_root = tmp_path / "vera"
     component = make_packaged_component(plugin_root)
     optional_name = "requirements-portal-recorder.txt"
@@ -1412,7 +1418,10 @@ def _load_vera_manager(monkeypatch: pytest.MonkeyPatch) -> Any:
     monkeypatch.setattr(
         manager,
         "_execute_with_diagnostics",
-        lambda root, args: (manager._IMPLEMENTATION.main(root, args), None),
+        lambda root, args, module=None: (
+            manager._IMPLEMENTATION.main(root, args),
+            None,
+        ),
     )
     return manager
 
@@ -1519,6 +1528,10 @@ def test_isolated_vera_launcher_keeps_owned_incident_imports_and_local_diagnosti
     import shutil
 
     (tmp_path / "scripts").mkdir()
+    (tmp_path / ".codex-plugin").mkdir()
+    (tmp_path / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": "vera", "version": "0.1.1"})
+    )
     shutil.copyfile(
         ROOT / "plugins/vera/scripts/technical_runner.py",
         tmp_path / "scripts/technical_runner.py",

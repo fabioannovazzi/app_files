@@ -15,7 +15,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from ade_acquisition.archive_runs import finish_runs, prepare_runs
+from ade_acquisition.archive_runs import (
+    finish_runs,
+    prepare_runs,
+    record_status_payload,
+)
 from ade_acquisition.contracts import (
     OPERATIONS,
     AcquisitionError,
@@ -31,8 +35,11 @@ from ade_acquisition.storage import Store, atomic_json, private_root, read_json
 __all__ = ["main"]
 
 
-def _emit(value: dict[str, Any]) -> None:
-    sys.stdout.write(json.dumps(value, ensure_ascii=False, sort_keys=True) + "\n")
+def _emit(value: dict[str, Any], *, run: Path | None = None) -> None:
+    text = json.dumps(value, ensure_ascii=False, sort_keys=True) + "\n"
+    if run is not None:
+        record_status_payload(run, value, text, channel="cli")
+    sys.stdout.write(text)
 
 
 def _run_path(store: Store, run_id: str) -> Path:
@@ -395,6 +402,7 @@ def main(argv: list[str] | None = None) -> int:
         store = Store(args.output)
         if args.command == "start":
             result = _start(store, Plan.parse(read_json(args.plan)))
+            run = _run_path(store, result["run_id"])
         else:
             run = _run_path(store, args.run_id)
             plan = Plan.parse(read_json(run / "plan.json"))
@@ -428,7 +436,7 @@ def main(argv: list[str] | None = None) -> int:
                 }
             else:
                 result = _archive(store, run, plan)
-        _emit(result)
+        _emit(result, run=run if args.command != "worker" else None)
         return 1 if result["state"] == "failed" else 0
     except (AcquisitionError, OSError, sqlite3.Error, subprocess.TimeoutExpired) as exc:
         code = (

@@ -1669,14 +1669,18 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
     )
 
     main = page[page.index('<main class="page-shell"') : page.index("</main>")]
-    assert 'data-model-data-workflow="centrale-rischi-review"' in main
-    assert 'data-model-data-status="relevant"' in main
+    assert 'data-model-data-status="placeholder"' in main
+    assert "function-model-data.js" in page
+    public = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text()
+    )["pages"]["centrale-rischi-review"]
+    assert public["workstream"] == "centrale-rischi-review"
+    assert public["status"] == "relevant"
     assert main.rstrip().endswith("</section>")
     assert "Quali dati arrivano al modello" in page
-    assert "What data reaches the model" in page
-    assert "garanti dell’intestatario" in page
-    assert "debitori ceduti" in page
-    assert "summary totals" in page
+    assert "garanti dell’intestatario" in " ".join(public["copy"]["it"])
+    assert "debitori ceduti" in " ".join(public["copy"]["it"])
+    assert "summary totals" in " ".join(public["copy"]["en"])
     assert "OCR" not in page
     assert 'href="https://centrale-rischi-synthetic.fabio3143.chatgpt.site/"' in page
     assert 'id="example"' in page

@@ -192,7 +192,8 @@ DEFAULT_REQUIRED_RESOLUTION_LEVEL = "classified"
 LEGACY_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v1"
 PREVIOUS_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v2"
 RETAINED_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v3"
-WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v4"
+PINNED_WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v4"
+WORKER_BOUNDARY_CONTRACT_ID = "journal_bank.luna_seatbelt_capsule.v5"
 SEATBELT_PROFILE = """(version 1)
 (deny default)
 (import "system.sb")
@@ -281,18 +282,18 @@ _LEGACY_DISABLED_WORKER_FEATURES = (
 
 @dataclass(frozen=True)
 class _HostCapabilityProfile:
-    """Immutable exact security envelope; identity checks are reproducible."""
+    """Packaged isolation policy; external runtime identities are observed per run."""
 
     contract_id: str
     provenance: str
     platform: str
-    darwin_build: str
-    codex_version: str
-    codex_sha256: str
+    darwin_build: str | None
+    codex_version: str | None
+    codex_sha256: str | None
     sandbox_exec_path: Path
-    sandbox_exec_sha256: str
+    sandbox_exec_sha256: str | None
     canary_path: Path
-    canary_sha256: str
+    canary_sha256: str | None
     seatbelt_sha256: str
     disabled_features: tuple[str, ...]
     qualification_basis: str
@@ -347,8 +348,8 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
         ),
         # Exact pins make the independently exercised OS boundary auditable;
         # diagnostic image-helper permissions never enter this production profile.
-        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
-            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+        PINNED_WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=PINNED_WORKER_BOUNDARY_CONTRACT_ID,
             provenance="native_qualified",
             platform="Darwin",
             darwin_build="26A428",
@@ -361,6 +362,23 @@ _HOST_CAPABILITY_PROFILES: Mapping[str, _HostCapabilityProfile] = MappingProxyTy
             seatbelt_sha256="7da42098684e01822f6d82882b00805eb89c5da1d20054884eab348ae25394e1",
             disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
             qualification_basis="pinned_cli01601_boundary_image_controls_2026_10_07",
+        ),
+        # The OS and Claude update independently of Vera. Qualification depends
+        # on live boundary/capability probes, not one developer's binary hashes.
+        WORKER_BOUNDARY_CONTRACT_ID: _HostCapabilityProfile(
+            contract_id=WORKER_BOUNDARY_CONTRACT_ID,
+            provenance="runtime_verified",
+            platform="Darwin",
+            darwin_build=None,
+            codex_version=None,
+            codex_sha256=None,
+            sandbox_exec_path=Path("/usr/bin/sandbox-exec"),
+            sandbox_exec_sha256=None,
+            canary_path=Path("/bin/cat"),
+            canary_sha256=None,
+            seatbelt_sha256="7da42098684e01822f6d82882b00805eb89c5da1d20054884eab348ae25394e1",
+            disabled_features=_LEGACY_DISABLED_WORKER_FEATURES,
+            qualification_basis="per_run_executable_snapshots_and_live_boundary_probes",
         ),
     }
 )
@@ -376,18 +394,15 @@ def _resolve_host_profile(
     if (
         profile is None
         or profile.contract_id != contract_id
-        or profile.provenance not in {"retained_legacy", "native_qualified"}
+        or profile.provenance
+        not in {"retained_legacy", "native_qualified", "runtime_verified"}
     ):
         raise ValueError("Unknown or unqualified native worker host profile")
     return profile
 
 
-# Compatibility names derive from the current record; legacy authority is retained.
-PINNED_DARWIN_BUILD = _resolve_host_profile().darwin_build
-PINNED_CODEX_VERSION = _resolve_host_profile().codex_version
-PINNED_CODEX_SHA256 = _resolve_host_profile().codex_sha256
-PINNED_SANDBOX_EXEC_SHA256 = _resolve_host_profile().sandbox_exec_sha256
-PINNED_CAT_SHA256 = _resolve_host_profile().canary_sha256
+# Only Vera-owned policy bytes are fixed. Host executable identities are
+# measured afresh for every invocation and compared again before publication.
 PINNED_SEATBELT_PROFILE_SHA256 = _resolve_host_profile().seatbelt_sha256
 SANDBOX_EXEC_PATH = _resolve_host_profile().sandbox_exec_path
 SANDBOX_CANARY_PATH = _resolve_host_profile().canary_path
@@ -595,7 +610,7 @@ def _stable_executable_binding(
     path: Path,
     *,
     label: str,
-    expected_sha256: str,
+    expected_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Hash one ordinary executable without loading it into memory."""
 
@@ -647,7 +662,9 @@ def _stable_executable_binding(
     ):
         raise ValueError(f"{label} changed while it was hashed")
     actual_sha256 = digest.hexdigest()
-    if byte_count != entry.st_size or actual_sha256 != expected_sha256:
+    if byte_count != entry.st_size or (
+        expected_sha256 is not None and actual_sha256 != expected_sha256
+    ):
         raise ValueError(f"{label} is not the qualified executable")
     return {
         "sha256": actual_sha256,
@@ -2446,7 +2463,7 @@ def _observed_darwin_build() -> str:
 def _darwin_build_version(profile: _HostCapabilityProfile | None = None) -> str:
     profile = profile or _resolve_host_profile()
     build = _observed_darwin_build()
-    if build != profile.darwin_build:
+    if profile.darwin_build is not None and build != profile.darwin_build:
         raise ValueError("The macOS build has not been qualified for Luna isolation")
     return build
 
@@ -2468,7 +2485,11 @@ def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
                 "check": "os_build",
                 "observed": build,
                 "required": profile.darwin_build,
-                "status": "matched" if build == profile.darwin_build else "unsupported",
+                "status": (
+                    "matched"
+                    if profile.darwin_build is None or build == profile.darwin_build
+                    else "unsupported"
+                ),
             }
         )
     try:
@@ -2559,6 +2580,10 @@ def _qualified_executables(
     *,
     profile_id: str = WORKER_BOUNDARY_CONTRACT_ID,
 ) -> dict[str, Any]:
+    if profile_id != WORKER_BOUNDARY_CONTRACT_ID:
+        raise ValueError(
+            "Prepare a new worker generation with the current isolation policy"
+        )
     profile = _resolve_host_profile(profile_id)
     build = _darwin_build_version(profile)
     resolved_codex = _resolved_codex_binary(codex_bin)
@@ -2664,12 +2689,39 @@ def _qualification_canaries(
         version = version_result["stdout"].decode("utf-8").strip()
     except UnicodeDecodeError as exc:
         raise ValueError("Claude version output is not UTF-8") from exc
-    if version_result["return_code"] != 0 or version != profile.codex_version:
-        raise ValueError("Claude version did not match the qualified worker")
+    if version_result["return_code"] != 0 or not version:
+        raise ValueError("Claude CLI could not report its version inside isolation")
+    if profile.codex_version is not None and version != profile.codex_version:
+        raise ValueError("Claude version did not match the retained worker receipt")
+    if profile.provenance == "runtime_verified":
+        # Ask the real parser to accept our actual arguments without starting
+        # a model turn. Help wording and hidden aliases are not compatibility gates.
+        probe_argv = _worker_inner_argv(
+            capsule=capsule,
+            schema_path=schema_path,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            host_profile=profile,
+        )
+        help_result = _run_captured_process(
+            [*codex_prefix, *probe_argv[:-1], "--help"],
+            cwd=capsule,
+            stdin_path=None,
+            stdout_limit=MAX_CANARY_OUTPUT_BYTES,
+            stderr_limit=MAX_CANARY_OUTPUT_BYTES,
+            timeout_seconds=CANARY_TIMEOUT_SECONDS,
+        )
+        if help_result["return_code"] != 0:
+            raise ValueError("Claude CLI rejected required isolated-worker arguments")
     return {
         "exact_schema_read_succeeded": True,
         "outside_capsule_read_denied": True,
         "codex_version_inside_boundary": version,
+        **(
+            {"required_cli_capabilities_available": True}
+            if profile.provenance == "runtime_verified"
+            else {}
+        ),
     }
 
 
@@ -2774,7 +2826,7 @@ def _worker_banner_attestation(
 
     The banner is a CLI self-report rather than a provider-signed attestation.
     JSONL mode in Claude CLI 0.148 does not currently emit the normal banner.
-    The pinned executable and exact argv remain the execution evidence. If a
+    The per-run executable snapshot and exact argv remain the execution evidence. If a
     banner is present, fail closed on any conflicting report.
     """
 
@@ -2875,7 +2927,12 @@ def load_worker_selection(
 
 
 def _record_model_submission(
-    output: Path, *, prompt: str, model: str, workflow_id: str
+    output: Path,
+    *,
+    prompt: str,
+    output_schema: Mapping[str, Any],
+    model: str,
+    workflow_id: str,
 ) -> None:
     """Retain the exact submitted prompt locally; never send it to the receipt service."""
     from vera_assurance.contracts import load_client_engagement_context_file
@@ -2911,23 +2968,18 @@ def _record_model_submission(
     import secrets
 
     from archive_report_store import RunStore
-    from archive_reporting import observe_tool
+    from archive_reporting import record_send
 
     root = context_path.parent
     if RunStore(root).state() is None:
         raise ValueError(
             "Worker submission requires the Archive start reporting record"
         )
-    observe_tool(
+    record_send(
         root,
-        {
-            "session_id": "worker",
-            "tool_use_id": secrets.token_hex(24),
-            "tool_name": "model_worker:" + model,
-            "tool_input": {},
-            "tool_response": prompt,
-            "evidence_basis": "submitted_worker_prompt",
-        },
+        {"prompt": prompt, "output_schema": output_schema},
+        channel="model_worker:" + model,
+        event_id=secrets.token_hex(24),
     )
 
 
@@ -2947,7 +2999,7 @@ def run_isolated_luna_worker(
 
     This is the reusable native-Claude boundary. Domain-specific callers own
     packet construction and semantic validation; this function owns only the
-    pinned executable, read boundary, exact model/effort request, bounded
+    snapshotted executable, read boundary, exact model/effort request, bounded
     process capture, event lifecycle, and content-bound launch receipt.
     """
 
@@ -3040,7 +3092,11 @@ def run_isolated_luna_worker(
             reasoning_effort=reasoning_effort,
         )
         _record_model_submission(
-            output, prompt=prompt, model=model, workflow_id=workflow_id
+            output,
+            prompt=prompt,
+            output_schema=json.loads(schema_bytes),
+            model=model,
+            workflow_id=workflow_id,
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
@@ -3135,7 +3191,7 @@ def run_isolated_luna_worker(
                 "codex_path": str(executables["codex_path"]),
                 "codex_sha256": executables["codex_binding"]["sha256"],
                 "codex_bytes": executables["codex_binding"]["byte_count"],
-                "codex_version": profile.codex_version,
+                "codex_version": canaries["codex_version_inside_boundary"],
                 "sandbox_exec_path": str(profile.sandbox_exec_path),
                 "sandbox_exec_sha256": executables["sandbox_exec_binding"]["sha256"],
                 "canary_reader_sha256": executables["canary_binding"]["sha256"],
@@ -3393,6 +3449,13 @@ def run_semantic_worker(
                 "reasoning_effort"
             ],
         )
+        _record_model_submission(
+            semantic,
+            prompt=prompt_text,
+            output_schema=json.loads(schema_bytes),
+            model=graph["requested_worker_configuration"]["model"],
+            workflow_id="journal-bank-reconciliation",
+        )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
             cwd=capsule,
@@ -3476,7 +3539,7 @@ def run_semantic_worker(
                 "codex_path": str(executables["codex_path"]),
                 "codex_sha256": executables["codex_binding"]["sha256"],
                 "codex_bytes": executables["codex_binding"]["byte_count"],
-                "codex_version": profile.codex_version,
+                "codex_version": canaries["codex_version_inside_boundary"],
                 "sandbox_exec_path": str(profile.sandbox_exec_path),
                 "sandbox_exec_sha256": executables["sandbox_exec_binding"]["sha256"],
                 "canary_reader_sha256": executables["canary_binding"]["sha256"],
@@ -4057,20 +4120,58 @@ def _validate_launch_receipt(
         profile.disabled_features
     ):
         raise ValueError("Luna graph host capabilities differ")
+    if profile.provenance == "runtime_verified":
+        # Receipts record identities observed during that execution. They are
+        # not compared with today's installation or a hard-coded old release.
+        for field in ("codex_sha256", "sandbox_exec_sha256", "canary_reader_sha256"):
+            if not isinstance(boundary[field], str) or not re.fullmatch(
+                r"[a-f0-9]{64}", boundary[field]
+            ):
+                raise ValueError(f"Luna launch boundary field is invalid: {field}")
+        if (
+            not isinstance(boundary["darwin_build"], str)
+            or not boundary["darwin_build"].strip()
+        ):
+            raise ValueError("Luna launch boundary field is invalid: darwin_build")
+        if (
+            not isinstance(boundary["codex_version"], str)
+            or not boundary["codex_version"].strip()
+        ):
+            raise ValueError("Luna launch boundary field is invalid: codex_version")
+        observed_runtime = {
+            "darwin_build": boundary["darwin_build"],
+            "codex_sha256": boundary["codex_sha256"],
+            "codex_version": boundary["codex_version"],
+            "sandbox_exec_sha256": boundary["sandbox_exec_sha256"],
+            "canary_reader_sha256": boundary["canary_reader_sha256"],
+        }
+    else:
+        observed_runtime = {
+            "darwin_build": profile.darwin_build,
+            "codex_sha256": profile.codex_sha256,
+            "codex_version": profile.codex_version,
+            "sandbox_exec_sha256": profile.sandbox_exec_sha256,
+            "canary_reader_sha256": profile.canary_sha256,
+        }
     expected_boundary = {
         "contract_id": profile.contract_id,
         "platform": profile.platform,
-        "darwin_build": profile.darwin_build,
+        "darwin_build": observed_runtime["darwin_build"],
         "profile_sha256": profile.seatbelt_sha256,
-        "codex_sha256": profile.codex_sha256,
-        "codex_version": profile.codex_version,
+        "codex_sha256": observed_runtime["codex_sha256"],
+        "codex_version": observed_runtime["codex_version"],
         "sandbox_exec_path": str(profile.sandbox_exec_path),
-        "sandbox_exec_sha256": profile.sandbox_exec_sha256,
-        "canary_reader_sha256": profile.canary_sha256,
+        "sandbox_exec_sha256": observed_runtime["sandbox_exec_sha256"],
+        "canary_reader_sha256": observed_runtime["canary_reader_sha256"],
         "canaries": {
             "exact_schema_read_succeeded": True,
             "outside_capsule_read_denied": True,
-            "codex_version_inside_boundary": profile.codex_version,
+            "codex_version_inside_boundary": observed_runtime["codex_version"],
+            **(
+                {"required_cli_capabilities_available": True}
+                if profile.provenance == "runtime_verified"
+                else {}
+            ),
         },
         "global_instructions_absent_or_empty": True,
         "auth_file_readable_by_codex_process": True,

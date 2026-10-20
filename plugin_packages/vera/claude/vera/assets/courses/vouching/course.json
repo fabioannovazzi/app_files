@@ -49,7 +49,7 @@
     },
     {
       "path": "modules/check-entries/scripts/apply_review_edits.py",
-      "sha256": "6f82d9385caeac9b7cc0d4b3d58b32c68ad2603b213d005cfd168a9800b49451"
+      "sha256": "8e6dfc45465cf5a0d147a482f7a2dae19831a25a52c6156f749e25b3cbee2ee9"
     },
     {
       "path": "modules/check-entries/scripts/check_dependencies.py",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "b00774256eabd684e7b51ddc2deed70f5363c60142e52251944c88247f470709"
+      "sha256": "6c422ef0e05a455210c8bfe7cf4162d4db9b9212c13fd390777582592c6b23c0"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -69,7 +69,7 @@
     },
     {
       "path": "modules/check-entries/scripts/inspect_entries.py",
-      "sha256": "fab6b4948ab49d7e60c1f08cd43b599b68ab662cf032f0787bb69a70876f38b3"
+      "sha256": "00795aaf2fe4a2ba51d7f83bfee1ef5ecd79fb2e78e00ed140753890b30d5e9f"
     },
     {
       "path": "modules/check-entries/scripts/invoice_support.py",
@@ -77,15 +77,15 @@
     },
     {
       "path": "modules/check-entries/scripts/local_helper_environment.cjs",
-      "sha256": "677fc62c1d292b6618e0890ded49618f1f6a59fdcaa6e303878e441eaa6cb35a"
+      "sha256": "a846577e2b2bbf98f9732e7be762d7fb1191355a4c59e3713cca374f7dded7da"
     },
     {
       "path": "modules/check-entries/scripts/local_helper_environment.json",
-      "sha256": "bc99261b918b8d772d3c1ccdcd7ef140fa0c49ffff0c78e824dea306d0cedd92"
+      "sha256": "85e3e402121d701c518ad5aa502785b637375df46a3bac993e82cfffb3dccda9"
     },
     {
       "path": "modules/check-entries/scripts/local_helper_environment.py",
-      "sha256": "3c0c1127adc3d1deb778b3e8d93ee7505ac70ea1281128d05256acd9c29e14ad"
+      "sha256": "c6352dad75af89133af337159dd5aafcab89c1b21bf55c0c77133321e9d1d0fc"
     },
     {
       "path": "modules/check-entries/scripts/physical_output_set.py",
@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
-      "sha256": "9988e88c48c37de72f97c086413abbb4cc40417fb2141c9f8ac44543eba2d8dc"
+      "sha256": "66a735b7d72fbc291f6c28596ccc4f6bc559edf67eb556458850ba6e4180c14b"
     },
     {
       "path": "modules/check-entries/scripts/stable_ooxml.py",
@@ -121,7 +121,7 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/decisions.py",
@@ -145,7 +145,7 @@
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/serialization.py",
@@ -273,7 +273,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "099669d56a3c16655b5f65051209eca78541846bbd9c32b5aa3cc592380c4832"
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -297,7 +297,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "81a25a1641b7d6d6919087f62e2ab8b88f7ea2969be5ae8aa2eea2e70812de95"
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",
@@ -650,5 +650,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c3f3aee4f7ad0b015189d216f79c38b1250a8dfa900de9ce981eb3da6a908617"
+  "canonical_course_sha256": "bef6a205855855432105ce896142b21806cd565a397fc6d638f138f26d60df33"
 }

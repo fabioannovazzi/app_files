@@ -1073,6 +1073,29 @@ def test_idempotent_rerun_does_not_repeat_luna_or_duplicate_results(
     )
 
 
+def test_saved_worker_prompt_keeps_exact_bytes_with_windows_text_translation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    original_open = Path.open
+
+    def windows_prompt_open(
+        self, mode="r", buffering=-1, encoding=None, errors=None, newline=None
+    ):
+        if self.name == "luna_prompt.md" and "w" in mode and "b" not in mode:
+            newline = "\r\n"
+        return original_open(self, mode, buffering, encoding, errors, newline)
+
+    monkeypatch.setattr(Path, "open", windows_prompt_open)
+
+    _, output = _run_fixture_audit(tmp_path, FixtureRunner({}))
+
+    chunk = next((output / "luna_chunks").glob("chunk-*"))
+    packets = json.loads((chunk / "audit_packets.json").read_bytes())
+    assert (chunk / "luna_prompt.md").read_bytes() == audit_core.build_luna_prompt(
+        packets
+    ).encode("utf-8")
+
+
 def test_rerun_rejects_changed_semantic_context(tmp_path: Path) -> None:
     invoices = tmp_path / "invoices"
     invoices.mkdir()

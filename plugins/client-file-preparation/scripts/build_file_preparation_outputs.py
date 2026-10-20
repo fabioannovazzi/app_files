@@ -916,7 +916,12 @@ def _validated_output_dir(value: Path) -> tuple[Path, bool]:
     if requested.exists():
         if not requested.is_dir():
             raise NotADirectoryError(f"Cartella output non valida: {requested}")
-        entries = list(requested.iterdir())
+        from vera_assurance.contracts import archive_reporting_paths
+
+        reporting = archive_reporting_paths(
+            requested, expected_workflow_ids=("fatture-xml-check",)
+        )
+        entries = [path for path in requested.iterdir() if path.name not in reporting]
         if entries and (
             not (requested / "run_intake.json").is_file()
             or (requested / "final_artifacts.json").exists()
@@ -2276,4 +2281,6 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

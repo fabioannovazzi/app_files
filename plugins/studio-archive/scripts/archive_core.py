@@ -7,6 +7,7 @@ import errno
 import hashlib
 import io
 import json
+import logging
 import os
 import re
 import secrets
@@ -3558,6 +3559,19 @@ def _selected_ledger_root(
         raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
     if engagement["client_id"] != client_id:
         raise ArchiveError("Selected engagement belongs to another client.")
+    try:
+        ledger.retry_reporting(client_root)
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        sqlite3.Error,
+        ledger.LedgerError,
+    ) as exc:
+        logging.getLogger(__name__).warning(
+            "Pending Archive reporting could not be retried: %s", type(exc).__name__
+        )
     return client_root
 
 

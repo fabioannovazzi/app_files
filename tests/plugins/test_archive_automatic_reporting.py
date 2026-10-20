@@ -74,22 +74,11 @@ def start(core, case, workflow="variance-analysis"):
     return core.ledger.load_run(case.client_root, case.engagement_id, run_id)
 
 
-def read_observed(loaded, **selection):
-    from archive_report_hook import handle
+def read_sent(loaded, **selection):
     from archive_reporting import read_artifact
 
     path = Path(loaded["context"]["input_bindings"][0]["path"])
-    packet = read_artifact(loaded, path, **selection)
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "tool_use_id": packet["vera_reporting"]["token"],
-            "tool_name": "mcp__veraStudioArchive__read_studio_run_artifact",
-            "tool_input": {"run_id": loaded["run"]["run_id"]},
-            "tool_response": packet,
-        }
-    )
+    return read_artifact(loaded, path, **selection)
 
 
 def finish(core, case, loaded):
@@ -136,8 +125,8 @@ def test_selected_archive_run_always_creates_report_at_start_and_terminal_write(
 
     assert report["outcome"] == "completed"
     assert report["run_id"] == loaded["run"]["run_id"]
-    assert report["collection_status"] == "incomplete"
-    assert report["sources"][0]["remaining_local"] is None
+    assert report["collection_status"] == "complete"
+    assert report["sources"][0]["not_sent_quantity"] == 1
     archive_core.ledger.validate_run_artifacts(
         client_case.client_root, client_case.engagement_id, report["run_id"]
     )
@@ -147,13 +136,13 @@ def test_full_exposure_still_creates_report_and_zero_local_remainder(
     archive_core, client_case
 ):
     loaded = start(archive_core, client_case)
-    read_observed(loaded)
+    read_sent(loaded)
 
     report = finish(archive_core, client_case, loaded)
 
     assert report["collection_status"] == "complete"
-    assert report["sources"][0]["observed_quantity"] == 1
-    assert report["sources"][0]["remaining_local"] == 0
+    assert report["sources"][0]["sent_quantity"] == 1
+    assert report["sources"][0]["not_sent_quantity"] == 0
 
 
 @pytest.mark.parametrize("terminal", ["failed", "cancelled"])
@@ -207,175 +196,6 @@ def csv_case(core, case, tmp_path, line_ending="\n"):
     return start(core, case)
 
 
-@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
-def test_later_whole_file_read_counts_all_ten_thousand_rows_without_double_counting(
-    archive_core, client_case, tmp_path, line_ending
-):
-    from archive_report_hook import handle
-
-    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
-    read_observed(loaded, limit=100)
-    read_observed(loaded, limit=100)
-    path = Path(loaded["context"]["input_bindings"][0]["path"])
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "tool_use_id": "later-read",
-            "tool_name": "Bash",
-            "tool_input": {"command": f"cat '{path}'"},
-            "tool_response": {"stdout": path.read_text(encoding="utf-8")},
-        }
-    )
-
-    report = finish(archive_core, client_case, loaded)
-
-    assert report["sources"][0]["source_quantity"] == 10000
-    assert report["sources"][0]["observed_quantity"] == 10000
-    assert report["sources"][0]["observed_cells"] == 20000
-    assert report["sources"][0]["remaining_local"] == 0
-
-
-def transcript_line(path, payload):
-    with path.open("a") as stream:
-        stream.write(json.dumps({"type": "response_item", "payload": payload}) + "\n")
-
-
-def test_codex_internal_result_is_not_counted_until_emitted_to_model(
-    archive_core, client_case, tmp_path
-):
-    from archive_report_hook import handle
-    from archive_report_transcript import attach, refresh
-    from archive_reporting import read_artifact, snapshot_run
-
-    loaded = start(archive_core, client_case)
-    root = Path(loaded["run_root"])
-    transcript = tmp_path / "host.jsonl"
-    transcript_line(
-        transcript,
-        {
-            "type": "custom_tool_call",
-            "call_id": "outer1",
-            "name": "exec",
-            "input": "tools.read();",
-        },
-    )
-    attach(root, "test-session", transcript)
-    handle(
-        {
-            "hook_event_name": "PreToolUse",
-            "session_id": "test-session",
-            "turn_id": "turn1",
-            "transcript_path": str(transcript),
-            "tool_name": "mcp__read",
-            "tool_use_id": "inner1",
-            "tool_input": {"run_id": loaded["run"]["run_id"]},
-        }
-    )
-    packet = read_artifact(loaded, Path(loaded["context"]["input_bindings"][0]["path"]))
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "turn_id": "turn1",
-            "tool_name": "mcp__read",
-            "tool_use_id": "inner1",
-            "tool_response": packet,
-        }
-    )
-    # Empty output is an internal read. No original data entered model context.
-    transcript_line(
-        transcript,
-        {"type": "custom_tool_call_output", "call_id": "outer1", "output": []},
-    )
-    refresh(root, "test-session")
-    snapshot_run(loaded)
-    before = json.loads(
-        (Path(loaded["output_dir"]) / "model_data_report.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    assert before["sources"][0]["observed_quantity"] == 0
-    transcript_line(
-        transcript,
-        {
-            "type": "custom_tool_call",
-            "call_id": "outer2",
-            "name": "exec",
-            "input": "text(packet);",
-        },
-    )
-    transcript_line(
-        transcript,
-        {
-            "type": "custom_tool_call_output",
-            "call_id": "outer2",
-            "output": [{"type": "input_text", "text": json.dumps(packet)}],
-        },
-    )
-
-    refresh(root, "test-session")
-    snapshot_run(loaded)
-
-    after = json.loads(
-        (Path(loaded["output_dir"]) / "model_data_report.json").read_text(
-            encoding="utf-8"
-        )
-    )
-    assert after["sources"][0]["observed_quantity"] == 1
-    assert after["collection_status"] == "complete"
-
-
-def test_terminal_write_waits_for_outer_result_before_hashing(
-    archive_core, client_case, tmp_path
-):
-    from archive_report_hook import handle
-    from archive_report_transcript import attach
-    from archive_reporting import read_artifact
-
-    loaded = start(archive_core, client_case)
-    root = Path(loaded["run_root"])
-    transcript = tmp_path / "host.jsonl"
-    transcript_line(
-        transcript,
-        {
-            "type": "custom_tool_call",
-            "call_id": "read-and-complete",
-            "name": "exec",
-            "input": "read(); complete();",
-        },
-    )
-    attach(root, "test-session", transcript)
-    packet = read_artifact(loaded, Path(loaded["context"]["input_bindings"][0]["path"]))
-    provisional = finish(archive_core, client_case, loaded)
-    assert provisional["collection_closed"] is False
-    assert not (root / "outputs/model_data_receipt_request.json").exists()
-    transcript_line(
-        transcript,
-        {
-            "type": "custom_tool_call_output",
-            "call_id": "read-and-complete",
-            "output": [{"type": "input_text", "text": json.dumps(packet)}],
-        },
-    )
-
-    transcript_line(
-        transcript,
-        {"type": "message", "role": "user", "content": "Unrelated later task"},
-    )
-    handle({"hook_event_name": "SessionStart", "session_id": "different-session"})
-
-    report = json.loads(
-        (root / "outputs/model_data_report.json").read_text(encoding="utf-8")
-    )
-    assert report["collection_closed"] is True
-    assert report["sources"][0]["observed_quantity"] == 1
-    assert report["collection_status"] == "complete"
-    archive_core.ledger.validate_run_artifacts(
-        client_case.client_root, client_case.engagement_id, report["run_id"]
-    )
-
-
 def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     archive_core, client_case, tmp_path, monkeypatch, reporting_runtime
 ):
@@ -393,8 +213,8 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     monkeypatch.setattr(archive_report_receipt, "stamp_report", reporting_runtime)
     monkeypatch.setattr(
         operational_incidents,
-        "local_context",
-        lambda: {"credentials": owner.model_dump(mode="json")},
+        "reporting_credentials",
+        lambda: owner.model_dump(mode="json"),
     )
     requests = []
 
@@ -412,7 +232,7 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
 
     monkeypatch.setattr(operational_incidents, "workflow_transport", offline)
     loaded = start(archive_core, client_case)
-    read_observed(loaded)
+    read_sent(loaded)
     report = finish(archive_core, client_case, loaded)
     root = Path(loaded["run_root"])
     report_path = root / "outputs/model_data_report.json"
@@ -426,7 +246,13 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     )
     monkeypatch.setattr(operational_incidents, "workflow_transport", transport)
 
-    archive_report_receipt.retry_pending(Registry())
+    # A normal Archive operation retries automatically; no Stop hook or agent
+    # calling the receipt transport is required.
+    archive_core._selected_ledger_root(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
 
     receipt = json.loads(
         (root / "outputs/model_data_receipt.json").read_text(encoding="utf-8")
@@ -524,6 +350,72 @@ def test_retry_does_not_recreate_a_removed_run(archive_core, client_case):
     assert Registry().pending_receipts() == []
 
 
+def test_invalid_pending_proof_does_not_block_other_archive_work(
+    archive_core, client_case
+):
+    loaded = start(archive_core, client_case)
+    finish(archive_core, client_case, loaded)
+    output = Path(loaded["output_dir"])
+    manifest = Path(loaded["run_root"]) / "artifact_manifest.json"
+    sealed = manifest.read_bytes()
+    report = (output / "model_data_report.json").read_bytes()
+    (output / "result.txt").write_text("Changed after sealing")
+
+    result = start(archive_core, client_case, "report-builder")
+
+    assert result["run"]["workflow_id"] == "report-builder"
+    assert result["run"]["status"] == "running"
+    assert manifest.read_bytes() == sealed
+    assert (output / "model_data_report.json").read_bytes() == report
+    assert (output / "result.txt").read_text() == "Changed after sealing"
+
+
+def test_reporting_sources_and_pending_proof_move_with_the_customer_folder(
+    archive_core, client_case, monkeypatch
+):
+    from archive_report_store import RunStore, registry_for_run
+
+    monkeypatch.delenv("VERA_REPORTING_STATE_DIR")
+    loaded = start(archive_core, client_case)
+    original = client_case.client_root
+    renamed = original.with_name(original.name + " Renamed")
+    original.rename(renamed)
+    moved = archive_core.ledger.load_run(
+        renamed, client_case.engagement_id, loaded["run"]["run_id"]
+    )
+
+    packet = read_sent(moved)
+    output = Path(moved["output_dir"])
+    (output / "result.txt").write_text("Local professional result\n")
+    archive_core.ledger.finalize_run(
+        renamed,
+        client_case.engagement_id,
+        moved["run"]["run_id"],
+        [
+            {
+                "artifact_id": "result",
+                "path": "result.txt",
+                "purpose": "Result",
+                "audience": "review",
+                "media_type": "text/plain",
+            }
+        ],
+    )
+    archive_core.ledger.complete_run(
+        renamed, client_case.engagement_id, moved["run"]["run_id"]
+    )
+
+    report = json.loads((output / "model_data_report.json").read_text())
+    assert packet["data"]["rows"]
+    assert report["collection_status"] == "complete", report["errors"]
+    assert report["sources"][0]["not_sent_quantity"] == 0
+    assert registry_for_run(Path(moved["run_root"])).pending_receipts() == [
+        Path(moved["run_root"])
+    ]
+    assert Path(RunStore(Path(moved["run_root"])).sources()[0]["path"]).is_file()
+    assert not original.exists()
+
+
 def test_read_rejects_empty_column_selection(archive_core, client_case):
     from archive_reporting import read_artifact
 
@@ -604,199 +496,6 @@ def test_scanned_or_empty_pdf_cannot_claim_measured_exposure(tmp_path):
     assert source["measurement_error"] is not None
 
 
-@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
-def test_exact_head_read_counts_only_returned_csv_records(
-    archive_core, client_case, tmp_path, line_ending
-):
-    from archive_report_hook import handle
-
-    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
-    path = Path(loaded["context"]["input_bindings"][0]["path"])
-    shown = "".join(path.read_text(encoding="utf-8").splitlines(keepends=True)[:101])
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "tool_use_id": "head-read",
-            "tool_name": "Bash",
-            "tool_input": {"command": f"head -n 101 '{path}'"},
-            "tool_response": {"stdout": shown},
-        }
-    )
-
-    report = finish(archive_core, client_case, loaded)
-
-    assert report["sources"][0]["observed_quantity"] == 100
-    assert report["sources"][0]["remaining_local"] == 9900
-
-
-def test_unmapped_extra_output_prevents_false_local_remainder(
-    archive_core, client_case
-):
-    from archive_report_hook import handle
-    from archive_reporting import read_artifact
-
-    loaded = start(archive_core, client_case)
-    packet = read_artifact(loaded, Path(loaded["context"]["input_bindings"][0]["path"]))
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "tool_use_id": "extra",
-            "tool_name": "mcp-read",
-            "tool_input": {"run_id": loaded["run"]["run_id"]},
-            "tool_response": {
-                "content": [{"type": "text", "text": json.dumps(packet)}],
-                "_meta": {"untracked_sensitive_field": "additional data"},
-            },
-        }
-    )
-
-    report = finish(archive_core, client_case, loaded)
-
-    assert report["collection_status"] == "incomplete"
-    assert report["sources"][0]["remaining_local"] is None
-    assert report["sources"][0]["observed_quantity"] == 1
-
-
-def test_changed_registered_packet_cannot_claim_original_rows(
-    archive_core, client_case
-):
-    from archive_report_hook import handle
-    from archive_reporting import read_artifact
-
-    loaded = start(archive_core, client_case)
-    packet = read_artifact(loaded, Path(loaded["context"]["input_bindings"][0]["path"]))
-    packet["data"]["rows"] = [["different bytes"]]
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "tool_use_id": "changed",
-            "tool_name": "mcp-read",
-            "tool_input": {},
-            "tool_response": packet,
-        }
-    )
-
-    report = finish(archive_core, client_case, loaded)
-
-    assert report["sources"][0]["observed_quantity"] == 0
-    assert report["collection_status"] == "incomplete"
-
-
-def test_hook_cli_failure_is_explicit_without_echoing_source_data(monkeypatch, capsys):
-    import io
-
-    import archive_report_hook
-
-    monkeypatch.setattr(
-        archive_report_hook.sys,
-        "stdin",
-        io.TextIOWrapper(
-            io.BytesIO(
-                json.dumps(
-                    {
-                        "hook_event_name": "PostToolUse",
-                        "session_id": "test-session",
-                        "tool_input": "PRIVATE SOURCE",
-                    }
-                ).encode("utf-8")
-            ),
-            encoding="utf-8",
-        ),
-    )
-
-    result = archive_report_hook.main()
-
-    output = capsys.readouterr().out
-    assert result == 0
-    assert "collection failed" in json.loads(output)["systemMessage"]
-    assert "PRIVATE SOURCE" not in output
-
-
-def test_stop_hook_retries_pending_proof(archive_core, client_case, monkeypatch):
-    import archive_report_receipt
-    from archive_report_hook import handle
-    from archive_report_store import Registry
-
-    loaded = start(archive_core, client_case)
-    finish(archive_core, client_case, loaded)
-    monkeypatch.setattr(
-        archive_report_receipt,
-        "stamp_report",
-        lambda path: {"status": "not_requested", "reason": "local_only"},
-    )
-
-    handle({"hook_event_name": "Stop", "session_id": "test-session"})
-
-    assert Registry().pending_receipts() == []
-
-
-@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
-def test_host_python_observes_direct_read_and_reseals_pending_receipt(
-    archive_core, client_case, tmp_path, line_ending
-):
-    from archive_report_store import Registry, RunStore
-
-    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
-    source = Path(loaded["context"]["input_bindings"][0]["path"])
-    hook = (
-        Path(__file__).resolve().parents[2]
-        / "plugins/vera/scripts/archive_report_hook.py"
-    )
-    host_python = Path("/usr/bin/python3")
-    executable = str(host_python) if host_python.is_file() else sys.executable
-    event = {
-        "hook_event_name": "PostToolUse",
-        "session_id": "test-session",
-        "tool_use_id": "host-python-direct-read",
-        "tool_name": "lecture_é",
-        "tool_input": {
-            "cmd": "cat " + shlex.quote(str(source)),
-            "run_id": loaded["run"]["run_id"],
-        },
-        "tool_response": source.read_text(encoding="utf-8"),
-    }
-
-    environment = {
-        **os.environ,
-        "PYTHONUTF8": "0",
-        "PYTHONCOERCECLOCALE": "0",
-        "LC_ALL": "C",
-    }
-    observed = subprocess.run(
-        [executable, "-B", str(hook)],
-        input=json.dumps(event, ensure_ascii=False).encode("utf-8"),
-        env=environment,
-        capture_output=True,
-        check=True,
-        timeout=30,
-    )
-    report = finish(archive_core, client_case, loaded)
-    retried = subprocess.run(
-        [executable, "-B", str(hook)],
-        input=json.dumps(
-            {"hook_event_name": "Stop", "session_id": "test-session"}
-        ).encode("utf-8"),
-        env=environment,
-        capture_output=True,
-        check=True,
-        timeout=30,
-    )
-
-    assert json.loads(observed.stdout) == {}
-    assert json.loads(retried.stdout) == {}
-    assert report["sources"][0]["observed_quantity"] == 10000
-    assert report["tool_results"][0]["tool"] == "lecture_é"
-    assert RunStore(Path(loaded["run_root"])).state()["collection_closed"] is True
-    # The child has its own isolated identity, so the proof stays pending.
-    assert Registry().pending_receipts() == [Path(loaded["run_root"])]
-    archive_core.ledger.validate_run_artifacts(
-        client_case.client_root, client_case.engagement_id, report["run_id"]
-    )
-
-
 def test_identity_failure_keeps_local_report(archive_core, client_case, monkeypatch):
     import archive_reporting
 
@@ -870,48 +569,9 @@ def test_acquisition_registers_only_verified_originals_in_its_archive_run(
     )
 
 
-def test_stop_recovers_terminal_write_interrupted_before_report_finalization(
-    archive_core, client_case, monkeypatch
-):
-    from archive_report_hook import handle
-    from archive_report_store import RunStore
-
-    loaded = start(archive_core, client_case)
-    root = Path(loaded["run_root"])
-    runtime = archive_core.ledger._reporting_runtime()
-
-    def interrupted(value):
-        raise OSError("Interrupted immediately after durable terminal write")
-
-    with monkeypatch.context() as patch:
-        patch.setattr(runtime, "finish_report", interrupted)
-        patch.setattr(archive_core.ledger, "_reporting_runtime", lambda: runtime)
-        with pytest.raises(OSError, match="Interrupted"):
-            archive_core.ledger.fail_run(
-                client_case.client_root,
-                client_case.engagement_id,
-                loaded["run"]["run_id"],
-                "Synthetic failure",
-            )
-    assert RunStore(root).state()["finished_at"] is None
-    assert (
-        json.loads((root / "run.json").read_text(encoding="utf-8"))["status"]
-        == "failed"
-    )
-
-    handle({"hook_event_name": "SessionStart", "session_id": "different-session"})
-
-    report = json.loads(
-        (root / "outputs/model_data_report.json").read_text(encoding="utf-8")
-    )
-    assert report["outcome"] == "failed"
-    assert report["collection_closed"] is True
-
-
-def test_mcp_entrypoint_reads_exact_selection_and_observer_counts_returned_packet(
+def test_mcp_entrypoint_records_its_exact_return_without_a_host_observer(
     archive_core, client_case, tmp_path, isolated_mcp_launcher
 ):
-    from archive_report_hook import handle
 
     from tests.plugins.test_vera_studio_archive_component import _mcp_tool
 
@@ -934,16 +594,61 @@ def test_mcp_entrypoint_reads_exact_selection_and_observer_counts_returned_packe
     assert response["isError"] is False, response
     packet = json.loads(response["content"][0]["text"])
     assert packet["data"]["rows"] == [["20"], ["22"]]
-    handle(
-        {
-            "hook_event_name": "PostToolUse",
-            "session_id": "test-session",
-            "tool_use_id": "actual-mcp",
-            "tool_name": "read_studio_run_artifact",
-            "tool_input": arguments,
-            "tool_response": response,
-        }
+    report = finish(archive_core, client_case, loaded)
+    assert report["sources"][0]["sent_quantity"] == 2
+    assert report["sources"][0]["sent_cells"] == 2
+
+
+def test_vera_return_records_exact_rows_without_host_hooks(
+    archive_core, client_case, tmp_path
+):
+    from archive_reporting import read_artifact
+
+    loaded = csv_case(archive_core, client_case, tmp_path)
+    path = Path(loaded["context"]["input_bindings"][0]["path"])
+    packet = read_artifact(loaded, path, offset=10, limit=2, columns=[1])
+
+    report = finish(archive_core, client_case, loaded)
+
+    assert packet["data"]["rows"] == [["20"], ["22"]]
+    assert report["measurement_scope"] == "vera_sent_data"
+    assert report["collection_status"] == "complete"
+    assert report["sources"][0]["sent_quantity"] == 2
+    assert report["sources"][0]["sent_cells"] == 2
+    assert report["sources"][0]["not_sent_quantity"] == 9998
+    assert report["collection_closed"] is True
+
+
+@pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
+def test_repeated_and_full_vera_sends_count_distinct_source_rows(
+    archive_core, client_case, tmp_path, line_ending
+):
+    loaded = csv_case(archive_core, client_case, tmp_path, line_ending)
+    read_sent(loaded, limit=100)
+    read_sent(loaded, limit=100)
+    read_sent(loaded)
+
+    report = finish(archive_core, client_case, loaded)
+
+    assert report["sources"][0]["sent_quantity"] == 10000
+    assert report["sources"][0]["sent_cells"] == 20000
+    assert report["sources"][0]["not_sent_quantity"] == 0
+    assert report["collection_status"] == "complete"
+
+
+def test_unmapped_vera_send_preserves_payload_but_cannot_claim_source_remainder(
+    archive_core, client_case
+):
+    from archive_reporting import record_send
+
+    loaded = start(archive_core, client_case)
+
+    record_send(
+        Path(loaded["run_root"]), "Some extra case-derived content", channel="worker"
     )
     report = finish(archive_core, client_case, loaded)
-    assert report["sources"][0]["observed_quantity"] == 2
-    assert report["sources"][0]["observed_cells"] == 2
+
+    assert report["collection_status"] == "incomplete"
+    assert "sent_data_has_no_source_coordinates" in report["errors"]
+    assert report["sources"][0]["not_sent_quantity"] is None
+    assert report["sent_characters"] > 0

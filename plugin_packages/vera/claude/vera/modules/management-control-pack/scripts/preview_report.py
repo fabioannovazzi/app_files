@@ -110,4 +110,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(main, Path(__file__)))

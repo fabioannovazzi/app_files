@@ -24,6 +24,65 @@ from modules.operational_incidents.store import IncidentStore
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def test_reporting_reads_existing_identity_without_rewriting_private_state(
+    tmp_path, monkeypatch
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    existing = module.local_context()["credentials"]
+    state_path = module._state_path()
+    before = state_path.read_bytes()
+
+    def forbid_write(*args, **kwargs):
+        raise PermissionError("Synthetic sandbox denies writes to private state")
+
+    monkeypatch.setattr(module, "_write", forbid_write)
+    monkeypatch.setattr(module.Path, "mkdir", forbid_write)
+    monkeypatch.setattr(module.Path, "chmod", forbid_write)
+
+    observed = module.reporting_credentials()
+
+    assert observed == existing
+    assert state_path.read_bytes() == before
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_codex_compatibility_hook_retains_existing_machine_identity(
+    tmp_path, monkeypatch, product
+):
+    module, _, _ = client(tmp_path, monkeypatch, product)
+    monkeypatch.delenv("MPARANZA_INCIDENT_STATE_DIR")
+    monkeypatch.delenv("MPARANZA_INCIDENT_HOST", raising=False)
+    monkeypatch.delenv("PLUGIN_ROOT", raising=False)
+    monkeypatch.delenv("CLAUDE_PLUGIN_ROOT", raising=False)
+    monkeypatch.setattr(module.Path, "home", lambda: tmp_path / "home")
+    existing = module.local_context()
+    monkeypatch.setenv("PLUGIN_ROOT", str(module.ROOT))
+    monkeypatch.setenv("CLAUDE_PLUGIN_ROOT", str(module.ROOT))
+
+    observed = module.local_context()
+
+    assert observed["client_status"]["host"] == "codex"
+    assert observed["credentials"] == existing["credentials"]
+    assert observed["outbox_path"] == existing["outbox_path"]
+
+
+@pytest.mark.parametrize("codex_compatibility", [False, True])
+def test_cowork_hook_keeps_its_host_when_explicitly_selected(
+    tmp_path, monkeypatch, codex_compatibility
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    monkeypatch.setenv("CLAUDE_PLUGIN_ROOT", str(module.ROOT))
+    monkeypatch.delenv("PLUGIN_ROOT", raising=False)
+    monkeypatch.delenv("MPARANZA_INCIDENT_HOST", raising=False)
+    if codex_compatibility:
+        monkeypatch.setenv("PLUGIN_ROOT", str(module.ROOT))
+        monkeypatch.setenv("MPARANZA_INCIDENT_HOST", "cowork")
+
+    observed = module.local_context()
+
+    assert observed["client_status"]["host"] == "cowork"
+
+
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_local_delivery_retains_failure_and_success_without_transport(
     tmp_path, monkeypatch, product
@@ -355,6 +414,12 @@ def client(tmp_path, monkeypatch, product="vera"):
     (root / ".codex-plugin").mkdir(parents=True)
     (root / ".codex-plugin/plugin.json").write_text(
         json.dumps({"name": product, "version": "0.1.361"})
+    )
+    # Launcher tests use tmp_path as their prepared installation. It must have
+    # the same product manifest as a real prepared root.
+    (tmp_path / ".codex-plugin").mkdir()
+    (tmp_path / ".codex-plugin/plugin.json").write_bytes(
+        (root / ".codex-plugin/plugin.json").read_bytes()
     )
     # The installed startup now imports its usage sibling; bind that sibling to
     # this isolated capability rather than the real user's installation state.

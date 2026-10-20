@@ -498,6 +498,8 @@ def resolve_binding(root: Path, reference: str) -> dict[str, Any]:
     run = loaded["run"]
     if run["client_id"] != client_id:
         raise PermissionError("Run does not belong to the selected client")
+    from vera_assurance.contracts import workflow_engine
+
     return {
         "work_ref": reference,
         "client_root": str(folder),
@@ -505,7 +507,7 @@ def resolve_binding(root: Path, reference: str) -> dict[str, Any]:
         "engagement_id": engagement_id,
         "run_id": run_id,
         "workflow_id": run["workflow_id"],
-        "component": run["workflow_id"],
+        "component": workflow_engine(run["workflow_id"]),
     }
 
 

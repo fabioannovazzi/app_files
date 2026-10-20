@@ -135,6 +135,7 @@ def new_client_workspace(tmp_path, monkeypatch, vera_workflow_workspace):
 
 @pytest.fixture
 def archive_workspace(tmp_path, monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/reporting-runtime"))
     context_path, snapshot, original_files = archive.scenario._prepared_run(tmp_path)
     result = archive.core.build_review_package(
         context_path, archive.scenario._proposals(tmp_path, snapshot), language="it"

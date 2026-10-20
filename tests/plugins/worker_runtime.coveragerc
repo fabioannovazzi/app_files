@@ -1,0 +1,6 @@
+[run]
+include = */plugins/journal-bank-reconciliation/scripts/semantic_review.py
+
+[report]
+fail_under = 80
+precision = 2

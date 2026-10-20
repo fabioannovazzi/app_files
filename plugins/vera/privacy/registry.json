@@ -1560,7 +1560,8 @@
         ],
         "privacy/services/run-receipt-stamping.json": [
           "hooks/cowork-hooks.json",
-          "hooks/hooks.json"
+          "hooks/hooks.json",
+          "mcp/workspace.cjs"
         ]
       }
     },

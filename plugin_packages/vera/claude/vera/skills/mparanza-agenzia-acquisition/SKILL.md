@@ -183,7 +183,7 @@ the worker runs. Its selected client plan is the initial receipted input. The
 worker saves client-specific evidence into those runs without closing them
 before model review. Each acquired original is measured automatically against its
 verified acquisition record. Use the Archive read tool for subsequent inspection;
-host hooks observe actual returned data. After review, declare professional outputs,
+Vera records its returned data before sending it. After review, declare professional outputs,
 finalize and complete the same Archive run. No report-input file is required.
 Use `archive-runs.json` to resolve the exact runs, never the worker UUID as a
 report run identity. Do not create a second report in the acquisition folder.

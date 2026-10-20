@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-10-19-clara-0-1-307-in-cowork/shared-runtime-fix/plugins/vera",
-  "version": "0.1.430",
-  "captured_at": "2026-10-19T21:34:17.524195+00:00",
-  "catalogue_fingerprint": "57606938d38d4dde1ebca1339e415c372b91a6b83875c0d2399cf67d65c14385",
-  "manifest_sha256": "34a0ae4e7ed0f33b612f674b2cc5758e7ffb520889fed92e591be70ffd32f3dd",
+  "version": "0.1.437",
+  "captured_at": "2026-10-20T07:40:54.119932+00:00",
+  "catalogue_fingerprint": "78842c354e4384a818ddb5a0a191794b659ea22050d832388f71e24baa6f1912",
+  "manifest_sha256": "d13d3b7ba9ec7dbd2e3549a4b8f7154390ef9376ff84e26e0ed043c65e33d472",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -19,7 +19,7 @@
     {
       "function_id": "agenzia-acquisition",
       "skill_path": "skills/agenzia-acquisition/SKILL.md",
-      "sha256": "f7b83f47c514f67c5b065db20f3ad321936f336db78920cf711bad11f923256e"
+      "sha256": "1428f502067e1bcac3bc55a5c91d95c3138f016555e42ac881540b6a5bb64310"
     },
     {
       "function_id": "aml-review",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "70551d1e8e81143f0de97e3e762799b160a224d5516da6cd2200cea9a56ffb73"
+      "sha256": "d565194c059b01e2bfd9f882a8b077b10093d3d4ece9e8647b6d3a6a91375031"
     },
     {
       "function_id": "studio-document-format",
