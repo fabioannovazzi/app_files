@@ -136,7 +136,7 @@
     },
     {
       "id": "qualified-native-luna-worker",
-      "control": "In Codex, the semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, defaults to gpt-5.6-luna or uses an explicitly reviewed alternative, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
+      "control": "In Codex, the semantic adapter reuses the per-run verified journal-bank native Codex Seatbelt capsule, defaults to gpt-5.6-luna or uses an explicitly reviewed alternative, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
     },
     {
       "id": "content-bound-restartable-job",
