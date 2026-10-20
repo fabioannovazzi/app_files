@@ -136,7 +136,7 @@ def test_native_navigation_keeps_blocked_record_non_actionable(archive, monkeypa
             str(ROOT / "plugins/vera/ui/workspace.js"),
         ],
         input=json.dumps(result),
-        text=True,
+        encoding="utf-8",
         capture_output=True,
         check=True,
         timeout=20,

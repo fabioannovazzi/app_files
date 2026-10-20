@@ -573,12 +573,12 @@ def inspect_client_manifests(
             continue
         for record in records:
             by_client.setdefault(record["client_id"], []).append(record)
-    for records in by_client.values():
-        if len(records) == 1:
-            found.extend(records)
+    for client_records in by_client.values():
+        if len(client_records) == 1:
+            found.extend(client_records)
             continue
         # Duplicate validated IDs are ambiguous only for those customer folders.
-        for record in records:
+        for record in client_records:
             blocked.append(
                 {
                     "scope_id": record["scope_id"],

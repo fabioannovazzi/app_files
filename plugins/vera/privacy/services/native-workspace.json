@@ -689,7 +689,7 @@
     },
     {
       "id": "registry-followup-separate-run",
-      "control": "Only an actual owned open Studio Archive engagement and a historical applied review can authorize a distinct follow-up. Explicitly saved literal question, whole predecessor selection and selected engagement receipts are generation-bound and separately confirmed. Immutable predecessor copies, lineage mapping and exact successor input receipts are retained; pending creation and orphan copies block ordinary use and output closure. Public initializer, existing model mandate and unchanged proposal producers remain authoritative. Prior confirmations remain historical and no model reads or filing are attested. The reviewed candidate materializes the unchanged public input iterator as a list before joining predecessor receipts; this preserves every receipt and changes no source selection or professional scope. Native installed-host acceptance remains pending.",
+      "control": "Only an actual owned open Studio Archive engagement and a historical applied review can authorize a distinct follow-up. Explicitly saved literal question, whole predecessor selection and selected engagement receipts are generation-bound and separately confirmed. Immutable predecessor copies, lineage mapping and exact successor input receipts are retained; pending creation and orphan copies block ordinary use and output closure. Public initializer, existing model mandate and unchanged proposal producers remain authoritative. Prior confirmations remain historical and no model reads or filing are attested. Follow-up source inventory contains only verified ledger receipts. Unavailable input and transport records are reported with app-private counts and completeness flags; they do not veto independent verified sources. Selected evidence and predecessor operations remain validated. Native installed-host acceptance remains pending.",
       "implemented_by": [
         "scripts/native_sari_followup.py",
         "scripts/native_workspace.py",
@@ -1095,7 +1095,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "660f8276ff24c75161a1b65414b1a0be8473b3d4c9445017d05fd468076446fa",
+    "source_fingerprint": "3716fd4437748cb6f61e26238050de4dd33aa09e3d48a9671ab524e39b4ca5e2",
     "reviewed_at": "2026-10-20"
   },
   "governed_repository_paths": [

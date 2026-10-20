@@ -239,7 +239,7 @@ def test_native_client_and_engagement_navigation_survives_folder_changes(
         ],
         input=json.dumps(catalogue),
         capture_output=True,
-        text=True,
+        encoding="utf-8",
         check=True,
         timeout=20,
     )

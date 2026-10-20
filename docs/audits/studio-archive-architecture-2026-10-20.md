@@ -53,11 +53,19 @@ client ambiguity and professional interpretation remain agent judgments.
 | A17 | Selected path / identity boundary | Internal ledger parent directories could be symbolic links; only the final file or directory was checked. Selected engagement loading also omitted directory/manifest ID equality. | An import followed a linked `Vera` directory and wrote outside its selected archive in a disposable reproduction. Loading an existing run also accepted redirected snapshot/execution input parents. | Loader checks now validate the ledger/engagement/input/run collection directories, bound input parent chains and selected engagement ID. Four redirected-import cases, two redirected-run-input cases and engagement identity substitution pass. | Prevent writes/reads outside the selected archive and adopting another engagement's manifest; unrelated valid records remain independently inspectable. |
 | A18 | Fault isolation / native presentation | Native run navigation discarded the core inventory's collection issues. | A missing runs directory appeared as an empty work list. | Reproduced; native catalogue and preparation now expose completeness and collection issues, and the interface states that the listing is incomplete. Regression passes. | An unreadable collection is not evidence of no existing work. |
 | A19 | Execution / exact retry | Run preparation validated every header before finding the requested run; incidental directory metadata also aborted lookup. | An unrelated damaged header blocked replay of a verified existing request; `.DS_Store` blocked independent run allocation. | Both reproduced and repaired. Exact existing requests replay and report unavailable siblings; incidental entries remain visible without vetoing allocation. A genuinely unreadable run header still prevents allocating a request whose prior existence cannot be established; the regression uses the actual prior request and verifies it is not duplicated. | Existing verified replay creates no second run. New allocation requires enough request identity to avoid duplicating the selected request, not an entirely clean directory. |
+| A20 | Fault isolation / specialist follow-up | SARI follow-up used the strict whole-engagement input reader and treated any unrelated upload recovery as a creation veto. | Two real native-RPC reproductions failed: a damaged receipt prevented opening the follow-up, and a damaged transport record prevented saving/creating it from valid inputs. | Follow-up now uses verified input inventory and separates unavailable-record counts from predecessor-operation recovery. All 38 follow-up and import checks pass, including distinct successors with unchanged predecessor outputs and damaged bytes. Installed acceptance remains pending. | Selected sources and predecessor operations must validate. An unrelated damaged receipt/upload cannot invalidate independently verified sources. |
 | T01 | Test harness | The component fixture restored `sys.path` between tests while its reporting adapter remained cached. | Broad regression run failed importing `archive_report_receipt` in the tax-litigation case. | Fixture now supplies product sibling imports per test; exact failing case passes. No product import behavior changed for this failure. | A fixture import defect does not justify changing production code. |
 | T02 | Previous behavior assertions | Two older tests required an exact recovery response without new issue fields and a global listing failure for an unreceipted file. | Broader regression verification failed after the intended inventory repair. | Assertions now verify the complete recovery response and the useful behavior: verified inputs remain visible, the unreceipted entry is unavailable and its bytes stay unchanged. Subsequent broader suite passes. | Tests must validate the requested behavior rather than preserving the defect as authority. |
+| T03 | Test harness / Windows CI | Job `118616483802` decoded Node's UTF-8 UI output using the Windows default encoding: `Apri incarichi →` became mojibake. | One native-navigation assertion failed; the job reported 60 passed, one failed and one skipped. | The three Archive UI harness subprocess calls now explicitly decode UTF-8. Ten focused local checks passed; subsequent Windows CI verification is pending. Production files are unchanged for this failure. | The harness must decode the actual UI transport encoding; weakening the visible-label assertion or changing production text would conceal the harness defect. |
+| T04 | Source typing / CI | Job `118616484270` found that `inspect_client_manifests` reused `records` for a tuple and then a list. The exact CI Mypy configuration reproduced it locally; the earlier default-config check did not. | The runtime-quality job failed static checking. | The per-client group has a distinct variable name; inventory behavior is unchanged. The exact CI configuration now passes all 29 source files locally. Remote CI is pending. | Keep types consistent; do not weaken static checks or mistake a differently configured local pass for equivalent CI evidence. |
 | B01 | Release evidence | `build_product_release.py vera clara lucia` stopped at privacy contract generation: reviewed fingerprints still described the previous source. | No candidate package was produced at that step. | Completed the source-delta review below, corrected three disclosure manifests and refreshed 40 affected review fingerprints. All three product privacy registers now validate; contract generation passes. No installed acceptance follows from this result. | Release disclosures must describe the governed source; this build check is separate from ordinary client execution. |
 | B02 | Release evidence | The next build stopped at the generated course-catalogue freshness check, first at Vera's `bilancio-oic/course.json`. Regeneration then invalidated the dependent Vera onboarding, Clara teaching/course-files and Lucia course-files fingerprints. | Packaging did not reach ZIP generation during those attempts. | Regenerated the existing authoring corpus; all 20 changed course JSON files changed only SHA-256 provenance fields. Reviewed that delta, refreshed the four dependent records and rebuilt successfully. | Generated course source references must match their declared source; this is a release check, not an ordinary client execution prerequisite. |
+| B03 | Review tooling | The GitHub connector returned HTTP 403 `Resource not accessible by integration` while creating the draft repair PR. | That connector could not create the PR. | The existing authenticated GitHub CLI verified that no PR existed and successfully created draft PR #884 for the pushed branch. | Connector permission scope is separate from Vera and from the repository account already used for the authorized branch push. |
+| B04 | Release evidence / CI | Accounting job `118616483281` and release-alignment job `118616483443` passed their preceding steps but the Geneva catalogue check still referenced the 0.1.439 manifest fingerprint. | Both jobs stopped at catalogue identity comparison. | All 55 skill IDs, paths and entrypoint hashes match the retained catalogue. Rebound the manifest fingerprint to 0.1.441 and preserved all Geneva applicability judgments; exact catalogue check passes. | A product version change requires refreshed provenance, not new legal/localization claims or removal of the check. |
+| B05 | Release version identity | The package regression rejected the changed Studio Archive component because its version still matched the preceding 0.1.58 candidate. | Package verification failed before installation: 532 passed, two skipped, one failed. | Component version is now 0.1.59; the failed regression passes. Containing host bundles are rebuilt, all Codex ZIPs match source, and 89 final package/privacy checks pass. | Changed packaged source needs a distinct release identity for installation/cache selection. This release check does not gate ordinary work on external runtime versions. |
+| B06 | Repository tooling | Git could not stage the correction because `.git/index.lock` existed. The sandbox also denied the first process-list read. | The commit stopped before staging. | Authorized process inspection found no Git process and no open owner. The lock was an unchanged empty ordinary file older than 18 minutes; removed only that stale lock after rechecking those properties. Commit retry remains separate. | An active lock protects another Git transaction. Evidence of no live owner and an old empty file permits clearing a stale lock; no client archive or Git history was removed. |
 | H01 | Acceptance host | `cua.getApp("Codex")` returned `Computer Use is not allowed to use the app 'com.openai.codex' for safety reasons.` | Cannot open the requested separate Codex app window through Computer Use. No workflow test was launched. | The supported chat API can create a separate GPT-6.1 Sol chat but exposes no new-window operation. Asked whether that separate chat is acceptable or whether to wait for a user-opened window; response pending. | This is a host tool restriction, not a Vera execution or Python check. No alternative UI-control mechanism was used to bypass it. |
+| H02 | Host CLI diagnostic | The read-only plugin-list command warned that it could not create PATH aliases (`Operation not permitted`). | No command failure: listings returned exit zero and the enabled 0.1.440, then 0.1.441 registrations. | Continued using the supported CLI without relying on those aliases; no permission change or alternate launcher was needed. | This warning concerns host CLI alias setup, not Archive data, Python capabilities or ordinary workflow acceptance. |
 
 ## Verification log
 
@@ -121,11 +129,36 @@ client ambiguity and professional interpretation remain agent judgments.
   `958a1c443078645b59b3636db22606dd2d8b922e9f1b37e8c5ff137a605c0ea9`.
   All 25 original test-archive files still match the pre-installation baseline.
   No fresh workflow chat has started; H01 remains pending.
+- Repair commit `58e3e7324a886a124cfe32bf9f5255d7c5a15e14` is pushed on
+  `codex/studio-archive-architecture`; draft PR:
+  https://github.com/fabioannovazzi/app_files/pull/884.
+  GitHub confirms 18 pull-request workflow runs queued for this exact commit.
+  This is pending CI, not green CI or deployment evidence.
+- CI for `58e3e7324` subsequently finished: 16 workflows succeeded and two
+  failed. The four failed jobs are accounted for by T03, T04 and B04; fixes
+  need a new exact-commit CI run.
+- The subsequent follow-up repair passed 38 native SARI/import checks.
+  Fault isolation, run isolation and catalogue regression checks passed 34
+  tests. Black, Isort and JavaScript syntax pass; the exact runtime CI Mypy
+  configuration passes all 29 files, and SARI Bandit has no medium/high findings.
+  All 25 original case files still match the preservation baseline.
+- The 0.1.441 package/privacy/report run completed with 532 passes, two absent
+  curated-installation skips and the single B05 version failure. The failed check
+  passes after assigning Studio Archive 0.1.59. Package parity passed before that
+  metadata correction; the final component-version rebuild remains in progress.
+- The final rebuild completed with Vera 0.1.441, Clara 0.1.319, Lucia 0.1.143
+  and Studio Archive 0.1.59. Every host package builds and passes its startup
+  or remote-contract checks. All Codex ZIPs match source; 89 final package,
+  release-alignment and privacy checks pass after the metadata correction.
+- Supported installation updated local `vera@mp-vera` to enabled 0.1.441.
+  All 2,180 installed files match the tested ZIP, without extra files. ZIP SHA-256:
+  `bbe8b4c8010b5104588dc9d40f80b677ffae2943414ac421cb9dba2372a5af69`.
+  All 25 original archive files still match the preservation baseline.
+  The new fresh-chat workflow has not started; H01 remains pending.
 
 ## Remaining audit targets
 
-- Complete the changed-source privacy review, refresh only reviewed records,
-  rebuild the product packages and run package/contract/receipt checks.
+- Rerun the failed CI jobs on the new exact correction commit.
 - Verify the packaged host's operation-scoped configuration leases and
   independent native-upload inventory through actual normal-chat use.
 - Carry the preserved exact-request limitation into acceptance reports whenever
@@ -159,3 +192,14 @@ files; their specialist calculations and model projections did not change.
 Shared-service fingerprints also cover the incident reader or product version.
 The review is limited to these inspected source deltas. It is not evidence that
 each workflow, packaged host, external service or normal chat has run successfully.
+
+The subsequent 0.1.441 delta adds SARI follow-up availability counts/completeness
+and a local unavailable-record notice. The unchanged MCP response builder keeps
+these fields in `_meta.workspace`; the model summary remains status/work reference.
+Follow-up sources now come from verified input inventory. Exact selected inputs,
+predecessor history and predecessor-specific operation recovery remain enforced.
+The two governing follow-up controls now describe this distinction. A ledger
+variable rename changes no behavior. Geneva catalogue rebinding changes only
+release provenance for 55 unchanged skill entries, and the four regenerated course
+JSON files change only SHA-256 fields. The 28 affected privacy fingerprints cover
+these inspected deltas; no external recipient or payload boundary is added.

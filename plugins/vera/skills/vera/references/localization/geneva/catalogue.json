@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.439",
-  "captured_at": "2026-10-20T09:42:45.371625+00:00",
-  "catalogue_fingerprint": "130285ffe5e067875d02e00d7b9a8debd72c66199ccea9c581a2dc5d289b1ed7",
-  "manifest_sha256": "2776cb9ac95763efc81c2174d447f7b383d9821edb769a557e95b9c711338786",
+  "version": "0.1.441",
+  "captured_at": "2026-10-20T12:19:43.201229+00:00",
+  "catalogue_fingerprint": "c16377c453bbb0102e7f79292cb4a7a8519bf1273aa60e280485ffd42d36247f",
+  "manifest_sha256": "0bac74c464b006070efcf1d5230253b5cee9a7a3072f4cd07eb9dde444368346",
   "entries": [
     {
       "function_id": "adeguati-assetti",

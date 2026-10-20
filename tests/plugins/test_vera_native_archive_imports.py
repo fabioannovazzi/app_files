@@ -458,7 +458,7 @@ const result={{setup,inputs,begun,rejected,prepared}};
                 "import_setup": result["setup"],
             }
         ),
-        text=True,
+        encoding="utf-8",
         capture_output=True,
         check=True,
         timeout=20,

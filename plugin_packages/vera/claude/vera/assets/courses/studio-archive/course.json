@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "68bb514f6b4c70de07889962982bd8fd092393d7a6f760c78a99d142c0018375"
+      "sha256": "181123d87c5deda2628f1d961f95fa33c0ae4c318356ca3301a3d9383adc4c9a"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -682,5 +682,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "765b46e742c13b472864159c9b56fc2ef093893c7231eb35a141108b7d9c9f91"
+  "canonical_course_sha256": "ee06fc56d7e1b9de9573329df083d5b03ab590211d1899b0572c9382ac11a948"
 }
