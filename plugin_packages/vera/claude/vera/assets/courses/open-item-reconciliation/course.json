@@ -120,7 +120,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
-      "sha256": "04eaba13b8e5bbe4e11152b1dfc8eefc203cfd119db4a06c04f4f895a7dcebca"
+      "sha256": "f4d5ddb13025adf07c2e9dce9ad08389cca6341f1a4e7b2d60a8518dac8c9a25"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/references/geneva.md",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5f47bbfd495042e25bc0f0dde778fcc8f40f286590fef66032d396314df72cd4"
+  "canonical_course_sha256": "e7b631969d8de3bf45cae00e33e42c968720d0456e651fca40c4f20636adf82d"
 }

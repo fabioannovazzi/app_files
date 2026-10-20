@@ -101,6 +101,10 @@
   ],
   "security_controls": [
     {
+      "id": "producer-bound-archive-exposure-accounting",
+      "control": "For active Archive runs, tabular inspection registers its bounded preview coordinates and reconciliation registers the normalizer's transaction-field origins. Selected MCP case responses carry app-only field-origin requests and the digest of the producer's private review packet; the collector accepts them only against retained producer evidence. The worker launcher registers the exact prompt and output schema against the selected candidate records before submission. Preparation alone does not count as disclosure. Exact operational messages and metadata-only recipe revisions retain their own declarations. Unknown review packets, added content, unsupported provenance and partial artifact reads remain explicitly incomplete rather than acquiring an inferred unsent remainder. The original source files, local outgoing payloads and field coordinates are not included in server receipt requests."
+    },
+    {
       "id": "generic-worker-output-leaf-check",
       "control": "The shared structured-worker entrypoint checks the caller-supplied output directory for a symlink before resolving the path and before opening authentication boundary inputs or launching a process. Its regression supplies a symlink to another empty directory and verifies rejection without credential access or output writes. This check covers the supplied leaf; it does not claim atomic protection from all concurrent ancestor-path changes."
     },
@@ -185,7 +189,7 @@
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "ca86a2e531394070f561d6d70a5b530362c1210529e33d1379bbc39abd59bee3"
+    "source_fingerprint": "de5c1257ea110d1bfa7a1a7ef0f972a094fc0277bb341ec5c0fd5f9dcef31f9a"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

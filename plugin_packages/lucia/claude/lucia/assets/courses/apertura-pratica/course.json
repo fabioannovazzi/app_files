@@ -132,7 +132,7 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "b9e795aed6f53858a215fed76ab3893594f354f358c283bf32285a2cd94a507a"
+      "sha256": "0ff08ada91584f479e7afd978685ce745cc08d52bf59153c74deac9533b7dcb6"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -156,7 +156,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
+      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
     },
     {
       "path": "skills/mparanza-apertura-pratica/SKILL.md",
@@ -557,5 +557,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "cd537f3634a80c60843c990250879928c5ce34e5c67dcbaf8b8d6468b9f3f32a"
+  "canonical_course_sha256": "8aba4964587541d9c3a733d47e84b49cb493590998ff18a0bd48a3fa620adf13"
 }

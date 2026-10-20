@@ -85,7 +85,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e47666c4e86b06067d48212e95682e77e261aca8c99f732468b0d42a56965dd8"
+    "source_fingerprint": "e381401531410a3b466d0b7816a71bf4a7d58f0f4ef148346d80a2e66bbf59ec"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -93,6 +93,16 @@
   ],
   "schema_version": 2,
   "security_controls": [
+    {
+      "id": "exact-producer-projection-accounting",
+      "control": "The local collector accepts complete transport envelopes only when their exact digest matches a producer declaration. Selected row-field origins and private review-packet digests are retained locally, independently of send events; constructing them does not count as disclosure. A changed envelope, unknown private review packet or unregistered metadata parent cannot inherit the original declaration. Partial text reads cannot inherit complete-artifact lineage.",
+      "implemented_by": [
+        "scripts/archive_reporting.py",
+        "scripts/archive_projection.py",
+        "scripts/archive_emit.py"
+      ],
+      "on_violation": "The report retains the outgoing payload hash and marks source accounting incomplete; it does not fabricate an unsent remainder or prevent ordinary result delivery merely because provenance is unavailable."
+    },
     {
       "id": "minimal-receipt-request-allow-list",
       "control": "Both client and server enforce the same closed receipt request schema, and the server's Pydantic model forbids every unregistered field.",

@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "e87d1c04802968a4ff744d1ab307ecf548f4a581f5be0fd4134c392acb8ef0ad",
+  "catalogue_fingerprint": "a25e8ada96412cc0973bf4cd3d238393593fff5fc22447bd5f58535ea5ac03a6",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1925,8 +1925,8 @@
     "version": "0.1.422"
   },
   "studio_archive_architecture_release_binding_20261020": {
-    "basis": "All skill IDs, paths and skill entrypoint hashes are unchanged from the 0.1.439 catalogue. Rebind only the product-manifest version fingerprint; Geneva applicability judgments and acceptance status remain unchanged.",
-    "version": "0.1.441"
+    "version": "0.1.445",
+    "basis": "All 55 skill IDs and paths are unchanged. The Vera entrypoint now prefers the native task-reporting service over shell writes to user-scoped state and makes reporting failures nonblocking for professional work. This changes reporting transport, not jurisdictional advice or specialist applicability. Other entrypoint hashes, Geneva judgments and acceptance status are unchanged."
   },
   "studio_archive_concurrency_release_binding": {
     "date": "2026-10-17",

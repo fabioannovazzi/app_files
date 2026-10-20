@@ -512,9 +512,19 @@
       "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
     },
     {
+      "path": "scripts/archive_cli.py",
+      "repository_path": "plugins/vera/scripts/archive_cli.py",
+      "sha256": "6520301413e5421e62c94d679e02a77e94b2b8b76183685d545d6201be7ee83e"
+    },
+    {
       "path": "scripts/archive_emit.py",
       "repository_path": "plugins/vera/scripts/archive_emit.py",
-      "sha256": "20304f6878ac14f028f479ff63b63a1433f4bde62cc9eb0ae6b34113f070283d"
+      "sha256": "07ad5a8b8c96c22e011d59f9919c03d73c9781d39b3052138e0ecbc628463a65"
+    },
+    {
+      "path": "scripts/archive_projection.py",
+      "repository_path": "plugins/vera/scripts/archive_projection.py",
+      "sha256": "80e7a734f87bf740278282a16c4c0fa1b5491fc42b864b23aaad432c1e83cfa0"
     },
     {
       "path": "scripts/archive_report_legacy.py",
@@ -544,7 +554,7 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/vera/scripts/archive_reporting.py",
-      "sha256": "b9e795aed6f53858a215fed76ab3893594f354f358c283bf32285a2cd94a507a"
+      "sha256": "0ff08ada91584f479e7afd978685ce745cc08d52bf59153c74deac9533b7dcb6"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -589,7 +599,7 @@
     {
       "path": "scripts/workflow_usage.py",
       "repository_path": "plugins/vera/scripts/workflow_usage.py",
-      "sha256": "0a4d338fa905ad4223b3f1f846603644c8f69aa907adb86159d50ac95a2f6e08"
+      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
     },
     {
       "path": "skills/variance-analysis/SKILL.md",

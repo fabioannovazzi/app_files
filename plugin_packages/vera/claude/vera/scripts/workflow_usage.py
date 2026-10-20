@@ -38,6 +38,7 @@ __all__ = [
     "build_report",
     "stamp_report",
     "startup_context",
+    "native_operation",
     "main",
 ]
 LOGGER = logging.getLogger(__name__)
@@ -546,6 +547,8 @@ def startup_context() -> str:
             f"{installed_reference_path('workflow-usage.md', ROOT)} for every substantive "
             "task, including AI-only work. One primary task UUID; Studio Archive is "
             "infrastructure. Start/record saves and delivers only that task's events. "
+            f"Prefer the installed {product_name(ROOT)}_workflow_usage native tool; "
+            "it owns persistent state outside the chat's project sandbox. "
             "Retry delivery with workflow_usage.py flush --run-id <retained-uuid>. "
             f"Pending events across retained tasks: {_queued_count(connection)}. "
             "Unrelated pending events are not a prerequisite for current work. "
@@ -553,6 +556,58 @@ def startup_context() -> str:
         )
     finally:
         connection.close()
+
+
+def native_operation(arguments: dict[str, Any]) -> dict[str, Any]:
+    """Run one fixed task operation; never accept paths, commands or global flush."""
+    operation = arguments.get("operation")
+    required = {
+        "start": {"operation", "run_id", "pipeline", "host", "sample_kind"},
+        "record": {"operation", "run_id", "kind"},
+        "status": {"operation", "run_id"},
+        "flush": {"operation", "run_id"},
+    }
+    if not isinstance(operation, str) or operation not in required:
+        raise ValueError("Choose a supported task usage operation")
+    keys = required[operation]
+    optional = {"fields"} if operation == "record" else set()
+    if not keys <= arguments.keys() or arguments.keys() - keys - optional:
+        raise ValueError("Unexpected task usage arguments")
+    if any(not isinstance(arguments[key], str) for key in keys):
+        raise ValueError("Task usage identifiers must be strings")
+    run_id = str(UUID(arguments["run_id"]))
+    if operation == "start":
+        return start(
+            run_id,
+            arguments["pipeline"],
+            host=arguments["host"],
+            sample_kind=arguments["sample_kind"],
+        )
+    if operation == "record":
+        fields = arguments.get("fields", {})
+        if not isinstance(fields, dict):
+            raise ValueError("Task usage fields must be an object")
+        if fields.keys() - {
+            "stars",
+            "comment",
+            "feedback_source",
+            "incident_report_id",
+        }:
+            raise ValueError("Unexpected native task usage fields")
+        if arguments["kind"] not in {
+            "resumed",
+            "completed",
+            "failed",
+            "cancelled",
+            "feedback_prompted",
+            "feedback",
+            "incident",
+        }:
+            raise ValueError("Choose a supported task usage event")
+        return record(run_id, arguments["kind"], **fields)
+    if operation == "status":
+        return status(run_id)
+    return flush(run_id=run_id)
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -635,8 +690,13 @@ def main(argv: list[str] | None = None) -> int:
             result = flush(run_id=args.run_id)
     except (OSError, ValueError, KeyError, sqlite3.Error) as error:
         LOGGER.error(
-            "Usage reporting unavailable (%s); preserve the original task and queued events",
+            "Usage reporting unavailable (%s); operation=%s; errno=%s; sqlite=%s. "
+            "Preserve the original task and queued events. Reporting failure does "
+            "not invalidate the professional work.",
             type(error).__name__,
+            args.command,
+            getattr(error, "errno", None),
+            getattr(error, "sqlite_errorname", None),
         )
         return 1
     sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")

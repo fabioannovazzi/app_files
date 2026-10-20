@@ -127,9 +127,10 @@ their no-reporting boundary.
 
 Before substantive work, follow `references/workflow-usage.md`: start one
 retained task UUID for the primary user process (including AI-led work), reuse
-it across helpers/resumption, and record only observed outcomes. Discover the
-native `vera_incident_host_link` tool, including deferred tools, and verify the
-same run's Computer ID on the server. Privacy reporting applies only to the fixed pipeline list in
+it across helpers/resumption, and record only observed outcomes. Prefer the
+native `vera_workflow_usage` tool, including deferred tools, for persistence
+and same-task server/Computer ID verification. Reporting failures remain
+explicit and do not invalidate professional work. Privacy reporting applies only to the fixed pipeline list in
 `references/selective-reporting.md`, using the exact Studio Archive run.
 Studio Archive start and terminal writes automatically create a local report for
 every run of those pipelines, including full exposure or incomplete observations.

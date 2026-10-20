@@ -99,6 +99,7 @@ from journal_bank_core import (
     canonical_json_sha256,
     configure_logging,
     decimal_text,
+    log_execution_status,
     parse_canonical_decimal,
     validate_artifact_receipt,
     validate_assurance_envelope,
@@ -2933,6 +2934,7 @@ def _record_model_submission(
     output_schema: Mapping[str, Any],
     model: str,
     workflow_id: str,
+    source_records: list[dict[str, Any]] | None = None,
 ) -> None:
     """Retain the exact submitted prompt locally; never send it to the receipt service."""
     from vera_assurance.contracts import load_client_engagement_context_file
@@ -2975,9 +2977,14 @@ def _record_model_submission(
         raise ValueError(
             "Worker submission requires the Archive start reporting record"
         )
+    submission = {"prompt": prompt, "output_schema": output_schema}
+    if source_records is not None:
+        from archive_projection import register_row_projection
+
+        register_row_projection(workflow_id, output, submission, source_records)
     record_send(
         root,
-        {"prompt": prompt, "output_schema": output_schema},
+        submission,
         channel="model_worker:" + model,
         event_id=secrets.token_hex(24),
     )
@@ -3455,6 +3462,19 @@ def run_semantic_worker(
             output_schema=json.loads(schema_bytes),
             model=graph["requested_worker_configuration"]["model"],
             workflow_id="journal-bank-reconciliation",
+            source_records=[
+                {
+                    "record_id": record["transaction_id"],
+                    "fields": [
+                        field for field in record if field != "truncated_fields"
+                    ],
+                }
+                for component in graph["selected_components"]
+                for record in (
+                    *component["bank_records"],
+                    *component["journal_records"],
+                )
+            ],
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
@@ -4460,6 +4480,13 @@ def _write_operational_review_payload(
     }
     path = _safe_output_path(semantic, OPERATIONAL_REVIEW_PAYLOAD_NAME)
     write_json(path, payload)
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_private_value(
+            "journal-bank-reconciliation", semantic, payload
+        )
     return path
 
 
@@ -5286,7 +5313,8 @@ def main() -> int:
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PREPARATION_FAILED: %s", exc)
             return 2
-        LOGGER.info(
+        log_execution_status(
+            args.output_dir,
             "semantic candidate graph prepared: selected=%s deferred=%s worker_required=%s",
             result["selected_component_count"],
             result["deferred_component_count"],
@@ -5306,7 +5334,8 @@ def main() -> int:
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PIPELINE_FAILED: %s", exc)
             return 2
-        LOGGER.info(
+        log_execution_status(
+            args.output_dir,
             "semantic pipeline completed: batches=%s reviewed=%s human_review=%s exhaustive=%s",
             result["batch_count"],
             result["reviewed_bank_count"],
@@ -5327,7 +5356,8 @@ def main() -> int:
             _record_cli_launch_failure(args, client_engagement)
             LOGGER.error("SEMANTIC_WORKER_LAUNCH_FAILED: %s", exc)
             return 2
-        LOGGER.info(
+        log_execution_status(
+            args.output_dir,
             "isolated Luna worker completed pending validation: %s",
             result["candidate_graph_sha256"],
         )

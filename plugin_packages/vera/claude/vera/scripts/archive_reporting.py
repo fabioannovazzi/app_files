@@ -299,7 +299,16 @@ def record_send(
     }
     projections = [item for item in retained if item["kind"] == "prepared_projection"]
     unmapped = False
-    for piece in _pieces(response):
+    whole_projection = next(
+        (item for item in projections if item["data_sha256"] == digest(response)),
+        None,
+    )
+    if whole_projection is not None:
+        selections.extend(whole_projection["selections"])
+    # Producers can register a complete MCP envelope or worker submission. Its
+    # exact digest covers all fields; changed envelopes still take the ordinary
+    # per-piece path and cannot inherit the original declaration.
+    for piece in [] if whole_projection is not None else _pieces(response):
         mapped = False
         if isinstance(piece, dict) and isinstance(piece.get("vera_reporting"), dict):
             binding = piece["vera_reporting"]
@@ -319,10 +328,21 @@ def record_send(
                         ),
                         None,
                     )
-                    if projection is not None and (
-                        selection["unit"] == "documents"
+                    projected_source = next(
+                        (
+                            source
+                            for source in store.sources()
+                            if source["source_id"] == selection["source_id"]
+                            and source["sha256"] == selection["source_sha256"]
+                        ),
+                        None,
+                    )
+                    if (
+                        projection is not None
+                        and projected_source is not None
+                        and selection["unit"] in {"documents", "lines"}
                         and selection["start"] == 0
-                        and selection["stop"] == 1
+                        and selection["stop"] == projected_source["quantity"]
                         and selection["columns"] == [0]
                     ):
                         selections[-1]["source_lineage_verified"] = True
@@ -337,6 +357,18 @@ def record_send(
                 ):
                     mapped = True
         if digest(piece) in metadata.values():
+            mapped = True
+        if (
+            isinstance(piece, str)
+            and piece
+            and all(
+                digest(line) in metadata.values()
+                for line in piece.splitlines(keepends=True)
+            )
+        ):
+            # A CLI transport can join several independently declared status
+            # lines. Every byte must still belong to a producer declaration;
+            # one extra line keeps the whole payload explicitly unmapped.
             mapped = True
         for projection in projections:
             if digest(piece) == projection["data_sha256"]:

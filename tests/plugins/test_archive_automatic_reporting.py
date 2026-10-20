@@ -778,3 +778,93 @@ def test_unmapped_vera_send_preserves_payload_but_cannot_claim_source_remainder(
     assert "sent_data_has_no_source_coordinates" in report["errors"]
     assert report["sources"][0]["not_sent_quantity"] is None
     assert report["sent_characters"] > 0
+
+
+@pytest.mark.parametrize("extra_field", [False, True])
+def test_complete_producer_envelope_cannot_cover_added_content(
+    archive_core, client_case, extra_field
+):
+    from archive_projection import register_value
+    from archive_reporting import record_send, snapshot_run
+
+    loaded = start(archive_core, client_case)
+    payload = {
+        "content": [{"type": "text", "text": "Prepared 2 rows"}],
+        "structuredContent": {"count": 2},
+        "isError": False,
+    }
+    register_value("variance-analysis", Path(loaded["output_dir"]), payload, [])
+    if extra_field:
+        payload["structuredContent"]["private_value"] = "Unregistered source value"
+    record_send(Path(loaded["run_root"]), payload, channel="test_mcp")
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+
+    assert report["collection_status"] == ("incomplete" if extra_field else "complete")
+
+
+@pytest.mark.parametrize("unregistered_line", ["", "Private case value: 123\n"])
+def test_cli_combined_status_preserves_unknown_lines_as_unmapped(
+    archive_core, client_case, unregistered_line
+):
+    from archive_projection import register_metadata
+    from archive_report_store import RunStore, digest
+    from archive_reporting import record_send, snapshot_run
+
+    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    output = Path(loaded["output_dir"])
+    first = "INFO: bank_rows=3\n"
+    second = "INFO: journal_rows=2\n"
+    register_metadata("journal-bank-reconciliation", output, first)
+    register_metadata("journal-bank-reconciliation", output, second)
+    payload = {"stdout": "", "stderr": first + second + unregistered_line}
+
+    record_send(
+        Path(loaded["run_root"]), payload, channel="cli:journal-bank-reconciliation"
+    )
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    sent = [
+        event
+        for event in RunStore(Path(loaded["run_root"])).events()
+        if event["kind"] == "vera_send"
+    ][-1]
+    assert sent["response_sha256"] == digest(payload)
+    assert sent["selections"] == []
+    assert sent["unmapped"] is bool(unregistered_line)
+    assert report["collection_status"] == (
+        "incomplete" if unregistered_line else "complete"
+    )
+
+
+@pytest.mark.parametrize("limit", [None, 1])
+def test_registered_text_artifact_requires_the_complete_projection_for_lineage(
+    archive_core, client_case, limit
+):
+    from archive_projection import register_value
+    from archive_report_store import file_digest
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    artifact = Path(loaded["output_dir"]) / "review_notes.md"
+    content = "# Review\nTwo matches; one residual.\n"
+    artifact.write_text(content, encoding="utf-8")
+    register_value(
+        "journal-bank-reconciliation",
+        artifact,
+        content,
+        [],
+        artifact_sha256=file_digest(artifact),
+    )
+
+    read_artifact(loaded, artifact, limit=limit)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == (
+        "complete" if limit is None else "incomplete"
+    )
+    assert (
+        next(source for source in report["sources"] if source["role"] == "input")[
+            "sent_cells"
+        ]
+        == 0
+    )

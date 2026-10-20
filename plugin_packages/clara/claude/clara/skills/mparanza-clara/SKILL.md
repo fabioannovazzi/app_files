@@ -195,8 +195,9 @@ For every substantive user mandate, follow
 `skills/mparanza-clara/references/workflow-usage.md` from this installation's root.
 Start one primary task before preparation, using `usage/pipelines.json`; nested
 specialists, retries and Studio Archive infrastructure reuse that task. Record
-only the observed whole-task outcome. Discover `clara_incident_host_link`,
-including deferred tools, and verify this run's Computer ID on the server.
+only the observed whole-task outcome. Prefer `clara_workflow_usage`, including
+deferred tools, for native persistence and same-task server/Computer ID
+verification. Reporting failures do not invalidate professional work.
 Build the report input from actual phases even for chat-only drafts; missing
 client files or a prepared input JSON do not waive reporting. Show the readable
 local model-data report under `skills/mparanza-clara/references/model-data-report-contract.md`, link its

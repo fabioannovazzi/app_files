@@ -96,6 +96,32 @@ jobs:
           python -m mypy --config-file=tests/plugin_runtime.mypy.ini modules/workflow_usage plugins/vera/scripts/workflow_usage.py scripts/manage_workflow_usage.py
           python -m bandit -q -ll -r modules/workflow_usage plugins/vera/scripts/workflow_usage.py scripts/manage_workflow_usage.py
 
+  native-task-reporting:
+    name: Native task reporting (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: python -m pip install pytest fastapi httpx jinja2 jsonschema pydantic psycopg[binary] python-dotenv beautifulsoup4 requests json-repair cryptography black==25.1.0 isort==6.0.1
+      - name: Verify native persistence, owner binding and task-scoped replay
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/modules/workflow_usage
+          tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py
+      - run: python -m black --check tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py
+      - run: python -m isort --check-only tests/plugins/test_native_workflow_usage.py tests/plugins/test_incident_native_host.py
+
   reporting-postgres:
     name: Product reporting on PostgreSQL
     runs-on: ubuntu-latest

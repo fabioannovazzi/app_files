@@ -16,6 +16,15 @@ the cause and retest that workflow before advancing. Record every block,
 including successful automatic recovery. Completion also requires automatic
 readable privacy reports and server hashes verified against the correct userID.
 
+Current user-directed priority: repair and restart workflow one end to end.
+The earlier acceptance below covered report delivery/receipt/reopening only
+and was too broad when described as a passed workflow. Overall acceptance is
+withdrawn: zero workflows are fully accepted. Test two is stopped; the user
+will archive that chat, which must not be reopened without a later request.
+Preserve the prior first-run outputs and receipt as evidence. A fresh first
+test must execute every required stage, deliver usable results and provide
+accurate privacy measurements and a verified same-userID server proof.
+
 ## Required behavior
 
 | Area | Contract | Required evidence |
@@ -57,6 +66,10 @@ client ambiguity and professional interpretation remain agent judgments.
 | A21 | Execution / unrelated usage backlog | Ordinary startup instructions requested a global usage flush; even `flush(run_id=...)` returned the entire outbox's pending count. The first normal-chat test attempted six historical events from two unrelated Archive Organization tests before reconciliation began. | An unrelated delivery failure stopped the acceptance run, and successful selected-task delivery could still appear pending. Five regressions reproduced the scope/count/instruction defects; a sixth verified that selected-task rejection remains visible. | Start/outcome status now counts the selected UUID only. CLI flush and pending inspection support `--run-id`; startup and all 49 direct Vera entrypoints instruct task-scoped delivery. All 132 usage tests pass. Historical payloads and acknowledgements are preserved; no rejected global transmission was retried. Packaging and fresh-chat acceptance remain pending. | Exact event/owner/hash acknowledgement still protects delivery evidence. Unrelated tasks are not dependencies of the selected accounting task or its report. |
 | A22 | Execution / artifact path resolution | The resumed first test passed `outputs/inspection.json` to `read_studio_run_artifact`. The implementation resolved it against the resident process directory and rejected it as outside the selected run; the tool schema did not identify the expected path base. | Test stopped after source inspection, before agent mapping review or reconciliation. | Regression reproduced the failure. Relative paths now resolve against the selected run root; absolute paths remain valid. The tool describes both forms. Another run's output remains rejected. Focused source checks pass; installed recovery is pending. | The selected run supplies an unambiguous path base. Existing bound-input/output checks continue to prevent crossing into another run. |
 | A23 | Execution / portable diagnostic context | Inspection printed a pending PDF-reporting warning for two CSV files. `report_pdf_recovery` accessed `context["output_dir"]`, but the actual portable context stores `output_relative_path`. The killed-worker diagnostic used the same obsolete assumption. | PDF diagnostics raised `KeyError`; killed-worker evidence was not saved in a real portable-context regression. | Both helpers now reuse the maintained Archive context verifier/hydrator. CSV inspection creates no PDF incident, actual PDF failures still report, other-run outputs reject, and killed-worker evidence persists under the same run. The original context bytes remain unchanged. The host's Python 3.9.6 successfully hydrated the actual acceptance context with the repaired helper. Installed recovery is pending. | Mechanical identity/path verification prevents attributing another run's evidence. Hydration must follow the portable format already used by normal execution. |
+| A24 | Instructions / remaining specialist refresh dependency | The Open-item component skill still said “refresh first if Studio Archive reports changed top-level scopes” in its client-folder gate. A repository-wide skill search found this remaining instance after A12. | The instruction could reintroduce a search-index dependency before selected work. No such stop was observed in test two. | Source now separates selected identity/input validation from content-search refresh. Candidate packaging remains pending. | Selected client identity and input receipts must validate; an unrelated folder change does not require content indexing before reconciliation. |
+| A25 | First workflow / skipped required residual worker | The saved semantic status is `prepared`, `worker_required=true`; the test chat deliberately did not launch the worker, interpreting GPT-6.1 Sol as prohibiting the component's Luna step. The installed skill explicitly keeps the main model unchanged while running that separate bounded worker. | The normal residual-resolution path was not exercised. The earlier executable-identity failure therefore has no successful end-to-end replacement evidence from this run. | Unresolved. Fresh first-test acceptance must exercise the intended worker and validate its result, while keeping the main chat on GPT-6.1 Sol. | A main-chat model requirement does not imply a prohibition on the workflow's documented worker. No worker success may be inferred from preparation alone. |
+| A26 | First workflow / incomplete producer provenance | The final privacy report has eight derived-output lineage gaps and unmapped emissions. Its available source-cell counts do not establish the unsent remainder. | Report delivery and correct-owner hash verification succeeded, but complete source exposure accounting was not established. | Source repairs now cover tabular inspection, calculation audit, sealed metadata recipe revisions, selected MCP cases and the actual worker submission boundary. Focused transport regressions pass; broader checks, packaging and fresh installed acceptance remain pending. Preserve the incomplete historical report and its proof unchanged. | Allowing a truthful incomplete report avoids suppressing results; it does not make missing measurement coverage a successful end-to-end test. |
+| A27 | Usage persistence / native service boundary | Fresh 0.1.444 chat invoked the prescribed shell registration. The database is outside its writable project; a no-write `r+b` probe returned `PermissionError`, errno 1. SQLite read-only `quick_check` is `ok`, and the retained task has no database row. | The test stopped before Archive preparation or accounting. Moving the same command to the coordinator had recovered prior attempts but did not fix normal use. | Added fixed task operations to the existing native reporting service, reusing the same identity/database and task-scoped delivery. CLI diagnostics now retain operation, errno and SQLite error code. Native boundary regressions pass; packaging and fresh installed acceptance remain pending. | Persistence belongs to the installed service that owns it. No permission expansion, replacement identity, global queue flush or silent loss of reporting is required. |
 | T01 | Test harness | The component fixture restored `sys.path` between tests while its reporting adapter remained cached. | Broad regression run failed importing `archive_report_receipt` in the tax-litigation case. | Fixture now supplies product sibling imports per test; exact failing case passes. No product import behavior changed for this failure. | A fixture import defect does not justify changing production code. |
 | T02 | Previous behavior assertions | Two older tests required an exact recovery response without new issue fields and a global listing failure for an unreceipted file. | Broader regression verification failed after the intended inventory repair. | Assertions now verify the complete recovery response and the useful behavior: verified inputs remain visible, the unreceipted entry is unavailable and its bytes stay unchanged. Subsequent broader suite passes. | Tests must validate the requested behavior rather than preserving the defect as authority. |
 | T03 | Test harness / Windows CI | Job `118616483802` decoded Node's UTF-8 UI output using the Windows default encoding: `Apri incarichi →` became mojibake. | One native-navigation assertion failed; the job reported 60 passed, one failed and one skipped. | The three Archive UI harness subprocess calls now explicitly decode UTF-8. Ten focused local checks passed; subsequent Windows CI verification is pending. Production files are unchanged for this failure. | The harness must decode the actual UI transport encoding; weakening the visible-label assertion or changing production text would conceal the harness defect. |
@@ -79,6 +92,17 @@ client ambiguity and professional interpretation remain agent judgments.
 | H06 | Host approval / scoped current-task delivery | Automatic approval review rejected the coordinator's message asking the test chat to request approved execution of the current task's start. Its stated reason was that workflow-test authorization did not specifically authorize lifecycle metadata and the external Mparanza destination. | The scoped retry was not dispatched and the first workflow stopped. | The question named registration/lifecycle metadata, existing installation/computer credentials, the Mparanza endpoint and the 13-test scope, excluding client contents and historical queued events. The user answered “Of course. Go ahead” and subsequently the structured question with “Yes, authorize for these 13 tests”. The original question and direct reply were verified through chat readback before the approved command ran. | Explicit authorization now covers the selected metadata transfer. The historical queue remains excluded; no global retry, alternative transport or payload change was used. |
 | H07 | Host approval / delegated authorization provenance | The test chat's escalated command was rejected before process creation because its reviewer considered the detailed approval scope to come from assistant-generated context. | The first workflow stopped again even though the coordinator had received the user's direct answer. | Coordinator readback established the original detailed question and direct human reply, then submitted the identical installed command to normal host review in that chat. Approved execution delivered the event with matching owner/hash. The same test chat resumed the same task; the child rejection remains recorded. | Verify the direct authorization rather than treating a relayed statement as its own proof. A host-approved command after that verification establishes recovery of this step only. |
 | H08 | Integration-test host / loopback server | The exact incident CI suite passed 446 checks but the native-identity integration test could not bind its temporary `127.0.0.1` HTTP server: `PermissionError` errno 1. | Local suite failed before that test's simulated guest registration. | The same suite passed all 447 checks through normal approved execution with local socket permission; coverage is 83.13%. The server and credentials are disposable test fixtures, with no live historical queue. | The integration test needs its loopback transport. No product code, test assertion or coverage threshold was changed to accommodate the host restriction. |
+| H09 | First workflow / agent file lookup | After reconciliation succeeded, the 0.1.443 test chat searched a nonexistent `modules/journal-bank-reconciliation/vendor/journal_bank_core.py`; `rg` returned exit 2. | The chat stopped before final verification/delivery, preserving the running run and generated workbook. | Inspected the actual installed inventory: the file is `modules/journal-bank-reconciliation/scripts/journal_bank_core.py`. The corrected search passed, followed by fresh material replay through normal semantic preparation, selective case review and exact balance checks. Reconciliation was not rerun. | A failed filename lookup is an agent error, not a failure of the completed calculation or evidence that the validator is absent. |
+| H10 | First workflow / interpretation of incomplete measurement | Finalization returned `collection_status=incomplete`, eight `derived_output_lineage_unavailable` entries and `sent_data_has_no_source_coordinates`. The agent treated this as a delivery veto. | The draft remained `ready_for_review` despite successful reconciliation and artifact sealing. | Inspected the reporting contract and regression: incomplete measurement is an explicitly supported report outcome. Resumed normal completion of the same draft; retained every emission, unknown remainder and limitation. No measurements were fabricated or cleared. | Missing source coordinates prevent claims about unsent data. They do not prohibit delivering the draft or a truthful incomplete report. |
+| H11 | First workflow / agent chat-read argument | The agent supplied `turnLimit: 12`; the chat tool requires at most 10. | Reading the original metadata authorization failed after Archive completion, so usage completion was deferred. | A direct follow-up supplied 10; the subsequent existing-task completion command returned exit zero. Final selective acknowledgement readback remains part of acceptance. | Invalid tool arguments are an agent error, not a Vera execution block or rejection of the human authorization. |
+| H12 | Acceptance coordination / archived chat | A continuation message returned `session ... is archived` after the interrupted final update. | The message was not dispatched. The cause of archival is not established. | Following the user's explicit instruction to continue the goal, restored the same chat with the supported unarchive operation; the continuation was accepted. | Archived-chat lifecycle state is separate from Archive data and from the already completed calculation. |
+| H13 | Second workflow / host access to persistent state | The normal installed managed launcher returned `Usage reporting unavailable (OperationalError)` and incident identity, stderr-retention and local-queue permission warnings. | Test two stopped before client/run creation, retaining task UUID `f626e2c6-2a66-414b-8b97-5b6cb377c909`. | The coordinator submitted the identical command through normal host approval under the user's existing metadata authorization. It returned exit zero, one delivered, zero queued, no blocked delivery. The resumed chat independently verified the same task and Computer ID, then created the selected client and engagement. | Host-approved execution succeeded without changing product code, database, payload, task identity or historical queue. The failed command did not expose a precise file/errno; no database corruption is inferred. |
+| H14 | Fresh first-workflow restart / usage registration | GPT-6.1 Sol chat `01a15a0a-13ae-7d50-b63c-28af0556f097` verified enabled/exposed Vera 0.1.444, then `workflow_usage.py start` returned exit 1 with `OperationalError` for task `49ae526a-d458-4822-aa14-845c52af4984`. | The chat stopped on the first error, created no Archive run, and did not reach reconciliation or Luna. | Exact command/error retained in the chat's `outputs/resoconto-test-01.txt`; diagnosis and native-service repair tracked as A27. No privileged coordinator registration or historical flush was performed for this attempt. | The requested stop-on-error policy was followed. Installation/preflight success is not end-to-end acceptance. |
+| T08 | Coordinator source lookup | Read-only searches included nonexistent `workflow_usage_store.py` and `references/studio-archive-handoff.md`; `rg` reported those paths missing. | No acceptance operation or data write failed. | The first search located the actual SQLite schema in `workflow_usage.py`; inspected it and performed the intended read-only verification. Subsequent reference discovery used the actual file inventory. | Incorrect filename assumptions by the coordinator; no product restriction or repair is inferred. |
+| T09 | Acceptance decision / premature advancement | The coordinator marked workflow one accepted after automatic report delivery, same-userID hash verification and read-only reopening, despite known incomplete measurement and an unexecuted required worker. | Workflow two was started too early. | Following the user's challenge, withdrew overall acceptance and stopped test two. The user explicitly prioritizes one fully successful end-to-end test over thirteen partial results. | Receipt validity proves retained report bytes and ownership; it does not prove the omitted workflow stage or missing source coverage. |
+| T10 | Reporting regression harness | The first new assertion expected `RunStore.events()` to expose `local_response`, which that read API intentionally removes. A broader combined run subsequently exposed Variance's missing test import isolation (`modules.chart_harness`), while the same Variance tests passed alone. | These checks failed before their intended assertions; neither established a product regression. | Corrected the new assertion to verify the retained payload digest. Imported the existing Variance isolation fixture into its projection test; the same combined suite now passes all 62 checks. No production import path was changed to accommodate the harness. | Tests must use their documented read API and isolate plugin imports. |
+| T11 | First-workflow integration fixture | The new fixture initially supplied Archive role `bank` instead of the documented `source` role, then placed `semantic_review` below the reconciliation output rather than using the documented sibling `semantic-review` layout. | The regression stopped during fixture setup, before its intended transport assertion. | Corrected the fixture to use the public import roles and ordinary reconciliation/semantic-review layout. The real calculation, MCP transport and simulated-worker launch regressions now pass. Production role and directory rules were not changed to accommodate test mistakes. | These are fixture defects, not evidence that the ordinary client workflow failed. |
+| T12 | Native usage regression fixture | The new test used Clara `variance-analysis` instead of catalogue primary `reporting-engine`, and expected status `product_version` instead of the existing `current_version`. | Three fixture assertions failed; the macOS sandbox/native boundary reproduction itself passed. | Corrected the fixtures to the inspected public catalogue/status contracts. All 46 native reporting regressions now pass. | No product rule was changed to accommodate these test mistakes. |
 
 ## Verification log
 
@@ -279,6 +303,151 @@ client ambiguity and professional interpretation remain agent judgments.
 - Final candidate package/privacy/release checks pass: 492 passed, two skips
   for unavailable curated Marketplace installations, zero failures or errors.
   JUnit: `/private/tmp/studio-archive-443-package-privacy.xml`.
+- Commit `edb8384453aecd91204a4f3bf35c52bdade78952` is pushed to draft PR #884;
+  its fresh CI is running. The supported local installation enabled 0.1.443,
+  and all 2,181 cache files match the tested ZIP with no extras. Fresh GPT-6.1
+  Sol chat `01a159a9-c6eb-7131-bc27-ceb3d0046094` verified the exposed version
+  and successfully read `outputs/inspection.json` relative to the selected
+  run, recovering A22. Agent mapping receipts were sealed; repeat inspection
+  emitted three bank and two journal rows with no A23 warning.
+  Reconciliation returned two matches, one unmatched bank row and zero unmatched
+  journal rows. H09 stopped final verification; the same chat has been resumed
+  with the inspected correct path. No completed-run or report acceptance is
+  claimed, and no second workflow has started.
+
+- The same 0.1.443 chat subsequently completed the preserved run and delivered
+  the reconciliation draft: two matches, a 5 EUR bank commission still open,
+  and verified closing balances of 1,295 EUR versus 1,300 EUR. This is draft
+  delivery, not a claim of full reconciliation or professional adoption.
+  The automatic final privacy report was included in the chat's response:
+  32 recorded emissions and 90,310 characters, with incomplete measurement
+  explicitly disclosed. Unsent source data remains unknown.
+- Independently ran the installed `archive_report_receipt.py verify` against
+  the saved final report and explicitly supplied Vera userID
+  `0ed4a818-1877-4652-8515-787c64de17a5`. It returned `verified` for the same
+  Archive run, revision 2, receipt `50ead784-dd72-5d8f-bcf1-e04764e9556f`,
+  SHA-256 `8d8c808a64ac792523d3a9b086b17e2ae334fa9003d72499549e727799b822d8`.
+  This verifies report bytes and ownership, not completeness of source-cell
+  measurement or provider receipt. Read-only reopening and final usage
+  acknowledgement remain to be checked before advancing to workflow two.
+- Current exact-commit CI on `edb8384453aecd91204a4f3bf35c52bdade78952`
+  has 17 successful workflows and two still running, with no failures.
+- First workflow acceptance subsequently passed: normal reopening of the
+  saved draft and privacy report succeeded without recalculation. Independent
+  before/after hashes of all 61 retained non-database run files were identical,
+  with no added files. The scoped usage task is completed, sequence 2, with
+  server acknowledgement and no selected-task queue. Final event:
+  `fc3742b5-f3cb-4462-aa95-4becadd4a33c`, payload SHA-256
+  `9d26c0ed4928c93c165a992ffeb62ed59e00083c460baddcab0e065a389084e7`.
+  All six excluded historical events remain byte-identical and unacknowledged.
+  Acceptance covers automatic report delivery, correct-userID server proof
+  and read-only reopening; it does not claim complete source-cell measurement.
+- Only after the first chat became idle and these checks passed, started
+  workflow two (`open-item-reconciliation`) in separate GPT-6.1 Sol chat
+  `01a159bb-06db-7ae1-9316-bfca6b698e60`. Its requested synthetic case has
+  three initial receivables and two subsequent receipts, including one partial
+  payment. It has verified exposed Vera 0.1.443. Result/report acceptance is
+  pending; no third workflow has started.
+
+## First-workflow repair after withdrawn acceptance
+
+Vera 0.1.444 was installed and independently verified before a fresh GPT-6.1 Sol
+chat started. That attempt stopped at H14 before accounting. No workflow is
+accepted. Test two remains stopped and must not be reopened.
+
+- Real CLI inspection reproduced missing preview provenance. The producer now
+  registers the cells in its bounded tabular preview before delivery; preparation
+  alone counts no source exposure. Tests cover one and thirty source rows,
+  the twenty-row preview bound, and an unmapped private column that remains local.
+- The collector now recognizes concatenated exact producer-declared status
+  lines. An additional undeclared line still makes the report incomplete and
+  retains its payload hash. Journal-bank's known operational log messages now
+  register their exact emitted text.
+- Registered complete text artifacts can carry verified producer provenance.
+  A partial read cannot inherit the complete artifact's source selections.
+  The reconciliation audit and technical review-note producers use the same
+  mechanism. A real three-bank-row/two-journal-row calculation produces two
+  matches and the expected unmatched fee, with twenty mapped cells exposed
+  when the audit is read and five private-column cells remaining local.
+- The focused automatic-reporting and producer-projection combination passes
+  62 tests. JUnit: `/private/tmp/studio-archive-first-producer-repair.xml`.
+  This is source regression evidence, not installed end-to-end acceptance.
+- Sealed mapping recipes retain their metadata provenance only when the exact
+  parent was producer-registered metadata and the edit adds mapping/review
+  metadata. Unknown extra recipe content cannot inherit this declaration.
+- The normalizer now records transaction field origins locally. The real MCP
+  bridge uses these origins for the selected case fields, including optional
+  identifiers. Review packets must match a producer-recorded private packet;
+  edited or unknown packets remain unaccounted for rather than being certified.
+  Source coordinates and private-packet digests stay in app-only metadata.
+- The worker launcher registers the exact submitted prompt/schema against
+  selected candidate rows. The macOS launch-path regression uses a simulated
+  model response and counts four cells from the one unmatched bank row, leaving
+  twenty-one cells local. This does not establish that a real Luna call ran.
+- The broader reconciliation, reporting, MCP minimization and producer suite
+  passed all 573 tests, with no failures or skips:
+  `/private/tmp/studio-archive-first-workflow-repair.xml`.
+- The exact reporting CI selection, including the new journal-bank regressions,
+  passed 163 tests with 81.58% coverage. Source quality checks pass Black, Isort,
+  Mypy and Bandit at the medium/high threshold. JUnit:
+  `/private/tmp/studio-archive-444-reporting-coverage.xml`.
+- A further regression covers the first case's explicit exclusion of opening
+  and running balance columns. It seals the agent's reviewed mapping, reconciles
+  two movements and retains the unmatched fee. Reading the audit exposes 45
+  mapped cells while 15 balance/private-note cells remain local:
+  `/private/tmp/studio-archive-first-balance-exclusions.xml`.
+- Candidate versions: Vera 0.1.444, Clara 0.1.322, Lucia 0.1.146,
+  Journal-Bank 0.1.71 and Open-item 0.1.60-tabular-source.12. Only PR #884 was
+  open at preflight; main remained `2d628d2ecae9ae9e447ff03353a05ec694755fc3`.
+- B01/B02 recurred during packaging: the first component build found stale
+  generated source contracts; the product build then stopped at stale course
+  provenance. Rebuilt the contracts and courses and inspected the resulting
+  delta. Twenty-one course files changed only verified source hashes and the
+  newly imported `archive_cli.py`/`archive_projection.py` dependencies; lesson
+  content is unchanged. All 55 localization entrypoint IDs, paths and hashes
+  remain identical; only the product-manifest catalogue binding was refreshed.
+- Reviewed/refreshed 21 affected privacy records, including five dependent
+  catalogue/course records. All three registers validate. Codex, ChatGPT upload,
+  Cowork and Antigravity builds and source-parity checks pass for all products.
+  Final package/privacy regressions passed 569 tests with two expected missing
+  curated-installation skips (`/private/tmp/studio-archive-444-package-privacy.xml`).
+  Marketplace was untouched.
+- Supported installation enabled `vera@mp-vera` at 0.1.444. All 2,181 cached
+  files matched the candidate ZIP, without extras; ZIP SHA-256
+  `74e8892d6a7d455e96740bc4bbcf77229536fd0e93179d6ed34077c9a799a7f4`.
+- The fresh chat `01a15a0a-13ae-7d50-b63c-28af0556f097` stopped at H14.
+  Read-only diagnosis found no saved usage row and no database corruption.
+  The native service repair preserves the existing identity and database; it
+  accepts only fixed start/record/status/task-scoped flush operations.
+  Its 46 passing regressions cover real local HTTP delivery, owner/computer
+  binding, replay without duplication, unchanged historical queue/identity,
+  rejected command/global-queue inputs, structured storage errors, and the
+  reproduced macOS restricted-shell/native-service boundary.
+  Evidence: `/private/tmp/studio-archive-native-usage.xml`.
+- A27 broader reporting regressions passed 292 tests with no failures/skips
+  (`/private/tmp/studio-archive-445-usage-regression.xml`). The exact usage
+  coverage selection plus native tests passed 163 tests at 93.49% coverage
+  (`/private/tmp/studio-archive-445-usage-coverage.xml`), including three added
+  task-scoped retry and snapshot-integrity regressions. Black, Isort, Mypy,
+  Bandit and Node syntax checks pass for the changed source.
+- Candidate Vera 0.1.445, Clara 0.1.323 and Lucia 0.1.147 packages built and
+  align across Codex, ChatGPT upload, Cowork and Antigravity. Reviewed/refreshed
+  24 affected privacy records plus five catalogue/course dependants. The native
+  route retains the same fixed endpoint, identities and task metadata fields;
+  it adds no professional-file or command input. The Geneva catalogue retains
+  all 55 IDs/paths; only Vera's reporting instructions changed, leaving the
+  authored jurisdictional assessments unchanged.
+- Final package/privacy checks passed 569 tests with two expected absent curated
+  installation skips (`/private/tmp/studio-archive-445-package-privacy.xml`).
+  Source/package parity passes for every affected host. The seven native usage
+  snapshot inputs match the real generated package index for all three products.
+- B06 recurred while committing this repair: an empty index lock dated 17:40:25
+  blocked staging. Normal host process inspection found no Git process/open
+  owner; rechecked the unchanged old empty file and removed only that lock.
+- Remaining work includes installing A27 and fresh normal chat
+  acceptance. The fresh first run must then execute
+  its required worker, deliver and reopen its results, and verify the new final
+  report against the correct userID. Preserve the earlier report unchanged.
 
 ## Remaining audit targets
 

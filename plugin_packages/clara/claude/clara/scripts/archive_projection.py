@@ -12,7 +12,11 @@ from archive_report_store import RunStore, digest, file_digest, run_lock
 __all__ = [
     "is_recording",
     "register_metadata",
+    "register_metadata_revision",
+    "register_private_value",
     "register_projection",
+    "register_rows",
+    "register_row_projection",
     "register_value",
     "run_cli",
 ]
@@ -74,6 +78,117 @@ def register_metadata(component: str, output: Path, payload: Any) -> None:
                 "data_sha256": digest(payload),
             },
         )
+
+
+def register_rows(
+    component: str, output: Path, records: dict[str, dict[str, Any]]
+) -> None:
+    """Retain the normalizer's field origins without counting preparation as a send."""
+    root = bound_run(component, {"output": str(output)})
+    if root is None:
+        return
+    with run_lock(root):
+        RunStore(root).event(
+            "rows:" + digest(records),
+            {
+                "kind": "prepared_source_rows",
+                "component": component,
+                "records": records,
+            },
+        )
+
+
+def register_private_value(component: str, output: Path, value: Any) -> None:
+    """Bind a locally produced review packet; this does not declare a model send."""
+    root = bound_run(component, {"output": str(output)})
+    if root is not None:
+        with run_lock(root):
+            RunStore(root).event(
+                "private:" + digest(value),
+                {
+                    "kind": "prepared_private_value",
+                    "component": component,
+                    "data_sha256": digest(value),
+                },
+            )
+
+
+def register_metadata_revision(
+    component: str, path: Path, previous_sha256: str
+) -> None:
+    """Carry an exact metadata parent through a producer's metadata-only edit."""
+    root = bound_run(component, {"output": str(path)})
+    if root is None:
+        return
+    with run_lock(root):
+        known_parent = any(
+            event["kind"] == "prepared_projection"
+            and event["artifact_sha256"] == previous_sha256
+            and not event["selections"]
+            for event in RunStore(root).events()
+        )
+    if known_parent:
+        register_projection(component, path, [])
+
+
+def register_row_projection(
+    component: str,
+    output: Path,
+    value: Any,
+    records: list[dict[str, Any]],
+    *,
+    private_sha256: str | None = None,
+) -> None:
+    """Resolve only fields selected by the producer, never infer origin from values."""
+    root = bound_run(component, {"output": str(output)})
+    if root is None:
+        return
+    with run_lock(root):
+        events = RunStore(root).events()
+        if private_sha256 is not None and not any(
+            event["kind"] == "prepared_private_value"
+            and event["component"] == component
+            and event["data_sha256"] == private_sha256
+            for event in events
+        ):
+            return  # An edited or supplied review cannot claim producer provenance.
+        origins = {}
+        for event in events:
+            if (
+                event["kind"] == "prepared_source_rows"
+                and event["component"] == component
+            ):
+                origins.update(event["records"])
+        entries = []
+        for record in records:
+            if (
+                not isinstance(record, dict)
+                or not isinstance(record.get("record_id"), str)
+                or not isinstance(record.get("fields"), list)
+                or any(not isinstance(field, str) for field in record["fields"])
+            ):
+                return
+            origin = origins.get(record["record_id"])
+            if origin is None or any(
+                field not in origin["fields"] for field in record["fields"]
+            ):
+                return  # Missing producer evidence remains an incomplete report.
+            columns = sorted(
+                {
+                    column
+                    for field in record["fields"]
+                    for column in origin["fields"][field]
+                }
+            )
+            entries.append(
+                {
+                    **origin["source"],
+                    "rows": [
+                        {"physical_row": origin["physical_row"], "columns": columns}
+                    ],
+                }
+            )
+    register_value(component, output, value, entries)
 
 
 def register_projection(

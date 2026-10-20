@@ -23,7 +23,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov jsonschema pyyaml pypdf openpyxl python-docx fastapi httpx jinja2 pydantic psycopg[binary] python-dotenv beautifulsoup4 requests json-repair cryptography defusedxml black==25.1.0 isort==6.0.1 mypy bandit -r plugins/report-builder/requirements.txt
+      - run: python -m pip install pytest pytest-cov jsonschema pyyaml pypdf openpyxl python-docx fastapi httpx jinja2 pydantic psycopg[binary] python-dotenv beautifulsoup4 requests json-repair cryptography defusedxml black==25.1.0 isort==6.0.1 mypy bandit -r plugins/report-builder/requirements.txt -r plugins/journal-bank-reconciliation/requirements.txt
       - name: Verify automatic lifecycle, Vera sends, retries and authenticated proofs
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
@@ -33,6 +33,7 @@ jobs:
           tests/plugins/test_archive_cli_delivery.py
           tests/plugins/test_archive_report_builder_projection.py
           tests/plugins/test_archive_report_builder_execution.py
+          tests/plugins/test_archive_journal_bank_projection.py
           tests/plugins/test_archive_output_boundaries.py
           tests/plugins/test_vera_selective_reporting.py
           tests/modules/run_receipts
@@ -43,8 +44,8 @@ jobs:
       - name: Check source quality
         shell: bash
         run: |
-          python -m black --check plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/modules/run_receipts/test_archive_binding.py
-          python -m isort --check-only plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/modules/run_receipts/test_archive_binding.py
+          python -m black --check plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/plugins/test_archive_journal_bank_projection.py tests/modules/run_receipts/test_archive_binding.py
+          python -m isort --check-only plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/plugins/test_archive_journal_bank_projection.py tests/modules/run_receipts/test_archive_binding.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/reporting-runtime/archive_*.py
           python -m bandit -q -ll plugins/_shared/reporting-runtime/archive_*.py
           python -m black --check plugins/_shared/reporting-runtime/diagnostic_context.py tests/plugins/test_portable_workflow_diagnostics.py
