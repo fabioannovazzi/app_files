@@ -80,7 +80,7 @@
       {
         "id": "selected-case-context",
         "purpose": "Interpret or verify only the reconciliation cases selected from the index",
-        "content": "At most 25 requested cases per call: populated allowlisted accounting fields such as dates, signed amounts, currency, account name, description, beneficiary or counterparty, deterministic status and rule, evidence level, match type, review flags and instructions, relationship or allocation status, exceptions and requested evidence. Physical source locators, technical record IDs, write targets, empty fields, unmapped columns and duplicate facts are omitted. Exact document, invoice, movement and reference values are excluded by default and can be requested only for selected cases when exact identity is required. Real names, descriptions, amounts and other case facts can therefore enter model context; the opaque handle is a routing control, not anonymization or pseudonymization of the professional case data. Producer-generated document requests can quote exact identifiers, so selected-case model projection also withholds requested_document unless include_exact_identifiers is true. This field gate applies in both data and evidence. The full human review remains unchanged. Mapped descriptions and other selected source text are not automatically anonymized.",
+        "content": "At most 25 requested cases per call: populated allowlisted accounting fields such as dates, signed amounts, currency, account name, description, beneficiary or counterparty, deterministic status and rule, evidence level, match type, review flags and instructions, relationship or allocation status, exceptions and requested evidence. Physical source locators, technical record IDs, write targets, empty fields, unmapped columns and duplicate facts are omitted. Exact document, invoice, movement and reference values are excluded by default and can be requested only for selected cases when exact identity is required. Real names, descriptions, amounts and other case facts can therefore enter model context; the opaque handle is a routing control, not anonymization or pseudonymization of the professional case data. Producer-generated document requests can quote exact identifiers, so selected-case model projection also withholds requested_document unless include_exact_identifiers is true. This field gate applies in both data and evidence. The full human review remains unchanged. Mapped descriptions and other selected source text are not automatically anonymized. Selected tabular cases also retain the mapped row counterparty, partial allocated amount and outstanding residual, and supporting bank date and amount; their recorded provenance follows explicit source record IDs and mapped column indices, never value matching.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -103,6 +103,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "review-mutation-status",
+        "purpose": "Confirm saved and applied review actions without echoing their complete private contents.",
+        "content": "Public save/apply replies expose status, technical run identity, counts and output paths. Complete decision objects, reviewer prose, applied effects and final-artifact objects remain in app-only metadata and persisted local files. The CLI completion message contains technical identities and paths, excluding free-form engagement label and purpose. Unknown errors or unsupported field origins remain unmeasured in the report rather than being silently classified as metadata.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -110,7 +119,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "3d64d6f5093cf65abc71f21b98a61b6d1a9e33bc4d2f32deba4c30e3062383e3"
+    "source_fingerprint": "eabfc61ba2c19010d048bb838bacc66fed13589c33f7d260a71663837dbc4e7d"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -174,6 +183,10 @@
     {
       "id": "explicit-registered-native-initial-intake",
       "control": "Signed current work/revision and receipt identities bind native source opening; stale, foreign, changed or oversized sources are refused. All source roles and conventions must be explicitly complete before the unchanged raw producer runs in the bound outputs/reconciliation directory. Private drafts use owner-bound compare-and-set and never restore confirmation. A durable unresolved intent requires recovery; identical completed requests replay their retained result. The public assurance validator checks the complete output and preserves failed gates. Declared reviewer labels are not authenticated identities; preparation does not approve the reconciliation or complete Archive."
+    },
+    {
+      "id": "producer-owned-tabular-provenance",
+      "control": "The reviewed CSV/XLSX reader records exact physical row and source-column dependencies with source byte hashes. The producer binds the complete private review digest. The outgoing recorder accepts index, selected-case and mutation-status projections only against that producer digest; edited or supplied review packets cannot inherit its provenance. Selected check metadata is limited to the known numeric pending-review count; arbitrary diagnostic prose is not certified."
     }
   ],
   "workstream": "open-item-reconciliation",

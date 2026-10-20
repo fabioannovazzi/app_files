@@ -2579,7 +2579,7 @@
       return {run_intake:state.payload.run_intake || null,review_payload:reviewPayload(),ui_decisions:state.payload.ui_decisions || null,final_artifacts:state.payload.final_artifacts || null,decisions:collectDecisionInputs(),decision_source:"mcp_widget",expected_predecessor_checkpoint:checkpoint};
     }
     function parseToolResult(result) {
-      const privatePayload = pickPayload(result);
+      const privatePayload = privatePayloadFromMetadata(result) || pickPayload(result);
       if (privatePayload) return privatePayload;
       if (result?.structuredContent) return result.structuredContent;
       if (result?.ui_decisions || result?.ok != null) return result;

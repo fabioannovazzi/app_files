@@ -265,6 +265,23 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         store = RunStore(Path(request["binding"]["run_root"]))
         state = store.state()
         if state is not None and state["collection_closed"]:
+            if operation == "cancel" or value.get("state") == "cancelled":
+                # Cancellation is already requested above. Its service-owned
+                # status can be confirmed without disclosing retained streams
+                # or rewriting the closed professional-data report.
+                payload = {"output": [metadata]}
+                response = {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": json.dumps(payload, ensure_ascii=False),
+                        }
+                    ],
+                    "structuredContent": payload,
+                }
+                if "cancellation_error" in value:
+                    response["isError"] = True
+                return response
             # Read-only recovery of an already delivered exact result preserves
             # the sealed report. A newly completed payload still needs delivery
             # under its active revision and cannot silently enter a closed run.

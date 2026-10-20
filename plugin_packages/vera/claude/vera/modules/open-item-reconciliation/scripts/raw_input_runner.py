@@ -130,7 +130,12 @@ from vera_assurance import (  # noqa: E402
 )
 
 try:
-    import fitz  # type: ignore
+    try:
+        import pymupdf as fitz  # type: ignore
+    except ModuleNotFoundError as exc:
+        if exc.name != "pymupdf":
+            raise
+        import fitz  # type: ignore
 except (
     Exception
 ) as exc:  # pragma: no cover - optional dependency import failures are reported at runtime
@@ -2630,6 +2635,7 @@ def extract_normalized_records(
     output_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     active = dict(assumptions or {})
+    source_origins: dict[str, dict[str, Any]] = {}
     root = Path(input_dir).absolute()
     out_dir = validate_run_output_dir(
         Path(output_dir) if output_dir else root.parent / "output",
@@ -2829,7 +2835,9 @@ def extract_normalized_records(
                 continue
             if adapter_family == "reviewed_tabular_accounting_v1":
                 parsed = read_reviewed_tabular_source(
-                    path, _reviewed_source_decision(active, path)
+                    path,
+                    _reviewed_source_decision(active, path),
+                    origins=source_origins,
                 )
                 if role_from_name == "open_items":
                     tabular_open_items.extend(parsed)
@@ -3009,6 +3017,7 @@ def extract_normalized_records(
     validate_receipt_set({"source": root.resolve()}, source_receipts)
     return {
         "source_inventory": inventory,
+        "source_origins": source_origins,
         "source_root": str(root.resolve()),
         "source_artifact_receipts": source_receipts,
         "reviewed_source_decision_receipts": list(decisions_by_path.values()),
@@ -3364,6 +3373,16 @@ def run_raw_input_reconciliation(
         ],
         workbook_name=Path(result["excel_path"]).name,
     )
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_rows(WORKFLOW_ID, out_dir, extracted["source_origins"])
+        recorder.register_private_value(
+            WORKFLOW_ID,
+            out_dir,
+            json.loads(review_session.review_payload_path.read_bytes()),
+        )
     return {
         **result,
         **extracted,
@@ -3518,10 +3537,21 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     summary = {
         "status": "ready_for_review",
-        "client_engagement": result["client_engagement"],
+        "client_engagement": {
+            key: result["client_engagement"][key]
+            for key in ("client_id", "engagement_id", "workflow_id", "run_id")
+        },
+        "client_engagement_path": str(args.client_engagement.resolve()),
         "run_manifest_path": str(Path(result["run_output_dir"]) / "run_manifest.json"),
         "artifact_card_path": str(Path(result["run_output_dir"]) / "artifact_card.md"),
     }
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        # This exact constructor carries status, technical IDs and paths;
+        # free-form engagement labels/purpose and source rows are not echoed.
+        recorder.register_metadata(WORKFLOW_ID, Path(result["run_output_dir"]), summary)
     sys.stdout.write(json.dumps(summary, ensure_ascii=False, sort_keys=True) + "\n")
     return 0
 

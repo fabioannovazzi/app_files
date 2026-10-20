@@ -1760,11 +1760,13 @@ def _portable_client_engagement_context(
 
 
 def _is_review_transaction_output(output_dir: Path, run_root: Path) -> bool:
-    """Recognize the private copy used by an Audit review transaction."""
+    """Recognize browser and MCP working copies inside this exact managed run."""
 
     return (
         output_dir.name == "working"
-        and output_dir.parent.name.startswith(".audit-review-transaction-")
+        and output_dir.parent.name.startswith(
+            (".audit-review-transaction-", ".generated-review-transaction-")
+        )
         and output_dir.parent.parent in {run_root, run_root / "outputs"}
     )
 
@@ -1790,7 +1792,7 @@ def _current_client_engagement(
     if out_dir.name == "reconciliation" and out_dir.parent.name == "outputs":
         context_candidates.append(out_dir.parent.parent / "context.json")
     if out_dir.name == "working" and out_dir.parent.name.startswith(
-        ".audit-review-transaction-"
+        (".audit-review-transaction-", ".generated-review-transaction-")
     ):
         context_candidates.append(out_dir.parent.parent / "context.json")
         if out_dir.parent.parent.name == "outputs":
@@ -3926,6 +3928,7 @@ def retain_review_transition(
     )
     if receipt not in receipts:
         raise AssuranceRunError("retained review transition did not replay")
+    retained_entries = _physical_tree_entries(transition_dir)
     return {
         "predecessor_assurance_sha256": predecessor_digest,
         "transition_receipt": receipt,
@@ -3935,8 +3938,17 @@ def retain_review_transition(
                 / predecessor_digest
                 / str(entry["path"])
             ).as_posix()
-            for entry in _physical_tree_entries(transition_dir)
+            for entry in retained_entries
             if entry["kind"] == "file"
+        ],
+        "history_directories": [
+            (
+                Path(REVIEW_TRANSITION_HISTORY_DIRECTORY)
+                / predecessor_digest
+                / str(entry["path"])
+            ).as_posix()
+            for entry in retained_entries
+            if entry["kind"] == "directory"
         ],
     }
 
@@ -5351,7 +5363,10 @@ def _tabular_xlsx_numbers(
 
 
 def read_reviewed_tabular_source(
-    path: Path, decision: Mapping[str, Any]
+    path: Path,
+    decision: Mapping[str, Any],
+    *,
+    origins: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Apply explicit semantic review using reproducible cell reads and arithmetic.
 
@@ -5590,6 +5605,37 @@ def read_reviewed_tabular_source(
             if role == "bank_statement":
                 row["bank_amount"] = row["amount"]
             output.append(row)
+        if origins is not None:
+            # These are the parser's actual cell dependencies, not inferred
+            # matches of emitted text against arbitrary source values.
+            fields = {field: [column] for field, column in columns.items()}
+            for field in (
+                "entity_ref",
+                "party_ref",
+                "currency",
+                "unit",
+                "evidence_type",
+            ):
+                fields.setdefault(field, [])
+            fields["document_key"] = sorted(
+                {*fields.get("document_no", []), *fields.get("document_date", [])}
+            )
+            if content["role"] == "open_items":
+                fields.setdefault("balance", fields["amount"])
+                fields.setdefault("posting_date", fields["document_date"])
+            if content["role"] == "bank_statement":
+                fields["bank_amount"] = fields["amount"]
+            for row in output:
+                origins[row["record_id"]] = {
+                    "source": {
+                        "source_path": str(path.resolve()),
+                        "source_sha256": hashlib.sha256(data).hexdigest(),
+                        "source_column_count": len(headers),
+                        "sheet_name": layout["sheet"],
+                    },
+                    "physical_row": row["source_row"],
+                    "fields": fields,
+                }
         return output
     finally:
         if workbook is not None:
@@ -5817,7 +5863,12 @@ def _source_value_locator(
             workbook.close()
     elif suffix == ".pdf":
         try:
-            import fitz
+            try:
+                import pymupdf as fitz
+            except ModuleNotFoundError as exc:
+                if exc.name != "pymupdf":
+                    raise
+                import fitz
         except ImportError as exc:
             raise AssuranceRunError(
                 "PDF source locators cannot be dereferenced"
@@ -6313,8 +6364,8 @@ def _validate_closed_relationships(
     evidence_rows: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
     assumptions: Mapping[str, Any] | None = None,
-) -> None:
-    """Require current evidence plus one balanced relationship for every closure."""
+) -> set[str]:
+    """Validate closure and return exact rederived partial-payment ledger IDs."""
 
     evidence_by_id = {
         str(row.get("record_id")): row
@@ -6330,6 +6381,7 @@ def _validate_closed_relationships(
     ):
         raise AssuranceRunError("prepared evidence record identities must be unique")
     ledgers = [validate_allocation_ledger(ledger) for ledger in allocation_ledgers]
+    validated_partial_ledgers: set[str] = set()
     partial_rows = [
         row
         for row in reconciliation_rows
@@ -6358,6 +6410,7 @@ def _validate_closed_relationships(
                 raise AssuranceRunError(
                     "partial payment lacks its exact evidence allocation and retained residual"
                 )
+            validated_partial_ledgers.add(ledger_id)
     for row in reconciliation_rows:
         if not _closed_status(row.get("reconciliation_status")):
             continue
@@ -6429,12 +6482,14 @@ def _validate_closed_relationships(
                 f"closed reconciliation record {record_id} lacks a balanced "
                 "evidence allocation relationship"
             )
+    return validated_partial_ledgers
 
 
 def _reconciliation_gate_failed(
     checks: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
     reconciliation_rows: Sequence[Mapping[str, Any]],
+    validated_partial_ledger_ids: set[str],
 ) -> bool:
     if reconciliation_rows and not checks:
         return True
@@ -6451,7 +6506,11 @@ def _reconciliation_gate_failed(
         and not str(row["check"]).startswith("codex_review")
         for row in checks
     ) or any(
+        # A retained unpaid balance is a valid result, not a failed calculation.
+        # Only source-rederived partial settlements receive this exception;
+        # unrelated imbalances and all claimed closures remain checked.
         not validate_allocation_ledger(ledger)["balanced"]
+        and ledger["ledger_id"] not in validated_partial_ledger_ids
         for ledger in allocation_ledgers
     )
 
@@ -6579,7 +6638,7 @@ def _finalize_assurance_run_in_place(
     normalized_allocations = [
         validate_allocation_ledger(ledger) for ledger in allocation_ledgers
     ]
-    _validate_closed_relationships(
+    validated_partial_ledger_ids = _validate_closed_relationships(
         reconciliation_rows=reconciliation_rows,
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=normalized_allocations,
@@ -6739,6 +6798,7 @@ def _finalize_assurance_run_in_place(
         checks,
         normalized_allocations,
         reconciliation_rows,
+        validated_partial_ledger_ids,
     )
     reconciliation_status = "failed" if reconciliation_failed else "passed"
     semantic_status = _review_gate_status(
@@ -7425,7 +7485,7 @@ def validate_assurance_run(
     ]
     if allocations != payload["allocation_ledgers"]:
         raise AssuranceRunError("allocation ledgers are stale")
-    _validate_closed_relationships(
+    validated_partial_ledger_ids = _validate_closed_relationships(
         reconciliation_rows=result["reconciliation_rows"],
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=allocations,
@@ -7590,6 +7650,7 @@ def validate_assurance_run(
             result["checks"],
             allocations,
             result["reconciliation_rows"],
+            validated_partial_ledger_ids,
         )
         else "passed"
     )

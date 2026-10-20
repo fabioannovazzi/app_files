@@ -34,7 +34,7 @@
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
       "repository_path": "plugins/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "a5dff24181de56b5b9f2a4d21a8a8e2eb39fd4f031abba6eba9f55deb14f18f3"
+      "sha256": "e389fc274e88e97104b4daf0792c05fb823541815bba936951f67d4233fbd59b"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -79,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "4a44d415747a5d0a3ae0e2e1a02b00069790eae9a1ca579f94bee3be7ce8f4e7"
+      "sha256": "caee43659051a76b5928211896e8805afc7ccebbf958da9c6d052099d9523a0c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "9bf91378dba0f8cb359a666c224409dc84baa72070f2992fc3223c3b42f7f71b"
+      "sha256": "489a522e5922f1df31b4e92310a0c02c218cb171ff0898ee32c7221ab76ca4da"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",

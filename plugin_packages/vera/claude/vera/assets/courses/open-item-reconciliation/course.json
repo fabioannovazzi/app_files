@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "a6118730be994a0d26e105517c3bdb971f7934109d078820d7d36843d008dd4b"
+      "sha256": "bba516a650c7f60421bb87cb763308f6120e293f733762548679ef9e507691c9"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "4a44d415747a5d0a3ae0e2e1a02b00069790eae9a1ca579f94bee3be7ce8f4e7"
+      "sha256": "caee43659051a76b5928211896e8805afc7ccebbf958da9c6d052099d9523a0c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "9bf91378dba0f8cb359a666c224409dc84baa72070f2992fc3223c3b42f7f71b"
+      "sha256": "489a522e5922f1df31b4e92310a0c02c218cb171ff0898ee32c7221ab76ca4da"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "45bd8755fb9a5e480a075e1ee194953232792778eff3b051b4084c10d6d9ca10"
+  "canonical_course_sha256": "b605350e7f3886b470336069f110dc5be7068ef761815c7fea23414ce6afa4c9"
 }

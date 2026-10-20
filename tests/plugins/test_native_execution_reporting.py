@@ -113,6 +113,44 @@ def test_first_delivery_after_run_closure_remains_explicitly_blocked(
     assert store.events() == before
 
 
+@pytest.mark.parametrize(
+    "operation, worker_state",
+    [("cancel", "running"), ("cancel", "cancelled"), ("status", "cancelled")],
+)
+def test_cancel_after_archive_closure_returns_status_without_source_output(
+    archive_core, client_case, tmp_path, monkeypatch, operation, worker_state
+):
+    from archive_report_store import RunStore
+
+    loaded = start(archive_core, client_case)
+    module, args = retained_job(
+        tmp_path, monkeypatch, loaded, "Undelivered client output", "Private diagnostic"
+    )
+    job = module._jobs() / args["job_id"]
+    if worker_state == "running":
+        (job / "result.json").unlink()
+        (job / "heartbeat").touch()
+    else:
+        (job / "result.json").write_text(
+            json.dumps({"state": "cancelled", "returncode": -9})
+        )
+    store = RunStore(Path(loaded["run_root"]))
+    store.save({**store.state(), "collection_closed": True})
+    before = store.path.read_bytes()
+
+    result = module.execute({**args, "operation": operation})
+
+    assert "isError" not in result
+    assert len(result["structuredContent"]["output"]) == 1
+    status = result["structuredContent"]["output"][0]
+    assert status["job_id"] == args["job_id"]
+    assert status["state"] == worker_state
+    assert "stdout" not in status and "stderr" not in status
+    assert "Undelivered client output" not in json.dumps(result)
+    assert "Private diagnostic" not in json.dumps(result)
+    assert store.path.read_bytes() == before
+
+
 @pytest.mark.parametrize("line_ending", ["\n", "\r\n"])
 def test_running_preview_returns_available_text_without_claiming_completion(
     archive_core, client_case, tmp_path, monkeypatch, line_ending

@@ -3,6 +3,7 @@
 const crypto = require("node:crypto");
 const childProcess = require("node:child_process");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const readline = require("node:readline");
 
@@ -212,6 +213,12 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "bank_date",
   "description",
   "counterparty",
+  "party_ref",
+  "allocated_amount",
+  "residual_amount",
+  "supporting_bank_date",
+  "supporting_bank_amount",
+  "supporting_bank_description",
   "beneficiary",
   "deterministic_status",
   "reconciliation_status",
@@ -1096,7 +1103,59 @@ function modelContextIndex(token, context) {
     },
     message:
       "The complete review payload remains in component-only metadata. Use opaque case handles to request selected semantic context.",
+    _private_source_records: [],
+    _private_source_review_sha256: modelContextReviewDigest(context.privatePayload.review_payload),
   };
+}
+
+function modelContextReviewDigest(value) {
+  return crypto.createHash("sha256")
+    .update(auditReviewStableJson(value) + "\n", "utf8").digest("hex");
+}
+
+function modelContextSourceRecords(item, semanticFields, evidence) {
+  // Mirror explicit producer field transformations. Unknown fields and supplied
+  // review notes remain unmeasured; never infer their sources from text values.
+  const fields = new Set([
+    ...Object.keys(semanticFields),
+    ...evidence.flatMap((entry) => Object.keys(entry)),
+  ]);
+  const generatedFields = new Set([
+    "kind", "status", "rule", "evidence_level", "matched_evidence_type",
+    "review_status", "review_selection_reason", "review_flags", "review_instruction",
+    "deterministic_status", "reconciliation_status", "deterministic_rule", "rule_applied",
+    "deterministic_evidence_level", "matched_evidence_reference",
+  ]);
+  const sourceFields = new Set([
+    "amount", "balance", "currency", "document_no", "document_date", "posting_date",
+    "due_date", "description", "party_ref",
+  ]);
+  const data = item.data || {};
+  if (item.item_type === "check_exception" && data.check === "codex_review_completed") {
+    // This producer check reports only pending-row counts. Its free-form
+    // diagnostic note is deliberately not covered by this metadata projection.
+    const countFields = new Set(["check", "kind", "status", "actual", "expected"]);
+    if ([...fields].every((field) => countFields.has(field)) &&
+        Number.isInteger(data.actual) && Number.isInteger(data.expected)) return [];
+  }
+  if (!data.record_id) return null;
+  const source = new Set();
+  const bank = new Set();
+  for (const field of fields) {
+    if (generatedFields.has(field)) continue;
+    if (sourceFields.has(field)) source.add(field);
+    else if (field === "supporting_bank_date") bank.add("posting_date");
+    else if (field === "supporting_bank_description") bank.add("description");
+    else if (["supporting_bank_amount", "allocated_amount"].includes(field)) bank.add("amount");
+    else if (field === "residual_amount") {
+      source.add("balance"); bank.add("amount");
+    } else return null;
+  }
+  if (bank.size && !data.supporting_bank_record_id) return null;
+  return [
+    { record_id: data.record_id, fields: [...source] },
+    ...(bank.size ? [{ record_id: data.supporting_bank_record_id, fields: [...bank] }] : []),
+  ];
 }
 
 function modelContextCases(args) {
@@ -1117,6 +1176,8 @@ function modelContextCases(args) {
       allowedDataFields.add(field);
     }
   }
+  const sourceRecords = [];
+  let sourceRecordsComplete = true;
   const cases = args.case_handles.map((handle, index) => {
     if (typeof handle !== "string" || !context.handles.has(handle)) {
       throw new Error(`case_handles[${index}] is unknown for this review`);
@@ -1128,6 +1189,9 @@ function modelContextCases(args) {
       semanticFields,
       includeExactIdentifiers,
     );
+    const records = modelContextSourceRecords(item, semanticFields, evidence);
+    if (records === null) sourceRecordsComplete = false;
+    else sourceRecords.push(...records);
     return {
       case_handle: handle,
       item_type: item.item_type,
@@ -1164,6 +1228,10 @@ function modelContextCases(args) {
     throw new Error(
       `selected case context exceeds ${MAX_MODEL_CONTEXT_BYTES} bytes; request fewer cases`,
     );
+  }
+  if (sourceRecordsComplete) {
+    result._private_source_records = sourceRecords;
+    result._private_source_review_sha256 = modelContextReviewDigest(context.privatePayload.review_payload);
   }
   return result;
 }
@@ -2283,8 +2351,14 @@ function auditReviewCanonicalSha256(value) {
 }
 
 function auditReviewPythonCandidates() {
+  const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
+    : path.join(os.homedir(), ".local/share/mparanza/runtime"));
+  const managed = path.join(runtimeRoot, "venv",
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
   const candidates = [
     process.env.OPEN_ITEM_RECONCILIATION_PYTHON,
+    fs.existsSync(managed) ? managed : null,
     process.env.VIRTUAL_ENV
       ? path.join(
           process.env.VIRTUAL_ENV,
@@ -2731,6 +2805,9 @@ function auditReviewParentWritePaths(
   for (const relativePath of state.expectedTransitionHistoryPaths || []) {
     paths.add(generatedReviewCanonicalRelativePath(relativePath));
   }
+  for (const relativePath of state.expectedTransitionHistoryDirectories || []) {
+    paths.add(generatedReviewCanonicalRelativePath(relativePath));
+  }
   return Array.from(paths);
 }
 
@@ -2802,6 +2879,12 @@ function validateAuditParentTransactionState(
         throw new Error(
           "Open-item Reconciliation review transition did not close.",
         );
+      }
+    }
+    for (const relativePath of state.expectedTransitionHistoryDirectories || []) {
+      const observed = fs.lstatSync(path.join(workingOutputDir, relativePath));
+      if (!observed.isDirectory() || observed.isSymbolicLink()) {
+        throw new Error("Open-item Reconciliation retained directory did not close.");
       }
     }
     if (state.expectedReviewHandoffContent != null) {
@@ -4377,6 +4460,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     persisted = true;
   }
   let transitionHistoryPaths = [];
+  let transitionHistoryDirectories = [];
   if (transitionCaptureDir) {
     const retained = auditReviewPythonBridge(
       "retain-review-transition-json",
@@ -4385,10 +4469,11 @@ function applyDecisionPayloadWrites(inputArgs) {
       "--expected-predecessor-checkpoint",
       expectedPredecessorCheckpoint,
     );
-    if (!Array.isArray(retained.history_paths)) {
+    if (!Array.isArray(retained.history_paths) || !Array.isArray(retained.history_directories)) {
       throw new Error("Review transition replay failed.");
     }
     transitionHistoryPaths = retained.history_paths;
+    transitionHistoryDirectories = retained.history_directories;
     fs.rmSync(transitionCaptureDir, { recursive: true, force: true });
     transitionCaptureDir = null;
   }
@@ -4480,6 +4565,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     parentState.expectedProfessionalReview =
       cloneAuditReviewTransactionValue(professionalReview);
     parentState.expectedTransitionHistoryPaths = [...transitionHistoryPaths];
+    parentState.expectedTransitionHistoryDirectories = [...transitionHistoryDirectories];
     parentState.authorizedWritePaths = auditReviewParentWritePaths(
       parentState,
       revisionOutputs,
@@ -4522,11 +4608,16 @@ function callTool(name, args = {}) {
   if (name === TOOL_NAMES.caseContext) {
     return modelContextCases(args);
   }
-  if (name === TOOL_NAMES.saveDecisions) {
-    return saveDecisionPayload(args);
-  }
-  if (name === TOOL_NAMES.applyDecisions) {
-    return applyDecisionPayload(args);
+  if ([TOOL_NAMES.saveDecisions, TOOL_NAMES.applyDecisions].includes(name)) {
+    const materialized = materializeInputArgs(args);
+    const reviewDigest = modelContextReviewDigest(materialized.review_payload);
+    const result = name === TOOL_NAMES.saveDecisions
+      ? saveDecisionPayload(materialized) : applyDecisionPayload(materialized);
+    return {
+      ...result,
+      _private_source_records: [],
+      _private_source_review_sha256: reviewDigest,
+    };
   }
   throw new Error(`unknown Open-item Reconciliation widget tool: ${name}`);
 }
@@ -4537,9 +4628,21 @@ function widgetUriForPayload(payload) {
 }
 
 function toolResult(payload, toolName) {
-  const privateReviewPayload = payload?._private_review_payload || null;
+  const mutation = [TOOL_NAMES.saveDecisions, TOOL_NAMES.applyDecisions].includes(toolName);
+  const sourceRecords = payload?._private_source_records;
+  const sourceReviewSha256 = payload?._private_source_review_sha256;
   const publicPayload = { ...payload };
   delete publicPayload._private_review_payload;
+  delete publicPayload._private_source_records;
+  delete publicPayload._private_source_review_sha256;
+  const privateReviewPayload = mutation ? { ...publicPayload } : payload?._private_review_payload || null;
+  if (mutation) {
+    // The app retains full decisions and reviewer prose. The model receives the
+    // exact status/count/path response, without echoing those private objects.
+    delete publicPayload.ui_decisions;
+    delete publicPayload.applied_decisions;
+    delete publicPayload.final_artifacts;
+  }
   const result = {
     content: [{
       type: "text",
@@ -4555,10 +4658,17 @@ function toolResult(payload, toolName) {
     isError: false,
   };
   const widgetUri = widgetUriForPayload(publicPayload) || WIDGET_TOOL_URIS[toolName];
-  if (widgetUri) {
+  if (widgetUri || privateReviewPayload) {
     result._meta = {
-      ...toolUiMeta(widgetUri, toolName),
+      ...(widgetUri ? toolUiMeta(widgetUri, toolName) : {}),
       ...(privateReviewPayload ? { private_review_payload: privateReviewPayload } : {}),
+    };
+  }
+  if (sourceRecords != null) {
+    result._meta = {
+      ...result._meta,
+      vera_source_records: sourceRecords,
+      vera_source_review_sha256: sourceReviewSha256,
     };
   }
   return result;

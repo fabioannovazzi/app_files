@@ -401,6 +401,10 @@ def test_multi_party_exports_reconcile_later_payments_and_replay_source_parties(
     assert rows[1]["allocated_amount"] == "300.00"
     assert rows[1]["residual_amount"] == "500.00"
     assert rows[2]["amount"] == "500"
+    assert (
+        result["assurance"]["gate_register"]["gates"]["reconciliation"]["status"]
+        == "passed"
+    )
     assert Path(result["excel_path"]).is_file()
     assert Path(result["word_path"]).is_file()
     assert (

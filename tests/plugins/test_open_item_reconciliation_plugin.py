@@ -1546,15 +1546,15 @@ def test_open_item_reconciliation_mcp_server_localizes_spanish_runtime_feedback(
     no_output_apply = responses[4]["result"]["structuredContent"]
     assert "No se proporcionó run_intake.output_dir" in no_output_apply["message"]
     assert no_output_apply["application_status"] == "blocked"
-    assert no_output_apply["final_artifacts"]["next_actions"][-1].startswith(
-        "Resuelva las decisiones de revisión bloqueadas"
-    )
+    assert responses[4]["result"]["_meta"]["private_review_payload"]["final_artifacts"][
+        "next_actions"
+    ][-1].startswith("Resuelva las decisiones de revisión bloqueadas")
     persisted_apply = responses[5]["result"]["structuredContent"]
     assert persisted_apply["message"].startswith("Se han aplicado 1 decisiones")
     assert persisted_apply["application_status"] == "blocked"
-    assert persisted_apply["final_artifacts"]["next_actions"][-1].startswith(
-        "Resuelva las decisiones de revisión bloqueadas"
-    )
+    assert responses[5]["result"]["_meta"]["private_review_payload"]["final_artifacts"][
+        "next_actions"
+    ][-1].startswith("Resuelva las decisiones de revisión bloqueadas")
     handoff = (output_dir / "review_handoff.md").read_text(encoding="utf-8")
     assert "<!-- Review Handoff -->" in handoff
     assert "Entrega para revisión" in handoff
@@ -1691,14 +1691,15 @@ def test_open_item_reconciliation_mcp_failed_check_blocks_final_ready() -> None:
 
     responses = {response["id"]: response for response in _call_mcp_server(messages)}
     result = responses[2]["result"]["structuredContent"]
+    private_result = responses[2]["result"]["_meta"]["private_review_payload"]
 
     assert result["application_status"] == "blocked"
     assert result["blocker_count"] == 2
     assert {
         blocker["kind"]
-        for blocker in result["applied_decisions"]["completion_blockers"]
+        for blocker in private_result["applied_decisions"]["completion_blockers"]
     } == {"failed_deterministic_checks", "assurance_replay_required"}
-    assert result["final_artifacts"]["status"] == "blocked"
+    assert private_result["final_artifacts"]["status"] == "blocked"
 
 
 def test_open_item_reconciliation_mcp_pending_required_review_blocks_final_ready() -> (
@@ -1764,14 +1765,15 @@ def test_open_item_reconciliation_mcp_pending_required_review_blocks_final_ready
 
     responses = {response["id"]: response for response in _call_mcp_server(messages)}
     result = responses[2]["result"]["structuredContent"]
+    private_result = responses[2]["result"]["_meta"]["private_review_payload"]
 
     assert result["application_status"] == "blocked"
     assert result["blocker_count"] == 2
     assert {
         blocker["kind"]
-        for blocker in result["applied_decisions"]["completion_blockers"]
+        for blocker in private_result["applied_decisions"]["completion_blockers"]
     } == {"pending_required_review", "assurance_replay_required"}
-    assert result["final_artifacts"]["status"] == "blocked"
+    assert private_result["final_artifacts"]["status"] == "blocked"
 
 
 def test_skill_mentions_browser_review_and_mcp_tools() -> None:
@@ -2327,9 +2329,9 @@ def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(
 
     assert second["application_status"] == "final_ready"
     assert (
-        second["applied_decisions"]["professional_review"][
-            "successor_assurance_replayed"
-        ]
+        second_result["_meta"]["private_review_payload"]["applied_decisions"][
+            "professional_review"
+        ]["successor_assurance_replayed"]
         is True
     )
     assert (
@@ -2381,7 +2383,10 @@ def _audit_transaction_call(
         server_path=server_path,
         env=env,
     )[0]
-    return response["result"]["structuredContent"]
+    result = response["result"]
+    return result.get("_meta", {}).get(
+        "private_review_payload", result["structuredContent"]
+    )
 
 
 def _portable_audit_transaction_case(
@@ -2521,6 +2526,37 @@ def test_audit_review_rejects_run_root_escape_without_writing(
     assert "leaves the customer run" in result["error"]
     assert _audit_tree_image(output_dir) == before
     assert not (output_dir.parent.parent / "outside").exists()
+
+
+def test_audit_review_uses_shared_runtime_outside_project_environment(
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _portable_audit_transaction_case(tmp_path)
+    arguments["client_engagement"] = _customer_context_path(output_dir).as_posix()
+    runtime = tmp_path / "shared-runtime"
+    runtime.mkdir()
+    (runtime / "venv").symlink_to(Path(sys.prefix), target_is_directory=True)
+    wrong_environment = tmp_path / "unrelated-project-environment"
+    wrong_python = wrong_environment / (
+        "Scripts/python.exe" if os.name == "nt" else "bin/python"
+    )
+    wrong_python.parent.mkdir(parents=True)
+    wrong_python.write_bytes(b"not an executable Python interpreter")
+    wrong_python.chmod(0o700)
+
+    saved = _audit_transaction_call(
+        "save_open_item_reconciliation_decisions",
+        arguments,
+        env={
+            "OPEN_ITEM_RECONCILIATION_PYTHON": "",
+            "MPARANZA_RUNTIME_ROOT": str(runtime),
+            "VIRTUAL_ENV": str(wrong_environment),
+        },
+    )
+
+    assert saved["ok"] is True
+    assert saved["persisted"] is True
+    assert (output_dir / "ui_decisions.json").is_file()
 
 
 def test_audit_review_transaction_honest_apply_commits_without_residue(
@@ -2749,7 +2785,9 @@ def test_audit_review_transaction_rejects_forged_save_response_contract(
     faulted = _audit_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_save",
         run_id: "forged-run",
@@ -2759,7 +2797,8 @@ def test_audit_review_transaction_rejects_forged_save_response_contract(
         ui_decisions_path: "/private/client/forged-ui.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _audit_transaction_call(
@@ -2786,7 +2825,9 @@ def test_audit_review_transaction_rejects_forged_apply_response_contract(
     faulted = _audit_faulted_server(
         tmp_path,
         needle=needle,
-        replacement=(needle + """
+        replacement=(
+            needle
+            + """
       Object.assign(workingResult, {
         validation_type: "forged_apply",
         run_id: "forged-run",
@@ -2805,7 +2846,8 @@ def test_audit_review_transaction_rejects_forged_apply_response_contract(
         run_intake_path: "/private/client/forged-intake.json",
         message: "forged message",
       });
-"""),
+"""
+        ),
     )
 
     result = _audit_transaction_call(
