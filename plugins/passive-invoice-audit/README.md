@@ -130,8 +130,9 @@ chunk evidence, recall, human-review rate, and every missed synthetic issue.
 
 ## Model boundary
 
-Semantic review calls the pinned native Codex executable with exactly
-`gpt-5.6-luna`. It reuses Vera's qualified, read-only macOS Seatbelt capsule,
+Semantic review calls the current native Codex executable with
+`gpt-5.6-luna` by default, or an explicitly reviewed selection. It reuses
+Vera's runtime-verified, read-only macOS Seatbelt capsule,
 passes the compact prompt by stdin, enforces a strict JSON schema, and retains
 the response, JSONL events, stderr and launch receipt per chunk. It uses the
 existing Codex login. There is no API client, `OPENAI_API_KEY`, external AI

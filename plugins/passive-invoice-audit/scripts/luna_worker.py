@@ -72,7 +72,7 @@ def _load_shared_capsule() -> Any:
 
 
 def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
-    """Inspect shared pinned prerequisites without credentials or a model call."""
+    """Inspect shared runtime prerequisites without credentials or a model call."""
     return _load_shared_capsule().inspect_execution_host(codex_bin)
 
 
@@ -88,7 +88,7 @@ def run_luna_chunk(
 ) -> Mapping[str, Any]:
     """Run one chunk with Luna or an explicitly reviewed native model selection.
 
-    The shared capsule pins and hashes the Codex executable, uses the existing
+    The shared capsule snapshots the current Codex executable, uses the existing
     Codex login, supplies prompt content over stdin, enforces structured output,
     and constrains the worker to an ephemeral read-only Seatbelt capsule.  This
     adapter contains no direct model API client and accepts no API key.

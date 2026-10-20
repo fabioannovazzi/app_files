@@ -111,6 +111,19 @@ call.
 - When working on the slide validator for innovation monitoring reports, use the project-local `innovation-report-validator` skill and follow `docs/innovation_report_validator_loop.md` as the fixed process. Do not replace that loop with another taxonomy, review workflow, or deck-level pass/fail framing unless the task explicitly asks to change the loop.
 - Prefer deterministic logic only when it works better for the specific job, not because it is deterministic or cheaper. Every new deterministic classifier, validator, rule engine, source selector, or model substitute must have a concrete reason such as mechanically verifiable correctness, lower observed error rate, reproducibility required by contract, security/auditability, or proven cost savings without quality loss. For semantic judgment, especially legal/tax/compliance relevance, source selection, topic taxonomy, research scope, and ambiguous intent, prefer model-led reasoning unless deterministic behavior has been proven better on representative cases. Use the project-local `deterministic-judgment` skill when making or reviewing these choices.
 
+### External runtime compatibility
+
+- Do not gate ordinary product execution on a hard-coded exact Codex version,
+  external executable digest, or OS build. These update independently of plugins.
+- Check required capabilities and isolation behavior on the actual runtime.
+  Record observed versions/digests per run and detect changes during that run.
+- Preserve package integrity checks, owned policy hashes, source receipts and
+  historical receipt verification; these are different from external-runtime
+  release allowlists. Historical pinned profiles must never launch new work.
+- Runtime changes require regression coverage for a newer Codex release, a new
+  OS build, changed executable bytes between runs, failed isolation probes and
+  executable changes during execution. Keep the latest-runtime CI check enabled.
+
 ## Polars: streaming engine guidance
 
 We no longer recommend using `streaming=True` in examples or new code. Prefer selective use of `engine="streaming"` on the few heavy `collect`/`sink_*` steps that are memory‑bound. Do **not** remove existing `engine="streaming"` calls wholesale; keep them where they provide memory headroom or speed.

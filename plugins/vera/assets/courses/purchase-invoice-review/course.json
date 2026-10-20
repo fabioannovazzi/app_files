@@ -65,7 +65,7 @@
     {
       "path": "modules/passive-invoice-audit/scripts/luna_worker.py",
       "repository_path": "plugins/passive-invoice-audit/scripts/luna_worker.py",
-      "sha256": "553a0c852234359901332d99a5b287b1e14d073cd75ed34ec576b1c5f7f2db86"
+      "sha256": "5c866c98952764cc59965d020926f16baf72bafba44d36c1ce0f8e590d8fe3b7"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/reviewed_invoices.py",

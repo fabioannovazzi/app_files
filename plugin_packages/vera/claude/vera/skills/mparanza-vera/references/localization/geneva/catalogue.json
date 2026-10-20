@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-reporting-hook-identity/plugins/vera",
-  "version": "0.1.434",
-  "captured_at": "2026-10-19T23:18:01.684962+00:00",
-  "catalogue_fingerprint": "656b3fd1f9d5ce8e23c168201f29de9cc27e04eeb17dad939fd9dd75a68b9637",
-  "manifest_sha256": "d3801db1295ac23bb8924364884047badeaa4cdd9b2eb7575bcd1b0fd4173355",
+  "root": "/Users/fabio/Documents/Codex/2026-10-20/usa-vera-per-una-riconciliazione-bancaria/work/vera-source/plugins/vera",
+  "version": "0.1.436",
+  "captured_at": "2026-10-20T06:50:08.976557+00:00",
+  "catalogue_fingerprint": "85fbcfb8b1465d64b6638083eefe14613cd82a22fcfcdc0db822d028c0dc6f55",
+  "manifest_sha256": "dd3ecc784062197fb41835ee2a056c29a56fc93eb988ef59e2b786794c7e9bd1",
   "entries": [
     {
       "function_id": "adeguati-assetti",

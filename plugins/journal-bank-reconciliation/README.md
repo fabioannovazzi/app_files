@@ -130,8 +130,9 @@ successive automatic model calls; over-cap residuals remain in the human-review
 queue without launching Luna. The packet contains populated canonical fields
 selected after source-column mapping, not the raw source columns, empty fields,
 physical source locators, or the redundant absolute amount. The
-launcher is qualified only on its pinned macOS/Codex/Seatbelt environment,
-fails closed when those pins or its filesystem canaries do not match, and
+launcher verifies the current macOS/Codex isolation and CLI capabilities,
+accepts updates without a version or executable allowlist, rejects failed
+filesystem canaries or executable changes during the run, and
 records a content-bound launch receipt. The bounded packet is transmitted to
 the OpenAI Codex service. Raw worker output remains advisory until validation;
 validated decisions update a sibling cumulative certainty funnel and remove

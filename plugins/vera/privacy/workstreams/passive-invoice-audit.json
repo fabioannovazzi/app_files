@@ -107,9 +107,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-18",
+    "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "2b8ca81eaa4046b932bcbd3483732d901cc4c5a2e6e4efaf0261e17ab95c9969"
+    "source_fingerprint": "b92b139dfeb25525fc64b001bc6172d28f099521ac9629e2f3b16952722e847f"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -136,7 +136,7 @@
     },
     {
       "id": "qualified-native-luna-worker",
-      "control": "In Codex, the semantic adapter reuses the pinned journal-bank native Codex Seatbelt capsule, defaults to gpt-5.6-luna or uses an explicitly reviewed alternative, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
+      "control": "In Codex, the semantic adapter reuses the per-run verified journal-bank native Codex Seatbelt capsule, defaults to gpt-5.6-luna or uses an explicitly reviewed alternative, validates the configured effort and strict schema, supplies compact content over stdin, retains response/event/stderr/receipt evidence, fails closed on qualification or model mismatch, and contains no direct model API client or API-key path."
     },
     {
       "id": "content-bound-restartable-job",
@@ -160,7 +160,7 @@
     },
     {
       "id": "current-host-profile-qualification",
-      "control": "The fixed source registry includes qualified macOS 26A428 / exact Codex CLI 0.160.1 v4 after fresh structured arithmetic, two bank decisions, four invoice packets including prompt injection, and permitted/outside/symlink image controls. The complete v1, v2 and v3 records remain unchanged. The v4 production Seatbelt text, file-content scope, disabled tool features, read-only inner sandbox and every-launch canaries are identical to v3. No model packet or external destination is added. Diagnostic image controls enable only their exact code-mode helper with its public manifest and process creation, and permit only the exact positive image; those capabilities are absent from production. Both sandboxes remain active. Native router logs independently show denial of each exact outside/symlink target; JSONL is not complete tool visibility and no kernel-log or provider attestation is claimed. Unknown or changed hosts still fail closed; dependency inspection alone is not qualification."
+      "control": "The v5 shared worker verifies live allow/deny filesystem canaries and required Codex exec capabilities inside the unchanged deny-default Seatbelt boundary. Actual OS build, Codex version and external executable digests are recorded per run without fixed release allowlists. Executables and runtime inputs are rechecked before output publication; concurrent changes reject the result. Historical v1–v4 records remain unchanged for receipt verification and cannot launch new work. No packet fields or external destination are added. Model/effort remain requested, not independently observed; JSONL does not prove hidden-tool absence."
     },
     {
       "id": "geneva-source-binding",

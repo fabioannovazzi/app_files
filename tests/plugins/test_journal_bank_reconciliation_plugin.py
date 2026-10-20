@@ -24,6 +24,12 @@ import pytest
 from scripts.validate_plugin_review_contract import validate_contract
 from tests.model_data_helpers import write_no_model_report
 
+TEST_DARWIN_BUILD = "27B999"
+TEST_CODEX_VERSION = "codex-cli 0.999.0-alpha.1"
+TEST_CODEX_SHA256 = "a" * 64
+TEST_SANDBOX_EXEC_SHA256 = "b" * 64
+TEST_CAT_SHA256 = "c" * 64
+
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPT_DIR = ROOT / "plugins" / "journal-bank-reconciliation" / "scripts"
 CORE_PATH = SCRIPT_DIR / "journal_bank_core.py"
@@ -1273,19 +1279,20 @@ def _write_semantic_worker_result(
         "boundary": {
             "contract_id": semantic_review.WORKER_BOUNDARY_CONTRACT_ID,
             "platform": "Darwin",
-            "darwin_build": semantic_review.PINNED_DARWIN_BUILD,
+            "darwin_build": TEST_DARWIN_BUILD,
             "profile_sha256": semantic_review.PINNED_SEATBELT_PROFILE_SHA256,
             "codex_path": "/Applications/ChatGPT.app/Contents/Resources/codex",
-            "codex_sha256": semantic_review.PINNED_CODEX_SHA256,
+            "codex_sha256": TEST_CODEX_SHA256,
             "codex_bytes": 1,
-            "codex_version": semantic_review.PINNED_CODEX_VERSION,
+            "codex_version": TEST_CODEX_VERSION,
             "sandbox_exec_path": "/usr/bin/sandbox-exec",
-            "sandbox_exec_sha256": semantic_review.PINNED_SANDBOX_EXEC_SHA256,
-            "canary_reader_sha256": semantic_review.PINNED_CAT_SHA256,
+            "sandbox_exec_sha256": TEST_SANDBOX_EXEC_SHA256,
+            "canary_reader_sha256": TEST_CAT_SHA256,
             "canaries": {
                 "exact_schema_read_succeeded": True,
                 "outside_capsule_read_denied": True,
-                "codex_version_inside_boundary": semantic_review.PINNED_CODEX_VERSION,
+                "codex_version_inside_boundary": TEST_CODEX_VERSION,
+                "required_cli_capabilities_available": True,
             },
             "global_instructions_absent_or_empty": True,
             "auth_file_readable_by_codex_process": True,
@@ -1359,24 +1366,24 @@ def _mock_semantic_worker_runtime(
     codex_path = Path("/qualified/codex")
     executable_bindings = {
         codex_path: {
-            "sha256": semantic_review.PINNED_CODEX_SHA256,
+            "sha256": TEST_CODEX_SHA256,
             "byte_count": 267_702_000,
             "mode": 0o755,
         },
         semantic_review.SANDBOX_EXEC_PATH: {
-            "sha256": semantic_review.PINNED_SANDBOX_EXEC_SHA256,
+            "sha256": TEST_SANDBOX_EXEC_SHA256,
             "byte_count": 102_560,
             "mode": 0o755,
         },
         semantic_review.SANDBOX_CANARY_PATH: {
-            "sha256": semantic_review.PINNED_CAT_SHA256,
+            "sha256": TEST_CAT_SHA256,
             "byte_count": 118_992,
             "mode": 0o755,
         },
     }
     qualified = {
         "host_profile": semantic_review._resolve_host_profile(),
-        "darwin_build": semantic_review.PINNED_DARWIN_BUILD,
+        "darwin_build": TEST_DARWIN_BUILD,
         "codex_path": codex_path,
         "codex_binding": executable_bindings[codex_path],
         "sandbox_exec_binding": executable_bindings[semantic_review.SANDBOX_EXEC_PATH],
@@ -1405,7 +1412,8 @@ def _mock_semantic_worker_runtime(
         lambda **kwargs: {
             "exact_schema_read_succeeded": True,
             "outside_capsule_read_denied": True,
-            "codex_version_inside_boundary": semantic_review.PINNED_CODEX_VERSION,
+            "codex_version_inside_boundary": TEST_CODEX_VERSION,
+            "required_cli_capabilities_available": True,
         },
     )
     monkeypatch.setattr(
@@ -10197,11 +10205,11 @@ def test_semantic_validate_requires_pinned_launch_receipt(tmp_path: Path) -> Non
 @pytest.mark.parametrize(
     "field,value,error",
     [
-        ("codex_sha256", "0" * 64, "codex_sha256"),
+        ("codex_sha256", "not-a-hash", "codex_sha256"),
         ("contract_id", "unqualified.profile.v2", "host profile"),
         ("profile_sha256", "0" * 64, "profile_sha256"),
-        ("darwin_build", "unqualified-build", "darwin_build"),
-        ("codex_version", "codex-cli unqualified", "codex_version"),
+        ("darwin_build", "", "darwin_build"),
+        ("codex_version", "", "codex_version"),
         ("qualification_basis", "capability_disabled", "qualification_basis"),
     ],
 )
@@ -10628,9 +10636,9 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "render_journal_bank_review" in skill_text
     assert "Codex-Only Luna Max Residual Resolution Funnel" in skill_text
     assert "semantic_review.py run-worker" in skill_text
-    assert "journal_bank.luna_seatbelt_capsule.v4" in skill_text
-    assert "The v1, v2 and v3" in skill_text
-    assert "registry records remain retained unchanged" in skill_text
+    assert "journal_bank.luna_seatbelt_capsule.v5" in skill_text
+    assert "Retained v1–v4 records validate historical evidence only" in skill_text
+    assert "new work must prepare" in skill_text
     assert "current chat unchanged" in skill_text
     assert "Codex JSONL visibility is incomplete" in skill_text
     assert "luna_launch_receipt.json" in skill_text
@@ -11385,6 +11393,7 @@ def test_spanish_mcp_runtime_feedback_handoff_and_errors(tmp_path: Path) -> None
     )
     assert validation["message"].startswith("Los datos de revisión")
     assert saved["message"].startswith("Las decisiones son válidas")
+    assert "message" in applied, applied
     assert applied["message"].startswith(f"Se aplicaron {len(decisions)} decisiones")
     assert applied["application_status"] == "blocked"
     assert applied["assurance_report_ready"] is False
@@ -12764,11 +12773,11 @@ def test_journal_bank_mcp_save_commits_only_decision_file(tmp_path: Path) -> Non
     assert list(output_dir.parent.glob(".journal-bank-apply-*")) == []
 
 
-def test_host_status_reports_unsupported_build_without_reading_credentials(
+def test_host_status_accepts_updated_build_without_reading_credentials(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     semantic = load_semantic_review()
-    monkeypatch.setattr(semantic, "_observed_darwin_build", lambda: "unqualified-build")
+    monkeypatch.setattr(semantic, "_observed_darwin_build", lambda: "27B999")
     monkeypatch.setattr(
         semantic, "_resolved_codex_binary", lambda _: Path("/synthetic/codex")
     )
@@ -12783,8 +12792,8 @@ def test_host_status_reports_unsupported_build_without_reading_credentials(
 
     result = semantic.inspect_execution_host()
 
-    assert result["status"] == "unsupported"
-    assert result["checks"][0]["observed"] == "unqualified-build"
+    assert result["status"] == "prerequisites_match"
+    assert result["checks"][0]["observed"] == "27B999"
     assert result["worker_executed"] is False
     assert result["canaries_executed"] is False
 
@@ -12793,9 +12802,7 @@ def test_matching_host_prerequisites_do_not_claim_worker_qualification(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     semantic = load_semantic_review()
-    monkeypatch.setattr(
-        semantic, "_observed_darwin_build", lambda: semantic.PINNED_DARWIN_BUILD
-    )
+    monkeypatch.setattr(semantic, "_observed_darwin_build", lambda: TEST_DARWIN_BUILD)
     monkeypatch.setattr(
         semantic, "_resolved_codex_binary", lambda _: Path("/synthetic/codex")
     )
@@ -13409,6 +13416,7 @@ def test_host_profile_registry_retains_immutable_legacy_envelope() -> None:
         "journal_bank.luna_seatbelt_capsule.v2",
         "journal_bank.luna_seatbelt_capsule.v3",
         "journal_bank.luna_seatbelt_capsule.v4",
+        "journal_bank.luna_seatbelt_capsule.v5",
     )
     assert profile.provenance == "retained_legacy"
     assert profile.darwin_build == "25F84"
@@ -13529,13 +13537,13 @@ def test_current_host_profile_preserves_the_production_security_envelope() -> No
     semantic = load_semantic_review()
     current = semantic._resolve_host_profile()
     legacy = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v1")
-    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v4"
-    assert current.provenance == "native_qualified"
-    assert current.darwin_build == "26A428"
-    assert current.codex_version == "codex-cli 0.160.1"
-    assert current.codex_sha256 == (
-        "cc0a05e34876414280a79726153d0fe8d55c93f704ef6c292ec409bfe36d5b06"
-    )
+    assert current.contract_id == "journal_bank.luna_seatbelt_capsule.v5"
+    assert current.provenance == "runtime_verified"
+    assert current.darwin_build is None
+    assert current.codex_version is None
+    assert current.codex_sha256 is None
+    assert current.sandbox_exec_sha256 is None
+    assert current.canary_sha256 is None
     retained = semantic._resolve_host_profile("journal_bank.luna_seatbelt_capsule.v3")
     assert retained.codex_version == "codex-cli 0.160.0"
     assert current.seatbelt_sha256 == retained.seatbelt_sha256
