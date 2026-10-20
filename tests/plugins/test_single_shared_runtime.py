@@ -30,8 +30,12 @@ def fixture_runtime(tmp_path):
     root.mkdir()
     (root / "requirements-shared-core.txt").write_text("# core\n")
     (root / "requirements-shared-ocr.txt").write_text("# ocr\n")
+    (root / "requirements.txt").write_text("# selected core\n")
+    (root / "requirements-ocr.txt").write_text("# selected ocr\n")
     selection = SimpleNamespace(
-        plugin_root=root, requirements_files=[root / "requirements.txt"]
+        plugin_root=root,
+        requirement_root=root,
+        requirements_files=[root / "requirements.txt"],
     )
     api = SimpleNamespace(
         _python312_executable=lambda runner, **kwargs: sys.executable,
@@ -41,8 +45,11 @@ def fixture_runtime(tmp_path):
         _bootstrap_pip=lambda p, runner: ([str(p / "bin/python"), "-m", "pip"], {}, ""),
         _process_detail=lambda r: r.stderr or r.stdout,
         _network_permission_detail=lambda s: s,
-        _dependencies_ready=lambda *args, **kwargs: True,
+        dependencies_available=True,
+        _dependencies_ready=lambda *args, **kwargs: api.dependencies_available,
         _resolved_dependencies=lambda p: [],
+        _included_requirement_files=lambda path, **kwargs: [path],
+        runtime_environment=lambda path: dict(os.environ),
     )
     calls = []
 
@@ -50,6 +57,8 @@ def fixture_runtime(tmp_path):
         calls.append(command)
         if "venv" in command:
             return subprocess.run(command, **kwargs)
+        if "install" in command:
+            api.dependencies_available = True
         return subprocess.CompletedProcess(command, 0, "", "")
 
     return module, selection, api, runner, calls
@@ -129,6 +138,7 @@ def test_recipe_upgrade_recovers_from_cross_volume_state_replace(
     assert module.ensure(selection, path, api, runner)[0]
     module.POLICY_REVISION += 1
     (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
+    api.dependencies_available = False
 
     def cross_volume_replace(_source, _target):
         error = OSError(error_number, "cross-volume")
@@ -145,7 +155,7 @@ def test_recipe_upgrade_recovers_from_cross_volume_state_replace(
         json.loads((path.parent / module.POLICY).read_text())["revision"]
         == module.POLICY_REVISION
     )
-    assert module.ready(selection, path, api)
+    assert module.ready(selection, path, api, runner)
     assert list(path.parent.glob("*.tmp")) == []
 
 
@@ -158,6 +168,7 @@ def test_recipe_upgrade_does_not_fallback_after_permission_denied(
     previous_policy = (path.parent / module.POLICY).read_bytes()
     module.POLICY_REVISION += 1
     (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
+    api.dependencies_available = False
 
     def denied_replace(_source, _target):
         raise PermissionError(errno.EACCES, "replacement denied")
@@ -169,7 +180,7 @@ def test_recipe_upgrade_does_not_fallback_after_permission_denied(
     assert not ready
     assert "replacement denied" in detail
     assert (path.parent / module.POLICY).read_bytes() == previous_policy
-    assert not module.ready(selection, path, api)
+    assert not module.ready(selection, path, api, runner)
     assert list(path.parent.glob("*.tmp")) == []
 
 
@@ -182,6 +193,7 @@ def test_recipe_upgrade_restores_policy_after_fallback_write_failure(
     previous_policy = (path.parent / module.POLICY).read_bytes()
     module.POLICY_REVISION += 1
     (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
+    api.dependencies_available = False
     real_write = os.write
     writes = []
 
@@ -202,47 +214,87 @@ def test_recipe_upgrade_restores_policy_after_fallback_write_failure(
     assert not ready
     assert "disk full" in detail
     assert (path.parent / module.POLICY).read_bytes() == previous_policy
-    assert not module.ready(selection, path, api)
+    assert not module.ready(selection, path, api, runner)
     assert list(path.parent.glob("*.tmp")) == []
 
 
-def test_changed_shared_recipe_is_not_silently_reused(tmp_path):
+def test_changed_recipe_comment_does_not_block_compatible_dependencies(tmp_path):
     module, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")
     assert module.ensure(selection, path, api, runner)[0]
     (selection.plugin_root / "requirements-shared-core.txt").write_text("# changed\n")
-    assert not module.ready(selection, path, api)
+    assert module.ready(selection, path, api, runner)
 
 
-def test_older_plugin_cannot_downgrade_shared_policy(tmp_path):
+@pytest.mark.parametrize("revision_delta", [-1, 0, 1, 100])
+def test_recipe_revision_does_not_block_or_rewrite_compatible_runtime(
+    tmp_path, revision_delta
+):
     module, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")
     assert module.ensure(selection, path, api, runner)[0]
-    module.POLICY_REVISION += 1
-    (selection.plugin_root / "requirements-shared-core.txt").write_text("# upgraded\n")
-    assert module.ensure(selection, path, api, runner)[0]
-    module.POLICY_REVISION -= 1
-    (selection.plugin_root / "requirements-shared-core.txt").write_text("# core\n")
+    policy_path = path.parent / module.POLICY
+    policy = json.loads(policy_path.read_text())
+    policy["revision"] += revision_delta
+    policy_path.write_text(json.dumps(policy))
+    previous_policy = policy_path.read_bytes()
+    previous_receipt = (path / module.RECEIPT).read_bytes()
+    (selection.plugin_root / "requirements-shared-core.txt").write_text("# changed\n")
+    calls.clear()
 
     ready, _, detail = module.ensure(selection, path, api, runner)
 
-    assert not ready
-    assert "newer runtime policy" in detail
-    assert (path / module.RECEIPT).is_file()
+    assert ready, detail
+    assert not any("install" in command for command in calls)
+    assert policy_path.read_bytes() == previous_policy
+    assert (path / module.RECEIPT).read_bytes() == previous_receipt
 
 
-def test_conflicting_recipe_at_same_revision_is_rejected_before_mutation(tmp_path):
+def test_missing_dependency_is_repaired_despite_recipe_difference(tmp_path):
     module, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")
     assert module.ensure(selection, path, api, runner)[0]
-    receipt = (path / module.RECEIPT).read_bytes()
     (selection.plugin_root / "requirements-shared-core.txt").write_text("# conflict\n")
+    api.dependencies_available = False
+    calls.clear()
 
     ready, _, detail = module.ensure(selection, path, api, runner)
 
-    assert not ready
-    assert "Conflicting shared recipes" in detail
-    assert (path / module.RECEIPT).read_bytes() == receipt
+    assert ready, detail
+    assert sum("install" in command for command in calls) == 1
+    assert module.ready(selection, path, api, runner)
+
+
+@pytest.mark.parametrize(
+    "requirement, expected_code, expected_message",
+    [
+        ("packaging>=20", 0, ""),
+        ("packaging<0", 1, "Dependency packaging requires <0; installed"),
+        ("mparanza-absent-test-package==1", 1, "Missing dependency:"),
+        ("mparanza-absent-test-package; python_version<'1'", 0, ""),
+    ],
+)
+def test_runtime_dependency_probe_checks_actual_installed_versions(
+    tmp_path, requirement, expected_code, expected_message
+):
+    requirements = tmp_path / "requirements.txt"
+    requirements.write_text(requirement + "\n")
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/vera/scripts/_shared_python_runtime.py"),
+            "--check-requirements",
+            str(requirements),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert result.returncode == expected_code
+    assert expected_message in result.stderr
 
 
 def test_runtime_root_symlink_rejected(tmp_path):
@@ -456,32 +508,69 @@ def test_ready_runtime_reused_despite_different_launcher_platform(
     ready, _, detail = module.ensure(selection, path, api, runner)
 
     assert ready, detail
-    assert calls == []
+    assert not any("install" in command or "venv" in command for command in calls)
     assert (path / module.RECEIPT).read_bytes() == receipt
     assert (path.parent / module.POLICY).read_bytes() == policy
 
 
-@pytest.mark.parametrize("metadata", ["receipt", "policy", "both"])
-def test_actual_interpreter_mismatch_rejected_before_mutation(tmp_path, metadata):
+@pytest.mark.parametrize(
+    "current_platform",
+    ["cpython-312-macosx-27.0-arm64", "cpython-312-linux-aarch64"],
+)
+def test_compatible_interpreter_platform_change_reuses_runtime(
+    tmp_path, current_platform
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    api.runtime_key = lambda *args, **kwargs: "cpython-312-macosx-26.0-arm64"
+    assert module.ensure(selection, path, api, runner)[0]
+    receipt = (path / module.RECEIPT).read_bytes()
+    policy = (path.parent / module.POLICY).read_bytes()
+    api.runtime_key = lambda *args, **kwargs: current_platform
+    calls.clear()
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ready, detail
+    assert any("--check-requirements" in command for command in calls)
+    assert not any("install" in command or "venv" in command for command in calls)
+    assert (path / module.RECEIPT).read_bytes() == receipt
+    assert (path.parent / module.POLICY).read_bytes() == policy
+
+
+def test_changed_platform_with_failed_native_dependency_remains_unavailable(tmp_path):
     module, selection, api, runner, calls = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")
     assert module.ensure(selection, path, api, runner)[0]
-    for name, file in [
-        ("receipt", path / module.RECEIPT),
-        ("policy", path.parent / module.POLICY),
-    ]:
-        if metadata in (name, "both"):
-            payload = json.loads(file.read_text())
-            payload["runtime_key"] = "cpython-312-other-architecture"
-            file.write_text(json.dumps(payload))
-    receipt = (path / module.RECEIPT).read_bytes()
-    policy = (path.parent / module.POLICY).read_bytes()
+    api.runtime_key = lambda *args, **kwargs: "cpython-312-macosx-27.0-arm64"
+    api._dependencies_ready = lambda *args, **kwargs: False
     calls.clear()
 
     ready, _, detail = module.ensure(selection, path, api, runner)
 
     assert not ready
-    assert "Shared interpreter platform changed" in detail
+    assert "Shared runtime validation failed" in detail
+    assert any("install" in command for command in calls)
+    assert not (path / module.RECEIPT).exists()
+
+
+def test_unavailable_existing_interpreter_preserves_installation_metadata(tmp_path):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    receipt = (path / module.RECEIPT).read_bytes()
+    policy = (path.parent / module.POLICY).read_bytes()
+
+    def unavailable(*args, **kwargs):
+        raise ValueError("Cannot verify the shared Python interpreter.")
+
+    api.runtime_key = unavailable
+    calls.clear()
+
+    ready, _, detail = module.ensure(selection, path, api, runner)
+
+    assert not ready
+    assert "Cannot verify" in detail
     assert calls == []
     assert (path / module.RECEIPT).read_bytes() == receipt
     assert (path.parent / module.POLICY).read_bytes() == policy
@@ -602,6 +691,7 @@ def test_upgrade_repairs_pre_lipe_revision6_without_recreating_runtime(
     )
     module.POLICY_REVISION = current_revision
     selection.requirements_files = [selection.plugin_root / "requirements.txt"]
+    api.dependencies_available = False
     calls.clear()
 
     ready, upgraded, detail = module.ensure(selection, path, api, runner)
@@ -616,7 +706,7 @@ def test_upgrade_repairs_pre_lipe_revision6_without_recreating_runtime(
         == current_revision
     )
     assert json.loads((path / module.RECEIPT).read_text())["features"] == list(features)
-    assert module.ready(selection, path, api)
+    assert module.ready(selection, path, api, runner)
     env = dict(os.environ)
     env.pop(module.INSTALLING, None)
     result = subprocess.run(

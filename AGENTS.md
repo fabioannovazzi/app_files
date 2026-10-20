@@ -107,6 +107,10 @@ call.
 - Centralize LLM step labels, provider names, and model identifiers in `modules.utilities.config.get_naming_params`; modules should import `modules.utilities.config` and call `get_naming_params()` instead of hard-coding strings.
 - Never call `get` on `namingParams`, `configParams`, or `runParams`; access keys directly so missing entries raise errors.
 - Never modify non‑test (production) files to fix test import errors or to make tests pass. Fix the tests instead (adjust imports, build minimal inputs, or monkeypatch in the test). If a production change seems necessary, stop and report why—do not edit production code.
+  This rule concerns test-harness defects. It does not prohibit repairing an
+  observed product defect within the user's requested scope. For such a repair,
+  change the production behavior and add a regression for the intended result;
+  an existing test that asserts the defective behavior is not product authority.
 - We are developing a new app and do not have paying users yet. Keeping compatibility with the past is not an issue. We are also migrating out of UI. Do not develop anything or invest any time on the legacy UI.
 - When working on the slide validator for innovation monitoring reports, use the project-local `innovation-report-validator` skill and follow `docs/innovation_report_validator_loop.md` as the fixed process. Do not replace that loop with another taxonomy, review workflow, or deck-level pass/fail framing unless the task explicitly asks to change the loop.
 - Prefer deterministic logic only when it works better for the specific job, not because it is deterministic or cheaper. Every new deterministic classifier, validator, rule engine, source selector, or model substitute must have a concrete reason such as mechanically verifiable correctness, lower observed error rate, reproducibility required by contract, security/auditability, or proven cost savings without quality loss. For semantic judgment, especially legal/tax/compliance relevance, source selection, topic taxonomy, research scope, and ambiguous intent, prefer model-led reasoning unless deterministic behavior has been proven better on representative cases. Use the project-local `deterministic-judgment` skill when making or reviewing these choices.
@@ -123,6 +127,26 @@ call.
 - Runtime changes require regression coverage for a newer Codex release, a new
   OS build, changed executable bytes between runs, failed isolation probes and
   executable changes during execution. Keep the latest-runtime CI check enabled.
+
+### Execution and review requirements
+
+- A new execution block must name the concrete error it prevents and include
+  a regression proving that harm. A revision number, changed recipe, missing
+  ceremonial approval, or the word "safety" is not evidence of incompatibility.
+- Test whether the requested work can run with actual installed capabilities.
+  Internal runtime-policy counters are diagnostic metadata, never release
+  allowlists. Compatible existing environments must keep working.
+- Separate preparation, calculation and delivery of a reviewable result from
+  professional adoption, signature, filing or external action. Do not require
+  professional approval merely to create or deliver the requested draft.
+- The agent reviews routine mappings and technical checks. Ask the user only
+  for a genuinely unresolved material decision or information the agent cannot
+  establish from evidence. Record agent review honestly; do not invent human
+  approval or impose a human step to satisfy an internal receipt.
+- Tests must verify useful behavior and the specific harm being prevented,
+  rather than treating an existing rejection as correct merely because it exists.
+- In acceptance tests, report every block encountered, including recovered
+  blocks, its cause, effect, recovery and evidenced justification.
 
 ## Polars: streaming engine guidance
 

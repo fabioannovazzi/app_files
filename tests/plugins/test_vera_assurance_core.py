@@ -818,6 +818,41 @@ def test_allocation_ledger_balances_exact_one_to_one_relationship() -> None:
     assert ledger["source_residuals"] == [{"record_ref": "bank.1", "residual": "0"}]
 
 
+@pytest.mark.parametrize("field", ["entity_ref", "party_ref"])
+@pytest.mark.parametrize("source_name", ["Test Privacy 01 Srl", "Société André & Fils"])
+def test_allocation_ledger_preserves_matching_source_names(
+    field: str, source_name: str
+) -> None:
+    source = {**_record("bank.1", "100"), field: source_name}
+    target = {**_record("open.1", "100"), field: source_name}
+
+    ledger = build_allocation_ledger(
+        ledger_id="bank_to_open_items",
+        policy=_relationship_policy(),
+        source_records=[source],
+        target_records=[target],
+        allocations=[_allocation("allocation.1", "bank.1", "open.1", "100")],
+    )
+
+    assert ledger["balanced"] is True
+    assert ledger["source_records"][0][field] == source_name
+
+
+@pytest.mark.parametrize("field", ["entity_ref", "party_ref"])
+def test_allocation_ledger_rejects_different_source_names(field: str) -> None:
+    source = {**_record("bank.1", "100"), field: "Company A Srl"}
+    target = {**_record("open.1", "100"), field: "Company B Srl"}
+
+    with pytest.raises(RelationshipContractError, match="mismatch"):
+        build_allocation_ledger(
+            ledger_id="bank_to_open_items",
+            policy=_relationship_policy(),
+            source_records=[source],
+            target_records=[target],
+            allocations=[_allocation("allocation.1", "bank.1", "open.1", "100")],
+        )
+
+
 def test_allocation_ledger_rejects_one_bank_row_closing_duplicate_open_rows() -> None:
     with pytest.raises(
         RelationshipContractError,

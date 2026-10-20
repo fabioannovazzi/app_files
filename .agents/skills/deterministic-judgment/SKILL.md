@@ -54,3 +54,8 @@ model judgment on semantic relevance unless tests show it is better.
   says otherwise.
 - Remove deterministic logic that exists only because it is deterministic and
   has no demonstrated quality advantage.
+- When reviewing an execution block, trace the rejected condition to the
+  concrete failure it prevents. An existing rejection test establishes current
+  behavior, not that the rejection is necessary. Check a valid case that should
+  proceed as well as the failure case. External version labels and installation
+  history alone do not establish missing runtime capabilities.
