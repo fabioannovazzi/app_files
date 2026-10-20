@@ -121,6 +121,7 @@ def test_complete_task_receipt_feedback_and_operator_metrics(setup):
     assert stamped.status_code == 201
     assert linked.status_code == 200
     assert linked.json()["reporting"]["model_data_receipt"] == "linked"
+    assert linked.json()["reporting"]["model_data_report_scope"] == "archive_run"
     assert report["totals"]["completed"] == 1
     assert report["totals"]["receipt_linked_runs"] == 1
     assert report["totals"]["stars"] == {"1": 0, "2": 1, "3": 0, "4": 0, "5": 0}
@@ -131,7 +132,7 @@ def test_complete_task_receipt_feedback_and_operator_metrics(setup):
     assert len(store.workflow_inspect(str(run_id))["events"]) == 5
 
 
-def test_cowork_completion_exposes_missing_link_and_receipt_without_failing_work(setup):
+def test_cowork_completion_exposes_missing_host_link_and_archive_report_scope(setup):
     store, owner, client = setup
     run_id = uuid4()
     post(client, owner, event(run_id, host="cowork", sample_kind="agent_test"))
@@ -140,7 +141,8 @@ def test_cowork_completion_exposes_missing_link_and_receipt_without_failing_work
 
     assert reply["reporting"]["computer_link"] == "unlinked"
     assert reply["reporting"]["computer_id"] is None
-    assert reply["reporting"]["model_data_receipt"] == "missing"
+    assert reply["reporting"]["model_data_receipt"] == "archive_managed"
+    assert reply["reporting"]["model_data_report_scope"] == "archive_run"
     assert len(reply["reporting"]["next_steps"]) == 2
     assert store.workflow_status(owner, str(run_id))["state"] == "completed"
     assert summarize(store.workflow_overview())["included_user_runs"] == 0
@@ -165,6 +167,7 @@ def test_excluded_vera_task_needs_no_privacy_receipt_or_monitoring_alert(
     response = post(client, owner, event(run_id, 2, "completed")).json()
 
     assert response["reporting"]["model_data_receipt"] == "not_applicable"
+    assert response["reporting"]["model_data_report_scope"] == "not_applicable"
     assert response["reporting"]["model_data_report_eligible"] is False
     assert len(response["reporting"]["next_steps"]) == 1
     assert summarize(store.workflow_overview())["review_candidates"] == []
@@ -187,10 +190,63 @@ def test_native_binding_updates_same_cowork_run_status_without_event_replay(setu
     assert status["sequence"] == 2
     assert status["reporting"]["computer_link"] == "verified"
     assert status["reporting"]["computer_id"] == str(device.device_id)
-    assert status["reporting"]["model_data_receipt"] == "missing"
+    assert status["reporting"]["model_data_receipt"] == "archive_managed"
+    assert status["reporting"]["model_data_report_scope"] == "archive_run"
     assert len(status["reporting"]["next_steps"]) == 1
     assert device.device_key not in json.dumps(status)
     assert owner.installation_key not in json.dumps(status)
+
+
+@pytest.mark.parametrize("outcome", ["completed", "failed", "cancelled"])
+def test_vera_task_status_does_not_infer_missing_archive_receipt(setup, outcome):
+    store, owner, _ = setup
+    run_id = uuid4()
+    device = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="codex"
+    )
+    store.register(owner, device)
+    store.workflow_record(owner, event(run_id, pipeline="journal-bank-reconciliation"))
+    store.workflow_record(owner, event(run_id, 2, outcome))
+
+    status = store.workflow_status(owner, str(run_id))
+
+    assert status["state"] == outcome
+    assert status["receipts"] == []
+    assert status["reporting"]["model_data_receipt"] == "archive_managed"
+    assert status["reporting"]["model_data_report_scope"] == "archive_run"
+    assert status["reporting"]["model_data_report_eligible"] is True
+    assert status["reporting"]["next_steps"] == [
+        "Studio Archive owns automatic report generation and receipt delivery "
+        "for every selected Archive run, including full exposure, zero local remainder "
+        "or incomplete measurements. Inspect that run's saved report and receipt "
+        "when verification is needed. This task status does not establish whether "
+        "an Archive report or receipt exists. No separate usage-task receipt link "
+        "is required; do not rerun work or manufacture evidence."
+    ]
+
+
+@pytest.mark.parametrize(
+    ("product", "pipeline"),
+    [("clara", "business-planning"), ("lucia", "quesito-legale-fiscale")],
+)
+def test_other_products_still_report_missing_task_receipt(setup, product, pipeline):
+    store, _, _ = setup
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    device = DeviceCredentials(
+        device_id=uuid4(), device_key=uuid4().hex, native_app="codex"
+    )
+    run_id = uuid4()
+    store.register(owner, device, product=product)
+    store.workflow_record(owner, event(run_id, product=product, pipeline=pipeline))
+    store.workflow_record(owner, event(run_id, 2, "completed", product=product))
+
+    status = store.workflow_status(owner, str(run_id))
+
+    assert status["reporting"]["model_data_receipt"] == "missing"
+    assert status["reporting"]["model_data_report_scope"] == "usage_task"
+    assert status["reporting"]["model_data_report_eligible"] is True
+    assert len(status["reporting"]["next_steps"]) == 1
+    assert "link it to this same run" in status["reporting"]["next_steps"][0]
 
 
 def test_duplicate_event_ack_refreshes_link_without_changing_acknowledged_bytes(setup):

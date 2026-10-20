@@ -341,11 +341,17 @@ class IncidentStore:
                 "the unlinked state; never infer a Computer ID or request broader access."
             )
         eligible = report_eligible(product, run["pipeline"])
+        archive_managed = product == "vera" and eligible
         if eligible and not run["receipts"] and run["state"] != "unknown":
             next_steps.append(
                 (
-                    "This pipeline is eligible for an Archive comparison report. Only if Studio Archive generated one from measured execution evidence, obtain its actual signed receipt and link it to this same usage run. A chat-only task, unavailable measurements or no local remainder does not require a report or receipt. Do not rerun work to manufacture one."
-                    if product == "vera"
+                    "Studio Archive owns automatic report generation and receipt delivery "
+                    "for every selected Archive run, including full exposure, zero local remainder "
+                    "or incomplete measurements. Inspect that run's saved report and receipt "
+                    "when verification is needed. This task status does not establish whether "
+                    "an Archive report or receipt exists. No separate usage-task receipt link "
+                    "is required; do not rerun work or manufacture evidence."
+                    if archive_managed
                     else "Build the model-data report from this task's observed phases, "
                     "including chat-only inputs, obtain its actual signed receipt and "
                     "link it to this same run. Preserve pending delivery on failure; "
@@ -357,10 +363,20 @@ class IncidentStore:
         return {
             "computer_id": link["device_id"] if link else None,
             "computer_link": "verified" if link and link["device_id"] else "unlinked",
+            # Historical task links remain visible; Archive presence is not observed here.
             "model_data_receipt": (
                 "linked"
                 if run["receipts"]
-                else "missing" if eligible else "not_applicable"
+                else (
+                    "archive_managed"
+                    if archive_managed
+                    else "missing" if eligible else "not_applicable"
+                )
+            ),
+            "model_data_report_scope": (
+                "archive_run"
+                if archive_managed
+                else "usage_task" if eligible else "not_applicable"
             ),
             "model_data_report_eligible": eligible,
             "next_steps": next_steps,
