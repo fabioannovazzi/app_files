@@ -2918,10 +2918,11 @@ def extract_normalized_records(
                     flush=True,
                 )
 
-    open_items = apply_source_perimeters(
-        [*parse_open_items(all_pages, active), *tabular_open_items],
-        active,
-    )
+    # Tabular rows already carry their reviewed, source-bound row party identity.
+    open_items = [
+        *apply_source_perimeters(parse_open_items(all_pages, active), active),
+        *tabular_open_items,
+    ]
     ledger_balance_rows = apply_source_perimeters(
         parse_ledger_balance_pages(all_pages, active),
         active,

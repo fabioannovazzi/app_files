@@ -815,6 +815,7 @@ def test_word_report_leads_with_results_and_keeps_wide_evidence_readable(tmp_pat
         document_source_map=[
             {
                 "document_no_examples": "26FF01/000003",
+                "record_refs": "open-source-record",
                 "open_amount_total": "488.00",
                 "open_item_rows": 1,
                 "ledger_rows": 2,
@@ -870,6 +871,7 @@ def test_word_report_leads_with_results_and_keeps_wide_evidence_readable(tmp_pat
         ]
     assert evidence == {
         "Documento": "26FF01/000003",
+        "Riferimenti alle righe": "open-source-record",
         "Importo aperto": "488,00",
         "Righe aperte": "1",
         "Mastro": "2",

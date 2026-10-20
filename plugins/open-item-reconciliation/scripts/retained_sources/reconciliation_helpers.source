@@ -345,11 +345,7 @@ def document_key(document_no: object, document_date: object = "") -> str:
         return ""
     parsed_date = parse_date(document_date)
     year = parsed_date[:4] if parsed_date else ""
-    if not year:
-        year_match = re.search(r"(20\d{2}|\d{2})$", doc)
-        if year_match:
-            year = year_match.group(1)
-            year = f"20{year}" if len(year) == 2 else year
+    # An undelimited invoice sequence is not a year (F001 does not mean 2001).
     return f"{doc}|{year}"
 
 
@@ -760,7 +756,7 @@ def post_cutoff_evidence_candidates(
 
     after_cutoff = [
         row
-        for row in evidence_rows
+        for row in _resolve_undated_bank_references(open_items, evidence_rows)
         if is_after_cutoff(row, active) and record_document_keys(row)
     ]
     evidence_index = build_evidence_document_index(after_cutoff)
@@ -1153,7 +1149,7 @@ def document_source_map(
 ) -> list[dict[str, Any]]:
     """Map each document key to the source families where it appears."""
 
-    rows = [*open_items, *evidence_rows]
+    rows = [*open_items, *_resolve_undated_bank_references(open_items, evidence_rows)]
     parent: dict[str, str] = {}
 
     def find(key: str) -> str:
@@ -1223,6 +1219,7 @@ def document_source_map(
                     sorted(groups.get(find(mapped), {mapped}))
                 ),
                 "document_no_examples": set(),
+                "record_refs": set(),
                 "document_dates": set(),
                 "source_files": set(),
                 "evidence_types_present": set(),
@@ -1241,6 +1238,8 @@ def document_source_map(
         )
         if clean_text(row.get("document_no")):
             target["document_no_examples"].add(clean_text(row.get("document_no")))
+        if clean_text(row.get("record_id")):
+            target["record_refs"].add(clean_text(row["record_id"]))
         row_date = record_date(row, ("document_date", "posting_date", "date"))
         if row_date:
             target["document_dates"].add(row_date)
@@ -1305,6 +1304,7 @@ def document_source_map(
             {
                 "document_key": row["document_key"],
                 "document_aliases": row["document_aliases"],
+                "record_refs": "; ".join(sorted(row["record_refs"])),
                 "document_no_examples": "; ".join(
                     sorted(row["document_no_examples"])[:5]
                 ),
@@ -1600,6 +1600,55 @@ def accounting_perimeter_mismatch_detail(
         if (left_value or right_value) and left_value != right_value:
             return label
     return "accounting perimeter mismatch"
+
+
+def _resolve_undated_bank_references(
+    open_items: list[dict[str, Any]], evidence_rows: list[dict[str, Any]]
+) -> list[dict[str, Any]]:
+    """Join an exact bank invoice number to one same-party source record.
+
+    Banks need not repeat an invoice date. This is an exact, population-bound
+    reference join, not a guessed year or description match. Original evidence
+    fields remain unchanged; ambiguous references receive no derived alias.
+    """
+    by_number: dict[str, list[dict[str, Any]]] = {}
+    for item in open_items:
+        number = document_key(item.get("document_no"), "")
+        if number:
+            by_number.setdefault(number, []).append(item)
+    resolved = []
+    for evidence in evidence_rows:
+        number = document_key(evidence.get("document_no"), "")
+        if (
+            not number
+            or not number.endswith("|")
+            or record_document_keys(evidence) != {number}
+            or parse_date(evidence.get("document_date"))
+            or not clean_text(evidence.get("party_ref"))
+            or (
+                evidence.get("source_role") != "bank_statement"
+                and normalized_evidence_type(evidence) != "external_bank"
+            )
+        ):
+            resolved.append(evidence)
+            continue
+        candidates = [
+            item
+            for item in by_number.get(number, [])
+            if accounting_perimeters_compatible(item, evidence)
+        ]
+        if len(candidates) == 1:
+            resolved.append(
+                {
+                    **evidence,
+                    "document_keys": "; ".join(
+                        sorted({number} | record_document_keys(candidates[0]))
+                    ),
+                }
+            )
+        else:
+            resolved.append(evidence)
+    return resolved
 
 
 def side_aware_closure_match(
@@ -2986,6 +3035,7 @@ def promote_partial_bank_payments(
             clean_text(evidence.get("record_id")): evidence
             for key in record_document_keys(row)
             for evidence in support.get(key, [])
+            if accounting_perimeters_compatible(row, evidence)
         }
         for row in reconciliation_rows
     ]
@@ -3011,8 +3061,13 @@ def promote_partial_bank_payments(
             or payment is None
             or not Decimal("0") < payment < amount
             or not parse_date(record_date(evidence))
-            or not parse_date(assumptions.get("cutoff_date"))
-            or record_date(evidence) > parse_date(assumptions.get("cutoff_date"))
+            or (
+                assumptions.get("post_cutoff_events_excluded")
+                and (
+                    not parse_date(assumptions.get("cutoff_date"))
+                    or is_after_cutoff(evidence, assumptions)
+                )
+            )
             or not clean_text(row.get("currency"))
             or sum(
                 clean_text(other.get("record_id")) == evidence_id
@@ -3673,6 +3728,7 @@ def reconcile_open_items(
     assumptions: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     active = merged_assumptions(assumptions)
+    evidence_rows = _resolve_undated_bank_references(open_items, evidence_rows)
     evidence_index = build_evidence_document_index(evidence_rows)
     grouped_support = grouped_open_amount_support_by_row(
         open_items, evidence_rows, active

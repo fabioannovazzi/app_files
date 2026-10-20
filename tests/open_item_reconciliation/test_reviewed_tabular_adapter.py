@@ -8,6 +8,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
+from defusedxml.common import EntitiesForbidden
 from openpyxl import Workbook
 
 from tests.open_item_reconciliation.test_audit_assurance import (
@@ -134,6 +135,30 @@ def test_invalid_mapped_cell_rejects_entire_source(tmp_path, bad):
         a.read_reviewed_tabular_source(path, decision)
 
 
+def test_workbook_xml_entities_cannot_supply_source_values(tmp_path):
+    a = load_assurance()
+    path = tmp_path / "source.xlsx"
+    write_source(path)
+    rewritten = io.BytesIO()
+    with (
+        zipfile.ZipFile(path) as source_zip,
+        zipfile.ZipFile(rewritten, "w") as target_zip,
+    ):
+        for item in source_zip.infolist():
+            data = source_zip.read(item.filename)
+            if item.filename == "xl/workbook.xml":
+                data = (
+                    b'<!DOCTYPE workbook [<!ENTITY sheetname "Export">]>'
+                    + data.replace(b'name="Export"', b'name="&sheetname;"')
+                )
+            target_zip.writestr(item, data)
+    path.write_bytes(rewritten.getvalue())
+    _, decision = reviewed(a, path, spec(path))
+
+    with pytest.raises(EntitiesForbidden):
+        a.read_reviewed_tabular_source(path, decision)
+
+
 def test_source_bytes_and_perimeter_are_not_replaced_by_review_defaults(tmp_path):
     a = load_assurance()
     path = tmp_path / "source.csv"
@@ -153,6 +178,160 @@ def test_source_bytes_and_perimeter_are_not_replaced_by_review_defaults(tmp_path
     _, decision = reviewed(a, path, value)
     with pytest.raises(a.AssuranceRunError, match="perimeter"):
         a.read_reviewed_tabular_source(path, decision)
+
+
+@pytest.mark.parametrize("suffix", [".csv", ".xlsx"])
+@pytest.mark.parametrize("role", ["open_items", "bank_statement", "journal"])
+def test_reviewed_party_column_preserves_each_source_counterparty(
+    tmp_path, suffix, role
+):
+    a = load_assurance()
+    path = tmp_path / ("parties" + suffix)
+    source_rows = [
+        ["InvoiceX", "DateX", "ValueX", "PostedX", "PartyX"],
+        ["F001", "01/09/2026", "100", "05/09/2026", "Alfa"],
+        ["F002", "02/09/2026", "200", "06/09/2026", "Beta"],
+    ]
+    if suffix == ".xlsx":
+        workbook = Workbook()
+        workbook.active.title = "Export"
+        for row in source_rows:
+            workbook.active.append(row)
+        workbook.save(path)
+        workbook.close()
+    else:
+        path.write_text("\n".join(";".join(row) for row in source_rows))
+    value = spec(path, role)
+    # The source has no common party: this explicit mapping is row authority.
+    value["perimeter"]["party_ref"] = None
+    value["tabular"]["columns"]["party_ref"] = "PartyX"
+    _, decision = reviewed(a, path, value)
+
+    rows = a.read_reviewed_tabular_source(path, decision)
+
+    assert [r["party_ref"] for r in rows] == ["Alfa", "Beta"]
+    assert {r["entity_ref"] for r in rows} == {"entity.test"}
+
+
+@pytest.mark.parametrize("party,fixed_party", [("", None), ("Beta", "Alfa")])
+def test_party_column_cannot_be_blank_or_contradict_a_fixed_party(
+    tmp_path, party, fixed_party
+):
+    a = load_assurance()
+    path = tmp_path / "source.csv"
+    path.write_text(
+        "InvoiceX;DateX;ValueX;PartyX\n"
+        "F001;01/09/2026;100;Alfa\n"
+        f"F002;02/09/2026;200;{party}\n"
+    )
+    value = spec(path)
+    value["perimeter"]["party_ref"] = fixed_party
+    value["tabular"]["columns"]["party_ref"] = "PartyX"
+    _, decision = reviewed(a, path, value)
+
+    with pytest.raises(a.AssuranceRunError, match="party_ref"):
+        a.read_reviewed_tabular_source(path, decision)
+
+
+@pytest.mark.parametrize("language", ["it", "en", "es", "de", "fr"])
+def test_multi_party_exports_reconcile_later_payments_and_replay_source_parties(
+    tmp_path, language
+):
+    a = load_assurance()
+    raw = load_script_module("multi_party_raw", SCRIPTS / "raw_input_runner.py")
+    workflow = load_script_module(
+        "multi_party_workflow", SCRIPTS / "reconciliation_workflow.py"
+    )
+    source = tmp_path / "inputs"
+    source.mkdir()
+    population = source / "population.csv"
+    population.write_text(
+        "InvoiceX;DateX;ValueX;DueX;PartyX\n"
+        "F001;01/09/2026;1200.00;30/09/2026;Cliente Alfa Test\n"
+        "F002;05/09/2026;800.00;30/09/2026;Cliente Beta Test\n"
+        "F003;15/09/2026;500.00;15/10/2026;Cliente Gamma Test\n"
+    )
+    bank = source / "bank.csv"
+    bank.write_text(
+        "InvoiceX;PostedX;ValueX;PartyX\n"
+        "F001;05/10/2026;1200.00;Cliente Alfa Test\n"
+        "F002;10/10/2026;300.00;Cliente Beta Test\n"
+    )
+    population_spec = spec(population)
+    population_spec["tabular"]["last_data_row"] = 4
+    population_spec["tabular"]["columns"]["due_date"] = "DueX"
+    bank_spec = spec(bank, "bank_statement")
+    del bank_spec["tabular"]["columns"]["document_date"]
+    for decision in (population_spec, bank_spec):
+        decision["perimeter"]["party_ref"] = None
+        decision["tabular"]["columns"]["party_ref"] = "PartyX"
+    assumptions = {
+        "assurance_run_date": "2026-10-20",
+        "scope_year": 2026,
+        "cutoff_date": "2026-09-30",
+        "post_cutoff_events_excluded": False,
+        "amount_tolerance": "0",
+        "reviewed_source_decisions": {
+            population.name: population_spec,
+            bank.name: bank_spec,
+        },
+    }
+    extracted = raw.extract_normalized_records(
+        source, assumptions, output_dir=tmp_path / "extracted"
+    )
+    assert extracted["extraction_errors"] == []
+    assert [r["party_ref"] for r in extracted["open_items"]] == [
+        "Cliente Alfa Test",
+        "Cliente Beta Test",
+        "Cliente Gamma Test",
+    ]
+    output = tmp_path / "workpapers"
+
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=output,
+        open_items=extracted["open_items"],
+        evidence_rows=extracted["evidence_rows"],
+        assumptions=assumptions,
+        source_inventory=extracted["source_inventory"],
+        source_qualifications=extracted["source_qualifications"],
+        source_artifact_root=source,
+        source_artifact_receipts=extracted["source_artifact_receipts"],
+        reviewed_source_decision_receipts=extracted[
+            "reviewed_source_decision_receipts"
+        ],
+        language=language,
+        require_completed_review=False,
+    )
+
+    rows = result["reconciliation_rows"]
+    assert [r["reconciliation_status"] for r in rows] == [
+        "closed",
+        "partially_paid",
+        "unresolved",
+    ]
+    assert rows[1]["allocated_amount"] == "300.00"
+    assert rows[1]["residual_amount"] == "500.00"
+    assert rows[2]["amount"] == "500"
+    assert Path(result["excel_path"]).is_file()
+    assert Path(result["word_path"]).is_file()
+    assert (
+        a.validate_assurance_run(output)["content_sha256"]
+        == result["assurance"]["content_sha256"]
+    )
+
+    forged = copy.deepcopy(extracted["evidence_rows"])
+    forged[1]["party_ref"] = "Cliente Alfa Test"
+    with pytest.raises(a.AssuranceRunError, match="source cells"):
+        a.prepare_assurance_run(
+            output_dir=tmp_path / "forged",
+            open_items=extracted["open_items"],
+            evidence_rows=forged,
+            assumptions=assumptions,
+            source_root=source,
+            source_receipts=extracted["source_artifact_receipts"],
+            reviewed_source_decisions=extracted["reviewed_source_decision_receipts"],
+            source_qualifications=extracted["source_qualifications"],
+        )
 
 
 def test_journal_evidence_meaning_is_explicit_review_not_description_keyword(tmp_path):
@@ -282,7 +461,9 @@ def test_malformed_review_layout_is_an_explicit_validation_error(
     assert not decisions and path.name in errors
 
 
-@pytest.mark.parametrize("dimensions", ["normal", "missing", "stale"])
+@pytest.mark.parametrize(
+    "dimensions", ["normal", "missing", "stale", "other_invoice_year"]
+)
 def test_tabular_sources_generate_workpapers_and_replay_final_assurance(
     tmp_path, dimensions
 ):
@@ -297,7 +478,10 @@ def test_tabular_sources_generate_workpapers_and_replay_final_assurance(
     bank = source / "bank.csv"
     write_source(population)
     write_source(bank)
-    if dimensions != "normal":
+    if dimensions == "other_invoice_year":
+        # Same printed invoice numbers refer to different source years.
+        bank.write_text(bank.read_text().replace("/09/2026", "/09/2025"))
+    if dimensions in {"missing", "stale"}:
         original = population.read_bytes()
         rewritten = io.BytesIO()
         with (
@@ -346,9 +530,10 @@ def test_tabular_sources_generate_workpapers_and_replay_final_assurance(
         ],
         require_completed_review=False,
     )
+    expected_status = "unresolved" if dimensions == "other_invoice_year" else "closed"
     assert [r["reconciliation_status"] for r in result["reconciliation_rows"]] == [
-        "closed",
-        "closed",
+        expected_status,
+        expected_status,
     ]
     assert Path(result["excel_path"]).is_file()
     assert Path(result["word_path"]).is_file()

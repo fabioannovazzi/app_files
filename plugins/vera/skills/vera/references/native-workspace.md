@@ -422,7 +422,13 @@ order. Scope, evidence policies, declared reviewer/date, report language and
 literal title/narrative remain editable private draft fields; no confirmation is
 restored. App-only original consultation checks exact registered bytes before a
 bounded 4 MiB download/open link. Larger originals remain in the Archive folder.
-No filenames assign accounting meaning. After renewed review of every source,
+No filenames assign accounting meaning. Tabular service drafts retain the exact
+reviewed layout and may declare a null common party with a mapped party column;
+the public producer validates every source row. Preparation records whether an
+agent or a human reviewed the sources, without claiming professional approval.
+Archive's owned automatic report files do not make a new run interrupted;
+unrecognized output files and unresolved preparation intents still require
+recovery. After recorded review of every source,
 the unchanged raw producer writes the complete normal package at the fixed
 `outputs/reconciliation/` location and the public assurance validator replays it.
 Durable intents preserve uncertain outcomes and prevent automatic repetition.

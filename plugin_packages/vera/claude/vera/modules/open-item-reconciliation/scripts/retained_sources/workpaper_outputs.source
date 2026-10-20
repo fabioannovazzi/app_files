@@ -1984,6 +1984,7 @@ def _document_source_report_rows(
         {
             labels["document"]: row.get("document_no_examples")
             or row.get("document_key", ""),
+            "Record refs": row.get("record_refs", ""),
             labels["open_amount"]: _format_decimal(row.get("open_amount_total")),
             labels["open_rows"]: row.get("open_item_rows", ""),
             labels["ledger"]: row.get("ledger_rows", ""),

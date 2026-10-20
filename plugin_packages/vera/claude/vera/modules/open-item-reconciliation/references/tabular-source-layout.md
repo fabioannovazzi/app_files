@@ -33,13 +33,22 @@ Reviewed receipts remain unsigned and do not authenticate that label.
    `tabular` object below. Use exact current source paths as decision keys.
 3. For each canonical field choose the exact source header. Do not infer
    missing values, silently discard relevant columns or overwrite source party,
-   entity, currency or units to agree with a desired result. Mapped perimeter
-   cells must equal the reviewed source perimeter. This version retains the
-   existing single reviewed perimeter per source; do not claim unrestricted
-   multi-party/multi-entity intake.
+   entity, currency or units to agree with a desired result. For a source with
+   multiple counterparties, map `columns.party_ref` to the exact counterparty
+   header and set `perimeter.party_ref=null`: each nonblank source party cell
+   then supplies that row's identity. Do not split an ordinary export per party
+   or substitute a common fictitious party. A non-null `perimeter.party_ref`
+   still declares one common party and any mapped party cells must equal it.
+   Entity, currency and units remain source-wide; their mapped cells must equal
+   the reviewed perimeter. Blank mapped party cells reject the source rather
+   than becoming a shared unknown identity. Cross-source party values must
+   actually agree before payments can be allocated; no alias or name guessing
+   is performed.
 4. Use the normal `raw_input_runner.py` entrypoint, with its actual started
    Archive context and `--output-subdirectory reconciliation`. It builds and
    replays current-byte source decisions/qualifications before parsing.
+   Save agent-generated `--assumptions-json` inside that run's output directory;
+   a configuration file in the chat workspace is outside the selected run.
 5. Review all emitted rows and source diagnostics. Any invalid mapped row
    rejects that source as a whole; no partly parsed source is promoted.
    Assurance freshly rederives every tabular prepared row, including evidence
@@ -88,6 +97,20 @@ evidence sources require posting date and amount. Each nonblank source row must
 have a source or document identity. A mapped critical date cannot be invalid;
 an amount or mapped balance cannot be blank, invalid or more precise than a
 cent. No exchange rate or amount rounding is inferred.
+
+A bank export may identify the invoice without repeating its issue date. The
+reconciliation joins that exact reviewed invoice number to a single source
+invoice with the same counterparty, entity, currency and unit. Repeated numbers
+within that perimeter remain unresolved, including repetitions across years;
+the payment amount does not choose the year. Source dates and references stay
+unchanged. Undelimited trailing digits such as `F001` never supply an invoice
+year. An explicit number/year reference retains its stated year.
+
+When the request includes settlements after the opening-population cutoff, set
+`post_cutoff_events_excluded=false` in the reviewed assumptions and retain the
+original cutoff. This applies to partial as well as full bank payments; the
+unpaid residual remains open. Inspect the supplied evidence period rather than
+changing the population cutoff to force a match.
 
 Open-item sources use explicit `default_evidence_type="open_item"`; bank
 sources use `"external_bank"`. Journal sources require an explicit reviewed

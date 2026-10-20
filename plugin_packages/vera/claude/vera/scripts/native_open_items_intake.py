@@ -43,6 +43,7 @@ SOURCE_FIELDS = {
     "money",
     "date",
 }
+TABULAR_ADAPTER = "reviewed_tabular_accounting_v1"
 GROUP_FIELDS = {
     "perimeter": {
         "entity_ref",
@@ -104,6 +105,8 @@ def context(
     """Exact receipts and an unresolved intent gate execution; no source-role inference."""
     if binding["workflow_id"] != "open-item-reconciliation":
         raise PermissionError("Open-item intake belongs to another workflow")
+    from vera_assurance.contracts import archive_reporting_paths
+
     output = Path(loaded["output_dir"])
     private = api.ui_state_directory(output, create=False)
     contract = engine_call(root, {"operation": "contract"})
@@ -112,13 +115,19 @@ def context(
         for path in private.glob("open-items-intake-request-*.json")
     )
     prepared = (output / "reconciliation/run_manifest.json").is_file()
+    # Archive starts its separately sealed report before accounting preparation.
+    # Validate ownership, rather than treating these exact sidecars as partial work.
+    reporting = archive_reporting_paths(
+        output, expected_workflow_ids=("open-item-reconciliation",)
+    )
+    existing_work = any(path.name not in reporting for path in output.iterdir())
     status = (
         "recovery_required"
         if pending
         else (
             "prepared"
             if prepared
-            else "ready" if not any(output.iterdir()) else "recovery_required"
+            else "recovery_required" if existing_work else "ready"
         )
     )
     if prepared and not pending:
@@ -169,7 +178,9 @@ def validate_fields(value: object, inputs: dict[str, Any]) -> dict[str, Any]:
             if not isinstance(item, dict) or set(item) - set(inputs):
                 raise ValueError("Open-item source choice is outside this run")
             for row in item.values():
-                if not isinstance(row, dict) or set(row) - SOURCE_FIELDS:
+                if not isinstance(row, dict) or set(row) - (
+                    SOURCE_FIELDS | {"tabular"}
+                ):
                     raise ValueError("Unexpected source decision fields")
                 for field, content in row.items():
                     if field in GROUP_FIELDS:
@@ -177,11 +188,21 @@ def validate_fields(value: object, inputs: dict[str, Any]) -> dict[str, Any]:
                             not isinstance(content, dict)
                             or set(content) - GROUP_FIELDS[field]
                             or any(
-                                not isinstance(v, str) or len(v) > 1_000
-                                for v in content.values()
+                                (not isinstance(v, str) or len(v) > 1_000)
+                                and not (
+                                    field == "perimeter"
+                                    and k == "party_ref"
+                                    and v is None
+                                )
+                                for k, v in content.items()
                             )
                         ):
                             raise ValueError("Invalid unfinished source convention")
+                    elif field == "tabular":
+                        # The existing producer validates the complete exact layout;
+                        # drafts may retain incomplete choices within the size bound.
+                        if not isinstance(content, dict):
+                            raise ValueError("Invalid tabular source layout")
                     elif not isinstance(content, str) or len(content) > 200:
                         raise ValueError("Invalid source role or adapter choice")
     return value
@@ -244,7 +265,10 @@ def compile_assumptions(
         raise ValueError("Review every exact registered Open-item source")
     decisions = {}
     for identity, choice in fields["sources"].items():
-        if set(choice) != SOURCE_FIELDS or any(
+        expected_fields = SOURCE_FIELDS | (
+            {"tabular"} if choice.get("adapter_family") == TABULAR_ADAPTER else set()
+        )
+        if set(choice) != expected_fields or any(
             set(choice[group]) != keys for group, keys in GROUP_FIELDS.items()
         ):
             raise ValueError("Complete every source convention")
@@ -406,15 +430,30 @@ def dispatch(
             record["draft_revision"] = api.digest(record)
             api.atomic_json(path, record)
             return {"draft_revision": record["draft_revision"], "saved": True}
-        if args.get("human_reviewed") is not True or saved["stale"]:
-            raise ValueError("Renew explicit review of the complete Open-item intake")
+        if saved["stale"]:
+            raise ValueError("Review the changed Open-item intake")
         fields = validate_fields(saved["fields"], inputs)
         assumptions = compile_assumptions(fields, loaded, current["contract"])
+        review_actor = args.get("review_actor")
+        if review_actor is None and args.get("human_reviewed") is True:
+            review_actor = "human"
+        if review_actor not in {"agent", "human"} or (
+            "human_reviewed" in args
+            and args["human_reviewed"] is not (review_actor == "human")
+        ):
+            raise ValueError("Record the actual agent or human source reviewer")
+        review = {
+            "actor_type": review_actor,
+            "reviewer_ref": fields["reviewer_ref"],
+            "reviewed_on": fields["reviewed_on"],
+            "human_reviewed": review_actor == "human",
+        }
         retained = {
             "request_digest": request_digest,
             "revision": current["revision"],
             "owner": owner(binding),
             "fields": fields,
+            "source_review": review,
         }
         api.atomic_json(receipt, retained)
         result = engine_call(
@@ -429,6 +468,7 @@ def dispatch(
             },
         )
         api.load_binding(binding)
+        result["source_review"] = review
         retained["result"] = result
         api.atomic_json(receipt, retained)
         return result

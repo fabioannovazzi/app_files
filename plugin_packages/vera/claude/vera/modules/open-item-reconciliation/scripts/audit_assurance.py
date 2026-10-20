@@ -100,7 +100,6 @@ import shutil
 import stat
 import sys
 import tempfile
-import xml.etree.ElementTree as ET
 import zipfile
 from collections.abc import Callable, Mapping, Sequence
 from datetime import date, datetime
@@ -108,6 +107,7 @@ from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 from typing import Any
 
+from defusedxml import ElementTree as ET
 from docx import Document
 from locale_support import canonical_word_label
 from openpyxl import load_workbook
@@ -874,6 +874,16 @@ def _validate_tabular_layout(
     return _json_safe(dict(value), label="tabular layout")
 
 
+def _tabular_party_is_row_scoped(content: Mapping[str, Any]) -> bool:
+    """Use exact source cells when review maps a party column without a common party."""
+
+    return (
+        content["adapter_family"] == TABULAR_ADAPTER
+        and content["perimeter"]["party_ref"] is None
+        and "party_ref" in content["tabular"]["columns"]
+    )
+
+
 def _validate_source_decision_content(
     value: Mapping[str, Any],
     *,
@@ -1618,6 +1628,9 @@ def _validate_prepared_population(
             "reported_unit": money["reported_unit"],
             "reported_increment": SUPPORTED_REPORTED_INCREMENT,
         }
+        if _tabular_party_is_row_scoped(content):
+            # The mandatory source replay below verifies each row's party cell.
+            del exact_fields["party_ref"]
         for field, expected in exact_fields.items():
             if row.get(field) != expected:
                 raise AssuranceRunError(
@@ -5517,8 +5530,13 @@ def read_reviewed_tabular_source(
                     raise AssuranceRunError(f"required mapped {field} is empty")
             if not row.get("source_record_id") and not row.get("document_no"):
                 raise AssuranceRunError("mapped row identity is empty")
+            perimeter = dict(content["perimeter"])
+            if _tabular_party_is_row_scoped(content):
+                if not row.get("party_ref"):
+                    raise AssuranceRunError("mapped party_ref is empty")
+                perimeter["party_ref"] = row["party_ref"]
             for field in ("entity_ref", "party_ref", "currency", "unit"):
-                if field in columns and row.get(field) != content["perimeter"][field]:
+                if field in columns and row.get(field) != perimeter[field]:
                     raise AssuranceRunError(
                         f"source {field} contradicts reviewed perimeter"
                     )
@@ -5529,7 +5547,7 @@ def read_reviewed_tabular_source(
                     raise AssuranceRunError(
                         "source evidence type lacks an explicit review mapping"
                     )
-            row.update(content["perimeter"])
+            row.update(perimeter)
             row.update(
                 reported_unit=content["money"]["reported_unit"],
                 reported_increment=SUPPORTED_REPORTED_INCREMENT,

@@ -407,7 +407,9 @@ Useful helper scripts include:
 
 - `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
   CLI requires the exact Studio Archive `--client-engagement` context and
-  `--assumptions-json`;
+  `--assumptions-json`. Save this agent-generated configuration in the selected
+  run's output directory before invoking the helper; a chat-workspace file is
+  outside that run and is not an imported client source;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.

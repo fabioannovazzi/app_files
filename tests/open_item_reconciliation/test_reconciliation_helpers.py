@@ -43,6 +43,13 @@ def test_document_key_numeric_year_suffix_matches_invoice_series_alias():
     assert "1524|2023" in helpers.record_document_keys({"document_key": "1524FE|2023"})
 
 
+@pytest.mark.parametrize("document_no", ["F001", "F002", "INV2026"])
+def test_invoice_sequence_does_not_invent_a_document_year(document_no):
+    helpers = load_helpers()
+
+    assert helpers.document_key(document_no) == f"{document_no}|"
+
+
 def test_side_aware_match_uses_expected_side_amount():
     helpers = load_helpers()
     open_item = {"document_key": "INV120|2023", "amount": "77032.64"}
@@ -1716,6 +1723,45 @@ def test_partial_bank_payment_retains_exact_residual_in_allocation_ledger():
     assert ledgers[0]["target_residuals"][0]["residual"] == "732"
 
 
+@pytest.mark.parametrize(
+    "exclude_later,expected_status",
+    [(False, "partially_paid"), (True, "unresolved")],
+)
+def test_partial_bank_payment_respects_selected_cutoff_policy(
+    exclude_later, expected_status
+):
+    helpers = load_helpers()
+    invoice = {
+        "record_id": "I1",
+        "document_key": "F002",
+        "amount": "800.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "document_date": "2026-09-05",
+    }
+    payment = {
+        "record_id": "P1",
+        "document_key": "F002",
+        "amount": "300.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "posting_date": "2026-10-10",
+        "evidence_type": "external_bank",
+    }
+
+    rows = helpers.reconcile_open_items(
+        [invoice],
+        [payment],
+        {
+            "scope_year": 2026,
+            "cutoff_date": "2026-09-30",
+            "post_cutoff_events_excluded": exclude_later,
+        },
+    )
+
+    assert rows[0]["reconciliation_status"] == expected_status
+
+
 def test_partial_bank_payment_does_not_choose_between_two_same_reference_invoices():
     helpers = load_helpers()
     invoices = [
@@ -1753,6 +1799,126 @@ def test_partial_bank_payment_does_not_choose_between_two_same_reference_invoice
     assert rows[1]["reconciliation_status"] == "unresolved"
     assert "allocated_amount" not in rows[0]
     assert "allocated_amount" not in rows[1]
+
+
+@pytest.mark.parametrize("payment_amount", ["300.00", "800.00"])
+def test_same_document_payment_from_another_party_cannot_settle_invoice(payment_amount):
+    helpers = load_helpers()
+    invoice = {
+        "record_id": "I1",
+        "document_key": "F002",
+        "amount": "800.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "document_date": "2026-09-05",
+    }
+    payment = {
+        "record_id": "P1",
+        "document_key": "F002",
+        "amount": payment_amount,
+        "currency": "EUR",
+        "party_ref": "Alfa",
+        "posting_date": "2026-10-10",
+        "evidence_type": "external_bank",
+    }
+
+    rows = helpers.reconcile_open_items(
+        [invoice],
+        [payment],
+        {
+            "scope_year": 2026,
+            "cutoff_date": "2026-09-30",
+            "post_cutoff_events_excluded": False,
+        },
+    )
+
+    assert rows[0]["rule_applied"] == "accounting_perimeter_mismatch"
+    assert rows[0].get("allocated_amount") is None
+
+
+def test_shared_invoice_reference_with_distinct_parties_keeps_payment_ownership():
+    helpers = load_helpers()
+    invoice = {
+        "record_id": "I1",
+        "document_key": "F002",
+        "amount": "800.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "document_date": "2026-09-05",
+    }
+    other_invoice = {**invoice, "record_id": "I2", "party_ref": "Gamma"}
+    payment = {
+        "record_id": "P1",
+        "document_key": "F002",
+        "amount": "300.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "posting_date": "2026-10-10",
+        "evidence_type": "external_bank",
+    }
+
+    rows = helpers.reconcile_open_items(
+        [invoice, other_invoice],
+        [payment],
+        {
+            "scope_year": 2026,
+            "cutoff_date": "2026-09-30",
+            "post_cutoff_events_excluded": False,
+        },
+    )
+
+    assert rows[0]["reconciliation_status"] == "partially_paid"
+    assert rows[0]["allocated_amount"] == "300.00"
+    assert rows[1]["rule_applied"] == "accounting_perimeter_mismatch"
+    assert rows[1].get("allocated_amount") is None
+
+
+@pytest.mark.parametrize("other_year", [2025, 2026])
+@pytest.mark.parametrize(
+    "other_party,expected", [("Beta", "unresolved"), ("Gamma", "closed")]
+)
+def test_undated_bank_reference_requires_one_exact_same_party_invoice(
+    other_year, other_party, expected
+):
+    helpers = load_helpers()
+    invoice = {
+        "record_id": "I1",
+        "document_no": "F002",
+        "document_key": "F002|2026",
+        "amount": "800.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "document_date": "2026-09-05",
+    }
+    other = {
+        **invoice,
+        "record_id": "I2",
+        "document_key": f"F002|{other_year}",
+        "document_date": f"{other_year}-09-05",
+        "party_ref": other_party,
+    }
+    payment = {
+        "record_id": "P1",
+        "document_no": "F002",
+        "document_key": "F002|",
+        "amount": "800.00",
+        "currency": "EUR",
+        "party_ref": "Beta",
+        "posting_date": "2026-10-10",
+        "evidence_type": "external_bank",
+    }
+
+    rows = helpers.reconcile_open_items(
+        [invoice, other],
+        [payment],
+        {"cutoff_date": "2026-09-30", "post_cutoff_events_excluded": False},
+    )
+
+    assert rows[0]["reconciliation_status"] == expected
+    assert rows[1]["reconciliation_status"] not in {"closed", "partially_paid"}
+    assert payment["document_key"] == "F002|"
+    assert "document_keys" not in payment
+    assert "document_date" not in payment
 
 
 @pytest.mark.parametrize(

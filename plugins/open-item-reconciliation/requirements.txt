@@ -3,6 +3,7 @@
 # what the plugin expects when run in a fresh Python environment.
 pandas>=2.0
 openpyxl>=3.1
+defusedxml>=0.7.1,<1
 python-docx>=1.1
 pypdf>=4.0
 PyMuPDF>=1.23
