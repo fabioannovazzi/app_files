@@ -422,3 +422,61 @@ def test_established_partial_payment_cannot_be_taken_by_another_target(
         semantic.apply_resolution(rows, bank, assumptions)[0]["allocated_amount"]
         == "100"
     )
+
+
+@pytest.mark.parametrize("host", ["cowork", "antigravity"])
+def test_native_handoff_resumes_same_population_and_closes_cumulative_payment(
+    runtime, monkeypatch, tmp_path, host
+):
+    from tests.plugins.test_native_host_workers import completed_record
+
+    _, helpers, semantic = runtime
+    monkeypatch.syspath_prepend(
+        str(SCRIPTS.parents[1] / "journal-bank-reconciliation/scripts")
+    )
+    import native_host_worker
+    import worker_capabilities
+
+    monkeypatch.setattr(
+        semantic,
+        "_capsule",
+        lambda: SimpleNamespace(
+            discover_worker_selection=lambda workflow: worker_capabilities.select_worker(
+                workflow, host=host
+            ),
+            run_isolated_native_worker=lambda **kwargs: native_host_worker.run_worker(
+                **{
+                    key: value
+                    for key, value in kwargs.items()
+                    if key != "source_records"
+                }
+            ),
+        ),
+    )
+    items, bank = population()
+    assumptions = {"currency": "EUR"}
+    rows = helpers.reconcile_open_items(items, bank, assumptions)
+    output = tmp_path / "results/semantic-review"
+    pending = semantic.prepare_resolution(rows, bank, assumptions, output)
+    request_path = output / "batch-0000/native_host_request.json"
+    original_request = request_path.read_bytes()
+    response = {
+        "decisions": [
+            decision("invoice-0", [("bank-0", "366")]),
+            decision("invoice-1", [("bank-0", "244")]),
+        ]
+    }
+    (request_path.parent / "native_host_record.json").write_text(
+        json.dumps(completed_record(json.loads(original_request), response))
+    )
+
+    assumptions[semantic.KEY] = semantic.prepare_resolution(
+        rows, bank, assumptions, output
+    )
+    result = helpers.reconcile_open_items(items, bank, assumptions)
+
+    assert pending["status"] == "incomplete"
+    assert "NATIVE_WORKER_PENDING" in pending["blocks"][0]["reason"]
+    assert request_path.read_bytes() == original_request
+    assert assumptions[semantic.KEY]["status"] == "completed"
+    assert [row["reconciliation_status"] for row in result] == ["closed", "closed"]

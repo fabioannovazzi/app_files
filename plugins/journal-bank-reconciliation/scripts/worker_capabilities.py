@@ -120,6 +120,30 @@ def select_worker(
         Path(__file__).with_name("semantic_worker_policy.json").read_text()
     )
     selected_host = host or policy["host"]
+    if selected_host in {"cowork", "antigravity"}:
+        # Python cannot inspect the calling agent's tool schema. Prepare a
+        # preference, then require current native capabilities and an actual
+        # completion before accepting any semantic result.
+        candidate = policy["candidates"][selected_host][0]
+        if effort not in {None, "host_default"}:
+            raise UnsupportedWorkerCapability(
+                "Native subagent effort is controlled by its host"
+            )
+        content = {
+            "schema_version": "vera.semantic_worker_selection.v1",
+            "workflow_id": workflow_id,
+            "host": selected_host,
+            "model": candidate["model"],
+            "reasoning_effort": "host_default",
+            "cost_class": candidate["cost_class"],
+            "discovery": {
+                "method": "native_tool_schema_at_dispatch",
+                "status": "requires_parent_observation",
+            },
+            "policy_sha256": _digest(policy),
+            "quality_claim": "requires_representative_validation",
+        }
+        return {**content, "content_sha256": _digest(content)}
     if selected_host != "codex":
         raise UnsupportedWorkerCapability(
             f"{selected_host}: no verified model-discovery and isolated invocation adapter is implemented; "
@@ -172,7 +196,10 @@ def validate_selection(
         or value.get("workflow_id") != workflow_id
     ):
         raise ValueError("Worker selection digest or workflow is inconsistent")
-    if value.get("host") != "codex" or value.get("cost_class") != "low":
+    if (
+        value.get("host") not in {"codex", "cowork", "antigravity"}
+        or value.get("cost_class") != "low"
+    ):
         raise UnsupportedWorkerCapability(
             "Worker selection has no supported low-cost host adapter"
         )
@@ -180,9 +207,18 @@ def validate_selection(
     if (
         not isinstance(model, str)
         or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,79}", model) is None
-        or selected_effort not in {"none", "low", "medium", "high", "xhigh", "max"}
+        or selected_effort
+        not in {"none", "low", "medium", "high", "xhigh", "max", "host_default"}
     ):
         raise ValueError("Invalid worker model/effort")
+    if value["host"] in {"cowork", "antigravity"} and (
+        model == "inherit"
+        or selected_effort != "host_default"
+        or value["discovery"].get("method") != "native_tool_schema_at_dispatch"
+    ):
+        raise ValueError("Native selection does not match the callable host adapter")
+    if value["host"] == "codex" and selected_effort == "host_default":
+        raise ValueError("Codex requires an advertised reasoning effort")
     if effort is not None and effort != selected_effort:
         raise ValueError("Requested effort differs from the discovered selection")
     return model, selected_effort, dict(value)

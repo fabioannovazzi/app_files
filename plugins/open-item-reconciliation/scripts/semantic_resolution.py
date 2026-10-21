@@ -254,10 +254,18 @@ def prepare_resolution(
             )
             continue
         directory = output / f"batch-{index:04d}"
-        directory.mkdir(parents=True, exist_ok=False)
-        (directory / "request.json").write_text(
+        if output.is_symlink() or directory.is_symlink():
+            raise ValueError("Unsafe semantic worker directory")
+        directory.mkdir(parents=True, exist_ok=True)
+        packet_path = directory / "request.json"
+        packet_bytes = (
             json.dumps(packet, ensure_ascii=False, indent=2) + "\n"
-        )
+        ).encode()
+        if packet_path.is_symlink() or (
+            packet_path.exists() and packet_path.read_bytes() != packet_bytes
+        ):
+            raise ValueError("Prepared semantic population changed; use a new run")
+        packet_path.write_bytes(packet_bytes)
         try:
             capsule = _capsule()
             if selection is None:
@@ -343,12 +351,28 @@ def _validate_batch(
         raise ValueError(
             "Semantic response differs from the successfully launched worker output"
         )
+    native_receipt = (
+        launch.get("schema_version") == "vera.native_host_worker_receipt.v1"
+    )
+    if native_receipt:
+        # Load the shared component through its ordinary verified bootstrap.
+        _capsule()
+        from native_host_worker import validate_receipt
+
+        validate_receipt(
+            launch,
+            workflow_id="open-item-reconciliation",
+            packet_sha256=canonical_json_sha256(packet),
+            prompt=_prompt(packet),
+            output_schema=_schema(),
+            response=response,
+        )
     requested = launch["requested_worker_configuration"]
     if (
         not requested["model"]
         or not requested["reasoning_effort"]
         or requested["direct_model_api"] is not False
-        or requested["ephemeral"] is not True
+        or (not native_receipt and requested["ephemeral"] is not True)
     ):
         raise ValueError("Semantic launch has no bound native model configuration")
     if (
@@ -362,8 +386,8 @@ def _validate_batch(
         != hashlib.sha256(schema_bytes).hexdigest()
     ):
         raise ValueError("Semantic launch schema is stale")
-    canaries = launch["boundary"]["canaries"]
-    if any(
+    canaries = launch.get("boundary", {}).get("canaries", {})
+    if not native_receipt and any(
         canaries.get(key) is not True
         for key in (
             "exact_schema_read_succeeded",
@@ -643,7 +667,7 @@ def semantic_artifact_paths(output: Path) -> set[str]:
         relative = artifact["path"]
         if (
             re.fullmatch(
-                r"semantic-review/batch-[0-9]{4}/(?:request\.json|luna_response\.json|luna_events\.jsonl|luna_stderr\.log|luna_launch_receipt\.json)",
+                r"semantic-review/batch-[0-9]{4}/(?:request\.json|native_host_request\.json|native_host_record\.json|luna_response\.json|luna_events\.jsonl|luna_stderr\.log|luna_launch_receipt\.json)",
                 relative,
             )
             is None

@@ -2075,19 +2075,6 @@ def project_cowork_skill(
             text,
             "## Codex-Only Luna Max Residual Resolution Funnel",
         )
-        if "## Native semantic residual resolution" in text:
-            text = _replace_section(
-                text,
-                "## Native semantic residual resolution",
-                "## Native semantic residual resolution\n\n"
-                "This distribution selects the Cowork host in the shared worker policy. "
-                "A verified isolated invocation adapter is not implemented for this route. "
-                "Keep residuals in the native review handoff and report that no automatic "
-                "semantic worker ran. Do not silently use another harness, switch the main "
-                "chat model, create visible per-case chats, or infer that a named model "
-                "is callable from its name. Preparation and delivery of the reviewable "
-                "workpapers continue without professional-approval ceremony.\n\n",
-            )
     elif (
         relative_path
         == "modules/client-file-preparation/skills/client-file-preparation/SKILL.md"

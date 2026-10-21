@@ -436,6 +436,8 @@ CURRENT_GENERATION_FILES = (
     RESOLUTION_FUNNEL_NAME,
     HUMAN_REVIEW_QUEUE_NAME,
     OPERATIONAL_REVIEW_PAYLOAD_NAME,
+    "native_host_request.json",
+    "native_host_record.json",
 )
 
 REQUIRED_RECEIPTS = {
@@ -1982,6 +1984,11 @@ def _graph_content(
     selected, deferred = _select_components(components)
     if discovery_deferred is not None:
         deferred.append(discovery_deferred)
+    native_selection = selection_review is not None and selection_review.get(
+        "host"
+    ) in {"cowork", "antigravity"}
+    from native_host_worker import configuration as native_configuration
+
     base = {
         "schema_version": GRAPH_SCHEMA_VERSION,
         "workflow_id": "journal_bank_reconciliation",
@@ -1998,24 +2005,28 @@ def _graph_content(
             "automatic_chunking": False,
             "over_cap_action": "skip_worker_and_retain_human_review_queue",
         },
-        "requested_worker_configuration": {
-            "execution": "separate_pinned_codex_exec",
-            "model": model,
-            "reasoning_effort": effort,
-            **(
-                {"selection_review": selection_review}
-                if selection_review is not None
-                else {}
-            ),
-            "ephemeral": True,
-            "inner_sandbox": "read-only",
-            "outer_filesystem_boundary": _resolve_host_profile().contract_id,
-            "project_rules_loaded": False,
-            "global_instructions_required_empty": True,
-            "working_directory": "ephemeral_worker_capsule",
-            "disabled_features": list(_resolve_host_profile().disabled_features),
-            "main_chat_model_change": False,
-        },
+        "requested_worker_configuration": (
+            native_configuration(selection_review)
+            if native_selection
+            else {
+                "execution": "separate_pinned_codex_exec",
+                "model": model,
+                "reasoning_effort": effort,
+                **(
+                    {"selection_review": selection_review}
+                    if selection_review is not None
+                    else {}
+                ),
+                "ephemeral": True,
+                "inner_sandbox": "read-only",
+                "outer_filesystem_boundary": _resolve_host_profile().contract_id,
+                "project_rules_loaded": False,
+                "global_instructions_required_empty": True,
+                "working_directory": "ephemeral_worker_capsule",
+                "disabled_features": list(_resolve_host_profile().disabled_features),
+                "main_chat_model_change": False,
+            }
+        ),
         "source_binding": source_binding,
         "prior_resolution": {
             "state_sha256": prior_state["content_sha256"],
@@ -2338,6 +2349,43 @@ def prepare_semantic_review(
         semantic / CUMULATIVE_RESOLUTION_STATE_NAME,
         required=False,
     )
+    if (semantic / "native_host_request.json").exists() and not (
+        semantic / VALIDATED_SUGGESTIONS_NAME
+    ).exists():
+        graph = _validate_graph_and_preparation_files(
+            reconciliation,
+            semantic,
+            semantic / CANDIDATE_GRAPH_NAME,
+            client_engagement=client_engagement,
+        )
+        if graph["resolution_policy"][
+            "required_level"
+        ] != required_resolution_level or (
+            worker_selection is not None
+            and graph["requested_worker_configuration"]["selection_review"]
+            != worker_selection
+        ):
+            raise ValueError("Pending native worker configuration changed")
+        return {
+            "candidate_graph": semantic / CANDIDATE_GRAPH_NAME,
+            "output_schema": semantic / OUTPUT_SCHEMA_NAME,
+            "prompt": semantic / PROMPT_NAME,
+            "status": semantic / STATUS_NAME,
+            "archived_generation": None,
+            "prior_resolution_state": semantic / PRIOR_RESOLUTION_STATE_NAME,
+            "required_resolution_level": required_resolution_level,
+            "operational_review_payload": semantic / OPERATIONAL_REVIEW_PAYLOAD_NAME,
+            "worker_required": bool(graph["selected_components"]),
+            "selected_component_count": graph["counts"]["selected_component_count"],
+            "deferred_component_count": graph["counts"]["deferred_component_count"],
+            "candidate_graph_sha256": graph["candidate_graph_sha256"],
+            "reviewed_bank_count": graph["prior_resolution"]["reviewed_bank_count"],
+            "human_review_count": _strict_json_file(
+                semantic / RESOLUTION_APPLICATION_NAME,
+                maximum_bytes=MAX_GRAPH_BYTES,
+                label=RESOLUTION_APPLICATION_NAME,
+            )["summary"]["human_review_count"],
+        }
     archived_generation = _archive_current_generation(semantic)
     graph, schema, prior_state = _graph_content(
         reconciliation,
@@ -3034,6 +3082,35 @@ def run_isolated_native_worker(
     process capture, event lifecycle, and content-bound launch receipt.
     """
 
+    if worker_selection is not None and worker_selection.get("host") in {
+        "cowork",
+        "antigravity",
+    }:
+        from native_host_worker import run_worker
+
+        resolve_worker_selection(
+            workflow_id=workflow_id.replace("_", "-"),
+            reasoning_effort=reasoning_effort,
+            worker_selection=worker_selection,
+        )
+        result = run_worker(
+            prompt=prompt,
+            output_schema=output_schema,
+            output_dir=output_dir,
+            workflow_id=workflow_id,
+            packet_sha256=packet_sha256,
+            worker_selection=worker_selection,
+        )
+        _record_model_submission(
+            output_dir,
+            prompt=prompt,
+            output_schema=output_schema,
+            model=result["model"],
+            workflow_id=workflow_id.replace("_", "-"),
+            source_records=source_records,
+        )
+        return result
+
     model, reasoning_effort, selection_review = resolve_worker_selection(
         workflow_id=workflow_id,
         reasoning_effort=reasoning_effort,
@@ -3407,6 +3484,21 @@ def run_semantic_worker(
     )
     if not graph["selected_components"]:
         raise ValueError("The bounded candidate packet does not require a worker")
+    selection = graph["requested_worker_configuration"].get("selection_review")
+    if selection is not None and selection.get("host") in {"cowork", "antigravity"}:
+        return run_isolated_native_worker(
+            prompt=_worker_prompt(graph),
+            output_schema=_worker_output_schema(graph),
+            output_dir=semantic,
+            workflow_id="journal_bank_reconciliation",
+            packet_sha256=graph["candidate_graph_sha256"],
+            worker_selection=selection,
+            source_records=[
+                {"record_id": row["transaction_id"], "fields": list(row)}
+                for component in graph["selected_components"]
+                for row in [*component["bank_records"], *component["journal_records"]]
+            ],
+        )
     for name in (
         RESPONSE_NAME,
         EVENTS_NAME,
@@ -4959,7 +5051,35 @@ def validate_semantic_review(
         label=STDERR_NAME,
     )
     normalized_reviews = _validate_worker_response(response, graph)
-    event_summary = _validate_worker_events(events_text, response)
+    native_receipt = (
+        receipt.get("schema_version") == "vera.native_host_worker_receipt.v1"
+    )
+    if native_receipt:
+        from native_host_worker import validate_receipt
+
+        event_summary = validate_receipt(
+            receipt,
+            workflow_id="journal_bank_reconciliation",
+            packet_sha256=graph["candidate_graph_sha256"],
+            prompt=_worker_prompt(graph),
+            output_schema=_worker_output_schema(graph),
+            response=response,
+        )
+        if receipt["requested_worker_configuration"] != graph[
+            "requested_worker_configuration"
+        ] or any(
+            receipt["process"][key] != digest
+            for key, digest in (
+                ("response_sha256", response_sha256),
+                ("events_sha256", events_sha256),
+                ("stderr_sha256", stderr_sha256),
+            )
+        ):
+            raise ValueError(
+                "Native worker files or configuration changed after completion"
+            )
+    else:
+        event_summary = _validate_worker_events(events_text, response)
     graph_file = _required_child(
         candidate_graph_path,
         semantic,
@@ -4980,23 +5100,24 @@ def validate_semantic_review(
         maximum_bytes=MAX_PROMPT_BYTES,
         label=OUTPUT_SCHEMA_NAME,
     )
-    _validate_launch_receipt(
-        receipt,
-        graph=graph,
-        graph_file_sha256=graph_file_sha256,
-        graph_file_bytes=len(graph_file_bytes_value),
-        prompt_sha256=prompt_sha256,
-        prompt_bytes=len(prompt_text.encode("utf-8")),
-        schema_sha256=schema_sha256,
-        schema_bytes=len(schema_bytes_value),
-        response_sha256=response_sha256,
-        response_bytes=len(response_bytes_value),
-        events_sha256=events_sha256,
-        events_bytes=len(events_text.encode("utf-8")),
-        stderr_sha256=stderr_sha256,
-        stderr_bytes=len(stderr_bytes_value),
-        event_summary=event_summary,
-    )
+    if not native_receipt:
+        _validate_launch_receipt(
+            receipt,
+            graph=graph,
+            graph_file_sha256=graph_file_sha256,
+            graph_file_bytes=len(graph_file_bytes_value),
+            prompt_sha256=prompt_sha256,
+            prompt_bytes=len(prompt_text.encode("utf-8")),
+            schema_sha256=schema_sha256,
+            schema_bytes=len(schema_bytes_value),
+            response_sha256=response_sha256,
+            response_bytes=len(response_bytes_value),
+            events_sha256=events_sha256,
+            events_bytes=len(events_text.encode("utf-8")),
+            stderr_sha256=stderr_sha256,
+            stderr_bytes=len(stderr_bytes_value),
+            event_summary=event_summary,
+        )
     prior_state = _load_resolution_state(
         semantic / PRIOR_RESOLUTION_STATE_NAME,
         required=True,
@@ -5095,6 +5216,13 @@ def validate_semantic_review(
         "advisory_only": True,
         "main_chat_model_change": False,
     }
+    if native_receipt:
+        worker_content["runtime_attestation"] = receipt["runtime_attestation"]
+        worker_content["jsonl_observation"] = {
+            "provenance": "parent_observed_native_tool",
+            "tool_use_absence_observed": True,
+            "visibility_complete": False,
+        }
     worker_run = {
         **worker_content,
         "content_sha256": canonical_json_sha256(worker_content),
@@ -5384,6 +5512,8 @@ def _record_cli_launch_failure(
 def main() -> int:
     """Run the deterministic preparation or validation command."""
 
+    from native_host_worker import NativeWorkerPending
+
     args = _parser().parse_args()
     configure_logging(args.verbose)
     if args.command == "host-status":
@@ -5425,6 +5555,9 @@ def main() -> int:
                 client_engagement=client_engagement,
                 worker_selection=_load_cli_worker_selection(args),
             )
+        except NativeWorkerPending as exc:
+            LOGGER.info("%s", exc)
+            return 3
         except (OSError, ValueError) as exc:
             LOGGER.error("SEMANTIC_PIPELINE_FAILED: %s", exc)
             return 2

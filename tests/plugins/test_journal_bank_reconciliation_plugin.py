@@ -14062,3 +14062,49 @@ def test_historical_semantic_selection_replays_without_current_catalog(
     )
     assert result["candidate_graph_sha256"] == graph["candidate_graph_sha256"]
     assert result["validated_suggestions"].is_file()
+
+
+@pytest.mark.parametrize("host", ["cowork", "antigravity"])
+def test_native_run_all_resumes_pending_packet_and_validates_funnel(
+    tmp_path, monkeypatch, host
+):
+    from tests.plugins.test_native_host_workers import completed_record
+
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    import native_host_worker
+    import worker_capabilities
+
+    selection = worker_capabilities.select_worker(
+        "journal-bank-reconciliation", host=host
+    )
+    monkeypatch.setattr(
+        semantic_review, "_record_model_submission", lambda *args, **kwargs: None
+    )
+    with pytest.raises(native_host_worker.NativeWorkerPending):
+        semantic_review.run_semantic_resolution_pipeline(
+            reconciliation_dir,
+            semantic_dir,
+            required_resolution_level="classified",
+            worker_selection=selection,
+        )
+    request = json.loads((semantic_dir / "native_host_request.json").read_text())
+    graph = json.loads((semantic_dir / "residual_candidate_graph.json").read_text())
+    (semantic_dir / "native_host_record.json").write_text(
+        json.dumps(completed_record(request, _valid_semantic_response(graph)))
+    )
+
+    result = semantic_review.run_semantic_resolution_pipeline(
+        reconciliation_dir,
+        semantic_dir,
+        required_resolution_level="classified",
+        worker_selection=selection,
+    )
+
+    assert result["batch_count"] == 1
+    assert result["reviewed_bank_count"] == 2
+    assert result["exhaustive"] is True
+    receipt = json.loads(result["batches"][0]["launch_receipt"].read_text())
+    assert receipt["runtime_attestation"]["os_isolation_probed"] is False
+    assert receipt["requested_worker_configuration"]["host"] == host
