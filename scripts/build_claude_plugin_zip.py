@@ -2134,6 +2134,31 @@ def project_cowork_skill(
             text,
             "## Codex-Only Luna Max Residual Resolution Funnel",
         )
+        if "## Native semantic residual resolution" in text:
+            text = _replace_section(
+                text,
+                "## Native semantic residual resolution",
+                "## Native semantic residual resolution\n\n"
+                "Use the ordinary `semantic_review.py run-all` command against the completed "
+                "reconciliation directory and its sibling semantic-review directory, with "
+                "the same `--client-engagement` context. The packaged host policy prepares "
+                "a bounded native request. Complete `NATIVE_WORKER_PENDING` automatically "
+                "using `references/native-host-workers.md`, then resume the identical "
+                "command. Use the actual Cowork `Agent` tool and registered "
+                "`vera:reconciliation-reviewer`; verify its current model choices and "
+                "declared tools before dispatch. Keep the main chat model unchanged.\n\n"
+                "The parent retains the exact invocation and completed response; these "
+                "are host-reported observations, not provider attestation or OS isolation "
+                "proof. Both parent and child receive the bounded mapped evidence. Missing "
+                "capabilities leave the draft unresolved without substituting another host. "
+                "Do not ask the user to copy requests, choose routine mappings or approve "
+                "draft preparation. Keep the default `perfect_match` clearance level unless "
+                "an operational policy has already been explicitly established. Semantic "
+                "judgment cannot claim deterministic perfect-match authority.\n\n"
+                "After resumption, use the returned worker-evidence paths and the regenerated "
+                "resolution funnel, review queue and operational payload. Completed worker "
+                "files move to the returned history generation; do not reconstruct paths.\n\n",
+            )
     elif (
         relative_path
         == "modules/client-file-preparation/skills/client-file-preparation/SKILL.md"

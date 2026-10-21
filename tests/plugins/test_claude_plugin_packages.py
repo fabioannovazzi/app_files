@@ -1443,6 +1443,14 @@ def test_cowork_omits_codex_only_luna_residual_route(vera_entries) -> None:
         assert "gpt-5.6-luna" not in text, name
         assert "codex exec" not in text.lower(), name
         assert "Luna Max" not in text, name
+    native_skill = vera_entries[skill_name].decode("utf-8")
+    assert "NATIVE_WORKER_PENDING" in native_skill
+    assert "references/native-host-workers.md" in native_skill
+    assert "vera:reconciliation-reviewer" in native_skill
+    assert "host-reported observations" in native_skill
+    assert "model: haiku\ntools: Read" in vera_entries[
+        "agents/reconciliation-reviewer.md"
+    ].decode("utf-8")
     assert "Optional Claude-Only Luna Max Residual Review" not in vera_entries[
         skill_name
     ].decode("utf-8")

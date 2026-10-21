@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "e3f8d7d127c04ef8f850fa8fa09f628ae93f0f093e407456b88bf145f1d6e3ff",
+      "sha256": "e8690ee5f9c77d546b115a566ab7e9731d5cfb7e811e382069fbb440d71b37a0",
       "languages": [
         "it",
         "en",

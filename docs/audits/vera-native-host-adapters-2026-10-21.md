@@ -82,3 +82,17 @@ retained both partial-payment explanation/provenance and semantic allocations.
   input bundle does not contain Claude agent files. The builder now explicitly
   projects the canonical reviewer source into Antigravity's native format; all
   three Antigravity product builds verified successfully.
+- The Cowork package regression caught Codex diagnostic-launcher directions in
+  the projected semantic section. Its host projection now directs the parent
+  only to the native Agent handoff and same-run resumption. The regression still
+  rejects Codex commands/model names and additionally requires the native route.
+- The privacy regression still expected the old unavailable-host wording. Review
+  also found the old Codex-only Journal–Bank paragraph beside the new handoff
+  explanation. All five translations now describe the supported hosts, while
+  retaining packet bounds, unchanged deterministic matches and the explicit
+  parent/child context, isolation and retention limits. The updated regression
+  passed. A package parity check that overlapped the Cowork rebuild is rerun
+  against the final stable packages.
+- Windows CI exposed a POSIX-separator assumption in the attachment-access test.
+  The assertion now compares platform paths, retaining the checks that missing
+  chat attachments produce actionable guidance without creating Archive state.

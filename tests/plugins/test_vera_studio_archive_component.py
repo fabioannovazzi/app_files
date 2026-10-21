@@ -2092,7 +2092,9 @@ def test_mcp_chat_upload_access_warns_without_creating_archive_state(
         "source_not_on_device",
         "source_not_on_device",
     ]
-    assert [source["source_path"] for source in payload["sources"]] == uploads
+    assert [Path(source["source_path"]) for source in payload["sources"]] == [
+        Path(upload) for upload in uploads
+    ]
     assert "file is in the chat" in payload["sources"][0]["message"]
     assert "Add folder" in payload["sources"][0]["next_step"]
     assert not state.exists()
