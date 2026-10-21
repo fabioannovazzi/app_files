@@ -6,7 +6,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const os = require("node:os");
 const { createHash } = require("node:crypto");
-const { spawn, spawnSync } = require("node:child_process");
+const { spawn } = require("node:child_process");
 const root = path.resolve(__dirname, "..");
 const indexPath = path.join(root, "execution-files.json");
 const development = fs.existsSync(path.resolve(root, "../../.git")) &&
@@ -28,20 +28,33 @@ const runtime = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win3
   : path.join(os.homedir(), ".local/share/mparanza/runtime"));
 const managed = path.join(runtime, "venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
 const python = fs.existsSync(managed) ? managed : (process.platform === "win32" ? "python" : "python3");
-let snapshot;
+// One Python process owns verification, the service and its live workers.
+// A short-lived preparer must not delete code before the service can use it.
+const program = [
+  "import runpy,sys",
+  "from pathlib import Path",
+  "sys.path.insert(0,sys.argv[1])",
+  "from verified_execution import prepare_execution_root,release_execution_root",
+  "snapshot=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True)",
+  "script=snapshot/'scripts/native_execution.py'",
+  "sys.argv=[str(script)]",
+  "try:",
+  "    runpy.run_path(str(script),run_name='__main__')",
+  "finally:",
+  "    release_execution_root(snapshot)",
+].join("\n");
+function cleanupBootstrap() {
+  try { fs.rmSync(bootstrap, { recursive: true, force: true }); }
+  catch (error) { process.stderr.write(`Vera bootstrap cleanup pending: ${error.message}\n`); }
+}
 try {
   for (const name of ["verified_execution.py", "reporting_product.py"])
     fs.writeFileSync(path.join(bootstrap, name), checked(`scripts/${name}`), { mode: 0o600 });
-  const program = "import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); from verified_execution import prepare_execution_root; sys.stdout.write(str(prepare_execution_root(Path(sys.argv[2]),None,snapshot=True)))";
-  const result = spawnSync(python, ["-I", "-B", "-c", program, bootstrap, root],
-    { cwd: bootstrap, encoding: "utf8", timeout: 60000 });
-  if (result.error) throw result.error;
-  if (result.status !== 0) throw new Error(`Vera execution verification failed: ${result.stderr}`);
-  snapshot = result.stdout.trim();
-} finally {
-  fs.rmSync(bootstrap, { recursive: true, force: true });
+  const child = spawn(python, ["-I", "-B", "-c", program, bootstrap, root],
+    { cwd: bootstrap, env: process.env, stdio: "inherit" });
+  child.on("error", error => { process.stderr.write(`${error.message}\n`); process.exitCode = 1; });
+  child.on("close", code => { cleanupBootstrap(); process.exitCode = code ?? 1; });
+} catch (error) {
+  cleanupBootstrap();
+  throw error;
 }
-const child = spawn(python, ["-I", "-B", path.join(snapshot, "scripts/native_execution.py")],
-  { cwd: snapshot, env: process.env, stdio: "inherit" });
-child.on("error", error => { process.stderr.write(`${error.message}\n`); process.exitCode = 1; });
-child.on("exit", code => { process.exitCode = code ?? 1; });

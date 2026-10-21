@@ -31,6 +31,7 @@ if _SCRIPTS_DIRECTORY not in sys.path:
 
 _VERIFICATION = runpy.run_path(str(Path(__file__).with_name("verified_execution.py")))
 prepare_execution_root = _VERIFICATION["prepare_execution_root"]
+release_execution_root = _VERIFICATION["release_execution_root"]
 report_preparation_failure = _VERIFICATION["report_preparation_failure"]
 
 
@@ -350,15 +351,18 @@ def main(argv: list[str] | None = None) -> int:
         logging.error("Product installation verification failed: %s", error)
         report_preparation_failure(root, selection.module, error)
         return 1
-    if "run" in arguments:
-        return run_verified_helper(
-            root,
-            arguments,
-            selection.module
-            or product_name(Path(__file__).resolve().parents[1]) + "-core",
-            original_report_id,
-        )
-    return _IMPLEMENTATION.main(root, arguments)
+    try:
+        if "run" in arguments:
+            return run_verified_helper(
+                root,
+                arguments,
+                selection.module
+                or product_name(Path(__file__).resolve().parents[1]) + "-core",
+                original_report_id,
+            )
+        return _IMPLEMENTATION.main(root, arguments)
+    finally:
+        release_execution_root(root)
 
 
 def run_verified_helper(

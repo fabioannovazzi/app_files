@@ -33,7 +33,7 @@
       "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
       "purpose": "Prepare the published shared Vera, Clara and Lucia core requirements and explicitly approved optional OCR in one user-scoped Python 3.12 environment per operating-system host.",
       "content": "Published shared package names and version constraints plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by this runtime installer.",
-      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations.",
+      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations. Verified temporary code copies are owned by the creating command and removed after completion, failure or cooperative cancellation, with process-exit retry if deletion is temporarily blocked. Preflight verification does not lease a persistent code copy. Installed code, client files and retained professional outputs are not removed. Forced termination or power loss may leave an orphan.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -171,6 +171,6 @@
     "reviewed_at": "2026-10-20",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "8958bbbd3ebd985e72ca940f9c669604fc13a7518417a21205074224fe1757c4"
+    "source_fingerprint": "76aff88f91f9702d42eef443a497cef560f3a74004ff05af7e96247aec279adc"
   }
 }
