@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "9f38a2606bbaefb53a6c367ccfc6e0d7ea8ad5f3d544a860d7794215c8ce3e1d"
+      "sha256": "87f9bbce7a9b848e576b04885bc9a81fd252cf7dd3215c7dfe6a735cb21e8ad3"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
-      "sha256": "1214da80bf08f041c99bab31d3440ea978030cf025af52b3578c6b45c49c890f"
+      "sha256": "7a6e90dd2f6b70ef59ade1693febf2daac0a7cd0fed2e3be4e0a7120ed86a591"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ff288ad18d8f10484d044d56052880c9d32c813441ba7a8f70de6fad738fe320"
+  "canonical_course_sha256": "415962207d105176f55313d9ba46f5e89ce7a71e08ad736cff295c08d572e1f2"
 }

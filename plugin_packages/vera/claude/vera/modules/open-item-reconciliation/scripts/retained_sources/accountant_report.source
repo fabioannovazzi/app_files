@@ -218,6 +218,8 @@ def confidence_for_row(row: dict[str, Any], has_detail: bool) -> str:
     evidence_type = clean_text(row.get("matched_evidence_type"))
     if status == "closed":
         return "Alta"
+    if status == "partially_paid" and evidence_level == "strong_external":
+        return "Alta"
     if status == "probable_payment":
         return "Media"
     if status == "needs_evidence":
@@ -572,10 +574,27 @@ def main_row_from_detail(
         )
         difference_text = clean_text(best.get("differenza"))
         difference = parse_decimal(difference_text)
+        amount = parse_decimal(row.get("amount"))
+        allocated = parse_decimal(row.get("allocated_amount"))
+        residual = parse_decimal(row.get("residual_amount"))
+        evidence_amount = parse_decimal(best.get("importo evidenza"))
+        # An exact partial allocation explains its residual; it is not an
+        # unexplained mismatch. Keep any inconsistent detail visibly flagged.
+        explained_partial = (
+            status == "partially_paid"
+            and None not in (amount, allocated, residual, evidence_amount, difference)
+            and allocated > 0
+            and residual > 0
+            and abs(amount) == allocated + residual
+            and abs(evidence_amount) == allocated
+            and abs(difference) == residual
+        )
         ambiguous = (
             confidence in {"Media", "Bassa", "Non trovato"}
             or len(details) > 1
-            or bool(difference_text and difference != Decimal("0"))
+            or bool(
+                difference_text and difference != Decimal("0") and not explained_partial
+            )
         )
         non_capita = "SI" if ambiguous else "NO"
 

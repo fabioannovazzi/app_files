@@ -3766,6 +3766,7 @@ def finalize_studio_client_workflow(
     run_id: str,
     artifacts: Sequence[Mapping[str, Any]],
     *,
+    expected_declaration_sha256: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Declare the purpose of every output and seal its exact bytes."""
@@ -3773,13 +3774,20 @@ def finalize_studio_client_workflow(
     private_state = _state_dir(state_dir)
     root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
     try:
-        loaded = ledger.finalize_run(root, engagement_id, run_id, artifacts)
+        loaded = ledger.finalize_run(
+            root,
+            engagement_id,
+            run_id,
+            artifacts,
+            expected_declaration_sha256=expected_declaration_sha256,
+        )
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow artifacts could not be finalized: {exc}") from exc
     result = {
         "status": loaded["run"]["status"],
         "run": loaded["run"],
         "artifact_manifest": loaded["artifact_manifest"],
+        "declaration_sha256": loaded["declaration_sha256"],
         "reporting": loaded["reporting"],
     }
     if ledger._reporting_runtime().selective_reporting_enabled():

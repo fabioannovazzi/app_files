@@ -1332,3 +1332,72 @@ Against installed 0.1.459, 131 files change, none are added or removed, and the
 four executable changes are confined to Open-item review/assurance handling.
 All 394 historical-file hash checks pass. Installed normal-chat acceptance
 remains outstanding; these source results do not count as a second accepted test.
+
+### 0.1.460 normal-chat result: corrected calculation, uncorrectable declarations
+
+The fresh installed GPT-6.1-sol chat verified the two unchanged CSVs, calculated
+the expected closed/partial/open result, recorded eight agent decisions and
+completed the published CLI regeneration and independent replay. All 17 checks
+passed; `checks_pass`, `report_ready` and `final_ready` were established. This
+confirms that the previous pending-stage repair worked in normal chat. The Word
+report's eight rendered pages were inspected and the Excel workbooks were read.
+
+**A66:** the agent's first Archive declaration incorrectly labelled four
+historical workpaper copies as deliverables, alongside the four current files.
+Archive accepted the declaration and reached `ready_for_review`. A second call
+kept the same files, identities and bytes while correcting the historical copies'
+audience/purpose. Archive rejected it because the declarations were already
+sealed. The chat immediately stopped and recorded a failed run; the calculation
+was not invalidated or repeated. This combines an agent classification mistake
+with a product limitation: a review-ready declaration cannot be corrected before
+completion. No automatic approval rejection occurred in this attempt.
+
+The readable privacy report appeared automatically. Independent server
+verification matched its exact hash, revision, run and expected userID. Its
+17 sends and 54,376 characters include one unmeasured Archive error response;
+the stored event identifies `mcp:studio-archive:error` as the unknown source
+coverage. The report honestly remains incomplete, with 21/24 population cells
+and 4/12 bank cells attributed. Host shell/browser reads are explicitly outside
+Vera's measurement boundary. The failed run's 78 files have a separate preservation
+baseline. The child retained the review server; coordinator cleanup cancelled
+it, but the long-lived tool rejected the cleanup response at the closed-run
+emission boundary. The retained service result independently confirms cancellation
+with return code -9. A preceding status call included an unsupported task ID;
+that coordinator argument error was corrected without repeating an execution.
+
+Source inspection found that downstream runs bind the complete artifact-manifest
+hash, including delivery metadata. Replacing labels without retaining receipts
+would invalidate those handoffs; automatic privacy-report resealing could also
+replace their manifest identity. The repair retains content-addressed prior
+manifest receipts, validates the current output tree, and replays an existing
+binding against its exact retained receipt and unchanged selected file. It
+adds a normal pre-completion metadata revision using the returned declaration
+revision value, so concurrent reviews cannot silently overwrite one another.
+That value excludes automatically maintained report artifacts. The agent handles
+it; no new human approval is required. Completed runs and changed professional
+bytes remain immutable. The public MCP/CLI correction path and these positive
+and negative cases passed in a 132-test finalization/ledger/reporting run.
+
+**A67:** the operational sheet treated a strongly evidenced partial bank payment
+as low confidence because `partially_paid` was missing from the presentation
+mapping. It also treated the expected residual as an unexplained difference.
+The correction reflects the existing strong-external evidence classification
+and explains the difference only when invoice amount, allocated payment,
+displayed evidence and residual reconcile exactly. An inconsistent payment
+detail still remains flagged. Twelve report tests pass, including the observed
+800/300/500 case and a contradictory 250 payment detail. Other observed
+presentation limits remain explicit in the local resoconto: lengthy technical
+references and unset residual fields where no partial allocation was produced.
+
+The broader checks passed: 202 Archive tests; 237 automatic-reporting tests
+with 82.94% coverage; 422 accounting tests with 81.65% coverage; and 17 public
+projection/review/regeneration tests. Shared runtime Mypy checks passed for all
+nine archive modules; formatting, imports, Bandit, Node syntax and whitespace
+checks passed. All 472 historical-file hash checks remain unchanged. Candidate
+Vera 0.1.461 (Archive 0.1.62, Open-item 0.1.68), Clara 0.1.327 and Lucia 0.1.152
+built successfully. All 516 package/privacy checks passed (two skips), and Codex/Cowork/Antigravity
+source parity passed. The supported local installation verified all 2,184 cache
+files against the checked ZIP, with one enabled local Vera 0.1.461. The sandboxed
+inventory warned that the remote catalog was unavailable; automatic approval
+review rejected an unnecessary networked repeat. Local verification was sufficient
+and no remote retry occurred. Acceptance remains **1 of 13** pending the fresh chat.

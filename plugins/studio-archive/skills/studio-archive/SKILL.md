@@ -297,6 +297,13 @@ Use this exact chat workflow whenever a professional starts client work:
    `outputs/result.pdf` are also accepted; an existing output-relative path
    takes precedence. Archive saves canonical output-relative paths, adds report
    artifacts and seals the review-ready outputs.
+   Keep the returned `declaration_sha256`. Before completion, the agent may
+   correct purpose, audience or media type by calling the same tool with the
+   complete declaration list and `expected_declaration_sha256` set to that value.
+   This records the correction while retaining prior receipts; it does not
+   reopen calculations or require human approval. It cannot replace file bytes,
+   paths or artifact IDs. If another review changed the declarations, read its
+   current result before deciding how to reconcile the difference.
    Collection continues through review. `complete_studio_client_workflow`, failure
    or cancellation writes end the run and finalize the report at the terminal
    ledger write. Failed run-bound Archive responses are retained too; unknown

@@ -255,6 +255,7 @@ def _parser() -> argparse.ArgumentParser:
     finalize_workflow.add_argument("--engagement-id", required=True)
     finalize_workflow.add_argument("--run-id", required=True)
     finalize_workflow.add_argument("--artifacts-json", required=True)
+    finalize_workflow.add_argument("--expected-declaration-sha256")
 
     close_engagement = subparsers.add_parser("close-engagement")
     close_engagement.add_argument("--client-id", required=True)
@@ -472,6 +473,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.engagement_id,
                 args.run_id,
                 artifact_payload,
+                expected_declaration_sha256=args.expected_declaration_sha256,
             )
         elif args.command == "complete-workflow":
             result = complete_studio_client_workflow(

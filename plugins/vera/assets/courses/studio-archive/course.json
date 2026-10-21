@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "e8a121118757bf9eab21c391e5ab2303aa65843229741926efec46d7b49930f8"
+      "sha256": "4e5de9086750db79d4e0119f51a844a3bc27b5771f36c00e22921c886f68ffde"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -65,7 +65,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "5dde16cb772dadcb0df10f753d3c72ac18943200a9af91c208bad6937638e635"
+      "sha256": "25d8eda13ad21b343b084b37e7730c2ac774c5b527042c71d5c54d1174c74c96"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -90,12 +90,12 @@
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
       "repository_path": "plugins/studio-archive/scripts/run_reporting.py",
-      "sha256": "0d13c393bb3e58c348d91196e9f0a1f20c22c275b933606e350b05e95ad9763b"
+      "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a"
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "dc6f7333e57e1ea93480138f4379fa41eae4d482e1b99e9ee2e26dcfc1154ae4"
+      "sha256": "86d8947d0a3886ad2f80b62b8067af917d545cf3a324f5fc5c0f7e3a4129fcb1"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -105,7 +105,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "62ddda8c55160a42180cbd94b8f95d89a488ba3f8d139b3da9e73456a33daa89"
+      "sha256": "da300fd302e2430b9fc8a52f57dca8f4937b42e1a6a54214e16db40756a61d7d"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -145,7 +145,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",
       "repository_path": "plugins/vera/scripts/archive_report_seal.py",
-      "sha256": "d853037c3d326d4094ab5fbb87a713ea7ee63383b83b026b5bc75d79bd6a2c0c"
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",

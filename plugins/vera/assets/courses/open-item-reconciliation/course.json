@@ -69,7 +69,7 @@
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "e6ec74696d165b71a3693a8f7137f76f85dbb53f93dea540e432babe805c134d"
+      "sha256": "f11b7a9dfb29b59a2c525894c6e74ce641634b63bf548fc5fe76f39bc0ab6afb"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -114,7 +114,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
-      "sha256": "1214da80bf08f041c99bab31d3440ea978030cf025af52b3578c6b45c49c890f"
+      "sha256": "7a6e90dd2f6b70ef59ade1693febf2daac0a7cd0fed2e3be4e0a7120ed86a591"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",

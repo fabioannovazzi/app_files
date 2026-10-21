@@ -529,10 +529,14 @@ function toolDefinitions() {
       name: TOOL_NAMES.finalizeWorkflow,
       title: "Finalize Vera workflow artifacts",
       description:
-        "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically.",
+        "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
       inputSchema: objectSchema(
         {
           ...runIdentityProperties(),
+          expected_declaration_sha256: {
+            type: "string", pattern: "^[0-9a-f]{64}$",
+            description: "Returned declaration_sha256 for a correction to purpose, audience or media type before completion. Prevents overwriting another review; the agent retains this value without an additional human approval.",
+          },
           artifacts: {
             type: "array",
             minItems: 1,
@@ -1423,7 +1427,13 @@ function commandForTool(name, rawArgs) {
     return runIdentityCommand(args, "cancel-workflow");
   }
   if (name === TOOL_NAMES.finalizeWorkflow) {
-    const command = runIdentityCommand(args, "finalize-workflow", ["artifacts"]);
+    const command = runIdentityCommand(args, "finalize-workflow", ["artifacts", "expected_declaration_sha256"]);
+    if (args.expected_declaration_sha256 !== undefined) {
+      if (!/^[0-9a-f]{64}$/.test(requireString(args.expected_declaration_sha256, "expected_declaration_sha256"))) {
+        throw new Error("expected_declaration_sha256 must be a SHA-256 value.");
+      }
+      command.push("--expected-declaration-sha256", args.expected_declaration_sha256);
+    }
     if (
       !Array.isArray(args.artifacts) ||
       args.artifacts.length < 1 ||

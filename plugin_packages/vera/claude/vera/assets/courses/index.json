@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "0493e68296bbf676bad9180d92f41bada791bc860206b4d714ce2ed4f43a22dc",
+      "sha256": "7bd54e8b10fa8affc257b25388bc732a83e6778a8ac549049a957eec277b65db",
       "languages": [
         "it",
         "en"
@@ -342,7 +342,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "9ea1373caffb51c71a3dc95cbaeca1db24f6aa08bc25105a53def3d7320e2ec2",
+      "sha256": "45681366aff1dab7e4893e752c9cc9b96d60ee4461d78a47624074e193f7fe29",
       "languages": [
         "it",
         "en",
@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "a735f5dcf4049d8a5e5b9ecdb6d500cf645ca8250af41edd0f99937e967306b7",
+      "sha256": "dcad7c8ae0f0b658c04482280a325fc35b38bc5aa635c01098f27fbe2e8a75f4",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "f49f7e03c6bd316d011285c156fb36130027c4e2fc5ec9343c244e05d02e6727",
+      "sha256": "216a0c495343925c288a77891e5986fbde61b5ea8c9556d71047ba9c2ea8900e",
       "languages": [
         "it",
         "en",
@@ -741,7 +741,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "afba30e7b1f74102cda5ff22b201675678ced3433567d0aed759ae64725b63c5",
+      "sha256": "ade6029a3f5864b2b2394075c7787ff1a975076cbef88c0329a14a62a6675db4",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "7a2c849cdbf5e3df8ebae30553070bc23c520897152a03a785fa89c05847a1b1",
+      "sha256": "483315fd62a8eddb0592d6a0773f1158698943bde48bffb035743193f54798f2",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "72f32267e3da0d4d3589b5bc94a1537ec49737a22b9049a9add803c8cb118b85",
+      "sha256": "f93d9be2c74ab78a73b3a9d7d093116c68b5cccf32cebd566c02cf290cd79cdf",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1049,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "d9c6d51ef3e1ca8acde268cf26e8f30d65ecdd7777b12f7db77ca10c78c8cb44",
+      "sha256": "b54389583ca9eb0b2aed20e67ff0f404013d9b8dfa269b89db0365d395434105",
       "languages": [
         "it",
         "en",
@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "d502c026933a333ef33670e62c260923fb15fa093d972ab10d7dc597d5434a4f",
+      "sha256": "5088f455c344dd294cf6f317b5a3f469cf4378326e82397fad8a30a1afb1d130",
       "languages": [
         "it",
         "en",

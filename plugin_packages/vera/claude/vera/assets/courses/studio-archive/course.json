@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "4c406591ebadde0f6642202a7396c5bd6aebce22cdc561a24c5980d10eaa02e1"
+      "sha256": "ee9db59b8866ace597742d23f6dcec5e09614f4be9b9747b32d55a1c0c6f9574"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "5dde16cb772dadcb0df10f753d3c72ac18943200a9af91c208bad6937638e635"
+      "sha256": "25d8eda13ad21b343b084b37e7730c2ac774c5b527042c71d5c54d1174c74c96"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -77,11 +77,11 @@
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
-      "sha256": "0d13c393bb3e58c348d91196e9f0a1f20c22c275b933606e350b05e95ad9763b"
+      "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a"
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "dc6f7333e57e1ea93480138f4379fa41eae4d482e1b99e9ee2e26dcfc1154ae4"
+      "sha256": "86d8947d0a3886ad2f80b62b8067af917d545cf3a324f5fc5c0f7e3a4129fcb1"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",
-      "sha256": "d853037c3d326d4094ab5fbb87a713ea7ee63383b83b026b5bc75d79bd6a2c0c"
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
@@ -686,5 +686,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "5c95cbc4df3332dc742887b73ef70309858a5065d9d64db6814409f59d381e18"
+  "canonical_course_sha256": "28a60c0e36b904dc8e0cb68200d4729326ead88d6b46f32e6ae9e8be8ec61cc6"
 }

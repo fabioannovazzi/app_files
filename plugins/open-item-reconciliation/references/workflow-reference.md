@@ -182,6 +182,15 @@ complete. Final delivery still requires `report_ready=true` after regeneration.
 Actual failed checks, rejected decisions, skipped required rows and invalid
 receipts remain blocking errors and must be reported as such.
 
+For Archive delivery declarations, current deliverables are the workpapers in
+this run's top-level `assurance_final_outputs` directory. Copies inside
+`assurance_transition_history` are retained internal evidence, including nested
+directories also named `assurance_final_outputs`. Resolve paths from the current
+output inventory; a substring match does not distinguish current workpapers from
+their historical copies. Before completion, declaration metadata can be corrected
+through Archive's documented revision argument without modifying either set of
+files or repeating the professional calculation.
+
 After saving and applying the review, regenerate through the published CLI:
 
 ```bash

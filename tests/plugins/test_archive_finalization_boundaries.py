@@ -67,6 +67,235 @@ def test_finalize_accepts_owned_file_paths_and_seals_canonical_paths(
     }
 
 
+def declaration_revision_case(core, case):
+    """Retain a review-ready output already selected by a downstream run."""
+    loaded, output, declaration = result_case(core, case)
+    initial = core.finalize_studio_client_workflow(
+        case.client_id,
+        case.engagement_id,
+        loaded["run"]["run_id"],
+        [declaration],
+        state_dir=case.state_dir,
+    )
+    downstream = core.prepare_studio_client_workflow(
+        case.engagement_id,
+        "variance-analysis",
+        input_ids=[case.imported["input_id"]],
+        upstream_artifacts=[
+            {
+                "run_id": loaded["run"]["run_id"],
+                "artifact_id": "result",
+                "role": "reviewed-prior-result",
+            }
+        ],
+        new_run=True,
+        state_dir=case.state_dir,
+    )
+    return loaded, output, declaration, initial, downstream
+
+
+def revise_declaration(core, case, loaded, declaration, initial):
+    return core.finalize_studio_client_workflow(
+        case.client_id,
+        case.engagement_id,
+        loaded["run"]["run_id"],
+        [{**declaration, "audience": "internal", "purpose": "Retained technical copy"}],
+        expected_declaration_sha256=initial["declaration_sha256"],
+        state_dir=case.state_dir,
+    )
+
+
+def test_review_ready_metadata_correction_preserves_existing_handoff(
+    archive_core, client_case
+):
+    loaded, output, declaration, initial, downstream = declaration_revision_case(
+        archive_core, client_case
+    )
+    prior_manifest = (Path(loaded["run_root"]) / "artifact_manifest.json").read_bytes()
+    prior_result = (output / "result.txt").read_bytes()
+
+    revised = revise_declaration(
+        archive_core, client_case, loaded, declaration, initial
+    )
+
+    result = next(
+        item
+        for item in revised["artifact_manifest"]["artifacts"]
+        if item["artifact_id"] == "result"
+    )
+    assert revised["status"] == "ready_for_review"
+    assert result["audience"] == "internal"
+    assert result["purpose"] == "Retained technical copy"
+    assert revised["declaration_sha256"] != initial["declaration_sha256"]
+    assert (output / "result.txt").read_bytes() == prior_result
+    history = Path(loaded["run_root"]) / "artifact-manifest-history"
+    assert (
+        history / f"{initial['artifact_manifest']['content_sha256']}.json"
+    ).read_bytes() == prior_manifest
+    replayed = archive_core.ledger.load_run(
+        client_case.client_root, client_case.engagement_id, downstream["run"]["run_id"]
+    )
+    assert replayed["run"]["status"] == "prepared"
+
+
+def test_reporting_closure_preserves_handoffs_before_and_after_metadata_revision(
+    archive_core, client_case
+):
+    loaded, _, declaration, initial, earlier = declaration_revision_case(
+        archive_core, client_case
+    )
+    revise_declaration(archive_core, client_case, loaded, declaration, initial)
+    later = archive_core.prepare_studio_client_workflow(
+        client_case.engagement_id,
+        "variance-analysis",
+        input_ids=[client_case.imported["input_id"]],
+        upstream_artifacts=[
+            {
+                "run_id": loaded["run"]["run_id"],
+                "artifact_id": "result",
+                "role": "prior",
+            }
+        ],
+        new_run=True,
+        state_dir=client_case.state_dir,
+    )
+
+    completed = archive_core.complete_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert completed["run"]["status"] == "completed"
+    assert (
+        archive_core.ledger.load_run(
+            client_case.client_root, client_case.engagement_id, earlier["run"]["run_id"]
+        )["run"]["status"]
+        == "prepared"
+    )
+    assert (
+        archive_core.ledger.load_run(
+            client_case.client_root, client_case.engagement_id, later["run"]["run_id"]
+        )["run"]["status"]
+        == "prepared"
+    )
+
+
+def test_stale_declaration_revision_cannot_overwrite_another_review(
+    archive_core, client_case
+):
+    loaded, _, declaration, initial, _ = declaration_revision_case(
+        archive_core, client_case
+    )
+    revise_declaration(archive_core, client_case, loaded, declaration, initial)
+    manifest = Path(loaded["run_root"]) / "artifact_manifest.json"
+    retained = manifest.read_bytes()
+
+    with pytest.raises(archive_core.ArchiveError, match="declarations changed"):
+        archive_core.finalize_studio_client_workflow(
+            client_case.client_id,
+            client_case.engagement_id,
+            loaded["run"]["run_id"],
+            [declaration],
+            expected_declaration_sha256=initial["declaration_sha256"],
+            state_dir=client_case.state_dir,
+        )
+
+    assert manifest.read_bytes() == retained
+
+
+def test_declaration_revision_cannot_reseal_changed_professional_bytes(
+    archive_core, client_case
+):
+    loaded, output, declaration, initial, _ = declaration_revision_case(
+        archive_core, client_case
+    )
+    (output / "result.txt").write_text("Different calculation\n")
+
+    with pytest.raises(archive_core.ArchiveError, match="changed|no longer matches"):
+        revise_declaration(archive_core, client_case, loaded, declaration, initial)
+
+
+def test_retained_declaration_receipt_tampering_invalidates_the_bound_handoff(
+    archive_core, client_case
+):
+    loaded, _, declaration, initial, downstream = declaration_revision_case(
+        archive_core, client_case
+    )
+    revise_declaration(archive_core, client_case, loaded, declaration, initial)
+    history = Path(loaded["run_root"]) / "artifact-manifest-history"
+    receipt = history / f"{initial['artifact_manifest']['content_sha256']}.json"
+    payload = json.loads(receipt.read_text())
+    payload["artifacts"][0]["purpose"] = "Unrecorded replacement"
+    receipt.write_text(json.dumps(payload))
+
+    with pytest.raises(archive_core.ledger.LedgerError, match="digest is stale"):
+        archive_core.ledger.load_run(
+            client_case.client_root,
+            client_case.engagement_id,
+            downstream["run"]["run_id"],
+        )
+
+
+def test_public_mcp_can_correct_review_ready_declarations(
+    archive_core, client_case, isolated_mcp_launcher
+):
+    loaded, output, declaration, initial, _ = declaration_revision_case(
+        archive_core, client_case
+    )
+    archive_core._release_state_leases()
+
+    response = _mcp_tool(
+        "finalize_studio_client_workflow",
+        {
+            "client_id": client_case.client_id,
+            "engagement_id": client_case.engagement_id,
+            "run_id": loaded["run"]["run_id"],
+            "artifacts": [{**declaration, "audience": "internal"}],
+            "expected_declaration_sha256": initial["declaration_sha256"],
+        },
+        state_dir=client_case.state_dir,
+    )
+
+    assert not response.get("isError"), response
+    result = response["structuredContent"]
+    assert result["status"] == "ready_for_review"
+    assert result["declaration_sha256"] != initial["declaration_sha256"]
+    assert (output / "result.txt").read_text() == "Professional result\n"
+    assert (
+        next(
+            item
+            for item in result["artifact_manifest"]["artifacts"]
+            if item["artifact_id"] == "result"
+        )["audience"]
+        == "internal"
+    )
+
+
+def test_completed_run_rejects_declaration_correction_without_changing_its_receipt(
+    archive_core, client_case
+):
+    loaded, _, declaration, initial, _ = declaration_revision_case(
+        archive_core, client_case
+    )
+    archive_core.complete_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+    manifest = Path(loaded["run_root"]) / "artifact_manifest.json"
+    before = manifest.read_bytes()
+
+    with pytest.raises(
+        archive_core.ArchiveError, match="Only a running or review-ready run"
+    ):
+        revise_declaration(archive_core, client_case, loaded, declaration, initial)
+
+    assert manifest.read_bytes() == before
+
+
 @pytest.mark.parametrize("failure_phase", ["mcp_validation", "worker"])
 def test_failed_archive_tool_records_exact_error_and_cannot_claim_complete_coverage(
     archive_core, client_case, isolated_mcp_launcher, failure_phase

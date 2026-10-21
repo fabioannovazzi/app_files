@@ -197,3 +197,46 @@ def test_exact_payment_is_not_marked_unexplained_for_zero_difference(
     )
     assert result["confidenza"] == "Alta"
     assert result["non capita"] == expected
+
+
+@pytest.mark.parametrize(
+    "evidence_amount,expected_unexplained", [("300.00", "NO"), ("250.00", "SI")]
+)
+def test_exact_partial_bank_payment_explains_only_its_recorded_residual(
+    evidence_amount, expected_unexplained
+):
+    report = load_accountant_report()
+
+    main, _, _ = report.build_accountant_report_rows(
+        [
+            {
+                "record_id": "F002",
+                "document_no": "F002",
+                "document_key": "F002",
+                "amount": "800.00",
+                "currency": "EUR",
+                "reconciliation_status": "partially_paid",
+                "evidence_level": "strong_external",
+                "matched_evidence_type": "external_bank",
+                "matched_evidence_id": "P002",
+                "allocated_amount": "300.00",
+                "residual_amount": "500.00",
+            }
+        ],
+        normalized_records=[
+            {
+                "record_id": "P002",
+                "document_key": "F002",
+                "amount": evidence_amount,
+                "currency": "EUR",
+                "evidence_type": "external_bank",
+                "source_role": "bank_statement",
+                "posting_date": "2026-10-10",
+            }
+        ],
+    )
+
+    assert main[0]["confidenza"] == "Alta"
+    assert main[0]["non capita"] == expected_unexplained
+    assert main[0]["non pagata"] == "PARZIALMENTE - residuo aperto"
+    assert main[0]["residuo aperto"] == "500.00"
