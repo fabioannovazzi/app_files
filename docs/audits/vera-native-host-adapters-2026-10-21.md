@@ -96,3 +96,8 @@ retained both partial-payment explanation/provenance and semantic allocations.
 - Windows CI exposed a POSIX-separator assumption in the attachment-access test.
   The assertion now compares platform paths, retaining the checks that missing
   chat attachments produce actionable guidance without creating Archive state.
+- Windows Archive-session CI also found a directory-mode assertion outside the
+  existing POSIX-only file-mode check. Both POSIX mode assertions now share that
+  platform condition; normalization, hidden identity fields and idempotence are
+  still checked on every platform. All 22 client-identity/routing tests passed
+  locally after this test-only correction.

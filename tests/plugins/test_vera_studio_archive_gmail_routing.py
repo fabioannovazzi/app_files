@@ -118,8 +118,8 @@ def test_client_profile_is_private_normalized_and_idempotent(
     assert stored_client["email_addresses"] == ["amministrazione@rossi.it"]
     assert stored_client["legal_names"] == ["Rossi SRL"]
     assert registry_path.read_bytes() == before
-    assert stat.S_IMODE(configured_clients.state.stat().st_mode) == 0o700
     if os.name == "posix":
+        assert stat.S_IMODE(configured_clients.state.stat().st_mode) == 0o700
         assert stat.S_IMODE(registry_path.stat().st_mode) == 0o600
 
 
