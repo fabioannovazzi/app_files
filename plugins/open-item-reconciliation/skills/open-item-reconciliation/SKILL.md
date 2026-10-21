@@ -280,7 +280,7 @@ workflow rebuild, and on successor validation. Never infer or copy this value
 from the candidate successor tree. Missing or unequal checkpoints fail without
 changing the output tree. Checkpoint provenance remains the responsibility of
 the separate channel; digest equality does not authenticate a reviewer.
-That replay also enforces the fixed ordered 26-file implementation contract,
+That replay also enforces the fixed ordered 27-file implementation contract,
 including its pre-import bootstrap and every cache entry, plus the exact
 physical file-and-directory closure at the run and final-output boundaries.
 MCP terminal readiness must use the same complete replay and invokes Python
@@ -428,6 +428,32 @@ python scripts/build_missing_evidence_requests.py <client-run-output>/riconcilia
 
 Normalization/matching and workpaper-output internals are retained source units
 loaded by the validated entrypoints; do not import or execute them directly.
+
+## Semantic resolution of unresolved items
+
+The maintained raw runner automatically submits unresolved items and unused bank
+evidence to bounded semantic workers after source mapping. The shared host policy
+selects a suitable low-cost model from actual harness capabilities. Keep the main
+chat's model; do not create visible per-case chats or ask the user to select routine
+technical mappings. A missing verified host invocation path is reported explicitly.
+
+Models interpret references, descriptions, counterparties and competing matches.
+The engine verifies quoted evidence, exact amounts, accounting perimeters and no
+cash reuse, then writes supported allocations and residuals into native results,
+workbooks and assurance ledgers. Partial, cumulative and excess payments retain
+exact open or unapplied balances. Equal amounts alone cannot close an item.
+Ambiguity, contradictory evidence and missing evidence stay visible.
+
+Inspect the returned `semantic_resolution` status and any blocks. The retained
+worker packets, launch evidence and decisions are bound to the prepared population
+and replayed during review/regeneration; do not edit the original source data to
+make a match. No worker output constitutes professional adoption or approval.
+The full packet remains local except for the selected host model submission;
+its populated mapped fields include business document identifiers, descriptions,
+parties, dates, amounts and opaque linkage IDs. It is not anonymized. Paths and
+unmapped columns are excluded. The main chat receives status and counts, not the
+whole retained packet. A complete currency/entity perimeter is never silently
+truncated to fit a worker; an oversized perimeter is explicitly deferred.
 
 ## Review, Outputs, Locales, And Wording
 

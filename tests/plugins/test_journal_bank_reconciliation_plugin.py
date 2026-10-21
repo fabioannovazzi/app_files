@@ -469,6 +469,46 @@ def load_apply_review_edits() -> Any:
     return module
 
 
+@pytest.fixture(autouse=True)
+def isolated_worker_catalog(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Unit tests observe a supplied harness catalog, never contact a real host."""
+    monkeypatch.syspath_prepend(str(SCRIPT_DIR))
+    import worker_capabilities
+
+    monkeypatch.setattr(
+        worker_capabilities,
+        "_catalog",
+        lambda _: {
+            "runtime": "unit-test Codex harness",
+            "models": [
+                {
+                    "model": "gpt-6-luna",
+                    "supportedReasoningEfforts": [
+                        {"reasoningEffort": effort}
+                        for effort in ("low", "medium", "high", "xhigh", "max")
+                    ],
+                }
+            ],
+        },
+    )
+    monkeypatch.setattr(
+        worker_capabilities, "shutil", SimpleNamespace(which=lambda _: "/test/codex")
+    )
+
+
+def _semantic_cli_fixture_command() -> list[str]:
+    """Run the public CLI with an in-process test harness catalog, not live I/O."""
+    code = (
+        "import sys,runpy;"
+        f"sys.path.insert(0,{str(SCRIPT_DIR)!r});"
+        "import worker_capabilities as w;"
+        "w._catalog=lambda _: {'runtime':'unit-test harness','models':[{'model':'gpt-6-luna','supportedReasoningEfforts':[{'reasoningEffort':'high'}]}]};"
+        "from types import SimpleNamespace; w.shutil=SimpleNamespace(which=lambda _:'/test/codex');"
+        f"runpy.run_path({str(SEMANTIC_REVIEW_PATH)!r},run_name='__main__')"
+    )
+    return [sys.executable, "-B", "-c", code]
+
+
 def load_semantic_review() -> Any:
     if str(SCRIPT_DIR) not in sys.path:
         sys.path.insert(0, str(SCRIPT_DIR))
@@ -1305,7 +1345,12 @@ def _write_semantic_worker_result(
             "return_code": 0,
             "timed_out": False,
             "duration_ms": 1,
-            "redacted_argv": semantic_review._redacted_worker_argv(),
+            "redacted_argv": semantic_review._redacted_worker_argv(
+                model=graph["requested_worker_configuration"]["model"],
+                reasoning_effort=graph["requested_worker_configuration"][
+                    "reasoning_effort"
+                ],
+            ),
             "response_sha256": hashlib.sha256(response_bytes).hexdigest(),
             "response_bytes": len(response_bytes),
             "events_sha256": hashlib.sha256(events_bytes).hexdigest(),
@@ -8648,9 +8693,7 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
     )
     blocked = subprocess.run(
         [
-            sys.executable,
-            "-B",
-            str(SEMANTIC_REVIEW_PATH),
+            *_semantic_cli_fixture_command(),
             "prepare",
             str(renamed_reconciliation),
             "--output-dir",
@@ -8672,9 +8715,7 @@ def test_semantic_prepare_cli_replays_renamed_managed_run_and_closes_outputs(
 
     semantic = subprocess.run(
         [
-            sys.executable,
-            "-B",
-            str(SEMANTIC_REVIEW_PATH),
+            *_semantic_cli_fixture_command(),
             "prepare",
             str(renamed_reconciliation),
             "--output-dir",
@@ -8823,9 +8864,7 @@ def test_semantic_prepare_cli_allows_drafts_without_a_clearance_decision(
 
     completed = subprocess.run(
         [
-            sys.executable,
-            "-B",
-            str(SEMANTIC_REVIEW_PATH),
+            *_semantic_cli_fixture_command(),
             "prepare",
             str(reconciliation),
             "--output-dir",
@@ -8888,8 +8927,9 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     )
     assert graph["requested_worker_configuration"] == {
         "execution": "separate_pinned_codex_exec",
-        "model": "gpt-5.6-luna",
-        "reasoning_effort": "max",
+        "model": "gpt-6-luna",
+        "reasoning_effort": "high",
+        "selection_review": graph["requested_worker_configuration"]["selection_review"],
         "ephemeral": True,
         "inner_sandbox": "read-only",
         "outer_filesystem_boundary": semantic_review.WORKER_BOUNDARY_CONTRACT_ID,
@@ -9424,8 +9464,8 @@ def test_semantic_validate_applies_certainty_funnel_without_changing_strict_ledg
         "perfect_match": 0,
     }
     assert review_queue["items"] == []
-    assert worker_run["requested_worker_configuration"]["model"] == "gpt-5.6-luna"
-    assert worker_run["requested_worker_configuration"]["reasoning_effort"] == "max"
+    assert worker_run["requested_worker_configuration"]["model"] == "gpt-6-luna"
+    assert worker_run["requested_worker_configuration"]["reasoning_effort"] == "high"
     assert worker_run["runtime_attestation"] == {
         "separate_thread_and_usage_observed": True,
         "model_observed": False,
@@ -10370,8 +10410,8 @@ def test_semantic_run_worker_launches_separate_pinned_luna_capsule(
         (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
     )
     assert command[0] == "/usr/bin/sandbox-exec"
-    assert command[command.index("--model") + 1] == "gpt-5.6-luna"
-    assert 'model_reasoning_effort="max"' in command
+    assert command[command.index("--model") + 1] == "gpt-6-luna"
+    assert 'model_reasoning_effort="high"' in command
     assert "--disable" in command
     assert "shell_tool" in command
     assert "unified_exec" in command
@@ -10695,7 +10735,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_journal_bank_review" in skill_text
     assert "render_journal_bank_review" in skill_text
-    assert "Codex-Only Luna Max Residual Resolution Funnel" in skill_text
+    assert "Native semantic residual resolution" in skill_text
     assert "semantic_review.py run-worker" in skill_text
     assert "journal_bank.luna_seatbelt_capsule.v5" in skill_text
     assert "Retained v1–v4 records validate historical evidence only" in skill_text
@@ -12979,9 +13019,8 @@ def test_generic_worker_uses_and_records_reviewed_model_selection(
     assert command[command.index("--model") + 1] == expected_model
     assert f'model_reasoning_effort="{expected_effort}"' in command
     receipt = json.loads(result["launch_receipt"].read_text())
-    assert (
-        receipt["requested_worker_configuration"].get("selection_review")
-        == selected_review
+    assert receipt["requested_worker_configuration"].get("selection_review") == (
+        selected_review
     )
     assert receipt["requested_worker_configuration"]["model"] == expected_model
     assert result["reasoning_effort"] == expected_effort
@@ -13992,3 +14031,34 @@ def test_fully_matched_mixed_currency_levels_keep_separate_values(
     assert funnel["human_review"]["gross_absolute_value"] == "0"
     assert funnel["human_review"]["value_totals"] == []
     assert _tree_snapshot(recon) == strict_before
+
+
+def test_historical_semantic_selection_replays_without_current_catalog(
+    tmp_path, monkeypatch
+):
+    _, semantic, reconciliation_dir, semantic_dir = _prepare_ambiguous_semantic_run(
+        tmp_path
+    )
+    with monkeypatch.context() as previous:
+        previous.setattr(semantic, "discover_worker_selection", lambda *_: None)
+        previous.setattr(
+            semantic,
+            "resolve_worker_selection",
+            lambda **_: ("gpt-5.6-luna", "max", None),
+        )
+        semantic.prepare_semantic_review(reconciliation_dir, semantic_dir)
+    graph_path = semantic_dir / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text())
+    response, events = _write_semantic_worker_result(
+        semantic_dir, _valid_semantic_response(graph)
+    )
+    monkeypatch.setattr(
+        semantic,
+        "discover_worker_selection",
+        lambda *_: pytest.fail("Historical replay cannot discover a new model"),
+    )
+    result = semantic.validate_semantic_review(
+        reconciliation_dir, semantic_dir, graph_path, response, events
+    )
+    assert result["candidate_graph_sha256"] == graph["candidate_graph_sha256"]
+    assert result["validated_suggestions"].is_file()

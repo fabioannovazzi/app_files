@@ -62,7 +62,7 @@
       {
         "id": "native-initial-intake-and-private-originals",
         "purpose": "Distinguish the optional native preparation and original-document view from substantive model source review.",
-        "content": "The native panel preserves explicit scope, reviewer attribution, evidence policies, literal keywords, title/narrative and per-source role, adapter, perimeter, money and date conventions in actor/tenant/client/engagement/run private drafts. Setup returns receipt-bound source titles and current choices in app metadata. A signed exact source request reads at most one registered original up to 4 MiB, verifies its bytes and returns base64 content only in app metadata for opening/download; larger sources remain in Studio Archive. Setup, original opening, draft writes and confirmed raw preparation have no model/provider/network call. Their model-facing tool result carries only status and a work reference. This is not a local-only guarantee for the professional task: the selected Codex or Cowork model may read the exact necessary source through the ordinary source-analysis path, without automatic anonymization. The optional Codex native panel is independent from the retained Cowork file-based route.",
+        "content": "The native panel preserves explicit scope, reviewer attribution, evidence policies, literal keywords, title/narrative and per-source role, adapter, perimeter, money and date conventions in actor/tenant/client/engagement/run private drafts. Setup returns receipt-bound source titles and current choices in app metadata. A signed exact source request reads at most one registered original up to 4 MiB, verifies its bytes and returns base64 content only in app metadata for opening/download; larger sources remain in Studio Archive. Setup, original opening and draft writes have no model/provider/network call. Confirmed raw preparation may invoke the bounded semantic residual worker described separately. Their model-facing tool result carries only status and a work reference. This is not a local-only guarantee for the professional task: the selected Codex or Cowork model may read the exact necessary source through the ordinary source-analysis path, without automatic anonymization. The optional Codex native panel is independent from the retained Cowork file-based route.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -103,14 +103,22 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "bounded-semantic-residual-worker",
+        "purpose": "Resolve unresolved open items into source-bound exact allocations",
+        "content": "The selected low-cost native model receives complete bounded currency/entity perimeters, capped at 120 combined target and bank rows and 48000 prompt bytes. Populated mapped fields include exact business document numbers, descriptions, parties, entities, dates, amounts, currencies, accounting sides and opaque record linkage IDs. Source paths and unmapped columns are excluded; professional data are not anonymized. Native worker launch and response evidence are retained locally and decisions are replayed into exact allocations with explicit residuals. The initial supported adapter uses the current Codex harness, not a direct provider API. Cowork and Antigravity report the absence of a verified isolated invocation adapter; a named model alone never establishes a worker run. Native raw preparation may therefore perform this bounded host-model phase; opening source documents or editing setup drafts does not.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5aa94eb74f87fc261a1e971a75cbbd3109667470d8840ad0ccbeefa1969d0095"
+    "source_fingerprint": "e8b4b6fcec0fbeb4afaa6f7f83e6a906d361920720843996bb2cb8869d8c0a77"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -191,6 +199,8 @@
           "Il modello richiede il contesto di un caso quando serve",
           "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
           "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
+          "I residui possono essere inviati a un modello secondario",
+          "Su Codex, Vera seleziona un modello economico effettivamente disponibile nell’host e invia gruppi delimitati di partite e movimenti bancari: al massimo 120 righe e 48.000 byte per richiesta. Il contenuto comprende campi mappati valorizzati, riferimenti di riga, date, importi, valute, descrizioni, riferimenti documentali e nomi delle controparti. Non comprende percorsi o colonne non mappate. La chat principale non cambia modello. I risultati e le citazioni restano nel lavoro locale; il codice verifica attribuzioni e residui. Il connettore isolato per Cowork e Antigravity non è ancora verificato: su questi host la risoluzione automatica resta in sospeso.",
           "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali."
         ],
         "en": [
@@ -203,6 +213,8 @@
           "The model requests a case's context when needed",
           "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
           "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
+          "Residuals may be sent to a secondary model",
+          "On Codex, Vera selects a low-cost model actually available in the host and sends bounded groups of open items and bank movements: at most 120 rows and 48,000 bytes per request. Content includes populated mapped fields, row references, dates, amounts, currencies, descriptions, document references and counterparty names. Paths and unmapped columns are excluded. The main chat keeps its model. Results and quotations remain in the local work; code checks allocations and residuals. An isolated adapter for Cowork and Antigravity is not yet verified, so automatic resolution remains pending on those hosts.",
           "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local."
         ],
         "fr": [
@@ -215,6 +227,8 @@
           "Le modèle demande le contexte d'un cas lorsque nécessaire",
           "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
           "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
+          "Les résidus peuvent être transmis à un modèle secondaire",
+          "Sur Codex, Vera sélectionne un modèle économique réellement disponible dans l’hôte et transmet des groupes limités de postes ouverts et de mouvements bancaires : au maximum 120 lignes et 48 000 octets par requête. Ils contiennent les champs mappés renseignés, références de lignes, dates, montants, devises, descriptions, références documentaires et noms des contreparties. Les chemins et colonnes non mappées sont exclus. La conversation principale conserve son modèle. Résultats et citations restent dans le dossier local ; le code vérifie les affectations et résidus. L’adaptateur isolé pour Cowork et Antigravity n’est pas encore vérifié : la résolution automatique y reste en attente.",
           "Studio Archive délimite chaque exécution de ce processus et crée automatiquement un rapport des données envoyées par Vera. Vera enregistre ses propres envois ; le rapport n’inspecte ni la conversation ni les autres outils. Le rapport reste sur la machine même lorsque toutes les données ont été envoyées. Les comptages manquants sont signalés comme indéterminés. Le serveur reçoit uniquement l’empreinte du rapport et les références de vérification, liées au Vera userID de la machine, à la même exécution et à la révision. Le contenu du rapport et les preuves restent locaux."
         ],
         "de": [
@@ -227,6 +241,8 @@
           "Das Modell fordert bei Bedarf den Kontext eines Falls an",
           "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
           "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
+          "Restposten können an ein zweites Modell gesendet werden",
+          "Unter Codex wählt Vera ein kostengünstiges, im Host tatsächlich verfügbares Modell und sendet begrenzte Gruppen offener Posten und Bankbewegungen: höchstens 120 Zeilen und 48.000 Bytes je Anfrage. Enthalten sind befüllte zugeordnete Felder, Zeilenverweise, Daten, Beträge, Währungen, Beschreibungen, Belegverweise und Namen der Gegenparteien. Pfade und nicht zugeordnete Spalten bleiben ausgeschlossen. Das Modell des Hauptchats bleibt gleich. Ergebnisse und Zitate bleiben im lokalen Vorgang; der Code prüft Zuordnungen und Restbeträge. Ein isolierter Adapter für Cowork und Antigravity ist noch nicht verifiziert; die automatische Klärung bleibt dort ausstehend.",
           "Studio Archive grenzt jede Ausführung dieses Prozesses ab und erstellt automatisch einen Bericht über die von Vera gesendeten Daten. Vera erfasst die eigenen Sendungen; der Bericht untersucht weder den Chat noch andere Werkzeuge. Der Bericht bleibt auf dem Rechner, auch wenn alle Daten gesendet wurden. Fehlende Mengenangaben werden ausdrücklich als unbekannt ausgewiesen. Der Server erhält nur den Berichtshash und die Prüfverweise, gebunden an die Vera userID des Rechners, dieselbe Ausführung und Revision. Berichtsinhalte und Nachweise bleiben lokal."
         ],
         "es": [
@@ -239,6 +255,8 @@
           "El modelo solicita el contexto de un caso cuando lo necesita",
           "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
           "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
+          "Los saldos pendientes pueden enviarse a un modelo secundario",
+          "En Codex, Vera selecciona un modelo económico realmente disponible en el host y envía grupos delimitados de partidas y movimientos bancarios: como máximo 120 filas y 48.000 bytes por solicitud. Incluyen campos mapeados cumplimentados, referencias de fila, fechas, importes, monedas, descripciones, referencias documentales y nombres de contrapartes. Se excluyen rutas y columnas no mapeadas. El chat principal conserva su modelo. Resultados y citas permanecen en el trabajo local; el código comprueba las asignaciones y los saldos. El adaptador aislado para Cowork y Antigravity aún no está verificado: la resolución automática queda pendiente en esos hosts.",
           "Studio Archive delimita cada ejecución de este proceso y crea automáticamente un informe de los datos enviados por Vera. Vera registra sus propios envíos; el informe no inspecciona el chat ni otras herramientas. El informe permanece en el equipo incluso cuando se han enviado todos los datos. Los recuentos que faltan se indican como indeterminados. El servidor recibe únicamente la huella del informe y las referencias de verificación, vinculadas al Vera userID del equipo, a la misma ejecución y revisión. El contenido del informe y las evidencias permanecen locales."
         ]
       }

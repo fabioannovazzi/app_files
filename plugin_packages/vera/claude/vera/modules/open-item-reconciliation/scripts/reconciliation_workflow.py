@@ -537,6 +537,9 @@ def build_reconciliation_artifacts(
         "accountant_report_path": str(accountant_report_path),
         "word_path": str(word_path),
         "assumptions": assumptions,
+        "semantic_resolution": assumptions.get(
+            "semantic_resolution", {"status": "not_requested", "blocks": []}
+        ),
         "client_engagement": normalized_client_engagement,
         "source_qualifications": source_qualifications or [],
         "source_processing": source_processing,

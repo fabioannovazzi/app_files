@@ -38,6 +38,7 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/implementation_bootstrap.py"),
     ("plugin", "scripts/raw_input_runner.py"),
     ("plugin", "scripts/reconciliation_workflow.py"),
+    ("plugin", "scripts/semantic_resolution.py"),
     ("plugin", "scripts/retained_sources/accountant_report.source"),
     ("plugin", "scripts/retained_sources/locale_support.source"),
     ("plugin", "scripts/retained_sources/reconciliation_helpers.source"),
@@ -186,7 +187,7 @@ def validate_implementation_tree(
         )
     if observed_files != set(IMPLEMENTATION_CONTRACT):
         raise RuntimeError(
-            "implementation filesystem does not match the exact 26-file contract"
+            "implementation filesystem does not match the exact 27-file contract"
         )
     if observed_directories != _expected_directories():
         raise RuntimeError("implementation directories do not match the exact contract")

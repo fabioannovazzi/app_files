@@ -304,6 +304,10 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    matches/residuals, unmatched partitions, blocked relationship ledger, gates,
    and audit instead.
 
+## Native semantic residual resolution
+
+This distribution selects the Cowork host in the shared worker policy. A verified isolated invocation adapter is not implemented for this route. Keep residuals in the native review handoff and report that no automatic semantic worker ran. Do not silently use another harness, switch the main chat model, create visible per-case chats, or infer that a named model is callable from its name. Preparation and delivery of the reviewable workpapers continue without professional-approval ceremony.
+
 ## Mapping Recipe Rules
 
 Claude can adjust the recipe JSON generated in the work folder. Use per-side recipe sections:

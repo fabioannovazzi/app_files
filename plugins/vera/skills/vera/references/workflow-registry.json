@@ -70,6 +70,7 @@
     "native_semantic_worker": {
       "components": [
         "journal-bank-reconciliation",
+        "open-item-reconciliation",
         "passive-invoice-audit"
       ],
       "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",

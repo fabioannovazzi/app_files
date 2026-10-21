@@ -1,0 +1,24 @@
+{
+  "schema_version": "vera.semantic_worker_policy.v1",
+  "host": "cowork",
+  "candidates": {
+    "codex": [
+      {
+        "model": "gpt-6-luna",
+        "effort": "high",
+        "cost_class": "low"
+      },
+      {
+        "model": "gpt-5.6-luna",
+        "effort": "high",
+        "cost_class": "low"
+      }
+    ],
+    "cowork": [],
+    "antigravity": []
+  },
+  "legacy_default": {
+    "model": "gpt-5.6-luna",
+    "effort": "low"
+  }
+}

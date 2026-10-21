@@ -69,7 +69,11 @@ def build_registry(root: Path) -> dict[str, Any]:
         },
         "host_qualification": {
             "native_semantic_worker": {
-                "components": ["journal-bank-reconciliation", "passive-invoice-audit"],
+                "components": [
+                    "journal-bank-reconciliation",
+                    "open-item-reconciliation",
+                    "passive-invoice-audit",
+                ],
                 "diagnostic": "modules/journal-bank-reconciliation/scripts/semantic_review.py host-status",
                 "requirement": "Exact qualified native capsule and launch-time canaries; inspect current host before promising execution.",
             },

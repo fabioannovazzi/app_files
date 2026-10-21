@@ -23,6 +23,7 @@ jobs:
       - run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_worker_runtime_compatibility.py
+          tests/plugins/test_reconciliation_worker_capabilities.py
           tests/plugins/test_journal_bank_reconciliation_plugin.py
           tests/plugins/test_archive_journal_bank_projection.py
           plugins/passive-invoice-audit/tests/test_passive_invoice_audit.py

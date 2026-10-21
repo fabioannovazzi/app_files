@@ -278,6 +278,16 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/semantic_review.py",
     ),
     (
+        "implementation.plugin.scripts.worker_capabilities_py",
+        "implementation",
+        "scripts/worker_capabilities.py",
+    ),
+    (
+        "implementation.plugin.scripts.semantic_worker_policy_json",
+        "implementation",
+        "scripts/semantic_worker_policy.json",
+    ),
+    (
         "implementation.plugin.scripts.windows_worker_process_py",
         "implementation",
         "scripts/windows_worker_process.py",

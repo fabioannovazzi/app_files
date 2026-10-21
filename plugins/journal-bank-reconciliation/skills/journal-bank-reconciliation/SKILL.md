@@ -304,7 +304,7 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
    matches/residuals, unmatched partitions, blocked relationship ledger, gates,
    and audit instead.
 
-## Codex-Only Luna Max Residual Resolution Funnel
+## Native semantic residual resolution
 
 Use this path in Codex after a qualified deterministic run leaves unmatched
 bank movements. Anthropic Cowork and other runtimes skip it and continue with
@@ -325,13 +325,19 @@ absolute value. Each movement has one highest level, while funnel totals count
 it in that level and every weaker threshold. A stronger result does not assert
 that every weaker evidence field exists: identifier evidence may be sufficient
 without a beneficiary name. `perfect_match` belongs only to deterministic
-replay; Luna may reach at most `identifier_match`.
+replay; the semantic worker may reach at most `identifier_match`.
 
 The main reconciliation chat must keep its current model and remain the
 orchestrator and final review authority. Never change the model configuration
-of the current chat, never rerun the full reconciliation with Luna, and never
-send one worker call per candidate. By default, launch one separate ephemeral Luna Max
-worker for the bounded packet produced for that run.
+of the current chat or create visible per-case chats. Use one bounded worker packet,
+not one call per candidate. The shared `worker_capabilities.py` selects a configured
+low-cost model and effort from the current harness model catalog. Model names and
+cost preferences belong in `semantic_worker_policy.json`, not matching rules.
+The current verified execution adapter uses the native Codex capsule. Cowork and
+Antigravity distributions carry their own host identity and report the missing
+verified invocation/isolation adapter explicitly; they must not launch Codex as
+an undisclosed substitute or assume that a named Haiku/Flash agent is callable.
+A catalog entry proves advertised availability, not matching quality or execution.
 
 1. Prefer `semantic_review.py run-all` against the completed `reconciliation`
    directory and a sibling `semantic-review` directory. It runs a worker only
@@ -360,12 +366,13 @@ completed worker; terminal `worker_required=false` means no further packet is
 needed. A zero-batch result supplies no new worker-receipt paths. Continue using
 the current resolution funnel, review queue and operational payload.
 
-An explicitly reviewed alternative may be supplied to `prepare` or `run-all`
-with `--worker-selection <receipt.json>`. Use the shared reviewed-decision
-contract with decision type `worker-model-selection`; the receipt binds the workflow, model,
-effort and benchmark digest. Treat it as an authorized engagement input and
-retain the same selection throughout replay. Do not invent a reviewed decision
-or treat a model choice as host qualification. Omit the option otherwise.
+`--worker-selection <receipt.json>` replays an explicit retained selection.
+Ordinary runs discover the current host automatically, without a ceremonial human
+approval. Retained reviewed-decision receipts remain readable for historical
+runs. The launch receipt records executable version and bytes, exact requested
+model/effort, observed runtime metadata and the limits of provider attestation.
+Do not invent a worker run or professional approval. An unavailable worker leaves
+an explicit incomplete result and its reason.
 
 Each preparation immediately writes the current deterministic plus cumulative
 `semantic_resolution_application.json`, `resolution_funnel.json`, and
@@ -464,7 +471,7 @@ cannot establish that no hidden tool path ran. The launcher therefore records
 zero JSONL-visible forbidden items without claiming observed tool absence; the
 pinned outer filesystem boundary is the primary containment control. JSONL
 also does not independently attest the actual model or reasoning effort.
-`semantic_worker_run.json` records Luna Max and max effort as requested, not
+`semantic_worker_run.json` records the selected model and effort as requested, not
 observed, and binds validation to the launch receipt.
 
 Raw worker output is advisory until the validator accepts it. Validated output

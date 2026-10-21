@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import logging
 import tempfile
@@ -91,6 +92,39 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
         for name, content in source.items()
         if name.startswith(prefix) and name.removeprefix(prefix) not in excluded
     }
+    policy_path = f"{product}/modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json"
+    if policy_path in entries:
+        original_policy_sha = hashlib.sha256(entries[policy_path]).hexdigest()
+        policy = json.loads(entries[policy_path])
+        policy["host"] = "antigravity"
+        entries[policy_path] = _json_bytes(policy)
+        index_path = f"{product}/assets/courses/index.json"
+        index = json.loads(entries[index_path])
+        for record in index["courses"].values():
+            course_path = f"{product}/assets/courses/" + record["path"]
+            course = json.loads(entries[course_path])
+            changed = False
+            original_course_sha = hashlib.sha256(entries[course_path]).hexdigest()
+            for source_record in course["sources"]:
+                if f"{product}/" + source_record["path"] != policy_path:
+                    continue
+                if source_record["sha256"] != original_policy_sha:
+                    raise ValueError("Rebuild the reviewed worker-policy course source")
+                source_record["source_sha256"] = original_policy_sha
+                source_record["sha256"] = hashlib.sha256(
+                    entries[policy_path]
+                ).hexdigest()
+                changed = True
+            if changed:
+                course["source_package"] = {
+                    "surface": "google-antigravity",
+                    "course_sha256": original_course_sha,
+                    "projection": "semantic_worker_host_policy",
+                }
+                entries[course_path] = _json_bytes(course)
+                record["source_sha256"] = original_course_sha
+                record["sha256"] = hashlib.sha256(entries[course_path]).hexdigest()
+        entries[index_path] = _json_bytes(index)
     # Clara's deck helpers need these canonical files inside the installed root.
     for relative in RUNTIME_SUPPORT_FILES.get(product, ()):
         entries[f"{product}/{relative.as_posix()}"] = source[

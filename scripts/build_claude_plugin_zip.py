@@ -2075,6 +2075,19 @@ def project_cowork_skill(
             text,
             "## Codex-Only Luna Max Residual Resolution Funnel",
         )
+        if "## Native semantic residual resolution" in text:
+            text = _replace_section(
+                text,
+                "## Native semantic residual resolution",
+                "## Native semantic residual resolution\n\n"
+                "This distribution selects the Cowork host in the shared worker policy. "
+                "A verified isolated invocation adapter is not implemented for this route. "
+                "Keep residuals in the native review handoff and report that no automatic "
+                "semantic worker ran. Do not silently use another harness, switch the main "
+                "chat model, create visible per-case chats, or infer that a named model "
+                "is callable from its name. Preparation and delivery of the reviewable "
+                "workpapers continue without professional-approval ceremony.\n\n",
+            )
     elif (
         relative_path
         == "modules/client-file-preparation/skills/client-file-preparation/SKILL.md"
@@ -3409,6 +3422,13 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             content = _project_previdenza_inventory_script(content)
         elif relative == "scripts/check_dependencies.py":
             content = _project_vera_dependency_checker(content)
+        elif (
+            relative
+            == "modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json"
+        ):
+            policy = json.loads(content)
+            policy["host"] = "cowork"
+            content = _json_bytes(policy)
         elif relative == "modules/passive-invoice-audit/scripts/worker_config.json":
             content = _json_bytes({"runtime": "cowork-haiku"})
         elif relative == "components.json":
