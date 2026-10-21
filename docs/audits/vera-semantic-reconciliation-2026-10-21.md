@@ -57,7 +57,11 @@ The focused new-module tests passed 33 cases with 84.68% combined coverage
 (capability selection 87%, Open-item semantic resolution 84%). A final Open-item
 assurance and capability run passed 159 cases. The journal semantic focus passed
 81 cases, and the separate historical-selection regression passed. Seven recovered
-journal checks passed against stable source after the broader test run.
+journal checks passed against stable source after the broader test run. The shared worker/projection
+suite passed 146 cases, and the actual installed-runtime isolation regression
+brought shared capsule coverage to 80.98%. Package checks passed 492 cases with
+two conditional skips; a missing test fixture was resolved by using the normal
+root fixture setup. Privacy checks passed all 108 cases at 90.30% coverage.
 
 ## Blocks encountered and recovery
 
@@ -66,9 +70,11 @@ journal checks passed against stable source after the broader test run.
 | A list of multiple evidence IDs was not an Excel cell value | Stored the native field as a semicolon-delimited string; retained exact allocations in the ledger and tested multiple-payment workbooks. |
 | Python and MCP exact implementation inventories omitted new source files | Synchronized the owned inventories; package startup and source integrity checks cover the new modules. |
 | Assurance rejected the new retained semantic artifact namespace | Admit only the exact generated names with retained hashes and single-link checks; reject tampering and symlink parents. |
+| An obsolete privacy test forbade host names in the Open-item explanation | Require the actual bounded worker path and unavailable-host limitation instead; all privacy checks pass. |
 | Existing test expectations fixed the old file count and model configuration | Updated tests for the intended behavior; mock live catalogs in unit/CLI tests rather than querying an account. |
 | Three receipt checks saw source edits during a broad test run | Reran the failed cases against stable source; all seven cases in that focused group passed. |
 | Privacy fingerprints and teaching catalogs were stale after source edits | Regenerated owned catalogs and refreshed only affected source reviews before rebuilding packages. |
+| Antigravity host-policy projection changed a teaching source hash | Bind the lesson to the exact projected bytes while retaining its original reviewed source hash. |
 | Cowork projection retained the newly renamed Codex launch instructions | Project an explicit missing-adapter explanation and verify the packaged Cowork host policy. |
 | Sandbox prevented native model discovery and Antigravity catalog inspection | Read-only escalated probes succeeded; no client data or model task was submitted by discovery. |
 | Automatic approval rejected a broad restore in the original dirty checkout | Proved the exact owned patch against the initial clean-file snapshot, then reversed only that patch. Unrelated work remains preserved. |
