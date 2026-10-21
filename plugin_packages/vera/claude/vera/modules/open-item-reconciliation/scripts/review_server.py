@@ -93,6 +93,8 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
+from review_session import completed_review_handoff
+
 try:
     from .audit_assurance import (
         build_applied_review_authority,
@@ -1042,6 +1044,13 @@ def _final_artifacts_with_application(
             ),
         },
     }
+    if applied_decisions["application_status"] == "final_ready":
+        final_artifacts = completed_review_handoff(
+            final_artifacts,
+            language=_read_json_object(output_dir / "run_intake.json").get(
+                "language", "en"
+            ),
+        )
     return final_artifacts
 
 

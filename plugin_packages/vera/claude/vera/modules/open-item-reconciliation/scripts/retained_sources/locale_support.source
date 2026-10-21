@@ -1067,6 +1067,20 @@ WORD_OUTPUT_LABELS: dict[str, dict[str, str]] = {
         "de": "Berichtssprache",
         "es": "Idioma del informe",
     },
+    "evidence_through_date": {
+        "it": "Evidenze considerate fino al",
+        "en": "Evidence through date",
+        "fr": "Justificatifs pris en compte jusqu'au",
+        "de": "Belege berücksichtigt bis",
+        "es": "Evidencias consideradas hasta el",
+    },
+    "residual_amount": {
+        "it": "Importo residuo",
+        "en": "Residual amount",
+        "fr": "Montant résiduel",
+        "de": "Restbetrag",
+        "es": "Importe residual",
+    },
     "document_language": {
         "it": "Lingua dei documenti",
         "en": "Document language",

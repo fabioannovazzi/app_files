@@ -80,7 +80,7 @@ exec(  # nosec B102
     _BOOTSTRAP_NAMESPACE,
 )
 _BOOTSTRAP_ROOTS = _BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](
-    ("locale_support", "reconciliation_helpers")
+    ("locale_support", "reconciliation_helpers", "review_session")
 )
 _BOOTSTRAP_VALIDATE_IMPLEMENTATION = _BOOTSTRAP_NAMESPACE[
     "validate_implementation_tree"
@@ -129,6 +129,7 @@ from reconciliation_helpers import (  # noqa: E402
     reconciliation_checks,
     validated_tolerance,
 )
+from review_session import completed_review_handoff  # noqa: E402
 
 
 def _add_vera_assurance_module_path() -> Path:
@@ -6995,6 +6996,12 @@ def _finalize_assurance_run_in_place(
                 }
             )
             final_artifacts["review_application"] = review_application
+            final_artifacts = completed_review_handoff(
+                final_artifacts,
+                language=_read_json_mapping(out_dir / "run_intake.json").get(
+                    "language", "en"
+                ),
+            )
         elif final_artifacts.get("status") == "final_ready":
             final_artifacts["status"] = "ready_for_professional_review"
         _write_exact_json(final_artifacts_path, final_artifacts)

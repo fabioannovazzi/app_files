@@ -275,8 +275,9 @@ def test_selected_partial_payment_has_exact_cells_and_retains_private_columns(
 
 
 @pytest.mark.parametrize("exact_identifiers", [False, True])
+@pytest.mark.parametrize("regeneration_route", ["native", "cli", "cli-retained"])
 def test_public_review_save_apply_keeps_notes_private_and_report_complete(
-    reconciled_case, tmp_path, exact_identifiers
+    reconciled_case, tmp_path, exact_identifiers, regeneration_route
 ):
     loaded = reconciled_case
     output = Path(loaded["calculation_dir"])
@@ -329,6 +330,9 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
 
     assert saved["structuredContent"]["decision_count"] == 3
     assert applied["structuredContent"]["decision_count"] == 3
+    pending = json.loads((output / "final_artifacts.json").read_text())
+    assert pending["status"] == "blocked"
+    assert pending["review_handoff"]["required_before_final_delivery"] is True
     assert "PRIVATE_REVIEW_NOTE" not in json.dumps(saved["structuredContent"])
     assert "PRIVATE_REVIEW_NOTE" not in json.dumps(applied["structuredContent"])
     assert "PRIVATE_REVIEW_NOTE" in json.dumps(saved["_meta"]["private_review_payload"])
@@ -350,22 +354,45 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
         for path in history.rglob("*")
         if path.is_file()
     }
-    regenerated = subprocess.run(
-        [
+    command = [
+        sys.executable,
+        "-I",
+        "-B",
+        str(PLUGIN.parent / "vera/scripts/native_open_item_bridge.py"),
+        str(PLUGIN),
+    ]
+    request = json.dumps(
+        {
+            "operation": "regenerate",
+            "output_dir": str(output),
+            "context": str(Path(loaded["run_root"]) / "context.json"),
+            "arguments": {"expected_predecessor_checkpoint": checkpoint},
+        }
+    )
+    if regeneration_route.startswith("cli"):
+        command = [
             sys.executable,
             "-I",
             "-B",
-            str(PLUGIN.parent / "vera/scripts/native_open_item_bridge.py"),
-            str(PLUGIN),
-        ],
-        input=json.dumps(
-            {
-                "operation": "regenerate",
-                "output_dir": str(output),
-                "context": str(Path(loaded["run_root"]) / "context.json"),
-                "arguments": {"expected_predecessor_checkpoint": checkpoint},
-            }
-        ),
+            str(PLUGIN / "scripts/raw_input_runner.py"),
+            "--client-engagement",
+            str(Path(loaded["run_root"]) / "context.json"),
+            "--output-subdirectory",
+            "reconciliation",
+            "--expected-predecessor-checkpoint",
+            checkpoint,
+        ]
+        if regeneration_route == "cli":
+            command.extend(
+                [
+                    "--assumptions-json",
+                    str(Path(loaded["output_dir"]) / "assumptions.json"),
+                ]
+            )
+        request = None
+    regenerated = subprocess.run(
+        command,
+        input=request,
         capture_output=True,
         text=True,
         timeout=90,
@@ -374,10 +401,14 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
     summary = json.loads(regenerated.stdout)
     assert summary["regenerated"] is True
     assert summary["report_ready"] is True
-    assert (
-        json.loads((output / "final_artifacts.json").read_text())["status"]
-        == "final_ready"
-    )
+    assert summary.get("status", "final_ready") == "final_ready"
+    final = json.loads((output / "final_artifacts.json").read_text())
+    assert final["status"] == "final_ready"
+    assert final["review_handoff"]["status"] == "review_completed"
+    assert final["review_handoff"]["required_before_final_delivery"] is False
+    assert final["review_handoff"]["server"]["required"] is False
+    assert "ui_decisions.json is pending" not in " ".join(final["caveats"])
+    assert "Open the browser review server" not in " ".join(final["next_actions"])
     assert sources_before == {path: Path(path).read_bytes() for path in sources_before}
     assert retained_before == {
         str(path.relative_to(history)): path.read_bytes()

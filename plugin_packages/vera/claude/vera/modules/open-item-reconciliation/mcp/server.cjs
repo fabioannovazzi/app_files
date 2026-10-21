@@ -4156,6 +4156,14 @@ function finalArtifactsWithApplication(
     ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
+    ...(appliedDecisions.application_status === "final_ready" ? {
+      review_handoff: {
+        ...(current.review_handoff || {}),
+        status: "review_completed",
+        required_before_final_delivery: false,
+        server: { ...(current.review_handoff?.server || {}), required: false },
+      },
+    } : (current.review_handoff ? { review_handoff: current.review_handoff } : {})),
     review_application: {
       applied_at: appliedDecisions.applied_at,
       application_status: appliedDecisions.application_status,
@@ -4219,6 +4227,16 @@ function nextActionsWithReviewApplication(
   blockers,
   inputArgs = {},
 ) {
+  if (appliedDecisions.application_status === "final_ready") {
+    const actions = {
+      it: "Consegna le carte revisionate, mantenendo espliciti i residui e le richieste di evidenze ancora aperte.",
+      en: "Deliver the reviewed workpapers with their remaining balances and evidence requests explicit.",
+      es: "Entregue los documentos revisados, manteniendo explícitos los saldos y las solicitudes de evidencias pendientes.",
+      fr: "Remettez les documents révisés en indiquant les soldes et les demandes de justificatifs encore ouverts.",
+      de: "Übergeben Sie die geprüften Unterlagen mit ausdrücklich ausgewiesenen Restbeträgen und offenen Beleganforderungen.",
+    };
+    return [actions[runtimeLanguage(inputArgs)] || actions.en];
+  }
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
   const spanish = isSpanishRuntime(inputArgs);
   if (blockers.length) {
@@ -4232,12 +4250,6 @@ function nextActionsWithReviewApplication(
       spanish
         ? "Vuelva a generar las salidas DOCX/XLSX/PDF nativas antes de la entrega final."
         : "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
-    );
-  } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push(
-      spanish
-        ? "Use final_artifacts.json como galería de artefactos revisados para la entrega."
-        : "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
     );
   } else if (appliedDecisions.application_status === "partial_review_applied") {
     nextActions.push(

@@ -3500,11 +3500,18 @@ def _cli_parser() -> Any:
         description="Run one client-bound Open-item Reconciliation workflow."
     )
     parser.add_argument("--client-engagement", type=Path, required=True)
-    parser.add_argument("--assumptions-json", type=Path, required=True)
+    parser.add_argument(
+        "--assumptions-json",
+        type=Path,
+        help="Initial production settings. Reviewed regeneration reuses the retained original settings.",
+    )
     parser.add_argument("--title")
     parser.add_argument("--narrative", default="")
     parser.add_argument("--language", default="it")
-    parser.add_argument("--expected-predecessor-checkpoint")
+    parser.add_argument(
+        "--expected-predecessor-checkpoint",
+        help="Regenerate the applied review in a transaction using this separately retained predecessor hash and the original report settings.",
+    )
     parser.add_argument("--output-subdirectory", choices=["reconciliation"])
     return parser
 
@@ -3517,26 +3524,46 @@ def main(argv: list[str] | None = None) -> int:
         client_engagement = load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="open-item-reconciliation",
-            input_paths=[args.assumptions_json],
+            input_paths=[args.assumptions_json] if args.assumptions_json else [],
         )
-        assumptions = json.loads(args.assumptions_json.read_text(encoding="utf-8"))
-        if not isinstance(assumptions, dict):
-            raise ValueError("Assumptions JSON must contain one object")
-        result = run_raw_input_reconciliation(
-            input_dir=Path(client_engagement["input_dir"]),
-            prepared_client_engagement=client_engagement,
-            assumptions=assumptions,
-            title=args.title,
-            narrative=args.narrative,
-            language=args.language,
-            expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
-            output_subdirectory=args.output_subdirectory,
-        )
+        if args.expected_predecessor_checkpoint:
+            output_dir = Path(client_engagement["output_dir"])
+            if args.output_subdirectory:
+                output_dir /= args.output_subdirectory
+            # A successor consumes persisted review authority through the same
+            # transactional producer as the native route; never rebuild pending
+            # rows over an applied review or rewrite its retained original settings.
+            result = {
+                **regenerate_raw_input_reconciliation(
+                    output_dir,
+                    client_engagement,
+                    expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
+                ),
+                "client_engagement": client_engagement,
+                "run_output_dir": str(output_dir),
+            }
+        else:
+            if args.assumptions_json is None:
+                raise ValueError("Initial production requires --assumptions-json")
+            assumptions = json.loads(args.assumptions_json.read_text(encoding="utf-8"))
+            if not isinstance(assumptions, dict):
+                raise ValueError("Assumptions JSON must contain one object")
+            result = run_raw_input_reconciliation(
+                input_dir=Path(client_engagement["input_dir"]),
+                prepared_client_engagement=client_engagement,
+                assumptions=assumptions,
+                title=args.title,
+                narrative=args.narrative,
+                language=args.language,
+                output_subdirectory=args.output_subdirectory,
+            )
     except (OSError, ValueError) as exc:
         sys.stderr.write(f"Open-item Reconciliation failed: {exc}\n")
         return 1
     summary = {
-        "status": "ready_for_review",
+        "status": (
+            "final_ready" if result.get("report_ready") is True else "ready_for_review"
+        ),
         "client_engagement": {
             key: result["client_engagement"][key]
             for key in ("client_id", "engagement_id", "workflow_id", "run_id")
@@ -3545,6 +3572,18 @@ def main(argv: list[str] | None = None) -> int:
         "run_manifest_path": str(Path(result["run_output_dir"]) / "run_manifest.json"),
         "artifact_card_path": str(Path(result["run_output_dir"]) / "artifact_card.md"),
     }
+    if result.get("regenerated") is True:
+        summary.update(
+            {
+                key: result[key]
+                for key in (
+                    "regenerated",
+                    "report_ready",
+                    "checks_pass",
+                    "assurance_sha256",
+                )
+            }
+        )
     from vera_assurance.contracts import archive_projection_runtime
 
     recorder = archive_projection_runtime(Path(__file__))

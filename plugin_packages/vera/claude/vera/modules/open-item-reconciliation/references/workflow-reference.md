@@ -182,6 +182,22 @@ shorter terminal-ready validator. Applying a new review decision is itself new
 run state: native outputs and the assurance seal must be regenerated before the
 application can become `final_ready`.
 
+After saving and applying the review, regenerate through the published CLI:
+
+```bash
+python -I -B scripts/raw_input_runner.py \
+  --client-engagement <customer-run>/context.json \
+  --output-subdirectory reconciliation \
+  --expected-predecessor-checkpoint <retained-64-hex-sha256>
+```
+
+The checkpoint selects reviewed regeneration. This uses the applied review and
+retained original assumptions, title, narrative and language in the same
+transaction as the native regeneration route. Initial-production options do not
+replace those retained settings. The command reuses the applied decisions without
+an additional approval step. Its response reports whether regeneration succeeded
+and whether the checked result is ready.
+
 The first review application also retains its predecessor transition within
 the same copy-on-write candidate. The content-addressed directory
 `assurance_transition_history/<predecessor-seal-content-sha256>/` has an exact

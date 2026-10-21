@@ -1177,3 +1177,97 @@ no failed Archive operation; their verification error occurred after report
 closure and was independently diagnosed as restricted-shell DNS failure. Its
 previous acceptance evidence remains unchanged. Fresh installed 0.1.458 test-2
 acceptance and saved-report reopening are still required.
+
+### 0.1.458 normal-chat result: public regeneration command failed
+
+The supported local installation was verified at 0.1.458: all 2,184 enabled
+cache files matched the generated ZIP. Fresh GPT-6.1-sol chat
+`01a15c2a-52d1-7a30-90a6-60b9097d0072` stopped at the first workflow error.
+Task `4f9d12f2-a50c-45b5-874d-6618398955e0` and Archive run
+`run_fa98101b02e43d8f8aa0bcae` are failed; neither may be resumed or rewritten.
+All 317 retained-file hash checks across the earlier attempts still passed.
+
+The initial three-row reconciliation was correct: EUR 2,500 less EUR 1,500
+received left EUR 1,000. Eight review decisions were recorded as agent review,
+without human confirmation or professional approval. The agent inspected all
+eight Word pages through the installed LibreOffice route. Public save/apply
+completed, but the subsequent published `raw_input_runner.py` command failed:
+`rendered review rows do not match persisted professional review authority`.
+The command accepted `--expected-predecessor-checkpoint` yet reran initial
+production instead of consuming the applied authority through the existing
+regeneration transaction. This is **A64**. Earlier 0.1.457 used a wrapper calling
+the regeneration function and therefore did not exercise this public CLI gap.
+No Archive finalization occurred in 0.1.458; A61 still needs normal-chat proof.
+
+The readable privacy report appeared automatically in the final response.
+It honestly reports incomplete collection: 13 emissions, 18,486 characters,
+21 of 24 population cells and 4 of 12 bank cells, with an unknown remainder.
+The only unmapped emission is the failed native-execution response, including
+stderr and its local technical-evidence pointer. It is not declared safe
+metadata or silently omitted. Independent read-only server verification passed
+for receipt `845fbc55-f666-51be-93c8-3015abcbac65`, revision 1, exact userID
+`0ed4a818-1877-4652-8515-787c64de17a5`, exact run and report SHA-256
+`05cfffc07ef903ea4855aba1dc4b986ee45c6c43dd49f59b6a4e4fd5ab0027bf`.
+Proof is retained in `/private/tmp/studio-archive-458-failed-report-proof.json`.
+This verifies the failed report; it does not accept the workflow.
+
+The chat's `outputs/resoconto-test-02.txt` retains every interruption. An
+unrefreshed search index did not prevent exact imported-source work. The normal
+review/replay transition was required, without a new human approval. The native
+technical incident remained queued locally because the dedicated incident tools
+were not exposed. A task event linking that incident and one scoped retry
+returned HTTPError; its exact HTTP status was not retained. Started/failed task
+events were acknowledged and ComputerID was verified. No historical queue was
+flushed. The server source requires an incident report to exist for that
+installation before accepting its link; this is consistent with the queued
+incident, but the exact rejected response has not been independently observed.
+
+The coordinator could create the separate chat but Computer Use refused access
+to the Codex app, so a separate window was not verified. The refusal was
+reported and not bypassed. This is a host limitation, not a Vera calculation
+failure. Two untranslated Italian-report labels and long technical provenance
+paths were also recorded.
+
+### 0.1.459 repair in progress: regeneration dispatch and completed handoff
+
+**A63** was independently reproduced against the retained 0.1.457 output:
+`final_artifacts.status=final_ready` coexisted with a required browser review,
+pending-decision caveat and initial setup instructions. The actual successor
+finalizer in `audit_assurance.py` wrote the terminal state while retaining
+initial handoff metadata. An initial repair of the browser/MCP writers alone
+did not fix this path; six expanded regressions exposed the remaining defect.
+
+The source repair now routes the public predecessor-checkpoint CLI through the
+existing regeneration transaction, retaining original settings and applied
+decisions. It accepts the documented regeneration command without repeating
+initial assumptions. Shared Python handoff rendering and the MCP writer reflect
+completed review only at final readiness; pending review remains pending.
+The completed handoff names delivery and outstanding evidence explicitly rather
+than repeating review setup. Two missing display-label translations are added;
+source fields and exact accounting values are unchanged.
+
+The public CLI failure was reproduced in two cases before the fix and those
+cases passed afterward. The terminal handoff failure was also reproduced and
+its focused regression now passes. Full accounting, native/public review and
+projection suites are in progress. No 0.1.459 installation or acceptance chat
+has started. Acceptance remains **1 of 13**; test 3 has not started.
+
+The source suites subsequently passed: 420 accounting cases with 81.63%
+coverage, 129 public-review/native cases, and all 17 projection/regeneration
+cases. Final review also corrected the CLI's completion label from
+`ready_for_review` to `final_ready` when the retained assurance reports ready;
+all four CLI integration variants passed again for that final response change.
+The same public review/projection suite is now explicitly included in CI.
+Black, Isort, Mypy, Bandit medium/high and Node syntax checks passed. All 317
+historical file hashes remained unchanged. Canonical candidate versions are
+Vera 0.1.459 and Open-item 0.1.66; package and installed acceptance checks remain
+pending at this point.
+
+Final 0.1.459 package/privacy/update checks passed: 513 tests, two skips, plus
+three icon-consistency checks. All-host source/package parity passed. Final
+Vera ZIP SHA-256 is
+`a5fbe32ba8ee18cf1c7c8973c013afcfbdce4a997f91cf0b0d3768965789810f`.
+The delta against verified 0.1.458 has 129 changed files, no additions and no
+removals. Its six executable changes are confined to Open-item's MCP server,
+assurance finalizer, public CLI, review server and two retained rendering/locale
+sources. Installation and fresh normal-chat acceptance remain outstanding.
