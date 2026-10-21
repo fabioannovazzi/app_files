@@ -4,12 +4,14 @@ from __future__ import annotations
 
 import json
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
+from typing import Any
 
 __all__ = ["main"]
 
 
-def main() -> None:
+def _execute() -> dict[str, Any]:
     """The parent supplies registered source; UI cannot supply a module path."""
     sys.path.insert(0, str(Path(sys.argv[1]) / "scripts"))
     import review_server
@@ -41,6 +43,13 @@ def main() -> None:
             "apply": review_server.apply_decisions,
         }[request["operation"]]
         result = operation(Path(request["output_dir"]), request["arguments"])
+    return result
+
+
+def main() -> None:
+    """Reserve stdout for JSON; retain dependency diagnostics on stderr."""
+    with redirect_stdout(sys.stderr):
+        result = _execute()
     sys.stdout.write(json.dumps(result, ensure_ascii=False))
 
 

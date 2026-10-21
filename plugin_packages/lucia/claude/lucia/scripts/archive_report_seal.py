@@ -7,9 +7,9 @@ import json
 from pathlib import Path
 from typing import Any
 
-from archive_report_store import atomic_json, canonical, file_digest
+from archive_report_store import atomic_bytes, atomic_json, canonical, file_digest
 
-__all__ = ["checkpoint", "reseal"]
+__all__ = ["checkpoint", "reseal", "retain_manifest"]
 FILES = {
     "model_data_report.json": "application/json",
     "model_data_report.md": "text/markdown",
@@ -65,6 +65,25 @@ def _check(root: Path, manifest: dict[str, Any], *, include_report: bool) -> Non
         raise ValueError("Archive artifact population changed after sealing")
 
 
+def retain_manifest(root: Path, manifest: dict[str, Any]) -> None:
+    """Retain a verified receipt so existing handoffs survive metadata revisions."""
+    _check(root, manifest, include_report=False)
+    current_path = root / "artifact_manifest.json"
+    _identity(current_path)
+    current = current_path.read_bytes()
+    content = current if json.loads(current) == manifest else canonical(manifest)
+    history = root / "artifact-manifest-history"
+    if history.is_symlink():
+        raise ValueError("Artifact receipt history cannot be a symbolic link")
+    path = history / f"{manifest['content_sha256']}.json"
+    if path.exists() or path.is_symlink():
+        _identity(path)
+        if json.loads(path.read_bytes()) != manifest:
+            raise ValueError("Retained artifact receipt differs from its digest")
+        return
+    atomic_bytes(path, content)
+
+
 def checkpoint(root: Path) -> dict[str, Any] | None:
     """Validate all sealed bytes before the reporting subsystem changes its files."""
     path = root / "artifact_manifest.json"
@@ -74,9 +93,11 @@ def checkpoint(root: Path) -> dict[str, Any] | None:
     if pending.is_file():
         baseline = json.loads(pending.read_text(encoding="utf-8"))
         _check(root, baseline, include_report=False)
+        retain_manifest(root, baseline)
         return baseline
     manifest = json.loads(path.read_text(encoding="utf-8"))
     _check(root, manifest, include_report=True)
+    retain_manifest(root, manifest)
     atomic_json(pending, manifest)
     return manifest
 

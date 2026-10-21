@@ -73,7 +73,7 @@ globalThis.VeraOpenItemsIntake = Object.freeze({create(api) {
     for(const [key,label] of [["entity_ref","Riferimento dell’entità"],["party_ref","Riferimento della controparte"],["currency","Valuta della fonte"],["unit","Unità degli importi"],["direction_policy","Direzione dichiarata"],["allocation_policy","Relazione dichiarata fra partite ed evidenze"]])field(perimeter,local,[...base,"perimeter",key],label+" · "+row.title);
     const money=group(section,"Convenzioni monetarie della fonte");
     field(money,local,[...base,"money","decimal_separator"],"Separatore decimale · "+row.title,{choices:[[",","Virgola"],[".","Punto"]]});
-    field(money,local,[...base,"money","thousands_separator"],"Separatore delle migliaia · "+row.title,{choices:[["none","Assente"],[".","Punto"],[",","Virgola"],[" ","Spazio"]],decode:value=>value==="none"?"":value,encode:value=>value===""?"none":value});
+    field(money,local,[...base,"money","thousands_separator"],"Separatore delle migliaia · "+row.title,{choices:[["none","Assente"],[".","Punto"],[",","Virgola"]],decode:value=>value==="none"?null:value,encode:value=>value==="null"?"none":value});
     field(money,local,[...base,"money","reported_unit"],"Unità monetaria riportata · "+row.title);
     field(money,local,[...base,"money","reported_increment"],"Incremento monetario dichiarato · "+row.title);
     section.append(node("p","Il produttore supporta importi esatti al centesimo: incremento 0.01. Precisioni diverse vengono segnalate senza arrotondarle per superare i controlli.","caption"));

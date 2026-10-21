@@ -619,9 +619,13 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         model_block = " ".join(catalog["pages"][path.parent.name]["copy"]["it"])
         for snippet in required:
             assert snippet in model_block
+        assert "In Cowork e Antigravity" in model_block
+        assert "chat principale e di un agente secondario nativo" in model_block
+        assert "non prova un isolamento del filesystem" in model_block
+        assert "Le trascrizioni degli agenti possono restare nell’host" in model_block
         if path.parent.name == "journal-bank-reconciliation":
-            assert "Solo nel runtime Codex" in model_block
-            assert "Cowork non esegue questo passaggio" in model_block
+            assert "Nei runtime Codex, Cowork e Antigravity" in model_block
+            assert "Cowork non esegue questo passaggio" not in model_block
             assert (
                 "l’intero insieme rientra in un unico pacchetto limitato" in model_block
             )
@@ -630,7 +634,7 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
             assert "Su Codex" in model_block
             assert "120 righe e 48.000 byte" in model_block
             assert "La chat principale non cambia modello" in model_block
-            assert "Cowork e Antigravity non è ancora verificato" in model_block
+            assert "Cowork e Antigravity non è ancora verificato" not in model_block
             assert "nomi delle controparti" in model_block
 
     check_entries = (

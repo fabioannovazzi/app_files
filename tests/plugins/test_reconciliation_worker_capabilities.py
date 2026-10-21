@@ -95,11 +95,10 @@ def test_unverified_host_does_not_silently_use_codex_or_invent_a_worker(
         "_catalog",
         lambda _: pytest.fail("Cross-host fallback is forbidden"),
     )
-    with pytest.raises(
-        capabilities.UnsupportedWorkerCapability,
-        match="no verified.*adapter.*no worker ran",
-    ):
-        capabilities.select_worker("open-item-reconciliation", host=host)
+    selection = capabilities.select_worker("open-item-reconciliation", host=host)
+    assert selection["host"] == host
+    assert selection["discovery"]["status"] == "requires_parent_observation"
+    assert selection["reasoning_effort"] == "host_default"
 
 
 def test_replay_preserves_selection_without_querying_changed_catalog(

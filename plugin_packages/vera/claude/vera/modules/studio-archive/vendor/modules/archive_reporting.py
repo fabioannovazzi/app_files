@@ -350,10 +350,18 @@ def record_send(
                         projection is not None
                         and projected_source is not None
                         and selection["unit"] in {"documents", "lines"}
-                        and selection["start"] == 0
-                        and selection["stop"] == projected_source["quantity"]
                         and selection["columns"] == [0]
+                        and (
+                            not projection["selections"]
+                            or (
+                                selection["start"] == 0
+                                and selection["stop"] == projected_source["quantity"]
+                            )
+                        )
                     ):
+                        # A subset of an exact producer-owned metadata file
+                        # still contains no copied source cells. Source-bearing
+                        # projections require the complete registered document.
                         artifact_selection["source_lineage_verified"] = True
                         selections.extend(projection["selections"])
                     table = (
@@ -372,14 +380,21 @@ def record_send(
                     ):
                         # The exact file hash binds the producer's output-cell
                         # map. Only cells actually returned can add input origins.
-                        artifact_selection["source_lineage_verified"] = True
-                        selections.extend(
-                            origin
+                        selected_cells = [
+                            row[column]
                             for row in table["cells"][
                                 selection["start"] : selection["stop"]
                             ]
                             for column in selection["columns"]
-                            for origin in row[column]
+                        ]
+                        artifact_selection["source_lineage_verified"] = all(
+                            cell is not None for cell in selected_cells
+                        )
+                        selections.extend(
+                            origin
+                            for cell in selected_cells
+                            if cell is not None
+                            for origin in cell
                         )
                     mapped = True
                 if metadata.get(binding.get("token")) == digest(
@@ -584,26 +599,23 @@ def finish_run(loaded: Mapping[str, Any]) -> dict[str, Any]:
         store.save(state)
     state["collection_closed"] = True
     store.save(state)
-    queue_available = True
-    try:
-        registry_for_run(root).close(state["run_id"])
-    except (ValueError, OSError, sqlite3.Error):
-        queue_available = False
-        store.error("receipt_retry_queue_unavailable")
     result = snapshot_run(loaded)
     from archive_report_receipt import stamp_report
 
     result["server_receipt"] = stamp_report(Path(result["report_path"]))
     reseal(root, baseline)
     atomic_json(Path(loaded["run_root"]) / "model_data_reporting.json", result)
-    if queue_available:
-        try:
-            registry_for_run(root).receipt_result(
-                root, result["server_receipt"]["status"]
-            )
-        except (ValueError, OSError, sqlite3.Error):
-            # The durable queue remains pending; an idempotent retry is safe.
-            pass
+    # Until the local report and seal are durable, the run must remain in the
+    # unfinished collection queue. Receipt retry alone cannot rebuild that state.
+    try:
+        registry = registry_for_run(root)
+        registry.close(state["run_id"])
+        registry.receipt_result(root, result["server_receipt"]["status"])
+    except (ValueError, OSError, sqlite3.Error) as exc:
+        result["retry_registration"] = {
+            "status": "unavailable",
+            "reason": type(exc).__name__,
+        }
     return result
 
 

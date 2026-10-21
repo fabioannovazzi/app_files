@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+from collections.abc import Iterator
 from contextlib import contextmanager
 from itertools import islice
 from pathlib import Path
@@ -18,6 +19,23 @@ from archive_report_store import canonical, file_digest
 __all__ = ["measure_source", "read_selection", "direct_read_selection"]
 
 
+def _word_body_rows(container: Any) -> Iterator[list[str]]:
+    """Yield text paragraphs in body order, including nested table cells once."""
+    from docx.text.paragraph import Paragraph
+
+    for block in container.iter_inner_content():
+        if isinstance(block, Paragraph):
+            if block.text:
+                yield [block.text]
+            continue
+        seen_cells = set()
+        for row in block.rows:
+            for cell in row.cells:
+                if cell._tc not in seen_cells:
+                    seen_cells.add(cell._tc)
+                    yield from _word_body_rows(cell)
+
+
 @contextmanager
 def _table(path: Path):
     """Stream physical source units; a small inspection never loads a whole table."""
@@ -27,13 +45,19 @@ def _table(path: Path):
             sample = handle.read(65536)
             handle.seek(0)
             dialect = csv.excel_tab if suffix == ".tsv" else csv.excel
+            delimiter_basis = "default"
             try:
                 dialect = csv.Sniffer().sniff(sample, delimiters=",;\t|")
+                delimiter_basis = "sniffed"
             except csv.Error:
                 pass
             reader = csv.reader(handle, dialect=dialect, strict=True)
             header = next(reader, [])
-            yield header, reader, "rows"
+            yield header, reader, "rows", {
+                "kind": suffix[1:],
+                "delimiter": dialect.delimiter,
+                "delimiter_basis": delimiter_basis,
+            }
         return
     if suffix == ".xlsx":
         from openpyxl import load_workbook
@@ -50,9 +74,30 @@ def _table(path: Path):
                                 width - len(row)
                             )
 
-            yield [str(i) for i in range(width)], rows(), "worksheet_rows"
+            yield [str(i) for i in range(width)], rows(), "worksheet_rows", None
         finally:
             workbook.close()
+        return
+    if suffix == ".docx":
+        from docx import Document
+        from docx.opc.exceptions import PackageNotFoundError
+        from lxml.etree import XMLSyntaxError
+
+        try:
+            document = Document(path)
+        except (PackageNotFoundError, KeyError, XMLSyntaxError) as exc:
+            raise ValueError("Word body text could not be measured") from exc
+        yield ["text"], _word_body_rows(document), "body_paragraphs", {
+            "kind": "docx",
+            "scope": "Nonempty document-body paragraphs, including table cells",
+            "excluded": [
+                "headers",
+                "footers",
+                "comments",
+                "images",
+                "embedded_objects",
+            ],
+        }
         return
     if suffix == ".pdf":
         from pypdf import PdfReader
@@ -71,17 +116,17 @@ def _table(path: Path):
                             )
                         yield [text]
 
-                yield ["text"], text_pages(), "text_pages"
+                yield ["text"], text_pages(), "text_pages", None
         except (PdfReadError, DependencyError) as exc:
             raise ValueError("PDF text could not be measured") from exc
         return
     if suffix in {".xml", ".json"}:
         with path.open(encoding="utf-8-sig") as handle:
-            yield ["document"], ([handle.read()],), "documents"
+            yield ["document"], ([handle.read()],), "documents", None
         return
     if suffix in {".txt", ".md", ".jsonl"}:
         with path.open(encoding="utf-8-sig") as handle:
-            yield ["text"], ([line.rstrip("\r\n")] for line in handle), "lines"
+            yield ["text"], ([line.rstrip("\r\n")] for line in handle), "lines", None
         return
     raise ValueError("No source measurement adapter for this format")
 
@@ -117,7 +162,7 @@ def measure_source(
         "measurement_error": None,
     }
     try:
-        with _table(path) as (header, rows, unit):
+        with _table(path) as (header, rows, unit, _):
             quantity = 0
             cells = 0
             for row in rows:
@@ -165,7 +210,7 @@ def read_selection(
     stop = (
         source["quantity"] if limit is None else min(source["quantity"], start + limit)
     )
-    with _table(path) as (header, rows, unit):
+    with _table(path) as (header, rows, unit, source_format):
         selected_columns = list(range(len(header))) if columns is None else columns
         if not selected_columns:
             raise ValueError("Read must select at least one source column")
@@ -186,10 +231,12 @@ def read_selection(
                     "Selected data exceeds the host output limit; select fewer units or columns"
                 )
             selected_rows.append(selected)
-    data = {
+    data: dict[str, Any] = {
         "columns": [header[index] for index in selected_columns],
         "rows": selected_rows,
     }
+    if source_format is not None:
+        data["source_format"] = source_format
     evidence = {
         "source_id": source["source_id"],
         "source_sha256": source["sha256"],

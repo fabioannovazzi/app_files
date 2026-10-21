@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-avviso-intake/SKILL.md",
-      "sha256": "f0fbec402f114c2f539f3f2230b7ad9715a1f1594ce7e4838080d86f71baadf2"
+      "sha256": "ce93360327e5001159c909eb77e58e49839213dd97ff990aed08c452112a8a74"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-avviso-intake/SKILL.md",
-      "sha256": "37d759a90757eb3d5650baacdfac03ce5646263fd3f02e3a83b1cec2765ba161"
+      "sha256": "1f0f8ce97f03e6c4141555b07ad5f46ae3d83e7f7e34ca27f62f75c039190478"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

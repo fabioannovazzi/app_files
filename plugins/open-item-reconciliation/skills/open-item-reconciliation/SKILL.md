@@ -87,7 +87,7 @@ files.
 
 For ordinary header-based CSV and XLSX exports, use the maintained
 `reviewed_tabular_accounting_v1` adapter with an explicit reviewed `tabular`
-layout. Read `references/tabular-source-layout.md` before qualifying these
+layout. Read `../../references/tabular-source-layout.md` before qualifying these
 files. Codex reviews the actual headers, table bounds, source role, evidence
 meaning and perimeter; the parser does not infer them. It supports open-item,
 bank and journal tables, preserves source rows and critical dates, reads native
@@ -335,13 +335,13 @@ the tool is available, native Plan-mode choices for small intake decisions.
 
 ## Starter Prompt Bank
 
-Load `references/starter-prompts.md` for beta-facing prompt examples. Keep this `SKILL.md` focused on routing, guardrails, first-run flow, dependency checks, deterministic workflow ownership, feedback, and packaging.
+Load `../../references/starter-prompts.md` for beta-facing prompt examples. Keep this `SKILL.md` focused on routing, guardrails, first-run flow, dependency checks, deterministic workflow ownership, feedback, and packaging.
 
 ## Evidence Standards, Data, And Checks
 
-Load `references/evidence-and-checks.md` when deciding evidence strength, canonical fields, source roles, or deterministic accounting checks.
+Load `../../references/evidence-and-checks.md` when deciding evidence strength, canonical fields, source roles, or deterministic accounting checks.
 
-Load `references/workflow-reference.md` for the exact source-decision contract,
+Load `../../references/workflow-reference.md` for the exact source-decision contract,
 receipt replay points, gate meanings, and promotion rules.
 
 Core rule: row-level classifications must be supported by deterministic evidence and preserved source references. Candidate allocations and aggregate roll-forward checks may guide review, but they must not close individual rows unless a deterministic rule connects row-level evidence.
@@ -407,7 +407,9 @@ Useful helper scripts include:
 
 - `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
   CLI requires the exact Studio Archive `--client-engagement` context and
-  `--assumptions-json`;
+  `--assumptions-json`. Save this agent-generated configuration in the selected
+  run's output directory before invoking the helper; a chat-workspace file is
+  outside that run and is not an imported client source;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.
@@ -435,7 +437,10 @@ The maintained raw runner automatically submits unresolved items and unused bank
 evidence to bounded semantic workers after source mapping. The shared host policy
 selects a suitable low-cost model from actual harness capabilities. Keep the main
 chat's model; do not create visible per-case chats or ask the user to select routine
-technical mappings. A missing verified host invocation path is reported explicitly.
+technical mappings. In Cowork or Antigravity, complete `NATIVE_WORKER_PENDING`
+using `../../../journal-bank-reconciliation/skills/journal-bank-reconciliation/references/native-host-workers.md`,
+then resume the same command and deliver the regenerated result. Missing actual
+host capabilities remain explicit; do not ask the user to perform the handoff.
 
 Models interpret references, descriptions, counterparties and competing matches.
 The engine verifies quoted evidence, exact amounts, accounting perimeters and no
@@ -451,15 +456,16 @@ make a match. No worker output constitutes professional adoption or approval.
 The full packet remains local except for the selected host model submission;
 its populated mapped fields include business document identifiers, descriptions,
 parties, dates, amounts and opaque linkage IDs. It is not anonymized. Paths and
-unmapped columns are excluded. The main chat receives status and counts, not the
-whole retained packet. A complete currency/entity perimeter is never silently
+unmapped columns are excluded. In Codex the main chat receives status and counts.
+In Cowork and Antigravity the parent reads the bounded request to dispatch its
+native child, so those mapped fields enter both contexts; host transcripts may persist. A complete currency/entity perimeter is never silently
 truncated to fit a worker; an oversized perimeter is explicitly deferred.
 
 ## Review, Outputs, Locales, And Wording
 
-Load `references/review-and-outputs.md` when producing workpapers, reviewing deterministic classifications, or preparing operational follow-up requests.
+Load `../../references/review-and-outputs.md` when producing workpapers, reviewing deterministic classifications, or preparing operational follow-up requests.
 
-Load `references/locales-and-wording.md` when choosing language settings or writing localized evidence requests.
+Load `../../references/locales-and-wording.md` when choosing language settings or writing localized evidence requests.
 
 Before delivery, Codex must review the deterministic output, preserve limitations, and avoid exposing internal status/rule labels in client-facing requests.
 

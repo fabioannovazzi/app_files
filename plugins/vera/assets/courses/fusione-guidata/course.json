@@ -115,7 +115,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "181123d87c5deda2628f1d961f95fa33c0ae4c318356ca3301a3d9383adc4c9a"
+      "sha256": "8fcc3d35faac84d0f0c70c022456db2214b14bc1dc8f42edbb853317ac179e27"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -130,7 +130,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/run_reporting.py",
       "repository_path": "plugins/studio-archive/scripts/run_reporting.py",
-      "sha256": "0d13c393bb3e58c348d91196e9f0a1f20c22c275b933606e350b05e95ad9763b"
+      "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/selective_reporting.py",

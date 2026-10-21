@@ -18,8 +18,8 @@ def customize_review(html: str) -> str:
         ).decode("ascii")
         css += f'\n@font-face {{font-family:"Instrument Sans";font-style:normal;font-weight:{weight};src:url(data:font/ttf;base64,{encoded}) format("truetype");}}'
     javascript = (assets / "open_item.js").read_text(encoding="utf-8")
-    # Replace complete top-level functions only; retain the shared persistence,
-    # validation, recovery and event handlers unchanged.
+    # Replace complete top-level functions only. The accounting overrides also
+    # bind browser-draft recovery to its original saved-decision baseline.
     functions = re.findall(
         r"^    function (\w+)\([^\n]*.*?(?=^    function |\Z)",
         javascript,

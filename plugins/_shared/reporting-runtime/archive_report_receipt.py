@@ -13,6 +13,7 @@ import sys
 import urllib.error
 import urllib.parse
 import urllib.request
+from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 from uuid import UUID, uuid5
@@ -250,7 +251,12 @@ def _retry_one(registry: Registry, root: Path) -> None:
         registry.receipt_result(root, result["server_receipt"]["status"])
 
 
-def verify_report(report_path: Path, *, user_id: str) -> dict[str, Any]:
+def verify_report(
+    report_path: Path,
+    *,
+    user_id: str,
+    opener: Callable[..., Any] | None = None,
+) -> dict[str, Any]:
     """Verify this file against the requested authenticated machine's retained proof."""
     request = _request(report_path, persist=False)
     if str(UUID(user_id)) != request["user_id"]:
@@ -266,7 +272,11 @@ def verify_report(report_path: Path, *, user_id: str) -> dict[str, Any]:
     from operational_incidents import _NoRedirect
 
     url = f"{_SERVER}/api/vera/run-receipts/{request['receipt_id']}?{query}"
-    with urllib.request.build_opener(_NoRedirect()).open(url, timeout=8) as response:
+    get = urllib.request.Request(
+        url, headers={"Accept": "application/json"}, method="GET"
+    )
+    open_request = opener or urllib.request.build_opener(_NoRedirect()).open
+    with open_request(get, timeout=8) as response:
         raw = response.read(65537)
     if len(raw) > 65536:
         raise ValueError("Receipt response exceeds its size limit")

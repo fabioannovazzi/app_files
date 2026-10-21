@@ -232,6 +232,66 @@ Never infer the client from a filename or silently create a client.
 
 Use this exact chat workflow whenever a professional starts client work:
 
+## Check supplied files before starting client work
+
+Select the exact files needed for this request. Folder access does not select
+all its contents: if the task needs two files in a folder containing four, use
+only those two. Resolve genuinely ambiguous choices with the user; reuse clear
+choices without another confirmation.
+
+Before parsing documents or creating a client, engagement or run, call
+`check_studio_import_sources` with all selected paths on the actual importer
+host. It needs no configured Archive and creates no records. If the MCP tool is
+unavailable, use the packaged `check-import-sources --source-path <path>` CLI
+through the maintained managed launcher on that same host (repeat the flag per
+file). A cloud-shell `ls` is not proof of access by a computer-side importer.
+Readable attachments, including `/mnt/user-data/uploads/` paths when the importer
+can read them, continue directly without requiring a connected computer folder.
+
+If files are unavailable, explain the cause immediately before creating anything:
+"The file is in the chat, but the import tool looks for it on your computer."
+Do not keep trying that same inaccessible path. Use this recovery sequence:
+
+1. Inspect the host's actual callable file-transfer capabilities and the already
+   connected folders. Reuse an authorized ordinary working folder outside the
+   managed `Vera/engagements/.../inputs` tree. Offer **Add folder** from the **+**
+   menu only when the current host offers it; otherwise explain the available
+   connection method. Ask for a folder only if an accessible destination is needed.
+2. With a supported bridge, copy only the selected original attachments to that
+   folder as files. Compute each original SHA-256 through the host file tools.
+   Do not recreate CSV text, convert encodings or line endings, relay document
+   contents through model-authored tool arguments, guess a mount translation,
+   overwrite a different file with the same name, or scan unrelated folders.
+   A verified byte-for-byte copy may reuse its destination on retry.
+3. Check the actual destination paths with `check_studio_import_sources`, passing
+   `expected_sha256` as the original hashes in the same order as `source_paths`.
+   The CLI takes one `--expected-sha256` per source. Archive hashes the destination
+   locally and returns `ready=true` only when all supplied original hashes match.
+   If no byte-preserving host transfer is available, say so and ask the user to
+   save the original selected files to the accessible working folder; then verify
+   them. Do not promise a bridge operation that is not callable.
+4. Only after all selected sources are ready, select/create the client and
+   engagement and import each through `import_studio_client_document` (CLI
+   `import-document`). Pass that file's `expected_sha256` / `--expected-sha256`
+   when a transfer was required. The importer checks it again during copying and
+   creates the input ID and SHA receipt itself. Never manually populate `inputs`.
+
+The path importer does not itself fetch chat attachments. Direct attachment use
+requires actual importer access or a demonstrated host transfer. If neither an
+importer-side check nor transfer is callable, explain the missing capability
+before creating records; do not create a cloud-only replacement for a local Archive.
+
+On any later import failure, disclose the existing `client_id` and `engagement_id`
+and resume those same records. A folder-name collision calls for inspecting the
+returned existing scope and reusing it when its identity matches; never clear old
+folders or change the client's name just to get past the error. A deliberately
+separate synthetic test may have a distinct name; retries retain their identities.
+Documentless client work needs no file check. Standalone workflows check access
+on their own execution host and do not require Archive or a computer folder when
+that engine can read the inputs.
+
+Continue the client workflow after the input checks above:
+
 1. Call `list_studio_archive_clients`. It returns safe client directory rows
    with stable IDs, display labels, status, and counts of private identity
    values; it does not return stored emails, legal names, or tax identifiers.
@@ -286,17 +346,34 @@ Use this exact chat workflow whenever a professional starts client work:
    input set.
 9. For Vera, the fixed 13 pipelines in `scripts/selective_reporting.py` receive
    one report for every run. Start initializes it automatically. Use
-   `read_studio_run_artifact` for exact selections from the bound inputs; trusted
-   host hooks record actual returned data and supported direct reads. No agent
+   `read_studio_run_artifact` for exact selections from the bound inputs.
+   Vera-owned tool and CLI boundaries record their actual returns; host shell,
+   browser, rendering and other tools are not observed. No agent
    prepares phase counts or `model_data_report_input.json`. Missing observations
    leave an explicitly incomplete report; full exposure still produces a report.
    Call `finalize_studio_client_workflow` with declarations for professional
-   outputs. Archive adds report artifacts and seals the review-ready outputs.
+   outputs. Declare each path relative to the prepared `output_dir`, for example
+   `result.pdf`. Absolute paths inside that folder and run-relative
+   `outputs/result.pdf` are also accepted; an existing output-relative path
+   takes precedence. Archive saves canonical output-relative paths, adds report
+   artifacts and seals the review-ready outputs.
+   Keep the returned `declaration_sha256`. Before completion, the agent may
+   correct purpose, audience or media type by calling the same tool with the
+   complete declaration list and `expected_declaration_sha256` set to that value.
+   This records the correction while retaining prior receipts; it does not
+   reopen calculations or require human approval. It cannot replace file bytes,
+   paths or artifact IDs. If another review changed the declarations, read its
+   current result before deciding how to reconcile the difference.
    Collection continues through review. `complete_studio_client_workflow`, failure
-   or cancellation writes end the run and finalize the report after the enclosing
-   tool result has been observed. The report remains local; the authenticated
+   or cancellation writes end the run and finalize the report at the terminal
+   ledger write. Failed run-bound Archive responses are retained too; unknown
+   diagnostic content keeps measurement incomplete. The report remains local; the authenticated
    server proof binds its hash to this Archive run, revision and existing Vera
    userID. Receipt retries preserve professional output bytes and the report hash.
+   Show the returned `reporting.display_markdown` in the final answer. If local
+   reporting is unavailable but `run_status_saved` is true, distinguish the saved
+   work from its pending report. Retry reporting for that same run without
+   repeating calculation, replacing the run or describing an older draft as final.
    If transmission is prohibited, save `model_data_report_options.json` with
    `{"local_only": true}` before the terminal write. Other products retain their
    own report requirements.
@@ -405,7 +482,7 @@ batch has the same exact byte selection as an earlier run, with a new
 
 Users do not operate the CLI. If Codex must use the internal fallback, the
 corresponding commands are `setup`, `clients`, `resolve-client`, `configure-client`, `create-client`,
-`create-engagement`, `import-document`, `engagements`, `prepare-workflow`, and
+`create-engagement`, `check-import-sources`, `import-document`, `engagements`, `prepare-workflow`, and
 `start-check-entries-from-sample` in `scripts/studio_archive.py`. Google Drive
 first-time setup additionally uses `authorize-google-drive --client-secrets`,
 then `google-drive-status`, `bind-google-drive`, `snapshot-google-drive`,
@@ -437,6 +514,18 @@ rewrite, reseal or replace its manifests, prepare a replacement for the same
 request, or use its inputs or outputs in another pipeline. A malformed immutable
 run header also blocks new preparation when its prior request identity cannot
 be verified.
+
+Client discovery also returns `directory_complete`, `directory_issues`,
+`identity_registry_complete` and `identity_issues`. A damaged private alias
+record does not hide healthy portable clients. When the root cannot be listed,
+previously verified folder locations may be returned with `known_scopes_only`;
+the selected client manifest and dependencies must still validate. These
+locations are recovery hints, not a complete current directory or an index.
+Report the unavailable portion and continue with healthy selected work.
+`resolution_complete: false` means not all stored aliases were readable;
+`resolution_status: incomplete` does not establish that a client is absent.
+Use an already established stable client ID to select its validated folder.
+Never interpret partial discovery as a reason to register the same client again.
 
 Close an engagement only after every active run is completed or cancelled.
 `report_studio_client_retention` reports age, size, lifecycle, and candidates
@@ -764,6 +853,7 @@ python scripts/studio_archive.py resolve-client --identity-kind email_address \
   --identity-value amministrazione@example.com
 python scripts/studio_archive.py create-client --legal-name "Zecca SPA"
 python scripts/studio_archive.py create-engagement --client-id client_... --engagement-label "2026 audit"
+python scripts/studio_archive.py check-import-sources --source-path /absolute/path/journal.xlsx
 python scripts/studio_archive.py import-document --client-id client_... --engagement-id eng_... --source-path /absolute/path/journal.xlsx --role journal
 python scripts/studio_archive.py verify-inputs --client-id client_... --engagement-id eng_... --input-id input_...
 python scripts/studio_archive.py prepare-workflow --engagement-id eng_... --workflow-id journal-sampling --input-id input_...

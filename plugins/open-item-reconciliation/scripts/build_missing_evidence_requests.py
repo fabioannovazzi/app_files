@@ -153,6 +153,20 @@ INVENTORY_FIELDS = (
     "source_files",
     "operational_use",
 )
+REFERENCE_FIELDS = (
+    "probable_bank_reference",
+    "matched_evidence_reference",
+    "supporting_bank_reference",
+    "evidence_reference",
+    "source_reference",
+)
+DESCRIPTION_FIELDS = (
+    "probable_bank_description",
+    "matched_evidence_description",
+    "supporting_bank_description",
+    "evidence_description",
+    "description",
+)
 
 
 TEXT: dict[str, dict[str, Any]] = {
@@ -890,13 +904,7 @@ def section_for_row(row: dict[str, Any]) -> str:
 
 
 def existing_reference(row: dict[str, Any]) -> str:
-    for field in (
-        "probable_bank_reference",
-        "matched_evidence_reference",
-        "supporting_bank_reference",
-        "evidence_reference",
-        "source_reference",
-    ):
+    for field in REFERENCE_FIELDS:
         value = clean_text(row.get(field))
         if value:
             return value
@@ -908,17 +916,35 @@ def existing_reference(row: dict[str, Any]) -> str:
 
 
 def existing_description(row: dict[str, Any]) -> str:
-    for field in (
-        "probable_bank_description",
-        "matched_evidence_description",
-        "supporting_bank_description",
-        "evidence_description",
-        "description",
-    ):
+    for field in DESCRIPTION_FIELDS:
         value = clean_text(row.get(field))
         if value:
             return value
     return ""
+
+
+def _combine_origins(
+    *origins: list[dict[str, Any]] | None
+) -> list[dict[str, Any]] | None:
+    if any(origin is None for origin in origins):
+        return None
+    return [entry for origin in origins if origin is not None for entry in origin]
+
+
+def _copied_origin(row: dict[str, Any], field: str, origins: dict[str, Any]) -> Any:
+    return [] if row.get(field) in (None, "") else origins.get(field)
+
+
+def _reference_origin(row: dict[str, Any], origins: dict[str, Any]) -> Any:
+    selected = next(
+        (field for field in REFERENCE_FIELDS if clean_text(row.get(field))), None
+    )
+    if selected:
+        return _copied_origin(row, selected, origins)
+    source = _copied_origin(row, "source_file", origins)
+    if clean_text(row.get("source_file")) and clean_text(row.get("workbook_row")):
+        return _combine_origins(source, _copied_origin(row, "workbook_row", origins))
+    return source
 
 
 def available_text(
@@ -957,6 +983,8 @@ def request_row(
     counterparty_name: str,
     cutoff_date: object,
     language: object,
+    source_origins: dict[str, Any] | None = None,
+    field_origins: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     texts = text_for(language)
     result = {
@@ -981,6 +1009,31 @@ def request_row(
         "requested_action": requested_action(section, language=language),
         "evidence_description": existing_description(row),
     }
+    origins = source_origins or {}
+    reference_origin = _reference_origin(row, origins)
+    if field_origins is not None:
+        # These fields are created from this module's templates and run settings.
+        field_origins.update({field: [] for field in REQUEST_FIELDS})
+        for target, source in {
+            "row_id": "record_id",
+            "side": "expected_side",
+            "document": "document_no",
+            "document_date": "document_date",
+            "amount": "amount",
+        }.items():
+            field_origins[target] = _copied_origin(row, source, origins)
+        field_origins["existing_reference"] = reference_origin
+        field_origins["available_evidence"] = reference_origin
+        description = next(
+            (field for field in DESCRIPTION_FIELDS if clean_text(row.get(field))), None
+        )
+        field_origins["evidence_description"] = (
+            _copied_origin(row, description, origins) if description else []
+        )
+        if clean_text(entity_name) or (
+            section == "open_balance_confirmation" and clean_text(counterparty_name)
+        ):
+            field_origins["operational_owner"] = None
     if clean_text(row.get("reconciliation_status")) == "partially_paid":
         paid = format_decimal(row.get("allocated_amount"))
         residual = format_decimal(row.get("residual_amount"))
@@ -1015,6 +1068,14 @@ def request_row(
             )
         result["targeted_missing_item"] = action.format(residual=residual)
         result["requested_action"] = result["targeted_missing_item"]
+        if field_origins is not None:
+            residual_origin = _copied_origin(row, "residual_amount", origins)
+            field_origins["amount"] = residual_origin
+            field_origins["available_evidence"] = _combine_origins(
+                _copied_origin(row, "allocated_amount", origins), reference_origin
+            )
+            field_origins["targeted_missing_item"] = residual_origin
+            field_origins["requested_action"] = residual_origin
     if clean_text(row.get("rule_applied")) == "accounting_perimeter_mismatch":
         actions = {
             "it": "Il candidato non rispetta il perimetro verificato (soggetto, controparte, valuta o unità). Confermare i dati delle due fonti e fornire il riscontro documentale necessario; importi numericamente uguali non dimostrano la chiusura.",
@@ -1025,6 +1086,9 @@ def request_row(
         }
         result["targeted_missing_item"] = actions[normalize_language(language)]
         result["requested_action"] = result["targeted_missing_item"]
+        if field_origins is not None:
+            field_origins["targeted_missing_item"] = []
+            field_origins["requested_action"] = []
     return result
 
 
@@ -1089,6 +1153,8 @@ def build_missing_evidence_request_pack(
     counterparty_name: str = "",
     cutoff_date: object = "",
     language: object = "it",
+    source_origins: dict[str, dict[str, dict[str, Any]]] | None = None,
+    projection_rows: dict[str, list[dict[str, Any]]] | None = None,
 ) -> MissingEvidenceRequestPack:
     """Build a localized operational request pack from technical workpaper rows."""
 
@@ -1096,10 +1162,15 @@ def build_missing_evidence_request_pack(
     request_sections: dict[str, list[dict[str, Any]]] = {
         section: [] for section in SECTION_ORDER
     }
+    origins = source_origins or {}
+    section_origins: dict[str, list[dict[str, Any]]] = {
+        section: [] for section in SECTION_ORDER
+    }
     for row in reconciliation_rows:
         section = section_for_row(row)
         if not section:
             continue
+        request_origins: dict[str, Any] = {}
         request = request_row(
             row,
             section=section,
@@ -1107,6 +1178,10 @@ def build_missing_evidence_request_pack(
             counterparty_name=counterparty_name,
             cutoff_date=cutoff_date,
             language=output_language,
+            source_origins=origins.get("Reconciliation detail", {}).get(
+                str(row.get("record_id")), {}
+            ),
+            field_origins=request_origins,
         )
         later = [
             candidate
@@ -1151,8 +1226,29 @@ def build_missing_evidence_request_pack(
                 cutoff=clean_text(cutoff_date) or "cut-off"
             )
             request["requested_action"] = request["targeted_missing_item"]
+            later_origins = _combine_origins(
+                *[
+                    _copied_origin(
+                        item,
+                        "evidence_date",
+                        origins.get("Post-cutoff candidates", {}).get(
+                            str(item.get("candidate_id")), {}
+                        ),
+                    )
+                    for item in later
+                ]
+            )
+            request_origins["available_evidence"] = _combine_origins(
+                request_origins["available_evidence"], later_origins
+            )
+            request_origins["existing_reference"] = _combine_origins(
+                request_origins["existing_reference"], later_origins
+            )
+            request_origins["targeted_missing_item"] = []
+            request_origins["requested_action"] = []
         request_sections[section].append(request)
-    return MissingEvidenceRequestPack(
+        section_origins[section].append(request_origins)
+    pack = MissingEvidenceRequestPack(
         language=output_language,
         instructions=build_instructions(
             entity_name=entity_name,
@@ -1168,6 +1264,34 @@ def build_missing_evidence_request_pack(
         ),
         request_sections=request_sections,
     )
+    if projection_rows is not None:
+        projection_rows.update(section_origins)
+        projection_rows["instructions"] = [
+            {"principle": [], "guidance": []},
+            {"principle": [], "guidance": []},
+            {
+                "principle": [],
+                "guidance": (
+                    None
+                    if clean_text(entity_name) or clean_text(counterparty_name)
+                    else []
+                ),
+            },
+        ]
+        projection_rows["summary"] = [
+            {
+                "section": [],
+                "rows": [],
+                "amount_total": _combine_origins(
+                    *[row["amount"] for row in section_origins[section]]
+                ),
+            }
+            for section in SECTION_ORDER
+        ]
+        projection_rows["inventory"] = [
+            {field: [] for field in INVENTORY_FIELDS} for row in pack.evidence_inventory
+        ]
+    return pack
 
 
 def sheet_headers(
@@ -1187,14 +1311,28 @@ def write_sheet(
     fields: tuple[str, ...],
     *,
     language: object,
+    projection_rows: list[dict[str, Any]] | None = None,
+    projection_cells: list[list[list[dict[str, Any]] | None]] | None = None,
 ) -> None:
     texts = text_for(language)
     sheet = workbook.create_sheet(title=name[:31])
     keys = sheet_headers(rows, fields)
     display_headers = [texts["headers"].get(key, key) for key in keys]
     sheet.append(display_headers)
-    for row in rows:
-        sheet.append([row.get(key, "") for key in keys])
+    if projection_cells is not None:
+        projection_cells.append([[] for key in keys])
+    for index, row in enumerate(rows):
+        values = [row.get(key, "") for key in keys]
+        sheet.append(values)
+        if projection_cells is not None and any(
+            value not in (None, "") for value in values
+        ):
+            origins = (
+                projection_rows[index]
+                if projection_rows is not None and index < len(projection_rows)
+                else {}
+            )
+            projection_cells.append([_copied_origin(row, key, origins) for key in keys])
     fill = PatternFill(fill_type="solid", fgColor=HEADER_FILL)
     for cell in sheet[1]:
         cell.fill = fill
@@ -1222,6 +1360,9 @@ def write_sheet(
 def write_missing_evidence_workbook(
     path: str | Path,
     pack: MissingEvidenceRequestPack,
+    *,
+    projection_rows: dict[str, list[dict[str, Any]]] | None = None,
+    projection_cells: list[list[list[dict[str, Any]] | None]] | None = None,
 ) -> Path:
     """Write the localized targeted request workbook."""
 
@@ -1231,12 +1372,16 @@ def write_missing_evidence_workbook(
     workbook.remove(workbook.active)
     texts = text_for(pack.language)
     sheet_names = texts["sheet_names"]
+    origins = projection_rows or {}
+    cells: list[list[list[dict[str, Any]] | None]] = []
     write_sheet(
         workbook,
         sheet_names["instructions"],
         pack.instructions,
         INSTRUCTION_FIELDS,
         language=pack.language,
+        projection_rows=origins.get("instructions"),
+        projection_cells=cells,
     )
     write_sheet(
         workbook,
@@ -1244,6 +1389,8 @@ def write_missing_evidence_workbook(
         pack.summary,
         SUMMARY_FIELDS,
         language=pack.language,
+        projection_rows=origins.get("summary"),
+        projection_cells=cells,
     )
     write_sheet(
         workbook,
@@ -1251,6 +1398,8 @@ def write_missing_evidence_workbook(
         pack.evidence_inventory,
         INVENTORY_FIELDS,
         language=pack.language,
+        projection_rows=origins.get("inventory"),
+        projection_cells=cells,
     )
     for section in SECTION_ORDER:
         write_sheet(
@@ -1259,8 +1408,15 @@ def write_missing_evidence_workbook(
             pack.request_sections.get(section, []),
             REQUEST_FIELDS,
             language=pack.language,
+            projection_rows=origins.get(section),
+            projection_cells=cells,
         )
     workbook.save(output_path)
+    if projection_cells is not None:
+        width = max(sheet.max_column for sheet in workbook)
+        projection_cells.extend(
+            row + [[] for _ in range(width - len(row))] for row in cells
+        )
     return output_path
 
 

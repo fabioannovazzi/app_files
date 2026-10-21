@@ -134,6 +134,55 @@ def output(result):
     return result["structuredContent"]["output"]
 
 
+@pytest.mark.parametrize("extra_arguments,expected_code", [([], 0), (["--fail"], 7)])
+def test_closed_connection_retains_worker_code_then_releases_temporary_copies(
+    installed, tmp_path, extra_arguments, expected_code
+):
+    temporary = tmp_path / "execution-temporary"
+    temporary.mkdir()
+    env = {
+        **environment(tmp_path),
+        "TMPDIR": str(temporary),
+        "TMP": str(temporary),
+        "TEMP": str(temporary),
+    }
+    args = request(
+        tmp_path,
+        arguments=[str(tmp_path / "counter"), "0.3", *extra_arguments],
+        wait_seconds=0,
+    )
+    message = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "vera_execute", "arguments": args},
+    }
+
+    result = subprocess.run(
+        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        input=json.dumps(message) + "\n",
+        text=True,
+        capture_output=True,
+        env=env,
+        timeout=15,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert output(json.loads(result.stdout)["result"])[0]["state"] == "running"
+    retained = json.loads(
+        (
+            tmp_path
+            / "incidents/helper-diagnostics/executions"
+            / args["job_id"]
+            / "result.json"
+        ).read_text()
+    )
+    assert retained["returncode"] == expected_code
+    assert (tmp_path / "counter").read_text() == "run\n"
+    assert list(temporary.iterdir()) == []
+    assert (installed / "scripts/native_execution.py").is_file()
+
+
 def test_native_helper_retains_diagnostics_and_runs_once_across_service_restart(
     installed, tmp_path
 ):

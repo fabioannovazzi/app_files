@@ -3,6 +3,7 @@
 const crypto = require("node:crypto");
 const childProcess = require("node:child_process");
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const readline = require("node:readline");
 
@@ -213,6 +214,12 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "bank_date",
   "description",
   "counterparty",
+  "party_ref",
+  "allocated_amount",
+  "residual_amount",
+  "supporting_bank_date",
+  "supporting_bank_amount",
+  "supporting_bank_description",
   "beneficiary",
   "deterministic_status",
   "reconciliation_status",
@@ -1097,7 +1104,108 @@ function modelContextIndex(token, context) {
     },
     message:
       "The complete review payload remains in component-only metadata. Use opaque case handles to request selected semantic context.",
+    _private_source_records: [],
+    _private_source_review_sha256: modelContextReviewDigest(context.privatePayload.review_payload),
   };
+}
+
+function modelContextReviewDigest(value) {
+  return crypto.createHash("sha256")
+    .update(auditReviewStableJson(value) + "\n", "utf8").digest("hex");
+}
+
+function decisionArtifactProjections(result, review, previousStatusSha256) {
+  const projections = [];
+  if (!result.persisted) return projections;
+  if (previousStatusSha256 && result.final_artifacts_path
+      && result.blocker_count === 0 && result.final_artifacts?.blockers?.length === 0) {
+    projections.push({
+      path: result.final_artifacts_path,
+      data_sha256: modelContextReviewDigest(result.final_artifacts),
+      artifact_sha256: crypto.createHash("sha256")
+        .update(fs.readFileSync(result.final_artifacts_path)).digest("hex"),
+      records: [],
+      previous_sha256: previousStatusSha256,
+    });
+  }
+  if (!result.ui_decisions_path || !result.ui_decisions) return projections;
+  const items = new Map(review.items.map((item) => [item.id, item]));
+  const statusFields = new Set(["item_id", "item_type", "title", "action", "status", "decided_at"]);
+  const records = [];
+  for (const decision of result.ui_decisions.decisions) {
+    const item = items.get(decision.item_id);
+    if (!item || decision.title !== item.title
+        || Object.keys(decision).some((key) => !statusFields.has(key))
+        || !Array.isArray(item._title_source_records)) return projections;
+    records.push(...item._title_source_records);
+  }
+  projections.push({
+    path: result.ui_decisions_path,
+    data_sha256: modelContextReviewDigest(result.ui_decisions),
+    artifact_sha256: crypto.createHash("sha256")
+      .update(fs.readFileSync(result.ui_decisions_path)).digest("hex"),
+    records,
+  });
+  return projections;
+}
+
+function modelContextSourceRecords(item, semanticFields, evidence, context) {
+  // Mirror explicit producer field transformations. Unknown fields and supplied
+  // review notes remain unmeasured; never infer their sources from text values.
+  const fields = new Set([
+    ...Object.keys(semanticFields),
+    ...evidence.flatMap((entry) => Object.keys(entry)),
+  ]);
+  const generatedFields = new Set([
+    "kind", "status", "rule", "evidence_level", "matched_evidence_type",
+    "review_status", "review_selection_reason", "review_flags", "review_instruction",
+    "deterministic_status", "reconciliation_status", "deterministic_rule", "rule_applied",
+    "deterministic_evidence_level", "matched_evidence_reference",
+  ]);
+  const sourceFields = new Set([
+    "amount", "balance", "currency", "document_no", "document_date", "posting_date",
+    "due_date", "description", "party_ref",
+  ]);
+  const data = item.data || {};
+  if (item.item_type === "check_exception" && data.check === "codex_review_completed") {
+    // Exact mode also returns the producer's pending-row locator list. Verify
+    // those locators against the same private review; arbitrary notes remain
+    // unmeasured. Locators and counts do not expose source-cell values.
+    const countFields = new Set(["check", "kind", "status", "actual", "expected"]);
+    const pendingIds = new Set([...context.handles.values()]
+      .filter((entry) => ["", "PENDING"].includes(entry.data?.review_status || ""))
+      .map((entry) => entry.data?.record_id)
+      .filter((recordId) => typeof recordId === "string"));
+    if (typeof data.note === "string" && data.note.length > 0) {
+      const locators = data.note.split("; ");
+      const emittedNotes = [semanticFields.note, ...evidence.map((entry) => entry.note)]
+        .filter((note) => note !== undefined);
+      if (locators.length === Math.min(data.actual, 10)
+          && new Set(locators).size === locators.length
+          && locators.every((locator) => pendingIds.has(locator))
+          && emittedNotes.every((note) => note === data.note)) countFields.add("note");
+    }
+    if ([...fields].every((field) => countFields.has(field)) &&
+        Number.isInteger(data.actual) && Number.isInteger(data.expected)) return [];
+  }
+  if (!data.record_id) return null;
+  const source = new Set();
+  const bank = new Set();
+  for (const field of fields) {
+    if (generatedFields.has(field)) continue;
+    if (sourceFields.has(field)) source.add(field);
+    else if (field === "supporting_bank_date") bank.add("posting_date");
+    else if (field === "supporting_bank_description") bank.add("description");
+    else if (["supporting_bank_amount", "allocated_amount"].includes(field)) bank.add("amount");
+    else if (field === "residual_amount") {
+      source.add("balance"); bank.add("amount");
+    } else return null;
+  }
+  if (bank.size && !data.supporting_bank_record_id) return null;
+  return [
+    { record_id: data.record_id, fields: [...source] },
+    ...(bank.size ? [{ record_id: data.supporting_bank_record_id, fields: [...bank] }] : []),
+  ];
 }
 
 function modelContextCases(args) {
@@ -1118,6 +1226,8 @@ function modelContextCases(args) {
       allowedDataFields.add(field);
     }
   }
+  const sourceRecords = [];
+  let sourceRecordsComplete = true;
   const cases = args.case_handles.map((handle, index) => {
     if (typeof handle !== "string" || !context.handles.has(handle)) {
       throw new Error(`case_handles[${index}] is unknown for this review`);
@@ -1129,6 +1239,9 @@ function modelContextCases(args) {
       semanticFields,
       includeExactIdentifiers,
     );
+    const records = modelContextSourceRecords(item, semanticFields, evidence, context);
+    if (records === null) sourceRecordsComplete = false;
+    else sourceRecords.push(...records);
     return {
       case_handle: handle,
       item_type: item.item_type,
@@ -1165,6 +1278,10 @@ function modelContextCases(args) {
     throw new Error(
       `selected case context exceeds ${MAX_MODEL_CONTEXT_BYTES} bytes; request fewer cases`,
     );
+  }
+  if (sourceRecordsComplete) {
+    result._private_source_records = sourceRecords;
+    result._private_source_review_sha256 = modelContextReviewDigest(context.privatePayload.review_payload);
   }
   return result;
 }
@@ -2284,8 +2401,14 @@ function auditReviewCanonicalSha256(value) {
 }
 
 function auditReviewPythonCandidates() {
+  const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
+    : path.join(os.homedir(), ".local/share/mparanza/runtime"));
+  const managed = path.join(runtimeRoot, "venv",
+    process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
   const candidates = [
     process.env.OPEN_ITEM_RECONCILIATION_PYTHON,
+    fs.existsSync(managed) ? managed : null,
     process.env.VIRTUAL_ENV
       ? path.join(
           process.env.VIRTUAL_ENV,
@@ -2369,6 +2492,7 @@ function auditReviewPythonBridge(command, outputDir, ...args) {
         maxBuffer: 64 * 1024 * 1024,
         timeout: 120_000,
         windowsHide: true,
+        env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
       },
     );
     if (replay.error?.code === "ENOENT") continue;
@@ -2396,7 +2520,7 @@ function auditReviewReplayAssuranceWithPython(
   outputDir,
   expectedPredecessorCheckpoint,
 ) {
-  const bridgeArgs = [];
+  const bridgeArgs = ["--private-review-bridge"];
   if (expectedPredecessorCheckpoint) {
     bridgeArgs.push(
       "--expected-predecessor-checkpoint",
@@ -2732,6 +2856,9 @@ function auditReviewParentWritePaths(
   for (const relativePath of state.expectedTransitionHistoryPaths || []) {
     paths.add(generatedReviewCanonicalRelativePath(relativePath));
   }
+  for (const relativePath of state.expectedTransitionHistoryDirectories || []) {
+    paths.add(generatedReviewCanonicalRelativePath(relativePath));
+  }
   return Array.from(paths);
 }
 
@@ -2803,6 +2930,12 @@ function validateAuditParentTransactionState(
         throw new Error(
           "Open-item Reconciliation review transition did not close.",
         );
+      }
+    }
+    for (const relativePath of state.expectedTransitionHistoryDirectories || []) {
+      const observed = fs.lstatSync(path.join(workingOutputDir, relativePath));
+      if (!observed.isDirectory() || observed.isSymbolicLink()) {
+        throw new Error("Open-item Reconciliation retained directory did not close.");
       }
     }
     if (state.expectedReviewHandoffContent != null) {
@@ -2961,9 +3094,12 @@ function validateAuditReconciliationReviewTransaction(
           ? path.join(canonicalOutputDir, "professional_review.json")
           : null,
       run_intake_path: path.join(canonicalOutputDir, "run_intake.json"),
-      message: isSpanishRuntime(inputArgs)
+      message: persistedAppliedDecisions.application_status === "awaiting_regeneration"
+        ? persistedFinalArtifacts.next_actions[0]
+        : isSpanishRuntime(inputArgs)
         ? `Se han aplicado ${persistedAppliedDecisions.decision_count} decisiones de Open-item Reconciliation.`
         : `Applied ${persistedAppliedDecisions.decision_count} Open-item Reconciliation decisions.`,
+      ui_decisions: persistedUiDecisions,
       applied_decisions: persistedAppliedDecisions,
       final_artifacts: persistedFinalArtifacts,
     };
@@ -3872,10 +4008,10 @@ function nativeRegenerationPathsForEffect(effect) {
   return Array.from(new Set(paths.map(artifactPathKey).filter(Boolean)));
 }
 
-function completionBlockers(reviewPayload, effects, successorReplayed = false) {
+function completionBlockers(reviewPayload, effects, successorReplayed = false, pendingReviewOnly = false) {
   const blockers = [];
   const summary = isPlainObject(reviewPayload.summary) ? reviewPayload.summary : {};
-  if (summary.checks_pass === false || Number(summary.failed_check_count || 0) > 0) {
+  if (!pendingReviewOnly && (summary.checks_pass === false || Number(summary.failed_check_count || 0) > 0)) {
     blockers.push({
       kind: "failed_deterministic_checks",
       detail: "Failed deterministic checks require correction and rerun.",
@@ -3884,6 +4020,7 @@ function completionBlockers(reviewPayload, effects, successorReplayed = false) {
   const effectById = new Map(effects.map((effect) => [effect.item_id, effect]));
   for (const item of reviewPayload.items || []) {
     if (!isPlainObject(item) || !REQUIRED_REVIEW_ITEM_TYPES.has(item.item_type)) continue;
+    if (pendingReviewOnly && item.item_type === "check_exception" && item.data?.check === "codex_review_completed") continue;
     const effect = effectById.get(item.id);
     if (!effect) {
       blockers.push({
@@ -3907,10 +4044,13 @@ function completionBlockers(reviewPayload, effects, successorReplayed = false) {
   return blockers;
 }
 
-function statusFromEffects(effects, itemCount, completionGateBlockers) {
+function statusFromEffects(effects, itemCount, completionGateBlockers, canRegenerate = false) {
   if (!effects.length) return "pending_review";
   if (effects.some((effect) => effect.requires_followup)) return "blocked";
-  if (completionGateBlockers.length) return "blocked";
+  if (completionGateBlockers.length) {
+    if (canRegenerate && completionGateBlockers.every((entry) => entry.kind === "assurance_replay_required")) return "awaiting_regeneration";
+    return "blocked";
+  }
   if (effects.some((effect) => effect.requires_native_regeneration)) return "partial_review_applied";
   if (effects.length < itemCount) return "partial_review_applied";
   return "final_ready";
@@ -4051,6 +4191,7 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
+    pending_steps: appliedDecisions.pending_steps || [],
     next_actions: nextActionsWithReviewApplication(
       current.next_actions,
       appliedDecisions,
@@ -4059,6 +4200,14 @@ function finalArtifactsWithApplication(
     ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
+    ...(["final_ready", "awaiting_regeneration"].includes(appliedDecisions.application_status) ? {
+      review_handoff: {
+        ...(current.review_handoff || {}),
+        status: appliedDecisions.application_status === "final_ready" ? "review_completed" : "review_applied",
+        required_before_final_delivery: false,
+        server: { ...(current.review_handoff?.server || {}), required: false },
+      },
+    } : (current.review_handoff ? { review_handoff: current.review_handoff } : {})),
     review_application: {
       applied_at: appliedDecisions.applied_at,
       application_status: appliedDecisions.application_status,
@@ -4122,6 +4271,26 @@ function nextActionsWithReviewApplication(
   blockers,
   inputArgs = {},
 ) {
+  if (appliedDecisions.application_status === "awaiting_regeneration") {
+    const actions = {
+      it: "Rigenera le carte con le decisioni registrate e verifica il nuovo risultato prima della consegna.",
+      en: "Regenerate the workpapers with the recorded decisions and verify the successor before delivery.",
+      es: "Regenere los documentos con las decisiones registradas y verifique el nuevo resultado antes de la entrega.",
+      fr: "Régénérez les documents avec les décisions enregistrées et vérifiez le nouveau résultat avant la remise.",
+      de: "Erstellen Sie die Unterlagen mit den erfassten Entscheidungen neu und prüfen Sie das neue Ergebnis vor der Übergabe.",
+    };
+    return [actions[runtimeLanguage(inputArgs)] || actions.en];
+  }
+  if (appliedDecisions.application_status === "final_ready") {
+    const actions = {
+      it: "Consegna le carte revisionate, mantenendo espliciti i residui e le richieste di evidenze ancora aperte.",
+      en: "Deliver the reviewed workpapers with their remaining balances and evidence requests explicit.",
+      es: "Entregue los documentos revisados, manteniendo explícitos los saldos y las solicitudes de evidencias pendientes.",
+      fr: "Remettez les documents révisés en indiquant les soldes et les demandes de justificatifs encore ouverts.",
+      de: "Übergeben Sie die geprüften Unterlagen mit ausdrücklich ausgewiesenen Restbeträgen und offenen Beleganforderungen.",
+    };
+    return [actions[runtimeLanguage(inputArgs)] || actions.en];
+  }
   const nextActions = Array.isArray(currentNextActions) ? [...currentNextActions] : [];
   const spanish = isSpanishRuntime(inputArgs);
   if (blockers.length) {
@@ -4135,12 +4304,6 @@ function nextActionsWithReviewApplication(
       spanish
         ? "Vuelva a generar las salidas DOCX/XLSX/PDF nativas antes de la entrega final."
         : "Regenerate native DOCX/XLSX/PDF outputs before final handoff.",
-    );
-  } else if (appliedDecisions.application_status === "final_ready") {
-    nextActions.push(
-      spanish
-        ? "Use final_artifacts.json como galería de artefactos revisados para la entrega."
-        : "Use final_artifacts.json as the reviewed artifact gallery for handoff.",
     );
   } else if (appliedDecisions.application_status === "partial_review_applied") {
     nextActions.push(
@@ -4292,19 +4455,29 @@ function applyDecisionPayloadWrites(inputArgs) {
   const nativeRegenerationPaths = Array.from(
     new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
   );
-  const completionGateBlockers = completionBlockers(
+  // Use the replayed complete result, never an accepted check card, to identify
+  // the normal review-to-regeneration transition. Final readiness stays withheld.
+  const pendingReviewOnly = assuranceReplay?.result?.review_completion_pending === true;
+  let completionGateBlockers = completionBlockers(
     reviewPayload,
     effects,
     successorReplayed,
+    pendingReviewOnly,
   );
-  const blockerCount =
-    effects.filter((effect) => effect.requires_followup).length +
-    completionGateBlockers.length;
   const applicationStatus = statusFromEffects(
     effects,
     reviewPayload.items.length,
     completionGateBlockers,
+    Boolean(professionalReview),
   );
+  let pendingSteps = [];
+  if (applicationStatus === "awaiting_regeneration") {
+    pendingSteps = completionGateBlockers;
+    completionGateBlockers = [];
+  }
+  const blockerCount =
+    effects.filter((effect) => effect.requires_followup).length +
+    completionGateBlockers.length;
   const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
@@ -4323,6 +4496,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     item_count: reviewPayload.items.length,
     blocker_count: blockerCount,
     completion_blockers: completionGateBlockers,
+    pending_steps: pendingSteps,
     revision_count: revisionOutputs.length,
     revision_paths: revisionOutputs.map((output) => output.path),
     target_update_count: targetOutputs.length,
@@ -4378,6 +4552,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     persisted = true;
   }
   let transitionHistoryPaths = [];
+  let transitionHistoryDirectories = [];
   if (transitionCaptureDir) {
     const retained = auditReviewPythonBridge(
       "retain-review-transition-json",
@@ -4386,10 +4561,11 @@ function applyDecisionPayloadWrites(inputArgs) {
       "--expected-predecessor-checkpoint",
       expectedPredecessorCheckpoint,
     );
-    if (!Array.isArray(retained.history_paths)) {
+    if (!Array.isArray(retained.history_paths) || !Array.isArray(retained.history_directories)) {
       throw new Error("Review transition replay failed.");
     }
     transitionHistoryPaths = retained.history_paths;
+    transitionHistoryDirectories = retained.history_directories;
     fs.rmSync(transitionCaptureDir, { recursive: true, force: true });
     transitionCaptureDir = null;
   }
@@ -4461,13 +4637,16 @@ function applyDecisionPayloadWrites(inputArgs) {
     final_artifacts_path: finalArtifactsPath,
     professional_review_path: professionalReviewPath,
     run_intake_path: runIntakePath,
-    message: isSpanishRuntime(materializedArgs)
+    message: responseAppliedDecisions.application_status === "awaiting_regeneration"
+      ? responseFinalArtifacts.next_actions[0]
+      : isSpanishRuntime(materializedArgs)
       ? persisted
         ? `Se han aplicado ${responseAppliedDecisions.decision_count} decisiones de Open-item Reconciliation.`
         : "Las decisiones aplicadas se han validado. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
       : persisted
         ? `Applied ${responseAppliedDecisions.decision_count} Open-item Reconciliation decisions.`
         : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+    ui_decisions: uiDecisions,
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
@@ -4481,6 +4660,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     parentState.expectedProfessionalReview =
       cloneAuditReviewTransactionValue(professionalReview);
     parentState.expectedTransitionHistoryPaths = [...transitionHistoryPaths];
+    parentState.expectedTransitionHistoryDirectories = [...transitionHistoryDirectories];
     parentState.authorizedWritePaths = auditReviewParentWritePaths(
       parentState,
       revisionOutputs,
@@ -4523,11 +4703,21 @@ function callTool(name, args = {}) {
   if (name === TOOL_NAMES.caseContext) {
     return modelContextCases(args);
   }
-  if (name === TOOL_NAMES.saveDecisions) {
-    return saveDecisionPayload(args);
-  }
-  if (name === TOOL_NAMES.applyDecisions) {
-    return applyDecisionPayload(args);
+  if ([TOOL_NAMES.saveDecisions, TOOL_NAMES.applyDecisions].includes(name)) {
+    const materialized = materializeInputArgs(args);
+    const reviewDigest = modelContextReviewDigest(materialized.review_payload);
+    const statusPath = name === TOOL_NAMES.applyDecisions
+      ? resolveFinalArtifactsOutputPath(materialized) : null;
+    const previousStatusSha256 = statusPath && fs.existsSync(statusPath)
+      ? crypto.createHash("sha256").update(fs.readFileSync(statusPath)).digest("hex") : null;
+    const result = name === TOOL_NAMES.saveDecisions
+      ? saveDecisionPayload(materialized) : applyDecisionPayload(materialized);
+    return {
+      ...result,
+      _private_source_records: [],
+      _private_source_review_sha256: reviewDigest,
+      _private_artifact_projections: decisionArtifactProjections(result, materialized.review_payload, previousStatusSha256),
+    };
   }
   throw new Error(`unknown Open-item Reconciliation widget tool: ${name}`);
 }
@@ -4538,9 +4728,23 @@ function widgetUriForPayload(payload) {
 }
 
 function toolResult(payload, toolName) {
-  const privateReviewPayload = payload?._private_review_payload || null;
+  const mutation = [TOOL_NAMES.saveDecisions, TOOL_NAMES.applyDecisions].includes(toolName);
+  const sourceRecords = payload?._private_source_records;
+  const sourceReviewSha256 = payload?._private_source_review_sha256;
+  const artifactProjections = payload?._private_artifact_projections;
   const publicPayload = { ...payload };
   delete publicPayload._private_review_payload;
+  delete publicPayload._private_source_records;
+  delete publicPayload._private_source_review_sha256;
+  delete publicPayload._private_artifact_projections;
+  const privateReviewPayload = mutation ? { ...publicPayload } : payload?._private_review_payload || null;
+  if (mutation) {
+    // The app retains full decisions and reviewer prose. The model receives the
+    // exact status/count/path response, without echoing those private objects.
+    delete publicPayload.ui_decisions;
+    delete publicPayload.applied_decisions;
+    delete publicPayload.final_artifacts;
+  }
   const result = {
     content: [{
       type: "text",
@@ -4548,7 +4752,7 @@ function toolResult(payload, toolName) {
         ok: publicPayload.ok !== false,
         run_id: publicPayload.run_id || null,
         item_count: publicPayload.item_count ?? publicPayload.case_count ?? null,
-        status: publicPayload.status || null,
+        status: publicPayload.status || publicPayload.application_status || null,
         message: publicPayload.message || null,
       }),
     }],
@@ -4556,10 +4760,18 @@ function toolResult(payload, toolName) {
     isError: false,
   };
   const widgetUri = widgetUriForPayload(publicPayload) || WIDGET_TOOL_URIS[toolName];
-  if (widgetUri) {
+  if (widgetUri || privateReviewPayload) {
     result._meta = {
-      ...toolUiMeta(widgetUri, toolName),
+      ...(widgetUri ? toolUiMeta(widgetUri, toolName) : {}),
       ...(privateReviewPayload ? { private_review_payload: privateReviewPayload } : {}),
+    };
+  }
+  if (sourceRecords != null) {
+    result._meta = {
+      ...result._meta,
+      vera_source_records: sourceRecords,
+      vera_source_review_sha256: sourceReviewSha256,
+      ...(artifactProjections ? { vera_artifact_projections: artifactProjections } : {}),
     };
   }
   return result;

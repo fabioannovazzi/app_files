@@ -14,8 +14,20 @@
         "cost_class": "low"
       }
     ],
-    "cowork": [],
-    "antigravity": []
+    "cowork": [
+      {
+        "model": "haiku",
+        "effort": "host_default",
+        "cost_class": "low"
+      }
+    ],
+    "antigravity": [
+      {
+        "model": "flash",
+        "effort": "host_default",
+        "cost_class": "low"
+      }
+    ]
   },
   "legacy_default": {
     "model": "gpt-5.6-luna",

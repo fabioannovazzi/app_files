@@ -1067,6 +1067,20 @@ WORD_OUTPUT_LABELS: dict[str, dict[str, str]] = {
         "de": "Berichtssprache",
         "es": "Idioma del informe",
     },
+    "evidence_through_date": {
+        "it": "Evidenze considerate fino al",
+        "en": "Evidence through date",
+        "fr": "Justificatifs pris en compte jusqu'au",
+        "de": "Belege berücksichtigt bis",
+        "es": "Evidencias consideradas hasta el",
+    },
+    "residual_amount": {
+        "it": "Importo residuo",
+        "en": "Residual amount",
+        "fr": "Montant résiduel",
+        "de": "Restbetrag",
+        "es": "Importe residual",
+    },
     "document_language": {
         "it": "Lingua dei documenti",
         "en": "Document language",
@@ -1649,3 +1663,8 @@ def word_output_label(value: object, language: str) -> object:
     if isinstance(key, str) and key in WORD_OUTPUT_LABELS:
         return WORD_OUTPUT_LABELS[key].get(language, WORD_OUTPUT_LABELS[key]["en"])
     return value
+
+
+def amount_tolerance_line(value: str, language: str) -> str:
+    """Render the declared calculation parameter with its exact sealed value."""
+    return f"{word_output_label('amount_tolerance', language)}: {value}"

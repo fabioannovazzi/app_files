@@ -322,8 +322,8 @@ def test_optional_pdf_imports_are_independent(monkeypatch):
     real_import = builtins.__import__
 
     def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
-        if name == "fitz":
-            raise ModuleNotFoundError("No module named 'fitz'")
+        if name in {"pymupdf", "fitz"}:
+            raise ModuleNotFoundError(f"No module named '{name}'", name=name)
         return real_import(name, globals, locals, fromlist, level)
 
     monkeypatch.setattr(builtins, "__import__", fake_import)
@@ -333,6 +333,25 @@ def test_optional_pdf_imports_are_independent(monkeypatch):
     assert runner.fitz is None
     assert runner.load_workbook is not None
     assert runner.pdfplumber is not None
+
+
+def test_pdf_reader_uses_available_legacy_module_without_a_version_gate(monkeypatch):
+    real_import = builtins.__import__
+    legacy = object()
+
+    def fake_import(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "pymupdf":
+            raise ModuleNotFoundError("No module named 'pymupdf'", name="pymupdf")
+        if name == "fitz":
+            return legacy
+        return real_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", fake_import)
+
+    runner = load_runner()
+
+    assert runner.fitz is legacy
+    assert runner.FITZ_IMPORT_ERROR is None
 
 
 def test_ocr_page_text_uses_local_paddle_fallback(tmp_path, monkeypatch):
@@ -951,9 +970,11 @@ def test_raw_run_writes_extracted_source_pages_to_output(
                 {"source_file": source_path, "source_role": "journal"}
             ],
             "source_root": str(source_root),
+            "source_origins": {},
             "source_artifact_receipts": source_receipts,
             "reviewed_source_decision_receipts": list(decisions.values()),
             "source_qualifications": [source_qualification],
+            "_source_controls_projection": {},
             "source_pages": extracted_pages,
             "open_items": [],
             "evidence_rows": [],
@@ -1082,7 +1103,11 @@ def test_raw_run_writes_extracted_source_pages_to_output(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
     assert final_artifacts["run_id"] == client_engagement["run_id"]
-    assert final_artifacts["client_engagement"] == portable_context
+    assert "client_engagement" not in final_artifacts
+    assert final_artifacts["client_engagement_reference"] == {
+        key: portable_context[key]
+        for key in ("client_id", "engagement_id", "run_id", "content_sha256")
+    }
     canonical_output = next(
         output
         for output in final_artifacts["outputs"]

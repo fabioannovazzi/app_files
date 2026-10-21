@@ -2069,6 +2069,360 @@ def test_mcp_verification_rejects_malformed_requests_before_client_access(
     assert not state.exists()
 
 
+def test_mcp_chat_upload_access_warns_without_creating_archive_state(
+    tmp_path: Path,
+) -> None:
+    state = tmp_path / "absent-state"
+    uploads = [
+        "/mnt/user-data/uploads/vera-intake-regression-journal.csv",
+        "/mnt/user-data/uploads/vera-intake-regression-bank.csv",
+    ]
+
+    result = _mcp_tool(
+        "check_studio_import_sources", {"source_paths": uploads}, state_dir=state
+    )
+
+    assert result["isError"] is False
+    payload = result["structuredContent"]
+    assert payload["ready"] is False
+    assert payload["status"] == "action_required"
+    assert payload["archive_records_created"] is False
+    assert payload["direct_chat_attachment_import_supported"] is False
+    assert [source["code"] for source in payload["sources"]] == [
+        "source_not_on_device",
+        "source_not_on_device",
+    ]
+    assert [Path(source["source_path"]) for source in payload["sources"]] == [
+        Path(upload) for upload in uploads
+    ]
+    assert "file is in the chat" in payload["sources"][0]["message"]
+    assert "Add folder" in payload["sources"][0]["next_step"]
+    assert not state.exists()
+
+
+@pytest.mark.parametrize("sources", [[], None, [""], ["file.csv"] * 101])
+def test_mcp_invalid_source_check_does_not_create_records(
+    tmp_path: Path, sources: Any
+) -> None:
+    state = tmp_path / "absent-state"
+
+    result = _mcp_tool(
+        "check_studio_import_sources", {"source_paths": sources}, state_dir=state
+    )
+
+    assert result["isError"] is True
+    assert not state.exists()
+
+
+def test_source_check_reports_all_files_without_archive_configuration(
+    archive_core: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "journal.csv"
+    source.write_bytes(b"description,amount\nprivate contents,100\n")
+    missing = tmp_path / "bank.csv"
+
+    def forbid_archive_access(*args, **kwargs):
+        pytest.fail("File access check must not access or create Archive state")
+
+    monkeypatch.setattr(archive_core, "_state_dir", forbid_archive_access)
+
+    result = archive_core.check_studio_import_sources([source, missing])
+
+    assert result["ready"] is False
+    assert result["sources"][0] == {"source_path": str(source), "reachable": True}
+    assert result["sources"][1]["code"] == "source_not_found"
+    assert "private contents" not in json.dumps(result)
+    assert sorted(tmp_path.iterdir()) == [source]
+
+
+@pytest.mark.skipif(
+    os.name == "nt", reason="Cloud upload paths use POSIX absolute paths"
+)
+def test_readable_chat_path_is_accepted_when_import_host_can_open_it(
+    archive_core: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Model a cloud-hosted importer without creating a system /mnt directory."""
+    backing = tmp_path / "bank.csv"
+    backing.write_bytes(b"date,amount\n2026-10-01,100\n")
+    upload = Path("/mnt/user-data/uploads/bank.csv")
+    original_resolve = Path.resolve
+    original_stat = Path.stat
+    original_is_symlink = Path.is_symlink
+    original_open = os.open
+    monkeypatch.setattr(
+        Path,
+        "resolve",
+        lambda path, **kw: path if path == upload else original_resolve(path, **kw),
+    )
+    monkeypatch.setattr(
+        Path,
+        "stat",
+        lambda path, **kw: original_stat(backing if path == upload else path, **kw),
+    )
+    monkeypatch.setattr(
+        Path,
+        "is_symlink",
+        lambda path: False if path == upload else original_is_symlink(path),
+    )
+    monkeypatch.setattr(
+        os,
+        "open",
+        lambda path, flags: original_open(backing if path == upload else path, flags),
+    )
+
+    result = archive_core.check_studio_import_sources([upload])
+
+    assert result["ready"] is True
+    assert result["sources"] == [{"source_path": str(upload), "reachable": True}]
+
+
+def test_source_check_observes_permission_failure_before_intake(
+    archive_core: ModuleType, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    source = tmp_path / "bank.csv"
+    source.write_bytes(b"amount\n100\n")
+
+    def deny_read(*args, **kwargs):
+        raise PermissionError(errno.EACCES, "Access denied")
+
+    monkeypatch.setattr(os, "open", deny_read)
+
+    result = archive_core.check_studio_import_sources([source])
+
+    assert result["ready"] is False
+    assert result["sources"][0]["code"] == "source_access_denied"
+    assert "permission" in result["sources"][0]["message"]
+
+
+def test_reachable_csvs_import_with_archive_sha_receipts_after_access_check(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType, tmp_path: Path
+) -> None:
+    journal = tmp_path / "journal.csv"
+    bank = tmp_path / "bank.csv"
+    journal.write_bytes(b"date,amount\n2026-10-01,100\n")
+    bank.write_bytes(b"date,amount\n2026-10-02,100\n")
+    access = archive_core.check_studio_import_sources([journal, bank])
+    assert access["ready"] is True
+    client = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )["client"]
+    engagement = archive_core.create_studio_client_engagement(
+        client["client_id"], "Reachable inputs", state_dir=indexed_archive.state
+    )["engagement"]
+
+    imported = [
+        archive_core.import_studio_client_document(
+            client["client_id"],
+            source,
+            "source",
+            engagement_id=engagement["engagement_id"],
+            state_dir=indexed_archive.state,
+        )
+        for source in (journal, bank)
+    ]
+
+    assert [item["status"] for item in imported] == ["imported", "imported"]
+    assert [item["input_receipt"]["sha256"] for item in imported] == [
+        hashlib.sha256(journal.read_bytes()).hexdigest(),
+        hashlib.sha256(bank.read_bytes()).hexdigest(),
+    ]
+    assert Path(imported[0]["imported_path"]).read_bytes() == journal.read_bytes()
+    assert Path(imported[1]["imported_path"]).read_bytes() == bank.read_bytes()
+
+
+def test_late_import_error_returns_existing_ids_without_duplicate_engagement(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(tmp_path / "profile"))
+    archive = tmp_path / "Studio"
+    archive.mkdir()
+    state = tmp_path / "session"
+    _mcp_tool(
+        "configure_studio_archive", {"archive_root": str(archive)}, state_dir=state
+    )
+    client_id = _mcp_tool(
+        "create_studio_archive_client",
+        {"legal_name": "Synthetic intake"},
+        state_dir=state,
+    )["structuredContent"]["client"]["client_id"]
+    engagement_id = _mcp_tool(
+        "create_studio_client_engagement",
+        {"client_id": client_id, "engagement_label": "Resume this engagement"},
+        state_dir=state,
+    )["structuredContent"]["engagement"]["engagement_id"]
+    before = _mcp_tool(
+        "list_studio_client_engagements", {"client_id": client_id}, state_dir=state
+    )
+
+    result = _mcp_tool(
+        "import_studio_client_document",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "role": "source",
+            "source_path": "/mnt/user-data/uploads/vera-intake-regression-bank.csv",
+        },
+        state_dir=state,
+    )
+
+    assert result["isError"] is True
+    error = result["structuredContent"]["error"]
+    assert error["code"] == "source_not_on_device"
+    assert error["details"]["client_id"] == client_id
+    assert error["details"]["engagement_id"] == engagement_id
+    assert error["details"]["resume_existing_engagement"] is True
+    assert (
+        _mcp_tool(
+            "list_studio_client_engagements", {"client_id": client_id}, state_dir=state
+        )
+        == before
+    )
+
+
+def test_source_disappearing_during_import_keeps_recovery_ids(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = tmp_path / "bank.csv"
+    source.write_bytes(b"amount\n100\n")
+    client_id = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )["client"]["client_id"]
+    engagement_id = archive_core.create_studio_client_engagement(
+        client_id, "Source disappeared", state_dir=indexed_archive.state
+    )["engagement"]["engagement_id"]
+
+    def remove_before_copy(*args, **kwargs):
+        source.unlink()
+        raise FileNotFoundError(errno.ENOENT, "File disappeared", str(source))
+
+    monkeypatch.setattr(archive_core.ledger, "import_document", remove_before_copy)
+
+    with pytest.raises(archive_core.ArchiveError) as captured:
+        archive_core.import_studio_client_document(
+            client_id,
+            source,
+            "source",
+            engagement_id=engagement_id,
+            state_dir=indexed_archive.state,
+        )
+
+    assert captured.value.code == "source_not_found"
+    assert captured.value.details["client_id"] == client_id
+    assert captured.value.details["engagement_id"] == engagement_id
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_transferred_source_check_verifies_original_bytes_without_archive_state(
+    archive_core: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    changed: bool,
+) -> None:
+    original = b"\xef\xbb\xbfdescription,amount\r\ncommissione,5.00\r\n"
+    copied = tmp_path / "bank.csv"
+    copied.write_bytes(original.replace(b"5.00", b"6.00") if changed else original)
+
+    def forbid_archive_access(*args, **kwargs):
+        pytest.fail("Transfer verification must not create Archive records")
+
+    monkeypatch.setattr(archive_core, "_state_dir", forbid_archive_access)
+
+    result = archive_core.check_studio_import_sources(
+        [copied], expected_sha256=[hashlib.sha256(original).hexdigest()]
+    )
+
+    assert result["ready"] is (not changed)
+    assert result["sources"][0]["reachable"] is True
+    assert result["sources"][0]["matches_expected_sha256"] is (not changed)
+    assert result["sources"][0]["byte_count"] == len(original)
+    assert "commissione" not in json.dumps(result)
+    assert list(tmp_path.iterdir()) == [copied]
+
+
+@pytest.mark.parametrize("hashes", [[], ["bad"], ["0" * 64, "1" * 64]])
+def test_mcp_source_check_rejects_unbound_transfer_hashes(
+    tmp_path: Path, hashes: list[str]
+) -> None:
+    state = tmp_path / "state"
+    result = _mcp_tool(
+        "check_studio_import_sources",
+        {"source_paths": [str(tmp_path / "source.csv")], "expected_sha256": hashes},
+        state_dir=state,
+    )
+    assert result["isError"] is True
+    assert not state.exists()
+
+
+@pytest.mark.parametrize("change_during_import", [False, True])
+def test_transfer_changed_after_check_cannot_register_an_input(
+    indexed_archive: SimpleNamespace,
+    archive_core: ModuleType,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    change_during_import: bool,
+) -> None:
+    original = b"amount\n100\n"
+    source = tmp_path / "bank.csv"
+    source.write_bytes(original)
+    expected = hashlib.sha256(original).hexdigest()
+    client_id = archive_core.set_studio_client_identity(
+        indexed_archive.scopes["Rossi"],
+        legal_names=["Rossi SRL"],
+        state_dir=indexed_archive.state,
+    )["client"]["client_id"]
+    engagement_id = archive_core.create_studio_client_engagement(
+        client_id,
+        "Transferred inputs",
+        state_dir=indexed_archive.state,
+    )["engagement"]["engagement_id"]
+    assert (
+        archive_core.check_studio_import_sources([source], expected_sha256=[expected])[
+            "ready"
+        ]
+        is True
+    )
+    before = archive_core.list_studio_client_engagements(
+        client_id, state_dir=indexed_archive.state
+    )
+    if change_during_import:
+        original_import = archive_core.ledger.import_document
+
+        def alter_before_copy(*args, **kwargs):
+            source.write_bytes(b"amount\n999\n")
+            return original_import(*args, **kwargs)
+
+        monkeypatch.setattr(archive_core.ledger, "import_document", alter_before_copy)
+    else:
+        source.write_bytes(b"amount\n999\n")
+
+    with pytest.raises(archive_core.ArchiveImportSourceError) as captured:
+        archive_core.import_studio_client_document(
+            client_id,
+            source,
+            "source",
+            engagement_id=engagement_id,
+            expected_sha256=expected,
+            state_dir=indexed_archive.state,
+        )
+
+    assert captured.value.code == "source_digest_mismatch"
+    assert captured.value.details["client_id"] == client_id
+    assert captured.value.details["engagement_id"] == engagement_id
+    assert (
+        archive_core.list_studio_client_engagements(
+            client_id, state_dir=indexed_archive.state
+        )
+        == before
+    )
+
+
 def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
     response = _mcp_request(
         {
@@ -2089,6 +2443,7 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
         "create_studio_archive_client",
         "create_studio_client_engagement",
         "import_studio_client_document",
+        "check_studio_import_sources",
         "copy_studio_client_source_folder",
         "snapshot_studio_client_folder",
         "studio_archive_google_drive_status",
@@ -2121,6 +2476,10 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
     }
     assert all(tool["inputSchema"]["additionalProperties"] is False for tool in tools)
     tool_by_name = {tool["name"]: tool for tool in tools}
+    assert (
+        tool_by_name["check_studio_import_sources"]["annotations"]["readOnlyHint"]
+        is True
+    )
     external_tools = {
         "bind_studio_client_google_drive",
         "snapshot_studio_client_google_drive",

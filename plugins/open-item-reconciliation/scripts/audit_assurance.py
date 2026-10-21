@@ -80,7 +80,7 @@ exec(  # nosec B102
     _BOOTSTRAP_NAMESPACE,
 )
 _BOOTSTRAP_ROOTS = _BOOTSTRAP_NAMESPACE["activate_implementation_boundary"](
-    ("locale_support", "reconciliation_helpers")
+    ("locale_support", "reconciliation_helpers", "review_session")
 )
 _BOOTSTRAP_VALIDATE_IMPLEMENTATION = _BOOTSTRAP_NAMESPACE[
     "validate_implementation_tree"
@@ -100,7 +100,6 @@ import shutil
 import stat
 import sys
 import tempfile
-import xml.etree.ElementTree as ET
 import zipfile
 from collections.abc import Callable, Mapping, Sequence
 from datetime import date, datetime
@@ -108,8 +107,14 @@ from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
 from typing import Any
 
+from defusedxml import ElementTree as ET
 from docx import Document
-from locale_support import canonical_word_label
+from locale_support import (
+    SUPPORTED_LANGUAGES,
+    amount_tolerance_line,
+    canonical_word_label,
+    output_labels,
+)
 from openpyxl import load_workbook
 from openpyxl.utils import coordinate_to_tuple, get_column_letter
 
@@ -122,7 +127,9 @@ from reconciliation_helpers import (  # noqa: E402
     document_key,
     reconcile_open_items,
     reconciliation_checks,
+    validated_tolerance,
 )
+from review_session import completed_review_handoff  # noqa: E402
 
 
 def _add_vera_assurance_module_path() -> Path:
@@ -174,6 +181,7 @@ __all__ = [
     "prepare_assurance_run",
     "retain_review_transition",
     "review_decision_fingerprint",
+    "review_completion_pending",
     "rollback_assurance_run",
     "reviewed_date_convention",
     "reviewed_money_convention",
@@ -562,22 +570,16 @@ def _review_metadata(
 
 
 def _validated_tolerance(value: object, *, label: str = "amount_tolerance") -> str:
-    """Return a canonical non-negative tolerance, preserving exact zero."""
+    """Normalize exact input syntax for sealing, without changing its value."""
 
-    if isinstance(value, (bool, float)) or not isinstance(value, (str, int, Decimal)):
-        raise AssuranceRunError(f"{label} must be canonical Decimal text")
-    normalized = (
-        decimal_text(Decimal(value))
-        if isinstance(value, (int, Decimal)) and not isinstance(value, bool)
-        else value
-    )
     try:
-        parsed = parse_canonical_decimal(normalized, label=label)
+        # Use the calculation's exact parser at intake. Receipt replay below
+        # still compares the stored text with this canonical representation.
+        return decimal_text(validated_tolerance(value))
     except ValueError as exc:
-        raise AssuranceRunError(str(exc)) from exc
-    if parsed < 0:
-        raise AssuranceRunError(f"{label} cannot be negative")
-    return decimal_text(parsed)
+        raise AssuranceRunError(
+            f"{label} must be an exact finite non-negative decimal"
+        ) from exc
 
 
 def _json_safe(value: Any, *, label: str = "value") -> Any:
@@ -737,11 +739,23 @@ def _validate_source_boundary(
 def _source_decision_input(
     assumptions: Mapping[str, Any],
     relative_path: str,
+    *,
+    input_root: Path,
 ) -> Mapping[str, Any] | None:
+    """Resolve only the relative or exact current absolute identity of a receipt."""
     decisions = assumptions.get("reviewed_source_decisions")
     if not isinstance(decisions, Mapping):
         return None
-    value = decisions.get(relative_path)
+    # Both public spellings identify these same source bytes. A basename or an
+    # absolute path from another run must never supply this source's review.
+    absolute = input_root / relative_path
+    keys = dict.fromkeys((relative_path, absolute.as_posix(), str(absolute)))
+    values = [decisions[key] for key in keys if key in decisions]
+    if any(value != values[0] for value in values[1:]):
+        raise AssuranceRunError(
+            f"Conflicting relative and absolute source decisions for {relative_path}"
+        )
+    value = values[0] if values else None
     return value if isinstance(value, Mapping) else None
 
 
@@ -872,6 +886,16 @@ def _validate_tabular_layout(
     ):
         raise AssuranceRunError("tabular source requires an explicit evidence type")
     return _json_safe(dict(value), label="tabular layout")
+
+
+def _tabular_party_is_row_scoped(content: Mapping[str, Any]) -> bool:
+    """Use exact source cells when review maps a party column without a common party."""
+
+    return (
+        content["adapter_family"] == TABULAR_ADAPTER
+        and content["perimeter"]["party_ref"] is None
+        and "party_ref" in content["tabular"]["columns"]
+    )
 
 
 def _validate_source_decision_content(
@@ -1009,7 +1033,13 @@ def build_reviewed_source_decisions(
     decisions: dict[str, dict[str, Any]] = {}
     errors: dict[str, str] = {}
     for relative_path, receipt in sorted(receipt_by_path.items()):
-        supplied = _source_decision_input(assumptions, relative_path)
+        try:
+            supplied = _source_decision_input(
+                assumptions, relative_path, input_root=root
+            )
+        except AssuranceRunError as exc:
+            errors[relative_path] = str(exc)
+            continue
         if supplied is None:
             errors[relative_path] = (
                 "A reviewed source-decision receipt with an explicit perimeter "
@@ -1618,6 +1648,9 @@ def _validate_prepared_population(
             "reported_unit": money["reported_unit"],
             "reported_increment": SUPPORTED_REPORTED_INCREMENT,
         }
+        if _tabular_party_is_row_scoped(content):
+            # The mandatory source replay below verifies each row's party cell.
+            del exact_fields["party_ref"]
         for field, expected in exact_fields.items():
             if row.get(field) != expected:
                 raise AssuranceRunError(
@@ -1729,11 +1762,13 @@ def _portable_client_engagement_context(
 
 
 def _is_review_transaction_output(output_dir: Path, run_root: Path) -> bool:
-    """Recognize the private copy used by an Audit review transaction."""
+    """Recognize browser and MCP working copies inside this exact managed run."""
 
     return (
         output_dir.name == "working"
-        and output_dir.parent.name.startswith(".audit-review-transaction-")
+        and output_dir.parent.name.startswith(
+            (".audit-review-transaction-", ".generated-review-transaction-")
+        )
         and output_dir.parent.parent in {run_root, run_root / "outputs"}
     )
 
@@ -1759,7 +1794,7 @@ def _current_client_engagement(
     if out_dir.name == "reconciliation" and out_dir.parent.name == "outputs":
         context_candidates.append(out_dir.parent.parent / "context.json")
     if out_dir.name == "working" and out_dir.parent.name.startswith(
-        ".audit-review-transaction-"
+        (".audit-review-transaction-", ".generated-review-transaction-")
     ):
         context_candidates.append(out_dir.parent.parent / "context.json")
         if out_dir.parent.parent.name == "outputs":
@@ -2040,6 +2075,7 @@ def prepare_assurance_run(
         "source_qualifications": normalized_qualifications,
         "implementation_receipts": normalized_implementation,
         "prepared_receipt": prepared_receipt,
+        "prepared_assumptions": prepared_assumptions,
         "run_date": run_date,
         "professional_review_authority": normalized_review_authority,
         "review_transition_receipts": review_transition_receipts,
@@ -2542,6 +2578,25 @@ def _validate_workflow_output_contract(value: object) -> dict[str, Any]:
     if value["content_sha256"] != canonical_json_sha256(content):
         raise AssuranceRunError("workflow output contract digest is stale")
     return {**content, "content_sha256": value["content_sha256"]}
+
+
+def review_completion_pending(
+    assurance: Mapping[str, Any], reconciliation: Mapping[str, Any]
+) -> bool:
+    """Identify a pending review from replayed gates and complete typed checks."""
+
+    gates = assurance["gate_register"]["gates"]
+    failed_checks = [
+        row["check"] for row in reconciliation["checks"] if row["status"] != "PASS"
+    ]
+    return (
+        all(
+            gates[name]["status"] in {"passed", "not_applicable"}
+            for name in ("source", "preparation", "reconciliation")
+        )
+        and gates["semantic_review"]["status"] == "withheld"
+        and failed_checks in ([], ["codex_review_completed"])
+    )
 
 
 def _review_gate_status(
@@ -3900,6 +3955,7 @@ def retain_review_transition(
     )
     if receipt not in receipts:
         raise AssuranceRunError("retained review transition did not replay")
+    retained_entries = _physical_tree_entries(transition_dir)
     return {
         "predecessor_assurance_sha256": predecessor_digest,
         "transition_receipt": receipt,
@@ -3909,8 +3965,17 @@ def retain_review_transition(
                 / predecessor_digest
                 / str(entry["path"])
             ).as_posix()
-            for entry in _physical_tree_entries(transition_dir)
+            for entry in retained_entries
             if entry["kind"] == "file"
+        ],
+        "history_directories": [
+            (
+                Path(REVIEW_TRANSITION_HISTORY_DIRECTORY)
+                / predecessor_digest
+                / str(entry["path"])
+            ).as_posix()
+            for entry in retained_entries
+            if entry["kind"] == "directory"
         ],
     }
 
@@ -4769,12 +4834,54 @@ def _rendered_value_address(
     }
 
 
+def _xlsx_projection_locations(
+    workbook: Any, cells: list[list[Any]] | None
+) -> dict[tuple[str, str], Any]:
+    """Locate the writer's flattened cells in the exact serialized workbook."""
+    if cells is None:
+        return {}
+    width = max(sheet.max_column or 0 for sheet in workbook)
+    position = 0
+    locations = {}
+    for sheet in workbook:
+        for row in sheet.iter_rows():
+            if not any(cell.value is not None for cell in row):
+                continue
+            if position >= len(cells) or len(cells[position]) != width:
+                return {}
+            for column, cell in enumerate(row):
+                locations[(sheet.title, cell.coordinate)] = cells[position][column]
+            position += 1
+    return locations if position == len(cells) else {}
+
+
+def _word_projection_locations(
+    document: Any, cells: list[list[Any]] | None
+) -> dict[Any, Any]:
+    """Use the same body-paragraph sequence captured by the Word producer."""
+    from docx.oxml.ns import qn
+    from docx.text.paragraph import Paragraph
+
+    if cells is None:
+        return {}
+    paragraphs = [
+        element
+        for element in document.element.body.iter(qn("w:p"))
+        if Paragraph(element, document).text
+    ]
+    if len(paragraphs) != len(cells) or any(len(row) != 1 for row in cells):
+        return {}
+    return {element: row[0] for element, row in zip(paragraphs, cells, strict=True)}
+
+
 def _native_rendered_value_addresses(
     *,
     final_receipts: Sequence[Mapping[str, Any]],
     final_root: Path,
     reconciliation_rows: Sequence[Mapping[str, Any]],
     prepared: Mapping[str, Any],
+    output_cells: Mapping[str, list[list[Any]]] | None = None,
+    projection_groups: list[Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Address every material figure in the code-owned three-file package."""
 
@@ -4804,6 +4911,19 @@ def _native_rendered_value_addresses(
     request_amount_headers = {c["headers"]["amount"] for c in request_text.values()}
     reconciliation_by_id = {str(row["record_id"]): row for row in reconciliation_rows}
     record_rows = [*support_rows, *reconciliation_rows]
+    # A declared calculation parameter is not a source-record amount. Match
+    # only the exact renderer-owned line for the sealed value, in each locale.
+    tolerance_lines = {
+        amount_tolerance_line(prepared["assumptions"]["amount_tolerance"], language)
+        for language in SUPPORTED_LANGUAGES
+    }
+    tolerance_prefixes = tuple(
+        amount_tolerance_line("", language) for language in SUPPORTED_LANGUAGES
+    )
+    parameter_labels = [output_labels(language) for language in SUPPORTED_LANGUAGES]
+    assumption_sheets = {"Assumptions", *(x["assumptions"] for x in parameter_labels)}
+    parameter_headers = {x["metadata_field"] for x in parameter_labels}
+    value_headers = {x["metadata_value"] for x in parameter_labels}
     addresses: list[dict[str, Any]] = []
     for name in sorted(native_names):
         receipt = by_name[name]
@@ -4812,6 +4932,11 @@ def _native_rendered_value_addresses(
         if path.suffix.lower() in {".xlsx", ".xlsm"}:
             workbook = load_workbook(path, read_only=True, data_only=True)
             try:
+                locations = (
+                    _xlsx_projection_locations(workbook, (output_cells or {}).get(name))
+                    if projection_groups is not None
+                    else {}
+                )
                 for sheet in workbook.worksheets:
                     rows = list(sheet.iter_rows())
                     if not rows:
@@ -4827,17 +4952,37 @@ def _native_rendered_value_addresses(
                         for i, label in enumerate(headers)
                         if label in request_id_headers
                     ]
+                    parameter_columns = [
+                        i
+                        for i, label in enumerate(headers)
+                        if label in parameter_headers
+                    ]
                     for row in rows[1:]:
                         values = [cell.value for cell in row]
                         owner_refs = _row_record_refs(values, record_rows)
                         for index, cell in enumerate(row):
+                            header = headers[index] if index < len(headers) else ""
+                            if (
+                                sheet.title in assumption_sheets
+                                and header in value_headers
+                                and len(parameter_columns) == 1
+                                and canonical_word_label(values[parameter_columns[0]])
+                                == "amount_tolerance"
+                            ):
+                                if (
+                                    str(cell.value)
+                                    != prepared["assumptions"]["amount_tolerance"]
+                                ):
+                                    raise AssuranceRunError(
+                                        "reported amount tolerance differs from sealed tolerance"
+                                    )
+                                continue
                             value = _rendered_money(
                                 cell.value,
                                 material_column=index in material_columns,
                             )
                             if value is None:
                                 continue
-                            header = headers[index] if index < len(headers) else ""
                             if (
                                 name == "richieste_mirate_evidenze.xlsx"
                                 and header in request_amount_headers
@@ -4891,11 +5036,26 @@ def _native_rendered_value_addresses(
                                     formula=formula,
                                 )
                             )
+                            if projection_groups is not None:
+                                projection_groups.append(
+                                    locations.get((sheet.title, cell.coordinate))
+                                )
             finally:
                 workbook.close()
         elif path.suffix.lower() == ".docx":
             document = Document(path)
+            paragraph_origins = (
+                _word_projection_locations(document, (output_cells or {}).get(name))
+                if projection_groups is not None
+                else {}
+            )
             for paragraph_index, paragraph in enumerate(document.paragraphs):
+                if paragraph.text.startswith(tolerance_prefixes):
+                    if paragraph.text not in tolerance_lines:
+                        raise AssuranceRunError(
+                            "reported amount tolerance differs from sealed tolerance"
+                        )
+                    continue
                 if _material_text_values(paragraph.text):
                     raise AssuranceRunError(
                         f"{name} contains a material figure outside a "
@@ -4947,6 +5107,12 @@ def _native_rendered_value_addresses(
                                 formula=formula,
                             )
                         )
+                        if projection_groups is not None:
+                            projection_groups.extend(
+                                paragraph_origins.get(paragraph._p)
+                                for paragraph in cell.paragraphs
+                                if paragraph.text
+                            )
     addresses.sort(key=lambda item: (item["artifact_ref"], item["locator"]))
     return addresses
 
@@ -5325,7 +5491,10 @@ def _tabular_xlsx_numbers(
 
 
 def read_reviewed_tabular_source(
-    path: Path, decision: Mapping[str, Any]
+    path: Path,
+    decision: Mapping[str, Any],
+    *,
+    origins: dict[str, dict[str, Any]] | None = None,
 ) -> list[dict[str, Any]]:
     """Apply explicit semantic review using reproducible cell reads and arithmetic.
 
@@ -5522,8 +5691,13 @@ def read_reviewed_tabular_source(
                     raise AssuranceRunError(f"required mapped {field} is empty")
             if not row.get("source_record_id") and not row.get("document_no"):
                 raise AssuranceRunError("mapped row identity is empty")
+            perimeter = dict(content["perimeter"])
+            if _tabular_party_is_row_scoped(content):
+                if not row.get("party_ref"):
+                    raise AssuranceRunError("mapped party_ref is empty")
+                perimeter["party_ref"] = row["party_ref"]
             for field in ("entity_ref", "party_ref", "currency", "unit"):
-                if field in columns and row.get(field) != content["perimeter"][field]:
+                if field in columns and row.get(field) != perimeter[field]:
                     raise AssuranceRunError(
                         f"source {field} contradicts reviewed perimeter"
                     )
@@ -5534,7 +5708,7 @@ def read_reviewed_tabular_source(
                     raise AssuranceRunError(
                         "source evidence type lacks an explicit review mapping"
                     )
-            row.update(content["perimeter"])
+            row.update(perimeter)
             row.update(
                 reported_unit=content["money"]["reported_unit"],
                 reported_increment=SUPPORTED_REPORTED_INCREMENT,
@@ -5559,6 +5733,48 @@ def read_reviewed_tabular_source(
             if role == "bank_statement":
                 row["bank_amount"] = row["amount"]
             output.append(row)
+        if origins is not None:
+            # These are the parser's actual cell dependencies, not inferred
+            # matches of emitted text against arbitrary source values.
+            fields = {field: [column] for field, column in columns.items()}
+            for field in (
+                "entity_ref",
+                "party_ref",
+                "currency",
+                "unit",
+                "evidence_type",
+                "reported_unit",
+                "reported_increment",
+                "record_id",
+                "source_file",
+                "source_row",
+                "source_role",
+                "source_sheet",
+                "source_side",
+                "expected_side",
+                "direction_policy",
+                "allocation_policy",
+            ):
+                fields.setdefault(field, [])
+            fields["document_key"] = sorted(
+                {*fields.get("document_no", []), *fields.get("document_date", [])}
+            )
+            if content["role"] == "open_items":
+                fields.setdefault("balance", fields["amount"])
+                fields.setdefault("posting_date", fields["document_date"])
+            if content["role"] == "bank_statement":
+                fields["bank_amount"] = fields["amount"]
+            for row in output:
+                origins[row["record_id"]] = {
+                    "source": {
+                        "source_path": str(path.resolve()),
+                        "source_sha256": hashlib.sha256(data).hexdigest(),
+                        "source_column_count": len(headers),
+                        "sheet_name": layout["sheet"],
+                    },
+                    "physical_row": row["source_row"],
+                    "fields": fields,
+                }
         return output
     finally:
         if workbook is not None:
@@ -5786,7 +6002,12 @@ def _source_value_locator(
             workbook.close()
     elif suffix == ".pdf":
         try:
-            import fitz
+            try:
+                import pymupdf as fitz
+            except ModuleNotFoundError as exc:
+                if exc.name != "pymupdf":
+                    raise
+                import fitz
         except ImportError as exc:
             raise AssuranceRunError(
                 "PDF source locators cannot be dereferenced"
@@ -5908,6 +6129,7 @@ def _numeric_entries(
     prepared: Mapping[str, Any],
     source_root: Path,
     strict_source_identity: bool = False,
+    projection_groups: list[Any] | None = None,
 ) -> list[dict[str, Any]]:
     final_by_name = {
         Path(str(receipt["path"])).name: receipt for receipt in final_receipts
@@ -6059,6 +6281,23 @@ def _numeric_entries(
                 "limitations": [],
             }
         )
+        if projection_groups is not None:
+            projection_groups.append(
+                [
+                    {
+                        "record_id": record_id,
+                        "fields": [
+                            "amount",
+                            "record_id",
+                            *[
+                                field
+                                for field in ("currency", "unit")
+                                if row.get(field)
+                            ],
+                        ],
+                    }
+                ]
+            )
     return entries
 
 
@@ -6282,8 +6521,8 @@ def _validate_closed_relationships(
     evidence_rows: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
     assumptions: Mapping[str, Any] | None = None,
-) -> None:
-    """Require current evidence plus one balanced relationship for every closure."""
+) -> set[str]:
+    """Validate closure and return exact rederived partial-payment ledger IDs."""
 
     evidence_by_id = {
         str(row.get("record_id")): row
@@ -6299,6 +6538,7 @@ def _validate_closed_relationships(
     ):
         raise AssuranceRunError("prepared evidence record identities must be unique")
     ledgers = [validate_allocation_ledger(ledger) for ledger in allocation_ledgers]
+    validated_partial_ledgers: set[str] = set()
     partial_rows = [
         row
         for row in reconciliation_rows
@@ -6327,6 +6567,7 @@ def _validate_closed_relationships(
                 raise AssuranceRunError(
                     "partial payment lacks its exact evidence allocation and retained residual"
                 )
+            validated_partial_ledgers.add(ledger_id)
     for row in reconciliation_rows:
         if not _closed_status(row.get("reconciliation_status")):
             continue
@@ -6398,12 +6639,14 @@ def _validate_closed_relationships(
                 f"closed reconciliation record {record_id} lacks a balanced "
                 "evidence allocation relationship"
             )
+    return validated_partial_ledgers
 
 
 def _reconciliation_gate_failed(
     checks: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
     reconciliation_rows: Sequence[Mapping[str, Any]],
+    validated_partial_ledger_ids: set[str],
 ) -> bool:
     if reconciliation_rows and not checks:
         return True
@@ -6420,7 +6663,11 @@ def _reconciliation_gate_failed(
         and not str(row["check"]).startswith("codex_review")
         for row in checks
     ) or any(
+        # A retained unpaid balance is a valid result, not a failed calculation.
+        # Only source-rederived partial settlements receive this exception;
+        # unrelated imbalances and all claimed closures remain checked.
         not validate_allocation_ledger(ledger)["balanced"]
+        and ledger["ledger_id"] not in validated_partial_ledger_ids
         for ledger in allocation_ledgers
     )
 
@@ -6464,6 +6711,8 @@ def _finalize_assurance_run_in_place(
     workbook_name: str,
     source_processing: Mapping[str, Any] | None = None,
     analyses: Mapping[str, Any] | None = None,
+    projection_context: dict[str, Any] | None = None,
+    projection_values: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Replay the run, publish an exact final set, and write independent gates."""
 
@@ -6548,7 +6797,7 @@ def _finalize_assurance_run_in_place(
     normalized_allocations = [
         validate_allocation_ledger(ledger) for ledger in allocation_ledgers
     ]
-    _validate_closed_relationships(
+    validated_partial_ledger_ids = _validate_closed_relationships(
         reconciliation_rows=reconciliation_rows,
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=normalized_allocations,
@@ -6646,6 +6895,19 @@ def _finalize_assurance_run_in_place(
         out_dir / "reconciliation_results.json",
         reconciliation_payload,
     )
+    if projection_context is not None and projection_values is not None:
+        from workpaper_outputs import canonical_report_origins
+
+        projection_values["reconciliation_results.json"] = {
+            "data_sha256": canonical_json_sha256(reconciliation_payload),
+            "records": canonical_report_origins(
+                reconciliation_payload,
+                {
+                    **projection_context,
+                    "professional_review_authority": professional_review,
+                },
+            ),
+        }
     published = _publish_final_outputs(
         out_dir,
         [*declared_outputs, reconciliation_path],
@@ -6657,6 +6919,8 @@ def _finalize_assurance_run_in_place(
     }
     reconciliation_receipt = final_by_name["reconciliation_results.json"]
     reconciliation_ref = str(reconciliation_receipt["artifact_id"])
+    numeric_projection_groups: list[Any] = []
+    rendered_projection_groups: list[Any] = []
     entries = _numeric_entries(
         reconciliation_rows=reconciliation_rows,
         allocation_ledgers=normalized_allocations,
@@ -6669,12 +6933,19 @@ def _finalize_assurance_run_in_place(
         prepared=prepared,
         source_root=Path(str(source_root)).resolve() if source_root else out_dir,
         strict_source_identity=True,
+        projection_groups=(
+            numeric_projection_groups if projection_context is not None else None
+        ),
     )
     rendered_value_addresses = _native_rendered_value_addresses(
         final_receipts=final_receipts,
         final_root=out_dir / FINAL_OUTPUT_DIRECTORY,
         reconciliation_rows=reconciliation_rows,
         prepared=prepared,
+        output_cells=(projection_context or {}).get("report_cells"),
+        projection_groups=(
+            rendered_projection_groups if projection_context is not None else None
+        ),
     )
     material_row_count = sum(
         _canonical_money(row.get("amount")) is not None for row in reconciliation_rows
@@ -6708,6 +6979,7 @@ def _finalize_assurance_run_in_place(
         checks,
         normalized_allocations,
         reconciliation_rows,
+        validated_partial_ledger_ids,
     )
     reconciliation_status = "failed" if reconciliation_failed else "passed"
     semantic_status = _review_gate_status(
@@ -6797,6 +7069,9 @@ def _finalize_assurance_run_in_place(
     )
     final_artifacts_path = out_dir / "final_artifacts.json"
     if final_artifacts_path.is_file():
+        previous_status_sha256 = hashlib.sha256(
+            final_artifacts_path.read_bytes()
+        ).hexdigest()
         final_artifacts = json.loads(final_artifacts_path.read_text(encoding="utf-8"))
         if not isinstance(final_artifacts, dict):
             raise AssuranceRunError("final_artifacts.json must contain an object")
@@ -6829,6 +7104,12 @@ def _finalize_assurance_run_in_place(
             name
             for name, gate in gates["gates"].items()
             if gate["status"] in {"failed", "blocked"}
+            and not (
+                name == "reporting"
+                and semantic_status == "withheld"
+                and source_status in {"passed", "not_applicable"}
+                and reconciliation_status == "passed"
+            )
         ]
         final_artifacts["assurance"] = {
             "receipts_path": "assurance_receipts.json",
@@ -6849,6 +7130,7 @@ def _finalize_assurance_run_in_place(
             ]
         elif not gates["report_ready"]:
             final_artifacts["status"] = "written_pending_review"
+            final_artifacts["blockers"] = []
         elif professional_review["origin"] == "applied_decisions":
             final_artifacts["status"] = "final_ready"
             final_artifacts["blockers"] = []
@@ -6864,9 +7146,22 @@ def _finalize_assurance_run_in_place(
                 }
             )
             final_artifacts["review_application"] = review_application
+            final_artifacts = completed_review_handoff(
+                final_artifacts,
+                language=_read_json_mapping(out_dir / "run_intake.json").get(
+                    "language", "en"
+                ),
+            )
         elif final_artifacts.get("status") == "final_ready":
             final_artifacts["status"] = "ready_for_professional_review"
         _write_exact_json(final_artifacts_path, final_artifacts)
+        from vera_assurance.contracts import archive_projection_runtime
+
+        recorder = archive_projection_runtime(Path(__file__))
+        if recorder is not None:
+            recorder.register_metadata_revision(
+                "open-item-reconciliation", final_artifacts_path, previous_status_sha256
+            )
     _write_exact_json(out_dir / "assurance_gates.json", gates)
     numeric_path = out_dir / "numeric_evidence_ledger.json"
     if numeric_ledger is not None:
@@ -6939,6 +7234,18 @@ def _finalize_assurance_run_in_place(
         "content_sha256": canonical_json_sha256(control_content),
     }
     _write_exact_json(out_dir / "assurance_receipts.json", control_payload)
+    if projection_context is not None and projection_values is not None:
+        from workpaper_outputs import assurance_report_origins
+
+        projection_values["assurance_receipts.json"] = {
+            "data_sha256": canonical_json_sha256(control_payload),
+            "records": assurance_report_origins(
+                control_payload,
+                projection_context,
+                numeric_groups=numeric_projection_groups,
+                rendered_groups=rendered_projection_groups,
+            ),
+        }
 
     return validate_assurance_run(
         out_dir,
@@ -7017,6 +7324,8 @@ def finalize_assurance_run(
     workbook_name: str,
     source_processing: Mapping[str, Any] | None = None,
     analyses: Mapping[str, Any] | None = None,
+    projection_context: dict[str, Any] | None = None,
+    projection_values: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build and replay the exact assurance tree under whole-run rollback."""
 
@@ -7035,6 +7344,8 @@ def finalize_assurance_run(
             workbook_name=workbook_name,
             source_processing=source_processing,
             analyses=analyses,
+            projection_context=projection_context,
+            projection_values=projection_values,
         )
     except (OSError, ValueError):
         _rollback_run_transaction(
@@ -7394,7 +7705,7 @@ def validate_assurance_run(
     ]
     if allocations != payload["allocation_ledgers"]:
         raise AssuranceRunError("allocation ledgers are stale")
-    _validate_closed_relationships(
+    validated_partial_ledger_ids = _validate_closed_relationships(
         reconciliation_rows=result["reconciliation_rows"],
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=allocations,
@@ -7559,6 +7870,7 @@ def validate_assurance_run(
             result["checks"],
             allocations,
             result["reconciliation_rows"],
+            validated_partial_ledger_ids,
         )
         else "passed"
     )
@@ -7690,10 +8002,15 @@ def _command_parser() -> argparse.ArgumentParser:
     context.add_argument("output_dir")
     replay = subparsers.add_parser(
         "validate-run-json",
-        help="Replay a sealed run and emit the bounded MCP bridge result.",
+        help="Replay a sealed run and emit its status and checkpoint, without source rows.",
     )
     replay.add_argument("output_dir")
     replay.add_argument("--expected-predecessor-checkpoint")
+    replay.add_argument(
+        "--private-review-bridge",
+        action="store_true",
+        help="Include detailed rows for the component's internal review transaction.",
+    )
     capture = subparsers.add_parser(
         "capture-review-transition-json",
         help="Capture a fully replayed predecessor outside the candidate tree.",
@@ -7883,8 +8200,31 @@ def _main(argv: Sequence[str] | None = None) -> int:
         "assurance": bounded_assurance,
         "result": {
             "reconciliation_rows": reconciliation["reconciliation_rows"],
+            "review_completion_pending": review_completion_pending(
+                assurance, reconciliation
+            ),
         },
     }
+    if not args.private_review_bridge:
+        # Public validation needs the replay outcome, not a second copy of all
+        # source rows and review notes. This exact constructor contains only
+        # technical status, count and checkpoint metadata.
+        response = {
+            "ok": True,
+            "assurance": {
+                "run_date": assurance["run_date"],
+                "content_sha256": assurance["content_sha256"],
+                "report_ready": assurance["gate_register"]["report_ready"],
+            },
+            "reconciliation_row_count": len(reconciliation["reconciliation_rows"]),
+        }
+        from vera_assurance.contracts import archive_projection_runtime
+
+        recorder = archive_projection_runtime(Path(__file__))
+        if recorder is not None:
+            recorder.register_metadata(
+                "open-item-reconciliation", Path(args.output_dir), response
+            )
     sys.stdout.write(
         json.dumps(response, ensure_ascii=False, separators=(",", ":")) + "\n"
     )
@@ -7892,4 +8232,6 @@ def _main(argv: Sequence[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(_main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(_main, Path(__file__)))

@@ -283,6 +283,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/worker_capabilities.py",
     ),
     (
+        "implementation.plugin.scripts.native_host_worker_py",
+        "implementation",
+        "scripts/native_host_worker.py",
+    ),
+    (
         "implementation.plugin.scripts.semantic_worker_policy_json",
         "implementation",
         "scripts/semantic_worker_policy.json",

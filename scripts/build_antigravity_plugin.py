@@ -158,6 +158,16 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
     entries[f"{product}/agents/{product}.md"] = (
         ROOT / f"plugins/{product}/agents/{product}.md"
     ).read_bytes()
+    if product == "vera":
+        agent_path = "vera/agents/reconciliation-reviewer.md"
+        entries[agent_path] = (
+            (ROOT / "plugins/vera/agents/reconciliation-reviewer.md")
+            .read_bytes()
+            .replace(
+                b"model: haiku\ntools: Read\n",
+                b"model: flash\ntools: []\nmainAgent: false\nsubagent: true\nmcpServers: []\nskills: []\nplugins: []\n",
+            )
+        )
     entries[f"{product}/LEGGIMI_ANTIGRAVITY.txt"] = INSTALL_README.format(
         product=product, title=product.title()
     ).encode()

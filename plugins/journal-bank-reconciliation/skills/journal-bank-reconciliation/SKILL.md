@@ -306,9 +306,9 @@ Use `--tolerance <amount>` and `--date-window-days <days>` when the user provide
 
 ## Native semantic residual resolution
 
-Use this path in Codex after a qualified deterministic run leaves unmatched
-bank movements. Anthropic Cowork and other runtimes skip it and continue with
-the normal review handoff. The purpose is to remove as much routine human work
+Use this path after a qualified deterministic run leaves unmatched bank movements.
+Cowork and Antigravity use their native subagent handoff described in
+`references/native-host-workers.md`; complete it automatically before delivery. The purpose is to remove as much routine human work
 as the user's required certainty permits, not merely to attach suggestions.
 
 Preparing and delivering a draft does not require a user decision about clearing
@@ -333,10 +333,11 @@ of the current chat or create visible per-case chats. Use one bounded worker pac
 not one call per candidate. The shared `worker_capabilities.py` selects a configured
 low-cost model and effort from the current harness model catalog. Model names and
 cost preferences belong in `semantic_worker_policy.json`, not matching rules.
-The current verified execution adapter uses the native Codex capsule. Cowork and
-Antigravity distributions carry their own host identity and report the missing
-verified invocation/isolation adapter explicitly; they must not launch Codex as
-an undisclosed substitute or assume that a named Haiku/Flash agent is callable.
+Codex uses its capability-probed native capsule. Cowork and Antigravity dispatch
+the prepared request through their actual native subagent tools, verify the
+current tool/model/type capabilities and retain the observed completion. Never
+substitute another host. Native records describe host-reported evidence; they
+do not claim Codex filesystem isolation or provider model attestation.
 A catalog entry proves advertised availability, not matching quality or execution.
 
 1. Prefer `semantic_review.py run-all` against the completed `reconciliation`

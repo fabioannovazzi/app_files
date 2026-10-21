@@ -69,13 +69,30 @@ await ui.panel.flush();process.stdout.write(JSON.stringify(ui.draft.fields));
         "sources": {
             "SOURCE-0": {
                 "role": "open_items",
-                "money": {"thousands_separator": ""},
+                "money": {"thousands_separator": None},
                 "date": {"order": "month_first"},
             },
             "SOURCE-1": {"role": "bank_statement"},
         },
         "payment_orders_are_bank_evidence": False,
     }
+
+
+def test_open_items_panel_reopens_absent_thousands_separator_without_rewriting_it():
+    result = events(
+        """
+const ui=fixture(source,{fields:{sources:{'SOURCE-0':{money:{thousands_separator:null}}}}});
+await ui.panel.open('fictional-intake');const control=ui.field('Separatore delle migliaia · fictional-source-0.pdf');
+await ui.panel.flush();process.stdout.write(JSON.stringify({value:control.value,choices:control.children.map(item=>item.value),fields:ui.draft.fields,calls:ui.calls}));
+"""
+    )
+
+    assert result["value"] == "none"
+    assert result["choices"] == ["", "none", ".", ","]
+    assert (
+        result["fields"]["sources"]["SOURCE-0"]["money"]["thousands_separator"] is None
+    )
+    assert not any(call["name"].endswith("_draft_save") for call in result["calls"])
 
 
 def test_open_items_panel_requires_renewed_confirmation_then_hands_back_to_review():

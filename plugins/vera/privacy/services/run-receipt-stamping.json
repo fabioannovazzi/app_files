@@ -23,7 +23,9 @@
         "Retries retain identical report bytes, UUID, version and revision. Professional artifacts are checked before and after updating only the reserved reporting artifacts in the Archive seal. Ordinary Archive use retries pending receipts and interrupted terminal reporting without re-executing professional work.",
         "An explicit local_only option or local onboarding marker suppresses the proof request but keeps the report. Network or identity failures retain a pending receipt without invalidating the professional work. Host permission denials remain binding.",
         "Verification proves the stored report hash, authenticated Vera installation/machine binding, Archive run, revision and server time. It does not identify a natural person or establish provider-side receipt, correctness of measurements, analytical correctness or GDPR compliance.",
-        "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link."
+        "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link.",
+        "The general verify command delegates schema-3 receipts to the same Archive verifier, defaults the expected owner to the existing local Vera installation identity, and requires exact agreement between the local receipt and the retained server proof. An explicit expected userID is supported for verification. Neither command rewrites the closed report or its professional artifacts. Legacy schema-1 and schema-2 verification remains independent of local installation credentials.",
+        "A saved terminal lifecycle transition remains acknowledged when local report generation or resealing fails. Report files are not deleted as a recovery action, unavailable reporting is acknowledged separately, and same-run retry finishes reporting without recalculation or duplicate lifecycle transitions. A partially written local report is not claimed as final before generation and resealing finish. Terminal recovery attempts are isolated and rotated locally; closure occurs after the local report and reseal succeed. Post-tool recording failures return operation, failure stage and a validated opaque run ID where available while withholding unrecorded case content. These metadata acknowledgements add no hosted recipient or server payload field."
       ]
     }
   ],
@@ -83,9 +85,9 @@
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5d25beea96e8f0a21d7585a5f324113cc78ca1329f20a1b28e469d4c2b53443f"
+    "source_fingerprint": "4c555b0d84d527d8a7d068a96c7e735541f8b0b8349f27b8abf912e61ccf869d"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -95,7 +97,7 @@
   "security_controls": [
     {
       "id": "exact-producer-projection-accounting",
-      "control": "The local collector accepts complete transport envelopes only when their exact digest matches a producer declaration. Selected row-field origins and private review-packet digests are retained locally, independently of send events; constructing them does not count as disclosure. A changed envelope, unknown private review packet or unregistered metadata parent cannot inherit the original declaration. Partial text reads cannot inherit complete-artifact lineage.",
+      "control": "The local collector accepts complete transport envelopes only when their exact digest matches a producer declaration. Selected row-field origins and private review-packet digests are retained locally, independently of send events; constructing them does not count as disclosure. A changed envelope, unknown private review packet or unregistered metadata parent cannot inherit the original declaration. Partial text reads cannot inherit complete-artifact lineage. Word body/table paragraphs and generated workbook cells use explicit producer origins for only the returned selection. Producer-owned JSON values also bind exact file bytes. The local argument-origin registry retains hashes of exact native helper argument strings under the existing run and component; it does not add a send event, read client files or submit these hashes to the server. Changed strings and a different run/component cannot inherit that origin.",
       "implemented_by": [
         "scripts/archive_reporting.py",
         "scripts/archive_projection.py",

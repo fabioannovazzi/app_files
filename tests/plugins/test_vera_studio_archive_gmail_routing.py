@@ -118,8 +118,8 @@ def test_client_profile_is_private_normalized_and_idempotent(
     assert stored_client["email_addresses"] == ["amministrazione@rossi.it"]
     assert stored_client["legal_names"] == ["Rossi SRL"]
     assert registry_path.read_bytes() == before
-    assert stat.S_IMODE(configured_clients.state.stat().st_mode) == 0o700
     if os.name == "posix":
+        assert stat.S_IMODE(configured_clients.state.stat().st_mode) == 0o700
         assert stat.S_IMODE(registry_path.stat().st_mode) == 0o600
 
 
@@ -331,11 +331,16 @@ def test_renamed_scope_identity_recovers_before_content_index_refresh(
     )
     assert moved["client_id"] == registered["client"]["client_id"]
     assert moved["email_addresses"] == ["amministrazione@rossi.it"]
-    with pytest.raises(archive_core.ArchiveError, match="refresh before planning"):
+    with pytest.raises(archive_core.ArchiveError, match="scope is not configured"):
         archive_core.plan_gmail_client_search(
             rossi_scope,
             state_dir=configured_clients.state,
         )
+    plan_without_refresh = archive_core.plan_gmail_client_search(
+        moved["scope_id"], state_dir=configured_clients.state
+    )
+    assert plan_without_refresh["profile_status"] == "configured"
+    assert "amministrazione@rossi.it" in plan_without_refresh["queries"][0]["query"]
     refreshed = archive_core.refresh_archive(state_dir=configured_clients.state)
     renamed_scope = next(
         item["scope_id"]

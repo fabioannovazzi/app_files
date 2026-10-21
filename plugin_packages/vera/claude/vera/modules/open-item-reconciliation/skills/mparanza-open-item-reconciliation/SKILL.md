@@ -87,7 +87,7 @@ files.
 
 For ordinary header-based CSV and XLSX exports, use the maintained
 `reviewed_tabular_accounting_v1` adapter with an explicit reviewed `tabular`
-layout. Read `references/tabular-source-layout.md` before qualifying these
+layout. Read `../../references/tabular-source-layout.md` before qualifying these
 files. professional reviews the actual headers, table bounds, source role, evidence
 meaning and perimeter; the parser does not infer them. It supports open-item,
 bank and journal tables, preserves source rows and critical dates, reads native
@@ -238,13 +238,13 @@ artifact card and final response.
 
 ## Starter Prompt Bank
 
-Load `references/starter-prompts.md` for beta-facing prompt examples. Keep this `SKILL.md` focused on routing, guardrails, first-run flow, dependency checks, deterministic workflow ownership, feedback, and packaging.
+Load `../../references/starter-prompts.md` for beta-facing prompt examples. Keep this `SKILL.md` focused on routing, guardrails, first-run flow, dependency checks, deterministic workflow ownership, feedback, and packaging.
 
 ## Evidence Standards, Data, And Checks
 
-Load `references/evidence-and-checks.md` when deciding evidence strength, canonical fields, source roles, or deterministic accounting checks.
+Load `../../references/evidence-and-checks.md` when deciding evidence strength, canonical fields, source roles, or deterministic accounting checks.
 
-Load `references/workflow-reference.md` for the exact source-decision contract,
+Load `../../references/workflow-reference.md` for the exact source-decision contract,
 receipt replay points, gate meanings, and promotion rules.
 
 Core rule: row-level classifications must be supported by deterministic evidence and preserved source references. Candidate allocations and aggregate roll-forward checks may guide review, but they must not close individual rows unless a deterministic rule connects row-level evidence.
@@ -310,7 +310,9 @@ Useful helper scripts include:
 
 - `scripts/raw_input_runner.py`: client-bound input-folder orchestration; its
   CLI requires the exact Studio Archive `--client-engagement` context and
-  `--assumptions-json`;
+  `--assumptions-json`. Save this agent-generated configuration in the selected
+  run's output directory before invoking the helper; a chat-workspace file is
+  outside that run and is not an imported client source;
 - `scripts/reconciliation_workflow.py`: normalized-row reconciliation and native output orchestration;
 - `scripts/audit_assurance.py`: isolated validation, predecessor capture/retention, and assurance replay commands;
 - `scripts/build_review_sample.py`: post-run selection of a small reviewer-friendly sample, with Italian operational wording and a Markdown request draft.
@@ -338,7 +340,10 @@ The maintained raw runner automatically submits unresolved items and unused bank
 evidence to bounded semantic workers after source mapping. The shared host policy
 selects a suitable low-cost model from actual harness capabilities. Keep the main
 chat's model; do not create visible per-case chats or ask the user to select routine
-technical mappings. A missing verified host invocation path is reported explicitly.
+technical mappings. In Cowork or Antigravity, complete `NATIVE_WORKER_PENDING`
+using `../../../journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/native-host-workers.md`,
+then resume the same command and deliver the regenerated result. Missing actual
+host capabilities remain explicit; do not ask the user to perform the handoff.
 
 Models interpret references, descriptions, counterparties and competing matches.
 The engine verifies quoted evidence, exact amounts, accounting perimeters and no
@@ -354,15 +359,16 @@ make a match. No worker output constitutes professional adoption or approval.
 The full packet remains local except for the selected host model submission;
 its populated mapped fields include business document identifiers, descriptions,
 parties, dates, amounts and opaque linkage IDs. It is not anonymized. Paths and
-unmapped columns are excluded. The main chat receives status and counts, not the
-whole retained packet. A complete currency/entity perimeter is never silently
+unmapped columns are excluded. In Claude the main chat receives status and counts.
+In Cowork and Antigravity the parent reads the bounded request to dispatch its
+native child, so those mapped fields enter both contexts; host transcripts may persist. A complete currency/entity perimeter is never silently
 truncated to fit a worker; an oversized perimeter is explicitly deferred.
 
 ## Review, Outputs, Locales, And Wording
 
-Load `references/review-and-outputs.md` when producing workpapers, reviewing deterministic classifications, or preparing operational follow-up requests.
+Load `../../references/review-and-outputs.md` when producing workpapers, reviewing deterministic classifications, or preparing operational follow-up requests.
 
-Load `references/locales-and-wording.md` when choosing language settings or writing localized evidence requests.
+Load `../../references/locales-and-wording.md` when choosing language settings or writing localized evidence requests.
 
 Before delivery, Claude must review the deterministic output, preserve limitations, and avoid exposing internal status/rule labels in client-facing requests.
 
@@ -379,6 +385,62 @@ After changing this plugin source, use the repo-local `plugin-release` workflow:
 Do not patch the downloadable ZIP manually.
 
 ## Cowork execution contract
+
+Select the exact files needed for this request. Folder access does not select
+all its contents: if the task needs two files in a folder containing four, use
+only those two. Resolve genuinely ambiguous choices with the user; reuse clear
+choices without another confirmation.
+
+Before parsing documents or creating a client, engagement or run, call
+`check_studio_import_sources` with all selected paths on the actual importer
+host. It needs no configured Archive and creates no records. If the MCP tool is
+unavailable, use the packaged `check-import-sources --source-path <path>` CLI
+through the maintained managed launcher on that same host (repeat the flag per
+file). A cloud-shell `ls` is not proof of access by a computer-side importer.
+Readable attachments, including `/mnt/user-data/uploads/` paths when the importer
+can read them, continue directly without requiring a connected computer folder.
+
+If files are unavailable, explain the cause immediately before creating anything:
+"The file is in the chat, but the import tool looks for it on your computer."
+Do not keep trying that same inaccessible path. Use this recovery sequence:
+
+1. Inspect the host's actual callable file-transfer capabilities and the already
+   connected folders. Reuse an authorized ordinary working folder outside the
+   managed `Vera/engagements/.../inputs` tree. Offer **Add folder** from the **+**
+   menu only when the current host offers it; otherwise explain the available
+   connection method. Ask for a folder only if an accessible destination is needed.
+2. With a supported bridge, copy only the selected original attachments to that
+   folder as files. Compute each original SHA-256 through the host file tools.
+   Do not recreate CSV text, convert encodings or line endings, relay document
+   contents through model-authored tool arguments, guess a mount translation,
+   overwrite a different file with the same name, or scan unrelated folders.
+   A verified byte-for-byte copy may reuse its destination on retry.
+3. Check the actual destination paths with `check_studio_import_sources`, passing
+   `expected_sha256` as the original hashes in the same order as `source_paths`.
+   The CLI takes one `--expected-sha256` per source. Archive hashes the destination
+   locally and returns `ready=true` only when all supplied original hashes match.
+   If no byte-preserving host transfer is available, say so and ask the user to
+   save the original selected files to the accessible working folder; then verify
+   them. Do not promise a bridge operation that is not callable.
+4. Only after all selected sources are ready, select/create the client and
+   engagement and import each through `import_studio_client_document` (CLI
+   `import-document`). Pass that file's `expected_sha256` / `--expected-sha256`
+   when a transfer was required. The importer checks it again during copying and
+   creates the input ID and SHA receipt itself. Never manually populate `inputs`.
+
+The path importer does not itself fetch chat attachments. Direct attachment use
+requires actual importer access or a demonstrated host transfer. If neither an
+importer-side check nor transfer is callable, explain the missing capability
+before creating records; do not create a cloud-only replacement for a local Archive.
+
+On any later import failure, disclose the existing `client_id` and `engagement_id`
+and resume those same records. A folder-name collision calls for inspecting the
+returned existing scope and reusing it when its identity matches; never clear old
+folders or change the client's name just to get past the error. A deliberately
+separate synthetic test may have a distinct name; retries retain their identities.
+Documentless client work needs no file check. Standalone workflows check access
+on their own execution host and do not require Archive or a computer folder when
+that engine can read the inputs.
 
 Public workflow names select skills; component IDs select module paths.
 `financial-report-builder` uses component `report-builder`, `vouching` (historically

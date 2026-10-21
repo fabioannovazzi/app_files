@@ -220,10 +220,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "4b605c91ddbc8a9a3906387bc04da54c96a5b0e3ab9675e41780dcbccafa5e47"
+    "source_fingerprint": "2cf3158d750be49c5ef57710a7746d16643ab97e5ae1b94c29d26dac92580ad6"
   },
   "public_explanations": {
     "apertura-pratica": {

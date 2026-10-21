@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -11,8 +12,11 @@ from archive_report_store import RunStore, digest, file_digest, run_lock
 
 __all__ = [
     "is_recording",
+    "model_argument_origin",
+    "register_model_arguments",
     "register_metadata",
     "register_metadata_revision",
+    "register_artifact_projection",
     "register_private_value",
     "register_projection",
     "register_rows",
@@ -87,6 +91,51 @@ def register_metadata(component: str, output: Path, payload: Any) -> None:
         )
 
 
+def register_model_arguments(
+    component: str, output: Path, arguments: list[str]
+) -> None:
+    """Remember exact text received from the model, without recording a send.
+
+    The native tool calls this before execution. Hashes are scoped to this run
+    and component; reading a file or running a plain CLI cannot create this
+    evidence. Returning this same text adds no newly exposed input-file cells.
+    """
+    root = bound_run(component, {"output": str(output)})
+    if root is None:
+        return
+    hashes = sorted({digest(value) for value in arguments})
+    with run_lock(root):
+        store = RunStore(root)
+        state = store.state()
+        if state is None or state["collection_closed"]:
+            return
+        store.event(
+            "model_arguments:" + digest([component, hashes]),
+            {
+                "kind": "model_supplied_arguments",
+                "component": component,
+                "value_sha256": hashes,
+            },
+        )
+
+
+def model_argument_origin(
+    component: str, output: Path, value: str
+) -> list[dict[str, Any]] | None:
+    """Resolve exact model-supplied text; unknown or changed text stays unknown."""
+    root = bound_run(component, {"output": str(output)})
+    if root is not None:
+        with run_lock(root):
+            if any(
+                event["kind"] == "model_supplied_arguments"
+                and event["component"] == component
+                and digest(value) in event["value_sha256"]
+                for event in RunStore(root).events()
+            ):
+                return []
+    return None
+
+
 def register_rows(
     component: str, output: Path, records: dict[str, dict[str, Any]]
 ) -> None:
@@ -121,21 +170,62 @@ def register_private_value(component: str, output: Path, value: Any) -> None:
 
 
 def register_metadata_revision(
-    component: str, path: Path, previous_sha256: str
+    component: str,
+    path: Path,
+    previous_sha256: str,
+    *,
+    expected_sha256: str | None = None,
 ) -> None:
-    """Carry an exact metadata parent through a producer's metadata-only edit."""
+    """Preserve known source operands through a producer's metadata-only edit."""
     root = bound_run(component, {"output": str(path)})
-    if root is None:
+    if root is None or path.is_symlink():
         return
     with run_lock(root):
-        known_parent = any(
-            event["kind"] == "prepared_projection"
-            and event["artifact_sha256"] == previous_sha256
-            and not event["selections"]
-            for event in RunStore(root).events()
+        store = RunStore(root)
+        parent = next(
+            (
+                event
+                for event in store.events()
+                if event["kind"] == "prepared_projection"
+                and event["artifact_sha256"] == previous_sha256
+            ),
+            None,
         )
-    if known_parent:
-        register_projection(component, path, [])
+        if parent is None:
+            return
+        sources = store.sources()
+        referenced_paths = set()
+        for selection in parent["selections"]:
+            source = next(
+                (
+                    item
+                    for item in sources
+                    if item["role"] == "input"
+                    and item["source_id"] == selection["source_id"]
+                    and item["sha256"] == selection["source_sha256"]
+                ),
+                None,
+            )
+            if source is None:
+                return
+            referenced_paths.add(Path(source["path"]))
+        content = path.read_bytes()
+        artifact_sha256 = hashlib.sha256(content).hexdigest()
+        if expected_sha256 is not None and artifact_sha256 != expected_sha256:
+            return
+        value = json.loads(content)
+        _verify_source_snapshots(sources, referenced_paths)
+        if file_digest(path) != artifact_sha256:
+            raise ValueError("Producer metadata edit changed during registration")
+        store.event(
+            "projection:" + artifact_sha256,
+            {
+                "kind": "prepared_projection",
+                "artifact_sha256": artifact_sha256,
+                "data_sha256": digest(value),
+                "selections": parent["selections"],
+            },
+        )
 
 
 def register_row_projection(
@@ -165,6 +255,51 @@ def register_row_projection(
         register_value(
             component, output, value, entries, artifact_sha256=artifact_sha256
         )
+
+
+def register_artifact_projection(
+    component: str,
+    path: Path,
+    *,
+    data_sha256: str,
+    artifact_sha256: str,
+    records: list[dict[str, Any]],
+    private_sha256: str,
+    previous_sha256: str | None = None,
+) -> None:
+    """Bind a writer's exact JSON file to its producer-owned review origins."""
+    root = bound_run(component, {"output": str(path)})
+    if (
+        root is None
+        or path.is_symlink()
+        or not path.resolve().is_relative_to(root / "outputs")
+        or file_digest(path) != artifact_sha256
+    ):
+        return
+    value = json.loads(path.read_bytes())
+    if digest(value) != data_sha256 or file_digest(path) != artifact_sha256:
+        return
+    if previous_sha256 is not None:
+        with run_lock(root):
+            if not any(
+                event["kind"] == "prepared_private_value"
+                and event["component"] == component
+                and event["data_sha256"] == private_sha256
+                for event in RunStore(root).events()
+            ):
+                return
+        register_metadata_revision(
+            component, path, previous_sha256, expected_sha256=artifact_sha256
+        )
+        return
+    register_row_projection(
+        component,
+        path,
+        value,
+        records,
+        private_sha256=private_sha256,
+        artifact_sha256=artifact_sha256,
+    )
 
 
 def _row_origins(events: list[dict[str, Any]], component: str) -> dict[str, Any]:
@@ -205,12 +340,13 @@ def _row_entries(
 
 
 def register_table_projection(
-    component: str, path: Path, cells: list[list[list[dict[str, Any]]]]
+    component: str, path: Path, cells: list[list[list[dict[str, Any]] | None]]
 ) -> None:
     """Bind each produced table cell to its declared record fields and exact bytes.
 
-    Empty references mean a producer-created constant or locator. Missing record
-    evidence invalidates the declaration; no column-name or value matching is used.
+    Empty references mean a producer-created constant or locator. None or missing
+    record evidence leaves that cell unknown; no column-name or value matching
+    is used. An unread unknown cell cannot invalidate another cell's provenance.
     """
     from archive_report_measurements import measure_source
 
@@ -221,6 +357,7 @@ def register_table_projection(
     if artifact["measurement_error"] or artifact["unit"] not in {
         "rows",
         "worksheet_rows",
+        "body_paragraphs",
     }:
         return
     if len(cells) != artifact["quantity"] or any(
@@ -238,16 +375,15 @@ def register_table_projection(
         workbooks: dict[str, dict[str, dict[int, int]]] = {}
         resolved = []
         for row in cells:
-            resolved_row = []
+            resolved_row: list[list[dict[str, Any]] | None] = []
             for records in row:
-                entries = _row_entries(origins, records)
+                entries = None if records is None else _row_entries(origins, records)
                 if entries is None:
-                    return
+                    resolved_row.append(None)
+                    continue
                 selections = _source_selections(
                     sources, entries, checked_sources, workbooks
                 )
-                if selections is None:
-                    return
                 resolved_row.append(selections)
             resolved.append(resolved_row)
         if file_digest(path) != artifact["sha256"]:

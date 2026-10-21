@@ -28,6 +28,8 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_archive_automatic_reporting.py
+          tests/plugins/test_archive_reporting_recovery.py
+          tests/plugins/test_archive_finalization_boundaries.py
           tests/plugins/test_portable_workflow_diagnostics.py
           tests/plugins/test_archive_emission_boundaries.py
           tests/plugins/test_archive_cli_delivery.py
@@ -41,14 +43,19 @@ jobs:
           --cov=archive_reporting --cov=archive_report_store --cov=archive_emit
           --cov=archive_cli --cov=archive_projection --cov=archive_report_measurements
           --cov=archive_report_receipt --cov=archive_report_seal
+          --cov=archive_error_reporting
           --cov-report=term-missing --cov-fail-under=80
       - name: Check source quality
         shell: bash
         run: |
-          python -m black --check plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/plugins/test_archive_journal_bank_projection.py tests/modules/run_receipts/test_archive_binding.py
-          python -m isort --check-only plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/plugins/test_archive_journal_bank_projection.py tests/modules/run_receipts/test_archive_binding.py
+          python -m black --check plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/plugins/test_archive_reporting_recovery.py tests/plugins/test_archive_journal_bank_projection.py tests/modules/run_receipts/test_archive_binding.py
+          python -m isort --check-only plugins/_shared/reporting-runtime/archive_*.py tests/plugins/test_archive_automatic_reporting.py tests/plugins/test_archive_reporting_recovery.py tests/plugins/test_archive_journal_bank_projection.py tests/modules/run_receipts/test_archive_binding.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/reporting-runtime/archive_*.py
           python -m bandit -q -ll plugins/_shared/reporting-runtime/archive_*.py
+          python -m black --check plugins/studio-archive/scripts/archive_error_reporting.py tests/plugins/test_archive_finalization_boundaries.py
+          python -m isort --check-only plugins/studio-archive/scripts/archive_error_reporting.py tests/plugins/test_archive_finalization_boundaries.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_error_reporting.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/archive_error_reporting.py
           python -m black --check plugins/_shared/reporting-runtime/diagnostic_context.py tests/plugins/test_portable_workflow_diagnostics.py
           python -m isort --check-only plugins/_shared/reporting-runtime/diagnostic_context.py tests/plugins/test_portable_workflow_diagnostics.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/_shared/reporting-runtime/diagnostic_context.py

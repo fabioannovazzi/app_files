@@ -71,6 +71,51 @@ def clean_text(value: object) -> str:
     return "" if value is None else str(value).strip()
 
 
+def _cell_origin(row: dict[str, Any], *fields: str) -> list[dict[str, Any]] | None:
+    """Retain the first populated field actually selected by this formatter."""
+    field = next((name for name in fields if clean_text(row.get(name))), None)
+    if field is None:
+        return []
+    record_id = clean_text(row.get("record_id"))
+    return [{"record_id": record_id, "fields": [field]}] if record_id else None
+
+
+def _combine_origins(
+    *groups: list[dict[str, Any]] | None
+) -> list[dict[str, Any]] | None:
+    """Preserve an unknown operand instead of manufacturing complete lineage."""
+    if any(group is None for group in groups):
+        return None
+    return [entry for group in groups if group is not None for entry in group]
+
+
+def _bank_origin(row: dict[str, Any], field: str) -> list[dict[str, Any]] | None:
+    """Bind a bank-derived value to its explicit supporting record identity."""
+    record_id = clean_text(row.get("supporting_bank_record_id")) or clean_text(
+        row.get("matched_evidence_id")
+    )
+    return [{"record_id": record_id, "fields": [field]}] if record_id else None
+
+
+def _action_origin(row: dict[str, Any]) -> list[dict[str, Any]] | None:
+    """Recognize exact owned wording; supplied free text remains unmeasured."""
+    try:
+        from .locale_support import SUPPORTED_LANGUAGES, missing_evidence_messages
+    except ImportError:
+        from locale_support import SUPPORTED_LANGUAGES, missing_evidence_messages
+
+    message = clean_text(row.get("missing_evidence"))
+    if not message:
+        return []  # default_action constructs a literal label in this module.
+    owned = {
+        value
+        for language in SUPPORTED_LANGUAGES
+        for value in missing_evidence_messages(language).values()
+    }
+    owned.add("Il residuo resta aperto: acquisire evidenza del suo regolamento.")
+    return [] if message in owned else None
+
+
 def split_values(value: object) -> list[str]:
     """Split semicolon-separated source fields without empty entries."""
 
@@ -221,6 +266,8 @@ def confidence_for_row(row: dict[str, Any], has_detail: bool) -> str:
         and row.get("rule_applied") == "semantic_evidence_allocation"
     ):
         return "Alta"
+    if status == "partially_paid" and evidence_level == "strong_external":
+        return "Alta"
     if status == "probable_payment":
         return "Media"
     if status == "needs_evidence":
@@ -318,6 +365,27 @@ def evidence_record_detail(
         or evidence_type_label(evidence_type, source_role)
     )
     return {
+        "_cells": {
+            "partita": _cell_origin(open_row, "document_no", "document_key"),
+            "data evidenza": _cell_origin(
+                evidence, "bank_date", "posting_date", "value_date", "document_date"
+            ),
+            "importo evidenza": _cell_origin(evidence, "amount", "bank_amount"),
+            "differenza": (
+                _combine_origins(
+                    _cell_origin(open_row, "amount"),
+                    _cell_origin(evidence, "amount", "bank_amount"),
+                )
+                if amount_difference(open_row.get("amount"), amount)
+                and clean_text(open_row.get("currency"))
+                == clean_text(evidence.get("currency"))
+                else []
+            ),
+            "descrizione evidenza": _cell_origin(
+                evidence, "description", "document_no"
+            ),
+            "azione richiesta": _action_origin(open_row),
+        },
         "id dettaglio": row_id,
         "partita": clean_text(open_row.get("document_no"))
         or clean_text(open_row.get("document_key")),
@@ -363,6 +431,28 @@ def matched_reference_detail(
         return None
     amount = clean_text(row.get("matched_evidence_amounts"))
     return {
+        "_cells": {
+            "partita": _cell_origin(row, "document_no", "document_key"),
+            "data evidenza": (
+                _bank_origin(row, "posting_date")
+                if clean_text(row.get("supporting_bank_date"))
+                else []
+            ),
+            "importo evidenza": _bank_origin(row, "amount") if amount else [],
+            "differenza": (
+                _combine_origins(
+                    _cell_origin(row, "amount"), _bank_origin(row, "amount")
+                )
+                if amount_difference(row.get("amount"), amount)
+                else []
+            ),
+            "descrizione evidenza": (
+                _bank_origin(row, "description")
+                if clean_text(row.get("supporting_bank_description"))
+                else []
+            ),
+            "azione richiesta": _action_origin(row),
+        },
         "id dettaglio": row_id,
         "partita": clean_text(row.get("document_no"))
         or clean_text(row.get("document_key")),
@@ -393,7 +483,32 @@ def bank_candidate_detail(
     perimeter_mismatch = row.get("rule_applied") == "accounting_perimeter_mismatch"
     if perimeter_mismatch:
         confidence = "Bassa"
+    bank = {"supporting_bank_record_id": candidate.get("bank_record_id")}
     return {
+        "_cells": {
+            "partita": _cell_origin(row, "document_no", "document_key"),
+            "data evidenza": _bank_origin(bank, "posting_date"),
+            "importo evidenza": _bank_origin(bank, "amount"),
+            "differenza": (
+                _combine_origins(
+                    _cell_origin(row, "amount"), _bank_origin(bank, "amount")
+                )
+                if not perimeter_mismatch
+                and amount_difference(row.get("amount"), candidate.get("bank_amount"))
+                else []
+            ),
+            "descrizione evidenza": (
+                _bank_origin(bank, "description")
+                if clean_text(candidate.get("bank_description"))
+                else []
+            ),
+            "azione richiesta": (
+                None
+                if not perimeter_mismatch
+                and clean_text(candidate.get("required_follow_up"))
+                else []
+            ),
+        },
         "id dettaglio": row_id,
         "partita": clean_text(row.get("document_no"))
         or clean_text(row.get("document_key")),
@@ -488,6 +603,10 @@ def collect_detail_rows(
     if not details:
         details.append(
             {
+                "_cells": {
+                    "partita": _cell_origin(row, "document_no", "document_key"),
+                    "azione richiesta": _action_origin(row),
+                },
                 "id dettaglio": row_id,
                 "partita": clean_text(row.get("document_no"))
                 or clean_text(row.get("document_key")),
@@ -590,18 +709,61 @@ def main_row_from_detail(
         )
         difference_text = clean_text(best.get("differenza"))
         difference = parse_decimal(difference_text)
+        amount = parse_decimal(row.get("amount"))
+        allocated = parse_decimal(row.get("allocated_amount"))
+        residual = parse_decimal(row.get("residual_amount"))
+        evidence_amount = parse_decimal(best.get("importo evidenza"))
+        # An exact partial allocation explains its residual; it is not an
+        # unexplained mismatch. Keep any inconsistent detail visibly flagged.
+        explained_partial = (
+            status == "partially_paid"
+            and None not in (amount, allocated, residual, evidence_amount, difference)
+            and allocated > 0
+            and residual > 0
+            and abs(amount) == allocated + residual
+            and abs(evidence_amount) == allocated
+            and abs(difference) == residual
+        )
         semantic_supported = row.get("rule_applied") == "semantic_evidence_allocation"
         ambiguous = not semantic_supported and (
             confidence in {"Media", "Bassa", "Non trovato"}
             or len(details) > 1
-            or bool(difference_text and difference != Decimal("0"))
+            or bool(
+                difference_text and difference != Decimal("0") and not explained_partial
+            )
         )
         non_capita = "SI" if ambiguous else "NO"
 
     evidence_used = clean_text(row.get("semantic_reason")) or clean_text(
         best.get("descrizione evidenza")
     )
+    detail_origins = best.get("_cells", {})
+    allocated_origin = (
+        _bank_origin(row, "amount") if clean_text(row.get("allocated_amount")) else []
+    )
     return {
+        "_cells": {
+            "partita": _cell_origin(row, "document_no", "document_key"),
+            "data documento": _cell_origin(row, "document_date", "posting_date"),
+            "importo": _cell_origin(row, "amount"),
+            "saldo": _cell_origin(row, "balance"),
+            "importo attribuito": allocated_origin,
+            "residuo aperto": (
+                _combine_origins(_cell_origin(row, "balance"), allocated_origin)
+                if clean_text(row.get("residual_amount"))
+                else []
+            ),
+            "data pagamento": (
+                detail_origins.get("data evidenza", []) if confidence != "N/A" else []
+            ),
+            "evidenza usata": (
+                None
+                if clean_text(row.get("semantic_reason"))
+                else detail_origins.get("descrizione evidenza", [])
+            ),
+            "differenza importo": detail_origins.get("differenza", []),
+            "azione richiesta": _action_origin(row),
+        },
         "id dettaglio": row_id,
         "partita": clean_text(row.get("document_no"))
         or clean_text(row.get("document_key")),
@@ -664,6 +826,7 @@ def build_accountant_report_rows(
             visible = {key: detail.get(key, "") for key in DETAIL_HEADERS}
             visible["Record refs"] = clean_text(row.get("record_id"))
             visible["id dettaglio"] = f"{row_id}-{detail_index:03d}"
+            visible["_cells"] = detail.get("_cells", {})
             detail_rows.append(visible)
         status = clean_text(main.get("stato riscontro"))
         confidence = clean_text(main.get("confidenza"))
@@ -807,6 +970,7 @@ def write_accountant_report_workbook(
     *,
     bank_allocation_candidates: list[dict[str, Any]] | None = None,
     normalized_records: list[dict[str, Any]] | None = None,
+    projection_cells: list[list[list[dict[str, Any]] | None]] | None = None,
 ) -> Path:
     """Write the standard accountant-facing operational workbook."""
 
@@ -875,4 +1039,21 @@ def write_accountant_report_workbook(
         },
     )
     workbook.save(path)
+    if projection_cells is not None:
+        # Headers, padding, generated labels/counts and source locators
+        # contain no copied source cells. Explicit value transformations above
+        # retain their original fields, including both operands of residuals.
+        width = max(len(MAIN_HEADERS), len(DETAIL_HEADERS))
+        for headers, rows in (
+            (["campo", "valore"], legend_rows),
+            (MAIN_HEADERS, main_rows),
+            (DETAIL_HEADERS, detail_rows),
+        ):
+            projection_cells.append([[] for _ in range(width)])
+            for row in rows:
+                origins = row.get("_cells", {})
+                projection_cells.append(
+                    [origins.get(header, []) for header in headers]
+                    + [[] for _ in range(width - len(headers))]
+                )
     return path

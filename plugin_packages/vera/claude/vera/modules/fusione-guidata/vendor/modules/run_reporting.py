@@ -26,6 +26,7 @@ __all__ = [
     "begin_report",
     "finish_report",
     "report_declarations",
+    "retain_artifact_manifest",
     "selective_reporting_enabled",
 ]
 
@@ -89,3 +90,10 @@ def report_declarations(output: Path) -> list[dict[str, str]]:
                 }
             )
     return result
+
+
+def retain_artifact_manifest(root: Path, manifest: dict[str, Any]) -> None:
+    """Keep the receipt used by existing handoffs when delivery labels change."""
+    from archive_report_seal import retain_manifest
+
+    retain_manifest(root, manifest)
