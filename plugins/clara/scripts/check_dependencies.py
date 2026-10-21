@@ -13,7 +13,11 @@ from pathlib import Path
 from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
 from managed_python_runtime import ensure_runtime, run_verified_helper
 from operational_incidents import report_failure
-from verified_execution import prepare_execution_root, report_preparation_failure
+from verified_execution import (
+    prepare_execution_root,
+    release_execution_root,
+    report_preparation_failure,
+)
 
 __all__ = [
     "check_dependencies",
@@ -294,104 +298,118 @@ def main(argv: list[str] | None = None) -> int:
     except (OSError, ValueError) as error:
         report_preparation_failure(plugin_root(), args.module, error)
         return 1
-    if args.module is not None:
-        root = (
-            execution_root / "modules" / args.module
-            if execution_root != plugin_root()
-            else component_root(args.module)
-        )
-        checker = root / "scripts" / "check_dependencies.py"
-        if not checker.is_file():
-            LOGGER.error(
-                "Dependency checker not found for %s: %s", args.module, checker
+    try:
+        if args.module is not None:
+            root = (
+                execution_root / "modules" / args.module
+                if execution_root != plugin_root()
+                else component_root(args.module)
             )
-            report_preparation_failure(
-                plugin_root(),
+            checker = root / "scripts" / "check_dependencies.py"
+            if not checker.is_file():
+                LOGGER.error(
+                    "Dependency checker not found for %s: %s", args.module, checker
+                )
+                report_preparation_failure(
+                    plugin_root(),
+                    args.module,
+                    ValueError("Published dependency checker is missing"),
+                    stage="dependency-setup",
+                    technical_code="runtime.missing-checker",
+                    technical_type="MissingDependencyChecker",
+                )
+                return 1
+            delegated_args = list(remaining)
+            for requirement in args.requirements or []:
+                delegated_args.extend(("--requirements", str(requirement)))
+            if args.include_optional:
+                delegated_args.append("--include-optional")
+            runtime_requirements = (
+                [str(path) for path in args.requirements] if args.requirements else None
+            )
+            if args.module == "reporting-engine" and args.include_optional:
+                runtime_requirements = list(
+                    runtime_requirements or ["requirements.txt"]
+                )
+                if "requirements-render.txt" not in runtime_requirements:
+                    runtime_requirements.append("requirements-render.txt")
+            if runtime_requirements is None:
+                ready, target, detail = ensure_runtime(execution_root, args.module)
+            else:
+                ready, target, detail = ensure_runtime(
+                    execution_root, args.module, requirements=runtime_requirements
+                )
+            if not ready:
+                LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
+                if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                    report_failure(
+                        args.module or "clara-core", "dependency-setup", detail
+                    )
+                return 1
+            runtime_args = ["--module", args.module]
+            for requirement in runtime_requirements or []:
+                runtime_args.extend(["--requirements", requirement])
+            return run_verified_helper(
+                execution_root,
+                [
+                    *runtime_args,
+                    "run",
+                    "scripts/check_dependencies.py",
+                    *delegated_args,
+                ],
                 args.module,
-                ValueError("Published dependency checker is missing"),
-                stage="dependency-setup",
-                technical_code="runtime.missing-checker",
-                technical_type="MissingDependencyChecker",
             )
-            return 1
-        delegated_args = list(remaining)
-        for requirement in args.requirements or []:
-            delegated_args.extend(("--requirements", str(requirement)))
-        if args.include_optional:
-            delegated_args.append("--include-optional")
-        runtime_requirements = (
-            [str(path) for path in args.requirements] if args.requirements else None
-        )
-        if args.module == "reporting-engine" and args.include_optional:
-            runtime_requirements = list(runtime_requirements or ["requirements.txt"])
-            if "requirements-render.txt" not in runtime_requirements:
-                runtime_requirements.append("requirements-render.txt")
-        if runtime_requirements is None:
-            ready, target, detail = ensure_runtime(execution_root, args.module)
-        else:
-            ready, target, detail = ensure_runtime(
-                execution_root, args.module, requirements=runtime_requirements
+        if remaining:
+            parser.error(f"unrecognized arguments: {' '.join(remaining)}")
+        if not args.managed_verify and not os.environ.get(
+            "MPARANZA_MANAGED_RUNTIME_VERIFY"
+        ):
+            ready, target, detail = ensure_runtime(execution_root)
+            if not ready:
+                LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
+                if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                    report_failure(
+                        args.module or "clara-core", "dependency-setup", detail
+                    )
+                return 1
+            delegated_args = ["--managed-verify"]
+            for requirement in args.requirements or []:
+                delegated_args.extend(("--requirements", str(requirement)))
+            if args.include_optional:
+                delegated_args.append("--include-optional")
+            for input_path in args.input or []:
+                delegated_args.extend(("--input", str(input_path)))
+            return run_verified_helper(
+                execution_root,
+                ["run", "scripts/check_dependencies.py", *delegated_args],
+                "clara-core",
             )
-        if not ready:
-            LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
-            if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
-                report_failure(args.module or "clara-core", "dependency-setup", detail)
-            return 1
-        runtime_args = ["--module", args.module]
-        for requirement in runtime_requirements or []:
-            runtime_args.extend(["--requirements", requirement])
-        return run_verified_helper(
-            execution_root,
-            [*runtime_args, "run", "scripts/check_dependencies.py", *delegated_args],
-            args.module,
-        )
-    if remaining:
-        parser.error(f"unrecognized arguments: {' '.join(remaining)}")
-    if not args.managed_verify and not os.environ.get(
-        "MPARANZA_MANAGED_RUNTIME_VERIFY"
-    ):
-        ready, target, detail = ensure_runtime(execution_root)
-        if not ready:
-            LOGGER.error("Clara managed Python runtime setup failed: %s", detail)
-            if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
-                report_failure(args.module or "clara-core", "dependency-setup", detail)
-            return 1
-        delegated_args = ["--managed-verify"]
-        for requirement in args.requirements or []:
-            delegated_args.extend(("--requirements", str(requirement)))
-        if args.include_optional:
-            delegated_args.append("--include-optional")
-        for input_path in args.input or []:
-            delegated_args.extend(("--input", str(input_path)))
-        return run_verified_helper(
-            execution_root,
-            ["run", "scripts/check_dependencies.py", *delegated_args],
-            "clara-core",
-        )
-    ocr_required = input_requires_ocr(args.input or [])
-    if ocr_required:
-        activate_ocr_runtime(plugin_root() / "requirements-ocr.txt")
-    requirement_files = selected_requirement_files(
-        args.requirements,
-        include_optional=args.include_optional or ocr_required,
-    )
-    missing = check_dependencies(requirement_files)
-    if missing:
+        ocr_required = input_requires_ocr(args.input or [])
         if ocr_required:
-            LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
-        LOGGER.error("Missing dependencies: %s", ", ".join(missing))
-        LOGGER.error(
-            "Checked requirement files: %s",
-            ", ".join(str(path) for path in requirement_files),
+            activate_ocr_runtime(plugin_root() / "requirements-ocr.txt")
+        requirement_files = selected_requirement_files(
+            args.requirements,
+            include_optional=args.include_optional or ocr_required,
         )
-        return 1
-    if ocr_required:
-        LOGGER.info(
-            "OCR_REQUIRED: Visual-only input detected; the shared PaddleOCR "
-            "runtime is ready."
-        )
-    LOGGER.info("All Clara dependencies are available.")
-    return 0
+        missing = check_dependencies(requirement_files)
+        if missing:
+            if ocr_required:
+                LOGGER.error("OCR_SETUP_REQUIRED: %s", OCR_SETUP_PROMPT)
+            LOGGER.error("Missing dependencies: %s", ", ".join(missing))
+            LOGGER.error(
+                "Checked requirement files: %s",
+                ", ".join(str(path) for path in requirement_files),
+            )
+            return 1
+        if ocr_required:
+            LOGGER.info(
+                "OCR_REQUIRED: Visual-only input detected; the shared PaddleOCR "
+                "runtime is ready."
+            )
+        LOGGER.info("All Clara dependencies are available.")
+        return 0
+    finally:
+        release_execution_root(execution_root)
 
 
 if __name__ == "__main__":

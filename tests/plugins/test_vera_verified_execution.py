@@ -385,9 +385,10 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
         assert len(delegated) == 1
         assert delegated[0][0] != root
         assert delegated[0][1] == arguments
+        assert not delegated[0][0].exists()
     finally:
         if delegated:
-            shutil.rmtree(delegated[0][0])
+            shutil.rmtree(delegated[0][0], ignore_errors=True)
 
 
 def test_preflight_cli_returns_verified_root(tmp_path, monkeypatch, capsys):
@@ -538,3 +539,187 @@ def test_host_description_quoting_preserves_verified_execution(tmp_path):
 
     assert prepared == root
     assert json.loads(description).startswith("Prepare one business plan")
+
+
+@pytest.mark.parametrize("snapshot", [False, True])
+def test_owned_copy_release_preserves_installation_and_alias(tmp_path, snapshot):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    source = (
+        root / "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py"
+    )
+    alias = tmp_path / "host-alias"
+    alias.hardlink_to(source)
+    original = alias.read_bytes()
+    prepared = recovery.prepare_execution_root(
+        root, "journal-bank-reconciliation", snapshot=snapshot
+    )
+    assert prepared.exists()
+
+    recovery.release_execution_root(prepared)
+    recovery.release_execution_root(prepared)
+    recovery.release_execution_root(root)
+
+    assert not prepared.exists()
+    assert source.read_bytes() == original
+    assert alias.read_bytes() == original
+    assert source.stat().st_nlink == 2
+
+
+def test_cleanup_never_removes_borrowed_temporary_or_symlink_target(tmp_path):
+    recovery = load_recovery()
+    borrowed = tmp_path / "vera-verified-not-owned"
+    borrowed.mkdir()
+    data = borrowed / "keep.txt"
+    data.write_text("client output")
+    link = tmp_path / "alias"
+    link.symlink_to(borrowed, target_is_directory=True)
+
+    recovery.release_execution_root(borrowed)
+    recovery.release_execution_root(link)
+
+    assert data.read_text() == "client output"
+    assert link.is_symlink()
+
+
+def test_hardlinked_preflight_leaves_no_copy(tmp_path, monkeypatch, capsys):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    (tmp_path / "alias").hardlink_to(root / "components.json")
+    temporary = tmp_path / "temp"
+    temporary.mkdir()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(temporary))
+    monkeypatch.setattr(
+        recovery, "__file__", str(root / "scripts/verified_execution.py")
+    )
+
+    assert recovery.main(["--module", "journal-bank-reconciliation"]) == 0
+
+    assert json.loads(capsys.readouterr().out) == {"execution_root": str(root)}
+    assert list(temporary.iterdir()) == []
+    assert (root / "components.json").stat().st_nlink == 2
+
+
+@pytest.mark.parametrize("failure", [RuntimeError, KeyboardInterrupt])
+def test_interrupted_copy_preparation_leaves_no_partial_tree(
+    tmp_path, monkeypatch, failure
+):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    (tmp_path / "alias").hardlink_to(root / "components.json")
+    temporary = tmp_path / "temp"
+    temporary.mkdir()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(temporary))
+
+    def fail(*args):
+        raise failure("interrupted validation")
+
+    monkeypatch.setattr(recovery, "_validate_module", fail)
+    with pytest.raises(failure):
+        recovery.prepare_execution_root(root, "journal-bank-reconciliation")
+
+    assert list(temporary.iterdir()) == []
+    assert root.exists()
+
+
+def test_process_exit_releases_library_copy(tmp_path):
+    root = installation(tmp_path)
+    (tmp_path / "alias").hardlink_to(root / "components.json")
+    code = (
+        "import runpy,sys; from pathlib import Path; "
+        "v=runpy.run_path(sys.argv[1]); "
+        "p=v['prepare_execution_root'](Path(sys.argv[2]), 'journal-bank-reconciliation'); "
+        "print(p, flush=True); assert p.exists()"
+    )
+    result = subprocess.run(
+        [sys.executable, "-B", "-c", code, str(SCRIPT), str(root)],
+        capture_output=True,
+        text=True,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert not Path(result.stdout.strip()).exists()
+    assert root.exists()
+
+
+def test_locked_copy_cleanup_is_retried_without_changing_result(tmp_path, monkeypatch):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    prepared = recovery.prepare_execution_root(
+        root, "journal-bank-reconciliation", snapshot=True
+    )
+    remove = recovery.shutil.rmtree
+
+    def locked(*args, **kwargs):
+        raise PermissionError("file still open on Windows")
+
+    monkeypatch.setattr(recovery.shutil, "rmtree", locked)
+    recovery.release_execution_root(prepared)
+    assert prepared.exists()
+    monkeypatch.setattr(recovery.shutil, "rmtree", remove)
+
+    recovery.release_execution_root(prepared)
+
+    assert not prepared.exists()
+    assert root.exists()
+
+
+def test_cleanup_rejects_replaced_owned_directory(tmp_path):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    prepared = recovery.prepare_execution_root(
+        root, "journal-bank-reconciliation", snapshot=True
+    )
+    original = prepared.with_name(prepared.name + "-moved")
+    prepared.rename(original)
+    prepared.mkdir()
+    output = prepared / "keep.txt"
+    output.write_text("unrelated output")
+    try:
+        recovery.release_execution_root(prepared)
+        assert output.read_text() == "unrelated output"
+        assert original.exists()
+    finally:
+        shutil.rmtree(prepared)
+        shutil.rmtree(original)
+
+
+@pytest.mark.parametrize("outcome", [0, 17, RuntimeError, KeyboardInterrupt])
+def test_managed_run_releases_copy_on_every_exit(tmp_path, monkeypatch, outcome):
+    root = installation(tmp_path)
+    (tmp_path / "alias").hardlink_to(root / "components.json")
+    monkeypatch.syspath_prepend(str(SCRIPT.parent))
+    spec = importlib.util.spec_from_file_location(
+        "managed_copy_lifetime_test", SCRIPT.parent / "managed_python_runtime.py"
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    monkeypatch.setattr(
+        launcher, "__file__", str(root / "scripts/managed_python_runtime.py")
+    )
+    observed = []
+
+    def run(prepared, *args):
+        observed.append(prepared)
+        assert prepared.exists()
+        assert prepared != root
+        if isinstance(outcome, type):
+            raise outcome("helper interrupted")
+        return outcome
+
+    monkeypatch.setattr(launcher, "run_verified_helper", run)
+    args = [
+        "--module",
+        "journal-bank-reconciliation",
+        "run",
+        "scripts/inspect_inputs.py",
+    ]
+    if isinstance(outcome, type):
+        with pytest.raises(outcome):
+            launcher.main(args)
+    else:
+        assert launcher.main(args) == outcome
+
+    assert len(observed) == 1
+    assert not observed[0].exists()
+    assert root.exists()

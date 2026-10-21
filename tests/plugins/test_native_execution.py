@@ -71,8 +71,13 @@ def installed(tmp_path):
 
 
 def environment(tmp_path):
+    temporary = tmp_path / "os-temp"
+    temporary.mkdir(exist_ok=True)
     return {
         **os.environ,
+        "TMPDIR": str(temporary),
+        "TMP": str(temporary),
+        "TEMP": str(temporary),
         "MPARANZA_RUNTIME_ROOT": str(tmp_path / "unused-runtime"),
         "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incidents"),
         "MPARANZA_INCIDENT_DELIVERY": "local-only",
@@ -335,3 +340,34 @@ def test_native_state_writes_work_when_chat_shell_writes_are_denied(
     assert output(result)[0]["state"] == "completed"
     assert output(result)[1]["stderr"] == ""
     assert (state / "state.json").is_file()
+
+
+def test_native_service_releases_snapshot_after_last_persistent_job(
+    installed, tmp_path
+):
+    args = request(
+        tmp_path, arguments=[str(tmp_path / "counter"), "0.5"], wait_seconds=0
+    )
+    temporary = tmp_path / "os-temp"
+    with native(installed, tmp_path) as call:
+        started = call(args)
+        assert output(started)[0]["state"] == "running"
+        assert list(temporary.glob("vera-verified-*"))
+        assert list(temporary.glob("vera-execution-bootstrap-*"))
+    # Closing the transport waits for its worker, then releases only code.
+    assert (tmp_path / "counter").read_text() == "run\n"
+    assert not list(temporary.glob("vera-verified-*"))
+    assert not list(temporary.glob("vera-execution-bootstrap-*"))
+    with native(installed, tmp_path) as call:
+        retained = call({"operation": "status", "job_id": args["job_id"]})
+    assert output(retained)[0]["state"] == "completed"
+    assert output(retained)[0]["returncode"] == 0
+    assert (tmp_path / "counter").read_text() == "run\n"
+
+
+def test_idle_native_service_releases_snapshot(installed, tmp_path):
+    with native(installed, tmp_path):
+        pass
+    temporary = tmp_path / "os-temp"
+    assert not list(temporary.glob("vera-verified-*"))
+    assert not list(temporary.glob("vera-execution-bootstrap-*"))

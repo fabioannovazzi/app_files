@@ -559,7 +559,7 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/vera/scripts/check_dependencies.py",
-      "sha256": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
+      "sha256": "fdabe0140dad23c87e668f059c95cfd5a569f0340d97e71621213095843e4f4d"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -569,7 +569,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "7e90445c14129245ca9165e6c908edd8ad0937ac8cc47eee99598ba85ba509cf"
+      "sha256": "774b17b418113d5481072863dc18af2f236dce91baad9f04d1058b7d5e10c89b"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -594,7 +594,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/vera/scripts/verified_execution.py",
-      "sha256": "285de14194ae93fcd4f08531154e369e748784909a18adbc54c59232a6c1bf9f"
+      "sha256": "eee5ef894358c8837d67bff7b98c2ead538bcbfb12ea73d12cbde8ab1e64cdf2"
     },
     {
       "path": "scripts/workflow_usage.py",

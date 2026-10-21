@@ -22,6 +22,7 @@ __all__ = ["execute", "serve", "main"]
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
+_OWNED_WORKERS: list[subprocess.Popen] = []
 
 
 def _write(path: Path, value: Any) -> None:
@@ -224,6 +225,8 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
                     stderr=errors,
                     **options,
                 )
+            _OWNED_WORKERS[:] = [item for item in _OWNED_WORKERS if item.poll() is None]
+            _OWNED_WORKERS.append(worker)
             threading.Thread(target=worker.wait, daemon=True).start()
     elif set(args) - {"operation", "job_id", "wait_seconds"}:
         raise ValueError(
@@ -513,7 +516,13 @@ def main() -> int:
     args = parser.parse_args()
     if args.execute is not None:
         return _run(args.execute)
-    serve()
+    try:
+        serve()
+    finally:
+        # A disconnected host does not cancel persistent work. Keep this code
+        # snapshot alive until every worker launched from it has finished.
+        for worker in _OWNED_WORKERS:
+            worker.wait()
     return 0
 
 

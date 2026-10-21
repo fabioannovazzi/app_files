@@ -7,6 +7,7 @@ detects drift, not publisher authenticity. No case files or network are used.
 from __future__ import annotations
 
 import argparse
+import atexit
 import hashlib
 import json
 import logging
@@ -29,6 +30,7 @@ __all__ = [
     "InstallationContentMismatch",
     "MANIFEST",
     "prepare_execution_root",
+    "release_execution_root",
     "report_preparation_failure",
     "main",
 ]
@@ -45,6 +47,38 @@ ASSURED_MODULES = frozenset(
 )
 MANIFEST = "execution-files.json"
 LOGGER = logging.getLogger(__name__)
+# Only copies created by this process may be removed. Never infer ownership
+# from a directory name or delete a caller's installation/input/output tree.
+_OWNED_COPIES: dict[Path, tuple[int, int, int]] = {}
+
+
+def release_execution_root(root: Path) -> None:
+    """Remove a process-owned code copy without touching borrowed roots."""
+    identity = _OWNED_COPIES.get(root)
+    if identity is None or identity[0] != os.getpid():
+        return
+    try:
+        info = root.lstat()
+        if not stat.S_ISDIR(info.st_mode) or (info.st_dev, info.st_ino) != identity[1:]:
+            LOGGER.warning(
+                "Temporary execution root changed; cleanup skipped: %s", root
+            )
+            return
+        shutil.rmtree(root)
+    except FileNotFoundError:
+        pass
+    except OSError:
+        LOGGER.warning("Temporary execution cleanup pending: %s", root, exc_info=True)
+        return
+    _OWNED_COPIES.pop(root, None)
+
+
+def _release_owned_copies() -> None:
+    for root in tuple(_OWNED_COPIES):
+        release_execution_root(root)
+
+
+atexit.register(_release_owned_copies)
 
 
 def _identity(info: os.stat_result) -> tuple[int, ...]:
@@ -272,6 +306,8 @@ def prepare_execution_root(
             prefix="vera-verified-", dir=Path(tempfile.gettempdir()).resolve()
         )
     )
+    info = private.lstat()
+    _OWNED_COPIES[private] = (os.getpid(), info.st_dev, info.st_ino)
     try:
         for name, data in {**contents, MANIFEST: manifest_bytes}.items():
             path = private / name
@@ -282,8 +318,9 @@ def prepare_execution_root(
             if installed != data or links != 1:
                 raise ValueError(f"Private execution copy failed verification: {name}")
         _validate_module(private, module)
-    except (OSError, ValueError):
-        shutil.rmtree(private)
+    except BaseException:
+        # Cancellation must not leak a partially materialized package either.
+        release_execution_root(private)
         raise
     LOGGER.log(
         logging.INFO if snapshot else logging.WARNING,
@@ -460,7 +497,10 @@ def main(argv: list[str] | None = None) -> int:
         LOGGER.error("Preparazione di Vera bloccata: %s", error)
         report_preparation_failure(root, args.module, error)
         return 1
-    sys.stdout.write(json.dumps({"execution_root": str(prepared)}) + "\n")
+    # Preflight is a check, not a lease spanning unrelated shell processes.
+    # Subsequent managed commands prepare their own scoped execution copy.
+    release_execution_root(prepared)
+    sys.stdout.write(json.dumps({"execution_root": str(root)}) + "\n")
     return 0
 
 
