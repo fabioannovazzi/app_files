@@ -134,7 +134,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "cc50a36c6d4f7454ac0c842f8268ad5690a6f85fb8f8a25c0e4372b104e5f877"
+      "sha256": "f2d1b21e75741cd76fef908a4f32de63da93722b43952be0864edad045cbc97c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -144,7 +144,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "bb4d3ebf5866c52823516afcef2c5041d4315d1c60b68d991a3f7f1db1fb949f"
+      "sha256": "e4bb318675b7cc1b097be2a4221b1f3549afba69fb649637705214d86741ed5e"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",

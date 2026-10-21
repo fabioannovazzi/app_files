@@ -819,6 +819,7 @@ def test_word_report_keeps_source_control_receipts_out_of_financial_prose(tmp_pa
             "bank.pdf": {"money": {"reported_increment": "0.01"}}
         },
         "_reviewed_source_decision_receipts": {"private_control_marker": "receipt"},
+        "semantic_resolution": {"population_sha256": "semantic_receipt_marker"},
     }
     path = tmp_path / "report.docx"
 
@@ -836,6 +837,10 @@ def test_word_report_keeps_source_control_receipts_out_of_financial_prose(tmp_pa
     assert "2026-09-30" in text
     assert "reported_increment" not in text
     assert "private_control_marker" not in text
+    assert "semantic_receipt_marker" not in text
+    assert assumptions["semantic_resolution"] == {
+        "population_sha256": "semantic_receipt_marker"
+    }
     assert (
         assumptions["reviewed_source_decisions"]["bank.pdf"]["money"][
             "reported_increment"

@@ -104,12 +104,16 @@ def _populations(
         raise ValueError(
             "Semantic resolution requires unique non-empty population record IDs"
         )
+    scope = h.merged_assumptions(assumptions)
+    scope["amount_tolerance"] = h.decimal_text(
+        h.validated_tolerance(scope["amount_tolerance"])
+    )
     return {
         "targets": targets,
         "sources": sources,
         "scope": {
             key: value
-            for key, value in h.merged_assumptions(assumptions).items()
+            for key, value in scope.items()
             if key not in {KEY, "assurance_run_date"}
         },
     }

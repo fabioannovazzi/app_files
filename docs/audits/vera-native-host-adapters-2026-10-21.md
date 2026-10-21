@@ -101,3 +101,22 @@ retained both partial-payment explanation/provenance and semantic allocations.
   platform condition; normalization, hidden identity fields and idempotence are
   still checked on every platform. All 22 client-identity/routing tests passed
   locally after this test-only correction.
+- Integrated Archive projection CI found a real scope-binding defect: the raw
+  runner bound tolerance `0.00`, then assurance normalized it to `0`. Identical
+  source rows were incorrectly rejected as stale semantic decisions. Population
+  binding now uses the same exact validated decimal representation as assurance.
+  Regressions accept equivalent spellings and still reject changed tolerance
+  values; the 23 semantic component tests passed after the repair.
+- Once preparation succeeded, the projection regression exposed the complete
+  internal semantic receipt in financial-report assumptions. Its opaque target
+  IDs had no professional-report paragraph lineage. The shared Word/Excel
+  assumption renderer now leaves that control receipt in canonical evidence,
+  preserving its content and existing provenance rules. A regression first
+  reproduced the leak; all 50 semantic/report-output checks then passed. The
+  57 native intake, reporting, regeneration and bridge checks also passed.
+  The complete Archive projection suite then passed all 135 cases, including
+  public save/apply, replay, tamper rejection and retained output provenance.
+- One macOS producer-reporting CI job was cancelled before execution because
+  GitHub could not acquire a hosted ARM runner. A retry on the same commit acquired
+  a runner and passed. The connector lacked Actions write permission, so the
+  authenticated GitHub CLI performed that retry.

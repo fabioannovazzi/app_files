@@ -295,6 +295,40 @@ def test_source_change_invalidates_semantic_replay(runtime, monkeypatch, tmp_pat
         h.reconcile_open_items(items, bank, assumptions)
 
 
+@pytest.mark.parametrize(
+    ("input_tolerance", "sealed_tolerance"), [("0.00", "0"), ("0.0100", "0.01")]
+)
+def test_equivalent_tolerance_spelling_preserves_semantic_replay(
+    runtime, tmp_path, input_tolerance, sealed_tolerance
+):
+    _, h, semantic = runtime
+    items, bank = population(payments=())
+    assumptions = {"amount_tolerance": input_tolerance}
+    preliminary = h.reconcile_open_items(items, bank, assumptions)
+    assumptions[semantic.KEY] = semantic.prepare_resolution(
+        preliminary, bank, assumptions, tmp_path / "semantic-review"
+    )
+    assumptions["amount_tolerance"] = sealed_tolerance
+
+    rows = h.reconcile_open_items(items, bank, assumptions)
+
+    assert rows == preliminary
+
+
+def test_changed_tolerance_value_invalidates_semantic_replay(runtime, tmp_path):
+    _, h, semantic = runtime
+    items, bank = population(payments=())
+    assumptions = {"amount_tolerance": "0.00"}
+    preliminary = h.reconcile_open_items(items, bank, assumptions)
+    assumptions[semantic.KEY] = semantic.prepare_resolution(
+        preliminary, bank, assumptions, tmp_path / "semantic-review"
+    )
+    assumptions["amount_tolerance"] = "0.01"
+
+    with pytest.raises(ValueError, match="stale"):
+        h.reconcile_open_items(items, bank, assumptions)
+
+
 def test_correct_semantics_reach_native_workbooks_and_assurance(
     runtime, monkeypatch, tmp_path
 ):

@@ -3293,6 +3293,7 @@ def write_excel_workpaper(
 def _report_assumptions(assumptions: dict[str, Any]) -> dict[str, Any]:
     """Keep control receipts in canonical JSON, not in financial report prose."""
     control_fields = {
+        "semantic_resolution",
         "reviewed_source_decisions",
         "source_review_notes",
         "source_artifact_receipts",
