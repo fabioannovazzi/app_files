@@ -366,3 +366,173 @@ def test_other_clients_do_not_consume_selected_clients_recovery_batch(tmp_path):
     pending = registry.terminal_runs(client_root=selected)
 
     assert pending == [root]
+
+
+@pytest.mark.parametrize("outcome", ["failed", "cancelled"])
+@pytest.mark.parametrize("damage", ["missing", "changed"])
+def test_terminal_failure_retains_report_when_execution_input_is_unavailable(
+    archive_core, client_case, outcome, damage
+):
+    loaded = _start(archive_core, client_case)
+    selected = Path(loaded["context"]["input_bindings"][0]["path"])
+    original = Path(client_case.imported["imported_path"]).read_bytes()
+    if damage == "missing":
+        selected.unlink()
+    else:
+        selected.write_bytes(b"Changed execution copy\n")
+
+    result = _terminate(archive_core, client_case, loaded, outcome)
+
+    assert result["status"] == outcome
+    assert result["reporting"]["status"] == "available"
+    report = json.loads(
+        (Path(loaded["output_dir"]) / "model_data_report.json").read_text()
+    )
+    assert report["outcome"] == outcome
+    assert report["collection_closed"] is True
+    assert report["run_id"] == loaded["run"]["run_id"]
+    assert Path(client_case.imported["imported_path"]).read_bytes() == original
+    with pytest.raises(archive_core.ledger.LedgerError):
+        archive_core.ledger.load_run(
+            client_case.client_root, client_case.engagement_id, loaded["run"]["run_id"]
+        )
+
+
+def test_selected_read_does_not_recover_an_unrelated_pending_report(
+    archive_core, client_case, monkeypatch
+):
+    import archive_reporting
+
+    unrelated = _start(archive_core, client_case)
+    selected = _start(archive_core, client_case)
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Synthetic interrupted report")
+
+    with monkeypatch.context() as interrupted:
+        interrupted.setattr(archive_reporting, "snapshot_run", unavailable)
+        _terminate(archive_core, client_case, unrelated, "failed")
+    attempts = []
+    original = archive_reporting.finish_run
+
+    def observed(loaded):
+        attempts.append(loaded["run"]["run_id"])
+        return original(loaded)
+
+    monkeypatch.setattr(archive_reporting, "finish_run", observed)
+
+    result = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        selected["run"]["run_id"],
+        selected["context"]["input_bindings"][0]["path"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert result["data"]
+    assert attempts == []
+
+
+def test_selected_read_does_not_retry_a_siblings_pending_server_receipt(
+    archive_core, client_case, monkeypatch
+):
+    import archive_report_receipt
+
+    sibling = _start(archive_core, client_case)
+    selected = _start(archive_core, client_case)
+    attempts = []
+
+    def pending(path):
+        attempts.append(path)
+        return {"status": "pending", "reason": "Synthetic offline server"}
+
+    monkeypatch.setattr(archive_report_receipt, "stamp_report", pending)
+    _terminate(archive_core, client_case, sibling, "failed")
+    attempts.clear()
+
+    result = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        selected["run"]["run_id"],
+        selected["context"]["input_bindings"][0]["path"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert result["data"]
+    assert attempts == []
+
+
+@pytest.mark.parametrize("damage", ["missing", "changed"])
+def test_unavailable_execution_input_still_prevents_completion(
+    archive_core, client_case, damage
+):
+    loaded = _start(archive_core, client_case)
+    _ready(archive_core, client_case, loaded)
+    source = Path(loaded["context"]["input_bindings"][0]["path"])
+    if damage == "missing":
+        source.unlink()
+    else:
+        source.write_bytes(b"Altered input")
+
+    with pytest.raises(archive_core.ArchiveError):
+        _terminate(archive_core, client_case, loaded, "completed")
+
+    assert (
+        json.loads((Path(loaded["run_root"]) / "run.json").read_text())["status"]
+        == "ready_for_review"
+    )
+
+
+def test_terminal_report_retry_survives_later_missing_input(
+    archive_core, client_case, monkeypatch
+):
+    import archive_reporting
+
+    loaded = _start(archive_core, client_case)
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Interrupted report write")
+
+    with monkeypatch.context() as interrupted:
+        interrupted.setattr(archive_reporting, "snapshot_run", unavailable)
+        _terminate(archive_core, client_case, loaded, "failed")
+    Path(loaded["context"]["input_bindings"][0]["path"]).unlink()
+
+    archive_core.ledger.retry_reporting(
+        client_case.client_root,
+        engagement_id=client_case.engagement_id,
+        run_id=loaded["run"]["run_id"],
+    )
+
+    report = json.loads(
+        (Path(loaded["output_dir"]) / "model_data_report.json").read_text()
+    )
+    assert report["outcome"] == "failed"
+    assert report["collection_closed"] is True
+
+
+def test_recovery_selector_does_not_follow_run_id_into_another_engagement(
+    archive_core, client_case, monkeypatch
+):
+    import archive_reporting
+
+    loaded = _start(archive_core, client_case)
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Interrupted report write")
+
+    with monkeypatch.context() as interrupted:
+        interrupted.setattr(archive_reporting, "snapshot_run", unavailable)
+        _terminate(archive_core, client_case, loaded, "failed")
+    before = (Path(loaded["output_dir"]) / "model_data_report.json").read_bytes()
+    other = archive_core.create_studio_client_engagement(
+        client_case.client_id, "Independent engagement", state_dir=client_case.state_dir
+    )["engagement"]["engagement_id"]
+
+    archive_core.ledger.retry_reporting(
+        client_case.client_root, engagement_id=other, run_id=loaded["run"]["run_id"]
+    )
+
+    assert (
+        Path(loaded["output_dir"]) / "model_data_report.json"
+    ).read_bytes() == before

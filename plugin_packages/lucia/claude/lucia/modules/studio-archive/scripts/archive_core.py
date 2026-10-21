@@ -2057,6 +2057,9 @@ def resolve_studio_client_identity(
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
     records, identity_issues = _client_identity_view(private_state, config)
+    inventory = _client_inventory(config, records)
+    blocked = {item["scope_id"]: item for item in inventory["blocked_clients"]}
+    complete = not identity_issues and inventory["complete"]
     scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
     matches: list[dict[str, Any]] = []
     for record in records:
@@ -2068,9 +2071,12 @@ def resolve_studio_client_identity(
         )
         if normalized not in comparison_values:
             continue
-        matches.append(
-            _client_directory_record(record, scope=scopes_by_id.get(record.scope_id))
+        match = _client_directory_record(
+            record, scope=scopes_by_id.get(record.scope_id)
         )
+        if record.scope_id in blocked:
+            match.update(blocked[record.scope_id], registration_status="blocked")
+        matches.append(match)
     return {
         "resolution_status": (
             "exact_match"
@@ -2078,10 +2084,13 @@ def resolve_studio_client_identity(
             else (
                 "ambiguous_exact_match"
                 if matches
-                else "incomplete" if identity_issues else "no_exact_match"
+                else "incomplete" if not complete else "no_exact_match"
             )
         ),
-        "resolution_complete": not identity_issues,
+        "resolution_complete": complete,
+        "directory_complete": inventory["complete"],
+        "directory_issues": inventory["directory_issues"],
+        "blocked_clients": inventory["blocked_clients"],
         "identity_issues": identity_issues,
         "identity_kind": identity_kind,
         "match_count": len(matches),
@@ -4088,6 +4097,7 @@ def _selected_ledger_root(
     engagement_id: str,
     *,
     state_dir: Path,
+    run_id: str | None = None,
 ) -> Path:
     folder = get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"]
     client_root = Path(folder["client_root"])
@@ -4097,8 +4107,12 @@ def _selected_ledger_root(
         raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
     if engagement["client_id"] != client_id:
         raise ArchiveError("Selected engagement belongs to another client.")
+    if run_id is None:
+        return client_root
     try:
-        ledger.retry_reporting(client_root)
+        # Recovery of another run must not take locks or make network calls on
+        # the selected operation's critical path. Explicit maintenance can batch.
+        ledger.retry_reporting(client_root, engagement_id=engagement_id, run_id=run_id)
     except (
         OSError,
         ValueError,
@@ -4139,7 +4153,9 @@ def start_studio_client_workflow(
     """Mark one prepared run as running before executing helper scripts."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
+    )
     try:
         loaded = ledger.start_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
@@ -4160,7 +4176,9 @@ def read_studio_run_artifact(
 ) -> dict[str, Any]:
     """Return selected source units with locally retained, exact read provenance."""
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
+    )
     loaded = ledger.load_run(root, engagement_id, run_id)
     if loaded["run"]["status"] not in {"running", "ready_for_review"}:
         raise ArchiveError("Data reads require an active Archive run")
@@ -4187,7 +4205,9 @@ def fail_studio_client_workflow(
     """Record a failed run while retaining its evidence and diagnostics."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
+    )
     try:
         loaded = ledger.fail_run(root, engagement_id, run_id, reason)
     except ledger.LedgerError as exc:
@@ -4206,7 +4226,9 @@ def cancel_studio_client_workflow(
     """Cancel one abandoned run without deleting it."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
+    )
     try:
         loaded = ledger.cancel_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
@@ -4227,7 +4249,9 @@ def finalize_studio_client_workflow(
     """Declare the purpose of every output and seal its exact bytes."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
+    )
     try:
         loaded = ledger.finalize_run(
             root,
@@ -4263,7 +4287,9 @@ def complete_studio_client_workflow(
     """Complete one review-ready run whose artifacts still validate."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
+    )
     try:
         loaded = ledger.complete_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:

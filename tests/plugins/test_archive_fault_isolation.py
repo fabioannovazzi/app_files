@@ -66,6 +66,46 @@ def test_damaged_unrelated_client_does_not_prevent_selected_continuation(case):
         core.get_studio_client_folder(other_id, state_dir=state)
 
 
+@pytest.mark.parametrize("status", [[], {}, None])
+def test_malformed_run_status_does_not_hide_healthy_sibling(case, status):
+    core, studio, state, root, cid, eid, input_id = case
+    healthy = core.prepare_studio_client_workflow(
+        eid, "financial-analysis", input_ids=[input_id], new_run=True, state_dir=state
+    )
+    broken = core.prepare_studio_client_workflow(
+        eid, "financial-analysis", input_ids=[input_id], new_run=True, state_dir=state
+    )
+    path = Path(broken["client_engagement"]["run_manifest_path"])
+    payload = json.loads(path.read_text())
+    payload["status"] = status
+    retained = json.dumps(payload).encode()
+    path.write_bytes(retained)
+
+    result = core.list_studio_client_engagements(cid, state_dir=state)
+
+    [engagement] = result["engagements"]
+    assert [run["run_id"] for run in engagement["workflow_runs"]] == [
+        healthy["run"]["run_id"]
+    ]
+    assert engagement["blocked_runs"][0]["run_id"] == broken["run"]["run_id"]
+    assert engagement["ledger_complete"] is False
+    assert path.read_bytes() == retained
+
+
+def test_exact_identity_lookup_reports_unavailable_client_record(case):
+    core, studio, state, root, cid, eid, input_id = case
+    (root / "Vera/client.json").write_bytes(b"{}")
+
+    result = core.resolve_studio_client_identity(
+        "legal_name", "Synthetic healthy client", state_dir=state
+    )
+
+    assert result["matches"][0]["client_id"] == cid
+    assert result["matches"][0]["registration_status"] == "blocked"
+    assert result["resolution_complete"] is False
+    assert result["blocked_clients"][0]["issue_code"] == "invalid_client_record"
+
+
 @pytest.mark.parametrize("operation", ["select", "prepare"])
 def test_selected_work_does_not_depend_on_or_rewrite_damaged_alias_registry(
     case, operation

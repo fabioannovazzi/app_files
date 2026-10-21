@@ -490,7 +490,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "13d1d0c45d2f0153fe1b530d1ae43795ea84cf9a0250a96346af9e5a2e222376"
+      "sha256": "979886354669c646c354272818c5baf6dfe4f2ad7ba09acaaba0d77305ffac4f"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -515,7 +515,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "8fcc3d35faac84d0f0c70c022456db2214b14bc1dc8f42edbb853317ac179e27"
+      "sha256": "759ff0d79729cf1535ffa6fdad036f8a47b988500137c06ad6147e799cc7a969"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -570,7 +570,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_receipt.py",
       "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
-      "sha256": "b95a744720e24960c623cea2a81728b4b0fa8412647096a588d0054efedfcd78"
+      "sha256": "d4b7cdad03bf1745632cd96087bbf352b89633d442d9ba32f606a85f1cd5662c"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",
@@ -580,7 +580,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
       "repository_path": "plugins/vera/scripts/archive_report_store.py",
-      "sha256": "6d04ba281a01f6a4e295efa5f1c33789801561ec183d67e40bfde7920e2f2f9f"
+      "sha256": "71b343484ce0dad7b426449c0d3038cb324dbd8ea3d45b44658e9e7e51fcdff5"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",

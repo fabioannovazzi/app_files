@@ -59,7 +59,8 @@ The server receives the report SHA-256 with the same Archive run ID, report
 revision and existing Vera userID, authenticated with the installation's existing
 credentials and machine link. These fields are covered by the receipt signature.
 It receives no report body, outgoing payloads, source filenames or source values.
-Ordinary Archive use retries pending receipts without rerunning professional work.
+Selecting the same Archive run retries its pending receipt without rerunning
+professional work. Other runs' reporting does not delay the selected operation.
 Verify a local report against its machine identity with
 `scripts/archive_report_receipt.py verify --report PATH`.
 

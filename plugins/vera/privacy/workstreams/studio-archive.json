@@ -319,7 +319,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "75e91c26008f836de2a60b5a48d1911a4383218af14133401f8cfffa9d3cd055"
+    "source_fingerprint": "75e7913f40c4adc3ae8f84b8d550964cc47afb27fe214919464ea9a6f4d3a5e6"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -430,7 +430,7 @@
     },
     {
       "id": "isolated-invalid-run-records",
-      "control": "Archive inventories inspect client, engagement, input and run records independently. Unavailable records expose directory entry names or opaque IDs, fixed issue codes and completeness flags; invalid manifest contents never supply identity, selected sources or artifacts. Duplicate or conflicting client IDs make only the affected folders unavailable. Selected use still validates exact ownership, ordinary parent directories, receipts and bound bytes. Healthy records remain accessible and damaged records remain unchanged. A verified existing request can replay despite unrelated invalid headers; allocation stops if unreadable historical request identity prevents establishing whether that request already exists. Recovery and navigation failures are reported separately from committed ledger mutations."
+      "control": "Archive inventories inspect client, engagement, input and run records independently. Unavailable records expose directory entry names or opaque IDs, fixed issue codes and completeness flags; invalid manifest contents never supply identity, selected sources or artifacts. Duplicate or conflicting client IDs make only the affected folders unavailable. Selected use still validates exact ownership, ordinary parent directories, receipts and bound bytes. Healthy records remain accessible and damaged records remain unchanged. A verified existing request can replay despite unrelated invalid headers; allocation stops if unreadable historical request identity prevents establishing whether that request already exists. Recovery and navigation failures are reported separately from committed ledger mutations. Wrong JSON types are rejected as invalid individual records, not uncaught collection errors. Exact alias lookup exposes blocked portable identities and incomplete directory evidence. Failure and cancellation validate sealed client, engagement, run and input-manifest identities without requiring damaged source bytes to become readable; they do not authorize execution or claim successful accounting."
     }
   ],
   "workstream": "studio-archive",
