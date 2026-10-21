@@ -98,7 +98,7 @@
       {
         "id": "selected-check-diagnostic-projection",
         "purpose": "Expose useful typed check outcomes without default producer diagnostic traces containing row IDs or source locators",
-        "content": "The default selected-case model response withholds diagnostic note fields and structured or text actual/expected values, retaining typed numeric counts and booleans. An explicit exact-identifier request can restore those selected diagnostic fields. The component-only private review payload retains the original data. Other declared semantic text is not automatically anonymized; the existing selected Codex or Cowork account processing arrangement applies.",
+        "content": "The default selected-case model response withholds diagnostic note fields and structured or text actual/expected values, retaining typed numeric counts and booleans. An explicit exact-identifier request can restore those selected diagnostic fields. The component-only private review payload retains the original data. Other declared semantic text is not automatically anonymized; the existing selected Codex or Cowork account processing arrangement applies. The producer-bound pending-review diagnostic may include its internal row-locator list in exact-identifier mode. Its provenance is treated as locator metadata only when every listed ID belongs to the same pending review; arbitrary diagnostic text remains unmeasured.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -107,7 +107,7 @@
       {
         "id": "review-mutation-status",
         "purpose": "Confirm saved and applied review actions without echoing their complete private contents.",
-        "content": "Public save/apply replies expose status, technical run identity, counts and output paths. Complete decision objects, reviewer prose, applied effects and final-artifact objects remain in app-only metadata and persisted local files. The CLI completion message contains technical identities and paths, excluding free-form engagement label and purpose. Unknown errors or unsupported field origins remain unmeasured in the report rather than being silently classified as metadata.",
+        "content": "Public save/apply replies expose status, technical run identity, counts and output paths. Complete decision objects, reviewer prose, applied effects and final-artifact objects remain in app-only metadata and persisted local files. The CLI completion message contains technical identities and paths, excluding free-form engagement label and purpose. Unknown errors or unsupported field origins remain unmeasured in the report rather than being silently classified as metadata. Normal assurance replay returns only its checkpoint, run date, readiness status and row count. Detailed reconciliation rows and review authority remain inside the private component transaction; a direct explicit request for the private bridge is still recorded and remains unmeasured until its source coverage can be established.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -119,7 +119,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "0261cc3418a2b1bc153e882fedf45d1496e5f85f03f6c7a913d8329474802dd2"
+    "source_fingerprint": "0e8ec2961cc32697e85eea08bc16001373470c13d93c442ad5c565be76add4f6"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -202,7 +202,7 @@
           "Il modello riceve un indice dei casi da rivedere",
           "L'indice usa riferimenti opachi ai casi e mostra solo il tipo di caso, lo stato e i tipi di segnale del controllo. Non contiene nomi, descrizioni, importi, date, riferimenti o identificativi presenti nelle fonti, né percorsi.",
           "Il modello richiede il contesto di un caso quando serve",
-          "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti, colonne non mappate, percorsi e identificativi tecnici restano fuori; gli identificativi professionali esatti arrivano solo quando sono necessari al confronto.",
+          "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti e colonne non mappate restano fuori. Percorsi e identificativi tecnici sono esclusi per impostazione predefinita; una richiesta di riferimenti esatti può includerli nelle note diagnostiche del caso, insieme agli identificativi professionali necessari al confronto.",
           "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
           "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali."
         ],
@@ -214,7 +214,7 @@
           "The model receives an index of cases to review",
           "The index uses opaque case references and shows only the case type, status, and control signal types. It contains no names, descriptions, amounts, dates, source references or identifiers, or paths.",
           "The model requests a case's context when needed",
-          "Only selected cases supply the mapped, populated fields useful to the review. Empty fields, unmapped columns, paths, and technical identifiers stay out; exact professional identifiers arrive only when the comparison requires them.",
+          "Only selected cases supply the mapped, populated fields useful to the review. Empty fields and unmapped columns stay out. Paths and technical identifiers are excluded by default; a request for exact references can include them in the case diagnostic notes, alongside the professional identifiers needed for comparison.",
           "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
           "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local."
         ],
@@ -226,7 +226,7 @@
           "Le modèle reçoit un index des cas à examiner",
           "L'index utilise des références de cas opaques et indique uniquement le type de cas, son statut et les types de signaux du contrôle. Il ne contient ni noms, descriptions, montants, dates, références ou identifiants provenant des sources, ni chemins.",
           "Le modèle demande le contexte d'un cas lorsque nécessaire",
-          "Seuls les cas sélectionnés transmettent les champs mappés et renseignés utiles à la revue. Les champs vides, colonnes non mappées, chemins et identifiants techniques restent exclus ; les identifiants professionnels exacts ne sont transmis que lorsque la comparaison l'exige.",
+          "Seuls les cas sélectionnés fournissent les champs mappés et renseignés utiles à la revue. Les champs vides et les colonnes non mappées restent exclus. Les chemins et identifiants techniques sont exclus par défaut ; une demande de références exactes peut les inclure dans les notes diagnostiques du cas, avec les identifiants professionnels nécessaires à la comparaison.",
           "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
           "Studio Archive délimite chaque exécution de ce processus et crée automatiquement un rapport des données envoyées par Vera. Vera enregistre ses propres envois ; le rapport n’inspecte ni la conversation ni les autres outils. Le rapport reste sur la machine même lorsque toutes les données ont été envoyées. Les comptages manquants sont signalés comme indéterminés. Le serveur reçoit uniquement l’empreinte du rapport et les références de vérification, liées au Vera userID de la machine, à la même exécution et à la révision. Le contenu du rapport et les preuves restent locaux."
         ],
@@ -238,7 +238,7 @@
           "Das Modell erhält einen Index der zu prüfenden Fälle",
           "Der Index verwendet undurchsichtige Fallreferenzen und zeigt nur Falltyp, Status und Arten von Prüfsignalen. Er enthält keine Namen, Beschreibungen, Beträge, Daten, Quellreferenzen oder Quellkennungen und keine Pfade.",
           "Das Modell fordert bei Bedarf den Kontext eines Falls an",
-          "Nur für ausgewählte Fälle werden die gemappten, befüllten und für die Prüfung nützlichen Felder übermittelt. Leere Felder, nicht gemappte Spalten, Pfade und technische Kennungen bleiben ausgeschlossen; exakte fachliche Kennungen werden nur übermittelt, wenn der Vergleich sie erfordert.",
+          "Nur ausgewählte Fälle liefern die zugeordneten und ausgefüllten Felder, die für die Prüfung benötigt werden. Leere Felder und nicht zugeordnete Spalten bleiben ausgeschlossen. Pfade und technische Kennungen werden standardmäßig ausgelassen; bei einer Anfrage nach exakten Referenzen können sie in den Diagnosehinweisen des Falls erscheinen, zusammen mit den für den Vergleich benötigten fachlichen Kennungen.",
           "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
           "Studio Archive grenzt jede Ausführung dieses Prozesses ab und erstellt automatisch einen Bericht über die von Vera gesendeten Daten. Vera erfasst die eigenen Sendungen; der Bericht untersucht weder den Chat noch andere Werkzeuge. Der Bericht bleibt auf dem Rechner, auch wenn alle Daten gesendet wurden. Fehlende Mengenangaben werden ausdrücklich als unbekannt ausgewiesen. Der Server erhält nur den Berichtshash und die Prüfverweise, gebunden an die Vera userID des Rechners, dieselbe Ausführung und Revision. Berichtsinhalte und Nachweise bleiben lokal."
         ],
@@ -250,7 +250,7 @@
           "El modelo recibe un índice de los casos que deben revisarse",
           "El índice utiliza referencias opacas a los casos y muestra solo el tipo de caso, el estado y los tipos de señales del control. No contiene nombres, descripciones, importes, fechas, referencias o identificadores presentes en las fuentes ni rutas.",
           "El modelo solicita el contexto de un caso cuando lo necesita",
-          "Solo los casos seleccionados aportan los campos mapeados y cumplimentados útiles para la revisión. Quedan fuera los campos vacíos, las columnas no mapeadas, las rutas y los identificadores técnicos; los identificadores profesionales exactos solo se incluyen cuando la comparación los exige.",
+          "Solo los casos seleccionados aportan los campos asignados y cumplimentados útiles para la revisión. Los campos vacíos y las columnas no asignadas quedan excluidos. Las rutas y los identificadores técnicos se omiten por defecto; una solicitud de referencias exactas puede incluirlos en las notas de diagnóstico del caso, junto con los identificadores profesionales necesarios para la comparación.",
           "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
           "Studio Archive delimita cada ejecución de este proceso y crea automáticamente un informe de los datos enviados por Vera. Vera registra sus propios envíos; el informe no inspecciona el chat ni otras herramientas. El informe permanece en el equipo incluso cuando se han enviado todos los datos. Los recuentos que faltan se indican como indeterminados. El servidor recibe únicamente la huella del informe y las referencias de verificación, vinculadas al Vera userID del equipo, a la misma ejecución y revisión. El contenido del informe y las evidencias permanecen locales."
         ]

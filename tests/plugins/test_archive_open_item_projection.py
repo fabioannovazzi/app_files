@@ -274,8 +274,9 @@ def test_selected_partial_payment_has_exact_cells_and_retains_private_columns(
     assert sum(entry["not_sent_cells"] for entry in inputs) == 28 - expected_cells
 
 
+@pytest.mark.parametrize("exact_identifiers", [False, True])
 def test_public_review_save_apply_keeps_notes_private_and_report_complete(
-    reconciled_case, tmp_path
+    reconciled_case, tmp_path, exact_identifiers
 ):
     loaded = reconciled_case
     output = Path(loaded["calculation_dir"])
@@ -313,6 +314,7 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
                     item["case_handle"]
                     for item in index["model_context_index"]["cases"]
                 ],
+                "include_exact_identifiers": exact_identifiers,
             },
         )["structuredContent"]
         assert selected["case_count"] == 4
@@ -394,6 +396,42 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
     assert measured["collection_status"] == "complete", measured["errors"]
 
 
+def test_public_assurance_replay_reports_status_without_reemitting_source_rows(
+    reconciled_case,
+):
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(PLUGIN / "scripts/audit_assurance.py"),
+            "--client-engagement",
+            str(Path(loaded["run_root"]) / "context.json"),
+            "validate-run-json",
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    summary = json.loads(completed.stdout)
+    assert summary["ok"] is True
+    assert summary["reconciliation_row_count"] == 3
+    assert summary["assurance"]["report_ready"] is False
+    assert "reconciliation_rows" not in completed.stdout
+    assert "Alfa" not in completed.stdout
+    assert "PRIVATE" not in completed.stdout
+    measured = report(loaded)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    assert measured["emissions"][-1]["channel"] == "cli:open-item-reconciliation"
+    assert measured["emissions"][-1]["unmapped"] is False
+    assert sum(source["sent_cells"] for source in measured["sources"]) == 0
+
+
 @pytest.mark.parametrize("changed_field", ["amount", "review_notes"])
 def test_edited_review_cannot_claim_the_producers_source_coordinates(
     reconciled_case, tmp_path, changed_field
@@ -433,6 +471,85 @@ def test_edited_review_cannot_claim_the_producers_source_coordinates(
     measured = report(loaded)
     assert measured["collection_status"] == "incomplete"
     assert "sent_data_has_no_source_coordinates" in measured["errors"]
+
+
+@pytest.mark.parametrize("note_location", ["data", "evidence"])
+def test_unknown_producer_check_note_is_not_classified_as_locator_metadata(
+    reconciled_case, tmp_path, note_location
+):
+    from archive_projection import register_private_value
+
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    path = output / "review_payload.json"
+    review = json.loads(path.read_text())
+    check = next(
+        item for item in review["items"] if item["item_type"] == "check_exception"
+    )
+    containers = {"data": check["data"], "evidence": check["evidence"][0]}
+    containers[note_location]["note"] = "UNMAPPED_SOURCE_VALUE"
+    path.write_text(json.dumps(review))
+    # Even a producer-bound value needs the declared field transformation;
+    # the private digest alone does not make arbitrary diagnostic text metadata.
+    register_private_value("open-item-reconciliation", output, review)
+
+    with review_transport(tmp_path) as call:
+        index = call(
+            "validate_open_item_reconciliation_review",
+            {
+                "review_payload_path": str(path),
+                "client_engagement": str(Path(loaded["run_root"]) / "context.json"),
+            },
+        )["structuredContent"]
+        handle = next(
+            item["case_handle"]
+            for item in index["model_context_index"]["cases"]
+            if item["item_type"] == "check_exception"
+        )
+        selected = call(
+            "get_open_item_reconciliation_case_context",
+            {
+                "persistence_token": index["review_reference"]["persistence_token"],
+                "case_handles": [handle],
+                "include_exact_identifiers": True,
+            },
+        )["structuredContent"]
+
+    assert "UNMAPPED_SOURCE_VALUE" in json.dumps(selected)
+    measured = report(loaded)
+    assert measured["collection_status"] == "incomplete"
+    assert "sent_data_has_no_source_coordinates" in measured["errors"]
+
+
+def test_private_replay_requested_directly_still_records_its_unmapped_rows(
+    reconciled_case,
+):
+    loaded = reconciled_case
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(PLUGIN / "scripts/audit_assurance.py"),
+            "--client-engagement",
+            str(Path(loaded["run_root"]) / "context.json"),
+            "validate-run-json",
+            loaded["calculation_dir"],
+            "--private-review-bridge",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    response = json.loads(completed.stdout)
+    assert len(response["result"]["reconciliation_rows"]) == 3
+    assert "Alfa" in completed.stdout
+    measured = report(loaded)
+    assert measured["collection_status"] == "incomplete"
+    assert measured["emissions"][-1]["channel"] == "cli:open-item-reconciliation"
+    assert measured["emissions"][-1]["unmapped"] is True
 
 
 @pytest.mark.parametrize("claim", ["no_residual", "fully_closed"])

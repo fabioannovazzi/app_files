@@ -1113,7 +1113,7 @@ function modelContextReviewDigest(value) {
     .update(auditReviewStableJson(value) + "\n", "utf8").digest("hex");
 }
 
-function modelContextSourceRecords(item, semanticFields, evidence) {
+function modelContextSourceRecords(item, semanticFields, evidence, context) {
   // Mirror explicit producer field transformations. Unknown fields and supplied
   // review notes remain unmeasured; never infer their sources from text values.
   const fields = new Set([
@@ -1132,9 +1132,23 @@ function modelContextSourceRecords(item, semanticFields, evidence) {
   ]);
   const data = item.data || {};
   if (item.item_type === "check_exception" && data.check === "codex_review_completed") {
-    // This producer check reports only pending-row counts. Its free-form
-    // diagnostic note is deliberately not covered by this metadata projection.
+    // Exact mode also returns the producer's pending-row locator list. Verify
+    // those locators against the same private review; arbitrary notes remain
+    // unmeasured. Locators and counts do not expose source-cell values.
     const countFields = new Set(["check", "kind", "status", "actual", "expected"]);
+    const pendingIds = new Set([...context.handles.values()]
+      .filter((entry) => ["", "PENDING"].includes(entry.data?.review_status || ""))
+      .map((entry) => entry.data?.record_id)
+      .filter((recordId) => typeof recordId === "string"));
+    if (typeof data.note === "string" && data.note.length > 0) {
+      const locators = data.note.split("; ");
+      const emittedNotes = [semanticFields.note, ...evidence.map((entry) => entry.note)]
+        .filter((note) => note !== undefined);
+      if (locators.length === Math.min(data.actual, 10)
+          && new Set(locators).size === locators.length
+          && locators.every((locator) => pendingIds.has(locator))
+          && emittedNotes.every((note) => note === data.note)) countFields.add("note");
+    }
     if ([...fields].every((field) => countFields.has(field)) &&
         Number.isInteger(data.actual) && Number.isInteger(data.expected)) return [];
   }
@@ -1189,7 +1203,7 @@ function modelContextCases(args) {
       semanticFields,
       includeExactIdentifiers,
     );
-    const records = modelContextSourceRecords(item, semanticFields, evidence);
+    const records = modelContextSourceRecords(item, semanticFields, evidence, context);
     if (records === null) sourceRecordsComplete = false;
     else sourceRecords.push(...records);
     return {
@@ -2442,6 +2456,7 @@ function auditReviewPythonBridge(command, outputDir, ...args) {
         maxBuffer: 64 * 1024 * 1024,
         timeout: 120_000,
         windowsHide: true,
+        env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
       },
     );
     if (replay.error?.code === "ENOENT") continue;
@@ -2469,7 +2484,7 @@ function auditReviewReplayAssuranceWithPython(
   outputDir,
   expectedPredecessorCheckpoint,
 ) {
-  const bridgeArgs = [];
+  const bridgeArgs = ["--private-review-bridge"];
   if (expectedPredecessorCheckpoint) {
     bridgeArgs.push(
       "--expected-predecessor-checkpoint",

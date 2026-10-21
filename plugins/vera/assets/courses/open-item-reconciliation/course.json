@@ -69,7 +69,7 @@
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "a3046b13d6b57543f3a0e47a40d0e7e0d25fb07a839d3ba34af024f2ad15529c"
+      "sha256": "cc2a3a00363893bbf7e6bbcdec31ca67e978c7950a31b3db70e26464bbcda63b"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -79,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "261a0394fff39733acc75edcd7f59142108d7d9fe799c1cb98aa2001aa533b5a"
+      "sha256": "99e2c86859fbeeb7f7f155a5a34e2cdbca5df884a5546d56b895ce46fbb86c73"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",

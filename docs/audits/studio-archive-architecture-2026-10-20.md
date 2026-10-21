@@ -996,3 +996,104 @@ added or removed files; only the four Open-item tolerance implementation files
 are executable changes. Installation and fresh normal-chat acceptance remain
 pending. The report-delivery clarification is guidance whose effect must be
 observed in that next chat, not an accepted delivery fix.
+
+### Fresh 0.1.456 normal chat: accounting passed, privacy coverage failed
+
+The supported local installation was verified as the single enabled `vera@mp-vera`
+0.1.456, with all 2,183 cache files matching the candidate ZIP. Fresh GPT-6.1 Sol
+chat `01a15be6-0a1a-73e0-93a4-d5cdd9f4dc3c` created task
+`a072942f-18fc-477b-b318-9c604fe5647e` and run
+`run_825b61ba38d2aec1f667854a`. Its ordinary review and regeneration reached
+`report_ready=true`, 17 passing checks and three agent-reviewed rows. F001 was
+closed, F002 retained its EUR 500 partial-payment residual and F003 retained its
+EUR 500 open balance. The chat inspected all eight rendered Word pages and the
+Excel values. It reported awkward long technical references, some decimal-dot
+formatting, an English date label and no dedicated counterparty column in the
+operational sheet. These usability issues remain recorded, not silently accepted
+as polished professional delivery.
+
+Finalization exposed two unmapped emissions. The test stopped and marked its run
+and task failed; it delivered the retained drafts. This is a failed privacy
+acceptance result, not evidence that the arithmetic or reviewed drafts failed.
+The final answer **automatically displayed a readable privacy report**, resolving
+the observed A58 handoff failure for this attempt. It honestly reported incomplete
+coverage, 11 emissions and 69,315 characters. Both input sources' 36 cells were
+measured, but the unknown remainder remained explicit.
+
+- **A59, exact-identifier diagnostic provenance:** requesting all four cases with
+  `include_exact_identifiers=true` also emitted the pending-review check's note.
+  That note is constructed from internal row locators; the projection supported
+  the count-only version but not this producer-authored note. The earlier
+  integration requested all cases without exact identifiers and missed this path.
+- **A60, public replay output boundary:** the normal `audit_assurance.py
+  validate-run-json` command returned the same detailed reconciliation rows used
+  by the private review transaction, without registering their provenance. Its
+  23,040-character response was the second unmapped emission. The replay succeeded;
+  the outgoing-data contract was incomplete.
+
+Independent read-only server verification succeeded for receipt
+`95a7b974-4938-53e8-812e-b47de5269bff`, revision 1, report SHA-256
+`bf6f088c401dfcaac50b285ec2bd5c3bd041ab7d983588c4d46b4f21b6e3865e`, this exact
+run and userID `0ed4a818-1877-4652-8515-787c64de17a5`. The test chat's own
+verification invocation had used Python isolated mode and failed to import the
+receipt module; the coordinator used the documented non-isolated reader, without
+altering the sealed report. Its initial sandboxed network read failed, followed
+by an authorized read-only verification. Proof is retained in
+`/private/tmp/studio-archive-456-failed-report-proof.json` and 77 run-file hashes
+in `/private/tmp/studio-archive-test2-456-failed-preservation.json`.
+
+The test log also retains recovered guessed paths, truncated reference reads,
+pre-calculation delimiter correction, native workspace UI unavailability with a
+published specialist fallback, and a corrected worker-cancel argument. It records
+shell/browser/rendering reads outside the Vera-sent-data measurement scope.
+Acceptance remains **1 of 13**; test 2 is stopped, and test 3 has not started.
+
+The 0.1.457 candidate separates the normal assurance replay response from its
+private review bridge. Normal validation emits a registered technical summary;
+the internal transaction explicitly requests its detailed rows and keeps them
+inside the component. The existing owned CLI recorder now also covers direct
+assurance invocation. Requesting the detailed bridge directly still records the
+actual output and leaves unknown coordinates incomplete. Exact-mode pending-review
+notes are recognized only as lists of known pending row locators within the same
+producer-bound private review. This is mechanical provenance checking, not a
+semantic relevance rule, an execution veto or a new consent requirement.
+
+The expanded public integration first reproduced both missing paths. After the
+repair, ten projection/review/replay cases and two additional negative cases
+passed. The negative cases retain incomplete measurement for an unknown
+producer-bound diagnostic and for externally emitted private bridge rows. The
+normal accounting checks remain unchanged. The function's five-language public
+explanation also corrects its previous blanket statement that technical locators
+always stay out: an explicit exact-reference request can expose them in selected
+diagnostic notes. No recipient was added.
+
+The coordinator's initial full-suite command omitted the repository's retained
+source coverage plugin. It ran the tests without failures but reported only the
+ordinary Python files (75.62%); that is not valid component coverage evidence.
+The suite is being repeated with the exact checked-in CI coverage configuration.
+Read-only diagnostic path guesses and an unavailable sandbox process listing
+did not affect the product run or its evidence. These are coordinator mistakes,
+separate from A59/A60. Final build, installed acceptance and saved-report reopening
+remain pending for 0.1.457.
+
+The correct CI command subsequently passed all 420 accounting tests with 81.69%
+coverage. All 89 current public review/native tests passed, as did the first
+0.1.457 all-host parity and 481 package/privacy checks (two skips). Before
+installation, manual review found that the new locator mapping also needed to
+compare the evidence-note copy with the main note. An additional producer-bound
+unknown-evidence-note regression failed against that intermediate implementation;
+the final condition now checks every emitted note against the same verified
+locator list. No installed user run used the intermediate candidate. Final
+projection and package validation are being repeated for those changed bytes;
+the accounting implementation and its coverage result are unchanged.
+
+Final 0.1.457 validation passed all 13 public projection/review/replay cases,
+481 package/privacy/update checks (two skips), and all-host source/package
+parity. The earlier 420 accounting cases (81.69% coverage) and 89 review/native
+cases remain valid; the final change affects only diagnostic-note provenance.
+Final ZIP SHA-256 is
+`c8e096a4db33e5db0078030cb3c57c64d539a9d16212a3ec964f8504764c18f0`.
+The 128-file delta against verified 0.1.456 has no additions/removals and only
+two executable changes: the Open-item MCP server and assurance CLI. Installation
+and normal-chat acceptance remain outstanding; these source/package checks do
+not accept test 2.

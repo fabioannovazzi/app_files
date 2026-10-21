@@ -215,6 +215,13 @@ separate channel used to retain and supply it; this workflow neither
 authenticates that channel nor upgrades `reviewer_ref` beyond an unsigned,
 unauthenticated, untrusted label.
 
+The normal replay response contains the checkpoint, run date, readiness status
+and reconciliation-row count. Detailed rows and review notes stay in the saved
+artifacts and the component's private review transaction; use the public selected
+case tools when those facts are needed in model context. The internal
+`--private-review-bridge` option is used by the component, not needed for normal
+validation. Invoking it directly does not exempt its output from measurement.
+
 ## Professional judgment boundary
 
 The controls verify identity, exact arithmetic, conservation, replay, and

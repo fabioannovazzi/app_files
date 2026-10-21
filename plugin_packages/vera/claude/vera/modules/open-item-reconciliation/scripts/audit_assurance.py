@@ -7822,10 +7822,15 @@ def _command_parser() -> argparse.ArgumentParser:
     context.add_argument("output_dir")
     replay = subparsers.add_parser(
         "validate-run-json",
-        help="Replay a sealed run and emit the bounded MCP bridge result.",
+        help="Replay a sealed run and emit its status and checkpoint, without source rows.",
     )
     replay.add_argument("output_dir")
     replay.add_argument("--expected-predecessor-checkpoint")
+    replay.add_argument(
+        "--private-review-bridge",
+        action="store_true",
+        help="Include detailed rows for the component's internal review transaction.",
+    )
     capture = subparsers.add_parser(
         "capture-review-transition-json",
         help="Capture a fully replayed predecessor outside the candidate tree.",
@@ -8017,6 +8022,26 @@ def _main(argv: Sequence[str] | None = None) -> int:
             "reconciliation_rows": reconciliation["reconciliation_rows"],
         },
     }
+    if not args.private_review_bridge:
+        # Public validation needs the replay outcome, not a second copy of all
+        # source rows and review notes. This exact constructor contains only
+        # technical status, count and checkpoint metadata.
+        response = {
+            "ok": True,
+            "assurance": {
+                "run_date": assurance["run_date"],
+                "content_sha256": assurance["content_sha256"],
+                "report_ready": assurance["gate_register"]["report_ready"],
+            },
+            "reconciliation_row_count": len(reconciliation["reconciliation_rows"]),
+        }
+        from vera_assurance.contracts import archive_projection_runtime
+
+        recorder = archive_projection_runtime(Path(__file__))
+        if recorder is not None:
+            recorder.register_metadata(
+                "open-item-reconciliation", Path(args.output_dir), response
+            )
     sys.stdout.write(
         json.dumps(response, ensure_ascii=False, separators=(",", ":")) + "\n"
     )
@@ -8024,4 +8049,6 @@ def _main(argv: Sequence[str] | None = None) -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(_main())
+    from vera_assurance.contracts import run_recorded_cli
+
+    raise SystemExit(run_recorded_cli(_main, Path(__file__)))
