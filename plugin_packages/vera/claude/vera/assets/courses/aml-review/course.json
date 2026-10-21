@@ -53,7 +53,7 @@
     },
     {
       "path": "modules/aml-review/skills/mparanza-aml-review/SKILL.md",
-      "sha256": "b8b99bf25a6136bc21d8d42eda23620f08a9088a84f4f2c2278efd40cfe4c361"
+      "sha256": "4f33a2afdfe527b1f9d191acd038be81d33deb64010c28646197926dd78afd77"
     },
     {
       "path": "modules/aml-review/skills/mparanza-aml-review/references/geneva.md",
@@ -101,7 +101,7 @@
     },
     {
       "path": "skills/mparanza-aml-review/SKILL.md",
-      "sha256": "e1114f0c53dc99216176671344e4593c037b3e048f49a2a8c8384abca55ea98f"
+      "sha256": "66bfaa23c85af5b004b73fc18318bdff10bb203b27cb16c65805889352419ed7"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

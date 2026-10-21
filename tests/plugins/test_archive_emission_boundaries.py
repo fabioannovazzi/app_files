@@ -199,6 +199,71 @@ def test_mcp_bridge_records_model_payload_and_keeps_app_metadata_out(
     assert events[0]["unmapped"] is False
 
 
+@pytest.mark.parametrize("failure_stage", ["before_tool_start", "after_tool_return"])
+def test_recording_failure_distinguishes_unstarted_tool_from_returned_mutation(
+    tmp_path, failure_stage
+):
+    marker = tmp_path / "saved-mutation.txt"
+    run_root = tmp_path / ("run_" + "1" * 24)
+    worker = tmp_path / "mutating-worker.cjs"
+    worker.write_text(
+        "const fs=require('node:fs');"
+        "require('node:readline').createInterface({input:process.stdin})"
+        ".on('line',line=>{const m=JSON.parse(line);"
+        f"fs.appendFileSync({json.dumps(str(marker))},'saved\\n');"
+        "process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,"
+        "result:{content:[{type:'text',text:'UNRECORDED_CASE_CONTENT'}]}})+'\\n');});"
+    )
+    launcher = tmp_path / "bridge-failure.cjs"
+    binding = json.dumps({"run_root": str(run_root), "report_revision": 1})
+    launcher.write_text(
+        "const cp=require('node:child_process');"
+        "cp.spawnSync=(python,args,options)=>{const m=JSON.parse(options.input);"
+        f"if(m.action==='bind' && {json.dumps(failure_stage)}==='after_tool_return')"
+        f"return {{status:0,stdout:{json.dumps(binding)}}};"
+        "return {status:1,stdout:''};};"
+        f"const {{bridge}}=require({json.dumps(str(SCRIPTS / 'archive_emission_mcp.cjs'))});"
+        f"const child=cp.spawn(process.execPath,[{json.dumps(str(worker))}],"
+        "{stdio:['pipe','pipe','inherit']});"
+        f"bridge(child,'report-builder',{json.dumps(str(ROOT / 'plugins/vera'))});"
+    )
+    request = {
+        "jsonrpc": "2.0",
+        "id": 7,
+        "method": "tools/call",
+        "params": {
+            "name": "save_review",
+            "arguments": {"client_engagement": str(run_root / "context.json")},
+        },
+    }
+
+    result = subprocess.run(
+        ["node", str(launcher)],
+        input=json.dumps(request) + "\n",
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+
+    assert result.returncode == 0, result.stderr
+    response = json.loads(result.stdout)["result"]
+    assert response["isError"] is True
+    if failure_stage == "after_tool_return":
+        assert marker.read_bytes() == b"saved\n"
+    else:
+        assert not marker.exists()
+    detail = response["structuredContent"]
+    assert detail["failure_stage"] == failure_stage
+    assert detail["operation"] == "save_review"
+    assert detail["response_delivered"] is False
+    assert "UNRECORDED_CASE_CONTENT" not in result.stdout
+    if failure_stage == "after_tool_return":
+        assert detail["archive_run_id"] == run_root.name
+        assert detail["retry_action"] == "inspect_existing_result"
+    else:
+        assert detail["retry_action"] == "restore_recording_then_retry"
+
+
 def test_changed_packet_cannot_reuse_an_already_recorded_token(
     archive_core, client_case
 ):

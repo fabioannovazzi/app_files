@@ -42,6 +42,7 @@ from archive_core import (
     authorize_studio_google_drive,
     bind_studio_client_google_drive,
     cancel_studio_client_workflow,
+    check_studio_import_sources,
     close_studio_client_engagement,
     complete_studio_client_workflow,
     configure_archive,
@@ -134,6 +135,12 @@ def _parser() -> argparse.ArgumentParser:
     create_engagement.add_argument("--client-id", required=True)
     create_engagement.add_argument("--engagement-label", required=True)
 
+    check_sources = subparsers.add_parser("check-import-sources")
+    check_sources.add_argument(
+        "--source-path", type=Path, action="append", required=True
+    )
+    check_sources.add_argument("--expected-sha256", action="append")
+
     import_document = subparsers.add_parser("import-document")
     import_document.add_argument("--client-id", required=True)
     import_document.add_argument("--source-path", type=Path, required=True)
@@ -141,6 +148,7 @@ def _parser() -> argparse.ArgumentParser:
         "--role", choices=["journal", "source", "support"], required=True
     )
     import_document.add_argument("--engagement-id", required=True)
+    import_document.add_argument("--expected-sha256")
 
     copy_folder = subparsers.add_parser("copy-client-source-folder")
     copy_folder.add_argument("--client-id", required=True)
@@ -338,6 +346,10 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "client-folder":
             result = get_studio_client_folder(args.client_id)
+        elif args.command == "check-import-sources":
+            result = check_studio_import_sources(
+                args.source_path, expected_sha256=args.expected_sha256
+            )
         elif args.command == "create-client":
             result = create_studio_client(
                 args.legal_name,
@@ -363,6 +375,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.source_path,
                 args.role,
                 engagement_id=args.engagement_id,
+                expected_sha256=args.expected_sha256,
             )
         elif args.command == "engagements":
             result = list_studio_client_engagements(args.client_id)

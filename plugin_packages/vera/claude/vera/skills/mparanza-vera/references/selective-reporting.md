@@ -64,12 +64,17 @@ Verify a local report against its machine identity with
 `scripts/archive_report_receipt.py verify --report PATH`.
 
 After completion, failure or cancellation, include the returned
-`vera_reporting.display_markdown` directly in the final answer, followed by the
+`reporting.display_markdown` directly in the final answer, followed by the
 saved report and receipt links. An incomplete report must still be shown, with
 its actual limitations. A link alone, a JSON excerpt or a statement that the
 report exists does not deliver it. If the returned text is unavailable, reopen
 the saved report with `scripts/model_data_report.py show --report PATH` and
-present that Markdown. Do not ask the user to request the report separately.
+present that Markdown. `vera_reporting` is collection metadata, not the report.
+If `reporting.status` is `unavailable` and `run_status_saved` is true, report the
+saved lifecycle status and the pending report separately. Retry reporting for
+the same run; do not repeat calculations or create a replacement run. Never
+present an older draft report as the missing final report.
+Do not ask the user to request the report separately.
 Reopening the saved report does not start another run or submit its contents to
 the server. A pending server receipt does not change the frozen report bytes.
 

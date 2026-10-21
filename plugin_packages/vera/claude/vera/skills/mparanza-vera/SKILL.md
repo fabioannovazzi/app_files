@@ -19,6 +19,62 @@ and is not permission to manually copy it or bypass a denied operation.
 
 ## Cowork execution contract
 
+Select the exact files needed for this request. Folder access does not select
+all its contents: if the task needs two files in a folder containing four, use
+only those two. Resolve genuinely ambiguous choices with the user; reuse clear
+choices without another confirmation.
+
+Before parsing documents or creating a client, engagement or run, call
+`check_studio_import_sources` with all selected paths on the actual importer
+host. It needs no configured Archive and creates no records. If the MCP tool is
+unavailable, use the packaged `check-import-sources --source-path <path>` CLI
+through the maintained managed launcher on that same host (repeat the flag per
+file). A cloud-shell `ls` is not proof of access by a computer-side importer.
+Readable attachments, including `/mnt/user-data/uploads/` paths when the importer
+can read them, continue directly without requiring a connected computer folder.
+
+If files are unavailable, explain the cause immediately before creating anything:
+"The file is in the chat, but the import tool looks for it on your computer."
+Do not keep trying that same inaccessible path. Use this recovery sequence:
+
+1. Inspect the host's actual callable file-transfer capabilities and the already
+   connected folders. Reuse an authorized ordinary working folder outside the
+   managed `Vera/engagements/.../inputs` tree. Offer **Add folder** from the **+**
+   menu only when the current host offers it; otherwise explain the available
+   connection method. Ask for a folder only if an accessible destination is needed.
+2. With a supported bridge, copy only the selected original attachments to that
+   folder as files. Compute each original SHA-256 through the host file tools.
+   Do not recreate CSV text, convert encodings or line endings, relay document
+   contents through model-authored tool arguments, guess a mount translation,
+   overwrite a different file with the same name, or scan unrelated folders.
+   A verified byte-for-byte copy may reuse its destination on retry.
+3. Check the actual destination paths with `check_studio_import_sources`, passing
+   `expected_sha256` as the original hashes in the same order as `source_paths`.
+   The CLI takes one `--expected-sha256` per source. Archive hashes the destination
+   locally and returns `ready=true` only when all supplied original hashes match.
+   If no byte-preserving host transfer is available, say so and ask the user to
+   save the original selected files to the accessible working folder; then verify
+   them. Do not promise a bridge operation that is not callable.
+4. Only after all selected sources are ready, select/create the client and
+   engagement and import each through `import_studio_client_document` (CLI
+   `import-document`). Pass that file's `expected_sha256` / `--expected-sha256`
+   when a transfer was required. The importer checks it again during copying and
+   creates the input ID and SHA receipt itself. Never manually populate `inputs`.
+
+The path importer does not itself fetch chat attachments. Direct attachment use
+requires actual importer access or a demonstrated host transfer. If neither an
+importer-side check nor transfer is callable, explain the missing capability
+before creating records; do not create a cloud-only replacement for a local Archive.
+
+On any later import failure, disclose the existing `client_id` and `engagement_id`
+and resume those same records. A folder-name collision calls for inspecting the
+returned existing scope and reusing it when its identity matches; never clear old
+folders or change the client's name just to get past the error. A deliberately
+separate synthetic test may have a distinct name; retries retain their identities.
+Documentless client work needs no file check. Standalone workflows check access
+on their own execution host and do not require Archive or a computer folder when
+that engine can read the inputs.
+
 Public workflow names select skills; component IDs select module paths.
 `financial-report-builder` uses component `report-builder`, `vouching` (historically
 called Check Entries) uses `check-entries`, and `purchase-invoice-review` uses
@@ -382,10 +438,71 @@ reviews are not professional approvals and its exports do not perform actions.
 Use Studio Archive's generic local report helper without preparing an archive
 run; it sets server attestation to false. No external stamping for this prototype.
 
+## Check supplied files before starting client work
+
+Select the exact files needed for this request. Folder access does not select
+all its contents: if the task needs two files in a folder containing four, use
+only those two. Resolve genuinely ambiguous choices with the user; reuse clear
+choices without another confirmation.
+
+Before parsing documents or creating a client, engagement or run, call
+`check_studio_import_sources` with all selected paths on the actual importer
+host. It needs no configured Archive and creates no records. If the MCP tool is
+unavailable, use the packaged `check-import-sources --source-path <path>` CLI
+through the maintained managed launcher on that same host (repeat the flag per
+file). A cloud-shell `ls` is not proof of access by a computer-side importer.
+Readable attachments, including `/mnt/user-data/uploads/` paths when the importer
+can read them, continue directly without requiring a connected computer folder.
+
+If files are unavailable, explain the cause immediately before creating anything:
+"The file is in the chat, but the import tool looks for it on your computer."
+Do not keep trying that same inaccessible path. Use this recovery sequence:
+
+1. Inspect the host's actual callable file-transfer capabilities and the already
+   connected folders. Reuse an authorized ordinary working folder outside the
+   managed `Vera/engagements/.../inputs` tree. Offer **Add folder** from the **+**
+   menu only when the current host offers it; otherwise explain the available
+   connection method. Ask for a folder only if an accessible destination is needed.
+2. With a supported bridge, copy only the selected original attachments to that
+   folder as files. Compute each original SHA-256 through the host file tools.
+   Do not recreate CSV text, convert encodings or line endings, relay document
+   contents through model-authored tool arguments, guess a mount translation,
+   overwrite a different file with the same name, or scan unrelated folders.
+   A verified byte-for-byte copy may reuse its destination on retry.
+3. Check the actual destination paths with `check_studio_import_sources`, passing
+   `expected_sha256` as the original hashes in the same order as `source_paths`.
+   The CLI takes one `--expected-sha256` per source. Archive hashes the destination
+   locally and returns `ready=true` only when all supplied original hashes match.
+   If no byte-preserving host transfer is available, say so and ask the user to
+   save the original selected files to the accessible working folder; then verify
+   them. Do not promise a bridge operation that is not callable.
+4. Only after all selected sources are ready, select/create the client and
+   engagement and import each through `import_studio_client_document` (CLI
+   `import-document`). Pass that file's `expected_sha256` / `--expected-sha256`
+   when a transfer was required. The importer checks it again during copying and
+   creates the input ID and SHA receipt itself. Never manually populate `inputs`.
+
+The path importer does not itself fetch chat attachments. Direct attachment use
+requires actual importer access or a demonstrated host transfer. If neither an
+importer-side check nor transfer is callable, explain the missing capability
+before creating records; do not create a cloud-only replacement for a local Archive.
+
+On any later import failure, disclose the existing `client_id` and `engagement_id`
+and resume those same records. A folder-name collision calls for inspecting the
+returned existing scope and reusing it when its identity matches; never clear old
+folders or change the client's name just to get past the error. A deliberately
+separate synthetic test may have a distinct name; retries retain their identities.
+Documentless client work needs no file check. Standalone workflows check access
+on their own execution host and do not require Archive or a computer folder when
+that engine can read the inputs.
+
 ## Client-bound work in Cowork
 
 Every client-bound workflow uses Studio Archive's portable ledger in the exact
-connected studio folder. Select or register one client, create or resume one
+connected studio folder. When inputs are supplied, first follow "Check supplied
+files before starting client work": verify all selected paths on the actual
+Archive import host and resolve unavailable inputs before creating records.
+Then select or register one client, create or resume one
 engagement, import immutable source receipts, prepare and start the exact
 workflow run, write only below its bound output root, then finalize and complete
 the declared artifacts. The customer folder remains the durable source of truth;

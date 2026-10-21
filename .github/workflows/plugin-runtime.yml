@@ -1036,13 +1036,13 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_studio_archive_verification.py
           --cov=input_verification --cov-report=term-missing --cov-fail-under=80
-      - name: Verify native input verification contract and fresh-session replay
+      - name: Verify input access before creation, receipt checks and fresh-session replay
         env:
           MPARANZA_INCIDENT_DELIVERY: local-only
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_studio_archive_component.py
-          -k "mcp_verif or mcp_lists_strict"
+          -k "mcp_verif or mcp_lists_strict or source_check or chat_upload_access or readable_chat_path or reachable_csvs_import or late_import_error or source_disappearing or transfer_changed"
 
   studio-work:
     name: Studio work register and calendar receipts
@@ -1086,6 +1086,7 @@ jobs:
           tests/plugins/test_studio_archive_adoption.py
           tests/plugins/test_studio_archive_concurrency.py
           tests/plugins/test_archive_fault_isolation.py
+          tests/plugins/test_vera_studio_archive_gmail_routing.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
       - name: Verify negotiation delivery and immutable round successors

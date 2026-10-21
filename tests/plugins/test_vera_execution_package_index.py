@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
-import shutil
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -89,6 +89,14 @@ def test_packaged_preflight_recovers_host_cache_hardlinks_without_manual_repair(
             alias.parent.mkdir(parents=True, exist_ok=True)
             alias.hardlink_to(path)
 
+    temporary = tmp_path / "os-temp"
+    temporary.mkdir()
+    environment = {
+        **os.environ,
+        "TMPDIR": str(temporary),
+        "TMP": str(temporary),
+        "TEMP": str(temporary),
+    }
     completed = subprocess.run(
         [
             sys.executable,
@@ -100,30 +108,51 @@ def test_packaged_preflight_recovers_host_cache_hardlinks_without_manual_repair(
         capture_output=True,
         text=True,
         check=False,
+        env=environment,
     )
 
     assert completed.returncode == 0, completed.stderr
-    prepared = Path(json.loads(completed.stdout)["execution_root"])
-    try:
-        assert prepared != installed
-        relative = "modules/journal-bank-reconciliation/scripts/inspect_inputs.py"
-        assert (prepared / relative).stat().st_nlink == 1
-        assert (installed / relative).stat().st_nlink == 2
-        assert (aliases / relative).read_bytes() == (prepared / relative).read_bytes()
-        help_result = subprocess.run(
-            [
-                sys.executable,
-                "-B",
-                str(
-                    prepared
-                    / "modules/journal-bank-reconciliation/scripts/check_dependencies.py"
-                ),
-                "--help",
-            ],
-            capture_output=True,
-            text=True,
-            check=False,
-        )
-        assert help_result.returncode == 0, help_result.stderr
-    finally:
-        shutil.rmtree(prepared)
+    # Preflight validates and releases its copy. Commands own a fresh copy
+    # only while they execute; no returned path outlives the owning process.
+    assert Path(json.loads(completed.stdout)["execution_root"]) == installed
+    assert not list(temporary.glob("vera-verified-*"))
+    relative = "modules/journal-bank-reconciliation/scripts/inspect_inputs.py"
+    assert (installed / relative).stat().st_nlink == 2
+    original = (aliases / relative).read_bytes()
+    program = "\n".join(
+        [
+            "import json,runpy,subprocess,sys",
+            "from pathlib import Path",
+            "v=runpy.run_path(sys.argv[1])",
+            "installed=Path(sys.argv[2])",
+            "prepared=v['prepare_execution_root'](installed,'journal-bank-reconciliation')",
+            "relative='modules/journal-bank-reconciliation/scripts/inspect_inputs.py'",
+            "assert prepared!=installed",
+            "assert (prepared/relative).stat().st_nlink==1",
+            "assert (prepared/relative).read_bytes()==(installed/relative).read_bytes()",
+            "r=subprocess.run([sys.executable,'-B',str(prepared/'modules/journal-bank-reconciliation/scripts/check_dependencies.py'),'--help'],capture_output=True,text=True)",
+            "assert r.returncode==0,r.stderr",
+            "print(json.dumps({'owned_root':str(prepared)}))",
+        ]
+    )
+    helper = subprocess.run(
+        [
+            sys.executable,
+            "-B",
+            "-c",
+            program,
+            str(installed / "scripts/verified_execution.py"),
+            str(installed),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        env=environment,
+    )
+
+    assert helper.returncode == 0, helper.stderr
+    assert not Path(json.loads(helper.stdout)["owned_root"]).exists()
+    assert not list(temporary.glob("vera-verified-*"))
+    assert (installed / relative).stat().st_nlink == 2
+    assert (aliases / relative).read_bytes() == original
+    assert (installed / relative).read_bytes() == original

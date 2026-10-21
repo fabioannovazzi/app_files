@@ -29,7 +29,7 @@ from email.parser import BytesParser
 from email.utils import getaddresses
 from functools import wraps
 from html.parser import HTMLParser
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 from threading import Lock, RLock
 from typing import Any, Callable, Iterator, Mapping, Sequence
 
@@ -72,8 +72,10 @@ __all__ = [
     "ArchiveAccessError",
     "ArchiveError",
     "ArchiveFolderPickerUnavailableError",
+    "ArchiveImportSourceError",
     "ArchiveNotConfiguredError",
     "SourceChangedError",
+    "check_studio_import_sources",
     "cancel_studio_client_workflow",
     "close_studio_client_engagement",
     "complete_studio_client_workflow",
@@ -292,6 +294,20 @@ class ArchiveError(RuntimeError):
     code = "archive_error"
 
 
+class ArchiveImportSourceError(ArchiveError):
+    """Keep a failed import's recovery information and existing identifiers."""
+
+    def __init__(self, result: Mapping[str, Any], **identity: str) -> None:
+        super().__init__(str(result["message"]))
+        self.code = str(result["code"])
+        self.details = {
+            **result,
+            **identity,
+            "resume_existing_engagement": bool(identity.get("engagement_id")),
+            "direct_chat_attachment_import_supported": False,
+        }
+
+
 class ArchiveAccessError(ArchiveError):
     """Describe one mechanically observed archive-root access failure safely."""
 
@@ -380,6 +396,8 @@ class ArchiveConfig:
     archive_root: Path
     scopes: tuple[Scope, ...]
     configured_at: str
+    scope_issues: tuple[dict[str, Any], ...] = ()
+    directory_issue: dict[str, Any] | None = None
 
     def as_json(self) -> dict[str, Any]:
         """Return the persisted configuration shape."""
@@ -573,11 +591,22 @@ def _archive_profile(state_dir: Path) -> Path | None:
 
 
 def _profile_registry_directory(state_dir: Path) -> Path | None:
+    if _archive_profile(state_dir) is None:
+        return None
+    config = _load_config(state_dir, validate_scope_roots=False)
+    return _profile_directory_for_root(state_dir, config.archive_root)
+
+
+def _profile_directory_for_root(state_dir: Path, root: Path) -> Path | None:
+    """Keep private discovery records outside every selected source tree."""
     profile = _archive_profile(state_dir)
     if profile is None:
         return None
-    config = _load_config(state_dir, validate_scope_roots=False)
-    key = hashlib.sha256(str(config.archive_root).encode()).hexdigest()
+    if _path_is_within(profile, root) or _path_is_within(root, profile):
+        raise ArchiveError(
+            "Private archive profile must be outside the source archive."
+        )
+    key = hashlib.sha256(str(root).encode()).hexdigest()
     return profile / "archives" / key
 
 
@@ -679,6 +708,77 @@ def _restore_approved_root(state: Path) -> None:
         raise ArchiveError("Approved archive preference is malformed.")
     # Revalidate access and derive fresh scopes; never copy an old session config.
     configure_archive(Path(saved["archive_root"]), state_dir=state)
+
+
+def _remember_known_scopes(state: Path, config: ArchiveConfig) -> dict[str, str]:
+    """Cache a complete observed directory without making cache writes a prerequisite."""
+    if config.directory_issue is not None or config.scope_issues:
+        return {"status": "retained", "reason": "current_discovery_incomplete"}
+    try:
+        directory = _profile_directory_for_root(state, config.archive_root)
+        if directory is None:
+            return {"status": "not_configured"}
+        path = directory / "known-scopes.json"
+        payload = {
+            "schema_version": 1,
+            "archive_root": str(config.archive_root),
+            "scopes": [scope.as_json() for scope in config.scopes],
+        }
+        if preferences.read_json(path) == payload:
+            return {"status": "current"}
+        # This derived cache can wait; an active alias transaction must not
+        # delay client work merely to refresh folder-location hints.
+        with preferences.registry_lock(
+            directory.parents[1], config.archive_root, timeout_seconds=0
+        ):
+            if preferences.read_json(path) != payload:
+                _write_private_json(path, payload)
+        return {"status": "saved"}
+    except (ArchiveError, OSError, ValueError) as exc:
+        logging.getLogger(__name__).warning(
+            "Archive folder cache remains unavailable: %s", type(exc).__name__
+        )
+        return {"status": "unavailable", "reason": type(exc).__name__}
+
+
+def _known_scopes(state: Path, root: Path) -> tuple[Scope, ...]:
+    """Read exact previously observed locations; selected identities still need validation."""
+    directory = _profile_directory_for_root(state, root)
+    if directory is None:
+        return ()
+    payload = preferences.read_json(directory / "known-scopes.json")
+    if payload is None:
+        return ()
+    if (
+        set(payload) != {"schema_version", "archive_root", "scopes"}
+        or payload["schema_version"] != 1
+        or payload["archive_root"] != str(root)
+        or not isinstance(payload["scopes"], list)
+        or not 1 <= len(payload["scopes"]) <= MAX_CLIENT_IDENTITIES + 1
+    ):
+        raise ArchiveError("Saved archive folder locations are invalid.")
+    scopes = []
+    for item in payload["scopes"]:
+        if not isinstance(item, dict) or not isinstance(item.get("relative_dir"), str):
+            raise ArchiveError("Saved archive folder location is invalid.")
+        relative = item["relative_dir"]
+        if relative != "." and (
+            relative in {"", ".."}
+            or Path(relative).name != relative
+            or "\\" in relative
+        ):
+            raise ArchiveError(
+                "Saved archive folder location is not an immediate child."
+            )
+        scope = _scope_from_relative(relative, root)
+        if scope.as_json() != item:
+            raise ArchiveError(
+                "Saved archive folder location does not match its identity."
+            )
+        scopes.append(scope)
+    if len({scope.scope_id for scope in scopes}) != len(scopes):
+        raise ArchiveError("Saved archive folder locations are ambiguous.")
+    return tuple(scopes)
 
 
 def _google_drive_bindings_path(state_dir: Path) -> Path:
@@ -909,6 +1009,7 @@ def _discover_top_level_scopes(
     root: Path,
     *,
     host_access_approved: bool = False,
+    issues: list[dict[str, Any]] | None = None,
 ) -> tuple[Scope, ...]:
     directories: list[Path] = []
     root_files = 0
@@ -925,19 +1026,32 @@ def _discover_top_level_scopes(
     for path in entries:
         if path.name in IGNORED_NAMES:
             continue
-        if path.is_symlink():
-            root_files += 1
-            continue
         try:
             mode = path.lstat().st_mode
         except OSError as exc:
-            raise _archive_access_error(
-                exc,
-                stage="root_entry_metadata",
-                path_kind=path_kind,
-                host_access_approved=host_access_approved,
-            ) from exc
-        if stat.S_ISDIR(mode):
+            if issues is None:
+                raise _archive_access_error(
+                    exc,
+                    stage="root_entry_metadata",
+                    path_kind=path_kind,
+                    host_access_approved=host_access_approved,
+                ) from exc
+            # Keep the unavailable name visible without asserting it is usable
+            # or preventing inspection of independent customer folders.
+            directories.append(path)
+            issues.append(
+                {
+                    **_scope_from_relative(path.name, root).as_json(),
+                    "issue_code": "scope_metadata_unavailable",
+                    "reason": "Folder metadata is unavailable; original records are preserved.",
+                    "error_type": type(exc).__name__,
+                    "available": False,
+                }
+            )
+            continue
+        if stat.S_ISLNK(mode):
+            root_files += 1
+        elif stat.S_ISDIR(mode):
             directories.append(path)
         elif stat.S_ISREG(mode):
             root_files += 1
@@ -952,9 +1066,25 @@ def _discover_top_level_scopes(
             else directory_scopes
         )
         if len({scope.scope_id for scope in scopes}) != len(scopes):
-            raise ArchiveError(
-                "Top-level archive directory names collide when case is ignored."
-            )
+            if issues is None:
+                raise ArchiveError(
+                    "Top-level archive directory names collide when case is ignored."
+                )
+            by_id: dict[str, list[Scope]] = {}
+            for scope in scopes:
+                by_id.setdefault(scope.scope_id, []).append(scope)
+            for group in by_id.values():
+                if len(group) > 1:
+                    issues.append(
+                        {
+                            **group[0].as_json(),
+                            "relative_dirs": [item.relative_dir for item in group],
+                            "issue_code": "scope_name_collision",
+                            "reason": "These folder names share a case-insensitive scope identity.",
+                            "available": False,
+                        }
+                    )
+            scopes = tuple(group[0] for group in by_id.values())
         return scopes
     if root_files:
         return (_scope_from_relative(".", root),)
@@ -1002,10 +1132,24 @@ def configure_archive(
             "Private archive profile must be outside the source archive."
         )
     private_state = _state_dir(state_dir, create=True)
-    scopes = _discover_top_level_scopes(
-        root,
-        host_access_approved=host_access_approved,
-    )
+    scope_issues: list[dict[str, Any]] = []
+    directory_issue = None
+    try:
+        scopes = _discover_top_level_scopes(
+            root, host_access_approved=host_access_approved, issues=scope_issues
+        )
+    except ArchiveAccessError as exc:
+        if exc.details["stage"] != "root_listing":
+            raise
+        scopes = _known_scopes(private_state, root)
+        if not scopes:
+            raise
+        directory_issue = {
+            "issue_code": "scope_listing_unavailable",
+            "reason": str(exc),
+            "available": False,
+            "known_scopes_only": True,
+        }
     _claim_state(private_state)
     config_path = _config_path(private_state)
     if config_path.is_file() and _config_matches(
@@ -1016,15 +1160,24 @@ def configure_archive(
         if os.name == "posix" and stat.S_IMODE(config_path.stat().st_mode) != 0o600:
             config_path.chmod(0o600)
         _remember_approved_root(private_state, root)
-        return studio_archive_status(state_dir=private_state)
+        status = studio_archive_status(state_dir=private_state)
+        status["scope_cache"] = _remember_known_scopes(
+            private_state,
+            ArchiveConfig(root, scopes, "", tuple(scope_issues), directory_issue),
+        )
+        return status
     config = ArchiveConfig(
         archive_root=root,
         scopes=scopes,
         configured_at=_now_iso(),
+        scope_issues=tuple(scope_issues),
+        directory_issue=directory_issue,
     )
     _write_private_json(config_path, config.as_json())
     _remember_approved_root(private_state, root)
+    scope_cache = _remember_known_scopes(private_state, config)
     status = studio_archive_status(state_dir=private_state)
+    status["scope_cache"] = scope_cache
     status["index_requires_refresh"] = True
     return status
 
@@ -1368,13 +1521,61 @@ def _load_client_identities(state_dir: Path) -> tuple[ClientIdentity, ...]:
     return _load_client_identity_file(_client_identities_path(state_dir))
 
 
-def _load_client_identity_file(path: Path) -> tuple[ClientIdentity, ...]:
-    if not path.is_file():
-        return ()
-    _assert_private_file(path, "client identity registry")
+def _parse_client_identity(item: Any) -> ClientIdentity:
+    """Validate one mechanical identity record independently of its siblings."""
+    required = {
+        "client_id",
+        "scope_id",
+        "email_addresses",
+        "legal_names",
+        "tax_identifiers",
+        "updated_at",
+    }
+    if not isinstance(item, dict) or set(item) != required:
+        raise ArchiveError("Studio Archive client identity record is malformed.")
+    if (
+        not isinstance(item["client_id"], str)
+        or re.fullmatch(r"client_[0-9a-f]{24}", item["client_id"]) is None
+        or not isinstance(item["scope_id"], str)
+        or re.fullmatch(r"scope_[0-9a-f]{24}", item["scope_id"]) is None
+        or not isinstance(item["updated_at"], str)
+        or not item["updated_at"]
+    ):
+        raise ArchiveError("Studio Archive client identity record is invalid.")
+    if not all(
+        isinstance(item[key], list)
+        for key in ("email_addresses", "legal_names", "tax_identifiers")
+    ):
+        raise ArchiveError("Studio Archive client identity values are malformed.")
+    return ClientIdentity(
+        client_id=item["client_id"],
+        scope_id=item["scope_id"],
+        email_addresses=_normalize_email_addresses(item["email_addresses"]),
+        legal_names=_normalize_legal_names(item["legal_names"]),
+        tax_identifiers=_normalize_tax_identifiers(item["tax_identifiers"]),
+        updated_at=item["updated_at"],
+    )
+
+
+def _load_client_identity_file(
+    path: Path, *, issues: list[dict[str, Any]] | None = None
+) -> tuple[ClientIdentity, ...]:
+    """Read aliases; partial readers preserve bad evidence and expose uncertainty."""
     try:
+        if not path.exists() and not path.is_symlink():
+            return ()
+        _assert_private_file(path, "client identity registry")
         payload = preferences.read_json(path)
-    except (OSError, ValueError) as exc:
+    except (ArchiveError, OSError, ValueError) as exc:
+        if issues is not None:
+            issues.append(
+                {
+                    "issue_code": "identity_registry_unavailable",
+                    "reason": type(exc).__name__,
+                    "available": False,
+                }
+            )
+            return ()
         raise ArchiveError(
             f"Studio Archive client identity registry is unreadable: {exc}"
         ) from exc
@@ -1383,58 +1584,58 @@ def _load_client_identity_file(path: Path) -> tuple[ClientIdentity, ...]:
         or payload.get("schema_version") != CLIENT_IDENTITIES_SCHEMA_VERSION
         or not isinstance(payload.get("clients"), list)
     ):
+        if issues is not None:
+            issues.append(
+                {"issue_code": "identity_registry_malformed", "available": False}
+            )
+            return ()
         raise ArchiveError("Studio Archive client identity registry is malformed.")
     raw_clients = payload["clients"]
     if len(raw_clients) > MAX_CLIENT_IDENTITIES:
+        if issues is not None:
+            issues.append(
+                {"issue_code": "identity_registry_limit_exceeded", "available": False}
+            )
+            return ()
         raise ArchiveError("Studio Archive client identity registry is too large.")
     records: list[ClientIdentity] = []
-    seen_client_ids: set[str] = set()
-    seen_scope_ids: set[str] = set()
-    required_keys = {
-        "client_id",
-        "scope_id",
-        "email_addresses",
-        "legal_names",
-        "tax_identifiers",
-        "updated_at",
-    }
-    for item in raw_clients:
-        if not isinstance(item, dict) or set(item) != required_keys:
-            raise ArchiveError("Studio Archive client identity record is malformed.")
-        client_id = item["client_id"]
-        scope_id = item["scope_id"]
-        updated_at = item["updated_at"]
-        if (
-            not isinstance(client_id, str)
-            or re.fullmatch(r"client_[0-9a-f]{24}", client_id) is None
-            or client_id in seen_client_ids
-            or not isinstance(scope_id, str)
-            or re.fullmatch(r"scope_[0-9a-f]{24}", scope_id) is None
-            or scope_id in seen_scope_ids
-            or not isinstance(updated_at, str)
-            or not updated_at
-        ):
-            raise ArchiveError("Studio Archive client identity record is invalid.")
-        raw_emails = item["email_addresses"]
-        raw_names = item["legal_names"]
-        raw_tax_ids = item["tax_identifiers"]
-        if not all(
-            isinstance(values, list) for values in (raw_emails, raw_names, raw_tax_ids)
-        ):
-            raise ArchiveError("Studio Archive client identity values are malformed.")
-        records.append(
-            ClientIdentity(
-                client_id=client_id,
-                scope_id=scope_id,
-                email_addresses=_normalize_email_addresses(raw_emails),
-                legal_names=_normalize_legal_names(raw_names),
-                tax_identifiers=_normalize_tax_identifiers(raw_tax_ids),
-                updated_at=updated_at,
+    for index, item in enumerate(raw_clients):
+        try:
+            records.append(_parse_client_identity(item))
+        except ArchiveError:
+            if issues is None:
+                raise
+            issues.append(
+                {
+                    "issue_code": "invalid_identity_record",
+                    "record_index": index,
+                    "available": False,
+                }
             )
-        )
-        seen_client_ids.add(client_id)
-        seen_scope_ids.add(scope_id)
-    _validate_identity_uniqueness(records)
+    if issues is None:
+        _validate_identity_uniqueness(records)
+    else:
+        # A conflicting opaque ID/scope cannot authorize either alias record.
+        # Shared email/tax aliases remain explicit ambiguous lookup candidates.
+        clients: dict[str, int] = {}
+        scopes: dict[str, int] = {}
+        for record in records:
+            clients[record.client_id] = clients.get(record.client_id, 0) + 1
+            scopes[record.scope_id] = scopes.get(record.scope_id, 0) + 1
+        unique = []
+        for record in records:
+            if clients[record.client_id] != 1 or scopes[record.scope_id] != 1:
+                issues.append(
+                    {
+                        "issue_code": "conflicting_identity_record",
+                        "client_id": record.client_id,
+                        "scope_id": record.scope_id,
+                        "available": False,
+                    }
+                )
+            else:
+                unique.append(record)
+        records = unique
     return tuple(sorted(records, key=lambda record: record.client_id))
 
 
@@ -1476,12 +1677,14 @@ def _client_inventory(
 ) -> dict[str, Any]:
     """Keep unavailable folders local to their scope; never adopt conflicting IDs."""
 
+    unavailable = {issue["scope_id"] for issue in config.scope_issues}
     scoped_roots = [
         (scope.scope_id, config.archive_root / scope.relative_dir)
         for scope in config.scopes
-        if scope.relative_dir != "."
+        if scope.relative_dir != "." and scope.scope_id not in unavailable
     ]
     inventory = ledger.inspect_client_manifests(scoped_roots)
+    inventory["blocked_clients"].extend(config.scope_issues)
     owners = {record.scope_id: record.client_id for record in records}
     valid = []
     for found in inventory["clients"]:
@@ -1498,22 +1701,19 @@ def _client_inventory(
         else:
             valid.append(found)
     inventory["clients"] = valid
-    inventory["complete"] = not inventory["blocked_clients"]
+    inventory["directory_issues"] = (
+        [config.directory_issue] if config.directory_issue else []
+    )
+    inventory["complete"] = (
+        not inventory["blocked_clients"] and not inventory["directory_issues"]
+    )
     return inventory
 
 
-@_identity_transaction
-def _synchronize_client_identities(
-    state_dir: Path,
-    config: ArchiveConfig,
-) -> tuple[ClientIdentity, ...]:
-    """Rebuild the private scope pointer from portable customer manifests.
-
-    Email, PEC, legal-name, and tax-identifier values stay in the private
-    registry.  Only the opaque client ID is recovered from the shared folder.
-    """
-
-    records = list(_load_client_identities(state_dir))
+def _merge_client_identities(
+    records: list[ClientIdentity], config: ArchiveConfig
+) -> tuple[tuple[ClientIdentity, ...], bool]:
+    """Join verified portable IDs and private aliases without changing either."""
     by_client = {record.client_id: record for record in records}
     by_scope = {record.scope_id: record for record in records}
     changed = False
@@ -1553,9 +1753,61 @@ def _synchronize_client_identities(
         by_scope.pop(existing.scope_id, None)
         by_scope[scope_id] = replacement
         changed = True
+    return tuple(sorted(records, key=lambda record: record.client_id)), changed
+
+
+@_identity_transaction
+def _synchronize_client_identities(
+    state_dir: Path, config: ArchiveConfig
+) -> tuple[ClientIdentity, ...]:
+    """Persist an explicit registry repair only after validating all retained aliases."""
+    records, changed = _merge_client_identities(
+        list(_load_client_identities(state_dir)), config
+    )
     if changed:
         _write_client_identities(state_dir, records)
-    return tuple(sorted(records, key=lambda record: record.client_id))
+    return records
+
+
+def _client_identity_view(
+    state_dir: Path, config: ArchiveConfig
+) -> tuple[tuple[ClientIdentity, ...], list[dict[str, Any]]]:
+    """Serve healthy discovery without requiring registry maintenance or its lock."""
+    issues: list[dict[str, Any]] = []
+    shared = _client_identities_path(state_dir)
+    legacy = state_dir / CLIENT_IDENTITIES_FILENAME
+    source = shared
+    records: tuple[ClientIdentity, ...] = ()
+    try:
+        if shared != legacy and not shared.exists() and legacy.is_file():
+            source = legacy
+    except OSError as exc:
+        # Neither an inaccessible shared file nor an inaccessible legacy file
+        # proves that no aliases exist. Preserve them and expose uncertainty.
+        issues.append(
+            {
+                "issue_code": "identity_registry_unavailable",
+                "reason": type(exc).__name__,
+                "available": False,
+            }
+        )
+    else:
+        records = _load_client_identity_file(source, issues=issues)
+    if source != shared and not issues:
+        # One-time migration preserves fresh-chat aliases. A failed migration
+        # must not obscure the readable current-session records.
+        try:
+            records = _synchronize_client_identities(state_dir, config)
+        except (ArchiveError, OSError, ValueError) as exc:
+            issues.append(
+                {
+                    "issue_code": "identity_migration_pending",
+                    "reason": type(exc).__name__,
+                    "available": False,
+                }
+            )
+    merged, _ = _merge_client_identities(list(records), config)
+    return merged, issues
 
 
 def _client_record(
@@ -1596,7 +1848,7 @@ def list_studio_client_identities(
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = _synchronize_client_identities(private_state, config)
+    records, identity_issues = _client_identity_view(private_state, config)
     records_by_scope = {record.scope_id: record for record in records}
     active_scope_ids = {scope.scope_id for scope in config.scopes}
     clients = [
@@ -1613,6 +1865,8 @@ def list_studio_client_identities(
     ]
     return {
         "scope_configuration_changed": scopes_changed,
+        "identity_registry_complete": not identity_issues,
+        "identity_issues": identity_issues,
         "registered_client_count": sum(
             client["registration_status"] == "registered" for client in clients
         ),
@@ -1714,7 +1968,7 @@ def list_studio_clients(
         }
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = _synchronize_client_identities(private_state, config)
+    records, identity_issues = _client_identity_view(private_state, config)
     inventory = _client_inventory(config, records)
     blocked = {issue["scope_id"]: issue for issue in inventory["blocked_clients"]}
     records_by_scope = {record.scope_id: record for record in records}
@@ -1761,7 +2015,11 @@ def list_studio_clients(
         "orphaned_profile_count": len(orphaned),
         "clients": clients,
         "blocked_clients": inventory["blocked_clients"],
-        "directory_complete": inventory["complete"],
+        "directory_complete": inventory["complete"] and not identity_issues,
+        "directory_issues": inventory["directory_issues"],
+        "scope_cache": _remember_known_scopes(private_state, config),
+        "identity_registry_complete": not identity_issues,
+        "identity_issues": identity_issues,
         "orphaned_profiles": orphaned,
         "private_identity_values_returned": False,
         "gmail_connector_called": False,
@@ -1798,7 +2056,7 @@ def resolve_studio_client_identity(
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
     config, scopes_changed = _current_scope_view(stored_config)
-    records = _synchronize_client_identities(private_state, config)
+    records, identity_issues = _client_identity_view(private_state, config)
     scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
     matches: list[dict[str, Any]] = []
     for record in records:
@@ -1817,8 +2075,14 @@ def resolve_studio_client_identity(
         "resolution_status": (
             "exact_match"
             if len(matches) == 1
-            else "ambiguous_exact_match" if matches else "no_exact_match"
+            else (
+                "ambiguous_exact_match"
+                if matches
+                else "incomplete" if identity_issues else "no_exact_match"
+            )
         ),
+        "resolution_complete": not identity_issues,
+        "identity_issues": identity_issues,
         "identity_kind": identity_kind,
         "match_count": len(matches),
         "matches": matches,
@@ -1837,35 +2101,45 @@ def get_studio_client_folder(
 
     private_state = _state_dir(state_dir)
     stored_config = _load_config(private_state, validate_scope_roots=False)
-    # Client selection uses live directory metadata and portable identities.
-    # A content-index refresh is separate and must not gate an unrelated client.
+    # The portable manifest owns this ID. Alias lookup and registry maintenance
+    # are separate operations, not prerequisites for already selected work.
     config, _ = _current_scope_view(stored_config)
-    identities = _synchronize_client_identities(private_state, config)
-    inventory = _client_inventory(config, identities)
-    identity = next(
-        (item for item in identities if item.client_id == client_id),
+    inventory = _client_inventory(config)
+    selected = next(
+        (item for item in inventory["clients"] if item["client_id"] == client_id),
         None,
     )
-    if identity is None:
-        raise ArchiveError("Stable client ID is not registered.")
-    scope = next(
-        (item for item in config.scopes if item.scope_id == identity.scope_id),
-        None,
-    )
-    if scope is None:
-        raise ArchiveError(
-            "The registered client folder is missing; relink it before continuing."
+    if selected is None:
+        # A private pointer may explain an unavailable selection, but cannot
+        # authorize a folder or prevent access to a verified portable identity.
+        try:
+            identity = next(
+                (
+                    item
+                    for item in _load_client_identities(private_state)
+                    if item.client_id == client_id
+                ),
+                None,
+            )
+        except (ArchiveError, OSError, ValueError):
+            identity = None
+        issue = next(
+            (
+                item
+                for item in inventory["blocked_clients"]
+                if item.get("client_id") == client_id
+                or (identity is not None and item["scope_id"] == identity.scope_id)
+            ),
+            None,
         )
-    issue = next(
-        (
-            item
-            for item in inventory["blocked_clients"]
-            if item["scope_id"] == scope.scope_id
-        ),
-        None,
+        if issue is not None:
+            raise ArchiveError(f"Selected client is unavailable: {issue['reason']}")
+        raise ArchiveError(
+            "The selected client identity is unavailable in this archive."
+        )
+    scope = next(
+        item for item in config.scopes if item.scope_id == selected["scope_id"]
     )
-    if issue is not None:
-        raise ArchiveError(f"Selected client is unavailable: {issue['reason']}")
     if scope.relative_dir == ".":
         raise ArchiveError(
             "The archive root scope is not a client folder; select one immediate "
@@ -1880,7 +2154,7 @@ def get_studio_client_folder(
     if manifest["client_id"] != client_id:
         raise ArchiveError("Selected customer folder belongs to another client.")
     binding = build_studio_client_folder_binding(
-        studio_client_id=identity.client_id,
+        studio_client_id=client_id,
         scope_id=scope.scope_id,
         archive_root=config.archive_root,
         scope_relative_dir=scope.relative_dir,
@@ -1890,6 +2164,10 @@ def get_studio_client_folder(
     return {
         "status": "ready",
         "client_folder": binding,
+        "directory_complete": inventory["complete"],
+        "directory_issues": inventory["directory_issues"],
+        "scope_cache": _remember_known_scopes(private_state, config),
+        "blocked_clients": inventory["blocked_clients"],
         "source_archive_mutated": False,
         "gmail_connector_called": False,
     }
@@ -2113,7 +2391,10 @@ def create_studio_client(
         raise ArchiveError("The generated client folder already exists.")
     client_root.mkdir()
     try:
-        current_scopes = _discover_top_level_scopes(config.archive_root)
+        scope_issues: list[dict[str, Any]] = []
+        current_scopes = _discover_top_level_scopes(
+            config.archive_root, issues=scope_issues
+        )
         scope = next(
             (item for item in current_scopes if item.relative_dir == directory_name),
             None,
@@ -2138,6 +2419,7 @@ def create_studio_client(
             archive_root=config.archive_root,
             scopes=current_scopes,
             configured_at=_now_iso(),
+            scope_issues=tuple(scope_issues),
         )
         _write_private_json(_config_path(private_state), updated_config.as_json())
         try:
@@ -2149,6 +2431,7 @@ def create_studio_client(
         shutil.rmtree(client_root, ignore_errors=True)
         raise
     folder = get_studio_client_folder(client_id, state_dir=private_state)
+    _remember_known_scopes(private_state, updated_config)
     return {
         "status": "created",
         "client": _client_directory_record(record, scope=scope),
@@ -3162,33 +3445,33 @@ def prepare_studio_client_workflow(
     private_state = _state_dir(state_dir)
     config = _load_config(private_state, validate_scope_roots=False)
     current, _ = _current_scope_view(config)
-    identities = _synchronize_client_identities(private_state, current)
-    matches: list[tuple[ClientIdentity, Scope]] = []
-    for identity in identities:
+    inventory = _client_inventory(current)
+    matches: list[tuple[str, Scope]] = []
+    for client in inventory["clients"]:
         scope = next(
-            (item for item in current.scopes if item.scope_id == identity.scope_id),
+            (item for item in current.scopes if item.scope_id == client["scope_id"]),
             None,
         )
         if scope is None:
             continue
-        client_root = _resolve_scope_root(current.archive_root, scope)
         try:
+            client_root = _resolve_scope_root(current.archive_root, scope)
             ledger.load_engagement_manifest(client_root, engagement_id)
-        except ledger.LedgerError:
+        except (ArchiveError, ledger.LedgerError, OSError):
             continue
-        matches.append((identity, scope))
+        matches.append((client["client_id"], scope))
     if not matches:
         raise ArchiveError("Client engagement was not found.")
     if len(matches) != 1:
         raise ArchiveError(
             "Client engagement identity is ambiguous across customer folders."
         )
-    identity, scope = matches[0]
+    client_id, scope = matches[0]
     client_root = _resolve_scope_root(current.archive_root, scope)
     try:
         prepared = ledger.prepare_run(
             client_root,
-            identity.client_id,
+            client_id,
             engagement_id,
             workflow_id,
             _workflow_version(workflow_id),
@@ -3203,13 +3486,16 @@ def prepare_studio_client_workflow(
         raise ArchiveError(f"Client workflow run is invalid: {exc}") from exc
     return {
         "status": prepared["status"],
-        "client_id": identity.client_id,
+        "client_id": client_id,
         "engagement_id": engagement_id,
         "run": prepared["run"],
         "input_manifest": prepared["input_manifest"],
         "client_engagement": prepared["context"],
         "client_engagement_path": prepared["context_path"],
         "blocked_runs": prepared.get("blocked_runs", []),
+        "blocked_clients": inventory["blocked_clients"],
+        "directory_complete": inventory["complete"],
+        "directory_issues": inventory["directory_issues"],
     }
 
 
@@ -3398,6 +3684,151 @@ def copy_studio_client_source_folder(
     return {**result, "client_id": client_id, "engagement_id": engagement_id}
 
 
+def _inspect_import_source(
+    source_path: Path, expected_sha256: str | None = None
+) -> dict[str, Any]:
+    """Probe access; optionally hash a transferred original without exposing bytes."""
+
+    source = source_path.expanduser()
+    # This prefix explains a failed access; it never rejects a readable file.
+    chat_upload = PurePosixPath(str(source).replace("\\", "/")).parts[:4] == (
+        "/",
+        "mnt",
+        "user-data",
+        "uploads",
+    )
+    code = "source_unavailable"
+    message = "The selected file cannot be opened on the computer running Archive."
+    next_step = "Select the file from a folder this computer can access, then retry."
+    try:
+        if not source.is_absolute():
+            code = "source_path_not_absolute"
+            message = "Select the file's full path on the computer running Archive."
+        else:
+            resolved = source.resolve(strict=True)
+            if source.is_symlink() or resolved != source:
+                code = "source_path_is_symlink"
+                message = "Select the original file, rather than a symbolic link."
+            elif not stat.S_ISREG(source.stat().st_mode):
+                code = "source_not_regular_file"
+                message = "Select a file, rather than a folder or another kind of item."
+            else:
+                flags = os.O_RDONLY | getattr(os, "O_BINARY", 0)
+                flags |= getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+                descriptor = os.open(source, flags)
+                try:
+                    if stat.S_ISREG(os.fstat(descriptor).st_mode):
+                        result: dict[str, Any] = {
+                            "source_path": str(source),
+                            "reachable": True,
+                        }
+                        if expected_sha256 is not None:
+                            # Exact hashes establish transfer identity, not document meaning.
+                            before = os.fstat(descriptor)
+                            digest = hashlib.sha256()
+                            while chunk := os.read(descriptor, 1024 * 1024):
+                                digest.update(chunk)
+                            after = os.fstat(descriptor)
+                            unchanged = all(
+                                getattr(before, key) == getattr(after, key)
+                                for key in (
+                                    "st_dev",
+                                    "st_ino",
+                                    "st_size",
+                                    "st_mtime_ns",
+                                    "st_ctime_ns",
+                                )
+                            )
+                            matches = (
+                                unchanged and digest.hexdigest() == expected_sha256
+                            )
+                            result.update(
+                                sha256=digest.hexdigest(),
+                                byte_count=after.st_size,
+                                matches_expected_sha256=matches,
+                            )
+                            if not matches:
+                                result.update(
+                                    code="source_digest_mismatch",
+                                    message="The accessible file does not match the selected original attachment.",
+                                    next_step="Copy the original file again without rewriting its contents, then verify it before importing. Reuse any existing client and engagement.",
+                                )
+                        return result
+                    code = "source_not_regular_file"
+                    message = "The selected item is no longer a regular file."
+                finally:
+                    os.close(descriptor)
+    except PermissionError:
+        code = "source_access_denied"
+        message = "Archive does not have permission to open the selected file."
+        next_step = "Allow access to that file or choose an accessible copy."
+    except (FileNotFoundError, NotADirectoryError):
+        code = "source_not_found"
+        message = "The selected file was not found on the computer running Archive."
+    except OSError as exc:
+        message = (
+            "The computer running Archive could not open the selected file "
+            f"(system error {exc.errno})."
+        )
+    if chat_upload and code in {"source_not_found", "source_path_not_absolute"}:
+        code = "source_not_on_device"
+        message = "The file is in the chat, but the import tool looks for it on your computer."
+        next_step = (
+            "Use the host's supported file transfer to copy only the selected originals "
+            "to an accessible working folder, then check their computer paths and "
+            "original SHA-256 values with Archive. Offer Add folder from the + menu "
+            "only when the current host offers it. If no transfer is available, ask "
+            "the user to save those files in the accessible folder before creating "
+            "a client, engagement or run. Do not copy into Archive's managed inputs "
+            "directory. This path importer does not itself transfer chat attachments."
+        )
+    return {
+        "source_path": str(source),
+        "reachable": False,
+        "code": code,
+        "message": message,
+        "next_step": next_step,
+    }
+
+
+def check_studio_import_sources(
+    source_paths: Sequence[Path], *, expected_sha256: Sequence[str] | None = None
+) -> dict[str, Any]:
+    """Check input reachability on the import host before any durable creation."""
+
+    if not source_paths or len(source_paths) > 100:
+        raise ArchiveError("Select between 1 and 100 source paths per access check.")
+    if expected_sha256 is not None and (
+        len(expected_sha256) != len(source_paths)
+        or any(
+            not isinstance(value, str) or re.fullmatch(r"[0-9a-f]{64}", value) is None
+            for value in expected_sha256
+        )
+    ):
+        raise ArchiveError(
+            "Supply one original lowercase SHA-256 per selected path, in the same order."
+        )
+    sources = [
+        _inspect_import_source(
+            path, expected_sha256[index] if expected_sha256 is not None else None
+        )
+        for index, path in enumerate(source_paths)
+    ]
+    ready = all(
+        source["reachable"] and source.get("matches_expected_sha256", True)
+        for source in sources
+    )
+    return {
+        "schema_version": "vera.import_source_access.v1",
+        "status": "ready" if ready else "action_required",
+        "ready": ready,
+        "checked_on": "archive_import_host",
+        "sources": sources,
+        "direct_chat_attachment_import_supported": False,
+        "archive_records_created": False,
+    }
+
+
 @_readable_after_write
 def import_studio_client_document(
     client_id: str,
@@ -3406,6 +3837,7 @@ def import_studio_client_document(
     *,
     engagement_id: str | None = None,
     engagement_label: str | None = None,
+    expected_sha256: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Copy one authorized file into one explicit, immutable engagement input."""
@@ -3431,27 +3863,46 @@ def import_studio_client_document(
         raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
     if engagement["client_id"] != client_id:
         raise ArchiveError("Selected engagement belongs to another client.")
-    try:
-        resolved_source = source_path.expanduser().resolve(strict=True)
-    except OSError as exc:
-        raise ArchiveError(f"Selected import source is unavailable: {exc}") from exc
-    archive_root = Path(folder["archive_root"])
-    if _path_is_within(resolved_source, archive_root) and not _path_is_within(
-        resolved_source, client_root
+    if (
+        expected_sha256 is not None
+        and re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None
     ):
         raise ArchiveError(
-            "Selected import source belongs to another Studio Archive scope."
+            "Expected SHA-256 must be the original file's lowercase 64-digit digest."
+        )
+    source_access = _inspect_import_source(source_path, expected_sha256)
+    if not source_access["reachable"] or not source_access.get(
+        "matches_expected_sha256", True
+    ):
+        raise ArchiveImportSourceError(
+            source_access, client_id=client_id, engagement_id=engagement_id
         )
     try:
+        resolved_source = source_path.expanduser().resolve(strict=True)
+        archive_root = Path(folder["archive_root"])
+        if _path_is_within(resolved_source, archive_root) and not _path_is_within(
+            resolved_source, client_root
+        ):
+            raise ArchiveError(
+                "Selected import source belongs to another Studio Archive scope."
+            )
         imported = ledger.import_document(
             client_root,
             client_id,
             engagement_id,
             source_path,
             role,
+            expected_sha256=expected_sha256,
         )
         inventory = ledger.inspect_inputs(client_root, engagement_id)
-    except ledger.LedgerError as exc:
+    except (ledger.LedgerError, OSError) as exc:
+        source_access = _inspect_import_source(source_path, expected_sha256)
+        if not source_access["reachable"] or not source_access.get(
+            "matches_expected_sha256", True
+        ):
+            raise ArchiveImportSourceError(
+                source_access, client_id=client_id, engagement_id=engagement_id
+            ) from exc
         raise ArchiveError(f"Controlled document import failed: {exc}") from exc
     return {
         "status": imported["status"],
@@ -3666,6 +4117,10 @@ def _run_result(loaded: Mapping[str, Any]) -> dict[str, Any]:
     result = {"status": loaded["run"]["status"], "run": loaded["run"]}
     if "reporting" in loaded:
         result["reporting"] = loaded["reporting"]
+        if loaded["reporting"].get("status") == "unavailable":
+            # This acknowledgement contains lifecycle metadata only. Do not
+            # obscure a committed state with another write to the failed recorder.
+            return result
     if ledger._reporting_runtime().selective_reporting_enabled():
         from archive_reporting import metadata_result
 
@@ -3863,7 +4318,18 @@ def recover_studio_client_ledger(
     private_state = _state_dir(state_dir)
     stored = _load_config(private_state, validate_scope_roots=False)
     current, _ = _current_scope_view(stored)
-    identities = _synchronize_client_identities(private_state, current)
+    identities, identity_issues = _client_identity_view(private_state, current)
+    if not identity_issues:
+        try:
+            identities = _synchronize_client_identities(private_state, current)
+        except (ArchiveError, OSError, ValueError) as exc:
+            identity_issues.append(
+                {
+                    "issue_code": "identity_recovery_pending",
+                    "reason": type(exc).__name__,
+                    "available": False,
+                }
+            )
     client_inventory = _client_inventory(current, identities)
     engagement_count = 0
     input_count = 0
@@ -3940,6 +4406,8 @@ def recover_studio_client_ledger(
             navigation_issues.append({"client_id": client_id, "reason": str(exc)})
     complete = not any(
         (
+            identity_issues,
+            client_inventory["directory_issues"],
             client_inventory["blocked_clients"],
             blocked_engagements,
             blocked_inputs,
@@ -3951,6 +4419,9 @@ def recover_studio_client_ledger(
     return {
         "status": "recovered" if complete else "recovered_with_issues",
         "recovery_complete": complete,
+        "identity_registry_complete": not identity_issues,
+        "identity_issues": identity_issues,
+        "directory_issues": client_inventory["directory_issues"],
         "blocked_clients": client_inventory["blocked_clients"],
         "blocked_engagements": blocked_engagements,
         "blocked_inputs": blocked_inputs,
@@ -4022,18 +4493,21 @@ def plan_gmail_client_search(
     """Build bounded Gmail-native searches without calling the connector."""
 
     private_state = _state_dir(state_dir)
-    config = _load_config(private_state, validate_scope_roots=False)
-    _, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before planning Gmail search."
-        )
+    stored = _load_config(private_state, validate_scope_roots=False)
+    config, scopes_changed = _current_scope_view(stored)
     if scope_id == "all":
         raise ArchiveError("Studio-wide Gmail search is not supported.")
     scope = next((item for item in config.scopes if item.scope_id == scope_id), None)
     if scope is None:
         raise ArchiveError("Gmail search scope is not configured.")
-    records = _load_client_identities(private_state)
+    records, identity_issues = _client_identity_view(private_state, config)
+    inventory = _client_inventory(config, records)
+    issue = next(
+        (item for item in inventory["blocked_clients"] if item["scope_id"] == scope_id),
+        None,
+    )
+    if issue is not None:
+        raise ArchiveError(f"Selected Gmail client is unavailable: {issue['reason']}")
     record = next((item for item in records if item.scope_id == scope_id), None)
     if topic is not None:
         if not isinstance(topic, str) or not topic.strip():
@@ -4109,6 +4583,11 @@ def plan_gmail_client_search(
         "display_name": scope.display_name,
         "profile_status": profile_status,
         "queries": queries,
+        "scope_configuration_changed": scopes_changed,
+        "directory_complete": inventory["complete"],
+        "directory_issues": inventory["directory_issues"],
+        "identity_registry_complete": not identity_issues,
+        "identity_issues": identity_issues,
         "requires_connector_profile_check": True,
         "requires_message_read_before_use": True,
         "gmail_connector_called": False,
@@ -4142,12 +4621,8 @@ def match_studio_email_client(
     if not isinstance(headers_complete, bool):
         raise ArchiveError("headers_complete must be a boolean.")
     private_state = _state_dir(state_dir)
-    config = _load_config(private_state, validate_scope_roots=False)
-    _, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before matching Gmail."
-        )
+    stored = _load_config(private_state, validate_scope_roots=False)
+    config, scopes_changed = _current_scope_view(stored)
     scopes_by_id = {scope.scope_id: scope for scope in config.scopes}
     if expected_scope_id is not None and expected_scope_id not in scopes_by_id:
         raise ArchiveError("Expected Gmail client scope is not configured.")
@@ -4171,23 +4646,25 @@ def match_studio_email_client(
             accepted = True
         if not accepted or not parsed_completely:
             unparsed_headers.append(raw_header)
-    records = _load_client_identities(private_state)
-    owners = {
-        email_address: record.scope_id
-        for record in records
-        for email_address in record.email_addresses
-    }
+    records, identity_issues = _client_identity_view(private_state, config)
+    inventory = _client_inventory(config, records)
+    blocked_scopes = {item["scope_id"] for item in inventory["blocked_clients"]}
     matched: dict[str, list[str]] = {}
-    for address in sorted(parsed_addresses):
-        owner = owners.get(address)
-        if owner is not None:
-            matched.setdefault(owner, []).append(address)
+    for record in records:
+        addresses = sorted(parsed_addresses.intersection(record.email_addresses))
+        if addresses:
+            matched[record.scope_id] = addresses
     candidate_scope_ids = sorted(matched)
+    unavailable_scope_ids = [
+        scope_id
+        for scope_id in candidate_scope_ids
+        if scope_id not in scopes_by_id or scope_id in blocked_scopes
+    ]
     header_coverage_complete = headers_complete and not unparsed_headers
     if len(candidate_scope_ids) > 1:
         routing_status = "ambiguous"
         matched_scope_id = None
-    elif not header_coverage_complete:
+    elif not header_coverage_complete or identity_issues or unavailable_scope_ids:
         routing_status = "incomplete"
         matched_scope_id = None
     elif len(candidate_scope_ids) == 1:
@@ -4208,7 +4685,11 @@ def match_studio_email_client(
         "matches": [
             {
                 "scope_id": scope_id,
-                "display_name": scopes_by_id[scope_id].display_name,
+                "display_name": (
+                    scopes_by_id[scope_id].display_name
+                    if scope_id in scopes_by_id
+                    else None
+                ),
                 "email_addresses": matched[scope_id],
                 "match_method": "exact_email_address",
             }
@@ -4220,6 +4701,10 @@ def match_studio_email_client(
         "parsed_email_addresses": sorted(parsed_addresses),
         "unparsed_header_count": len(unparsed_headers),
         "header_coverage_complete": header_coverage_complete,
+        "scope_configuration_changed": scopes_changed,
+        "unavailable_scope_ids": unavailable_scope_ids,
+        "identity_registry_complete": not identity_issues,
+        "identity_issues": identity_issues,
         "gmail_connector_called": False,
         "gmail_data_persisted": False,
     }
@@ -5606,12 +6091,16 @@ def refresh_archive(
                 "count"
             ]
         )
-        recovered_clients = _synchronize_client_identities(private_state, config)
+        recovered_clients, identity_issues = _client_identity_view(
+            private_state, config
+        )
         return {
             "status": "refreshed",
             "last_refresh_at": indexed_at,
             "rebuild": bool(rebuild or root_changed),
             "scope_configuration_changed": scopes_changed,
+            "identity_registry_complete": not identity_issues,
+            "identity_issues": identity_issues,
             "scopes": _scope_records(config),
             "ocr_enabled": enable_ocr,
             "ocr_language": ocr_language,
@@ -5637,17 +6126,44 @@ def _scope_records(config: ArchiveConfig) -> list[dict[str, str]]:
 
 
 def _current_scope_view(config: ArchiveConfig) -> tuple[ArchiveConfig, bool]:
-    current_scopes = _discover_top_level_scopes(config.archive_root)
+    issues: list[dict[str, Any]] = []
+    try:
+        current_scopes = _discover_top_level_scopes(config.archive_root, issues=issues)
+    except ArchiveAccessError as exc:
+        if exc.details["stage"] != "root_listing":
+            raise
+        # A known location is a routing hint, not authorization: selected
+        # manifests and source receipts still validate on the actual filesystem.
+        return (
+            ArchiveConfig(
+                config.archive_root,
+                config.scopes,
+                config.configured_at,
+                directory_issue={
+                    "issue_code": "scope_listing_unavailable",
+                    "reason": str(exc),
+                    "available": False,
+                    "known_scopes_only": True,
+                },
+            ),
+            False,
+        )
     changed = current_scopes != config.scopes
-    if not changed:
+    if (
+        not changed
+        and not issues
+        and not config.scope_issues
+        and config.directory_issue is None
+    ):
         return config, False
     return (
         ArchiveConfig(
             archive_root=config.archive_root,
             scopes=current_scopes,
             configured_at=config.configured_at,
+            scope_issues=tuple(issues),
         ),
-        True,
+        changed,
     )
 
 
@@ -5688,6 +6204,10 @@ def studio_archive_status(*, state_dir: Path | None = None) -> dict[str, Any]:
             "scopes": _scope_records(config),
             "index_requires_refresh": True,
             "scope_configuration_changed": scopes_changed,
+            "scope_discovery_complete": not config.scope_issues
+            and config.directory_issue is None,
+            "scope_discovery_issues": list(config.scope_issues)
+            + ([config.directory_issue] if config.directory_issue else []),
             "needs_ocr_document_count": 0,
             "partial_document_count": 0,
             "failed_document_count": 0,
@@ -5722,6 +6242,10 @@ def studio_archive_status(*, state_dir: Path | None = None) -> dict[str, Any]:
             "scopes": _scope_records(config),
             "index_requires_refresh": scopes_changed or not fingerprint_matches,
             "scope_configuration_changed": scopes_changed,
+            "scope_discovery_complete": not config.scope_issues
+            and config.directory_issue is None,
+            "scope_discovery_issues": list(config.scope_issues)
+            + ([config.directory_issue] if config.directory_issue else []),
             "needs_ocr_document_count": int(
                 connection.execute(
                     "SELECT COUNT(*) AS count FROM documents WHERE needs_ocr = 1"
@@ -6087,7 +6611,11 @@ def _verify_run_configuration(function: Callable[..., Any]) -> Callable[..., Any
 
 for _operation_name in __all__:
     _operation = globals()[_operation_name]
-    if callable(_operation) and not isinstance(_operation, type):
+    if (
+        callable(_operation)
+        and not isinstance(_operation, type)
+        and _operation_name != "check_studio_import_sources"
+    ):
         globals()[_operation_name] = _verify_run_configuration(_operation)
 
 _load_config = _verify_run_configuration(_load_config)

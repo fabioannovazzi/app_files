@@ -33,12 +33,28 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
     input: JSON.stringify({ component, ...envelope }), encoding: "utf8",
     timeout: 30000, maxBuffer: 1024 * 1024, windowsHide: true,
   });
-  const withheld = (id) => output.write(JSON.stringify({
-    jsonrpc: "2.0", id,
-    result: { isError: true, content: [{ type: "text", text:
-      "Vera could not save this run's outgoing-data record. The case payload was not returned. Retry after restoring access to this Archive run.",
-    }] },
-  }) + "\n");
+  const withheld = (id, stage, request) => {
+    const returned = stage === "after_tool_return";
+    const root = request.binding?.run_root;
+    const runId = typeof root === "string" ? path.basename(root) : null;
+    // Report transport state, never unrecorded case content. A returned tool
+    // may already have saved work; its missing response is not permission to repeat it.
+    const detail = {
+      code: "archive_recording_unavailable",
+      operation: request.name,
+      failure_stage: stage,
+      response_delivered: false,
+      retry_action: returned ? "inspect_existing_result" : "restore_recording_then_retry",
+      ...(runId && /^run_[0-9a-f]{24}$/.test(runId) ? { archive_run_id: runId } : {}),
+    };
+    output.write(JSON.stringify({
+      jsonrpc: "2.0", id,
+      result: { isError: true, structuredContent: detail, content: [{ type: "text", text: returned
+        ? "The tool returned, but Vera could not save its outgoing-data record or deliver its response. Work may already be saved. Restore recording access and inspect the existing result in this same run before repeating any operation."
+        : "Vera could not prepare this run's outgoing-data record, so the tool was not started. Restore recording access, then retry the same operation.",
+      }] },
+    }) + "\n");
+  };
   const incoming = readline.createInterface({ input, crlfDelay: Infinity });
   incoming.on("line", (line) => {
     const message = JSON.parse(line);
@@ -48,7 +64,7 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
       const boundArguments = owner ? { request: args, client_engagement: path.join(owner, "context.json") } : args;
       const bound = record({ action: "bind", arguments: boundArguments });
       if (bound.status !== 0) {
-        withheld(message.id);
+        withheld(message.id, "before_tool_start", message.params);
         return;
       }
       requests.set(message.id, { ...message.params, binding: JSON.parse(bound.stdout) });
@@ -71,7 +87,7 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
           channel: "mcp", operation: request.name,
       });
       if (recorded.status !== 0) {
-        withheld(message.id);
+        withheld(message.id, "after_tool_return", request);
         return;
       }
       const summary = message.result?.structuredContent;

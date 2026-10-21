@@ -1971,3 +1971,98 @@ changed relative to the installed 0.1.465 baseline. Of the 19 Geneva package pat
 The complete 55-entry skill hash list and all assessment rows are unchanged.
 All 764 preserved-file hashes match after the builds. Installation and fresh
 normal-chat acceptance are the next steps; Test 2 remains unaccepted.
+
+The candidate is committed as `f75d1e8a2333d5a74ea92f70ccd44a2d4de17452` on
+PR #885 and installed through the supported local plugin command. All 2,187
+source files and 2,184 cached files match the final package. The global plugin
+inventory shows exactly one enabled Vera: `vera@mp-vera` 0.1.466.
+
+Fresh-chat creation encountered two host automatic-approval rejections before
+any chat was created. The stated reason was missing specific authorization to
+send the synthetic invoice/payment rows, random Archive IDs and local paths to
+the new GPT-6.1-sol chat. These were host approval blocks, not Vera execution
+failures. Fabio explicitly authorized that payload and destination in response
+to question `call_b6a4bc4ec7bb48df8e5484e997185d07`; the supported creation call
+then succeeded. The new Test 2 chat is
+`01a15dd6-bbb9-7493-a865-00d4a1388717`. Its first status confirms the seven
+registered sources passed receipt/byte verification and the selected two CSVs
+match the expected three invoices and two payments. The chat is running;
+automatic delivery, final source coverage and correct-user server verification
+are not yet established for this attempt. Acceptance remains 1 of 13.
+
+### A73: agent used an invented Documents renderer path
+
+The 0.1.466 chat stopped on run `run_5cb2ad1a143fe4cde356a28c`, usage task
+`b607dbda-23ae-4888-a561-a32d1e09f185`. Calculation, saved review, regeneration
+and successor replay passed (`report_ready=true`). F001 closed at zero; F002
+retained EUR 500 after a EUR 300 payment; F003 remained open at EUR 500.
+The agent then tried the external Documents skill's nonexistent
+`scripts/render_docx.py` without resolving it first. The skill lists the
+renderer at its root. The failed command was followed by a workbook read and
+an assurance validation launch before the agent announced its stop; this
+sequence did not follow the prompt's instruction to stop immediately.
+It then closed Archive/task as failed and cancelled its review server. Port
+53241 is independently confirmed closed. No normal artifact finalization or
+delivery occurred; this attempt remains unaccepted.
+
+The automatically delivered privacy report is complete within its stated Vera
+emission scope: 27 sends, 324,224 characters and no measurement errors. The
+general verifier independently confirms receipt
+`3264ef82-60e1-580c-9e4c-c3ef146b6ffb`, report SHA-256
+`431d3032a973b913a5e7eca86e3631263904fe40b909089a154e3f140a9b099a`, revision 1,
+for user `0ed4a818-1877-4652-8515-787c64de17a5` and the exact run. This is
+evidence for A72's repair, not end-to-end acceptance. Shell and browser reads
+remain explicitly outside that report's measurement scope.
+
+The coordinator located the documented renderer and rendered the unchanged
+successor Word successfully with the bundled runtime: eight pages, inspected
+here, with no missing-renderer or compatibility failure. The only renderer
+diagnostics were Fontconfig cache warnings; PNGs and PDF were produced. The
+normal chat must still check its own new outputs. No product-code change or
+version bump is warranted for this path-selection mistake. The retry prompt
+now gives the verified discovery route and retains the same version and case.
+All 841 preservation hash checks pass, including 77 files from this stopped run.
+
+The test's retained report also records recovered review/regeneration states,
+the stale but nonblocking Archive index, unrelated orphaned profiles, large
+JSON outputs and host truncation, generic evidence-request wording for F003,
+and blank allocated/residual fields for F001 and F003 in the operating workbook.
+Those presentation/measurement limits are retained rather than silently treated
+as resolved. No Test 3, merge or deployment has started.
+
+### A74: agent mixed native accessibility and DOM selector roles
+
+Same-version retry chat `01a15dde-9481-7b23-bcbb-9e5dd91a6c52` stopped on run
+`run_b37224df654e38e86318223c`, task
+`8db9ec4f-cb0f-49db-ae3c-3b560b02a538`. The expected calculations passed;
+the browser draft contained four unsaved decisions. Its current native AX
+snapshot exposed element 150 as `checkbox Conferma esito`. The agent switched
+to Playwright `getByRole('checkbox', {name:'Conferma esito', exact:true})` and
+received `no_matches` with a selector deadline error. The maintained HTML
+actually renders a `button` with `aria-pressed`; no checkbox DOM element is
+defined. Thus the evidence identifies a mismatch between automation selector
+systems, not a missing Vera control. The agent stopped before saving or
+applying the draft, marked run/task failed and cancelled the review server.
+Port 54000 is independently confirmed closed. A coordinator attempt to inspect
+the same live browser tab was refused because it remained owned by the test
+chat; no tab ownership or browser-state workaround was attempted.
+
+Its automatic report is complete within the declared Vera scope, with no
+measurement errors and 294,156 characters. The general verifier confirms
+receipt `04d4e478-b075-5a15-a341-65d267464584`, SHA-256
+`83032779511293eb765c6f6fb00597d16d7ade4c0b8d637f87da5d4524af8e10`, revision 1,
+against the same correct userID and exact run. End-to-end acceptance remains
+open. The next attempt will use the published save/apply MCP tools for agent
+decisions, as the first 0.1.466 chat did successfully, and reopen the browser
+to verify persistence. It retains the same accounting, artifact and privacy
+checks. This is an agent tool-selection correction; product code and package
+version remain unchanged.
+
+The stopped chat's final record also identifies a recovered cleanup error:
+`vera_execute` rejected `cancel` with both `job_id` and `task_id`, explaining
+that status/cancel accept only the retained job ID and optional wait. The
+agent then used the documented job-ID-only request and verified terminal
+cancellation. Forty-one files from this attempt are preserved; all 882
+historical preservation hash checks pass. A third same-version attempt,
+`01a15de5-ab12-7c60-8c07-743e9527aba8`, is now running sequentially with the
+published save/apply tools. The two prior chats remain closed and failed.

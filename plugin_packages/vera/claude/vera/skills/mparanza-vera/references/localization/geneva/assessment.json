@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "f243d307d0e04dc8aa60d91ee07bc075ca87f19af79459735521655b0328d8d1",
+  "catalogue_fingerprint": "cc2a3640e2d24e4f30c9fdb7b854d79a0252ca9bb1f622b339b8b613375baa6a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -626,8 +626,8 @@
     "version": "0.1.331"
   },
   "release_revalidation": {
-    "version": "0.1.466",
-    "scope": "All 55 skill IDs, paths and entrypoint hashes are unchanged from the 0.1.465 snapshot. Refresh only the product-manifest identity for the generated-workpaper provenance repair. Existing jurisdiction assessments and acceptance limits remain unchanged; this is not fresh Geneva acceptance."
+    "version": "0.1.469",
+    "scope": "All 55 function identities and existing jurisdiction judgments remain unchanged. Reviewed intake uses actual importer access, selected-file host transfer when available, original hash verification, and same-record recovery. No native host acceptance is asserted."
   },
   "remote_course_package_binding": {
     "scope": "Preserve the merged model-policy and calendar source reviews and existing Geneva dispositions. Shared remote lesson data remains hash-pinned. No additional jurisdictional workflow or installed-host acceptance claimed.",
@@ -2185,5 +2185,15 @@
     "previous_catalogue_fingerprint": "dfb13325270705e5ba78219138181027468ee106ddffa3bf8fad5141fe667bda",
     "source_version": "0.1.452",
     "scope": "Only product version and reviewed server-service fingerprints change for task-status reporting. All 55 function entrypoints, assessment rows, dispositions, legal-source references and jurisdiction limits are preserved. No new professional or jurisdiction acceptance is asserted."
+  },
+  "cowork_attachment_intake_release_binding_20261021": {
+    "version": "0.1.469",
+    "previous_catalogue_fingerprint": "f243d307d0e04dc8aa60d91ee07bc075ca87f19af79459735521655b0328d8d1",
+    "reviewed_entrypoints": [
+      "journal-bank-reconciliation",
+      "studio-archive",
+      "vera"
+    ],
+    "scope": "All 55 function identities and existing jurisdiction judgments remain unchanged. Reviewed intake uses actual importer access, selected-file host transfer when available, original hash verification, and same-record recovery. No native host acceptance is asserted."
   }
 }

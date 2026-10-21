@@ -23,6 +23,7 @@ const TOOL_NAMES = {
   clientFolder: "get_studio_client_folder",
   createClient: "create_studio_archive_client",
   createEngagement: "create_studio_client_engagement",
+  checkImportSources: "check_studio_import_sources",
   importDocument: "import_studio_client_document",
   copySourceFolder: "copy_studio_client_source_folder",
   snapshotFolder: "snapshot_studio_client_folder",
@@ -146,7 +147,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.clients,
       title: "List Studio Archive clients",
       description:
-        "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local.",
+        "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local. Healthy clients remain usable when directory_complete or identity_registry_complete is false; report the returned issues. An incomplete directory does not prove a client is absent and must not trigger duplicate registration.",
       inputSchema: objectSchema({}),
       annotations: annotations(false),
     },
@@ -154,7 +155,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.resolveClient,
       title: "Resolve one exact Studio Archive client identity",
       description:
-        "Compare one user-supplied email address, legal name, or tax identifier against the private local registry and return only matching safe client directory rows. The supplied value and stored identity values are not echoed.",
+        "Compare one user-supplied email address, legal name, or tax identifier against the private local registry and return only matching safe client directory rows. The supplied value and stored identity values are not echoed. resolution_complete=false means some aliases are unavailable; resolution_status=incomplete is not proof of absence. Reuse a known stable client ID and validate its folder instead of creating a duplicate.",
       inputSchema: objectSchema(
         {
           identity_kind: {
@@ -185,10 +186,34 @@ function toolDefinitions() {
       annotations: annotations(true),
     },
     {
+      name: TOOL_NAMES.checkImportSources,
+      title: "Check file access before starting client work",
+      description:
+        "Check every selected file on the actual Archive import host before processing or creating records. No Archive configuration or records are needed. Without expected_sha256 only readability is checked; with original attachment hashes the tool reads bytes locally and verifies exact transfer identity without returning contents. If ready is false, explain the cause immediately. A chat path is not a file transfer. Use a supported host transfer into an ordinary connected working folder, verify the original hashes, then import with those same hashes. Never manually write managed engagement inputs. This path importer does not transfer attachments itself.",
+      inputSchema: objectSchema(
+        {
+          source_paths: {
+            type: "array",
+            minItems: 1,
+            maxItems: 100,
+            items: { type: "string", minLength: 1, maxLength: 4096 },
+            description: "Paths of all selected files; check in batches for more than 100 files before creating records.",
+          },
+          expected_sha256: {
+            type: "array", minItems: 1, maxItems: 100,
+            items: { type: "string", pattern: "^[0-9a-f]{64}$" },
+            description: "Optional original file hashes, one per selected path in the same order. Required when verifying an attachment transferred between environments; compute from originals using a file tool, never invent them.",
+          },
+        },
+        ["source_paths"],
+      ),
+      annotations: annotations(true),
+    },
+    {
       name: TOOL_NAMES.createClient,
       title: "Create a new Studio Archive client",
       description:
-        "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. This begins but does not complete Vera's New Client professional workflow.",
+        "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. For work starting from supplied files, first check_studio_import_sources for all selected files and resolve any unavailable inputs. This begins but does not complete Vera's New Client professional workflow.",
       inputSchema: objectSchema(
         {
           legal_name: {
@@ -218,7 +243,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.importDocument,
       title: "Import a document into one client engagement",
       description:
-        "Copy one authorized source, journal, or support file into the selected engagement with an immutable byte receipt. For a user-authorized document-only continuation, save the clearly identified Vera-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
+        "Copy one authorized source, journal, or support file from this computer into the selected engagement with an immutable byte receipt. Check file access with check_studio_import_sources before creating any client or engagement for file-based work. If import fails, disclose and reuse the returned client_id and engagement_id; never create duplicates to retry. For a user-authorized document-only continuation, save the clearly identified Vera-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
       inputSchema: objectSchema(
         {
           client_id: {
@@ -230,6 +255,10 @@ function toolDefinitions() {
             minLength: 1,
             maxLength: 4096,
             description: "Absolute path to the selected source/journal/support file, including a derived follow-up prepared under the user's authority to continue this engagement.",
+          },
+          expected_sha256: {
+            type: "string", pattern: "^[0-9a-f]{64}$",
+            description: "Original attachment SHA-256 when importing a transferred file. Rechecked during copying so an altered transfer cannot be registered.",
           },
           role: {
             type: "string",
@@ -351,7 +380,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.createEngagement,
       title: "Create a Studio Archive client engagement",
       description:
-        "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type.",
+        "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type. For work starting from supplied files, check_studio_import_sources must first establish access to all selected inputs; warn and resolve unavailable inputs before creation. Documentless work does not require a file check.",
       inputSchema: objectSchema(
         {
           client_id: {
@@ -589,7 +618,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.recoverLedger,
       title: "Recover Vera customer-folder ledger",
       description:
-        "Rebuild private client pointers from portable customer manifests and verify all engagement, input, and run records.",
+        "Recover private client pointers from portable customer manifests and inspect engagement, input, and run records independently. Preserve damaged aliases and records; return healthy work alongside explicit issues and completeness flags. An incomplete inventory is not an empty archive.",
       inputSchema: objectSchema({}),
       annotations: annotations(false),
     },
@@ -983,6 +1012,22 @@ function runIdentityCommand(args, commandName, extraKeys = []) {
 
 function commandForTool(name, rawArgs) {
   const args = requirePlainObject(rawArgs);
+  if (name === TOOL_NAMES.checkImportSources) {
+    assertOnlyKeys(args, new Set(["source_paths", "expected_sha256"]));
+    const sources = optionalStringArray(args.source_paths, "source_paths", 100, 4096);
+    if (sources.length === 0) {
+      throw new Error("source_paths must contain at least one file path.");
+    }
+    const command = ["check-import-sources", ...sources.flatMap((source) => ["--source-path", source])];
+    if (args.expected_sha256 !== undefined) {
+      const hashes = optionalStringArray(args.expected_sha256, "expected_sha256", 100, 64);
+      if (hashes.length !== sources.length || hashes.some((value) => !/^[0-9a-f]{64}$/.test(value))) {
+        throw new Error("Supply one original lowercase SHA-256 per selected path, in the same order.");
+      }
+      command.push(...hashes.flatMap((hash) => ["--expected-sha256", hash]));
+    }
+    return command;
+  }
   if (name === TOOL_NAMES.status) {
     assertOnlyKeys(args, new Set());
     return ["status"];
@@ -1049,6 +1094,7 @@ function commandForTool(name, rawArgs) {
         "source_path",
         "role",
         "engagement_id",
+        "expected_sha256",
       ]),
     );
     const clientId = requireString(args.client_id, "client_id");
@@ -1073,6 +1119,11 @@ function commandForTool(name, rawArgs) {
       throw new Error("engagement_id is invalid.");
     }
     command.push("--engagement-id", engagementId);
+    if (args.expected_sha256 !== undefined) {
+      const hash = requireString(args.expected_sha256, "expected_sha256");
+      if (!/^[0-9a-f]{64}$/.test(hash)) throw new Error("Expected SHA-256 must be the original file's lowercase 64-digit digest.");
+      command.push("--expected-sha256", hash);
+    }
     return command;
   }
   if (name === TOOL_NAMES.copySourceFolder) {

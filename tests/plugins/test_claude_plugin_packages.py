@@ -424,6 +424,49 @@ def test_audit_instructions_direct_skills_share_current_contract_and_component_n
     )
 
 
+def test_cowork_attachment_preflight_survives_host_projection(vera_entries):
+    """The shipped host instructions and callable helper must agree on intake."""
+    root = vera_entries["skills/mparanza-vera/SKILL.md"].decode()
+    assert "## Check supplied files before starting client work" in root
+    client_route = root.split("## Client-bound work in Cowork", 1)[1].split("\n## ", 1)[
+        0
+    ]
+    assert client_route.index("verify all selected paths") < client_route.index(
+        "Then select or register one client"
+    )
+    bank_skill = vera_entries[
+        "skills/mparanza-journal-bank-reconciliation/SKILL.md"
+    ].decode()
+    assert "Before parsing documents or creating a client" in bank_skill
+    assert "Add folder" in bank_skill
+    assert "existing `client_id` and `engagement_id`" in bank_skill
+    assert "expected_sha256" in bank_skill
+    assert "Never manually populate `inputs`" in bank_skill
+    server = vera_entries["modules/studio-archive/mcp/server.cjs"].decode()
+    helper = vera_entries["modules/studio-archive/scripts/studio_archive.py"].decode()
+    assert 'checkImportSources: "check_studio_import_sources"' in server
+    assert 'args.command == "check-import-sources"' in helper
+
+
+def test_cowork_delivery_contract_keeps_the_archive_response_field(vera_entries):
+    source = (
+        ROOT / "plugins/vera/skills/vera/references/selective-reporting.md"
+    ).read_text(encoding="utf-8")
+    projected = vera_entries[
+        "skills/mparanza-vera/references/selective-reporting.md"
+    ].decode()
+    pattern = r"include the returned\s+`([\w.]+)`"
+    source_field = re.search(pattern, source)
+    projected_field = re.search(pattern, projected)
+
+    assert source_field is not None and projected_field is not None
+    assert projected_field[1] == source_field[1] == "reporting.display_markdown"
+    assert (
+        "## Show the privacy report"
+        in vera_entries["skills/mparanza-vera/SKILL.md"].decode()
+    )
+
+
 def test_cowork_package_has_no_dangling_onboarding_or_registry_paths(
     vera_entries,
 ) -> None:

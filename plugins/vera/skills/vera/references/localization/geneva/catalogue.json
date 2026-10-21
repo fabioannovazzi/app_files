@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.466",
-  "captured_at": "2026-10-21T09:20:57.689194+00:00",
-  "catalogue_fingerprint": "f243d307d0e04dc8aa60d91ee07bc075ca87f19af79459735521655b0328d8d1",
-  "manifest_sha256": "6b95ad4ba71764f67c99c0d8f9e85e638a9320d98ef8adfef189096652e1d0d1",
+  "version": "0.1.469",
+  "captured_at": "2026-10-21T11:59:23.183953+00:00",
+  "catalogue_fingerprint": "cc2a3640e2d24e4f30c9fdb7b854d79a0252ca9bb1f622b339b8b613375baa6a",
+  "manifest_sha256": "47b8909db40a26fbf03983a6113f093856679514734d7c3b71b637c9557d668b",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -139,7 +139,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "e5771cd36069994616332c66964cd5a45429131f7ec8cd31696a776dc47dc635"
+      "sha256": "edd8805185a87bbf9c777bfb30a901cee042cc3187559132716243f1ddead7ad"
     },
     {
       "function_id": "journal-sampling",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "d565194c059b01e2bfd9f882a8b077b10093d3d4ece9e8647b6d3a6a91375031"
+      "sha256": "c59a147cdd1486d6b16d05d3d47f85ac40f56569a8eba7b9b46ce409e9cc43b2"
     },
     {
       "function_id": "studio-document-format",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "8a78122cf155de24026f2f8521db9a31e97b2a43ae03eb644432aa6e2f690cdd"
+      "sha256": "2f0928441e7d8fac0af20eaaaddd9d62e99f106bcc6514443560c92b39d78da7"
     },
     {
       "function_id": "vouching",

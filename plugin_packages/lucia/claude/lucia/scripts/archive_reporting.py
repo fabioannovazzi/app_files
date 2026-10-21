@@ -599,26 +599,23 @@ def finish_run(loaded: Mapping[str, Any]) -> dict[str, Any]:
         store.save(state)
     state["collection_closed"] = True
     store.save(state)
-    queue_available = True
-    try:
-        registry_for_run(root).close(state["run_id"])
-    except (ValueError, OSError, sqlite3.Error):
-        queue_available = False
-        store.error("receipt_retry_queue_unavailable")
     result = snapshot_run(loaded)
     from archive_report_receipt import stamp_report
 
     result["server_receipt"] = stamp_report(Path(result["report_path"]))
     reseal(root, baseline)
     atomic_json(Path(loaded["run_root"]) / "model_data_reporting.json", result)
-    if queue_available:
-        try:
-            registry_for_run(root).receipt_result(
-                root, result["server_receipt"]["status"]
-            )
-        except (ValueError, OSError, sqlite3.Error):
-            # The durable queue remains pending; an idempotent retry is safe.
-            pass
+    # Until the local report and seal are durable, the run must remain in the
+    # unfinished collection queue. Receipt retry alone cannot rebuild that state.
+    try:
+        registry = registry_for_run(root)
+        registry.close(state["run_id"])
+        registry.receipt_result(root, result["server_receipt"]["status"])
+    except (ValueError, OSError, sqlite3.Error) as exc:
+        result["retry_registration"] = {
+            "status": "unavailable",
+            "reason": type(exc).__name__,
+        }
     return result
 
 

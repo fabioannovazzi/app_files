@@ -1192,7 +1192,7 @@ def test_import_rejects_symbolic_link_source(
     linked = tmp_path / "journal-link.txt"
     linked.symlink_to(client_case.source)
 
-    with pytest.raises(archive_core.ArchiveError, match="non-symlink"):
+    with pytest.raises(archive_core.ArchiveImportSourceError) as failure:
         archive_core.import_studio_client_document(
             client_case.client_id,
             linked,
@@ -1200,6 +1200,10 @@ def test_import_rejects_symbolic_link_source(
             engagement_id=client_case.engagement_id,
             state_dir=client_case.state_dir,
         )
+
+    assert failure.value.code == "source_path_is_symlink"
+    assert failure.value.details["engagement_id"] == client_case.engagement_id
+    assert linked.is_symlink()
 
 
 def test_fresh_private_state_recovers_client_engagement_input_and_run(
@@ -1239,6 +1243,9 @@ def test_fresh_private_state_recovers_client_engagement_input_and_run(
         "collection_issues": [],
         "navigation_issues": [],
         "recovery_complete": True,
+        "directory_issues": [],
+        "identity_issues": [],
+        "identity_registry_complete": True,
     }
     assert listed["engagements"][0]["engagement_id"] == client_case.engagement_id
     assert listed["engagements"][0]["workflow_runs"][0]["run_id"] == (

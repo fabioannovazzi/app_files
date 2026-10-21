@@ -53,6 +53,13 @@ Current user requests take precedence over saved preferences.
 
 # Journal-Bank Reconciliation
 
+Before inspecting supplied bank/journal files or creating any client, engagement
+or run, follow "Check supplied files before starting client work" in
+`../vera/SKILL.md`: call `check_studio_import_sources` for both sets of files on
+the Archive import host. If any input is unavailable, explain the access problem
+and folder-connection option immediately, before creating anything. After a late
+import failure, report and reuse the existing client and engagement IDs.
+
 When the user chooses the native review panel, use `vera_workspace_open` when
 callable and the exact Studio Archive run is authorised through the owned archive
 or a trusted operator binding. The panel is optional: ordinary chat preparation

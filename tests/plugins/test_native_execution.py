@@ -71,8 +71,13 @@ def installed(tmp_path):
 
 
 def environment(tmp_path):
+    temporary = tmp_path / "os-temp"
+    temporary.mkdir(exist_ok=True)
     return {
         **os.environ,
+        "TMPDIR": str(temporary),
+        "TMP": str(temporary),
+        "TEMP": str(temporary),
         "MPARANZA_RUNTIME_ROOT": str(tmp_path / "unused-runtime"),
         "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incidents"),
         "MPARANZA_INCIDENT_DELIVERY": "local-only",
@@ -127,6 +132,55 @@ def request(tmp_path, **values):
 
 def output(result):
     return result["structuredContent"]["output"]
+
+
+@pytest.mark.parametrize("extra_arguments,expected_code", [([], 0), (["--fail"], 7)])
+def test_closed_connection_retains_worker_code_then_releases_temporary_copies(
+    installed, tmp_path, extra_arguments, expected_code
+):
+    temporary = tmp_path / "execution-temporary"
+    temporary.mkdir()
+    env = {
+        **environment(tmp_path),
+        "TMPDIR": str(temporary),
+        "TMP": str(temporary),
+        "TEMP": str(temporary),
+    }
+    args = request(
+        tmp_path,
+        arguments=[str(tmp_path / "counter"), "0.3", *extra_arguments],
+        wait_seconds=0,
+    )
+    message = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "vera_execute", "arguments": args},
+    }
+
+    result = subprocess.run(
+        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        input=json.dumps(message) + "\n",
+        text=True,
+        capture_output=True,
+        env=env,
+        timeout=15,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert output(json.loads(result.stdout)["result"])[0]["state"] == "running"
+    retained = json.loads(
+        (
+            tmp_path
+            / "incidents/helper-diagnostics/executions"
+            / args["job_id"]
+            / "result.json"
+        ).read_text()
+    )
+    assert retained["returncode"] == expected_code
+    assert (tmp_path / "counter").read_text() == "run\n"
+    assert list(temporary.iterdir()) == []
+    assert (installed / "scripts/native_execution.py").is_file()
 
 
 def test_native_helper_retains_diagnostics_and_runs_once_across_service_restart(
@@ -335,3 +389,34 @@ def test_native_state_writes_work_when_chat_shell_writes_are_denied(
     assert output(result)[0]["state"] == "completed"
     assert output(result)[1]["stderr"] == ""
     assert (state / "state.json").is_file()
+
+
+def test_native_service_releases_snapshot_after_last_persistent_job(
+    installed, tmp_path
+):
+    args = request(
+        tmp_path, arguments=[str(tmp_path / "counter"), "0.5"], wait_seconds=0
+    )
+    temporary = tmp_path / "os-temp"
+    with native(installed, tmp_path) as call:
+        started = call(args)
+        assert output(started)[0]["state"] == "running"
+        assert list(temporary.glob("vera-verified-*"))
+        assert list(temporary.glob("vera-execution-bootstrap-*"))
+    # Closing the transport waits for its worker, then releases only code.
+    assert (tmp_path / "counter").read_text() == "run\n"
+    assert not list(temporary.glob("vera-verified-*"))
+    assert not list(temporary.glob("vera-execution-bootstrap-*"))
+    with native(installed, tmp_path) as call:
+        retained = call({"operation": "status", "job_id": args["job_id"]})
+    assert output(retained)[0]["state"] == "completed"
+    assert output(retained)[0]["returncode"] == 0
+    assert (tmp_path / "counter").read_text() == "run\n"
+
+
+def test_idle_native_service_releases_snapshot(installed, tmp_path):
+    with native(installed, tmp_path):
+        pass
+    temporary = tmp_path / "os-temp"
+    assert not list(temporary.glob("vera-verified-*"))
+    assert not list(temporary.glob("vera-execution-bootstrap-*"))

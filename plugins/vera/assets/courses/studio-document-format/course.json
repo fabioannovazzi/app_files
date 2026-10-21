@@ -490,7 +490,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "4e5de9086750db79d4e0119f51a844a3bc27b5771f36c00e22921c886f68ffde"
+      "sha256": "13d1d0c45d2f0153fe1b530d1ae43795ea84cf9a0250a96346af9e5a2e222376"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -515,7 +515,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "25d8eda13ad21b343b084b37e7730c2ac774c5b527042c71d5c54d1174c74c96"
+      "sha256": "8fcc3d35faac84d0f0c70c022456db2214b14bc1dc8f42edbb853317ac179e27"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -545,7 +545,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "86d8947d0a3886ad2f80b62b8067af917d545cf3a324f5fc5c0f7e3a4129fcb1"
+      "sha256": "4fe199b53b1ae39bef47e5cf7f7301262c049cff097234382495c11418c5d827"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -580,12 +580,12 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
       "repository_path": "plugins/vera/scripts/archive_report_store.py",
-      "sha256": "5daf6b21e744bd4c5b4e9ad645dc910f6cfabe2c3615f56b319f61034f4216dc"
+      "sha256": "6d04ba281a01f6a4e295efa5f1c33789801561ec183d67e40bfde7920e2f2f9f"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
       "repository_path": "plugins/vera/scripts/archive_reporting.py",
-      "sha256": "3f8e2aa583f30571764174721ec32ff595c41dd77e5cf54af92c7dc363bff003"
+      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",

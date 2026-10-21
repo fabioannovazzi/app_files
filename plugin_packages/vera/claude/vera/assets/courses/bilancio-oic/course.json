@@ -230,7 +230,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "6d16517b3f1b5879ab4da25c83e5f7347e361bb80693a003627809517ac02c2a"
+      "sha256": "340cd6915fd3950d7ba460a16016c9a2476fa755f2e0e489e3e230c32fb6feec"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -310,15 +310,15 @@
     },
     {
       "path": "scripts/archive_report_store.py",
-      "sha256": "5daf6b21e744bd4c5b4e9ad645dc910f6cfabe2c3615f56b319f61034f4216dc"
+      "sha256": "6d04ba281a01f6a4e295efa5f1c33789801561ec183d67e40bfde7920e2f2f9f"
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "3f8e2aa583f30571764174721ec32ff595c41dd77e5cf54af92c7dc363bff003"
+      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
+      "sha256": "fdabe0140dad23c87e668f059c95cfd5a569f0340d97e71621213095843e4f4d"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -326,7 +326,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "7e90445c14129245ca9165e6c908edd8ad0937ac8cc47eee99598ba85ba509cf"
+      "sha256": "774b17b418113d5481072863dc18af2f236dce91baad9f04d1058b7d5e10c89b"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -346,7 +346,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "285de14194ae93fcd4f08531154e369e748784909a18adbc54c59232a6c1bf9f"
+      "sha256": "eee5ef894358c8837d67bff7b98c2ead538bcbfb12ea73d12cbde8ab1e64cdf2"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -354,7 +354,7 @@
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "51e8bd55f6dee219450b732cc8675e6f0cb44e28db6001c72411c01609912ef3"
+      "sha256": "460e9d031b4c489d0a4ff397caf5c1662c7af163823eb087793f102fae88f4a1"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -692,5 +692,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4dbb20206347172e93635e4f6f5521758b545cac463f314d04da06eff6c95fb1"
+  "canonical_course_sha256": "882a27b0f8cb501961aa626b5d24a2b5ae0dca713ec077ba270040f39782f658"
 }

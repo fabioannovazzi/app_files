@@ -13,10 +13,12 @@ import hashlib
 import importlib
 import importlib.util
 import json
+import logging
 import os
 import re
 import secrets
 import shutil
+import sqlite3
 import stat
 import tempfile
 import threading
@@ -1069,6 +1071,8 @@ def import_document(
     engagement_id: str,
     source_path: Path,
     role: str,
+    *,
+    expected_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Create or reuse one immutable, content-addressed input snapshot."""
 
@@ -1091,6 +1095,11 @@ def import_document(
     source_stat = _ordinary_file(source, label="import source")
     _validate_imported_names([source.name])
     source_sha256 = _sha256_file(source)
+    # Reject a changed transfer before creating a snapshot or recording an alias.
+    if expected_sha256 is not None and source_sha256 != expected_sha256:
+        raise LedgerError(
+            "Import source does not match the original attachment SHA-256."
+        )
     with _engagement_lock(root, engagement_id):
         engagement = load_engagement_manifest(root, engagement_id)
         if engagement["client_id"] != client_id:
@@ -2328,15 +2337,56 @@ def retry_reporting(client_root: Path) -> None:
     )
     if not registry.path.is_file():
         return
-    for run_root in registry.terminal_runs():
-        if run_root.parents[4] != client_root:
-            continue
+    for run_root in registry.terminal_runs(client_root=client_root):
         engagement_id = run_root.parents[1].name
-        with _engagement_lock(client_root, engagement_id):
-            loaded = load_run(client_root, engagement_id, run_root.name)
-            if loaded["run"]["status"] in {"completed", "failed", "cancelled"}:
-                _reporting_runtime().finish_report(loaded)
+        try:
+            with _engagement_lock(client_root, engagement_id):
+                loaded = load_run(client_root, engagement_id, run_root.name)
+                if loaded["run"]["status"] in {"completed", "failed", "cancelled"}:
+                    _reporting_runtime().finish_report(loaded)
+        except (
+            LedgerError,
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            sqlite3.Error,
+        ) as exc:
+            logging.getLogger(__name__).warning(
+                "Archive report recovery remains pending for %s: %s",
+                run_root.name,
+                type(exc).__name__,
+            )
+        # Failed records must not monopolize the bounded recovery batch.
+        registry.recovery_attempted(run_root)
     retry_pending(registry, strict=False)
+
+
+def _finish_terminal_reporting(loaded: dict[str, Any]) -> dict[str, Any]:
+    """Return the committed lifecycle outcome separately from report recovery."""
+    try:
+        reporting = _reporting_runtime().finish_report(loaded)
+        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+        logging.getLogger(__name__).warning(
+            "Saved Archive run %s has unfinished reporting: %s",
+            loaded["run"]["run_id"],
+            type(exc).__name__,
+        )
+        # Keep existing report bytes and receipts. The start-time registry and
+        # idempotent terminal call retain ownership of the unfinished report.
+        reporting = {
+            "status": "unavailable",
+            "run_status_saved": True,
+            "run_id": loaded["run"]["run_id"],
+            "retry_pending": True,
+            "error": {
+                "code": "archive_report_pending",
+                "reason": type(exc).__name__,
+                "message": "The run status was saved, but its privacy report could not finish. Resume this same run to retry the report; do not repeat the calculation.",
+            },
+        }
+    return {**loaded, "reporting": reporting}
 
 
 def _write_run_status_locked(
@@ -2353,9 +2403,10 @@ def _write_run_status_locked(
     current = run["status"]
     if target_status == current:
         if current == "completed":
-            if (Path(loaded["run_root"]) / "reporting/seal-update.json").is_file():
-                _reporting_runtime().finish_report(loaded)
-            validate_run_artifacts(client_root, engagement_id, run_id)
+            if not (Path(loaded["run_root"]) / "reporting/seal-update.json").is_file():
+                validate_run_artifacts(client_root, engagement_id, run_id)
+        if current in {"completed", "failed", "cancelled"}:
+            return _finish_terminal_reporting(loaded)
         return loaded
     if engagement["status"] != "open":
         raise LedgerError("Runs cannot change after their engagement is closed.")
@@ -2388,9 +2439,7 @@ def _write_run_status_locked(
         "ready_for_review",
         "failed",
     }:
-        reporting = _reporting_runtime().finish_report(loaded)
-        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
-        return {**loaded, "reporting": reporting}
+        return _finish_terminal_reporting(loaded)
     return loaded
 
 

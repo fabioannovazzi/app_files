@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/SKILL.md",
-      "sha256": "e4a96938e6c1d7616af4ce86900f5d22ed2e9ec57d9e3cd5244859b3d3f26a7d"
+      "sha256": "3e92c4dd2a057dbe4173a891ad642edaaf5a884845d2a99b2d557984e6ff3da9"
     },
     {
       "path": "modules/passive-invoice-audit/skills/mparanza-purchase-invoice-review/references/geneva.md",
@@ -121,7 +121,7 @@
     },
     {
       "path": "skills/mparanza-purchase-invoice-review/SKILL.md",
-      "sha256": "676017390fe38d5fb0f204a8e473d5e24e98e20137d5c2b09c1867690b03f6b4"
+      "sha256": "42385a8acdc9e3426a74714b877ca62c01314277c1ef15b8f238ec2f25be5bf2"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
