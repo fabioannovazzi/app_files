@@ -570,7 +570,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_receipt.py",
       "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
-      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
+      "sha256": "b95a744720e24960c623cea2a81728b4b0fa8412647096a588d0054efedfcd78"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",

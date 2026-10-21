@@ -23,7 +23,8 @@
         "Retries retain identical report bytes, UUID, version and revision. Professional artifacts are checked before and after updating only the reserved reporting artifacts in the Archive seal. Ordinary Archive use retries pending receipts and interrupted terminal reporting without re-executing professional work.",
         "An explicit local_only option or local onboarding marker suppresses the proof request but keeps the report. Network or identity failures retain a pending receipt without invalidating the professional work. Host permission denials remain binding.",
         "Verification proves the stored report hash, authenticated Vera installation/machine binding, Archive run, revision and server time. It does not identify a natural person or establish provider-side receipt, correctness of measurements, analytical correctness or GDPR compliance.",
-        "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link."
+        "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link.",
+        "The general verify command delegates schema-3 receipts to the same Archive verifier, defaults the expected owner to the existing local Vera installation identity, and requires exact agreement between the local receipt and the retained server proof. An explicit expected userID is supported for verification. Neither command rewrites the closed report or its professional artifacts. Legacy schema-1 and schema-2 verification remains independent of local installation credentials."
       ]
     }
   ],
@@ -85,7 +86,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "888b1ee7416b00f0fe4fc2876397bf4c03e91539b06dc49094942e8568a58837"
+    "source_fingerprint": "7e468aba3ab0a46a57f274e0e917177c29ba56c0831e0a1a33f221c6d94fd407"
   },
   "runtime_profiles": [
     "openai-codex",

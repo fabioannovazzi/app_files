@@ -374,7 +374,7 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     standalone.write_bytes(before)
 
     def open_verified(url, timeout):
-        parsed = urlsplit(url)
+        parsed = urlsplit(url.full_url)
         response = client.get(parsed.path + "?" + parsed.query)
         response.raise_for_status()
         return io.BytesIO(response.content)
@@ -401,6 +401,188 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     standalone.write_bytes(before + b"\n")
     with pytest.raises(ValueError, match="canonical"):
         archive_report_receipt.verify_report(standalone, user_id=report["user_id"])
+
+
+@pytest.fixture
+def signed_archive_report(
+    archive_core, client_case, tmp_path, monkeypatch, reporting_runtime
+):
+    import io
+    from types import SimpleNamespace
+    from urllib.parse import urlsplit
+
+    import archive_report_receipt
+    import archive_reporting
+    import operational_incidents
+
+    from tests.modules.run_receipts.test_archive_binding import archive_client
+
+    client, owner, _, _, _ = archive_client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        archive_reporting, "_identity", lambda: str(owner.installation_id)
+    )
+    monkeypatch.setattr(
+        operational_incidents,
+        "reporting_credentials",
+        lambda: owner.model_dump(mode="json"),
+    )
+
+    def stamp(operation, envelope):
+        assert operation == "archive-stamp"
+        response = client.post(
+            "/api/operational-incidents/archive-stamp", json=envelope
+        )
+        response.raise_for_status()
+        return response.json()
+
+    monkeypatch.setattr(operational_incidents, "workflow_transport", stamp)
+    monkeypatch.setattr(archive_report_receipt, "stamp_report", reporting_runtime)
+    loaded = start(archive_core, client_case)
+    finish(archive_core, client_case, loaded)
+    output = Path(loaded["output_dir"])
+    report = output / "model_data_report.json"
+    receipt = output / "model_data_receipt.json"
+    requests = []
+
+    def open_verified(request, *, timeout):
+        requests.append(request)
+        parsed = urlsplit(request.full_url)
+        response = client.get(parsed.path + "?" + parsed.query)
+        response.raise_for_status()
+        return io.BytesIO(response.content)
+
+    return SimpleNamespace(
+        report=report,
+        receipt=receipt,
+        owner=str(owner.installation_id),
+        opener=open_verified,
+        requests=requests,
+        original={
+            path: path.read_bytes()
+            for path in Path(loaded["run_root"]).rglob("*")
+            if path.is_file()
+        },
+    )
+
+
+def test_general_verifier_accepts_archive_receipt_without_rewriting_run(
+    signed_archive_report,
+):
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    result = notarized_run_receipt.verify_model_data_receipt(
+        case.receipt, report_path=case.report, opener=case.opener
+    )
+
+    assert result["status"] == "valid"
+    assert result["user_id"] == case.owner
+    assert result["archive_run_id"] == json.loads(case.report.read_bytes())["run_id"]
+    assert result["report_revision"] == 1
+    assert len(case.requests) == 1
+    assert {path: path.read_bytes() for path in case.original} == case.original
+
+
+@pytest.mark.parametrize("explicit_owner", [False, True])
+def test_general_verify_cli_accepts_archive_receipt(
+    signed_archive_report, monkeypatch, capsys, explicit_owner
+):
+    from types import SimpleNamespace
+
+    import archive_report_receipt
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    monkeypatch.setattr(
+        archive_report_receipt.urllib.request,
+        "build_opener",
+        lambda *args: SimpleNamespace(open=case.opener),
+    )
+
+    status = notarized_run_receipt.main(
+        [
+            "verify",
+            "--report",
+            str(case.report),
+            "--receipt",
+            str(case.receipt),
+        ]
+        + (["--user-id", case.owner] if explicit_owner else [])
+    )
+
+    assert status == 0
+    assert json.loads(capsys.readouterr().out)["user_id"] == case.owner
+
+
+def test_general_archive_verifier_uses_current_user_before_network(
+    signed_archive_report, monkeypatch
+):
+    import notarized_run_receipt
+    import operational_incidents
+
+    case = signed_archive_report
+    monkeypatch.setattr(
+        operational_incidents,
+        "reporting_credentials",
+        lambda: {"installation_id": USER_ID},
+    )
+
+    with pytest.raises(
+        notarized_run_receipt.NotarizedRunReceiptError, match="another Vera userID"
+    ):
+        notarized_run_receipt.verify_model_data_receipt(
+            case.receipt, report_path=case.report, opener=case.opener
+        )
+
+    assert case.requests == []
+
+
+@pytest.mark.parametrize("product", ["clara", "lucia"])
+def test_other_product_verifier_cannot_claim_vera_archive_receipt(
+    signed_archive_report, monkeypatch, product
+):
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    monkeypatch.setattr(notarized_run_receipt, "PRODUCT", product)
+
+    with pytest.raises(notarized_run_receipt.NotarizedRunReceiptError):
+        notarized_run_receipt.verify_model_data_receipt(
+            case.receipt, report_path=case.report, opener=case.opener
+        )
+
+    assert case.requests == []
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("user_id", USER_ID),
+        ("archive_run_id", "run_" + "e" * 24),
+        ("report_revision", 2),
+        ("report_sha256", "f" * 64),
+        ("signature", "alteredSignature"),
+    ],
+)
+def test_general_archive_verifier_rejects_changed_local_proof(
+    signed_archive_report, field, value
+):
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    altered = json.loads(case.receipt.read_bytes())
+    altered[field] = value
+    case.receipt.write_text(json.dumps(altered))
+
+    with pytest.raises(
+        notarized_run_receipt.NotarizedRunReceiptError, match="does not match"
+    ):
+        notarized_run_receipt.verify_model_data_receipt(
+            case.receipt, report_path=case.report, opener=case.opener
+        )
+
+    assert json.loads(case.receipt.read_bytes()) == altered
+    assert case.report.read_bytes() == case.original[case.report]
 
 
 def test_late_receipt_cannot_reseal_modified_professional_output(

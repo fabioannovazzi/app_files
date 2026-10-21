@@ -1602,3 +1602,94 @@ Clara 0.1.330 and Lucia 0.1.155 include the shared reporter update; the Open-ite
 component is 0.1.71. All-host source/package parity passes, and package/privacy
 validation passes 516 cases with two skips. Installed normal-chat acceptance
 remains pending. No Marketplace publication or server deployment has occurred.
+
+
+### 0.1.464 normal chat: complete report, incompatible general verification
+
+**A71:** fresh GPT-6.1-sol chat `01a15d0d-715f-79f0-b76e-59fc3fc1d4b4`
+used the verified installed 0.1.464 package. The EUR 2,500 population less
+EUR 1,500 receipts produced the correct EUR 1,000 residual. Agent review,
+successor regeneration, all 17 replay checks and delivery succeeded. Word
+outputs rendered to eight pages each for inspection. Task
+`7a6d1373-63a8-41d2-bd08-18ed9f6a5986` and run
+`run_9936feae0223943a31146b27` completed before the accessory verification
+failure; their terminal records are preserved without retroactive alteration.
+
+The privacy report appeared automatically with complete collection, no errors,
+21 sends and 63,268 characters. It measured all 24 population cells and all
+12 bank cells. The chat read `artifact_card.md` and `final_artifacts.json`
+through Archive, exercising their corrected provenance. It did not read the
+operational workbook or saved decision file through Archive, so this attempt
+alone does not establish those A69/A70 acceptance paths. It did not perform a
+separate native visual inspection of every Excel sheet.
+
+The general `notarized_run_receipt.py verify` command stopped with unexpected
+fields `archive_run_id`, `product`, `report_revision`, and `user_id`. It still
+accepted only legacy receipt formats. The schema-3 receipt itself independently
+verified through the existing Archive verifier: userID
+`0ed4a818-1877-4652-8515-787c64de17a5`, the exact run above, revision 1,
+receipt `058723a7-89f4-5315-a9e1-be200ac66b6a`, report SHA-256
+`97b692ecfc750cd90cf89ed1e5ea039fd0a559d1fd0ab73875a0a25ccbdb710c`.
+Delivered report bytes equal the original. No saved-report reopening was
+accepted after the error. The review server was stopped and its port closed.
+The 79 new retained files bring preservation checks to 723 unchanged files.
+
+Other observed interruptions and limits are retained in the chat's
+`outputs/resoconto-test-02.txt`: missing component-reference paths, truncated
+instruction reads, a search with no example files, stale Archive indexing and
+candidate-only profiles that did not prevent use of exact registered inputs,
+no separate incident-registration tool, ordinary pending review and successor
+regeneration, generic missing-evidence wording for the unpaid F003, eight-page
+Word layout and line breaks, review-server stdout without a URL recovered from
+browser inventory, and authorized host escalation to write new assumptions.
+The third invoice remains unpaid within the supplied evidence; its workflow
+label does not justify inventing settlement. Vera's measurement covers its own
+recorded sends, not all generic shell/browser/chat activity.
+
+The chat attributed its missing reference paths to agent error. Source
+inspection instead found six incorrect skill-relative paths: their files live
+in the component's top-level `references` directory. Those six paths are now
+`../../references/...`; the correctly nested Geneva reference is unchanged.
+All seven references resolve from the published skill directory.
+
+The general verifier now delegates schema-3 Vera receipts to the existing
+Archive verification contract. It obtains the expected userID from the current
+installation, or an explicitly supplied expected ID, independently of the
+receipt being checked. The local receipt must equal the retained server proof.
+The fixed endpoint, redirect refusal, bounded response, exact canonical hash,
+userID/run/revision binding and legacy schema-1/schema-2 behavior remain.
+Clara and Lucia cannot claim a Vera Archive receipt. Verification does not
+rewrite closed reports, workpapers or history. No execution gate, human-review
+step or new external recipient is introduced.
+
+A regression reproduced the exact unexpected-fields failure before the repair.
+All 125 receipt/reporting-focused cases now pass, including default and explicit
+owner CLI use, foreign-user rejection before network access, altered local
+owner/run/revision/hash/signature rejection, other-product rejection, and
+unchanged original run files. The repaired command also independently verified
+the preserved 0.1.464 report against the live server and current installation
+identity. That repair check does not convert the stopped chat into a successful
+normal acceptance test. Candidate Vera 0.1.465, Clara 0.1.331, Lucia 0.1.156 and
+Open-item 0.1.72 are being packaged. Acceptance remains **1 of 13**.
+
+Final reporting validation passes 285 cases with 83.37% coverage. Both changed
+receipt modules pass Mypy, Black, Isort and Bandit with no findings; whitespace
+checks pass. The unchanged accounting source retains its prior 426 passing
+cases and 81.79% coverage. All-host package/source parity passes. The new ZIP
+changes 140 files, with no additions/removals and three executable paths, all
+receipt runtime copies. SHA-256 is
+`b47f56acc14a753cf62f42137c120b0f0bd98b8ed07ed7da64b0d96c3daf27e4`.
+Build preparation briefly detected stale course fingerprints after the final
+source edit; rebuilding the catalogue and its reviewed privacy fingerprints
+resolved the package check without changing runtime behavior or approvals.
+
+The coordinator's attempt to inspect Codex window controls was refused by the
+computer-use API: “Computer Use is not allowed to use the app 'com.openai.codex'
+for safety reasons.” No more specific harm was provided. Native Codex chat
+management remains available, but a distinct OS window cannot be attested.
+This is a host-control limitation, not a Vera execution failure. No attempt was
+made to bypass it through another desktop-control mechanism.
+
+Final package/privacy validation passes 516 cases with two skips. No Marketplace
+action or server deployment has occurred. Installed normal-chat acceptance of
+0.1.465 remains outstanding.

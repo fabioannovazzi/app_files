@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Create and verify server-stamped proofs for Vera model-data reports.
 
-The Mparanza service receives only an opaque receipt UUID, the Vera version,
-and the SHA-256 digest of the canonical local report. It never receives the
-report, run ID, workflow ID, source filenames, source hashes, or case content.
+Legacy receipts send an opaque receipt UUID, product version and report hash.
+Archive receipts also bind the Vera userID, run ID and revision. Verification
+uses those same fields; the report body, workflow ID, source filenames, source
+hashes and case content remain local.
 """
 
 from __future__ import annotations
@@ -944,11 +945,48 @@ def stamp_model_data_report(
     }
 
 
+def _verify_archive_receipt(
+    receipt: dict[str, Any],
+    report_path: Path,
+    *,
+    user_id: str | None,
+    opener: Callable[..., Any] | None,
+) -> dict[str, Any]:
+    """Check Archive ownership and compare the local proof to the retained proof."""
+    from archive_report_receipt import verify_report
+    from operational_incidents import reporting_credentials
+
+    try:
+        expected_user = user_id or reporting_credentials()["installation_id"]
+        verified = verify_report(report_path, user_id=expected_user, opener=opener)
+    except (ValueError, TypeError) as exc:
+        raise NotarizedRunReceiptError(str(exc)) from exc
+    if receipt != verified:
+        raise NotarizedRunReceiptError(
+            "local receipt does not match the server's retained proof"
+        )
+    return {
+        "status": "valid",
+        **{
+            key: verified[key]
+            for key in (
+                "receipt_id",
+                "report_sha256",
+                "verification_url",
+                "user_id",
+                "archive_run_id",
+                "report_revision",
+            )
+        },
+    }
+
+
 def verify_model_data_receipt(
     receipt_path: Path,
     *,
     report_path: Path,
     opener: Callable[..., Any] | None = None,
+    user_id: str | None = None,
 ) -> dict[str, Any]:
     """Check the local digest and ask Mparanza for the retained signed proof."""
 
@@ -961,6 +999,10 @@ def verify_model_data_receipt(
         raise NotarizedRunReceiptError("receipt file is invalid") from exc
     if not isinstance(receipt, dict):
         raise NotarizedRunReceiptError("receipt file must be an object")
+    if PRODUCT == "vera" and receipt.get("schema_version") == 3:
+        return _verify_archive_receipt(
+            receipt, report_path.expanduser(), user_id=user_id, opener=opener
+        )
     digest = hashlib.sha256(_canonical_bytes(report)).hexdigest()
     local_request = {
         "schema_version": receipt.get("schema_version"),
@@ -1008,6 +1050,10 @@ def _parser() -> argparse.ArgumentParser:
     verify = subparsers.add_parser("verify")
     verify.add_argument("--report", type=Path, required=True)
     verify.add_argument("--receipt", type=Path, required=True)
+    verify.add_argument(
+        "--user-id",
+        help="Expected Archive owner; defaults to the current Vera installation",
+    )
     return parser
 
 
@@ -1027,6 +1073,7 @@ def main(argv: list[str] | None = None) -> int:
             payload = verify_model_data_receipt(
                 args.receipt,
                 report_path=args.report,
+                user_id=args.user_id,
             )
         sys.stdout.write(json.dumps(payload, ensure_ascii=False, sort_keys=True) + "\n")
         return 0
