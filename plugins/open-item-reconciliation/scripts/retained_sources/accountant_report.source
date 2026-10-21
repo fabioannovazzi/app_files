@@ -756,7 +756,11 @@ def main_row_from_detail(
             "data pagamento": (
                 detail_origins.get("data evidenza", []) if confidence != "N/A" else []
             ),
-            "evidenza usata": detail_origins.get("descrizione evidenza", []),
+            "evidenza usata": (
+                None
+                if clean_text(row.get("semantic_reason"))
+                else detail_origins.get("descrizione evidenza", [])
+            ),
             "differenza importo": detail_origins.get("differenza", []),
             "azione richiesta": _action_origin(row),
         },

@@ -430,7 +430,7 @@ def test_native_handoff_resumes_same_population_and_closes_cumulative_payment(
 ):
     from tests.plugins.test_native_host_workers import completed_record
 
-    _, helpers, semantic = runtime
+    workflow, helpers, semantic = runtime
     monkeypatch.syspath_prepend(
         str(SCRIPTS.parents[1] / "journal-bank-reconciliation/scripts")
     )
@@ -480,3 +480,13 @@ def test_native_handoff_resumes_same_population_and_closes_cumulative_payment(
     assert request_path.read_bytes() == original_request
     assert assumptions[semantic.KEY]["status"] == "completed"
     assert [row["reconciliation_status"] for row in result] == ["closed", "closed"]
+    delivered = workflow.build_reconciliation_artifacts(
+        output_dir=output.parent,
+        open_items=items,
+        evidence_rows=bank,
+        assumptions=assumptions,
+        require_completed_review=False,
+    )
+    assert delivered["assurance"]["content_sha256"]
+    assert Path(delivered["excel_path"]).is_file()
+    assert Path(delivered["word_path"]).is_file()

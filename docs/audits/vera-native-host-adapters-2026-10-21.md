@@ -1,0 +1,84 @@
+# Native reconciliation adapters and pending Archive integration
+
+The evaluation campaign remains paused. These are technical host diagnostics,
+source regressions and release checks, not professional or fresh installed-plugin
+acceptance. No Marketplace version was uploaded, submitted or published.
+
+## Observed host capabilities
+
+Cowork's installed Claude host exposed `Agent` with `description`, `prompt`,
+`subagent_type`, `model` and `isolation`. The observed model enum was `sonnet`,
+`opus`, `haiku`, `fable`. Its existing Vera passive-invoice agent was listed with
+`Read` only. A synthetic general-purpose child requested as `haiku` returned the
+constant probe JSON, agent ID `a72e29132d6221f14`, and zero tool uses. The parent
+model remained Sonnet 5.5 Medium. This did not prove enforced tool-free operation,
+provider model identity, absence of ambient host instructions, or support for
+Claude Code's `omitClaudeMd` in Cowork. The adapter therefore uses the actually
+observed restricted-agent format and records these limits explicitly.
+
+Diagnostic chat: https://claude.ai/chat/af6ab534-aac1-4943-a890-2296baeadfe2
+
+Antigravity's installed `agy` exposed headless structured output and a current
+model catalogue. `agy models --json` was unsupported; plain `agy models` worked.
+A synthetic CLI main-agent probe with `tools: []` still advertised a broad tool
+set in its init event. Consequently the implementation does not represent that
+CLI route as an isolated worker. The native `invoke_subagent` probe accepted
+`TypeName`, `Role`, `Prompt`, `Model: flash`, `Workspace: inherit`. Child
+`a7905069-c90d-4368-977c-b779b7e4d364` returned the constant JSON and reached
+completion. Its returned transcript contained no child tool calls. The actual
+schema also exposed `inherit`, `flash_lite`, `flash`, `pro` model tiers. A model
+tier request is distinct from provider-attested model identity.
+
+Primary references inspected:
+- https://www.antigravity.google/docs/subagents/
+- https://www.antigravity.google/docs/cli/headless/
+- https://support.claude.com/en/articles/13345190-get-started-with-claude-cowork
+
+No client data or accounting evaluation case was used in these probes. The
+existing enabled installations were not modified. The new packaged reviewer
+still needs a fresh installed-host campaign when the user resumes it.
+
+## Implementation boundary
+
+The shared policy prepares a host-specific model preference. The current parent
+checks its live tool schema and agent listing, invokes one fresh native child,
+retains the exact invocation and completion, then resumes the same command.
+Missing capability, incomplete output, reused history, changed packets and child
+tool use cannot supply an accepted result. No Codex/provider fallback runs.
+Open-item allocations and Journal–Bank resolution use their existing independent
+source, quote, perimeter, conservation and threshold checks. Preparing a draft
+adds no human approval step.
+
+Native receipts are explicitly parent-reported evidence. They contain no invented
+Codex OS canaries, ephemeral-transcript claim or provider attestation. Both parent
+and child receive the bounded native request. Their reported exposures are recorded
+separately with stable event identities; account retention remains host controlled.
+
+## Pending work integrated
+
+All pending work from `codex/open-item-row-counterparties`, including commit
+`e919151e5`, was integrated with the current deployed source. This includes source
+and workbook provenance, Archive selected-work fault isolation, recoverable report
+completion, attachment access checks and native execution reporting. Merge
+conflicts in generated files were resolved by rebuilding them. Source conflicts
+retained both partial-payment explanation/provenance and semantic allocations.
+
+## Blocks encountered
+
+- Unsupported `agy models --json`: recovered using the installed plain catalogue.
+- CLI main-agent tool declaration did not yield a tool-free init: used the actual
+  native subagent route and retained the narrower evidence claim.
+- A first Journal–Bank resumption regression found no cumulative completed state
+  for a pending packet: resumed from the already validated pending graph and
+  retained preparation outputs instead. Both host regressions then passed.
+- Source/ZIP parity and combined regression results are recorded in the release PR.
+
+- The initial combined check ran while source and packages were changing. Two
+  source integrity checks correctly rejected changed helper bytes; nine package
+  checks read the previous packages. Three native process checks encountered the
+  nested shell sandbox. All fourteen passed against stable rebuilt files with
+  native process permissions. No product gate was disabled.
+- Antigravity packaging initially omitted the new reviewer because its Codex
+  input bundle does not contain Claude agent files. The builder now explicitly
+  projects the canonical reviewer source into Antigravity's native format; all
+  three Antigravity product builds verified successfully.

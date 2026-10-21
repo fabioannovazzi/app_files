@@ -3006,6 +3006,9 @@ def _record_model_submission(
     model: str,
     workflow_id: str,
     source_records: list[dict[str, Any]] | None = None,
+    event_id: str | None = None,
+    channel: str | None = None,
+    submission_payload: Mapping[str, Any] | None = None,
 ) -> None:
     """Retain the exact submitted prompt locally; never send it to the receipt service."""
     from vera_assurance.contracts import load_client_engagement_context_file
@@ -3048,7 +3051,11 @@ def _record_model_submission(
         raise ValueError(
             "Worker submission requires the Archive start reporting record"
         )
-    submission = {"prompt": prompt, "output_schema": output_schema}
+    submission = (
+        dict(submission_payload)
+        if submission_payload is not None
+        else {"prompt": prompt, "output_schema": output_schema}
+    )
     if source_records is not None:
         from archive_projection import register_row_projection
 
@@ -3056,8 +3063,8 @@ def _record_model_submission(
     record_send(
         root,
         submission,
-        channel="model_worker:" + model,
-        event_id=secrets.token_hex(24),
+        channel=channel or "model_worker:" + model,
+        event_id=event_id or secrets.token_hex(24),
     )
 
 
@@ -3101,6 +3108,10 @@ def run_isolated_native_worker(
             packet_sha256=packet_sha256,
             worker_selection=worker_selection,
         )
+        receipt = json.loads(result["launch_receipt"].read_text())
+        request = receipt["request"]
+        completion = receipt["native_record"]["completion"]
+        event_identity = request["content_sha256"] + completion["invocation_id"]
         _record_model_submission(
             output_dir,
             prompt=prompt,
@@ -3108,6 +3119,22 @@ def run_isolated_native_worker(
             model=result["model"],
             workflow_id=workflow_id.replace("_", "-"),
             source_records=source_records,
+            event_id=hashlib.sha256(event_identity.encode()).hexdigest()[:48],
+            channel="host_reported_native_worker:" + worker_selection["host"],
+            submission_payload=request["invocation"]["parameters"],
+        )
+        _record_model_submission(
+            output_dir,
+            prompt=prompt,
+            output_schema=output_schema,
+            model=result["model"],
+            workflow_id=workflow_id.replace("_", "-"),
+            source_records=source_records,
+            event_id=hashlib.sha256(("parent:" + event_identity).encode()).hexdigest()[
+                :48
+            ],
+            channel="host_reported_native_parent:" + worker_selection["host"],
+            submission_payload=request,
         )
         return result
 
@@ -3486,7 +3513,7 @@ def run_semantic_worker(
         raise ValueError("The bounded candidate packet does not require a worker")
     selection = graph["requested_worker_configuration"].get("selection_review")
     if selection is not None and selection.get("host") in {"cowork", "antigravity"}:
-        return run_isolated_native_worker(
+        result = run_isolated_native_worker(
             prompt=_worker_prompt(graph),
             output_schema=_worker_output_schema(graph),
             output_dir=semantic,
@@ -3499,6 +3526,7 @@ def run_semantic_worker(
                 for row in [*component["bank_records"], *component["journal_records"]]
             ],
         )
+        return {**result, "candidate_graph_sha256": graph["candidate_graph_sha256"]}
     for name in (
         RESPONSE_NAME,
         EVENTS_NAME,
@@ -5590,6 +5618,9 @@ def main() -> int:
                 codex_bin=args.codex_bin,
                 client_engagement=client_engagement,
             )
+        except NativeWorkerPending as exc:
+            LOGGER.info("%s", exc)
+            return 3
         except (OSError, ValueError) as exc:
             _record_cli_launch_failure(args, client_engagement)
             LOGGER.error("SEMANTIC_WORKER_LAUNCH_FAILED: %s", exc)

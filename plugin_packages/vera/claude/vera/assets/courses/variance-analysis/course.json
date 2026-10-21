@@ -112,7 +112,7 @@
     },
     {
       "path": "modules/variance-analysis/skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "41e132a8931939f7f8480dd4b0c907dd2322550174f2874baf50de8f51da6df8"
+      "sha256": "e7c7a68da71bb49ec0ad9b280d5b26e8510140a73520f947f64d9b542a4b9783"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/__init__.py",
@@ -420,11 +420,11 @@
     },
     {
       "path": "scripts/archive_emit.py",
-      "sha256": "07ad5a8b8c96c22e011d59f9919c03d73c9781d39b3052138e0ecbc628463a65"
+      "sha256": "26725652a10fa0cdaa9233c058f18abd6ace28f48638a366b635c36a9573b553"
     },
     {
       "path": "scripts/archive_projection.py",
-      "sha256": "4f001a5018d14caaf1aa45015052c635b39af4f81f6bc693517ea9ac26ebd1a2"
+      "sha256": "b528cbefbb8ce0f71984d31efe65f52f69bba830ac16779227a67674fd06beee"
     },
     {
       "path": "scripts/archive_report_legacy.py",
@@ -432,23 +432,23 @@
     },
     {
       "path": "scripts/archive_report_measurements.py",
-      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
     },
     {
       "path": "scripts/archive_report_receipt.py",
-      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
+      "sha256": "b95a744720e24960c623cea2a81728b4b0fa8412647096a588d0054efedfcd78"
     },
     {
       "path": "scripts/archive_report_seal.py",
-      "sha256": "d853037c3d326d4094ab5fbb87a713ea7ee63383b83b026b5bc75d79bd6a2c0c"
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
     },
     {
       "path": "scripts/archive_report_store.py",
-      "sha256": "5daf6b21e744bd4c5b4e9ad645dc910f6cfabe2c3615f56b319f61034f4216dc"
+      "sha256": "6d04ba281a01f6a4e295efa5f1c33789801561ec183d67e40bfde7920e2f2f9f"
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
+      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -468,7 +468,7 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "e7fb73264c7fae65a97c9bcce8a364590486862347e4917e6fcb0f51a2e9deeb"
+      "sha256": "2717683cee798a899ea116a77188b63cf4e4e9f40cb4c4d3a278a2b1274c36c3"
     },
     {
       "path": "scripts/operational_incidents.py",
@@ -488,7 +488,7 @@
     },
     {
       "path": "skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "a28ae44c3ba84ce6ccc087ae070106ef3db880e38038564ce1fdfcc61d3460fc"
+      "sha256": "3182ab55ae35c6e95d188edb58a0c29f177fdd7b680ab4d0baa85cc05378ed5d"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -893,5 +893,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2e8407175f869fd7a1e6149a9e97c84b344b91800810efc0f392edfabcceb38d"
+  "canonical_course_sha256": "3a4b08c79e36c39cb3540b8b1bf56f602ee3da1af39c61ae91dd7a41768f684e"
 }

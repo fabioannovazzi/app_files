@@ -89,6 +89,14 @@ def test_projection_keeps_canonical_skills_agent_and_host_configuration(
 
     entries = builder.package_entries(product)
 
+    if product == "vera":
+        reviewer = entries["vera/agents/reconciliation-reviewer.md"].decode()
+        assert "model: flash\ntools: []\nmainAgent: false\nsubagent: true" in reviewer
+        assert "mcpServers: []" in reviewer
+        assert (
+            "Use only the evidence and output schema in the parent prompt" in reviewer
+        )
+
     assert json.loads(entries[f"{product}/plugin.json"])["name"] == product
     assert (
         entries[f"{product}/skills/{product}/SKILL.md"]

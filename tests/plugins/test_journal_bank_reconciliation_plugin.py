@@ -14065,7 +14065,7 @@ def test_historical_semantic_selection_replays_without_current_catalog(
 
 
 @pytest.mark.parametrize("host", ["cowork", "antigravity"])
-def test_native_run_all_resumes_pending_packet_and_validates_funnel(
+def test_native_worker_run_all_resumes_pending_packet_and_validates_funnel(
     tmp_path, monkeypatch, host
 ):
     from tests.plugins.test_native_host_workers import completed_record

@@ -340,7 +340,10 @@ The maintained raw runner automatically submits unresolved items and unused bank
 evidence to bounded semantic workers after source mapping. The shared host policy
 selects a suitable low-cost model from actual harness capabilities. Keep the main
 chat's model; do not create visible per-case chats or ask the user to select routine
-technical mappings. A missing verified host invocation path is reported explicitly.
+technical mappings. In Cowork or Antigravity, complete `NATIVE_WORKER_PENDING`
+using `../../../journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/native-host-workers.md`,
+then resume the same command and deliver the regenerated result. Missing actual
+host capabilities remain explicit; do not ask the user to perform the handoff.
 
 Models interpret references, descriptions, counterparties and competing matches.
 The engine verifies quoted evidence, exact amounts, accounting perimeters and no
@@ -356,8 +359,9 @@ make a match. No worker output constitutes professional adoption or approval.
 The full packet remains local except for the selected host model submission;
 its populated mapped fields include business document identifiers, descriptions,
 parties, dates, amounts and opaque linkage IDs. It is not anonymized. Paths and
-unmapped columns are excluded. The main chat receives status and counts, not the
-whole retained packet. A complete currency/entity perimeter is never silently
+unmapped columns are excluded. In Claude the main chat receives status and counts.
+In Cowork and Antigravity the parent reads the bounded request to dispatch its
+native child, so those mapped fields enter both contexts; host transcripts may persist. A complete currency/entity perimeter is never silently
 truncated to fit a worker; an oversized perimeter is explicitly deferred.
 
 ## Review, Outputs, Locales, And Wording
