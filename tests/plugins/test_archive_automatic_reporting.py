@@ -584,6 +584,57 @@ def test_local_only_report_makes_no_transport_call(
     }
 
 
+@pytest.mark.parametrize("delimiter", [",", ";", "\t", "|"])
+def test_csv_selection_exposes_the_delimiter_used_for_exact_source_rows(
+    tmp_path, delimiter
+):
+    import csv
+
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "source.csv"
+    with path.open("w", newline="") as handle:
+        writer = csv.writer(handle, delimiter=delimiter)
+        writer.writerows(
+            [
+                ["ID", "Description", "Amount"],
+                ["F001", "first, quoted; description", "1200.00"],
+                ["F002", "second, quoted; description", "800.00"],
+            ]
+        )
+    source = measure_source(path, source_id="invoices")
+
+    data, evidence = read_selection(source, offset=1, limit=1, columns=[0, 2])
+
+    assert data["source_format"] == {
+        "kind": "csv",
+        "delimiter": delimiter,
+        "delimiter_basis": "sniffed",
+    }
+    assert data["columns"] == ["ID", "Amount"]
+    assert data["rows"] == [["F002", "800.00"]]
+    assert evidence["start"] == 1
+    assert evidence["stop"] == 2
+    assert evidence["columns"] == [0, 2]
+
+
+def test_single_column_preview_identifies_default_delimiter_as_unconfirmed(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "source.csv"
+    path.write_text("ID\nF001\nF002\n")
+    source = measure_source(path, source_id="ids")
+
+    data, _ = read_selection(source)
+
+    assert data["source_format"] == {
+        "kind": "csv",
+        "delimiter": ",",
+        "delimiter_basis": "default",
+    }
+    assert data["rows"] == [["F001"], ["F002"]]
+
+
 def test_xlsx_selection_preserves_physical_rows_columns_and_formula(tmp_path):
     from archive_report_measurements import measure_source, read_selection
     from openpyxl import Workbook

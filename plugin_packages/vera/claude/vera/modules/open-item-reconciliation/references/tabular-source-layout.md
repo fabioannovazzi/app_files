@@ -28,6 +28,13 @@ Reviewed receipts remain unsigned and do not authenticate that label.
    exact local parsing still covers the complete reviewed table. Review the
    beginning and end of the table and keep notes/totals outside the selected
    population only when that scope is justified. Do not omit difficult rows.
+   For CSV, Archive's normal read returns `data.source_format.delimiter`, the
+   separator actually used for the displayed columns and rows. Retain that value
+   in the reviewed layout instead of assuming a comma from the `.csv` extension.
+   `delimiter_basis=sniffed` identifies the reader's sample-based detection;
+   `default` means detection was inconclusive and the reader used its fallback.
+   Check the physical source when the preview or fallback leaves the layout
+   uncertain. This is an agent technical check, not a human approval step.
 2. Record the existing source decision fields: role, adapter, reviewer/date,
    accounting perimeter, cent-only money convention and date order. Add the
    `tabular` object below. Key each decision by its complete path relative to

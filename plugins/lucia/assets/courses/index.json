@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "f9a6c754b79bae40eff5384276b2b66c26251c662de42b8bdff1d4ef27e6b005",
+      "sha256": "90e6d5876d5c0c5d74ad4cb8a51000a7a0f812194ac5cee96077899982539b8b",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "ff793e56d8d3424e48ae354d08725daa12eb558f34d0b73231621b6be1e76c94",
+      "sha256": "1039b71fbcf64306db7ee3189605a2ca3da70d2cc303c5235448884e867ae967",
       "languages": [
         "it",
         "en",

@@ -1401,3 +1401,41 @@ files against the checked ZIP, with one enabled local Vera 0.1.461. The sandboxe
 inventory warned that the remote catalog was unavailable; automatic approval
 review rejected an unnecessary networked repeat. Local verification was sufficient
 and no remote retry occurred. Acceptance remains **1 of 13** pending the fresh chat.
+
+### 0.1.461 normal chat: delimiter omitted from the source preview
+
+**A68:** the fresh Sol chat verified the enabled installation, the seven registered
+sources and the selected three invoices/two receipts. It then declared a comma
+delimiter for both semicolon-delimited CSVs. The producer stopped before any
+calculation with `reviewed header is missing or ambiguous: ID riga`. Inspection
+of the retained assumptions and exact source headers establishes an agent mapping
+error, not a missing header or a failure of the reconciliation algorithm. The
+ordinary Archive reader had parsed both files correctly but returned only the
+columns and rows, omitting its parser's delimiter. That missing technical context
+contributed to an avoidable guess. No correction or rerun occurred in that chat.
+
+The run and usage task closed as failed, with both lifecycle events acknowledged.
+The privacy report appeared automatically: five emissions, 5,408 characters,
+24/24 population cells and 12/12 bank cells attributed. Helper responses without
+source coordinates remain explicitly unmeasured. Independent server verification
+matched the exact report hash, revision, run and expected userID. Fourteen retained
+run files have a preservation baseline. The queued technical diagnostic was not
+reported as delivered; no global queue flush occurred. A mistaken documentation
+path was recovered with `rg --files`; truncated reads and a no-match asset search
+were recorded separately. An index needing refresh did not block ledger access.
+
+The repair exposes the delimiter already used by the CSV/TSV preview parser,
+with an explicit distinction between sample detection and an inconclusive
+default. It adds no new delimiter classifier, accounting rule, source cells,
+network recipient or execution block. The source-layout reference tells the agent
+to retain this returned value and inspect physical source layout when uncertain.
+Five focused regressions failed before the repair and pass afterward: all four
+supported separators, quoted values, selected row/column coordinates and an
+inconclusive single-column case. The full reporting suite passes 242 tests with
+82.98% coverage. The next Vera ZIP changes 140 files with no additions or removals;
+its only executable delta is the shared measurement reader and its generated
+vendor copy. Package/privacy checks pass: 516 tests, two skips. All-host source
+parity passes. The supported local installation verifies all 2,184 cache files
+against the checked ZIP; an inventory scoped to the existing local source avoids
+the unnecessary remote catalog lookup. Installed acceptance remains pending.
+Acceptance remains **1 of 13**.

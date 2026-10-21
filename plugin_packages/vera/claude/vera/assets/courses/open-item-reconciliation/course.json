@@ -56,7 +56,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
-      "sha256": "a56f4ece1d7fc6e537313a8b783027288bd4d99cf4f5bf27a298bcb5dbce50c2"
+      "sha256": "30e167ff93551144bd086350f29648e370dd9b65f212cd3fb3b7f7f26d37b194"
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "415962207d105176f55313d9ba46f5e89ce7a71e08ad736cff295c08d572e1f2"
+  "canonical_course_sha256": "e42d20618736d19040118c91665fed9a425d876d2cb584eae26484941617a0be"
 }
