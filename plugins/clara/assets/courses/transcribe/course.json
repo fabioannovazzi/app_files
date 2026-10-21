@@ -55,7 +55,7 @@
     {
       "path": "scripts/archive_projection.py",
       "repository_path": "plugins/clara/scripts/archive_projection.py",
-      "sha256": "4f001a5018d14caaf1aa45015052c635b39af4f81f6bc693517ea9ac26ebd1a2"
+      "sha256": "aad7ded05066f440f8240c1df73683c4cc5bd80f7dbf5c403c84ebb839a2a2e7"
     },
     {
       "path": "scripts/archive_report_legacy.py",
@@ -85,7 +85,7 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/clara/scripts/archive_reporting.py",
-      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
+      "sha256": "6c807130881782c807c6a67d4110a52bde6c5ea8bfbc56d73fe239f39c87557c"
     },
     {
       "path": "scripts/auto_attribute_hosted_transcript.py",

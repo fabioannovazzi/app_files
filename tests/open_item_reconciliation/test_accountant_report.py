@@ -120,6 +120,44 @@ def test_write_accountant_report_workbook_creates_operational_tabs(tmp_path):
     assert workbook["Scheda operativa"]["A2"].value == "open-1"
 
 
+@pytest.mark.parametrize(
+    "message,known",
+    [
+        ("", True),
+        ("Il residuo resta aperto: acquisire evidenza del suo regolamento.", True),
+        (
+            "Eine Verrechnung ist erkennbar, aber die konfigurierte Regel verlangt "
+            "Bank-/externen Nachweis.",
+            True,
+        ),
+        ("Nota del cliente: incasso riservato il 25 ottobre.", False),
+    ],
+)
+def test_workbook_provenance_does_not_treat_supplied_action_text_as_generated(
+    tmp_path, message, known
+):
+    report = load_accountant_report()
+    path = tmp_path / "scheda.xlsx"
+    cells = []
+
+    report.write_accountant_report_workbook(
+        path,
+        [{"record_id": "open-1", "missing_evidence": message}],
+        projection_cells=cells,
+    )
+
+    workbook = load_workbook(path, read_only=True)
+    legend_rows = workbook["Legenda"].max_row
+    action = workbook["Scheda operativa"]["S2"].value
+    assert action == (
+        message
+        or "Richiedere evidenza di pagamento/incasso o spiegazione della partita aperta."
+    )
+    assert cells[legend_rows + 1][18] == ([] if known else None)
+    assert cells[legend_rows + 3][10] == ([] if known else None)
+    workbook.close()
+
+
 def test_post_cutoff_evidence_does_not_label_unresolved_invoice_as_paid():
     report = load_accountant_report()
     invoice = {

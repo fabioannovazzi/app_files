@@ -94,7 +94,10 @@ def test_only_selected_public_function_pages_describe_archive_reporting():
     selected = {
         page
         for page, data in public["pages"].items()
-        if data["copy"].get("it", [""])[-1].startswith("Studio Archive delimita")
+        if any(
+            paragraph.startswith("Studio Archive delimita")
+            for paragraph in data["copy"].get("it", [])
+        )
     }
     assert selected == {
         "journal-bank-reconciliation",
@@ -113,7 +116,10 @@ def test_only_selected_public_function_pages_describe_archive_reporting():
     }
     for page in selected:
         assert all(
-            "Studio Archive" in public["pages"][page]["copy"][locale][-1]
+            any(
+                "Studio Archive" in paragraph
+                for paragraph in public["pages"][page]["copy"][locale]
+            )
             for locale in ("it", "en", "fr", "de", "es")
         )
 

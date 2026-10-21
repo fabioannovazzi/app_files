@@ -970,6 +970,32 @@ def table_projection_case(archive_core, client_case, tmp_path, request):
     return loaded
 
 
+@pytest.mark.parametrize(
+    "columns,complete,sent_cells", [([0], True, 1), ([1], False, 0), ([0, 1], False, 1)]
+)
+def test_partial_table_provenance_keeps_unknown_cells_explicit_when_selected(
+    table_projection_case, columns, complete, sent_cells
+):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    artifact = Path(loaded["output_dir"]) / "partial.csv"
+    artifact.write_text("amount,unmapped_note\n7,UNMAPPED_VALUE\n")
+    register_table_projection(
+        "journal-bank-reconciliation",
+        artifact,
+        [[[{"record_id": "first", "fields": ["amount"]}], None]],
+    )
+
+    read_artifact(loaded, artifact, columns=columns)
+
+    measured = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert measured["collection_status"] == ("complete" if complete else "incomplete")
+    [source] = [row for row in measured["sources"] if row["role"] == "input"]
+    assert source["sent_cells"] == sent_cells
+
+
 @pytest.mark.parametrize("first_to_read", [True, False])
 def test_identical_table_bytes_keep_each_producers_source_row(
     table_projection_case, first_to_read

@@ -372,14 +372,21 @@ def record_send(
                     ):
                         # The exact file hash binds the producer's output-cell
                         # map. Only cells actually returned can add input origins.
-                        artifact_selection["source_lineage_verified"] = True
-                        selections.extend(
-                            origin
+                        selected_cells = [
+                            row[column]
                             for row in table["cells"][
                                 selection["start"] : selection["stop"]
                             ]
                             for column in selection["columns"]
-                            for origin in row[column]
+                        ]
+                        artifact_selection["source_lineage_verified"] = all(
+                            cell is not None for cell in selected_cells
+                        )
+                        selections.extend(
+                            origin
+                            for cell in selected_cells
+                            if cell is not None
+                            for origin in cell
                         )
                     mapped = True
                 if metadata.get(binding.get("token")) == digest(

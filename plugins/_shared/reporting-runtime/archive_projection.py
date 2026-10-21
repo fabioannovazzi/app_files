@@ -205,12 +205,13 @@ def _row_entries(
 
 
 def register_table_projection(
-    component: str, path: Path, cells: list[list[list[dict[str, Any]]]]
+    component: str, path: Path, cells: list[list[list[dict[str, Any]] | None]]
 ) -> None:
     """Bind each produced table cell to its declared record fields and exact bytes.
 
-    Empty references mean a producer-created constant or locator. Missing record
-    evidence invalidates the declaration; no column-name or value matching is used.
+    Empty references mean a producer-created constant or locator. None or missing
+    record evidence leaves that cell unknown; no column-name or value matching
+    is used. An unread unknown cell cannot invalidate another cell's provenance.
     """
     from archive_report_measurements import measure_source
 
@@ -238,16 +239,15 @@ def register_table_projection(
         workbooks: dict[str, dict[str, dict[int, int]]] = {}
         resolved = []
         for row in cells:
-            resolved_row = []
+            resolved_row: list[list[dict[str, Any]] | None] = []
             for records in row:
-                entries = _row_entries(origins, records)
+                entries = None if records is None else _row_entries(origins, records)
                 if entries is None:
-                    return
+                    resolved_row.append(None)
+                    continue
                 selections = _source_selections(
                     sources, entries, checked_sources, workbooks
                 )
-                if selections is None:
-                    return
                 resolved_row.append(selections)
             resolved.append(resolved_row)
         if file_digest(path) != artifact["sha256"]:

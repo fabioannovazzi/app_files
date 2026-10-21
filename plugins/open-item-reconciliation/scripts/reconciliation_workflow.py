@@ -484,11 +484,13 @@ def build_reconciliation_artifacts(
     )
 
     excel_path = write_excel_workpaper(out_dir / excel_name, sheets, language=language)
+    accountant_cells: list[list[list[dict[str, Any]] | None]] = []
     accountant_report_path = write_accountant_report_workbook(
         out_dir / "scheda_operativa_commercialista.xlsx",
         reconciliation_rows,
         bank_allocation_candidates=bank_candidates,
         normalized_records=normalized,
+        projection_cells=accountant_cells,
     )
     word_path = write_word_report(
         out_dir / word_name,
@@ -542,6 +544,7 @@ def build_reconciliation_artifacts(
     result = {
         "excel_path": str(excel_path),
         "accountant_report_path": str(accountant_report_path),
+        "_accountant_report_cells": accountant_cells,
         "word_path": str(word_path),
         "assumptions": assumptions,
         "client_engagement": normalized_client_engagement,

@@ -177,6 +177,74 @@ def report(loaded):
     return json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
 
 
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+@pytest.mark.parametrize(
+    "selection,population_cells,bank_cells",
+    [("legend", 0, 0), ("partial_amounts", 1, 1), ("whole_workbook", 9, 6)],
+)
+def test_accountant_workbook_reads_preserve_exact_original_cell_provenance(
+    reconciled_case, artifact_folder, selection, population_cells, bank_cells
+):
+    from archive_reporting import read_artifact
+    from openpyxl import load_workbook
+
+    loaded = reconciled_case
+    path = (
+        Path(loaded["calculation_dir"])
+        / artifact_folder
+        / "scheda_operativa_commercialista.xlsx"
+    )
+    read_options = {}
+    if selection == "legend":
+        read_options = {"offset": 0, "limit": 4}
+    elif selection == "partial_amounts":
+        with path.open("rb") as handle:
+            book = load_workbook(handle, read_only=True)
+            legend_rows = sum(
+                any(value is not None for value in row)
+                for row in book["Legenda"].iter_rows(values_only=True)
+            )
+            book.close()
+        read_options = {"offset": legend_rows + 2, "limit": 1, "columns": [4, 6, 7]}
+
+    read_artifact(loaded, path, **read_options)
+
+    measured = report(loaded)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == population_cells
+    assert inputs["bank.csv"]["sent_cells"] == bank_cells
+
+
+def test_changed_accountant_workbook_cannot_reuse_original_source_provenance(
+    reconciled_case,
+):
+    from archive_reporting import read_artifact
+    from openpyxl import load_workbook
+
+    loaded = reconciled_case
+    path = Path(loaded["calculation_dir"]) / "scheda_operativa_commercialista.xlsx"
+    workbook = load_workbook(path)
+    workbook["Legenda"]["B2"] = "UNREGISTERED_REPLACEMENT"
+    workbook.save(path)
+    workbook.close()
+
+    read_artifact(loaded, path, offset=0, limit=4)
+
+    measured = report(loaded)
+    assert measured["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in measured["errors"]
+    )
+    assert (
+        sum(row["sent_cells"] for row in measured["sources"] if row["role"] == "input")
+        == 0
+    )
+
+
 def test_pending_review_counts_do_not_claim_source_cell_exposure(
     reconciled_case, tmp_path
 ):
@@ -279,6 +347,8 @@ def test_selected_partial_payment_has_exact_cells_and_retains_private_columns(
 def test_public_review_save_apply_keeps_notes_private_and_report_complete(
     reconciled_case, tmp_path, exact_identifiers, regeneration_route
 ):
+    from archive_reporting import read_artifact
+
     loaded = reconciled_case
     output = Path(loaded["calculation_dir"])
     review = json.loads((output / "review_payload.json").read_text())
@@ -426,6 +496,13 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
         for path in history.rglob("*")
         if path.is_file()
     }
+    # Promotion changes paths and workbook bytes. Both current copies must carry
+    # their own provenance, without borrowing the predecessor's declaration.
+    read_artifact(loaded, output / "scheda_operativa_commercialista.xlsx")
+    read_artifact(
+        loaded,
+        output / "assurance_final_outputs/scheda_operativa_commercialista.xlsx",
+    )
     with review_transport(tmp_path) as call:
         call(
             "validate_open_item_reconciliation_review",

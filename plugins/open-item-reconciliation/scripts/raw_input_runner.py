@@ -3383,6 +3383,10 @@ def run_raw_input_reconciliation(
             out_dir,
             json.loads(review_session.review_payload_path.read_bytes()),
         )
+    if regeneration_output_dir is None:
+        _register_accountant_workbook_projection(
+            out_dir, result["_accountant_report_cells"]
+        )
     return {
         **result,
         **extracted,
@@ -3392,6 +3396,21 @@ def run_raw_input_reconciliation(
         "missing_evidence_requests_path": str(missing_evidence_requests_path),
         "missing_evidence_request_pack": missing_evidence_pack,
     }
+
+
+def _register_accountant_workbook_projection(
+    output_dir: Path, cells: list[list[list[dict[str, Any]] | None]]
+) -> None:
+    """Bind working and sealed copies after their final bytes are in place."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None:
+        return
+    for directory in (output_dir, output_dir / "assurance_final_outputs"):
+        recorder.register_table_projection(
+            WORKFLOW_ID, directory / "scheda_operativa_commercialista.xlsx", cells
+        )
 
 
 def regenerate_raw_input_reconciliation(
@@ -3462,6 +3481,8 @@ def regenerate_raw_input_reconciliation(
     ):
         raise ValueError("Saved decisions differ from the applied review")
 
+    accountant_cells: list[list[list[dict[str, Any]] | None]] = []
+
     def rebuild(working: Path) -> dict[str, Any]:
         result = run_raw_input_reconciliation(
             input_dir=context["input_dir"],
@@ -3475,6 +3496,7 @@ def regenerate_raw_input_reconciliation(
             regeneration_output_dir=working,
             applied_review_rows=authority["records"],
         )
+        accountant_cells.extend(result["_accountant_report_cells"])
         replay = validate_assurance_run(
             working, expected_predecessor_checkpoint=expected_predecessor_checkpoint
         )
@@ -3485,12 +3507,14 @@ def regenerate_raw_input_reconciliation(
             "checks_pass": result["checks_pass"],
         }
 
-    return run_review_output_transaction(
+    result = run_review_output_transaction(
         output_dir,
         rebuild,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
         regenerate_successor=True,
     )
+    _register_accountant_workbook_projection(output_dir, accountant_cells)
+    return result
 
 
 def _cli_parser() -> Any:

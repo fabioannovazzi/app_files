@@ -1439,3 +1439,78 @@ parity passes. The supported local installation verifies all 2,184 cache files
 against the checked ZIP; an inventory scoped to the existing local source avoids
 the unnecessary remote catalog lookup. Installed acceptance remains pending.
 Acceptance remains **1 of 13**.
+
+### 0.1.462 normal chat: generated workbook provenance missing
+
+**A69:** fresh installed GPT-6.1-sol chat
+`01a15cb1-bcfe-75c2-ae88-078d9ff6ef5b` completed the three-invoice
+reconciliation, agent review, published regeneration and independent replay:
+EUR 2,500 population less EUR 1,500 receipts leaves EUR 1,000 outstanding.
+All 17 checks passed; `report_ready` and `final_ready` were true. The eight-page
+Word report was rendered and inspected. Current deliverables and historical
+copies were correctly distinguished, and Archive finalization succeeded.
+
+The first ordinary Archive read of the generated operational workbook returned
+four rows of its legend, padded to 20 columns. Its producer had not registered
+the workbook's source-cell provenance. Final reporting therefore correctly
+reported `derived_output_lineage_unavailable` and incomplete collection. The
+chat stopped, preserved the accounting result and closed only its new run/task
+as failed. The reported defect concerns source attribution, not arithmetic.
+The existing producer-projection mechanism supports table provenance; this
+workbook producer had not supplied it.
+
+The automatic readable report appeared with 15 sends, 50,407 characters and
+50,443 bytes. Independent server verification matched receipt
+`34d9975b-9008-5fb4-a843-aca3fe289a28`, revision 1, run
+`run_99a033a186b2149348417c20`, userID
+`0ed4a818-1877-4652-8515-787c64de17a5` and report SHA-256
+`1dd798cc20c3618f853055be6ba2b7b8005451dd165080ac83292268d5b020e8`.
+That proof authenticates the incomplete report; it does not make the test pass.
+Its 79 files join the earlier preservation baselines: all 565 historical-file
+hash checks still match. The leftover review-server job was cancelled through
+the public execution tool, reached `cancelled` with return code -9, and its
+listening socket disappeared.
+
+All other observed limits remain in the test resoconto: stale document index
+without interference with exact registered inputs; pending agent review and
+successor regeneration; the genuinely unpaid third invoice; generic shell and
+document-tool reads outside Vera's measured boundary; no separate incident
+registration tool; recovered instruction-output truncation; and withheld
+publication. No dependency, execution or host-approval failure occurred in the
+normal chat. It read the CSVs through the shell, so this attempt does not itself
+establish normal-chat use of the new delimiter preview.
+
+The repair adds producer-owned cell dependencies for the operational workbook,
+including the source operands of residuals/differences and the actual fields
+selected for displayed dates, descriptions and references. It registers both
+working and sealed copies after their final bytes and paths exist, including
+after successor promotion. Unknown text/origins remain unknown per cell, so an
+unread unknown cell cannot invalidate a separately selected, traceable cell.
+Exact path, artifact hash and original source hashes remain required. The
+repair adds no user confirmation, accounting decision or external recipient.
+It does not establish provenance for other generated workbooks or generic host
+reads. The public explanation records this boundary in all five languages.
+
+Six workbook regressions failed before the repair. Current checks pass all 24
+public projection/review/regeneration cases, including changed-byte rejection,
+both final-copy paths, precise original-cell counts and untouched private
+columns. The reporting suite passes 245 tests with 83.06% coverage. A new German
+action-text fixture mistakenly used a next-step sentence instead of a producer
+missing-evidence message; correcting that fixture gives 16 passing report tests
+without widening the production classification. Full accounting/package checks
+and a fresh installed normal-chat rerun remain outstanding. Acceptance remains
+**1 of 13**. The current candidate is Vera 0.1.463, Open-item 0.1.70, Clara
+0.1.329 and Lucia 0.1.154; Archive component source remains 0.1.63.
+
+Final accounting verification passes 426 tests with 81.69% coverage. All-host
+package/source parity passes, as do formatting, imports, nine-module shared
+runtime typing, Bandit medium/high and whitespace checks. The package suite
+passed 515 tests and skipped two; its sole failure was a test-only assumption
+that the Archive disclosure must be the last paragraph. The new workbook
+explanation preserves that disclosure in the same final privacy section. The
+assertion now checks its presence without imposing paragraph order; production
+code/package bytes are unchanged by that test-harness repair. The package ZIP
+contains six executable changes and no added/removed files; SHA-256 is
+`42dc02b7272ba737bd74f02e64bdabc4396e70f7437578cbdd331512ceae6929`.
+The complete selective-reporting test file now passes all 29 cases. No normal
+chat has yet accepted candidate 0.1.463.
