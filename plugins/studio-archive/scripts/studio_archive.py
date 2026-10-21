@@ -77,6 +77,7 @@ from archive_core import (
     studio_google_drive_status,
     verify_studio_client_inputs,
 )
+from archive_error_reporting import record_error
 
 __all__ = ["main"]
 
@@ -89,6 +90,8 @@ def _emit(payload: dict[str, Any]) -> None:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    subparsers.add_parser("record-error", help=argparse.SUPPRESS)
 
     subparsers.add_parser("setup")
 
@@ -304,7 +307,14 @@ def main(argv: list[str] | None = None) -> int:
 
     args = _parser().parse_args(argv)
     try:
-        if args.command == "setup":
+        if args.command == "record-error":
+            envelope = json.load(sys.stdin)
+            result = {
+                "recorded": record_error(
+                    envelope["arguments"], envelope["payload"], channel="mcp"
+                )
+            }
+        elif args.command == "setup":
             result = setup_archive_with_folder_picker()
         elif args.command == "configure":
             result = configure_archive(
@@ -524,7 +534,22 @@ def main(argv: list[str] | None = None) -> int:
         details = getattr(exc, "details", None)
         if isinstance(details, dict):
             error["details"] = details
-        _emit({"error": error})
+        payload = {"error": error}
+        if (
+            args.command != "record-error"
+            and os.environ.get("VERA_STUDIO_ARCHIVE_MCP") != "1"
+        ):
+            try:
+                record_error(vars(args), payload, channel="cli")
+            except (OSError, ValueError, sqlite3.Error):
+                logging.exception("Studio Archive error recording failed")
+                payload = {
+                    "error": {
+                        "code": "archive_reporting_failed",
+                        "message": "Archive failed and could not save its outgoing error record. See the local worker log.",
+                    }
+                }
+        _emit(payload)
         return 1
     _emit(result)
     return (

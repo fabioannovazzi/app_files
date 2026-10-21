@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "7f50b1f162c7e83d9ba78dcc9b0823f6bcfff5ca646b181e4b62fc0e2e62ad70",
+      "sha256": "e5cd12c345bedfaabe0c0d353802cdd040871d362132c130443abf5a736aab32",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "3d924696771c357b323d13b237e41a476e1249c8289c9c365b7f3825bf272d97",
+      "sha256": "5c95cbc4df3332dc742887b73ef70309858a5065d9d64db6814409f59d381e18",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "471e6c152e271e945aacc4de0ec8b0f74d8ced667e65f7b3a1c7dd929f958d67",
+      "sha256": "08f7a8b0ec62fe90dd6502660166607512d0c757a9568f23095d3752e06fc5ca",
       "languages": [
         "it",
         "en",

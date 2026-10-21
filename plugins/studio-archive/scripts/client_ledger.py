@@ -2553,6 +2553,28 @@ def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
         raise LedgerError("Model-data report receipt hash is invalid.")
 
 
+def _artifact_declaration_path(
+    value: object, output_dir: Path, physical: Mapping[str, Path]
+) -> str:
+    """Canonicalize references to the same owned file without guessing its identity."""
+    if isinstance(value, str) and Path(value).is_absolute():
+        try:
+            value = Path(value).relative_to(output_dir).as_posix()
+        except ValueError as exc:
+            raise LedgerError(
+                "Artifact path is outside this run's output folder."
+            ) from exc
+        return _relative_path(value, label="artifact path")
+    relative = _relative_path(value, label="artifact path")
+    # Output-relative paths remain authoritative, including real nested outputs/.
+    # Accept the reader's run-relative spelling only for an existing owned file.
+    if relative not in physical and relative.startswith("outputs/"):
+        candidate = relative.removeprefix("outputs/")
+        if candidate in physical:
+            return candidate
+    return relative
+
+
 def _finalize_run_locked(
     client_root: Path,
     engagement_id: str,
@@ -2587,7 +2609,22 @@ def _finalize_run_locked(
         "finished_at": None,
         "finish_status": "ready_for_review",
     }
+    files = _output_files(output_dir)
+    physical = {path.relative_to(output_dir).as_posix(): path for path in files}
     if not isinstance(declarations, (str, bytes)):
+        declarations = [
+            (
+                {
+                    **item,
+                    "path": _artifact_declaration_path(
+                        item["path"], output_dir, physical
+                    ),
+                }
+                if isinstance(item, Mapping) and "path" in item
+                else item
+            )
+            for item in declarations
+        ]
         paths = {item.get("path") for item in declarations if isinstance(item, Mapping)}
         declarations = [
             *declarations,
@@ -2597,7 +2634,6 @@ def _finalize_run_locked(
                 if item["path"] not in paths
             ),
         ]
-    files = _output_files(output_dir)
     if not files:
         raise LedgerError("An empty workflow output cannot be finalized.")
     if reporting["status"] in {"available", "created", "legacy_required"}:
@@ -2636,7 +2672,6 @@ def _finalize_run_locked(
             raise LedgerError("Artifact IDs must be safe and unique.")
         declared[path] = raw
         seen_ids.add(artifact_id)
-    physical = {path.relative_to(output_dir).as_posix(): path for path in files}
     if set(declared) != set(physical):
         undeclared_paths = sorted(set(physical) - set(declared))
         missing_paths = sorted(set(declared) - set(physical))

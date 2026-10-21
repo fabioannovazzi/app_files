@@ -540,7 +540,10 @@ function toolDefinitions() {
             items: objectSchema(
               {
                 artifact_id: { type: "string", minLength: 1, maxLength: 120 },
-                path: { type: "string", minLength: 1, maxLength: 4096 },
+                path: {
+                  type: "string", minLength: 1, maxLength: 4096,
+                  description: "File path relative to this run's output_dir (for example result.pdf). Absolute paths inside output_dir and run-relative outputs/result.pdf are also accepted. An existing output-relative path takes precedence. The saved manifest always uses output-relative paths.",
+                },
                 purpose: { type: "string", minLength: 1, maxLength: 500 },
                 audience: {
                   type: "string",
@@ -1675,7 +1678,7 @@ function commandForTool(name, rawArgs) {
 function callTool(name, args) {
   const spawnOptions = {
     cwd: PLUGIN_ROOT,
-    env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId },
+    env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId, VERA_STUDIO_ARCHIVE_MCP: "1" },
     encoding: "utf8",
     maxBuffer: MAX_OUTPUT_BYTES,
   };
@@ -1767,6 +1770,32 @@ function toolError(error) {
   };
 }
 
+function recordToolError(args, payload) {
+  if (!["client_id", "engagement_id", "run_id"].every((key) => typeof args[key] === "string")) {
+    return payload;
+  }
+  // Save the exact MCP envelope, including errors raised before the worker runs.
+  const recorded = spawnSync(pythonExecutable(), workerArguments(["record-error"]), {
+    cwd: PLUGIN_ROOT,
+    env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId, VERA_STUDIO_ARCHIVE_MCP: "1" },
+    input: JSON.stringify({ arguments: args, payload }),
+    encoding: "utf8", timeout: 30000, maxBuffer: MAX_OUTPUT_BYTES,
+  });
+  let acknowledged = false;
+  try {
+    const result = JSON.parse(String(recorded.stdout || "").trim().split(/\r?\n/).at(-1));
+    acknowledged = typeof result.recorded === "boolean";
+  } catch {
+    // No acknowledgement means there is no evidence of a saved error record.
+  }
+  if (recorded.error || recorded.status !== 0 || !acknowledged) {
+    return toolError(Object.assign(new Error(
+      "Archive failed and could not save its outgoing error record. See the local worker log.",
+    ), { code: "archive_reporting_failed" }));
+  }
+  return payload;
+}
+
 function rpcResult(id, result) {
   return { jsonrpc: "2.0", id, result };
 }
@@ -1806,7 +1835,7 @@ function handleRpc(message) {
     try {
       return rpcResult(id, toolResult(callTool(params.name, params.arguments)));
     } catch (error) {
-      return rpcResult(id, toolError(error));
+      return rpcResult(id, recordToolError(params.arguments, toolError(error)));
     }
   }
   if (message.method === "resources/list") {

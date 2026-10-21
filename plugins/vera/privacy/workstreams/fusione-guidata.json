@@ -124,10 +124,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-18",
+    "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "22bb941688a1adc36ba89f26819d635177e71b89c68167fb833fe9de7585a77c"
+    "source_fingerprint": "dcac6eca97a62d374c1fa3e4f73ddcf534d0252b1d6fc9a4b6df4fb102c19bc8"
   },
   "public_explanations": {
     "fusione-guidata": {

@@ -1097,3 +1097,83 @@ The 128-file delta against verified 0.1.456 has no additions/removals and only
 two executable changes: the Open-item MCP server and assurance CLI. Installation
 and normal-chat acceptance remain outstanding; these source/package checks do
 not accept test 2.
+
+### 0.1.457 normal-chat result: finalization failure and missing error emission
+
+The supported local installation was verified at 0.1.457, with all 2,183 cache
+files matching the final ZIP. Fresh GPT-6.1-sol chat
+`01a15c06-31d3-78c2-99ba-fe9ff57318af` ran only test 2. Run
+`run_757f06f00ca937238010bdeb` and task
+`bf524ab3-938e-4f29-914a-931387b63bc0` are failed and stopped. Preserve them;
+never resume this run to turn its result into a pass.
+
+Observed: the reconciliation, review, apply and regeneration completed. The
+three rows passed checks and were report-ready; EUR 2,500 less EUR 1,500 collected
+left EUR 1,000. The agent visually reviewed all eight Word pages. No human
+approval was invented. The new failure occurred during Archive finalization:
+the agent declared 65 paths as `outputs/<file>` relative to the run, while the
+finalizer expected paths relative to `output_dir`. Its MCP path field did not
+state that base, whereas the artifact reader explicitly supports run-relative
+paths. This inconsistent handoff is **A61**. It is unrelated to the accounting
+calculation or an unmet professional decision.
+
+The chat automatically displayed the privacy report. Independent read-only
+verification confirmed receipt `bc7fe21f-c45f-52be-bbac-4f9d768973ea`, revision 1,
+SHA-256 `5fbdc48d7181c8808f3d68e243e865b01280f3e1570fb182b147dfa06f098615`,
+the exact run and userID `0ed4a818-1877-4652-8515-787c64de17a5`. The child had
+encountered a sandbox network error; the coordinator's authorized reader verified
+the receipt without rewriting the report. Proof is retained in
+`/private/tmp/studio-archive-457-failed-report-proof.json`. Seventy-seven run-file
+hashes are retained in
+`/private/tmp/studio-archive-test2-457-failed-preservation.json`.
+
+The saved report labels its collection complete: 15 emissions, 18,805 characters,
+and all 36 source cells. Subsequent source inspection and a failing MCP regression
+showed that Archive's failed finalization response was omitted. This is **A62**:
+successful Archive responses record themselves, but neither worker errors nor
+MCP validation errors were recorded. Therefore the report's complete label is
+not accepted as complete response coverage. The signature verifies the retained
+bytes and ownership; it does not cure that omission. The coordinator corrected
+its earlier completeness claim after finding this defect.
+
+Recovered interruptions are retained in the chat's `outputs/resoconto-test-02.txt`:
+an unrefreshed index did not block existing imports; pending row decisions were
+resolved through agent review; apply required the documented predecessor/replay
+regeneration; guessed helper paths and truncated reference reads were corrected;
+the incident-registration tool was unavailable while the two task-usage events
+were acknowledged. A stale generic final-artifact caveat still referred to
+pending UI decisions after final readiness. Technical paths in the Word report
+remain awkward. Shell reads before Archive start and host/browser/rendering
+activity remain outside Vera-owned emission measurement and were disclosed.
+
+The local repair accepts unambiguous references to the same owned output file,
+retains output-relative paths in manifests, and records exact run-bound MCP and
+CLI errors. Unknown error content remains unmapped, making coverage incomplete;
+it is not declared harmless metadata. No recipient or professional approval step
+was added. The first regression run reproduced four failures; the repaired five
+cases passed, followed by 248 Archive, lifecycle, reporting and Lucia tests.
+Further boundary checks and release validation remain in progress. Acceptance
+remains **1 of 13**. Test 3 has not started.
+
+Final 0.1.458 source validation passed 260 Archive/lifecycle/reporting/Lucia tests
+with 97.37% coverage of the error recorder, plus the full automatic-reporting CI
+command: 230 tests and 83.15% coverage. Additional negative cases preserve
+prepared/closed/unselected runs, record failures despite missing inputs, reject
+foreign reporting state, and withhold an unrecorded detailed error when the
+recorder fails or supplies no acknowledgement. Path cases cover nested `outputs`
+directories, duplicate aliases, absolute paths and escapes. All 481 package,
+privacy and update checks passed (two skips); Black, Isort, Mypy, Bandit and Node
+syntax checks passed. All-host parity passed for Vera 0.1.458 and Lucia 0.1.151,
+embedding Archive 0.1.61. The unchanged Open-item engine remains 0.1.65.
+
+The final Vera ZIP hash is
+`779b55855143d3b19d5767a48da75aa1be3e836e86f086c46d481c36ac32a0c0`.
+The delta against the verified 0.1.457 baseline contains 132 changed files, one
+new Archive error-recorder module and no removals. Executable changes are limited
+to Archive's MCP server, CLI, ledger and new recorder, plus the same ledger copied
+into Fusione's vendor directory. All 240 retained-file hash checks passed.
+The accepted test-1 transcript and resoconto were reviewed for A62: they record
+no failed Archive operation; their verification error occurred after report
+closure and was independently diagnosed as restricted-shell DNS failure. Its
+previous acceptance evidence remains unchanged. Fresh installed 0.1.458 test-2
+acceptance and saved-report reopening are still required.

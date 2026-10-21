@@ -286,15 +286,21 @@ Use this exact chat workflow whenever a professional starts client work:
    input set.
 9. For Vera, the fixed 13 pipelines in `scripts/selective_reporting.py` receive
    one report for every run. Start initializes it automatically. Use
-   `read_studio_run_artifact` for exact selections from the bound inputs; trusted
-   host hooks record actual returned data and supported direct reads. No agent
+   `read_studio_run_artifact` for exact selections from the bound inputs.
+   Vera-owned tool and CLI boundaries record their actual returns; host shell,
+   browser, rendering and other tools are not observed. No agent
    prepares phase counts or `model_data_report_input.json`. Missing observations
    leave an explicitly incomplete report; full exposure still produces a report.
    Call `finalize_studio_client_workflow` with declarations for professional
-   outputs. Archive adds report artifacts and seals the review-ready outputs.
+   outputs. Declare each path relative to the prepared `output_dir`, for example
+   `result.pdf`. Absolute paths inside that folder and run-relative
+   `outputs/result.pdf` are also accepted; an existing output-relative path
+   takes precedence. Archive saves canonical output-relative paths, adds report
+   artifacts and seals the review-ready outputs.
    Collection continues through review. `complete_studio_client_workflow`, failure
-   or cancellation writes end the run and finalize the report after the enclosing
-   tool result has been observed. The report remains local; the authenticated
+   or cancellation writes end the run and finalize the report at the terminal
+   ledger write. Failed run-bound Archive responses are retained too; unknown
+   diagnostic content keeps measurement incomplete. The report remains local; the authenticated
    server proof binds its hash to this Archive run, revision and existing Vera
    userID. Receipt retries preserve professional output bytes and the report hash.
    If transmission is prohibited, save `model_data_report_options.json` with

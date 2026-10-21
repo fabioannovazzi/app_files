@@ -40,6 +40,10 @@
       "sha256": "4c406591ebadde0f6642202a7396c5bd6aebce22cdc561a24c5980d10eaa02e1"
     },
     {
+      "path": "modules/studio-archive/scripts/archive_error_reporting.py",
+      "sha256": "1e6b75417003089eec78c1a36fafbb63af0935e3ea48d8e91314b510cc9080d4"
+    },
+    {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086"
     },
@@ -53,7 +57,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "181123d87c5deda2628f1d961f95fa33c0ae4c318356ca3301a3d9383adc4c9a"
+      "sha256": "5dde16cb772dadcb0df10f753d3c72ac18943200a9af91c208bad6937638e635"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -77,7 +81,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "da35230750ec44d993bb34aa047837aef936b6675d07670def4e9732a92373ab"
+      "sha256": "dc6f7333e57e1ea93480138f4379fa41eae4d482e1b99e9ee2e26dcfc1154ae4"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
@@ -682,5 +686,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3d924696771c357b323d13b237e41a476e1249c8289c9c365b7f3825bf272d97"
+  "canonical_course_sha256": "5c95cbc4df3332dc742887b73ef70309858a5065d9d64db6814409f59d381e18"
 }
