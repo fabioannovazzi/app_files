@@ -626,7 +626,10 @@ def _validate_engagement_manifest(
     )
     _text(normalized["label"], label="engagement label", maximum=160)
     _text(normalized["created_at"], label="created_at", maximum=80)
-    if normalized["status"] not in {"open", "closed"}:
+    if not isinstance(normalized["status"], str) or normalized["status"] not in {
+        "open",
+        "closed",
+    }:
         raise LedgerError("Engagement status is invalid.")
     closed_at = normalized["closed_at"]
     if normalized["status"] == "open" and closed_at is not None:
@@ -853,7 +856,10 @@ def _validate_input_receipt(
         normalized["engagement_id"], label="engagement_id", pattern=_ENGAGEMENT_ID_RE
     )
     _identifier(normalized["input_id"], label="input_id", pattern=_INPUT_ID_RE)
-    if normalized["role"] not in IMPORT_ROLES:
+    if (
+        not isinstance(normalized["role"], str)
+        or normalized["role"] not in IMPORT_ROLES
+    ):
         raise LedgerError("Input receipt role is invalid.")
     for key in ("stored_name", "original_name"):
         name = _text(normalized[key], label=key, maximum=255)
@@ -1339,7 +1345,7 @@ def _validate_artifact_record(record: Mapping[str, Any]) -> dict[str, Any]:
         "byte_count",
         "sha256",
     }
-    if set(record) != required:
+    if not isinstance(record, Mapping) or set(record) != required:
         raise LedgerError("Artifact declaration shape is invalid.")
     artifact_id = _text(record["artifact_id"], label="artifact_id", maximum=120)
     if _ARTIFACT_ID_RE.fullmatch(artifact_id) is None:
@@ -1347,7 +1353,7 @@ def _validate_artifact_record(record: Mapping[str, Any]) -> dict[str, Any]:
     path = _relative_path(record["path"], label="artifact path")
     purpose = _text(record["purpose"], label="artifact purpose", maximum=500)
     audience = record["audience"]
-    if audience not in ARTIFACT_AUDIENCES:
+    if not isinstance(audience, str) or audience not in ARTIFACT_AUDIENCES:
         raise LedgerError("Artifact audience is invalid.")
     media_type = _text(record["media_type"], label="artifact media_type", maximum=160)
     byte_count = record["byte_count"]
@@ -1505,7 +1511,10 @@ def _validate_input_manifest(payload: Mapping[str, Any]) -> dict[str, Any]:
             raise LedgerError("Run input source paths must be unique.")
         if execution_path in seen_execution_paths:
             raise LedgerError("Run execution input paths must be unique.")
-        if item["kind"] not in {"import", "upstream_artifact"}:
+        if not isinstance(item["kind"], str) or item["kind"] not in {
+            "import",
+            "upstream_artifact",
+        }:
             raise LedgerError("Run input binding kind is invalid.")
         _text(item["role"], label="input role", maximum=80)
         if (
@@ -1610,7 +1619,10 @@ def _validate_run_manifest(payload: Mapping[str, Any]) -> dict[str, Any]:
         or _SHA256_RE.fullmatch(payload["input_manifest_sha256"]) is None
     ):
         raise LedgerError("Run input manifest digest is invalid.")
-    if payload["status"] not in RUN_LIFECYCLE_STATES:
+    if (
+        not isinstance(payload["status"], str)
+        or payload["status"] not in RUN_LIFECYCLE_STATES
+    ):
         raise LedgerError("Run status is invalid.")
     for key in ("created_at", "updated_at"):
         _text(payload[key], label=key, maximum=80)
@@ -1633,6 +1645,7 @@ def _validate_run_manifest(payload: Mapping[str, Any]) -> dict[str, Any]:
         if (
             not isinstance(event, dict)
             or set(event) != {"status", "at"}
+            or not isinstance(event["status"], str)
             or event["status"] not in RUN_LIFECYCLE_STATES
         ):
             raise LedgerError("Run status history entry is invalid.")
@@ -1713,23 +1726,24 @@ def _load_run_paths(
     )
 
 
-def load_run(
+def _load_run_identity(
     client_root: Path,
     engagement_id: str,
     run_id: str,
-    *,
-    verify_inputs: bool = True,
 ) -> dict[str, Any]:
-    """Replay one run and materialize its current absolute paths."""
-
+    """Verify durable ownership without requiring damaged work inputs to be usable."""
     root = _ordinary_directory(client_root, label="client folder")
     client = load_client_manifest(root)
-    engagement = load_engagement_manifest(root, engagement_id)
+    load_engagement_manifest(root, engagement_id)
     run_root, run_path, input_path, context_path = _load_run_paths(
         root, engagement_id, run_id
     )
     run = _validate_run_manifest(_read_json(run_path, label="run manifest"))
-    if run["client_id"] != client["client_id"] or run["engagement_id"] != engagement_id:
+    if (run["client_id"], run["engagement_id"], run["run_id"]) != (
+        client["client_id"],
+        engagement_id,
+        run_id,
+    ):
         raise LedgerError("Run belongs to another client or engagement.")
     inputs = _validate_input_manifest(
         _read_json(input_path, label="run input manifest")
@@ -1742,6 +1756,32 @@ def load_run(
     ):
         raise LedgerError("Run input manifest does not match the run.")
     context = _validate_context(_read_json(context_path, label="run context"), run)
+    return {
+        "run": run,
+        "input_manifest": inputs,
+        "context": {**context, "input_bindings": []},
+        "run_root": str(run_root),
+        "output_dir": str(run_root / "outputs"),
+        "context_path": str(context_path),
+    }
+
+
+def load_run(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    *,
+    verify_inputs: bool = True,
+) -> dict[str, Any]:
+    """Replay one executable run, validating its bound inputs and current paths."""
+    loaded = _load_run_identity(client_root, engagement_id, run_id)
+    root = client_root.resolve()
+    client = load_client_manifest(root)
+    run_root = Path(loaded["run_root"])
+    run_path = run_root / "run.json"
+    input_path = run_root / "input_manifest.json"
+    context_path = Path(loaded["context_path"])
+    run, inputs, context = loaded["run"], loaded["input_manifest"], loaded["context"]
     resolved_bindings: list[dict[str, Any]] = []
     for binding in inputs["inputs"]:
         source = _contained_input_path(root, root / binding["source_relative_path"])
@@ -2323,8 +2363,17 @@ def _reporting_runtime() -> ModuleType:
     return module
 
 
-def retry_reporting(client_root: Path) -> None:
+def retry_reporting(
+    client_root: Path, *, engagement_id: str | None = None, run_id: str | None = None
+) -> None:
     """Recover interrupted terminal writes and retry proofs on ordinary Archive use."""
+    if (engagement_id is None) != (run_id is None):
+        raise LedgerError("Report recovery needs both engagement and run identity.")
+    selected_root = None
+    if engagement_id is not None and run_id is not None:
+        _identifier(engagement_id, label="engagement_id", pattern=_ENGAGEMENT_ID_RE)
+        _identifier(run_id, label="run_id", pattern=_RUN_ID_RE)
+        selected_root = _run_root(client_root, engagement_id, run_id)
     if not _reporting_runtime().selective_reporting_enabled():
         return
     from archive_report_receipt import retry_pending
@@ -2337,11 +2386,13 @@ def retry_reporting(client_root: Path) -> None:
     )
     if not registry.path.is_file():
         return
-    for run_root in registry.terminal_runs(client_root=client_root):
+    for run_root in registry.terminal_runs(
+        client_root=client_root, run_root=selected_root
+    ):
         engagement_id = run_root.parents[1].name
         try:
             with _engagement_lock(client_root, engagement_id):
-                loaded = load_run(client_root, engagement_id, run_root.name)
+                loaded = _load_run_identity(client_root, engagement_id, run_root.name)
                 if loaded["run"]["status"] in {"completed", "failed", "cancelled"}:
                     _reporting_runtime().finish_report(loaded)
         except (
@@ -2359,7 +2410,7 @@ def retry_reporting(client_root: Path) -> None:
             )
         # Failed records must not monopolize the bounded recovery batch.
         registry.recovery_attempted(run_root)
-    retry_pending(registry, strict=False)
+    retry_pending(registry, strict=False, run_root=selected_root)
 
 
 def _finish_terminal_reporting(loaded: dict[str, Any]) -> dict[str, Any]:
@@ -2398,7 +2449,13 @@ def _write_run_status_locked(
     reason: str | None = None,
 ) -> dict[str, Any]:
     engagement = load_engagement_manifest(client_root, engagement_id)
-    loaded = load_run(client_root, engagement_id, run_id)
+    # Failure/cancellation must remain recordable when execution inputs fail.
+    # Ownership and sealed metadata still validate; execution/completion retain
+    # the full input-byte checks through load_run and validate_run_artifacts.
+    loader = (
+        _load_run_identity if target_status in {"failed", "cancelled"} else load_run
+    )
+    loaded = loader(client_root, engagement_id, run_id)
     run = loaded["run"]
     current = run["status"]
     if target_status == current:
@@ -2433,7 +2490,7 @@ def _write_run_status_locked(
         ],
     }
     _write_json(Path(loaded["run_root"]) / "run.json", updated)
-    loaded = load_run(client_root, engagement_id, run_id)
+    loaded = loader(client_root, engagement_id, run_id)
     if target_status in {"completed", "failed", "cancelled"} and current in {
         "running",
         "ready_for_review",

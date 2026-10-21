@@ -412,11 +412,12 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     )
     monkeypatch.setattr(operational_incidents, "workflow_transport", transport)
 
-    # A normal Archive operation retries automatically; no Stop hook or agent
-    # calling the receipt transport is required.
-    archive_core._selected_ledger_root(
+    # Resuming the exact completed run retries automatically, without requiring
+    # unrelated client operations to recover its report or call the transport.
+    archive_core.complete_studio_client_workflow(
         client_case.client_id,
         client_case.engagement_id,
+        loaded["run"]["run_id"],
         state_dir=client_case.state_dir,
     )
 

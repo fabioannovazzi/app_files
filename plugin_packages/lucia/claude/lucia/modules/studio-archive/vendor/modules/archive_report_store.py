@@ -384,7 +384,9 @@ class Registry:
                 (run_id, now()),
             )
 
-    def terminal_runs(self, *, client_root: Path | None = None) -> list[Path]:
+    def terminal_runs(
+        self, *, client_root: Path | None = None, run_root: Path | None = None
+    ) -> list[Path]:
         """Find written terminal transitions whose local collection did not finish."""
         with self.transaction() as connection:
             roots = [
@@ -392,7 +394,10 @@ class Registry:
                 for row in connection.execute(
                     "SELECT r.run_root FROM runs r LEFT JOIN recovery_attempts a "
                     "ON a.run_id=r.run_id WHERE r.active=1 "
-                    "ORDER BY COALESCE(a.checked_at,''),r.rowid"
+                    "AND (? IS NULL OR r.run_root=?) "
+                    "ORDER BY COALESCE(a.checked_at,''),r.rowid",
+                    (self._stored_root(run_root) if run_root is not None else None,)
+                    * 2,
                 )
             ]
         result = []
@@ -411,7 +416,7 @@ class Registry:
                     "An unreadable Archive transition could not be recovered"
                 )
                 continue
-            if status in {
+            if isinstance(status, str) and status in {
                 "completed",
                 "failed",
                 "cancelled",
@@ -438,12 +443,16 @@ class Registry:
                 (status, now(), self._stored_root(root)),
             )
 
-    def pending_receipts(self) -> list[Path]:
+    def pending_receipts(self, *, run_root: Path | None = None) -> list[Path]:
         with self.transaction() as connection:
             return [
                 self._current_root(row["run_root"])
                 for row in connection.execute(
-                    "SELECT r.run_root FROM runs r JOIN receipt_queue q ON r.run_id=q.run_id WHERE r.active=0 AND q.status='pending' ORDER BY q.checked_at LIMIT 3"
+                    "SELECT r.run_root FROM runs r JOIN receipt_queue q ON r.run_id=q.run_id "
+                    "WHERE r.active=0 AND q.status='pending' AND (? IS NULL OR r.run_root=?) "
+                    "ORDER BY q.checked_at LIMIT 3",
+                    (self._stored_root(run_root) if run_root is not None else None,)
+                    * 2,
                 )
             ]
 

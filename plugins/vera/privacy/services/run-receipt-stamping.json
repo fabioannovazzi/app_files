@@ -25,7 +25,8 @@
         "Verification proves the stored report hash, authenticated Vera installation/machine binding, Archive run, revision and server time. It does not identify a natural person or establish provider-side receipt, correctness of measurements, analytical correctness or GDPR compliance.",
         "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link.",
         "The general verify command delegates schema-3 receipts to the same Archive verifier, defaults the expected owner to the existing local Vera installation identity, and requires exact agreement between the local receipt and the retained server proof. An explicit expected userID is supported for verification. Neither command rewrites the closed report or its professional artifacts. Legacy schema-1 and schema-2 verification remains independent of local installation credentials.",
-        "A saved terminal lifecycle transition remains acknowledged when local report generation or resealing fails. Report files are not deleted as a recovery action, unavailable reporting is acknowledged separately, and same-run retry finishes reporting without recalculation or duplicate lifecycle transitions. A partially written local report is not claimed as final before generation and resealing finish. Terminal recovery attempts are isolated and rotated locally; closure occurs after the local report and reseal succeed. Post-tool recording failures return operation, failure stage and a validated opaque run ID where available while withholding unrecorded case content. These metadata acknowledgements add no hosted recipient or server payload field."
+        "A saved terminal lifecycle transition remains acknowledged when local report generation or resealing fails. Report files are not deleted as a recovery action, unavailable reporting is acknowledged separately, and same-run retry finishes reporting without recalculation or duplicate lifecycle transitions. A partially written local report is not claimed as final before generation and resealing finish. Terminal recovery attempts are isolated and rotated locally; closure occurs after the local report and reseal succeed. Post-tool recording failures return operation, failure stage and a validated opaque run ID where available while withholding unrecorded case content. These metadata acknowledgements add no hosted recipient or server payload field.",
+        "Ordinary operations recover only the exact selected client/engagement/run; unrelated pending report locks and server requests are not prerequisites. Explicit maintenance retains the bounded independent recovery queue. Failed or cancelled runs may close using sealed ownership and retained observation evidence even when original or execution input bytes are unavailable. Execution, completion and professional-artifact seals retain their full integrity checks. No new recipient, payload field or source-file transmission is introduced."
       ]
     }
   ],
@@ -87,7 +88,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4c555b0d84d527d8a7d068a96c7e735541f8b0b8349f27b8abf912e61ccf869d"
+    "source_fingerprint": "d66bf6d42e5054e2eeeaec754b204c543134ff91bf0197757a222c00137dfffa"
   },
   "runtime_profiles": [
     "openai-codex",

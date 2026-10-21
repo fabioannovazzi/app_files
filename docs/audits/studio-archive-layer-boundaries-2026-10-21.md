@@ -448,3 +448,78 @@ separate chat; a separate native window was not verified.
 Automatic visible delivery, reopening without recalculation, accounting output
 correctness and independent live correct-user server verification are still
 pending for this replacement run. The overall 13-pipeline goal remains active.
+
+## Follow-up after the combined implementation merged
+
+The user stopped the replacement test and paused this review while the other
+implementation finished. PRs #887 and #888 were then merged. The subsequent
+instruction authorizes repairs and deployment, explicitly stopping before any
+Codex or Cowork acceptance test is restarted. This phase begins from clean main
+`3957f0003406c8bcf7795dc8ccfcea3fb1c16df6`; production was independently observed
+at that same revision. The 13-pipeline acceptance goal is not complete.
+
+Four remaining source defects were confirmed:
+
+- Ordinary selected operations synchronously recovered unrelated runs belonging
+  to the same client, taking their engagement/report locks and making server
+  calls before the requested work. Recovery now selects the exact client,
+  engagement and run path before applying either recovery queue's batch limit.
+  Operations without a selected run do not initiate unrelated recovery. Explicit
+  maintenance can still process the independent bounded queue.
+- Failure and cancellation used the execution loader, so missing or changed input
+  bytes prevented recording the failure itself and generating its final report.
+  A shared metadata reader now validates the sealed client/engagement/run/input
+  manifest and context identities without opening execution input bytes. Only
+  failure, cancellation and already-terminal reporting recovery use that reader
+  alone. Execution and completion retain complete input and artifact checks.
+  Run ownership now also compares the requested run ID with its manifest.
+- JSON arrays or objects in a run status raised an uncaught TypeError outside
+  per-record isolation. Mechanical type validation now returns the existing
+  invalid-record result. Equivalent enum fields and artifact-record shapes have
+  explicit type checks; damaged records remain unchanged and healthy siblings
+  remain visible.
+- Exact alias lookup could label a damaged portable client as registered and
+  the result complete. It now carries the same blocked-record and directory
+  completeness evidence as client listing, retaining a known alias as evidence
+  without representing the folder as usable.
+
+The initial focused regressions reproduced eight failures, with one already
+passing null-status case (`/private/tmp/vera-recovery-boundaries-before.log`).
+The first repaired two-suite selection passed 68 checks. Expanded regressions
+include sibling receipt isolation, exact engagement/run recovery, retained report
+recovery after input loss, and rejection of completion with damaged inputs.
+The expanded Archive selection passed **189 checks**, five SWIG warnings,
+in 14.96 seconds (`/private/tmp/vera-recovery-boundaries-regressions.log`).
+
+One wider command named nonexistent adoption/concurrency test files and collected
+no tests. It was corrected to the repository's actual test names; production code
+was not changed for this harness mistake. The source type and security checks
+passed for the four changed implementation modules.
+
+Candidate versions are Vera **0.1.473**, Clara **0.1.338**, Lucia **0.1.163** and
+Studio Archive **0.1.66**. The privacy-surface review inspected the changed recovery
+selection, identity-only lifecycle reader, error projection and unchanged server
+transport. There is no additional recipient, server payload field, document
+transmission, model call or professional approval. Twenty-three affected source
+review fingerprints were individually refreshed after inspecting their governed
+paths; course changes regenerate source bindings without changing teaching
+content. The three product privacy registers validate. Build, broader coverage,
+hosted CI and deployment evidence are recorded separately when complete.
+
+No normal-chat test, installation acceptance, Marketplace publication or live
+test receipt verification is performed by this follow-up phase.
+
+The first automatic-reporting coverage run passed 302 checks but found one test
+still invoking the private client-level lookup to retry unrelated reports. That
+expectation conflicts with the repaired recovery boundary. The test now resumes
+the exact completed run through the public completion API. It passes while
+retaining authenticated server proof, unchanged report/professional-output bytes,
+signature verification, wrong-user rejection and altered-report rejection. No
+production behavior was changed to satisfy the old assertion. Reporting coverage
+was 84.67%; the complete selection is being repeated with the corrected test.
+
+All three product builds completed with matching Codex, Cowork and Antigravity
+versions. The generated course changes were checked to affect source bindings
+and their indexes only. The public OpenAI published-version manifest is unchanged.
+Final package validation, hosted CI and production verification remain merge and
+deployment requirements, not substitutes for the stopped acceptance campaign.

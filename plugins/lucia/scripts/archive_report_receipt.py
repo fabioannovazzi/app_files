@@ -212,9 +212,11 @@ def stamp_report(report_path: Path) -> dict[str, Any]:
         return {"status": "pending", "reason": type(exc).__name__}
 
 
-def retry_pending(registry: Registry, *, strict: bool = True) -> None:
+def retry_pending(
+    registry: Registry, *, strict: bool = True, run_root: Path | None = None
+) -> None:
     """Retry retained terminal reports; never regenerate or rerun professional work."""
-    for root in registry.pending_receipts():
+    for root in registry.pending_receipts(run_root=run_root):
         try:
             _retry_one(registry, root)
         except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
