@@ -55,9 +55,9 @@
   "security_controls": [],
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a896ec8a08ac8e85324a6fb84531f9a1998569e3aa5be335b2178f01c36fd313"
+    "source_fingerprint": "67d296eeb99c5129b09233ffbaff7b6acd76f95d85098ba97e8519e7ced0ff75"
   },
   "service_ids": [
     "cnc-authenticated-review",

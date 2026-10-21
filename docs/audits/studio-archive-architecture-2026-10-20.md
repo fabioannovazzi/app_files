@@ -113,6 +113,9 @@ client ambiguity and professional interpretation remain agent judgments.
 | A53 | MCP review transaction context recovery | The real three-invoice public-MCP integration passes save, but apply fails assurance replay. Temporary diagnostic instrumentation identifies `current Open-item Reconciliation customer-run context is unavailable`: the Python resolver recognizes `.audit-review-transaction-` browser copies but not `.generated-review-transaction-` MCP copies. | A valid managed run cannot apply its review through the public MCP route, even with the correct interpreter. | Admit both producer-owned working-copy forms only at their existing locations inside the same run. Portable client/run identity and source receipts still revalidate. | Different internal transaction names do not establish a different client or invalid source. |
 | A54 | Retaining an empty predecessor directory | After A53, the same integration fails with `Review transaction changed an unauthorized directory` for the predecessor's empty `.open_item_reconciliation_cache`. The Python producer retains the full snapshot but returns only its file paths to the MCP transaction validator. | Correct snapshot preservation is rejected because its empty directory has no file from which the validator can infer the directory. | Return the freshly replayed history's directory list as well as its files, and validate their actual directory types before promotion. The three-invoice public save/apply integration then passes. | Preserve exact predecessor contents, including empty directories; do not treat their absence from a files-only list as evidence of an unauthorized change. |
 | A55 | Partial-payment report readiness | The integrated public save/apply and native regeneration succeeds with all mechanical checks and semantic review passed, but `report_ready=false`. The gate independently rejects every allocation with `balanced=false`, including the verified EUR 300 payment on an EUR 800 invoice retaining EUR 500 outstanding. | A correct partial settlement cannot become a ready report, despite being a central result of this workflow. | Carry the exact partial-ledger IDs already rederived from source evidence into gate evaluation. Their retained residual is allowed; unbound imbalances and claimed full closures remain checked. The real public save/apply and native regeneration integration reaches final_ready/report_ready with source files and retained predecessor files unchanged. False full closure and erased residual regressions also pass. | An unpaid residual is an accounting result, not by itself an arithmetic or evidence failure. |
+| A56 | Ordinary decimal tolerance rejected during preparation | Fresh 0.1.455 chat supplies the exact string `amount_tolerance="0.00"`; the producer rejects it with `amount_tolerance must be canonical Decimal text`. The existing calculation helper accepts that same value as exact zero, while the preparation layer requires the already-canonical serialization `"0"`. A public preparation regression reproduces the rejection. | The run stops before producing Excel/Word and never exercises the repaired public review. | Reuse the calculation's exact finite non-negative parser at intake and serialize its result canonically. Receipt replay still requires the stored canonical form. Seventeen focused tolerance checks pass, including negative, non-finite, ambiguous and binary-float rejection. Full candidate checks and installed acceptance remain pending. | Canonical storage does not require rejecting equivalent exact input notation; normalization changes no tolerance or accounting decision. |
+| A57 | Calculation parameter treated as an unowned accounting figure | After A56 normalization, the temporary public integration rejects the Word tolerance paragraph as a material figure outside a workflow-owned table. A nonzero tolerance also reproduces the corresponding Excel failure for its Assumptions value. The validators demand source-record ownership for a declared calculation parameter. | Valid explicit tolerances prevent delivery of the generated documents. This was found in candidate integration, not in a resumed normal chat. | Carry the canonical prepared tolerance into rendering. Match the renderer-owned parameter line and Assumptions cell against that exact sealed value, separately from source-record figures. Twenty-six focused tolerance/report tests pass, including all five languages and changed or erased values in both Word and Excel. The existing arbitrary-figure and source-formula checks remain. | Parameter identity is established by its sealed input value; treating it as an invoice amount is a false classification. |
+| A58 | Failed-run report linked but not displayed | The completed 0.1.455 chat's final answer contains a report link and an incomplete-measurement notice, but no readable report body. No saved-report show command appears in that turn. Archive already returns `vera_reporting.display_markdown`, and the existing generic contract requires displaying it. | Saving and signing succeeded, but the transcript does not establish the required inline delivery. | Clarify the Vera-specific reporting reference: show the actual returned Markdown even for an incomplete failed-run report, with links in addition, and use the saved-report reader when the returned text is unavailable. Report generation and the shared Archive implementation are unchanged. Fresh normal-chat delivery remains unproved. | This is an observed handoff failure, not evidence of a missing report or invalid server signature. Clearer instructions alone are not acceptance evidence. |
 
 | B01 | Release evidence | `build_product_release.py vera clara lucia` stopped at privacy contract generation: reviewed fingerprints still described the previous source. | No candidate package was produced at that step. | Completed the source-delta review below, corrected three disclosure manifests and refreshed 40 affected review fingerprints. All three product privacy registers now validate; contract generation passes. No installed acceptance follows from this result. | Release disclosures must describe the governed source; this build check is separate from ordinary client execution. |
 | B02 | Release evidence | The next build stopped at the generated course-catalogue freshness check, first at Vera's `bilancio-oic/course.json`. Regeneration then invalidated the dependent Vera onboarding, Clara teaching/course-files and Lucia course-files fingerprints. | Packaging did not reach ZIP generation during those attempts. | Regenerated the existing authoring corpus; all 20 changed course JSON files changed only SHA-256 provenance fields. Reviewed that delta, refreshed the four dependent records and rebuilt successfully. | Generated course source references must match their declared source; this is a release check, not an ordinary client execution prerequisite. |
@@ -932,3 +935,64 @@ It changes 132 of 2,186 files relative to the verified installed 0.1.454 source,
 with no added or removed files. All 72 preserved historical source/run files
 still match their recorded hashes. Installation, exact-commit CI, deployment
 and fresh normal-chat acceptance remain pending. No Marketplace action occurred.
+
+## Fresh 0.1.455 test-two outcome and tolerance repair
+
+Commit `37f25304c176d32382cade01ab0e3ae956fbc64f` was pushed to PR #885.
+The supported installation command installed 0.1.455; all 2,183 cached plugin
+files matched its ZIP and the independent fresh GPT-6.1 Sol chat
+`01a15bc3-2e67-7993-82a4-9f58c31490ff` verified its actually exposed skill.
+Task `64eb16a2-a498-43f4-8f25-c15c2703042e`, run
+`run_a9be36c3363f4dbeb0768f5c`, stopped at A56. Both run and task are failed;
+no Excel/Word was produced and no other test started. The run's 14 files have
+an independent preservation baseline. The complete interruption log remains in
+the test chat's `outputs/resoconto-test-02.txt`.
+
+The automatic failed-run report remains explicitly incomplete because its error
+emission has no source coordinates. Independent server verification confirms
+report SHA-256 `0ff71889f4576265c9cf53b2fca41fb6f52807ca5670f278267539cc248ce281`,
+receipt `af0f9e80-24b8-5311-ad74-53be195fc640`, revision 1, bound to this exact
+run and userID `0ed4a818-1877-4652-8515-787c64de17a5`. The test read CSVs through
+the shell before the producer; the report explicitly covers Vera-sent data and
+does not claim to measure those shell reads. Task metadata was acknowledged;
+the separate diagnostic remains queued locally, and no historical queue was
+flushed. Recovery of a shell UUID command, a guessed nonexistent reference,
+truncated diagnostic reads, nonblocking Archive inventory warnings and a granted
+sandbox write are recorded in the test's log.
+
+The 0.1.456 candidate normalizes tolerance input, carries that exact prepared
+value into rendering, and verifies its Word/Excel presentation against the sealed
+parameter rather than an accounting-record formula. Canonical receipt parsing
+is unchanged. The repair adds no recipient or model-facing data field; the
+parameter was already part of the generated documents. Other source changes
+are version/generated release metadata.
+The existing full public review integration now uses `"0.00"` as its input, so
+its next run must complete review and regeneration using the observed notation.
+Acceptance remains **1 of 13**; test 2 stays stopped until the candidate is ready.
+
+The final accounting repair passes **420 component tests with 81.76% coverage**,
+26 focused tolerance cases and all eight public Archive/review/projection cases.
+The latter now uses `"0.00"` through complete save/apply and regeneration. Static
+checks pass. The first rebuilt 0.1.456 package also passed all-host parity and
+481 package/privacy/update tests (two skips); it must be rebuilt once more after
+the A58 handoff clarification. The final clarification updates the Vera-specific
+reporting reference. The measured report body, terminal response shape, recipients,
+source-coordinate mapping and accounting calculation are unchanged, and no
+execution gate is added. All 86 preserved files remain unchanged.
+
+The A58 implementation briefly changed shared Archive descriptions, then an
+incorrectly selected generated runtime copy. The build synchronization removed
+that generated-copy edit and exposed its stale review fingerprint. Those two
+unreleased approaches were discarded; the final delta is the Vera-owned delivery
+reference. This is a coordinator implementation mistake, not an installed workflow
+failure. Inline delivery remains an open normal-chat acceptance check.
+
+Final 0.1.456 build and parity now pass for every host. The final source also
+passes 59 automatic-reporting checks; the final package/privacy/update suite
+passes 481 tests with two skips. Candidate ZIP SHA-256 is
+`36e322d01eb42a74180fda1a54ad3d7377deedce3192ec67797a9bb4a4d9e4ba`.
+Its 130-file delta against the verified installed 0.1.455 package contains no
+added or removed files; only the four Open-item tolerance implementation files
+are executable changes. Installation and fresh normal-chat acceptance remain
+pending. The report-delivery clarification is guidance whose effect must be
+observed in that next chat, not an accepted delivery fix.

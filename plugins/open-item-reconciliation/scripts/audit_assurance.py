@@ -109,7 +109,12 @@ from typing import Any
 
 from defusedxml import ElementTree as ET
 from docx import Document
-from locale_support import canonical_word_label
+from locale_support import (
+    SUPPORTED_LANGUAGES,
+    amount_tolerance_line,
+    canonical_word_label,
+    output_labels,
+)
 from openpyxl import load_workbook
 from openpyxl.utils import coordinate_to_tuple, get_column_letter
 
@@ -122,6 +127,7 @@ from reconciliation_helpers import (  # noqa: E402
     document_key,
     reconcile_open_items,
     reconciliation_checks,
+    validated_tolerance,
 )
 
 
@@ -562,22 +568,16 @@ def _review_metadata(
 
 
 def _validated_tolerance(value: object, *, label: str = "amount_tolerance") -> str:
-    """Return a canonical non-negative tolerance, preserving exact zero."""
+    """Normalize exact input syntax for sealing, without changing its value."""
 
-    if isinstance(value, (bool, float)) or not isinstance(value, (str, int, Decimal)):
-        raise AssuranceRunError(f"{label} must be canonical Decimal text")
-    normalized = (
-        decimal_text(Decimal(value))
-        if isinstance(value, (int, Decimal)) and not isinstance(value, bool)
-        else value
-    )
     try:
-        parsed = parse_canonical_decimal(normalized, label=label)
+        # Use the calculation's exact parser at intake. Receipt replay below
+        # still compares the stored text with this canonical representation.
+        return decimal_text(validated_tolerance(value))
     except ValueError as exc:
-        raise AssuranceRunError(str(exc)) from exc
-    if parsed < 0:
-        raise AssuranceRunError(f"{label} cannot be negative")
-    return decimal_text(parsed)
+        raise AssuranceRunError(
+            f"{label} must be an exact finite non-negative decimal"
+        ) from exc
 
 
 def _json_safe(value: Any, *, label: str = "value") -> Any:
@@ -2073,6 +2073,7 @@ def prepare_assurance_run(
         "source_qualifications": normalized_qualifications,
         "implementation_receipts": normalized_implementation,
         "prepared_receipt": prepared_receipt,
+        "prepared_assumptions": prepared_assumptions,
         "run_date": run_date,
         "professional_review_authority": normalized_review_authority,
         "review_transition_receipts": review_transition_receipts,
@@ -4842,6 +4843,19 @@ def _native_rendered_value_addresses(
     request_amount_headers = {c["headers"]["amount"] for c in request_text.values()}
     reconciliation_by_id = {str(row["record_id"]): row for row in reconciliation_rows}
     record_rows = [*support_rows, *reconciliation_rows]
+    # A declared calculation parameter is not a source-record amount. Match
+    # only the exact renderer-owned line for the sealed value, in each locale.
+    tolerance_lines = {
+        amount_tolerance_line(prepared["assumptions"]["amount_tolerance"], language)
+        for language in SUPPORTED_LANGUAGES
+    }
+    tolerance_prefixes = tuple(
+        amount_tolerance_line("", language) for language in SUPPORTED_LANGUAGES
+    )
+    parameter_labels = [output_labels(language) for language in SUPPORTED_LANGUAGES]
+    assumption_sheets = {"Assumptions", *(x["assumptions"] for x in parameter_labels)}
+    parameter_headers = {x["metadata_field"] for x in parameter_labels}
+    value_headers = {x["metadata_value"] for x in parameter_labels}
     addresses: list[dict[str, Any]] = []
     for name in sorted(native_names):
         receipt = by_name[name]
@@ -4865,17 +4879,37 @@ def _native_rendered_value_addresses(
                         for i, label in enumerate(headers)
                         if label in request_id_headers
                     ]
+                    parameter_columns = [
+                        i
+                        for i, label in enumerate(headers)
+                        if label in parameter_headers
+                    ]
                     for row in rows[1:]:
                         values = [cell.value for cell in row]
                         owner_refs = _row_record_refs(values, record_rows)
                         for index, cell in enumerate(row):
+                            header = headers[index] if index < len(headers) else ""
+                            if (
+                                sheet.title in assumption_sheets
+                                and header in value_headers
+                                and len(parameter_columns) == 1
+                                and canonical_word_label(values[parameter_columns[0]])
+                                == "amount_tolerance"
+                            ):
+                                if (
+                                    str(cell.value)
+                                    != prepared["assumptions"]["amount_tolerance"]
+                                ):
+                                    raise AssuranceRunError(
+                                        "reported amount tolerance differs from sealed tolerance"
+                                    )
+                                continue
                             value = _rendered_money(
                                 cell.value,
                                 material_column=index in material_columns,
                             )
                             if value is None:
                                 continue
-                            header = headers[index] if index < len(headers) else ""
                             if (
                                 name == "richieste_mirate_evidenze.xlsx"
                                 and header in request_amount_headers
@@ -4934,6 +4968,12 @@ def _native_rendered_value_addresses(
         elif path.suffix.lower() == ".docx":
             document = Document(path)
             for paragraph_index, paragraph in enumerate(document.paragraphs):
+                if paragraph.text.startswith(tolerance_prefixes):
+                    if paragraph.text not in tolerance_lines:
+                        raise AssuranceRunError(
+                            "reported amount tolerance differs from sealed tolerance"
+                        )
+                    continue
                 if _material_text_values(paragraph.text):
                     raise AssuranceRunError(
                         f"{name} contains a material figure outside a "

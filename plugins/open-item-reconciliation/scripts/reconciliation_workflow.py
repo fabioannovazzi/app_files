@@ -361,6 +361,13 @@ def build_reconciliation_artifacts(
         review_rows=review_rows,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
+    if "amount_tolerance" in assumptions:
+        assumptions = {
+            **assumptions,
+            "amount_tolerance": assurance_context["prepared_assumptions"][
+                "amount_tolerance"
+            ],
+        }
     review_authority = assurance_context.get("professional_review_authority")
     successor_run_id = (
         str(review_authority.get("run_id"))

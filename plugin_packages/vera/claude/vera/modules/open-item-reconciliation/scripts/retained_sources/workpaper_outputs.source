@@ -24,12 +24,18 @@ from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 try:
-    from .locale_support import canonical_word_label, output_labels, word_output_label
+    from .locale_support import (
+        amount_tolerance_line,
+        canonical_word_label,
+        output_labels,
+        word_output_label,
+    )
 except ImportError:  # pragma: no cover - retained top-level loader support
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
     from locale_support import (  # type: ignore
+        amount_tolerance_line,
         canonical_word_label,
         output_labels,
         word_output_label,
@@ -966,6 +972,8 @@ def _fallback_label(value: object) -> str:
 
 def _field_label(field: object, language: str) -> str:
     value = str(field or "")
+    if value == "amount_tolerance":
+        return str(word_output_label(value, _language_code(language)))
     labels = _locale_catalog(language, ITALIAN_FIELD_LABELS, SPANISH_FIELD_LABELS)
     if not labels:
         return value
@@ -2764,9 +2772,14 @@ def write_word_report(
 
     doc.add_heading(labels["assumptions"], level=1)
     for key, value in _report_assumptions(assumptions).items():
+        line = (
+            amount_tolerance_line(str(value), language)
+            if key == "amount_tolerance"
+            else f"{word_output_label(_field_label(key, language), language)}: "
+            f"{word_output_label(_localize_value(key, value, language), language)}"
+        )
         paragraph = doc.add_paragraph(
-            f"{word_output_label(_field_label(key, language), language)}: "
-            f"{word_output_label(_localize_value(key, value, language), language)}",
+            line,
             style="List Bullet",
         )
         _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)

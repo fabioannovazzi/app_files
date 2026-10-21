@@ -90,6 +90,7 @@ def reconciled_case(archive_core, client_case, tmp_path):
                 "assurance_run_date": "2026-10-20",
                 "scope_year": 2026,
                 "cutoff_date": "2026-09-30",
+                "amount_tolerance": "0.00",
                 "post_cutoff_events_excluded": False,
                 "reviewed_source_decisions": decisions,
             }
