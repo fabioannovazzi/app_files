@@ -1,0 +1,36 @@
+{
+  "projection_of": "Final native reconciliation_results.json; selected fields only",
+  "canonical_sha256": "01bde82fb18ee2266515add61238898e20036d57960d7f44dcf261032e5dee6c",
+  "rows": [
+    {
+      "document_no": "FT-2026-0141",
+      "party_ref": "Zeta Cumulo Srl",
+      "amount": "366",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved"
+    },
+    {
+      "document_no": "FT-2026-0142",
+      "party_ref": "Zeta Cumulo Srl",
+      "amount": "244",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved"
+    }
+  ],
+  "allocation_ledgers": [],
+  "gates": {
+    "preparation": "passed",
+    "publication": "withheld",
+    "reconciliation": "passed",
+    "reporting": "blocked",
+    "semantic_review": "failed",
+    "source": "passed"
+  },
+  "report_ready": false,
+  "semantic_initial_status": "missing_evidence",
+  "semantic_batch_count": 0,
+  "freeze_manifest_sha256": "ed89c96e9cda1a19b93508d80bf42c99ddcdc70da305f23105fdf83625c6e572",
+  "frozen_files_verified": 77
+}

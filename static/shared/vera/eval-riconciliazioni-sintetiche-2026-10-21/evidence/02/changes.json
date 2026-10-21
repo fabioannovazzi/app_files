@@ -1,0 +1,42 @@
+{
+  "base_case": "E-032-adversarial-importi-uguali-causale-muta",
+  "changes": [
+    {
+      "file": "receivables.csv",
+      "field": "Invoice_Date",
+      "rows": [
+        "FT-2026-0144",
+        "FT-2026-0145"
+      ],
+      "before": "",
+      "after": "2026-07-01",
+      "basis": "Explicit synthetic date for maintained adapter compatibility"
+    },
+    {
+      "file": "source_notes.md",
+      "field": "scope",
+      "after": {
+        "cutoff_date": "2026-07-01",
+        "scope_year": 2026,
+        "post_cutoff_events_excluded": false
+      },
+      "basis": "Explicit synthetic scenario design"
+    }
+  ],
+  "unchanged": [
+    "Bank file bytes",
+    "Invoice numbers/customers/amounts/currency/Paid",
+    "Missing identifying evidence retained"
+  ],
+  "hashes": {
+    "bank.csv": "322080d02adeac64d85d604902e87d5c80881ac91a9b617a842b33367fd4d5dd",
+    "receivables.csv": "afe6de4c15975de5a5d58a5939052be04d64cf208c4b2abaab83259d24da22bd",
+    "source_notes.md": "d88f217d8297d8cb211b92e20602cc5d222d7d3a4c2a3c8dbaf65ece744d7a4e"
+  },
+  "reporting_addendum": {
+    "notice": "Appended by evaluator after freeze; does not alter supplied fixture files.",
+    "task": "Original benchmark prompt replaced by the same ordinary Vera work request for every case.",
+    "scope_notes": "Original coordinator notes replaced by uniform agreed synthetic-scope metadata; original accounting CSV bytes from the adapted fixture retained.",
+    "case_specific": "Richiesta normalizzata sul lavoro Vera. Il file banca non riceve un riferimento o un alias sintetico per colmare l’ambiguità."
+  }
+}

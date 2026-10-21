@@ -1,0 +1,46 @@
+{
+  "projection_of": "Final native reconciliation_results.json; selected fields only",
+  "canonical_sha256": "67da403850b1fc02bb4eda2f9257fada7991f9a6b6af66c553cfc0ffa9259795",
+  "rows": [
+    {
+      "document_no": "FT-2026-0101",
+      "party_ref": "Rossi Costruzioni Srl",
+      "amount": "610",
+      "currency": "EUR",
+      "reconciliation_status": "closed",
+      "rule_applied": "external_bank_match",
+      "supporting_bank_amount": "610.00",
+      "supporting_bank_date": "2026-07-10"
+    }
+  ],
+  "allocation_ledgers": [
+    {
+      "allocations": [
+        {
+          "amount": "610",
+          "currency": "EUR"
+        }
+      ],
+      "relationship_shape": "one_to_one",
+      "bank_residuals": [
+        "0"
+      ],
+      "invoice_residuals": [
+        "0"
+      ]
+    }
+  ],
+  "gates": {
+    "preparation": "passed",
+    "publication": "withheld",
+    "reconciliation": "passed",
+    "reporting": "passed",
+    "semantic_review": "passed",
+    "source": "passed"
+  },
+  "report_ready": true,
+  "semantic_initial_status": "not_required",
+  "semantic_batch_count": 0,
+  "freeze_manifest_sha256": "d23e868f1f9a7b5c4c9632cec327bde81823ea0f6299ff2842ae9a25da276e00",
+  "frozen_files_verified": 77
+}

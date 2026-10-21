@@ -1,0 +1,447 @@
+{
+  "summary": "Sei prove adattate e congelate. I casi semplice e parziale producono il risultato contabile atteso; due casi conservano correttamente l’incertezza. Pagamento cumulativo ed eccedenza restano bloccati: il ragionamento dell’agente non arriva nelle allocazioni native.",
+  "cases": [
+    {
+      "number": "01",
+      "upstream": "E-001-base-abbinamento-semplice",
+      "title": "Abbinamento semplice",
+      "core_result": "€610 attribuiti; residuo zero",
+      "conclusion": "Risultato contabile corretto e consegnato, con due campi mancanti nella scheda operativa.",
+      "expected": "Collegare l’unico incasso alla fattura corrispondente per riferimento, cliente, valuta e importo; conservare residuo zero.",
+      "observed": "Vera consegna la fattura regolata da €610 il 10 luglio. Il ledger nativo attribuisce €610 e conserva residui zero per banca e fattura. Il regolamento non è retrodatato al cut-off.",
+      "findings": [
+        "La scheda operativa lascia vuoti «importo attribuito» e «residuo aperto», anche se ledger e riepilogo consegnato contengono i valori corretti.",
+        "La review visiva del Word non è riuscita: Word non disponibile tramite controllo app; LibreOffice termina all’avvio. La struttura e il testo sono stati esaminati, ma questo non verifica la resa visiva."
+      ],
+      "task_adaptation": "Richiesta normalizzata sul lavoro Vera; aggiunto un riferimento strutturato già letteralmente presente nella causale. Non verifica l’estrazione del riferimento dal testo libero.",
+      "verdict_code": "partial_success",
+      "model_stage": "Non richiesto; match esatto",
+      "delivery": "Carte pronte; limiti documentati",
+      "execution": {
+        "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+        "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+        "Worker semantico": "not_required; 0 batch; nessuna invocazione worker",
+        "Report pronto secondo i gate": "true",
+        "Gate source / preparation / reconciliation": "passed / passed / passed",
+        "Gate review / reporting": "passed / passed",
+        "Stato contenitore Archive": "completed",
+        "File congelati verificati": 77,
+        "Interventi umani durante il caso": 0,
+        "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+      },
+      "native_extract": {
+        "projection_of": "Final native reconciliation_results.json; selected fields only",
+        "canonical_sha256": "67da403850b1fc02bb4eda2f9257fada7991f9a6b6af66c553cfc0ffa9259795",
+        "rows": [
+          {
+            "document_no": "FT-2026-0101",
+            "party_ref": "Rossi Costruzioni Srl",
+            "amount": "610",
+            "currency": "EUR",
+            "reconciliation_status": "closed",
+            "rule_applied": "external_bank_match",
+            "supporting_bank_amount": "610.00",
+            "supporting_bank_date": "2026-07-10"
+          }
+        ],
+        "allocation_ledgers": [
+          {
+            "allocations": [
+              {
+                "amount": "610",
+                "currency": "EUR"
+              }
+            ],
+            "relationship_shape": "one_to_one",
+            "bank_residuals": [
+              "0"
+            ],
+            "invoice_residuals": [
+              "0"
+            ]
+          }
+        ],
+        "gates": {
+          "preparation": "passed",
+          "publication": "withheld",
+          "reconciliation": "passed",
+          "reporting": "passed",
+          "semantic_review": "passed",
+          "source": "passed"
+        },
+        "report_ready": true,
+        "semantic_initial_status": "not_required",
+        "semantic_batch_count": 0,
+        "freeze_manifest_sha256": "d23e868f1f9a7b5c4c9632cec327bde81823ea0f6299ff2842ae9a25da276e00",
+        "frozen_files_verified": 77
+      },
+      "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+    },
+    {
+      "number": "02",
+      "upstream": "E-032-adversarial-importi-uguali-causale-muta",
+      "title": "Due fatture dello stesso importo",
+      "core_result": "Astensione corretta; nessuna allocazione",
+      "conclusion": "Vera non sceglie arbitrariamente tra i due clienti e chiede evidenza identificativa.",
+      "expected": "Non assegnare l’incasso da €549 a una delle due fatture da €549 in assenza di riferimento o collegamento al pagatore.",
+      "observed": "Entrambe le fatture restano irrisolte. Nessun ledger di allocazione. La consegna distingue i €1.098 di crediti forniti da un residuo riconciliato e non afferma che l’assenza di riscontro provi il mancato pagamento.",
+      "findings": [
+        "La scheda usa «non pagata — SI, chiusura non dimostrata al cut-off»: un mancato riscontro non dimostra mancato pagamento, e il richiamo al cut-off è impreciso per questa prova con incassi successivi inclusi.",
+        "Il worker non parte: lo stato è missing_evidence. In questo caso manca realmente un collegamento identificativo, ma la serie non dimostra una valutazione semantica di quella ambiguità da parte di un worker.",
+        "Un controllo aggiuntivo della ricevuta con Python ambientale fallisce per dipendenza assente; la verifica nativa della ricevuta è conservata. Nessuna installazione o riparazione del prodotto."
+      ],
+      "task_adaptation": "Richiesta normalizzata sul lavoro Vera. Il file banca non riceve un riferimento o un alias sintetico per colmare l’ambiguità.",
+      "verdict_code": "partial_success",
+      "model_stage": "Non avviato; missing_evidence",
+      "delivery": "Carte pronte; limiti documentati",
+      "execution": {
+        "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+        "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+        "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+        "Report pronto secondo i gate": "true",
+        "Gate source / preparation / reconciliation": "passed / passed / passed",
+        "Gate review / reporting": "passed / passed",
+        "Stato contenitore Archive": "completed",
+        "File congelati verificati": 77,
+        "Interventi umani durante il caso": 0,
+        "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+      },
+      "native_extract": {
+        "projection_of": "Final native reconciliation_results.json; selected fields only",
+        "canonical_sha256": "4b6a71fe19eee94b92a09f8c7f5d78177a1365b92aabd510dd774ce076448e7f",
+        "rows": [
+          {
+            "document_no": "FT-2026-0144",
+            "party_ref": "Theta Gemella Srl",
+            "amount": "549",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved"
+          },
+          {
+            "document_no": "FT-2026-0145",
+            "party_ref": "Iota Gemella Snc",
+            "amount": "549",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved"
+          }
+        ],
+        "allocation_ledgers": [],
+        "gates": {
+          "preparation": "passed",
+          "publication": "withheld",
+          "reconciliation": "passed",
+          "reporting": "passed",
+          "semantic_review": "passed",
+          "source": "passed"
+        },
+        "report_ready": true,
+        "semantic_initial_status": "missing_evidence",
+        "semantic_batch_count": 0,
+        "freeze_manifest_sha256": "b6738e2757ebe01f96a932ac2471e0a8568a45bfb357408091eddc1806dd4ded",
+        "frozen_files_verified": 77
+      },
+      "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+    },
+    {
+      "number": "03",
+      "upstream": "E-031-adversarial-incasso-parziale",
+      "title": "Pagamento parziale",
+      "core_result": "€600 attribuiti; €620 ancora aperti",
+      "conclusion": "Il pagamento parziale arriva negli artefatti nativi senza diventare una chiusura integrale.",
+      "expected": "Attribuire l’acconto di €600 alla fattura da €1.220, conservando €620 aperti e residuo banca zero.",
+      "observed": "Classificazione nativa partially_paid, allocated_amount=600.00 e residual_amount=620.00. Ledger, riepilogo e consegna conservano il residuo. Review e rigenerazione raggiungono report_ready=true.",
+      "findings": [
+        "Il risultato deriva dalla regola nativa per pagamento parziale, non da un worker semantico.",
+        "Un errore JavaScript nel wrapper di orchestrazione precede l’intake; il wrapper viene corretto senza eseguire il prodotto o modificare dati nel tentativo fallito.",
+        "La resa visiva del DOCX resta non verificata, come nel caso 01."
+      ],
+      "task_adaptation": "Richiesta normalizzata sul lavoro Vera; riferimento strutturato copiato dalla causale. Nessun importo di allocazione è inserito nella fonte.",
+      "verdict_code": "partial_success",
+      "model_stage": "Non avviato; missing_evidence",
+      "delivery": "Carte pronte; limiti documentati",
+      "execution": {
+        "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+        "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+        "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+        "Report pronto secondo i gate": "true",
+        "Gate source / preparation / reconciliation": "passed / passed / passed",
+        "Gate review / reporting": "passed / passed",
+        "Stato contenitore Archive": "completed",
+        "File congelati verificati": 77,
+        "Interventi umani durante il caso": 0,
+        "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+      },
+      "native_extract": {
+        "projection_of": "Final native reconciliation_results.json; selected fields only",
+        "canonical_sha256": "17204c7dbb231f4db7b57b42e794f4799a55180a33c4d6aabd4795b4c01757ba",
+        "rows": [
+          {
+            "document_no": "FT-2026-0143",
+            "party_ref": "Eta Parziale Srl",
+            "amount": "1220",
+            "currency": "EUR",
+            "reconciliation_status": "partially_paid",
+            "rule_applied": "exact_document_partial_bank_payment",
+            "allocated_amount": "600.00",
+            "residual_amount": "620.00",
+            "supporting_bank_amount": "600.00",
+            "supporting_bank_date": "2026-07-24"
+          }
+        ],
+        "allocation_ledgers": [
+          {
+            "allocations": [
+              {
+                "amount": "600",
+                "currency": "EUR"
+              }
+            ],
+            "relationship_shape": "one_to_one",
+            "bank_residuals": [
+              "0"
+            ],
+            "invoice_residuals": [
+              "620"
+            ]
+          }
+        ],
+        "gates": {
+          "preparation": "passed",
+          "publication": "withheld",
+          "reconciliation": "passed",
+          "reporting": "passed",
+          "semantic_review": "passed",
+          "source": "passed"
+        },
+        "report_ready": true,
+        "semantic_initial_status": "missing_evidence",
+        "semantic_batch_count": 0,
+        "freeze_manifest_sha256": "6842a69e3b2f288b5619cfdd06afc2cf7035e2987cba1148a3c0c0a35cc72816",
+        "frozen_files_verified": 77
+      },
+      "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+    },
+    {
+      "number": "04",
+      "upstream": "E-030-adversarial-bonifico-cumulativo",
+      "title": "Un incasso per due fatture",
+      "core_result": "Allocazione cumulativa non consegnata",
+      "conclusion": "Limite end-to-end: l’agente comprende la relazione, ma il workflow non la porta nelle allocazioni native.",
+      "expected": "Usare il singolo incasso da €610 che cita entrambe le fatture per rappresentare la copertura di €366 e €244, senza duplicare la cassa e senza inventare un’ambiguità.",
+      "observed": "Vera riconosce nella risposta che riferimenti, cliente e somma concordano. Il risultato nativo lascia entrambe le fatture unresolved e non crea un ledger. La review respinge il risultato; report_ready=false e Archive failed. Sono consegnate soltanto copie diagnostiche esplicitamente non definitive.",
+      "findings": [
+        "Il worker semantico non viene chiamato: missing_evidence, «No unused in-scope external bank evidence». L’incasso è però presente nella fonte.",
+        "Il filtro di preparazione semantica esclude le righe successive al cut-off senza condizionare l’esclusione a post_cutoff_events_excluded. La prova ha quel flag a false. L’incasso del 24 luglio viene quindi escluso nonostante il perimetro concordato lo includa.",
+        "Il replay assurance riuscito attesta l’integrità della bozza e dei suoi gate falliti, non una riconciliazione riuscita. Nessun bypass, riscrittura della causale o allocazione manuale viene usato.",
+        "Non sappiamo come avrebbe risposto il worker: non è stato eseguito."
+      ],
+      "task_adaptation": "Il prompt originario del simulatore impone abbinamenti solo 1:1; tale vincolo non è imposto alla richiesta Vera normalizzata. L’attesa professionale è quindi distinta dall’oracle del simulatore. Nessuna riga bancaria è duplicata o scissa e nessuna allocazione è precomputata.",
+      "verdict_code": "failure",
+      "model_stage": "Non avviato; missing_evidence",
+      "delivery": "Bozze bloccate; report non pronto",
+      "execution": {
+        "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+        "Esito valutazione end-to-end": "Fallimento del risultato operativo atteso",
+        "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+        "Report pronto secondo i gate": "false",
+        "Gate source / preparation / reconciliation": "passed / passed / passed",
+        "Gate review / reporting": "failed / blocked",
+        "Stato contenitore Archive": "failed",
+        "File congelati verificati": 77,
+        "Interventi umani durante il caso": 0,
+        "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+      },
+      "native_extract": {
+        "projection_of": "Final native reconciliation_results.json; selected fields only",
+        "canonical_sha256": "01bde82fb18ee2266515add61238898e20036d57960d7f44dcf261032e5dee6c",
+        "rows": [
+          {
+            "document_no": "FT-2026-0141",
+            "party_ref": "Zeta Cumulo Srl",
+            "amount": "366",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved"
+          },
+          {
+            "document_no": "FT-2026-0142",
+            "party_ref": "Zeta Cumulo Srl",
+            "amount": "244",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved"
+          }
+        ],
+        "allocation_ledgers": [],
+        "gates": {
+          "preparation": "passed",
+          "publication": "withheld",
+          "reconciliation": "passed",
+          "reporting": "blocked",
+          "semantic_review": "failed",
+          "source": "passed"
+        },
+        "report_ready": false,
+        "semantic_initial_status": "missing_evidence",
+        "semantic_batch_count": 0,
+        "freeze_manifest_sha256": "ed89c96e9cda1a19b93508d80bf42c99ddcdc70da305f23105fdf83625c6e572",
+        "frozen_files_verified": 77
+      },
+      "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+    },
+    {
+      "number": "05",
+      "upstream": "E-037-adversarial-importo-superiore",
+      "title": "Incasso superiore alla fattura",
+      "core_result": "Copertura ed eccedenza non allocate",
+      "conclusion": "Limite end-to-end: i €90 di eccedenza sono spiegati dall’agente ma non rappresentati in un’allocazione nativa.",
+      "expected": "Collegare il pagamento da €700 alla fattura indicata da €610, conservando €90 non applicati senza inventarne il trattamento. Chiedere evidenza solo sulla disposizione dell’eccedenza.",
+      "observed": "La consegna distingue la copertura candidata di €610 dall’eccedenza di €90, ma la fattura resta nativamente unresolved e il ledger è assente. Review respinta, report_ready=false, Archive failed. Le carte sono dichiarate diagnostiche.",
+      "findings": [
+        "Il medesimo filtro temporale esclude il pagamento successivo al cut-off, benché incluso dal perimetro. Nessun worker semantico viene avviato.",
+        "La domanda sulla natura dei €90 è motivata; la mancata allocazione supportata della fattura non viene spiegata come un dato che il cliente avrebbe omesso.",
+        "L’interpretazione dell’agente non è presentata come output del motore. Nessun rimborso, acconto o altra destinazione dell’eccedenza è inventato."
+      ],
+      "task_adaptation": "Richiesta normalizzata sul lavoro Vera; riferimento strutturato copiato dalla causale. Il pagamento resta di €700 e la fattura di €610; nessuna riduzione artificiale del movimento.",
+      "verdict_code": "failure",
+      "model_stage": "Non avviato; missing_evidence",
+      "delivery": "Bozze bloccate; report non pronto",
+      "execution": {
+        "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+        "Esito valutazione end-to-end": "Fallimento del risultato operativo atteso",
+        "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+        "Report pronto secondo i gate": "false",
+        "Gate source / preparation / reconciliation": "passed / passed / passed",
+        "Gate review / reporting": "failed / blocked",
+        "Stato contenitore Archive": "failed",
+        "File congelati verificati": 77,
+        "Interventi umani durante il caso": 0,
+        "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+      },
+      "native_extract": {
+        "projection_of": "Final native reconciliation_results.json; selected fields only",
+        "canonical_sha256": "e1cbfbebdca573c622b3cc222f4710558164dd21ac2be74a29d1f1dabf8f54a4",
+        "rows": [
+          {
+            "document_no": "FT-2026-0150",
+            "party_ref": "Xi Eccedenza Srl",
+            "amount": "610",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved",
+            "supporting_bank_amount": "700.00",
+            "supporting_bank_date": "2026-07-24"
+          }
+        ],
+        "allocation_ledgers": [],
+        "gates": {
+          "preparation": "passed",
+          "publication": "withheld",
+          "reconciliation": "passed",
+          "reporting": "blocked",
+          "semantic_review": "failed",
+          "source": "passed"
+        },
+        "report_ready": false,
+        "semantic_initial_status": "missing_evidence",
+        "semantic_batch_count": 0,
+        "freeze_manifest_sha256": "1bf54ce4d44688529c1d56f57afab0428a110f1b878f439035177dc724839c2b",
+        "frozen_files_verified": 77
+      },
+      "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+    },
+    {
+      "number": "06",
+      "upstream": "E-039-adversarial-causale-contraddittoria",
+      "title": "Riferimento e importo in conflitto",
+      "core_result": "Nessuna chiusura sul cliente sbagliato",
+      "conclusion": "Vera conserva il conflitto e non usa il solo importo per chiudere la fattura di un altro cliente.",
+      "expected": "Non attribuire a Sigma il pagamento di Rho soltanto perché entrambi valgono €427. Spiegare il riferimento a una fattura Rho da €244 e chiarire la differenza.",
+      "observed": "Le due fatture restano unresolved. La risposta distingue pagatore Rho, riferimento FT-2026-0152 e differenza di €183, chiedendo una distinta o conferma. Nessuna chiusura a Sigma e nessuna allocazione dell’eccedenza vengono dichiarate native.",
+      "findings": [
+        "L’astensione evita un falso abbinamento, ma non dimostra che un worker abbia valutato il conflitto: anche qui il worker non viene chiamato.",
+        "report_ready=true descrive carte rivedibili con esiti irrisolti, non una chiusura contabile delle partite.",
+        "La resa visiva del DOCX resta non verificata. La conservazione degli irrisolti non prova mancato pagamento."
+      ],
+      "task_adaptation": "Richiesta normalizzata sul lavoro Vera; il riferimento strutturato conserva il documento Rho presente nella causale. Non è sostituito con la fattura Sigma dello stesso importo.",
+      "verdict_code": "partial_success",
+      "model_stage": "Non avviato; missing_evidence",
+      "delivery": "Carte pronte; limiti documentati",
+      "execution": {
+        "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+        "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+        "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+        "Report pronto secondo i gate": "true",
+        "Gate source / preparation / reconciliation": "passed / passed / passed",
+        "Gate review / reporting": "passed / passed",
+        "Stato contenitore Archive": "completed",
+        "File congelati verificati": 77,
+        "Interventi umani durante il caso": 0,
+        "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+      },
+      "native_extract": {
+        "projection_of": "Final native reconciliation_results.json; selected fields only",
+        "canonical_sha256": "c7e51e61cbaa3ac523e795d0a4c731bc9cff73f2c775767429961da8b5dee283",
+        "rows": [
+          {
+            "document_no": "FT-2026-0152",
+            "party_ref": "Rho Intreccio Srl",
+            "amount": "244",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved",
+            "supporting_bank_amount": "427.00",
+            "supporting_bank_date": "2026-07-24"
+          },
+          {
+            "document_no": "FT-2026-0153",
+            "party_ref": "Sigma Intreccio Srl",
+            "amount": "427",
+            "currency": "EUR",
+            "reconciliation_status": "unresolved",
+            "rule_applied": "unresolved"
+          }
+        ],
+        "allocation_ledgers": [],
+        "gates": {
+          "preparation": "passed",
+          "publication": "withheld",
+          "reconciliation": "passed",
+          "reporting": "passed",
+          "semantic_review": "passed",
+          "source": "passed"
+        },
+        "report_ready": true,
+        "semantic_initial_status": "missing_evidence",
+        "semantic_batch_count": 0,
+        "freeze_manifest_sha256": "58915a1e6c98a12e1ce843ea6b63b7c6356fba31b8e874885ba7aaadc208b226",
+        "frozen_files_verified": 77
+      },
+      "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+    }
+  ],
+  "expansion_decision": "Non estesa ai restanti 34 casi. La raccolta di origine contiene 40 casi di riconciliazione; il committente ha subordinato l’estensione al funzionamento del pilota. I limiti end-to-end osservati nei casi 04 e 05 non soddisfano quella condizione. Tutti i sei tentativi sono conservati, compresi i fallimenti; nessun caso ulteriore è rappresentato come eseguito.",
+  "exclusions": [
+    "Le precedenti prove di componente non sono conteggiate come eval end-to-end.",
+    "Il controllo precedente su Vera 0.1.470 è conservato separatamente. Queste sei prove sono tutte su 0.1.473.",
+    "Nessun worker semantico aggiuntivo è stato invocato nella serie: non è misurata la sua accuratezza né verificata l’esecuzione su altri harness.",
+    "Le prove sono adattate e la richiesta è normalizzata: non costituiscono un punteggio ufficiale di ItalBizBench."
+  ],
+  "coverage": {
+    "pilot": 6,
+    "total_source_family": 40,
+    "not_executed": 34,
+    "expansion": false,
+    "frozen_files_verified": 462
+  },
+  "source_revision": "986458835adc4c33f694d4a83ac7d4b43cb5eb97",
+  "deployment_revision": "e3cbfa6d3b4e79bc32f7154ffcdc3a3821595bf1",
+  "eligibility_diagnosis": {
+    "installed_file": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
+    "condition": "and not h.is_after_cutoff(row, assumptions)",
+    "observed_setting": "post_cutoff_events_excluded=false",
+    "result": "Post-cutoff bank evidence excluded before worker; no repair performed."
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "number": "04",
+  "upstream": "E-030-adversarial-bonifico-cumulativo",
+  "title": "Un incasso per due fatture",
+  "core_result": "Allocazione cumulativa non consegnata",
+  "conclusion": "Limite end-to-end: l’agente comprende la relazione, ma il workflow non la porta nelle allocazioni native.",
+  "expected": "Usare il singolo incasso da €610 che cita entrambe le fatture per rappresentare la copertura di €366 e €244, senza duplicare la cassa e senza inventare un’ambiguità.",
+  "observed": "Vera riconosce nella risposta che riferimenti, cliente e somma concordano. Il risultato nativo lascia entrambe le fatture unresolved e non crea un ledger. La review respinge il risultato; report_ready=false e Archive failed. Sono consegnate soltanto copie diagnostiche esplicitamente non definitive.",
+  "findings": [
+    "Il worker semantico non viene chiamato: missing_evidence, «No unused in-scope external bank evidence». L’incasso è però presente nella fonte.",
+    "Il filtro di preparazione semantica esclude le righe successive al cut-off senza condizionare l’esclusione a post_cutoff_events_excluded. La prova ha quel flag a false. L’incasso del 24 luglio viene quindi escluso nonostante il perimetro concordato lo includa.",
+    "Il replay assurance riuscito attesta l’integrità della bozza e dei suoi gate falliti, non una riconciliazione riuscita. Nessun bypass, riscrittura della causale o allocazione manuale viene usato.",
+    "Non sappiamo come avrebbe risposto il worker: non è stato eseguito."
+  ],
+  "task_adaptation": "Il prompt originario del simulatore impone abbinamenti solo 1:1; tale vincolo non è imposto alla richiesta Vera normalizzata. L’attesa professionale è quindi distinta dall’oracle del simulatore. Nessuna riga bancaria è duplicata o scissa e nessuna allocazione è precomputata.",
+  "verdict_code": "failure",
+  "model_stage": "Non avviato; missing_evidence",
+  "delivery": "Bozze bloccate; report non pronto",
+  "execution": {
+    "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+    "Esito valutazione end-to-end": "Fallimento del risultato operativo atteso",
+    "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+    "Report pronto secondo i gate": "false",
+    "Gate source / preparation / reconciliation": "passed / passed / passed",
+    "Gate review / reporting": "failed / blocked",
+    "Stato contenitore Archive": "failed",
+    "File congelati verificati": 77,
+    "Interventi umani durante il caso": 0,
+    "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+  },
+  "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+}

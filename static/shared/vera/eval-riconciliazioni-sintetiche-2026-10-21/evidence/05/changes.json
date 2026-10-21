@@ -1,0 +1,39 @@
+{
+  "case": "restart-05",
+  "changes": [
+    {
+      "file": "receivables.csv",
+      "field": "Invoice_Date",
+      "after": "2026-07-01",
+      "basis": "Explicit synthetic adapter-compatible date for every supplied invoice"
+    },
+    {
+      "file": "bank.csv",
+      "field": "Invoice_Reference",
+      "after": "FT-2026-0150",
+      "basis": "Verbatim single reference already present in original bank description"
+    },
+    {
+      "file": "source_notes.md",
+      "field": "scope",
+      "after": {
+        "cutoff_date": "2026-07-01",
+        "scope_year": 2026,
+        "post_cutoff_events_excluded": false
+      },
+      "basis": "Explicit synthetic scenario design"
+    }
+  ],
+  "preserved": "Original accounting values and missing/conflicting identifying evidence; no invented allocation",
+  "hashes": {
+    "bank.csv": "245851f15cfada1a36abfdcc04dd62ada78d061ae65459ba3987d83add61cf91",
+    "receivables.csv": "3c2d01b0ed1defc6cab1efadff4f57287d0439d4be66d8670c0df45d4a56f1a0",
+    "source_notes.md": "8f442f3a6a765a9303438126dcd069468746a23aabdc2b9a013dc68e07b74e98"
+  },
+  "reporting_addendum": {
+    "notice": "Appended by evaluator after freeze; does not alter supplied fixture files.",
+    "task": "Original benchmark prompt replaced by the same ordinary Vera work request for every case.",
+    "scope_notes": "Original coordinator notes replaced by uniform agreed synthetic-scope metadata; original accounting CSV bytes from the adapted fixture retained.",
+    "case_specific": "Richiesta normalizzata sul lavoro Vera; riferimento strutturato copiato dalla causale. Il pagamento resta di €700 e la fattura di €610; nessuna riduzione artificiale del movimento."
+  }
+}

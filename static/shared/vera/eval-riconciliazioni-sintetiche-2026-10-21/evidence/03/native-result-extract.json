@@ -1,0 +1,48 @@
+{
+  "projection_of": "Final native reconciliation_results.json; selected fields only",
+  "canonical_sha256": "17204c7dbb231f4db7b57b42e794f4799a55180a33c4d6aabd4795b4c01757ba",
+  "rows": [
+    {
+      "document_no": "FT-2026-0143",
+      "party_ref": "Eta Parziale Srl",
+      "amount": "1220",
+      "currency": "EUR",
+      "reconciliation_status": "partially_paid",
+      "rule_applied": "exact_document_partial_bank_payment",
+      "allocated_amount": "600.00",
+      "residual_amount": "620.00",
+      "supporting_bank_amount": "600.00",
+      "supporting_bank_date": "2026-07-24"
+    }
+  ],
+  "allocation_ledgers": [
+    {
+      "allocations": [
+        {
+          "amount": "600",
+          "currency": "EUR"
+        }
+      ],
+      "relationship_shape": "one_to_one",
+      "bank_residuals": [
+        "0"
+      ],
+      "invoice_residuals": [
+        "620"
+      ]
+    }
+  ],
+  "gates": {
+    "preparation": "passed",
+    "publication": "withheld",
+    "reconciliation": "passed",
+    "reporting": "passed",
+    "semantic_review": "passed",
+    "source": "passed"
+  },
+  "report_ready": true,
+  "semantic_initial_status": "missing_evidence",
+  "semantic_batch_count": 0,
+  "freeze_manifest_sha256": "6842a69e3b2f288b5619cfdd06afc2cf7035e2987cba1148a3c0c0a35cc72816",
+  "frozen_files_verified": 77
+}

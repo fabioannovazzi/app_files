@@ -1,0 +1,2 @@
+Invoice,Customer,Invoice_Date,Net,VAT,Total,Currency,Paid
+FT-2026-0143,Eta Parziale Srl,2026-07-01,1000.00,220.00,1220.00,EUR,false

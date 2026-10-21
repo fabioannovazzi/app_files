@@ -1,0 +1,30 @@
+{
+  "number": "01",
+  "upstream": "E-001-base-abbinamento-semplice",
+  "title": "Abbinamento semplice",
+  "core_result": "€610 attribuiti; residuo zero",
+  "conclusion": "Risultato contabile corretto e consegnato, con due campi mancanti nella scheda operativa.",
+  "expected": "Collegare l’unico incasso alla fattura corrispondente per riferimento, cliente, valuta e importo; conservare residuo zero.",
+  "observed": "Vera consegna la fattura regolata da €610 il 10 luglio. Il ledger nativo attribuisce €610 e conserva residui zero per banca e fattura. Il regolamento non è retrodatato al cut-off.",
+  "findings": [
+    "La scheda operativa lascia vuoti «importo attribuito» e «residuo aperto», anche se ledger e riepilogo consegnato contengono i valori corretti.",
+    "La review visiva del Word non è riuscita: Word non disponibile tramite controllo app; LibreOffice termina all’avvio. La struttura e il testo sono stati esaminati, ma questo non verifica la resa visiva."
+  ],
+  "task_adaptation": "Richiesta normalizzata sul lavoro Vera; aggiunto un riferimento strutturato già letteralmente presente nella causale. Non verifica l’estrazione del riferimento dal testo libero.",
+  "verdict_code": "partial_success",
+  "model_stage": "Non richiesto; match esatto",
+  "delivery": "Carte pronte; limiti documentati",
+  "execution": {
+    "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+    "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+    "Worker semantico": "not_required; 0 batch; nessuna invocazione worker",
+    "Report pronto secondo i gate": "true",
+    "Gate source / preparation / reconciliation": "passed / passed / passed",
+    "Gate review / reporting": "passed / passed",
+    "Stato contenitore Archive": "completed",
+    "File congelati verificati": 77,
+    "Interventi umani durante il caso": 0,
+    "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+  },
+  "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+}
