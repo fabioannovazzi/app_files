@@ -12,7 +12,11 @@ import sys
 from pathlib import Path
 
 from managed_python_runtime import ensure_runtime, run_verified_helper
-from verified_execution import prepare_execution_root, report_preparation_failure
+from verified_execution import (
+    prepare_execution_root,
+    release_execution_root,
+    report_preparation_failure,
+)
 
 __all__ = ["main"]
 
@@ -76,81 +80,86 @@ def main(argv: list[str] | None = None) -> int:
         LOGGER.error("Vera installation verification failed: %s", error)
         report_preparation_failure(PLUGIN_ROOT, args.module, error)
         return 1
-    component_root = (
-        execution_root / "modules" / args.module
-        if execution_root != PLUGIN_ROOT
-        else _component_root(args.module)
-    )
-    checker = component_root / "scripts" / "check_dependencies.py"
-    if not checker.exists():
-        LOGGER.error("Dependency checker not found for %s: %s", args.module, checker)
-        report_preparation_failure(
-            PLUGIN_ROOT,
-            args.module,
-            ValueError("Published dependency checker is missing"),
-            stage="dependency-setup",
-            technical_code="runtime.missing-checker",
-            technical_type="MissingDependencyChecker",
+    try:
+        component_root = (
+            execution_root / "modules" / args.module
+            if execution_root != PLUGIN_ROOT
+            else _component_root(args.module)
         )
-        return 1
-    delegated_args = list(remaining)
-    for requirement in args.requirements or []:
-        delegated_args = ["--requirements", requirement, *delegated_args]
-    ready, target, detail = ensure_runtime(
-        execution_root,
-        args.module,
-        requirements=args.requirements,
-    )
-    if not ready and detail.startswith(
-        "Shared runtime update requires the base Python interpreter"
-    ):
-        # An activated host hook may put the managed venv first on PATH.
-        # Re-enter this same verified checker under its recorded base interpreter;
-        # keep the shared runtime's prohibition on self-updating intact.
-        base = Path(getattr(sys, "_base_executable", sys.executable))
-        if base.is_file() and base.absolute() != Path(sys.executable).absolute():
-            completed = subprocess.run(
-                [
-                    str(base),
-                    str(execution_root / "scripts/check_dependencies.py"),
-                    *(sys.argv[1:] if argv is None else argv),
-                ],
-                cwd=execution_root,
-                check=False,
+        checker = component_root / "scripts" / "check_dependencies.py"
+        if not checker.exists():
+            LOGGER.error(
+                "Dependency checker not found for %s: %s", args.module, checker
             )
-            return completed.returncode
-    if not ready:
-        from operational_incidents import report_failure
-
-        if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
-            report_failure(
+            report_preparation_failure(
+                PLUGIN_ROOT,
                 args.module,
-                "dependency-setup",
-                detail,
-                capture_state="complete",
-                technical_diagnostics=[
-                    {
-                        "component": "vera-runtime",
-                        "stage": "dependency-setup",
-                        "error_type": "RuntimeSetupError",
-                        "error_code": "runtime.setup-failed",
-                        "message": detail,
-                        "evidence_source": "observed-tool-result",
-                    }
-                ],
+                ValueError("Published dependency checker is missing"),
+                stage="dependency-setup",
+                technical_code="runtime.missing-checker",
+                technical_type="MissingDependencyChecker",
             )
-        LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
-        return 1
-    # The actual selector resolves this relative path under the selected component,
-    # not this top-level Vera checker (covered by a real-process regression).
-    runtime_args = ["--module", args.module]
-    for requirement in args.requirements or []:
-        runtime_args.extend(["--requirements", requirement])
-    return run_verified_helper(
-        execution_root,
-        [*runtime_args, "run", "scripts/check_dependencies.py", *delegated_args],
-        args.module,
-    )
+            return 1
+        delegated_args = list(remaining)
+        for requirement in args.requirements or []:
+            delegated_args = ["--requirements", requirement, *delegated_args]
+        ready, target, detail = ensure_runtime(
+            execution_root,
+            args.module,
+            requirements=args.requirements,
+        )
+        if not ready and detail.startswith(
+            "Shared runtime update requires the base Python interpreter"
+        ):
+            # An activated host hook may put the managed venv first on PATH.
+            # Re-enter this same verified checker under its recorded base interpreter;
+            # keep the shared runtime's prohibition on self-updating intact.
+            base = Path(getattr(sys, "_base_executable", sys.executable))
+            if base.is_file() and base.absolute() != Path(sys.executable).absolute():
+                completed = subprocess.run(
+                    [
+                        str(base),
+                        str(execution_root / "scripts/check_dependencies.py"),
+                        *(sys.argv[1:] if argv is None else argv),
+                    ],
+                    cwd=execution_root,
+                    check=False,
+                )
+                return completed.returncode
+        if not ready:
+            from operational_incidents import report_failure
+
+            if not os.environ.get("MPARANZA_INCIDENT_RECOVERY_ACTIVE"):
+                report_failure(
+                    args.module,
+                    "dependency-setup",
+                    detail,
+                    capture_state="complete",
+                    technical_diagnostics=[
+                        {
+                            "component": "vera-runtime",
+                            "stage": "dependency-setup",
+                            "error_type": "RuntimeSetupError",
+                            "error_code": "runtime.setup-failed",
+                            "message": detail,
+                            "evidence_source": "observed-tool-result",
+                        }
+                    ],
+                )
+            LOGGER.error("Vera managed Python runtime setup failed: %s", detail)
+            return 1
+        # The actual selector resolves this relative path under the selected component,
+        # not this top-level Vera checker (covered by a real-process regression).
+        runtime_args = ["--module", args.module]
+        for requirement in args.requirements or []:
+            runtime_args.extend(["--requirements", requirement])
+        return run_verified_helper(
+            execution_root,
+            [*runtime_args, "run", "scripts/check_dependencies.py", *delegated_args],
+            args.module,
+        )
+    finally:
+        release_execution_root(execution_root)
 
 
 if __name__ == "__main__":

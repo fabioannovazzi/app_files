@@ -49,11 +49,12 @@ python3 scripts/verified_execution.py --module <component-id>
 ```
 
 Do not ask the professional to open Terminal or paste diagnostic commands.
-Read `execution_root` from successful JSON output. Resolve the component at
-`<execution_root>/modules/<component-id>` and read its complete specialist skill.
-Use that execution root for dependency checks, managed Python commands, assets
-and review servers throughout the workflow. This overrides the installed-root
-handoff below it. Repository development uses existing sibling module roots.
+The successful JSON returns the installed `execution_root`; preflight removes
+its temporary verification copy before returning. Read the complete specialist
+skill from that installation. Run helpers through its managed Python launcher,
+which verifies the code and owns any temporary copy until the helper finishes.
+Do not execute an assured module directly from a hardlinked installation.
+Repository development uses existing sibling module roots.
 
 The helper checks a build-generated SHA-256 index. For unchanged regular files
 with multiple physical links, it creates independent files in a fresh private
@@ -61,8 +62,10 @@ OS temporary directory, verifies copied bytes and runs the module's single-link
 integrity validator. It never edits the host-managed installation or its aliases.
 The index checks package consistency; it is not a publisher signature. No
 network is used and no client documents, credentials or reports are copied.
-Code copies remain in OS temporary storage for normal OS cleanup; they are
-neither client archives nor additional dependency environments.
+Code copies are removed by their owning command after success, failure or
+exception, with process-exit cleanup as a fallback. They are never client
+archives or additional dependency environments. Forced process termination or
+power loss can still leave an orphan; do not delete another active run's copy.
 
 Keep input/output paths absolute and outside the installation/code copy.
 All specialist persistence, professional-review and disclosure gates still apply.
