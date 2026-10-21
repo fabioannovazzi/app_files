@@ -523,3 +523,24 @@ versions. The generated course changes were checked to affect source bindings
 and their indexes only. The public OpenAI published-version manifest is unchanged.
 Final package validation, hosted CI and production verification remain merge and
 deployment requirements, not substitutes for the stopped acceptance campaign.
+
+The final local reporting selection passed **303 checks**, with **84.74%**
+coverage. Product build parity passed for all three products and hosts. The wider
+package/privacy selection passed 589 checks, skipped two unavailable local
+Marketplace-cache comparisons and had one setup error because the command's
+`--confcutdir` excluded the shared `vera_workflow_workspace` fixture. The affected
+test passed when run with the proper repository fixtures: 590 passed checks in
+total, with no product change for that invocation error.
+
+PR #889's first release-alignment job failed because the Geneva catalogue still
+recorded the 0.1.472 manifest. Exact comparison verified that all 55 skill IDs and
+entrypoint bytes were unchanged. The catalogue and assessment release binding
+were updated to 0.1.473, retaining every jurisdiction judgment and acceptance
+limit. The single affected Vera privacy source fingerprint was reviewed and
+refreshed; Vera packages were rebuilt. This release-metadata omission interrupted
+deployment, not a client workflow. It does not establish native-host acceptance.
+The accounting regression job later failed at the same catalogue check, after
+its accounting and jurisdiction suites passed. The corrected catalogue covers
+both failures. All 55 assessment rows are byte-equivalent as parsed JSON; 103
+catalogue, connector and reporting-reference checks passed, and the affected
+Vera packages rebuilt successfully before the correction was submitted to CI.
