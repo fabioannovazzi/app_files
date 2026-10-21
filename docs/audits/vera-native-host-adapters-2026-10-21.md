@@ -120,3 +120,11 @@ retained both partial-payment explanation/provenance and semantic allocations.
   GitHub could not acquire a hosted ARM runner. A retry on the same commit acquired
   a runner and passed. The connector lacked Actions write permission, so the
   authenticated GitHub CLI performed that retry.
+- The integrated accounting CI job exceeded its 60-minute budget after all 453
+  Open-item source tests (82.59% coverage), 135 public projection tests and 57
+  native intake/regeneration tests passed. Those suites took 13m52s, 29m29s and
+  14m10s respectively, leaving no time for the other accounting workflows. The
+  workflow now runs three independent matrix jobs: accounting, Open-item
+  source/native checks, and public projection. All 30 original steps and their
+  commands are retained; every verification step belongs to exactly one job.
+  Coverage thresholds and per-job time limits are unchanged.

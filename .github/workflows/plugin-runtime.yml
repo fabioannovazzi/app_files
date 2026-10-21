@@ -364,7 +364,18 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_studio_archive_file_identity.py tests/plugins/test_vera_model_data_report.py tests/plugins/test_plugin_update_notifications.py
 
   workflow-regressions:
-    name: Accounting and reporting regressions
+    name: ${{ matrix.name }}
+    # The Open-item suites alone take nearly an hour on hosted runners.
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - suite: accounting
+            name: Accounting and reporting regressions
+          - suite: open-item-source
+            name: Open-item sources, workpapers and native regeneration
+          - suite: open-item-projection
+            name: Open-item public review and source coverage
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -421,10 +432,13 @@ jobs:
           -r plugins/treasury-forecast/requirements.txt
           -r plugins/variance-analysis/requirements.txt
       - name: Install Chromium for the local browser teaching regression
+        if: matrix.suite == 'accounting'
         run: python -m playwright install --with-deps chromium
       - name: Verify both reporting pipelines retain professional integrity after Archive completion
+        if: matrix.suite == 'accounting'
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_archive_report_builder_execution.py
       - name: Verify Open-item sources, workpapers and Archive review history
+        if: matrix.suite == 'open-item-source'
         env:
           MPARANZA_INCIDENT_DELIVERY: local-only
           MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item/identity
@@ -432,12 +446,14 @@ jobs:
           VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item/registry
         run: python -m pytest -q -o addopts='' --confcutdir=tests/open_item_reconciliation tests/open_item_reconciliation --cov --cov-config=tests/open_item_reconciliation/coverage.ini --cov-report=term --cov-fail-under=80
       - name: Check Open-item source and retained helper quality
+        if: matrix.suite == 'open-item-source'
         run: |
           python -m black --check plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source tests/open_item_reconciliation/test_reconciliation_helpers.py tests/open_item_reconciliation/test_reviewed_tabular_adapter.py tests/open_item_reconciliation/test_workpaper_outputs.py tests/open_item_reconciliation/coverage_plugin.py
           python -m isort --check-only plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py tests/open_item_reconciliation/test_reconciliation_helpers.py tests/open_item_reconciliation/test_reviewed_tabular_adapter.py tests/open_item_reconciliation/test_workpaper_outputs.py tests/open_item_reconciliation/coverage_plugin.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py tests/open_item_reconciliation/coverage_plugin.py
           python -m bandit -q -ll plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source
       - name: Verify Open-item public review, CLI regeneration and measured source coverage
+        if: matrix.suite == 'open-item-projection'
         env:
           MPARANZA_INCIDENT_DELIVERY: local-only
           MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item-public/identity
@@ -445,6 +461,7 @@ jobs:
           VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item-public/registry
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_archive_open_item_projection.py
       - name: Verify Open-item native intake and regeneration with automatic reporting
+        if: matrix.suite == 'open-item-source'
         env:
           MPARANZA_INCIDENT_DELIVERY: local-only
           MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/identity
@@ -452,6 +469,7 @@ jobs:
           VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/registry
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_native_open_items_intake.py tests/plugins/test_vera_native_open_items_intake_reporting.py tests/plugins/test_vera_native_open_items_regeneration.py tests/plugins/test_vera_native_open_items_intake_ui.py tests/plugins/test_vera_native_open_item_bridge_io.py
       - name: Build the checksum-verified official taxonomy for local OIC execution
+        if: matrix.suite == 'accounting'
         shell: bash
         run: |
           curl --fail --location --retry 2 --max-time 60 --output "$RUNNER_TEMP/teaching-PCI-2018-11-04.zip" https://it.xbrl.org/wp-content/uploads/sites/5/2018/11/PCI-2018-11-04.zip
@@ -468,17 +486,21 @@ jobs:
       # Keep cold setup outside the teaching tests' 60-second analysis deadline;
       # the dedicated cold-start matrix still verifies first-time installation.
       - name: Prepare the declared managed workflow runtime
+        if: matrix.suite == 'accounting'
         timeout-minutes: 10
         run: |
           python -m zipfile -e plugin_packages/clara/clara-plugin.zip "$RUNNER_TEMP/clara-managed-runtime"
           python "$RUNNER_TEMP/clara-managed-runtime/clara-codex-plugin/plugins/clara/scripts/check_dependencies.py" --module variance-analysis
           python plugins/vera/scripts/check_dependencies.py --module concordato-plan-review
       - name: Verify workflow integrations
+        if: matrix.suite == 'accounting'
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_business_valuation.py tests/plugins/test_cnc_integrations.py tests/plugins/test_matter_review_presentation.py
       - name: Install repository assortment-test dependencies
+        if: matrix.suite == 'accounting'
         run: python -m pip install -r tests/plugin_attribute_hosted_requirements.txt
       - name: Verify assortment runtime and report evidence
+        if: matrix.suite == 'accounting'
         run: |
           python -m pytest --noconftest -q -o addopts='' tests/plugins/test_attribute_reporting_*.py tests/plugins/test_clara_attribute_reporting_component.py tests/plugins/test_teaching_attribute_execution.py --cov --cov-config=tests/plugin_attribute_reporting.coveragerc --cov-report=term-missing --cov-fail-under=80
           python -m black --check plugins/attribute-reporting/scripts/attribute_reporting.py tests/plugins/test_attribute_reporting_plugin.py tests/plugins/test_teaching_attribute_execution.py plugins/attribute-reporting/scripts/prepare_run.py modules/pdp/attribute_table_templates.py tests/plugins/test_clara_attribute_reporting_component.py tests/modules/pdp/test_attribute_table_templates.py
@@ -486,6 +508,7 @@ jobs:
           python -m mypy --follow-imports=skip plugins/attribute-reporting/scripts/attribute_reporting.py plugins/attribute-reporting/scripts/prepare_run.py modules/pdp/attribute_table_templates.py
           python -m bandit -q -ll plugins/attribute-reporting/scripts/attribute_reporting.py plugins/attribute-reporting/scripts/prepare_run.py modules/pdp/attribute_table_templates.py
       - name: Verify focused costing and archive integration
+        if: matrix.suite == 'accounting'
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_management_costing.py --cov --cov-config=tests/plugin_costing.coveragerc --cov-report=term-missing
           python -m black --check plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py tests/plugins/test_management_costing.py
@@ -493,6 +516,7 @@ jobs:
           python -m mypy --follow-imports=skip plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py
           python -m bandit -q -ll plugins/management-control-pack/scripts/costing_core.py plugins/management-control-pack/scripts/costing_pack.py plugins/management-control-pack/scripts/costing_report.py plugins/management-control-pack/scripts/run_costing.py
       - name: Verify management report languages and presentation
+        if: matrix.suite == 'accounting'
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_management_control_pack.py tests/plugins/test_teaching_management_execution.py tests/plugins/test_teaching_clara_budget_execution.py tests/plugins/test_teaching_kit_execution.py::test_budget_kits_run_the_owning_product_report_pipeline --cov --cov-config=tests/plugin_management_presentation.coveragerc --cov-report=term-missing --cov-fail-under=80
           python -m black --check plugins/management-control-pack/scripts/management_report_copy.py plugins/management-control-pack/scripts/management_control_core.py plugins/management-control-pack/scripts/management_delivery.py plugins/management-control-pack/scripts/budget_presentation.py plugins/clara/modules/reporting-engine/scripts/budget_report.py plugins/_shared/vendor/modules/reporting_table.py tests/plugins/test_management_control_pack.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_clara_budget_execution.py
@@ -500,6 +524,7 @@ jobs:
           python -m mypy --follow-imports=skip plugins/management-control-pack/scripts/management_report_copy.py plugins/management-control-pack/scripts/management_control_core.py plugins/management-control-pack/scripts/management_delivery.py plugins/management-control-pack/scripts/budget_presentation.py plugins/clara/modules/reporting-engine/scripts/budget_report.py plugins/_shared/vendor/modules/reporting_table.py
           python -m bandit -q -ll plugins/management-control-pack/scripts/management_report_copy.py plugins/management-control-pack/scripts/management_control_core.py plugins/management-control-pack/scripts/management_delivery.py plugins/management-control-pack/scripts/budget_presentation.py plugins/clara/modules/reporting-engine/scripts/budget_report.py plugins/_shared/vendor/modules/reporting_table.py
       - name: Verify New Client incomplete inputs, arithmetic and dossier delivery
+        if: matrix.suite == 'accounting'
         run: >-
           python -m pytest -q -o addopts=''
           plugins/new-client/tests tests/plugins/test_vera_new_client_component.py
@@ -508,11 +533,13 @@ jobs:
           --cov --cov-config=tests/plugin_new_client.coveragerc
           --cov-report=term-missing --cov-fail-under=80
       - name: Verify Geneva common-core adapters and source boundaries
+        if: matrix.suite == 'accounting'
         run: |
           python -m pytest -q -o addopts='' tests/plugins/test_vera_geneva_adaptations.py --cov=jurisdiction_setup --cov=jurisdiction_accounts --cov=vera_assurance.jurisdiction --cov-report=term-missing --cov-fail-under=80
           python -m pytest -q -o addopts='' .agents/skills/localize-vera/scripts/test_catalogue.py
           python .agents/skills/localize-vera/scripts/catalogue.py check --root plugins/vera --inventory plugins/vera/skills/vera/references/localization/geneva/catalogue.json --assessment plugins/vera/skills/vera/references/localization/geneva/assessment.json
       - name: Verify native annual-accounts previews and review gates
+        if: matrix.suite == 'accounting'
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_bilancio_*.py tests/plugins/test_teaching_bilancio_execution.py --cov --cov-config=tests/plugin_bilancio_preview.coveragerc --cov-report=term-missing --cov-fail-under=80
           python -m black --check plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py tests/plugins/test_bilancio_preview_presentation.py tests/plugins/test_bilancio_xbrl_it_plugin.py
@@ -520,6 +547,7 @@ jobs:
           python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
           python -m bandit -q plugins/bilancio-xbrl-it/scripts/accounts_preview.py plugins/bilancio-xbrl-it/scripts/accounts_preview_text.py plugins/bilancio-xbrl-it/scripts/xbrl_case.py
       - name: Check living area workpapers and source-bound review
+        if: matrix.suite == 'accounting'
         run: |
           python -m black --check plugins/bilancio-xbrl-it/scripts/area_review.py plugins/bilancio-xbrl-it/scripts/review_workbook.py tests/plugins/test_bilancio_area_review.py
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/area_review.py plugins/bilancio-xbrl-it/scripts/review_workbook.py tests/plugins/test_bilancio_area_review.py
@@ -529,6 +557,7 @@ jobs:
       # Closing-account arithmetic is mechanical; interpretation remains a
       # model proposal followed by a separately authorized reviewer decision.
       - name: Check reviewed closing-account implementation
+        if: matrix.suite == 'accounting'
         run: |
           python -m black --check plugins/bilancio-xbrl-it/scripts/closing_workflow.py scripts/run_bilancio_alfa_v3_acceptance.py tests/plugins/test_bilancio_closing_workflow.py tests/plugins/conftest.py
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/closing_workflow.py scripts/run_bilancio_alfa_v3_acceptance.py tests/plugins/test_bilancio_closing_workflow.py tests/plugins/conftest.py
@@ -537,12 +566,14 @@ jobs:
           python scripts/run_bilancio_alfa_v3_acceptance.py --output "$RUNNER_TEMP/bilancio-alfa-v3"
           python scripts/run_bilancio_alfa_v3_acceptance.py --transport mcp --output "$RUNNER_TEMP/bilancio-alfa-v3-mcp"
       - name: Check private Bilancio workspace integration
+        if: matrix.suite == 'accounting'
         run: |
           python -m black --check plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py tests/plugins/test_bilancio_native_workspace.py
           python -m isort --check-only plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py tests/plugins/test_bilancio_native_workspace.py
           python -m mypy --follow-imports=skip plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py
           python -m bandit -ll plugins/bilancio-xbrl-it/scripts/workspace_bridge.py plugins/bilancio-xbrl-it/scripts/workspace_contract.py scripts/build_vera_workspace_pilot.py
       - name: Check workflow code quality
+        if: matrix.suite == 'accounting'
         run: |
           python scripts/build_matter_review_assets.py --check
           python -m black --check scripts/archive_organization_review_widget.py
@@ -574,6 +605,7 @@ jobs:
           python -m mypy --follow-imports=skip plugins/concordato-plan-review/scripts/concordato_semantic.py plugins/concordato-plan-review/scripts/concordato_labels.py plugins/concordato-plan-review/scripts/concordato_plan_core.py plugins/concordato-plan-review/scripts/review_session.py scripts/course_materials/build_concordato_support.py
           python -m bandit -q -ll plugins/concordato-plan-review/scripts/concordato_semantic.py plugins/concordato-plan-review/scripts/concordato_labels.py plugins/concordato-plan-review/scripts/concordato_plan_core.py plugins/concordato-plan-review/scripts/review_session.py scripts/course_materials/build_concordato_support.py
       - name: Check Concordato reasoning and localized deliverables
+        if: matrix.suite == 'accounting'
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_concordato_plan_review_plugin.py
@@ -582,17 +614,20 @@ jobs:
           --cov=concordato_semantic --cov=concordato_labels --cov=concordato_plan_core --cov=review_session
           --cov-report=term-missing --cov-fail-under=80
       - name: Check Registry preparation and localized review consistency
+        if: matrix.suite == 'accounting'
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_registro_imprese_sari_plugin.py
           --cov --cov-config=tests/plugin_registro_presentation.coveragerc
       - name: Check website evidence integrity and native image formats
+        if: matrix.suite == 'accounting'
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_presenza_digitale_studio.py
           --cov=presenza_digitale_workflow_core
           --cov-report=term-missing --cov-fail-under=80
       - name: Check matter-opening core and validation CLI consistency
+        if: matrix.suite == 'accounting'
         run: >-
           python -m pytest -q -o addopts=''
           plugins/apertura-pratica/tests/test_apertura_pratica.py
