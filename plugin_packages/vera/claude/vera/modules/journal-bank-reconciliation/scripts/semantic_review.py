@@ -132,7 +132,9 @@ __all__ = [
     "VALIDATED_SUGGESTIONS_NAME",
     "WORKER_RUN_NAME",
     "run_isolated_luna_worker",
+    "run_isolated_native_worker",
     "resolve_worker_selection",
+    "discover_worker_selection",
     "load_worker_selection",
     "inspect_execution_host",
     "main",
@@ -1858,12 +1860,8 @@ def _graph_content(
     required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
     prior_resolution_state: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
+    historical_replay: bool = False,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any]]:
-    model, effort, selection_review = resolve_worker_selection(
-        workflow_id="journal-bank-reconciliation",
-        reasoning_effort="max" if worker_selection is None else None,
-        worker_selection=worker_selection,
-    )
     if (
         required_resolution_level not in RESOLUTION_RANK
         or required_resolution_level == "unresolved"
@@ -1872,6 +1870,15 @@ def _graph_content(
     replay = _validated_source_replay(
         output_dir,
         client_engagement=client_engagement,
+    )
+    if worker_selection is None and not historical_replay:
+        worker_selection = discover_worker_selection("journal-bank-reconciliation")
+    model, effort, selection_review = resolve_worker_selection(
+        workflow_id="journal-bank-reconciliation",
+        reasoning_effort=(
+            "max" if historical_replay and worker_selection is None else None
+        ),
+        worker_selection=worker_selection,
     )
     source_binding = replay["source_binding"]
     audit = replay["audit"]
@@ -2318,12 +2325,13 @@ def prepare_semantic_review(
 ) -> dict[str, Any]:
     """Write a deterministic bounded graph, prompt, and worker output schema."""
 
-    # Reject an invalid selection before archiving any existing generation.
-    resolve_worker_selection(
-        workflow_id="journal-bank-reconciliation",
-        reasoning_effort="max" if worker_selection is None else None,
-        worker_selection=worker_selection,
-    )
+    # Reject an invalid supplied selection before archiving any generation.
+    if worker_selection is not None:
+        resolve_worker_selection(
+            workflow_id="journal-bank-reconciliation",
+            reasoning_effort=None,
+            worker_selection=worker_selection,
+        )
     reconciliation = _resolved_reconciliation_dir(reconciliation_dir)
     semantic = _semantic_output_dir(reconciliation, semantic_output_dir)
     cumulative_state = _load_resolution_state(
@@ -2411,6 +2419,7 @@ def _validate_graph_and_preparation_files(
         required_resolution_level=required_resolution_level,
         prior_resolution_state=prior_state,
         worker_selection=configuration.get("selection_review"),
+        historical_replay=True,
     )
     if prior_state != expected_prior_state:
         raise ValueError("Prior semantic resolution state is stale or modified")
@@ -2870,12 +2879,13 @@ def resolve_worker_selection(
     enforced separately and cannot be overridden by this receipt.
     """
 
+    from worker_capabilities import legacy_selection, validate_selection
+
     allowed_efforts = {"none", "low", "medium", "high", "xhigh", "max"}
     if worker_selection is None:
-        effort = "low" if reasoning_effort is None else reasoning_effort
-        if effort not in allowed_efforts:
-            raise ValueError("Unsupported Luna reasoning effort")
-        return "gpt-5.6-luna", effort, None
+        return legacy_selection(reasoning_effort)
+    if worker_selection.get("schema_version") == "vera.semantic_worker_selection.v1":
+        return validate_selection(worker_selection, workflow_id, reasoning_effort)
 
     review = validate_reviewed_decision_receipt(
         worker_selection,
@@ -2912,6 +2922,15 @@ def resolve_worker_selection(
     if review["source_artifact_refs"] != [f"benchmark-{benchmark_sha256}"]:
         raise ValueError("Worker selection benchmark binding is stale")
     return model, effort, review
+
+
+def discover_worker_selection(
+    workflow_id: str, reasoning_effort: str | None = None
+) -> dict[str, Any]:
+    """Discover a current low-cost native worker for unresolved reconciliation."""
+    from worker_capabilities import select_worker
+
+    return select_worker(workflow_id, reasoning_effort)
 
 
 def load_worker_selection(
@@ -2994,7 +3013,7 @@ def _record_model_submission(
     )
 
 
-def run_isolated_luna_worker(
+def run_isolated_native_worker(
     *,
     prompt: str,
     output_schema: Mapping[str, Any],
@@ -3005,8 +3024,9 @@ def run_isolated_luna_worker(
     worker_selection: Mapping[str, Any] | None = None,
     codex_bin: Path | None = None,
     timeout_seconds: int = WORKER_TIMEOUT_SECONDS,
+    source_records: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
-    """Run one generic structured Luna task through the qualified capsule.
+    """Run a structured task through the verified current native capsule.
 
     This is the reusable native-Claude boundary. Domain-specific callers own
     packet construction and semantic validation; this function owns only the
@@ -3108,6 +3128,7 @@ def run_isolated_luna_worker(
             output_schema=json.loads(schema_bytes),
             model=model,
             workflow_id=workflow_id,
+            source_records=source_records,
         )
         process_result = _run_captured_process(
             [*worker_prefix, *worker_inner],
@@ -3290,6 +3311,10 @@ def run_isolated_luna_worker(
             if artifacts_published:
                 _remove_published_worker_artifacts(output)
             raise
+
+
+# Retained API for existing passive-invoice clients; new workflows use the host-neutral name.
+run_isolated_luna_worker = run_isolated_native_worker
 
 
 def _publish_worker_artifacts(
@@ -5236,7 +5261,7 @@ def _parser() -> argparse.ArgumentParser:
     prepare.add_argument(
         "--worker-selection",
         type=Path,
-        help="Reviewed worker-model-selection receipt; omit to retain Luna/max.",
+        help="Explicit worker-selection receipt; omit to discover the current low-cost native worker.",
     )
     prepare.add_argument(
         "--required-level",
@@ -5267,12 +5292,12 @@ def _parser() -> argparse.ArgumentParser:
     run_all.add_argument(
         "--worker-selection",
         type=Path,
-        help="Reviewed worker-model-selection receipt; omit to retain Luna/max.",
+        help="Explicit worker-selection receipt; omit to discover the current low-cost native worker.",
     )
     _add_client_engagement_argument(run_all)
     run_worker = subparsers.add_parser(
         "run-worker",
-        help="Run the pinned Luna worker in a deny-default capsule.",
+        help="Run the selected native worker in a deny-default capsule.",
     )
     run_worker.add_argument("reconciliation_dir", type=Path)
     run_worker.add_argument("--output-dir", type=Path, required=True)

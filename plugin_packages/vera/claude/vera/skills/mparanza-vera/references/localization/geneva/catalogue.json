@@ -1,6 +1,6 @@
 {
-  "captured_at": "2026-10-21T11:58:09.668563+00:00",
-  "catalogue_fingerprint": "cd5babddaeef2238b952a2b3b20ead365c67810830a8868c838507711b3869c2",
+  "captured_at": "2026-10-21T15:09:22.916825+00:00",
+  "catalogue_fingerprint": "1aec3fcdcec2c2ade621ff1486afc08212be31f5e260b83da91267168bc41567",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -278,8 +278,8 @@
       "skill_path": "skills/vouching/SKILL.md"
     }
   ],
-  "manifest_sha256": "99c8dfae420af8061b72a3c9a70cb0d3380403b89474a475376774f7c9f3aca1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-21/ple/work/release/plugins/vera",
+  "manifest_sha256": "c14009d327af0da952c31e2ae02e029f87f23a9fe1210870a2e52122498d844d",
+  "root": "/private/tmp/app-files-semantic-host/plugins/vera",
   "schema": "vera.localization.catalogue.v1",
-  "version": "0.1.468"
+  "version": "0.1.471"
 }

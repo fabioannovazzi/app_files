@@ -2206,8 +2206,13 @@ def _validate_run_tree_allowlist(
             REVIEW_TRANSITION_RECEIPT_FILE,
         ]
     }
+    from semantic_resolution import semantic_artifact_paths
+
+    semantic_paths = semantic_artifact_paths(output_dir)
     for entry in entries:
         relative = str(entry.get("path") or "")
+        if relative in semantic_paths:
+            continue
         kind = str(entry.get("kind") or "")
         parts = Path(relative).parts
         if not parts:

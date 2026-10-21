@@ -3161,6 +3161,16 @@ def run_raw_input_reconciliation(
         imported_names = binding.get("imported_names", [])
         if len(imported_names) > 1:
             source["byte_identical_import_names"] = "; ".join(imported_names)
+    if "semantic_resolution" not in active:
+        from reconciliation_helpers import reconcile_open_items
+        from semantic_resolution import prepare_resolution
+
+        preliminary = reconcile_open_items(
+            extracted["open_items"], extracted["evidence_rows"], active
+        )
+        active["semantic_resolution"] = prepare_resolution(
+            preliminary, extracted["evidence_rows"], active, out_dir / "semantic-review"
+        )
     review_rows = applied_review_rows
     review_rows_path = active.get("review_rows_path")
     if review_rows_path and review_rows is None:
@@ -3517,6 +3527,18 @@ def main(argv: list[str] | None = None) -> int:
         "status": "ready_for_review",
         "client_engagement": result["client_engagement"],
         "run_manifest_path": str(Path(result["run_output_dir"]) / "run_manifest.json"),
+        "semantic_resolution": {
+            "status": result.get("semantic_resolution", {}).get(
+                "status", "not_requested"
+            ),
+            "batch_count": len(
+                result.get("semantic_resolution", {}).get("batches", [])
+            ),
+            "blocks": [
+                block["reason"]
+                for block in result.get("semantic_resolution", {}).get("blocks", [])
+            ],
+        },
         "artifact_card_path": str(Path(result["run_output_dir"]) / "artifact_card.md"),
     }
     sys.stdout.write(json.dumps(summary, ensure_ascii=False, sort_keys=True) + "\n")

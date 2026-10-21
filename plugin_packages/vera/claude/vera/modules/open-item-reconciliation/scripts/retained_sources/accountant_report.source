@@ -216,7 +216,10 @@ def confidence_for_row(row: dict[str, Any], has_detail: bool) -> str:
     status = clean_text(row.get("reconciliation_status"))
     evidence_level = clean_text(row.get("evidence_level"))
     evidence_type = clean_text(row.get("matched_evidence_type"))
-    if status == "closed":
+    if status == "closed" or (
+        status == "partially_paid"
+        and row.get("rule_applied") == "semantic_evidence_allocation"
+    ):
         return "Alta"
     if status == "probable_payment":
         return "Media"
@@ -453,6 +456,17 @@ def collect_detail_rows(
         if fallback:
             details.append(fallback)
 
+    for additional_id in clean_text(row.get("matched_evidence_ids")).split("; "):
+        if additional_id != matched_id and additional_id in evidence_by_id:
+            details.append(
+                evidence_record_detail(
+                    row_id=row_id,
+                    open_row=row,
+                    evidence=evidence_by_id[additional_id],
+                    confidence=confidence,
+                )
+            )
+
     for candidate in bank_allocation_candidates:
         if candidate_matches_row(candidate, row):
             details.append(
@@ -510,7 +524,11 @@ def collect_detail_rows(
             continue
         seen.add(key)
         unique.append(detail)
-    return unique[:12]
+    return (
+        unique
+        if row.get("rule_applied") == "semantic_evidence_allocation"
+        else unique[:12]
+    )
 
 
 def build_evidence_indexes(
@@ -572,14 +590,17 @@ def main_row_from_detail(
         )
         difference_text = clean_text(best.get("differenza"))
         difference = parse_decimal(difference_text)
-        ambiguous = (
+        semantic_supported = row.get("rule_applied") == "semantic_evidence_allocation"
+        ambiguous = not semantic_supported and (
             confidence in {"Media", "Bassa", "Non trovato"}
             or len(details) > 1
             or bool(difference_text and difference != Decimal("0"))
         )
         non_capita = "SI" if ambiguous else "NO"
 
-    evidence_used = clean_text(best.get("descrizione evidenza"))
+    evidence_used = clean_text(row.get("semantic_reason")) or clean_text(
+        best.get("descrizione evidenza")
+    )
     return {
         "id dettaglio": row_id,
         "partita": clean_text(row.get("document_no"))
@@ -600,7 +621,11 @@ def main_row_from_detail(
         "stato riscontro": status_label(row),
         "confidenza": confidence,
         "evidenza usata": evidence_used[:500] if evidence_used else "Nessun riscontro",
-        "differenza importo": clean_text(best.get("differenza")) or "N/A",
+        "differenza importo": (
+            clean_text(row.get("residual_amount"))
+            if row.get("rule_applied") == "semantic_evidence_allocation"
+            else clean_text(best.get("differenza")) or "N/A"
+        ),
         "azione richiesta": default_action(row, confidence),
         "riferimento fonte": clean_text(best.get("riferimento fonte")),
     }

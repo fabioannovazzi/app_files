@@ -20,6 +20,9 @@ from tests.plugins.test_archive_automatic_reporting import (
     reporting_runtime,
     start,
 )
+from tests.plugins.test_journal_bank_reconciliation_plugin import (
+    isolated_worker_catalog,
+)
 
 SCRIPTS = (
     Path(__file__).resolve().parents[2] / "plugins/journal-bank-reconciliation/scripts"

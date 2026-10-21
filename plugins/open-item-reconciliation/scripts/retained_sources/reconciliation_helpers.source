@@ -2617,6 +2617,8 @@ def closed_bank_allocation_controls(
     }
     closed_by_evidence: dict[str, list[dict[str, Any]]] = {}
     for row in reconciliation_rows:
+        if row.get("rule_applied") == "semantic_evidence_allocation":
+            continue  # Replayed below against the source-bound worker receipt.
         if clean_text(row.get("reconciliation_status")) not in {
             "closed",
             "partially_paid",
@@ -2851,6 +2853,9 @@ def closed_bank_allocation_controls(
             )
             continue
         ledgers.append(ledger)
+    from semantic_resolution import resolution_ledgers
+
+    ledgers.extend(resolution_ledgers(reconciliation_rows, evidence_rows, active))
     return ledgers, failures
 
 
@@ -3730,11 +3735,16 @@ def reconcile_open_items(
         evidence_rows,
         active,
     )
-    return enforce_closed_bank_allocation_controls(
-        reconciliation_rows,
-        evidence_rows,
-        active,
+    # First establish mechanical allocations without consuming semantic evidence.
+    mechanical = {
+        key: value for key, value in active.items() if key != "semantic_resolution"
+    }
+    controlled = enforce_closed_bank_allocation_controls(
+        reconciliation_rows, evidence_rows, mechanical
     )
+    from semantic_resolution import apply_resolution
+
+    return apply_resolution(controlled, evidence_rows, active)
 
 
 def reconciliation_checks(

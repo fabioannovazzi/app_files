@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "cd5babddaeef2238b952a2b3b20ead365c67810830a8868c838507711b3869c2",
+  "catalogue_fingerprint": "1aec3fcdcec2c2ade621ff1486afc08212be31f5e260b83da91267168bc41567",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1800,6 +1800,11 @@
     "date": "2026-10-19",
     "scope": "Replace the universal privacy-report trigger with fixed pipeline scope and Studio Archive lifecycle. Existing jurisdiction judgments are unchanged; no additional Geneva professional acceptance is claimed.",
     "version": "0.1.425"
+  },
+  "semantic_reconciliation_release_binding_20261021": {
+    "previous_catalogue_fingerprint": "cd5babddaeef2238b952a2b3b20ead365c67810830a8868c838507711b3869c2",
+    "scope": "Canonical manifest/version binding refresh. All 55 skill entrypoint IDs and bytes, assessment rows and Geneva jurisdiction dispositions are preserved. Shared host discovery and bounded semantic reconciliation do not establish new Swiss client, installed-host or professional acceptance.",
+    "version": "0.1.471"
   },
   "shared_privacy_release_binding_20261018": {
     "changed_entrypoints": [

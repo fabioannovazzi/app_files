@@ -306,8 +306,11 @@ the signed amount remains available as evidence.
 
 Only the main Codex chat may orchestrate the optional model pass. It keeps its
 existing model and invokes `semantic_review.py run-worker`, which requests one
-separate ephemeral `gpt-5.6-luna` process at max reasoning for the complete
-selected packet. Never reconstruct or run the underlying `codex exec` command
+separate ephemeral worker for the complete selected packet. The shared owned
+`semantic_worker_policy.json` supplies low-cost candidates, and
+`worker_capabilities.py` selects an advertised model/effort from the current host.
+The graph retains that selection for replay; availability is not model-quality
+evidence. Never reconstruct or run the underlying `codex exec` command
 directly. The launcher checks actual isolation and required CLI capabilities on the
 current macOS and Codex, without fixed external version/build/hash gates.
 It records executable snapshots per run and rejects concurrent changes.

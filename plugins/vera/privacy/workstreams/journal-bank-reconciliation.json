@@ -122,7 +122,7 @@
     },
     {
       "id": "bounded-validated-luna-resolution-funnel",
-      "control": "Codex-only residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a runtime-verified deny-default Codex worker (Luna/max by default, or an explicitly reviewed selection). It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness. Draft preparation defaults to perfect_match without attributing a decision to the user. The worker still analyses the admitted residuals, but its judgments cannot reach that deterministic-only level, so they remain in the review queue. An explicitly established lower clearance policy remains supported; no professional adoption or signature is implied."
+      "control": "The currently implemented Codex isolated adapter for residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a runtime-verified deny-default Codex worker (a low-cost model and reasoning effort discovered from the current host model catalog, or an explicit retained selection). It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness. Draft preparation defaults to perfect_match without attributing a decision to the user. The worker still analyses the admitted residuals, but its judgments cannot reach that deterministic-only level, so they remain in the review queue. An explicitly established lower clearance policy remains supported; no professional adoption or signature is implied."
     },
     {
       "id": "component-private-review-transport",
@@ -183,13 +183,17 @@
     {
       "id": "source-bound-bank-pdf-recovery",
       "control": "The reviewed bank layout binds source bytes, currency, physical columns, printed controls and the exact run-local adapter. Independent reconstruction rejects fabricated, duplicated or unclaimed monetary tokens, mismatched balances and totals, and changed mapping/adapter bindings. Failed checks retain readable entries as unqualified. Per-source bank histories and incident episodes are separate from journal recovery; extraction replay cannot certify the original task."
+    },
+    {
+      "id": "current-host-worker-selection",
+      "control": "The shared owned configuration provides cost candidates; the running Codex app-server model/list provides actual model and reasoning capabilities without creating a conversation. The receipt retains catalog and policy hashes and observed runtime. Availability does not establish model quality. Cowork and Antigravity packages select their own host and explicitly retain unresolved residuals because a verified isolated invocation adapter is not implemented; they never silently launch Codex."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "9a881ec12be04ae3b16d3808bef83aacbbb3608e2f9e06d541b30d336d1a1fdf"
+    "source_fingerprint": "51c09d30222e196e9444011dfd73e0079a26b3c1531ac8b0bba6320b34c7c228"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

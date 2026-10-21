@@ -19,6 +19,7 @@ const IMPLEMENTATION_CONTRACT = [
   ["plugin", "scripts/implementation_bootstrap.py"],
   ["plugin", "scripts/raw_input_runner.py"],
   ["plugin", "scripts/reconciliation_workflow.py"],
+  ["plugin", "scripts/semantic_resolution.py"],
   ["plugin", "scripts/retained_sources/accountant_report.source"],
   ["plugin", "scripts/retained_sources/locale_support.source"],
   ["plugin", "scripts/retained_sources/reconciliation_helpers.source"],
@@ -145,7 +146,7 @@ function validateImplementationTree() {
   );
   if (!setEquals(files, expectedFiles)) {
     throw new Error(
-      "implementation filesystem does not match the exact 26-file contract",
+      "implementation filesystem does not match the exact implementation contract",
     );
   }
   if (!setEquals(directories, expectedImplementationDirectories())) {

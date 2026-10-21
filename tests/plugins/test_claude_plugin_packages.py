@@ -1380,6 +1380,12 @@ def test_cowork_concordato_prefers_bounded_review_without_blocking_file_fallback
 
 
 def test_cowork_omits_codex_only_luna_residual_route(vera_entries) -> None:
+    policy = json.loads(
+        vera_entries[
+            "modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json"
+        ]
+    )
+    assert policy["host"] == "cowork"
     skill_name = (
         "modules/journal-bank-reconciliation/skills/"
         "mparanza-journal-bank-reconciliation/SKILL.md"
