@@ -888,37 +888,78 @@ def test_cli_combined_status_preserves_unknown_lines_as_unmapped(
 
 
 @pytest.mark.parametrize("limit", [None, 1])
-def test_registered_text_artifact_requires_the_complete_projection_for_lineage(
-    archive_core, client_case, limit
+@pytest.mark.parametrize("source_bearing", [False, True])
+def test_partial_text_is_measured_only_for_source_free_producer_metadata(
+    table_projection_case, limit, source_bearing
 ):
-    from archive_projection import register_value
+    from archive_projection import register_row_projection
     from archive_report_store import file_digest
     from archive_reporting import read_artifact, snapshot_run
 
-    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    loaded = table_projection_case
     artifact = Path(loaded["output_dir"]) / "review_notes.md"
     content = "# Review\nTwo matches; one residual.\n"
     artifact.write_text(content, encoding="utf-8")
-    register_value(
+    register_row_projection(
         "journal-bank-reconciliation",
         artifact,
         content,
-        [],
+        [{"record_id": "first", "fields": ["amount"]}] if source_bearing else [],
         artifact_sha256=file_digest(artifact),
     )
 
     read_artifact(loaded, artifact, limit=limit)
 
     report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    complete = not source_bearing or limit is None
+    assert report["collection_status"] == ("complete" if complete else "incomplete")
+    assert next(source for source in report["sources"] if source["role"] == "input")[
+        "sent_cells"
+    ] == int(source_bearing and complete)
+
+
+@pytest.mark.parametrize(
+    "changed", [None, "file_bytes", "producer_review", "expected_json"]
+)
+def test_saved_artifact_projection_requires_exact_writer_and_review_digests(
+    table_projection_case, changed
+):
+    from archive_projection import register_artifact_projection, register_private_value
+    from archive_report_store import digest, file_digest
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    output = Path(loaded["output_dir"])
+    artifact = output / "decisions.json"
+    review = {"items": [{"id": "first", "title": "7"}]}
+    value = {"title": "7"}
+    artifact.write_text(json.dumps(value))
+    artifact_sha256 = file_digest(artifact)
+    register_private_value("journal-bank-reconciliation", output, review)
+    if changed == "file_bytes":
+        artifact.write_text(json.dumps({"title": "Unregistered replacement"}))
+    elif changed == "producer_review":
+        review["items"][0]["title"] = "Edited review"
+    elif changed == "expected_json":
+        value["title"] = "Different writer output"
+
+    register_artifact_projection(
+        "journal-bank-reconciliation",
+        artifact,
+        data_sha256=digest(value),
+        artifact_sha256=artifact_sha256,
+        records=[{"record_id": "first", "fields": ["amount"]}],
+        private_sha256=digest(review),
+    )
+    read_artifact(loaded, artifact)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
     assert report["collection_status"] == (
-        "complete" if limit is None else "incomplete"
+        "complete" if changed is None else "incomplete"
     )
-    assert (
-        next(source for source in report["sources"] if source["role"] == "input")[
-            "sent_cells"
-        ]
-        == 0
-    )
+    assert next(row for row in report["sources"] if row["role"] == "input")[
+        "sent_cells"
+    ] == (1 if changed is None else 0)
 
 
 @pytest.fixture
@@ -968,6 +1009,50 @@ def table_projection_case(archive_core, client_case, tmp_path, request):
         },
     )
     return loaded
+
+
+@pytest.mark.parametrize("source_bearing", [False, True])
+@pytest.mark.parametrize("invalidated", [None, "parent", "revision"])
+def test_metadata_edit_preserves_only_proven_parent_source_operands(
+    table_projection_case, source_bearing, invalidated
+):
+    from archive_projection import register_metadata_revision, register_row_projection
+    from archive_report_store import file_digest
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    artifact = Path(loaded["output_dir"]) / "status.json"
+    value = {"sample": 7} if source_bearing else {"count": 2}
+    artifact.write_text(json.dumps(value))
+    register_row_projection(
+        "journal-bank-reconciliation",
+        artifact,
+        value,
+        [{"record_id": "first", "fields": ["amount"]}] if source_bearing else [],
+        artifact_sha256=file_digest(artifact),
+    )
+    if invalidated == "parent":
+        value["unknown_note"] = "Unregistered source content"
+        artifact.write_text(json.dumps(value))
+    previous_sha256 = file_digest(artifact)
+    value["status"] = "ready"
+    artifact.write_text(json.dumps(value))
+
+    register_metadata_revision(
+        "journal-bank-reconciliation",
+        artifact,
+        previous_sha256,
+        expected_sha256=(
+            "0" * 64 if invalidated == "revision" else file_digest(artifact)
+        ),
+    )
+    read_artifact(loaded, artifact)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == ("incomplete" if invalidated else "complete")
+    assert next(row for row in report["sources"] if row["role"] == "input")[
+        "sent_cells"
+    ] == int(source_bearing and not invalidated)
 
 
 @pytest.mark.parametrize(

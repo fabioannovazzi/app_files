@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "3d1492918bdccc19d2ef25de26af62638c8c2431003f256a19e18eb114a6f286"
+      "sha256": "ba113ab238e948cd364498f2f97afbaeb2252372e5937751d877c8487f497978"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "da6d199463e9db9a7d9b5c9c78ca8c7554acb3a3d86e1e598954c287511457a1"
+      "sha256": "e933d81babfc24586262ad3cbe946ca4c1794fec4333c620988259ca7e4732dd"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "458c22ce681d3b4bbd754244776ef6fd97b7623a8c68880ec69711911370c2b3"
+      "sha256": "f3c140cf3864e7ef69000ccbf6cac7be5eba09935e6f7a88f1f4088faa0d0c63"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
-      "sha256": "181fd67e98474876968bc566e8bda851fef3d4ee161f707d886a3c1aaf814067"
+      "sha256": "2cb0bf138c61440c23ed81483b0caeeecdc2422a81bb7387cf3b7cd64fdf5da8"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
@@ -116,7 +116,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "cd80d073920ac4ffa5f3e6d23bf2bf8111433f433d1c6216900521eea38e7a2f"
+      "sha256": "03a67f43af1bbfd29e1d8db4bec9fdd79b822b4b01c7079466ec04bee4e85e6d"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a66dc1dce2b59112d00f0a2da4251258f8ad2c6067fb3031c47112c1ea506f5f"
+  "canonical_course_sha256": "947403881cff4c0143080188b5a0f02eb2f180152023c092909c68a0fbee75ff"
 }

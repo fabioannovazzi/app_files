@@ -79,6 +79,7 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
     _bootstrap_sys.path.insert(0, _SCRIPTS_DIR)
 
 import argparse
+import hashlib
 import ipaddress
 import json
 import logging
@@ -93,7 +94,7 @@ from pathlib import Path
 from typing import Any
 from urllib.parse import urlparse
 
-from review_session import completed_review_handoff
+from review_session import completed_review_handoff, register_review_projections
 
 try:
     from .audit_assurance import (
@@ -559,10 +560,13 @@ def save_decisions(
         load_client_workflow_context_for_output(
             directory, expected_workflow_id=PLUGIN_NAME
         )
-    return run_review_output_transaction(
+    review_payload = _read_json_object(directory / "review_payload.json")
+    result = run_review_output_transaction(
         directory,
         lambda working_dir: _save_decisions_in_place(working_dir, input_args),
     )
+    register_review_projections(directory, result["ui_decisions"], review_payload)
+    return result
 
 
 def _short_string(value: Any) -> str:
@@ -1381,6 +1385,7 @@ def _apply_decisions_in_place(
             else f"Applied {applied_decisions['decision_count']} "
             "Open-item Reconciliation decisions."
         ),
+        "ui_decisions": ui_decisions,
         "applied_decisions": applied_decisions,
         "final_artifacts": final_artifacts,
     }
@@ -1400,7 +1405,14 @@ def apply_decisions(
         load_client_workflow_context_for_output(
             directory, expected_workflow_id=PLUGIN_NAME
         )
-    return run_review_output_transaction(
+    review_payload = _read_json_object(directory / "review_payload.json")
+    status_path = directory / "final_artifacts.json"
+    previous_status_sha256 = (
+        hashlib.sha256(status_path.read_bytes()).hexdigest()
+        if status_path.is_file() and not status_path.is_symlink()
+        else None
+    )
+    result = run_review_output_transaction(
         directory,
         lambda working_dir: _apply_decisions_in_place(working_dir, input_args),
         expected_predecessor_checkpoint=(
@@ -1409,6 +1421,14 @@ def apply_decisions(
             else None
         ),
     )
+    register_review_projections(
+        directory,
+        result["ui_decisions"],
+        review_payload,
+        final_artifacts=result["final_artifacts"],
+        previous_status_sha256=previous_status_sha256,
+    )
+    return result
 
 
 def _widget_html(output_dir: Path) -> str:

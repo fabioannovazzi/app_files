@@ -350,10 +350,18 @@ def record_send(
                         projection is not None
                         and projected_source is not None
                         and selection["unit"] in {"documents", "lines"}
-                        and selection["start"] == 0
-                        and selection["stop"] == projected_source["quantity"]
                         and selection["columns"] == [0]
+                        and (
+                            not projection["selections"]
+                            or (
+                                selection["start"] == 0
+                                and selection["stop"] == projected_source["quantity"]
+                            )
+                        )
                     ):
+                        # A subset of an exact producer-owned metadata file
+                        # still contains no copied source cells. Source-bearing
+                        # projections require the complete registered document.
                         artifact_selection["source_lineage_verified"] = True
                         selections.extend(projection["selections"])
                     table = (

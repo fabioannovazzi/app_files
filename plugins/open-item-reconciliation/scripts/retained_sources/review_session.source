@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import re
 from dataclasses import dataclass
@@ -12,6 +13,7 @@ __all__ = [
     "ReviewSessionResult",
     "RunIntakeResult",
     "completed_review_handoff",
+    "register_review_projections",
     "write_review_session_artifacts",
     "write_run_intake",
 ]
@@ -103,6 +105,91 @@ def _write_json(path: Path, payload: dict[str, Any]) -> Path:
         encoding="utf-8",
     )
     return path
+
+
+def _record_produced_value(
+    path: Path, text: str, value: Any, records: list[dict[str, Any]]
+) -> None:
+    """Bind the producer's exact bytes, without certifying later file edits."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_row_projection(
+            WORKFLOW_NAME,
+            path,
+            value,
+            records,
+            artifact_sha256=hashlib.sha256(text.encode("utf-8")).hexdigest(),
+        )
+
+
+def _write_registered_json(
+    path: Path, payload: dict[str, Any], *, records: list[dict[str, Any]]
+) -> Path:
+    """Write a producer payload with its explicitly selected source operands."""
+    text = json.dumps(payload, ensure_ascii=False, indent=2, default=str) + "\n"
+    path.write_text(text, encoding="utf-8")
+    _record_produced_value(path, text, payload, records)
+    return path
+
+
+def register_review_projections(
+    output_dir: Path,
+    decisions: dict[str, Any],
+    review: dict[str, Any],
+    *,
+    final_artifacts: dict[str, Any] | None = None,
+    previous_status_sha256: str | None = None,
+) -> None:
+    """Retain copied title operands; arbitrary review prose stays unmeasured."""
+    from vera_assurance.contracts import archive_projection_runtime
+    from vera_assurance.serialization import canonical_json_bytes
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None:
+        return
+    private_sha256 = hashlib.sha256(canonical_json_bytes(review) + b"\n").hexdigest()
+    if (
+        final_artifacts is not None
+        and previous_status_sha256
+        and not final_artifacts.get("blockers")
+        and final_artifacts.get("review_application", {}).get("blocker_count") == 0
+    ):
+        status_path = output_dir / "final_artifacts.json"
+        recorder.register_artifact_projection(
+            WORKFLOW_NAME,
+            status_path,
+            data_sha256=hashlib.sha256(
+                canonical_json_bytes(final_artifacts) + b"\n"
+            ).hexdigest(),
+            artifact_sha256=hashlib.sha256(status_path.read_bytes()).hexdigest(),
+            records=[],
+            private_sha256=private_sha256,
+            previous_sha256=previous_status_sha256,
+        )
+    items = {item["id"]: item for item in review["items"]}
+    records: list[dict[str, Any]] = []
+    status_fields = {"item_id", "item_type", "title", "action", "status", "decided_at"}
+    for decision in decisions["decisions"]:
+        item = items.get(decision["item_id"])
+        if (
+            not item
+            or decision["title"] != item["title"]
+            or set(decision) - status_fields
+            or not isinstance(item.get("_title_source_records"), list)
+        ):
+            return
+        records.extend(item["_title_source_records"])
+    path = output_dir / "ui_decisions.json"
+    recorder.register_artifact_projection(
+        WORKFLOW_NAME,
+        path,
+        data_sha256=hashlib.sha256(canonical_json_bytes(decisions) + b"\n").hexdigest(),
+        artifact_sha256=hashlib.sha256(path.read_bytes()).hexdigest(),
+        records=records,
+        private_sha256=private_sha256,
+    )
 
 
 def _local_output_refs(final_artifacts_path: Path) -> list[str]:
@@ -468,11 +555,13 @@ def _base_item(
     output_path: str | None = None,
     evidence: Sequence[dict[str, Any]] = (),
     data: dict[str, Any] | None = None,
+    title_source_records: list[dict[str, Any]] | None = None,
 ) -> dict[str, Any]:
     return {
         "id": item_id,
         "item_type": item_type,
         "title": title,
+        "_title_source_records": title_source_records,
         "source_path": source_path,
         "output_path": output_path,
         "allowed_actions": list(allowed_actions),
@@ -601,6 +690,28 @@ def _review_row_items(
             ),
         ]
         source_ref = "; ".join(part for part in source_parts if part) or None
+        # These are the exact operands used by _review_title, not text matching.
+        title_fields = []
+        document_field = next(
+            (
+                key
+                for key in ("document_no", "document_key")
+                if _clean_text(row.get(key))
+            ),
+            None,
+        )
+        if document_field:
+            title_fields.append(document_field)
+        amount_field = next(
+            (key for key in ("amount", "balance", "open_amount") if row.get(key)), None
+        )
+        if amount_field and _num(row[amount_field]):
+            title_fields.append(amount_field)
+        title_sources = (
+            [{"record_id": row.get("record_id"), "fields": title_fields}]
+            if title_fields
+            else []
+        )
         data = dict(row)
         if target_record_id:
             data.update(
@@ -628,6 +739,7 @@ def _review_row_items(
                 item_id,
                 _review_item_type(row),
                 _review_title(row, index, language),
+                title_source_records=title_sources,
                 source_path=source_ref,
                 output_path="codex_review_packet.json",
                 allowed_actions=(
@@ -681,6 +793,9 @@ def _check_items(
             "check_exception",
             _clean_text(row.get("check"))
             or (f"Control {index}" if _is_spanish(language) else f"Check {index}"),
+            title_source_records=(
+                [] if row.get("check") == "codex_review_completed" else None
+            ),
             output_path="run_manifest.json",
             allowed_actions=("accept", "reject", "edit", "mark_unclear", "skip"),
             recommended_action=(
@@ -805,6 +920,7 @@ def _artifact_items(
                 f"artifact-{index}",
                 item_type,
                 title,
+                title_source_records=[],
                 output_path=path_ref,
                 allowed_actions=("accept", "edit", "mark_unclear", "skip"),
                 recommended_action="accept" if exists else "mark_unclear",
@@ -1105,6 +1221,20 @@ def _accountant_workbook_required_cells(
     return cells
 
 
+def _output_quality_source_records(result: dict[str, Any]) -> list[dict[str, Any]]:
+    """Mirror the invoice values copied into the two workbook QA contracts."""
+    rows = result.get("reconciliation_rows")
+    if not isinstance(rows, list) or not rows or not isinstance(rows[0], dict):
+        return []
+    first = rows[0]
+    fields = []
+    if _cell_expected_text(first.get("document_no")):
+        fields.append("document_no")
+    if not first.get("document_no") and _cell_expected_text(first.get("document_key")):
+        fields.append("document_key")
+    return [{"record_id": first.get("record_id"), "fields": fields}] if fields else []
+
+
 def _word_report_required_text(language: str) -> list[str]:
     if _is_italian(language):
         return [
@@ -1296,10 +1426,10 @@ def _write_artifact_card(
             "",
             "## Siguiente acción",
             "",
-            "Abra el servidor local, comunique expresamente al revisor la URL y "
-            "recoja las decisiones en la página del navegador. Use Aplicar decisiones "
-            "para escribir `ui_decisions.json`, `applied_decisions.json` y el estado "
-            "actualizado en `final_artifacts.json`.",
+            "Siga `next_actions` en `final_artifacts.json`. Si la revisión está "
+            "completada (`review_completed`), entregue los documentos actuales. "
+            "Si quedan decisiones pendientes, use el navegador local y Aplicar "
+            "decisiones para conservarlas antes de regenerar los documentos.",
         ]
     else:
         lines = [
@@ -1327,13 +1457,15 @@ def _write_artifact_card(
             "",
             "## Prossima azione",
             "",
-            "Aprire il server locale, comunicare esplicitamente l'URL al reviewer, "
-            "raccogliere le decisioni nella pagina browser e usare Apply decisions "
-            "per scrivere `ui_decisions.json`, `applied_decisions.json` e lo stato "
-            "aggiornato in `final_artifacts.json`.",
+            "Seguire `next_actions` in `final_artifacts.json`. Se la revisione è "
+            "completata (`review_completed`), consegnare i documenti correnti. "
+            "Se restano decisioni da registrare, usare il browser locale e "
+            "Apply decisions prima di rigenerare i documenti.",
         ]
     path = output_dir / "artifact_card.md"
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    text = "\n".join(lines) + "\n"
+    path.write_text(text, encoding="utf-8")
+    _record_produced_value(path, text, text, [])
     return path
 
 
@@ -1623,9 +1755,10 @@ def write_review_session_artifacts(
         "decision_count": 0,
         "status": "pending_review",
     }
-    ui_decisions_path = _write_json(
+    ui_decisions_path = _write_registered_json(
         output_dir / "ui_decisions.json",
         ui_decisions_payload,
+        records=[],
     )
 
     review_html_path = _write_standalone_review_html(
@@ -1691,14 +1824,27 @@ def write_review_session_artifacts(
         ]
     )
 
-    final_artifacts_path = _write_json(
+    final_artifacts_path = _write_registered_json(
         output_dir / "final_artifacts.json",
         {
             "schema_version": SCHEMA_VERSION,
             "plugin": PLUGIN_NAME,
             "workflow": WORKFLOW_NAME,
             "run_id": run_id,
-            "client_engagement": persisted_client_engagement,
+            "client_engagement_reference": (
+                {
+                    key: persisted_client_engagement[key]
+                    for key in (
+                        "client_id",
+                        "engagement_id",
+                        "run_id",
+                        "content_sha256",
+                    )
+                    if key in persisted_client_engagement
+                }
+                if persisted_client_engagement
+                else None
+            ),
             "completed_at": _utc_now(),
             "outputs": _output_records(
                 output_dir,
@@ -1753,6 +1899,7 @@ def write_review_session_artifacts(
             "next_actions": next_actions,
             "status": "written_pending_review",
         },
+        records=_output_quality_source_records(result),
     )
     _append_execution_trace(
         run_intake_path,

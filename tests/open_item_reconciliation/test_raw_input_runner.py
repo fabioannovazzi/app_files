@@ -1102,7 +1102,11 @@ def test_raw_run_writes_extracted_source_pages_to_output(
         (output_dir / "final_artifacts.json").read_text(encoding="utf-8")
     )
     assert final_artifacts["run_id"] == client_engagement["run_id"]
-    assert final_artifacts["client_engagement"] == portable_context
+    assert "client_engagement" not in final_artifacts
+    assert final_artifacts["client_engagement_reference"] == {
+        key: portable_context[key]
+        for key in ("client_id", "engagement_id", "run_id", "content_sha256")
+    }
     canonical_output = next(
         output
         for output in final_artifacts["outputs"]

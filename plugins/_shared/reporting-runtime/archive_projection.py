@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -13,6 +14,7 @@ __all__ = [
     "is_recording",
     "register_metadata",
     "register_metadata_revision",
+    "register_artifact_projection",
     "register_private_value",
     "register_projection",
     "register_rows",
@@ -121,21 +123,62 @@ def register_private_value(component: str, output: Path, value: Any) -> None:
 
 
 def register_metadata_revision(
-    component: str, path: Path, previous_sha256: str
+    component: str,
+    path: Path,
+    previous_sha256: str,
+    *,
+    expected_sha256: str | None = None,
 ) -> None:
-    """Carry an exact metadata parent through a producer's metadata-only edit."""
+    """Preserve known source operands through a producer's metadata-only edit."""
     root = bound_run(component, {"output": str(path)})
-    if root is None:
+    if root is None or path.is_symlink():
         return
     with run_lock(root):
-        known_parent = any(
-            event["kind"] == "prepared_projection"
-            and event["artifact_sha256"] == previous_sha256
-            and not event["selections"]
-            for event in RunStore(root).events()
+        store = RunStore(root)
+        parent = next(
+            (
+                event
+                for event in store.events()
+                if event["kind"] == "prepared_projection"
+                and event["artifact_sha256"] == previous_sha256
+            ),
+            None,
         )
-    if known_parent:
-        register_projection(component, path, [])
+        if parent is None:
+            return
+        sources = store.sources()
+        referenced_paths = set()
+        for selection in parent["selections"]:
+            source = next(
+                (
+                    item
+                    for item in sources
+                    if item["role"] == "input"
+                    and item["source_id"] == selection["source_id"]
+                    and item["sha256"] == selection["source_sha256"]
+                ),
+                None,
+            )
+            if source is None:
+                return
+            referenced_paths.add(Path(source["path"]))
+        content = path.read_bytes()
+        artifact_sha256 = hashlib.sha256(content).hexdigest()
+        if expected_sha256 is not None and artifact_sha256 != expected_sha256:
+            return
+        value = json.loads(content)
+        _verify_source_snapshots(sources, referenced_paths)
+        if file_digest(path) != artifact_sha256:
+            raise ValueError("Producer metadata edit changed during registration")
+        store.event(
+            "projection:" + artifact_sha256,
+            {
+                "kind": "prepared_projection",
+                "artifact_sha256": artifact_sha256,
+                "data_sha256": digest(value),
+                "selections": parent["selections"],
+            },
+        )
 
 
 def register_row_projection(
@@ -165,6 +208,51 @@ def register_row_projection(
         register_value(
             component, output, value, entries, artifact_sha256=artifact_sha256
         )
+
+
+def register_artifact_projection(
+    component: str,
+    path: Path,
+    *,
+    data_sha256: str,
+    artifact_sha256: str,
+    records: list[dict[str, Any]],
+    private_sha256: str,
+    previous_sha256: str | None = None,
+) -> None:
+    """Bind a writer's exact JSON file to its producer-owned review origins."""
+    root = bound_run(component, {"output": str(path)})
+    if (
+        root is None
+        or path.is_symlink()
+        or not path.resolve().is_relative_to(root / "outputs")
+        or file_digest(path) != artifact_sha256
+    ):
+        return
+    value = json.loads(path.read_bytes())
+    if digest(value) != data_sha256 or file_digest(path) != artifact_sha256:
+        return
+    if previous_sha256 is not None:
+        with run_lock(root):
+            if not any(
+                event["kind"] == "prepared_private_value"
+                and event["component"] == component
+                and event["data_sha256"] == private_sha256
+                for event in RunStore(root).events()
+            ):
+                return
+        register_metadata_revision(
+            component, path, previous_sha256, expected_sha256=artifact_sha256
+        )
+        return
+    register_row_projection(
+        component,
+        path,
+        value,
+        records,
+        private_sha256=private_sha256,
+        artifact_sha256=artifact_sha256,
+    )
 
 
 def _row_origins(events: list[dict[str, Any]], component: str) -> dict[str, Any]:

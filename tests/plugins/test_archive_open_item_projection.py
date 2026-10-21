@@ -245,6 +245,188 @@ def test_changed_accountant_workbook_cannot_reuse_original_source_provenance(
     )
 
 
+@pytest.mark.parametrize(
+    "name,read_options,source_cells",
+    [
+        ("artifact_card.md", {}, 0),
+        ("artifact_card.md", {"offset": 0, "limit": 4}, 0),
+        ("final_artifacts.json", {}, 1),
+        ("ui_decisions.json", {}, 0),
+    ],
+)
+def test_initial_workflow_status_files_have_producer_provenance(
+    reconciled_case, name, read_options, source_cells
+):
+    from archive_reporting import read_artifact
+
+    loaded = reconciled_case
+    path = Path(loaded["calculation_dir"]) / name
+
+    read_artifact(loaded, path, **read_options)
+
+    measured = report(loaded)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    assert (
+        sum(
+            source["sent_cells"]
+            for source in measured["sources"]
+            if source["role"] == "input"
+        )
+        == source_cells
+    )
+
+
+@pytest.mark.parametrize("route", ["browser", "mcp"])
+@pytest.mark.parametrize("operation", ["save", "apply"])
+@pytest.mark.parametrize("with_note", [False, True])
+def test_saved_decision_titles_keep_sources_and_arbitrary_notes_remain_unmeasured(
+    reconciled_case, tmp_path, route, operation, with_note
+):
+    from archive_reporting import read_artifact
+
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    review = json.loads((output / "review_payload.json").read_text())
+    args = {
+        "client_engagement": str(Path(loaded["run_root"]) / "context.json"),
+        **{
+            key + "_path": str(output / (key + ".json"))
+            for key in ("run_intake", "review_payload", "final_artifacts")
+        },
+        "decision_source": "codex_agent",
+        "reviewer": "agent.test",
+        "decisions": [
+            {
+                "item_id": item["id"],
+                "action": "accept",
+                **({"note": "UNREGISTERED_REVIEW_TEXT"} if with_note else {}),
+            }
+            for item in review["items"]
+        ],
+        "expected_predecessor_checkpoint": json.loads(
+            (output / "assurance_receipts.json").read_text()
+        )["content_sha256"],
+    }
+
+    if route == "mcp":
+        with review_transport(tmp_path) as call:
+            call(f"{operation}_open_item_reconciliation_decisions", args)
+    else:
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-c",
+                "import json, runpy, sys; "
+                "api = runpy.run_path(sys.argv[1]); "
+                "api[sys.argv[2] + '_decisions'](sys.argv[3], json.loads(sys.stdin.read()))",
+                str(PLUGIN / "scripts/review_server.py"),
+                operation,
+                str(output),
+            ],
+            input=json.dumps(args),
+            capture_output=True,
+            text=True,
+            timeout=90,
+        )
+        assert completed.returncode == 0, completed.stderr
+    read_artifact(loaded, output / "ui_decisions.json")
+
+    measured = report(loaded)
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    if with_note:
+        assert measured["collection_status"] == "incomplete"
+        assert any(
+            error.startswith("derived_output_lineage_unavailable:")
+            for error in measured["errors"]
+        )
+        assert inputs["population.csv"]["sent_cells"] == 0
+    else:
+        assert measured["collection_status"] == "complete", measured["errors"]
+        assert inputs["population.csv"]["sent_cells"] == 6
+    assert inputs["bank.csv"]["sent_cells"] == 0
+
+
+def test_edited_status_file_cannot_inherit_producer_metadata(reconciled_case):
+    from archive_reporting import read_artifact
+
+    loaded = reconciled_case
+    path = Path(loaded["calculation_dir"]) / "artifact_card.md"
+    path.write_text(path.read_text() + "UNREGISTERED_REVIEW_TEXT\n")
+
+    read_artifact(loaded, path)
+
+    measured = report(loaded)
+    assert measured["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in measured["errors"]
+    )
+
+
+@pytest.mark.parametrize("route", ["browser", "mcp"])
+def test_applied_status_keeps_qa_source_provenance_without_private_review_notes(
+    reconciled_case, tmp_path, route
+):
+    from archive_reporting import read_artifact
+
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    review = json.loads((output / "review_payload.json").read_text())
+    args = {
+        "client_engagement": str(Path(loaded["run_root"]) / "context.json"),
+        **{
+            key + "_path": str(output / (key + ".json"))
+            for key in ("run_intake", "review_payload", "final_artifacts")
+        },
+        "decision_source": "codex_agent",
+        "reviewer": "agent.test",
+        "decisions": [
+            {"item_id": item["id"], "action": "accept", "note": "PRIVATE_REVIEW_NOTE"}
+            for item in review["items"]
+        ],
+        "expected_predecessor_checkpoint": json.loads(
+            (output / "assurance_receipts.json").read_text()
+        )["content_sha256"],
+    }
+
+    if route == "mcp":
+        with review_transport(tmp_path) as call:
+            call("apply_open_item_reconciliation_decisions", args)
+    else:
+        completed = subprocess.run(
+            [
+                sys.executable,
+                "-I",
+                "-B",
+                "-c",
+                "import json, runpy, sys; "
+                "api = runpy.run_path(sys.argv[1]); "
+                "api['apply_decisions'](sys.argv[2], json.loads(sys.stdin.read()))",
+                str(PLUGIN / "scripts/review_server.py"),
+                str(output),
+            ],
+            input=json.dumps(args),
+            capture_output=True,
+            text=True,
+            timeout=90,
+        )
+        assert completed.returncode == 0, completed.stderr
+    packet = read_artifact(loaded, output / "final_artifacts.json")
+
+    assert "PRIVATE_REVIEW_NOTE" not in json.dumps(packet)
+    measured = report(loaded)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == 1
+    assert inputs["bank.csv"]["sent_cells"] == 0
+
+
 def test_pending_review_counts_do_not_claim_source_cell_exposure(
     reconciled_case, tmp_path
 ):
@@ -503,6 +685,9 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
         loaded,
         output / "assurance_final_outputs/scheda_operativa_commercialista.xlsx",
     )
+    read_artifact(loaded, output / "artifact_card.md")
+    read_artifact(loaded, output / "final_artifacts.json")
+    read_artifact(loaded, output / "ui_decisions.json")
     with review_transport(tmp_path) as call:
         call(
             "validate_open_item_reconciliation_review",

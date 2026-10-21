@@ -2680,27 +2680,32 @@
     }
     function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
     function persistWidgetState() {
-      try { window.openai?.setWidgetState?.({ run_id: reviewPayload().run_id || null, decisions: state.decisions }); } catch { }
+      try {
+        window.openai?.setWidgetState?.({
+          run_id: reviewPayload().run_id || null,
+          saved_decision_signature: decisionSignature(savedDecisionInputs()),
+          decisions: state.decisions,
+        });
+      } catch { }
     }
     function loadInitialDecisions() {
       const current = {};
-      let savedDecisionCount = 0;
-      for (const decision of (Array.isArray(state.payload.ui_decisions?.decisions) ? state.payload.ui_decisions.decisions : [])) {
-        if (decision?.item_id && decision?.action && itemById(decision.item_id)) {
-          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };
-          savedDecisionCount += 1;
-        }
-      }
+      const saved = savedDecisionInputs();
+      for (const decision of saved) current[decision.item_id] = decision;
       const widgetState = window.openai?.widgetState;
       let draftDecisionCount = 0;
-      if (widgetState?.run_id === reviewPayload().run_id && widgetState.decisions && typeof widgetState.decisions === "object") {
-        for (const [itemId, decision] of Object.entries(widgetState.decisions)) if (itemById(itemId) && decision?.action) {
-          current[itemId] = decision;
-          draftDecisionCount += 1;
+      if (widgetState?.run_id === reviewPayload().run_id
+          && widgetState.saved_decision_signature === decisionSignature(saved)
+          && widgetState.decisions && typeof widgetState.decisions === "object") {
+        for (const [itemId, decision] of Object.entries(widgetState.decisions)) {
+          if (itemById(itemId) && decision?.action) {
+            current[itemId] = decision;
+            draftDecisionCount += 1;
+          }
         }
       }
       state.decisions = current;
-      state.recovery = { savedDecisionCount, draftDecisionCount };
+      state.recovery = { savedDecisionCount: saved.length, draftDecisionCount };
     }
     function setButtonText(id, text) {
       const button = document.getElementById(id);

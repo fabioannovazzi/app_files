@@ -41,6 +41,34 @@
       const applied = appliedDecisionInputs();
       document.getElementById("review-store").textContent = `${deskText("saved")}: ${saved.length} · ${deskText("applied")}: ${applied.length} · ${changed ? deskText("unsaved") : deskText("noUnsaved")}`;
     }
+    function persistWidgetState() {
+      try {
+        window.openai?.setWidgetState?.({
+          run_id: reviewPayload().run_id || null,
+          saved_decision_signature: decisionSignature(savedDecisionInputs()),
+          decisions: state.decisions,
+        });
+      } catch { }
+    }
+    function loadInitialDecisions() {
+      const current = {};
+      const saved = savedDecisionInputs();
+      for (const decision of saved) current[decision.item_id] = decision;
+      const widgetState = window.openai?.widgetState;
+      let draftDecisionCount = 0;
+      if (widgetState?.run_id === reviewPayload().run_id
+          && widgetState.saved_decision_signature === decisionSignature(saved)
+          && widgetState.decisions && typeof widgetState.decisions === "object") {
+        for (const [itemId, decision] of Object.entries(widgetState.decisions)) {
+          if (itemById(itemId) && decision?.action) {
+            current[itemId] = decision;
+            draftDecisionCount += 1;
+          }
+        }
+      }
+      state.decisions = current;
+      state.recovery = { savedDecisionCount: saved.length, draftDecisionCount };
+    }
     function filteredItems() {
       const q = state.query.trim().toLowerCase();
       const group = state.selectedType === "all" ? "accounting" : state.selectedType;

@@ -1514,3 +1514,91 @@ contains six executable changes and no added/removed files; SHA-256 is
 `42dc02b7272ba737bd74f02e64bdabc4396e70f7437578cbdd331512ceae6929`.
 The complete selective-reporting test file now passes all 29 cases. No normal
 chat has yet accepted candidate 0.1.463.
+
+### 0.1.463 normal chat: status and saved-decision provenance
+
+**A70:** fresh GPT-6.1-sol chat `01a15cd5-9807-76e2-b503-3fb3f82469b3`
+used the installed 0.1.463 package and ordinary Archive reads of both CSVs.
+The semicolon delimiter was correctly exposed. The EUR 2,500 population,
+EUR 1,500 receipts and EUR 1,000 residual reconciled; agent review, successor
+regeneration, 17 checks and independent replay succeeded. `final_ready` and
+`report_ready` were true. Word was unavailable; LibreOffice rendered both
+eight-page reports for inspection without changing the DOCX files.
+
+Automatic delivery still failed acceptance: Archive reads of
+`artifact_card.md`, `final_artifacts.json` and the browser-saved
+`ui_decisions.json` had no producer provenance. They produced, respectively,
+`artifact_7addbe163034cec98307fd71`, `artifact_19f400df8c48861735007c93`
+and `artifact_99c9a76b42bf443beda5067d`. The incomplete report was delivered
+automatically; the chat stopped and closed only its new run and task as failed.
+It did not read the operational workbook through Archive, so this attempt does
+not establish normal-chat acceptance of A69's workbook projection.
+
+Independent server verification matched run `run_21434e33b91aba51cf21b759`,
+userID `0ed4a818-1877-4652-8515-787c64de17a5`, receipt
+`aa047187-e38f-5453-8ceb-ee3c67b8322d`, revision 1, and report SHA-256
+`aee140d8bd7d98e1a142099e200516a191a62e8749b71392a52dac2d7b28af3c`.
+The report contains 23 sends and 67,644 characters. All 24 population and 12
+bank cells were read, but unknown derived-file provenance prevents a complete
+collection claim. Server agreement authenticates that incomplete result.
+All 644 files in the eleven historical preservation baselines remain unchanged.
+The new review-server job reached cancelled with return code -9.
+
+Additional observed interruptions and limits: 29 orphaned profiles and four
+candidate-only profiles did not block the exact registered client; truncated
+instruction output required targeted reads; pending review required agent
+decisions and regeneration; the third unpaid invoice retained an explicitly
+undetermined derived residual in the UI while its source amount was visible;
+the copy-JSON toast did not establish clipboard delivery, so normal Save plus
+Archive read supplied the result; the browser save omitted a reviewer label,
+which the public tool subsequently recorded as agent review. Reload showed
+seven completed decisions but an unsaved-change indication and blank note.
+No host-approval denial or accounting execution failure was observed.
+
+The repair separates exact producer status from source-bearing values. The
+artifact card and empty decision template contain owned status information.
+Saved decision titles copy invoice identifiers and amounts and require their
+original CSV coordinates. The final status file also contains the first invoice
+identifier in Excel verification metadata: it must count that cell, not claim
+the entire file is source-free. Full engagement information remains in the
+canonical result, intake, prepared records, review payload and assurance data;
+the status file keeps the client, engagement, run and context-digest references.
+Changed bytes, unregistered review packets and arbitrary review prose must not
+inherit a producer declaration. Partial reads of proven source-free status may
+remain measured; partial source-bearing text cannot claim its whole-file
+projection.
+
+The browser reload defect was independently reproduced: a cached draft keyed
+only by run ID overwrites newer persisted notes after public-tool review. A
+draft must be restored only against the saved-decision baseline on which it
+was created. An unchanged baseline must still recover genuine unsaved work.
+This adds no human approval or execution gate. Candidate repairs and full
+verification are in progress. Acceptance remains **1 of 13**; test 3 and
+server deployment remain pending a complete test-2 result.
+
+The same provenance gap was reproduced in both browser and MCP reads of the
+intermediate applied-status file. These writes now preserve the known parent's
+source operands only after exact writer-byte and producer-review verification;
+free-form blocker contents are not certified as metadata. Saved decisions
+without notes count precisely six population cells (three invoice identifiers
+and three amounts); status reads count the one invoice cell copied into the QA
+contract. Review notes remain private in mutation replies. Reading an untraced
+note-bearing file still reports its missing provenance honestly.
+
+The cached-draft regression failed before the repair and now passes alongside
+unchanged-baseline recovery. The artifact card now follows the current handoff
+instead of unconditionally requesting another review after completion. The
+public explanation includes status/decision-file reads in all five languages.
+
+Final source validation for candidate Vera 0.1.464 passes 120 projection,
+component and browser cases, 426 accounting cases with 81.79% coverage, and
+257 reporting cases with 83.33% coverage. Formatting, imports, nine-module
+runtime typing, Bandit medium/high and whitespace checks pass. All 55 Geneva
+entrypoint hashes and assessment rows are unchanged; only the version-bound
+catalogue identity changes. The Vera ZIP changes 148 files with no additions or
+removals, including ten executable/HTML paths; SHA-256 is
+`656d0e7bcde292205c5a2063a36e3f64676261c96eb16be2edf9fd4d3626e0f3`.
+Clara 0.1.330 and Lucia 0.1.155 include the shared reporter update; the Open-item
+component is 0.1.71. All-host source/package parity passes, and package/privacy
+validation passes 516 cases with two skips. Installed normal-chat acceptance
+remains pending. No Marketplace publication or server deployment has occurred.

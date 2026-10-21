@@ -6949,6 +6949,9 @@ def _finalize_assurance_run_in_place(
     )
     final_artifacts_path = out_dir / "final_artifacts.json"
     if final_artifacts_path.is_file():
+        previous_status_sha256 = hashlib.sha256(
+            final_artifacts_path.read_bytes()
+        ).hexdigest()
         final_artifacts = json.loads(final_artifacts_path.read_text(encoding="utf-8"))
         if not isinstance(final_artifacts, dict):
             raise AssuranceRunError("final_artifacts.json must contain an object")
@@ -7032,6 +7035,13 @@ def _finalize_assurance_run_in_place(
         elif final_artifacts.get("status") == "final_ready":
             final_artifacts["status"] = "ready_for_professional_review"
         _write_exact_json(final_artifacts_path, final_artifacts)
+        from vera_assurance.contracts import archive_projection_runtime
+
+        recorder = archive_projection_runtime(Path(__file__))
+        if recorder is not None:
+            recorder.register_metadata_revision(
+                "open-item-reconciliation", final_artifacts_path, previous_status_sha256
+            )
     _write_exact_json(out_dir / "assurance_gates.json", gates)
     numeric_path = out_dir / "numeric_evidence_ledger.json"
     if numeric_ledger is not None:

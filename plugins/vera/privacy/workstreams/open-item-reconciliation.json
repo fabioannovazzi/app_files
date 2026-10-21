@@ -121,6 +121,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "selected-status-and-saved-review-files",
+        "purpose": "Read generated workflow status and saved decisions through Archive with their actual source dependencies.",
+        "content": "The artifact card and empty decision template contain producer status, counts and locators. The final status JSON includes the sample invoice identifier used to verify the generated Excel files; that value remains linked to its original input cell. Saved review titles can contain invoice identifiers and amounts. Their provenance follows the exact producer-owned review digest and explicit title operands, including browser and MCP save/apply writes. Status-only revisions preserve the exact known parent source dependencies. Whole-file JSON reads retain those dependencies; partial text reads are measured without source cells only for exact producer-owned source-free metadata. Free-form reviewer notes, edited files and unregistered review packets remain explicitly unmeasured where their provenance is unavailable. Opening those local files can expose their contents to the selected model; mutation replies still keep complete decisions and notes in application-only metadata. Engagement labels and purpose remain in the full local records, while status files use technical client, engagement, run and context-digest references. No additional provider or external recipient is introduced.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -128,7 +137,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "aa2f2c83ca763e0fa7113d34a13ac3ab4566502ff84a3ffd8e324e6282688617"
+    "source_fingerprint": "7009ad09674f76193f1c1202d5e40d0656a6c6ca511ae9c7fea79eff2f655713"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -147,7 +156,7 @@
     },
     {
       "id": "local-review-service",
-      "control": "The review server binds to loopback and constrains review writes to the selected run folder."
+      "control": "The review server binds to loopback and constrains review writes to the selected run folder. A browser draft is restored only against the saved-decision signature on which it was created, so cached notes cannot overwrite a newer saved review. Unchanged saved baselines still recover unsaved drafts in local session storage."
     },
     {
       "id": "component-private-review-transport",
@@ -195,7 +204,7 @@
     },
     {
       "id": "producer-owned-tabular-provenance",
-      "control": "The reviewed CSV/XLSX reader records exact physical row and source-column dependencies with source byte hashes. The producer binds the complete private review digest. The outgoing recorder accepts index, selected-case and mutation-status projections only against that producer digest; edited or supplied review packets cannot inherit its provenance. Selected check metadata is limited to the known numeric pending-review count; arbitrary diagnostic prose is not certified. Operational-workbook provenance binds each output cell to explicit original record fields and the exact current path and bytes, including sealed copies after regeneration. Unknown cells retain unknown provenance without invalidating unrelated cells that were actually selected; a changed file cannot reuse a prior declaration. Literal producer text is identified by exact owned wording, never semantic or value matching against client data."
+      "control": "The reviewed CSV/XLSX reader records exact physical row and source-column dependencies with source byte hashes. The producer binds the complete private review digest. The outgoing recorder accepts index, selected-case and mutation-status projections only against that producer digest; edited or supplied review packets cannot inherit its provenance. Selected check metadata is limited to the known numeric pending-review count; arbitrary diagnostic prose is not certified. Operational-workbook provenance binds each output cell to explicit original record fields and the exact current path and bytes, including sealed copies after regeneration. Unknown cells retain unknown provenance without invalidating unrelated cells that were actually selected; a changed file cannot reuse a prior declaration. Literal producer text is identified by exact owned wording, never semantic or value matching against client data. Saved review files require the exact writer JSON, file hash and producer review digest. Metadata-only status revisions require a previously registered parent and preserve its original-cell references; unknown notes or changed parents cannot acquire a source-free declaration."
     }
   ],
   "workstream": "open-item-reconciliation",
@@ -214,7 +223,8 @@
           "Solo per i casi selezionati arrivano i campi mappati e valorizzati utili alla revisione. Campi vuoti e colonne non mappate restano fuori. Percorsi e identificativi tecnici sono esclusi per impostazione predefinita; una richiesta di riferimenti esatti può includerli nelle note diagnostiche del caso, insieme agli identificativi professionali necessari al confronto.",
           "I dati professionali non vengono anonimizzati né pseudonimizzati automaticamente. Il contesto di un caso selezionato può contenere nomi, descrizioni, importi, date e riferimenti reali quando servono alla revisione professionale.",
           "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali.",
-          "Se apre la scheda operativa generata, il modello riceve le righe e le colonne selezionate, che possono includere riferimenti fattura, date, importi, residui e descrizioni. Archive collega le celle lette alle fonti quando dispone della provenienza verificabile; testo libero non tracciato e altre letture non misurate restano esplicitamente fuori da questa verifica."
+          "Se apre la scheda operativa generata, il modello riceve le righe e le colonne selezionate, che possono includere riferimenti fattura, date, importi, residui e descrizioni. Archive collega le celle lette alle fonti quando dispone della provenienza verificabile; testo libero non tracciato e altre letture non misurate restano esplicitamente fuori da questa verifica.",
+          "Aprendo i file di stato o delle decisioni salvate, il modello può ricevere anche riferimenti e importi delle fatture. I valori copiati sono collegati alle celle originali quando la provenienza è verificabile. Le note libere e i file modificati senza provenienza restano esplicitamente non misurati."
         ],
         "en": [
           "The model understands the structure",
@@ -227,7 +237,8 @@
           "Only selected cases supply the mapped, populated fields useful to the review. Empty fields and unmapped columns stay out. Paths and technical identifiers are excluded by default; a request for exact references can include them in the case diagnostic notes, alongside the professional identifiers needed for comparison.",
           "Professional data is not automatically anonymized or pseudonymized. Selected case context may contain real names, descriptions, amounts, dates, and references when professional review requires them.",
           "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local.",
-          "When it opens the generated operational workbook, the model receives the selected rows and columns, which may include invoice references, dates, amounts, residual balances and descriptions. Archive links the cells read to sources when verifiable provenance is available; untraced free text and other unmeasured reads remain explicitly outside that verification."
+          "When it opens the generated operational workbook, the model receives the selected rows and columns, which may include invoice references, dates, amounts, residual balances and descriptions. Archive links the cells read to sources when verifiable provenance is available; untraced free text and other unmeasured reads remain explicitly outside that verification.",
+          "Opening status or saved-decision files can also give the model invoice references and amounts. Copied values are linked to their original cells when provenance is verifiable. Free-form notes and changed files without provenance remain explicitly unmeasured."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -240,7 +251,8 @@
           "Seuls les cas sélectionnés fournissent les champs mappés et renseignés utiles à la revue. Les champs vides et les colonnes non mappées restent exclus. Les chemins et identifiants techniques sont exclus par défaut ; une demande de références exactes peut les inclure dans les notes diagnostiques du cas, avec les identifiants professionnels nécessaires à la comparaison.",
           "Les données professionnelles ne sont pas automatiquement anonymisées ou pseudonymisées. Le contexte d'un cas sélectionné peut contenir des noms, descriptions, montants, dates et références réels lorsque la revue professionnelle l'exige.",
           "Studio Archive délimite chaque exécution de ce processus et crée automatiquement un rapport des données envoyées par Vera. Vera enregistre ses propres envois ; le rapport n’inspecte ni la conversation ni les autres outils. Le rapport reste sur la machine même lorsque toutes les données ont été envoyées. Les comptages manquants sont signalés comme indéterminés. Le serveur reçoit uniquement l’empreinte du rapport et les références de vérification, liées au Vera userID de la machine, à la même exécution et à la révision. Le contenu du rapport et les preuves restent locaux.",
-          "Lorsqu’il ouvre le classeur opérationnel produit, le modèle reçoit les lignes et colonnes sélectionnées, qui peuvent inclure des références de factures, dates, montants, soldes résiduels et descriptions. Archive rattache les cellules lues aux sources lorsque leur provenance est vérifiable ; les textes libres non traçables et les autres lectures non mesurées restent explicitement hors de cette vérification."
+          "Lorsqu’il ouvre le classeur opérationnel produit, le modèle reçoit les lignes et colonnes sélectionnées, qui peuvent inclure des références de factures, dates, montants, soldes résiduels et descriptions. Archive rattache les cellules lues aux sources lorsque leur provenance est vérifiable ; les textes libres non traçables et les autres lectures non mesurées restent explicitement hors de cette vérification.",
+          "En ouvrant les fichiers de statut ou de décisions enregistrées, le modèle peut aussi recevoir des références et des montants de factures. Les valeurs copiées sont rattachées aux cellules originales lorsque leur provenance est vérifiable. Les notes libres et les fichiers modifiés sans provenance restent explicitement non mesurés."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -253,7 +265,8 @@
           "Nur ausgewählte Fälle liefern die zugeordneten und ausgefüllten Felder, die für die Prüfung benötigt werden. Leere Felder und nicht zugeordnete Spalten bleiben ausgeschlossen. Pfade und technische Kennungen werden standardmäßig ausgelassen; bei einer Anfrage nach exakten Referenzen können sie in den Diagnosehinweisen des Falls erscheinen, zusammen mit den für den Vergleich benötigten fachlichen Kennungen.",
           "Professionelle Daten werden nicht automatisch anonymisiert oder pseudonymisiert. Der Kontext eines ausgewählten Falls kann echte Namen, Beschreibungen, Beträge, Daten und Referenzen enthalten, wenn die fachliche Prüfung sie benötigt.",
           "Studio Archive grenzt jede Ausführung dieses Prozesses ab und erstellt automatisch einen Bericht über die von Vera gesendeten Daten. Vera erfasst die eigenen Sendungen; der Bericht untersucht weder den Chat noch andere Werkzeuge. Der Bericht bleibt auf dem Rechner, auch wenn alle Daten gesendet wurden. Fehlende Mengenangaben werden ausdrücklich als unbekannt ausgewiesen. Der Server erhält nur den Berichtshash und die Prüfverweise, gebunden an die Vera userID des Rechners, dieselbe Ausführung und Revision. Berichtsinhalte und Nachweise bleiben lokal.",
-          "Beim Öffnen der erzeugten operativen Arbeitsmappe erhält das Modell die ausgewählten Zeilen und Spalten, gegebenenfalls mit Rechnungsreferenzen, Daten, Beträgen, Restbeträgen und Beschreibungen. Archive ordnet gelesene Zellen den Quellen zu, soweit ihre Herkunft überprüfbar ist; nicht zuordenbarer Freitext und andere nicht gemessene Lesezugriffe bleiben ausdrücklich außerhalb dieser Prüfung."
+          "Beim Öffnen der erzeugten operativen Arbeitsmappe erhält das Modell die ausgewählten Zeilen und Spalten, gegebenenfalls mit Rechnungsreferenzen, Daten, Beträgen, Restbeträgen und Beschreibungen. Archive ordnet gelesene Zellen den Quellen zu, soweit ihre Herkunft überprüfbar ist; nicht zuordenbarer Freitext und andere nicht gemessene Lesezugriffe bleiben ausdrücklich außerhalb dieser Prüfung.",
+          "Beim Öffnen von Statusdateien oder gespeicherten Prüfentscheidungen kann das Modell auch Rechnungsreferenzen und Beträge erhalten. Kopierte Werte werden ihren ursprünglichen Zellen zugeordnet, wenn ihre Herkunft überprüfbar ist. Freie Notizen und geänderte Dateien ohne Herkunftsnachweis bleiben ausdrücklich ungemessen."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -266,7 +279,8 @@
           "Solo los casos seleccionados aportan los campos asignados y cumplimentados útiles para la revisión. Los campos vacíos y las columnas no asignadas quedan excluidos. Las rutas y los identificadores técnicos se omiten por defecto; una solicitud de referencias exactas puede incluirlos en las notas de diagnóstico del caso, junto con los identificadores profesionales necesarios para la comparación.",
           "Los datos profesionales no se anonimizan ni se seudonimizan automáticamente. El contexto de un caso seleccionado puede contener nombres, descripciones, importes, fechas y referencias reales cuando la revisión profesional los necesita.",
           "Studio Archive delimita cada ejecución de este proceso y crea automáticamente un informe de los datos enviados por Vera. Vera registra sus propios envíos; el informe no inspecciona el chat ni otras herramientas. El informe permanece en el equipo incluso cuando se han enviado todos los datos. Los recuentos que faltan se indican como indeterminados. El servidor recibe únicamente la huella del informe y las referencias de verificación, vinculadas al Vera userID del equipo, a la misma ejecución y revisión. El contenido del informe y las evidencias permanecen locales.",
-          "Al abrir el libro operativo generado, el modelo recibe las filas y columnas seleccionadas, que pueden incluir referencias de facturas, fechas, importes, saldos residuales y descripciones. Archive vincula las celdas leídas con las fuentes cuando dispone de una procedencia verificable; el texto libre sin trazabilidad y otras lecturas no medidas quedan expresamente fuera de esa verificación."
+          "Al abrir el libro operativo generado, el modelo recibe las filas y columnas seleccionadas, que pueden incluir referencias de facturas, fechas, importes, saldos residuales y descripciones. Archive vincula las celdas leídas con las fuentes cuando dispone de una procedencia verificable; el texto libre sin trazabilidad y otras lecturas no medidas quedan expresamente fuera de esa verificación.",
+          "Al abrir archivos de estado o de decisiones guardadas, el modelo también puede recibir referencias e importes de facturas. Los valores copiados se vinculan a sus celdas originales cuando su procedencia es verificable. Las notas libres y los archivos modificados sin procedencia quedan expresamente sin medir."
         ]
       }
     }

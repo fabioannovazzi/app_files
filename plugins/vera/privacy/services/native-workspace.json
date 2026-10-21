@@ -1095,8 +1095,8 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a389af53af2bbee52671d8ff6efc8a651301a483157d6348e1e7b0cac1307331",
-    "reviewed_at": "2026-10-20"
+    "source_fingerprint": "6ec5ef90d867b09c6e1aba83b896e91a8052a5cf4a67c04b0f475b7d72f2aa5e",
+    "reviewed_at": "2026-10-21"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",

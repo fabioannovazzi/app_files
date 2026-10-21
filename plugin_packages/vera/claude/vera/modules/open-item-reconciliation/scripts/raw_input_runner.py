@@ -3319,6 +3319,11 @@ def run_raw_input_reconciliation(
         extracted.get("account_rollforward_check", []),
     )
     write_json(out_dir / "codex_review_packet.json", result["review_rows"])
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        recorder.register_rows(WORKFLOW_ID, out_dir, extracted["source_origins"])
     existing_review_session = result.get("review_session") or {}
     review_session = write_review_session_artifacts(
         out_dir,
@@ -3373,11 +3378,7 @@ def run_raw_input_reconciliation(
         ],
         workbook_name=Path(result["excel_path"]).name,
     )
-    from vera_assurance.contracts import archive_projection_runtime
-
-    recorder = archive_projection_runtime(Path(__file__))
     if recorder is not None:
-        recorder.register_rows(WORKFLOW_ID, out_dir, extracted["source_origins"])
         recorder.register_private_value(
             WORKFLOW_ID,
             out_dir,

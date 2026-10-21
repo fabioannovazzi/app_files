@@ -1113,6 +1113,41 @@ function modelContextReviewDigest(value) {
     .update(auditReviewStableJson(value) + "\n", "utf8").digest("hex");
 }
 
+function decisionArtifactProjections(result, review, previousStatusSha256) {
+  const projections = [];
+  if (!result.persisted) return projections;
+  if (previousStatusSha256 && result.final_artifacts_path
+      && result.blocker_count === 0 && result.final_artifacts?.blockers?.length === 0) {
+    projections.push({
+      path: result.final_artifacts_path,
+      data_sha256: modelContextReviewDigest(result.final_artifacts),
+      artifact_sha256: crypto.createHash("sha256")
+        .update(fs.readFileSync(result.final_artifacts_path)).digest("hex"),
+      records: [],
+      previous_sha256: previousStatusSha256,
+    });
+  }
+  if (!result.ui_decisions_path || !result.ui_decisions) return projections;
+  const items = new Map(review.items.map((item) => [item.id, item]));
+  const statusFields = new Set(["item_id", "item_type", "title", "action", "status", "decided_at"]);
+  const records = [];
+  for (const decision of result.ui_decisions.decisions) {
+    const item = items.get(decision.item_id);
+    if (!item || decision.title !== item.title
+        || Object.keys(decision).some((key) => !statusFields.has(key))
+        || !Array.isArray(item._title_source_records)) return projections;
+    records.push(...item._title_source_records);
+  }
+  projections.push({
+    path: result.ui_decisions_path,
+    data_sha256: modelContextReviewDigest(result.ui_decisions),
+    artifact_sha256: crypto.createHash("sha256")
+      .update(fs.readFileSync(result.ui_decisions_path)).digest("hex"),
+    records,
+  });
+  return projections;
+}
+
 function modelContextSourceRecords(item, semanticFields, evidence, context) {
   // Mirror explicit producer field transformations. Unknown fields and supplied
   // review notes remain unmeasured; never infer their sources from text values.
@@ -3063,6 +3098,7 @@ function validateAuditReconciliationReviewTransaction(
         : isSpanishRuntime(inputArgs)
         ? `Se han aplicado ${persistedAppliedDecisions.decision_count} decisiones de Open-item Reconciliation.`
         : `Applied ${persistedAppliedDecisions.decision_count} Open-item Reconciliation decisions.`,
+      ui_decisions: persistedUiDecisions,
       applied_decisions: persistedAppliedDecisions,
       final_artifacts: persistedFinalArtifacts,
     };
@@ -4609,6 +4645,7 @@ function applyDecisionPayloadWrites(inputArgs) {
       : persisted
         ? `Applied ${responseAppliedDecisions.decision_count} Open-item Reconciliation decisions.`
         : "Validated applied decisions. No run_intake.output_dir was provided, so nothing was written.",
+    ui_decisions: uiDecisions,
     applied_decisions: responseAppliedDecisions,
     final_artifacts: responseFinalArtifacts,
   };
@@ -4668,12 +4705,17 @@ function callTool(name, args = {}) {
   if ([TOOL_NAMES.saveDecisions, TOOL_NAMES.applyDecisions].includes(name)) {
     const materialized = materializeInputArgs(args);
     const reviewDigest = modelContextReviewDigest(materialized.review_payload);
+    const statusPath = name === TOOL_NAMES.applyDecisions
+      ? resolveFinalArtifactsOutputPath(materialized) : null;
+    const previousStatusSha256 = statusPath && fs.existsSync(statusPath)
+      ? crypto.createHash("sha256").update(fs.readFileSync(statusPath)).digest("hex") : null;
     const result = name === TOOL_NAMES.saveDecisions
       ? saveDecisionPayload(materialized) : applyDecisionPayload(materialized);
     return {
       ...result,
       _private_source_records: [],
       _private_source_review_sha256: reviewDigest,
+      _private_artifact_projections: decisionArtifactProjections(result, materialized.review_payload, previousStatusSha256),
     };
   }
   throw new Error(`unknown Open-item Reconciliation widget tool: ${name}`);
@@ -4688,10 +4730,12 @@ function toolResult(payload, toolName) {
   const mutation = [TOOL_NAMES.saveDecisions, TOOL_NAMES.applyDecisions].includes(toolName);
   const sourceRecords = payload?._private_source_records;
   const sourceReviewSha256 = payload?._private_source_review_sha256;
+  const artifactProjections = payload?._private_artifact_projections;
   const publicPayload = { ...payload };
   delete publicPayload._private_review_payload;
   delete publicPayload._private_source_records;
   delete publicPayload._private_source_review_sha256;
+  delete publicPayload._private_artifact_projections;
   const privateReviewPayload = mutation ? { ...publicPayload } : payload?._private_review_payload || null;
   if (mutation) {
     // The app retains full decisions and reviewer prose. The model receives the
@@ -4726,6 +4770,7 @@ function toolResult(payload, toolName) {
       ...result._meta,
       vera_source_records: sourceRecords,
       vera_source_review_sha256: sourceReviewSha256,
+      ...(artifactProjections ? { vera_artifact_projections: artifactProjections } : {}),
     };
   }
   return result;
