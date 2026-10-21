@@ -1,0 +1,3 @@
+Invoice,Customer,Invoice_Date,Net,VAT,Total,Currency,Paid
+FT-2026-0144,Theta Gemella Srl,2026-07-01,450.00,99.00,549.00,EUR,false
+FT-2026-0145,Iota Gemella Snc,2026-07-01,450.00,99.00,549.00,EUR,false

@@ -1,0 +1,3 @@
+Invoice,Customer,Invoice_Date,Net,VAT,Total,Currency,Paid
+FT-2026-0152,Rho Intreccio Srl,2026-07-01,200.00,44.00,244.00,EUR,false
+FT-2026-0153,Sigma Intreccio Srl,2026-07-01,350.00,77.00,427.00,EUR,false

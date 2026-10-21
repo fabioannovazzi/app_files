@@ -1,0 +1,31 @@
+{
+  "number": "03",
+  "upstream": "E-031-adversarial-incasso-parziale",
+  "title": "Pagamento parziale",
+  "core_result": "€600 attribuiti; €620 ancora aperti",
+  "conclusion": "Il pagamento parziale arriva negli artefatti nativi senza diventare una chiusura integrale.",
+  "expected": "Attribuire l’acconto di €600 alla fattura da €1.220, conservando €620 aperti e residuo banca zero.",
+  "observed": "Classificazione nativa partially_paid, allocated_amount=600.00 e residual_amount=620.00. Ledger, riepilogo e consegna conservano il residuo. Review e rigenerazione raggiungono report_ready=true.",
+  "findings": [
+    "Il risultato deriva dalla regola nativa per pagamento parziale, non da un worker semantico.",
+    "Un errore JavaScript nel wrapper di orchestrazione precede l’intake; il wrapper viene corretto senza eseguire il prodotto o modificare dati nel tentativo fallito.",
+    "La resa visiva del DOCX resta non verificata, come nel caso 01."
+  ],
+  "task_adaptation": "Richiesta normalizzata sul lavoro Vera; riferimento strutturato copiato dalla causale. Nessun importo di allocazione è inserito nella fonte.",
+  "verdict_code": "partial_success",
+  "model_stage": "Non avviato; missing_evidence",
+  "delivery": "Carte pronte; limiti documentati",
+  "execution": {
+    "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+    "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+    "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+    "Report pronto secondo i gate": "true",
+    "Gate source / preparation / reconciliation": "passed / passed / passed",
+    "Gate review / reporting": "passed / passed",
+    "Stato contenitore Archive": "completed",
+    "File congelati verificati": 77,
+    "Interventi umani durante il caso": 0,
+    "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+  },
+  "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+}

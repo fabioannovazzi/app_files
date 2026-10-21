@@ -1,0 +1,36 @@
+{
+  "projection_of": "Final native reconciliation_results.json; selected fields only",
+  "canonical_sha256": "4b6a71fe19eee94b92a09f8c7f5d78177a1365b92aabd510dd774ce076448e7f",
+  "rows": [
+    {
+      "document_no": "FT-2026-0144",
+      "party_ref": "Theta Gemella Srl",
+      "amount": "549",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved"
+    },
+    {
+      "document_no": "FT-2026-0145",
+      "party_ref": "Iota Gemella Snc",
+      "amount": "549",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved"
+    }
+  ],
+  "allocation_ledgers": [],
+  "gates": {
+    "preparation": "passed",
+    "publication": "withheld",
+    "reconciliation": "passed",
+    "reporting": "passed",
+    "semantic_review": "passed",
+    "source": "passed"
+  },
+  "report_ready": true,
+  "semantic_initial_status": "missing_evidence",
+  "semantic_batch_count": 0,
+  "freeze_manifest_sha256": "b6738e2757ebe01f96a932ac2471e0a8568a45bfb357408091eddc1806dd4ded",
+  "frozen_files_verified": 77
+}

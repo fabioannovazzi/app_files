@@ -1,0 +1,31 @@
+{
+  "number": "05",
+  "upstream": "E-037-adversarial-importo-superiore",
+  "title": "Incasso superiore alla fattura",
+  "core_result": "Copertura ed eccedenza non allocate",
+  "conclusion": "Limite end-to-end: i €90 di eccedenza sono spiegati dall’agente ma non rappresentati in un’allocazione nativa.",
+  "expected": "Collegare il pagamento da €700 alla fattura indicata da €610, conservando €90 non applicati senza inventarne il trattamento. Chiedere evidenza solo sulla disposizione dell’eccedenza.",
+  "observed": "La consegna distingue la copertura candidata di €610 dall’eccedenza di €90, ma la fattura resta nativamente unresolved e il ledger è assente. Review respinta, report_ready=false, Archive failed. Le carte sono dichiarate diagnostiche.",
+  "findings": [
+    "Il medesimo filtro temporale esclude il pagamento successivo al cut-off, benché incluso dal perimetro. Nessun worker semantico viene avviato.",
+    "La domanda sulla natura dei €90 è motivata; la mancata allocazione supportata della fattura non viene spiegata come un dato che il cliente avrebbe omesso.",
+    "L’interpretazione dell’agente non è presentata come output del motore. Nessun rimborso, acconto o altra destinazione dell’eccedenza è inventato."
+  ],
+  "task_adaptation": "Richiesta normalizzata sul lavoro Vera; riferimento strutturato copiato dalla causale. Il pagamento resta di €700 e la fattura di €610; nessuna riduzione artificiale del movimento.",
+  "verdict_code": "failure",
+  "model_stage": "Non avviato; missing_evidence",
+  "delivery": "Bozze bloccate; report non pronto",
+  "execution": {
+    "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+    "Esito valutazione end-to-end": "Fallimento del risultato operativo atteso",
+    "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+    "Report pronto secondo i gate": "false",
+    "Gate source / preparation / reconciliation": "passed / passed / passed",
+    "Gate review / reporting": "failed / blocked",
+    "Stato contenitore Archive": "failed",
+    "File congelati verificati": 77,
+    "Interventi umani durante il caso": 0,
+    "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+  },
+  "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+}

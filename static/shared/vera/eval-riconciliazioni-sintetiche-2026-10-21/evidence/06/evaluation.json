@@ -1,0 +1,31 @@
+{
+  "number": "06",
+  "upstream": "E-039-adversarial-causale-contraddittoria",
+  "title": "Riferimento e importo in conflitto",
+  "core_result": "Nessuna chiusura sul cliente sbagliato",
+  "conclusion": "Vera conserva il conflitto e non usa il solo importo per chiudere la fattura di un altro cliente.",
+  "expected": "Non attribuire a Sigma il pagamento di Rho soltanto perché entrambi valgono €427. Spiegare il riferimento a una fattura Rho da €244 e chiarire la differenza.",
+  "observed": "Le due fatture restano unresolved. La risposta distingue pagatore Rho, riferimento FT-2026-0152 e differenza di €183, chiedendo una distinta o conferma. Nessuna chiusura a Sigma e nessuna allocazione dell’eccedenza vengono dichiarate native.",
+  "findings": [
+    "L’astensione evita un falso abbinamento, ma non dimostra che un worker abbia valutato il conflitto: anche qui il worker non viene chiamato.",
+    "report_ready=true descrive carte rivedibili con esiti irrisolti, non una chiusura contabile delle partite.",
+    "La resa visiva del DOCX resta non verificata. La conservazione degli irrisolti non prova mancato pagamento."
+  ],
+  "task_adaptation": "Richiesta normalizzata sul lavoro Vera; il riferimento strutturato conserva il documento Rho presente nella causale. Non è sostituito con la fattura Sigma dello stesso importo.",
+  "verdict_code": "partial_success",
+  "model_stage": "Non avviato; missing_evidence",
+  "delivery": "Carte pronte; limiti documentati",
+  "execution": {
+    "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+    "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+    "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+    "Report pronto secondo i gate": "true",
+    "Gate source / preparation / reconciliation": "passed / passed / passed",
+    "Gate review / reporting": "passed / passed",
+    "Stato contenitore Archive": "completed",
+    "File congelati verificati": 77,
+    "Interventi umani durante il caso": 0,
+    "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+  },
+  "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+}

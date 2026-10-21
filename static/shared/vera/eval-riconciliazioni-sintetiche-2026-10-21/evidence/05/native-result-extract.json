@@ -1,0 +1,30 @@
+{
+  "projection_of": "Final native reconciliation_results.json; selected fields only",
+  "canonical_sha256": "e1cbfbebdca573c622b3cc222f4710558164dd21ac2be74a29d1f1dabf8f54a4",
+  "rows": [
+    {
+      "document_no": "FT-2026-0150",
+      "party_ref": "Xi Eccedenza Srl",
+      "amount": "610",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved",
+      "supporting_bank_amount": "700.00",
+      "supporting_bank_date": "2026-07-24"
+    }
+  ],
+  "allocation_ledgers": [],
+  "gates": {
+    "preparation": "passed",
+    "publication": "withheld",
+    "reconciliation": "passed",
+    "reporting": "blocked",
+    "semantic_review": "failed",
+    "source": "passed"
+  },
+  "report_ready": false,
+  "semantic_initial_status": "missing_evidence",
+  "semantic_batch_count": 0,
+  "freeze_manifest_sha256": "1bf54ce4d44688529c1d56f57afab0428a110f1b878f439035177dc724839c2b",
+  "frozen_files_verified": 77
+}

@@ -1,0 +1,3 @@
+Invoice,Customer,Invoice_Date,Net,VAT,Total,Currency,Paid
+FT-2026-0141,Zeta Cumulo Srl,2026-07-01,300.00,66.00,366.00,EUR,false
+FT-2026-0142,Zeta Cumulo Srl,2026-07-01,200.00,44.00,244.00,EUR,false

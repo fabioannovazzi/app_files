@@ -1,0 +1,38 @@
+{
+  "projection_of": "Final native reconciliation_results.json; selected fields only",
+  "canonical_sha256": "c7e51e61cbaa3ac523e795d0a4c731bc9cff73f2c775767429961da8b5dee283",
+  "rows": [
+    {
+      "document_no": "FT-2026-0152",
+      "party_ref": "Rho Intreccio Srl",
+      "amount": "244",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved",
+      "supporting_bank_amount": "427.00",
+      "supporting_bank_date": "2026-07-24"
+    },
+    {
+      "document_no": "FT-2026-0153",
+      "party_ref": "Sigma Intreccio Srl",
+      "amount": "427",
+      "currency": "EUR",
+      "reconciliation_status": "unresolved",
+      "rule_applied": "unresolved"
+    }
+  ],
+  "allocation_ledgers": [],
+  "gates": {
+    "preparation": "passed",
+    "publication": "withheld",
+    "reconciliation": "passed",
+    "reporting": "passed",
+    "semantic_review": "passed",
+    "source": "passed"
+  },
+  "report_ready": true,
+  "semantic_initial_status": "missing_evidence",
+  "semantic_batch_count": 0,
+  "freeze_manifest_sha256": "58915a1e6c98a12e1ce843ea6b63b7c6356fba31b8e874885ba7aaadc208b226",
+  "frozen_files_verified": 77
+}

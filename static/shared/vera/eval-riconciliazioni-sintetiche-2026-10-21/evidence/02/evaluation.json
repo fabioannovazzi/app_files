@@ -1,0 +1,31 @@
+{
+  "number": "02",
+  "upstream": "E-032-adversarial-importi-uguali-causale-muta",
+  "title": "Due fatture dello stesso importo",
+  "core_result": "Astensione corretta; nessuna allocazione",
+  "conclusion": "Vera non sceglie arbitrariamente tra i due clienti e chiede evidenza identificativa.",
+  "expected": "Non assegnare l’incasso da €549 a una delle due fatture da €549 in assenza di riferimento o collegamento al pagatore.",
+  "observed": "Entrambe le fatture restano irrisolte. Nessun ledger di allocazione. La consegna distingue i €1.098 di crediti forniti da un residuo riconciliato e non afferma che l’assenza di riscontro provi il mancato pagamento.",
+  "findings": [
+    "La scheda usa «non pagata — SI, chiusura non dimostrata al cut-off»: un mancato riscontro non dimostra mancato pagamento, e il richiamo al cut-off è impreciso per questa prova con incassi successivi inclusi.",
+    "Il worker non parte: lo stato è missing_evidence. In questo caso manca realmente un collegamento identificativo, ma la serie non dimostra una valutazione semantica di quella ambiguità da parte di un worker.",
+    "Un controllo aggiuntivo della ricevuta con Python ambientale fallisce per dipendenza assente; la verifica nativa della ricevuta è conservata. Nessuna installazione o riparazione del prodotto."
+  ],
+  "task_adaptation": "Richiesta normalizzata sul lavoro Vera. Il file banca non riceve un riferimento o un alias sintetico per colmare l’ambiguità.",
+  "verdict_code": "partial_success",
+  "model_stage": "Non avviato; missing_evidence",
+  "delivery": "Carte pronte; limiti documentati",
+  "execution": {
+    "Versione / workflow": "Vera 0.1.473 / open-item-reconciliation 0.1.74",
+    "Esito valutazione end-to-end": "Successo parziale con limiti di consegna",
+    "Worker semantico": "missing_evidence; 0 batch; nessuna invocazione worker",
+    "Report pronto secondo i gate": "true",
+    "Gate source / preparation / reconciliation": "passed / passed / passed",
+    "Gate review / reporting": "passed / passed",
+    "Stato contenitore Archive": "completed",
+    "File congelati verificati": 77,
+    "Interventi umani durante il caso": 0,
+    "Resa visiva DOCX": "Non verificata; indisponibilità Word e arresto LibreOffice nel primo caso"
+  },
+  "interpretation_boundary": "Il risultato nativo e la lettura dell’agente sono distinti. report_ready non equivale a chiusura delle partite o adozione professionale. Il modello host è richiesto come GPT-6.1 Sol; identità e reasoning effort effettivi non sono attestati dal provider negli strumenti disponibili."
+}

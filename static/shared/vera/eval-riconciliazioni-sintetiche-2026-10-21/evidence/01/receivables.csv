@@ -1,0 +1,2 @@
+Invoice,Customer,Invoice_Date,Net,VAT,Total,Currency,Paid
+FT-2026-0101,Rossi Costruzioni Srl,2026-07-01,500.00,110.00,610.00,EUR,false
