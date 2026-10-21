@@ -40,6 +40,15 @@ using the localized wording in `../vera/SKILL.md`, and continue in ChatGPT.
 
 # Archivio dello Studio
 
+For work starting from supplied files, first follow "Check supplied files before
+starting client work" in `../vera/SKILL.md`. Call `check_studio_import_sources`
+on every selected path before processing attachments or creating a client,
+engagement or run. Report an unavailable chat upload immediately and explain
+the supported host transfer or folder route. Verify transferred originals with
+`expected_sha256`; never manually write the managed inputs directory. Reuse and
+disclose any existing client and
+engagement IDs after a later import failure; do not duplicate them.
+
 For a user-authorized external folder delivery into a selected client's working
 area, use the component's `copy_studio_client_source_folder` operation. It
 preserves the tree outside `Vera/` for Archive Organization and retains a copy
@@ -58,6 +67,14 @@ preparation, start, bound execution, artifact finalization, review/completion,
 recovery, rename handling, and retention must remain separate explicit steps.
 The machine-local index and configuration are rebuildable aids, not the run
 ledger.
+
+Use the returned completeness flags when discovering clients or resolving names.
+`directory_complete: false` or `identity_registry_complete: false` does not mean
+the archive is empty. Report the listed issues and continue with healthy selected
+clients. A name lookup with `resolution_status: incomplete` cannot establish
+absence; reuse an established stable client ID and validate its folder rather
+than register it again. Previously known folder locations can support recovery
+when root listing is unavailable, but do not replace current identity validation.
 
 For local archive delivery, show the generated `readable_archive.index_path`
 (`Vera/APRI ARCHIVIO.html`) and the dated, named folders under `Vera/Pratiche/`.

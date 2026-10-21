@@ -44,6 +44,43 @@ def test_accounting_copy_covers_every_supported_locale() -> None:
     }
 
 
+@pytest.mark.parametrize("newer_saved_decisions", [False, True])
+def test_browser_draft_cannot_overwrite_newer_saved_review(
+    tmp_path: Path, newer_saved_decisions: bool
+) -> None:
+    node = shutil.which("node")
+    if node is None:
+        pytest.skip("Node is required to execute the generated widget")
+    javascript = re.search(r"<script>(.*?)</script>", ASSET.read_text(), re.DOTALL)[1]
+    javascript = re.split(
+        r'^    document\.getElementById\("[^\"]+"\)\.addEventListener',
+        javascript,
+        maxsplit=1,
+        flags=re.MULTILINE,
+    )[0]
+    exercise = r"""
+    const assert = require("node:assert/strict");
+    const item = {id:"one",item_type:"manual_review",allowed_actions:["accept"]};
+    const decision = {item_id:"one",action:"accept",reviewer_note:"Saved earlier"};
+    const window = {openai:{setWidgetState(value){this.widgetState=value;}}};
+    state.payload = {review_payload:{run_id:"same-run",items:[item]},ui_decisions:{decisions:[decision]}};
+    state.decisions = {one:{...decision,reviewer_note:"Local unsaved draft"}};
+    persistWidgetState();
+    if (NEWER) state.payload.ui_decisions.decisions = [{...decision,reviewer_note:"Agent saved newer"}];
+
+    loadInitialDecisions();
+
+    assert.equal(state.decisions.one.reviewer_note, NEWER ? "Agent saved newer" : "Local unsaved draft");
+    assert.equal(changedDecisionCount(collectDecisionInputs(),savedDecisionInputs()),NEWER ? 0 : 1);
+    """.replace(
+        "NEWER", json.dumps(newer_saved_decisions)
+    )
+    script = tmp_path / "draft-reload.cjs"
+    script.write_text(javascript + exercise)
+    result = subprocess.run([node, str(script)], capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+
+
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_accounting_desk_separates_documents_and_withholds_unproven_settlement(
     tmp_path: Path, language: str
@@ -99,7 +136,9 @@ def test_accounting_desk_separates_documents_and_withholds_unproven_settlement(
       assert.equal(elements["save-status"].textContent,deskText("notPersisted"));
       assert.equal(savedDecisionInputs().length,0);
     }).catch(error=>{console.error(error);process.exitCode=1;});
-    """.replace("LANG", json.dumps(language))
+    """.replace(
+        "LANG", json.dumps(language)
+    )
     script = tmp_path / "widget-test.cjs"
     script.write_text(javascript + exercise, encoding="utf-8")
     result = subprocess.run(

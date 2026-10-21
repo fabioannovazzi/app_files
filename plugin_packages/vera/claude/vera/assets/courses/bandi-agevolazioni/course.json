@@ -133,7 +133,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/SKILL.md",
-      "sha256": "e0705f14f1f01ae03a033ae1b169f95497a17e0ebd0694112e120682d10d8757"
+      "sha256": "a5bcd5471689a0f51423e3b6d7c4ac3559c488b6675c6c305189479e7728e7a7"
     },
     {
       "path": "modules/bandi-agevolazioni/skills/mparanza-bandi-agevolazioni/agents/openai.yaml",
@@ -217,7 +217,7 @@
     },
     {
       "path": "skills/mparanza-bandi-agevolazioni/SKILL.md",
-      "sha256": "a7efb7f01847eef26ee92abf45bdb32ca02ad7ff86c5e511ab21f25647657553"
+      "sha256": "01734b6916e56d4b16c2f156d8a7332b34afbd3ab91dc8c0fb765559fa0a8059"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

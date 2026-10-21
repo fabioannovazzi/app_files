@@ -192,6 +192,14 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("This job ID already belongs to a different execution")
         else:
             _write(job / "request.json", request)
+            if request["binding"] is not None:
+                from archive_projection import register_model_arguments
+
+                register_model_arguments(
+                    spec["component"],
+                    Path(request["binding"]["run_root"]) / "outputs",
+                    spec["arguments"],
+                )
             (job / "heartbeat").touch()
             # The native process inherits the host's permissions. Detachment only
             # keeps an authorized job alive when a tool connection is restarted.
@@ -268,6 +276,23 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         store = RunStore(Path(request["binding"]["run_root"]))
         state = store.state()
         if state is not None and state["collection_closed"]:
+            if operation == "cancel" or value.get("state") == "cancelled":
+                # Cancellation is already requested above. Its service-owned
+                # status can be confirmed without disclosing retained streams
+                # or rewriting the closed professional-data report.
+                payload = {"output": [metadata]}
+                response = {
+                    "content": [
+                        {
+                            "type": "text",
+                            "text": json.dumps(payload, ensure_ascii=False),
+                        }
+                    ],
+                    "structuredContent": payload,
+                }
+                if "cancellation_error" in value:
+                    response["isError"] = True
+                return response
             # Read-only recovery of an already delivered exact result preserves
             # the sealed report. A newly completed payload still needs delivery
             # under its active revision and cannot silently enter a closed run.

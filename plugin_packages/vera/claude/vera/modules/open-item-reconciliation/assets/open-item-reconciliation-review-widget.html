@@ -1258,7 +1258,9 @@
     "reviewPendingTitle": "Item review still to complete",
     "reviewPendingFinding": "{count} items do not yet have an applied review verified in regenerated documents.",
     "reviewPendingEffect": "Examine the listed items, record reasoned decisions and regenerate the documents with fresh validation. Accepting this exception does not complete the item reviews.",
-    "readOnly": "Archived result is read only. Start a new run to change review decisions."
+    "readOnly": "Archived result is read only. Start a new run to change review decisions.",
+    "reviewApplied": "Review recorded",
+    "regenerationPending": "Regenerate and verify the workpapers before delivery"
   },
   "it": {
     "purpose": "Confronta le partite segnalate come aperte con le evidenze disponibili. Verifica gli esiti e registra il supporto mancante.",
@@ -1351,7 +1353,9 @@
     "reviewPendingTitle": "Revisione delle partite da completare",
     "reviewPendingFinding": "{count} partite non hanno ancora una revisione applicata e verificata nei documenti rigenerati.",
     "reviewPendingEffect": "Esamina le partite indicate, registra decisioni motivate e rigenera i documenti con una nuova verifica. Confermare questa eccezione non completa la revisione delle partite.",
-    "readOnly": "Risultato archiviato in sola lettura. Per modificare le decisioni avvia una nuova esecuzione."
+    "readOnly": "Risultato archiviato in sola lettura. Per modificare le decisioni avvia una nuova esecuzione.",
+    "reviewApplied": "Revisione registrata",
+    "regenerationPending": "Rigenera e verifica le carte prima della consegna"
   },
   "fr": {
     "purpose": "Comparez les postes déclarés ouverts aux justificatifs disponibles. Vérifiez les résultats et consignez les pièces manquantes.",
@@ -1444,7 +1448,9 @@
     "reviewPendingTitle": "Revue des postes à terminer",
     "reviewPendingFinding": "{count} postes ne disposent pas encore d’une revue appliquée et vérifiée dans les documents régénérés.",
     "reviewPendingEffect": "Examinez les postes indiqués, consignez des décisions motivées et régénérez les documents avec une nouvelle validation. Accepter cette exception ne termine pas la revue des postes.",
-    "readOnly": "Résultat archivé en lecture seule. Lancez une nouvelle exécution pour modifier les décisions."
+    "readOnly": "Résultat archivé en lecture seule. Lancez une nouvelle exécution pour modifier les décisions.",
+    "reviewApplied": "Revue enregistrée",
+    "regenerationPending": "Régénérez et vérifiez les documents avant la remise"
   },
   "de": {
     "purpose": "Gleichen Sie gemeldete offene Posten mit den verfügbaren Nachweisen ab. Prüfen Sie die Ergebnisse und erfassen Sie fehlende Belege.",
@@ -1537,7 +1543,9 @@
     "reviewPendingTitle": "Prüfung der Posten noch offen",
     "reviewPendingFinding": "Für {count} Posten liegt noch keine angewendete und in neu erstellten Dokumenten validierte Prüfung vor.",
     "reviewPendingEffect": "Prüfen Sie die aufgeführten Posten, erfassen Sie begründete Entscheidungen und erstellen Sie die Dokumente mit erneuter Validierung. Das Bestätigen dieser Ausnahme schließt die Prüfung der Posten nicht ab.",
-    "readOnly": "Archiviertes Ergebnis ist schreibgeschützt. Starten Sie einen neuen Lauf, um Prüfentscheidungen zu ändern."
+    "readOnly": "Archiviertes Ergebnis ist schreibgeschützt. Starten Sie einen neuen Lauf, um Prüfentscheidungen zu ändern.",
+    "reviewApplied": "Prüfung erfasst",
+    "regenerationPending": "Unterlagen vor der Übergabe neu erstellen und prüfen"
   },
   "es": {
     "purpose": "Contraste las partidas declaradas abiertas con las evidencias disponibles. Revise los resultados y registre el soporte que falta.",
@@ -1630,7 +1638,9 @@
     "reviewPendingTitle": "Revisión de partidas pendiente",
     "reviewPendingFinding": "{count} partidas aún no tienen una revisión aplicada y verificada en los documentos regenerados.",
     "reviewPendingEffect": "Examine las partidas indicadas, registre decisiones motivadas y regenere los documentos con una nueva validación. Aceptar esta excepción no completa la revisión de las partidas.",
-    "readOnly": "Resultado archivado de solo lectura. Inicie una nueva ejecución para cambiar las decisiones."
+    "readOnly": "Resultado archivado de solo lectura. Inicie una nueva ejecución para cambiar las decisiones.",
+    "reviewApplied": "Revisión registrada",
+    "regenerationPending": "Regenere y verifique los documentos antes de la entrega"
   }
 }
 ;
@@ -2148,7 +2158,10 @@
       const failed = reviewPayload().summary?.failed_check_count;
       const stage = artifactState();
       const ready = stage === "final_ready";
-      document.getElementById("state-strip").innerHTML = `<p class="desk-note"><strong>${esc(deskText("processing"))}:</strong> ${esc(failed > 0 ? `${failed} ${deskText("failedChecks")}` : failed === 0 ? deskText("processed") : deskText("unavailable"))} · <strong>${esc(deskText("deliverables"))}:</strong> ${esc(ready ? deskText("finalReady") : deskText("notFinal"))}</p>`;
+      const awaitingRegeneration = stage === "awaiting_regeneration";
+      const processing = awaitingRegeneration ? deskText("reviewApplied") : stage === "written_pending_review" ? deskText("reviewPendingTitle") : failed > 0 ? `${failed} ${deskText("failedChecks")}` : failed === 0 ? deskText("processed") : deskText("unavailable");
+      const delivery = ready ? deskText("finalReady") : awaitingRegeneration ? deskText("regenerationPending") : deskText("notFinal");
+      document.getElementById("state-strip").innerHTML = `<p class="desk-note"><strong>${esc(deskText("processing"))}:</strong> ${esc(processing)} · <strong>${esc(deskText("deliverables"))}:</strong> ${esc(delivery)}</p>`;
     }
     function rowHtml(item) {
       const data = item.data || {};
@@ -2667,27 +2680,32 @@
     }
     function applyRecommendedToVisible() { for (const item of filteredItems()) ensureDecision(item, item.recommended_action || item.allowed_actions?.[0] || "mark_unclear"); persistWidgetState(); renderRows(); }
     function persistWidgetState() {
-      try { window.openai?.setWidgetState?.({ run_id: reviewPayload().run_id || null, decisions: state.decisions }); } catch { }
+      try {
+        window.openai?.setWidgetState?.({
+          run_id: reviewPayload().run_id || null,
+          saved_decision_signature: decisionSignature(savedDecisionInputs()),
+          decisions: state.decisions,
+        });
+      } catch { }
     }
     function loadInitialDecisions() {
       const current = {};
-      let savedDecisionCount = 0;
-      for (const decision of (Array.isArray(state.payload.ui_decisions?.decisions) ? state.payload.ui_decisions.decisions : [])) {
-        if (decision?.item_id && decision?.action && itemById(decision.item_id)) {
-          current[decision.item_id] = { item_id: decision.item_id, action: decision.action, reviewer_note: decision.reviewer_note || "", edit_value: decision.edit_value || "", requested_documents: Array.isArray(decision.requested_documents) ? decision.requested_documents : [] };
-          savedDecisionCount += 1;
-        }
-      }
+      const saved = savedDecisionInputs();
+      for (const decision of saved) current[decision.item_id] = decision;
       const widgetState = window.openai?.widgetState;
       let draftDecisionCount = 0;
-      if (widgetState?.run_id === reviewPayload().run_id && widgetState.decisions && typeof widgetState.decisions === "object") {
-        for (const [itemId, decision] of Object.entries(widgetState.decisions)) if (itemById(itemId) && decision?.action) {
-          current[itemId] = decision;
-          draftDecisionCount += 1;
+      if (widgetState?.run_id === reviewPayload().run_id
+          && widgetState.saved_decision_signature === decisionSignature(saved)
+          && widgetState.decisions && typeof widgetState.decisions === "object") {
+        for (const [itemId, decision] of Object.entries(widgetState.decisions)) {
+          if (itemById(itemId) && decision?.action) {
+            current[itemId] = decision;
+            draftDecisionCount += 1;
+          }
         }
       }
       state.decisions = current;
-      state.recovery = { savedDecisionCount, draftDecisionCount };
+      state.recovery = { savedDecisionCount: saved.length, draftDecisionCount };
     }
     function setButtonText(id, text) {
       const button = document.getElementById(id);

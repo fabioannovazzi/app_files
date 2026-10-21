@@ -139,27 +139,27 @@
     {
       "path": "scripts/archive_report_measurements.py",
       "repository_path": "plugins/lucia/scripts/archive_report_measurements.py",
-      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
     },
     {
       "path": "scripts/archive_report_receipt.py",
       "repository_path": "plugins/lucia/scripts/archive_report_receipt.py",
-      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
+      "sha256": "b95a744720e24960c623cea2a81728b4b0fa8412647096a588d0054efedfcd78"
     },
     {
       "path": "scripts/archive_report_seal.py",
       "repository_path": "plugins/lucia/scripts/archive_report_seal.py",
-      "sha256": "d853037c3d326d4094ab5fbb87a713ea7ee63383b83b026b5bc75d79bd6a2c0c"
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
     },
     {
       "path": "scripts/archive_report_store.py",
       "repository_path": "plugins/lucia/scripts/archive_report_store.py",
-      "sha256": "5daf6b21e744bd4c5b4e9ad645dc910f6cfabe2c3615f56b319f61034f4216dc"
+      "sha256": "6d04ba281a01f6a4e295efa5f1c33789801561ec183d67e40bfde7920e2f2f9f"
     },
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/lucia/scripts/archive_reporting.py",
-      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
+      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -174,7 +174,7 @@
     {
       "path": "scripts/notarized_run_receipt.py",
       "repository_path": "plugins/lucia/scripts/notarized_run_receipt.py",
-      "sha256": "d14afea6e9dabee7c2611d4e5fc0dac12c7c0011a7e8908f5e0e927369962f71"
+      "sha256": "7b32e58c31df7fdbe875407f370e709a14ec4a2d7456b9f75d0eea91c8ccb89b"
     },
     {
       "path": "scripts/operational_incidents.py",

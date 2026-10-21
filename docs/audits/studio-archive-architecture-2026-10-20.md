@@ -22,8 +22,12 @@ The accepted run is `run_f833545796f658d8aaaba563`; its full evidence and the
 recovered verification-network block appear below. Twelve workflows remain.
 The earlier partial acceptance remains withdrawn; no earlier failed run was
 rewritten or reclassified. The old test-two chat stays stopped and must not be
-reopened without a later request. Resolve the remaining CI and server-status
-inconsistency before starting a new test-two chat. The overall goal is active.
+reopened without a later request. PR #884 passed all 98 checks, merged and was
+deployed; the 0.1.452 native service passed in a fresh test-two chat. That chat
+stopped before creating sources or an Archive run because the tabular adapter
+requires a single counterparty per source. Candidate 0.1.453 repairs that limit
+and the subsequent locally reproduced failures described below. It is not yet
+accepted in normal chat. The overall goal is active.
 
 ## Required behavior
 
@@ -80,6 +84,10 @@ client ambiguity and professional interpretation remain agent judgments.
 | A35 | Mapping handoff / copied inspection metadata | The skill lists `potential_monetary_columns` alongside the fields sealed in a mapping receipt. The input contract omits it because the sealer derives it from source bytes. The 0.1.449 agent copied it into its decisions, which were rejected as unknown fields. | The draft could not reach reconciliation despite explicit mapped amount and excluded balance columns. Three new positive regressions reproduce the rejection; a fourth shows it hides the actual undisposed-balance error. | Clarify the input contract and discard this single known informational field from a copy of the decisions before validation. Recompute candidates from the current source as before. Regressions cover correct, empty and stale copied candidates, an undisposed balance that must still reject, and a misspelled unknown decision field that must not be silently ignored. All 27 sealer integration checks pass at 85.91% coverage, and all 20 reporting checks pass. Package verification and installed acceptance are pending. | Source-derived candidates cannot supply review authority. Recomputing them prevents stale values from concealing monetary columns without rejecting harmless copied metadata. Required mapping, exclusions, source-byte checks and relationship policy remain enforced. |
 | A36 | Derived result provenance / partial tabular reads | Test 0.1.450 read `resolution_funnel.json`, `human_review_queue.json` and one row of `relationship_residuals.csv` through the recorded reader. The JSON producers had no source declarations; the collector supported whole-document projections but not selected table cells. | Finalization rejected incomplete measurement after successful reconciliation and validated worker execution. | The repair declares generated summary/review JSON against their actual source fields and exact bytes, and records a per-cell map for the residual CSV. Partial reads consume only selected cell origins, including both amounts behind allocations. Identical bytes at distinct producer paths keep distinct origins; edited artifacts and missing evidence remain unaccounted. Local integration and shared regressions pass; package and fresh-chat acceptance are pending. | Exact bytes and producer coordinates are mechanically verifiable. No business result is reclassified as metadata, no unread row is counted as sent, and no professional approval is added. |
 | A37 | Server task-status wording / separate receipt contracts | The current `workflow_status` response correctly reports task completed and Computer ID verified, but also reports the unused legacy usage receipt as missing and suggests manual linkage. `modules/operational_incidents/store.py::_workflow_reporting` still emits that wording and says no local remainder needs no report. The installed contract instead creates an Archive report for every selected run, including full exposure, and requires no separate usage-receipt link. | No block occurred in the accepted run, whose independent Archive receipt verifies. The server recommendation is nevertheless misleading and can reintroduce an unnecessary manual step. | Repaired in source: selected Vera tasks identify `archive_managed` receipt handling and `archive_run` report scope. They no longer infer a missing Archive receipt or require a separate usage link. Historical task links remain visible; Clara/Lucia retain task-owned reporting. Completed/failed/cancelled task regressions pass. Deployment and live readback remain pending. | A legacy usage-receipt absence does not invalidate a verified Archive report. The diagnostic must identify its actual contract and cannot claim the automatic report is missing. |
+| H27 | Coordinator native service after update | The coordinator's old native incident binding returns Native incident build index is unavailable. Old 0.1.451 cache roots were removed by the supported installer; read-only process inspection finds resident services at those roots and newer services at 0.1.452. The exact responding PID is unknown. | That coordinator binding cannot read task status. | Current installed public CLI verifies the live task; the new 0.1.452 test chat independently passes native status and registers/fails its own task. No process was killed, index bypassed or cache restored. | A stale binding is supported inference, not proven PID attribution. Fresh-chat native success does not establish that the old binding recovered. |
+| H28 | Coordinator acceptance handoff | The new test-two prompt incorrectly locates check_installed_product.py inside the installed plugin; it is a repository helper. | Chat stops before creating a task or inputs. | Correct repository command with the actual exposed 0.1.452 skill path passes in the same chat. The missing path and explicit recovery remain in its report. | This was a coordinator error, not a package incompatibility or a reason to add an execution gate. |
+| H29 | Fresh second workflow | Chat 01a15b38-163e-74e1-93ed-8f4c277ff467 stops at A38 after native service, installation and dependency checks pass. An earlier reference read under the wrong skill-relative directory returned ENOENT and was recovered by a bounded component search. Archive reports 29 orphaned profiles but no blocked clients/runs/inputs for the selected engagement. | Task 7857cd53-ddf6-41d4-8339-6cbf110b0e68 ends failed; zero queued task events, verified Computer ID. No new sources, Archive run, accounting deliverables or privacy report. | Repairs stay in the coordinator. A fresh chat after installation must rerun the original two-file case; no artificial per-party file split. | archive_managed identifies reporting ownership and does not prove that a report exists. These results are not an accepted pipeline. |
+| H30 | Coordinator pre-install inventory | The first check_installed_product invocation returned Installation verification unavailable with no detailed cause. | Installation remained on hold; the failure was not counted as an installed pass. | The same bundled Codex CLI returned its inventory successfully, and the unmodified checker then verified one enabled Vera 0.1.452 installation with its matching exposed skill. | The first failure mechanism is unknown. No Python/runtime-policy or package-integrity check was weakened. |
 | T01 | Test harness | The component fixture restored `sys.path` between tests while its reporting adapter remained cached. | Broad regression run failed importing `archive_report_receipt` in the tax-litigation case. | Fixture now supplies product sibling imports per test; exact failing case passes. No product import behavior changed for this failure. | A fixture import defect does not justify changing production code. |
 | T02 | Previous behavior assertions | Two older tests required an exact recovery response without new issue fields and a global listing failure for an unreceipted file. | Broader regression verification failed after the intended inventory repair. | Assertions now verify the complete recovery response and the useful behavior: verified inputs remain visible, the unreceipted entry is unavailable and its bytes stay unchanged. Subsequent broader suite passes. | Tests must validate the requested behavior rather than preserving the defect as authority. |
 | T03 | Test harness / Windows CI | Job `118616483802` decoded Node's UTF-8 UI output using the Windows default encoding: `Apri incarichi →` became mojibake. | One native-navigation assertion failed; the job reported 60 passed, one failed and one skipped. | The three Archive UI harness subprocess calls now explicitly decode UTF-8. Ten focused local checks passed; subsequent Windows CI verification is pending. Production files are unchanged for this failure. | The harness must decode the actual UI transport encoding; weakening the visible-label assertion or changing production text would conceal the harness defect. |
@@ -87,6 +95,28 @@ client ambiguity and professional interpretation remain agent judgments.
 | T05 | Editing check | The task-scoping instruction edit expected 47 matching skill entrypoints but found 49 after applying the exact replacement. | Its final count assertion failed; the edits had already completed. | Inspected the actual diff and all matching entrypoints, confirmed all 49 contained the same intended scope correction, and verified the old global-flush instructions are absent. Shared-runtime synchronization and all 132 usage tests pass. | An incorrect editing-count assumption is not a product defect or a reason to omit two direct entrypoints. |
 | T06 | New regression fixture | The plugin-suite fixture defaults unfamiliar test modules to local-only incident delivery. The new portable-PDF regression expected its isolated server store to receive the event. | One assertion failed after the production repair: 58 checks passed, one failed. | The test explicitly enables delivery to its existing in-process fake transport. The wider 191-check suite passes. No production behavior changed to address this fixture mismatch. | An isolated fake transport is permitted in this integration test; the assertion must exercise the intended delivery route without a real network dependency. |
 | T07 | Release review check | The course-delta check initially assumed every source inventory retained its length. The new diagnostic helper legitimately adds one source entry to affected inventories. | The review script stopped before fingerprint refresh. | Inspected the additions, then verified all 19 changed course JSON files preserve their content after accounting for only source hashes and the named new helper reference. | New governed code must be listed; an unchanged source count is not a product invariant. |
+| A38 | Open-item ordinary CSV intake | Fresh 0.1.452 test two read the published single-party source contract and stopped. Local regressions reproduce rejection of valid mapped party cells for CSV/XLSX populations, bank exports and journals. Preparation also reapplies one source party to all rows. | The requested three-party population and two-party bank export cannot run faithfully. No new Archive run or source was created in the test chat. | Working-tree repair: a reviewed party column with null common party supplies each exact row identity; source replay verifies it and preparation preserves it. Fixed-party, blank-party and forged-row regressions retain their concrete protections. | A normal multi-party export does not require partitioning, invented common identities or human mapping approval. Entity/currency/unit and cross-party allocation checks remain. |
+| A39 | Open-item partial settlement cutoff | A local regression with cutoff 2026-09-30 and a 2026-10-10 receipt leaves the invoice unresolved even with post_cutoff_events_excluded=false. Partial promotion unconditionally compares the receipt with the cutoff. | A valid EUR 300 receipt against EUR 800 is ignored. | Working-tree repair respects the selected cutoff policy; included later receipts retain EUR 500 residual, excluded receipts remain excluded. | The calculation must follow the reviewed evidence period instead of silently changing the opening-population cutoff. |
+| A40 | Open-item invoice identity | Exact source inspection shows document_key(F001, no date) returns F001/2001, and F002 becomes year 2002. The year is guessed from undelimited sequence digits. | Ordinary bank references do not match their actual 2026 invoices. | Removed the guessed year. A source-number reference without a date joins only one same-party, same-perimeter invoice in the supplied population, without changing source dates or keys. Same-party repeated numbers, including different years, remain unresolved. | Sequence digits do not establish a year. Explicit number/year syntax remains supported; payment amount does not choose between ambiguous invoices. |
+| A41 | Open-item partial allocation ownership | A reproduced case with two different parties using the same document key is rejected as ambiguous before party compatibility is considered. | The uniquely owned partial receipt is not allocated. | Working-tree candidate enumeration checks the exact accounting perimeter before testing ownership. Same-party duplicate invoices and reused evidence remain unallocated. | Another party's identical reference cannot create ownership ambiguity or receive the payment. |
+| A42 | Open-item Word source-map lineage | A complete local workflow reaches Word replay but a bank-only source group displays zero open amount beside the same printed invoice number as a populated group. The verifier resolves both groups to both source records. | A legitimate zero subtotal fails material-value replay. The initial diagnosis that the renderer changed 1200 to zero was disproved by inspecting the exact source groups. | Source-map groups and Word rows now retain their actual record references. A regression with the same printed numbers in different explicit invoice years checks delivery and replay without merging the records. | Repeated display names cannot substitute for record identity. Numeric replay remains required and unchanged. |
+| A43 | Open-item XLSX source parser | Bandit identifies three medium-severity standard ElementTree parses in the bounded XLSX reader. | XML entity expansion remains possible within an otherwise bounded source reader; this was found during code validation, not in the synthetic chat. | Replaced those calls with defusedxml, already present in the shared runtime and declared explicitly for the standalone component. Added a source-level entity rejection regression; no runtime-policy counter changes. | A concrete XML entity hazard justifies the parser behavior. Ordinary workbook values remain admitted. |
+| A44 | Native Open-item initial readiness | The native integration test fails on a new started Archive run: context treats the automatically created model-data report pair as interrupted accounting output. | Even draft_save fails before calculation with Existing Open-item outputs or interrupted work require review or recovery. | Candidate 0.1.453 uses the existing archive_reporting_paths ownership contract to separate the exact owned report sidecars from unfinished work. The original native CSV case now calculates; unknown output and pending-intent regressions still retain recovery state, and foreign-run reports are refused. | A new run's automatic reporting is not evidence of interrupted accounting. Actual unowned output or an unfinished request must not be overwritten. |
+| A45 | Native Open-item source conventions | The native draft schema excludes tabular and rejects null party_ref; compilation also requires exactly the older text-adapter fields. | The native route cannot retain an ordinary reviewed multi-party CSV selection even after the underlying reader repair. | Candidate accepts the bounded tabular draft and null common party; the unchanged public producer validates the exact completed layout and source cells. Native regression with the original three invoices and two later receipts passes. | Source mapping is reviewed by the agent; fixed schema validation must represent the supported input contract rather than impose a single-party fiction. |
+| A46 | Native Open-item review attribution | Native prepare requires human_reviewed=true even for preparing a reviewable draft; the MCP schema also fixes the value to true. | An agent either cannot prepare the requested work or would have to claim a human review that did not occur. | Candidate accepts and persists explicit agent or human source-review attribution; the native regression uses agent.codex and human_reviewed=false, with professional_approval=false. Existing human panel submission remains supported. | Routine source review can be performed by the agent under the user's explicit authorization. Adoption, signing, filing and external actions are separate. |
+| A47 | Open-item absolute source-decision lookup | The 0.1.453 normal-chat producer fails with exactly one current reviewed source decision is required per source. Its adapter lookup accepts the exact absolute input paths supplied by the agent, while the assurance decision lookup accepts only input-relative keys. A local regression reproduces the missing decisions with otherwise unchanged sources and mappings. | Neither reviewed CSV is qualified and no accounting report is produced. The failed run and assumptions are retained. | Candidate 0.1.454 resolves the exact current absolute and full input-relative path to the same source receipt. It preserves relative identities in decision receipts and refuses foreign-run paths, ambiguous basenames and conflicting aliases. All 399 component tests pass with 81.72% coverage, including full Archive production with absolute mappings. Fresh acceptance remains pending. | Path spelling is not a missing professional review. Exact source identity must stay bound to current bytes without forcing an undocumented spelling. |
+| A48 | Native Open-item nullable source conventions | The underlying producer admits null for a missing thousands separator, but the native draft validator requires text for that money field. The same native CSV regression fails with Invalid unfinished source convention when the valid explicit null is used. | A valid ordinary CSV convention cannot be retained through the native service. This was reproduced here, not in the normal-chat CLI route. | Candidate 0.1.454 mirrors only the producer-admitted nullable entity/party and decimal/thousands fields. All other values still reach the existing complete source validator. The native panel also encoded its Assente choice as an invalid empty string and offered an unsupported space separator; it now preserves null and only the supported choices. All 57 native intake, reporting, regeneration, panel and bridge regressions pass after the separate A49 repair. | An absent thousands separator is not an incomplete human decision. The transport must preserve the producer contract. |
+| A49 | Native Open-item JSON transport | CI job 118919566070 installed PyMuPDF 1.28.2. Its legacy import writes a warning to stdout before JSON; 42 native tests fail with JSONDecodeError. Two local public-bridge regressions reproduce corruption from import and execution diagnostics. | The native service cannot read an otherwise valid contract or review response. This is a real protocol defect, separate from the CSV path failure. | Candidate 0.1.454 reserves stdout for the final JSON response in both Open-item bridges and retains Python diagnostics on stderr. Both regressions and all 57 real native-suite checks pass locally; CI verification remains pending. The test-only regeneration launcher separates its own import diagnostics in the same way. | Dependency diagnostics are not accounting data or evidence of an incompatible runtime. No version pin, policy-counter change or skipped JSON validation is introduced. |
+| A50 | Public Open-item review runtime selection | The public MCP replay selects an override, project environments or PATH Python, but omits the shared environment used by the successful producer. Replaying that fallback with /usr/bin/python3 fails on missing defusedxml. A public save regression with a valid shared environment and unrelated unusable project interpreter fails before repair. | The installed normal chat generates the correct three-invoice drafts but save_open_item_reconciliation_decisions returns Complete assurance replay failed. The original tool conceals subprocess details, so its exact interpreter is not independently attested. | Working-tree follow-up prefers the existing shared interpreter before project/PATH fallbacks, preserving an explicit override. The same public save regression passes. No dependency upgrade or runtime version gate is added. | A tool that resumes the producer must use its available declared runtime rather than assume the unrelated chat project provides dependencies. |
+| A51 | Cancellation confirmation after Archive closure | The cancel operation writes its request and the worker stops, but result delivery then rejects the already-closed Archive run. Retained job 6780d3e0-16b7-4661-8be4-aaa0d05a4476 has state cancelled and returncode -9. | The user-facing call reports failure and cannot confirm cleanup despite successful cancellation. | Working-tree follow-up returns only service-owned cancellation status after closure, including status polling of a cancelled worker. Undelivered stdout/stderr are withheld and the sealed report bytes remain unchanged. Focused regressions pass. | Stopping or confirming an owned worker is distinct from sending new professional output into a closed report. |
+| A52 | Open-item outgoing-data provenance | The failed 0.1.454 run records four unmapped emissions: the producer summary, validation index, render index and review error. Both imported CSVs have exact read coordinates, but the component does not register the emitted producer summaries and review projections. | The automatic report correctly remains incomplete despite recording all 36 known source cells; no source minimization claim is supported. | The working-tree repair binds exact producer status and private-review digests, records actual CSV/XLSX field origins, and keeps full mutation objects in app metadata. The CLI omits free-form engagement text. Eight focused cases pass, including exact selected-cell counts, pending-review counts, full regeneration, and rejection of false partial-payment claims. Unknown errors and edited or unsupported data remain unmeasured. Installed normal-chat acceptance remains pending. | A server signature proves the report identity, not complete outgoing-data measurement. |
+| A53 | MCP review transaction context recovery | The real three-invoice public-MCP integration passes save, but apply fails assurance replay. Temporary diagnostic instrumentation identifies `current Open-item Reconciliation customer-run context is unavailable`: the Python resolver recognizes `.audit-review-transaction-` browser copies but not `.generated-review-transaction-` MCP copies. | A valid managed run cannot apply its review through the public MCP route, even with the correct interpreter. | Admit both producer-owned working-copy forms only at their existing locations inside the same run. Portable client/run identity and source receipts still revalidate. | Different internal transaction names do not establish a different client or invalid source. |
+| A54 | Retaining an empty predecessor directory | After A53, the same integration fails with `Review transaction changed an unauthorized directory` for the predecessor's empty `.open_item_reconciliation_cache`. The Python producer retains the full snapshot but returns only its file paths to the MCP transaction validator. | Correct snapshot preservation is rejected because its empty directory has no file from which the validator can infer the directory. | Return the freshly replayed history's directory list as well as its files, and validate their actual directory types before promotion. The three-invoice public save/apply integration then passes. | Preserve exact predecessor contents, including empty directories; do not treat their absence from a files-only list as evidence of an unauthorized change. |
+| A55 | Partial-payment report readiness | The integrated public save/apply and native regeneration succeeds with all mechanical checks and semantic review passed, but `report_ready=false`. The gate independently rejects every allocation with `balanced=false`, including the verified EUR 300 payment on an EUR 800 invoice retaining EUR 500 outstanding. | A correct partial settlement cannot become a ready report, despite being a central result of this workflow. | Carry the exact partial-ledger IDs already rederived from source evidence into gate evaluation. Their retained residual is allowed; unbound imbalances and claimed full closures remain checked. The real public save/apply and native regeneration integration reaches final_ready/report_ready with source files and retained predecessor files unchanged. False full closure and erased residual regressions also pass. | An unpaid residual is an accounting result, not by itself an arithmetic or evidence failure. |
+| A56 | Ordinary decimal tolerance rejected during preparation | Fresh 0.1.455 chat supplies the exact string `amount_tolerance="0.00"`; the producer rejects it with `amount_tolerance must be canonical Decimal text`. The existing calculation helper accepts that same value as exact zero, while the preparation layer requires the already-canonical serialization `"0"`. A public preparation regression reproduces the rejection. | The run stops before producing Excel/Word and never exercises the repaired public review. | Reuse the calculation's exact finite non-negative parser at intake and serialize its result canonically. Receipt replay still requires the stored canonical form. Seventeen focused tolerance checks pass, including negative, non-finite, ambiguous and binary-float rejection. Full candidate checks and installed acceptance remain pending. | Canonical storage does not require rejecting equivalent exact input notation; normalization changes no tolerance or accounting decision. |
+| A57 | Calculation parameter treated as an unowned accounting figure | After A56 normalization, the temporary public integration rejects the Word tolerance paragraph as a material figure outside a workflow-owned table. A nonzero tolerance also reproduces the corresponding Excel failure for its Assumptions value. The validators demand source-record ownership for a declared calculation parameter. | Valid explicit tolerances prevent delivery of the generated documents. This was found in candidate integration, not in a resumed normal chat. | Carry the canonical prepared tolerance into rendering. Match the renderer-owned parameter line and Assumptions cell against that exact sealed value, separately from source-record figures. Twenty-six focused tolerance/report tests pass, including all five languages and changed or erased values in both Word and Excel. The existing arbitrary-figure and source-formula checks remain. | Parameter identity is established by its sealed input value; treating it as an invoice amount is a false classification. |
+| A58 | Failed-run report linked but not displayed | The completed 0.1.455 chat's final answer contains a report link and an incomplete-measurement notice, but no readable report body. No saved-report show command appears in that turn. Archive already returns `vera_reporting.display_markdown`, and the existing generic contract requires displaying it. | Saving and signing succeeded, but the transcript does not establish the required inline delivery. | Clarify the Vera-specific reporting reference: show the actual returned Markdown even for an incomplete failed-run report, with links in addition, and use the saved-report reader when the returned text is unavailable. Report generation and the shared Archive implementation are unchanged. Fresh normal-chat delivery remains unproved. | This is an observed handoff failure, not evidence of a missing report or invalid server signature. Clearer instructions alone are not acceptance evidence. |
+
 | B01 | Release evidence | `build_product_release.py vera clara lucia` stopped at privacy contract generation: reviewed fingerprints still described the previous source. | No candidate package was produced at that step. | Completed the source-delta review below, corrected three disclosure manifests and refreshed 40 affected review fingerprints. All three product privacy registers now validate; contract generation passes. No installed acceptance follows from this result. | Release disclosures must describe the governed source; this build check is separate from ordinary client execution. |
 | B02 | Release evidence | The next build stopped at the generated course-catalogue freshness check, first at Vera's `bilancio-oic/course.json`. Regeneration then invalidated the dependent Vera onboarding, Clara teaching/course-files and Lucia course-files fingerprints. | Packaging did not reach ZIP generation during those attempts. | Regenerated the existing authoring corpus; all 20 changed course JSON files changed only SHA-256 provenance fields. Reviewed that delta, refreshed the four dependent records and rebuilt successfully. | Generated course source references must match their declared source; this is a release check, not an ordinary client execution prerequisite. |
 | B03 | Review tooling | The GitHub connector returned HTTP 403 `Resource not accessible by integration` while creating the draft repair PR. | That connector could not create the PR. | The existing authenticated GitHub CLI verified that no PR existed and successfully created draft PR #884 for the pushed branch. | Connector permission scope is separate from Vera and from the repository account already used for the authorized branch push. |
@@ -148,6 +178,14 @@ client ambiguity and professional interpretation remain agent judgments.
 | T25 | Coordinator commit / stale Git lock | Committing the verified 0.1.451 candidate failed because `.git/index.lock` already existed. It was empty and dated 22:03:55; `lsof` found no owner and the process inventory showed no active Git writer. | Commit and installation were held. | Recheck the exact lock and Git processes, remove only that stale empty lock, then retry the existing branch commit. No repository contents are reset or discarded. | A local repository lock, not a Vera execution block or failed product test. |
 | T26 | Status-regression fixture | The first new Clara/Lucia scope tests inherited Vera's `journal-sampling` default, which is absent from those products' catalogues. | Two tests failed validation before exercising status. | Corrected only the test inputs to existing Clara `business-planning` and Lucia `quesito-legale-fiscale` processes. The intended five pre-fix assertions then failed; the repaired combined suite passes. | This is a test-fixture mistake, not a new product restriction. |
 | T27 | Coordinator staging inventory | The commit precheck omitted generated `.claude-plugin/marketplace.json` from this task's allowed paths, so it stopped before staging anything. | No commit or product operation ran. | Inspected the diff: only Vera, Clara and Lucia version numbers changed to the three built candidates. Include this generated local Cowork catalogue in the same commit. | This is package-source bookkeeping, not an external Marketplace upload or a product execution block. |
+
+| T28 | Coordinator validation sequencing | One first-pass integrity regression failed because implementation bytes changed while the full suite was running. | That run could not establish a stable candidate result. | Froze product source and reran the complete suite: 389 passed. No integrity check was removed. | The rejection correctly detected in-run source change; source edits and acceptance validation must be sequential. |
+| T29 | Word layout regression fixture | Adding exact record references changed the source-map table headers; the existing test assumed the old column set. | The first wide-table regression failed. | Kept document and record references as repeated anchors, updated the fixture to include its actual reference, and verified the existing width, amount and completeness assertions. The full suite passes. | The source-map lineage repair changes the intended output schema; no production behavior was weakened to accommodate a test. |
+| T30 | Coverage harness for retained implementations | Standard coverage found virtual Python filenames that the bootstrap compiles from unchanged .source bytes, then omitted those helpers because physical .py files do not exist. | Its initial 76 percent summary omitted executed implementation files. | Added a test-only coverage filename tracer; complete measurement now includes all five retained modules and reports 81.70 percent with 389 passing tests. CI runs the full suite and the same measurement. | Correct source attribution preserves executed line numbers and does not omit uncovered production code or alter the bootstrap. |
+| T31 | Coordinator development diagnostics | Several guessed helper paths/globs and a shell quote failed; an optional diff-cover module was absent. A first preservation check incorrectly assumed a .vera directory, so it reported missing paths before hashing. A new broad format check found an untouched legacy test file. | These checks produced no product mutation or client-work result. | Read actual paths, verified the existing Vera ledger, and matched all 16 old-run and 10 imported-file hashes. Required full coverage and scoped formatting/type/security checks pass; no optional package was installed and unrelated legacy formatting was not changed. | Failed diagnostics are not evidence that archived files changed or that Vera needs a new runtime restriction. |
+| T32 | Coordinator premature test stop | The first fresh 0.1.453 chat used nonexistent paths in three read-only source searches. The coordinator stopped on the failed command marker before inspecting the cause. | The started run was marked failed before accounting execution; no producer failure had occurred. | The stop is recorded as coordinator error. Exact existing reference/source paths were inspected here; a new task and run reused the two immutable CSVs. That later attempt stopped independently on A47. Both failed histories are preserved. | A command status alone does not establish a product defect. Inspect the error before attributing or interrupting; record recovered diagnostic errors in the test output. |
+| T33 | Coordinator diagnostic and test-fixture errors | Additional searches named nonexistent files or an unmatched shell glob. The first bridge regression used pytest's reserved request parameter name and failed collection. | These commands did not establish a product result. | Used the actual file inventory and renamed only the fixture parameter; both intended pre-fix JSON corruption regressions then failed and passed after A49. | Record development mistakes separately from product defects; do not change production behavior to satisfy an invalid test fixture. |
+| T34 | Unreleased provenance implementation errors | The first new regression exposed a copied helper name absent from Open-item; the next exposed provenance markers added before an exact internal transaction-response comparison. Some diagnostic searches again named nonexistent files, and one replay inspection printed an unnecessarily large synthetic result. | The first two were mistakes in the unshipped repair, not defects of the installed 0.1.454 release. | Use the component's existing canonical serializer and add transport provenance only after the internal transaction closes. The selected-cell and public save/apply regressions pass; subsequent A53-A55 failures are separately traced to existing product behavior. | Keep failed repair attempts and diagnostic mistakes distinct from observed normal-workflow defects. |
 
 ## Verification log
 
@@ -728,6 +766,51 @@ accepted. Test two remains stopped and must not be reopened.
   changed. Final CI, installation and deployment are pending; this is not a new
   end-to-end acceptance claim.
 
+### Deployed 0.1.452 and second-workflow restart
+
+- PR #884 passed all 98 checks on `1e58198d3d7465b6cf0c913b9673e537e9b79e24`.
+  Merge `3f6f8796ec49b2b4cd5f71f31ae18e6d75b98a56` has the identical tested tree.
+  Server Git pull and normal restart succeeded; live task status returns
+  `archive_managed` / `archive_run`, verified Computer ID and zero queued events.
+  The accepted first report's exact hash/user/run receipt was reverified after
+  deployment, with report and completed-run bytes unchanged.
+- The enabled 0.1.452 installation was verified against its generated ZIP.
+  Branch cleanup verified one local branch, one remote branch, one worktree and
+  zero stashes before starting this new repair branch. No Marketplace action.
+- Fresh test two stopped at A38, with H27-H29 retained. Its full local report is
+  `/Users/fabio/Documents/Codex/2026-10-20/vera-privacy-02-452-restart/outputs/resoconto-test-02.txt`.
+- Candidate Vera **0.1.453**, Open-item **0.1.61**, is reserved after observing
+  no open release PR. Initial positive/negative regression set: **123 passed**,
+  including the original multi-party case in five output languages and full
+  source/final replay. The complete stable-source suite, including the XML
+  regression, now passes: **389 tests, 81.70% coverage**. Black, Isort, Mypy
+  and Bandit pass on the changed implementation and tests. Old archive bytes
+  match all 26 baseline hashes. Packaging is in progress; no installed
+  acceptance, server deployment or test-two pass is claimed.
+- The mechanical changes preserve source facts and enforce exact identities,
+  dates, cents and record ownership. Source-role and mapping meaning remain
+  agent-reviewed. No human approval, external-runtime allowlist or changed
+  runtime-policy counter was introduced. The source-data flow still reads the
+  selected files locally and renders existing reviewed records; party values
+  already belonged to that disclosed source/output path. Reports now preserve
+  them per row and add local record references to source-map tables.
+
+The first wider native check exposed A44 and stopped installation. Some older
+negative tests also incorrectly expected an empty output directory after Archive
+start; they now verify the retained report pair and absence of accounting
+outputs. This is a test expectation repair, separate from A44's product repair.
+Four additional native regressions pass: the original multi-party CSV with
+recorded agent review, unknown output, pending intent and foreign-run reporting.
+The optional human panel still uses its existing explicit submission; this test
+establishes the service route, not a human-panel CSV mapping experience.
+The package checks repeated after the native repair pass **481 tests**
+(**2 skipped**), and all host package parity checks pass.
+The complete native intake, reporting, regeneration, browser-panel and component
+integration group now passes **125 tests**. Both human and agent source-review
+attribution are covered, including rejection of contradictory attribution.
+The rebuilt 0.1.453 Codex, Cowork and Antigravity packages pass parity.
+Installation, deployment and fresh normal-chat acceptance remain pending.
+
 ## Remaining audit targets
 
 - Verify the additional task-scoping packages and run CI on their exact commit.
@@ -787,3 +870,1199 @@ variable rename changes no behavior. Geneva catalogue rebinding changes only
 release provenance for 55 unchanged skill entries, and the four regenerated course
 JSON files change only SHA-256 fields. The 28 affected privacy fingerprints cover
 these inspected deltas; no external recipient or payload boundary is added.
+
+## Fresh 0.1.453 test-two outcomes and 0.1.454 repair
+
+PR #885 currently contains source commit fb64c735b5cddb4a9097308468fac1ce2ef03a14.
+Vera 0.1.453 was installed through the supported command; the single enabled
+installation and all 2,183 installed package files matched the checked ZIP.
+Fresh GPT-6.1 Sol chat 01a15b67-2e5c-7c23-b692-0831e201af65 independently
+verified its exposed skill/version. It remains stopped after the second outcome.
+
+- First task eed24369-1219-4cd9-82d1-b177703ee0d6, run
+  run_52b44ac34c26f2549bc0ab7e: interrupted by T32 before calculation.
+  The automatic failed-run privacy report was delivered and independently
+  verified against the correct userID by the published server-proof verifier;
+  this is failed-run reporting evidence, not workflow acceptance.
+- Second task a7989ceb-d7d5-4643-a9fd-67fbcf05d8a5, run
+  run_4f75bf6417b4b6ae645fc98f: the public producer reached A47 and stopped.
+  Sources, assumptions and technical diagnostics remain unchanged. The report
+  openly marks unmapped sent-data coordinates as incomplete. The technical
+  incident remains queued locally; historical queues were not flushed.
+
+The candidate repair is Vera 0.1.454 / Open-item 0.1.62. The same three-invoice
+case now passes with exact absolute decision keys, alongside nested receipt
+identity and conflicting/foreign-key regressions. The complete component suite now passes **399 tests with 81.72% coverage**,
+including full Archive producer execution with absolute mappings. Ten panel
+checks pass within the complete 57-test native suite, including reporting,
+regeneration and bridge protocols. All rebuilt host packages match source; 481 package/privacy/update checks pass
+with two skips. CI for the final commit and fresh normal-chat acceptance remain pending. The accepted count remains **1 of 13**.
+
+The A49 dependency behavior is documented by the upstream [PyMuPDF change log](https://pymupdf.readthedocs.io/en/latest/changes.html): 1.28.2 added the legacy import warning, and 2.0 changes it to a Python warning. The repair handles diagnostic output at the JSON boundary rather than requiring either release.
+
+Final local 0.1.454 package SHA-256: `325993152c80cfd5b00bfb50bfa51978dc0fbf0da510c1f06d21066f04b355ad`. Compared with the installed 0.1.453 package, 135 files change, none are added or removed, and the executable delta is limited to the two Open-item source readers, two native bridges, native intake and its panel. The preinstallation inventory shows one enabled `vera@mp-vera` at 0.1.453. Its first sandboxed inventory could not reach the remote catalog; the authorized read-only retry returned the complete inventory without warnings. All 31 files retained from both failed 0.1.453 runs and their exact imports still match their preserved hashes.
+
+## Fresh 0.1.454 test-two outcome
+
+The fresh GPT-6.1 Sol chat `01a15b8d-ec87-7ed0-8b47-48cc5c291c60` verified its actual exposed 0.1.454 installation and the unchanged two imported CSVs. Task `e796550f-e753-4c7e-b5b0-eef305dc8235`, run `run_524f2896f03f02f4de149890`, produced the expected EUR 2,500 opening, EUR 1,500 receipts and EUR 1,000 outstanding. It stopped at the public review-save failure and marked its run and task failed. The Word document was not visually accepted, and no subsequent pipeline began.
+
+All blocks, including the recovered dependency warning, unfinished review, privacy gaps, cancellation-confirmation failure and unrelated orphan-profile inventory warning, are retained in the chat's `outputs/resoconto-test-02.txt`. The 41 files in the new failed run have a separate preservation baseline at `/private/tmp/studio-archive-test2-454-failed-preservation.json`; the preceding failed histories remain unchanged.
+
+The original final response automatically displayed the incomplete privacy report. Independent server verification confirms report SHA-256 `a0e67fae2d107ca6e2f25f20bedd207ca91e764e50082c6f63a8dac93ab47d06`, receipt `8ff0f7d4-d50f-5bef-9894-94ca5680c93c`, revision 1, bound to userID `0ed4a818-1877-4652-8515-787c64de17a5` and this exact run. That proof does not make the failed workflow accepted. Overall acceptance remains **1 of 13**; test 2 is stopped under the next repair and test 3 must not start.
+
+## Vera 0.1.455 candidate verification
+
+The source repair addresses A50-A55. A real temporary Archive integration now
+runs the public producer, review validation/rendering, selected-case reads,
+decision save/apply and native regeneration. It reaches `final_ready` with the
+EUR 500 partial residual intact, and preserves source bytes and predecessor
+history. Exact selected-cell counts are checked, while edited reviews and
+unsupported origins remain incomplete. The final projection/reporting group
+passes 17 cases; the broader public review/native group passed 105 before the
+final CLI-summary and count-metadata refinements covered by those 17 cases.
+
+All host packages match the source, and package/privacy/update validation passes
+481 tests with two skips. Black, Isort, Mypy, Node syntax and Bandit medium/high
+checks pass. The full component suite passes **400 tests with 81.69% coverage**.
+Two stale test fixtures were corrected: the optional PDF import mock and a
+mocked extraction result without `source_origins`. Neither correction changes
+production behavior. An expanded integration also passes after reading all four
+indexed cases before public save/apply and native regeneration.
+
+Candidate ZIP SHA-256 is
+`3b8751c425d1394ca0fc2e64193794266c94abaa8d0ba800f8a8530b29d00fb5`.
+It changes 132 of 2,186 files relative to the verified installed 0.1.454 source,
+with no added or removed files. All 72 preserved historical source/run files
+still match their recorded hashes. Installation, exact-commit CI, deployment
+and fresh normal-chat acceptance remain pending. No Marketplace action occurred.
+
+## Fresh 0.1.455 test-two outcome and tolerance repair
+
+Commit `37f25304c176d32382cade01ab0e3ae956fbc64f` was pushed to PR #885.
+The supported installation command installed 0.1.455; all 2,183 cached plugin
+files matched its ZIP and the independent fresh GPT-6.1 Sol chat
+`01a15bc3-2e67-7993-82a4-9f58c31490ff` verified its actually exposed skill.
+Task `64eb16a2-a498-43f4-8f25-c15c2703042e`, run
+`run_a9be36c3363f4dbeb0768f5c`, stopped at A56. Both run and task are failed;
+no Excel/Word was produced and no other test started. The run's 14 files have
+an independent preservation baseline. The complete interruption log remains in
+the test chat's `outputs/resoconto-test-02.txt`.
+
+The automatic failed-run report remains explicitly incomplete because its error
+emission has no source coordinates. Independent server verification confirms
+report SHA-256 `0ff71889f4576265c9cf53b2fca41fb6f52807ca5670f278267539cc248ce281`,
+receipt `af0f9e80-24b8-5311-ad74-53be195fc640`, revision 1, bound to this exact
+run and userID `0ed4a818-1877-4652-8515-787c64de17a5`. The test read CSVs through
+the shell before the producer; the report explicitly covers Vera-sent data and
+does not claim to measure those shell reads. Task metadata was acknowledged;
+the separate diagnostic remains queued locally, and no historical queue was
+flushed. Recovery of a shell UUID command, a guessed nonexistent reference,
+truncated diagnostic reads, nonblocking Archive inventory warnings and a granted
+sandbox write are recorded in the test's log.
+
+The 0.1.456 candidate normalizes tolerance input, carries that exact prepared
+value into rendering, and verifies its Word/Excel presentation against the sealed
+parameter rather than an accounting-record formula. Canonical receipt parsing
+is unchanged. The repair adds no recipient or model-facing data field; the
+parameter was already part of the generated documents. Other source changes
+are version/generated release metadata.
+The existing full public review integration now uses `"0.00"` as its input, so
+its next run must complete review and regeneration using the observed notation.
+Acceptance remains **1 of 13**; test 2 stays stopped until the candidate is ready.
+
+The final accounting repair passes **420 component tests with 81.76% coverage**,
+26 focused tolerance cases and all eight public Archive/review/projection cases.
+The latter now uses `"0.00"` through complete save/apply and regeneration. Static
+checks pass. The first rebuilt 0.1.456 package also passed all-host parity and
+481 package/privacy/update tests (two skips); it must be rebuilt once more after
+the A58 handoff clarification. The final clarification updates the Vera-specific
+reporting reference. The measured report body, terminal response shape, recipients,
+source-coordinate mapping and accounting calculation are unchanged, and no
+execution gate is added. All 86 preserved files remain unchanged.
+
+The A58 implementation briefly changed shared Archive descriptions, then an
+incorrectly selected generated runtime copy. The build synchronization removed
+that generated-copy edit and exposed its stale review fingerprint. Those two
+unreleased approaches were discarded; the final delta is the Vera-owned delivery
+reference. This is a coordinator implementation mistake, not an installed workflow
+failure. Inline delivery remains an open normal-chat acceptance check.
+
+Final 0.1.456 build and parity now pass for every host. The final source also
+passes 59 automatic-reporting checks; the final package/privacy/update suite
+passes 481 tests with two skips. Candidate ZIP SHA-256 is
+`36e322d01eb42a74180fda1a54ad3d7377deedce3192ec67797a9bb4a4d9e4ba`.
+Its 130-file delta against the verified installed 0.1.455 package contains no
+added or removed files; only the four Open-item tolerance implementation files
+are executable changes. Installation and fresh normal-chat acceptance remain
+pending. The report-delivery clarification is guidance whose effect must be
+observed in that next chat, not an accepted delivery fix.
+
+### Fresh 0.1.456 normal chat: accounting passed, privacy coverage failed
+
+The supported local installation was verified as the single enabled `vera@mp-vera`
+0.1.456, with all 2,183 cache files matching the candidate ZIP. Fresh GPT-6.1 Sol
+chat `01a15be6-0a1a-73e0-93a4-d5cdd9f4dc3c` created task
+`a072942f-18fc-477b-b318-9c604fe5647e` and run
+`run_825b61ba38d2aec1f667854a`. Its ordinary review and regeneration reached
+`report_ready=true`, 17 passing checks and three agent-reviewed rows. F001 was
+closed, F002 retained its EUR 500 partial-payment residual and F003 retained its
+EUR 500 open balance. The chat inspected all eight rendered Word pages and the
+Excel values. It reported awkward long technical references, some decimal-dot
+formatting, an English date label and no dedicated counterparty column in the
+operational sheet. These usability issues remain recorded, not silently accepted
+as polished professional delivery.
+
+Finalization exposed two unmapped emissions. The test stopped and marked its run
+and task failed; it delivered the retained drafts. This is a failed privacy
+acceptance result, not evidence that the arithmetic or reviewed drafts failed.
+The final answer **automatically displayed a readable privacy report**, resolving
+the observed A58 handoff failure for this attempt. It honestly reported incomplete
+coverage, 11 emissions and 69,315 characters. Both input sources' 36 cells were
+measured, but the unknown remainder remained explicit.
+
+- **A59, exact-identifier diagnostic provenance:** requesting all four cases with
+  `include_exact_identifiers=true` also emitted the pending-review check's note.
+  That note is constructed from internal row locators; the projection supported
+  the count-only version but not this producer-authored note. The earlier
+  integration requested all cases without exact identifiers and missed this path.
+- **A60, public replay output boundary:** the normal `audit_assurance.py
+  validate-run-json` command returned the same detailed reconciliation rows used
+  by the private review transaction, without registering their provenance. Its
+  23,040-character response was the second unmapped emission. The replay succeeded;
+  the outgoing-data contract was incomplete.
+
+Independent read-only server verification succeeded for receipt
+`95a7b974-4938-53e8-812e-b47de5269bff`, revision 1, report SHA-256
+`bf6f088c401dfcaac50b285ec2bd5c3bd041ab7d983588c4d46b4f21b6e3865e`, this exact
+run and userID `0ed4a818-1877-4652-8515-787c64de17a5`. The test chat's own
+verification invocation had used Python isolated mode and failed to import the
+receipt module; the coordinator used the documented non-isolated reader, without
+altering the sealed report. Its initial sandboxed network read failed, followed
+by an authorized read-only verification. Proof is retained in
+`/private/tmp/studio-archive-456-failed-report-proof.json` and 77 run-file hashes
+in `/private/tmp/studio-archive-test2-456-failed-preservation.json`.
+
+The test log also retains recovered guessed paths, truncated reference reads,
+pre-calculation delimiter correction, native workspace UI unavailability with a
+published specialist fallback, and a corrected worker-cancel argument. It records
+shell/browser/rendering reads outside the Vera-sent-data measurement scope.
+Acceptance remains **1 of 13**; test 2 is stopped, and test 3 has not started.
+
+The 0.1.457 candidate separates the normal assurance replay response from its
+private review bridge. Normal validation emits a registered technical summary;
+the internal transaction explicitly requests its detailed rows and keeps them
+inside the component. The existing owned CLI recorder now also covers direct
+assurance invocation. Requesting the detailed bridge directly still records the
+actual output and leaves unknown coordinates incomplete. Exact-mode pending-review
+notes are recognized only as lists of known pending row locators within the same
+producer-bound private review. This is mechanical provenance checking, not a
+semantic relevance rule, an execution veto or a new consent requirement.
+
+The expanded public integration first reproduced both missing paths. After the
+repair, ten projection/review/replay cases and two additional negative cases
+passed. The negative cases retain incomplete measurement for an unknown
+producer-bound diagnostic and for externally emitted private bridge rows. The
+normal accounting checks remain unchanged. The function's five-language public
+explanation also corrects its previous blanket statement that technical locators
+always stay out: an explicit exact-reference request can expose them in selected
+diagnostic notes. No recipient was added.
+
+The coordinator's initial full-suite command omitted the repository's retained
+source coverage plugin. It ran the tests without failures but reported only the
+ordinary Python files (75.62%); that is not valid component coverage evidence.
+The suite is being repeated with the exact checked-in CI coverage configuration.
+Read-only diagnostic path guesses and an unavailable sandbox process listing
+did not affect the product run or its evidence. These are coordinator mistakes,
+separate from A59/A60. Final build, installed acceptance and saved-report reopening
+remain pending for 0.1.457.
+
+The correct CI command subsequently passed all 420 accounting tests with 81.69%
+coverage. All 89 current public review/native tests passed, as did the first
+0.1.457 all-host parity and 481 package/privacy checks (two skips). Before
+installation, manual review found that the new locator mapping also needed to
+compare the evidence-note copy with the main note. An additional producer-bound
+unknown-evidence-note regression failed against that intermediate implementation;
+the final condition now checks every emitted note against the same verified
+locator list. No installed user run used the intermediate candidate. Final
+projection and package validation are being repeated for those changed bytes;
+the accounting implementation and its coverage result are unchanged.
+
+Final 0.1.457 validation passed all 13 public projection/review/replay cases,
+481 package/privacy/update checks (two skips), and all-host source/package
+parity. The earlier 420 accounting cases (81.69% coverage) and 89 review/native
+cases remain valid; the final change affects only diagnostic-note provenance.
+Final ZIP SHA-256 is
+`c8e096a4db33e5db0078030cb3c57c64d539a9d16212a3ec964f8504764c18f0`.
+The 128-file delta against verified 0.1.456 has no additions/removals and only
+two executable changes: the Open-item MCP server and assurance CLI. Installation
+and normal-chat acceptance remain outstanding; these source/package checks do
+not accept test 2.
+
+### 0.1.457 normal-chat result: finalization failure and missing error emission
+
+The supported local installation was verified at 0.1.457, with all 2,183 cache
+files matching the final ZIP. Fresh GPT-6.1-sol chat
+`01a15c06-31d3-78c2-99ba-fe9ff57318af` ran only test 2. Run
+`run_757f06f00ca937238010bdeb` and task
+`bf524ab3-938e-4f29-914a-931387b63bc0` are failed and stopped. Preserve them;
+never resume this run to turn its result into a pass.
+
+Observed: the reconciliation, review, apply and regeneration completed. The
+three rows passed checks and were report-ready; EUR 2,500 less EUR 1,500 collected
+left EUR 1,000. The agent visually reviewed all eight Word pages. No human
+approval was invented. The new failure occurred during Archive finalization:
+the agent declared 65 paths as `outputs/<file>` relative to the run, while the
+finalizer expected paths relative to `output_dir`. Its MCP path field did not
+state that base, whereas the artifact reader explicitly supports run-relative
+paths. This inconsistent handoff is **A61**. It is unrelated to the accounting
+calculation or an unmet professional decision.
+
+The chat automatically displayed the privacy report. Independent read-only
+verification confirmed receipt `bc7fe21f-c45f-52be-bbac-4f9d768973ea`, revision 1,
+SHA-256 `5fbdc48d7181c8808f3d68e243e865b01280f3e1570fb182b147dfa06f098615`,
+the exact run and userID `0ed4a818-1877-4652-8515-787c64de17a5`. The child had
+encountered a sandbox network error; the coordinator's authorized reader verified
+the receipt without rewriting the report. Proof is retained in
+`/private/tmp/studio-archive-457-failed-report-proof.json`. Seventy-seven run-file
+hashes are retained in
+`/private/tmp/studio-archive-test2-457-failed-preservation.json`.
+
+The saved report labels its collection complete: 15 emissions, 18,805 characters,
+and all 36 source cells. Subsequent source inspection and a failing MCP regression
+showed that Archive's failed finalization response was omitted. This is **A62**:
+successful Archive responses record themselves, but neither worker errors nor
+MCP validation errors were recorded. Therefore the report's complete label is
+not accepted as complete response coverage. The signature verifies the retained
+bytes and ownership; it does not cure that omission. The coordinator corrected
+its earlier completeness claim after finding this defect.
+
+Recovered interruptions are retained in the chat's `outputs/resoconto-test-02.txt`:
+an unrefreshed index did not block existing imports; pending row decisions were
+resolved through agent review; apply required the documented predecessor/replay
+regeneration; guessed helper paths and truncated reference reads were corrected;
+the incident-registration tool was unavailable while the two task-usage events
+were acknowledged. A stale generic final-artifact caveat still referred to
+pending UI decisions after final readiness. Technical paths in the Word report
+remain awkward. Shell reads before Archive start and host/browser/rendering
+activity remain outside Vera-owned emission measurement and were disclosed.
+
+The local repair accepts unambiguous references to the same owned output file,
+retains output-relative paths in manifests, and records exact run-bound MCP and
+CLI errors. Unknown error content remains unmapped, making coverage incomplete;
+it is not declared harmless metadata. No recipient or professional approval step
+was added. The first regression run reproduced four failures; the repaired five
+cases passed, followed by 248 Archive, lifecycle, reporting and Lucia tests.
+Further boundary checks and release validation remain in progress. Acceptance
+remains **1 of 13**. Test 3 has not started.
+
+Final 0.1.458 source validation passed 260 Archive/lifecycle/reporting/Lucia tests
+with 97.37% coverage of the error recorder, plus the full automatic-reporting CI
+command: 230 tests and 83.15% coverage. Additional negative cases preserve
+prepared/closed/unselected runs, record failures despite missing inputs, reject
+foreign reporting state, and withhold an unrecorded detailed error when the
+recorder fails or supplies no acknowledgement. Path cases cover nested `outputs`
+directories, duplicate aliases, absolute paths and escapes. All 481 package,
+privacy and update checks passed (two skips); Black, Isort, Mypy, Bandit and Node
+syntax checks passed. All-host parity passed for Vera 0.1.458 and Lucia 0.1.151,
+embedding Archive 0.1.61. The unchanged Open-item engine remains 0.1.65.
+
+The final Vera ZIP hash is
+`779b55855143d3b19d5767a48da75aa1be3e836e86f086c46d481c36ac32a0c0`.
+The delta against the verified 0.1.457 baseline contains 132 changed files, one
+new Archive error-recorder module and no removals. Executable changes are limited
+to Archive's MCP server, CLI, ledger and new recorder, plus the same ledger copied
+into Fusione's vendor directory. All 240 retained-file hash checks passed.
+The accepted test-1 transcript and resoconto were reviewed for A62: they record
+no failed Archive operation; their verification error occurred after report
+closure and was independently diagnosed as restricted-shell DNS failure. Its
+previous acceptance evidence remains unchanged. Fresh installed 0.1.458 test-2
+acceptance and saved-report reopening are still required.
+
+### 0.1.458 normal-chat result: public regeneration command failed
+
+The supported local installation was verified at 0.1.458: all 2,184 enabled
+cache files matched the generated ZIP. Fresh GPT-6.1-sol chat
+`01a15c2a-52d1-7a30-90a6-60b9097d0072` stopped at the first workflow error.
+Task `4f9d12f2-a50c-45b5-874d-6618398955e0` and Archive run
+`run_fa98101b02e43d8f8aa0bcae` are failed; neither may be resumed or rewritten.
+All 317 retained-file hash checks across the earlier attempts still passed.
+
+The initial three-row reconciliation was correct: EUR 2,500 less EUR 1,500
+received left EUR 1,000. Eight review decisions were recorded as agent review,
+without human confirmation or professional approval. The agent inspected all
+eight Word pages through the installed LibreOffice route. Public save/apply
+completed, but the subsequent published `raw_input_runner.py` command failed:
+`rendered review rows do not match persisted professional review authority`.
+The command accepted `--expected-predecessor-checkpoint` yet reran initial
+production instead of consuming the applied authority through the existing
+regeneration transaction. This is **A64**. Earlier 0.1.457 used a wrapper calling
+the regeneration function and therefore did not exercise this public CLI gap.
+No Archive finalization occurred in 0.1.458; A61 still needs normal-chat proof.
+
+The readable privacy report appeared automatically in the final response.
+It honestly reports incomplete collection: 13 emissions, 18,486 characters,
+21 of 24 population cells and 4 of 12 bank cells, with an unknown remainder.
+The only unmapped emission is the failed native-execution response, including
+stderr and its local technical-evidence pointer. It is not declared safe
+metadata or silently omitted. Independent read-only server verification passed
+for receipt `845fbc55-f666-51be-93c8-3015abcbac65`, revision 1, exact userID
+`0ed4a818-1877-4652-8515-787c64de17a5`, exact run and report SHA-256
+`05cfffc07ef903ea4855aba1dc4b986ee45c6c43dd49f59b6a4e4fd5ab0027bf`.
+Proof is retained in `/private/tmp/studio-archive-458-failed-report-proof.json`.
+This verifies the failed report; it does not accept the workflow.
+
+The chat's `outputs/resoconto-test-02.txt` retains every interruption. An
+unrefreshed search index did not prevent exact imported-source work. The normal
+review/replay transition was required, without a new human approval. The native
+technical incident remained queued locally because the dedicated incident tools
+were not exposed. A task event linking that incident and one scoped retry
+returned HTTPError; its exact HTTP status was not retained. Started/failed task
+events were acknowledged and ComputerID was verified. No historical queue was
+flushed. The server source requires an incident report to exist for that
+installation before accepting its link; this is consistent with the queued
+incident, but the exact rejected response has not been independently observed.
+
+The coordinator could create the separate chat but Computer Use refused access
+to the Codex app, so a separate window was not verified. The refusal was
+reported and not bypassed. This is a host limitation, not a Vera calculation
+failure. Two untranslated Italian-report labels and long technical provenance
+paths were also recorded.
+
+### 0.1.459 repair in progress: regeneration dispatch and completed handoff
+
+**A63** was independently reproduced against the retained 0.1.457 output:
+`final_artifacts.status=final_ready` coexisted with a required browser review,
+pending-decision caveat and initial setup instructions. The actual successor
+finalizer in `audit_assurance.py` wrote the terminal state while retaining
+initial handoff metadata. An initial repair of the browser/MCP writers alone
+did not fix this path; six expanded regressions exposed the remaining defect.
+
+The source repair now routes the public predecessor-checkpoint CLI through the
+existing regeneration transaction, retaining original settings and applied
+decisions. It accepts the documented regeneration command without repeating
+initial assumptions. Shared Python handoff rendering and the MCP writer reflect
+completed review only at final readiness; pending review remains pending.
+The completed handoff names delivery and outstanding evidence explicitly rather
+than repeating review setup. Two missing display-label translations are added;
+source fields and exact accounting values are unchanged.
+
+The public CLI failure was reproduced in two cases before the fix and those
+cases passed afterward. The terminal handoff failure was also reproduced and
+its focused regression now passes. Full accounting, native/public review and
+projection suites are in progress. No 0.1.459 installation or acceptance chat
+has started. Acceptance remains **1 of 13**; test 3 has not started.
+
+The source suites subsequently passed: 420 accounting cases with 81.63%
+coverage, 129 public-review/native cases, and all 17 projection/regeneration
+cases. Final review also corrected the CLI's completion label from
+`ready_for_review` to `final_ready` when the retained assurance reports ready;
+all four CLI integration variants passed again for that final response change.
+The same public review/projection suite is now explicitly included in CI.
+Black, Isort, Mypy, Bandit medium/high and Node syntax checks passed. All 317
+historical file hashes remained unchanged. Canonical candidate versions are
+Vera 0.1.459 and Open-item 0.1.66; package and installed acceptance checks remain
+pending at this point.
+
+Final 0.1.459 package/privacy/update checks passed: 513 tests, two skips, plus
+three icon-consistency checks. All-host source/package parity passed. Final
+Vera ZIP SHA-256 is
+`a5fbe32ba8ee18cf1c7c8973c013afcfbdce4a997f91cf0b0d3768965789810f`.
+The delta against verified 0.1.458 has 129 changed files, no additions and no
+removals. Its six executable changes are confined to Open-item's MCP server,
+assurance finalizer, public CLI, review server and two retained rendering/locale
+sources. Installation and fresh normal-chat acceptance remain outstanding.
+
+### 0.1.459 normal-chat result: expected transition reported as a failure
+
+The selected local installation was verified at 0.1.459, with all 2,184 cached
+files matching the ZIP. The fresh GPT-6.1-sol test 2 stopped before regeneration:
+automatic approval review rejected the requested public helper, interpreting the
+workflow's `blocked` state and required replay as the user's stop condition.
+No alternate route or retry was attempted. The failed run, its eight recorded
+agent decisions and its original drafts are preserved. The technical helper
+did not execute, so this does not demonstrate a failure of the repaired CLI.
+
+**A65:** the retained evidence showed 16 passing checks and one failing
+`codex_review_completed` check, referring to three pending rows before the
+agent's recorded review. Source qualification and reconciliation assurance gates
+passed. Nonetheless, initial final-artifact metadata reported `blocked`, and
+apply described normal regeneration as `failed_deterministic_checks` plus
+`assurance_replay_required`. This conflated work awaiting its next stage with a
+failed calculation. A regression also exposed a redundant acceptance of the
+old pending-review count card after the underlying rows had been reviewed.
+
+The failed report appeared automatically, and independent read-only verification
+confirmed its exact report hash, revision, run and expected userID. Both source
+tables were fully represented: 24 population cells and 12 bank cells. Four
+explicit reads of derived artifacts lacked input-cell lineage, so the report
+honestly remained incomplete. These reads covered the artifact card, two versions
+of final-artifact metadata and saved decisions. This measurement limitation is
+separate from the host refusal; no source provenance was invented to remove it.
+The local resoconto retains the exact evidence, the harmless recovered lookup
+error, the unblocking orphan-profile warning, and the review-server cleanup.
+
+The next source repair distinguishes `written_pending_review`,
+`awaiting_regeneration` and `final_ready`. It recognizes pending review only
+from a replayed complete result whose source/calculation gates pass and whose
+checks all pass or have only the typed pending-review check outstanding. The
+broader suite exposed the first variant: workflows may omit that optional check
+while their semantic review gate remains pending. Required row decisions
+remain mandatory. Real failed checks, rejected/skipped rows and invalid receipts
+remain blockers; delivery still requires the unchanged successor verification.
+The outstanding regeneration is recorded as a pending step, and the browser
+and tool response identify the next normal action. The initial regression failed
+against 0.1.459 and now passes; broader positive and negative checks are running.
+No new acceptance chat has started. Acceptance remains **1 of 13**.
+
+Final 0.1.460 source validation passed: 420 accounting tests with 81.63%
+coverage, 72 public-review tests, 43 native intake/regeneration/bridge tests,
+17 projection/review/regeneration integration cases, seven focused transition
+and failure cases, and seven widget checks. Package/privacy/update/icon checks
+passed 516 tests with two skips; all-host source/package parity passed. Black,
+Isort, Mypy, Bandit medium/high, Node syntax and whitespace checks passed.
+The unassured transaction fixture correctly remains blocked; an incorrect new
+expectation in that test was corrected without weakening production behavior.
+
+The previous-head release-alignment CI failure was a stale Geneva catalogue
+manifest/version snapshot. All 55 skill entrypoint hashes and all assessment
+rows were unchanged; only the catalogue identity was refreshed for this release.
+The verified candidate is Vera 0.1.460 with Open-item 0.1.67. Its ZIP SHA-256 is
+`b222c7dde9de453891b170809db8c8c35eb331b46d95e6ccde1033c103cf207c`.
+Against installed 0.1.459, 131 files change, none are added or removed, and the
+four executable changes are confined to Open-item review/assurance handling.
+All 394 historical-file hash checks pass. Installed normal-chat acceptance
+remains outstanding; these source results do not count as a second accepted test.
+
+### 0.1.460 normal-chat result: corrected calculation, uncorrectable declarations
+
+The fresh installed GPT-6.1-sol chat verified the two unchanged CSVs, calculated
+the expected closed/partial/open result, recorded eight agent decisions and
+completed the published CLI regeneration and independent replay. All 17 checks
+passed; `checks_pass`, `report_ready` and `final_ready` were established. This
+confirms that the previous pending-stage repair worked in normal chat. The Word
+report's eight rendered pages were inspected and the Excel workbooks were read.
+
+**A66:** the agent's first Archive declaration incorrectly labelled four
+historical workpaper copies as deliverables, alongside the four current files.
+Archive accepted the declaration and reached `ready_for_review`. A second call
+kept the same files, identities and bytes while correcting the historical copies'
+audience/purpose. Archive rejected it because the declarations were already
+sealed. The chat immediately stopped and recorded a failed run; the calculation
+was not invalidated or repeated. This combines an agent classification mistake
+with a product limitation: a review-ready declaration cannot be corrected before
+completion. No automatic approval rejection occurred in this attempt.
+
+The readable privacy report appeared automatically. Independent server
+verification matched its exact hash, revision, run and expected userID. Its
+17 sends and 54,376 characters include one unmeasured Archive error response;
+the stored event identifies `mcp:studio-archive:error` as the unknown source
+coverage. The report honestly remains incomplete, with 21/24 population cells
+and 4/12 bank cells attributed. Host shell/browser reads are explicitly outside
+Vera's measurement boundary. The failed run's 78 files have a separate preservation
+baseline. The child retained the review server; coordinator cleanup cancelled
+it, but the long-lived tool rejected the cleanup response at the closed-run
+emission boundary. The retained service result independently confirms cancellation
+with return code -9. A preceding status call included an unsupported task ID;
+that coordinator argument error was corrected without repeating an execution.
+
+Source inspection found that downstream runs bind the complete artifact-manifest
+hash, including delivery metadata. Replacing labels without retaining receipts
+would invalidate those handoffs; automatic privacy-report resealing could also
+replace their manifest identity. The repair retains content-addressed prior
+manifest receipts, validates the current output tree, and replays an existing
+binding against its exact retained receipt and unchanged selected file. It
+adds a normal pre-completion metadata revision using the returned declaration
+revision value, so concurrent reviews cannot silently overwrite one another.
+That value excludes automatically maintained report artifacts. The agent handles
+it; no new human approval is required. Completed runs and changed professional
+bytes remain immutable. The public MCP/CLI correction path and these positive
+and negative cases passed in a 132-test finalization/ledger/reporting run.
+
+**A67:** the operational sheet treated a strongly evidenced partial bank payment
+as low confidence because `partially_paid` was missing from the presentation
+mapping. It also treated the expected residual as an unexplained difference.
+The correction reflects the existing strong-external evidence classification
+and explains the difference only when invoice amount, allocated payment,
+displayed evidence and residual reconcile exactly. An inconsistent payment
+detail still remains flagged. Twelve report tests pass, including the observed
+800/300/500 case and a contradictory 250 payment detail. Other observed
+presentation limits remain explicit in the local resoconto: lengthy technical
+references and unset residual fields where no partial allocation was produced.
+
+The broader checks passed: 202 Archive tests; 237 automatic-reporting tests
+with 82.94% coverage; 422 accounting tests with 81.65% coverage; and 17 public
+projection/review/regeneration tests. Shared runtime Mypy checks passed for all
+nine archive modules; formatting, imports, Bandit, Node syntax and whitespace
+checks passed. All 472 historical-file hash checks remain unchanged. Candidate
+Vera 0.1.461 (Archive 0.1.62, Open-item 0.1.68), Clara 0.1.327 and Lucia 0.1.152
+built successfully. All 516 package/privacy checks passed (two skips), and Codex/Cowork/Antigravity
+source parity passed. The supported local installation verified all 2,184 cache
+files against the checked ZIP, with one enabled local Vera 0.1.461. The sandboxed
+inventory warned that the remote catalog was unavailable; automatic approval
+review rejected an unnecessary networked repeat. Local verification was sufficient
+and no remote retry occurred. Acceptance remains **1 of 13** pending the fresh chat.
+
+### 0.1.461 normal chat: delimiter omitted from the source preview
+
+**A68:** the fresh Sol chat verified the enabled installation, the seven registered
+sources and the selected three invoices/two receipts. It then declared a comma
+delimiter for both semicolon-delimited CSVs. The producer stopped before any
+calculation with `reviewed header is missing or ambiguous: ID riga`. Inspection
+of the retained assumptions and exact source headers establishes an agent mapping
+error, not a missing header or a failure of the reconciliation algorithm. The
+ordinary Archive reader had parsed both files correctly but returned only the
+columns and rows, omitting its parser's delimiter. That missing technical context
+contributed to an avoidable guess. No correction or rerun occurred in that chat.
+
+The run and usage task closed as failed, with both lifecycle events acknowledged.
+The privacy report appeared automatically: five emissions, 5,408 characters,
+24/24 population cells and 12/12 bank cells attributed. Helper responses without
+source coordinates remain explicitly unmeasured. Independent server verification
+matched the exact report hash, revision, run and expected userID. Fourteen retained
+run files have a preservation baseline. The queued technical diagnostic was not
+reported as delivered; no global queue flush occurred. A mistaken documentation
+path was recovered with `rg --files`; truncated reads and a no-match asset search
+were recorded separately. An index needing refresh did not block ledger access.
+
+The repair exposes the delimiter already used by the CSV/TSV preview parser,
+with an explicit distinction between sample detection and an inconclusive
+default. It adds no new delimiter classifier, accounting rule, source cells,
+network recipient or execution block. The source-layout reference tells the agent
+to retain this returned value and inspect physical source layout when uncertain.
+Five focused regressions failed before the repair and pass afterward: all four
+supported separators, quoted values, selected row/column coordinates and an
+inconclusive single-column case. The full reporting suite passes 242 tests with
+82.98% coverage. The next Vera ZIP changes 140 files with no additions or removals;
+its only executable delta is the shared measurement reader and its generated
+vendor copy. Package/privacy checks pass: 516 tests, two skips. All-host source
+parity passes. The supported local installation verifies all 2,184 cache files
+against the checked ZIP; an inventory scoped to the existing local source avoids
+the unnecessary remote catalog lookup. Installed acceptance remains pending.
+Acceptance remains **1 of 13**.
+
+### 0.1.462 normal chat: generated workbook provenance missing
+
+**A69:** fresh installed GPT-6.1-sol chat
+`01a15cb1-bcfe-75c2-ae88-078d9ff6ef5b` completed the three-invoice
+reconciliation, agent review, published regeneration and independent replay:
+EUR 2,500 population less EUR 1,500 receipts leaves EUR 1,000 outstanding.
+All 17 checks passed; `report_ready` and `final_ready` were true. The eight-page
+Word report was rendered and inspected. Current deliverables and historical
+copies were correctly distinguished, and Archive finalization succeeded.
+
+The first ordinary Archive read of the generated operational workbook returned
+four rows of its legend, padded to 20 columns. Its producer had not registered
+the workbook's source-cell provenance. Final reporting therefore correctly
+reported `derived_output_lineage_unavailable` and incomplete collection. The
+chat stopped, preserved the accounting result and closed only its new run/task
+as failed. The reported defect concerns source attribution, not arithmetic.
+The existing producer-projection mechanism supports table provenance; this
+workbook producer had not supplied it.
+
+The automatic readable report appeared with 15 sends, 50,407 characters and
+50,443 bytes. Independent server verification matched receipt
+`34d9975b-9008-5fb4-a843-aca3fe289a28`, revision 1, run
+`run_99a033a186b2149348417c20`, userID
+`0ed4a818-1877-4652-8515-787c64de17a5` and report SHA-256
+`1dd798cc20c3618f853055be6ba2b7b8005451dd165080ac83292268d5b020e8`.
+That proof authenticates the incomplete report; it does not make the test pass.
+Its 79 files join the earlier preservation baselines: all 565 historical-file
+hash checks still match. The leftover review-server job was cancelled through
+the public execution tool, reached `cancelled` with return code -9, and its
+listening socket disappeared.
+
+All other observed limits remain in the test resoconto: stale document index
+without interference with exact registered inputs; pending agent review and
+successor regeneration; the genuinely unpaid third invoice; generic shell and
+document-tool reads outside Vera's measured boundary; no separate incident
+registration tool; recovered instruction-output truncation; and withheld
+publication. No dependency, execution or host-approval failure occurred in the
+normal chat. It read the CSVs through the shell, so this attempt does not itself
+establish normal-chat use of the new delimiter preview.
+
+The repair adds producer-owned cell dependencies for the operational workbook,
+including the source operands of residuals/differences and the actual fields
+selected for displayed dates, descriptions and references. It registers both
+working and sealed copies after their final bytes and paths exist, including
+after successor promotion. Unknown text/origins remain unknown per cell, so an
+unread unknown cell cannot invalidate a separately selected, traceable cell.
+Exact path, artifact hash and original source hashes remain required. The
+repair adds no user confirmation, accounting decision or external recipient.
+It does not establish provenance for other generated workbooks or generic host
+reads. The public explanation records this boundary in all five languages.
+
+Six workbook regressions failed before the repair. Current checks pass all 24
+public projection/review/regeneration cases, including changed-byte rejection,
+both final-copy paths, precise original-cell counts and untouched private
+columns. The reporting suite passes 245 tests with 83.06% coverage. A new German
+action-text fixture mistakenly used a next-step sentence instead of a producer
+missing-evidence message; correcting that fixture gives 16 passing report tests
+without widening the production classification. Full accounting/package checks
+and a fresh installed normal-chat rerun remain outstanding. Acceptance remains
+**1 of 13**. The current candidate is Vera 0.1.463, Open-item 0.1.70, Clara
+0.1.329 and Lucia 0.1.154; Archive component source remains 0.1.63.
+
+Final accounting verification passes 426 tests with 81.69% coverage. All-host
+package/source parity passes, as do formatting, imports, nine-module shared
+runtime typing, Bandit medium/high and whitespace checks. The package suite
+passed 515 tests and skipped two; its sole failure was a test-only assumption
+that the Archive disclosure must be the last paragraph. The new workbook
+explanation preserves that disclosure in the same final privacy section. The
+assertion now checks its presence without imposing paragraph order; production
+code/package bytes are unchanged by that test-harness repair. The package ZIP
+contains six executable changes and no added/removed files; SHA-256 is
+`42dc02b7272ba737bd74f02e64bdabc4396e70f7437578cbdd331512ceae6929`.
+The complete selective-reporting test file now passes all 29 cases. No normal
+chat has yet accepted candidate 0.1.463.
+
+### 0.1.463 normal chat: status and saved-decision provenance
+
+**A70:** fresh GPT-6.1-sol chat `01a15cd5-9807-76e2-b503-3fb3f82469b3`
+used the installed 0.1.463 package and ordinary Archive reads of both CSVs.
+The semicolon delimiter was correctly exposed. The EUR 2,500 population,
+EUR 1,500 receipts and EUR 1,000 residual reconciled; agent review, successor
+regeneration, 17 checks and independent replay succeeded. `final_ready` and
+`report_ready` were true. Word was unavailable; LibreOffice rendered both
+eight-page reports for inspection without changing the DOCX files.
+
+Automatic delivery still failed acceptance: Archive reads of
+`artifact_card.md`, `final_artifacts.json` and the browser-saved
+`ui_decisions.json` had no producer provenance. They produced, respectively,
+`artifact_7addbe163034cec98307fd71`, `artifact_19f400df8c48861735007c93`
+and `artifact_99c9a76b42bf443beda5067d`. The incomplete report was delivered
+automatically; the chat stopped and closed only its new run and task as failed.
+It did not read the operational workbook through Archive, so this attempt does
+not establish normal-chat acceptance of A69's workbook projection.
+
+Independent server verification matched run `run_21434e33b91aba51cf21b759`,
+userID `0ed4a818-1877-4652-8515-787c64de17a5`, receipt
+`aa047187-e38f-5453-8ceb-ee3c67b8322d`, revision 1, and report SHA-256
+`aee140d8bd7d98e1a142099e200516a191a62e8749b71392a52dac2d7b28af3c`.
+The report contains 23 sends and 67,644 characters. All 24 population and 12
+bank cells were read, but unknown derived-file provenance prevents a complete
+collection claim. Server agreement authenticates that incomplete result.
+All 644 files in the eleven historical preservation baselines remain unchanged.
+The new review-server job reached cancelled with return code -9.
+
+Additional observed interruptions and limits: 29 orphaned profiles and four
+candidate-only profiles did not block the exact registered client; truncated
+instruction output required targeted reads; pending review required agent
+decisions and regeneration; the third unpaid invoice retained an explicitly
+undetermined derived residual in the UI while its source amount was visible;
+the copy-JSON toast did not establish clipboard delivery, so normal Save plus
+Archive read supplied the result; the browser save omitted a reviewer label,
+which the public tool subsequently recorded as agent review. Reload showed
+seven completed decisions but an unsaved-change indication and blank note.
+No host-approval denial or accounting execution failure was observed.
+
+The repair separates exact producer status from source-bearing values. The
+artifact card and empty decision template contain owned status information.
+Saved decision titles copy invoice identifiers and amounts and require their
+original CSV coordinates. The final status file also contains the first invoice
+identifier in Excel verification metadata: it must count that cell, not claim
+the entire file is source-free. Full engagement information remains in the
+canonical result, intake, prepared records, review payload and assurance data;
+the status file keeps the client, engagement, run and context-digest references.
+Changed bytes, unregistered review packets and arbitrary review prose must not
+inherit a producer declaration. Partial reads of proven source-free status may
+remain measured; partial source-bearing text cannot claim its whole-file
+projection.
+
+The browser reload defect was independently reproduced: a cached draft keyed
+only by run ID overwrites newer persisted notes after public-tool review. A
+draft must be restored only against the saved-decision baseline on which it
+was created. An unchanged baseline must still recover genuine unsaved work.
+This adds no human approval or execution gate. Candidate repairs and full
+verification are in progress. Acceptance remains **1 of 13**; test 3 and
+server deployment remain pending a complete test-2 result.
+
+The same provenance gap was reproduced in both browser and MCP reads of the
+intermediate applied-status file. These writes now preserve the known parent's
+source operands only after exact writer-byte and producer-review verification;
+free-form blocker contents are not certified as metadata. Saved decisions
+without notes count precisely six population cells (three invoice identifiers
+and three amounts); status reads count the one invoice cell copied into the QA
+contract. Review notes remain private in mutation replies. Reading an untraced
+note-bearing file still reports its missing provenance honestly.
+
+The cached-draft regression failed before the repair and now passes alongside
+unchanged-baseline recovery. The artifact card now follows the current handoff
+instead of unconditionally requesting another review after completion. The
+public explanation includes status/decision-file reads in all five languages.
+
+Final source validation for candidate Vera 0.1.464 passes 120 projection,
+component and browser cases, 426 accounting cases with 81.79% coverage, and
+257 reporting cases with 83.33% coverage. Formatting, imports, nine-module
+runtime typing, Bandit medium/high and whitespace checks pass. All 55 Geneva
+entrypoint hashes and assessment rows are unchanged; only the version-bound
+catalogue identity changes. The Vera ZIP changes 148 files with no additions or
+removals, including ten executable/HTML paths; SHA-256 is
+`656d0e7bcde292205c5a2063a36e3f64676261c96eb16be2edf9fd4d3626e0f3`.
+Clara 0.1.330 and Lucia 0.1.155 include the shared reporter update; the Open-item
+component is 0.1.71. All-host source/package parity passes, and package/privacy
+validation passes 516 cases with two skips. Installed normal-chat acceptance
+remains pending. No Marketplace publication or server deployment has occurred.
+
+
+### 0.1.464 normal chat: complete report, incompatible general verification
+
+**A71:** fresh GPT-6.1-sol chat `01a15d0d-715f-79f0-b76e-59fc3fc1d4b4`
+used the verified installed 0.1.464 package. The EUR 2,500 population less
+EUR 1,500 receipts produced the correct EUR 1,000 residual. Agent review,
+successor regeneration, all 17 replay checks and delivery succeeded. Word
+outputs rendered to eight pages each for inspection. Task
+`7a6d1373-63a8-41d2-bd08-18ed9f6a5986` and run
+`run_9936feae0223943a31146b27` completed before the accessory verification
+failure; their terminal records are preserved without retroactive alteration.
+
+The privacy report appeared automatically with complete collection, no errors,
+21 sends and 63,268 characters. It measured all 24 population cells and all
+12 bank cells. The chat read `artifact_card.md` and `final_artifacts.json`
+through Archive, exercising their corrected provenance. It did not read the
+operational workbook or saved decision file through Archive, so this attempt
+alone does not establish those A69/A70 acceptance paths. It did not perform a
+separate native visual inspection of every Excel sheet.
+
+The general `notarized_run_receipt.py verify` command stopped with unexpected
+fields `archive_run_id`, `product`, `report_revision`, and `user_id`. It still
+accepted only legacy receipt formats. The schema-3 receipt itself independently
+verified through the existing Archive verifier: userID
+`0ed4a818-1877-4652-8515-787c64de17a5`, the exact run above, revision 1,
+receipt `058723a7-89f4-5315-a9e1-be200ac66b6a`, report SHA-256
+`97b692ecfc750cd90cf89ed1e5ea039fd0a559d1fd0ab73875a0a25ccbdb710c`.
+Delivered report bytes equal the original. No saved-report reopening was
+accepted after the error. The review server was stopped and its port closed.
+The 79 new retained files bring preservation checks to 723 unchanged files.
+
+Other observed interruptions and limits are retained in the chat's
+`outputs/resoconto-test-02.txt`: missing component-reference paths, truncated
+instruction reads, a search with no example files, stale Archive indexing and
+candidate-only profiles that did not prevent use of exact registered inputs,
+no separate incident-registration tool, ordinary pending review and successor
+regeneration, generic missing-evidence wording for the unpaid F003, eight-page
+Word layout and line breaks, review-server stdout without a URL recovered from
+browser inventory, and authorized host escalation to write new assumptions.
+The third invoice remains unpaid within the supplied evidence; its workflow
+label does not justify inventing settlement. Vera's measurement covers its own
+recorded sends, not all generic shell/browser/chat activity.
+
+The chat attributed its missing reference paths to agent error. Source
+inspection instead found six incorrect skill-relative paths: their files live
+in the component's top-level `references` directory. Those six paths are now
+`../../references/...`; the correctly nested Geneva reference is unchanged.
+All seven references resolve from the published skill directory.
+
+The general verifier now delegates schema-3 Vera receipts to the existing
+Archive verification contract. It obtains the expected userID from the current
+installation, or an explicitly supplied expected ID, independently of the
+receipt being checked. The local receipt must equal the retained server proof.
+The fixed endpoint, redirect refusal, bounded response, exact canonical hash,
+userID/run/revision binding and legacy schema-1/schema-2 behavior remain.
+Clara and Lucia cannot claim a Vera Archive receipt. Verification does not
+rewrite closed reports, workpapers or history. No execution gate, human-review
+step or new external recipient is introduced.
+
+A regression reproduced the exact unexpected-fields failure before the repair.
+All 125 receipt/reporting-focused cases now pass, including default and explicit
+owner CLI use, foreign-user rejection before network access, altered local
+owner/run/revision/hash/signature rejection, other-product rejection, and
+unchanged original run files. The repaired command also independently verified
+the preserved 0.1.464 report against the live server and current installation
+identity. That repair check does not convert the stopped chat into a successful
+normal acceptance test. Candidate Vera 0.1.465, Clara 0.1.331, Lucia 0.1.156 and
+Open-item 0.1.72 are being packaged. Acceptance remains **1 of 13**.
+
+Final reporting validation passes 285 cases with 83.37% coverage. Both changed
+receipt modules pass Mypy, Black, Isort and Bandit with no findings; whitespace
+checks pass. The unchanged accounting source retains its prior 426 passing
+cases and 81.79% coverage. All-host package/source parity passes. The new ZIP
+changes 140 files, with no additions/removals and three executable paths, all
+receipt runtime copies. SHA-256 is
+`b47f56acc14a753cf62f42137c120b0f0bd98b8ed07ed7da64b0d96c3daf27e4`.
+Build preparation briefly detected stale course fingerprints after the final
+source edit; rebuilding the catalogue and its reviewed privacy fingerprints
+resolved the package check without changing runtime behavior or approvals.
+
+The coordinator's attempt to inspect Codex window controls was refused by the
+computer-use API: “Computer Use is not allowed to use the app 'com.openai.codex'
+for safety reasons.” No more specific harm was provided. Native Codex chat
+management remains available, but a distinct OS window cannot be attested.
+This is a host-control limitation, not a Vera execution failure. No attempt was
+made to bypass it through another desktop-control mechanism.
+
+Final package/privacy validation passes 516 cases with two skips. No Marketplace
+action or server deployment has occurred. Installed normal-chat acceptance of
+0.1.465 remains outstanding.
+
+
+### 0.1.465 normal chat: Word read and generated-output provenance
+
+**A72:** fresh GPT-6.1-sol chat `01a15d2a-18e8-70a2-a6c8-b5c3eabfa832`
+confirmed the exposed 0.1.465 installation, available dependencies and existing
+verified Computer ID. It used one new task
+`836e3c25-c3c6-46c0-97a9-d61a761d18c0` and run
+`run_08f99a98b72e8b8f228f6225`. Both input CSVs matched the declared case.
+Calculation and the operational workbook showed the correct EUR 2,500 initial
+population, EUR 1,500 receipts and EUR 1,000 remaining. Archive read all 20
+operational-workbook rows, including the explanatory cells, with verified
+source lineage: this supplies the missing normal-chat evidence for A69's read
+path. Review was still pending; no Apply or regeneration occurred.
+
+The first blocking error was the normal Archive read of
+`outputs/reconciliation/relazione_riconciliazione_audit.docx`, with limit 30:
+“Run artifact could not be read: This source has no complete measurement
+adapter.” The chat stopped without retry or fallback, failed its new run and
+task, verified all seven original inputs, and stopped review-server job
+`d829d76d-ef17-453e-ad8e-b5597dca178f` (cancelled, return code -9). The
+coordinator independently confirmed that port 49593 had no listener. All
+41 new run files are hash-preserved, bringing the retained baseline to 764.
+The task's failed event is acknowledged at sequence 2 with zero queued events.
+
+The report appeared automatically: 17 sends, 294,079 characters, incomplete
+collection. Its errors identify missing provenance for `assurance_receipts.json`,
+the unclassified error reply, and the unavailable Word measurement adapter.
+The generic verifier repaired in A71 now independently verifies this exact
+unchanged report against the server and current installation identity:
+userID `0ed4a818-1877-4652-8515-787c64de17a5`, the run above, revision 1,
+receipt `d796e616-6bab-5029-96d2-306127f794c8`, SHA-256
+`88af6e6c3b301be851cd5e5941b12fad0885c68469cba51a5c63d3e16ba87fe0`.
+The server authenticates the incomplete report; it does not turn it into a
+passing test. Delivered report bytes match the preserved original.
+
+Other recorded interruptions and limits: candidate-only profiles and stale
+search indexing did not block exact registered inputs; three pending decisions
+caused the ordinary review check, not a calculation error; the local review
+server's URL was recovered from browser inventory because job status had empty
+stdout; a JSON read with limit 1 returned the whole 236 KB assurance document,
+causing host-output truncation; instruction/listing reads also truncated;
+F003's workbook text refers generically to cut-off and leaves attributed/open
+amount cells blank despite the declared unpaid EUR 500; saved-review reopening
+and final delivery were not reached; no independent incident receipt or
+traceback was returned; no host denial occurred in the test. Full details remain
+in the chat's `outputs/resoconto-test-02.txt`. No closed record was rewritten.
+
+Source inspection distinguishes the Word readers: Archive's indexed-document
+reader already extracts DOCX paragraphs and tables, whereas the selected-run
+measurement reader has no DOCX branch. The public run-read tool description
+allows bound inputs and generated data files without stating that difference.
+A local sweep of the actual generated output types reproduces nine failures:
+working and sealed copies of Word, audit Excel, evidence-request Excel and
+canonical JSON, plus the assurance receipt. The Word copies cannot be read;
+the other files can be read but lack registered original-source dependencies.
+At that initial sweep, no source repair for these gaps had been validated. Acceptance remains
+**1 of 13**. Test 3, merge and deployment remain pending.
+
+The selected-run reader now has a DOCX body-text adapter in source. Four focused
+checks pass for ordered paragraph/table reads, nested and merged table cells,
+changed-file rejection, and malformed packages; the module passes Mypy. The
+adapter explicitly excludes headers, footers, comments, images and embedded
+objects from its body-paragraph measurement. It does not attest visual layout
+or whole-document contents. The malformed-package test initially expected a
+ValueError label; the existing outer reader correctly retains BadZipFile, so
+only that test expectation was corrected. Output-source registrations are still
+unfinished; none of the nine output-provenance cases is claimed green. These
+changes have not been packaged or installed. All 764 preserved hashes match.
+
+The audit-workbook writer now retains cell origins while writing its visible
+localized and hidden canonical sheets. Normalized rows retain their actual
+mapped fields; summary amounts retain the contributing invoice amounts;
+copied reconciliation fields retain their named original fields; exact partial
+payment amounts and residuals retain the bank amount and subtraction operands.
+The normalizer explicitly distinguishes its generated locators and configured
+perimeter fields from copied CSV cells. Headers and padding are source-free;
+unsupported fields and supplied notes stay unknown. Working and sealed copies
+are registered after their final bytes exist, including after review
+regeneration and transaction promotion. This does not change calculations,
+approval requirements or the generated report text.
+
+Validation of this source candidate: 16 focused checks pass for these selected
+reads, arbitrary notes and edited bytes. The complete projection suite has
+54 passes and the same nine whole-output attribution failures, including the
+save/apply/regeneration cases with new reads of both audit-workbook copies.
+The writer/tabular suite passes all 72 cases; all four Word-reader checks pass;
+Mypy passes the measurement adapter and retained writer; formatting and diff
+checks pass. The real-engine Word fixture now reads 308 body paragraphs with
+no measurement error, but still reports missing derived-output lineage.
+These are local source checks, not normal-chat acceptance. Complete Word,
+audit/evidence workbooks, canonical JSON and assurance receipts still need
+producer attribution. No new version has been reserved, packaged or installed;
+no new chat was opened. All 764 preserved files remain byte-identical.
+Acceptance remains **1 of 13**, with Test 2, merge and deployment pending.
+
+The subsequent A72 source repair completes attribution for the full native
+audit workbook, in both its working and sealed locations. The complete reads
+account for exactly 15 invoice cells and eight bank cells in the synthetic
+case; all five unused private cells remain local. Aggregate amounts, partial
+payment subtotals, dates and concentration percentages retain their actual
+operands. The aging producer records the contributing record identities as it
+builds each bucket. Generated run parameters and check results are distinguished
+from supplied text: direct callers cannot obtain source-free attribution for
+arbitrary check notes. A workbook missing optional aggregate-provenance context
+still writes successfully, with those cells explicitly unknown.
+
+An additional source variant found an attribution error in four views: an
+evidence-type label mapped from a CSV column was treated like a configured
+label. The four failing checks reproduced zero bank cells where two were
+required. The repair follows the mapped field through evidence detail,
+post-cutoff candidates, document-source summaries and reconciliation detail.
+The fixture initially supplied both a mapped type and a default type; its
+setup stopped with `exactly one current reviewed source decision is required
+per source`. Setting the fixture's default to null, consistently with the
+existing mapped-type fixture, allowed the actual attribution checks to run.
+No production exception or source-review requirement was changed for that
+fixture correction.
+
+Final validation for this A72 checkpoint: **79 projection checks pass and seven
+fail**; the two audit-workbook failures are resolved. The remaining failures
+are the working/sealed Word files, working/sealed evidence-request workbooks,
+working/sealed canonical JSON and the assurance receipt. The writer/tabular
+suite passes **73** cases; Mypy passes both checked source modules; formatting
+and diff checks pass. Saved-review and regeneration regressions remain green.
+All 764 preserved files match. This is still an uncommitted source candidate:
+no new package, installation, chat, merge or deployment has occurred, and
+normal-chat acceptance remains **1 of 13**.
+
+A72 now also records the Word writer's paragraph origins and the targeted-request
+writer's cell origins. Word formatting preserves named field copies, grouping
+operands, localized labels, partial-payment amounts and dates through tables and
+body paragraphs. Headers, footers and embedded objects remain outside the
+explicit body-text measurement scope. The request workbook records residual
+amounts even when embedded in prose, later-evidence dates, copied descriptions
+and references, and summary operands. Supplied free text remains unknown unless
+its origin is separately evidenced. Working and sealed copies are registered
+after final bytes exist, including after review regeneration and promotion.
+
+Local validation before the authored-text addition: **116 projection checks pass
+and three fail**, including all six saved-review/regeneration cases with complete
+Word and request-workbook reads. The remaining default-output failures are
+working/sealed `reconciliation_results.json` and `assurance_receipts.json`.
+Nineteen focused Word checks verified complete reads (9 population cells and 6
+bank cells), partial reads, mapped evidence-type cells, untraced supplied text
+and edited-file rejection. Sixteen targeted-request checks verified complete
+reads (9 population cells and 2 bank cells), residual/payment prose, later dates,
+unknown supplied owners and edited-file rejection. All 93 writer/input-adapter
+checks passed after updating an existing test-only monkeypatch to forward the
+writer's new optional projection arguments. Before that harness correction,
+`TypeError: ... unexpected keyword argument 'projection_rows'` prevented the
+intentional amount-tampering assertion from running; the final run verifies that
+the altered amount is still rejected. Four Word-reader checks also pass.
+
+Inspection of the stopped 0.1.465 run's original manifest then identified an
+additional normal-chat gap: its title and narrative were supplied by the chat,
+whereas the complete Word checks above used default text. The native execution
+boundary now records hashes of the exact incoming argument strings, scoped to
+that Archive run and component, before launching the helper. This records text
+already supplied by the model; it does not count preparation as a send or infer
+source-free status from arbitrary file text. The writer uses this evidence only
+for exact supplied title/narrative values. Plain CLI text without that recorded
+origin, changed text, another pipeline and a new run cannot reuse the declaration.
+Regeneration retains the same origin only for the unchanged values in that run.
+
+The six authored-Word cases pass with the original stopped chat's title and
+narrative; eight existing arbitrary-text cases remain green. The new native
+boundary test and an additional authored-text save/apply/regeneration case also
+pass. The request-boundary test mocks worker launch, then the document cases run
+the real producer separately with those arguments; this is local source evidence,
+not a substitute for a fresh installed normal chat. Its test expectations were
+corrected to respect existing behavior: cross-pipeline binding raises an error,
+Archive startup already records one metadata send, and preparing identical work
+reuses its run unless `new_run=True` is requested. No production behavior was
+changed to accommodate those test assumptions.
+
+Three broader native-host checks initially failed inside the chat sandbox:
+cancellation could not execute `/bin/ps` (`PermissionError: Operation not
+permitted`), and the nested macOS sandbox could not start (`sandbox_apply:
+Operation not permitted`). The same three isolated synthetic checks passed when
+run outside that sandbox through approved execution. Together with the unchanged
+passing native cases and corrected boundary test, the native suites' cases pass;
+no cancellation or sandbox assertion was relaxed. Mypy passes five changed source
+modules; shared-source parity, formatting and diff checks pass. The full projection
+suite has not been repeated after the narrowly tested authored-text addition.
+
+This remains an uncommitted source candidate. No new version, package,
+installation, normal test chat, merge or deployment has occurred. The three JSON
+attribution gaps remain open. Acceptance is still **1 of 13** and the goal remains
+active. All 764 preserved files were verified unchanged at this checkpoint.
+
+
+A72 now also traces both canonical JSON copies and the assurance receipt. The
+canonical writer reuses the actual row-field origins for reconciliation, review,
+checks and analyses. The allocation producer records the amount and perimeter
+fields it actually selected, including fallback amount/party fields; its exact
+ledger hash binds those operands to the serialized ledger. Validated review
+attribution and native source-control declarations remain distinct from untraced
+free-form notes. An unknown field, changed declaration or edited output does not
+inherit provenance.
+
+The assurance writer records the origins of the numeric entries it emits and
+uses the office writers' physical cell/paragraph maps for the values it echoes.
+It does not infer privacy lineage from matching numeric values. Full allocation
+ledgers contribute their producer-recorded operands. The final JSON value and
+file bytes are registered only after finalization or regeneration promotion.
+
+One additional failure was reproduced during this repair: assurance sorts the
+source decisions by artifact reference, while the initial provenance declaration
+hashed insertion order. Identical decisions therefore failed the whole-receipt
+lineage check. Hashing the producer's decisions in the same canonical order fixes
+that mismatch without changing accounting results or relaxing receipt checks.
+Seven focused canonical checks pass, including working/sealed copies, mapped
+source evidence types, edited-file rejection and authored-text regeneration.
+Five receipt/regeneration checks pass, including exact source coverage and edited
+numeric-value rejection. Canonical reads cover 15 population cells and 8 bank
+cells (10 when evidence type is read from the bank CSV); the receipt covers only
+5 population cells and 4 bank cells. Unused private CSV cells remain local.
+
+An added allocation fallback regression initially omitted the existing partial
+payment's allocated/residual amounts and correctly failed accounting validation.
+Only that test fixture was completed; the intended fallback-origin assertion now
+passes. The accounting/helper/writer run preceding that fixture correction had
+181 passing checks and that single test-setup failure. Mypy passes all nine
+changed implementation modules (retained sources checked separately); Bandit
+reports no medium/high issue, and shared-runtime parity passes. All 764 preserved
+files were rehashed unchanged. Full projection, accounting-coverage and reporting-
+coverage suites are now running on the combined source change. No candidate
+version has been reserved and no new package, install, chat, merge or deployment
+has occurred. These local results do not close Test 2; acceptance remains 1 of 13.
+
+
+The combined A72 source checks are now green: **135 projection checks**, including
+all generated-output reads and seven saved-review/regeneration routes; **430
+accounting checks with 82.38% coverage**; and **196 reporting checks with 83.23%
+coverage**. The first broader commands exposed two test-harness issues. A fake
+OCR extractor did not return the new private provenance declaration; adding an
+empty declaration to that test-only stub preserves unknown provenance and the
+existing extracted-page assertions. The initial reporting command omitted the
+repository root's existing import-isolation hooks and reused Check Entries'
+`physical_output_set` while loading Report Builder. The proper root configuration
+resolved both import errors without production changes. The accounting command
+also omitted the existing retained-source coverage plugin, producing virtual-file
+warnings and an invalid 75.88% scan. Repeating with the maintained coverage
+configuration gives the 82.38% result above; no threshold or assertion was lowered.
+
+The next candidate versions are now reserved: Vera 0.1.466, Clara 0.1.332,
+Lucia 0.1.157 and Open-item Reconciliation 0.1.73; Archive remains 0.1.63.
+Only PR #885 is open, and remote main remains
+`3f6f8796ec49b2b4cd5f71f31ae18e6d75b98a56`. The privacy description now states the
+additional workpaper/JSON paths and the local hash-only argument origin, with
+explicit unknown-text and generic-tool-read limits. Package build, package
+validation, installed-version verification and fresh normal-chat acceptance are
+still pending. No merge, deployment or Marketplace action has occurred.
+
+
+Initial Codex, ChatGPT-upload, Cowork and Antigravity builds passed for all three
+products. The separate CI catalogue check then reproduced a stale manifest
+identity: the Geneva snapshot still named 0.1.465. All 55 skill entrypoint hashes,
+IDs and paths match the preceding snapshot. The maintained inventory helper now
+binds the catalogue and assessment metadata to 0.1.466; assessment rows were
+asserted unchanged and no fresh jurisdiction acceptance is claimed. The catalogue
+check passes. Vera's packages are being rebuilt after this metadata correction;
+the earlier candidate ZIP hash is superseded and will not be installed.
+
+
+Final release validation passes: all-host source/package parity for Vera 0.1.466,
+Clara 0.1.332 and Lucia 0.1.157; **568 package/privacy checks pass**, with two
+expected installed-curated-Marketplace checks skipped because those distributions
+are absent locally. The selected acceptance distribution remains `vera@mp-vera`.
+The final Vera ZIP SHA-256 is
+`513e672f3cee9d9b5beb00dfa969e6b1801400a843f57b69be611f2aab5e0fb1`:
+2,187 files, 146 changed, none added or removed, and ten executable source paths
+changed relative to the installed 0.1.465 baseline. Of the 19 Geneva package paths,
+17 are unchanged; the other two contain the catalogue/assessment identity refresh.
+The complete 55-entry skill hash list and all assessment rows are unchanged.
+All 764 preserved-file hashes match after the builds. Installation and fresh
+normal-chat acceptance are the next steps; Test 2 remains unaccepted.
+
+The candidate is committed as `f75d1e8a2333d5a74ea92f70ccd44a2d4de17452` on
+PR #885 and installed through the supported local plugin command. All 2,187
+source files and 2,184 cached files match the final package. The global plugin
+inventory shows exactly one enabled Vera: `vera@mp-vera` 0.1.466.
+
+Fresh-chat creation encountered two host automatic-approval rejections before
+any chat was created. The stated reason was missing specific authorization to
+send the synthetic invoice/payment rows, random Archive IDs and local paths to
+the new GPT-6.1-sol chat. These were host approval blocks, not Vera execution
+failures. Fabio explicitly authorized that payload and destination in response
+to question `call_b6a4bc4ec7bb48df8e5484e997185d07`; the supported creation call
+then succeeded. The new Test 2 chat is
+`01a15dd6-bbb9-7493-a865-00d4a1388717`. Its first status confirms the seven
+registered sources passed receipt/byte verification and the selected two CSVs
+match the expected three invoices and two payments. The chat is running;
+automatic delivery, final source coverage and correct-user server verification
+are not yet established for this attempt. Acceptance remains 1 of 13.
+
+### A73: agent used an invented Documents renderer path
+
+The 0.1.466 chat stopped on run `run_5cb2ad1a143fe4cde356a28c`, usage task
+`b607dbda-23ae-4888-a561-a32d1e09f185`. Calculation, saved review, regeneration
+and successor replay passed (`report_ready=true`). F001 closed at zero; F002
+retained EUR 500 after a EUR 300 payment; F003 remained open at EUR 500.
+The agent then tried the external Documents skill's nonexistent
+`scripts/render_docx.py` without resolving it first. The skill lists the
+renderer at its root. The failed command was followed by a workbook read and
+an assurance validation launch before the agent announced its stop; this
+sequence did not follow the prompt's instruction to stop immediately.
+It then closed Archive/task as failed and cancelled its review server. Port
+53241 is independently confirmed closed. No normal artifact finalization or
+delivery occurred; this attempt remains unaccepted.
+
+The automatically delivered privacy report is complete within its stated Vera
+emission scope: 27 sends, 324,224 characters and no measurement errors. The
+general verifier independently confirms receipt
+`3264ef82-60e1-580c-9e4c-c3ef146b6ffb`, report SHA-256
+`431d3032a973b913a5e7eca86e3631263904fe40b909089a154e3f140a9b099a`, revision 1,
+for user `0ed4a818-1877-4652-8515-787c64de17a5` and the exact run. This is
+evidence for A72's repair, not end-to-end acceptance. Shell and browser reads
+remain explicitly outside that report's measurement scope.
+
+The coordinator located the documented renderer and rendered the unchanged
+successor Word successfully with the bundled runtime: eight pages, inspected
+here, with no missing-renderer or compatibility failure. The only renderer
+diagnostics were Fontconfig cache warnings; PNGs and PDF were produced. The
+normal chat must still check its own new outputs. No product-code change or
+version bump is warranted for this path-selection mistake. The retry prompt
+now gives the verified discovery route and retains the same version and case.
+All 841 preservation hash checks pass, including 77 files from this stopped run.
+
+The test's retained report also records recovered review/regeneration states,
+the stale but nonblocking Archive index, unrelated orphaned profiles, large
+JSON outputs and host truncation, generic evidence-request wording for F003,
+and blank allocated/residual fields for F001 and F003 in the operating workbook.
+Those presentation/measurement limits are retained rather than silently treated
+as resolved. No Test 3, merge or deployment has started.
+
+### A74: agent mixed native accessibility and DOM selector roles
+
+Same-version retry chat `01a15dde-9481-7b23-bcbb-9e5dd91a6c52` stopped on run
+`run_b37224df654e38e86318223c`, task
+`8db9ec4f-cb0f-49db-ae3c-3b560b02a538`. The expected calculations passed;
+the browser draft contained four unsaved decisions. Its current native AX
+snapshot exposed element 150 as `checkbox Conferma esito`. The agent switched
+to Playwright `getByRole('checkbox', {name:'Conferma esito', exact:true})` and
+received `no_matches` with a selector deadline error. The maintained HTML
+actually renders a `button` with `aria-pressed`; no checkbox DOM element is
+defined. Thus the evidence identifies a mismatch between automation selector
+systems, not a missing Vera control. The agent stopped before saving or
+applying the draft, marked run/task failed and cancelled the review server.
+Port 54000 is independently confirmed closed. A coordinator attempt to inspect
+the same live browser tab was refused because it remained owned by the test
+chat; no tab ownership or browser-state workaround was attempted.
+
+Its automatic report is complete within the declared Vera scope, with no
+measurement errors and 294,156 characters. The general verifier confirms
+receipt `04d4e478-b075-5a15-a341-65d267464584`, SHA-256
+`83032779511293eb765c6f6fb00597d16d7ade4c0b8d637f87da5d4524af8e10`, revision 1,
+against the same correct userID and exact run. End-to-end acceptance remains
+open. The next attempt will use the published save/apply MCP tools for agent
+decisions, as the first 0.1.466 chat did successfully, and reopen the browser
+to verify persistence. It retains the same accounting, artifact and privacy
+checks. This is an agent tool-selection correction; product code and package
+version remain unchanged.
+
+The stopped chat's final record also identifies a recovered cleanup error:
+`vera_execute` rejected `cancel` with both `job_id` and `task_id`, explaining
+that status/cancel accept only the retained job ID and optional wait. The
+agent then used the documented job-ID-only request and verified terminal
+cancellation. Forty-one files from this attempt are preserved; all 882
+historical preservation hash checks pass. A third same-version attempt,
+`01a15de5-ab12-7c60-8c07-743e9527aba8`, is now running sequentially with the
+published save/apply tools. The two prior chats remain closed and failed.

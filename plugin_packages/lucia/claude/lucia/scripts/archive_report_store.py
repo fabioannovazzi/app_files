@@ -357,6 +357,9 @@ class Registry:
             connection.execute(
                 "CREATE TABLE IF NOT EXISTS receipt_queue (run_id TEXT PRIMARY KEY, status TEXT NOT NULL, checked_at TEXT NOT NULL)"
             )
+            connection.execute(
+                "CREATE TABLE IF NOT EXISTS recovery_attempts (run_id TEXT PRIMARY KEY, checked_at TEXT NOT NULL)"
+            )
             yield connection
 
     def register(self, run_id: str, root: Path) -> None:
@@ -381,21 +384,27 @@ class Registry:
                 (run_id, now()),
             )
 
-    def terminal_runs(self) -> list[Path]:
+    def terminal_runs(self, *, client_root: Path | None = None) -> list[Path]:
         """Find written terminal transitions whose local collection did not finish."""
         with self.transaction() as connection:
             roots = [
                 self._current_root(row["run_root"])
                 for row in connection.execute(
-                    "SELECT run_root FROM runs WHERE active=1"
+                    "SELECT r.run_root FROM runs r LEFT JOIN recovery_attempts a "
+                    "ON a.run_id=r.run_id WHERE r.active=1 "
+                    "ORDER BY COALESCE(a.checked_at,''),r.rowid"
                 )
             ]
         result = []
         for root in roots:
-            path = root / "run.json"
-            if path.is_symlink() or not path.is_file() or root.is_symlink():
+            if client_root is not None and (
+                len(root.parents) < 5 or root.parents[4] != client_root
+            ):
                 continue
+            path = root / "run.json"
             try:
+                if path.is_symlink() or not path.is_file() or root.is_symlink():
+                    continue
                 status = json.loads(path.read_text(encoding="utf-8"))["status"]
             except (OSError, ValueError, KeyError, TypeError):
                 logging.warning(
@@ -411,6 +420,16 @@ class Registry:
                 if len(result) == 3:
                     break
         return result
+
+    def recovery_attempted(self, root: Path) -> None:
+        """Rotate an attempted transition without dropping its pending state."""
+        with self.transaction() as connection:
+            connection.execute(
+                "INSERT INTO recovery_attempts(run_id,checked_at) "
+                "SELECT run_id,? FROM runs WHERE run_root=? "
+                "ON CONFLICT(run_id) DO UPDATE SET checked_at=excluded.checked_at",
+                (now(), self._stored_root(root)),
+            )
 
     def receipt_result(self, root: Path, status: str) -> None:
         with self.transaction() as connection:

@@ -129,7 +129,7 @@
     },
     {
       "path": "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
-      "sha256": "033c9c88c8212875ca13637424904a778aef4d8dbe99058cf3c3e32f6cbbd21c"
+      "sha256": "73c3462bd803c3960558a4a95e7c276251955cc971627f2a8eca8a4dcf4f89b5"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "skills/mparanza-financial-report-builder/SKILL.md",
-      "sha256": "24773ea15afd1fa2bb3e5a3b25ab668ac73a4ee7e9b7208f33f5e9aa7c0aa539"
+      "sha256": "db294fa5a4e48e69799049ec711b66cd75bcbaa91cbd55ef45137df54bbe1894"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

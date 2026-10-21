@@ -137,6 +137,8 @@ const result={prepared,retry,reopened,view};
     "change",
     [
         "human_reviewed:false",
+        "review_actor:'agent',human_reviewed:true",
+        "review_actor:'human',human_reviewed:false",
         "revision:'0'.repeat(64)",
         "expected_draft_revision:'0'.repeat(64)",
         "review_ticket:'invalid.signature'",
@@ -154,7 +156,10 @@ def test_initial_open_items_refuses_stale_or_unconfirmed_request_before_outputs(
         + "});",
     )
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 def test_initial_open_items_catalogue_exposes_initial_intake(initial_open_items):
@@ -164,7 +169,10 @@ def test_initial_open_items_catalogue_exposes_initial_intake(initial_open_items)
 
     assert result["works"][0]["workflow"] == "open-item-reconciliation"
     assert result["works"][0]["setup_available"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 def test_initial_open_items_original_is_exact_private_readable_for_viewer(
@@ -196,7 +204,10 @@ const result=call('vera_workspace_open_items_intake_source',{work_ref:setup.work
     )
     assert source["content"] not in json.dumps(result["content"])
     assert source["content"] not in json.dumps(result["structuredContent"])
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 @pytest.mark.parametrize(
@@ -224,7 +235,10 @@ const result=call('vera_workspace_open_items_intake_source',{work_ref:setup.work
 
     assert result["isError"] is True
     assert set(result["_meta"]["workspace"]) == {"error"}
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 @pytest.mark.parametrize("initial_open_items", [True], indirect=True)
@@ -245,7 +259,10 @@ const result=call('vera_workspace_open_items_intake_source',{work_ref:setup.work
     assert result["isError"] is True
     assert "Studio Archive" in json.dumps(result["content"])
     assert set(result["_meta"]["workspace"]) == {"error"}
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 def test_initial_open_items_viewer_cannot_persist_partial_choices(initial_open_items):
@@ -261,7 +278,10 @@ const result={setup,refused};
     )
     assert result["setup"]["can_prepare"] is False
     assert result["refused"]["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 def test_initial_open_items_partial_choices_remain_private_and_unqualified(
@@ -282,7 +302,10 @@ const result={saved,reopened};
     )
     assert "PRIVATE_SENTINEL" not in json.dumps(result["reopened"]["content"])
     assert "PRIVATE_SENTINEL" not in json.dumps(result["reopened"]["structuredContent"])
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 def test_initial_open_items_foreign_actor_refused_before_draft_read(initial_open_items):
@@ -303,7 +326,10 @@ const result=payload(call('vera_workspace_open_items_intake_draft_save',{work_re
 
     assert result["isError"] is True
     assert "PRIVATE_OWNER_SENTINEL" not in json.dumps(result)
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 def test_initial_open_items_changed_source_refused_before_output(initial_open_items):
@@ -321,7 +347,10 @@ def test_initial_open_items_changed_source_refused_before_output(initial_open_it
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }
 
 
 @pytest.mark.parametrize(
@@ -349,4 +378,7 @@ def test_initial_open_items_incomplete_scope_refused_before_output(
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name for p in output.iterdir()} == {
+        "model_data_report.json",
+        "model_data_report.md",
+    }

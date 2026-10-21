@@ -122,6 +122,7 @@ from vera_assurance import (  # noqa: E402
     AssuranceContractError,
     MoneyValidationError,
     build_source_qualification,
+    canonical_json_sha256,
     decimal_text,
     load_client_engagement_context_file,
     parse_canonical_decimal,
@@ -130,7 +131,12 @@ from vera_assurance import (  # noqa: E402
 )
 
 try:
-    import fitz  # type: ignore
+    try:
+        import pymupdf as fitz  # type: ignore
+    except ModuleNotFoundError as exc:
+        if exc.name != "pymupdf":
+            raise
+        import fitz  # type: ignore
 except (
     Exception
 ) as exc:  # pragma: no cover - optional dependency import failures are reported at runtime
@@ -583,6 +589,8 @@ def _requested_source_adapter_families(
         value = mapping.get(_source_name(path, assumptions))
         if not isinstance(value, dict):
             value = mapping.get(path.as_posix())
+        if not isinstance(value, dict):
+            value = mapping.get(str(path))
         if not isinstance(value, dict):
             families[_source_name(path, assumptions)] = ""
         elif value.get("schema_version") == "vera.reviewed_decision_receipt.v1":
@@ -2628,6 +2636,7 @@ def extract_normalized_records(
     output_dir: str | Path | None = None,
 ) -> dict[str, Any]:
     active = dict(assumptions or {})
+    source_origins: dict[str, dict[str, Any]] = {}
     root = Path(input_dir).absolute()
     out_dir = validate_run_output_dir(
         Path(output_dir) if output_dir else root.parent / "output",
@@ -2827,7 +2836,9 @@ def extract_normalized_records(
                 continue
             if adapter_family == "reviewed_tabular_accounting_v1":
                 parsed = read_reviewed_tabular_source(
-                    path, _reviewed_source_decision(active, path)
+                    path,
+                    _reviewed_source_decision(active, path),
+                    origins=source_origins,
                 )
                 if role_from_name == "open_items":
                     tabular_open_items.extend(parsed)
@@ -2918,10 +2929,11 @@ def extract_normalized_records(
                     flush=True,
                 )
 
-    open_items = apply_source_perimeters(
-        [*parse_open_items(all_pages, active), *tabular_open_items],
-        active,
-    )
+    # Tabular rows already carry their reviewed, source-bound row party identity.
+    open_items = [
+        *apply_source_perimeters(parse_open_items(all_pages, active), active),
+        *tabular_open_items,
+    ]
     ledger_balance_rows = apply_source_perimeters(
         parse_ledger_balance_pages(all_pages, active),
         active,
@@ -3006,10 +3018,24 @@ def extract_normalized_records(
     validate_receipt_set({"source": root.resolve()}, source_receipts)
     return {
         "source_inventory": inventory,
+        "source_origins": source_origins,
         "source_root": str(root.resolve()),
         "source_artifact_receipts": source_receipts,
         "reviewed_source_decision_receipts": list(decisions_by_path.values()),
         "source_qualifications": source_qualifications,
+        "_source_controls_projection": {
+            "source_qualifications": {
+                "data_sha256": canonical_json_sha256(source_qualifications)
+            },
+            "reviewed_source_decisions": {
+                "data_sha256": canonical_json_sha256(
+                    sorted(
+                        decisions_by_path.values(),
+                        key=lambda item: str(item["source_artifact_refs"][0]),
+                    )
+                )
+            },
+        },
         "source_pages": page_rows,
         "open_items": open_items,
         "evidence_rows": evidence_rows,
@@ -3176,6 +3202,19 @@ def run_raw_input_reconciliation(
     if review_rows_path and review_rows is None:
         review_rows = json.loads(Path(review_rows_path).read_text(encoding="utf-8"))
 
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    authored_text_origins = {}
+    argument_origin = getattr(recorder, "model_argument_origin", None)
+    if callable(argument_origin):
+        authored_text_origins = {
+            name: argument_origin(
+                WORKFLOW_ID, Path(client_engagement["output_dir"]), value
+            )
+            for name, value in (("title", title), ("narrative", narrative))
+            if isinstance(value, str)
+        }
     result = build_reconciliation_artifacts(
         output_dir=out_dir,
         open_items=extracted["open_items"],
@@ -3202,10 +3241,17 @@ def run_raw_input_reconciliation(
             "Engagement ID": client_engagement["engagement_id"],
             "Run timestamp": datetime.now().isoformat(timespec="seconds"),
         },
+        metadata_origins={
+            "Input folder": [],
+            "Studio client ID": [],
+            "Engagement ID": [],
+            "Run timestamp": [],
+        },
         client_engagement=client_engagement,
         run_id=client_engagement["run_id"],
         title=title,
         narrative=narrative,
+        authored_text_origins=authored_text_origins,
         language=active.get("report_language", requested_language),
         excel_name="riconciliazione_audit.xlsx",
         word_name="relazione_riconciliazione_audit.docx",
@@ -3219,6 +3265,7 @@ def run_raw_input_reconciliation(
         defer_assurance_finalization=True,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
+    request_projection_rows: dict[str, list[dict[str, Any]]] = {}
     missing_evidence_pack = build_missing_evidence_request_pack(
         result["reconciliation_rows"],
         post_cutoff_candidates=result["post_cutoff_candidates"],
@@ -3230,11 +3277,17 @@ def run_raw_input_reconciliation(
         or "",
         cutoff_date=active.get("cutoff_date"),
         language=active.get("report_language", requested_language),
+        source_origins=result["_request_report_origins"],
+        projection_rows=request_projection_rows,
     )
+    request_cells: list[list[list[dict[str, Any]] | None]] = []
     missing_evidence_requests_path = write_missing_evidence_workbook(
         out_dir / "richieste_mirate_evidenze.xlsx",
         missing_evidence_pack,
+        projection_rows=request_projection_rows,
+        projection_cells=request_cells,
     )
+    result["_request_report_cells"] = request_cells
     review_status_counts: dict[str, int] = defaultdict(int)
     for row in result["review_rows"]:
         review_status_counts[
@@ -3317,6 +3370,8 @@ def run_raw_input_reconciliation(
         extracted.get("account_rollforward_check", []),
     )
     write_json(out_dir / "codex_review_packet.json", result["review_rows"])
+    if recorder is not None:
+        recorder.register_rows(WORKFLOW_ID, out_dir, extracted["source_origins"])
     existing_review_session = result.get("review_session") or {}
     review_session = write_review_session_artifacts(
         out_dir,
@@ -3353,6 +3408,7 @@ def run_raw_input_reconciliation(
         ),
     }
     write_json(out_dir / "run_manifest.json", manifest)
+    json_projections: dict[str, Any] = {}
     result["assurance"] = finalize_assurance_run(
         output_dir=out_dir,
         context=result["assurance_context"],
@@ -3370,7 +3426,29 @@ def run_raw_input_reconciliation(
             missing_evidence_requests_path,
         ],
         workbook_name=Path(result["excel_path"]).name,
+        projection_context={
+            **result["_json_projection_context"],
+            "source_controls": extracted["_source_controls_projection"],
+            "report_cells": {
+                "riconciliazione_audit.xlsx": result["_audit_report_cells"],
+                "scheda_operativa_commercialista.xlsx": result[
+                    "_accountant_report_cells"
+                ],
+                "relazione_riconciliazione_audit.docx": result["_word_report_cells"],
+                "richieste_mirate_evidenze.xlsx": result["_request_report_cells"],
+            },
+        },
+        projection_values=json_projections,
     )
+    result["_json_report_projections"] = json_projections
+    if recorder is not None:
+        recorder.register_private_value(
+            WORKFLOW_ID,
+            out_dir,
+            json.loads(review_session.review_payload_path.read_bytes()),
+        )
+    if regeneration_output_dir is None:
+        _register_report_projections(out_dir, result)
     return {
         **result,
         **extracted,
@@ -3380,6 +3458,43 @@ def run_raw_input_reconciliation(
         "missing_evidence_requests_path": str(missing_evidence_requests_path),
         "missing_evidence_request_pack": missing_evidence_pack,
     }
+
+
+def _register_report_projections(output_dir: Path, result: dict[str, Any]) -> None:
+    """Bind working and sealed copies after their final bytes are in place."""
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is None:
+        return
+    for directory in (output_dir, output_dir / "assurance_final_outputs"):
+        for name, cells in (
+            (
+                "scheda_operativa_commercialista.xlsx",
+                result["_accountant_report_cells"],
+            ),
+            ("riconciliazione_audit.xlsx", result["_audit_report_cells"]),
+            ("relazione_riconciliazione_audit.docx", result["_word_report_cells"]),
+            ("richieste_mirate_evidenze.xlsx", result["_request_report_cells"]),
+        ):
+            recorder.register_table_projection(WORKFLOW_ID, directory / name, cells)
+        for name, declaration in result.get("_json_report_projections", {}).items():
+            if name == "assurance_receipts.json" and directory != output_dir:
+                continue  # The assurance control is not a delivered-output copy.
+            path = directory / name
+            data = path.read_bytes()
+            value = json.loads(data)
+            if (
+                declaration["records"] is not None
+                and canonical_json_sha256(value) == declaration["data_sha256"]
+            ):
+                recorder.register_row_projection(
+                    WORKFLOW_ID,
+                    path,
+                    value,
+                    declaration["records"],
+                    artifact_sha256=hashlib.sha256(data).hexdigest(),
+                )
 
 
 def regenerate_raw_input_reconciliation(
@@ -3450,6 +3565,8 @@ def regenerate_raw_input_reconciliation(
     ):
         raise ValueError("Saved decisions differ from the applied review")
 
+    report_projections: dict[str, Any] = {}
+
     def rebuild(working: Path) -> dict[str, Any]:
         result = run_raw_input_reconciliation(
             input_dir=context["input_dir"],
@@ -3463,6 +3580,18 @@ def regenerate_raw_input_reconciliation(
             regeneration_output_dir=working,
             applied_review_rows=authority["records"],
         )
+        report_projections.update(
+            {
+                key: result[key]
+                for key in (
+                    "_accountant_report_cells",
+                    "_audit_report_cells",
+                    "_word_report_cells",
+                    "_request_report_cells",
+                    "_json_report_projections",
+                )
+            }
+        )
         replay = validate_assurance_run(
             working, expected_predecessor_checkpoint=expected_predecessor_checkpoint
         )
@@ -3473,12 +3602,14 @@ def regenerate_raw_input_reconciliation(
             "checks_pass": result["checks_pass"],
         }
 
-    return run_review_output_transaction(
+    result = run_review_output_transaction(
         output_dir,
         rebuild,
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
         regenerate_successor=True,
     )
+    _register_report_projections(output_dir, report_projections)
+    return result
 
 
 def _cli_parser() -> Any:
@@ -3488,11 +3619,18 @@ def _cli_parser() -> Any:
         description="Run one client-bound Open-item Reconciliation workflow."
     )
     parser.add_argument("--client-engagement", type=Path, required=True)
-    parser.add_argument("--assumptions-json", type=Path, required=True)
+    parser.add_argument(
+        "--assumptions-json",
+        type=Path,
+        help="Initial production settings. Reviewed regeneration reuses the retained original settings.",
+    )
     parser.add_argument("--title")
     parser.add_argument("--narrative", default="")
     parser.add_argument("--language", default="it")
-    parser.add_argument("--expected-predecessor-checkpoint")
+    parser.add_argument(
+        "--expected-predecessor-checkpoint",
+        help="Regenerate the applied review in a transaction using this separately retained predecessor hash and the original report settings.",
+    )
     parser.add_argument("--output-subdirectory", choices=["reconciliation"])
     return parser
 
@@ -3505,27 +3643,51 @@ def main(argv: list[str] | None = None) -> int:
         client_engagement = load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="open-item-reconciliation",
-            input_paths=[args.assumptions_json],
+            input_paths=[args.assumptions_json] if args.assumptions_json else [],
         )
-        assumptions = json.loads(args.assumptions_json.read_text(encoding="utf-8"))
-        if not isinstance(assumptions, dict):
-            raise ValueError("Assumptions JSON must contain one object")
-        result = run_raw_input_reconciliation(
-            input_dir=Path(client_engagement["input_dir"]),
-            prepared_client_engagement=client_engagement,
-            assumptions=assumptions,
-            title=args.title,
-            narrative=args.narrative,
-            language=args.language,
-            expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
-            output_subdirectory=args.output_subdirectory,
-        )
+        if args.expected_predecessor_checkpoint:
+            output_dir = Path(client_engagement["output_dir"])
+            if args.output_subdirectory:
+                output_dir /= args.output_subdirectory
+            # A successor consumes persisted review authority through the same
+            # transactional producer as the native route; never rebuild pending
+            # rows over an applied review or rewrite its retained original settings.
+            result = {
+                **regenerate_raw_input_reconciliation(
+                    output_dir,
+                    client_engagement,
+                    expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
+                ),
+                "client_engagement": client_engagement,
+                "run_output_dir": str(output_dir),
+            }
+        else:
+            if args.assumptions_json is None:
+                raise ValueError("Initial production requires --assumptions-json")
+            assumptions = json.loads(args.assumptions_json.read_text(encoding="utf-8"))
+            if not isinstance(assumptions, dict):
+                raise ValueError("Assumptions JSON must contain one object")
+            result = run_raw_input_reconciliation(
+                input_dir=Path(client_engagement["input_dir"]),
+                prepared_client_engagement=client_engagement,
+                assumptions=assumptions,
+                title=args.title,
+                narrative=args.narrative,
+                language=args.language,
+                output_subdirectory=args.output_subdirectory,
+            )
     except (OSError, ValueError) as exc:
         sys.stderr.write(f"Open-item Reconciliation failed: {exc}\n")
         return 1
     summary = {
-        "status": "ready_for_review",
-        "client_engagement": result["client_engagement"],
+        "status": (
+            "final_ready" if result.get("report_ready") is True else "ready_for_review"
+        ),
+        "client_engagement": {
+            key: result["client_engagement"][key]
+            for key in ("client_id", "engagement_id", "workflow_id", "run_id")
+        },
+        "client_engagement_path": str(args.client_engagement.resolve()),
         "run_manifest_path": str(Path(result["run_output_dir"]) / "run_manifest.json"),
         "semantic_resolution": {
             "status": result.get("semantic_resolution", {}).get(
@@ -3541,6 +3703,25 @@ def main(argv: list[str] | None = None) -> int:
         },
         "artifact_card_path": str(Path(result["run_output_dir"]) / "artifact_card.md"),
     }
+    if result.get("regenerated") is True:
+        summary.update(
+            {
+                key: result[key]
+                for key in (
+                    "regenerated",
+                    "report_ready",
+                    "checks_pass",
+                    "assurance_sha256",
+                )
+            }
+        )
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        # This exact constructor carries status, technical IDs and paths;
+        # free-form engagement labels/purpose and source rows are not echoed.
+        recorder.register_metadata(WORKFLOW_ID, Path(result["run_output_dir"]), summary)
     sys.stdout.write(json.dumps(summary, ensure_ascii=False, sort_keys=True) + "\n")
     return 0
 

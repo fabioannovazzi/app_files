@@ -19,17 +19,24 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
+from docx.text.paragraph import Paragraph
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
 from openpyxl.utils import get_column_letter
 
 try:
-    from .locale_support import canonical_word_label, output_labels, word_output_label
+    from .locale_support import (
+        amount_tolerance_line,
+        canonical_word_label,
+        output_labels,
+        word_output_label,
+    )
 except ImportError:  # pragma: no cover - retained top-level loader support
     scripts_dir = Path(__file__).resolve().parent
     if str(scripts_dir) not in sys.path:
         sys.path.insert(0, str(scripts_dir))
     from locale_support import (  # type: ignore
+        amount_tolerance_line,
         canonical_word_label,
         output_labels,
         word_output_label,
@@ -966,6 +973,8 @@ def _fallback_label(value: object) -> str:
 
 def _field_label(field: object, language: str) -> str:
     value = str(field or "")
+    if value == "amount_tolerance":
+        return str(word_output_label(value, _language_code(language)))
     labels = _locale_catalog(language, ITALIAN_FIELD_LABELS, SPANISH_FIELD_LABELS)
     if not labels:
         return value
@@ -1134,13 +1143,54 @@ def _localize_value(field: object, value: object, language: str) -> object:
     return value
 
 
+class _ReportRow(dict[str, Any]):
+    """Carry writer-owned field origins without adding fields to report data."""
+
+    def __init__(self, values: dict[str, Any], origins: dict[str, Any]) -> None:
+        super().__init__(values)
+        self.origins = origins
+
+
+def _field_origin(row: dict[str, Any], field: str) -> list[dict[str, Any]] | None:
+    if row.get(field) in (None, ""):
+        return []
+    return row.origins.get(field) if isinstance(row, _ReportRow) else None
+
+
+def _report_row(
+    values: dict[str, Any], source: dict[str, Any], fields: dict[str, str | None]
+) -> _ReportRow:
+    """Preserve explicit formatter aliases; only declared constants get []."""
+    origins: dict[str, Any] = {}
+    for key in values:
+        source_field = fields.get(key)
+        origins[key] = (
+            None
+            if key not in fields
+            else [] if source_field is None else _field_origin(source, source_field)
+        )
+    return _ReportRow(values, origins)
+
+
 def _localize_row(row: dict[str, Any], language: str) -> dict[str, Any]:
     if not _is_localized(language):
-        return dict(row)
-    return {
+        return (
+            _ReportRow(dict(row), dict(row.origins))
+            if isinstance(row, _ReportRow)
+            else dict(row)
+        )
+    values = {
         _field_label(key, language): _localize_value(key, value, language)
         for key, value in row.items()
     }
+    return (
+        _ReportRow(
+            values,
+            {_field_label(key, language): _field_origin(row, key) for key in row},
+        )
+        if isinstance(row, _ReportRow)
+        else values
+    )
 
 
 def _localize_rows(rows: list[dict[str, Any]], language: str) -> list[dict[str, Any]]:
@@ -1411,7 +1461,13 @@ def _format_table(
 
 
 def _add_callout(
-    doc: Document, title: str, body: str, *, fill: str = LIGHT_BLUE
+    doc: Document,
+    title: str,
+    body: str,
+    *,
+    fill: str = LIGHT_BLUE,
+    paragraph_origins: dict[Any, Any] | None = None,
+    body_origin: list[dict[str, Any]] | None = None,
 ) -> None:
     table = doc.add_table(rows=1, cols=1)
     table.style = "Table Grid"
@@ -1425,6 +1481,9 @@ def _add_callout(
     for run in title_p.runs:
         _set_run_font(run, bold=True, color=NAVY)
     body_p = cell.add_paragraph(body)
+    if paragraph_origins is not None:
+        paragraph_origins[title_p._p] = []
+        paragraph_origins[body_p._p] = body_origin
     _set_paragraph_spacing(body_p, after=0)
     _set_table_geometry(table, [6.4])
 
@@ -1445,10 +1504,16 @@ def _add_paragraphs(doc: Document, paragraphs: list[str]) -> None:
             _set_paragraph_spacing(paragraph)
 
 
-def _add_bullet_list(doc: Document, items: list[str]) -> None:
+def _add_bullet_list(
+    doc: Document, items: list[str], *, paragraph_origins: dict[Any, Any] | None = None
+) -> None:
     for item in items:
         if item:
             paragraph = doc.add_paragraph(item, style="List Bullet")
+            if paragraph_origins is not None:
+                paragraph_origins[paragraph._p] = (
+                    []
+                )  # This helper receives the owned status legend.
             _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)
 
 
@@ -1457,6 +1522,7 @@ def _add_table(
     rows: list[dict[str, Any]],
     preferred: list[str] | None = None,
     limit: int | None = None,
+    paragraph_origins: dict[Any, Any] | None = None,
 ) -> None:
     if not rows:
         return
@@ -1478,10 +1544,15 @@ def _add_table(
             _add_table(
                 doc,
                 [
-                    {header: row.get(header, "") for header in group}
+                    _report_row(
+                        {header: row.get(header, "") for header in group},
+                        row,
+                        {header: header for header in group},
+                    )
                     for row in visible_rows
                 ],
                 preferred=group,
+                paragraph_origins=paragraph_origins,
             )
         return
     table = doc.add_table(rows=1, cols=len(headers))
@@ -1489,6 +1560,8 @@ def _add_table(
     for idx, header in enumerate(headers):
         cell = table.rows[0].cells[idx]
         cell.text = str(word_output_label(header, language))
+        if paragraph_origins is not None:
+            paragraph_origins[cell.paragraphs[0]._p] = []
         for paragraph in cell.paragraphs:
             for run in paragraph.runs:
                 run.font.bold = True
@@ -1496,6 +1569,10 @@ def _add_table(
         cells = table.add_row().cells
         for idx, header in enumerate(headers):
             cells[idx].text = _word_cell_value(header, row.get(header, ""), language)
+            if paragraph_origins is not None:
+                paragraph_origins[cells[idx].paragraphs[0]._p] = _field_origin(
+                    row, header
+                )
     _format_table(table, [cell.text for cell in table.rows[0].cells])
     # Adjacent tables otherwise merge in LibreOffice, causing a later block to
     # repeat the first block's unrelated headings after a page break.
@@ -1532,6 +1609,7 @@ def _summary_by_status(
     text = _report_text(language)
     status_header = _field_label("status", language)
     buckets: dict[str, dict[str, Any]] = {}
+    origins: dict[str, dict[str, list[Any]]] = {}
     for row in summary_rows:
         status = str(
             row.get("reconciliation_status")
@@ -1558,12 +1636,27 @@ def _summary_by_status(
             or row.get("Importe")
             or row.get("Amount")
         )
-    return [
-        {
-            status_header: _reconciliation_status_label(row["status"], language),
-            text["rows"]: row[text["rows"]],
-            text["amount"]: _format_decimal(row[text["amount"]]),
+        selected_fields = {
+            status_header: ("reconciliation_status", "Esito", "Estado", "Status"),
+            text["rows"]: ("rows", "Righe", "Líneas", "Rows"),
+            text["amount"]: ("amount", "Importo", "Importe", "Amount"),
         }
+        group = origins.setdefault(status, {key: [] for key in selected_fields})
+        for label, fields in selected_fields.items():
+            selected = next((field for field in fields if row.get(field)), None)
+            group[label].append(_field_origin(row, selected) if selected else [])
+    return [
+        _ReportRow(
+            {
+                status_header: _reconciliation_status_label(row["status"], language),
+                text["rows"]: row[text["rows"]],
+                text["amount"]: _format_decimal(row[text["amount"]]),
+            },
+            {
+                key: _join_origins(values)
+                for key, values in origins[row["status"]].items()
+            },
+        )
         for row in sorted(buckets.values(), key=lambda item: str(item["status"]))
     ]
 
@@ -1572,9 +1665,11 @@ def _check_summary(
     checks: list[dict[str, Any]], language: str = "en"
 ) -> list[dict[str, Any]]:
     buckets: dict[str, int] = {}
+    origins: dict[str, list[Any]] = {}
     for row in checks:
         status = str(row.get("status") or "UNKNOWN")
         buckets[status] = buckets.get(status, 0) + 1
+        origins.setdefault(status, []).append(_field_origin(row, "status"))
     status_header = _field_label("status", language)
     checks_header = (
         "Controlli"
@@ -1582,10 +1677,13 @@ def _check_summary(
         else ("Controles" if _is_spanish(language) else "checks")
     )
     return [
-        {
-            status_header: _status_label(status, language),
-            checks_header: count,
-        }
+        _ReportRow(
+            {
+                status_header: _status_label(status, language),
+                checks_header: count,
+            },
+            {status_header: _join_origins(origins[status]), checks_header: []},
+        )
         for status, count in sorted(buckets.items())
     ]
 
@@ -1758,10 +1856,17 @@ def _post_cutoff_summary_rows(
             "evidence_amount": "Evidence amount",
         }
     buckets: dict[tuple[str, str], dict[str, Any]] = {}
+    origins: dict[tuple[str, str], dict[str, list[Any]]] = {}
     for row in rows:
         evidence_type = _evidence_type_label(row.get("evidence_type"), language)
         exact_match = _yes_no_label(row.get("exact_amount_match"), language)
         key = (evidence_type, exact_match)
+        group = origins.setdefault(key, {label: [] for label in labels.values()})
+        group[labels["evidence_type"]].append(_field_origin(row, "evidence_type"))
+        group[labels["exact_match"]].append(_field_origin(row, "exact_amount_match"))
+        group[labels["open_amount"]].append(_field_origin(row, "open_amount"))
+        group[labels["evidence_amount"]].append(_field_origin(row, "evidence_amount"))
+        group[labels["rows"]].append([])
         bucket = buckets.setdefault(
             key,
             {
@@ -1781,14 +1886,27 @@ def _post_cutoff_summary_rows(
         bucket[labels["evidence_amount"]] += _decimal(row.get("evidence_amount"))
 
     return [
-        {
-            "Record refs": "; ".join(sorted(row["Record refs"])),
-            labels["evidence_type"]: row[labels["evidence_type"]],
-            labels["exact_match"]: row[labels["exact_match"]],
-            labels["rows"]: row[labels["rows"]],
-            labels["open_amount"]: _format_decimal(row[labels["open_amount"]]),
-            labels["evidence_amount"]: _format_decimal(row[labels["evidence_amount"]]),
-        }
+        _ReportRow(
+            {
+                "Record refs": "; ".join(sorted(row["Record refs"])),
+                labels["evidence_type"]: row[labels["evidence_type"]],
+                labels["exact_match"]: row[labels["exact_match"]],
+                labels["rows"]: row[labels["rows"]],
+                labels["open_amount"]: _format_decimal(row[labels["open_amount"]]),
+                labels["evidence_amount"]: _format_decimal(
+                    row[labels["evidence_amount"]]
+                ),
+            },
+            {
+                "Record refs": [],
+                **{
+                    label: _join_origins(values)
+                    for label, values in origins[
+                        (row[labels["evidence_type"]], row[labels["exact_match"]])
+                    ].items()
+                },
+            },
+        )
         for row in sorted(
             buckets.values(),
             key=lambda item: (
@@ -1843,24 +1961,43 @@ def _post_cutoff_detail_rows(
     report_rows: list[dict[str, Any]] = []
     for row in sorted(rows, key=sort_key):
         report_rows.append(
-            {
-                "Record refs": "; ".join(
-                    filter(
-                        None, [row.get("open_record_id"), row.get("evidence_record_id")]
-                    )
-                ),
-                labels["document_no"]: row.get("document_no", ""),
-                labels["document_date"]: row.get("document_date", ""),
-                labels["open_amount"]: _format_decimal(row.get("open_amount")),
-                labels["evidence_date"]: row.get("evidence_date", ""),
-                labels["evidence_type"]: _evidence_type_label(
-                    row.get("evidence_type"), language
-                ),
-                labels["exact_match"]: _yes_no_label(
-                    row.get("exact_amount_match"), language
-                ),
-                labels["source"]: row.get("evidence_source_file", ""),
-            }
+            _report_row(
+                {
+                    "Record refs": "; ".join(
+                        filter(
+                            None,
+                            [row.get("open_record_id"), row.get("evidence_record_id")],
+                        )
+                    ),
+                    labels["document_no"]: row.get("document_no", ""),
+                    labels["document_date"]: row.get("document_date", ""),
+                    labels["open_amount"]: _format_decimal(row.get("open_amount")),
+                    labels["evidence_date"]: row.get("evidence_date", ""),
+                    labels["evidence_type"]: _evidence_type_label(
+                        row.get("evidence_type"), language
+                    ),
+                    labels["exact_match"]: _yes_no_label(
+                        row.get("exact_amount_match"), language
+                    ),
+                    labels["source"]: row.get("evidence_source_file", ""),
+                },
+                row,
+                {
+                    "Record refs": None,
+                    **{
+                        labels[key]: key
+                        for key in (
+                            "document_no",
+                            "document_date",
+                            "open_amount",
+                            "evidence_date",
+                            "evidence_type",
+                        )
+                    },
+                    labels["exact_match"]: "exact_amount_match",
+                    labels["source"]: "evidence_source_file",
+                },
+            )
         )
     return report_rows
 
@@ -1925,18 +2062,32 @@ def _review_signal_report_rows(
             "signals": "Reason",
         }
     return [
-        {
-            labels["rank"]: row.get("review_signal_rank", ""),
-            labels["document"]: row.get("document_no") or row.get("document_key", ""),
-            labels["amount"]: _format_decimal(row.get("amount")),
-            labels["age"]: row.get("age_days_at_reference", ""),
-            labels["status"]: _reconciliation_status_label(
-                row.get("reconciliation_status"), language
-            ),
-            labels["signals"]: _localized_semicolon_list(
-                row.get("review_signals", ""), language, _review_signal_label
-            ),
-        }
+        _report_row(
+            {
+                labels["rank"]: row.get("review_signal_rank", ""),
+                labels["document"]: row.get("document_no")
+                or row.get("document_key", ""),
+                labels["amount"]: _format_decimal(row.get("amount")),
+                labels["age"]: row.get("age_days_at_reference", ""),
+                labels["status"]: _reconciliation_status_label(
+                    row.get("reconciliation_status"), language
+                ),
+                labels["signals"]: _localized_semicolon_list(
+                    row.get("review_signals", ""), language, _review_signal_label
+                ),
+            },
+            row,
+            {
+                labels["rank"]: "review_signal_rank",
+                labels["document"]: (
+                    "document_no" if row.get("document_no") else "document_key"
+                ),
+                labels["amount"]: "amount",
+                labels["age"]: "age_days_at_reference",
+                labels["status"]: "reconciliation_status",
+                labels["signals"]: "review_signals",
+            },
+        )
         for row in rows
     ]
 
@@ -1981,18 +2132,38 @@ def _document_source_report_rows(
             "note": "Note",
         }
     return [
-        {
-            labels["document"]: row.get("document_no_examples")
-            or row.get("document_key", ""),
-            labels["open_amount"]: _format_decimal(row.get("open_amount_total")),
-            labels["open_rows"]: row.get("open_item_rows", ""),
-            labels["ledger"]: row.get("ledger_rows", ""),
-            labels["journal"]: row.get("journal_rows", ""),
-            labels["bank"]: row.get("bank_rows", ""),
-            labels["payment"]: row.get("payment_order_rows", ""),
-            labels["factor"]: row.get("factoring_rows", ""),
-            labels["note"]: row.get("review_note", ""),
-        }
+        _report_row(
+            {
+                labels["document"]: row.get("document_no_examples")
+                or row.get("document_key", ""),
+                "Record refs": row.get("record_refs", ""),
+                labels["open_amount"]: _format_decimal(row.get("open_amount_total")),
+                labels["open_rows"]: row.get("open_item_rows", ""),
+                labels["ledger"]: row.get("ledger_rows", ""),
+                labels["journal"]: row.get("journal_rows", ""),
+                labels["bank"]: row.get("bank_rows", ""),
+                labels["payment"]: row.get("payment_order_rows", ""),
+                labels["factor"]: row.get("factoring_rows", ""),
+                labels["note"]: row.get("review_note", ""),
+            },
+            row,
+            {
+                labels["document"]: (
+                    "document_no_examples"
+                    if row.get("document_no_examples")
+                    else "document_key"
+                ),
+                "Record refs": "record_refs",
+                labels["open_amount"]: "open_amount_total",
+                labels["open_rows"]: "open_item_rows",
+                labels["ledger"]: "ledger_rows",
+                labels["journal"]: "journal_rows",
+                labels["bank"]: "bank_rows",
+                labels["payment"]: "payment_order_rows",
+                labels["factor"]: "factoring_rows",
+                labels["note"]: "review_note",
+            },
+        )
         for row in rows
     ]
 
@@ -2072,10 +2243,16 @@ def _cutoff_window_summary_rows(
             "amount": "Amount",
         }
     buckets: dict[tuple[str, str], dict[str, Any]] = {}
+    origins: dict[tuple[str, str], dict[str, list[Any]]] = {}
     for row in rows:
         timing = _cutoff_timing_label(row.get("cutoff_window_timing"), language)
         evidence_type = _evidence_type_label(row.get("evidence_type"), language)
         key = (timing, evidence_type)
+        group = origins.setdefault(key, {label: [] for label in labels.values()})
+        group[labels["timing"]].append(_field_origin(row, "cutoff_window_timing"))
+        group[labels["evidence_type"]].append(_field_origin(row, "evidence_type"))
+        group[labels["amount"]].append(_field_origin(row, "amount"))
+        group[labels["rows"]].append([])
         bucket = buckets.setdefault(
             key,
             {
@@ -2091,13 +2268,24 @@ def _cutoff_window_summary_rows(
         if row.get("record_id"):
             bucket["Record refs"].append(str(row["record_id"]))
     return [
-        {
-            labels["timing"]: row[labels["timing"]],
-            labels["evidence_type"]: row[labels["evidence_type"]],
-            labels["rows"]: row[labels["rows"]],
-            labels["amount"]: _format_decimal(row[labels["amount"]]),
-            "Record refs": "; ".join(row["Record refs"]),
-        }
+        _ReportRow(
+            {
+                labels["timing"]: row[labels["timing"]],
+                labels["evidence_type"]: row[labels["evidence_type"]],
+                labels["rows"]: row[labels["rows"]],
+                labels["amount"]: _format_decimal(row[labels["amount"]]),
+                "Record refs": "; ".join(row["Record refs"]),
+            },
+            {
+                "Record refs": [],
+                **{
+                    label: _join_origins(values)
+                    for label, values in origins[
+                        (row[labels["timing"]], row[labels["evidence_type"]])
+                    ].items()
+                },
+            },
+        )
         for row in sorted(
             buckets.values(),
             key=lambda item: (
@@ -2136,18 +2324,29 @@ def _evidence_concentration_report_rows(
             "share": "Share %",
         }
     return [
-        {
-            "Record refs": row.get("record_refs", ""),
-            labels["bucket"]: _support_bucket_label(
-                row.get("support_bucket"), language
-            ),
-            labels["status"]: _reconciliation_status_label(
-                row.get("reconciliation_status"), language
-            ),
-            labels["rows"]: row.get("rows", ""),
-            labels["amount"]: _format_decimal(row.get("amount_abs_total")),
-            labels["share"]: row.get("share_of_abs_amount_percent", ""),
-        }
+        _report_row(
+            {
+                "Record refs": row.get("record_refs", ""),
+                labels["bucket"]: _support_bucket_label(
+                    row.get("support_bucket"), language
+                ),
+                labels["status"]: _reconciliation_status_label(
+                    row.get("reconciliation_status"), language
+                ),
+                labels["rows"]: row.get("rows", ""),
+                labels["amount"]: _format_decimal(row.get("amount_abs_total")),
+                labels["share"]: row.get("share_of_abs_amount_percent", ""),
+            },
+            row,
+            {
+                "Record refs": "record_refs",
+                labels["bucket"]: "support_bucket",
+                labels["status"]: "reconciliation_status",
+                labels["rows"]: "rows",
+                labels["amount"]: "amount_abs_total",
+                labels["share"]: "share_of_abs_amount_percent",
+            },
+        )
         for row in rows
     ]
 
@@ -2263,11 +2462,705 @@ def build_audit_workbook_sheets(
     return {name: sheets.get(name, []) for name in STANDARD_SHEET_ORDER}
 
 
+def workpaper_row_origins(
+    name: str,
+    rows: list[dict[str, Any]],
+    sheets: dict[str, list[dict[str, Any]]],
+    *,
+    aging_records: dict[str, list[str]] | None = None,
+    owned_checks: bool = False,
+) -> list[dict[str, Any]]:
+    """Expose the same explicit field copies/operands to downstream writers."""
+    normalized = {
+        str(row["record_id"]): row
+        for row in sheets.get("Normalized records", [])
+        if row.get("record_id")
+    }
+    return [
+        {
+            field: _audit_cell_origin(
+                name, row, field, normalized, sheets, aging_records or {}, owned_checks
+            )
+            for field in row
+        }
+        for row in rows
+    ]
+
+
+def canonical_report_origins(
+    payload: dict[str, Any], context: dict[str, Any]
+) -> list[dict[str, Any]] | None:
+    """Trace the canonical writer's row copies and allocation operands.
+
+    Context is supplied by the producers, before JSON serialization. Unknown
+    fields/notes and a changed source-control declaration remain unverified.
+    """
+    from vera_assurance import canonical_json_sha256
+
+    if set(payload) != {
+        "schema_version",
+        "client_engagement",
+        "source_processing",
+        "reconciliation_rows",
+        "allocation_ledgers",
+        "analyses",
+        "checks",
+        "review_rows",
+        "source_qualifications",
+    }:
+        return None
+    engagement = payload["client_engagement"]
+    if (
+        engagement is not None
+        and engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return None
+    # The managed context is the validated Archive identity and user-supplied
+    # engagement metadata; it is not an extraction from the accounting files.
+    control = context.get("source_controls", {}).get("source_qualifications")
+    if payload["source_qualifications"] and (
+        not control
+        or control["data_sha256"]
+        != canonical_json_sha256(payload["source_qualifications"])
+    ):
+        return None
+    groups: list[list[dict[str, Any]] | None] = []
+    sheets = context["sheets"]
+    review_authority = {
+        entry["record_id"]: entry
+        for entry in context.get("professional_review_authority", {}).get("records", [])
+    }
+
+    def include_rows(name: str, rows: list[dict[str, Any]]) -> None:
+        origins = workpaper_row_origins(
+            name,
+            rows,
+            sheets,
+            aging_records=context.get("aging_records"),
+            owned_checks=True,
+        )
+        for row, fields in zip(rows, origins, strict=True):
+            for field, origin in fields.items():
+                if name == "Review" and field in {"reviewer_ref", "reviewed_on"}:
+                    authority = review_authority.get(row.get("record_id"), {})
+                    if field in authority and authority[field] == row[field]:
+                        origin = (
+                            []
+                        )  # Copied validated review attribution, not a source cell.
+                groups.append(origin)
+
+    include_rows("Reconciliation detail", payload["reconciliation_rows"])
+    include_rows("Review", payload["review_rows"])
+    include_rows("Checks", payload["checks"])
+    schedules = {
+        "source_processing": {
+            "extraction_errors": None,
+            "ledger_balance_rows": "Ledger balances",
+            "journal_rollforward_rows": "Journal rollforward",
+            "journal_rollforward_summary": "Journal rollforward summary",
+        },
+        "analyses": {
+            "aging_summary": "Open item aging",
+            "bank_allocation_candidates": "Bank allocation candidates",
+            "cutoff_window_movements": "Cutoff window movements",
+            "document_source_map": "Document source map",
+            "evidence_concentration": "Evidence concentration",
+            "external_evidence_detail": "External evidence detail",
+            "external_evidence_summary": "External evidence aggregate",
+            "post_cutoff_candidates": "Post-cutoff candidates",
+            "reversal_candidates": "Reversal candidates",
+            "review_signals": "Review signals",
+        },
+    }
+    for section, names in schedules.items():
+        if set(payload[section]) - set(names):
+            return None
+        for key, rows in payload[section].items():
+            if rows:
+                if names[key] is None:
+                    return None
+                include_rows(names[key], rows)
+    for ledger in payload["allocation_ledgers"]:
+        declaration = context["allocation_projections"].get(ledger["ledger_id"])
+        if not declaration or declaration["data_sha256"] != canonical_json_sha256(
+            ledger
+        ):
+            return None
+        groups.append(declaration["records"])
+    return _join_origins(groups)
+
+
+def assurance_report_origins(
+    payload: dict[str, Any],
+    context: dict[str, Any],
+    *,
+    numeric_groups: list[Any],
+    rendered_groups: list[Any],
+) -> list[dict[str, Any]] | None:
+    """Trace accounting values echoed in the assurance writer's control record."""
+    from vera_assurance import canonical_json_sha256
+
+    if set(payload) != {
+        "schema_version",
+        "run_id",
+        "run_date",
+        "client_engagement",
+        "source_root",
+        "source_receipts",
+        "reviewed_source_decisions",
+        "source_qualifications",
+        "implementation_receipts",
+        "prepared_receipt",
+        "professional_review_receipt",
+        "professional_review_authority",
+        "review_transition_receipts",
+        "workflow_output_contract",
+        "run_tree_contract",
+        "final_output_inventory",
+        "numeric_evidence_ledger",
+        "rendered_value_addresses",
+        "allocation_value_addresses",
+        "allocation_ledgers",
+        "gate_register",
+        "limitations",
+        "content_sha256",
+    }:
+        return None
+    engagement = payload["client_engagement"]
+    if (
+        engagement is not None
+        and engagement.get("schema_version") != "vera.client_workflow_context.v2"
+    ):
+        return None
+    for name in ("reviewed_source_decisions", "source_qualifications"):
+        declaration = context.get("source_controls", {}).get(name)
+        if payload[name] and (
+            not declaration
+            or declaration["data_sha256"] != canonical_json_sha256(payload[name])
+        ):
+            return None
+    # Receipts, locators, configuration and review attribution are created by
+    # the assurance writer. Accounting values have explicit producer operands:
+    # numeric entries, selected rendered cells, and complete allocation ledgers.
+    groups = [*numeric_groups, *rendered_groups]
+    for ledger in payload["allocation_ledgers"]:
+        declaration = context["allocation_projections"].get(ledger["ledger_id"])
+        if not declaration or declaration["data_sha256"] != canonical_json_sha256(
+            ledger
+        ):
+            return None
+        groups.append(declaration["records"])
+    return _join_origins(groups)
+
+
+def _audit_cell_origin(
+    sheet: str,
+    row: dict[str, Any],
+    field: str,
+    normalized: dict[str, dict[str, Any]],
+    sheets: dict[str, list[dict[str, Any]]],
+    aging_records: dict[str, list[str]],
+    owned_checks: bool = False,
+) -> list[dict[str, Any]] | None:
+    """Describe this writer's explicit copies and sums, never match source values.
+
+    The normalizer resolves record fields to physical source cells. Unsupported
+    report fields remain unknown without blocking calculation or delivery.
+    """
+    if row.get(field) in (None, "") or sheet == "Index":
+        return []
+    if sheet == "Normalized records":
+        record_id = row.get("record_id")
+        return [{"record_id": record_id, "fields": [field]}] if record_id else None
+    if sheet in {"Reconciliation detail", "Review"}:
+        return _reconciliation_cell_origin(row, field, normalized)
+    if sheet == "Assumptions":
+        parameter = next(iter(row.values()), "")
+        if parameter in {
+            "scope_year",
+            "cutoff_date",
+            "amount_tolerance",
+            "assurance_run_date",
+            "post_cutoff_events_excluded",
+            "payment_orders_are_bank_evidence",
+            "factoring_pro_soluto_closes_item",
+            "compensation_requires_bank",
+            "require_completed_review",
+            "report_language",
+            "document_language",
+            "currency",
+        }:
+            return []  # Explicit run configuration, not an extracted source value.
+    if sheet == "Source inventory" and field in {
+        "sha256",
+        "size_bytes",
+        "source_adapter_family",
+        "source_artifact_id",
+        "source_file",
+        "source_qualification_id",
+        "source_qualification_status",
+        "source_role",
+        "source_role_status",
+        "suffix",
+        "suggested_source_role",
+        "byte_identical_import_names",
+    }:
+        return []
+    if (
+        owned_checks
+        and sheet == "Checks"
+        and field in {"check", "status", "actual", "expected", "note"}
+    ):
+        # The workflow's qualification/reconciliation/review checks emit counts,
+        # status labels and generated record locators, not accounting values.
+        return []
+    if sheet == "Summary":
+        if field in {"Record refs", "reconciliation_status", "rule_applied", "rows"}:
+            return []  # Owned locators, classification labels and record counts.
+        if field == "amount":
+            records = str(row.get("Record refs") or "").split("; ")
+            if all(records):
+                return [
+                    {"record_id": record, "fields": ["amount"]} for record in records
+                ]
+    if sheet == "Post-cutoff candidates":
+        original = normalized.get(str(row.get("open_record_id") or ""), {})
+        evidence = normalized.get(str(row.get("evidence_record_id") or ""), {})
+        if field == "open_amount":
+            return _amount_origin(original)
+        if field == "evidence_amount":
+            return _amount_origin(evidence, external=True)
+        if field == "document_date":
+            return _date_origin(original, document_first=True)
+        if field == "evidence_date":
+            return _date_origin(evidence)
+        if field in {"document_no", "document_key"}:
+            return _source_origin(original, field)
+        if field == "description":
+            return _source_origin(evidence, field)
+        if field == "evidence_type":
+            return _source_origin(evidence, field)
+        if field in {
+            "candidate_id",
+            "open_record_id",
+            "open_source_file",
+            "open_source_page",
+            "open_source_row",
+            "evidence_record_id",
+            "evidence_source_file",
+            "evidence_source_page",
+            "evidence_source_row",
+            "evidence_source_role",
+            "exact_amount_match",
+            "review_use",
+        }:
+            return []
+    if sheet in {
+        "External evidence detail",
+        "Review signals",
+        "Cutoff window movements",
+    }:
+        original = normalized.get(str(row.get("record_id") or ""), {})
+        if field in {"document_no", "document_key", "description", "evidence_type"}:
+            return _source_origin(original, field)
+        if field == "matched_evidence_type":
+            reconciled = next(
+                (
+                    entry
+                    for entry in sheets.get("Reconciliation detail", [])
+                    if entry["record_id"] == row["record_id"]
+                ),
+                None,
+            )
+            return (
+                None
+                if reconciled is None
+                else _reconciliation_cell_origin(reconciled, field, normalized)
+            )
+        if field in {"amount", "amount_abs"}:
+            return _amount_origin(original, external=sheet != "Review signals")
+        if field in {"document_date", "age_days_at_reference"}:
+            return _date_origin(original, document_first=True)
+        if field in {"posting_date", "movement_date", "days_from_cutoff"}:
+            return _date_origin(original)
+        if field in {
+            "cash_flow_signed",
+            "settlement_effect_signed_net_debit_minus_credit",
+        }:
+            return _external_signed_origin(row, field, original)
+        if field in {
+            "record_id",
+            "source_file",
+            "source_page",
+            "source_row",
+            "source_role",
+            "source_reference",
+            "external_category",
+            "external_treatment",
+            "direction_confidence",
+            "reconciliation_status",
+            "rule_applied",
+            "evidence_level",
+            "review_signals",
+            "review_signal_rank",
+            "cutoff_window_timing",
+        }:
+            return []
+    if sheet == "External evidence aggregate":
+        if field in {"external_category", "rows"}:
+            return []
+        value_field = {
+            "amount_total": "amount",
+            "cash_flow_signed_total": "cash_flow_signed",
+            "settlement_effect_signed_net_debit_minus_credit": "settlement_effect_signed_net_debit_minus_credit",
+        }.get(field)
+        if value_field is not None:
+            if "External evidence detail" not in sheets:
+                return None
+            detail = [
+                entry
+                for entry in sheets["External evidence detail"]
+                if row["external_category"] == "TOTAL"
+                or entry["external_category"] == row["external_category"]
+            ]
+            return _join_origins(
+                [
+                    _audit_cell_origin(
+                        "External evidence detail",
+                        entry,
+                        value_field,
+                        normalized,
+                        sheets,
+                        aging_records,
+                    )
+                    for entry in detail
+                ]
+            )
+    if sheet in {"Evidence concentration", "Document source map", "Open item aging"}:
+        return _aggregate_cell_origin(
+            sheet, row, field, normalized, sheets, aging_records
+        )
+    return None
+
+
+def _source_origin(row: dict[str, Any], field: str) -> list[dict[str, Any]] | None:
+    """Refer to one named field of an explicitly identified source record."""
+    if not row or not row.get("record_id"):
+        return None
+    if row.get(field) in (None, ""):
+        return []
+    return [{"record_id": row["record_id"], "fields": [field]}]
+
+
+def _join_origins(
+    groups: list[list[dict[str, Any]] | None],
+) -> list[dict[str, Any]] | None:
+    if any(group is None for group in groups):
+        return None
+    return [entry for group in groups if group is not None for entry in group]
+
+
+def _amount_origin(
+    row: dict[str, Any], *, external: bool = False
+) -> list[dict[str, Any]] | None:
+    """Retain the same named operand selected by amount_for_matching."""
+    from reconciliation_helpers import DEFAULT_EXTERNAL_AMOUNT_FIELDS, parse_decimal
+
+    if not row:
+        return None
+    for field in (
+        "amount",
+        "balance",
+        "open_amount",
+        "matched_amount",
+        "allocated_amount",
+    ):
+        value = parse_decimal(row.get(field))
+        if value is not None:
+            if value or not external:
+                return _source_origin(row, field)
+            break
+    if external:
+        return _join_origins(
+            [_source_origin(row, field) for field in DEFAULT_EXTERNAL_AMOUNT_FIELDS]
+        )
+    return []
+
+
+def _date_origin(
+    row: dict[str, Any], *, document_first: bool = False
+) -> list[dict[str, Any]] | None:
+    """Use the date field order used by the corresponding producer calculation."""
+    from reconciliation_helpers import DATE_FIELDS, parse_date
+
+    if not row:
+        return None
+    for field in (
+        ("document_date", "posting_date", "date") if document_first else DATE_FIELDS
+    ):
+        if parse_date(row.get(field)):
+            return _source_origin(row, field)
+    return []
+
+
+def _external_signed_origin(
+    row: dict[str, Any], field: str, original: dict[str, Any]
+) -> list[dict[str, Any]] | None:
+    category = row.get("external_category")
+    if category in {
+        "other_external",
+        "counterparty_bank_other",
+        "factor_operator_other",
+    }:
+        return []  # Both signs are literal zero in these producer branches.
+    if field == "settlement_effect_signed_net_debit_minus_credit" and (
+        category
+        in {
+            "factor_or_operator_debit_fee",
+            "bank_advance_repayment",
+            "bank_advance_credit",
+        }
+        or category == "factor_operator_cash_inflow"
+        and _decimal(row[field]) == 0
+    ):
+        return []
+    return _amount_origin(original, external=True)
+
+
+def _aggregate_cell_origin(
+    sheet: str,
+    row: dict[str, Any],
+    field: str,
+    normalized: dict[str, dict[str, Any]],
+    sheets: dict[str, list[dict[str, Any]]],
+    aging_records: dict[str, list[str]],
+) -> list[dict[str, Any]] | None:
+    if sheet == "Open item aging":
+        ids = aging_records.get(row["aging_bucket"])
+        if ids is None:
+            return None
+    else:
+        ids = str(row.get("record_refs") or "").split("; ")
+    if not all(identity in normalized for identity in ids):
+        return None
+    records = [normalized[identity] for identity in ids]
+    if sheet == "Open item aging":
+        if field in {"aging_bucket", "reference_date", "rows"}:
+            return []
+        if field in {"min_age_days", "max_age_days"}:
+            return _join_origins(
+                [_date_origin(entry, document_first=True) for entry in records]
+            )
+        status_fields = {
+            f"{status}_amount": status
+            for status in (
+                "closed",
+                "partially_paid",
+                "probable_payment",
+                "open_supported",
+                "needs_evidence",
+                "unresolved",
+            )
+        }
+        if field in status_fields:
+            if "Reconciliation detail" not in sheets:
+                return None
+            status_ids = {
+                entry["record_id"]
+                for entry in sheets["Reconciliation detail"]
+                if entry["reconciliation_status"] == status_fields[field]
+            }
+            records = [entry for entry in records if entry["record_id"] in status_ids]
+        elif field not in {"amount_total", "amount_abs_total"}:
+            return None
+        return _join_origins([_amount_origin(entry) for entry in records])
+    if sheet == "Evidence concentration":
+        if field in {"record_refs", "support_bucket", "reconciliation_status", "rows"}:
+            return []
+        if field == "share_of_abs_amount_percent":
+            if "Reconciliation detail" not in sheets:
+                return None
+            population = [
+                entry
+                for entry in sheets["Reconciliation detail"]
+                if entry["reconciliation_status"] != "out_of_scope"
+            ]
+            if any(entry.get("record_id") not in normalized for entry in population):
+                return None
+            records = [normalized[entry["record_id"]] for entry in population]
+        elif field not in {"amount_total", "amount_abs_total"}:
+            return None
+        return _join_origins([_amount_origin(entry) for entry in records])
+    if field in {"document_key", "document_aliases"}:
+        return _join_origins(
+            [_source_origin(entry, "document_key") for entry in records]
+        )
+    if field == "evidence_types_present":
+        return _join_origins(
+            [_source_origin(entry, "evidence_type") for entry in records]
+        )
+    if field == "document_no_examples":
+        displayed = sorted(
+            {
+                str(entry["document_no"]).strip()
+                for entry in records
+                if entry.get("document_no")
+            }
+        )[:5]
+        return _join_origins(
+            [
+                _source_origin(entry, "document_no")
+                for entry in records
+                if str(entry.get("document_no") or "").strip() in displayed
+            ]
+        )
+    if field == "document_dates":
+        # Date selection is bounded by the writer's five displayed unique dates.
+        from reconciliation_helpers import record_date
+
+        dated = [
+            (entry, record_date(entry, ("document_date", "posting_date", "date")))
+            for entry in records
+        ]
+        displayed = sorted({value for _, value in dated if value})[:5]
+        return _join_origins(
+            [
+                _date_origin(entry, document_first=True)
+                for entry, value in dated
+                if value in displayed
+            ]
+        )
+    if field in {"open_amount_total", "evidence_amount_total"}:
+        from reconciliation_helpers import source_map_bucket
+
+        return _join_origins(
+            [
+                _amount_origin(entry, external=True)
+                for entry in records
+                if (source_map_bucket(entry) == "open_items")
+                == (field == "open_amount_total")
+            ]
+        )
+    if field in {
+        "record_refs",
+        "open_item_rows",
+        "ledger_rows",
+        "journal_rows",
+        "bank_rows",
+        "payment_order_rows",
+        "factoring_rows",
+        "compensation_rows",
+        "other_rows",
+        "reconciliation_status_counts",
+        "source_roles_present",
+        "source_files",
+        "review_note",
+    }:
+        return []
+    return None
+
+
+def _reconciliation_cell_origin(
+    row: dict[str, Any], field: str, normalized: dict[str, dict[str, Any]]
+) -> list[dict[str, Any]] | None:
+    """Follow named copies and the exact partial-payment arithmetic operands."""
+    record_id = str(row.get("record_id") or "")
+    original = normalized.get(record_id, {})
+    if field in original and row[field] == original[field]:
+        return [{"record_id": record_id, "fields": [field]}]
+    if field == "matched_evidence_type":
+        if row.get("rule_applied") in {
+            "external_bank_exact_allocation_match",
+            "probable_bank_payment_candidate",
+        }:
+            return []  # These two promotion branches assign a literal type label.
+        evidence = normalized.get(str(row.get("matched_evidence_id") or ""), {})
+        return _source_origin(evidence, "evidence_type")
+    if field in {
+        "reconciliation_status",
+        "rule_applied",
+        "evidence_level",
+        "matched_evidence_id",
+        "matched_evidence_reference",
+        "supporting_bank_record_id",
+        "supporting_bank_reference",
+        "supporting_bank_rule",
+        "relationship_allocation_content_sha256",
+        "relationship_allocation_ledger_id",
+        "relationship_control_status",
+        "review_id",
+        "review_status",
+        "review_required",
+        "review_selection_reason",
+        "deterministic_status",
+        "deterministic_rule",
+        "deterministic_evidence_level",
+        "review_flags",
+    }:
+        return []
+    if field == "review_instruction":
+        from reconciliation_helpers import review_instruction_for_row
+
+        return [] if row[field] == review_instruction_for_row(row) else None
+    if field == "missing_evidence":
+        from accountant_report import _action_origin
+
+        return _action_origin(row)
+    if field in {
+        "supporting_bank_amount",
+        "supporting_bank_date",
+        "supporting_bank_description",
+    }:
+        evidence = normalized.get(str(row.get("supporting_bank_record_id") or ""), {})
+        if field == "supporting_bank_amount":
+            return _amount_origin(evidence, external=True)
+        if field == "supporting_bank_date":
+            return _date_origin(evidence)
+        return _source_origin(evidence, "description")
+    if field == "matched_evidence_amounts":
+        from reconciliation_helpers import evidence_amount_summary
+
+        evidence = normalized.get(str(row.get("matched_evidence_id") or ""), {})
+        if not evidence or row[field] != evidence_amount_summary(evidence):
+            return None
+        return _join_origins(
+            [
+                _source_origin(evidence, name)
+                for name in (
+                    "amount",
+                    "bank_amount",
+                    "external_bank_amount",
+                    "factor_amount",
+                    "factoring_amount",
+                    "advance_amount",
+                )
+            ]
+        )
+    if field in {"allocated_amount", "residual_amount"} and row.get("rule_applied") in {
+        "exact_document_partial_bank_payment",
+        "exact_document_partial_compensation",
+    }:
+        evidence_id = str(row.get("matched_evidence_id") or "")
+        evidence = normalized.get(evidence_id, {})
+        # This branch copies payment.amount and subtracts it from open.amount.
+        # A source adapter using fallback fields must declare those separately.
+        if "amount" not in original or "amount" not in evidence:
+            return None
+        references = [{"record_id": evidence_id, "fields": ["amount"]}]
+        if field == "residual_amount":
+            references.append({"record_id": record_id, "fields": ["amount"]})
+        return references
+    return None
+
+
 def write_excel_workpaper(
     output_path: str | Path,
     sheets: dict[str, list[dict[str, Any]]],
     preferred_headers: dict[str, list[str]] | None = None,
     language: str = "en",
+    projection_cells: list[list[list[dict[str, Any]] | None]] | None = None,
+    aging_records: dict[str, list[str]] | None = None,
+    owned_checks: bool = False,
 ) -> Path:
     """Write an audit-ready Excel workbook with filters, frozen headers and wrapping."""
 
@@ -2280,6 +3173,12 @@ def write_excel_workpaper(
     ordered_names = [name for name in STANDARD_SHEET_ORDER if name in sheets]
     ordered_names.extend(name for name in sheets if name not in ordered_names)
     localized_sheets = _localized_excel_sheets(sheets, ordered_names, language)
+    written_cells: list[list[list[dict[str, Any]] | None]] = []
+    normalized = {
+        row["record_id"]: row
+        for row in sheets.get("Normalized records", [])
+        if row.get("record_id")
+    }
 
     def write_sheet(
         sheet_name: str,
@@ -2287,16 +3186,47 @@ def write_excel_workpaper(
         *,
         preferred: list[str] | None = None,
         hidden: bool = False,
+        source_name: str,
+        localized: bool = False,
     ) -> None:
         ws = wb.create_sheet(sheet_name[:31])
         headers = _headers(rows, preferred)
         ws.append(headers)
+        written_cells.append([[] for _ in headers])
         for cell in ws[1]:
             cell.font = Font(color="FFFFFF", bold=True)
             cell.fill = header_fill
             cell.alignment = Alignment(wrap_text=True, vertical="top")
-        for row in rows:
-            ws.append([row.get(header, "") for header in headers])
+        for row, original in zip(rows, sheets[source_name], strict=True):
+            values = [row.get(header, "") for header in headers]
+            ws.append(values)
+            # Build the map alongside the exact row being written. Localization
+            # only changes its labels; it must not drop the canonical field name.
+            origins = {
+                (
+                    _field_label(field, language) if localized else field
+                ): _audit_cell_origin(
+                    source_name,
+                    original,
+                    field,
+                    normalized,
+                    sheets,
+                    aging_records or {},
+                    owned_checks,
+                )
+                for field in original
+            }
+            if any(value not in (None, "") for value in values):
+                written_cells.append(
+                    [
+                        (
+                            []
+                            if value in (None, "") or source_name == "Index"
+                            else origins.get(header)
+                        )
+                        for header, value in zip(headers, values, strict=True)
+                    ]
+                )
         ws.freeze_panes = "A2"
         ws.auto_filter.ref = ws.dimensions
         for idx, header in enumerate(headers, start=1):
@@ -2338,8 +3268,8 @@ def write_excel_workpaper(
         if hidden:
             ws.sheet_state = "hidden"
 
-    for sheet_name, rows in localized_sheets.items():
-        write_sheet(sheet_name, rows)
+    for source_name, (sheet_name, rows) in zip(ordered_names, localized_sheets.items()):
+        write_sheet(sheet_name, rows, source_name=source_name, localized=True)
 
     for sheet_name in ordered_names:
         write_sheet(
@@ -2347,10 +3277,16 @@ def write_excel_workpaper(
             sheets[sheet_name],
             preferred=preferred_headers.get(sheet_name),
             hidden=bool(localized_sheets),
+            source_name=sheet_name,
         )
 
     path.parent.mkdir(parents=True, exist_ok=True)
     wb.save(path)
+    if projection_cells is not None:
+        width = max((sheet.max_column for sheet in wb), default=0)
+        projection_cells.extend(
+            row + [[] for _ in range(width - len(row))] for row in written_cells
+        )
     return path
 
 
@@ -2370,7 +3306,14 @@ def _report_assumptions(assumptions: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _add_run_metadata(doc: Document, metadata: dict[str, Any], language: str) -> None:
+def _add_run_metadata(
+    doc: Document,
+    metadata: dict[str, Any],
+    language: str,
+    *,
+    paragraph_origins: dict[Any, Any] | None = None,
+    metadata_origins: dict[str, Any] | None = None,
+) -> None:
     """Keep the short provenance block compact and together without dropping values."""
     if not metadata:
         return
@@ -2387,6 +3330,8 @@ def _add_run_metadata(doc: Document, metadata: dict[str, Any], language: str) ->
         level=1,
     )
     heading.paragraph_format.keep_with_next = True
+    if paragraph_origins is not None:
+        paragraph_origins[heading._p] = []
     for index, (key, value) in enumerate(metadata.items()):
         paragraph = doc.add_paragraph()
         label = str(word_output_label(_field_label(key, language), language))
@@ -2395,6 +3340,8 @@ def _add_run_metadata(doc: Document, metadata: dict[str, Any], language: str) ->
         )
         _set_run_font(paragraph.add_run(label + ": "), size=9.5, bold=True, color=INK)
         _set_run_font(paragraph.add_run(rendered), size=9.5, color=INK)
+        if paragraph_origins is not None:
+            paragraph_origins[paragraph._p] = (metadata_origins or {}).get(key)
         _set_paragraph_spacing(paragraph, after=2, line_spacing=1.0)
         paragraph.paragraph_format.keep_together = True
         paragraph.paragraph_format.keep_with_next = index < len(metadata) - 1
@@ -2423,6 +3370,15 @@ def write_word_report(
     review_rows: list[dict[str, Any]] | None = None,
     language: str = "it",
     reconciliation_rows: list[dict[str, Any]] | None = None,
+    projection_cells: list[list[list[dict[str, Any]] | None]] | None = None,
+    projection_sheets: dict[str, list[dict[str, Any]]] | None = None,
+    aging_records: dict[str, list[str]] | None = None,
+    owned_checks: bool = False,
+    owned_title: bool = False,
+    owned_next_steps: bool = False,
+    metadata_origins: dict[str, Any] | None = None,
+    title_origin: list[dict[str, Any]] | None = None,
+    narrative_origin: list[dict[str, Any]] | None = None,
 ) -> Path:
     """Write an explanatory Word report; detailed row evidence belongs in Excel."""
 
@@ -2433,6 +3389,75 @@ def write_word_report(
     doc = Document()
     doc.core_properties.language = _language_code(language)
     _configure_word_styles(doc)
+
+    paragraph_origins: dict[Any, Any] = {}
+    sheets = projection_sheets or {}
+    normalized = {
+        str(row["record_id"]): row
+        for row in sheets.get("Normalized records", [])
+        if row.get("record_id")
+    }
+
+    def attributed(
+        name: str, rows: list[dict[str, Any]] | None
+    ) -> list[dict[str, Any]]:
+        return [
+            _ReportRow(row, origins)
+            for row, origins in zip(
+                rows or [],
+                workpaper_row_origins(
+                    name,
+                    rows or [],
+                    sheets,
+                    aging_records=aging_records,
+                    owned_checks=owned_checks,
+                ),
+                strict=True,
+            )
+        ]
+
+    summary_rows = attributed("Summary", summary_rows)
+    reconciliation_rows = attributed("Reconciliation detail", reconciliation_rows)
+    source_inventory = attributed("Source inventory", source_inventory)
+    external_evidence_summary = attributed(
+        "External evidence aggregate", external_evidence_summary
+    )
+    account_rollforward_check = attributed(
+        "Account rollforward check", account_rollforward_check
+    )
+    aggregate_rollforward_summary = attributed(
+        "Journal rollforward summary", aggregate_rollforward_summary
+    )
+    post_cutoff_candidates = attributed(
+        "Post-cutoff candidates", post_cutoff_candidates
+    )
+    aging_summary = attributed("Open item aging", aging_summary)
+    evidence_concentration = attributed(
+        "Evidence concentration", evidence_concentration
+    )
+    review_signals = attributed("Review signals", review_signals)
+    document_source_map = attributed("Document source map", document_source_map)
+    reversal_candidates = attributed("Reversal candidates", reversal_candidates)
+    cutoff_window_movements = attributed(
+        "Cutoff window movements", cutoff_window_movements
+    )
+    checks = attributed("Checks", checks)
+    review_rows = attributed("Review", review_rows)
+
+    def add_paragraph(
+        text: str = "", style: str | None = None, *, origin: Any = None
+    ) -> Paragraph:
+        paragraph = doc.add_paragraph(text, style=style)
+        paragraph_origins[paragraph._p] = origin
+        return paragraph
+
+    def add_heading(text: str, level: int) -> Paragraph:
+        heading = doc.add_heading(text, level=level)
+        paragraph_origins[heading._p] = []
+        return heading
+
+    def add_table(rows: list[dict[str, Any]], limit: int | None = None) -> None:
+        _add_table(doc, rows, limit=limit, paragraph_origins=paragraph_origins)
 
     section = doc.sections[0]
     header = section.header.paragraphs[0]
@@ -2449,13 +3474,15 @@ def write_word_report(
     for run in footer.runs:
         _set_run_font(run, size=8.5, color=MUTED)
 
-    title_paragraph = doc.add_paragraph(style="Title")
+    title_paragraph = add_paragraph(
+        style="Title", origin=[] if owned_title else title_origin
+    )
     title_paragraph.add_run(title)
     _set_paragraph_spacing(title_paragraph, after=3)
     for run in title_paragraph.runs:
         _set_run_font(run, size=22, color=INK, bold=True)
 
-    subtitle = doc.add_paragraph(style="Subtitle")
+    subtitle = add_paragraph(style="Subtitle", origin=[])
     subtitle.add_run(
         "Workpaper di riconciliazione deterministica"
         if _is_italian(language)
@@ -2478,33 +3505,37 @@ def write_word_report(
                 f"{word_output_label(field, language)}: {assumptions[field]}"
             )
     if scope_details:
-        paragraph = doc.add_paragraph(" | ".join(scope_details))
+        paragraph = add_paragraph(" | ".join(scope_details), origin=[])
         _set_paragraph_spacing(paragraph, after=4)
 
-    rule = doc.add_paragraph()
+    rule = add_paragraph()
     _paragraph_border_bottom(rule)
     _set_paragraph_spacing(rule, after=12)
 
-    doc.add_heading(text["executive_summary"], level=1)
+    add_heading(text["executive_summary"], level=1)
     status_summary = _summary_by_status(summary_rows, language)
     if status_summary:
-        _add_table(doc, status_summary)
+        add_table(status_summary)
     else:
-        doc.add_paragraph(text["no_rows"])
+        add_paragraph(text["no_rows"], origin=[])
     _add_callout(
         doc,
         labels["conclusion"],
         " ".join([narrative or labels["fallback_narrative"], text["executive_copy"]]),
         fill=LIGHT_BLUE,
+        paragraph_origins=paragraph_origins,
+        body_origin=[] if not narrative else narrative_origin,
     )
 
-    doc.add_heading(labels["next_steps"], level=1)
+    add_heading(labels["next_steps"], level=1)
     for step in next_steps:
-        paragraph = doc.add_paragraph(step, style="List Bullet")
+        paragraph = add_paragraph(
+            step, style="List Bullet", origin=[] if owned_next_steps else None
+        )
         _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)
 
-    doc.add_heading(text["scope_method"], level=1)
-    scope = doc.add_paragraph(text["scope_copy"])
+    add_heading(text["scope_method"], level=1)
+    scope = add_paragraph(text["scope_copy"], origin=[])
     _set_paragraph_spacing(scope)
     if source_inventory:
         duplicate_imports = [
@@ -2535,36 +3566,53 @@ def write_word_report(
                     else "es" if _is_spanish(language) else "en"
                 )
             ]
-            doc.add_heading(heading, level=2)
-            _add_table(
-                doc,
+            add_heading(heading, level=2)
+            add_table(
                 [
-                    {
-                        canonical_label: row["source_file"],
-                        names_label: row["byte_identical_import_names"],
-                    }
+                    _report_row(
+                        {
+                            canonical_label: row["source_file"],
+                            names_label: row["byte_identical_import_names"],
+                        },
+                        row,
+                        {
+                            canonical_label: "source_file",
+                            names_label: "byte_identical_import_names",
+                        },
+                    )
                     for row in duplicate_imports
                 ],
             )
         source_summary: dict[str, int] = {}
+        source_origins: dict[str, list[Any]] = {}
         for row in source_inventory:
             role = str(row.get("source_role") or row.get("role") or "unknown")
             source_summary[role] = source_summary.get(role, 0) + 1
-        _add_table(
-            doc,
+            source_origins.setdefault(role, []).append(
+                _field_origin(row, "source_role" if row.get("source_role") else "role")
+            )
+        add_table(
             [
-                {
-                    _field_label("source_role", language): _source_role_label(
-                        role, language
-                    ),
-                    _field_label("files", language): count,
-                }
+                _ReportRow(
+                    {
+                        _field_label("source_role", language): _source_role_label(
+                            role, language
+                        ),
+                        _field_label("files", language): count,
+                    },
+                    {
+                        _field_label("source_role", language): _join_origins(
+                            source_origins[role]
+                        ),
+                        _field_label("files", language): [],
+                    },
+                )
                 for role, count in sorted(source_summary.items())
             ],
         )
 
     if summary_rows:
-        doc.add_heading(
+        add_heading(
             (
                 "Dettaglio regole"
                 if _is_italian(language)
@@ -2576,7 +3624,7 @@ def write_word_report(
             ),
             level=2,
         )
-        _add_table(doc, _localize_rows(summary_rows, language))
+        add_table(_localize_rows(summary_rows, language))
 
     partial_rows = [
         row
@@ -2584,7 +3632,7 @@ def write_word_report(
         if row.get("reconciliation_status") == "partially_paid"
     ]
     if partial_rows:
-        doc.add_heading(
+        add_heading(
             (
                 "Pagamenti parziali e residui aperti"
                 if _is_italian(language)
@@ -2600,29 +3648,50 @@ def write_word_report(
             ),
             level=2,
         )
-        _add_table(
-            doc,
+        add_table(
             [
-                {
-                    "Record refs": row["record_id"],
-                    "Importo" if _is_italian(language) else "Amount": row["amount"],
-                    (
-                        "Importo attribuito"
-                        if _is_italian(language)
-                        else "Allocated amount"
-                    ): row["allocated_amount"],
-                    (
-                        "Residuo aperto" if _is_italian(language) else "Residual amount"
-                    ): row["residual_amount"],
-                    "Evidenza" if _is_italian(language) else "Evidence": row[
-                        "matched_evidence_id"
-                    ],
-                }
+                _report_row(
+                    {
+                        "Record refs": row["record_id"],
+                        "Importo" if _is_italian(language) else "Amount": row["amount"],
+                        (
+                            "Importo attribuito"
+                            if _is_italian(language)
+                            else "Allocated amount"
+                        ): row["allocated_amount"],
+                        (
+                            "Residuo aperto"
+                            if _is_italian(language)
+                            else "Residual amount"
+                        ): row["residual_amount"],
+                        "Evidenza" if _is_italian(language) else "Evidence": row[
+                            "matched_evidence_id"
+                        ],
+                    },
+                    row,
+                    {
+                        "Record refs": "record_id",
+                        "Importo" if _is_italian(language) else "Amount": "amount",
+                        (
+                            "Importo attribuito"
+                            if _is_italian(language)
+                            else "Allocated amount"
+                        ): "allocated_amount",
+                        (
+                            "Residuo aperto"
+                            if _is_italian(language)
+                            else "Residual amount"
+                        ): "residual_amount",
+                        (
+                            "Evidenza" if _is_italian(language) else "Evidence"
+                        ): "matched_evidence_id",
+                    },
+                )
                 for row in partial_rows
             ],
         )
 
-    doc.add_heading(text["how_to_read"], level=1)
+    add_heading(text["how_to_read"], level=1)
     _add_bullet_list(
         doc,
         [
@@ -2632,11 +3701,12 @@ def write_word_report(
             text["status_needs_evidence"],
             text["status_unresolved"],
         ],
+        paragraph_origins=paragraph_origins,
     )
 
     if external_evidence_summary:
-        doc.add_heading(text["external_evidence"], level=1)
-        external = doc.add_paragraph(text["external_copy"])
+        add_heading(text["external_evidence"], level=1)
+        external = add_paragraph(text["external_copy"], origin=[])
         _set_paragraph_spacing(external)
         # This report summarizes available evidence. Signed cash/settlement
         # schedules stay in the workbook with their direction qualifications;
@@ -2644,38 +3714,40 @@ def write_word_report(
         evidence_fields = ("external_category", "rows", "amount_total")
         external_report_rows = [
             (
-                {field: row[field] for field in evidence_fields}
+                _report_row(
+                    {field: row[field] for field in evidence_fields},
+                    row,
+                    {field: field for field in evidence_fields},
+                )
                 if all(field in row for field in evidence_fields)
                 else row
             )
             for row in external_evidence_summary
         ]
-        _add_table(doc, _localize_rows(external_report_rows, language))
+        add_table(_localize_rows(external_report_rows, language))
 
     if account_rollforward_check:
-        doc.add_heading(text["account_rollforward"], level=1)
-        account_rollforward = doc.add_paragraph(text["account_rollforward_copy"])
+        add_heading(text["account_rollforward"], level=1)
+        account_rollforward = add_paragraph(text["account_rollforward_copy"], origin=[])
         _set_paragraph_spacing(account_rollforward)
-        _add_table(
-            doc,
+        add_table(
             _account_rollforward_report_rows(account_rollforward_check, language),
             limit=12,
         )
 
     if aggregate_rollforward_summary:
-        doc.add_heading(text["rollforward"], level=1)
-        rollforward = doc.add_paragraph(text["rollforward_copy"])
+        add_heading(text["rollforward"], level=1)
+        rollforward = add_paragraph(text["rollforward_copy"], origin=[])
         _set_paragraph_spacing(rollforward)
-        _add_table(doc, _localize_rows(aggregate_rollforward_summary, language))
+        add_table(_localize_rows(aggregate_rollforward_summary, language))
 
     if post_cutoff_candidates:
-        doc.add_heading(text["post_cutoff"], level=1)
-        post_cutoff = doc.add_paragraph(text["post_cutoff_copy"])
+        add_heading(text["post_cutoff"], level=1)
+        post_cutoff = add_paragraph(text["post_cutoff_copy"], origin=[])
         _set_paragraph_spacing(post_cutoff)
-        _add_table(doc, _post_cutoff_summary_rows(post_cutoff_candidates, language))
-        doc.add_heading(text["post_cutoff_detail"], level=2)
-        _add_table(
-            doc,
+        add_table(_post_cutoff_summary_rows(post_cutoff_candidates, language))
+        add_heading(text["post_cutoff_detail"], level=2)
+        add_table(
             _post_cutoff_detail_rows(post_cutoff_candidates, language),
             limit=10,
         )
@@ -2689,98 +3761,138 @@ def write_word_report(
         cutoff_window_movements,
     ]
     if any(additional_sections):
-        doc.add_heading(text["additional_analyses"], level=1)
-        additional = doc.add_paragraph(text["additional_analyses_copy"])
+        add_heading(text["additional_analyses"], level=1)
+        additional = add_paragraph(text["additional_analyses_copy"], origin=[])
         _set_paragraph_spacing(additional)
         if aging_summary:
-            doc.add_heading(text["aging"], level=2)
-            _add_table(doc, _localize_rows(aging_summary, language))
+            add_heading(text["aging"], level=2)
+            add_table(_localize_rows(aging_summary, language))
         if evidence_concentration:
-            doc.add_heading(text["evidence_concentration"], level=2)
-            _add_table(
-                doc,
+            add_heading(text["evidence_concentration"], level=2)
+            add_table(
                 _evidence_concentration_report_rows(evidence_concentration, language),
             )
         if review_signals:
-            doc.add_heading(text["review_signals"], level=2)
-            _add_table(
-                doc,
+            add_heading(text["review_signals"], level=2)
+            add_table(
                 _review_signal_report_rows(review_signals, language),
                 limit=10,
             )
         if document_source_map:
-            doc.add_heading(text["document_source_map"], level=2)
-            _add_table(
-                doc,
+            add_heading(text["document_source_map"], level=2)
+            add_table(
                 _document_source_report_rows(document_source_map, language),
                 limit=10,
             )
         if reversal_candidates:
-            doc.add_heading(text["reversal_candidates"], level=2)
-            _add_table(
-                doc,
+            add_heading(text["reversal_candidates"], level=2)
+            add_table(
                 _reversal_report_rows(reversal_candidates, language),
                 limit=10,
             )
         if cutoff_window_movements:
-            doc.add_heading(text["cutoff_window"], level=2)
-            _add_table(
-                doc,
+            add_heading(text["cutoff_window"], level=2)
+            add_table(
                 _cutoff_window_summary_rows(cutoff_window_movements, language),
             )
 
     if checks:
-        doc.add_heading(text["checks"], level=1)
-        checks_copy = doc.add_paragraph(text["checks_copy"])
+        add_heading(text["checks"], level=1)
+        checks_copy = add_paragraph(text["checks_copy"], origin=[])
         _set_paragraph_spacing(checks_copy)
-        _add_table(doc, _check_summary(checks, language))
+        add_table(_check_summary(checks, language))
         flagged = [
             row for row in checks if str(row.get("status") or "").upper() != "PASS"
         ]
         if flagged:
-            _add_table(doc, _localize_rows(flagged, language), limit=10)
+            add_table(_localize_rows(flagged, language), limit=10)
 
     if review_rows:
-        doc.add_heading(text["review"], level=1)
-        review = doc.add_paragraph(text["review_copy"])
+        add_heading(text["review"], level=1)
+        review = add_paragraph(text["review_copy"], origin=[])
         _set_paragraph_spacing(review)
         review_summary: dict[str, int] = {}
+        review_origins: dict[str, list[Any]] = {}
         for row in review_rows:
             status = str(row.get("review_status") or "UNKNOWN")
             review_summary[status] = review_summary.get(status, 0) + 1
-        _add_table(
-            doc,
+            review_origins.setdefault(status, []).append(
+                _field_origin(row, "review_status")
+            )
+        add_table(
             [
-                {
-                    _field_label("review_status", language): _review_status_label(
-                        status, language
-                    ),
-                    _field_label("rows", language): count,
-                }
+                _ReportRow(
+                    {
+                        _field_label("review_status", language): _review_status_label(
+                            status, language
+                        ),
+                        _field_label("rows", language): count,
+                    },
+                    {
+                        _field_label("review_status", language): _join_origins(
+                            review_origins[status]
+                        ),
+                        _field_label("rows", language): [],
+                    },
+                )
                 for status, count in sorted(review_summary.items())
             ],
         )
 
-    doc.add_heading(labels["assumptions"], level=1)
+    add_heading(labels["assumptions"], level=1)
     for key, value in _report_assumptions(assumptions).items():
-        paragraph = doc.add_paragraph(
-            f"{word_output_label(_field_label(key, language), language)}: "
-            f"{word_output_label(_localize_value(key, value, language), language)}",
+        line = (
+            amount_tolerance_line(str(value), language)
+            if key == "amount_tolerance"
+            else f"{word_output_label(_field_label(key, language), language)}: "
+            f"{word_output_label(_localize_value(key, value, language), language)}"
+        )
+        paragraph = add_paragraph(
+            line,
             style="List Bullet",
+            origin=_audit_cell_origin(
+                "Assumptions",
+                {"Field": key, "Value": value},
+                "Value",
+                normalized,
+                sheets,
+                aging_records or {},
+            ),
         )
         _set_paragraph_spacing(paragraph, after=4, line_spacing=1.167)
 
-    doc.add_heading(text["limitations"], level=1)
-    _add_callout(doc, text["limitations"], text["limitations_copy"], fill=AMBER_FILL)
+    add_heading(text["limitations"], level=1)
+    _add_callout(
+        doc,
+        text["limitations"],
+        text["limitations_copy"],
+        fill=AMBER_FILL,
+        paragraph_origins=paragraph_origins,
+        body_origin=[],
+    )
 
-    doc.add_heading(text["excel_reference"], level=1)
-    excel_copy = doc.add_paragraph(text["excel_copy"])
+    add_heading(text["excel_reference"], level=1)
+    excel_copy = add_paragraph(text["excel_copy"], origin=[])
     _set_paragraph_spacing(excel_copy)
-    authority = doc.add_paragraph()
+    authority = add_paragraph(origin=[])
     authority.add_run(labels["excel_authority"]).bold = True
     _set_paragraph_spacing(authority, before=8, after=0)
-    _add_run_metadata(doc, metadata, language)
+    _add_run_metadata(
+        doc,
+        metadata,
+        language,
+        paragraph_origins=paragraph_origins,
+        metadata_origins=metadata_origins,
+    )
 
     path.parent.mkdir(parents=True, exist_ok=True)
     doc.save(path)
+    if projection_cells is not None:
+        # This writer creates ordinary body paragraphs and table-cell paragraphs.
+        # Empty separators and header/footer stories are not part of a body read.
+        projection_cells.extend(
+            [paragraph_origins.get(element)]
+            for element in doc.element.body.iter(qn("w:p"))
+            if Paragraph(element, doc).text
+        )
     return path

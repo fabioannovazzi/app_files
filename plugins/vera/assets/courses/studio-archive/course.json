@@ -40,7 +40,12 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "e8a121118757bf9eab21c391e5ab2303aa65843229741926efec46d7b49930f8"
+      "sha256": "13d1d0c45d2f0153fe1b530d1ae43795ea84cf9a0250a96346af9e5a2e222376"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_error_reporting.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_error_reporting.py",
+      "sha256": "1e6b75417003089eec78c1a36fafbb63af0935e3ea48d8e91314b510cc9080d4"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -60,7 +65,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "181123d87c5deda2628f1d961f95fa33c0ae4c318356ca3301a3d9383adc4c9a"
+      "sha256": "8fcc3d35faac84d0f0c70c022456db2214b14bc1dc8f42edbb853317ac179e27"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -85,12 +90,12 @@
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
       "repository_path": "plugins/studio-archive/scripts/run_reporting.py",
-      "sha256": "0d13c393bb3e58c348d91196e9f0a1f20c22c275b933606e350b05e95ad9763b"
+      "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a"
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "da35230750ec44d993bb34aa047837aef936b6675d07670def4e9732a92373ab"
+      "sha256": "4fe199b53b1ae39bef47e5cf7f7301262c049cff097234382495c11418c5d827"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -100,7 +105,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "9dbe0df493a2d73b1ae8dd31159e7475a1ad5c794e7a5f0ce30d5b9f078a3122"
+      "sha256": "b6f87ad2140782caf973b7a0555a91694e21c4872153f16886d23652ab8d66c8"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -130,27 +135,27 @@
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_measurements.py",
       "repository_path": "plugins/vera/scripts/archive_report_measurements.py",
-      "sha256": "0e9286baf9d372b0a3bdf727758434ca5e1749c03535136dc1550b66514a54cd"
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_receipt.py",
       "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
-      "sha256": "a4f1857397b15438c8f9934d526df28ac012aaa3c60c1daa47fe5b000af19246"
+      "sha256": "b95a744720e24960c623cea2a81728b4b0fa8412647096a588d0054efedfcd78"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",
       "repository_path": "plugins/vera/scripts/archive_report_seal.py",
-      "sha256": "d853037c3d326d4094ab5fbb87a713ea7ee63383b83b026b5bc75d79bd6a2c0c"
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
       "repository_path": "plugins/vera/scripts/archive_report_store.py",
-      "sha256": "5daf6b21e744bd4c5b4e9ad645dc910f6cfabe2c3615f56b319f61034f4216dc"
+      "sha256": "6d04ba281a01f6a4e295efa5f1c33789801561ec183d67e40bfde7920e2f2f9f"
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
       "repository_path": "plugins/vera/scripts/archive_reporting.py",
-      "sha256": "64a63e76cce118db6ecafaf9c788dd8f6fad3fdfa5e9c9a19e6eda5002cbd475"
+      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
@@ -225,7 +230,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "d565194c059b01e2bfd9f882a8b077b10093d3d4ece9e8647b6d3a6a91375031"
+      "sha256": "12afac0ed5bd00af0193a41f79bb556f7c128031c65fe863aced4d6d3ad0fa34"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",

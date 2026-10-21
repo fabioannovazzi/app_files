@@ -13,10 +13,12 @@ import hashlib
 import importlib
 import importlib.util
 import json
+import logging
 import os
 import re
 import secrets
 import shutil
+import sqlite3
 import stat
 import tempfile
 import threading
@@ -1069,6 +1071,8 @@ def import_document(
     engagement_id: str,
     source_path: Path,
     role: str,
+    *,
+    expected_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Create or reuse one immutable, content-addressed input snapshot."""
 
@@ -1091,6 +1095,11 @@ def import_document(
     source_stat = _ordinary_file(source, label="import source")
     _validate_imported_names([source.name])
     source_sha256 = _sha256_file(source)
+    # Reject a changed transfer before creating a snapshot or recording an alias.
+    if expected_sha256 is not None and source_sha256 != expected_sha256:
+        raise LedgerError(
+            "Import source does not match the original attachment SHA-256."
+        )
     with _engagement_lock(root, engagement_id):
         engagement = load_engagement_manifest(root, engagement_id)
         if engagement["client_id"] != client_id:
@@ -1800,6 +1809,14 @@ def load_run(
                 engagement_id,
                 upstream_run_id,
             )
+            if artifact_manifest["content_sha256"] != binding["receipt_sha256"]:
+                retained = _contained_input_path(
+                    root,
+                    receipt_path.parent
+                    / "artifact-manifest-history"
+                    / f"{binding['receipt_sha256']}.json",
+                )
+                artifact_manifest = _read_artifact_manifest(retained, artifact_manifest)
             artifact = next(
                 (
                     item
@@ -2320,15 +2337,56 @@ def retry_reporting(client_root: Path) -> None:
     )
     if not registry.path.is_file():
         return
-    for run_root in registry.terminal_runs():
-        if run_root.parents[4] != client_root:
-            continue
+    for run_root in registry.terminal_runs(client_root=client_root):
         engagement_id = run_root.parents[1].name
-        with _engagement_lock(client_root, engagement_id):
-            loaded = load_run(client_root, engagement_id, run_root.name)
-            if loaded["run"]["status"] in {"completed", "failed", "cancelled"}:
-                _reporting_runtime().finish_report(loaded)
+        try:
+            with _engagement_lock(client_root, engagement_id):
+                loaded = load_run(client_root, engagement_id, run_root.name)
+                if loaded["run"]["status"] in {"completed", "failed", "cancelled"}:
+                    _reporting_runtime().finish_report(loaded)
+        except (
+            LedgerError,
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            sqlite3.Error,
+        ) as exc:
+            logging.getLogger(__name__).warning(
+                "Archive report recovery remains pending for %s: %s",
+                run_root.name,
+                type(exc).__name__,
+            )
+        # Failed records must not monopolize the bounded recovery batch.
+        registry.recovery_attempted(run_root)
     retry_pending(registry, strict=False)
+
+
+def _finish_terminal_reporting(loaded: dict[str, Any]) -> dict[str, Any]:
+    """Return the committed lifecycle outcome separately from report recovery."""
+    try:
+        reporting = _reporting_runtime().finish_report(loaded)
+        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+        logging.getLogger(__name__).warning(
+            "Saved Archive run %s has unfinished reporting: %s",
+            loaded["run"]["run_id"],
+            type(exc).__name__,
+        )
+        # Keep existing report bytes and receipts. The start-time registry and
+        # idempotent terminal call retain ownership of the unfinished report.
+        reporting = {
+            "status": "unavailable",
+            "run_status_saved": True,
+            "run_id": loaded["run"]["run_id"],
+            "retry_pending": True,
+            "error": {
+                "code": "archive_report_pending",
+                "reason": type(exc).__name__,
+                "message": "The run status was saved, but its privacy report could not finish. Resume this same run to retry the report; do not repeat the calculation.",
+            },
+        }
+    return {**loaded, "reporting": reporting}
 
 
 def _write_run_status_locked(
@@ -2345,9 +2403,10 @@ def _write_run_status_locked(
     current = run["status"]
     if target_status == current:
         if current == "completed":
-            if (Path(loaded["run_root"]) / "reporting/seal-update.json").is_file():
-                _reporting_runtime().finish_report(loaded)
-            validate_run_artifacts(client_root, engagement_id, run_id)
+            if not (Path(loaded["run_root"]) / "reporting/seal-update.json").is_file():
+                validate_run_artifacts(client_root, engagement_id, run_id)
+        if current in {"completed", "failed", "cancelled"}:
+            return _finish_terminal_reporting(loaded)
         return loaded
     if engagement["status"] != "open":
         raise LedgerError("Runs cannot change after their engagement is closed.")
@@ -2380,9 +2439,7 @@ def _write_run_status_locked(
         "ready_for_review",
         "failed",
     }:
-        reporting = _reporting_runtime().finish_report(loaded)
-        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
-        return {**loaded, "reporting": reporting}
+        return _finish_terminal_reporting(loaded)
     return loaded
 
 
@@ -2475,12 +2532,20 @@ def finalize_run(
     engagement_id: str,
     run_id: str,
     declarations: Sequence[Mapping[str, Any]],
+    *,
+    expected_declaration_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Seal every physical output with an explicit purpose and audience."""
 
     root = _ordinary_directory(client_root, label="client folder")
     with _engagement_lock(root, engagement_id):
-        return _finalize_run_locked(root, engagement_id, run_id, declarations)
+        return _finalize_run_locked(
+            root,
+            engagement_id,
+            run_id,
+            declarations,
+            expected_declaration_sha256=expected_declaration_sha256,
+        )
 
 
 def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
@@ -2553,11 +2618,52 @@ def _require_model_data_artifacts(loaded: Mapping[str, Any]) -> None:
         raise LedgerError("Model-data report receipt hash is invalid.")
 
 
+def _artifact_declaration_path(
+    value: object, output_dir: Path, physical: Mapping[str, Path]
+) -> str:
+    """Canonicalize references to the same owned file without guessing its identity."""
+    if isinstance(value, str) and Path(value).is_absolute():
+        try:
+            value = Path(value).relative_to(output_dir).as_posix()
+        except ValueError as exc:
+            raise LedgerError(
+                "Artifact path is outside this run's output folder."
+            ) from exc
+        return _relative_path(value, label="artifact path")
+    relative = _relative_path(value, label="artifact path")
+    # Output-relative paths remain authoritative, including real nested outputs/.
+    # Accept the reader's run-relative spelling only for an existing owned file.
+    if relative not in physical and relative.startswith("outputs/"):
+        candidate = relative.removeprefix("outputs/")
+        if candidate in physical:
+            return candidate
+    return relative
+
+
+def _declaration_sha256(manifest: Mapping[str, Any], report_paths: set[str]) -> str:
+    """Bind editable declarations without depending on automatic report refreshes."""
+    return _canonical_json_sha256(
+        {
+            **{
+                key: manifest[key]
+                for key in ("client_id", "engagement_id", "workflow_id", "run_id")
+            },
+            "artifacts": [
+                item
+                for item in manifest["artifacts"]
+                if item["path"] not in report_paths
+            ],
+        }
+    )
+
+
 def _finalize_run_locked(
     client_root: Path,
     engagement_id: str,
     run_id: str,
     declarations: Sequence[Mapping[str, Any]],
+    *,
+    expected_declaration_sha256: str | None = None,
 ) -> dict[str, Any]:
     engagement = load_engagement_manifest(client_root, engagement_id)
     if engagement["status"] != "open":
@@ -2567,6 +2673,11 @@ def _finalize_run_locked(
         raise LedgerError("Only a running or review-ready run can be finalized.")
     output_dir = Path(loaded["output_dir"])
     runtime = _reporting_runtime()
+    if expected_declaration_sha256 is not None and (
+        not isinstance(expected_declaration_sha256, str)
+        or _SHA256_RE.fullmatch(expected_declaration_sha256) is None
+    ):
+        raise LedgerError("Expected declaration digest must be a SHA-256 value.")
 
     try:
         reporting = runtime.finish_report(loaded)
@@ -2587,7 +2698,22 @@ def _finalize_run_locked(
         "finished_at": None,
         "finish_status": "ready_for_review",
     }
+    files = _output_files(output_dir)
+    physical = {path.relative_to(output_dir).as_posix(): path for path in files}
     if not isinstance(declarations, (str, bytes)):
+        declarations = [
+            (
+                {
+                    **item,
+                    "path": _artifact_declaration_path(
+                        item["path"], output_dir, physical
+                    ),
+                }
+                if isinstance(item, Mapping) and "path" in item
+                else item
+            )
+            for item in declarations
+        ]
         paths = {item.get("path") for item in declarations if isinstance(item, Mapping)}
         declarations = [
             *declarations,
@@ -2597,7 +2723,6 @@ def _finalize_run_locked(
                 if item["path"] not in paths
             ),
         ]
-    files = _output_files(output_dir)
     if not files:
         raise LedgerError("An empty workflow output cannot be finalized.")
     if reporting["status"] in {"available", "created", "legacy_required"}:
@@ -2636,7 +2761,6 @@ def _finalize_run_locked(
             raise LedgerError("Artifact IDs must be safe and unique.")
         declared[path] = raw
         seen_ids.add(artifact_id)
-    physical = {path.relative_to(output_dir).as_posix(): path for path in files}
     if set(declared) != set(physical):
         undeclared_paths = sorted(set(physical) - set(declared))
         missing_paths = sorted(set(declared) - set(physical))
@@ -2666,6 +2790,7 @@ def _finalize_run_locked(
         artifacts.append(record)
     if _output_files(output_dir) != files:
         raise LedgerError("Workflow outputs changed while they were being sealed.")
+    report_paths = {item["path"] for item in runtime.report_declarations(output_dir)}
     if loaded["run"]["status"] == "ready_for_review":
         existing = validate_run_artifacts(client_root, engagement_id, run_id)
         requested = [
@@ -2681,11 +2806,41 @@ def _finalize_run_locked(
             for item in artifacts
         ]
         if existing["artifacts"] != requested:
-            raise LedgerError(
-                "Review-ready artifacts are already sealed with different declarations."
+            if expected_declaration_sha256 is None:
+                raise LedgerError(
+                    "Review-ready declarations need their returned declaration_sha256 "
+                    "to record a metadata correction without overwriting another review."
+                )
+            if expected_declaration_sha256 != _declaration_sha256(
+                existing, report_paths
+            ):
+                raise LedgerError(
+                    "Artifact declarations changed since this review; reload the current declarations."
+                )
+            identity_keys = ("artifact_id", "path", "byte_count", "sha256")
+            if [
+                tuple(item[key] for key in identity_keys)
+                for item in existing["artifacts"]
+            ] != [tuple(item[key] for key in identity_keys) for item in requested]:
+                raise LedgerError(
+                    "Declaration corrections cannot change sealed artifact identities or bytes."
+                )
+            try:
+                runtime.retain_artifact_manifest(Path(loaded["run_root"]), existing)
+            except (ValueError, OSError) as exc:
+                raise LedgerError(
+                    f"Artifact receipt history could not be retained: {exc}"
+                ) from exc
+        else:
+            _write_json(
+                Path(loaded["run_root"]) / "model_data_reporting.json", reporting
             )
-        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
-        return {**loaded, "artifact_manifest": existing, "reporting": reporting}
+            return {
+                **loaded,
+                "artifact_manifest": existing,
+                "reporting": reporting,
+                "declaration_sha256": _declaration_sha256(existing, report_paths),
+            }
     manifest = _sealed(
         {
             "schema_version": ARTIFACT_MANIFEST_SCHEMA,
@@ -2705,16 +2860,18 @@ def _finalize_run_locked(
         )
     reporting["review_ready_at"] = loaded["run"]["updated_at"]
     _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
-    return {**loaded, "artifact_manifest": manifest, "reporting": reporting}
+    return {
+        **loaded,
+        "artifact_manifest": manifest,
+        "reporting": reporting,
+        "declaration_sha256": _declaration_sha256(manifest, report_paths),
+    }
 
 
-def validate_run_artifacts(
-    client_root: Path, engagement_id: str, run_id: str
+def _read_artifact_manifest(
+    manifest_path: Path, run: Mapping[str, Any]
 ) -> dict[str, Any]:
-    """Verify that a run's declared artifacts still close its exact output tree."""
-
-    loaded = load_run(client_root, engagement_id, run_id)
-    manifest_path = Path(loaded["run_root"]) / "artifact_manifest.json"
+    """Read one owned current or retained artifact receipt without changing it."""
     manifest = _validate_seal(
         _read_json(manifest_path, label="artifact manifest"),
         label="artifact manifest",
@@ -2735,7 +2892,7 @@ def validate_run_artifacts(
     ):
         raise LedgerError("Artifact manifest shape is invalid.")
     for key in ("client_id", "engagement_id", "workflow_id", "run_id"):
-        if manifest[key] != loaded["run"][key]:
+        if manifest[key] != run[key]:
             raise LedgerError("Artifact manifest belongs to another run.")
     raw_artifacts = manifest["artifacts"]
     if not isinstance(raw_artifacts, list) or not raw_artifacts:
@@ -2745,6 +2902,18 @@ def validate_run_artifacts(
         {item["path"] for item in artifacts}
     ) != len(artifacts):
         raise LedgerError("Artifact manifest entries must be unique.")
+    return manifest
+
+
+def validate_run_artifacts(
+    client_root: Path, engagement_id: str, run_id: str
+) -> dict[str, Any]:
+    """Verify that a run's declared artifacts still close its exact output tree."""
+    loaded = load_run(client_root, engagement_id, run_id)
+    manifest = _read_artifact_manifest(
+        Path(loaded["run_root"]) / "artifact_manifest.json", loaded["run"]
+    )
+    artifacts = manifest["artifacts"]
     output_dir = Path(loaded["output_dir"])
     physical = {
         path.relative_to(output_dir).as_posix(): path

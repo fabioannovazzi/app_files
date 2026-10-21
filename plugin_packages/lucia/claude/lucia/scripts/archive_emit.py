@@ -174,13 +174,30 @@ def record_output(
     if channel == "mcp" and isinstance(payload, dict):
         producer_records = payload.get("_meta", {}).get("vera_source_records")
         private_sha256 = payload.get("_meta", {}).get("vera_source_review_sha256")
+        artifact_projections = payload.get("_meta", {}).get(
+            "vera_artifact_projections", []
+        )
         payload = {
             key: value
             for key, value in payload.items()
             if key in {"content", "structuredContent", "isError"}
         }
         if producer_records is not None and isinstance(private_sha256, str):
-            from archive_projection import register_row_projection
+            from archive_projection import (
+                register_artifact_projection,
+                register_row_projection,
+            )
+
+            for artifact in artifact_projections:
+                register_artifact_projection(
+                    component,
+                    Path(artifact["path"]),
+                    data_sha256=artifact["data_sha256"],
+                    artifact_sha256=artifact["artifact_sha256"],
+                    records=artifact["records"],
+                    private_sha256=private_sha256,
+                    previous_sha256=artifact.get("previous_sha256"),
+                )
 
             register_row_projection(
                 component,

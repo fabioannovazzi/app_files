@@ -21,6 +21,22 @@ For every source, record a `reviewed_source_decisions` entry with exactly:
   `0.01`;
 - `date.order`: exactly `day_first` or `month_first`.
 
+The accepted `direction_policy` values are `customer`, `supplier`, `receivable`,
+`payable`, `debit`, `credit`, `source_signed` and `not_applicable`. Open-item
+populations require a direction other than `not_applicable`. The accepted
+`allocation_policy` values are `one_to_one`, `one_to_many`, `many_to_one`,
+`many_to_many` and `not_applicable`; declaring a shape does not prove a match.
+Choose these from the supplied source meaning, not from filename patterns.
+
+Money separators are `"."`, `","` or JSON `null`; use `null` for an absent
+thousands separator, not an empty string or a space. Decimal and thousands
+separators cannot be identical when both are declared. `reported_unit` and
+`perimeter.unit` are explicit nonempty unit labels; preserve the same reviewed
+unit across sources being compared. `entity_ref` and `party_ref` can be null
+when the evidence does not supply a common identity; a mapped row party follows
+the tabular contract below. These source-review choices can be recorded by the
+agent and do not imply human approval.
+
 For `reviewed_tabular_accounting_v1`, add exactly one `tabular` object with
 reviewed header/row/sheet/delimiter selectors, canonical columns and explicit
 evidence-type choices. Follow `tabular-source-layout.md`. It admits bounded
@@ -156,6 +172,41 @@ shorter terminal-ready validator. Applying a new review decision is itself new
 run state: native outputs and the assurance seal must be regenerated before the
 application can become `final_ready`.
 
+`written_pending_review` is a draft awaiting row review. After the required row
+decisions are recorded, `awaiting_regeneration` names the normal next stage:
+regenerate the workpapers and replay the successor. The required step is listed
+under `pending_steps`; it is not a failed calculation or a request for another
+approval. The old pending-review count card does not need a separate acceptance
+when the sealed source and calculation checks pass and the row decisions are
+complete. Final delivery still requires `report_ready=true` after regeneration.
+Actual failed checks, rejected decisions, skipped required rows and invalid
+receipts remain blocking errors and must be reported as such.
+
+For Archive delivery declarations, current deliverables are the workpapers in
+this run's top-level `assurance_final_outputs` directory. Copies inside
+`assurance_transition_history` are retained internal evidence, including nested
+directories also named `assurance_final_outputs`. Resolve paths from the current
+output inventory; a substring match does not distinguish current workpapers from
+their historical copies. Before completion, declaration metadata can be corrected
+through Archive's documented revision argument without modifying either set of
+files or repeating the professional calculation.
+
+After saving and applying the review, regenerate through the published CLI:
+
+```bash
+python -I -B scripts/raw_input_runner.py \
+  --client-engagement <customer-run>/context.json \
+  --output-subdirectory reconciliation \
+  --expected-predecessor-checkpoint <retained-64-hex-sha256>
+```
+
+The checkpoint selects reviewed regeneration. This uses the applied review and
+retained original assumptions, title, narrative and language in the same
+transaction as the native regeneration route. Initial-production options do not
+replace those retained settings. The command reuses the applied decisions without
+an additional approval step. Its response reports whether regeneration succeeded
+and whether the checked result is ready.
+
 The first review application also retains its predecessor transition within
 the same copy-on-write candidate. The content-addressed directory
 `assurance_transition_history/<predecessor-seal-content-sha256>/` has an exact
@@ -198,6 +249,13 @@ The checkpoint proves byte-digest equality only. Its authority depends on the
 separate channel used to retain and supply it; this workflow neither
 authenticates that channel nor upgrades `reviewer_ref` beyond an unsigned,
 unauthenticated, untrusted label.
+
+The normal replay response contains the checkpoint, run date, readiness status
+and reconciliation-row count. Detailed rows and review notes stay in the saved
+artifacts and the component's private review transaction; use the public selected
+case tools when those facts are needed in model context. The internal
+`--private-review-bridge` option is used by the component, not needed for normal
+validation. Invoking it directly does not exempt its output from measurement.
 
 ## Professional judgment boundary
 

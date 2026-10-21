@@ -813,7 +813,7 @@
     },
     {
       "id": "open-items-initial-source-intake",
-      "control": "Five app-only routes retain exact registered original identities, actor-private unfinished scope and per-source decision fields without stored confirmation, and signed current source/draft CAS. Original consultation replays immutable source receipts and bounds full verified bytes to 4 MiB inside the existing bridge envelope; base64, file name, size and hash remain in app metadata. No source role or perimeter is inferred from a filename and no provider client or model-facing source route is added. Renewed explicit review invokes only the unchanged strict public raw producer and full assurance replay at the fixed reconciliation child. The normal package, cache, original report options, failed gates and uncertain durable intent are retained. Stale/foreign/viewer/incomplete/changed-source requests are refused. Report readiness remains distinct from semantic review, professional approval, actual run disclosure, finalization and Archive completion. The ordinary packaged Cowork/file route remains independent. Scope-qualified source tests and an isolated browser with separately unapplied shared repairs do not establish installed-host or professional acceptance. App metadata and a local process do not guarantee local-only host/account processing. This shared-service review covers the native source envelope, authority and account boundary; the separately governed workstream owns substantive reconciliation source review.",
+      "control": "Five app-only routes retain exact registered original identities, actor-private unfinished scope and per-source decision fields without stored confirmation, and signed current source/draft CAS. Original consultation replays immutable source receipts and bounds full verified bytes to 4 MiB inside the existing bridge envelope; base64, file name, size and hash remain in app metadata. No source role or perimeter is inferred from a filename and no provider client or model-facing source route is added. Recorded agent or human source review invokes only the strict public raw producer and full assurance replay at the fixed reconciliation child. Attribution is persisted without inventing human review or professional approval. Bounded tabular drafts retain the explicit layout and row-party selection; the producer validates the complete source mapping. Exact same-run Archive reporting sidecars are validated separately and do not imply interrupted accounting work; unknown outputs and pending intents still prevent overwrite. The normal package, cache, original report options, failed gates and uncertain durable intent are retained. Stale/foreign/viewer/incomplete/changed-source requests are refused. Report readiness remains distinct from semantic review, professional approval, actual run disclosure, finalization and Archive completion. The ordinary packaged Cowork/file route remains independent. Scope-qualified source tests and an isolated browser with separately unapplied shared repairs do not establish installed-host or professional acceptance. App metadata and a local process do not guarantee local-only host/account processing. This shared-service review covers the native source envelope, authority and account boundary; the separately governed workstream owns substantive reconciliation source review.",
       "implemented_by": [
         "scripts/native_open_items_intake.py",
         "scripts/native_open_items_intake_bridge.py",
@@ -1095,8 +1095,8 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5c7f85e146e6761e5a00b2f340b6c58fe999ca8ab4abc00c108dd01938638196",
-    "reviewed_at": "2026-10-20"
+    "source_fingerprint": "4df1cf3a765ff837c2c4ac9dd0b3ecc68ca8d6709945eaaa4ebf8208028cf17f",
+    "reviewed_at": "2026-10-21"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",

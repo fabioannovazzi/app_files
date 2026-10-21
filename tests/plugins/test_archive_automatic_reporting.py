@@ -34,6 +34,86 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+def test_word_run_reader_measures_selected_body_paragraphs_and_table_cells(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+    from docx import Document
+
+    path = tmp_path / "generated-report.docx"
+    document = Document()
+    document.sections[0].header.paragraphs[0].text = "HEADER_NOT_SELECTED"
+    document.add_paragraph("Introduction")
+    table = document.add_table(rows=1, cols=2)
+    table.cell(0, 0).text = "F001"
+    table.cell(0, 1).text = "1200.00"
+    document.add_paragraph("Conclusion")
+    document.save(path)
+    source = measure_source(path, source_id="report", role="output")
+
+    data, selection = read_selection(source, offset=1, limit=2)
+
+    assert source["measurement_error"] is None
+    assert source["unit"] == "body_paragraphs"
+    assert source["quantity"] == source["cells"] == 4
+    assert data["rows"] == [["F001"], ["1200.00"]]
+    assert data["source_format"]["kind"] == "docx"
+    assert "HEADER_NOT_SELECTED" not in json.dumps(data)
+    assert selection["start"] == 1
+    assert selection["stop"] == 3
+
+
+def test_word_measurement_rejects_changed_document_before_returning_data(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+    from docx import Document
+
+    path = tmp_path / "generated-report.docx"
+    document = Document()
+    document.add_paragraph("Original result")
+    document.save(path)
+    source = measure_source(path, source_id="report", role="output")
+    document.add_paragraph("Changed result")
+    document.save(path)
+
+    with pytest.raises(ValueError, match="no longer matches"):
+        read_selection(source)
+
+
+def test_word_body_reader_counts_merged_and_nested_cell_text_once(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+    from docx import Document
+
+    path = tmp_path / "nested-report.docx"
+    document = Document()
+    table = document.add_table(rows=1, cols=2)
+    table.cell(0, 0).text = "First paragraph"
+    table.cell(0, 1).text = "Second paragraph"
+    cell = table.cell(0, 0).merge(table.cell(0, 1))
+    cell.add_table(rows=1, cols=1).cell(0, 0).text = "Nested paragraph"
+    document.save(path)
+    source = measure_source(path, source_id="report", role="output")
+
+    data, _ = read_selection(source)
+
+    assert source["quantity"] == 3
+    assert data["rows"] == [
+        ["First paragraph"],
+        ["Second paragraph"],
+        ["Nested paragraph"],
+    ]
+
+
+def test_invalid_word_package_remains_an_explicit_measurement_error(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "broken.docx"
+    path.write_bytes(b"This is not a Word package")
+    source = measure_source(path, source_id="report", role="output")
+
+    with pytest.raises(ValueError, match="no complete measurement adapter"):
+        read_selection(source)
+
+    assert source["measurement_error"] == "BadZipFile"
+
+
 @pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
 def test_private_report_database_can_record_without_changing_permissions(
     tmp_path, monkeypatch
@@ -374,7 +454,7 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     standalone.write_bytes(before)
 
     def open_verified(url, timeout):
-        parsed = urlsplit(url)
+        parsed = urlsplit(url.full_url)
         response = client.get(parsed.path + "?" + parsed.query)
         response.raise_for_status()
         return io.BytesIO(response.content)
@@ -401,6 +481,188 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
     standalone.write_bytes(before + b"\n")
     with pytest.raises(ValueError, match="canonical"):
         archive_report_receipt.verify_report(standalone, user_id=report["user_id"])
+
+
+@pytest.fixture
+def signed_archive_report(
+    archive_core, client_case, tmp_path, monkeypatch, reporting_runtime
+):
+    import io
+    from types import SimpleNamespace
+    from urllib.parse import urlsplit
+
+    import archive_report_receipt
+    import archive_reporting
+    import operational_incidents
+
+    from tests.modules.run_receipts.test_archive_binding import archive_client
+
+    client, owner, _, _, _ = archive_client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        archive_reporting, "_identity", lambda: str(owner.installation_id)
+    )
+    monkeypatch.setattr(
+        operational_incidents,
+        "reporting_credentials",
+        lambda: owner.model_dump(mode="json"),
+    )
+
+    def stamp(operation, envelope):
+        assert operation == "archive-stamp"
+        response = client.post(
+            "/api/operational-incidents/archive-stamp", json=envelope
+        )
+        response.raise_for_status()
+        return response.json()
+
+    monkeypatch.setattr(operational_incidents, "workflow_transport", stamp)
+    monkeypatch.setattr(archive_report_receipt, "stamp_report", reporting_runtime)
+    loaded = start(archive_core, client_case)
+    finish(archive_core, client_case, loaded)
+    output = Path(loaded["output_dir"])
+    report = output / "model_data_report.json"
+    receipt = output / "model_data_receipt.json"
+    requests = []
+
+    def open_verified(request, *, timeout):
+        requests.append(request)
+        parsed = urlsplit(request.full_url)
+        response = client.get(parsed.path + "?" + parsed.query)
+        response.raise_for_status()
+        return io.BytesIO(response.content)
+
+    return SimpleNamespace(
+        report=report,
+        receipt=receipt,
+        owner=str(owner.installation_id),
+        opener=open_verified,
+        requests=requests,
+        original={
+            path: path.read_bytes()
+            for path in Path(loaded["run_root"]).rglob("*")
+            if path.is_file()
+        },
+    )
+
+
+def test_general_verifier_accepts_archive_receipt_without_rewriting_run(
+    signed_archive_report,
+):
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    result = notarized_run_receipt.verify_model_data_receipt(
+        case.receipt, report_path=case.report, opener=case.opener
+    )
+
+    assert result["status"] == "valid"
+    assert result["user_id"] == case.owner
+    assert result["archive_run_id"] == json.loads(case.report.read_bytes())["run_id"]
+    assert result["report_revision"] == 1
+    assert len(case.requests) == 1
+    assert {path: path.read_bytes() for path in case.original} == case.original
+
+
+@pytest.mark.parametrize("explicit_owner", [False, True])
+def test_general_verify_cli_accepts_archive_receipt(
+    signed_archive_report, monkeypatch, capsys, explicit_owner
+):
+    from types import SimpleNamespace
+
+    import archive_report_receipt
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    monkeypatch.setattr(
+        archive_report_receipt.urllib.request,
+        "build_opener",
+        lambda *args: SimpleNamespace(open=case.opener),
+    )
+
+    status = notarized_run_receipt.main(
+        [
+            "verify",
+            "--report",
+            str(case.report),
+            "--receipt",
+            str(case.receipt),
+        ]
+        + (["--user-id", case.owner] if explicit_owner else [])
+    )
+
+    assert status == 0
+    assert json.loads(capsys.readouterr().out)["user_id"] == case.owner
+
+
+def test_general_archive_verifier_uses_current_user_before_network(
+    signed_archive_report, monkeypatch
+):
+    import notarized_run_receipt
+    import operational_incidents
+
+    case = signed_archive_report
+    monkeypatch.setattr(
+        operational_incidents,
+        "reporting_credentials",
+        lambda: {"installation_id": USER_ID},
+    )
+
+    with pytest.raises(
+        notarized_run_receipt.NotarizedRunReceiptError, match="another Vera userID"
+    ):
+        notarized_run_receipt.verify_model_data_receipt(
+            case.receipt, report_path=case.report, opener=case.opener
+        )
+
+    assert case.requests == []
+
+
+@pytest.mark.parametrize("product", ["clara", "lucia"])
+def test_other_product_verifier_cannot_claim_vera_archive_receipt(
+    signed_archive_report, monkeypatch, product
+):
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    monkeypatch.setattr(notarized_run_receipt, "PRODUCT", product)
+
+    with pytest.raises(notarized_run_receipt.NotarizedRunReceiptError):
+        notarized_run_receipt.verify_model_data_receipt(
+            case.receipt, report_path=case.report, opener=case.opener
+        )
+
+    assert case.requests == []
+
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("user_id", USER_ID),
+        ("archive_run_id", "run_" + "e" * 24),
+        ("report_revision", 2),
+        ("report_sha256", "f" * 64),
+        ("signature", "alteredSignature"),
+    ],
+)
+def test_general_archive_verifier_rejects_changed_local_proof(
+    signed_archive_report, field, value
+):
+    import notarized_run_receipt
+
+    case = signed_archive_report
+    altered = json.loads(case.receipt.read_bytes())
+    altered[field] = value
+    case.receipt.write_text(json.dumps(altered))
+
+    with pytest.raises(
+        notarized_run_receipt.NotarizedRunReceiptError, match="does not match"
+    ):
+        notarized_run_receipt.verify_model_data_receipt(
+            case.receipt, report_path=case.report, opener=case.opener
+        )
+
+    assert json.loads(case.receipt.read_bytes()) == altered
+    assert case.report.read_bytes() == case.original[case.report]
 
 
 def test_late_receipt_cannot_reseal_modified_professional_output(
@@ -582,6 +844,57 @@ def test_local_only_report_makes_no_transport_call(
         "status": "not_requested",
         "reason": "local_only",
     }
+
+
+@pytest.mark.parametrize("delimiter", [",", ";", "\t", "|"])
+def test_csv_selection_exposes_the_delimiter_used_for_exact_source_rows(
+    tmp_path, delimiter
+):
+    import csv
+
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "source.csv"
+    with path.open("w", newline="") as handle:
+        writer = csv.writer(handle, delimiter=delimiter)
+        writer.writerows(
+            [
+                ["ID", "Description", "Amount"],
+                ["F001", "first, quoted; description", "1200.00"],
+                ["F002", "second, quoted; description", "800.00"],
+            ]
+        )
+    source = measure_source(path, source_id="invoices")
+
+    data, evidence = read_selection(source, offset=1, limit=1, columns=[0, 2])
+
+    assert data["source_format"] == {
+        "kind": "csv",
+        "delimiter": delimiter,
+        "delimiter_basis": "sniffed",
+    }
+    assert data["columns"] == ["ID", "Amount"]
+    assert data["rows"] == [["F002", "800.00"]]
+    assert evidence["start"] == 1
+    assert evidence["stop"] == 2
+    assert evidence["columns"] == [0, 2]
+
+
+def test_single_column_preview_identifies_default_delimiter_as_unconfirmed(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "source.csv"
+    path.write_text("ID\nF001\nF002\n")
+    source = measure_source(path, source_id="ids")
+
+    data, _ = read_selection(source)
+
+    assert data["source_format"] == {
+        "kind": "csv",
+        "delimiter": ",",
+        "delimiter_basis": "default",
+    }
+    assert data["rows"] == [["F001"], ["F002"]]
 
 
 def test_xlsx_selection_preserves_physical_rows_columns_and_formula(tmp_path):
@@ -837,37 +1150,78 @@ def test_cli_combined_status_preserves_unknown_lines_as_unmapped(
 
 
 @pytest.mark.parametrize("limit", [None, 1])
-def test_registered_text_artifact_requires_the_complete_projection_for_lineage(
-    archive_core, client_case, limit
+@pytest.mark.parametrize("source_bearing", [False, True])
+def test_partial_text_is_measured_only_for_source_free_producer_metadata(
+    table_projection_case, limit, source_bearing
 ):
-    from archive_projection import register_value
+    from archive_projection import register_row_projection
     from archive_report_store import file_digest
     from archive_reporting import read_artifact, snapshot_run
 
-    loaded = start(archive_core, client_case, "journal-bank-reconciliation")
+    loaded = table_projection_case
     artifact = Path(loaded["output_dir"]) / "review_notes.md"
     content = "# Review\nTwo matches; one residual.\n"
     artifact.write_text(content, encoding="utf-8")
-    register_value(
+    register_row_projection(
         "journal-bank-reconciliation",
         artifact,
         content,
-        [],
+        [{"record_id": "first", "fields": ["amount"]}] if source_bearing else [],
         artifact_sha256=file_digest(artifact),
     )
 
     read_artifact(loaded, artifact, limit=limit)
 
     report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    complete = not source_bearing or limit is None
+    assert report["collection_status"] == ("complete" if complete else "incomplete")
+    assert next(source for source in report["sources"] if source["role"] == "input")[
+        "sent_cells"
+    ] == int(source_bearing and complete)
+
+
+@pytest.mark.parametrize(
+    "changed", [None, "file_bytes", "producer_review", "expected_json"]
+)
+def test_saved_artifact_projection_requires_exact_writer_and_review_digests(
+    table_projection_case, changed
+):
+    from archive_projection import register_artifact_projection, register_private_value
+    from archive_report_store import digest, file_digest
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    output = Path(loaded["output_dir"])
+    artifact = output / "decisions.json"
+    review = {"items": [{"id": "first", "title": "7"}]}
+    value = {"title": "7"}
+    artifact.write_text(json.dumps(value))
+    artifact_sha256 = file_digest(artifact)
+    register_private_value("journal-bank-reconciliation", output, review)
+    if changed == "file_bytes":
+        artifact.write_text(json.dumps({"title": "Unregistered replacement"}))
+    elif changed == "producer_review":
+        review["items"][0]["title"] = "Edited review"
+    elif changed == "expected_json":
+        value["title"] = "Different writer output"
+
+    register_artifact_projection(
+        "journal-bank-reconciliation",
+        artifact,
+        data_sha256=digest(value),
+        artifact_sha256=artifact_sha256,
+        records=[{"record_id": "first", "fields": ["amount"]}],
+        private_sha256=digest(review),
+    )
+    read_artifact(loaded, artifact)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
     assert report["collection_status"] == (
-        "complete" if limit is None else "incomplete"
+        "complete" if changed is None else "incomplete"
     )
-    assert (
-        next(source for source in report["sources"] if source["role"] == "input")[
-            "sent_cells"
-        ]
-        == 0
-    )
+    assert next(row for row in report["sources"] if row["role"] == "input")[
+        "sent_cells"
+    ] == (1 if changed is None else 0)
 
 
 @pytest.fixture
@@ -917,6 +1271,76 @@ def table_projection_case(archive_core, client_case, tmp_path, request):
         },
     )
     return loaded
+
+
+@pytest.mark.parametrize("source_bearing", [False, True])
+@pytest.mark.parametrize("invalidated", [None, "parent", "revision"])
+def test_metadata_edit_preserves_only_proven_parent_source_operands(
+    table_projection_case, source_bearing, invalidated
+):
+    from archive_projection import register_metadata_revision, register_row_projection
+    from archive_report_store import file_digest
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    artifact = Path(loaded["output_dir"]) / "status.json"
+    value = {"sample": 7} if source_bearing else {"count": 2}
+    artifact.write_text(json.dumps(value))
+    register_row_projection(
+        "journal-bank-reconciliation",
+        artifact,
+        value,
+        [{"record_id": "first", "fields": ["amount"]}] if source_bearing else [],
+        artifact_sha256=file_digest(artifact),
+    )
+    if invalidated == "parent":
+        value["unknown_note"] = "Unregistered source content"
+        artifact.write_text(json.dumps(value))
+    previous_sha256 = file_digest(artifact)
+    value["status"] = "ready"
+    artifact.write_text(json.dumps(value))
+
+    register_metadata_revision(
+        "journal-bank-reconciliation",
+        artifact,
+        previous_sha256,
+        expected_sha256=(
+            "0" * 64 if invalidated == "revision" else file_digest(artifact)
+        ),
+    )
+    read_artifact(loaded, artifact)
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert report["collection_status"] == ("incomplete" if invalidated else "complete")
+    assert next(row for row in report["sources"] if row["role"] == "input")[
+        "sent_cells"
+    ] == int(source_bearing and not invalidated)
+
+
+@pytest.mark.parametrize(
+    "columns,complete,sent_cells", [([0], True, 1), ([1], False, 0), ([0, 1], False, 1)]
+)
+def test_partial_table_provenance_keeps_unknown_cells_explicit_when_selected(
+    table_projection_case, columns, complete, sent_cells
+):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact, snapshot_run
+
+    loaded = table_projection_case
+    artifact = Path(loaded["output_dir"]) / "partial.csv"
+    artifact.write_text("amount,unmapped_note\n7,UNMAPPED_VALUE\n")
+    register_table_projection(
+        "journal-bank-reconciliation",
+        artifact,
+        [[[{"record_id": "first", "fields": ["amount"]}], None]],
+    )
+
+    read_artifact(loaded, artifact, columns=columns)
+
+    measured = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    assert measured["collection_status"] == ("complete" if complete else "incomplete")
+    [source] = [row for row in measured["sources"] if row["role"] == "input"]
+    assert source["sent_cells"] == sent_cells
 
 
 @pytest.mark.parametrize("first_to_read", [True, False])

@@ -226,6 +226,8 @@ def reseal_numeric(assurance: object, payload: dict[str, object]) -> None:
 
 def prepared_case(
     tmp_path: Path,
+    *,
+    amount_tolerance: object = "0",
 ) -> tuple[object, Path, Path, list[dict[str, object]], dict[str, object]]:
     assurance = load_assurance()
     source_dir = tmp_path / "source"
@@ -256,7 +258,7 @@ def prepared_case(
         output_dir=output_dir,
         open_items=rows,
         evidence_rows=[],
-        assumptions={"currency": "EUR", "amount_tolerance": "0"},
+        assumptions={"currency": "EUR", "amount_tolerance": amount_tolerance},
         source_root=source_dir,
         source_receipts=receipts,
         reviewed_source_decisions=list(decisions.values()),
@@ -1574,10 +1576,10 @@ def test_review_application_cannot_outrun_latest_assurance_replay(
         },
     )
 
-    assert result["application_status"] == "blocked"
+    assert result["application_status"] == "awaiting_regeneration"
     assert any(
         blocker["kind"] == "assurance_replay_required"
-        for blocker in result["applied_decisions"]["completion_blockers"]
+        for blocker in result["applied_decisions"]["pending_steps"]
     )
 
 
@@ -1596,7 +1598,7 @@ def test_honest_successor_retains_and_replays_exact_transition(
     predecessor_digest = predecessor["content_sha256"]
     history_dir = output_dir / "assurance_transition_history" / predecessor_digest
 
-    assert first_apply["application_status"] == "blocked"
+    assert first_apply["application_status"] == "awaiting_regeneration"
     assert {path.name for path in history_dir.iterdir()} == {
         "predecessor_assurance_receipts.json",
         "predecessor_professional_review.json",
@@ -2335,6 +2337,92 @@ def test_amount_tolerance_rejects_bool_float_and_negative(invalid: object) -> No
 
     with pytest.raises(ValueError, match="non-negative canonical Decimal"):
         helpers.amounts_equal("100", "100", invalid)
+
+
+@pytest.mark.parametrize(
+    "supplied,canonical", [("0.00", "0"), ("0.0100", "0.01"), ("1.2300", "1.23")]
+)
+def test_preparation_normalizes_exact_decimal_tolerance_without_changing_value(
+    tmp_path: Path, supplied: str, canonical: str
+) -> None:
+    _, _, output_dir, _, _ = prepared_case(tmp_path, amount_tolerance=supplied)
+
+    prepared = json.loads((output_dir / "prepared_records.json").read_text())
+    assert prepared["assumptions"]["amount_tolerance"] == canonical
+
+
+@pytest.mark.parametrize(
+    "invalid", [True, 0.0, -1, "-0.01", "NaN", "Infinity", "0,01", "1_000"]
+)
+def test_preparation_rejects_nonexact_nonfinite_negative_or_ambiguous_tolerance(
+    tmp_path: Path, invalid: object
+) -> None:
+    with pytest.raises(ValueError, match="amount_tolerance"):
+        prepared_case(tmp_path, amount_tolerance=invalid)
+
+    assert not (tmp_path / "output/prepared_records.json").exists()
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_report_accepts_the_exact_sealed_tolerance_in_each_language(
+    tmp_path: Path, language: str
+) -> None:
+    workflow = load_script_module("tolerance_workflow", WORKFLOW_PATH)
+
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "report",
+        open_items=[],
+        evidence_rows=[],
+        assumptions={"scope_year": "2026", "amount_tolerance": "0.0100"},
+        language=language,
+    )
+
+    assurance = load_assurance()
+    assert (
+        assurance.validate_assurance_run(tmp_path / "report")["content_sha256"]
+        == result["assurance"]["content_sha256"]
+    )
+
+
+@pytest.mark.parametrize("artifact_kind", ["word", "excel"])
+@pytest.mark.parametrize("wrong_value", ["0", "0.02"])
+def test_report_rejects_a_tolerance_changed_by_the_renderer(
+    tmp_path: Path, monkeypatch, artifact_kind: str, wrong_value: str
+) -> None:
+    workflow = load_script_module("altered_tolerance_workflow", WORKFLOW_PATH)
+    writer_name = (
+        "write_word_report" if artifact_kind == "word" else "write_excel_workpaper"
+    )
+    writer = getattr(workflow, writer_name)
+
+    def altered_tolerance(*args, **kwargs):
+        path = writer(*args, **kwargs)
+        if artifact_kind == "word":
+            document = Document(path)
+            paragraph = next(
+                p for p in document.paragraphs if p.text.endswith(": 0.01")
+            )
+            paragraph.text = paragraph.text.replace(": 0.01", f": {wrong_value}")
+            document.save(path)
+        else:
+            workbook = load_workbook(path)
+            sheet = workbook["Assumptions"]
+            row = next(
+                row for row in sheet.iter_rows() if row[0].value == "amount_tolerance"
+            )
+            row[1].value = wrong_value
+            workbook.save(path)
+            workbook.close()
+        return path
+
+    monkeypatch.setattr(workflow, writer_name, altered_tolerance)
+    with pytest.raises(ValueError, match="differs from sealed tolerance"):
+        workflow.build_reconciliation_artifacts(
+            output_dir=tmp_path / "report",
+            open_items=[],
+            evidence_rows=[],
+            assumptions={"scope_year": "2026", "amount_tolerance": "0.01"},
+        )
 
 
 def test_zero_tolerance_is_not_promoted_to_one_cent() -> None:

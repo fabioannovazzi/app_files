@@ -424,13 +424,33 @@ jobs:
         run: python -m playwright install --with-deps chromium
       - name: Verify both reporting pipelines retain professional integrity after Archive completion
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_archive_report_builder_execution.py
-      - name: Verify Open-item review history with automatic Archive reports
+      - name: Verify Open-item sources, workpapers and Archive review history
         env:
           MPARANZA_INCIDENT_DELIVERY: local-only
           MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item/identity
           MPARANZA_INCIDENT_DEVICE_DIR: ${{ runner.temp }}/reporting-open-item/device
           VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item/registry
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/open_item_reconciliation tests/open_item_reconciliation/test_audit_assurance.py tests/open_item_reconciliation/test_semantic_resolution.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/open_item_reconciliation tests/open_item_reconciliation --cov --cov-config=tests/open_item_reconciliation/coverage.ini --cov-report=term --cov-fail-under=80
+      - name: Check Open-item source and retained helper quality
+        run: |
+          python -m black --check plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source tests/open_item_reconciliation/test_reconciliation_helpers.py tests/open_item_reconciliation/test_reviewed_tabular_adapter.py tests/open_item_reconciliation/test_workpaper_outputs.py tests/open_item_reconciliation/coverage_plugin.py
+          python -m isort --check-only plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py tests/open_item_reconciliation/test_reconciliation_helpers.py tests/open_item_reconciliation/test_reviewed_tabular_adapter.py tests/open_item_reconciliation/test_workpaper_outputs.py tests/open_item_reconciliation/coverage_plugin.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py tests/open_item_reconciliation/coverage_plugin.py
+          python -m bandit -q -ll plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source
+      - name: Verify Open-item public review, CLI regeneration and measured source coverage
+        env:
+          MPARANZA_INCIDENT_DELIVERY: local-only
+          MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item-public/identity
+          MPARANZA_INCIDENT_DEVICE_DIR: ${{ runner.temp }}/reporting-open-item-public/device
+          VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item-public/registry
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_archive_open_item_projection.py
+      - name: Verify Open-item native intake and regeneration with automatic reporting
+        env:
+          MPARANZA_INCIDENT_DELIVERY: local-only
+          MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/identity
+          MPARANZA_INCIDENT_DEVICE_DIR: ${{ runner.temp }}/reporting-open-item-native/device
+          VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/registry
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_native_open_items_intake.py tests/plugins/test_vera_native_open_items_intake_reporting.py tests/plugins/test_vera_native_open_items_regeneration.py tests/plugins/test_vera_native_open_items_intake_ui.py tests/plugins/test_vera_native_open_item_bridge_io.py
       - name: Build the checksum-verified official taxonomy for local OIC execution
         shell: bash
         run: |
@@ -1016,13 +1036,13 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_studio_archive_verification.py
           --cov=input_verification --cov-report=term-missing --cov-fail-under=80
-      - name: Verify native input verification contract and fresh-session replay
+      - name: Verify input access before creation, receipt checks and fresh-session replay
         env:
           MPARANZA_INCIDENT_DELIVERY: local-only
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_studio_archive_component.py
-          -k "mcp_verif or mcp_lists_strict"
+          -k "mcp_verif or mcp_lists_strict or source_check or chat_upload_access or readable_chat_path or reachable_csvs_import or late_import_error or source_disappearing or transfer_changed"
 
   studio-work:
     name: Studio work register and calendar receipts
@@ -1066,6 +1086,7 @@ jobs:
           tests/plugins/test_studio_archive_adoption.py
           tests/plugins/test_studio_archive_concurrency.py
           tests/plugins/test_archive_fault_isolation.py
+          tests/plugins/test_vera_studio_archive_gmail_routing.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
       - name: Verify negotiation delivery and immutable round successors

@@ -20,7 +20,9 @@ def isolated_engine(code: str, *arguments: object) -> dict:
             "-I",
             "-B",
             "-c",
-            "import sys,json;sys.path.insert(0,sys.argv[1]);import raw_input_runner as runner;import audit_assurance as assurance;import review_server as review_server;"
+            "import sys,json,contextlib;sys.path.insert(0,sys.argv[1]);\n"
+            "with contextlib.redirect_stdout(sys.stderr):\n"
+            " import raw_input_runner as runner;import audit_assurance as assurance;import review_server as review_server\n"
             + code,
             str(engine.SCRIPT_DIR),
             *[json.dumps(value) for value in arguments],

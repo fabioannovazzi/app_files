@@ -101,7 +101,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-email-cliente/SKILL.md",
-      "sha256": "b90d1eeb4f8899a97075eed5a5fd26c009953a520974ec7d8b75ca01474633e9"
+      "sha256": "53931723dfa96cdbf74a868843552044cc3bade20fc807dc44f4b530bb18f839"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -153,7 +153,7 @@
     },
     {
       "path": "skills/mparanza-email-cliente/SKILL.md",
-      "sha256": "6dee51420eaf3b4376824b6aa9ae12f3799821abf38ef8cfa5ba85364c8b1970"
+      "sha256": "735e70775cc18a4ad5960648303fa758fa78bc78cb29e6bc2496fc94a7c80dc4"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

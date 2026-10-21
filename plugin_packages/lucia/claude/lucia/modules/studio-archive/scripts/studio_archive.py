@@ -42,6 +42,7 @@ from archive_core import (
     authorize_studio_google_drive,
     bind_studio_client_google_drive,
     cancel_studio_client_workflow,
+    check_studio_import_sources,
     close_studio_client_engagement,
     complete_studio_client_workflow,
     configure_archive,
@@ -77,6 +78,7 @@ from archive_core import (
     studio_google_drive_status,
     verify_studio_client_inputs,
 )
+from archive_error_reporting import record_error
 
 __all__ = ["main"]
 
@@ -89,6 +91,8 @@ def _emit(payload: dict[str, Any]) -> None:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
     subparsers = parser.add_subparsers(dest="command", required=True)
+
+    subparsers.add_parser("record-error", help=argparse.SUPPRESS)
 
     subparsers.add_parser("setup")
 
@@ -131,6 +135,12 @@ def _parser() -> argparse.ArgumentParser:
     create_engagement.add_argument("--client-id", required=True)
     create_engagement.add_argument("--engagement-label", required=True)
 
+    check_sources = subparsers.add_parser("check-import-sources")
+    check_sources.add_argument(
+        "--source-path", type=Path, action="append", required=True
+    )
+    check_sources.add_argument("--expected-sha256", action="append")
+
     import_document = subparsers.add_parser("import-document")
     import_document.add_argument("--client-id", required=True)
     import_document.add_argument("--source-path", type=Path, required=True)
@@ -138,6 +148,7 @@ def _parser() -> argparse.ArgumentParser:
         "--role", choices=["journal", "source", "support"], required=True
     )
     import_document.add_argument("--engagement-id", required=True)
+    import_document.add_argument("--expected-sha256")
 
     copy_folder = subparsers.add_parser("copy-client-source-folder")
     copy_folder.add_argument("--client-id", required=True)
@@ -252,6 +263,7 @@ def _parser() -> argparse.ArgumentParser:
     finalize_workflow.add_argument("--engagement-id", required=True)
     finalize_workflow.add_argument("--run-id", required=True)
     finalize_workflow.add_argument("--artifacts-json", required=True)
+    finalize_workflow.add_argument("--expected-declaration-sha256")
 
     close_engagement = subparsers.add_parser("close-engagement")
     close_engagement.add_argument("--client-id", required=True)
@@ -304,7 +316,14 @@ def main(argv: list[str] | None = None) -> int:
 
     args = _parser().parse_args(argv)
     try:
-        if args.command == "setup":
+        if args.command == "record-error":
+            envelope = json.load(sys.stdin)
+            result = {
+                "recorded": record_error(
+                    envelope["arguments"], envelope["payload"], channel="mcp"
+                )
+            }
+        elif args.command == "setup":
             result = setup_archive_with_folder_picker()
         elif args.command == "configure":
             result = configure_archive(
@@ -327,6 +346,10 @@ def main(argv: list[str] | None = None) -> int:
             )
         elif args.command == "client-folder":
             result = get_studio_client_folder(args.client_id)
+        elif args.command == "check-import-sources":
+            result = check_studio_import_sources(
+                args.source_path, expected_sha256=args.expected_sha256
+            )
         elif args.command == "create-client":
             result = create_studio_client(
                 args.legal_name,
@@ -352,6 +375,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.source_path,
                 args.role,
                 engagement_id=args.engagement_id,
+                expected_sha256=args.expected_sha256,
             )
         elif args.command == "engagements":
             result = list_studio_client_engagements(args.client_id)
@@ -462,6 +486,7 @@ def main(argv: list[str] | None = None) -> int:
                 args.engagement_id,
                 args.run_id,
                 artifact_payload,
+                expected_declaration_sha256=args.expected_declaration_sha256,
             )
         elif args.command == "complete-workflow":
             result = complete_studio_client_workflow(
@@ -524,7 +549,22 @@ def main(argv: list[str] | None = None) -> int:
         details = getattr(exc, "details", None)
         if isinstance(details, dict):
             error["details"] = details
-        _emit({"error": error})
+        payload = {"error": error}
+        if (
+            args.command != "record-error"
+            and os.environ.get("VERA_STUDIO_ARCHIVE_MCP") != "1"
+        ):
+            try:
+                record_error(vars(args), payload, channel="cli")
+            except (OSError, ValueError, sqlite3.Error):
+                logging.exception("Studio Archive error recording failed")
+                payload = {
+                    "error": {
+                        "code": "archive_reporting_failed",
+                        "message": "Archive failed and could not save its outgoing error record. See the local worker log.",
+                    }
+                }
+        _emit(payload)
         return 1
     _emit(result)
     return (
