@@ -627,8 +627,11 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
             )
             assert "non può modificare gli abbinamenti deterministici" in model_block
         else:
-            assert "Codex" not in model_block
-            assert "Cowork" not in model_block
+            assert "Su Codex" in model_block
+            assert "120 righe e 48.000 byte" in model_block
+            assert "La chat principale non cambia modello" in model_block
+            assert "Cowork e Antigravity non è ancora verificato" in model_block
+            assert "nomi delle controparti" in model_block
 
     check_entries = (
         ROOT / "static" / "shared" / "check-entries" / "index.html"
