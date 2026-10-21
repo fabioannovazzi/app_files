@@ -2291,7 +2291,7 @@ def test_audit_mcp_honest_successor_lifecycle_replays_retained_transition(
     first_result = apply_current(predecessor["content_sha256"])
     assert first_result.get("isError") is not True
     first = first_result["structuredContent"]
-    assert first["application_status"] == "blocked"
+    assert first["application_status"] == "awaiting_regeneration"
     history_dir = (
         output_dir / "assurance_transition_history" / predecessor["content_sha256"]
     )
@@ -2572,8 +2572,11 @@ def test_audit_review_transaction_honest_apply_commits_without_residue(
 
     assert result["ok"] is True
     assert result["persisted"] is True
+    # This transaction fixture has no calculation receipts or review authority.
+    # A successful write alone must not authorize a regeneration transition.
     assert result["application_status"] == "blocked"
     assert result["blocker_count"] == 1
+    assert result["applied_decisions"]["pending_steps"] == []
     assert result["applied_decisions"]["completion_blockers"] == [
         {
             "kind": "assurance_replay_required",

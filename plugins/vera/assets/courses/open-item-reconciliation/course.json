@@ -34,7 +34,7 @@
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
       "repository_path": "plugins/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "e389fc274e88e97104b4daf0792c05fb823541815bba936951f67d4233fbd59b"
+      "sha256": "5448b90efc525deca4963171fd695b6a63a874ba46e597d88c6d3446e8539bc4"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -69,7 +69,7 @@
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "97aae00b4392106a23c5a991a68e89fe5d3db645ebde9bc1c7327c10611d2a07"
+      "sha256": "e6ec74696d165b71a3693a8f7137f76f85dbb53f93dea540e432babe805c134d"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -79,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "07c3503fdbbacf5370aba7bd0280809d102355ef015927225d1beec17f66f2f6"
+      "sha256": "da6d199463e9db9a7d9b5c9c78ca8c7554acb3a3d86e1e598954c287511457a1"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -129,7 +129,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/review_session.source",
-      "sha256": "9badd44a686b66731cae2403707a087ec52fec4fd20bfebf25e3cc73e5d13560"
+      "sha256": "181fd67e98474876968bc566e8bda851fef3d4ee161f707d886a3c1aaf814067"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
@@ -139,7 +139,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "3c10c158254fa06d94aafd761af939b5a98b210740ae22c2bbcf262c8e5fe2cc"
+      "sha256": "83a8b7cf029c818c4152007cab209f34af81042dcde436577bdd43814390c014"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",

@@ -282,6 +282,9 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
     loaded = reconciled_case
     output = Path(loaded["calculation_dir"])
     review = json.loads((output / "review_payload.json").read_text())
+    initial = json.loads((output / "final_artifacts.json").read_text())
+    assert initial["status"] == "written_pending_review"
+    assert initial["assurance"]["report_ready"] is False
     checkpoint = json.loads((output / "assurance_receipts.json").read_text())[
         "content_sha256"
     ]
@@ -331,8 +334,16 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
     assert saved["structuredContent"]["decision_count"] == 3
     assert applied["structuredContent"]["decision_count"] == 3
     pending = json.loads((output / "final_artifacts.json").read_text())
-    assert pending["status"] == "blocked"
-    assert pending["review_handoff"]["required_before_final_delivery"] is True
+    assert applied["structuredContent"]["application_status"] == "awaiting_regeneration"
+    assert applied["structuredContent"]["blocker_count"] == 0
+    assert pending["status"] == "awaiting_regeneration"
+    assert pending["blockers"] == []
+    assert (
+        json.loads((output / "assurance_gates.json").read_text())["report_ready"]
+        is False
+    )
+    assert pending["pending_steps"][0]["kind"] == "assurance_replay_required"
+    assert pending["review_handoff"]["required_before_final_delivery"] is False
     assert "PRIVATE_REVIEW_NOTE" not in json.dumps(saved["structuredContent"])
     assert "PRIVATE_REVIEW_NOTE" not in json.dumps(applied["structuredContent"])
     assert "PRIVATE_REVIEW_NOTE" in json.dumps(saved["_meta"]["private_review_payload"])

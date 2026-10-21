@@ -101,6 +101,7 @@ try:
         build_review_payload_mapping,
         capture_review_transition_predecessor,
         retain_review_transition,
+        review_completion_pending,
         review_decision_fingerprint,
         run_review_output_transaction,
         validate_assurance_run,
@@ -111,6 +112,7 @@ except ImportError:  # pragma: no cover - direct script/importlib support
         build_review_payload_mapping,
         capture_review_transition_predecessor,
         retain_review_transition,
+        review_completion_pending,
         review_decision_fingerprint,
         run_review_output_transaction,
         validate_assurance_run,
@@ -847,32 +849,11 @@ def _completion_blockers(
                 "detail": "Failed deterministic checks require correction and rerun.",
             }
         )
-    effect_by_id = {effect["item_id"]: effect for effect in effects}
-    for item in review_payload.get("items", []):
-        if (
-            not isinstance(item, dict)
-            or item.get("item_type") not in REQUIRED_REVIEW_ITEM_TYPES
-        ):
-            continue
-        effect = effect_by_id.get(item.get("id"))
-        if effect is None:
-            blockers.append(
-                {
-                    "kind": "pending_required_review",
-                    "detail": f"Required review item remains pending: {item.get('id')}",
-                }
-            )
-        elif effect.get("action") == "skip":
-            blockers.append(
-                {
-                    "kind": "skipped_required_review",
-                    "detail": f"Required review item was skipped: {item.get('id')}",
-                }
-            )
     assurance_path = (
         output_dir / "assurance_gates.json" if output_dir is not None else None
     )
     successor_replayed = False
+    pending_review_only = False
     if assurance_path is not None and assurance_path.is_file():
         try:
             assurance = validate_assurance_run(
@@ -894,7 +875,22 @@ def _completion_blockers(
             gates = register.get("gates") if isinstance(register, dict) else None
             semantic = gates.get("semantic_review") if isinstance(gates, dict) else None
             reporting = gates.get("reporting") if isinstance(gates, dict) else None
-            if (
+            result = _read_json_object(
+                output_dir
+                / str(assurance["final_output_inventory"]["boundary_root"])
+                / "reconciliation_results.json",
+                required=True,
+            )
+            # The replayed source/calculation gates distinguish a normal pending
+            # review from a real failure. Accepting a failed check cannot do this.
+            pending_review_only = review_completion_pending(assurance, result)
+            if pending_review_only:
+                blockers = [
+                    blocker
+                    for blocker in blockers
+                    if blocker["kind"] != "failed_deterministic_checks"
+                ]
+            if not pending_review_only and (
                 not isinstance(semantic, dict)
                 or semantic.get("status") not in {"passed", "not_applicable"}
                 or not isinstance(reporting, dict)
@@ -917,6 +913,36 @@ def _completion_blockers(
                 and authority.get("decision_fingerprint") == decision_fingerprint
                 and assurance.get("gate_register", {}).get("report_ready") is True
             )
+    effect_by_id = {effect["item_id"]: effect for effect in effects}
+    for item in review_payload.get("items", []):
+        if (
+            not isinstance(item, dict)
+            or item.get("item_type") not in REQUIRED_REVIEW_ITEM_TYPES
+        ):
+            continue
+        if (
+            pending_review_only
+            and item.get("item_type") == "check_exception"
+            and item.get("data", {}).get("check") == "codex_review_completed"
+        ):
+            # Reviewed rows are the authority; the old pending-count card does
+            # not need a second acceptance to permit their normal regeneration.
+            continue
+        effect = effect_by_id.get(item.get("id"))
+        if effect is None:
+            blockers.append(
+                {
+                    "kind": "pending_required_review",
+                    "detail": f"Required review item remains pending: {item.get('id')}",
+                }
+            )
+        elif effect.get("action") == "skip":
+            blockers.append(
+                {
+                    "kind": "skipped_required_review",
+                    "detail": f"Required review item was skipped: {item.get('id')}",
+                }
+            )
     if not successor_replayed:
         blockers.append(
             {
@@ -934,12 +960,19 @@ def _application_status(
     effects: list[dict[str, Any]],
     item_count: int,
     completion_blockers: list[dict[str, str]],
+    *,
+    can_regenerate: bool = False,
 ) -> str:
     if not effects:
         return "pending_review"
     if any(effect["requires_followup"] for effect in effects):
         return "blocked"
     if completion_blockers:
+        if can_regenerate and all(
+            blocker["kind"] == "assurance_replay_required"
+            for blocker in completion_blockers
+        ):
+            return "awaiting_regeneration"
         return "blocked"
     if len(effects) < item_count:
         return "partial_review_applied"
@@ -1006,6 +1039,7 @@ def _final_artifacts_with_application(
         "run_id": current.get("run_id", applied_decisions["run_id"]),
         "outputs": outputs,
         "blockers": applied_decisions.get("completion_blockers", []),
+        "pending_steps": applied_decisions.get("pending_steps", []),
         "status": applied_decisions["application_status"],
         "review_application": {
             "applied_at": applied_decisions["applied_at"],
@@ -1044,11 +1078,17 @@ def _final_artifacts_with_application(
             ),
         },
     }
-    if applied_decisions["application_status"] == "final_ready":
+    if applied_decisions["application_status"] in {
+        "final_ready",
+        "awaiting_regeneration",
+    }:
         final_artifacts = completed_review_handoff(
             final_artifacts,
             language=_read_json_object(output_dir / "run_intake.json").get(
                 "language", "en"
+            ),
+            regeneration_pending=(
+                applied_decisions["application_status"] == "awaiting_regeneration"
             ),
         )
     return final_artifacts
@@ -1238,13 +1278,17 @@ def _apply_decisions_in_place(
             else None
         ),
     )
-    blocker_count = sum(1 for effect in effects if effect["requires_followup"]) + len(
-        completion_blockers
-    )
     application_status = _application_status(
         effects,
         review_payload["item_count"],
         completion_blockers,
+        can_regenerate=isinstance(professional_review, dict),
+    )
+    pending_steps = []
+    if application_status == "awaiting_regeneration":
+        pending_steps, completion_blockers = completion_blockers, []
+    blocker_count = sum(1 for effect in effects if effect["requires_followup"]) + len(
+        completion_blockers
     )
     applied_decisions = {
         "schema_version": review_payload["schema_version"],
@@ -1264,6 +1308,7 @@ def _apply_decisions_in_place(
         "item_count": review_payload["item_count"],
         "blocker_count": blocker_count,
         "completion_blockers": completion_blockers,
+        "pending_steps": pending_steps,
         "target_update_count": len(target_outputs),
         "target_update_paths": [output["path"] for output in target_outputs],
         "structured_update_count": len(structured_update_paths),
@@ -1331,7 +1376,9 @@ def _apply_decisions_in_place(
         ),
         "run_intake_path": run_intake_path.as_posix() if run_intake_path else None,
         "message": (
-            f"Applied {applied_decisions['decision_count']} "
+            final_artifacts["next_actions"][0]
+            if application_status == "awaiting_regeneration"
+            else f"Applied {applied_decisions['decision_count']} "
             "Open-item Reconciliation decisions."
         ),
         "applied_decisions": applied_decisions,

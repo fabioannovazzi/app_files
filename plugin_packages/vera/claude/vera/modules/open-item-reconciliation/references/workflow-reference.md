@@ -182,6 +182,16 @@ shorter terminal-ready validator. Applying a new review decision is itself new
 run state: native outputs and the assurance seal must be regenerated before the
 application can become `final_ready`.
 
+`written_pending_review` is a draft awaiting row review. After the required row
+decisions are recorded, `awaiting_regeneration` names the normal next stage:
+regenerate the workpapers and replay the successor. The required step is listed
+under `pending_steps`; it is not a failed calculation or a request for another
+approval. The old pending-review count card does not need a separate acceptance
+when the sealed source and calculation checks pass and the row decisions are
+complete. Final delivery still requires `report_ready=true` after regeneration.
+Actual failed checks, rejected decisions, skipped required rows and invalid
+receipts remain blocking errors and must be reported as such.
+
 After saving and applying the review, regenerate through the published CLI:
 
 ```bash

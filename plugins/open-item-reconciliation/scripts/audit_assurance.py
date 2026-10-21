@@ -181,6 +181,7 @@ __all__ = [
     "prepare_assurance_run",
     "retain_review_transition",
     "review_decision_fingerprint",
+    "review_completion_pending",
     "rollback_assurance_run",
     "reviewed_date_convention",
     "reviewed_money_convention",
@@ -2572,6 +2573,25 @@ def _validate_workflow_output_contract(value: object) -> dict[str, Any]:
     if value["content_sha256"] != canonical_json_sha256(content):
         raise AssuranceRunError("workflow output contract digest is stale")
     return {**content, "content_sha256": value["content_sha256"]}
+
+
+def review_completion_pending(
+    assurance: Mapping[str, Any], reconciliation: Mapping[str, Any]
+) -> bool:
+    """Identify a pending review from replayed gates and complete typed checks."""
+
+    gates = assurance["gate_register"]["gates"]
+    failed_checks = [
+        row["check"] for row in reconciliation["checks"] if row["status"] != "PASS"
+    ]
+    return (
+        all(
+            gates[name]["status"] in {"passed", "not_applicable"}
+            for name in ("source", "preparation", "reconciliation")
+        )
+        and gates["semantic_review"]["status"] == "withheld"
+        and failed_checks in ([], ["codex_review_completed"])
+    )
 
 
 def _review_gate_status(
@@ -6961,6 +6981,12 @@ def _finalize_assurance_run_in_place(
             name
             for name, gate in gates["gates"].items()
             if gate["status"] in {"failed", "blocked"}
+            and not (
+                name == "reporting"
+                and semantic_status == "withheld"
+                and source_status in {"passed", "not_applicable"}
+                and reconciliation_status == "passed"
+            )
         ]
         final_artifacts["assurance"] = {
             "receipts_path": "assurance_receipts.json",
@@ -6981,6 +7007,7 @@ def _finalize_assurance_run_in_place(
             ]
         elif not gates["report_ready"]:
             final_artifacts["status"] = "written_pending_review"
+            final_artifacts["blockers"] = []
         elif professional_review["origin"] == "applied_decisions":
             final_artifacts["status"] = "final_ready"
             final_artifacts["blockers"] = []
@@ -8027,6 +8054,9 @@ def _main(argv: Sequence[str] | None = None) -> int:
         "assurance": bounded_assurance,
         "result": {
             "reconciliation_rows": reconciliation["reconciliation_rows"],
+            "review_completion_pending": review_completion_pending(
+                assurance, reconciliation
+            ),
         },
     }
     if not args.private_review_bridge:

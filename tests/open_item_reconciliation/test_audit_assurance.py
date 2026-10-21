@@ -1576,10 +1576,10 @@ def test_review_application_cannot_outrun_latest_assurance_replay(
         },
     )
 
-    assert result["application_status"] == "blocked"
+    assert result["application_status"] == "awaiting_regeneration"
     assert any(
         blocker["kind"] == "assurance_replay_required"
-        for blocker in result["applied_decisions"]["completion_blockers"]
+        for blocker in result["applied_decisions"]["pending_steps"]
     )
 
 
@@ -1598,7 +1598,7 @@ def test_honest_successor_retains_and_replays_exact_transition(
     predecessor_digest = predecessor["content_sha256"]
     history_dir = output_dir / "assurance_transition_history" / predecessor_digest
 
-    assert first_apply["application_status"] == "blocked"
+    assert first_apply["application_status"] == "awaiting_regeneration"
     assert {path.name for path in history_dir.iterdir()} == {
         "predecessor_assurance_receipts.json",
         "predecessor_professional_review.json",

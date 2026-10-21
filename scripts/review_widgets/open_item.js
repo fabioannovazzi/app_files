@@ -56,7 +56,10 @@
       const failed = reviewPayload().summary?.failed_check_count;
       const stage = artifactState();
       const ready = stage === "final_ready";
-      document.getElementById("state-strip").innerHTML = `<p class="desk-note"><strong>${esc(deskText("processing"))}:</strong> ${esc(failed > 0 ? `${failed} ${deskText("failedChecks")}` : failed === 0 ? deskText("processed") : deskText("unavailable"))} · <strong>${esc(deskText("deliverables"))}:</strong> ${esc(ready ? deskText("finalReady") : deskText("notFinal"))}</p>`;
+      const awaitingRegeneration = stage === "awaiting_regeneration";
+      const processing = awaitingRegeneration ? deskText("reviewApplied") : stage === "written_pending_review" ? deskText("reviewPendingTitle") : failed > 0 ? `${failed} ${deskText("failedChecks")}` : failed === 0 ? deskText("processed") : deskText("unavailable");
+      const delivery = ready ? deskText("finalReady") : awaitingRegeneration ? deskText("regenerationPending") : deskText("notFinal");
+      document.getElementById("state-strip").innerHTML = `<p class="desk-note"><strong>${esc(deskText("processing"))}:</strong> ${esc(processing)} · <strong>${esc(deskText("deliverables"))}:</strong> ${esc(delivery)}</p>`;
     }
     function rowHtml(item) {
       const data = item.data || {};

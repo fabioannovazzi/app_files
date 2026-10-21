@@ -1271,3 +1271,64 @@ The delta against verified 0.1.458 has 129 changed files, no additions and no
 removals. Its six executable changes are confined to Open-item's MCP server,
 assurance finalizer, public CLI, review server and two retained rendering/locale
 sources. Installation and fresh normal-chat acceptance remain outstanding.
+
+### 0.1.459 normal-chat result: expected transition reported as a failure
+
+The selected local installation was verified at 0.1.459, with all 2,184 cached
+files matching the ZIP. The fresh GPT-6.1-sol test 2 stopped before regeneration:
+automatic approval review rejected the requested public helper, interpreting the
+workflow's `blocked` state and required replay as the user's stop condition.
+No alternate route or retry was attempted. The failed run, its eight recorded
+agent decisions and its original drafts are preserved. The technical helper
+did not execute, so this does not demonstrate a failure of the repaired CLI.
+
+**A65:** the retained evidence showed 16 passing checks and one failing
+`codex_review_completed` check, referring to three pending rows before the
+agent's recorded review. Source qualification and reconciliation assurance gates
+passed. Nonetheless, initial final-artifact metadata reported `blocked`, and
+apply described normal regeneration as `failed_deterministic_checks` plus
+`assurance_replay_required`. This conflated work awaiting its next stage with a
+failed calculation. A regression also exposed a redundant acceptance of the
+old pending-review count card after the underlying rows had been reviewed.
+
+The failed report appeared automatically, and independent read-only verification
+confirmed its exact report hash, revision, run and expected userID. Both source
+tables were fully represented: 24 population cells and 12 bank cells. Four
+explicit reads of derived artifacts lacked input-cell lineage, so the report
+honestly remained incomplete. These reads covered the artifact card, two versions
+of final-artifact metadata and saved decisions. This measurement limitation is
+separate from the host refusal; no source provenance was invented to remove it.
+The local resoconto retains the exact evidence, the harmless recovered lookup
+error, the unblocking orphan-profile warning, and the review-server cleanup.
+
+The next source repair distinguishes `written_pending_review`,
+`awaiting_regeneration` and `final_ready`. It recognizes pending review only
+from a replayed complete result whose source/calculation gates pass and whose
+checks all pass or have only the typed pending-review check outstanding. The
+broader suite exposed the first variant: workflows may omit that optional check
+while their semantic review gate remains pending. Required row decisions
+remain mandatory. Real failed checks, rejected/skipped rows and invalid receipts
+remain blockers; delivery still requires the unchanged successor verification.
+The outstanding regeneration is recorded as a pending step, and the browser
+and tool response identify the next normal action. The initial regression failed
+against 0.1.459 and now passes; broader positive and negative checks are running.
+No new acceptance chat has started. Acceptance remains **1 of 13**.
+
+Final 0.1.460 source validation passed: 420 accounting tests with 81.63%
+coverage, 72 public-review tests, 43 native intake/regeneration/bridge tests,
+17 projection/review/regeneration integration cases, seven focused transition
+and failure cases, and seven widget checks. Package/privacy/update/icon checks
+passed 516 tests with two skips; all-host source/package parity passed. Black,
+Isort, Mypy, Bandit medium/high, Node syntax and whitespace checks passed.
+The unassured transaction fixture correctly remains blocked; an incorrect new
+expectation in that test was corrected without weakening production behavior.
+
+The previous-head release-alignment CI failure was a stale Geneva catalogue
+manifest/version snapshot. All 55 skill entrypoint hashes and all assessment
+rows were unchanged; only the catalogue identity was refreshed for this release.
+The verified candidate is Vera 0.1.460 with Open-item 0.1.67. Its ZIP SHA-256 is
+`b222c7dde9de453891b170809db8c8c35eb331b46d95e6ccde1033c103cf207c`.
+Against installed 0.1.459, 131 files change, none are added or removed, and the
+four executable changes are confined to Open-item review/assurance handling.
+All 394 historical-file hash checks pass. Installed normal-chat acceptance
+remains outstanding; these source results do not count as a second accepted test.

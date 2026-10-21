@@ -24,9 +24,12 @@ MAX_CHECK_ITEMS = 100
 
 
 def completed_review_handoff(
-    final_artifacts: dict[str, Any], *, language: str
+    final_artifacts: dict[str, Any],
+    *,
+    language: str,
+    regeneration_pending: bool = False,
 ) -> dict[str, Any]:
-    """Reflect replayed final-ready state without making a review decision."""
+    """Reflect recorded review and replay state without making a review decision."""
 
     handoff = final_artifacts.get("review_handoff") or {}
     actions = {
@@ -36,11 +39,19 @@ def completed_review_handoff(
         "fr": "Remettez les documents révisés en indiquant les soldes et les demandes de justificatifs encore ouverts.",
         "de": "Übergeben Sie die geprüften Unterlagen mit ausdrücklich ausgewiesenen Restbeträgen und offenen Beleganforderungen.",
     }
+    if regeneration_pending:
+        actions = {
+            "it": "Rigenera le carte con le decisioni registrate e verifica il nuovo risultato prima della consegna.",
+            "en": "Regenerate the workpapers with the recorded decisions and verify the successor before delivery.",
+            "es": "Regenere los documentos con las decisiones registradas y verifique el nuevo resultado antes de la entrega.",
+            "fr": "Régénérez les documents avec les décisions enregistrées et vérifiez le nouveau résultat avant la remise.",
+            "de": "Erstellen Sie die Unterlagen mit den erfassten Entscheidungen neu und prüfen Sie das neue Ergebnis vor der Übergabe.",
+        }
     return {
         **final_artifacts,
         "review_handoff": {
             **handoff,
-            "status": "review_completed",
+            "status": "review_applied" if regeneration_pending else "review_completed",
             "required_before_final_delivery": False,
             "server": {**handoff.get("server", {}), "required": False},
         },

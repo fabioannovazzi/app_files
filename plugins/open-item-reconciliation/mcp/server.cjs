@@ -3058,7 +3058,9 @@ function validateAuditReconciliationReviewTransaction(
           ? path.join(canonicalOutputDir, "professional_review.json")
           : null,
       run_intake_path: path.join(canonicalOutputDir, "run_intake.json"),
-      message: isSpanishRuntime(inputArgs)
+      message: persistedAppliedDecisions.application_status === "awaiting_regeneration"
+        ? persistedFinalArtifacts.next_actions[0]
+        : isSpanishRuntime(inputArgs)
         ? `Se han aplicado ${persistedAppliedDecisions.decision_count} decisiones de Open-item Reconciliation.`
         : `Applied ${persistedAppliedDecisions.decision_count} Open-item Reconciliation decisions.`,
       applied_decisions: persistedAppliedDecisions,
@@ -3969,10 +3971,10 @@ function nativeRegenerationPathsForEffect(effect) {
   return Array.from(new Set(paths.map(artifactPathKey).filter(Boolean)));
 }
 
-function completionBlockers(reviewPayload, effects, successorReplayed = false) {
+function completionBlockers(reviewPayload, effects, successorReplayed = false, pendingReviewOnly = false) {
   const blockers = [];
   const summary = isPlainObject(reviewPayload.summary) ? reviewPayload.summary : {};
-  if (summary.checks_pass === false || Number(summary.failed_check_count || 0) > 0) {
+  if (!pendingReviewOnly && (summary.checks_pass === false || Number(summary.failed_check_count || 0) > 0)) {
     blockers.push({
       kind: "failed_deterministic_checks",
       detail: "Failed deterministic checks require correction and rerun.",
@@ -3981,6 +3983,7 @@ function completionBlockers(reviewPayload, effects, successorReplayed = false) {
   const effectById = new Map(effects.map((effect) => [effect.item_id, effect]));
   for (const item of reviewPayload.items || []) {
     if (!isPlainObject(item) || !REQUIRED_REVIEW_ITEM_TYPES.has(item.item_type)) continue;
+    if (pendingReviewOnly && item.item_type === "check_exception" && item.data?.check === "codex_review_completed") continue;
     const effect = effectById.get(item.id);
     if (!effect) {
       blockers.push({
@@ -4004,10 +4007,13 @@ function completionBlockers(reviewPayload, effects, successorReplayed = false) {
   return blockers;
 }
 
-function statusFromEffects(effects, itemCount, completionGateBlockers) {
+function statusFromEffects(effects, itemCount, completionGateBlockers, canRegenerate = false) {
   if (!effects.length) return "pending_review";
   if (effects.some((effect) => effect.requires_followup)) return "blocked";
-  if (completionGateBlockers.length) return "blocked";
+  if (completionGateBlockers.length) {
+    if (canRegenerate && completionGateBlockers.every((entry) => entry.kind === "assurance_replay_required")) return "awaiting_regeneration";
+    return "blocked";
+  }
   if (effects.some((effect) => effect.requires_native_regeneration)) return "partial_review_applied";
   if (effects.length < itemCount) return "partial_review_applied";
   return "final_ready";
@@ -4148,6 +4154,7 @@ function finalArtifactsWithApplication(
     outputs,
     caveats: Array.isArray(current.caveats) ? current.caveats : [],
     blockers,
+    pending_steps: appliedDecisions.pending_steps || [],
     next_actions: nextActionsWithReviewApplication(
       current.next_actions,
       appliedDecisions,
@@ -4156,10 +4163,10 @@ function finalArtifactsWithApplication(
     ),
     status: appliedDecisions.application_status,
     review_status: appliedDecisions.application_status,
-    ...(appliedDecisions.application_status === "final_ready" ? {
+    ...(["final_ready", "awaiting_regeneration"].includes(appliedDecisions.application_status) ? {
       review_handoff: {
         ...(current.review_handoff || {}),
-        status: "review_completed",
+        status: appliedDecisions.application_status === "final_ready" ? "review_completed" : "review_applied",
         required_before_final_delivery: false,
         server: { ...(current.review_handoff?.server || {}), required: false },
       },
@@ -4227,6 +4234,16 @@ function nextActionsWithReviewApplication(
   blockers,
   inputArgs = {},
 ) {
+  if (appliedDecisions.application_status === "awaiting_regeneration") {
+    const actions = {
+      it: "Rigenera le carte con le decisioni registrate e verifica il nuovo risultato prima della consegna.",
+      en: "Regenerate the workpapers with the recorded decisions and verify the successor before delivery.",
+      es: "Regenere los documentos con las decisiones registradas y verifique el nuevo resultado antes de la entrega.",
+      fr: "Régénérez les documents avec les décisions enregistrées et vérifiez le nouveau résultat avant la remise.",
+      de: "Erstellen Sie die Unterlagen mit den erfassten Entscheidungen neu und prüfen Sie das neue Ergebnis vor der Übergabe.",
+    };
+    return [actions[runtimeLanguage(inputArgs)] || actions.en];
+  }
   if (appliedDecisions.application_status === "final_ready") {
     const actions = {
       it: "Consegna le carte revisionate, mantenendo espliciti i residui e le richieste di evidenze ancora aperte.",
@@ -4401,19 +4418,29 @@ function applyDecisionPayloadWrites(inputArgs) {
   const nativeRegenerationPaths = Array.from(
     new Set(effects.flatMap((effect) => nativeRegenerationPathsForEffect(effect))),
   );
-  const completionGateBlockers = completionBlockers(
+  // Use the replayed complete result, never an accepted check card, to identify
+  // the normal review-to-regeneration transition. Final readiness stays withheld.
+  const pendingReviewOnly = assuranceReplay?.result?.review_completion_pending === true;
+  let completionGateBlockers = completionBlockers(
     reviewPayload,
     effects,
     successorReplayed,
+    pendingReviewOnly,
   );
-  const blockerCount =
-    effects.filter((effect) => effect.requires_followup).length +
-    completionGateBlockers.length;
   const applicationStatus = statusFromEffects(
     effects,
     reviewPayload.items.length,
     completionGateBlockers,
+    Boolean(professionalReview),
   );
+  let pendingSteps = [];
+  if (applicationStatus === "awaiting_regeneration") {
+    pendingSteps = completionGateBlockers;
+    completionGateBlockers = [];
+  }
+  const blockerCount =
+    effects.filter((effect) => effect.requires_followup).length +
+    completionGateBlockers.length;
   const appliedDecisions = {
     schema_version: reviewPayload.schema_version,
     plugin: reviewPayload.plugin,
@@ -4432,6 +4459,7 @@ function applyDecisionPayloadWrites(inputArgs) {
     item_count: reviewPayload.items.length,
     blocker_count: blockerCount,
     completion_blockers: completionGateBlockers,
+    pending_steps: pendingSteps,
     revision_count: revisionOutputs.length,
     revision_paths: revisionOutputs.map((output) => output.path),
     target_update_count: targetOutputs.length,
@@ -4572,7 +4600,9 @@ function applyDecisionPayloadWrites(inputArgs) {
     final_artifacts_path: finalArtifactsPath,
     professional_review_path: professionalReviewPath,
     run_intake_path: runIntakePath,
-    message: isSpanishRuntime(materializedArgs)
+    message: responseAppliedDecisions.application_status === "awaiting_regeneration"
+      ? responseFinalArtifacts.next_actions[0]
+      : isSpanishRuntime(materializedArgs)
       ? persisted
         ? `Se han aplicado ${responseAppliedDecisions.decision_count} decisiones de Open-item Reconciliation.`
         : "Las decisiones aplicadas se han validado. No se proporcionó run_intake.output_dir, por lo que no se escribió ningún archivo."
@@ -4677,7 +4707,7 @@ function toolResult(payload, toolName) {
         ok: publicPayload.ok !== false,
         run_id: publicPayload.run_id || null,
         item_count: publicPayload.item_count ?? publicPayload.case_count ?? null,
-        status: publicPayload.status || null,
+        status: publicPayload.status || publicPayload.application_status || null,
         message: publicPayload.message || null,
       }),
     }],

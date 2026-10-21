@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "bba516a650c7f60421bb87cb763308f6120e293f733762548679ef9e507691c9"
+      "sha256": "3d1492918bdccc19d2ef25de26af62638c8c2431003f256a19e18eb114a6f286"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "5475fb58c98dd80c06dc4b2bff54ef99f549163c43ea8e4b1d2be8a234dfd670"
+      "sha256": "9f38a2606bbaefb53a6c367ccfc6e0d7ea8ad5f3d544a860d7794215c8ce3e1d"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "07c3503fdbbacf5370aba7bd0280809d102355ef015927225d1beec17f66f2f6"
+      "sha256": "da6d199463e9db9a7d9b5c9c78ca8c7554acb3a3d86e1e598954c287511457a1"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
-      "sha256": "9badd44a686b66731cae2403707a087ec52fec4fd20bfebf25e3cc73e5d13560"
+      "sha256": "181fd67e98474876968bc566e8bda851fef3d4ee161f707d886a3c1aaf814067"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
@@ -116,7 +116,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "20f562cf3f97a05506e44010b5d322655b1aaf138c13657f87f54228cb2bf3c0"
+      "sha256": "cd80d073920ac4ffa5f3e6d23bf2bf8111433f433d1c6216900521eea38e7a2f"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b1558fc7136014c93caebf0dcd61c49b87ded6c618aa86660cf43aeff92afaa1"
+  "canonical_course_sha256": "ff288ad18d8f10484d044d56052880c9d32c813441ba7a8f70de6fad738fe320"
 }
