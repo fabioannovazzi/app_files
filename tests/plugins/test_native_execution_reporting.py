@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import json
 from pathlib import Path
+from types import SimpleNamespace
 from uuid import uuid4
 
 import pytest
@@ -21,6 +22,100 @@ __all__: list[str] = []
 SCRIPT = (
     Path(__file__).resolve().parents[2] / "plugins/vera/scripts/native_execution.py"
 )
+
+
+def submit_native_arguments(
+    tmp_path,
+    monkeypatch,
+    component,
+    arguments,
+    *,
+    script="scripts/check_dependencies.py",
+):
+    """Exercise the real request boundary; execute the producer separately."""
+    spec = importlib.util.spec_from_file_location("native_argument_test", SCRIPT)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    jobs = tmp_path / "argument-jobs"
+    jobs.mkdir(exist_ok=True)
+    monkeypatch.setattr(module, "_jobs", lambda: jobs)
+
+    def completed_worker(command, **kwargs):
+        job = Path(command[-1])
+        (job / "result.json").write_text(
+            json.dumps({"state": "completed", "returncode": 0})
+        )
+        (job / "stdout.txt").write_text("")
+        (job / "stderr.txt").write_text("")
+        return SimpleNamespace(wait=lambda: 0)
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(module.subprocess, "Popen", completed_worker)
+        return module.execute(
+            {
+                "operation": "run",
+                "job_id": str(uuid4()),
+                "component": component,
+                "script": script,
+                "arguments": arguments,
+            }
+        )
+
+
+def test_native_request_retains_exact_model_text_without_claiming_file_exposure(
+    archive_core, client_case, tmp_path, monkeypatch
+):
+    from archive_projection import model_argument_origin
+    from archive_report_store import RunStore
+
+    loaded = start(archive_core, client_case)
+    output = Path(loaded["output_dir"])
+    text = "A model-authored title with 1,200.00 already in context"
+    store = RunStore(Path(loaded["run_root"]))
+    before = [event for event in store.events() if event["kind"] == "vera_send"]
+
+    submit_native_arguments(
+        tmp_path,
+        monkeypatch,
+        "variance-analysis",
+        ["--output-dir", str(output), "--title", text],
+    )
+
+    assert model_argument_origin("variance-analysis", output, text) == []
+    assert model_argument_origin("variance-analysis", output, text + " changed") is None
+    with pytest.raises(ValueError, match="another pipeline"):
+        model_argument_origin("open-item-reconciliation", output, text)
+    events = store.events()
+    declarations = [
+        event for event in events if event["kind"] == "model_supplied_arguments"
+    ]
+    assert len(declarations) == 1
+    assert text not in json.dumps(declarations)
+    sends = [event for event in events if event["kind"] == "vera_send"]
+    assert len(sends) == len(before) + 1  # Only the native reply adds a send.
+    assert sends[-1]["selections"] == []
+    prepared = archive_core.prepare_studio_client_workflow(
+        client_case.engagement_id,
+        "variance-analysis",
+        input_ids=[client_case.imported["input_id"]],
+        new_run=True,
+        state_dir=client_case.state_dir,
+    )
+    another_id = prepared["run"]["run_id"]
+    archive_core.start_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        another_id,
+        state_dir=client_case.state_dir,
+    )
+    another = archive_core.ledger.load_run(
+        client_case.client_root, client_case.engagement_id, another_id
+    )
+    assert another_id != loaded["run"]["run_id"]
+    assert (
+        model_argument_origin("variance-analysis", Path(another["output_dir"]), text)
+        is None
+    )
 
 
 def retained_job(tmp_path, monkeypatch, loaded, stdout, stderr=""):

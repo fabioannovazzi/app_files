@@ -1693,3 +1693,281 @@ made to bypass it through another desktop-control mechanism.
 Final package/privacy validation passes 516 cases with two skips. No Marketplace
 action or server deployment has occurred. Installed normal-chat acceptance of
 0.1.465 remains outstanding.
+
+
+### 0.1.465 normal chat: Word read and generated-output provenance
+
+**A72:** fresh GPT-6.1-sol chat `01a15d2a-18e8-70a2-a6c8-b5c3eabfa832`
+confirmed the exposed 0.1.465 installation, available dependencies and existing
+verified Computer ID. It used one new task
+`836e3c25-c3c6-46c0-97a9-d61a761d18c0` and run
+`run_08f99a98b72e8b8f228f6225`. Both input CSVs matched the declared case.
+Calculation and the operational workbook showed the correct EUR 2,500 initial
+population, EUR 1,500 receipts and EUR 1,000 remaining. Archive read all 20
+operational-workbook rows, including the explanatory cells, with verified
+source lineage: this supplies the missing normal-chat evidence for A69's read
+path. Review was still pending; no Apply or regeneration occurred.
+
+The first blocking error was the normal Archive read of
+`outputs/reconciliation/relazione_riconciliazione_audit.docx`, with limit 30:
+“Run artifact could not be read: This source has no complete measurement
+adapter.” The chat stopped without retry or fallback, failed its new run and
+task, verified all seven original inputs, and stopped review-server job
+`d829d76d-ef17-453e-ad8e-b5597dca178f` (cancelled, return code -9). The
+coordinator independently confirmed that port 49593 had no listener. All
+41 new run files are hash-preserved, bringing the retained baseline to 764.
+The task's failed event is acknowledged at sequence 2 with zero queued events.
+
+The report appeared automatically: 17 sends, 294,079 characters, incomplete
+collection. Its errors identify missing provenance for `assurance_receipts.json`,
+the unclassified error reply, and the unavailable Word measurement adapter.
+The generic verifier repaired in A71 now independently verifies this exact
+unchanged report against the server and current installation identity:
+userID `0ed4a818-1877-4652-8515-787c64de17a5`, the run above, revision 1,
+receipt `d796e616-6bab-5029-96d2-306127f794c8`, SHA-256
+`88af6e6c3b301be851cd5e5941b12fad0885c68469cba51a5c63d3e16ba87fe0`.
+The server authenticates the incomplete report; it does not turn it into a
+passing test. Delivered report bytes match the preserved original.
+
+Other recorded interruptions and limits: candidate-only profiles and stale
+search indexing did not block exact registered inputs; three pending decisions
+caused the ordinary review check, not a calculation error; the local review
+server's URL was recovered from browser inventory because job status had empty
+stdout; a JSON read with limit 1 returned the whole 236 KB assurance document,
+causing host-output truncation; instruction/listing reads also truncated;
+F003's workbook text refers generically to cut-off and leaves attributed/open
+amount cells blank despite the declared unpaid EUR 500; saved-review reopening
+and final delivery were not reached; no independent incident receipt or
+traceback was returned; no host denial occurred in the test. Full details remain
+in the chat's `outputs/resoconto-test-02.txt`. No closed record was rewritten.
+
+Source inspection distinguishes the Word readers: Archive's indexed-document
+reader already extracts DOCX paragraphs and tables, whereas the selected-run
+measurement reader has no DOCX branch. The public run-read tool description
+allows bound inputs and generated data files without stating that difference.
+A local sweep of the actual generated output types reproduces nine failures:
+working and sealed copies of Word, audit Excel, evidence-request Excel and
+canonical JSON, plus the assurance receipt. The Word copies cannot be read;
+the other files can be read but lack registered original-source dependencies.
+At that initial sweep, no source repair for these gaps had been validated. Acceptance remains
+**1 of 13**. Test 3, merge and deployment remain pending.
+
+The selected-run reader now has a DOCX body-text adapter in source. Four focused
+checks pass for ordered paragraph/table reads, nested and merged table cells,
+changed-file rejection, and malformed packages; the module passes Mypy. The
+adapter explicitly excludes headers, footers, comments, images and embedded
+objects from its body-paragraph measurement. It does not attest visual layout
+or whole-document contents. The malformed-package test initially expected a
+ValueError label; the existing outer reader correctly retains BadZipFile, so
+only that test expectation was corrected. Output-source registrations are still
+unfinished; none of the nine output-provenance cases is claimed green. These
+changes have not been packaged or installed. All 764 preserved hashes match.
+
+The audit-workbook writer now retains cell origins while writing its visible
+localized and hidden canonical sheets. Normalized rows retain their actual
+mapped fields; summary amounts retain the contributing invoice amounts;
+copied reconciliation fields retain their named original fields; exact partial
+payment amounts and residuals retain the bank amount and subtraction operands.
+The normalizer explicitly distinguishes its generated locators and configured
+perimeter fields from copied CSV cells. Headers and padding are source-free;
+unsupported fields and supplied notes stay unknown. Working and sealed copies
+are registered after their final bytes exist, including after review
+regeneration and transaction promotion. This does not change calculations,
+approval requirements or the generated report text.
+
+Validation of this source candidate: 16 focused checks pass for these selected
+reads, arbitrary notes and edited bytes. The complete projection suite has
+54 passes and the same nine whole-output attribution failures, including the
+save/apply/regeneration cases with new reads of both audit-workbook copies.
+The writer/tabular suite passes all 72 cases; all four Word-reader checks pass;
+Mypy passes the measurement adapter and retained writer; formatting and diff
+checks pass. The real-engine Word fixture now reads 308 body paragraphs with
+no measurement error, but still reports missing derived-output lineage.
+These are local source checks, not normal-chat acceptance. Complete Word,
+audit/evidence workbooks, canonical JSON and assurance receipts still need
+producer attribution. No new version has been reserved, packaged or installed;
+no new chat was opened. All 764 preserved files remain byte-identical.
+Acceptance remains **1 of 13**, with Test 2, merge and deployment pending.
+
+The subsequent A72 source repair completes attribution for the full native
+audit workbook, in both its working and sealed locations. The complete reads
+account for exactly 15 invoice cells and eight bank cells in the synthetic
+case; all five unused private cells remain local. Aggregate amounts, partial
+payment subtotals, dates and concentration percentages retain their actual
+operands. The aging producer records the contributing record identities as it
+builds each bucket. Generated run parameters and check results are distinguished
+from supplied text: direct callers cannot obtain source-free attribution for
+arbitrary check notes. A workbook missing optional aggregate-provenance context
+still writes successfully, with those cells explicitly unknown.
+
+An additional source variant found an attribution error in four views: an
+evidence-type label mapped from a CSV column was treated like a configured
+label. The four failing checks reproduced zero bank cells where two were
+required. The repair follows the mapped field through evidence detail,
+post-cutoff candidates, document-source summaries and reconciliation detail.
+The fixture initially supplied both a mapped type and a default type; its
+setup stopped with `exactly one current reviewed source decision is required
+per source`. Setting the fixture's default to null, consistently with the
+existing mapped-type fixture, allowed the actual attribution checks to run.
+No production exception or source-review requirement was changed for that
+fixture correction.
+
+Final validation for this A72 checkpoint: **79 projection checks pass and seven
+fail**; the two audit-workbook failures are resolved. The remaining failures
+are the working/sealed Word files, working/sealed evidence-request workbooks,
+working/sealed canonical JSON and the assurance receipt. The writer/tabular
+suite passes **73** cases; Mypy passes both checked source modules; formatting
+and diff checks pass. Saved-review and regeneration regressions remain green.
+All 764 preserved files match. This is still an uncommitted source candidate:
+no new package, installation, chat, merge or deployment has occurred, and
+normal-chat acceptance remains **1 of 13**.
+
+A72 now also records the Word writer's paragraph origins and the targeted-request
+writer's cell origins. Word formatting preserves named field copies, grouping
+operands, localized labels, partial-payment amounts and dates through tables and
+body paragraphs. Headers, footers and embedded objects remain outside the
+explicit body-text measurement scope. The request workbook records residual
+amounts even when embedded in prose, later-evidence dates, copied descriptions
+and references, and summary operands. Supplied free text remains unknown unless
+its origin is separately evidenced. Working and sealed copies are registered
+after final bytes exist, including after review regeneration and promotion.
+
+Local validation before the authored-text addition: **116 projection checks pass
+and three fail**, including all six saved-review/regeneration cases with complete
+Word and request-workbook reads. The remaining default-output failures are
+working/sealed `reconciliation_results.json` and `assurance_receipts.json`.
+Nineteen focused Word checks verified complete reads (9 population cells and 6
+bank cells), partial reads, mapped evidence-type cells, untraced supplied text
+and edited-file rejection. Sixteen targeted-request checks verified complete
+reads (9 population cells and 2 bank cells), residual/payment prose, later dates,
+unknown supplied owners and edited-file rejection. All 93 writer/input-adapter
+checks passed after updating an existing test-only monkeypatch to forward the
+writer's new optional projection arguments. Before that harness correction,
+`TypeError: ... unexpected keyword argument 'projection_rows'` prevented the
+intentional amount-tampering assertion from running; the final run verifies that
+the altered amount is still rejected. Four Word-reader checks also pass.
+
+Inspection of the stopped 0.1.465 run's original manifest then identified an
+additional normal-chat gap: its title and narrative were supplied by the chat,
+whereas the complete Word checks above used default text. The native execution
+boundary now records hashes of the exact incoming argument strings, scoped to
+that Archive run and component, before launching the helper. This records text
+already supplied by the model; it does not count preparation as a send or infer
+source-free status from arbitrary file text. The writer uses this evidence only
+for exact supplied title/narrative values. Plain CLI text without that recorded
+origin, changed text, another pipeline and a new run cannot reuse the declaration.
+Regeneration retains the same origin only for the unchanged values in that run.
+
+The six authored-Word cases pass with the original stopped chat's title and
+narrative; eight existing arbitrary-text cases remain green. The new native
+boundary test and an additional authored-text save/apply/regeneration case also
+pass. The request-boundary test mocks worker launch, then the document cases run
+the real producer separately with those arguments; this is local source evidence,
+not a substitute for a fresh installed normal chat. Its test expectations were
+corrected to respect existing behavior: cross-pipeline binding raises an error,
+Archive startup already records one metadata send, and preparing identical work
+reuses its run unless `new_run=True` is requested. No production behavior was
+changed to accommodate those test assumptions.
+
+Three broader native-host checks initially failed inside the chat sandbox:
+cancellation could not execute `/bin/ps` (`PermissionError: Operation not
+permitted`), and the nested macOS sandbox could not start (`sandbox_apply:
+Operation not permitted`). The same three isolated synthetic checks passed when
+run outside that sandbox through approved execution. Together with the unchanged
+passing native cases and corrected boundary test, the native suites' cases pass;
+no cancellation or sandbox assertion was relaxed. Mypy passes five changed source
+modules; shared-source parity, formatting and diff checks pass. The full projection
+suite has not been repeated after the narrowly tested authored-text addition.
+
+This remains an uncommitted source candidate. No new version, package,
+installation, normal test chat, merge or deployment has occurred. The three JSON
+attribution gaps remain open. Acceptance is still **1 of 13** and the goal remains
+active. All 764 preserved files were verified unchanged at this checkpoint.
+
+
+A72 now also traces both canonical JSON copies and the assurance receipt. The
+canonical writer reuses the actual row-field origins for reconciliation, review,
+checks and analyses. The allocation producer records the amount and perimeter
+fields it actually selected, including fallback amount/party fields; its exact
+ledger hash binds those operands to the serialized ledger. Validated review
+attribution and native source-control declarations remain distinct from untraced
+free-form notes. An unknown field, changed declaration or edited output does not
+inherit provenance.
+
+The assurance writer records the origins of the numeric entries it emits and
+uses the office writers' physical cell/paragraph maps for the values it echoes.
+It does not infer privacy lineage from matching numeric values. Full allocation
+ledgers contribute their producer-recorded operands. The final JSON value and
+file bytes are registered only after finalization or regeneration promotion.
+
+One additional failure was reproduced during this repair: assurance sorts the
+source decisions by artifact reference, while the initial provenance declaration
+hashed insertion order. Identical decisions therefore failed the whole-receipt
+lineage check. Hashing the producer's decisions in the same canonical order fixes
+that mismatch without changing accounting results or relaxing receipt checks.
+Seven focused canonical checks pass, including working/sealed copies, mapped
+source evidence types, edited-file rejection and authored-text regeneration.
+Five receipt/regeneration checks pass, including exact source coverage and edited
+numeric-value rejection. Canonical reads cover 15 population cells and 8 bank
+cells (10 when evidence type is read from the bank CSV); the receipt covers only
+5 population cells and 4 bank cells. Unused private CSV cells remain local.
+
+An added allocation fallback regression initially omitted the existing partial
+payment's allocated/residual amounts and correctly failed accounting validation.
+Only that test fixture was completed; the intended fallback-origin assertion now
+passes. The accounting/helper/writer run preceding that fixture correction had
+181 passing checks and that single test-setup failure. Mypy passes all nine
+changed implementation modules (retained sources checked separately); Bandit
+reports no medium/high issue, and shared-runtime parity passes. All 764 preserved
+files were rehashed unchanged. Full projection, accounting-coverage and reporting-
+coverage suites are now running on the combined source change. No candidate
+version has been reserved and no new package, install, chat, merge or deployment
+has occurred. These local results do not close Test 2; acceptance remains 1 of 13.
+
+
+The combined A72 source checks are now green: **135 projection checks**, including
+all generated-output reads and seven saved-review/regeneration routes; **430
+accounting checks with 82.38% coverage**; and **196 reporting checks with 83.23%
+coverage**. The first broader commands exposed two test-harness issues. A fake
+OCR extractor did not return the new private provenance declaration; adding an
+empty declaration to that test-only stub preserves unknown provenance and the
+existing extracted-page assertions. The initial reporting command omitted the
+repository root's existing import-isolation hooks and reused Check Entries'
+`physical_output_set` while loading Report Builder. The proper root configuration
+resolved both import errors without production changes. The accounting command
+also omitted the existing retained-source coverage plugin, producing virtual-file
+warnings and an invalid 75.88% scan. Repeating with the maintained coverage
+configuration gives the 82.38% result above; no threshold or assertion was lowered.
+
+The next candidate versions are now reserved: Vera 0.1.466, Clara 0.1.332,
+Lucia 0.1.157 and Open-item Reconciliation 0.1.73; Archive remains 0.1.63.
+Only PR #885 is open, and remote main remains
+`3f6f8796ec49b2b4cd5f71f31ae18e6d75b98a56`. The privacy description now states the
+additional workpaper/JSON paths and the local hash-only argument origin, with
+explicit unknown-text and generic-tool-read limits. Package build, package
+validation, installed-version verification and fresh normal-chat acceptance are
+still pending. No merge, deployment or Marketplace action has occurred.
+
+
+Initial Codex, ChatGPT-upload, Cowork and Antigravity builds passed for all three
+products. The separate CI catalogue check then reproduced a stale manifest
+identity: the Geneva snapshot still named 0.1.465. All 55 skill entrypoint hashes,
+IDs and paths match the preceding snapshot. The maintained inventory helper now
+binds the catalogue and assessment metadata to 0.1.466; assessment rows were
+asserted unchanged and no fresh jurisdiction acceptance is claimed. The catalogue
+check passes. Vera's packages are being rebuilt after this metadata correction;
+the earlier candidate ZIP hash is superseded and will not be installed.
+
+
+Final release validation passes: all-host source/package parity for Vera 0.1.466,
+Clara 0.1.332 and Lucia 0.1.157; **568 package/privacy checks pass**, with two
+expected installed-curated-Marketplace checks skipped because those distributions
+are absent locally. The selected acceptance distribution remains `vera@mp-vera`.
+The final Vera ZIP SHA-256 is
+`513e672f3cee9d9b5beb00dfa969e6b1801400a843f57b69be611f2aab5e0fb1`:
+2,187 files, 146 changed, none added or removed, and ten executable source paths
+changed relative to the installed 0.1.465 baseline. Of the 19 Geneva package paths,
+17 are unchanged; the other two contain the catalogue/assessment identity refresh.
+The complete 55-entry skill hash list and all assessment rows are unchanged.
+All 764 preserved-file hashes match after the builds. Installation and fresh
+normal-chat acceptance are the next steps; Test 2 remains unaccepted.

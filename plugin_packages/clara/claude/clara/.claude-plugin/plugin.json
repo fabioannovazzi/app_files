@@ -30,7 +30,7 @@
     "reporting",
     "data-analysis"
   ],
-  "version": "0.1.331",
+  "version": "0.1.332",
   "skills": "./skills/",
   "agents": [
     "./agents/clara.md"

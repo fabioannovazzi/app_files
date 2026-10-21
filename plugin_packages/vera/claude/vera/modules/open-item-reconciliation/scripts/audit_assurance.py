@@ -4829,12 +4829,54 @@ def _rendered_value_address(
     }
 
 
+def _xlsx_projection_locations(
+    workbook: Any, cells: list[list[Any]] | None
+) -> dict[tuple[str, str], Any]:
+    """Locate the writer's flattened cells in the exact serialized workbook."""
+    if cells is None:
+        return {}
+    width = max(sheet.max_column or 0 for sheet in workbook)
+    position = 0
+    locations = {}
+    for sheet in workbook:
+        for row in sheet.iter_rows():
+            if not any(cell.value is not None for cell in row):
+                continue
+            if position >= len(cells) or len(cells[position]) != width:
+                return {}
+            for column, cell in enumerate(row):
+                locations[(sheet.title, cell.coordinate)] = cells[position][column]
+            position += 1
+    return locations if position == len(cells) else {}
+
+
+def _word_projection_locations(
+    document: Any, cells: list[list[Any]] | None
+) -> dict[Any, Any]:
+    """Use the same body-paragraph sequence captured by the Word producer."""
+    from docx.oxml.ns import qn
+    from docx.text.paragraph import Paragraph
+
+    if cells is None:
+        return {}
+    paragraphs = [
+        element
+        for element in document.element.body.iter(qn("w:p"))
+        if Paragraph(element, document).text
+    ]
+    if len(paragraphs) != len(cells) or any(len(row) != 1 for row in cells):
+        return {}
+    return {element: row[0] for element, row in zip(paragraphs, cells, strict=True)}
+
+
 def _native_rendered_value_addresses(
     *,
     final_receipts: Sequence[Mapping[str, Any]],
     final_root: Path,
     reconciliation_rows: Sequence[Mapping[str, Any]],
     prepared: Mapping[str, Any],
+    output_cells: Mapping[str, list[list[Any]]] | None = None,
+    projection_groups: list[Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Address every material figure in the code-owned three-file package."""
 
@@ -4885,6 +4927,11 @@ def _native_rendered_value_addresses(
         if path.suffix.lower() in {".xlsx", ".xlsm"}:
             workbook = load_workbook(path, read_only=True, data_only=True)
             try:
+                locations = (
+                    _xlsx_projection_locations(workbook, (output_cells or {}).get(name))
+                    if projection_groups is not None
+                    else {}
+                )
                 for sheet in workbook.worksheets:
                     rows = list(sheet.iter_rows())
                     if not rows:
@@ -4984,10 +5031,19 @@ def _native_rendered_value_addresses(
                                     formula=formula,
                                 )
                             )
+                            if projection_groups is not None:
+                                projection_groups.append(
+                                    locations.get((sheet.title, cell.coordinate))
+                                )
             finally:
                 workbook.close()
         elif path.suffix.lower() == ".docx":
             document = Document(path)
+            paragraph_origins = (
+                _word_projection_locations(document, (output_cells or {}).get(name))
+                if projection_groups is not None
+                else {}
+            )
             for paragraph_index, paragraph in enumerate(document.paragraphs):
                 if paragraph.text.startswith(tolerance_prefixes):
                     if paragraph.text not in tolerance_lines:
@@ -5046,6 +5102,12 @@ def _native_rendered_value_addresses(
                                 formula=formula,
                             )
                         )
+                        if projection_groups is not None:
+                            projection_groups.extend(
+                                paragraph_origins.get(paragraph._p)
+                                for paragraph in cell.paragraphs
+                                if paragraph.text
+                            )
     addresses.sort(key=lambda item: (item["artifact_ref"], item["locator"]))
     return addresses
 
@@ -5676,6 +5738,17 @@ def read_reviewed_tabular_source(
                 "currency",
                 "unit",
                 "evidence_type",
+                "reported_unit",
+                "reported_increment",
+                "record_id",
+                "source_file",
+                "source_row",
+                "source_role",
+                "source_sheet",
+                "source_side",
+                "expected_side",
+                "direction_policy",
+                "allocation_policy",
             ):
                 fields.setdefault(field, [])
             fields["document_key"] = sorted(
@@ -6051,6 +6124,7 @@ def _numeric_entries(
     prepared: Mapping[str, Any],
     source_root: Path,
     strict_source_identity: bool = False,
+    projection_groups: list[Any] | None = None,
 ) -> list[dict[str, Any]]:
     final_by_name = {
         Path(str(receipt["path"])).name: receipt for receipt in final_receipts
@@ -6202,6 +6276,23 @@ def _numeric_entries(
                 "limitations": [],
             }
         )
+        if projection_groups is not None:
+            projection_groups.append(
+                [
+                    {
+                        "record_id": record_id,
+                        "fields": [
+                            "amount",
+                            "record_id",
+                            *[
+                                field
+                                for field in ("currency", "unit")
+                                if row.get(field)
+                            ],
+                        ],
+                    }
+                ]
+            )
     return entries
 
 
@@ -6615,6 +6706,8 @@ def _finalize_assurance_run_in_place(
     workbook_name: str,
     source_processing: Mapping[str, Any] | None = None,
     analyses: Mapping[str, Any] | None = None,
+    projection_context: dict[str, Any] | None = None,
+    projection_values: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Replay the run, publish an exact final set, and write independent gates."""
 
@@ -6797,6 +6890,19 @@ def _finalize_assurance_run_in_place(
         out_dir / "reconciliation_results.json",
         reconciliation_payload,
     )
+    if projection_context is not None and projection_values is not None:
+        from workpaper_outputs import canonical_report_origins
+
+        projection_values["reconciliation_results.json"] = {
+            "data_sha256": canonical_json_sha256(reconciliation_payload),
+            "records": canonical_report_origins(
+                reconciliation_payload,
+                {
+                    **projection_context,
+                    "professional_review_authority": professional_review,
+                },
+            ),
+        }
     published = _publish_final_outputs(
         out_dir,
         [*declared_outputs, reconciliation_path],
@@ -6808,6 +6914,8 @@ def _finalize_assurance_run_in_place(
     }
     reconciliation_receipt = final_by_name["reconciliation_results.json"]
     reconciliation_ref = str(reconciliation_receipt["artifact_id"])
+    numeric_projection_groups: list[Any] = []
+    rendered_projection_groups: list[Any] = []
     entries = _numeric_entries(
         reconciliation_rows=reconciliation_rows,
         allocation_ledgers=normalized_allocations,
@@ -6820,12 +6928,19 @@ def _finalize_assurance_run_in_place(
         prepared=prepared,
         source_root=Path(str(source_root)).resolve() if source_root else out_dir,
         strict_source_identity=True,
+        projection_groups=(
+            numeric_projection_groups if projection_context is not None else None
+        ),
     )
     rendered_value_addresses = _native_rendered_value_addresses(
         final_receipts=final_receipts,
         final_root=out_dir / FINAL_OUTPUT_DIRECTORY,
         reconciliation_rows=reconciliation_rows,
         prepared=prepared,
+        output_cells=(projection_context or {}).get("report_cells"),
+        projection_groups=(
+            rendered_projection_groups if projection_context is not None else None
+        ),
     )
     material_row_count = sum(
         _canonical_money(row.get("amount")) is not None for row in reconciliation_rows
@@ -7114,6 +7229,18 @@ def _finalize_assurance_run_in_place(
         "content_sha256": canonical_json_sha256(control_content),
     }
     _write_exact_json(out_dir / "assurance_receipts.json", control_payload)
+    if projection_context is not None and projection_values is not None:
+        from workpaper_outputs import assurance_report_origins
+
+        projection_values["assurance_receipts.json"] = {
+            "data_sha256": canonical_json_sha256(control_payload),
+            "records": assurance_report_origins(
+                control_payload,
+                projection_context,
+                numeric_groups=numeric_projection_groups,
+                rendered_groups=rendered_projection_groups,
+            ),
+        }
 
     return validate_assurance_run(
         out_dir,
@@ -7192,6 +7319,8 @@ def finalize_assurance_run(
     workbook_name: str,
     source_processing: Mapping[str, Any] | None = None,
     analyses: Mapping[str, Any] | None = None,
+    projection_context: dict[str, Any] | None = None,
+    projection_values: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Build and replay the exact assurance tree under whole-run rollback."""
 
@@ -7210,6 +7339,8 @@ def finalize_assurance_run(
             workbook_name=workbook_name,
             source_processing=source_processing,
             analyses=analyses,
+            projection_context=projection_context,
+            projection_values=projection_values,
         )
     except (OSError, ValueError):
         _rollback_run_transaction(

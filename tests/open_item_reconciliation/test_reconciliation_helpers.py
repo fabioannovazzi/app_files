@@ -1687,6 +1687,40 @@ def test_additional_deterministic_analyses_explain_open_items():
     assert {row["record_id"] for row in cutoff_rows} >= {"ledger-1", "bank-1", "open-2"}
 
 
+def test_allocation_provenance_follows_selected_amount_and_party_fallback_fields():
+    helpers = load_helpers()
+    row = {
+        "record_id": "I1",
+        "balance": "1220.00",
+        "currency": "EUR",
+        "party_id": "customer-a",
+        "reconciliation_status": "partially_paid",
+        "rule_applied": "exact_document_partial_bank_payment",
+        "matched_evidence_id": "P1",
+        "allocated_amount": "488.00",
+        "residual_amount": "732.00",
+    }
+    payment = {
+        "record_id": "P1",
+        "bank_amount": "488.00",
+        "currency": "EUR",
+        "party_id": "customer-a",
+        "evidence_type": "external_bank",
+    }
+    declarations = {}
+
+    ledgers, failures = helpers.closed_bank_allocation_controls(
+        [row], [payment], projection_records=declarations
+    )
+
+    assert failures == {}
+    assert ledgers[0]["target_residuals"][0]["residual"] == "732"
+    assert declarations[ledgers[0]["ledger_id"]]["records"] == [
+        {"record_id": "P1", "fields": ["bank_amount", "currency", "party_id"]},
+        {"record_id": "I1", "fields": ["balance", "currency", "party_id"]},
+    ]
+
+
 def test_partial_bank_payment_retains_exact_residual_in_allocation_ledger():
     helpers = load_helpers()
     invoices = [

@@ -6,6 +6,7 @@ import csv
 import hashlib
 import io
 import json
+from collections.abc import Iterator
 from contextlib import contextmanager
 from itertools import islice
 from pathlib import Path
@@ -16,6 +17,23 @@ from zipfile import BadZipFile
 from archive_report_store import canonical, file_digest
 
 __all__ = ["measure_source", "read_selection", "direct_read_selection"]
+
+
+def _word_body_rows(container: Any) -> Iterator[list[str]]:
+    """Yield text paragraphs in body order, including nested table cells once."""
+    from docx.text.paragraph import Paragraph
+
+    for block in container.iter_inner_content():
+        if isinstance(block, Paragraph):
+            if block.text:
+                yield [block.text]
+            continue
+        seen_cells = set()
+        for row in block.rows:
+            for cell in row.cells:
+                if cell._tc not in seen_cells:
+                    seen_cells.add(cell._tc)
+                    yield from _word_body_rows(cell)
 
 
 @contextmanager
@@ -59,6 +77,27 @@ def _table(path: Path):
             yield [str(i) for i in range(width)], rows(), "worksheet_rows", None
         finally:
             workbook.close()
+        return
+    if suffix == ".docx":
+        from docx import Document
+        from docx.opc.exceptions import PackageNotFoundError
+        from lxml.etree import XMLSyntaxError
+
+        try:
+            document = Document(path)
+        except (PackageNotFoundError, KeyError, XMLSyntaxError) as exc:
+            raise ValueError("Word body text could not be measured") from exc
+        yield ["text"], _word_body_rows(document), "body_paragraphs", {
+            "kind": "docx",
+            "scope": "Nonempty document-body paragraphs, including table cells",
+            "excluded": [
+                "headers",
+                "footers",
+                "comments",
+                "images",
+                "embedded_objects",
+            ],
+        }
         return
     if suffix == ".pdf":
         from pypdf import PdfReader

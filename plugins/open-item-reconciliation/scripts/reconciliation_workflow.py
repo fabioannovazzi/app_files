@@ -129,6 +129,7 @@ try:
     from .workpaper_outputs import (
         build_audit_workbook_sheets,
         summary_from_reconciliation,
+        workpaper_row_origins,
         write_excel_workpaper,
         write_word_report,
     )
@@ -169,6 +170,7 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
     from workpaper_outputs import (  # type: ignore
         build_audit_workbook_sheets,
         summary_from_reconciliation,
+        workpaper_row_origins,
         write_excel_workpaper,
         write_word_report,
     )
@@ -329,6 +331,8 @@ def build_reconciliation_artifacts(
     client_engagement: Mapping[str, Any] | None = None,
     run_id: str | None = None,
     metadata: dict[str, Any] | None = None,
+    metadata_origins: dict[str, Any] | None = None,
+    authored_text_origins: dict[str, Any] | None = None,
     title: str | None = None,
     narrative: str = "",
     next_steps: list[str] | None = None,
@@ -402,10 +406,12 @@ def build_reconciliation_artifacts(
     )
 
     reconciliation_rows = reconcile_open_items(open_items, evidence_rows, assumptions)
+    allocation_projections: dict[str, dict[str, Any]] = {}
     relationship_allocation_ledgers, _ = closed_bank_allocation_controls(
         reconciliation_rows,
         evidence_rows,
         assumptions,
+        projection_records=allocation_projections,
     )
     bank_candidates = bank_allocation_candidates(
         reconciliation_rows, evidence_rows, assumptions
@@ -415,7 +421,10 @@ def build_reconciliation_artifacts(
     post_cutoff_candidates = post_cutoff_evidence_candidates(
         open_items, evidence_rows, assumptions
     )
-    aging_summary = open_item_aging_summary(reconciliation_rows, assumptions)
+    aging_records: dict[str, list[str]] = {}
+    aging_summary = open_item_aging_summary(
+        reconciliation_rows, assumptions, projection_records=aging_records
+    )
     review_signals = review_signal_rows(reconciliation_rows, assumptions)
     evidence_concentration = evidence_concentration_summary(reconciliation_rows)
     source_map = document_source_map(open_items, evidence_rows, reconciliation_rows)
@@ -483,7 +492,15 @@ def build_reconciliation_artifacts(
         language=language,
     )
 
-    excel_path = write_excel_workpaper(out_dir / excel_name, sheets, language=language)
+    audit_cells: list[list[list[dict[str, Any]] | None]] = []
+    excel_path = write_excel_workpaper(
+        out_dir / excel_name,
+        sheets,
+        language=language,
+        projection_cells=audit_cells,
+        aging_records=aging_records,
+        owned_checks=True,
+    )
     accountant_cells: list[list[list[dict[str, Any]] | None]] = []
     accountant_report_path = write_accountant_report_workbook(
         out_dir / "scheda_operativa_commercialista.xlsx",
@@ -492,6 +509,7 @@ def build_reconciliation_artifacts(
         normalized_records=normalized,
         projection_cells=accountant_cells,
     )
+    word_cells: list[list[list[dict[str, Any]] | None]] = []
     word_path = write_word_report(
         out_dir / word_name,
         title=title or default_report_title(language),
@@ -519,6 +537,15 @@ def build_reconciliation_artifacts(
         checks=checks,
         review_rows=review,
         language=language,
+        projection_cells=word_cells,
+        projection_sheets=sheets,
+        aging_records=aging_records,
+        owned_checks=True,
+        owned_title=not title,
+        owned_next_steps=next_steps is None,
+        metadata_origins=metadata_origins,
+        title_origin=(authored_text_origins or {}).get("title"),
+        narrative_origin=(authored_text_origins or {}).get("narrative"),
     )
     for office_path in (excel_path, accountant_report_path, word_path):
         _stabilize_office_package(Path(office_path))
@@ -545,6 +572,26 @@ def build_reconciliation_artifacts(
         "excel_path": str(excel_path),
         "accountant_report_path": str(accountant_report_path),
         "_accountant_report_cells": accountant_cells,
+        "_audit_report_cells": audit_cells,
+        "_word_report_cells": word_cells,
+        "_allocation_projections": allocation_projections,
+        "_json_projection_context": {
+            "sheets": sheets,
+            "aging_records": aging_records,
+            "allocation_projections": allocation_projections,
+        },
+        "_request_report_origins": {
+            name: {
+                str(row[identity]): origins
+                for row, origins in zip(
+                    rows, workpaper_row_origins(name, rows, sheets), strict=True
+                )
+            }
+            for name, rows, identity in (
+                ("Reconciliation detail", reconciliation_rows, "record_id"),
+                ("Post-cutoff candidates", post_cutoff_candidates, "candidate_id"),
+            )
+        },
         "word_path": str(word_path),
         "assumptions": assumptions,
         "client_engagement": normalized_client_engagement,

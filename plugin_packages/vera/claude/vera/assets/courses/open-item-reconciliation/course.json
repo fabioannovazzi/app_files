@@ -68,11 +68,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "e933d81babfc24586262ad3cbe946ca4c1794fec4333c620988259ca7e4732dd"
+      "sha256": "1600f230f712f28cbde78adb47d2a8dd3959e3b2438964e9c2674c850594a992"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
-      "sha256": "16582f72e10222004c2c384158ada7279c1c0f83754d981320fa74cdb442e82d"
+      "sha256": "88f420eb5a93f3dbaca9eaf933b0521a55fca07718ef18278470503d084db3b2"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_review_sample.py",
@@ -88,11 +88,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "f3c140cf3864e7ef69000ccbf6cac7be5eba09935e6f7a88f1f4088faa0d0c63"
+      "sha256": "4ab8815eddd9cc70b57170aef97ce0906834e270f98ac0e2d142b8c2723fdcb0"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
-      "sha256": "ccf8f6cbf2e53b904836add0884c3ee3722f615d80b6b40ee3c3dac43422a87c"
+      "sha256": "52491d3b495a7c40ef730b733427019547fd4a181215d2e0502cd79b08eb5cc1"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
@@ -104,7 +104,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
-      "sha256": "5a22dfe58af8af6798cf040b278e794988551a1113054a0afb5c93d79a5f5502"
+      "sha256": "37f1040c089119f8f8fd1d77f99789f1653e51934ce0917763bb8a0dd7e9122f"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
@@ -112,7 +112,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "42142f7ab8c382f6f2d7377340e91183de9d4f380b3edcd3624201bc4d5e6915"
+      "sha256": "cc50a36c6d4f7454ac0c842f8268ad5690a6f85fb8f8a25c0e4372b104e5f877"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -629,5 +629,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "68a0befa62e4639ec87763a9c0774600244a81db4b30d875dca86c1182b94391"
+  "canonical_course_sha256": "a431411f8bb59dabbcd67cab85d76f6343a85b25a147a144e2f1493e85c4e106"
 }

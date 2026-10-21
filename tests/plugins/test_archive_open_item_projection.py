@@ -23,10 +23,17 @@ from tests.plugins.test_archive_automatic_reporting import (
 
 __all__: list[str] = []
 PLUGIN = Path(__file__).resolve().parents[2] / "plugins/open-item-reconciliation"
+AUTHORED_TITLE = (
+    "Verifica partite aperte al 30 settembre 2026 — incassi fino al 20 ottobre 2026"
+)
+AUTHORED_NARRATIVE = (
+    "Bozza da dati fittizi. Popolazione al 30 settembre 2026; verifica degli incassi successivi fino al 20 ottobre 2026. "
+    "Revisione dell'agente agent.codex; nessuna conferma umana o approvazione professionale."
+)
 
 
 @pytest.fixture
-def reconciled_case(archive_core, client_case, tmp_path):
+def reconciled_case(archive_core, client_case, tmp_path, request, monkeypatch):
     sources = {
         "population.csv": (
             "InvoiceX;DateX;ValueX;DueX;PartyX;PrivateX\n"
@@ -40,6 +47,12 @@ def reconciled_case(archive_core, client_case, tmp_path):
             "F002;10/10/2026;300.00;Beta;LOCAL_ONLY_5\n"
         ),
     }
+    mapped_kind = getattr(request, "param", None) == "mapped_evidence_type"
+    if mapped_kind:
+        header, *rows = sources["bank.csv"].splitlines()
+        sources["bank.csv"] = (
+            header + ";KindX\n" + "".join(row + ";transfer\n" for row in rows)
+        )
     imported = []
     for name, text in sources.items():
         path = tmp_path / name
@@ -82,6 +95,10 @@ def reconciled_case(archive_core, client_case, tmp_path):
             decision["tabular"]["columns"]["due_date"] = "DueX"
         else:
             del decision["tabular"]["columns"]["document_date"]
+            if mapped_kind:
+                decision["tabular"]["columns"]["evidence_type"] = "KindX"
+                decision["tabular"]["default_evidence_type"] = None
+                decision["tabular"]["evidence_type_map"] = {"transfer": "external_bank"}
         decisions[str(path)] = decision
     assumptions = Path(loaded["output_dir"]) / "assumptions.json"
     assumptions.write_text(
@@ -96,18 +113,42 @@ def reconciled_case(archive_core, client_case, tmp_path):
             }
         )
     )
+    helper_arguments = [
+        "--client-engagement",
+        str(Path(loaded["run_root"]) / "context.json"),
+        "--assumptions-json",
+        str(assumptions),
+        "--output-subdirectory",
+        "reconciliation",
+    ]
+    variant = getattr(request, "param", "")
+    if variant in {"model_authored", "model_authored_changed", "authored_cli"}:
+        helper_arguments.extend(
+            ["--title", AUTHORED_TITLE, "--narrative", AUTHORED_NARRATIVE]
+        )
+        if variant != "authored_cli":
+            from tests.plugins.test_native_execution_reporting import (
+                submit_native_arguments,
+            )
+
+            submit_native_arguments(
+                tmp_path,
+                monkeypatch,
+                "open-item-reconciliation",
+                helper_arguments,
+                script="scripts/raw_input_runner.py",
+            )
+        if variant == "model_authored_changed":
+            helper_arguments[
+                helper_arguments.index("--title") + 1
+            ] += " changed after the request"
     completed = subprocess.run(
         [
             sys.executable,
             "-I",
             "-B",
             str(PLUGIN / "scripts/raw_input_runner.py"),
-            "--client-engagement",
-            str(Path(loaded["run_root"]) / "context.json"),
-            "--assumptions-json",
-            str(assumptions),
-            "--output-subdirectory",
-            "reconciliation",
+            *helper_arguments,
         ],
         capture_output=True,
         text=True,
@@ -177,6 +218,617 @@ def report(loaded):
     return json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
 
 
+def worksheet_selection(path, name, column=None):
+    """Select an actual worksheet in Archive's flattened physical-row order."""
+    from openpyxl import load_workbook
+
+    if name is None:
+        return {}
+    workbook = load_workbook(path, read_only=True)
+    offset = 0
+    try:
+        for sheet in workbook:
+            rows = [
+                row
+                for row in sheet.iter_rows(values_only=True)
+                if any(value is not None for value in row)
+            ]
+            if sheet.title == name:
+                options = {"offset": offset, "limit": len(rows)}
+                if column is not None:
+                    options["columns"] = [rows[0].index(column)]
+                return options
+            offset += len(rows)
+    finally:
+        workbook.close()
+    raise AssertionError(f"Expected generated worksheet {name}")
+
+
+def word_paragraphs(path):
+    """Locate assertions in the actual document body, including table cells."""
+    from docx import Document
+    from docx.oxml.ns import qn
+    from docx.text.paragraph import Paragraph
+
+    document = Document(path)
+    paragraphs = [
+        Paragraph(element, document)
+        for element in document.element.body.iter(qn("w:p"))
+        if Paragraph(element, document).text
+    ]
+    return document, paragraphs
+
+
+@pytest.mark.parametrize(
+    "reconciled_case,bank_cells",
+    [(None, 8), ("mapped_evidence_type", 10)],
+    indirect=["reconciled_case"],
+)
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+def test_canonical_json_retains_exact_row_and_allocation_source_cells(
+    reconciled_case, artifact_folder, bank_cells
+):
+    from archive_reporting import read_artifact
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / artifact_folder
+        / "reconciliation_results.json"
+    )
+
+    packet = read_artifact(reconciled_case, path)
+
+    assert "LOCAL_ONLY" not in json.dumps(packet)
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == 15
+    assert inputs["bank.csv"]["sent_cells"] == bank_cells
+
+
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+def test_changed_canonical_json_cannot_reuse_producer_provenance(
+    reconciled_case, artifact_folder
+):
+    from archive_reporting import read_artifact
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / artifact_folder
+        / "reconciliation_results.json"
+    )
+    value = json.loads(path.read_bytes())
+    value["review_rows"][0]["review_notes"] = "UNTRACED_REPLACEMENT"
+    path.write_text(json.dumps(value))
+
+    read_artifact(reconciled_case, path)
+
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in measured["errors"]
+    )
+    assert (
+        sum(row["sent_cells"] for row in measured["sources"] if row["role"] == "input")
+        == 0
+    )
+
+
+@pytest.mark.parametrize(
+    "reconciled_case", [None, "mapped_evidence_type"], indirect=True
+)
+def test_assurance_receipt_retains_only_echoed_amount_and_allocation_cells(
+    reconciled_case,
+):
+    from archive_reporting import read_artifact
+
+    path = Path(reconciled_case["calculation_dir"]) / "assurance_receipts.json"
+
+    packet = read_artifact(reconciled_case, path)
+
+    assert "LOCAL_ONLY" not in json.dumps(packet)
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    # Three invoice amounts and the two allocated counterparties; two bank
+    # amounts and their counterparties. Invoice dates and unused text stay local.
+    assert inputs["population.csv"]["sent_cells"] == 5
+    assert inputs["bank.csv"]["sent_cells"] == 4
+
+
+def test_changed_assurance_receipt_cannot_reuse_producer_provenance(reconciled_case):
+    from archive_reporting import read_artifact
+
+    path = Path(reconciled_case["calculation_dir"]) / "assurance_receipts.json"
+    value = json.loads(path.read_bytes())
+    value["rendered_value_addresses"][0]["value"] = "987654.00"
+    path.write_text(json.dumps(value))
+
+    read_artifact(reconciled_case, path)
+
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in measured["errors"]
+    )
+    assert (
+        sum(row["sent_cells"] for row in measured["sources"] if row["role"] == "input")
+        == 0
+    )
+
+
+@pytest.mark.parametrize(
+    "reconciled_case,expected_status",
+    [
+        ("model_authored", "complete"),
+        ("authored_cli", "incomplete"),
+        ("model_authored_changed", "incomplete"),
+    ],
+    indirect=["reconciled_case"],
+)
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+def test_word_authored_text_uses_exact_native_request_provenance(
+    reconciled_case, expected_status, artifact_folder
+):
+    from archive_reporting import read_artifact
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / artifact_folder
+        / "relazione_riconciliazione_audit.docx"
+    )
+
+    packet = read_artifact(reconciled_case, path)
+
+    assert AUTHORED_TITLE in json.dumps(packet, ensure_ascii=False)
+    assert AUTHORED_NARRATIVE in json.dumps(packet, ensure_ascii=False)
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == expected_status, measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == 9
+    assert inputs["bank.csv"]["sent_cells"] == 6
+
+
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+@pytest.mark.parametrize(
+    "selection,population_cells,bank_cells",
+    [("title", 0, 0), ("partial_amounts", 1, 1), ("whole_document", 9, 6)],
+)
+def test_word_reads_retain_exact_source_cells(
+    reconciled_case, artifact_folder, selection, population_cells, bank_cells
+):
+    from archive_reporting import read_artifact
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / artifact_folder
+        / "relazione_riconciliazione_audit.docx"
+    )
+    options = {}
+    if selection == "title":
+        options = {"offset": 0, "limit": 1}
+    elif selection == "partial_amounts":
+        document, paragraphs = word_paragraphs(path)
+        table = next(
+            table
+            for table in document.tables
+            if "Residuo aperto" in [cell.text for cell in table.rows[0].cells]
+        )
+        amount_paragraph = table.rows[1].cells[1].paragraphs[0]._p
+        offset = [paragraph._p for paragraph in paragraphs].index(amount_paragraph)
+        options = {"offset": offset, "limit": 3}
+
+    packet = read_artifact(reconciled_case, path, **options)
+
+    assert packet["data"]["rows"]
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == population_cells
+    assert inputs["bank.csv"]["sent_cells"] == bank_cells
+
+
+@pytest.mark.parametrize("reconciled_case", ["mapped_evidence_type"], indirect=True)
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+def test_word_evidence_labels_include_mapped_source_type_cells(
+    reconciled_case, artifact_folder
+):
+    from archive_reporting import read_artifact
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / artifact_folder
+        / "relazione_riconciliazione_audit.docx"
+    )
+
+    read_artifact(reconciled_case, path)
+
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == 9
+    assert inputs["bank.csv"]["sent_cells"] == 8
+
+
+@pytest.mark.parametrize(
+    "custom_field", ["title", "narrative", "next_steps", "metadata"]
+)
+@pytest.mark.parametrize("read_custom", [False, True])
+def test_custom_word_text_stays_unknown_without_tainting_unrelated_amounts(
+    reconciled_case, custom_field, read_custom
+):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact
+
+    from tests.open_item_reconciliation.test_workpaper_outputs import load_outputs
+
+    output = Path(reconciled_case["calculation_dir"])
+    source = json.loads((output / "normalized_records.json").read_bytes())[0]
+    path = output / "custom-report.docx"
+    options = {
+        "title": "Test report",
+        "metadata": {},
+        "next_steps": [],
+        "narrative": "",
+    }
+    custom_value = "UNTRACED_CUSTOM_TEXT"
+    options[custom_field] = (
+        [custom_value]
+        if custom_field == "next_steps"
+        else (
+            {"Custom context": custom_value}
+            if custom_field == "metadata"
+            else custom_value
+        )
+    )
+    cells = []
+    load_outputs().write_word_report(
+        path,
+        **options,
+        summary_rows=[
+            {
+                "Record refs": source["record_id"],
+                "reconciliation_status": "open_supported",
+                "rows": 1,
+                "amount": "1200.00",
+            }
+        ],
+        assumptions={},
+        language="en",
+        projection_cells=cells,
+    )
+    register_table_projection("open-item-reconciliation", path, cells)
+    _, paragraphs = word_paragraphs(path)
+    target = custom_value if read_custom else "1,200.00"
+    offset = next(
+        index for index, paragraph in enumerate(paragraphs) if target in paragraph.text
+    )
+
+    packet = read_artifact(reconciled_case, path, offset=offset, limit=1)
+
+    assert target in packet["data"]["rows"][0][0]
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == (
+        "incomplete" if read_custom else "complete"
+    )
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == (0 if read_custom else 1)
+    assert inputs["bank.csv"]["sent_cells"] == 0
+
+
+def test_changed_word_cannot_reuse_original_source_provenance(reconciled_case):
+    from archive_reporting import read_artifact
+    from docx import Document
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / "relazione_riconciliazione_audit.docx"
+    )
+    document = Document(path)
+    document.paragraphs[0].text = "UNREGISTERED_REPLACEMENT"
+    document.save(path)
+
+    read_artifact(reconciled_case, path, offset=0, limit=1)
+
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("derived_output_lineage_unavailable:")
+        for error in measured["errors"]
+    )
+    assert (
+        sum(row["sent_cells"] for row in measured["sources"] if row["role"] == "input")
+        == 0
+    )
+
+
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "relazione_riconciliazione_audit.docx",
+        "riconciliazione_audit.xlsx",
+        "richieste_mirate_evidenze.xlsx",
+        "reconciliation_results.json",
+        "assurance_final_outputs/relazione_riconciliazione_audit.docx",
+        "assurance_final_outputs/riconciliazione_audit.xlsx",
+        "assurance_final_outputs/richieste_mirate_evidenze.xlsx",
+        "assurance_final_outputs/reconciliation_results.json",
+        "assurance_receipts.json",
+    ],
+)
+def test_generated_deliverable_read_retains_its_source_provenance(
+    archive_core, client_case, reconciled_case, relative
+):
+    loaded = reconciled_case
+    path = Path(loaded["calculation_dir"]) / relative
+
+    packet = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        path,
+        state_dir=client_case.state_dir,
+    )
+
+    assert packet["data"]["rows"]
+    assert "LOCAL_ONLY_" not in json.dumps(packet)
+    measured = report(loaded)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["not_sent_cells"] >= 3
+    assert inputs["bank.csv"]["not_sent_cells"] >= 2
+
+
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+@pytest.mark.parametrize(
+    "sheet,column,population_cells,bank_cells",
+    [
+        (None, None, 9, 2),
+        ("sintesi", "importo_totale", 3, 1),
+        ("evidenze_da_integrare", "importo", 1, 1),
+        ("evidenze_da_integrare", "evidenza_gia_disponibile", 0, 2),
+        ("evidenze_da_integrare", "riferimento_esistente", 0, 1),
+        ("evidenze_da_integrare", "dato_mancante_mirato", 0, 0),
+    ],
+)
+def test_targeted_requests_retain_embedded_amount_and_date_sources(
+    reconciled_case, artifact_folder, sheet, column, population_cells, bank_cells
+):
+    from archive_reporting import read_artifact
+
+    path = (
+        Path(reconciled_case["calculation_dir"])
+        / artifact_folder
+        / "richieste_mirate_evidenze.xlsx"
+    )
+    options = worksheet_selection(path, sheet, column)
+
+    read_artifact(reconciled_case, path, **options)
+
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == population_cells
+    assert inputs["bank.csv"]["sent_cells"] == bank_cells
+
+
+@pytest.mark.parametrize(
+    "column,population_cells,bank_cells,status",
+    [
+        ("dato_mancante_mirato", 1, 1, "complete"),
+        ("evidenza_gia_disponibile", 0, 1, "complete"),
+        ("destinatario_operativo", 0, 0, "incomplete"),
+    ],
+)
+def test_request_without_later_candidate_traces_residual_prose_and_unknown_owner(
+    reconciled_case, column, population_cells, bank_cells, status
+):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact
+
+    from tests.open_item_reconciliation.test_build_missing_evidence_requests import (
+        load_missing_requests,
+    )
+    from tests.open_item_reconciliation.test_workpaper_outputs import load_outputs
+
+    output = Path(reconciled_case["calculation_dir"])
+    rows = json.loads((output / "reconciliation_results.json").read_bytes())[
+        "reconciliation_rows"
+    ]
+    normalized = json.loads((output / "normalized_records.json").read_bytes())
+    field_maps = load_outputs().workpaper_row_origins(
+        "Reconciliation detail", rows, {"Normalized records": normalized}
+    )
+    origins = {
+        "Reconciliation detail": {
+            row["record_id"]: fields
+            for row, fields in zip(rows, field_maps, strict=True)
+        }
+    }
+    requests = load_missing_requests()
+    projection_rows = {}
+    pack = requests.build_missing_evidence_request_pack(
+        rows,
+        normalized_records=normalized,
+        source_origins=origins,
+        projection_rows=projection_rows,
+        entity_name="UNTRACED_OWNER",
+    )
+    cells = []
+    path = output / "requests-without-later-candidates.xlsx"
+    requests.write_missing_evidence_workbook(
+        path, pack, projection_rows=projection_rows, projection_cells=cells
+    )
+    register_table_projection("open-item-reconciliation", path, cells)
+    selection = worksheet_selection(path, "evidenze_da_integrare", column)
+
+    packet = read_artifact(reconciled_case, path, **selection)
+
+    assert packet["data"]["rows"]
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == status, measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == population_cells
+    assert inputs["bank.csv"]["sent_cells"] == bank_cells
+
+
+@pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
+@pytest.mark.parametrize(
+    "sheet_name,selected_column,expected_population,expected_bank",
+    [
+        ("Normalized records", None, 15, 8),
+        ("Righe normalizzate", None, 15, 8),
+        ("Summary", "amount", 3, 0),
+        ("Reconciliation detail", "allocated_amount", 0, 1),
+        ("Reconciliation detail", "residual_amount", 1, 1),
+        ("Review", "residual_amount", 1, 1),
+        (None, None, 15, 8),
+        ("External evidence aggregate", "cash_flow_signed_total", 0, 0),
+        ("External evidence aggregate", "amount_total", 0, 2),
+        ("Open item aging", "partially_paid_amount", 1, 0),
+        ("Open item aging", "min_age_days", 3, 0),
+        ("Evidence concentration", "share_of_abs_amount_percent", 3, 0),
+        ("Document source map", "document_dates", 3, 2),
+        ("Post-cutoff candidates", "evidence_date", 0, 2),
+        ("Cutoff window movements", "days_from_cutoff", 3, 2),
+    ],
+)
+def test_audit_workbook_selected_rows_retain_exact_source_cells(
+    reconciled_case,
+    artifact_folder,
+    sheet_name,
+    selected_column,
+    expected_population,
+    expected_bank,
+):
+    from archive_reporting import read_artifact
+
+    loaded = reconciled_case
+    path = (
+        Path(loaded["calculation_dir"]) / artifact_folder / "riconciliazione_audit.xlsx"
+    )
+    options = worksheet_selection(path, sheet_name, selected_column)
+
+    packet = read_artifact(loaded, path, **options)
+
+    assert "LOCAL_ONLY_" not in json.dumps(packet)
+    measured = report(loaded)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == expected_population
+    assert inputs["bank.csv"]["sent_cells"] == expected_bank
+
+
+@pytest.mark.parametrize(
+    "column,expected_status,expected_value",
+    [(0, "complete", "1200"), (1, "incomplete", "UNTRACED_NOTE")],
+)
+def test_audit_writer_keeps_supplied_notes_unknown_without_tainting_amount_reads(
+    reconciled_case,
+    column,
+    expected_status,
+    expected_value,
+):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact
+
+    from tests.open_item_reconciliation.test_workpaper_outputs import load_outputs
+
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    source_row = json.loads((output / "normalized_records.json").read_bytes())[0]
+    path = output / "selected-review.xlsx"
+    cells = []
+    load_outputs().write_excel_workpaper(
+        path,
+        {
+            "Normalized records": [source_row],
+            "Reconciliation detail": [{**source_row, "review_notes": "UNTRACED_NOTE"}],
+        },
+        preferred_headers={"Reconciliation detail": ["amount", "review_notes"]},
+        projection_cells=cells,
+    )
+    register_table_projection("open-item-reconciliation", path, cells)
+
+    packet = read_artifact(loaded, path, offset=3, limit=1, columns=[column])
+
+    assert packet["data"]["rows"] == [[expected_value]]
+    measured = report(loaded)
+    assert measured["collection_status"] == expected_status
+
+
+def test_supplied_check_note_is_not_registered_as_generated_metadata(reconciled_case):
+    from archive_projection import register_table_projection
+    from archive_reporting import read_artifact
+
+    from tests.open_item_reconciliation.test_workpaper_outputs import load_outputs
+
+    path = Path(reconciled_case["calculation_dir"]) / "supplied-checks.xlsx"
+    cells = []
+    load_outputs().write_excel_workpaper(
+        path,
+        {"Checks": [{"note": "UNTRACED_CHECK_NOTE"}]},
+        projection_cells=cells,
+    )
+    register_table_projection("open-item-reconciliation", path, cells)
+
+    packet = read_artifact(reconciled_case, path, offset=1, limit=1)
+
+    assert packet["data"]["rows"] == [["UNTRACED_CHECK_NOTE"]]
+    assert report(reconciled_case)["collection_status"] == "incomplete"
+
+
+@pytest.mark.parametrize("reconciled_case", ["mapped_evidence_type"], indirect=True)
+@pytest.mark.parametrize(
+    "sheet,column",
+    [
+        ("External evidence detail", "evidence_type"),
+        ("Post-cutoff candidates", "evidence_type"),
+        ("Document source map", "evidence_types_present"),
+        ("Reconciliation detail", "matched_evidence_type"),
+    ],
+)
+def test_audit_evidence_labels_retain_mapped_source_type_cells(
+    reconciled_case, sheet, column
+):
+    from archive_reporting import read_artifact
+
+    path = Path(reconciled_case["calculation_dir"]) / "riconciliazione_audit.xlsx"
+    selection = worksheet_selection(path, sheet, column)
+
+    read_artifact(reconciled_case, path, **selection)
+
+    measured = report(reconciled_case)
+    assert measured["collection_status"] == "complete", measured["errors"]
+    inputs = {
+        row["label"]: row for row in measured["sources"] if row["role"] == "input"
+    }
+    assert inputs["population.csv"]["sent_cells"] == 0
+    assert inputs["bank.csv"]["sent_cells"] == 2
+
+
 @pytest.mark.parametrize("artifact_folder", ["", "assurance_final_outputs"])
 @pytest.mark.parametrize(
     "selection,population_cells,bank_cells",
@@ -218,16 +870,26 @@ def test_accountant_workbook_reads_preserve_exact_original_cell_provenance(
     assert inputs["bank.csv"]["sent_cells"] == bank_cells
 
 
-def test_changed_accountant_workbook_cannot_reuse_original_source_provenance(
+@pytest.mark.parametrize(
+    "name,sheet",
+    [
+        ("scheda_operativa_commercialista.xlsx", "Legenda"),
+        ("riconciliazione_audit.xlsx", "Indice"),
+        ("richieste_mirate_evidenze.xlsx", "istruzioni"),
+    ],
+)
+def test_changed_workbook_cannot_reuse_original_source_provenance(
     reconciled_case,
+    name,
+    sheet,
 ):
     from archive_reporting import read_artifact
     from openpyxl import load_workbook
 
     loaded = reconciled_case
-    path = Path(loaded["calculation_dir"]) / "scheda_operativa_commercialista.xlsx"
+    path = Path(loaded["calculation_dir"]) / name
     workbook = load_workbook(path)
-    workbook["Legenda"]["B2"] = "UNREGISTERED_REPLACEMENT"
+    workbook[sheet]["B2"] = "UNREGISTERED_REPLACEMENT"
     workbook.save(path)
     workbook.close()
 
@@ -524,8 +1186,19 @@ def test_selected_partial_payment_has_exact_cells_and_retains_private_columns(
     assert sum(entry["not_sent_cells"] for entry in inputs) == 28 - expected_cells
 
 
-@pytest.mark.parametrize("exact_identifiers", [False, True])
-@pytest.mark.parametrize("regeneration_route", ["native", "cli", "cli-retained"])
+@pytest.mark.parametrize(
+    "reconciled_case,regeneration_route,exact_identifiers",
+    [
+        (None, "native", False),
+        (None, "native", True),
+        (None, "cli", False),
+        (None, "cli", True),
+        (None, "cli-retained", False),
+        (None, "cli-retained", True),
+        ("model_authored", "native", False),
+    ],
+    indirect=["reconciled_case"],
+)
 def test_public_review_save_apply_keeps_notes_private_and_report_complete(
     reconciled_case, tmp_path, exact_identifiers, regeneration_route
 ):
@@ -685,6 +1358,27 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
         loaded,
         output / "assurance_final_outputs/scheda_operativa_commercialista.xlsx",
     )
+    audit_path = output / "riconciliazione_audit.xlsx"
+    selection = worksheet_selection(
+        audit_path, "Reconciliation detail", "residual_amount"
+    )
+    read_artifact(loaded, audit_path, **selection)
+    read_artifact(
+        loaded, output / "assurance_final_outputs" / audit_path.name, **selection
+    )
+    read_artifact(loaded, output / "relazione_riconciliazione_audit.docx")
+    read_artifact(
+        loaded, output / "assurance_final_outputs/relazione_riconciliazione_audit.docx"
+    )
+    read_artifact(loaded, output / "richieste_mirate_evidenze.xlsx")
+    read_artifact(
+        loaded, output / "assurance_final_outputs/richieste_mirate_evidenze.xlsx"
+    )
+    read_artifact(loaded, output / "reconciliation_results.json")
+    read_artifact(
+        loaded, output / "assurance_final_outputs/reconciliation_results.json"
+    )
+    read_artifact(loaded, output / "assurance_receipts.json")
     read_artifact(loaded, output / "artifact_card.md")
     read_artifact(loaded, output / "final_artifacts.json")
     read_artifact(loaded, output / "ui_decisions.json")

@@ -139,7 +139,7 @@
     {
       "path": "scripts/archive_report_measurements.py",
       "repository_path": "plugins/lucia/scripts/archive_report_measurements.py",
-      "sha256": "24a1e45f66f654666c0db64669c48e2df44a464390c459dc7b5833f3293d5334"
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
     },
     {
       "path": "scripts/archive_report_receipt.py",

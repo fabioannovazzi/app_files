@@ -12,6 +12,8 @@ from archive_report_store import RunStore, digest, file_digest, run_lock
 
 __all__ = [
     "is_recording",
+    "model_argument_origin",
+    "register_model_arguments",
     "register_metadata",
     "register_metadata_revision",
     "register_artifact_projection",
@@ -87,6 +89,51 @@ def register_metadata(component: str, output: Path, payload: Any) -> None:
                 "data_sha256": digest(payload),
             },
         )
+
+
+def register_model_arguments(
+    component: str, output: Path, arguments: list[str]
+) -> None:
+    """Remember exact text received from the model, without recording a send.
+
+    The native tool calls this before execution. Hashes are scoped to this run
+    and component; reading a file or running a plain CLI cannot create this
+    evidence. Returning this same text adds no newly exposed input-file cells.
+    """
+    root = bound_run(component, {"output": str(output)})
+    if root is None:
+        return
+    hashes = sorted({digest(value) for value in arguments})
+    with run_lock(root):
+        store = RunStore(root)
+        state = store.state()
+        if state is None or state["collection_closed"]:
+            return
+        store.event(
+            "model_arguments:" + digest([component, hashes]),
+            {
+                "kind": "model_supplied_arguments",
+                "component": component,
+                "value_sha256": hashes,
+            },
+        )
+
+
+def model_argument_origin(
+    component: str, output: Path, value: str
+) -> list[dict[str, Any]] | None:
+    """Resolve exact model-supplied text; unknown or changed text stays unknown."""
+    root = bound_run(component, {"output": str(output)})
+    if root is not None:
+        with run_lock(root):
+            if any(
+                event["kind"] == "model_supplied_arguments"
+                and event["component"] == component
+                and digest(value) in event["value_sha256"]
+                for event in RunStore(root).events()
+            ):
+                return []
+    return None
 
 
 def register_rows(
@@ -310,6 +357,7 @@ def register_table_projection(
     if artifact["measurement_error"] or artifact["unit"] not in {
         "rows",
         "worksheet_rows",
+        "body_paragraphs",
     }:
         return
     if len(cells) != artifact["quantity"] or any(

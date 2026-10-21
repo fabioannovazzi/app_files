@@ -49,7 +49,7 @@
     },
     {
       "path": "scripts/archive_projection.py",
-      "sha256": "408460020f6351bd17759525b1640f87c1ef3e82867306b73578dc78ebb76b50"
+      "sha256": "b528cbefbb8ce0f71984d31efe65f52f69bba830ac16779227a67674fd06beee"
     },
     {
       "path": "scripts/archive_report_legacy.py",
@@ -57,7 +57,7 @@
     },
     {
       "path": "scripts/archive_report_measurements.py",
-      "sha256": "24a1e45f66f654666c0db64669c48e2df44a464390c459dc7b5833f3293d5334"
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
     },
     {
       "path": "scripts/archive_report_receipt.py",
@@ -454,5 +454,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8b75baba32eb6ac3d93b2a76d225abe3f73ba24538d6733a3d4a38939ff90a56"
+  "canonical_course_sha256": "74b98eb1ce1e8c268c300bad750d4459a46f024df8437b379674328d9ba83da9"
 }

@@ -54,6 +54,51 @@ def document_text(path: Path) -> str:
     return "\n".join(parts)
 
 
+def test_partial_workpaper_writes_without_inventing_missing_aggregate_origins(tmp_path):
+    outputs = load_outputs()
+    path = tmp_path / "aggregate-only.xlsx"
+    cells = []
+
+    outputs.write_excel_workpaper(
+        path,
+        {
+            "External evidence aggregate": [
+                {"external_category": "TOTAL", "amount_total": "123.00"}
+            ]
+        },
+        projection_cells=cells,
+    )
+
+    workbook = load_workbook(path, read_only=True)
+    try:
+        assert workbook["External evidence aggregate"]["A2"].value == "123.00"
+    finally:
+        workbook.close()
+    assert cells[1][0] is None
+
+
+@pytest.mark.parametrize("field", ["review_notes", "unregistered_custom_field"])
+def test_canonical_report_keeps_supplied_row_text_unverified(field):
+    outputs = load_outputs()
+    source = {"record_id": "invoice-1", "amount": "1200.00"}
+    payload = {
+        "schema_version": "vera.reconciliation_results.v1",
+        "client_engagement": None,
+        "source_processing": {},
+        "reconciliation_rows": [source],
+        "allocation_ledgers": [],
+        "analyses": {},
+        "checks": [],
+        "review_rows": [{**source, field: "PRIVATE_SUPPLIED_TEXT"}],
+        "source_qualifications": [],
+    }
+    context = {"sheets": {"Normalized records": [source]}, "allocation_projections": {}}
+
+    origins = outputs.canonical_report_origins(payload, context)
+
+    assert origins is None
+
+
 def test_build_audit_workbook_sheets_has_standard_tabs():
     outputs = load_outputs()
     sheets = outputs.build_audit_workbook_sheets(

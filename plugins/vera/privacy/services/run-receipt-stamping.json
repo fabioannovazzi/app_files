@@ -86,7 +86,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7e468aba3ab0a46a57f274e0e917177c29ba56c0831e0a1a33f221c6d94fd407"
+    "source_fingerprint": "a32e1f75b31644f6c6276138673704ede1b1d60e118569dc91b75985181b1c7e"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -96,7 +96,7 @@
   "security_controls": [
     {
       "id": "exact-producer-projection-accounting",
-      "control": "The local collector accepts complete transport envelopes only when their exact digest matches a producer declaration. Selected row-field origins and private review-packet digests are retained locally, independently of send events; constructing them does not count as disclosure. A changed envelope, unknown private review packet or unregistered metadata parent cannot inherit the original declaration. Partial text reads cannot inherit complete-artifact lineage.",
+      "control": "The local collector accepts complete transport envelopes only when their exact digest matches a producer declaration. Selected row-field origins and private review-packet digests are retained locally, independently of send events; constructing them does not count as disclosure. A changed envelope, unknown private review packet or unregistered metadata parent cannot inherit the original declaration. Partial text reads cannot inherit complete-artifact lineage. Word body/table paragraphs and generated workbook cells use explicit producer origins for only the returned selection. Producer-owned JSON values also bind exact file bytes. The local argument-origin registry retains hashes of exact native helper argument strings under the existing run and component; it does not add a send event, read client files or submit these hashes to the server. Changed strings and a different run/component cannot inherit that origin.",
       "implemented_by": [
         "scripts/archive_reporting.py",
         "scripts/archive_projection.py",

@@ -34,6 +34,86 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+def test_word_run_reader_measures_selected_body_paragraphs_and_table_cells(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+    from docx import Document
+
+    path = tmp_path / "generated-report.docx"
+    document = Document()
+    document.sections[0].header.paragraphs[0].text = "HEADER_NOT_SELECTED"
+    document.add_paragraph("Introduction")
+    table = document.add_table(rows=1, cols=2)
+    table.cell(0, 0).text = "F001"
+    table.cell(0, 1).text = "1200.00"
+    document.add_paragraph("Conclusion")
+    document.save(path)
+    source = measure_source(path, source_id="report", role="output")
+
+    data, selection = read_selection(source, offset=1, limit=2)
+
+    assert source["measurement_error"] is None
+    assert source["unit"] == "body_paragraphs"
+    assert source["quantity"] == source["cells"] == 4
+    assert data["rows"] == [["F001"], ["1200.00"]]
+    assert data["source_format"]["kind"] == "docx"
+    assert "HEADER_NOT_SELECTED" not in json.dumps(data)
+    assert selection["start"] == 1
+    assert selection["stop"] == 3
+
+
+def test_word_measurement_rejects_changed_document_before_returning_data(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+    from docx import Document
+
+    path = tmp_path / "generated-report.docx"
+    document = Document()
+    document.add_paragraph("Original result")
+    document.save(path)
+    source = measure_source(path, source_id="report", role="output")
+    document.add_paragraph("Changed result")
+    document.save(path)
+
+    with pytest.raises(ValueError, match="no longer matches"):
+        read_selection(source)
+
+
+def test_word_body_reader_counts_merged_and_nested_cell_text_once(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+    from docx import Document
+
+    path = tmp_path / "nested-report.docx"
+    document = Document()
+    table = document.add_table(rows=1, cols=2)
+    table.cell(0, 0).text = "First paragraph"
+    table.cell(0, 1).text = "Second paragraph"
+    cell = table.cell(0, 0).merge(table.cell(0, 1))
+    cell.add_table(rows=1, cols=1).cell(0, 0).text = "Nested paragraph"
+    document.save(path)
+    source = measure_source(path, source_id="report", role="output")
+
+    data, _ = read_selection(source)
+
+    assert source["quantity"] == 3
+    assert data["rows"] == [
+        ["First paragraph"],
+        ["Second paragraph"],
+        ["Nested paragraph"],
+    ]
+
+
+def test_invalid_word_package_remains_an_explicit_measurement_error(tmp_path):
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "broken.docx"
+    path.write_bytes(b"This is not a Word package")
+    source = measure_source(path, source_id="report", role="output")
+
+    with pytest.raises(ValueError, match="no complete measurement adapter"):
+        read_selection(source)
+
+    assert source["measurement_error"] == "BadZipFile"
+
+
 @pytest.mark.skipif(os.name != "posix", reason="POSIX permission-change behavior")
 def test_private_report_database_can_record_without_changing_permissions(
     tmp_path, monkeypatch

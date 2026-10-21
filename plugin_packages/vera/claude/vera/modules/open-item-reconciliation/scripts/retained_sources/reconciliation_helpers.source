@@ -59,6 +59,7 @@ _add_vera_assurance_module_path()
 from vera_assurance import (  # noqa: E402
     RelationshipContractError,
     build_allocation_ledger,
+    canonical_json_sha256,
     decimal_text,
 )
 
@@ -865,6 +866,8 @@ def age_days_at_reference(row: dict[str, Any], reference_date: str) -> int | Non
 def open_item_aging_summary(
     reconciliation_rows: list[dict[str, Any]],
     assumptions: dict[str, Any] | None = None,
+    *,
+    projection_records: dict[str, list[str]] | None = None,
 ) -> list[dict[str, Any]]:
     """Summarize in-scope reconciliation rows by deterministic aging bucket."""
 
@@ -879,6 +882,10 @@ def open_item_aging_summary(
         status = clean_text(row.get("reconciliation_status")) or "unknown"
         age_days = age_days_at_reference(row, reference_date)
         bucket_key = aging_bucket(age_days)
+        if projection_records is not None:
+            projection_records.setdefault(bucket_key, []).append(
+                clean_text(row.get("record_id"))
+            )
         bucket = buckets.setdefault(
             bucket_key,
             {
@@ -1517,11 +1524,16 @@ def is_open_item_in_scope(
 
 
 def first_amount(
-    row: dict[str, Any], fields: tuple[str, ...] | list[str]
+    row: dict[str, Any],
+    fields: tuple[str, ...] | list[str],
+    *,
+    projection_fields: list[str] | None = None,
 ) -> Decimal | None:
     for field in fields:
         parsed = parse_decimal(row.get(field))
         if parsed is not None:
+            if projection_fields is not None:
+                projection_fields.append(field)
             return parsed
     return None
 
@@ -1541,6 +1553,8 @@ def external_amount_total(
     external_amount_fields: (
         tuple[str, ...] | list[str]
     ) = DEFAULT_EXTERNAL_AMOUNT_FIELDS,
+    *,
+    projection_fields: list[str] | None = None,
 ) -> Decimal:
     total = Decimal("0.00")
     for field in external_amount_fields:
@@ -1551,11 +1565,16 @@ def external_amount_total(
         if parsed is None:
             raise ValueError(f"{field} must be a canonical decimal")
         total += parsed
+        if projection_fields is not None:
+            projection_fields.append(field)
     return total.quantize(Decimal("0.01"))
 
 
 def amount_for_matching(
-    row: dict[str, Any], amount_field: str = "amount"
+    row: dict[str, Any],
+    amount_field: str = "amount",
+    *,
+    projection_fields: list[str] | None = None,
 ) -> Decimal | None:
     fields = (
         amount_field,
@@ -1564,7 +1583,7 @@ def amount_for_matching(
         "matched_amount",
         "allocated_amount",
     )
-    return first_amount(row, fields)
+    return first_amount(row, fields, projection_fields=projection_fields)
 
 
 def accounting_perimeters_compatible(
@@ -2592,10 +2611,14 @@ def _relationship_value(
     row_fields: tuple[str, ...],
     assumptions: dict[str, Any],
     assumption_fields: tuple[str, ...],
+    *,
+    projection_fields: list[str] | None = None,
 ) -> str:
     for field in row_fields:
         value = clean_text(row.get(field))
         if value:
+            if projection_fields is not None:
+                projection_fields.append(field)
             return value
     for field in assumption_fields:
         value = clean_text(assumptions.get(field))
@@ -2610,17 +2633,23 @@ def _allocation_population_record(
     record_ref: str,
     amount: Decimal,
     assumptions: dict[str, Any],
+    projection_fields: list[str] | None = None,
 ) -> dict[str, Any]:
     currency = (
         clean_text(row.get("currency"))
         or clean_text(assumptions.get("currency"))
         or "EUR"
     ).upper()
+    if projection_fields is not None:
+        projection_fields.extend(
+            field for field in ("currency", "unit") if clean_text(row.get(field))
+        )
     entity = _relationship_value(
         row,
         ("entity_ref", "entity_id", "entity", "company_name", "company"),
         assumptions,
         ("entity_ref", "entity_id", "entity_name", "company_name"),
+        projection_fields=projection_fields,
     )
     party = _relationship_value(
         row,
@@ -2634,6 +2663,7 @@ def _allocation_population_record(
         ),
         assumptions,
         ("party_ref", "party_id", "counterparty_name", "counterparty"),
+        projection_fields=projection_fields,
     )
     return {
         "record_id": record_ref,
@@ -2649,6 +2679,8 @@ def closed_bank_allocation_controls(
     reconciliation_rows: list[dict[str, Any]],
     evidence_rows: list[dict[str, Any]],
     assumptions: dict[str, Any] | None = None,
+    *,
+    projection_records: dict[str, dict[str, Any]] | None = None,
 ) -> tuple[list[dict[str, Any]], dict[str, str]]:
     """Build exact closure-allocation ledgers and return evidence-level failures.
 
@@ -2687,10 +2719,18 @@ def closed_bank_allocation_controls(
     )
     for evidence_id, closed_rows in sorted(closed_by_evidence.items()):
         evidence = evidence_by_id[evidence_id]
-        evidence_amount = amount_for_matching(evidence)
+        source_fields: list[str] = []
+        target_fields: dict[str, list[str]] = {}
+        evidence_amount = amount_for_matching(evidence, projection_fields=source_fields)
         if evidence_amount is None:
-            evidence_amount = external_amount_total(evidence)
-        target_amounts = [amount_for_matching(row) for row in closed_rows]
+            evidence_amount = external_amount_total(
+                evidence, projection_fields=source_fields
+            )
+        target_amounts = []
+        for row in closed_rows:
+            fields: list[str] = []
+            target_amounts.append(amount_for_matching(row, projection_fields=fields))
+            target_fields[_row_identity(row)] = fields
         if evidence_amount is None or any(amount is None for amount in target_amounts):
             failures[evidence_id] = (
                 "Closure allocation requires exact source and target amounts."
@@ -2781,6 +2821,7 @@ def closed_bank_allocation_controls(
             record_ref=source_ref,
             amount=face_amount if pro_soluto_disposition else evidence_amount,
             assumptions=active,
+            projection_fields=source_fields,
         )
         target_records = [
             _allocation_population_record(
@@ -2792,6 +2833,7 @@ def closed_bank_allocation_controls(
                     else amount_for_matching(row) or Decimal("0")
                 ),
                 assumptions=active,
+                projection_fields=target_fields[_row_identity(row)],
             )
             for row in closed_rows
         ]
@@ -2817,6 +2859,13 @@ def closed_bank_allocation_controls(
             for record in (source_record, *target_records)
         )
         allocation_policy = clean_text(evidence.get("allocation_policy"))
+        if allocation_policy in {
+            "one_to_one",
+            "one_to_many",
+            "many_to_one",
+            "many_to_many",
+        }:
+            source_fields.append("allocation_policy")
         relationship_shape = (
             allocation_policy
             if allocation_policy
@@ -2900,6 +2949,19 @@ def closed_bank_allocation_controls(
             )
             continue
         ledgers.append(ledger)
+        if projection_records is not None:
+            # Full ledgers retain both populations and their allocations/residuals.
+            # Capture their actual amount/perimeter operands in this producer loop.
+            projection_records[ledger_id] = {
+                "data_sha256": canonical_json_sha256(ledger),
+                "records": [
+                    {"record_id": evidence_id, "fields": sorted(set(source_fields))},
+                    *[
+                        {"record_id": identity, "fields": sorted(set(fields))}
+                        for identity, fields in target_fields.items()
+                    ],
+                ],
+            }
     return ledgers, failures
 
 

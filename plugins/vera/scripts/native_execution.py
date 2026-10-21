@@ -191,6 +191,14 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
                 raise ValueError("This job ID already belongs to a different execution")
         else:
             _write(job / "request.json", request)
+            if request["binding"] is not None:
+                from archive_projection import register_model_arguments
+
+                register_model_arguments(
+                    spec["component"],
+                    Path(request["binding"]["run_root"]) / "outputs",
+                    spec["arguments"],
+                )
             (job / "heartbeat").touch()
             # The native process inherits the host's permissions. Detachment only
             # keeps an authorized job alive when a tool connection is restarted.

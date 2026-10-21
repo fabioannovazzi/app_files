@@ -974,6 +974,7 @@ def test_raw_run_writes_extracted_source_pages_to_output(
             "source_artifact_receipts": source_receipts,
             "reviewed_source_decision_receipts": list(decisions.values()),
             "source_qualifications": [source_qualification],
+            "_source_controls_projection": {},
             "source_pages": extracted_pages,
             "open_items": [],
             "evidence_rows": [],

@@ -787,8 +787,8 @@ def test_representative_managed_raw_producer_replays_followup_workbook(
 
         original = raw.write_missing_evidence_workbook
 
-        def altered_request(path, pack):
-            written = original(path, pack)
+        def altered_request(path, pack, **kwargs):
+            written = original(path, pack, **kwargs)
             workbook = load_workbook(written)
             changed = False
             for sheet in workbook:

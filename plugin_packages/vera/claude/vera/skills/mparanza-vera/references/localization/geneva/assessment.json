@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "38acce52ba98c8383175bc7a0eeb8135f3f09aff756f324a82d2d1d3dc61c34d",
+  "catalogue_fingerprint": "f243d307d0e04dc8aa60d91ee07bc075ca87f19af79459735521655b0328d8d1",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -626,8 +626,8 @@
     "version": "0.1.331"
   },
   "release_revalidation": {
-    "scope": "All skill entrypoint hashes are unchanged from the preceding snapshot. Release manifest identity refreshed for the Cowork archive startup and session fix; existing jurisdiction assessments are unchanged.",
-    "version": "0.1.274"
+    "version": "0.1.466",
+    "scope": "All 55 skill IDs, paths and entrypoint hashes are unchanged from the 0.1.465 snapshot. Refresh only the product-manifest identity for the generated-workpaper provenance repair. Existing jurisdiction assessments and acceptance limits remain unchanged; this is not fresh Geneva acceptance."
   },
   "remote_course_package_binding": {
     "scope": "Preserve the merged model-policy and calendar source reviews and existing Geneva dispositions. Shared remote lesson data remains hash-pinned. No additional jurisdictional workflow or installed-host acceptance claimed.",

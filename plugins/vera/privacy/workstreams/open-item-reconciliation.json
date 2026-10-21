@@ -130,6 +130,15 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "selected-generated-reconciliation-workpapers",
+        "purpose": "Inspect generated audit workbooks, Word reports, evidence requests and JSON records through Studio Archive with producer-recorded source attribution.",
+        "content": "The audit workbook and targeted evidence-request workbook retain per-cell original record/field origins; Word retains per-paragraph origins for body paragraphs and table cells. Returned values can include invoice identifiers, counterparties, dates, amounts, allocated payments, residuals and requested evidence. The body reader excludes headers, footers, comments, images and embedded objects from its measured selection. Canonical reconciliation JSON records copied row fields, aggregate operands and the fields actually used to construct allocation ledgers. The assurance receipt records source amounts, allocation operands and the origins of report cells whose numeric values it echoes. Whole-document JSON reads use the exact registered value and file bytes. Working and sealed copies are registered after finalization or successor promotion. Native execution records only hashes of exact incoming argument strings within the same run and component; unchanged title/narrative text already supplied by the model can reuse that origin during generation and regeneration. This recording is not a model send and introduces no external recipient. Unknown notes, unsupported schedules or origins, changed argument text and edited outputs remain explicitly unmeasured without preventing draft creation. These declarations cover the corresponding producer paths, not arbitrary document contents or reads through generic shell/document tools.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
@@ -137,7 +146,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "86934d97ddc5c70542f08f517a21f869adbb438f204b370a0f1bd2a2cfe44d0e"
+    "source_fingerprint": "1b5765fe6dc6bca839bd69f4b3e8e7e4e43962b49860cc5ec72685a95410d930"
   },
   "role": "workflow",
   "runtime_profiles": [
