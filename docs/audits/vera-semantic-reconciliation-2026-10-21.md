@@ -82,3 +82,5 @@ root fixture setup. Privacy checks passed all 108 cases at 90.30% coverage.
 Release version, source/package parity, server deployment, enabled installation and
 fresh-chat professional acceptance are separate evidence. This document does not
 claim Marketplace publication, installation updates or universal host acceptance.
+
+CI release-alignment recovery: all host packages aligned at 0.1.471, but the later Geneva catalogue check still recorded 0.1.468. Exact comparison found all 55 skill entrypoint IDs and bytes unchanged. Refreshed only the manifest/version binding and its explicit audit annotation; existing jurisdiction assessment rows and acceptance limits remain unchanged. Rebuilt packages include the refreshed metadata.
