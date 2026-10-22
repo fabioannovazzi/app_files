@@ -116,7 +116,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "75c33c46bf296a8f9ac7b60d3542f6decf05789a8edfd32bbf97209283cd6e4a"
+      "sha256": "40b2ddfc56a14ccd5140a32c39cf456670e669ca4f045c1eb1e76b49a36f3513"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -224,7 +224,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
-      "sha256": "b0d4bf0404a559966cb6854342bd8f97a96664bcf54714c0202373b85a7295a7"
+      "sha256": "24c8c2bab6b6d333c9d709b463063a837446041b39e2a0f116b217484bc1bc7f"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
@@ -781,5 +781,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "755cb5fe200f25a171af931e76be1744a0dd5e269432598ea285333e58faf730"
+  "canonical_course_sha256": "ff48fa81cd7ea326877cab69c6d4cc1e0224e98d3a0b13d2558ce53f44e97333"
 }

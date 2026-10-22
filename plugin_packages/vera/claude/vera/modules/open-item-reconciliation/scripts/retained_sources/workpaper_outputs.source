@@ -2672,6 +2672,14 @@ def _audit_cell_origin(
     if sheet == "Normalized records":
         record_id = row.get("record_id")
         return [{"record_id": record_id, "fields": [field]}] if record_id else None
+    if sheet == "Review" and row.get("reviewer_ref") == "system-exact-match":
+        if field == "reviewer_ref":
+            return []  # Literal technical identity emitted by the exact checks.
+        if field == "reviewed_on" and any(
+            list(setting.values()) == ["assurance_run_date", row[field]]
+            for setting in sheets.get("Assumptions", [])
+        ):
+            return []  # Copied run configuration, not an accounting source date.
     if sheet in {"Reconciliation detail", "Review"}:
         return _reconciliation_cell_origin(row, field, normalized)
     if sheet == "Assumptions":
