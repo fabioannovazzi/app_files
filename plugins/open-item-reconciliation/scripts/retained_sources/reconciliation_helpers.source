@@ -1627,8 +1627,9 @@ def _resolve_undated_bank_references(
     """Join an exact bank invoice number to one same-party source record.
 
     Banks need not repeat an invoice date. This is an exact, population-bound
-    reference join, not a guessed year or description match. Original evidence
-    fields remain unchanged; ambiguous references receive no derived alias.
+    reference join, not a guessed year. A complete literal invoice identifier
+    in the bank description is equally usable: identity, perimeter and money
+    remain mechanically checked. Original fields are never rewritten.
     """
     by_number: dict[str, list[dict[str, Any]]] = {}
     for item in open_items:
@@ -1638,10 +1639,27 @@ def _resolve_undated_bank_references(
     resolved = []
     for evidence in evidence_rows:
         number = document_key(evidence.get("document_no"), "")
+        if not number and not record_document_keys(evidence):
+            description = clean_text(evidence.get("description"))
+            literal_numbers = {
+                document_key(item.get("document_no"), "")
+                for item in open_items
+                if (reference := clean_text(item.get("document_no")))
+                # A bare number in a narrative could be an amount or customer ID.
+                and any(char.isdigit() for char in reference)
+                and not reference.isdecimal()
+                and re.search(
+                    rf"(?<![\w/-]){re.escape(reference)}(?![\w/-])",
+                    description,
+                    re.IGNORECASE,
+                )
+            }
+            if len(literal_numbers) == 1:
+                number = next(iter(literal_numbers))
         if (
             not number
             or not number.endswith("|")
-            or record_document_keys(evidence) != {number}
+            or record_document_keys(evidence) not in (set(), {number})
             or parse_date(evidence.get("document_date"))
             or not clean_text(evidence.get("party_ref"))
             or (
@@ -4135,6 +4153,92 @@ def row_matches_challenge(
         if clean_text(row.get(field))
     }
     return bool(challenged & row_values)
+
+
+AUTOMATIC_EXACT_MATCH_NOTE = (
+    "Automatically verified exact source match; no human or professional approval."
+)
+
+
+def automatically_review_exact_matches(
+    review_rows: list[dict[str, Any]],
+    reconciliation_rows: list[dict[str, Any]],
+    evidence_rows: list[dict[str, Any]],
+    assumptions: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Verify unique exact identities and cents, never simulate human approval.
+
+    The same calculation is replayed from sealed source rows. Semantic matches,
+    partial payments, tolerance-only matches and ambiguous identities still need
+    review. This removes an accept click that would repeat mechanical checks.
+    """
+    evidence = _resolve_undated_bank_references(reconciliation_rows, evidence_rows)
+    by_id = {clean_text(row.get("record_id")): row for row in evidence}
+    use_count: dict[str, int] = {}
+    for row in reconciliation_rows:
+        refs = set(split_tokens(row.get("matched_evidence_ids")))
+        refs.add(clean_text(row.get("matched_evidence_id")))
+        for ref in refs - {""}:
+            use_count[ref] = use_count.get(ref, 0) + 1
+    automatic = set()
+    for row in reconciliation_rows:
+        bank_id = clean_text(row.get("matched_evidence_id"))
+        bank = by_id.get(bank_id, {})
+        amount = amount_for_matching(row)
+        invoice_date, bank_date = parse_date(record_date(row)), parse_date(
+            record_date(bank)
+        )
+        if (
+            row.get("reconciliation_status") != "closed"
+            or row.get("rule_applied") != "external_bank_match"
+            or row.get("relationship_control_status") != "passed"
+            or normalized_evidence_type(bank) != "external_bank"
+            or use_count.get(bank_id) != 1
+            or amount is None
+            or amount <= 0
+            or _external_cash_amount(bank) != amount
+            or invoice_date is None
+            or bank_date is None
+            or bank_date < invoice_date
+            or not document_keys_match(row, bank, require_both=True)
+            or any(
+                not clean_text(row.get(field)) or row.get(field) != bank.get(field)
+                for field in ("entity_ref", "party_ref", "currency", "unit")
+            )
+            or not accounting_perimeters_compatible(row, bank)
+        ):
+            continue
+        possible_invoices = [
+            item
+            for item in reconciliation_rows
+            if document_keys_match(item, bank, require_both=True)
+            and accounting_perimeters_compatible(item, bank)
+        ]
+        possible_payments = [
+            item
+            for item in evidence
+            if normalized_evidence_type(item) == "external_bank"
+            and document_keys_match(row, item, require_both=True)
+            and accounting_perimeters_compatible(row, item)
+            and _external_cash_amount(item) == amount
+        ]
+        if len(possible_invoices) == len(possible_payments) == 1:
+            automatic.add(clean_text(row.get("record_id")))
+    return [
+        (
+            {
+                **row,
+                "review_status": "PASS",
+                "reviewer_ref": "system-exact-match",
+                "reviewed_on": assumptions["assurance_run_date"],
+                "review_notes": AUTOMATIC_EXACT_MATCH_NOTE,
+            }
+            if row.get("record_id") in automatic
+            and row.get("review_status", "PENDING") == "PENDING"
+            else dict(row)
+        )
+        for row in review_rows
+    ]
 
 
 def is_reviewable_row(row: dict[str, Any]) -> bool:

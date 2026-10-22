@@ -411,6 +411,40 @@ def test_partial_multiple_and_excess_payments_retain_exact_residuals(
     assert len(details) == len(payments)
 
 
+@pytest.mark.parametrize("second_date_field", ["posting_date", "value_date"])
+def test_multiple_semantic_payments_keep_each_actual_bank_date(
+    runtime, monkeypatch, tmp_path, second_date_field
+):
+    _, h, _ = runtime
+    items, bank = population(amounts=("366",), payments=("100", "266"))
+    del bank[1]["posting_date"]
+    bank[1][second_date_field] = "2026-10-12"
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [decision("invoice-0", [("bank-0", "100"), ("bank-1", "266")])],
+    )
+
+    rows = h.reconcile_open_items(items, bank, assumptions)
+
+    assert rows[0]["supporting_bank_record_id"] == "bank-0; bank-1"
+    assert rows[0]["supporting_bank_date"] == "2026-10-10; 2026-10-12"
+    import accountant_report
+
+    main, details, _ = accountant_report.build_accountant_report_rows(
+        rows, normalized_records=bank
+    )
+    assert "2026-10-10" in str(main) and "2026-10-12" in str(main)
+    assert main[0]["_cells"]["data pagamento"] == [
+        {"record_id": "bank-0", "fields": ["posting_date"]},
+        {"record_id": "bank-1", "fields": [second_date_field]},
+    ]
+    assert len(details) == 2
+
+
 def test_mismatched_payer_cannot_be_closed_by_equal_amount(
     runtime, monkeypatch, tmp_path
 ):

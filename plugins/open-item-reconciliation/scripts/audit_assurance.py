@@ -1085,6 +1085,19 @@ def build_reviewed_source_decisions(
                 ) != dict(content):
                     raise AssuranceRunError("reviewed source decision content is stale")
             else:
+                # Intake labels are unsigned metadata, not accounting evidence.
+                # Generate valid identifiers here; sealed receipts still replay
+                # strictly and never inherit an invented human approval.
+                supplied = dict(supplied)
+                reviewer = supplied.get("reviewer_ref")
+                if (
+                    not isinstance(reviewer, str)
+                    or REVIEWER_REF_RE.fullmatch(reviewer) is None
+                ):
+                    supplied["reviewer_ref"] = (
+                        "agent-" + canonical_json_sha256({"label": reviewer})[:24]
+                    )
+                supplied.setdefault("reviewed_on", run_date)
                 content = _validate_source_decision_content(
                     supplied,
                     relative_path=relative_path,
@@ -2034,7 +2047,14 @@ def prepare_assurance_run(
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
     )
     _require_managed_review_authority(
-        normalized_client_engagement, normalized_review_authority, review_rows
+        normalized_client_engagement,
+        normalized_review_authority,
+        review_rows,
+        prepared={
+            "open_items": list(open_items),
+            "evidence_rows": list(evidence_rows),
+            "assumptions": prepared_assumptions,
+        },
     )
     prepared_payload = {
         "schema_version": "open_item_reconciliation.prepared_records.v2",
@@ -2681,11 +2701,40 @@ def _require_managed_review_authority(
     client_engagement: Mapping[str, Any] | None,
     authority: Mapping[str, Any] | None,
     review_rows: Sequence[Mapping[str, Any]] | None,
+    *,
+    prepared: Mapping[str, Any] | None = None,
 ) -> None:
     """Prevent record-ID-only review reuse after managed source replacement."""
     rows = (
         review_rows if review_rows is not None else (authority or {}).get("records", [])
     )
+    if authority is not None and authority["origin"] == "automatic_checks":
+        from reconciliation_helpers import (
+            automatically_review_exact_matches,
+            reconcile_open_items,
+        )
+
+        if prepared is None or (
+            client_engagement is not None
+            and authority["run_id"] != client_engagement["run_id"]
+        ):
+            raise AssuranceRunError(
+                "Automatic review requires the current prepared run"
+            )
+        calculated = reconcile_open_items(
+            prepared["open_items"], prepared["evidence_rows"], prepared["assumptions"]
+        )
+        pending = [
+            {"record_id": row["record_id"], "review_status": "PENDING"} for row in rows
+        ]
+        expected = automatically_review_exact_matches(
+            pending, calculated, prepared["evidence_rows"], prepared["assumptions"]
+        )
+        if authority["records"] != _review_projection(expected) or authority[
+            "records"
+        ] != _review_projection(rows):
+            raise AssuranceRunError("Automatic exact-match checks cannot be rederived")
+        return
     if client_engagement is None or not any(
         str(row.get("review_status") or "PENDING").strip().upper() != "PENDING"
         for row in rows
@@ -2713,7 +2762,11 @@ def build_professional_review_authority(
 ) -> dict[str, Any]:
     """Persist review claims; reviewer_ref remains unsigned and untrusted."""
 
-    if origin not in {"direct_persisted_review", "applied_decisions"}:
+    if origin not in {
+        "direct_persisted_review",
+        "applied_decisions",
+        "automatic_checks",
+    }:
         raise AssuranceRunError("professional review authority origin is unsupported")
     records = _json_safe(
         _review_projection(review_rows),
@@ -3801,7 +3854,7 @@ def validate_review_transition_history(
                 "review transition history requires professional review authority"
             )
         return receipts
-    if current["origin"] == "direct_persisted_review":
+    if current["origin"] in {"direct_persisted_review", "automatic_checks"}:
         if receipts:
             raise AssuranceRunError(
                 "direct professional review cannot claim transition history"
@@ -6826,13 +6879,22 @@ def _finalize_assurance_run_in_place(
     if context_review_authority is None:
         professional_review = build_professional_review_authority(
             review_rows,
+            origin=(
+                "automatic_checks"
+                if any(
+                    row.get("reviewer_ref") == "system-exact-match"
+                    for row in review_rows
+                )
+                else "direct_persisted_review"
+            ),
+            run_id=client_engagement["run_id"] if client_engagement else None,
         )
     else:
         professional_review = validate_professional_review_authority(
             context_review_authority
         )
     _require_managed_review_authority(
-        client_engagement, professional_review, review_rows
+        client_engagement, professional_review, review_rows, prepared=prepared
     )
     if professional_review["records"] != _review_projection(review_rows):
         raise AssuranceRunError(
@@ -7150,6 +7212,16 @@ def _finalize_assurance_run_in_place(
         elif not gates["report_ready"]:
             final_artifacts["status"] = "written_pending_review"
             final_artifacts["blockers"] = []
+        elif professional_review["origin"] == "automatic_checks":
+            final_artifacts["status"] = "final_ready"
+            final_artifacts["blockers"] = []
+            final_artifacts = completed_review_handoff(
+                final_artifacts,
+                language=_read_json_mapping(out_dir / "run_intake.json").get(
+                    "language", "en"
+                ),
+                automatic_checks=True,
+            )
         elif professional_review["origin"] == "applied_decisions":
             final_artifacts["status"] = "final_ready"
             final_artifacts["blockers"] = []
@@ -7590,7 +7662,6 @@ def validate_assurance_run(
         expected_predecessor_checkpoint=expected_predecessor_checkpoint,
         _externally_anchored_run_sha256=_externally_anchored_run_sha256,
     )
-    _require_managed_review_authority(client_engagement, professional_review, None)
     prepared = _read_json_mapping(out_dir / "prepared_records.json")
     if (
         set(prepared)
@@ -7613,6 +7684,9 @@ def validate_assurance_run(
         raise AssuranceRunError("prepared client engagement is stale")
     if prepared["assumptions"].get("assurance_run_date") != run_date:
         raise AssuranceRunError("prepared run date is stale")
+    _require_managed_review_authority(
+        client_engagement, professional_review, None, prepared=prepared
+    )
     if _validated_tolerance(
         prepared["assumptions"].get("amount_tolerance"),
     ) != prepared["assumptions"].get("amount_tolerance"):

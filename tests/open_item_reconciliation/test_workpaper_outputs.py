@@ -99,6 +99,23 @@ def test_canonical_report_keeps_supplied_row_text_unverified(field):
     assert origins is None
 
 
+@pytest.mark.parametrize(
+    "reviewed_on,expected",
+    [("2026-10-22", []), ("2026-10-21", None)],
+)
+def test_automatic_review_date_origin_requires_the_actual_run_date(
+    reviewed_on, expected
+):
+    outputs = load_outputs()
+    row = {"reviewer_ref": "system-exact-match", "reviewed_on": reviewed_on}
+    sheets = {"Assumptions": [{"Campo": "assurance_run_date", "Valore": "2026-10-22"}]}
+
+    origins = outputs.workpaper_row_origins("Review", [row], sheets)
+
+    assert origins[0]["reviewer_ref"] == []
+    assert origins[0]["reviewed_on"] == expected
+
+
 def test_build_audit_workbook_sheets_has_standard_tabs():
     outputs = load_outputs()
     sheets = outputs.build_audit_workbook_sheets(

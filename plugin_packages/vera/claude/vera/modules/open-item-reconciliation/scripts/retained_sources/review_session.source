@@ -30,6 +30,7 @@ def completed_review_handoff(
     *,
     language: str,
     regeneration_pending: bool = False,
+    automatic_checks: bool = False,
 ) -> dict[str, Any]:
     """Reflect recorded review and replay state without making a review decision."""
 
@@ -41,7 +42,15 @@ def completed_review_handoff(
         "fr": "Remettez les documents révisés en indiquant les soldes et les demandes de justificatifs encore ouverts.",
         "de": "Übergeben Sie die geprüften Unterlagen mit ausdrücklich ausgewiesenen Restbeträgen und offenen Beleganforderungen.",
     }
-    if regeneration_pending:
+    if automatic_checks:
+        actions = {
+            "it": "Consegna le carte verificate automaticamente. La pagina di revisione è facoltativa; i controlli non costituiscono approvazione professionale.",
+            "en": "Deliver the automatically verified workpapers. The review page is optional; these checks do not constitute professional approval.",
+            "es": "Entregue los documentos verificados automáticamente. La página de revisión es opcional; estos controles no constituyen aprobación profesional.",
+            "fr": "Remettez les documents vérifiés automatiquement. La page de révision est facultative ; ces contrôles ne constituent pas une approbation professionnelle.",
+            "de": "Übergeben Sie die automatisch geprüften Unterlagen. Die Prüfseite ist optional; diese Kontrollen stellen keine fachliche Freigabe dar.",
+        }
+    elif regeneration_pending:
         actions = {
             "it": "Rigenera le carte con le decisioni registrate e verifica il nuovo risultato prima della consegna.",
             "en": "Regenerate the workpapers with the recorded decisions and verify the successor before delivery.",
@@ -53,7 +62,11 @@ def completed_review_handoff(
         **final_artifacts,
         "review_handoff": {
             **handoff,
-            "status": "review_applied" if regeneration_pending else "review_completed",
+            "status": (
+                "optional_exact_matches_verified"
+                if automatic_checks
+                else "review_applied" if regeneration_pending else "review_completed"
+            ),
             "required_before_final_delivery": False,
             "server": {**handoff.get("server", {}), "required": False},
         },
@@ -1406,7 +1419,7 @@ def _write_artifact_card(
             "",
             f"- ID de ejecución: `{run_id}`",
             f"- Carpeta de salida: `{output_folder}`",
-            "- Entrega para revisión: navegador local mediante `scripts/review_server.py`",
+            "- Revisión opcional: navegador local mediante `scripts/review_server.py`",
             f"- Comando: `{command}`",
             "- Estado de revisión actual: consulte `final_artifacts.json`",
             f"- Elementos para revisar: `{review_items}`",
@@ -1437,7 +1450,7 @@ def _write_artifact_card(
             "",
             f"- Run ID: `{run_id}`",
             f"- Output folder: `{output_folder}`",
-            "- Review handoff: browser locale tramite `scripts/review_server.py`",
+            "- Revisione facoltativa: browser locale tramite `scripts/review_server.py`",
             f"- Command: `{command}`",
             "- Current review status: see `final_artifacts.json`",
             f"- Review items: `{review_items}`",
@@ -1458,7 +1471,8 @@ def _write_artifact_card(
             "## Prossima azione",
             "",
             "Seguire `next_actions` in `final_artifacts.json`. Se la revisione è "
-            "completata (`review_completed`), consegnare i documenti correnti. "
+            "completata (`review_completed`) o verificata automaticamente "
+            "(`optional_exact_matches_verified`), consegnare i documenti correnti. "
             "Se restano decisioni da registrare, usare il browser locale e "
             "Apply decisions prima di rigenerare i documenti.",
         ]

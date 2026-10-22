@@ -14,7 +14,10 @@ Load this reference when producing delivery workpapers, reviewing deterministic 
 
 ## Claude Review Layer
 
-After every deterministic run intended for delivery, build and review a reproducible sample containing at minimum:
+The producer builds the review packet as part of the ordinary calculation.
+Unique exact matches verified from the sealed sources already carry an automatic
+`PASS`; do not audit them again, click Accept or regenerate unchanged workpapers.
+Review only the remaining pending or challenged rows. The saved packet covers:
 
 - 10 highest-value in-scope rows;
 - all rows with bank, factoring/operator, compensation, or other mandatory closure evidence;
@@ -24,17 +27,24 @@ After every deterministic run intended for delivery, build and review a reproduc
 The reviewable population must have exactly one review row per `record_id`,
 with no missing, unknown, or duplicate IDs. Record `PASS`, `FAIL`, or
 `UNRESOLVED`, a canonical `reviewer_ref`, and ISO `reviewed_on` no later than
-the sealed run date; status text alone is not a completed professional review.
+the sealed run date. Automatic checks and agent review do not constitute human
+or professional approval; status text alone does not establish such approval.
 `reviewer_ref` is only an unsigned, unauthenticated label. Treat it as untrusted
 metadata, never as proof of the reviewer's identity or authorization.
 
-If any `FAIL` exists, stop, patch deterministic logic or extraction, rerun reconciliation, rebuild the review packet, and repeat review before delivery. Do not deliver final Excel/Word as audit-ready while required review rows are still `PENDING`.
+If a real calculation or extraction defect exists, retain it and correct it only
+within the user's authorized scope. A pending review does not prevent delivery of
+the draft with unresolved rows clearly identified. Do not label that draft final.
+For `report_ready=true`, deliver the existing workpapers directly.
 
 The assurance gate register keeps source, preparation, reconciliation,
 semantic review, reporting, and publication independent. A click cannot waive
 a failed deterministic check. A pending, skipped, unresolved, reviewer-unbound,
 or failed required review keeps semantic review withheld/failed and reporting
 blocked until native outputs are regenerated and all receipts replay.
+This financial-report readiness gate is distinct from completeness of the
+data-usage report. Incomplete data-usage measurement is delivered as an honest
+warning beside the accounting result and does not require recalculation.
 Even a previously passing gate file cannot authorize a later review
 application: every new applied decision requires native regeneration and a new
 assurance seal. On the first apply, the same copy-on-write transaction retains

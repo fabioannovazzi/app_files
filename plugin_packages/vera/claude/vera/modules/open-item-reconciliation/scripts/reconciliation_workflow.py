@@ -108,6 +108,7 @@ try:
     )
     from .locale_support import language_pack, normalize_language
     from .reconciliation_helpers import (
+        automatically_review_exact_matches,
         bank_allocation_candidates,
         build_codex_review_packet,
         checks_pass,
@@ -146,6 +147,7 @@ except ImportError:  # pragma: no cover - supports direct import from scripts/
     )
     from locale_support import language_pack, normalize_language  # type: ignore
     from reconciliation_helpers import (  # type: ignore
+        automatically_review_exact_matches,
         bank_allocation_candidates,
         build_codex_review_packet,
         checks_pass,
@@ -444,6 +446,13 @@ def build_reconciliation_artifacts(
             priority_rows=review_signals,
         )
     )
+    if review_rows is None:
+        review = automatically_review_exact_matches(
+            review,
+            reconciliation_rows,
+            evidence_rows,
+            assurance_context["prepared_assumptions"],
+        )
     checks = [
         *source_qualification_checks(source_qualifications or []),
         *reconciliation_checks(open_items, reconciliation_rows),

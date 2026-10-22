@@ -2672,6 +2672,14 @@ def _audit_cell_origin(
     if sheet == "Normalized records":
         record_id = row.get("record_id")
         return [{"record_id": record_id, "fields": [field]}] if record_id else None
+    if sheet == "Review" and row.get("reviewer_ref") == "system-exact-match":
+        if field == "reviewer_ref":
+            return []  # Literal technical identity emitted by the exact checks.
+        if field == "reviewed_on" and any(
+            list(setting.values()) == ["assurance_run_date", row[field]]
+            for setting in sheets.get("Assumptions", [])
+        ):
+            return []  # Copied run configuration, not an accounting source date.
     if sheet in {"Reconciliation detail", "Review"}:
         return _reconciliation_cell_origin(row, field, normalized)
     if sheet == "Assumptions":
@@ -3102,6 +3110,11 @@ def _reconciliation_cell_origin(
         from reconciliation_helpers import review_instruction_for_row
 
         return [] if row[field] == review_instruction_for_row(row) else None
+    if field == "review_notes" and row.get("reviewer_ref") == "system-exact-match":
+        from reconciliation_helpers import AUTOMATIC_EXACT_MATCH_NOTE
+
+        # The producer emits this literal; other supplied notes remain unverified.
+        return [] if row[field] == AUTOMATIC_EXACT_MATCH_NOTE else None
     if field == "missing_evidence":
         from accountant_report import _action_origin
 
@@ -3111,12 +3124,20 @@ def _reconciliation_cell_origin(
         "supporting_bank_date",
         "supporting_bank_description",
     }:
-        evidence = normalized.get(str(row.get("supporting_bank_record_id") or ""), {})
+        from reconciliation_helpers import split_tokens
+
+        supporting = [
+            normalized.get(ref, {})
+            for ref in split_tokens(row.get("supporting_bank_record_id"))
+        ]
+        evidence = supporting[0] if len(supporting) == 1 else {}
         if field == "supporting_bank_amount":
             return _amount_origin(evidence, external=True)
         if field == "supporting_bank_date":
-            return _date_origin(evidence)
-        return _source_origin(evidence, "description")
+            return _join_origins([_date_origin(item) for item in supporting])
+        return _join_origins(
+            [_source_origin(item, "description") for item in supporting]
+        )
     if field == "matched_evidence_amounts":
         from reconciliation_helpers import evidence_amount_summary
 

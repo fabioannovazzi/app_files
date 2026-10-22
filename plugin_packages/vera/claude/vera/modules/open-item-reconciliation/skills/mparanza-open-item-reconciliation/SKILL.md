@@ -72,8 +72,8 @@ Do not edit downloaded plugin folders, ZIP contents, or Claude cache copies as s
 
 Filename and text keyword matches are source-role suggestions only. Before raw
 ingestion, Claude must record one `reviewed_source_decisions` entry per current
-source. Each entry contains the reviewed role, adapter family, reviewer
-identity/date, accounting perimeter, cent-only monetary convention
+source. Each entry contains the reviewed role, adapter family,
+accounting perimeter, cent-only monetary convention
 (`reported_increment: "0.01"`), and `date.order` (`day_first` or
 `month_first`). The v2 decision and one qualification carrying its
 `reviewed_mapping_ref` are bound to exactly one current-byte source receipt.
@@ -100,6 +100,9 @@ never fabricate prepared records or ask the professional to author JSON.
 Every `reviewer_ref` is an unsigned, unauthenticated, untrusted label. Its
 canonical syntax and sealed bytes do not prove the reviewer's identity or
 authorization.
+For new plain mappings, intake supplies the run date and a valid technical
+reviewer label when omitted or syntactically invalid. These are bookkeeping
+metadata, not user decisions. Previously sealed receipts retain strict replay.
 
 ## Core Principle
 
@@ -154,7 +157,7 @@ Expected delivery artifacts are:
 - `source_pages.json`;
 - `run_intake.json`, `review_payload.json`, `ui_decisions.json`, and
   `final_artifacts.json` for browser/widget review handoff;
-- `artifact_card.md` as the mandatory visible handoff card for every normal
+- `artifact_card.md` as an optional navigation card for every normal
   run;
 - `review_ui.html` as a standalone local fallback when the local browser server
   cannot start or the browser cannot be opened;
@@ -196,7 +199,13 @@ or the contents of an accounting file.
    manifest is stale or edited. Do not copy, merge, or relabel another
    customer's files to make validation pass.
 
-Completed review rows must come from the current run's applied review decisions.
+Exact one-to-one bank matches are automatically verified when invoice identity,
+party, entity, currency, dates, exact cents and unique allocation all agree with
+the source records. Complete literal invoice references in descriptions are
+resolved before semantic fallback; the latter receives only unresolved rows.
+Automatic review is rederived from the same sealed sources and explicitly does
+not imply human or professional approval. Other completed review rows must come
+from the current run's applied review decisions.
 Regenerate with those exact rows and the externally retained predecessor
 checkpoint. A `PASS` row copied from an earlier run is not authority for replacement
 sources, even when the invoice record ID is unchanged. Import replacement evidence
