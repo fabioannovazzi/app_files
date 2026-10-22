@@ -60,6 +60,21 @@ FIELDS = (
 )
 MAX_ROWS = 120
 MAX_PACKET_BYTES = 48_000
+# Source membership is mechanical; the worker judges whether these identity
+# and narrative fields establish settlement in the complete candidate packet.
+# Amounts and technical metadata alone cannot establish that relationship.
+RELATIONSHIP_EVIDENCE_FIELDS = frozenset(
+    {
+        "document_no",
+        "description",
+        "party_ref",
+        "party_id",
+        "counterparty_id",
+        "counterparty",
+        "counterparty_name",
+        "party",
+    }
+)
 
 
 def _helpers() -> Any:
@@ -162,7 +177,10 @@ def _prompt(packet: dict[str, Any]) -> str:
         "Propose exact positive decimal allocations, never above either source cash or target open amount. "
         "Retain partial-payment and overpayment residuals. Do not allocate by invoice order or proportional guesses. "
         "Each allocation must cite exact non-empty quotes from BOTH its target and source, using their record_id and "
-        "field names, including substantive document/reference or description evidence (amount is not evidence of identity). "
+        "field names. Customer/payer identity, document references and descriptions are substantive evidence; "
+        "amounts alone are not evidence of identity. A generic transfer description can support a relationship "
+        "through source-bound customer identity and the complete candidate population, even without an invoice reference. "
+        "Use the payment description or direction when available to explain its settlement meaning. "
         "Explain why those quotes support the relationship and why competing candidates are excluded. "
         "No external knowledge or tools. A supported decision is an agent assessment, never professional approval.\n"
         + json.dumps(packet, ensure_ascii=False, sort_keys=True)
@@ -516,11 +534,11 @@ def _validate_batch(
                     raise ValueError(
                         "Semantic citation is not an exact quote from its source record"
                     )
-                if field in {"description", "document_no"}:
+                if field in RELATIONSHIP_EVIDENCE_FIELDS:
                     cited.add(identity)
             if cited != {target_id, source_id}:
                 raise ValueError(
-                    "Allocation requires substantive source and target quotes; equal amounts are insufficient"
+                    "Allocation requires source-bound identity or narrative quotes from both records; equal amounts are insufficient"
                 )
             amount = h.parse_decimal(allocation["amount"])
             if amount is None or not amount.is_finite() or amount <= 0:

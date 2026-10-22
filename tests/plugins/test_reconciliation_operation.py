@@ -197,3 +197,67 @@ def test_packaged_operation_retains_its_release_for_later_review(client_case, tm
     binding = json.loads((run / "execution-runtime.json").read_text())
     assert len(binding["package_sha256"]) == 64
     assert delivery["artifacts"]
+
+
+@pytest.mark.parametrize("legacy_checkpoint", [False, True])
+def test_reviewed_draft_finishes_with_retained_checkpoint_without_recalculation(
+    operation, client_case, tmp_path, monkeypatch, reporting_runtime, legacy_checkpoint
+):
+    request = request_for(client_case, tmp_path)
+    request["sources"] = request["sources"][:1]
+    draft = operation.reconcile(request, state_dir=client_case.state_dir)
+    output = Path(draft["output_dir"])
+    checkpoint = json.loads(
+        (output.parent / "reconciliation-review-checkpoint.json").read_text()
+    )["content_sha256"]
+    payload = json.loads((output / "review_payload.json").read_text())
+    scripts = (
+        Path(__file__).resolve().parents[2] / "plugins/open-item-reconciliation/scripts"
+    )
+    monkeypatch.syspath_prepend(str(scripts))
+    import review_server
+
+    applied = review_server.apply_decisions(
+        output,
+        {
+            "reviewer": "agent.codex",
+            "expected_predecessor_checkpoint": checkpoint,
+            "decisions": [
+                {"item_id": item["id"], "action": "accept"} for item in payload["items"]
+            ],
+        },
+    )
+    assert applied["application_status"] == "awaiting_regeneration"
+    context = output.parent.parent / "context.json"
+    operation._command(
+        "raw_input_runner.py",
+        [
+            "--client-engagement",
+            str(context),
+            "--output-subdirectory",
+            "reconciliation",
+            "--expected-predecessor-checkpoint",
+            checkpoint,
+        ],
+        output.parent / "regeneration.log",
+    )
+    original = operation._command
+
+    def replay_only(script, arguments, log):
+        assert script == "audit_assurance.py"
+        assert arguments[-2:] == ["--expected-predecessor-checkpoint", checkpoint]
+        return original(script, arguments, log)
+
+    monkeypatch.setattr(operation, "_command", replay_only)
+    if legacy_checkpoint:
+        (output.parent / "reconciliation-review-checkpoint.json").unlink()
+    finished = operation.finish_reconciliation(
+        client_case.client_id,
+        client_case.engagement_id,
+        draft["run_id"],
+        state_dir=client_case.state_dir,
+        expected_predecessor_checkpoint=checkpoint if legacy_checkpoint else None,
+    )
+    assert finished["status"] == "completed"
+    assert finished["report_ready"] is True
+    assert finished["run_id"] == draft["run_id"]

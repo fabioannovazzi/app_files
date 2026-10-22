@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-22/reconciliation-simple-flow/plugins/vera",
-  "version": "0.1.481",
-  "captured_at": "2026-10-22T13:34:45.422509+00:00",
-  "catalogue_fingerprint": "369d9aa364da37db3c2fc6adf1713bd59a14f8890435fa5e7ad2cd1a12aea8e4",
-  "manifest_sha256": "919979e0e94bf3d6ef1e5ac012f1225fcf4aeea7c257afcb07da96c5fb717287",
+  "root": "/Users/fabio/Documents/Codex/2026-10-22/reconciliation-guide-path/plugins/vera",
+  "version": "0.1.484",
+  "captured_at": "2026-10-22T18:41:47.344593+00:00",
+  "catalogue_fingerprint": "2c6b97b2e46f9fa8319d075f1c0483d4fdc54daae3e0e0e7c67a2dd4420c9902",
+  "manifest_sha256": "7a421f1f180b7e1e0741c624cb08dadc35715fd95e11a6c98cacdfb7938b1bed",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -179,7 +179,7 @@
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "3ee87c809a5552243a92c6a92f5771978bdf8bae4fdc3a27e4a8a60001b42dcd"
+      "sha256": "663233a06bfd3637ddf1f5b27fdc94bbd5436c8fb963a29378d022b67a0027d8"
     },
     {
       "function_id": "organizzazione-lavoro",
