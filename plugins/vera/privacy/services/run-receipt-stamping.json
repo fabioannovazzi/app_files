@@ -56,7 +56,10 @@
     "scripts/run_component_mcp.cjs",
     "scripts/native_workspace.py",
     "mcp/workspace.cjs",
-    "usage/pipelines.json"
+    "usage/pipelines.json",
+    "scripts/component_gateway.py",
+    "scripts/component_service.cjs",
+    "scripts/run_service_mcp.cjs"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -88,7 +91,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-22",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8e8d29947455cfda2c80968a0b98ffc6d1295529866735fc3ddcbf6cc457f05a"
+    "source_fingerprint": "575e86c0e8bddc880e97b48961899c34e2e9f775100715e884ba3c63be25dedf"
   },
   "runtime_profiles": [
     "openai-codex",

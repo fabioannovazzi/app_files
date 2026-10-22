@@ -346,7 +346,11 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 return 2
     try:
-        root = prepare_execution_root(root, selection.module)
+        root = prepare_execution_root(
+            root,
+            selection.module,
+            shared="run" in arguments and product_name(root) == "vera",
+        )
     except (OSError, ValueError) as error:
         logging.error("Product installation verification failed: %s", error)
         report_preparation_failure(root, selection.module, error)

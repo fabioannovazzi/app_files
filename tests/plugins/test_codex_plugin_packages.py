@@ -1251,6 +1251,12 @@ def _projected_review_tools(
     completed = subprocess.run(
         [node, server_path.as_posix(), *server_args, "--stdio"],
         cwd=server_path.parent.parent,
+        env={
+            **os.environ,
+            "MPARANZA_RUNTIME_ROOT": str(
+                server_path.parent.parent.parent / "review-runtime"
+            ),
+        },
         input=json.dumps(message) + "\n",
         capture_output=True,
         check=True,

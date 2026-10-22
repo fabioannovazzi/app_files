@@ -20,7 +20,9 @@ import stat
 import subprocess
 import sys
 import tempfile
+from contextlib import contextmanager
 from pathlib import Path, PurePosixPath, PureWindowsPath
+from typing import Iterator
 
 product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py")))[
     "product_name"
@@ -31,6 +33,10 @@ __all__ = [
     "InstallationContentMismatch",
     "MANIFEST",
     "prepare_execution_root",
+    "execution_package_id",
+    "bind_execution_run",
+    "execution_store_lock",
+    "collect_execution_store",
     "release_execution_root",
     "own_execution_root",
     "execution_lease_fds",
@@ -60,6 +66,7 @@ _OWNED_COPIES: dict[Path, tuple[int, int, int]] = {}
 # the descriptor. Exclusive acquisition is mechanical proof that no holder uses
 # this code; directory names, age and PID liveness alone are not such proof.
 _LEASES: dict[Path, int] = {}
+_SHARED_ROOTS: dict[Path, tuple[int, int]] = {}
 
 
 def _lease_directory() -> Path:
@@ -102,7 +109,8 @@ def own_execution_root(root: Path) -> None:
 
 def execution_lease_fds(root: Path) -> tuple[int, ...]:
     """Keep the code lease in a detached worker until its helper finishes."""
-    descriptor = _LEASES.get(root)
+    shared = _SHARED_ROOTS.get(root)
+    descriptor = shared[0] if shared else _LEASES.get(root)
     return () if descriptor is None else (descriptor,)
 
 
@@ -167,6 +175,16 @@ def recover_abandoned_execution_roots() -> None:
 
 def release_execution_root(root: Path) -> None:
     """Remove owned code only after all inherited kernel leases have closed."""
+    shared = _SHARED_ROOTS.get(root)
+    if shared is not None:
+        shared_descriptor, references = shared
+        if references > 1:
+            _SHARED_ROOTS[root] = (shared_descriptor, references - 1)
+        else:
+            del _SHARED_ROOTS[root]
+            os.close(shared_descriptor)
+            collect_execution_store()
+        return
     identity = _OWNED_COPIES.get(root)
     if identity is None or identity[0] != os.getpid():
         return
@@ -210,6 +228,9 @@ def release_execution_root(root: Path) -> None:
 
 
 def _release_owned_copies() -> None:
+    for root in tuple(_SHARED_ROOTS):
+        descriptor, _ = _SHARED_ROOTS.pop(root)
+        os.close(descriptor)
     for root in tuple(_OWNED_COPIES):
         release_execution_root(root)
 
@@ -381,7 +402,7 @@ def _validate_module(root: Path, module: str | None) -> None:
 
 
 def prepare_execution_root(
-    root: Path, module: str | None, *, snapshot: bool = False
+    root: Path, module: str | None, *, snapshot: bool = False, shared: bool = False
 ) -> Path:
     """Return verified code; recover only authentic-to-index hardlinked bytes.
 
@@ -389,6 +410,7 @@ def prepare_execution_root(
     Recovery never weakens a module's own single-link validation.
     """
 
+    snapshot = snapshot or shared
     product = product_name(root)
     if product == "vera" and module not in ASSURED_MODULES and not snapshot:
         return root
@@ -431,6 +453,11 @@ def prepare_execution_root(
             )
         contents[name] = data
         hardlinks = hardlinks or links > 1
+    if _read_regular(root / MANIFEST)[0] != manifest_bytes:
+        raise ValueError("Execution digest index changed during verification")
+    if shared:
+        recover_abandoned_execution_roots()
+        return _shared_execution_root(contents, manifest_bytes, module)
     if not hardlinks and not snapshot:
         _validate_module(root, module)
         return root
@@ -464,6 +491,315 @@ def prepare_execution_root(
         "Vera ha preparato una copia privata verificata del codice.",
     )
     return private
+
+
+def _code_store() -> Path:
+    """Keep verified code separate from host caches and professional state."""
+    if os.environ.get("MPARANZA_RUNTIME_ROOT"):
+        base = Path(os.environ["MPARANZA_RUNTIME_ROOT"]).expanduser()
+    elif os.name == "nt":
+        base = (
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData/Local")))
+            / "mpr"
+        )
+    else:
+        base = Path.home() / ".local/share/mparanza/runtime"
+    directory = (base / "code").absolute()
+    directory.mkdir(mode=0o700, parents=True, exist_ok=True)
+    _real_ancestors(directory)
+    info = directory.stat()
+    if os.name == "posix" and (
+        info.st_uid != os.getuid() or stat.S_IMODE(info.st_mode) != 0o700
+    ):
+        raise ValueError("Execution code store is not privately owned")
+    return directory
+
+
+def _lock_descriptor(path: Path, *, exclusive: bool, wait: bool = True) -> int:
+    """Acquire a kernel lease; close releases it, including after a crash."""
+    descriptor = os.open(
+        path, os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0), 0o600
+    )
+    try:
+        info = os.fstat(descriptor)
+        if not stat.S_ISREG(info.st_mode) or info.st_nlink != 1:
+            raise ValueError("Invalid execution lock")
+        if os.name == "nt":
+            import ctypes
+            import msvcrt
+            from ctypes import wintypes
+
+            class Overlapped(ctypes.Structure):
+                _fields_ = [
+                    ("Internal", ctypes.c_size_t),
+                    ("InternalHigh", ctypes.c_size_t),
+                    ("Offset", wintypes.DWORD),
+                    ("OffsetHigh", wintypes.DWORD),
+                    ("hEvent", wintypes.HANDLE),
+                ]
+
+            kernel = getattr(ctypes, "WinDLL")("kernel32", use_last_error=True)
+            lock = kernel.LockFileEx
+            lock.argtypes = [
+                wintypes.HANDLE,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                wintypes.DWORD,
+                ctypes.POINTER(Overlapped),
+            ]
+            lock.restype = wintypes.BOOL
+            overlapped = Overlapped()
+            if not lock(
+                getattr(msvcrt, "get_osfhandle")(descriptor),
+                (2 if exclusive else 0) | (0 if wait else 1),
+                0,
+                1,
+                0,
+                ctypes.byref(overlapped),
+            ):
+                error = getattr(ctypes, "get_last_error")()
+                if error == 33:
+                    raise BlockingIOError("Execution code is in use")
+                raise getattr(ctypes, "WinError")(error)
+        else:
+            import fcntl
+
+            fcntl.flock(
+                descriptor,
+                (fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH)
+                | (0 if wait else fcntl.LOCK_NB),
+            )
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+@contextmanager
+def execution_store_lock(name: str = "catalog") -> Iterator[None]:
+    """Serialize materialization/collection or a managed install transaction."""
+    if name not in {"catalog", "install"}:
+        raise ValueError("Unknown execution-store lock")
+    descriptor = _lock_descriptor(_code_store() / f"{name}.lock", exclusive=True)
+    try:
+        yield
+    finally:
+        os.close(descriptor)
+
+
+def execution_package_id(root: Path) -> str | None:
+    """Identify the complete indexed package, independently of its version label."""
+    path = root / MANIFEST
+    return hashlib.sha256(_read_regular(path)[0]).hexdigest() if path.exists() else None
+
+
+def _remove_code(root: Path) -> None:
+    """Remove an exclusively owned immutable code tree, including on Windows."""
+    for directory, _, files in os.walk(root):
+        Path(directory).chmod(0o700)
+        for name in files:
+            target = Path(directory) / name
+            if not target.is_symlink():
+                target.chmod(0o600)
+    shutil.rmtree(root)
+
+
+def _collect_execution_store(directory: Path, keep_idle: int) -> None:
+    idle = []
+    # The catalog lock excludes every creator/collector. A terminated creator's
+    # staging directory cannot be read by a service and is safe to reclaim.
+    for stage in directory.glob(".staging-*"):
+        if stage.is_dir() and not stage.is_symlink():
+            _remove_code(stage)
+    # A crash between atomic publication and writing the ownership receipt
+    # leaves complete code without a lease. Adopt only a complete indexed tree.
+    for root in directory.iterdir():
+        record = directory / f"{root.name}.json"
+        if (
+            re.fullmatch("[0-9a-f]{64}", root.name)
+            and not record.exists()
+            and not root.is_symlink()
+        ):
+            try:
+                manifest = _read_regular(root / MANIFEST)[0]
+                expected = _manifest(manifest)
+                files, _ = _inventory(root)
+                if hashlib.sha256(
+                    manifest
+                ).hexdigest() != root.name or files.keys() != {*expected, MANIFEST}:
+                    continue
+                if any(
+                    _read_regular(files[name]) != (data, 1)
+                    for name, data in {MANIFEST: manifest}.items()
+                ):
+                    continue
+                if any(
+                    hashlib.sha256(_read_regular(files[name])[0]).hexdigest() != digest
+                    for name, digest in expected.items()
+                ):
+                    continue
+                info = root.stat()
+                record.write_text(json.dumps({"identity": [info.st_dev, info.st_ino]}))
+            except (OSError, ValueError):
+                LOGGER.warning("Unrecognized execution store entry retained: %s", root)
+    for record in directory.glob("*.json"):
+        digest = record.stem
+        if not re.fullmatch("[0-9a-f]{64}", digest):
+            continue
+        descriptor = None
+        try:
+            descriptor = _lock_descriptor(
+                directory / f"{digest}.lock", exclusive=True, wait=False
+            )
+            identity = json.loads(_read_regular(record)[0])
+            root = directory / digest
+            if not root.exists():
+                record.unlink()
+                os.close(descriptor)
+                descriptor = None
+                (directory / f"{digest}.lock").unlink()
+                continue
+            info = root.lstat()
+            if (
+                not stat.S_ISDIR(info.st_mode)
+                or [info.st_dev, info.st_ino] != identity["identity"]
+            ):
+                continue
+            idle.append((record.stat().st_mtime_ns, root, record, descriptor))
+            descriptor = None
+        except BlockingIOError:
+            pass
+        except (OSError, ValueError, KeyError, TypeError):
+            LOGGER.warning(
+                "Execution code collection pending: %s", record, exc_info=True
+            )
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+    retired = []
+    try:
+        for _, root, record, _ in sorted(idle, reverse=True)[keep_idle:]:
+            _remove_code(root)
+            record.unlink()
+            retired.append(root.name)
+    finally:
+        for _, _, _, descriptor in idle:
+            os.close(descriptor)
+        # No waiter can hold this pathname: all acquisitions hold catalog.
+        for name in retired:
+            (directory / f"{name}.lock").unlink()
+
+
+def collect_execution_store(*, keep_idle: int = 2) -> None:
+    """Keep two idle releases plus live leases; never collect active services."""
+    if keep_idle < 0:
+        raise ValueError("Idle release count cannot be negative")
+    with execution_store_lock():
+        _collect_execution_store(_code_store(), keep_idle)
+
+
+def _shared_execution_root(
+    contents: dict[str, bytes], manifest: bytes, module: str | None
+) -> Path:
+    """Atomically share verified single-link bytes, while pinning their lifetime."""
+    digest = hashlib.sha256(manifest).hexdigest()
+    expected = {**contents, MANIFEST: manifest}
+    directory = _code_store()
+    root = directory / digest
+    with execution_store_lock():
+        _collect_execution_store(directory, 2)
+        if not root.exists():
+            stage = Path(tempfile.mkdtemp(prefix=".staging-", dir=directory))
+            try:
+                for name, data in expected.items():
+                    path = stage / name
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    with path.open("xb") as handle:
+                        handle.write(data)
+                    path.chmod(0o400)
+                for folder, _, _ in os.walk(stage, topdown=False):
+                    Path(folder).chmod(0o500)
+                stage.rename(root)
+            except BaseException:
+                if stage.exists():
+                    _remove_code(stage)
+                raise
+        # Reuse never trusts a directory name or a previous successful check.
+        files, directories = _inventory(root)
+        expected_directories = {
+            parent.as_posix()
+            for name in expected
+            for parent in PurePosixPath(name).parents
+            if parent != PurePosixPath(".")
+        }
+        if files.keys() != expected.keys() or directories != expected_directories:
+            raise ValueError("Shared execution inventory changed")
+        for name, data in expected.items():
+            actual, links = _read_regular(files[name])
+            if actual != data or links != 1:
+                raise ValueError(f"Shared execution code changed: {name}")
+        _validate_module(root, module)
+        info = root.stat()
+        record = directory / f"{digest}.json"
+        identity = json.dumps({"identity": [info.st_dev, info.st_ino]})
+        if record.exists():
+            if _read_regular(record)[0].decode() != identity:
+                raise ValueError("Shared execution directory identity changed")
+            record.touch()
+        else:
+            record.write_text(identity)
+        if root in _SHARED_ROOTS:
+            descriptor, references = _SHARED_ROOTS[root]
+            _SHARED_ROOTS[root] = (descriptor, references + 1)
+        else:
+            descriptor = _lock_descriptor(directory / f"{digest}.lock", exclusive=False)
+            _SHARED_ROOTS[root] = (descriptor, 1)
+        return root
+
+
+def bind_execution_run(run_root: Path, current_root: Path) -> Path:
+    """Keep an active Archive run on its first complete package across reconnects.
+
+    The binding is professional state, outside immutable code. Missing retired
+    code is explicit; never silently recalculate an old run with a new release.
+    The caller must release the returned lease when its operation/service ends.
+    """
+    digest = execution_package_id(current_root)
+    if digest is None:
+        return current_root  # Editable repository development has no package index.
+    record = run_root / "execution-runtime.json"
+    temporary_lease = None
+    with execution_store_lock():
+        if record.exists():
+            binding = json.loads(_read_regular(record)[0])
+            selected = binding["package_sha256"]
+            if not isinstance(selected, str) or not re.fullmatch(
+                "[0-9a-f]{64}", selected
+            ):
+                raise ValueError("Invalid run execution package binding")
+        else:
+            selected = digest
+            # Catalog serialization and exclusive creation protect simultaneous
+            # first calculation/review requests for the same run.
+            with record.open("x", encoding="utf-8") as handle:
+                json.dump({"schema_version": 1, "package_sha256": digest}, handle)
+        root = current_root if selected == digest else _code_store() / selected
+        if not root.is_dir():
+            raise ValueError(
+                "This run's original code is no longer retained; restore its verified package before resuming"
+            )
+        if root.parent == _code_store():
+            temporary_lease = _lock_descriptor(
+                root.parent / f"{selected}.lock", exclusive=False
+            )
+    try:
+        if execution_package_id(root) != selected:
+            raise ValueError("Run execution package changed")
+        return prepare_execution_root(root, None, shared=True)
+    finally:
+        if temporary_lease is not None:
+            os.close(temporary_lease)
 
 
 class InstallationContentMismatch(ValueError):

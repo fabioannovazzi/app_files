@@ -256,7 +256,9 @@ def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
     engagement.write_text(
         json.dumps({"run_id": "synthetic-run", "input_manifest_sha256": "a" * 64})
     )
-    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *_: tmp_path)
+    monkeypatch.setattr(
+        launcher, "prepare_execution_root", lambda *_, **kwargs: tmp_path
+    )
     monkeypatch.setattr(
         launcher._IMPLEMENTATION,
         "select_runtime",
@@ -369,7 +371,9 @@ def test_real_argument_failure_through_registry_retry_and_original_task_recovery
     helper.write_text(
         "import argparse\np=argparse.ArgumentParser()\np.add_argument('--required',required=True)\np.parse_args()\n"
     )
-    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *_args: tmp_path)
+    monkeypatch.setattr(
+        launcher, "prepare_execution_root", lambda *_args, **kwargs: tmp_path
+    )
     monkeypatch.setattr(
         launcher._IMPLEMENTATION,
         "select_runtime",
@@ -769,7 +773,9 @@ def test_parent_runtime_exception_retains_its_complete_chain(
     launcher = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(launcher)
     (tmp_path / "helper.py").write_text("# synthetic helper")
-    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *_args: tmp_path)
+    monkeypatch.setattr(
+        launcher, "prepare_execution_root", lambda *_args, **kwargs: tmp_path
+    )
     monkeypatch.setattr(
         launcher._IMPLEMENTATION,
         "select_runtime",
@@ -826,7 +832,7 @@ def test_integrity_failure_routes_to_remote_connector_without_unverified_report_
         lambda *_args: SimpleNamespace(requirement_root=tmp_path),
     )
 
-    def invalid(*_args):
+    def invalid(*_args, **kwargs):
         raise ValueError("Installation content mismatch: synthetic.py")
 
     monkeypatch.setattr(launcher, "prepare_execution_root", invalid)
@@ -1375,7 +1381,9 @@ def test_real_failed_helper_retains_error_chain_without_uploading_raw_stderr(
         + f"sys.stderr.write('X' * {extra_stderr_bytes})\n"
         + "try:\n    raise OSError('synthetic underlying cause')\nexcept OSError as cause:\n    raise RuntimeError('synthetic transport failed') from cause\n"
     )
-    monkeypatch.setattr(launcher, "prepare_execution_root", lambda *args: tmp_path)
+    monkeypatch.setattr(
+        launcher, "prepare_execution_root", lambda *args, **kwargs: tmp_path
+    )
     monkeypatch.setattr(
         launcher._IMPLEMENTATION,
         "select_runtime",

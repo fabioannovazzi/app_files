@@ -403,7 +403,7 @@ def test_native_service_releases_snapshot_after_last_persistent_job(
     with native(installed, tmp_path) as call:
         started = call(args)
         assert output(started)[0]["state"] == "running"
-        assert list(temporary.glob("vera-verified-*"))
+        assert list((tmp_path / "unused-runtime/code").glob("*/execution-files.json"))
         assert list(temporary.glob("vera-execution-bootstrap-*"))
     # Closing the transport waits for its worker, then releases only code.
     assert (tmp_path / "counter").read_text() == "run\n"
@@ -523,7 +523,12 @@ def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
         process.stdin.flush()
         assert json.loads(process.stdout.readline())["id"] == 1
         temporary = tmp_path / "os-temp"
-        snapshots = list(temporary.glob("vera-verified-*"))
+        snapshots = [
+            path.parent
+            for path in (tmp_path / "unused-runtime/code").glob(
+                "*/execution-files.json"
+            )
+        ]
         assert len(snapshots) == 1
         os.killpg(process.pid, signal.SIGKILL)
         process.wait(timeout=10)

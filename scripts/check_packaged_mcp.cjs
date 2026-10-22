@@ -2,6 +2,7 @@
 
 // Exercise the packaged launchers: source-tree inspection cannot prove startup.
 const fs = require("node:fs");
+const os = require("node:os");
 const path = require("node:path");
 const { spawn, spawnSync } = require("node:child_process");
 const readline = require("node:readline");
@@ -99,7 +100,7 @@ async function checkRemoteServer(name, config) {
   }
 }
 
-function checkServer(root, name, config) {
+function checkServer(root, name, config, runtime) {
   if (config.type === "http" || config.serverUrl) return checkRemoteServer(name, {...config, url: config.url || config.serverUrl});
   return new Promise((resolve) => {
     if (config.command !== "node" || !Array.isArray(config.args)) {
@@ -117,6 +118,7 @@ function checkServer(root, name, config) {
       env: {
         PATH: process.env.PATH,
         SystemRoot: process.env.SystemRoot,
+        MPARANZA_RUNTIME_ROOT: runtime,
         ...Object.fromEntries(
           Object.entries(config.env || {}).map(([key, value]) => [key, expand(value)]),
         ),
@@ -223,12 +225,28 @@ async function main() {
   if (!servers || !Object.keys(servers).length) {
     throw new Error("Empty MCP server configuration");
   }
+  const runtime = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), "mparanza-release-runtime-")));
   const results = [];
-  for (const [name, config] of Object.entries(servers)) {
-    results.push(await checkServer(root, name, config));
+  try {
+    for (const [name, config] of Object.entries(servers)) {
+      results.push(await checkServer(root, name, config, runtime));
+    }
+    process.stdout.write(`${JSON.stringify(results)}\n`);
+    process.exitCode = results.some((result) => result.error) ? 1 : 0;
+  } finally {
+    // Only this check's private code store is writable for deletion. Never
+    // touch the developer's installed runtime or retained professional state.
+    function writable(directory) {
+      fs.chmodSync(directory, 0o700);
+      for (const entry of fs.readdirSync(directory, {withFileTypes:true})) {
+        const file = path.join(directory, entry.name);
+        if (entry.isDirectory()) writable(file);
+        else if (!entry.isSymbolicLink()) fs.chmodSync(file, 0o600);
+      }
+    }
+    writable(runtime);
+    fs.rmSync(runtime, {recursive:true, force:true});
   }
-  process.stdout.write(`${JSON.stringify(results)}\n`);
-  process.exitCode = results.some((result) => result.error) ? 1 : 0;
 }
 
 module.exports = { validIncidentTools };

@@ -6,7 +6,7 @@
       "destination": "Python Package Index (PyPI) or the package index configured for the active Python interpreter",
       "purpose": "Prepare the published shared Vera, Clara and Lucia core requirements and explicitly approved optional OCR in one user-scoped Python 3.12 environment per operating-system host.",
       "content": "Published shared package names and version constraints plus ordinary package-index request metadata. No client files, prompts, case data, credentials, or generated work are sent by this runtime installer.",
-      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations. Verified temporary code copies are owned by the creating command and removed after completion, failure or cooperative cancellation, with process-exit retry if deletion is temporarily blocked. Preflight verification does not lease a persistent code copy. Installed code, client files and retained professional outputs are not removed. Forced termination or power loss may leave an orphan. On macOS and Linux, fresh code snapshots and native bootstrap copies have private sidecar device/inode records and shared kernel flock leases. Detached native workers inherit the snapshot lease. Normal termination signals stop intake and retain accepted jobs until completion; SIGKILL or power loss can leave copies, recovered on a later verified startup only after an exclusive nonblocking lease proves no holder remains and the directory identity matches. Unmarked historical copies, replaced directories, symlinks and live leases are retained. Lease records contain technical directory identity only, remain outside the indexed code and client folders, and are not returned to the model or sent to a service. Windows retains process-owned cleanup without automatic POSIX orphan recovery.",
+      "retention": "Packages remain in one fixed user-scoped environment outside plugin source and client folders until explicitly removed. The default location is ~/.local/share/mparanza/runtime/venv on macOS and Linux, and LOCALAPPDATA/mpr/venv on Windows; MPARANZA_RUNTIME_ROOT may override the parent. Enabled OCR remains enabled across later core updates. Package-index request-log retention is controlled by the configured index. Failed updates invalidate the readiness receipt and require repair before execution; this shared environment has no retained generations. Verified temporary code copies are owned by the creating command and removed after completion, failure or cooperative cancellation, with process-exit retry if deletion is temporarily blocked. Preflight verification does not lease a persistent code copy. Installed code, client files and retained professional outputs are not removed. Forced termination or power loss may leave an orphan. On macOS and Linux, fresh code snapshots and native bootstrap copies have private sidecar device/inode records and shared kernel flock leases. Detached native workers inherit the snapshot lease. Normal termination signals stop intake and retain accepted jobs until completion; SIGKILL or power loss can leave copies, recovered on a later verified startup only after an exclusive nonblocking lease proves no holder remains and the directory identity matches. Unmarked historical copies, replaced directories, symlinks and live leases are retained. Lease records contain technical directory identity only, remain outside the indexed code and client folders, and are not returned to the model or sent to a service. Windows retains process-owned cleanup without automatic POSIX orphan recovery. Vera MCP services additionally share a verified immutable code tree keyed by the complete package index hash under the runtime parent/code directory. Kernel leases protect live services; the collector retains two idle releases and never removes client/job state. Active Archive runs retain their original package hash in execution-runtime.json beside their context; reconnects use that verified release while retained. Code storage contains shipped product files only. A missing retired release is explicit and is never silently replaced by newer calculation code. Product service startup and per-run review routing are local and add no external recipient. Native status replies include the technical package hash. The local source installer serializes participating updates and retains the current and previous managed source; direct host updates are outside its lock.",
       "activation": "automatic_on_first_use",
       "optional": false,
       "requires_confirmation": false,
@@ -90,14 +90,20 @@
     "scripts/verified_execution.py",
     "skills/vera/references/execution-recovery.md",
     "scripts/operational_incidents.py",
-    "scripts/technical_runner.py"
+    "scripts/technical_runner.py",
+    "scripts/native_execution.py",
+    "scripts/native_execution_mcp.cjs",
+    "scripts/run_component_mcp.cjs",
+    "scripts/component_service.cjs",
+    "scripts/component_gateway.py",
+    "scripts/run_service_mcp.cjs"
   ],
   "service_id": "managed-python-runtime",
   "review": {
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-22",
-    "source_fingerprint": "018abdb1fcaa415c336a6738997132f6df40e3f5d2d2b8fb47c4d844db755d05"
+    "source_fingerprint": "17c057df2f87ca817487798ce3d5aa3e0b65b479f4da53f5917fe72a2e5ec16c"
   },
   "runtime_profiles": [
     "openai-codex",

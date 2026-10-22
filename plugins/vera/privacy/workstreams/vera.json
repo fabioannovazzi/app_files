@@ -6,7 +6,10 @@
   "governed_paths": [
     "skills/vera",
     "scripts/native_execution.py",
-    "scripts/native_execution_mcp.cjs"
+    "scripts/native_execution_mcp.cjs",
+    "scripts/component_gateway.py",
+    "scripts/component_service.cjs",
+    "scripts/run_service_mcp.cjs"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -20,7 +23,7 @@
       {
         "id": "selected-task-evidence",
         "purpose": "Carry out vera using the selected evidence and user instructions",
-        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist.",
+        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Active runs bind that hash locally so calculation and review use their original release across a live update; this does not transmit additional source data or change the specialist payload.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork",
@@ -57,7 +60,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-22",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7bffbb30a787f04f13c26e9bd00de4d522f3bed1305c22072bfa73853af5f7cb"
+    "source_fingerprint": "949e9a693e19979f447dd80bef38641a67c2907d9ab685a724dd7165f65d3745"
   },
   "service_ids": [
     "cnc-authenticated-review",
