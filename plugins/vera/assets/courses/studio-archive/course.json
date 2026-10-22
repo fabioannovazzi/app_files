@@ -88,6 +88,11 @@
       "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
     },
     {
+      "path": "modules/studio-archive/scripts/reconcile_open_items.py",
+      "repository_path": "plugins/studio-archive/scripts/reconcile_open_items.py",
+      "sha256": "b0d4bf0404a559966cb6854342bd8f97a96664bcf54714c0202373b85a7295a7"
+    },
+    {
       "path": "modules/studio-archive/scripts/run_reporting.py",
       "repository_path": "plugins/studio-archive/scripts/run_reporting.py",
       "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a"

@@ -94,7 +94,15 @@ def _bank_origin(row: dict[str, Any], field: str) -> list[dict[str, Any]] | None
     record_id = clean_text(row.get("supporting_bank_record_id")) or clean_text(
         row.get("matched_evidence_id")
     )
-    return [{"record_id": record_id, "fields": [field]}] if record_id else None
+    return (
+        [
+            {"record_id": ref.strip(), "fields": [field]}
+            for ref in record_id.split(";")
+            if ref.strip()
+        ]
+        if record_id
+        else None
+    )
 
 
 def _action_origin(row: dict[str, Any]) -> list[dict[str, Any]] | None:
@@ -725,6 +733,8 @@ def main_row_from_detail(
             and abs(difference) == residual
         )
         semantic_supported = row.get("rule_applied") == "semantic_evidence_allocation"
+        if semantic_supported and clean_text(row.get("supporting_bank_date")):
+            data_pagamento = clean_text(row["supporting_bank_date"])
         ambiguous = not semantic_supported and (
             confidence in {"Media", "Bassa", "Non trovato"}
             or len(details) > 1
@@ -738,6 +748,18 @@ def main_row_from_detail(
         best.get("descrizione evidenza")
     )
     detail_origins = best.get("_cells", {})
+    payment_date_origins = detail_origins.get("data evidenza", [])
+    if row.get("rule_applied") == "semantic_evidence_allocation":
+        supporting = {
+            ref.strip()
+            for ref in clean_text(row.get("supporting_bank_record_id")).split(";")
+        }
+        payment_date_origins = [
+            origin
+            for detail in details
+            for origin in detail.get("_cells", {}).get("data evidenza", []) or []
+            if origin["record_id"] in supporting
+        ] or None
     allocated_origin = (
         _bank_origin(row, "amount") if clean_text(row.get("allocated_amount")) else []
     )
@@ -753,9 +775,7 @@ def main_row_from_detail(
                 if clean_text(row.get("residual_amount"))
                 else []
             ),
-            "data pagamento": (
-                detail_origins.get("data evidenza", []) if confidence != "N/A" else []
-            ),
+            "data pagamento": (payment_date_origins if confidence != "N/A" else []),
             "evidenza usata": (
                 None
                 if clean_text(row.get("semantic_reason"))
@@ -789,7 +809,11 @@ def main_row_from_detail(
             else clean_text(best.get("differenza")) or "N/A"
         ),
         "azione richiesta": default_action(row, confidence),
-        "riferimento fonte": clean_text(best.get("riferimento fonte")),
+        "riferimento fonte": (
+            clean_text(row.get("supporting_bank_reference"))
+            if row.get("rule_applied") == "semantic_evidence_allocation"
+            else clean_text(best.get("riferimento fonte"))
+        ),
     }
 
 

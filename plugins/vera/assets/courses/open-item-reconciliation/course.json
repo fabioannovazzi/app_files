@@ -54,7 +54,12 @@
     {
       "path": "modules/open-item-reconciliation/references/review-and-outputs.md",
       "repository_path": "plugins/open-item-reconciliation/references/review-and-outputs.md",
-      "sha256": "2258a5c2f4542a3e2250c1349fa7955e51f7e6fee42bdca5dfd5703216e1ee07"
+      "sha256": "017b66b22dbd5a795de16c3c3db9305da6f92394b4c965532e2e7e0050cfa85e"
+    },
+    {
+      "path": "modules/open-item-reconciliation/references/simple-reconciliation.md",
+      "repository_path": "plugins/open-item-reconciliation/references/simple-reconciliation.md",
+      "sha256": "e546756a2a76e21beb8a0fd39a7102ac0d3ae7d4dbd24313e47077daf09f31c1"
     },
     {
       "path": "modules/open-item-reconciliation/references/starter-prompts.md",
@@ -69,7 +74,7 @@
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "f00930f5ef135026be009fb1167356647e4b5f74d9bbab63a54fe7b7a1753304"
+      "sha256": "03eec13de5f2f98ef74bd413ec31ee810cf05aa7e08134294f954cc87d841b6e"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -79,7 +84,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "b5fd91b3b7c68acae89d76ba522e0405b84015e7b46a0a8b8a00039e7e0234d8"
+      "sha256": "d5d0891b939e5b12c888e397926dd02bdbfe13313bd3a8eb2d83d80ce0c0e888"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -109,12 +114,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/reconciliation_workflow.py",
-      "sha256": "7ce99ede60798bd745e7deae9affdecef5f24b118d3ea0c376717345daab5dbb"
+      "sha256": "0db8b1aa827c5047be2e8113692d89581f4d530c53b1d77bc150ea5c788f959c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
-      "sha256": "b19ccd3d46db2548cef9693f0529ed188d97507118d5b023a1d788458fcee298"
+      "sha256": "a47eb166f3a90970be98ae901e7e914f7441b8d79c7f85270824e26755e91752"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
@@ -124,17 +129,17 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
-      "sha256": "91938e9026e73fd5424ab5036c3a17c596c46f1a138e41dfff6d5589a6380648"
+      "sha256": "72952ef0fe7e2f21154de88099a3f9c20dbfb12b6fe12b8cc151f3ad1cbb1f06"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/review_session.source",
-      "sha256": "2cb0bf138c61440c23ed81483b0caeeecdc2422a81bb7387cf3b7cd64fdf5da8"
+      "sha256": "29504ad81ad2ebf46f6d380d8c34c68ede1269d35ea34ed7806671c05a94992e"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "f2d1b21e75741cd76fef908a4f32de63da93722b43952be0864edad045cbc97c"
+      "sha256": "75c33c46bf296a8f9ac7b60d3542f6decf05789a8edfd32bbf97209283cd6e4a"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -144,12 +149,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "5de5d30ab80cbc83b126808b4b9583a10fbcc6aff7932362c351269e7bb2379d"
+      "sha256": "d9c4d90d69d770560144dac855a13c789b8ff7831736ae27c948bb22ea3c16ff"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "b6e52c0c6dc2076048ce635e0b33a5bb2160afc68e132f967bc59f3bb1aaa3d0"
+      "sha256": "3e2b69be3b6638a7e55b26b3dbf58c71c9be7f73f4bdb2b5a5c77710b7d3c9b9"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
@@ -207,9 +212,194 @@
       "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
     },
     {
+      "path": "modules/studio-archive/assets/icon.svg",
+      "repository_path": "plugins/studio-archive/assets/icon.svg",
+      "sha256": "9af9d82ba0869b79fca8ba154b1efe2eaa5970c2d3d589a588c987cf2952d7a4"
+    },
+    {
+      "path": "modules/studio-archive/requirements.txt",
+      "repository_path": "plugins/studio-archive/requirements.txt",
+      "sha256": "e1410b9553859a73d5c30af448a442751c1599c66f84e2a72574111f1a4b0b94"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_core.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_core.py",
+      "sha256": "6e6d06a379f9ba09ec6247a77068b1c525882231dd1e9abbf8716ecd28f897bb"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_error_reporting.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_error_reporting.py",
+      "sha256": "1e6b75417003089eec78c1a36fafbb63af0935e3ea48d8e91314b510cc9080d4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/archive_preferences.py",
+      "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
+      "sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086"
+    },
+    {
+      "path": "modules/studio-archive/scripts/build_model_data_report.py",
+      "repository_path": "plugins/studio-archive/scripts/build_model_data_report.py",
+      "sha256": "57eebdae3bb98531ee030dda2fca05de45ce84331ac4f8fdede6a3c3b06ea409"
+    },
+    {
+      "path": "modules/studio-archive/scripts/check_dependencies.py",
+      "repository_path": "plugins/studio-archive/scripts/check_dependencies.py",
+      "sha256": "9af5b8c81cdd7c1811d2a2d39c0d8db19c51d098cde5f4bb808df1af6ee18ea4"
+    },
+    {
+      "path": "modules/studio-archive/scripts/client_ledger.py",
+      "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
+      "sha256": "759ff0d79729cf1535ffa6fdad036f8a47b988500137c06ad6147e799cc7a969"
+    },
+    {
+      "path": "modules/studio-archive/scripts/folder_intake.py",
+      "repository_path": "plugins/studio-archive/scripts/folder_intake.py",
+      "sha256": "11a9eb7d2be366890b0db14ca2588454b288d53e414d86193c2f5b867b40947c"
+    },
+    {
+      "path": "modules/studio-archive/scripts/google_drive.py",
+      "repository_path": "plugins/studio-archive/scripts/google_drive.py",
+      "sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5"
+    },
+    {
+      "path": "modules/studio-archive/scripts/input_verification.py",
+      "repository_path": "plugins/studio-archive/scripts/input_verification.py",
+      "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
+    },
+    {
+      "path": "modules/studio-archive/scripts/readable_archive.py",
+      "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
+      "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
+    },
+    {
+      "path": "modules/studio-archive/scripts/reconcile_open_items.py",
+      "repository_path": "plugins/studio-archive/scripts/reconcile_open_items.py",
+      "sha256": "b0d4bf0404a559966cb6854342bd8f97a96664bcf54714c0202373b85a7295a7"
+    },
+    {
+      "path": "modules/studio-archive/scripts/run_reporting.py",
+      "repository_path": "plugins/studio-archive/scripts/run_reporting.py",
+      "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a"
+    },
+    {
+      "path": "modules/studio-archive/scripts/studio_archive.py",
+      "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
+      "sha256": "4fe199b53b1ae39bef47e5cf7f7301262c049cff097234382495c11418c5d827"
+    },
+    {
+      "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
+      "repository_path": "plugins/studio-archive/scripts/whatsapp_desktop_guard.mjs",
+      "sha256": "79f43c094c5c6e703b07dd65b936d40d9f5b1ad33b4f0f7dd50afa1f1ce277dc"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/__init__.py",
+      "sha256": "b9c828953825fd2b27182d6fe360dfd49ebc9b5e846d4b0d969af3e2829465ae"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/archive_report_legacy.py",
+      "repository_path": "plugins/vera/scripts/archive_report_legacy.py",
+      "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/archive_report_measurements.py",
+      "repository_path": "plugins/vera/scripts/archive_report_measurements.py",
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/archive_report_receipt.py",
+      "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
+      "sha256": "d4b7cdad03bf1745632cd96087bbf352b89633d442d9ba32f606a85f1cd5662c"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/archive_report_seal.py",
+      "repository_path": "plugins/vera/scripts/archive_report_seal.py",
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/archive_report_store.py",
+      "repository_path": "plugins/vera/scripts/archive_report_store.py",
+      "sha256": "71b343484ce0dad7b426449c0d3038cb324dbd8ea3d45b44658e9e7e51fcdff5"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
+      "repository_path": "plugins/vera/scripts/archive_reporting.py",
+      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
+      "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
+      "sha256": "93e16152a47769fa8fbf56181e5a213f7dba181a8515a139971d3169ec055546"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/model_data_report.py",
+      "repository_path": "plugins/vera/scripts/model_data_report.py",
+      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/privacy_contract.py",
+      "repository_path": "plugins/vera/scripts/privacy_contract.py",
+      "sha256": "08116da007761d983c5eaead355025e9ba299d20dc31821044f402da1bcab594"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/selective_reporting.py",
+      "repository_path": "plugins/vera/scripts/selective_reporting.py",
+      "sha256": "3c99afa7d416625bd94d1dc0aab41ea354df662f0362098f3b431a57fecba8ba"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/envelope.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/jurisdiction.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/money.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/serialization.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_ocr/__init__.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_ocr/__init__.py",
+      "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
+    },
+    {
       "path": "skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "e9ebc383b0780cfe3c45cd5a86b6c6581ac8e3143cbb6002b6daa9149105a101"
+      "sha256": "3ee87c809a5552243a92c6a92f5771978bdf8bae4fdc3a27e4a8a60001b42dcd"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

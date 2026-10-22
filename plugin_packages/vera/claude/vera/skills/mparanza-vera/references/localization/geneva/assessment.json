@@ -134,7 +134,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "7589fc946a50b70cb8ec64bc166fc838e79487183ef5537a6f6024a4f6687602",
+  "catalogue_fingerprint": "369d9aa364da37db3c2fc6adf1713bd59a14f8890435fa5e7ad2cd1a12aea8e4",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2241,5 +2241,10 @@
     "previous_catalogue_fingerprint": "61eb479db8cb6ec151d6e50cf740fc57a6f36377775b3eaa4c325f508d2b30b1",
     "version": "0.1.480",
     "scope": "Package runtime and version refresh; all skill entrypoint bytes and jurisdiction judgments remain unchanged."
+  },
+  "reconciliation_usability_release_binding_20261022": {
+    "previous_catalogue_fingerprint": "7589fc946a50b70cb8ec64bc166fc838e79487183ef5537a6f6024a4f6687602",
+    "version": "0.1.481",
+    "scope": "Open-item reconciliation entrypoint now uses the maintained import-to-delivery operation, automatically verifies unique exact source matches, and separates accounting readiness from reporting completeness. Dates and source provenance are retained. Existing jurisdiction assessments and professional acceptance limits remain unchanged; no new Geneva acceptance is claimed."
   }
 }

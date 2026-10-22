@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.480",
-  "captured_at": "2026-10-22T09:29:25.236940+00:00",
-  "catalogue_fingerprint": "7589fc946a50b70cb8ec64bc166fc838e79487183ef5537a6f6024a4f6687602",
-  "manifest_sha256": "1e64076c91d89cd9f1621cf609f1b076a11d07421eea45420a3394b1b4ba2c56",
+  "root": "/Users/fabio/Documents/Codex/2026-10-22/reconciliation-simple-flow/plugins/vera",
+  "version": "0.1.481",
+  "captured_at": "2026-10-22T13:34:45.422509+00:00",
+  "catalogue_fingerprint": "369d9aa364da37db3c2fc6adf1713bd59a14f8890435fa5e7ad2cd1a12aea8e4",
+  "manifest_sha256": "919979e0e94bf3d6ef1e5ac012f1225fcf4aeea7c257afcb07da96c5fb717287",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -179,7 +179,7 @@
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "e9ebc383b0780cfe3c45cd5a86b6c6581ac8e3143cbb6002b6daa9149105a101"
+      "sha256": "3ee87c809a5552243a92c6a92f5771978bdf8bae4fdc3a27e4a8a60001b42dcd"
     },
     {
       "function_id": "organizzazione-lavoro",

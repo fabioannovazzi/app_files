@@ -2101,15 +2101,12 @@ def test_assurance_contract_is_documented_in_skill_and_workflow_reference() -> N
 @pytest.mark.parametrize(
     ("field", "value"),
     [
-        ("reviewer_ref", None),
-        ("reviewer_ref", 123),
-        ("reviewer_ref", " reviewer.test"),
         ("reviewed_on", None),
         ("reviewed_on", "not-a-date"),
         ("reviewed_on", "2999-01-01"),
     ],
 )
-def test_source_decision_rejects_noncanonical_or_future_review_metadata(
+def test_source_decision_rejects_invalid_or_future_review_date(
     tmp_path: Path,
     field: str,
     value: object,

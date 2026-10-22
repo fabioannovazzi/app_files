@@ -453,6 +453,14 @@ jobs:
           python -m isort --check-only plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py tests/open_item_reconciliation/test_reconciliation_helpers.py tests/open_item_reconciliation/test_reviewed_tabular_adapter.py tests/open_item_reconciliation/test_workpaper_outputs.py tests/open_item_reconciliation/coverage_plugin.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py tests/open_item_reconciliation/coverage_plugin.py
           python -m bandit -q -ll plugins/open-item-reconciliation/scripts/audit_assurance.py plugins/open-item-reconciliation/scripts/raw_input_runner.py plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source
+      - name: Verify one-call reconciliation delivery and independent reporting warnings
+        if: matrix.suite == 'open-item-source'
+        run: |
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_reconciliation_operation.py
+          python -m black --check plugins/studio-archive/scripts/reconcile_open_items.py tests/plugins/test_reconciliation_operation.py tests/open_item_reconciliation/test_simple_reconciliation.py
+          python -m isort --check-only plugins/studio-archive/scripts/reconcile_open_items.py tests/plugins/test_reconciliation_operation.py tests/open_item_reconciliation/test_simple_reconciliation.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/reconcile_open_items.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/reconcile_open_items.py
       - name: Verify Open-item public review, CLI regeneration and measured source coverage
         if: matrix.suite == 'open-item-projection'
         env:

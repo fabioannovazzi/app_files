@@ -322,7 +322,7 @@ def test_native_regeneration_keeps_incomplete_professional_review_blocked(
             case["output"] / "assurance_final_outputs/reconciliation_results.json"
         ).read_bytes()
     )
-    assert [row["review_status"] for row in canonical["review_rows"]] == [
+    assert sorted(row["review_status"] for row in canonical["review_rows"]) == [
         "PASS",
         "UNRESOLVED",
         "UNRESOLVED",

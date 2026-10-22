@@ -76,6 +76,13 @@ saved lifecycle status and the pending report separately. Retry reporting for
 the same run; do not repeat calculations or create a replacement run. Never
 present an older draft report as the missing final report.
 Do not ask the user to request the report separately.
+Treat accounting outcome and data-usage reporting completeness separately.
+An incomplete measurement (including `sent_data_has_no_source_coordinates`) or
+pending server receipt does not turn a verified accounting result into a failed
+reconciliation and must not withhold its files. Deliver the result and the honest
+reporting warning together. Do not rerun reconciliation to repair reporting.
+An actual source-integrity, mapping, arithmetic or allocation failure remains an
+accounting issue; this distinction never waives those checks.
 Reopening the saved report does not start another run or submit its contents to
 the server. A pending server receipt does not change the frozen report bytes.
 

@@ -225,6 +225,26 @@ invoked by the user; Vera does not dispatch them.
 
 # Riconciliazione partite
 
+For normal CSV/XLSX work, use the maintained import-to-delivery operation in
+`../../modules/studio-archive/scripts/reconcile_open_items.py` (repository:
+`../../../studio-archive/scripts/reconcile_open_items.py`). Inspect the selected
+sources and write one request using the component's
+`references/simple-reconciliation.md`. Invoke it through `vera_execute` with
+component `studio-archive`, script `scripts/reconcile_open_items.py`, and
+`arguments=["--request", "<absolute request path>"]`. Reuse the request to reopen
+its saved result; do not assemble the import/start/produce/finalize sequence or
+repeat calculation after success. Only unresolved material choices require a
+question. The agent supplies mappings; technical reviewer labels are generated.
+
+Read `accounting_status`, `report_ready` and the returned artifacts. Exact,
+unique, source-verified matches complete automatically. Deliver those files
+directly; the browser is optional. For `review_required`, deliver the draft and
+its unresolved items, then use the existing review tools for the remaining
+decisions. After review/regeneration, call the same operation with
+`--finish-run <run_id>`. Never invent human approval. A data-usage warning is
+reported alongside the result; it does not negate a verified reconciliation or
+justify rerunning it. Preserve the warning and the saved data-usage report.
+
 For a prepared and started run with exact registered source receipts, the
 optional native workspace also offers initial preparation. It preserves private
 unfinished scope and per-source choices without restoring confirmation. The

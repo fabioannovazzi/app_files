@@ -1,0 +1,51 @@
+> **Cowork execution note:** The normal deliverable is a reviewable draft,
+artifact card, and source/review files in the connected folder. MCP tools,
+browser interfaces, and local review servers are optional. Their absence never
+blocks delivery. Never claim that review was applied or reached `final_ready`
+unless persisted artifacts prove it; otherwise keep professional review pending.
+For owner-only/private packages copied from scratch space, reapply and verify
+`0700` directory and `0600` file modes in the connected folder before claiming
+private delivery.
+Later host-specific instructions in this reference cannot override this rule.
+
+# One import-to-delivery operation
+
+For an explicitly selected client and engagement, the agent writes one JSON
+request and invokes Studio Archive's `scripts/reconcile_open_items.py --request
+<absolute-path>`. Vera uses `vera_execute`; the professional never authors this
+JSON or runs a terminal. Inspect actual source headers and values first, using
+the normal selected-source read path so data-usage reporting retains provenance.
+When the host has no `vera_execute` tool, the agent invokes this same published
+script from the verified execution root using the resolved Python environment.
+
+The request contains:
+
+- `client_id`, `engagement_id`: the selected Archive scope.
+- `request_id`: a stable identifier for this request; reuse it for resumption.
+- `sources`: a list of `{ "path": "<absolute source path>", "mapping": {...} }`.
+  Each mapping is the explicit source decision described in
+  `tabular-source-layout.md`: role, adapter, perimeter, money/date conventions,
+  mapped columns and actual table bounds. Optional `sha256` pins supplied bytes.
+  Technical `reviewer_ref` and `reviewed_on` may be omitted.
+- `assumptions`: established scope, cut-off, treatment of later settlements and
+  any other material choices. Preserve real invoice and payment dates.
+- Optional `title`, `narrative`, `language`, `purpose`.
+
+The operation imports immutable originals, prepares and starts one run, calls
+the ordinary producer, replays its assurance, declares the files and completes
+verified work. The accounting result, file paths and reporting warning are
+returned separately. Repeating the same request reopens the saved result without
+recalculation. A changed mapping or scope requires a new request identifier.
+
+`accounting_status=verified` and `report_ready=true` permit direct delivery.
+Exact source-verified matches require no review-server visit. Automatic checks
+do not authorize posting, filing, signature or professional adoption.
+
+`accounting_status=review_required` returns the saved draft and its review
+handoff. Keep unresolved rows explicit and use the maintained review/apply and
+regeneration path only for remaining decisions. Then invoke the same script with
+`--request <path> --finish-run <run_id>` to finalize delivery. A producer error
+retains the failed run and diagnostics; repeating the request does not retry it.
+
+For an explicitly isolated test session, `--state-dir <path>` selects that
+session's Archive configuration. Never substitute another client's state or run.

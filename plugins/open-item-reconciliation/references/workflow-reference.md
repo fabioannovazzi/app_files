@@ -179,6 +179,9 @@ under `pending_steps`; it is not a failed calculation or a request for another
 approval. The old pending-review count card does not need a separate acceptance
 when the sealed source and calculation checks pass and the row decisions are
 complete. Final delivery still requires `report_ready=true` after regeneration.
+An initial run whose unique exact matches pass the automatic source checks can
+already be `final_ready` with `report_ready=true`; deliver it without an Apply or
+regeneration cycle. These automatic checks are not professional approval.
 Actual failed checks, rejected decisions, skipped required rows and invalid
 receipts remain blocking errors and must be reported as such.
 

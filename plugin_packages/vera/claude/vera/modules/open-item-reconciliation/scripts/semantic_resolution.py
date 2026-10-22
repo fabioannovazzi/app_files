@@ -636,6 +636,7 @@ def apply_resolution(
     """Carry validated relationships and explicit residuals into native results."""
     h = _helpers()
     updated = {row["record_id"]: dict(row) for row in rows}
+    evidence_by_id = {row["record_id"]: row for row in evidence if row.get("record_id")}
     for decisions, ledger in _replay(rows, evidence, assumptions):
         for decision in decisions:
             row = updated[decision["target_id"]]
@@ -675,6 +676,19 @@ def apply_resolution(
                     "relationship_allocation_ledger_id": ledger["ledger_id"],
                     "relationship_allocation_content_sha256": ledger["content_sha256"],
                 }
+            )
+            settlements = [evidence_by_id[source_id] for source_id in ids]
+            dates = sorted({h.record_date(item) for item in settlements} - {""})
+            row.update(
+                supporting_bank_record_id="; ".join(ids),
+                supporting_bank_reference="; ".join(
+                    h.evidence_reference(item) for item in settlements
+                ),
+                supporting_bank_date="; ".join(dates),
+                supporting_bank_description="; ".join(
+                    h.clean_text(item.get("description")) for item in settlements
+                ),
+                supporting_bank_rule="semantic_evidence_allocation",
             )
     return list(updated.values())
 
