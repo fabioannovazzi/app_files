@@ -48,9 +48,9 @@ def _jobs() -> Path:
     return root
 
 
-def _specification(args: dict[str, Any]) -> dict[str, Any]:
+def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     """Resolve only shipped Python helpers; never accept a shell or caller code."""
-    components = json.loads((ROOT / "components.json").read_text())["plugins"]
+    components = json.loads((root / "components.json").read_text())["plugins"]
     component = args.get("component")
     if not isinstance(component, str) or component not in components:
         raise ValueError("Select a component in this installed Vera package")
@@ -64,9 +64,9 @@ def _specification(args: dict[str, Any]) -> dict[str, Any]:
         or not script.endswith(".py")
     ):
         raise ValueError("Select a published component scripts/*.py entrypoint")
-    component_root = ROOT / "modules" / component
+    component_root = root / "modules" / component
     if not component_root.exists():
-        component_root = ROOT.parent / component
+        component_root = root.parent / component
     helper = component_root / script
     if helper.is_symlink() or not helper.resolve().is_relative_to(
         component_root.resolve()
@@ -181,10 +181,18 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         ).hexdigest()
         from archive_emit import bind_output
 
+        binding = bind_output(spec["component"], _arguments(spec))
+        execution_root = ROOT
+        from verified_execution import bind_execution_run, execution_package_id
+
+        if binding is not None:
+            execution_root = bind_execution_run(Path(binding["run_root"]), ROOT)
+            spec = _specification(args, execution_root)
         request = {
             **spec,
             "fingerprint": fingerprint,
-            "binding": bind_output(spec["component"], _arguments(spec)),
+            "binding": binding,
+            "package_sha256": execution_package_id(execution_root),
         }
         try:
             job.mkdir(mode=0o700)
@@ -213,20 +221,22 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
             if os.name == "posix":
                 from verified_execution import execution_lease_fds
 
-                options["pass_fds"] = execution_lease_fds(ROOT)
+                options["pass_fds"] = execution_lease_fds(execution_root)
             with (job / "runner.stderr").open("ab") as errors:
                 worker = subprocess.Popen(
                     [
                         sys.executable,
                         "-I",
                         "-B",
-                        str(Path(__file__).resolve()),
+                        str(execution_root / "scripts/native_execution.py"),
                         "--execute",
                         str(job),
                     ],
-                    cwd=ROOT,
+                    cwd=execution_root,
                     env={
                         **os.environ,
+                        "VERA_EXECUTION_PACKAGE_ID": request["package_sha256"]
+                        or "development",
                         "MPARANZA_INCIDENT_TASK_ID": spec["task_id"],
                         **(
                             {"MPARANZA_INCIDENT_DELIVERY": "local-only"}
@@ -256,7 +266,11 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         ("management-control-pack", "preview_report.py"),
         ("open-item-reconciliation", "review_server.py"),
     }
-    value = {"job_id": job_id, **_output(job, streaming=streaming)}
+    value = {
+        "job_id": job_id,
+        "package_sha256": request.get("package_sha256"),
+        **_output(job, streaming=streaming),
+    }
     if (job / "cancellation_error.json").exists():
         value["cancellation_error"] = json.loads(
             (job / "cancellation_error.json").read_text()

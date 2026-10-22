@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "7b92bb9de422b90f1ce8948bd07df9ea03f4f27840afcebc42cb611599850c25",
+      "sha256": "d9f20fb608618a81220e783f38d253642f262d9a110530a8b33a14cdd78a7614",
       "languages": [
         "it",
         "en"
@@ -342,7 +342,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "5ac27c9c2ecadc8bb8a8491d0c9eff3836a567d86b0d1a33b082b469b6ca031a",
+      "sha256": "d39a1e012a98584fb8226e2a79a18d550729226bf9666ab1f829d78c50a716c9",
       "languages": [
         "it",
         "en",
@@ -741,7 +741,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "5682cdf1c2309ab84fc8036b8577621fea52a8cc2087a19380d0d473c49497fe",
+      "sha256": "269db27c022ff3912b3f91fbbffb4e50e06a273b1f002def08e6b685466255de",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1049,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "2ccb88ad2afa157b79bf26f63d43179b96e355fd21ea0c3406d95a59c9141267",
+      "sha256": "5a212e5f2e0d8e6790f381b0d06ec287cb18169d858dbf8f579f49d8a69b449a",
       "languages": [
         "it",
         "en",
@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "99005232411319c4f2941e9217eca2bb3d188daf2bcbec348233a925678c8f08",
+      "sha256": "bd8ea7ff682efa11ea375976cf1bd81bf390253dd4618ca71f103ed80ba198ed",
       "languages": [
         "it",
         "en",

@@ -15,6 +15,11 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPT = ROOT / "plugins/vera/scripts/verified_execution.py"
 
 
+@pytest.fixture(autouse=True)
+def isolate_shared_code_store(tmp_path, monkeypatch):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+
+
 def load_recovery():
     spec = importlib.util.spec_from_file_location("vera_recovery_test", SCRIPT)
     assert spec and spec.loader
@@ -385,10 +390,11 @@ def test_managed_cli_delegates_to_private_root_and_keeps_helper_arguments(
         assert len(delegated) == 1
         assert delegated[0][0] != root
         assert delegated[0][1] == arguments
+        assert delegated[0][0].exists()  # One of at most two retained idle releases.
+        recovery.collect_execution_store(keep_idle=0)
         assert not delegated[0][0].exists()
     finally:
-        if delegated:
-            shutil.rmtree(delegated[0][0], ignore_errors=True)
+        recovery.collect_execution_store(keep_idle=0)
 
 
 def test_preflight_cli_returns_verified_root(tmp_path, monkeypatch, capsys):
@@ -723,6 +729,8 @@ def test_managed_run_releases_copy_on_every_exit(tmp_path, monkeypatch, outcome)
         assert launcher.main(args) == outcome
 
     assert len(observed) == 1
+    # Completion releases the lease; bounded idle caching is independent.
+    load_recovery().collect_execution_store(keep_idle=0)
     assert not observed[0].exists()
     assert root.exists()
 

@@ -316,6 +316,8 @@ def main(argv: list[str] | None = None) -> int:
         original_report_id = arguments[index + 1]
         del arguments[index : index + 2]
     root = Path(__file__).absolute().parents[1]
+    installed_root = root
+    original_cwd = Path.cwd()
     # Reject an invalid entrypoint before provisioning, with an exact boundary
     # diagnostic rather than conflating an outside script with a missing file.
     if "run" in arguments:
@@ -346,12 +348,23 @@ def main(argv: list[str] | None = None) -> int:
                 )
                 return 2
     try:
-        root = prepare_execution_root(root, selection.module)
+        root = prepare_execution_root(
+            root,
+            selection.module,
+            shared="run" in arguments and product_name(root) == "vera",
+        )
     except (OSError, ValueError) as error:
         logging.error("Product installation verification failed: %s", error)
         report_preparation_failure(root, selection.module, error)
         return 1
+    moved_cwd = False
     try:
+        if root != installed_root:
+            # Late diagnostic imports must also survive cache replacement.
+            sys.path.insert(0, str(root / "scripts"))
+            if original_cwd.is_relative_to(installed_root):
+                os.chdir(root)
+                moved_cwd = True
         if "run" in arguments:
             return run_verified_helper(
                 root,
@@ -362,6 +375,10 @@ def main(argv: list[str] | None = None) -> int:
             )
         return _IMPLEMENTATION.main(root, arguments)
     finally:
+        if root != installed_root:
+            sys.path.remove(str(root / "scripts"))
+        if moved_cwd:
+            os.chdir(original_cwd if original_cwd.is_dir() else root.parent)
         release_execution_root(root)
 
 

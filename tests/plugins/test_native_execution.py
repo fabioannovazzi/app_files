@@ -403,7 +403,7 @@ def test_native_service_releases_snapshot_after_last_persistent_job(
     with native(installed, tmp_path) as call:
         started = call(args)
         assert output(started)[0]["state"] == "running"
-        assert list(temporary.glob("vera-verified-*"))
+        assert list((tmp_path / "unused-runtime/code").glob("*/execution-files.json"))
         assert list(temporary.glob("vera-execution-bootstrap-*"))
     # Closing the transport waits for its worker, then releases only code.
     assert (tmp_path / "counter").read_text() == "run\n"
@@ -523,7 +523,12 @@ def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
         process.stdin.flush()
         assert json.loads(process.stdout.readline())["id"] == 1
         temporary = tmp_path / "os-temp"
-        snapshots = list(temporary.glob("vera-verified-*"))
+        snapshots = [
+            path.parent
+            for path in (tmp_path / "unused-runtime/code").glob(
+                "*/execution-files.json"
+            )
+        ]
         assert len(snapshots) == 1
         os.killpg(process.pid, signal.SIGKILL)
         process.wait(timeout=10)
@@ -560,8 +565,9 @@ def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
 
 
 @pytest.mark.skipif(os.name != "posix", reason="POSIX inherited code leases")
+@pytest.mark.parametrize("shared", [False, True])
 def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
-    installed, tmp_path
+    installed, tmp_path, shared
 ):
     helper = installed / "modules/fixture-component/scripts/hold_code.py"
     helper.write_text(
@@ -575,7 +581,7 @@ def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
         "import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); "
         "from verified_execution import prepare_execution_root; "
         "from archive_cli import run_command; "
-        "root=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True); "
+        f"root=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True,shared={shared!r}); "
         "print(root,flush=True); "
         "run_command([sys.executable,str(root/'modules/fixture-component/scripts/hold_code.py'),sys.argv[3],sys.argv[4]],"
         "plugin_root=root,component='fixture-component',arguments=[],check=True)"
@@ -629,6 +635,22 @@ def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
         ), "The helper must still read its code after launcher death"
         time.sleep(0.1)
         restart()
+        if shared:
+            # Shared storage keeps two idle releases; explicit collection proves
+            # that the terminated helper no longer holds its inherited lease.
+            subprocess.run(
+                [
+                    sys.executable,
+                    "-I",
+                    "-B",
+                    "-c",
+                    "import sys;sys.path.insert(0,sys.argv[1]);from verified_execution import collect_execution_store;collect_execution_store(keep_idle=0)",
+                    str(installed / "scripts"),
+                ],
+                env=environment(tmp_path),
+                check=True,
+                timeout=15,
+            )
         assert not snapshot.exists()
     finally:
         try:

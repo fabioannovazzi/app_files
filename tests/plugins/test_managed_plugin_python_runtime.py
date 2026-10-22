@@ -784,6 +784,11 @@ def test_managed_launcher_imports_ready_component_target(
             (ROOT / "scripts" / filename).read_bytes()
         )
 
+    from tests.plugins.test_vera_verified_execution import write_index
+
+    write_index(plugin_root)
+    environment["MPARANZA_RUNTIME_ROOT"] = str(tmp_path / "runtime")
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
     completed = subprocess.run(
         [
             sys.executable,
@@ -1482,7 +1487,9 @@ def test_vera_manager_records_forcibly_terminated_worker_in_client_output(
         lambda *args: SimpleNamespace(requirement_root=tmp_path),
     )
     monkeypatch.setattr(manager._IMPLEMENTATION, "main", lambda *args: returncode)
-    monkeypatch.setattr(manager, "prepare_execution_root", lambda *args: tmp_path)
+    monkeypatch.setattr(
+        manager, "prepare_execution_root", lambda *args, **kwargs: tmp_path
+    )
 
     result = manager.main(
         [
@@ -1529,7 +1536,9 @@ def test_vera_manager_does_not_write_forced_exit_diagnostic_outside_client_outpu
         lambda *args: SimpleNamespace(requirement_root=tmp_path),
     )
     monkeypatch.setattr(manager._IMPLEMENTATION, "main", lambda *args: -9)
-    monkeypatch.setattr(manager, "prepare_execution_root", lambda *args: tmp_path)
+    monkeypatch.setattr(
+        manager, "prepare_execution_root", lambda *args, **kwargs: tmp_path
+    )
 
     result = manager.main(
         [
@@ -1590,7 +1599,7 @@ def forbidden(*args,**kwargs):
 urllib.request.build_opener=forbidden
 spec=importlib.util.spec_from_file_location('isolated_launcher_test',path)
 launcher=importlib.util.module_from_spec(spec);spec.loader.exec_module(launcher)
-launcher.prepare_execution_root=lambda *args: root
+launcher.prepare_execution_root=lambda *args,**kwargs: root
 launcher._IMPLEMENTATION.select_runtime=lambda *args: SimpleNamespace(requirement_root=root)
 launcher._IMPLEMENTATION.ensure_runtime=lambda *args,**kwargs: (True,root,'synthetic ready runtime')
 launcher._IMPLEMENTATION.runtime_python=lambda *args: Path(sys.executable)

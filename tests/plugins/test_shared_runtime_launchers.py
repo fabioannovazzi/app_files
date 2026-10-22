@@ -273,3 +273,58 @@ print((path/m._shared_runtime().RECEIPT).read_text())
     assert json.loads(result.stdout)["features"] == (
         ["core"] if mode == "cold" else ["core", "ocr"]
     )
+
+
+def test_managed_helper_retains_code_and_cwd_after_installation_removed(
+    tmp_path, monkeypatch
+):
+    import time
+
+    from tests.plugins.test_vera_verified_execution import write_index
+
+    root, component, _, _, _ = installed_fixture(tmp_path, "vera", monkeypatch)
+    helper = root / "modules" / component / "scripts/live_update.py"
+    helper.write_text(
+        "import json,os,sys,time\nfrom pathlib import Path\n"
+        "ready=Path(sys.argv[1]); proceed=Path(sys.argv[2]); ready.touch()\n"
+        "while not proceed.exists(): time.sleep(0.02)\n"
+        "print(json.dumps({'file_present':Path(__file__).is_file(),'cwd_present':Path(os.getcwd()).is_dir()}))\n"
+    )
+    write_index(root)
+    ready, proceed = tmp_path / "ready", tmp_path / "proceed"
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(root / "scripts/managed_python_runtime.py"),
+            "--module",
+            component,
+            "run",
+            "scripts/live_update.py",
+            str(ready),
+            str(proceed),
+        ],
+        cwd=root,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        deadline = time.monotonic() + 20
+        while (
+            not ready.exists()
+            and process.poll() is None
+            and time.monotonic() < deadline
+        ):
+            time.sleep(0.02)
+        assert ready.exists(), process.communicate(timeout=5)
+        shutil.rmtree(root)
+        proceed.touch()
+        stdout, stderr = process.communicate(timeout=20)
+        assert process.returncode == 0, stderr
+        assert json.loads(stdout) == {"file_present": True, "cwd_present": True}
+    finally:
+        if process.poll() is None:
+            process.kill()
+            process.wait(timeout=5)

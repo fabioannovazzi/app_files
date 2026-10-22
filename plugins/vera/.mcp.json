@@ -348,7 +348,8 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./scripts/course_chat_mcp.cjs"
+        "./scripts/run_service_mcp.cjs",
+        "scripts/course_chat_mcp.cjs"
       ]
     },
     "veraNativeWorkspace": {
@@ -366,7 +367,8 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./mcp/workspace.cjs"
+        "./scripts/run_service_mcp.cjs",
+        "mcp/workspace.cjs"
       ]
     },
     "studioWork": {
@@ -384,7 +386,8 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./mcp/studio-work.cjs"
+        "./scripts/run_service_mcp.cjs",
+        "mcp/studio-work.cjs"
       ]
     },
     "agenziaAcquisition": {
@@ -418,7 +421,8 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./mcp/research-sources.cjs",
+        "./scripts/run_service_mcp.cjs",
+        "mcp/research-sources.cjs",
         "--stdio"
       ]
     },
@@ -437,7 +441,8 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./scripts/incident_host_mcp.cjs"
+        "./scripts/run_service_mcp.cjs",
+        "scripts/incident_host_mcp.cjs"
       ]
     }
   }

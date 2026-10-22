@@ -123,7 +123,8 @@ def test_release_gate_preserves_exact_implementation_checks(
 
     errors = builder.verify_packaged_mcp(archive, ["."])
 
-    assert "implementation filesystem does not match the exact contract" in errors[0]
+    assert "Installation inventory mismatch" in errors[0]
+    assert "modules/check-entries/scripts/unreceipted.py" in errors[0]
 
 
 def test_cowork_build_failure_preserves_existing_distributables(
