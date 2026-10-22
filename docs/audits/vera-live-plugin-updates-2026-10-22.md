@@ -31,9 +31,9 @@ The actual packaged MCP validator returned `ok=true` after each operation:
 2. Delete that cache again and install an upgrade fixture while the service stays live.
 3. Open a fresh service from the upgrade fixture and validate the original run.
 
-The run remained bound to package A `c503dda9b931530f2a515e976ea96a185d640e0bfb3ec2e0604062af11e3baa4`. Package B was
-`0a24934c881dfbcbc0faa9e55b7a3971087c061eba70cf759ec1a15c4ae53ec3`. B is an isolated 0.1.479-fixture label/index over candidate
-A's code, not a published release. The run ID was `run_9638be7330fc442ea38924e8`.
+The run remained bound to package A `c68f3f56cd4c11ef036524fa0cf0d2d51ec73047e8c0a11510dca778437b89c1`. Package B was
+`dcde04eee558f4fec3a568968773ae98e7725b546c941ae00110f4106a5a97bd`. B is an isolated 0.1.481-fixture label/index over candidate
+A's code, not a published release. The run ID was `run_1e4da5e7d2a2d21acc447f42`.
 
 This is a real packaged calculation/review-process regression. It is not a fresh
 installed Codex chat, native visible UI acceptance, server receipt acceptance or
@@ -42,10 +42,16 @@ original failed 0.1.474 run and its evidence were not altered.
 
 ## Validation
 
-- 296 runtime checks passed; combined runtime coverage 80.91%.
-- 54 final native execution, live-update, installer and reporting tests passed;
-  the subsequent interrupted-installer regression also passed.
-- 110 shared-launcher/managed-runtime tests and 144 integrity/reporting tests passed.
+- 302 runtime checks passed; combined runtime coverage 80.31%.
+- 48 final native execution, live-update and installer tests passed.
+- The final package started all 25 local services concurrently in at most 6.38
+  seconds on this Mac, with one shared code tree. The earlier serialized
+  verification path took 22.39 seconds; the lease now protects verification
+  without holding the catalog lock through the reads.
+- Both the Python owner and Node transport release the replaceable installation
+  cwd. CLI children inherit a code lease before launch, including shared roots.
+- The dated CI scenario verifies invoice and receipt dates in the normalized-row
+  and reconciliation-detail workbook sheets, in addition to the source inputs.
 - Black, Isort and Mypy passed. Bandit found no medium/high issues.
 - Same-version replacement, upgrade, reconnect, concurrent starts/installs,
   bounded storage, cache tampering, cancellation, repeated signals and POSIX

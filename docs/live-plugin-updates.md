@@ -30,7 +30,7 @@ From the repository's activated virtual environment:
 ```sh
 python scripts/install_local_vera.py /absolute/path/to/vera-codex-plugin \
   --destination /absolute/persistent/path/managed-vera-sources \
-  --expected-version 0.1.478
+  --expected-version 0.1.480
 ```
 
 The updater verifies and stages the source before changing the selected local

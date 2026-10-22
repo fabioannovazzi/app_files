@@ -15,6 +15,8 @@ from pathlib import Path
 from uuid import uuid4
 from zipfile import ZipFile
 
+from openpyxl import load_workbook
+
 archive = Path(sys.argv[1]).resolve()
 base = Path(sys.argv[2]).resolve()
 base.mkdir(parents=True, exist_ok=True)
@@ -64,7 +66,7 @@ prepared = ledger.prepare_run(
     client_id,
     engagement["engagement_id"],
     "open-item-reconciliation",
-    "0.1.478",
+    json.loads((installed / ".codex-plugin/plugin.json").read_text())["version"],
     input_ids=[r["input_id"] for r in receipts],
 )
 running = ledger.start_run(
@@ -180,6 +182,22 @@ assert calculation.returncode == 0, calculation.stderr
 summary = json.loads(calculation.stdout)
 assert summary["semantic_resolution"]["status"] == "not_required", summary
 assert summary["semantic_resolution"]["batch_count"] == 0, summary
+workbook = load_workbook(
+    output / "reconciliation/riconciliazione_audit.xlsx", read_only=True, data_only=True
+)
+workbook_dates = {}
+try:
+    for sheet, expected in {
+        "Righe normalizzate": {"F2": "2026-07-01", "N3": "2026-07-10"},
+        "Dettaglio riconciliazione": {"E2": "2026-07-01", "AD2": "2026-07-10"},
+    }.items():
+        workbook_dates[sheet] = {
+            cell: str(workbook[sheet][cell].value) for cell in expected
+        }
+        assert workbook_dates[sheet] == expected
+finally:
+    workbook.close()
+(base / "workbook-dates.json").write_text(json.dumps(workbook_dates, indent=2))
 
 
 class MCP:
@@ -275,7 +293,7 @@ try:
         z.extractall(cache)
     metadata = installed / ".codex-plugin/plugin.json"
     value = json.loads(metadata.read_text())
-    value["version"] = "0.1.479-fixture"
+    value["version"] = "0.1.481-fixture"
     metadata.write_text(json.dumps(value))
     index = {
         path.relative_to(installed)

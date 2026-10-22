@@ -77,6 +77,37 @@ def test_cached_code_tamper_is_rejected_before_reuse(tmp_path, monkeypatch):
     recovery.release_execution_root(pinned)
 
 
+def test_slow_component_verification_does_not_hold_catalog_lock(tmp_path, monkeypatch):
+    from concurrent.futures import ThreadPoolExecutor
+    from threading import Event
+
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    recovery = load_recovery()
+    source = package(tmp_path)
+    entered, proceed = Event(), Event()
+
+    def validate(root, module):
+        if module == "slow":
+            entered.set()
+            assert proceed.wait(10)
+
+    monkeypatch.setattr(recovery, "_validate_module", validate)
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        slow = pool.submit(recovery.prepare_execution_root, source, "slow", shared=True)
+        try:
+            assert entered.wait(5)
+            fast = pool.submit(
+                recovery.prepare_execution_root, source, None, shared=True
+            )
+            pinned = fast.result(timeout=5)
+            recovery.release_execution_root(pinned)
+            recovery.collect_execution_store(keep_idle=0)
+            assert pinned.exists(), "Validation must retain its reader lease"
+        finally:
+            proceed.set()
+        recovery.release_execution_root(slow.result(timeout=5))
+
+
 def review_package(tmp_path, version="1"):
     root = package(tmp_path, version)
     for name in (
@@ -112,6 +143,7 @@ def launch_review(root, tmp_path):
             str(root / "scripts/run_component_mcp.cjs"),
             "open-item-reconciliation",
         ],
+        cwd=root,
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,

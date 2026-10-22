@@ -235,7 +235,7 @@
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "185e746fd225619752c045db6826cd9b40fefb0dc1854346b5426e5450d27134"
+    "source_fingerprint": "2d136340a291e3b6b78905b1230d3e3c1dc4c30ac86ccf6d6fa84d6043573625"
   },
   "governed_repository_paths": [
     "plugins/management-control-pack/scripts",

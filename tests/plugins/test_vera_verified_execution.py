@@ -802,3 +802,74 @@ def test_owner_cleanup_cannot_remove_code_held_by_detached_worker(
         worker.communicate(timeout=10)
     recovery.recover_abandoned_execution_roots()
     assert not root.exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX independent CLI leases")
+def test_cli_borrowed_lease_outlives_owner_cleanup(tmp_path, monkeypatch):
+    import os
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = tmp_path / "vera-verified-cli-child"
+    root.mkdir()
+    (root / "code").write_text("helper code")
+    recovery.own_execution_root(root)
+    lease = recovery.acquire_execution_lease(root)
+    assert lease is not None
+    try:
+        recovery.release_execution_root(root)
+        recovery.recover_abandoned_execution_roots()
+        assert (root / "code").read_text() == "helper code"
+    finally:
+        os.close(lease)
+    recovery.recover_abandoned_execution_roots()
+    assert not root.exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX CLI lease validation")
+@pytest.mark.parametrize(
+    "payload",
+    [[], {"schema_version": 9}, {"schema_version": 1, "device": -1, "inode": -1}],
+)
+def test_cli_handoff_rejects_invalid_lease_without_removing_code(
+    tmp_path, monkeypatch, payload
+):
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = tmp_path / "vera-verified-invalid-cli"
+    root.mkdir()
+    (root / "code").write_text("preserved")
+    recovery.own_execution_root(root)
+    lease = recovery._lease_directory() / (root.name + ".json")
+    lease.write_text(json.dumps(payload))
+    with pytest.raises(ValueError):
+        recovery.acquire_execution_lease(root)
+    assert (root / "code").read_text() == "preserved"
+    recovery.release_execution_root(root)
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX lease protocol migration")
+def test_reaper_retains_legacy_owner_only_lease_records(tmp_path, monkeypatch):
+    import os
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = tmp_path / "vera-verified-legacy-owner"
+    root.mkdir()
+    (root / "code").write_text("legacy helper may still need this code")
+    recovery.own_execution_root(root)
+    lease_path = recovery._lease_directory() / (root.name + ".json")
+    record = json.loads(lease_path.read_text())
+    record["schema_version"] = 1
+    lease_path.write_text(json.dumps(record))
+    os.close(recovery._LEASES.pop(root))
+
+    recovery.recover_abandoned_execution_roots()
+
+    assert (root / "code").read_text() == "legacy helper may still need this code"
+    # A current CLI can still borrow protection from a legacy record; lack of
+    # holders never proves that every older helper inherited that protection.
+    lease = recovery.acquire_execution_lease(root)
+    assert lease is not None
+    os.close(lease)
+    recovery.release_execution_root(root)

@@ -40,6 +40,7 @@ __all__ = [
     "release_execution_root",
     "own_execution_root",
     "execution_lease_fds",
+    "acquire_execution_lease",
     "recover_abandoned_execution_roots",
     "report_preparation_failure",
     "main",
@@ -97,7 +98,7 @@ def own_execution_root(root: Path) -> None:
         os.write(
             descriptor,
             json.dumps(
-                {"schema_version": 1, "device": info.st_dev, "inode": info.st_ino}
+                {"schema_version": 2, "device": info.st_dev, "inode": info.st_ino}
             ).encode(),
         )
         _LEASES[root] = descriptor
@@ -112,6 +113,65 @@ def execution_lease_fds(root: Path) -> tuple[int, ...]:
     shared = _SHARED_ROOTS.get(root)
     descriptor = shared[0] if shared else _LEASES.get(root)
     return () if descriptor is None else (descriptor,)
+
+
+def acquire_execution_lease(root: Path) -> int | None:
+    """Borrow a registered snapshot lease for a CLI child before launching it."""
+    if os.name == "posix" and root.parent.name == "code":
+        if root.parent != _code_store() or not re.fullmatch("[0-9a-f]{64}", root.name):
+            return None
+        with execution_store_lock():
+            descriptor = _lock_descriptor(
+                root.parent / f"{root.name}.lock", exclusive=False
+            )
+            try:
+                record = json.loads(_read_regular(root.parent / f"{root.name}.json")[0])
+                info = root.lstat()
+                if not stat.S_ISDIR(info.st_mode) or record["identity"] != [
+                    info.st_dev,
+                    info.st_ino,
+                ]:
+                    raise ValueError(
+                        "CLI code lease no longer matches its execution root"
+                    )
+                return descriptor
+            except BaseException:
+                os.close(descriptor)
+                raise
+    if os.name != "posix" or root.parent != Path(tempfile.gettempdir()).resolve():
+        return None
+    if not re.fullmatch(
+        r"vera-(?:verified|execution-bootstrap)-[A-Za-z0-9_-]+", root.name
+    ):
+        return None
+    import fcntl
+
+    lease = _lease_directory() / (root.name + ".json")
+    try:
+        descriptor = os.open(lease, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except FileNotFoundError:
+        return None  # Unmarked/borrowed code is never swept automatically.
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_SH)
+        info = os.fstat(descriptor)
+        data = json.loads(os.read(descriptor, 4096))
+        current = root.lstat()
+        if (
+            not stat.S_ISREG(info.st_mode)
+            or info.st_uid != os.getuid()
+            or info.st_nlink != 1
+            or not stat.S_ISDIR(current.st_mode)
+            or current.st_uid != os.getuid()
+            or not isinstance(data, dict)
+            or data.get("schema_version") not in (1, 2)
+            or (current.st_dev, current.st_ino)
+            != (data.get("device"), data.get("inode"))
+        ):
+            raise ValueError("CLI code lease no longer matches its execution root")
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
 
 
 def recover_abandoned_execution_roots() -> None:
@@ -146,7 +206,9 @@ def recover_abandoned_execution_roots() -> None:
             data = json.loads(os.read(descriptor, 4096))
             if set(data) != {"schema_version", "device", "inode"}:
                 continue
-            if data["schema_version"] != 1:
+            # Protocol 1 did not guarantee CLI-child inheritance. Retain it
+            # even with no holder: a legacy helper may still be running.
+            if data["schema_version"] != 2:
                 continue
             root = directory.parent / name
             try:
@@ -725,21 +787,6 @@ def _shared_execution_root(
                 if stage.exists():
                     _remove_code(stage)
                 raise
-        # Reuse never trusts a directory name or a previous successful check.
-        files, directories = _inventory(root)
-        expected_directories = {
-            parent.as_posix()
-            for name in expected
-            for parent in PurePosixPath(name).parents
-            if parent != PurePosixPath(".")
-        }
-        if files.keys() != expected.keys() or directories != expected_directories:
-            raise ValueError("Shared execution inventory changed")
-        for name, data in expected.items():
-            actual, links = _read_regular(files[name])
-            if actual != data or links != 1:
-                raise ValueError(f"Shared execution code changed: {name}")
-        _validate_module(root, module)
         info = root.stat()
         record = directory / f"{digest}.json"
         identity = json.dumps({"identity": [info.st_dev, info.st_ino]})
@@ -755,7 +802,31 @@ def _shared_execution_root(
         else:
             descriptor = _lock_descriptor(directory / f"{digest}.lock", exclusive=False)
             _SHARED_ROOTS[root] = (descriptor, 1)
+    # The reader lease prevents collection. Verify bytes outside the catalog
+    # lock so independent service starts do not queue behind one full-package
+    # read or a component validator. Integrity checks still precede execution.
+    try:
+        # Reuse never trusts a directory name or a previous successful check.
+        files, directories = _inventory(root)
+        expected_directories = {
+            parent.as_posix()
+            for name in expected
+            for parent in PurePosixPath(name).parents
+            if parent != PurePosixPath(".")
+        }
+        if files.keys() != expected.keys() or directories != expected_directories:
+            raise ValueError("Shared execution inventory changed")
+        for name, data in expected.items():
+            actual, links = _read_regular(files[name])
+            if actual != data or links != 1:
+                raise ValueError(f"Shared execution code changed: {name}")
+        _validate_module(root, module)
+        if (root.stat().st_dev, root.stat().st_ino) != (info.st_dev, info.st_ino):
+            raise ValueError("Shared execution directory changed during verification")
         return root
+    except BaseException:
+        release_execution_root(root)
+        raise
 
 
 def bind_execution_run(run_root: Path, current_root: Path) -> Path:

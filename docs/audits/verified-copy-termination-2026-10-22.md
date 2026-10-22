@@ -1,104 +1,86 @@
-# Verified code lifetime after transport termination
+# Verified code lifetime after native and CLI termination
 
-## Observed defect
+## Observed defect and scope
 
-The installed Vera 0.1.474 native launcher left both a full verified code
-snapshot and its bootstrap behind when its process group received SIGTERM.
-Closing stdin normally removed them. An isolated reproduction initialized the
-actual installed launcher without running a client helper. On this Mac, 1,202
-surviving verified copies used 58.160 GiB allocated. The previous cleanup repair
-covered normal/process-exit paths but not default signal termination, and had
-no ownership proof for recovering abandoned snapshots.
+Installed Vera 0.1.474 removed a verified code snapshot after normal stdin EOF,
+but left it and its bootstrap behind after SIGTERM. On this Mac, 1,202 surviving
+verified copies occupied 58.160 GiB. The previous repair covered finally/atexit
+cleanup and did not establish ownership for orphan recovery.
 
-## Repair
+This repair changes temporary program-code lifetime. It does not alter client
+inputs, retained results, professional decisions or the model-data boundary.
+The final product versions are Vera 0.1.479, Clara 0.1.342 and Lucia 0.1.167.
 
-The Node launcher forwards SIGTERM/SIGINT without exiting before its service.
-The Python owner records termination as a stop-intake event, finishes accepted
-requests and waits for detached workers. Signal handlers set a plain flag; they
-never acquire an Event/Condition mutex, which repeated signals can reenter and
-deadlock on the interrupted main thread. A repeated-signal stress run exposed
-this failure in the first candidate; it was repaired before installation. A transport reader permits termination
-even when stdin remains open or holds a partial message. Signals do not cancel
-professional jobs. User-requested job cancellation keeps its existing semantics.
+## Implementation
 
-On POSIX, every new snapshot and bootstrap has a private sidecar record of its
-device/inode and a shared kernel flock lease. Native workers inherit the
-snapshot descriptor across detachment. Closing the owner's descriptor does not
-release a worker's inherited lease. Removal obtains an exclusive lock through a
-new open-file description, never by upgrading that shared descriptor. This
-prevents owner cleanup from deleting live worker code.
+The native Node launcher forwards SIGTERM/SIGINT and keeps the Python owner
+alive until accepted detached jobs finish. The service stops intake without
+cancelling jobs, including when stdin remains open or contains a partial line.
+Signal handlers set a plain flag: repeated signals can reenter and deadlock a
+threading.Event/Condition mutex. Stress testing exposed that race in an early
+candidate and the plain flag removed it.
 
-A later verified startup scans only these explicit lease records. It removes
-an orphan only after exclusive nonblocking acquisition and matching real
-directory identity/ownership. Live holders, replaced roots, symlinks, malformed
-records and unmarked historical directories are retained. It never discovers
-client files by a name/age rule. Forced termination can leave a directory until
-the next verified startup; it does not require pretending SIGKILL is catchable.
-Windows retains process-owned cleanup; automatic orphan recovery depends on
-POSIX kernel leases and is not claimed for Windows.
+On POSIX, freshly owned snapshots and bootstraps have private sidecar
+schema/device/inode records and shared kernel flock leases. Detached native
+workers inherit the snapshot descriptor. CLI command boundaries independently
+acquire and pass a shared descriptor to their child before launch. This covers
+a killed managed launcher whose helper is still running, even if another native
+service starts. The lease is closed only after the child completes or at its
+actual process exit. It is not a PID/age heuristic.
+
+Owner cleanup first closes its descriptor, then tries an exclusive lock through
+a new open-file description. Upgrading the inherited shared description would
+incorrectly upgrade the worker's same flock lock. A later verified startup scans
+only explicit lease records and removes an orphan only after exclusive
+nonblocking acquisition and matching real-directory identity/ownership. Live
+holders, replaced roots, symlinks, malformed records and unmarked historical
+copies are retained. Automatic collection requires protocol 2, which includes
+native and CLI handoff. Protocol-1 records are retained even without a holder,
+because their earlier owners did not guarantee that every CLI child inherited
+a lease. Current commands can still borrow those older leases. A regression
+failed before this guard and passes after it. Windows retains process-owned cleanup; automatic orphan
+recovery is POSIX-only.
 
 ## Verification
 
-The local runtime/ownership/reporting/index suite passed 111 tests. After
-integrating PR #892, the runtime/reporting suite passed 99 tests and the
-index/privacy suite passed 85 tests. The shared-runtime suite passed 285 tests
-with 82.62% coverage. Three repeated termination batches passed all 24 cases,
-each sending bursts of 100 signals. The package/privacy suite passed 479 tests
-with two skips before integration; current combined package checks are repeated
-for the release. Real
-launcher processes cover SIGTERM and SIGINT sent to the Node launcher and its
-whole process group, idle and with an accepted persistent job, repeated signals
-with stdin still open, and SIGKILL followed by automatic startup recovery.
-Detached jobs complete once, retain their durable result and keep their code
-until completion. Safety cases preserve live leases, borrowed directories,
-replaced directory identities and symlink targets. Formatting, import sorting,
-Mypy and medium/high Bandit checks are part of release verification.
+- 109 native/CLI, verified-copy and automatic-reporting tests passed.
+- 290 shared-runtime tests passed with 82.79% coverage; Mypy passed 29 files.
+- Real launchers cover normal EOF, bursts of 100 SIGTERM/SIGINT signals sent to
+  the launcher/group, idle/busy services, partial stdin and SIGKILL followed by
+  startup recovery. Accepted jobs complete once and retain durable results.
+- The direct-CLI regression failed before the handoff repair: the reaper deleted
+  a surviving helper's code. After repair, the helper reads its code after its
+  launcher is killed, completes, and only then becomes eligible for recovery.
+- Borrowed CLI leases outlive owner cleanup. Invalid lease records, live code,
+  replaced identities, borrowed directories and symlink targets remain safe.
+- Source/package parity, full product builds and installed-launcher probes are
+  recorded separately from fresh professional host-conversation acceptance.
 
-## Privacy and recovery boundaries
+The release catalogue check caught a stale localization snapshot. The final
+manifest binding preserves all 55 professional skill entrypoint byte hashes and
+every existing jurisdiction assessment row. No jurisdiction capability is added.
 
-Lease records hold technical directory identity, not documents, credentials or
-professional output. They stay beside OS temporary code storage, outside the
-indexed product and client folders. No model-visible payload, hosted recipient,
-network operation or reporting authorization is added. Managed-runtime service
-records and generated contracts are refreshed for this inspected change.
+## Privacy and space recovery
 
-The one-time historical cleanup is separate from the product sweeper: inspect
-live process command/open-file references, fully verify the build index and every
-file digest, reject unexpected contents or filesystem objects, and recheck live
-references before each removal. The second pass admits overnight copies before 09:00 CEST, reduces that
-cutoff to the oldest observed live bootstrap when necessary, and rechecks the
-cutoff immediately before deletion. Newer or otherwise uncertain copies are
-retained. Running services and workers are never signalled for this recovery.
-Exact deletions and reclaimed allocation are recorded locally by the recovery
-operation. Package/source checks do not establish a fresh professional
-host-conversation acceptance run or replace an already running service.
+Sidecar records contain technical directory identity and stay outside indexed
+code and client folders. No new model payload, network operation or recipient
+is introduced. Shared service descriptions and source/contract fingerprints are
+reviewed for the actual source changes.
 
+Historical recovery is separate from the new sweeper. It verifies every file
+against the complete build inventory and SHA-256, rejects unexpected contents
+and filesystem objects, and rechecks live process/open-file references plus
+directory identity immediately before removal. The overnight pass retains all
+copies as new as any live bootstrap, with a conservative 09:00 CEST ceiling.
+Running services and workers are never signalled for space recovery.
 
-## Local recovery and installation evidence
+The two passes removed 1,152 verified unused copies: 60,097,245,184 allocated
+bytes (55.970 GiB / 60.097 decimal GB). Five observed detached workers retained
+their original start times, and all explicitly protected code directories
+remained intact. Recent, live and unverified copies were retained. Exact local
+removal and post-recovery evidence is recorded by the recovery operation.
 
-The two recovery passes removed 1,152 fully verified unused copies, reclaiming
-60,097,245,184 allocated bytes (55.970 GiB / 60.097 decimal GB). Five previously
-observed detached workers retained their original process start times after
-recovery and installation, and every explicitly protected code directory still
-existed. No existing worker was signalled for the recovery or local update.
-
-The supported local catalog/installation commands selected one enabled
-`vera@mp-vera` 0.1.476, retaining old caches and source folders. The first combined 0.1.476
-Codex ZIP SHA-256 was
-`6385c2a41c3f3fdbcc6e906f461b6e46d98c1b594d965b847b1e44611fba5675`.
-The actual installed launcher independently passed normal EOF, 100-signal
-SIGTERM/SIGINT bursts, and SIGKILL followed by startup recovery. These tests
-initialize isolated native services, not client workflows. Active conversations
-and their existing services retain their old code; the selected installation is
-for new sessions. This is local termination acceptance, not a claim of a fresh
-professional workflow, native Windows acceptance or Marketplace publication.
-
-
-The release CI later detected a stale localization catalogue bound to 0.1.475.
-The final Vera patch is 0.1.477, avoiding replacement of code in the already
-running 0.1.476 cache. Its recorded catalogue is rebound to the canonical
-manifest; exact equality checks preserve all 55 skill entrypoints and every
-existing jurisdiction assessment row. No jurisdiction adaptation is inferred
-from this local runtime repair. Executable lifecycle bytes are unchanged from
-the tested 0.1.476 candidate. Final archive/install hashes and CI outcomes are
-recorded by the release validation evidence.
+The supported local installation updates retain older caches and services.
+Already-running work keeps its code; new sessions use the selected final
+installation. No Marketplace operation, native Windows acceptance or fresh
+professional workflow acceptance is claimed by these local developer probes.

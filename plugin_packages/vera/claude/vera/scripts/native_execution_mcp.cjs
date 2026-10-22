@@ -78,6 +78,9 @@ function cleanupBootstrap() {
 try {
   for (const name of ["verified_execution.py", "reporting_product.py"])
     fs.writeFileSync(path.join(bootstrap, name), checked(`scripts/${name}`), { mode: 0o600 });
+  // The transport parent must release the replaceable installation directory
+  // too: Windows prevents its removal while any process keeps it as cwd.
+  process.chdir(os.tmpdir());
   const child = spawn(python, ["-I", "-B", "-c", program, bootstrap, root, mode, process.execPath, ...args],
     { cwd: bootstrap, env: process.env, stdio: "inherit" });
   // A host stop closes this transport, not the detached professional jobs.
