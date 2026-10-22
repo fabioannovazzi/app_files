@@ -232,7 +232,13 @@ exception before emitting that response, using `logging.exception` or equivalent
 the retained stderr can be empty. Studio Archive follows this contract for its
 handled Archive, OS, value and SQLite errors. Its JSON response and exit status
 are unchanged. The collector extracts source-bound classes, templates and errno;
-raw traceback details stay local for the host AI's existing review. Professional
+raw traceback details stay local for the host AI's existing review. Explicitly
+producer-selected numeric and boolean `technical_facts` also travel with the
+original diagnostic, preserving values needed for diagnosis without serializing
+arbitrary exception values. Archive state permission failures include actual
+mode, rejected bits, numeric ownership/process facts and selection source.
+A fixed message or a complete-capture flag alone does not establish that the
+report contains enough evidence to diagnose or recover the user task. Professional
 stdout is neither captured nor forwarded. A regression must exercise the actual
 handled-error CLI path and assert its real exception, local traceback, unchanged
 response, and exclusion of dynamic case values from structured reporting.

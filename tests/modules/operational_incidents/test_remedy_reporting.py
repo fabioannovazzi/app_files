@@ -335,22 +335,27 @@ def alert_case(tmp_path):
         report_id=original.report_id,
         remedy_revision=revision,
         followup_sha256=followup_hash(row),
-        observed="Aggiornamento pubblicato, ricevuta assente.",
-        inferred="La pubblicazione non stabilisce la comunicazione.",
-        unknown="Causa originale e recupero.",
-        blocker="Nessuna ricevuta del reporter originale.",
+        headline="Archive task blocked; update delivery needs investigation",
+        impact="The Archive operation remains interrupted.",
+        actions_taken="Published the update; no receipt has arrived.",
+        user_action="No action is established for Fabio; the monitor must inspect delivery.",
+        verification="Retry the same Archive operation with the original inputs and verify its result.",
+        observed="An update was published; receipt is unconfirmed.",
+        inferred="Publication does not prove delivery.",
+        unknown="Original cause and recovery result.",
+        blocker="No receipt from the original reporter.",
         next_action={
             "action_id": "inspect-original-session-contact",
             "owner": "monitor",
-            "instruction": "Verificare il collegamento della sessione originale.",
-            "reason": "Il rimedio non risulta ricevuto.",
+            "instruction": "Inspect the original session link and delivery log.",
+            "reason": "The remedy has no confirmed receipt.",
             "evidence_refs": [row["attention_key"]],
         },
         next_check_at="2030-01-01T08:00:00+00:00",
     )
     labels = {
         str(device.device_id): {
-            "label": "Il tuo Mac",
+            "label": "Your Mac",
             "verified_at": PUBLISHED,
             "evidence_ref": "inspected-native-profile",
         }
@@ -381,15 +386,98 @@ def test_rendered_alert_names_verified_mac_app_original_version_blocker_and_owne
 
     result = render_alert(actual, review, labels, now=NOW)
 
-    assert "Il tuo Mac" in result["html"]
+    assert "Your Mac" in result["html"]
+    assert result["subject"] == f"Vera: {review.headline} · Your Mac"
     assert "Claude Cowork" in result["html"]
     assert "Vera 0.1.393" in result["html"]
-    assert "versione proposta 0.1.396" in result["html"]
-    assert "ricevuta assente" in result["html"]
-    assert "Agente di monitoraggio" in result["html"]
+    assert "proposed version 0.1.396" in result["html"]
+    assert "receipt unconfirmed" in result["html"]
+    assert "Recovery monitor" in result["html"]
     assert "Chiusura" not in result["html"]
     assert "setup refresh had errors" not in result["html"]
     assert result["original_task_verified"] is False
+
+
+def test_alert_delivers_useful_facts_from_only_the_original_report(tmp_path):
+    actual, review, labels = alert_case(tmp_path)
+    diagnostic = actual["reports"][0]["diagnostics"][0]
+    diagnostic["technical_facts"] = {
+        "archive_state.mode": 0o755,
+        "archive_state.owner_matches_process": True,
+    }
+    unrelated = {
+        "report_id": str(uuid4()),
+        "diagnostics": [
+            {
+                "error_type": "UnrelatedFailure",
+                "technical_facts": {"unrelated_fact": 999},
+            }
+        ],
+    }
+    actual["reports"].append(unrelated)
+
+    result = render_alert(actual, review, labels, now=NOW)
+
+    assert "archive_state.mode=0o755" in result["html"]
+    assert "archive_state.owner_matches_process=yes" in result["html"]
+    assert review.actions_taken in result["html"]
+    assert review.impact in result["html"]
+    assert review.user_action in result["html"]
+    assert review.verification in result["html"]
+    assert "UnrelatedFailure" not in result["html"]
+    assert "unrelated_fact" not in result["html"]
+
+
+@pytest.mark.parametrize(
+    "field", ["headline", "impact", "actions_taken", "user_action", "verification"]
+)
+def test_alert_requires_user_impact_actual_work_and_concrete_recovery_result(
+    tmp_path, field
+):
+    _, review, _ = alert_case(tmp_path)
+    payload = review.model_dump()
+    payload.pop(field)
+
+    with pytest.raises(ValidationError):
+        AlertReview.model_validate(payload)
+
+
+def test_technical_facts_do_not_change_legacy_report_retry_payload(tmp_path):
+    import json
+    import sqlite3
+
+    store, owner = registered(tmp_path)
+    original = report()
+    receipt = store.report(owner, original)
+    with sqlite3.connect(tmp_path / "incidents.sqlite3") as connection:
+        payload = json.loads(
+            connection.execute(
+                "SELECT payload_json FROM operational_reports"
+            ).fetchone()[0]
+        )
+
+    retried = store.report(owner, original)
+
+    assert "technical_facts" not in payload["diagnostics"][0]
+    assert retried["incident_id"] == receipt["incident_id"]
+    assert retried["report_id"] == receipt["report_id"]
+
+
+@pytest.mark.parametrize(
+    "value", ["/home/client/private", "password=secret", [493], {"mode": 493}, 1.2]
+)
+def test_automatic_technical_facts_reject_arbitrary_text_or_nested_values(value):
+    from modules.operational_incidents.contracts import Diagnostic
+
+    with pytest.raises(ValidationError):
+        Diagnostic(
+            component="runtime",
+            error_type="ArchiveError",
+            stage="state",
+            message="State rejected",
+            evidence_source="runtime-exception",
+            technical_facts={"mode": value},
+        )
 
 
 def test_unknown_device_or_unverified_alias_never_becomes_fabios_mac(tmp_path):
@@ -399,7 +487,7 @@ def test_unknown_device_or_unverified_alias_never_becomes_fabios_mac(tmp_path):
 
     result = render_alert(actual, review, labels, now=NOW)
 
-    assert "Il tuo Mac" not in result["html"]
+    assert "Your Mac" not in result["html"]
     assert "Computer " in result["html"]
 
 
@@ -411,8 +499,8 @@ def test_unlinked_machine_and_app_remain_explicitly_unknown(tmp_path):
 
     result = render_alert(actual, review, labels, now=NOW)
 
-    assert "Computer non identificato" in result["html"]
-    assert "collegamento non verificato" in result["html"]
+    assert "Unidentified computer" in result["html"]
+    assert "app link unverified" in result["html"]
 
 
 @pytest.mark.parametrize("change", ["identity", "receipt", "revision", "case"])
@@ -461,7 +549,7 @@ def test_reporter_contact_version_is_not_asserted_as_current_installed_version(
 
     result = render_alert(actual, review, labels, now=NOW)
 
-    assert "Vera 0.1.999 osservata dal reporter originale" in result["html"]
+    assert "Vera 0.1.999 observed at the original reporter contact" in result["html"]
     assert "Vera 0.1.393" in result["html"]
 
 
@@ -534,7 +622,7 @@ def test_alert_cli_inspects_and_renders_without_mutating_evidence_or_ledger(tmp_
     )
 
     assert result.returncode == 0, result.stderr
-    assert "Il tuo Mac" in json.loads(output.read_text())["html"]
+    assert "Your Mac" in json.loads(output.read_text())["html"]
     assert json.loads(incident_path.read_text()) == actual
     assert json.loads(ledger_path.read_text()) == {"device_labels": labels}
 
@@ -660,6 +748,6 @@ def test_investigating_incident_has_an_actionable_alert_without_a_host_remedy(tm
 
     rendered = render_alert(actual, review, labels, now=NOW)
 
-    assert "in diagnosi; nessun rimedio assegnato" in rendered["html"]
-    assert "Agente di monitoraggio" in rendered["html"]
+    assert "investigating; no remedy assigned" in rendered["html"]
+    assert "Recovery monitor" in rendered["html"]
     assert "versione proposta" not in rendered["html"]

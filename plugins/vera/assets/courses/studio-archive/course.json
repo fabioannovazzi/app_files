@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "979886354669c646c354272818c5baf6dfe4f2ad7ba09acaaba0d77305ffac4f"
+      "sha256": "6e6d06a379f9ba09ec6247a77068b1c525882231dd1e9abbf8716ecd28f897bb"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",

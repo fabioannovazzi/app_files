@@ -43,6 +43,11 @@ class AlertReview(BaseModel):
     report_id: UUID
     remedy_revision: int = Field(ge=1)
     followup_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    headline: str = Field(min_length=1, max_length=160)
+    impact: str = Field(min_length=1, max_length=1500)
+    actions_taken: str = Field(min_length=1, max_length=2000)
+    user_action: str = Field(min_length=1, max_length=1500)
+    verification: str = Field(min_length=1, max_length=1500)
     observed: str = Field(min_length=1, max_length=1500)
     inferred: str = Field(min_length=1, max_length=1500)
     unknown: str = Field(min_length=1, max_length=1500)
@@ -50,7 +55,17 @@ class AlertReview(BaseModel):
     next_action: NextAction
     next_check_at: datetime
 
-    @field_validator("observed", "inferred", "unknown", "blocker")
+    @field_validator(
+        "headline",
+        "observed",
+        "inferred",
+        "unknown",
+        "blocker",
+        "impact",
+        "actions_taken",
+        "user_action",
+        "verification",
+    )
     @classmethod
     def technical_text(cls, value: str) -> str:
         return scrub(value)
@@ -82,12 +97,47 @@ def followup_hash(followup: dict[str, Any]) -> str:
 
 def _date(value: str | None) -> str:
     if value is None:
-        return "non disponibile"
+        return "not available"
     return (
         datetime.fromisoformat(value)
         .astimezone(ZoneInfo("Europe/Paris"))
         .strftime("%d/%m/%Y %H:%M %Z")
     )
+
+
+def _technical_details(incident: dict[str, Any], report_id: str) -> str:
+    """Expose exact source locations and producer facts for the reviewed report."""
+    details = []
+    for report in [*incident.get("reports", []), *incident.get("evidence", [])]:
+        if (
+            report.get("report_id") != report_id
+            and report.get("evidence_for_report_id") != report_id
+        ):
+            continue
+        for diagnostic in report.get("diagnostics", []):
+            frames = diagnostic.get("technical_frames", [])
+            facts = diagnostic.get("technical_facts", {})
+            if not frames and not facts:
+                continue
+            parts = [diagnostic["error_type"]]
+            parts.extend(
+                f"{frame['file']}:{frame['line']} ({frame['function']})"
+                for frame in frames
+            )
+            for key, value in facts.items():
+                if type(value) is bool:
+                    rendered = "yes" if value else "no"
+                elif key in {
+                    "archive_state.mode",
+                    "archive_state.private_creation_mode",
+                    "archive_state.forbidden_mode_bits",
+                }:
+                    rendered = f"0o{value:o}"
+                else:
+                    rendered = str(value)
+                parts.append(f"{key}={rendered}")
+            details.append("; ".join(parts))
+    return " | ".join(dict.fromkeys(details))
 
 
 def render_alert(
@@ -137,87 +187,81 @@ def render_alert(
     machine = (
         label["label"]
         if proven_label
-        else (f"Computer {device_id[:8]}" if device_id else "Computer non identificato")
+        else (f"Computer {device_id[:8]}" if device_id else "Unidentified computer")
     )
     app_link = followup.get("app_link")
     app = app_link["native_app"] if app_link else followup["host"]
     app_name = {"cowork": "Claude Cowork", "codex": "Codex"}.get(
-        app, "App non identificata"
+        app, "Unidentified app"
     )
     if not app_link:
-        app_name += " (dichiarata, collegamento non verificato)"
+        app_name += " (reported; app link unverified)"
     contact = followup["reporter_contact"]
     contact_text = (
-        f"{_date(contact['last_seen'])}; {title} {contact['product_version']} osservata dal reporter originale"
+        f"{_date(contact['last_seen'])}; {title} {contact['product_version']} observed at the original reporter contact"
         if contact
-        else "nessun contatto del reporter originale registrato"
+        else "no contact from the original reporter recorded"
     )
     state_names = {
-        "investigating": "in diagnosi; nessun rimedio assegnato",
-        "published-awaiting-receipt": "pubblicato, ricevuta assente",
-        "received-awaiting-reply": "ricevuto, risposta diagnostica assente",
-        "responded": "risposta diagnostica ricevuta; recupero non dimostrato",
-        "received-awaiting-action": "ricevuto, applicazione non registrata",
-        "applied-awaiting-original-task": "applicato, attività originale ancora da verificare",
-        "retry-in-progress": "tentativo originale avviato, esito assente",
-        "retry-failed": "tentativo originale fallito",
-        "outcome-failed": "esito di fallimento registrato",
-        "action-required": "richiesto intervento",
-        "evidence-unavailable": "evidenza tecnica non disponibile",
-        "awaiting-original-task-verification": "tentativo riuscito, verifica originale assente",
-        "verified-recovered": "attività originale verificata con esito positivo",
+        "investigating": "investigating; no remedy assigned",
+        "published-awaiting-receipt": "published; receipt unconfirmed",
+        "received-awaiting-reply": "received; diagnostic reply missing",
+        "responded": "diagnostic reply received; recovery unverified",
+        "received-awaiting-action": "received; application unrecorded",
+        "applied-awaiting-original-task": "applied; original task unverified",
+        "retry-in-progress": "original retry started; result missing",
+        "retry-failed": "original retry failed",
+        "outcome-failed": "failure recorded",
+        "action-required": "action required",
+        "evidence-unavailable": "technical evidence unavailable",
+        "awaiting-original-task-verification": "retry succeeded; original task unverified",
+        "verified-recovered": "original task verified successfully",
     }
     owner = {
-        "monitor": "Agente di monitoraggio",
-        "vera": "Vera interessata",
-        "clara": "Clara interessata",
-        "lucia": "Lucia interessata",
+        "monitor": "Recovery monitor",
+        "vera": "Affected Vera session",
+        "clara": "Affected Clara session",
+        "lucia": "Affected Lucia session",
         "fabio": "Fabio",
     }[review.next_action.owner]
-    identity = f"{machine} · {app_name}"
+    identity = f"{machine} · {app_name} · {followup.get('platform', 'unknown')} worker"
     if device_id and proven_label:
-        identity += f" · codice {device_id[:8]}"
+        identity += f" · ID {device_id[:8]}"
     rows = [
-        ("Installazione", identity),
-        (
-            "Segnalazione originale",
-            f"{_date(followup['original_reported_at'])} · {followup['workflow']} · {title} {followup['original_version']}",
-        ),
-        (
-            "Rimedio",
-            f"{followup['remedy_kind']} · revisione {review.remedy_revision}"
-            + (
-                f" · versione proposta {followup['required_version']}"
-                if followup["required_version"]
-                else ""
-            )
-            + f" · {state_names[followup['state']]}",
-        ),
-        ("Ultimo contatto", contact_text),
-        ("Fatti", review.observed),
-        ("Valutazione", review.inferred),
-        ("Non sappiamo", review.unknown),
-        ("Blocco", review.blocker),
-        ("Prossima azione", f"{owner}: {review.next_action.instruction}"),
-        ("Motivo", review.next_action.reason),
-        ("Prossimo controllo", _date(review.next_check_at.isoformat())),
-        (
-            "Verifica richiesta",
-            "Successo della stessa attività e degli stessi input, per il rapporto originale e la revisione applicabile. Un aggiornamento o una ricevuta non bastano.",
-        ),
+        ("Problem and impact", f"{review.observed} {review.impact}"),
+        ("Diagnosis", review.inferred),
+        ("Work done and result", review.actions_taken),
+        ("Missing evidence and blocker", f"{review.unknown} {review.blocker}"),
+        ("Next action", f"{owner}: {review.next_action.instruction}"),
+        ("Action needed from Fabio", review.user_action),
+        ("Success criterion", review.verification),
     ]
+    technical = _technical_details(incident, str(review.report_id))
+    if technical:
+        rows.insert(2, ("Technical evidence", technical))
     body = "".join(
         f"<p><strong>{html.escape(key)}:</strong> {html.escape(value)}</p>"
         for key, value in rows
     )
-    body += f'<p><a href="{CHAT_URL}">Vera incident monitoring</a>: apre la chat in Codex. Caso {html.escape(incident["incident_id"][:8])}.</p>'
+    metadata = (
+        f"{identity} · {followup['workflow']} · {title} {followup['original_version']}"
+        f" · original failure {_date(followup['original_reported_at'])}. "
+        f"{followup['remedy_kind']} revision {review.remedy_revision}: {state_names[followup['state']]}"
+        + (
+            f"; proposed version {followup['required_version']}"
+            if followup["required_version"]
+            else ""
+        )
+        + f". Last contact: {contact_text}. Next check: {_date(review.next_check_at.isoformat())}."
+    )
+    body += f'<p>{html.escape(metadata)}</p><p><a href="{CHAT_URL}">Vera incident monitoring</a>: opens the chat in Codex. Case {html.escape(incident["incident_id"][:8])}; report {html.escape(str(review.report_id)[:8])}.</p>'
     # Wording and scheduled check dates are not new recovery events.
     event_key = (
         f"{incident['incident_id']}|{followup['attention_key']}|actionable-followup|"
         f"{review.next_action.owner}|{review.next_action.action_id}"
     )
     return {
-        "subject": f"{title}: {identity} · {followup['workflow']}",
+        "subject": f"{title}: {review.headline} · {machine}",
         "html": body,
         "event_key": event_key,
         "report_id": followup["report_id"],

@@ -76,7 +76,7 @@ def test_count_distinguishes_open_fixture_and_verified_scope_pending_closure():
     assert result["effective_open_incidents"] == 1
     assert result["controlled_fixture_incidents"] == 1
     assert result["technical_recovery_pending_closure_incidents"] == 1
-    assert result["summary_it"].startswith("Problemi tecnici aperti: 1.")
+    assert result["summary_en"].startswith("Open technical problems: 1.")
     assert recovered_scope["status"] == "open"
 
 
