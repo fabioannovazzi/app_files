@@ -557,3 +557,84 @@ def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
         process.stdin.close()
         process.stdout.close()
         process.stderr.close()
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX inherited code leases")
+def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
+    installed, tmp_path
+):
+    helper = installed / "modules/fixture-component/scripts/hold_code.py"
+    helper.write_text(
+        "import sys,time\nfrom pathlib import Path\n"
+        "Path(sys.argv[1]).touch()\ntime.sleep(1.5)\n"
+        "assert Path(__file__).read_text()\nPath(sys.argv[2]).touch()\n"
+    )
+    write_index(installed)
+    started, finished = tmp_path / "started", tmp_path / "finished"
+    program = (
+        "import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); "
+        "from verified_execution import prepare_execution_root; "
+        "from archive_cli import run_command; "
+        "root=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True); "
+        "print(root,flush=True); "
+        "run_command([sys.executable,str(root/'modules/fixture-component/scripts/hold_code.py'),sys.argv[3],sys.argv[4]],"
+        "plugin_root=root,component='fixture-component',arguments=[],check=True)"
+    )
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            program,
+            str(installed / "scripts"),
+            str(installed),
+            str(started),
+            str(finished),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=environment(tmp_path),
+        start_new_session=True,
+    )
+    initialize = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "initialize"}) + "\n"
+
+    def restart():
+        result = subprocess.run(
+            ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+            input=initialize,
+            text=True,
+            capture_output=True,
+            env=environment(tmp_path),
+            timeout=15,
+        )
+        assert result.returncode == 0, result.stderr
+
+    try:
+        snapshot = Path(process.stdout.readline().strip())
+        deadline = time.monotonic() + 10
+        while not started.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert started.exists()
+        process.kill()
+        process.wait(timeout=10)
+        restart()
+        assert snapshot.exists(), "A surviving CLI helper must retain its code lease"
+        deadline = time.monotonic() + 10
+        while not finished.exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert (
+            finished.exists()
+        ), "The helper must still read its code after launcher death"
+        time.sleep(0.1)
+        restart()
+        assert not snapshot.exists()
+    finally:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait(timeout=10)
+        process.stdout.close()
+        process.stderr.close()

@@ -56,6 +56,35 @@ def run_command(
     arguments: list[str],
     **options: Any,
 ) -> subprocess.CompletedProcess:
+    """Hand the code lease to the child before a launcher can be terminated."""
+    from verified_execution import acquire_execution_lease
+
+    lease = acquire_execution_lease(plugin_root)
+    try:
+        if lease is not None:
+            options["pass_fds"] = tuple(
+                dict.fromkeys((*options.get("pass_fds", ()), lease))
+            )
+        return _run_command(
+            command,
+            plugin_root=plugin_root,
+            component=component,
+            arguments=arguments,
+            **options,
+        )
+    finally:
+        if lease is not None:
+            os.close(lease)
+
+
+def _run_command(
+    command: list[str],
+    *,
+    plugin_root: Path,
+    component: str,
+    arguments: list[str],
+    **options: Any,
+) -> subprocess.CompletedProcess:
     """Measure producer bytes; an unsuccessful record prevents payload delivery."""
     manifest = next(
         (

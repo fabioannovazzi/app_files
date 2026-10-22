@@ -34,6 +34,7 @@ __all__ = [
     "release_execution_root",
     "own_execution_root",
     "execution_lease_fds",
+    "acquire_execution_lease",
     "recover_abandoned_execution_roots",
     "report_preparation_failure",
     "main",
@@ -104,6 +105,44 @@ def execution_lease_fds(root: Path) -> tuple[int, ...]:
     """Keep the code lease in a detached worker until its helper finishes."""
     descriptor = _LEASES.get(root)
     return () if descriptor is None else (descriptor,)
+
+
+def acquire_execution_lease(root: Path) -> int | None:
+    """Borrow a registered snapshot lease for a CLI child before launching it."""
+    if os.name != "posix" or root.parent != Path(tempfile.gettempdir()).resolve():
+        return None
+    if not re.fullmatch(
+        r"vera-(?:verified|execution-bootstrap)-[A-Za-z0-9_-]+", root.name
+    ):
+        return None
+    import fcntl
+
+    lease = _lease_directory() / (root.name + ".json")
+    try:
+        descriptor = os.open(lease, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except FileNotFoundError:
+        return None  # Unmarked/borrowed code is never swept automatically.
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_SH)
+        info = os.fstat(descriptor)
+        data = json.loads(os.read(descriptor, 4096))
+        current = root.lstat()
+        if (
+            not stat.S_ISREG(info.st_mode)
+            or info.st_uid != os.getuid()
+            or info.st_nlink != 1
+            or not stat.S_ISDIR(current.st_mode)
+            or current.st_uid != os.getuid()
+            or not isinstance(data, dict)
+            or data.get("schema_version") != 1
+            or (current.st_dev, current.st_ino)
+            != (data.get("device"), data.get("inode"))
+        ):
+            raise ValueError("CLI code lease no longer matches its execution root")
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
 
 
 def recover_abandoned_execution_roots() -> None:
