@@ -182,6 +182,157 @@ def test_cumulative_receipt_creates_two_native_closures_and_conserved_ledger(
     assert assumptions[semantic.KEY]["status"] == "completed"
 
 
+def generic_payment_case():
+    """Retain case 3's actual fields and the worker's customer-identity citations."""
+    common = {
+        "amount": "915",
+        "currency": "EUR",
+        "unit": "EUR",
+        "entity_ref": "synthetic-case-003",
+        "party_ref": "Verdi Logistica Snc",
+        "direction_policy": "receivable",
+    }
+    items = [
+        {
+            **common,
+            "record_id": "invoice-0",
+            "document_no": "FT-2026-0104",
+            "document_date": "2026-07-01",
+            "expected_side": "receivable",
+        }
+    ]
+    bank = [
+        {
+            **common,
+            "record_id": "bank-0",
+            "description": "bonifico a vs favore",
+            "posting_date": "2026-07-13",
+            "evidence_type": "external_bank",
+        }
+    ]
+    proposal = {
+        "target_id": "invoice-0",
+        "outcome": "supported",
+        "reason": (
+            "The description indicates an incoming transfer from the same customer. "
+            "Only one open invoice is provided; the amount supports its allocation."
+        ),
+        "allocations": [
+            {
+                "source_id": "bank-0",
+                "amount": "915",
+                "citations": [
+                    {
+                        "record_id": "invoice-0",
+                        "field": "party_ref",
+                        "quote": "Verdi Logistica Snc",
+                    },
+                    {
+                        "record_id": "invoice-0",
+                        "field": "expected_side",
+                        "quote": "receivable",
+                    },
+                    {
+                        "record_id": "bank-0",
+                        "field": "party_ref",
+                        "quote": "Verdi Logistica Snc",
+                    },
+                    {
+                        "record_id": "bank-0",
+                        "field": "description",
+                        "quote": "bonifico a vs favore",
+                    },
+                ],
+            }
+        ],
+    }
+    return items, bank, proposal
+
+
+def test_generic_payment_customer_citations_close_case_three_with_exact_ledger(
+    runtime, monkeypatch, tmp_path
+):
+    _, h, semantic = runtime
+    items, bank, proposal = generic_payment_case()
+    scope = {"cutoff_date": "2026-07-01", "post_cutoff_events_excluded": False}
+    assert (
+        h.reconcile_open_items(items, bank, scope)[0]["reconciliation_status"]
+        == "unresolved"
+    )
+
+    assumptions = prepare(
+        runtime, monkeypatch, tmp_path, items, bank, [proposal], scope=scope
+    )
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    ledgers, failures = h.closed_bank_allocation_controls(rows, bank, assumptions)
+
+    assert assumptions[semantic.KEY]["status"] == "completed"
+    assert rows[0]["rule_applied"] == "semantic_evidence_allocation"
+    assert rows[0]["reconciliation_status"] == "closed"
+    assert rows[0]["allocated_amount"] == "915"
+    assert rows[0]["residual_amount"] == "0"
+    assert rows[0]["document_date"] == "2026-07-01"
+    assert rows[0]["supporting_bank_date"] == "2026-07-13"
+    assert failures == {}
+    assert ledgers[0]["balanced"] is True
+
+
+@pytest.mark.parametrize("invalid", ["amount_only", "invented_customer", "wrong_payer"])
+def test_customer_citations_do_not_bypass_evidence_or_party_checks(
+    runtime, monkeypatch, tmp_path, invalid
+):
+    _, h, semantic = runtime
+    items, bank, proposal = generic_payment_case()
+    citations = proposal["allocations"][0]["citations"]
+    if invalid == "amount_only":
+        proposal["allocations"][0]["citations"] = [
+            {"record_id": "invoice-0", "field": "amount", "quote": "915"},
+            {"record_id": "bank-0", "field": "amount", "quote": "915"},
+        ]
+    elif invalid == "invented_customer":
+        citations[0]["quote"] = "Invented Customer Srl"
+    else:
+        bank[0]["party_ref"] = "Different Payer Srl"
+        citations[2]["quote"] = "Different Payer Srl"
+
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
+
+    assert assumptions[semantic.KEY]["status"] == "incomplete"
+    assert assumptions[semantic.KEY]["batches"] == []
+    assert (
+        h.reconcile_open_items(items, bank, assumptions)[0]["reconciliation_status"]
+        == "unresolved"
+    )
+
+
+def test_same_customer_and_amount_do_not_override_semantic_ambiguity(
+    runtime, monkeypatch, tmp_path
+):
+    _, h, semantic = runtime
+    items, bank, _ = generic_payment_case()
+    items.append({**items[0], "record_id": "invoice-1", "document_no": "FT-2026-0105"})
+    proposals = [
+        {
+            "target_id": item["record_id"],
+            "outcome": "ambiguous",
+            "reason": "Two same-customer invoices fit the generic payment equally.",
+            "allocations": [],
+        }
+        for item in items
+    ]
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, proposals)
+
+    rows = h.reconcile_open_items(items, bank, assumptions)
+
+    assert assumptions[semantic.KEY]["status"] == "completed"
+    assert [row["semantic_outcome"] for row in rows] == ["ambiguous", "ambiguous"]
+    assert [row["reconciliation_status"] for row in rows] == [
+        "unresolved",
+        "unresolved",
+    ]
+    assert h.closed_bank_allocation_controls(rows, bank, assumptions)[0] == []
+
+
 @pytest.mark.parametrize(
     ("amounts", "payment", "allocated", "bank_residual"),
     [(("366", "244"), "610", ("366", "244"), "0"), (("610",), "700", ("610",), "90")],
