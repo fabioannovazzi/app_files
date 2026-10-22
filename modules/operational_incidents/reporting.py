@@ -43,6 +43,7 @@ class AlertReview(BaseModel):
     report_id: UUID
     remedy_revision: int = Field(ge=1)
     followup_sha256: str = Field(pattern=r"^[a-f0-9]{64}$")
+    headline: str = Field(min_length=1, max_length=160)
     impact: str = Field(min_length=1, max_length=1500)
     actions_taken: str = Field(min_length=1, max_length=2000)
     user_action: str = Field(min_length=1, max_length=1500)
@@ -55,6 +56,7 @@ class AlertReview(BaseModel):
     next_check_at: datetime
 
     @field_validator(
+        "headline",
         "observed",
         "inferred",
         "unknown",
@@ -259,7 +261,7 @@ def render_alert(
         f"{review.next_action.owner}|{review.next_action.action_id}"
     )
     return {
-        "subject": f"{title}: {identity} · {followup['workflow']}",
+        "subject": f"{title}: {review.headline} · {machine}",
         "html": body,
         "event_key": event_key,
         "report_id": followup["report_id"],

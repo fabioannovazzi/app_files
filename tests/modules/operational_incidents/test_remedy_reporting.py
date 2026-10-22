@@ -335,6 +335,7 @@ def alert_case(tmp_path):
         report_id=original.report_id,
         remedy_revision=revision,
         followup_sha256=followup_hash(row),
+        headline="Archive task blocked; update delivery needs investigation",
         impact="The Archive operation remains interrupted.",
         actions_taken="Published the update; no receipt has arrived.",
         user_action="No action is established for Fabio; the monitor must inspect delivery.",
@@ -386,6 +387,7 @@ def test_rendered_alert_names_verified_mac_app_original_version_blocker_and_owne
     result = render_alert(actual, review, labels, now=NOW)
 
     assert "Your Mac" in result["html"]
+    assert result["subject"] == f"Vera: {review.headline} · Your Mac"
     assert "Claude Cowork" in result["html"]
     assert "Vera 0.1.393" in result["html"]
     assert "proposed version 0.1.396" in result["html"]
@@ -427,7 +429,7 @@ def test_alert_delivers_useful_facts_from_only_the_original_report(tmp_path):
 
 
 @pytest.mark.parametrize(
-    "field", ["impact", "actions_taken", "user_action", "verification"]
+    "field", ["headline", "impact", "actions_taken", "user_action", "verification"]
 )
 def test_alert_requires_user_impact_actual_work_and_concrete_recovery_result(
     tmp_path, field

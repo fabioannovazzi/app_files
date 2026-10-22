@@ -212,8 +212,10 @@ is rendering/validation, not an email sender or an autonomous diagnostic rule.
    venv; never overwrite unrelated primary-checkout source.
 2. The AI writes one `AlertReview` JSON: `incident_id`, `report_id`,
    `remedy_revision`, `followup_sha256`, concise English `observed`, `inferred`,
-   `unknown`, `blocker`, `impact`, `actions_taken`, `user_action`, `verification`,
-   `next_action` and timezone-aware `next_check_at`. `impact` explains the interrupted
+   `unknown`, `blocker`, `headline`, `impact`, `actions_taken`, `user_action`, `verification`,
+   `next_action` and timezone-aware `next_check_at`. `headline` states the actual
+   problem or verified recovery and any required user action in the subject.
+   `impact` explains the interrupted
    user task. `actions_taken` states what was actually attempted and its result.
    `user_action` names the specific action required from Fabio or explains the
    established automatic next step. `verification` names the concrete result
