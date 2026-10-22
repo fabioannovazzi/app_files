@@ -44,7 +44,7 @@
     {
       "path": "modules/open-item-reconciliation/references/evidence-and-checks.md",
       "repository_path": "plugins/open-item-reconciliation/references/evidence-and-checks.md",
-      "sha256": "548dd655e68a13e80966ed1f04c659fddd1dd4d37e338ddf58d8e95605c7e339"
+      "sha256": "c246f4f6f917ffe5fc9d2b92125df29ed24e78efca0fa5c578bee68f67a8d19f"
     },
     {
       "path": "modules/open-item-reconciliation/references/locales-and-wording.md",
@@ -69,12 +69,12 @@
     {
       "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
       "repository_path": "plugins/open-item-reconciliation/references/tabular-source-layout.md",
-      "sha256": "f8e2066c796064d90fe8b5782a8987a61a4910b6592840b0c1d22f890299be9e"
+      "sha256": "99fe36083a15d14646f6f11841dbd6d6c2ad798405937a0b8d149c2da6795f00"
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/open-item-reconciliation/references/workflow-reference.md",
-      "sha256": "03eec13de5f2f98ef74bd413ec31ee810cf05aa7e08134294f954cc87d841b6e"
+      "sha256": "0cc7d6a1f30ec24ca6fbef9ddc0fc70fcd0274aad86a3a7ecd41edd2f38f27d9"
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
@@ -84,7 +84,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "d5d0891b939e5b12c888e397926dd02bdbfe13313bd3a8eb2d83d80ce0c0e888"
+      "sha256": "8c49ca481b5ff0ded574d058cb7cfd3c847fdd903f74a22745ab2368a71b3d87"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -149,7 +149,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "e056d80508bc844aaef1db0078bcae88b198aced9dded63c7992e82a833d7f53"
+      "sha256": "6951ee8a2e9e872c0766475c44bb77bfd4debbc537d7041ef3a5441fb659a65a"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",

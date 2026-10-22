@@ -277,7 +277,9 @@ def test_generic_payment_customer_citations_close_case_three_with_exact_ledger(
     assert ledgers[0]["balanced"] is True
 
 
-@pytest.mark.parametrize("invalid", ["amount_only", "invented_customer", "wrong_payer"])
+@pytest.mark.parametrize(
+    "invalid", ["amount_only", "invented_customer", "conflicting_party_id"]
+)
 def test_customer_citations_do_not_bypass_evidence_or_party_checks(
     runtime, monkeypatch, tmp_path, invalid
 ):
@@ -292,8 +294,8 @@ def test_customer_citations_do_not_bypass_evidence_or_party_checks(
     elif invalid == "invented_customer":
         citations[0]["quote"] = "Invented Customer Srl"
     else:
-        bank[0]["party_ref"] = "Different Payer Srl"
-        citations[2]["quote"] = "Different Payer Srl"
+        items[0]["party_id"] = "customer-1"
+        bank[0]["party_id"] = "customer-2"
 
     assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
 
@@ -303,6 +305,177 @@ def test_customer_citations_do_not_bypass_evidence_or_party_checks(
         h.reconcile_open_items(items, bank, assumptions)[0]["reconciliation_status"]
         == "unresolved"
     )
+
+
+def truncated_payment_case():
+    """Replay case 13's dated source fields and actual model proposal, without paths."""
+    fixture = json.loads(
+        (
+            SCRIPTS.parents[2]
+            / "tests/fixtures/open_item_reconciliation/case013_truncated_payer.json"
+        ).read_text()
+    )
+    return (
+        fixture["open_items"],
+        fixture["evidence"],
+        fixture["response"]["decisions"][0],
+    )
+
+
+@pytest.mark.parametrize("party_field", ["party_ref", "counterparty"])
+def test_case_thirteen_truncated_payer_closes_and_delivers_with_original_dates(
+    runtime, monkeypatch, tmp_path, party_field
+):
+    workflow, h, semantic = runtime
+    items, bank, proposal = truncated_payment_case()
+    if party_field != "party_ref":
+        for row in [*items, *bank]:
+            row[party_field] = row.pop("party_ref")
+        for citation in proposal["allocations"][0]["citations"]:
+            if citation["field"] == "party_ref":
+                citation["field"] = party_field
+    scope = {"cutoff_date": "2026-07-01", "post_cutoff_events_excluded": False}
+    original_sources = json.dumps([items, bank], sort_keys=True)
+    assert (
+        h.reconcile_open_items(items, bank, scope)[0]["reconciliation_status"]
+        == "unresolved"
+    )
+
+    assumptions = prepare(
+        runtime, monkeypatch, tmp_path, items, bank, [proposal], scope=scope
+    )
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "results",
+        open_items=items,
+        evidence_rows=bank,
+        assumptions=assumptions,
+        require_completed_review=False,
+    )
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    ledgers, failures = h.closed_bank_allocation_controls(rows, bank, assumptions)
+    from audit_assurance import validate_assurance_run
+
+    assert assumptions[semantic.KEY]["status"] == "completed"
+    assert rows[0]["rule_applied"] == "semantic_evidence_allocation"
+    assert rows[0]["allocated_amount"] == "524.6"
+    assert rows[0]["residual_amount"] == "0"
+    assert rows[0]["reconciliation_status"] == "closed"
+    assert rows[0]["document_date"] == "2026-07-01"
+    assert rows[0]["supporting_bank_date"] == "2026-07-22"
+    assert json.dumps([items, bank], sort_keys=True) == original_sources
+    assert failures == {}
+    assert ledgers[0]["balanced"] is True
+    assert (
+        ledgers[0]["source_records"][0]["party_ref"]
+        != ledgers[0]["target_records"][0]["party_ref"]
+    )
+    assert Path(result["excel_path"]).is_file()
+    assert Path(result["word_path"]).is_file()
+    assert validate_assurance_run(tmp_path / "results")["content_sha256"]
+
+
+@pytest.mark.parametrize(
+    "invalid",
+    [
+        "missing_name_quote",
+        "partial_name_quote",
+        "party_id",
+        "counterparty_id",
+        "entity",
+        "currency",
+        "unit",
+        "direction",
+        "excess",
+    ],
+)
+def test_case_thirteen_semantic_name_resolution_keeps_evidence_and_accounting_checks(
+    runtime, monkeypatch, tmp_path, invalid
+):
+    _, h, semantic = runtime
+    items, bank, proposal = truncated_payment_case()
+    allocation = proposal["allocations"][0]
+    if invalid == "missing_name_quote":
+        allocation["citations"] = [
+            item for item in allocation["citations"] if item["field"] != "party_ref"
+        ]
+    elif invalid == "partial_name_quote":
+        allocation["citations"][1]["quote"] = "Eta"
+    elif invalid in {"party_id", "counterparty_id"}:
+        items[0][invalid], bank[0][invalid] = "customer-1", "customer-2"
+    elif invalid == "excess":
+        allocation["amount"] = "524.61"
+    else:
+        field, value = {
+            "entity": ("entity_ref", "another-company"),
+            "currency": ("currency", "USD"),
+            "unit": ("unit", "thousands"),
+            "direction": ("account_side", "payable"),
+        }[invalid]
+        bank[0][field] = value
+
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
+
+    assert assumptions[semantic.KEY]["status"] == "incomplete"
+    assert assumptions[semantic.KEY]["batches"] == []
+    assert (
+        h.reconcile_open_items(items, bank, assumptions)[0]["reconciliation_status"]
+        == "unresolved"
+    )
+
+
+def test_semantically_conflicting_payer_remains_unresolved(
+    runtime, monkeypatch, tmp_path
+):
+    _, h, semantic = runtime
+    items, bank, proposal = truncated_payment_case()
+    bank[0]["party_ref"] = "Different Payer Srl"
+    proposal.update(
+        outcome="conflict",
+        allocations=[],
+        reason="The payer is another company; the invoice reference alone does not establish settlement.",
+    )
+
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
+    rows = h.reconcile_open_items(items, bank, assumptions)
+
+    assert assumptions[semantic.KEY]["status"] == "completed"
+    assert rows[0]["semantic_outcome"] == "conflict"
+    assert rows[0]["reconciliation_status"] == "unresolved"
+    assert h.closed_bank_allocation_controls(rows, bank, assumptions)[0] == []
+
+
+def test_truncated_payer_cannot_reuse_the_same_payment(runtime, monkeypatch, tmp_path):
+    _, h, semantic = runtime
+    items, bank, proposal = truncated_payment_case()
+    items.append({**items[0], "record_id": "invoice-1"})
+    duplicate = json.loads(json.dumps(proposal))
+    duplicate["target_id"] = "invoice-1"
+    for citation in duplicate["allocations"][0]["citations"]:
+        if citation["record_id"] == "invoice-0":
+            citation["record_id"] = "invoice-1"
+
+    assumptions = prepare(
+        runtime, monkeypatch, tmp_path, items, bank, [proposal, duplicate]
+    )
+
+    assert assumptions[semantic.KEY]["status"] == "incomplete"
+    assert assumptions[semantic.KEY]["batches"] == []
+    assert all(
+        row["reconciliation_status"] != "closed"
+        for row in h.reconcile_open_items(items, bank, assumptions)
+    )
+
+
+def test_truncated_payer_replay_rejects_changed_source_identity(
+    runtime, monkeypatch, tmp_path
+):
+    _, h, _ = runtime
+    items, bank, proposal = truncated_payment_case()
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
+    bank[0]["party_ref"] = "Another customer"
+
+    with pytest.raises(ValueError, match="stale"):
+        h.reconcile_open_items(items, bank, assumptions)
 
 
 def test_same_customer_and_amount_do_not_override_semantic_ambiguity(

@@ -130,6 +130,14 @@ relationship shape, prevent prohibited reuse, and conserve exact source and
 target amounts. Record all allocation and residual values; a material residual
 is never rounded or forced to zero.
 
+Deterministic matching uses exact party values. For unresolved items, the
+semantic worker can establish customer identity across bank abbreviations or
+other name variations using source-bound reasoning and complete identity quotes
+from both records. The semantic ledger preserves the original party values;
+it does not repeat name-string equality after that assessment. Explicit party
+ID conflicts and the entity, currency, unit, direction and conservation checks
+still apply. Ambiguous or conflicting relationships remain unresolved.
+
 ## 4. Reporting boundary
 
 Write native Excel/Word and JSON outputs, then copy only declared delivery files

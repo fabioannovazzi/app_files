@@ -1,0 +1,113 @@
+{
+  "open_items": [
+    {
+      "document_no": "FT-2026-0116",
+      "document_date": "2026-07-01",
+      "amount": "524.6",
+      "currency": "EUR",
+      "party_ref": "Eta Impianti Elettrici Di Rossi Mario & C. Sas",
+      "entity_ref": "synthetic-case-013-0484",
+      "unit": "units",
+      "direction_policy": "receivable",
+      "allocation_policy": "one_to_one",
+      "reported_unit": "units",
+      "reported_increment": "0.01",
+      "record_id": "invoice-0",
+      "source_role": "open_items",
+      "evidence_type": "open_item",
+      "document_key": "FT20260116|2026",
+      "balance": "524.6",
+      "posting_date": "2026-07-01",
+      "source_side": "receivable",
+      "expected_side": "receivable"
+    }
+  ],
+  "evidence": [
+    {
+      "source_record_id": "TX-093",
+      "posting_date": "2026-07-22",
+      "amount": "524.6",
+      "party_ref": "ETA IMPIANTI ELETTR.",
+      "description": "FT-2026-0116",
+      "currency": "EUR",
+      "entity_ref": "synthetic-case-013-0484",
+      "unit": "units",
+      "direction_policy": "receivable",
+      "allocation_policy": "one_to_one",
+      "reported_unit": "units",
+      "reported_increment": "0.01",
+      "record_id": "bank-0",
+      "source_role": "bank_statement",
+      "evidence_type": "external_bank",
+      "document_key": "",
+      "bank_amount": "524.6"
+    }
+  ],
+  "response": {
+    "decisions": [
+      {
+        "target_id": "invoice-0",
+        "outcome": "supported",
+        "reason": "The bank description exactly matches the receivable document reference, and the payer name is consistent with the customer name. The bank record and receivable also share the same entity and currency; the bank statement source and receivable direction support settlement. This is the only candidate target provided, so there is no competing item to explain the payment.",
+        "allocations": [
+          {
+            "source_id": "bank-0",
+            "amount": "524.6",
+            "citations": [
+              {
+                "record_id": "invoice-0",
+                "field": "document_no",
+                "quote": "FT-2026-0116"
+              },
+              {
+                "record_id": "invoice-0",
+                "field": "party_ref",
+                "quote": "Eta Impianti Elettrici Di Rossi Mario & C. Sas"
+              },
+              {
+                "record_id": "invoice-0",
+                "field": "expected_side",
+                "quote": "receivable"
+              },
+              {
+                "record_id": "bank-0",
+                "field": "description",
+                "quote": "FT-2026-0116"
+              },
+              {
+                "record_id": "bank-0",
+                "field": "party_ref",
+                "quote": "ETA IMPIANTI ELETTR."
+              },
+              {
+                "record_id": "bank-0",
+                "field": "source_role",
+                "quote": "bank_statement"
+              },
+              {
+                "record_id": "invoice-0",
+                "field": "entity_ref",
+                "quote": "synthetic-case-013-0484"
+              },
+              {
+                "record_id": "bank-0",
+                "field": "entity_ref",
+                "quote": "synthetic-case-013-0484"
+              },
+              {
+                "record_id": "invoice-0",
+                "field": "currency",
+                "quote": "EUR"
+              },
+              {
+                "record_id": "bank-0",
+                "field": "currency",
+                "quote": "EUR"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
