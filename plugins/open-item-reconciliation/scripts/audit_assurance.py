@@ -6522,7 +6522,7 @@ def _validate_closed_relationships(
     allocation_ledgers: Sequence[Mapping[str, Any]],
     assumptions: Mapping[str, Any] | None = None,
 ) -> set[str]:
-    """Validate closure and return exact rederived partial-payment ledger IDs."""
+    """Validate closure and return source-rederived ledgers with retained residuals."""
 
     evidence_by_id = {
         str(row.get("record_id")): row
@@ -6538,23 +6538,27 @@ def _validate_closed_relationships(
     ):
         raise AssuranceRunError("prepared evidence record identities must be unique")
     ledgers = [validate_allocation_ledger(ledger) for ledger in allocation_ledgers]
-    validated_partial_ledgers: set[str] = set()
-    partial_rows = [
+    validated_residual_ledgers: set[str] = set()
+    actual_by_id = {ledger["ledger_id"]: ledger for ledger in ledgers}
+    settlement_rows = [
         row
         for row in reconciliation_rows
         if row.get("reconciliation_status") == "partially_paid"
+        or (
+            _closed_status(row.get("reconciliation_status"))
+            and row.get("rule_applied") == "semantic_evidence_allocation"
+        )
     ]
-    if partial_rows:
-        expected_partial_ledgers, failures = closed_bank_allocation_controls(
+    if settlement_rows:
+        expected_settlement_ledgers, failures = closed_bank_allocation_controls(
             [dict(row) for row in reconciliation_rows],
             [dict(row) for row in evidence_rows],
             dict(assumptions or {}),
         )
         expected_by_id = {
-            ledger["ledger_id"]: ledger for ledger in expected_partial_ledgers
+            ledger["ledger_id"]: ledger for ledger in expected_settlement_ledgers
         }
-        actual_by_id = {ledger["ledger_id"]: ledger for ledger in ledgers}
-        for row in partial_rows:
+        for row in settlement_rows:
             evidence_id = str(row.get("matched_evidence_id") or "")
             ledger_id = str(row.get("relationship_allocation_ledger_id") or "")
             expected = expected_by_id.get(ledger_id)
@@ -6565,9 +6569,24 @@ def _validate_closed_relationships(
                 or row.get("relationship_control_status") != "passed"
             ):
                 raise AssuranceRunError(
-                    "partial payment lacks its exact evidence allocation and retained residual"
+                    "settlement lacks its exact evidence allocation and retained residual"
                 )
-            validated_partial_ledgers.add(ledger_id)
+            if _closed_status(row.get("reconciliation_status")):
+                target_ref = (
+                    "target."
+                    + hashlib.sha256(str(row["record_id"]).encode("utf-8")).hexdigest()[
+                        :24
+                    ]
+                )
+                if _canonical_money(row.get("residual_amount")) != "0" or not any(
+                    residual["record_ref"] == target_ref
+                    and _canonical_money(residual["residual"]) == "0"
+                    for residual in expected["target_residuals"]
+                ):
+                    raise AssuranceRunError(
+                        "closed settlement retains an unpaid invoice residual"
+                    )
+            validated_residual_ledgers.add(ledger_id)
     for row in reconciliation_rows:
         if not _closed_status(row.get("reconciliation_status")):
             continue
@@ -6598,7 +6617,7 @@ def _validate_closed_relationships(
         candidates = [
             ledger
             for ledger in ledgers
-            if ledger["balanced"]
+            if (ledger["balanced"] or ledger["ledger_id"] in validated_residual_ledgers)
             and (
                 not relationship_ledger_id
                 or ledger["ledger_id"] == relationship_ledger_id
@@ -6639,14 +6658,14 @@ def _validate_closed_relationships(
                 f"closed reconciliation record {record_id} lacks a balanced "
                 "evidence allocation relationship"
             )
-    return validated_partial_ledgers
+    return validated_residual_ledgers
 
 
 def _reconciliation_gate_failed(
     checks: Sequence[Mapping[str, Any]],
     allocation_ledgers: Sequence[Mapping[str, Any]],
     reconciliation_rows: Sequence[Mapping[str, Any]],
-    validated_partial_ledger_ids: set[str],
+    validated_residual_ledger_ids: set[str],
 ) -> bool:
     if reconciliation_rows and not checks:
         return True
@@ -6663,11 +6682,11 @@ def _reconciliation_gate_failed(
         and not str(row["check"]).startswith("codex_review")
         for row in checks
     ) or any(
-        # A retained unpaid balance is a valid result, not a failed calculation.
-        # Only source-rederived partial settlements receive this exception;
-        # unrelated imbalances and all claimed closures remain checked.
+        # Unpaid balances and unapplied cash are valid retained residuals.
+        # Only exact source/worker-rederived settlements receive this exception;
+        # closures still require a fully covered invoice, not a fully used payment.
         not validate_allocation_ledger(ledger)["balanced"]
-        and ledger["ledger_id"] not in validated_partial_ledger_ids
+        and ledger["ledger_id"] not in validated_residual_ledger_ids
         for ledger in allocation_ledgers
     )
 
@@ -6797,7 +6816,7 @@ def _finalize_assurance_run_in_place(
     normalized_allocations = [
         validate_allocation_ledger(ledger) for ledger in allocation_ledgers
     ]
-    validated_partial_ledger_ids = _validate_closed_relationships(
+    validated_residual_ledger_ids = _validate_closed_relationships(
         reconciliation_rows=reconciliation_rows,
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=normalized_allocations,
@@ -6979,7 +6998,7 @@ def _finalize_assurance_run_in_place(
         checks,
         normalized_allocations,
         reconciliation_rows,
-        validated_partial_ledger_ids,
+        validated_residual_ledger_ids,
     )
     reconciliation_status = "failed" if reconciliation_failed else "passed"
     semantic_status = _review_gate_status(
@@ -7705,7 +7724,7 @@ def validate_assurance_run(
     ]
     if allocations != payload["allocation_ledgers"]:
         raise AssuranceRunError("allocation ledgers are stale")
-    validated_partial_ledger_ids = _validate_closed_relationships(
+    validated_residual_ledger_ids = _validate_closed_relationships(
         reconciliation_rows=result["reconciliation_rows"],
         evidence_rows=prepared["evidence_rows"],
         allocation_ledgers=allocations,
@@ -7870,7 +7889,7 @@ def validate_assurance_run(
             result["checks"],
             allocations,
             result["reconciliation_rows"],
-            validated_partial_ledger_ids,
+            validated_residual_ledger_ids,
         )
         else "passed"
     )

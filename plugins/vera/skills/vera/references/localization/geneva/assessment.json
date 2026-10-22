@@ -124,7 +124,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "4e5e1a5840d903d87301bc69bb8646433974e6b0134c331598eb9f8e8ab9944b",
+  "catalogue_fingerprint": "9cfe1d7829039f89bf9e8d08f4bed760cee8408c8f272ad8d60dd6e5b5fd796e",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2216,5 +2216,10 @@
     "previous_catalogue_fingerprint": "0222f7c5954d155feccb1e8fefd334b3b5634c681143049bbfde231a1593dba8",
     "changed_entrypoints": [],
     "scope": "Canonical manifest/version binding only: every skill entrypoint and existing jurisdiction judgment is preserved. Exact-run recovery, terminal reporting after input loss and damaged-record isolation establish no new Geneva or native-host professional acceptance."
+  },
+  "semantic_cutoff_repair_release_binding_20261022": {
+    "previous_catalogue_fingerprint": "4e5e1a5840d903d87301bc69bb8646433974e6b0134c331598eb9f8e8ab9944b",
+    "scope": "Manifest-only catalogue refresh. Skill entrypoint bytes and existing jurisdiction assessments are unchanged. No new jurisdiction acceptance is claimed.",
+    "version": "0.1.474"
   }
 }

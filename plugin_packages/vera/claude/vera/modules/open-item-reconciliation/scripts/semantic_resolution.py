@@ -177,6 +177,7 @@ def prepare_resolution(
 ) -> dict[str, Any]:
     """Run bounded complete perimeter batches, recording every unsupported block."""
     h = _helpers()
+    active = h.merged_assumptions(assumptions)
     population = _populations(rows, evidence, assumptions)
     used = {
         str(row.get("matched_evidence_id"))
@@ -194,7 +195,11 @@ def prepare_resolution(
         if str(row.get("record_id")) not in used
         and h.normalized_evidence_type(row)
         in {"external_bank", "unallocated_external_bank"}
-        and not h.is_after_cutoff(row, assumptions)
+        # Date eligibility follows the selected accounting scope; interpreting
+        # the payment remains the worker's job, not a date-based matching rule.
+        and not (
+            active["post_cutoff_events_excluded"] and h.is_after_cutoff(row, active)
+        )
     ]
     result: dict[str, Any] = {
         "schema_version": "vera.open_item_semantic_resolution.v1",
@@ -294,6 +299,16 @@ def prepare_resolution(
                     "packet": packet,
                     "response": execution["response_payload"],
                     "launch_receipt": launch,
+                    # Prepared-run JSON sorts object keys. Preserve the worker's
+                    # serialization order for its byte-hashed response/receipt.
+                    "worker_evidence_json": json.dumps(
+                        {
+                            "response": execution["response_payload"],
+                            "launch_receipt": launch,
+                        },
+                        ensure_ascii=False,
+                        allow_nan=False,
+                    ),
                 }
             )
             # Reject unsupported model claims and invalid proposals before any
@@ -333,6 +348,13 @@ def _validate_batch(
         batch["response"],
         batch["launch_receipt"],
     )
+    if "worker_evidence_json" in batch:
+        retained = json.loads(batch["worker_evidence_json"])
+        if retained != {"response": response, "launch_receipt": launch}:
+            raise ValueError(
+                "Semantic worker evidence differs from its retained serialization"
+            )
+        response, launch = retained["response"], retained["launch_receipt"]
     launch_content = {
         key: value for key, value in launch.items() if key != "content_sha256"
     }
