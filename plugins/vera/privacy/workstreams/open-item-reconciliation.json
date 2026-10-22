@@ -147,7 +147,7 @@
       {
         "id": "bounded-semantic-residual-worker",
         "purpose": "Resolve unresolved open items into source-bound exact allocations",
-        "content": "The selected low-cost native model receives complete bounded currency/entity perimeters, capped at 120 combined target and bank rows and 48000 prompt bytes. Populated mapped fields include exact business document numbers, descriptions, parties, entities, dates, amounts, currencies, accounting sides and opaque record linkage IDs. Source paths and unmapped columns are excluded; professional data are not anonymized. Native worker launch and response evidence are retained locally and decisions are replayed into exact allocations with explicit residuals. Codex uses its capability-probed native capsule. Native raw preparation may therefore perform this bounded host-model phase; opening source documents or editing setup drafts does not.",
+        "content": "The selected low-cost native model receives complete bounded currency/entity perimeters, capped at 120 combined target and bank rows and 48000 prompt bytes. Populated mapped fields include exact business document numbers, descriptions, parties, entities, dates, amounts, currencies, accounting sides and opaque record linkage IDs. Source paths and unmapped columns are excluded; professional data are not anonymized. Native worker launch and response evidence are retained locally and decisions are replayed into exact allocations with explicit residuals. Codex uses its capability-probed native capsule. Native raw preparation may therefore perform this bounded host-model phase; opening source documents or editing setup drafts does not. Bank receipts after the cut-off enter that same bounded packet only when the reviewed scope includes post-cut-off events. Local retained worker evidence preserves byte-hashed response and launch serialization for exact replay after sorted JSON persistence; this adds no recipient or model-visible source field.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -165,9 +165,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-21",
+    "reviewed_at": "2026-10-22",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "9f8f5f877ee24e033ecc95c9a346ce711ec0623f9125b005d68bed34da43bf6e"
+    "source_fingerprint": "07aeb8e05aeda53e1cc93258d0bc331f0d2dbc3a520cf842f6b7fc2659baced0"
   },
   "role": "workflow",
   "runtime_profiles": [

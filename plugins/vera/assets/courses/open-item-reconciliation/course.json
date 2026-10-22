@@ -79,7 +79,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "f680fa848de13d52f2ddc63d2870bc3c934f3af796cd459da73bcd13b2d5eae2"
+      "sha256": "b5fd91b3b7c68acae89d76ba522e0405b84015e7b46a0a8b8a00039e7e0234d8"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -144,7 +144,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "e4bb318675b7cc1b097be2a4221b1f3549afba69fb649637705214d86741ed5e"
+      "sha256": "5de5d30ab80cbc83b126808b4b9583a10fbcc6aff7932362c351269e7bb2379d"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
