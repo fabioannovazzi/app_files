@@ -83,8 +83,8 @@ recovery and installation, and every explicitly protected code directory still
 existed. No existing worker was signalled for the recovery or local update.
 
 The supported local catalog/installation commands selected one enabled
-`vera@mp-vera` 0.1.476, retaining old caches and source folders. The final combined
-Codex ZIP SHA-256 is
+`vera@mp-vera` 0.1.476, retaining old caches and source folders. The first combined 0.1.476
+Codex ZIP SHA-256 was
 `6385c2a41c3f3fdbcc6e906f461b6e46d98c1b594d965b847b1e44611fba5675`.
 The actual installed launcher independently passed normal EOF, 100-signal
 SIGTERM/SIGINT bursts, and SIGKILL followed by startup recovery. These tests
@@ -92,3 +92,13 @@ initialize isolated native services, not client workflows. Active conversations
 and their existing services retain their old code; the selected installation is
 for new sessions. This is local termination acceptance, not a claim of a fresh
 professional workflow, native Windows acceptance or Marketplace publication.
+
+
+The release CI later detected a stale localization catalogue bound to 0.1.475.
+The final Vera patch is 0.1.477, avoiding replacement of code in the already
+running 0.1.476 cache. Its recorded catalogue is rebound to the canonical
+manifest; exact equality checks preserve all 55 skill entrypoints and every
+existing jurisdiction assessment row. No jurisdiction adaptation is inferred
+from this local runtime repair. Executable lifecycle bytes are unchanged from
+the tested 0.1.476 candidate. Final archive/install hashes and CI outcomes are
+recorded by the release validation evidence.
