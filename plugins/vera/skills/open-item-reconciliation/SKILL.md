@@ -56,8 +56,12 @@ Current user requests take precedence over saved preferences.
 For normal CSV/XLSX work, use the maintained import-to-delivery operation in
 `../../modules/studio-archive/scripts/reconcile_open_items.py` (repository:
 `../../../studio-archive/scripts/reconcile_open_items.py`). Inspect the selected
-sources and write one request using the component's
-`references/simple-reconciliation.md`. Invoke it through `vera_execute` with
+sources and read the Open-item Reconciliation guide at
+`../../modules/open-item-reconciliation/references/simple-reconciliation.md`
+(repository: `../../../open-item-reconciliation/references/simple-reconciliation.md`).
+Resolve these paths from this skill's directory. The guide belongs to
+`open-item-reconciliation`; the operation belongs to `studio-archive`.
+Write the request described in that guide. Invoke it through `vera_execute` with
 component `studio-archive`, script `scripts/reconcile_open_items.py`, and
 `arguments=["--request", "<absolute request path>"]`. Reuse the request to reopen
 its saved result; do not assemble the import/start/produce/finalize sequence or
