@@ -85,7 +85,14 @@ def decision(target, allocations, outcome="supported"):
 
 
 def prepare(
-    runtime, monkeypatch, tmp_path, items, bank, decisions, classified_rows=None
+    runtime,
+    monkeypatch,
+    tmp_path,
+    items,
+    bank,
+    decisions,
+    classified_rows=None,
+    scope=None,
 ):
     _, h, semantic = runtime
     response = {"decisions": decisions}
@@ -138,7 +145,7 @@ def prepare(
             run_isolated_native_worker=worker,
         ),
     )
-    assumptions = {"currency": "EUR"}
+    assumptions = {"currency": "EUR", **(scope or {})}
     rows = (
         classified_rows
         if classified_rows is not None
@@ -173,6 +180,177 @@ def test_cumulative_receipt_creates_two_native_closures_and_conserved_ledger(
     assert failures == {}
     assert ledgers[0]["balanced"] is True
     assert assumptions[semantic.KEY]["status"] == "completed"
+
+
+@pytest.mark.parametrize(
+    ("amounts", "payment", "allocated", "bank_residual"),
+    [(("366", "244"), "610", ("366", "244"), "0"), (("610",), "700", ("610",), "90")],
+    ids=["cumulative", "overpayment"],
+)
+def test_included_post_cutoff_receipt_reaches_worker_native_ledger_and_workpapers(
+    runtime, monkeypatch, tmp_path, amounts, payment, allocated, bank_residual
+):
+    workflow, h, semantic = runtime
+    items, bank = population(amounts=amounts, payments=(payment,))
+    for item in items:
+        item["document_date"] = "2026-07-01"
+    bank[0]["posting_date"] = "2026-07-24"
+    if len(items) == 1:
+        bank[0]["description"] = "saldo fattura FT-2026-0141"
+    proposals = [
+        decision(f"invoice-{index}", [("bank-0", amount)])
+        for index, amount in enumerate(allocated)
+    ]
+    for proposal in proposals:
+        proposal["allocations"][0]["citations"][1]["quote"] = bank[0]["description"]
+
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        proposals,
+        scope={"cutoff_date": "2026-07-01", "post_cutoff_events_excluded": False},
+    )
+
+    resolution = assumptions[semantic.KEY]
+    assert resolution["status"] == "completed"
+    assert len(resolution["batches"]) == 1
+    assert (
+        resolution["batches"][0]["packet"]["sources"][0]["posting_date"] == "2026-07-24"
+    )
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    assert [row["reconciliation_status"] for row in rows] == ["closed"] * len(items)
+    assert [row["allocated_amount"] for row in rows] == list(allocated)
+    ledgers, failures = h.closed_bank_allocation_controls(rows, bank, assumptions)
+    assert failures == {}
+    assert ledgers[0]["balanced"] is (bank_residual == "0")
+    assert ledgers[0]["source_residuals"][0]["residual"] == bank_residual
+    assert all(row["residual"] == "0" for row in ledgers[0]["target_residuals"])
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "results",
+        open_items=items,
+        evidence_rows=bank,
+        assumptions=assumptions,
+        require_completed_review=False,
+    )
+    from audit_assurance import validate_assurance_run
+
+    assert len(result["relationship_allocation_ledgers"]) == 1
+    assert Path(result["excel_path"]).is_file()
+    assert Path(result["word_path"]).is_file()
+    assert validate_assurance_run(tmp_path / "results")["content_sha256"]
+
+
+@pytest.mark.parametrize("policy", [True, None], ids=["excluded", "default-excluded"])
+def test_excluded_post_cutoff_receipt_never_launches_worker(
+    runtime, monkeypatch, tmp_path, policy
+):
+    _, h, semantic = runtime
+    items, bank = population()
+    for item in items:
+        item["document_date"] = "2026-07-01"
+    bank[0]["posting_date"] = "2026-07-24"
+    assumptions = {"cutoff_date": "2026-07-01"}
+    if policy is not None:
+        assumptions["post_cutoff_events_excluded"] = policy
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    monkeypatch.setattr(
+        semantic, "_capsule", lambda: pytest.fail("Excluded receipt sent")
+    )
+
+    result = semantic.prepare_resolution(
+        rows, bank, assumptions, tmp_path / "semantic-review"
+    )
+
+    assert result["status"] == "missing_evidence"
+    assert result["batches"] == []
+    assert all(row["reconciliation_status"] == "unresolved" for row in rows)
+
+
+@pytest.mark.parametrize("tamper", ["hide_excess", "underallocate", "inflate_invoice"])
+def test_overpayment_assurance_rejects_ledger_changes(
+    runtime, monkeypatch, tmp_path, tamper
+):
+    workflow, h, _ = runtime
+    items, bank = population(amounts=("610",), payments=("700",))
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [decision("invoice-0", [("bank-0", "610")])],
+    )
+    original = workflow.closed_bank_allocation_controls
+
+    def altered_ledger(*args, **kwargs):
+        ledgers, failures = original(*args, **kwargs)
+        ledger = json.loads(json.dumps(ledgers[0]))
+        if tamper == "hide_excess":
+            ledger["source_records"][0]["amount"] = "610"
+        elif tamper == "underallocate":
+            ledger["allocations"][0]["amount"] = "609"
+        else:
+            ledger["target_records"][0]["amount"] = "700"
+        rebuilt = h.build_allocation_ledger(
+            **{
+                key: ledger[key]
+                for key in (
+                    "ledger_id",
+                    "policy",
+                    "source_records",
+                    "target_records",
+                    "allocations",
+                )
+            }
+        )
+        return [rebuilt], failures
+
+    monkeypatch.setattr(workflow, "closed_bank_allocation_controls", altered_ledger)
+    from audit_assurance import AssuranceRunError
+
+    with pytest.raises(AssuranceRunError, match="exact evidence allocation"):
+        workflow.build_reconciliation_artifacts(
+            output_dir=tmp_path / "results",
+            open_items=items,
+            evidence_rows=bank,
+            assumptions=assumptions,
+            require_completed_review=False,
+        )
+
+
+def test_sorted_json_replay_retains_worker_receipt_and_rejects_response_edit(
+    runtime, monkeypatch, tmp_path
+):
+    _, h, semantic = runtime
+    items, bank = population()
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [
+            decision("invoice-0", [("bank-0", "366")]),
+            decision("invoice-1", [("bank-0", "244")]),
+        ],
+    )
+    persisted = json.loads(json.dumps(assumptions, sort_keys=True))
+
+    rows = h.reconcile_open_items(items, bank, persisted)
+
+    assert [row["reconciliation_status"] for row in rows] == ["closed", "closed"]
+    persisted["semantic_resolution"]["batches"][0]["response"]["decisions"][0][
+        "reason"
+    ] = "edited"
+    receipt = persisted[semantic.KEY]
+    receipt["content_sha256"] = semantic.canonical_json_sha256(
+        {key: value for key, value in receipt.items() if key != "content_sha256"}
+    )
+    with pytest.raises(ValueError, match="retained serialization"):
+        h.reconcile_open_items(items, bank, persisted)
 
 
 @pytest.mark.parametrize(
