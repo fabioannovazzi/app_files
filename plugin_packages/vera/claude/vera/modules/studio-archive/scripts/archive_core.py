@@ -293,6 +293,12 @@ class ArchiveError(RuntimeError):
 
     code = "archive_error"
 
+    def __init__(
+        self, *args: object, technical_facts: dict[str, int | bool] | None = None
+    ) -> None:
+        super().__init__(*args)
+        self.incident_technical_facts = technical_facts or {}
+
 
 class ArchiveImportSourceError(ArchiveError):
     """Keep a failed import's recovery information and existing identifiers."""
@@ -543,8 +549,11 @@ def _state_dir(
     create: bool = False,
 ) -> Path:
     selected = explicit
+    selection_explicit = explicit is not None
+    selection_environment = False
     if selected is None:
         environment_value = os.environ.get(STATE_ENV, "").strip()
+        selection_environment = bool(environment_value)
         selected = (
             Path(environment_value).expanduser()
             if environment_value
@@ -572,8 +581,28 @@ def _state_dir(
         and os.name == "posix"
         and stat.S_IMODE(selected.stat().st_mode) & 0o077
     ):
+        observed = selected.stat()
+        facts = {
+            "archive_state.mode": stat.S_IMODE(observed.st_mode),
+            "archive_state.private_creation_mode": 0o700,
+            "archive_state.forbidden_mode_bits": 0o077,
+            "archive_state.owner_uid": observed.st_uid,
+            "archive_state.process_euid": os.geteuid(),
+            "archive_state.owner_matches_process": observed.st_uid == os.geteuid(),
+            "archive_state.owner_gid": observed.st_gid,
+            "archive_state.process_egid": os.getegid(),
+            "archive_state.is_directory": stat.S_ISDIR(observed.st_mode),
+            "archive_state.is_symlink": selected.is_symlink(),
+            "archive_state.selection_explicit": selection_explicit,
+            "archive_state.selection_environment": selection_environment,
+            "archive_state.selection_default": not (
+                selection_explicit or selection_environment
+            ),
+            "archive_state.create_requested": create,
+        }
         raise ArchiveError(
-            "Studio Archive state directory must not be accessible by group or others."
+            "Studio Archive state directory must not be accessible by group or others.",
+            technical_facts=facts,
         )
     return selected.resolve()
 

@@ -114,6 +114,8 @@ def _report_payload(report: Report) -> dict[str, Any]:
     for diagnostic in payload["diagnostics"]:
         if not diagnostic["technical_frames"]:
             diagnostic.pop("technical_frames")
+        if not diagnostic["technical_facts"]:
+            diagnostic.pop("technical_facts")
     return payload
 
 
@@ -199,7 +201,7 @@ class IncidentStore:
                 return row["revision"], remedy
         return fallback_revision, Remedy(
             kind="investigating",
-            summary="Il problema è in diagnosi; nessun rimedio è assegnato a questa segnalazione.",
+            summary="The problem is being investigated; no remedy is assigned to this report.",
             evidence="No scoped remedy is available for this original report. Earlier overwritten revisions cannot be reconstructed.",
             expected_outcome="Successful execution of the original operation",
         ).model_dump(mode="json")
@@ -997,7 +999,7 @@ class IncidentStore:
             incident_id = str(uuid4())
             initial = Remedy(
                 kind="investigating",
-                summary="Il problema è stato registrato ed è in diagnosi.",
+                summary="The problem has been recorded and is being investigated.",
                 evidence="No cause has yet been established.",
                 expected_outcome="Successful execution of the interrupted operation",
             ).model_dump(mode="json")

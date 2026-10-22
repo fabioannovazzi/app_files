@@ -121,11 +121,11 @@ def summarize(snapshot: dict[str, Any], ledger: dict[str, Any]) -> dict[str, Any
     return {
         "raw_open_incidents": len(queued),
         **counts,
-        "summary_it": (
-            f"Problemi tecnici aperti: {counts['effective_open_incidents']}. "
-            "Recuperi tecnici verificati in attesa di chiusura nel registro: "
+        "summary_en": (
+            f"Open technical problems: {counts['effective_open_incidents']}. "
+            "Verified technical recoveries awaiting registry closure: "
             f"{counts['technical_recovery_pending_closure_incidents']}. "
-            f"Prove controllate escluse: {counts['controlled_fixture_incidents']}."
+            f"Controlled tests excluded: {counts['controlled_fixture_incidents']}."
         ),
         "basis": "distinct incident records, not reports, installations or machines",
         "items": items,

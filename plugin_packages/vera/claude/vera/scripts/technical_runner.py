@@ -13,6 +13,7 @@ import ast
 import json
 import logging
 import os
+import re
 import runpy
 import stat
 import sys
@@ -104,6 +105,21 @@ def exception_events(error: BaseException, root: Path) -> list[dict[str, Any]]:
                     message = found[1]
             trace = trace.tb_next
         if frames:
+            # Only explicit producer measurements, never exception args/locals.
+            # Numeric/boolean facts carry useful runtime state without arbitrary
+            # client strings. Each producer's choices require source review.
+            declared = getattr(error, "incident_technical_facts", {})
+            facts = (
+                {
+                    key: value
+                    for key, value in declared.items()
+                    if isinstance(key, str)
+                    and re.fullmatch(r"[A-Za-z0-9_.:-]{1,100}", key)
+                    and type(value) in {int, bool}
+                }
+                if isinstance(declared, dict)
+                else {}
+            )
             events.append(
                 {
                     "error_type": type(error).__name__,
@@ -112,6 +128,7 @@ def exception_events(error: BaseException, root: Path) -> list[dict[str, Any]]:
                     or "Exception at the recorded package source location; dynamic detail retained for review.",
                     "errno": error.errno if isinstance(error, OSError) else None,
                     "technical_frames": frames,
+                    "technical_facts": facts,
                     "detail_available": (
                         message is not None and "{value}" not in message
                     )
