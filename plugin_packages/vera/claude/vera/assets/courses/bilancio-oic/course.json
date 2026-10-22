@@ -282,7 +282,7 @@
     },
     {
       "path": "scripts/archive_cli.py",
-      "sha256": "6520301413e5421e62c94d679e02a77e94b2b8b76183685d545d6201be7ee83e"
+      "sha256": "f115d95768459394be54777d96b55d026ba1f33fcabe1e85591d93eceb036f13"
     },
     {
       "path": "scripts/archive_emit.py",
@@ -346,7 +346,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "eee5ef894358c8837d67bff7b98c2ead538bcbfb12ea73d12cbde8ab1e64cdf2"
+      "sha256": "03c96b2a1207cd248206be7fed4d3691c5de268d5a54ce6f94f2b1b96093ce2e"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -692,5 +692,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d15c980727374de44e3d560b12d9d574bba282ee6146e555cd07972ee437841c"
+  "canonical_course_sha256": "7b92bb9de422b90f1ce8948bd07df9ea03f4f27840afcebc42cb611599850c25"
 }

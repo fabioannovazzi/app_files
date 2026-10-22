@@ -12,6 +12,7 @@ import hashlib
 import json
 import logging
 import os
+import re
 import runpy
 import shutil
 import sqlite3
@@ -31,6 +32,10 @@ __all__ = [
     "MANIFEST",
     "prepare_execution_root",
     "release_execution_root",
+    "own_execution_root",
+    "execution_lease_fds",
+    "acquire_execution_lease",
+    "recover_abandoned_execution_roots",
     "report_preparation_failure",
     "main",
 ]
@@ -52,12 +57,176 @@ LOGGER = logging.getLogger(__name__)
 _OWNED_COPIES: dict[Path, tuple[int, int, int]] = {}
 
 
+# POSIX kernel leases survive owner termination while detached workers retain
+# the descriptor. Exclusive acquisition is mechanical proof that no holder uses
+# this code; directory names, age and PID liveness alone are not such proof.
+_LEASES: dict[Path, int] = {}
+
+
+def _lease_directory() -> Path:
+    directory = Path(tempfile.gettempdir()).resolve() / ".vera-execution-leases"
+    directory.mkdir(mode=0o700, exist_ok=True)
+    info = directory.lstat()
+    if not stat.S_ISDIR(info.st_mode) or info.st_uid != os.getuid():
+        raise ValueError("Execution lease directory is not privately owned")
+    if stat.S_IMODE(info.st_mode) != 0o700:
+        raise ValueError("Execution lease directory is not private")
+    return directory
+
+
+def own_execution_root(root: Path) -> None:
+    """Record a newly created code root and hold its kernel lifetime lease."""
+    info = root.lstat()
+    _OWNED_COPIES[root] = (os.getpid(), info.st_dev, info.st_ino)
+    if os.name != "posix":
+        return
+    import fcntl
+
+    if root.parent != Path(tempfile.gettempdir()).resolve():
+        raise ValueError("Execution copy must belong to this OS temporary folder")
+    lease = _lease_directory() / (root.name + ".json")
+    descriptor = os.open(lease, os.O_CREAT | os.O_EXCL | os.O_RDWR, 0o600)
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_SH)
+        os.write(
+            descriptor,
+            json.dumps(
+                {"schema_version": 2, "device": info.st_dev, "inode": info.st_ino}
+            ).encode(),
+        )
+        _LEASES[root] = descriptor
+    except BaseException:
+        os.close(descriptor)
+        lease.unlink(missing_ok=True)
+        raise
+
+
+def execution_lease_fds(root: Path) -> tuple[int, ...]:
+    """Keep the code lease in a detached worker until its helper finishes."""
+    descriptor = _LEASES.get(root)
+    return () if descriptor is None else (descriptor,)
+
+
+def acquire_execution_lease(root: Path) -> int | None:
+    """Borrow a registered snapshot lease for a CLI child before launching it."""
+    if os.name != "posix" or root.parent != Path(tempfile.gettempdir()).resolve():
+        return None
+    if not re.fullmatch(
+        r"vera-(?:verified|execution-bootstrap)-[A-Za-z0-9_-]+", root.name
+    ):
+        return None
+    import fcntl
+
+    lease = _lease_directory() / (root.name + ".json")
+    try:
+        descriptor = os.open(lease, os.O_RDONLY | os.O_NOFOLLOW | os.O_NONBLOCK)
+    except FileNotFoundError:
+        return None  # Unmarked/borrowed code is never swept automatically.
+    try:
+        fcntl.flock(descriptor, fcntl.LOCK_SH)
+        info = os.fstat(descriptor)
+        data = json.loads(os.read(descriptor, 4096))
+        current = root.lstat()
+        if (
+            not stat.S_ISREG(info.st_mode)
+            or info.st_uid != os.getuid()
+            or info.st_nlink != 1
+            or not stat.S_ISDIR(current.st_mode)
+            or current.st_uid != os.getuid()
+            or not isinstance(data, dict)
+            or data.get("schema_version") not in (1, 2)
+            or (current.st_dev, current.st_ino)
+            != (data.get("device"), data.get("inode"))
+        ):
+            raise ValueError("CLI code lease no longer matches its execution root")
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def recover_abandoned_execution_roots() -> None:
+    """Recover only identity-bound code with an exclusively acquired OS lease.
+
+    Windows retains normal cleanup; orphan recovery is enabled only where the
+    OS supplies inheritable POSIX flock leases. Unmarked historical copies and
+    any malformed/replaced/locked entry are always retained.
+    """
+    if os.name != "posix":
+        return
+    import fcntl
+
+    directory = _lease_directory()
+    for lease in directory.glob("*.json"):
+        descriptor = None
+        try:
+            name = lease.name.removesuffix(".json")
+            if not re.fullmatch(
+                r"vera-(?:verified|execution-bootstrap)-[A-Za-z0-9_-]+", name
+            ):
+                continue
+            descriptor = os.open(lease, os.O_RDWR | os.O_NOFOLLOW | os.O_NONBLOCK)
+            info = os.fstat(descriptor)
+            if (
+                not stat.S_ISREG(info.st_mode)
+                or info.st_uid != os.getuid()
+                or info.st_nlink != 1
+            ):
+                continue
+            fcntl.flock(descriptor, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            data = json.loads(os.read(descriptor, 4096))
+            if set(data) != {"schema_version", "device", "inode"}:
+                continue
+            # Protocol 1 did not guarantee CLI-child inheritance. Retain it
+            # even with no holder: a legacy helper may still be running.
+            if data["schema_version"] != 2:
+                continue
+            root = directory.parent / name
+            try:
+                current = root.lstat()
+            except FileNotFoundError:
+                lease.unlink(missing_ok=True)
+                continue
+            if (
+                not stat.S_ISDIR(current.st_mode)
+                or current.st_uid != os.getuid()
+                or (current.st_dev, current.st_ino) != (data["device"], data["inode"])
+            ):
+                continue
+            shutil.rmtree(root)
+            lease.unlink(missing_ok=True)
+        except BlockingIOError:
+            pass  # A live service or worker still owns the code.
+        except (OSError, ValueError, TypeError):
+            LOGGER.warning(
+                "Execution orphan recovery pending: %s", lease, exc_info=True
+            )
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+
+
 def release_execution_root(root: Path) -> None:
-    """Remove a process-owned code copy without touching borrowed roots."""
+    """Remove owned code only after all inherited kernel leases have closed."""
     identity = _OWNED_COPIES.get(root)
     if identity is None or identity[0] != os.getpid():
         return
+    descriptor = _LEASES.pop(root, None)
+    if descriptor is not None:
+        os.close(descriptor)
+    exclusive = None
+    lease = None
     try:
+        if os.name == "posix":
+            import fcntl
+
+            lease = _lease_directory() / (root.name + ".json")
+            if lease.exists():
+                exclusive = os.open(lease, os.O_RDWR | os.O_NOFOLLOW)
+                # A new open-file description conflicts with an inherited
+                # worker lease; upgrading the parent's shared descriptor would
+                # incorrectly upgrade the worker's very same flock lock.
+                fcntl.flock(exclusive, fcntl.LOCK_EX | fcntl.LOCK_NB)
         info = root.lstat()
         if not stat.S_ISDIR(info.st_mode) or (info.st_dev, info.st_ino) != identity[1:]:
             LOGGER.warning(
@@ -65,12 +234,20 @@ def release_execution_root(root: Path) -> None:
             )
             return
         shutil.rmtree(root)
+        _OWNED_COPIES.pop(root, None)
+        if lease is not None:
+            lease.unlink(missing_ok=True)
+    except BlockingIOError:
+        return  # A persistent worker owns the code; a future sweep will retry.
     except FileNotFoundError:
-        pass
+        _OWNED_COPIES.pop(root, None)
+        if lease is not None:
+            lease.unlink(missing_ok=True)
     except OSError:
         LOGGER.warning("Temporary execution cleanup pending: %s", root, exc_info=True)
-        return
-    _OWNED_COPIES.pop(root, None)
+    finally:
+        if exclusive is not None:
+            os.close(exclusive)
 
 
 def _release_owned_copies() -> None:
@@ -299,6 +476,8 @@ def prepare_execution_root(
         _validate_module(root, module)
         return root
 
+    recover_abandoned_execution_roots()
+
     # mkdtemp creates a fresh private directory. Never mutate the installed tree
     # or an alias, never reuse an unverified cache, never copy client material.
     private = Path(
@@ -306,9 +485,8 @@ def prepare_execution_root(
             prefix="vera-verified-", dir=Path(tempfile.gettempdir()).resolve()
         )
     )
-    info = private.lstat()
-    _OWNED_COPIES[private] = (os.getpid(), info.st_dev, info.st_ino)
     try:
+        own_execution_root(private)
         for name, data in {**contents, MANIFEST: manifest_bytes}.items():
             path = private / name
             path.parent.mkdir(parents=True, exist_ok=True)

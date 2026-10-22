@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import shutil
+import signal
 import subprocess
 import sys
 import time
@@ -179,7 +180,8 @@ def test_closed_connection_retains_worker_code_then_releases_temporary_copies(
     )
     assert retained["returncode"] == expected_code
     assert (tmp_path / "counter").read_text() == "run\n"
-    assert list(temporary.iterdir()) == []
+    assert not list(temporary.glob("vera-*"))
+    assert not list((temporary / ".vera-execution-leases").glob("*"))
     assert (installed / "scripts/native_execution.py").is_file()
 
 
@@ -420,3 +422,219 @@ def test_idle_native_service_releases_snapshot(installed, tmp_path):
     temporary = tmp_path / "os-temp"
     assert not list(temporary.glob("vera-verified-*"))
     assert not list(temporary.glob("vera-execution-bootstrap-*"))
+
+
+@pytest.mark.skipif(
+    os.name != "posix", reason="POSIX transport signals and flock leases"
+)
+@pytest.mark.parametrize("target", ["launcher", "group"])
+@pytest.mark.parametrize("busy", [False, True])
+@pytest.mark.parametrize("signum", [signal.SIGTERM, signal.SIGINT])
+def test_termination_keeps_accepted_work_and_releases_code(
+    installed, tmp_path, target, busy, signum
+):
+    process = subprocess.Popen(
+        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=environment(tmp_path),
+        start_new_session=True,
+    )
+    args = request(
+        tmp_path, arguments=[str(tmp_path / "counter"), "0.6"], wait_seconds=0
+    )
+    message = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "vera_execute", "arguments": args},
+    }
+    if not busy:
+        message = {"jsonrpc": "2.0", "id": 1, "method": "initialize"}
+    try:
+        process.stdin.write(json.dumps(message) + "\n")
+        process.stdin.flush()
+        assert json.loads(process.stdout.readline())["id"] == 1
+        if not busy:
+            process.stdin.write('{"jsonrpc":')
+            process.stdin.flush()
+        # Stdin remains open: a signal must stop intake by itself. Repeated
+        # signals must not interrupt worker retention or delete its code.
+        for _ in range(100):
+            if target == "group":
+                os.killpg(process.pid, signum)
+            else:
+                process.send_signal(signum)
+        process.wait(timeout=15)
+        assert process.returncode == 0, process.stderr.read()
+        temporary = tmp_path / "os-temp"
+        assert not list(temporary.glob("vera-*"))
+        assert not list((temporary / ".vera-execution-leases").glob("*"))
+        if busy:
+            retained = json.loads(
+                (
+                    tmp_path
+                    / "incidents/helper-diagnostics/executions"
+                    / args["job_id"]
+                    / "result.json"
+                ).read_text()
+            )
+            assert retained["state"] == "completed"
+            assert retained["returncode"] == 0
+            assert (tmp_path / "counter").read_text() == "run\n"
+    finally:
+        if process.poll() is None:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait(timeout=10)
+        process.stdin.close()
+        process.stdout.close()
+        process.stderr.close()
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX kernel leases")
+@pytest.mark.parametrize("busy", [False, True])
+def test_sigkill_recovery_protects_detached_worker_then_recovers_orphan(
+    installed, tmp_path, busy
+):
+    process = subprocess.Popen(
+        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=environment(tmp_path),
+        start_new_session=True,
+    )
+    args = request(
+        tmp_path, arguments=[str(tmp_path / "counter"), "1.5"], wait_seconds=0
+    )
+    message = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "vera_execute", "arguments": args},
+    }
+    if not busy:
+        message = {"jsonrpc": "2.0", "id": 1, "method": "initialize"}
+    try:
+        process.stdin.write(json.dumps(message) + "\n")
+        process.stdin.flush()
+        assert json.loads(process.stdout.readline())["id"] == 1
+        temporary = tmp_path / "os-temp"
+        snapshots = list(temporary.glob("vera-verified-*"))
+        assert len(snapshots) == 1
+        os.killpg(process.pid, signal.SIGKILL)
+        process.wait(timeout=10)
+        # A new service automatically recovers an unleased orphan. A detached
+        # worker still holds its inherited lease, even after SIGKILL of owner.
+        with native(installed, tmp_path):
+            if busy:
+                assert snapshots[0].exists()
+        if busy:
+            result_path = (
+                tmp_path
+                / "incidents/helper-diagnostics/executions"
+                / args["job_id"]
+                / "result.json"
+            )
+            deadline = time.monotonic() + 10
+            while not result_path.exists() and time.monotonic() < deadline:
+                time.sleep(0.05)
+            assert json.loads(result_path.read_text())["returncode"] == 0
+            assert (tmp_path / "counter").read_text() == "run\n"
+            # The result is persisted just before the worker exits.
+            time.sleep(0.2)
+            with native(installed, tmp_path):
+                pass
+        assert not list(temporary.glob("vera-*"))
+        assert not list((temporary / ".vera-execution-leases").glob("*"))
+    finally:
+        if process.poll() is None:
+            os.killpg(process.pid, signal.SIGKILL)
+            process.wait(timeout=10)
+        process.stdin.close()
+        process.stdout.close()
+        process.stderr.close()
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX inherited code leases")
+def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
+    installed, tmp_path
+):
+    helper = installed / "modules/fixture-component/scripts/hold_code.py"
+    helper.write_text(
+        "import sys,time\nfrom pathlib import Path\n"
+        "Path(sys.argv[1]).touch()\ntime.sleep(1.5)\n"
+        "assert Path(__file__).read_text()\nPath(sys.argv[2]).touch()\n"
+    )
+    write_index(installed)
+    started, finished = tmp_path / "started", tmp_path / "finished"
+    program = (
+        "import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); "
+        "from verified_execution import prepare_execution_root; "
+        "from archive_cli import run_command; "
+        "root=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True); "
+        "print(root,flush=True); "
+        "run_command([sys.executable,str(root/'modules/fixture-component/scripts/hold_code.py'),sys.argv[3],sys.argv[4]],"
+        "plugin_root=root,component='fixture-component',arguments=[],check=True)"
+    )
+    process = subprocess.Popen(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            program,
+            str(installed / "scripts"),
+            str(installed),
+            str(started),
+            str(finished),
+        ],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env=environment(tmp_path),
+        start_new_session=True,
+    )
+    initialize = json.dumps({"jsonrpc": "2.0", "id": 1, "method": "initialize"}) + "\n"
+
+    def restart():
+        result = subprocess.run(
+            ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+            input=initialize,
+            text=True,
+            capture_output=True,
+            env=environment(tmp_path),
+            timeout=15,
+        )
+        assert result.returncode == 0, result.stderr
+
+    try:
+        snapshot = Path(process.stdout.readline().strip())
+        deadline = time.monotonic() + 10
+        while not started.exists() and time.monotonic() < deadline:
+            time.sleep(0.01)
+        assert started.exists()
+        process.kill()
+        process.wait(timeout=10)
+        restart()
+        assert snapshot.exists(), "A surviving CLI helper must retain its code lease"
+        deadline = time.monotonic() + 10
+        while not finished.exists() and time.monotonic() < deadline:
+            time.sleep(0.05)
+        assert (
+            finished.exists()
+        ), "The helper must still read its code after launcher death"
+        time.sleep(0.1)
+        restart()
+        assert not snapshot.exists()
+    finally:
+        try:
+            os.killpg(process.pid, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
+        process.wait(timeout=10)
+        process.stdout.close()
+        process.stderr.close()

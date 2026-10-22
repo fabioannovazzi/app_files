@@ -596,7 +596,8 @@ def test_hardlinked_preflight_leaves_no_copy(tmp_path, monkeypatch, capsys):
     assert recovery.main(["--module", "journal-bank-reconciliation"]) == 0
 
     assert json.loads(capsys.readouterr().out) == {"execution_root": str(root)}
-    assert list(temporary.iterdir()) == []
+    assert not list(temporary.glob("vera-*"))
+    assert not list((temporary / ".vera-execution-leases").glob("*"))
     assert (root / "components.json").stat().st_nlink == 2
 
 
@@ -618,7 +619,8 @@ def test_interrupted_copy_preparation_leaves_no_partial_tree(
     with pytest.raises(failure):
         recovery.prepare_execution_root(root, "journal-bank-reconciliation")
 
-    assert list(temporary.iterdir()) == []
+    assert not list(temporary.glob("vera-*"))
+    assert not list((temporary / ".vera-execution-leases").glob("*"))
     assert root.exists()
 
 
@@ -723,3 +725,143 @@ def test_managed_run_releases_copy_on_every_exit(tmp_path, monkeypatch, outcome)
     assert len(observed) == 1
     assert not observed[0].exists()
     assert root.exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX kernel leases")
+def test_orphan_recovery_preserves_live_borrowed_replaced_and_symlink_roots(
+    tmp_path, monkeypatch
+):
+    recovery = load_recovery()
+    temporary = tmp_path / "temporary"
+    temporary.mkdir()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(temporary))
+    live = temporary / "vera-verified-live"
+    live.mkdir()
+    (live / "code").write_text("live code")
+    recovery.own_execution_root(live)
+    borrowed = temporary / "vera-verified-borrowed"
+    borrowed.mkdir()
+    (borrowed / "client").write_text("preserve client material")
+    replaced = temporary / "vera-verified-replaced"
+    replaced.mkdir()
+    recovery.own_execution_root(replaced)
+    descriptor = recovery._LEASES.pop(replaced)
+    import os
+
+    os.close(descriptor)
+    saved = temporary / "saved-original"
+    replaced.rename(saved)
+    replaced.mkdir()
+    (replaced / "client").write_text("replacement")
+    linked = temporary / "vera-verified-linked"
+    linked.mkdir()
+    recovery.own_execution_root(linked)
+    os.close(recovery._LEASES.pop(linked))
+    linked.rmdir()
+    linked.symlink_to(borrowed, target_is_directory=True)
+
+    recovery.recover_abandoned_execution_roots()
+
+    assert (live / "code").read_text() == "live code"
+    assert (borrowed / "client").read_text() == "preserve client material"
+    assert (replaced / "client").read_text() == "replacement"
+    assert linked.is_symlink()
+    recovery.release_execution_root(live)
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX inherited kernel lease")
+def test_owner_cleanup_cannot_remove_code_held_by_detached_worker(
+    tmp_path, monkeypatch
+):
+    import os
+    import tempfile
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = Path(tempfile.mkdtemp(prefix="vera-verified-", dir=tmp_path))
+    (root / "code").write_text("running")
+    recovery.own_execution_root(root)
+    worker = subprocess.Popen(
+        [sys.executable, "-c", "import sys; sys.stdin.read()"],
+        stdin=subprocess.PIPE,
+        pass_fds=recovery.execution_lease_fds(root),
+    )
+    try:
+        recovery.release_execution_root(root)
+        recovery.recover_abandoned_execution_roots()
+        assert (root / "code").read_text() == "running"
+    finally:
+        worker.communicate(timeout=10)
+    recovery.recover_abandoned_execution_roots()
+    assert not root.exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX independent CLI leases")
+def test_cli_borrowed_lease_outlives_owner_cleanup(tmp_path, monkeypatch):
+    import os
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = tmp_path / "vera-verified-cli-child"
+    root.mkdir()
+    (root / "code").write_text("helper code")
+    recovery.own_execution_root(root)
+    lease = recovery.acquire_execution_lease(root)
+    assert lease is not None
+    try:
+        recovery.release_execution_root(root)
+        recovery.recover_abandoned_execution_roots()
+        assert (root / "code").read_text() == "helper code"
+    finally:
+        os.close(lease)
+    recovery.recover_abandoned_execution_roots()
+    assert not root.exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX CLI lease validation")
+@pytest.mark.parametrize(
+    "payload",
+    [[], {"schema_version": 9}, {"schema_version": 1, "device": -1, "inode": -1}],
+)
+def test_cli_handoff_rejects_invalid_lease_without_removing_code(
+    tmp_path, monkeypatch, payload
+):
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = tmp_path / "vera-verified-invalid-cli"
+    root.mkdir()
+    (root / "code").write_text("preserved")
+    recovery.own_execution_root(root)
+    lease = recovery._lease_directory() / (root.name + ".json")
+    lease.write_text(json.dumps(payload))
+    with pytest.raises(ValueError):
+        recovery.acquire_execution_lease(root)
+    assert (root / "code").read_text() == "preserved"
+    recovery.release_execution_root(root)
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX lease protocol migration")
+def test_reaper_retains_legacy_owner_only_lease_records(tmp_path, monkeypatch):
+    import os
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = tmp_path / "vera-verified-legacy-owner"
+    root.mkdir()
+    (root / "code").write_text("legacy helper may still need this code")
+    recovery.own_execution_root(root)
+    lease_path = recovery._lease_directory() / (root.name + ".json")
+    record = json.loads(lease_path.read_text())
+    record["schema_version"] = 1
+    lease_path.write_text(json.dumps(record))
+    os.close(recovery._LEASES.pop(root))
+
+    recovery.recover_abandoned_execution_roots()
+
+    assert (root / "code").read_text() == "legacy helper may still need this code"
+    # A current CLI can still borrow protection from a legacy record; lack of
+    # holders never proves that every older helper inherited that protection.
+    lease = recovery.acquire_execution_lease(root)
+    assert lease is not None
+    os.close(lease)
+    recovery.release_execution_root(root)

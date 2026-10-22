@@ -31,17 +31,25 @@ const python = fs.existsSync(managed) ? managed : (process.platform === "win32" 
 // One Python process owns verification, the service and its live workers.
 // A short-lived preparer must not delete code before the service can use it.
 const program = [
-  "import runpy,sys",
+  "import runpy,sys,signal",
+  // A signal handler must never acquire an Event/Condition mutex: a repeated
+  // signal can reenter it while that same thread holds the nonreentrant lock.
+  "shutdown={'requested':False}",
+  "for sig in (signal.SIGTERM,signal.SIGINT): signal.signal(sig,lambda *_: shutdown.__setitem__('requested',True))",
   "from pathlib import Path",
   "sys.path.insert(0,sys.argv[1])",
-  "from verified_execution import prepare_execution_root,release_execution_root",
-  "snapshot=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True)",
-  "script=snapshot/'scripts/native_execution.py'",
-  "sys.argv=[str(script)]",
+  "from verified_execution import prepare_execution_root,release_execution_root,own_execution_root,recover_abandoned_execution_roots",
+  "bootstrap=Path(sys.argv[1]).resolve()",
+  "own_execution_root(bootstrap)",
+  "snapshot=None",
   "try:",
-  "    runpy.run_path(str(script),run_name='__main__')",
+  "    snapshot=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True)",
+  "    script=snapshot/'scripts/native_execution.py'",
+  "    sys.argv=[str(script)]",
+  "    runpy.run_path(str(script),run_name='__main__',init_globals={'_SHUTDOWN':shutdown})",
   "finally:",
-  "    release_execution_root(snapshot)",
+  "    if snapshot is not None: release_execution_root(snapshot)",
+  "    release_execution_root(bootstrap)",
 ].join("\n");
 function cleanupBootstrap() {
   try { fs.rmSync(bootstrap, { recursive: true, force: true }); }
@@ -52,6 +60,10 @@ try {
     fs.writeFileSync(path.join(bootstrap, name), checked(`scripts/${name}`), { mode: 0o600 });
   const child = spawn(python, ["-I", "-B", "-c", program, bootstrap, root],
     { cwd: bootstrap, env: process.env, stdio: "inherit" });
+  // A host stop closes this transport, not the detached professional jobs.
+  // Keep the owner alive until its workers release the leased code.
+  for (const sig of ["SIGTERM", "SIGINT"])
+    process.on(sig, () => { if (child.exitCode === null) child.kill(sig); });
   child.on("error", error => { process.stderr.write(`${error.message}\n`); process.exitCode = 1; });
   child.on("close", code => { cleanupBootstrap(); process.exitCode = code ?? 1; });
 } catch (error) {
