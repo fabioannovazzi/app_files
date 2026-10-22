@@ -236,10 +236,24 @@ def test_included_post_cutoff_receipt_reaches_worker_native_ledger_and_workpaper
         require_completed_review=False,
     )
     from audit_assurance import validate_assurance_run
+    from openpyxl import load_workbook
 
     assert len(result["relationship_allocation_ledgers"]) == 1
     assert Path(result["excel_path"]).is_file()
     assert Path(result["word_path"]).is_file()
+    workbook = load_workbook(result["accountant_report_path"], read_only=True)
+    operating = list(workbook["Scheda operativa"].values)
+    allocated_column = operating[0].index("importo attribuito")
+    residual_column = operating[0].index("residuo aperto")
+    assert [row[allocated_column] for row in operating[1:]] == list(allocated)
+    assert all(row[residual_column] == "0" for row in operating[1:])
+    if bank_residual != "0":
+        from decimal import Decimal
+
+        detail = list(workbook["Dettaglio riscontri"].values)
+        difference_column = detail[0].index("differenza")
+        assert Decimal(detail[1][difference_column]) == Decimal(bank_residual)
+    workbook.close()
     assert validate_assurance_run(tmp_path / "results")["content_sha256"]
 
 
