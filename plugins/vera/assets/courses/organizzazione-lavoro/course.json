@@ -115,7 +115,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/vera/scripts/verified_execution.py",
-      "sha256": "43cb8aa882ceb6adc52d96bc4003d2b6d45bc74e1df960d15b9c1fc8a7240641"
+      "sha256": "03c96b2a1207cd248206be7fed4d3691c5de268d5a54ce6f94f2b1b96093ce2e"
     },
     {
       "path": "scripts/workflow_usage.py",

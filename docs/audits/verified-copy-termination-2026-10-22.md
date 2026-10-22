@@ -9,7 +9,7 @@ cleanup and did not establish ownership for orphan recovery.
 
 This repair changes temporary program-code lifetime. It does not alter client
 inputs, retained results, professional decisions or the model-data boundary.
-The final product versions are Vera 0.1.478, Clara 0.1.341 and Lucia 0.1.166.
+The final product versions are Vera 0.1.479, Clara 0.1.342 and Lucia 0.1.167.
 
 ## Implementation
 
@@ -34,13 +34,17 @@ incorrectly upgrade the worker's same flock lock. A later verified startup scans
 only explicit lease records and removes an orphan only after exclusive
 nonblocking acquisition and matching real-directory identity/ownership. Live
 holders, replaced roots, symlinks, malformed records and unmarked historical
-copies are retained. Windows retains process-owned cleanup; automatic orphan
+copies are retained. Automatic collection requires protocol 2, which includes
+native and CLI handoff. Protocol-1 records are retained even without a holder,
+because their earlier owners did not guarantee that every CLI child inherited
+a lease. Current commands can still borrow those older leases. A regression
+failed before this guard and passes after it. Windows retains process-owned cleanup; automatic orphan
 recovery is POSIX-only.
 
 ## Verification
 
-- 108 native/CLI, verified-copy and automatic-reporting tests passed.
-- 289 shared-runtime tests passed with 82.70% coverage; Mypy passed 29 files.
+- 109 native/CLI, verified-copy and automatic-reporting tests passed.
+- 290 shared-runtime tests passed with 82.79% coverage; Mypy passed 29 files.
 - Real launchers cover normal EOF, bursts of 100 SIGTERM/SIGINT signals sent to
   the launcher/group, idle/busy services, partial stdin and SIGKILL followed by
   startup recovery. Accepted jobs complete once and retain durable results.

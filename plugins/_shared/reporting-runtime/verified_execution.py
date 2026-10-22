@@ -91,7 +91,7 @@ def own_execution_root(root: Path) -> None:
         os.write(
             descriptor,
             json.dumps(
-                {"schema_version": 1, "device": info.st_dev, "inode": info.st_ino}
+                {"schema_version": 2, "device": info.st_dev, "inode": info.st_ino}
             ).encode(),
         )
         _LEASES[root] = descriptor
@@ -134,7 +134,7 @@ def acquire_execution_lease(root: Path) -> int | None:
             or not stat.S_ISDIR(current.st_mode)
             or current.st_uid != os.getuid()
             or not isinstance(data, dict)
-            or data.get("schema_version") != 1
+            or data.get("schema_version") not in (1, 2)
             or (current.st_dev, current.st_ino)
             != (data.get("device"), data.get("inode"))
         ):
@@ -177,7 +177,9 @@ def recover_abandoned_execution_roots() -> None:
             data = json.loads(os.read(descriptor, 4096))
             if set(data) != {"schema_version", "device", "inode"}:
                 continue
-            if data["schema_version"] != 1:
+            # Protocol 1 did not guarantee CLI-child inheritance. Retain it
+            # even with no holder: a legacy helper may still be running.
+            if data["schema_version"] != 2:
                 continue
             root = directory.parent / name
             try:

@@ -104,7 +104,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "43cb8aa882ceb6adc52d96bc4003d2b6d45bc74e1df960d15b9c1fc8a7240641"
+      "sha256": "03c96b2a1207cd248206be7fed4d3691c5de268d5a54ce6f94f2b1b96093ce2e"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -493,5 +493,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "94c278bfb0ed6f178f29c52e1182d29cc1faaf8c9d61676163a9916bf9747959"
+  "canonical_course_sha256": "fda22a9ee3faa9cdd9e31cb7985776f8e880b12c6b863ec916b78e4950ee6541"
 }
