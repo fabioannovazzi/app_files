@@ -90,7 +90,7 @@
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
       "repository_path": "plugins/studio-archive/scripts/reconcile_open_items.py",
-      "sha256": "24c8c2bab6b6d333c9d709b463063a837446041b39e2a0f116b217484bc1bc7f"
+      "sha256": "8454114d6385a67f62b89fa216bf747f231555e7f79d02221809577a05286380"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",

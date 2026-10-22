@@ -118,7 +118,12 @@ def _delivery(loaded: dict[str, Any], terminal: dict[str, Any]) -> dict[str, Any
 
 
 def finish_reconciliation(
-    client_id: str, engagement_id: str, run_id: str, *, state_dir: Path | None = None
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+    expected_predecessor_checkpoint: str | None = None,
 ) -> dict[str, Any]:
     """Finish existing work, including an ordinarily reviewed/regenerated draft."""
     root = Path(
@@ -143,19 +148,46 @@ def finish_reconciliation(
         )
     # Keep replay diagnostics outside the sealed package. Reopening a review
     # draft never launches the producer or a semantic worker again.
+    checkpoint_path = output / "reconciliation-review-checkpoint.json"
+    checkpoint = expected_predecessor_checkpoint
+    if checkpoint_path.exists():
+        retained = _json(checkpoint_path)
+        if retained["run_id"] != run_id or (
+            checkpoint is not None and checkpoint != retained["content_sha256"]
+        ):
+            raise archive.ArchiveError("Review checkpoint differs from this run.")
+        checkpoint = retained["content_sha256"]
+    replay_arguments = [
+        "--client-engagement",
+        str(loaded["context_path"]),
+        "validate-run-json",
+        str(output / "reconciliation"),
+    ]
+    if checkpoint is not None:
+        replay_arguments.extend(["--expected-predecessor-checkpoint", checkpoint])
     replay = _command(
         "audit_assurance.py",
-        [
-            "--client-engagement",
-            str(loaded["context_path"]),
-            "validate-run-json",
-            str(output / "reconciliation"),
-        ],
+        replay_arguments,
         output / "reconciliation-validation.json",
     )
     if not replay.get("ok"):
         raise archive.ArchiveError("Reconciliation assurance replay did not pass.")
     if not replay["assurance"]["report_ready"]:
+        if not checkpoint_path.exists():
+            # Retain the verified predecessor outside the mutable review tree.
+            # Later delivery must replay that same transition, not trust a hash
+            # supplied by the already-reviewed package.
+            checkpoint_path.write_text(
+                json.dumps(
+                    {
+                        "run_id": run_id,
+                        "content_sha256": replay["assurance"]["content_sha256"],
+                    },
+                    indent=2,
+                )
+                + "\n",
+                encoding="utf-8",
+            )
         reported = archive.ledger._finish_terminal_reporting(loaded)
         return _delivery(
             loaded, {"status": "review_required", "reporting": reported["reporting"]}
@@ -271,6 +303,10 @@ def main() -> int:
     parser.add_argument(
         "--finish-run", help="Resume delivery after ordinary review/regeneration."
     )
+    parser.add_argument(
+        "--expected-predecessor-checkpoint",
+        help="Separately retained review checkpoint for a run created before automatic checkpoint retention.",
+    )
     args = parser.parse_args()
     request = _json(args.request)
     if args.finish_run:
@@ -279,6 +315,7 @@ def main() -> int:
             request["engagement_id"],
             args.finish_run,
             state_dir=args.state_dir,
+            expected_predecessor_checkpoint=args.expected_predecessor_checkpoint,
         )
     else:
         result = reconcile(request, state_dir=args.state_dir)

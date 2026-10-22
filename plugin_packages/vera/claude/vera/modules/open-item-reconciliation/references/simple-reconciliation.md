@@ -46,6 +46,10 @@ handoff. Keep unresolved rows explicit and use the maintained review/apply and
 regeneration path only for remaining decisions. Then invoke the same script with
 `--request <path> --finish-run <run_id>` to finalize delivery. A producer error
 retains the failed run and diagnostics; repeating the request does not retry it.
+The operation retains the initial validated review checkpoint outside the review
+package and forwards it automatically when finishing. For an older run without
+that retained checkpoint, pass its separately saved original hash through
+`--expected-predecessor-checkpoint <hash>`; never derive it from a successor.
 
 For an explicitly isolated test session, `--state-dir <path>` selects that
 session's Archive configuration. Never substitute another client's state or run.
