@@ -32,7 +32,7 @@ button { font: inherit; }
 .top nav a[aria-current="page"] { color: var(--navy); text-decoration: underline; }
 .hero { padding-block: clamp(52px, 7vw, 88px) 45px; }
 .eyebrow { color: var(--blue); text-transform: uppercase; letter-spacing: .1em; font-size: 12px; font-weight: 650; margin: 0 0 22px; }
-h1, h2, h3 { color: var(--navy); font-weight: 500; }
+h1, h2, h3 { color: var(--navy); font-weight: 500; overflow-wrap: anywhere; hyphens: auto; }
 h1 { max-width: 920px; font-size: clamp(38px, 5.4vw, 66px); line-height: 1.08; letter-spacing: -.045em; margin: 0 0 28px; text-wrap: balance; }
 h2 { font-size: clamp(26px, 3vw, 34px); line-height: 1.2; letter-spacing: -.025em; margin: 0 0 18px; }
 h3 { font-size: 21px; line-height: 1.35; margin: 0 0 12px; }
