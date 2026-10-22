@@ -1577,7 +1577,12 @@ def test_partial_payment_cannot_erase_its_balance_or_claim_full_closure(
     )
 
     with pytest.raises(
-        ValueError, match="partial payment|balanced evidence allocation"
+        ValueError,
+        match=(
+            "exact evidence allocation and retained residual"
+            if claim == "no_residual"
+            else "balanced evidence allocation relationship"
+        ),
     ):
         runner.run_raw_input_reconciliation(
             input_dir=loaded["context"]["input_dir"],
