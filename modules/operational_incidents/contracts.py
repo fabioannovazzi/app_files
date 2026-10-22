@@ -6,7 +6,15 @@ import re
 from typing import Any, Literal
 from uuid import UUID
 
-from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    StrictBool,
+    StrictInt,
+    field_validator,
+    model_validator,
+)
 
 __all__ = [
     "Diagnostic",
@@ -106,6 +114,19 @@ class Diagnostic(StrictModel):
         "observed-tool-result", "runtime-exception", "technical-log"
     ]
     technical_frames: list[TechnicalFrame] = Field(default_factory=list, max_length=100)
+    technical_facts: dict[str, StrictInt | StrictBool] = Field(
+        default_factory=dict, max_length=100
+    )
+
+    @field_validator("technical_facts")
+    @classmethod
+    def technical_fact_labels(
+        cls, values: dict[str, int | bool]
+    ) -> dict[str, int | bool]:
+        """Keep producer-selected measurements separate from redacted prose."""
+        if any(not re.fullmatch(r"[A-Za-z0-9_.:-]{1,100}", key) for key in values):
+            raise ValueError("Technical fact labels must be technical identifiers")
+        return values
 
     @field_validator("message")
     @classmethod

@@ -45,6 +45,7 @@ def test_component_checker_executes_once_without_reentering_vera_checker(
     )
     monkeypatch.setattr(runtime, "runtime_python", lambda *_a: Path(sys.executable))
     monkeypatch.setattr(runtime, "runtime_environment", lambda *_a: None)
+    monkeypatch.syspath_prepend(str(RUNNER.parent))
     event = tmp_path / "event.json"
 
     result = runtime.main(
@@ -257,6 +258,76 @@ def test_real_archive_handled_error_retains_cause_without_changing_json(tmp_path
         "Studio Archive is not configured. Start the guided folder setup first."
     )
     assert data["events"][0]["technical_frames"][-1]["file"].endswith("archive_core.py")
+
+
+@pytest.mark.skipif(os.name != "posix", reason="POSIX state permissions")
+def test_archive_permission_facts_survive_real_cli_to_operator_record(tmp_path):
+    """A real failure must explain the state rejected, without leaking its path."""
+    from modules.operational_incidents.contracts import Credentials, Report
+    from modules.operational_incidents.store import IncidentStore
+
+    state = tmp_path / "state"
+    state.mkdir(mode=0o755)
+    state.chmod(0o755)
+    completed, data = archive_command(tmp_path, ["refresh"])
+    event = data["events"][0]
+    diagnostic = {
+        key: value for key, value in event.items() if key != "detail_available"
+    }
+    original = Report(
+        report_id=uuid4(),
+        product_version="0.1.473",
+        host="codex",
+        platform="linux",
+        workflow="studio-archive",
+        stage="helper:studio_archive.py",
+        diagnostics=[
+            dict(
+                diagnostic,
+                component="vera-runtime",
+                stage="helper:studio_archive.py",
+                evidence_source="runtime-exception",
+            )
+        ],
+        capture_state="complete",
+    )
+    store = IncidentStore(tmp_path / "incidents.sqlite3")
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(owner)
+    receipt = store.report(owner, original)
+
+    delivered = store.show(receipt["incident_id"])["reports"][0]["diagnostics"][0]
+
+    assert completed.returncode == 1
+    assert (
+        delivered["message"]
+        == "Studio Archive state directory must not be accessible by group or others."
+    )
+    assert delivered["technical_facts"]["archive_state.mode"] == 0o755
+    assert delivered["technical_facts"]["archive_state.private_creation_mode"] == 0o700
+    assert delivered["technical_facts"]["archive_state.owner_matches_process"] is True
+    assert delivered["technical_facts"]["archive_state.selection_environment"] is True
+    assert delivered["technical_facts"]["archive_state.selection_default"] is False
+    assert delivered["technical_facts"]["archive_state.create_requested"] is False
+    assert delivered["technical_frames"][-1]["function"] == "_state_dir"
+    assert str(tmp_path) not in json.dumps(delivered)
+    assert state.stat().st_mode & 0o777 == 0o755
+
+
+def test_explicit_technical_facts_never_serialize_dynamic_strings_or_locals(tmp_path):
+    completed, data = execute(
+        tmp_path,
+        "private_local='CLIENT_PRIVATE_CASE_TEXT'\n"
+        "error=ValueError('Fixed failure')\n"
+        "error.incident_technical_facts={'mode':493,'owner_matches':True,'path':'/home/client/PRIVATE_CASE','nested':{'secret':'PRIVATE_VALUE'}}\n"
+        "raise error\n",
+    )
+
+    assert completed.returncode == 1
+    assert data["events"][0]["technical_facts"] == {"mode": 493, "owner_matches": True}
+    assert "CLIENT_PRIVATE_CASE_TEXT" not in json.dumps(data)
+    assert "PRIVATE_CASE" not in json.dumps(data)
+    assert "PRIVATE_VALUE" not in json.dumps(data)
 
 
 @pytest.mark.parametrize(
