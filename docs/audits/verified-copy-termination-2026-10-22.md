@@ -39,7 +39,13 @@ POSIX kernel leases and is not claimed for Windows.
 
 ## Verification
 
-The local runtime/ownership/reporting/index suite passed 111 tests. Real
+The local runtime/ownership/reporting/index suite passed 111 tests. After
+integrating PR #892, the runtime/reporting suite passed 99 tests and the
+index/privacy suite passed 85 tests. The shared-runtime suite passed 285 tests
+with 82.62% coverage. Three repeated termination batches passed all 24 cases,
+each sending bursts of 100 signals. The package/privacy suite passed 479 tests
+with two skips before integration; current combined package checks are repeated
+for the release. Real
 launcher processes cover SIGTERM and SIGINT sent to the Node launcher and its
 whole process group, idle and with an accepted persistent job, repeated signals
 with stdin still open, and SIGKILL followed by automatic startup recovery.
@@ -59,8 +65,30 @@ records and generated contracts are refreshed for this inspected change.
 The one-time historical cleanup is separate from the product sweeper: inspect
 live process command/open-file references, fully verify the build index and every
 file digest, reject unexpected contents or filesystem objects, and recheck live
-references before each removal. Current-day or otherwise uncertain copies are
+references before each removal. The second pass admits overnight copies before 09:00 CEST, reduces that
+cutoff to the oldest observed live bootstrap when necessary, and rechecks the
+cutoff immediately before deletion. Newer or otherwise uncertain copies are
 retained. Running services and workers are never signalled for this recovery.
 Exact deletions and reclaimed allocation are recorded locally by the recovery
 operation. Package/source checks do not establish a fresh professional
 host-conversation acceptance run or replace an already running service.
+
+
+## Local recovery and installation evidence
+
+The two recovery passes removed 1,152 fully verified unused copies, reclaiming
+60,097,245,184 allocated bytes (55.970 GiB / 60.097 decimal GB). Five previously
+observed detached workers retained their original process start times after
+recovery and installation, and every explicitly protected code directory still
+existed. No existing worker was signalled for the recovery or local update.
+
+The supported local catalog/installation commands selected one enabled
+`vera@mp-vera` 0.1.476, retaining old caches and source folders. The final combined
+Codex ZIP SHA-256 is
+`6385c2a41c3f3fdbcc6e906f461b6e46d98c1b594d965b847b1e44611fba5675`.
+The actual installed launcher independently passed normal EOF, 100-signal
+SIGTERM/SIGINT bursts, and SIGKILL followed by startup recovery. These tests
+initialize isolated native services, not client workflows. Active conversations
+and their existing services retain their old code; the selected installation is
+for new sessions. This is local termination acceptance, not a claim of a fresh
+professional workflow, native Windows acceptance or Marketplace publication.
