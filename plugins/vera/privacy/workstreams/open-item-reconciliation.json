@@ -177,7 +177,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-22",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "603682528980602389869fdeebc37ddef9378a7e5c876017fffaedba6dfc3031"
+    "source_fingerprint": "b4fdfa7baf9c0600571955bf8815e46a12be610a183cdee587a09061ec581ab3"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -209,7 +209,7 @@
     },
     {
       "id": "qualified-source-and-relationship-controls",
-      "control": "Row-level reconciliation uses only reviewed source roles and qualified source adapters, and enforces current source receipts, entity, party, currency, evidence-reuse, fan-out, and exact allocation-conservation controls before a row can close. Opposing signed entries for the same document and accounting perimeter withhold automatic bank settlement pending reversal and payment-purpose review; this mechanical conflict does not establish the validity of a reversal. Candidate report figures retain explicit invoice and evidence record references."
+      "control": "Row-level reconciliation uses only reviewed source roles and qualified source adapters, and enforces current source receipts, entity, party, currency, evidence-reuse, fan-out, and exact allocation-conservation controls before a row can close. Opposing signed entries for the same document and accounting perimeter withhold automatic bank settlement pending reversal and payment-purpose review; this mechanical conflict does not establish the validity of a reversal. Candidate report figures retain explicit invoice and evidence record references. For unresolved items, the native semantic worker may establish customer identity across different source names using complete source identity quotes and settlement reasoning. Exact entity, currency, unit, direction, explicit party-ID and allocation checks remain; original source names and the worker response are retained. No new model-visible fields or destinations are added."
     },
     {
       "id": "bounded-trusted-memory-review-transaction",

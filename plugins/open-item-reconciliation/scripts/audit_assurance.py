@@ -6653,6 +6653,16 @@ def _validate_closed_relationships(
                 f"closed reconciliation record {record_id} lacks current evidence"
             )
         for field in ("currency", "unit", "entity_ref", "party_ref"):
+            if (
+                field == "party_ref"
+                and row.get("rule_applied") == "semantic_evidence_allocation"
+                and row.get("relationship_allocation_ledger_id")
+                in validated_residual_ledgers
+            ):
+                # The source-bound semantic decision and exact ledger were
+                # replayed above, including identity quotes and explicit IDs.
+                # Requiring equal name text here would undo that assessment.
+                continue
             left = row.get(field)
             right = evidence.get(field)
             if (left is not None or right is not None) and left != right:

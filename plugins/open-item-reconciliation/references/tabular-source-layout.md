@@ -42,9 +42,13 @@ Reviewed receipts remain unsigned and do not authenticate that label.
    still declares one common party and any mapped party cells must equal it.
    Entity, currency and units remain source-wide; their mapped cells must equal
    the reviewed perimeter. Blank mapped party cells reject the source rather
-   than becoming a shared unknown identity. Cross-source party values must
-   actually agree before payments can be allocated; no alias or name guessing
-   is performed.
+   than becoming a shared unknown identity. Deterministic matching requires
+   exact cross-source party values. For unresolved items, the semantic worker
+   may establish that different names identify the same customer, citing both
+   complete source names and settlement evidence. Preserve both original
+   names; do not rewrite source mappings to make them equal. Conflicting
+   explicit party IDs, entities, currencies, units and payment directions
+   remain incompatible.
 4. Use the normal `raw_input_runner.py` entrypoint, with its actual started
    Archive context and `--output-subdirectory reconciliation`. It builds and
    replays current-byte source decisions/qualifications before parsing.

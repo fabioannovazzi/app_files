@@ -25,6 +25,13 @@ declared, and every allocation must conserve source and target amounts exactly
 within the reviewed tolerance. Preserve non-zero residuals; never force them to
 zero to obtain a passing result.
 
+For unresolved items, a supported semantic assessment can establish that a
+truncated bank name and an invoice customer identify the same party. It must
+cite both complete source identities and explain the settlement relationship
+within the full candidate population. Preserve source names and the reasoning;
+equal amounts or name similarity alone are insufficient. Explicit party-ID
+conflicts remain a mechanical rejection.
+
 ## Canonical Data
 
 Normalize available evidence into fields such as `record_id`, `source_file`, `source_sheet`, `source_page`, `source_row`, `source_role`, `party`, `counterparty`, `account`, `document_no`, `document_date`, `posting_date`, `value_date`, `amount`, `currency`, `direction`, `description`, `reference`, `beneficiary`, `iban`, `evidence_type`, and `document_key`.
