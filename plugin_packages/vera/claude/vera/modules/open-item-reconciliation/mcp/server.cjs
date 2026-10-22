@@ -1167,6 +1167,12 @@ function modelContextSourceRecords(item, semanticFields, evidence, context) {
     "due_date", "description", "party_ref",
   ]);
   const data = item.data || {};
+  if (data.reviewer_ref === "system-exact-match"
+      && data.review_notes === "Automatically verified exact source match; no human or professional approval."
+      && [semanticFields.review_notes, ...evidence.map((entry) => entry.review_notes)]
+        .filter((note) => note !== undefined).every((note) => note === data.review_notes)) {
+    generatedFields.add("review_notes");
+  }
   if (item.item_type === "check_exception" && data.check === "codex_review_completed") {
     // Exact mode also returns the producer's pending-row locator list. Verify
     // those locators against the same private review; arbitrary notes remain

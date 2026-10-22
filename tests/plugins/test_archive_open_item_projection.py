@@ -1126,7 +1126,8 @@ def test_pending_review_counts_do_not_claim_source_cell_exposure(
             },
         )["structuredContent"]
 
-    assert selected["cases"][0]["semantic_fields"]["actual"] == 3
+    # The unique exact payment is already verified; two items still need review.
+    assert selected["cases"][0]["semantic_fields"]["actual"] == 2
     measured = report(loaded)
     assert measured["collection_status"] == "complete", measured["errors"]
     assert (
@@ -1431,16 +1432,15 @@ def test_public_assurance_replay_reports_status_without_reemitting_source_rows(
 
 
 @pytest.mark.parametrize("changed_field", ["amount", "review_notes"])
+@pytest.mark.parametrize("item_type", ["manual_review", "closure_evidence_review"])
 def test_edited_review_cannot_claim_the_producers_source_coordinates(
-    reconciled_case, tmp_path, changed_field
+    reconciled_case, tmp_path, changed_field, item_type
 ):
     loaded = reconciled_case
     output = Path(loaded["calculation_dir"])
     path = output / "review_payload.json"
     review = json.loads(path.read_text())
-    item = next(
-        item for item in review["items"] if item["item_type"] == "manual_review"
-    )
+    item = next(item for item in review["items"] if item["item_type"] == item_type)
     item["data"][changed_field] = "UNKNOWN_CASE_DATA"
     path.write_text(json.dumps(review))
 
@@ -1455,7 +1455,7 @@ def test_edited_review_cannot_claim_the_producers_source_coordinates(
         handle = next(
             item["case_handle"]
             for item in index["model_context_index"]["cases"]
-            if item["item_type"] == "manual_review"
+            if item["item_type"] == item_type
         )
         selected = call(
             "get_open_item_reconciliation_case_context",
