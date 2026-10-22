@@ -462,12 +462,11 @@ def test_termination_keeps_accepted_work_and_releases_code(
             process.stdin.flush()
         # Stdin remains open: a signal must stop intake by itself. Repeated
         # signals must not interrupt worker retention or delete its code.
-        if target == "group":
-            os.killpg(process.pid, signum)
-            os.killpg(process.pid, signum)
-        else:
-            process.send_signal(signum)
-            process.send_signal(signum)
+        for _ in range(100):
+            if target == "group":
+                os.killpg(process.pid, signum)
+            else:
+                process.send_signal(signum)
         process.wait(timeout=15)
         assert process.returncode == 0, process.stderr.read()
         temporary = tmp_path / "os-temp"

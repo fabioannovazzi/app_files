@@ -24,7 +24,7 @@ __all__ = ["execute", "serve", "main"]
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 _OWNED_WORKERS: list[subprocess.Popen] = []
-_SHUTDOWN = globals().get("_SHUTDOWN", threading.Event())
+_SHUTDOWN = globals().get("_SHUTDOWN", {"requested": False})
 
 
 def _write(path: Path, value: Any) -> None:
@@ -504,7 +504,7 @@ def serve() -> None:
             messages.put(None)
 
     threading.Thread(target=read_messages, daemon=True).start()
-    while not _SHUTDOWN.is_set():
+    while not _SHUTDOWN["requested"]:
         try:
             line = messages.get(timeout=0.1)
         except queue.Empty:
@@ -567,7 +567,7 @@ def main() -> int:
     if args.execute is not None:
         return _run(args.execute)
     for signum in (signal.SIGTERM, signal.SIGINT):
-        signal.signal(signum, lambda *_: _SHUTDOWN.set())
+        signal.signal(signum, lambda *_: _SHUTDOWN.__setitem__("requested", True))
     try:
         serve()
     finally:

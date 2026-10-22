@@ -14,7 +14,10 @@ no ownership proof for recovering abandoned snapshots.
 
 The Node launcher forwards SIGTERM/SIGINT without exiting before its service.
 The Python owner records termination as a stop-intake event, finishes accepted
-requests and waits for detached workers. A transport reader permits termination
+requests and waits for detached workers. Signal handlers set a plain flag; they
+never acquire an Event/Condition mutex, which repeated signals can reenter and
+deadlock on the interrupted main thread. A repeated-signal stress run exposed
+this failure in the first candidate; it was repaired before installation. A transport reader permits termination
 even when stdin remains open or holds a partial message. Signals do not cancel
 professional jobs. User-requested job cancellation keeps its existing semantics.
 

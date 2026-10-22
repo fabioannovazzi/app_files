@@ -31,9 +31,11 @@ const python = fs.existsSync(managed) ? managed : (process.platform === "win32" 
 // One Python process owns verification, the service and its live workers.
 // A short-lived preparer must not delete code before the service can use it.
 const program = [
-  "import runpy,sys,signal,threading",
-  "shutdown=threading.Event()",
-  "for sig in (signal.SIGTERM,signal.SIGINT): signal.signal(sig,lambda *_: shutdown.set())",
+  "import runpy,sys,signal",
+  // A signal handler must never acquire an Event/Condition mutex: a repeated
+  // signal can reenter it while that same thread holds the nonreentrant lock.
+  "shutdown={'requested':False}",
+  "for sig in (signal.SIGTERM,signal.SIGINT): signal.signal(sig,lambda *_: shutdown.__setitem__('requested',True))",
   "from pathlib import Path",
   "sys.path.insert(0,sys.argv[1])",
   "from verified_execution import prepare_execution_root,release_execution_root,own_execution_root,recover_abandoned_execution_roots",
