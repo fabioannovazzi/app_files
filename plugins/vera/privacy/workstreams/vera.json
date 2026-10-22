@@ -57,7 +57,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-21",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "90b9326f18c60b6cd73f76d73182598f26b95de70d8423e1e95d5f9e745f8d95"
+    "source_fingerprint": "d0829a114b36b6e7876060b9a72a786739a9f62f16eb969d985b5cb332178bf2"
   },
   "service_ids": [
     "cnc-authenticated-review",

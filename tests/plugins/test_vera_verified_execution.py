@@ -596,7 +596,8 @@ def test_hardlinked_preflight_leaves_no_copy(tmp_path, monkeypatch, capsys):
     assert recovery.main(["--module", "journal-bank-reconciliation"]) == 0
 
     assert json.loads(capsys.readouterr().out) == {"execution_root": str(root)}
-    assert list(temporary.iterdir()) == []
+    assert not list(temporary.glob("vera-*"))
+    assert not list((temporary / ".vera-execution-leases").glob("*"))
     assert (root / "components.json").stat().st_nlink == 2
 
 
@@ -618,7 +619,8 @@ def test_interrupted_copy_preparation_leaves_no_partial_tree(
     with pytest.raises(failure):
         recovery.prepare_execution_root(root, "journal-bank-reconciliation")
 
-    assert list(temporary.iterdir()) == []
+    assert not list(temporary.glob("vera-*"))
+    assert not list((temporary / ".vera-execution-leases").glob("*"))
     assert root.exists()
 
 
@@ -723,3 +725,72 @@ def test_managed_run_releases_copy_on_every_exit(tmp_path, monkeypatch, outcome)
     assert len(observed) == 1
     assert not observed[0].exists()
     assert root.exists()
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX kernel leases")
+def test_orphan_recovery_preserves_live_borrowed_replaced_and_symlink_roots(
+    tmp_path, monkeypatch
+):
+    recovery = load_recovery()
+    temporary = tmp_path / "temporary"
+    temporary.mkdir()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(temporary))
+    live = temporary / "vera-verified-live"
+    live.mkdir()
+    (live / "code").write_text("live code")
+    recovery.own_execution_root(live)
+    borrowed = temporary / "vera-verified-borrowed"
+    borrowed.mkdir()
+    (borrowed / "client").write_text("preserve client material")
+    replaced = temporary / "vera-verified-replaced"
+    replaced.mkdir()
+    recovery.own_execution_root(replaced)
+    descriptor = recovery._LEASES.pop(replaced)
+    import os
+
+    os.close(descriptor)
+    saved = temporary / "saved-original"
+    replaced.rename(saved)
+    replaced.mkdir()
+    (replaced / "client").write_text("replacement")
+    linked = temporary / "vera-verified-linked"
+    linked.mkdir()
+    recovery.own_execution_root(linked)
+    os.close(recovery._LEASES.pop(linked))
+    linked.rmdir()
+    linked.symlink_to(borrowed, target_is_directory=True)
+
+    recovery.recover_abandoned_execution_roots()
+
+    assert (live / "code").read_text() == "live code"
+    assert (borrowed / "client").read_text() == "preserve client material"
+    assert (replaced / "client").read_text() == "replacement"
+    assert linked.is_symlink()
+    recovery.release_execution_root(live)
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX inherited kernel lease")
+def test_owner_cleanup_cannot_remove_code_held_by_detached_worker(
+    tmp_path, monkeypatch
+):
+    import os
+    import tempfile
+
+    recovery = load_recovery()
+    monkeypatch.setattr(recovery.tempfile, "gettempdir", lambda: str(tmp_path))
+    root = Path(tempfile.mkdtemp(prefix="vera-verified-", dir=tmp_path))
+    (root / "code").write_text("running")
+    recovery.own_execution_root(root)
+    worker = subprocess.Popen(
+        [sys.executable, "-c", "import sys; sys.stdin.read()"],
+        stdin=subprocess.PIPE,
+        pass_fds=recovery.execution_lease_fds(root),
+    )
+    try:
+        recovery.release_execution_root(root)
+        recovery.recover_abandoned_execution_roots()
+        assert (root / "code").read_text() == "running"
+    finally:
+        worker.communicate(timeout=10)
+    recovery.recover_abandoned_execution_roots()
+    assert not root.exists()

@@ -7,6 +7,7 @@ import codecs
 import hashlib
 import json
 import os
+import queue
 import signal
 import sqlite3
 import subprocess
@@ -23,6 +24,7 @@ __all__ = ["execute", "serve", "main"]
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 _OWNED_WORKERS: list[subprocess.Popen] = []
+_SHUTDOWN = globals().get("_SHUTDOWN", threading.Event())
 
 
 def _write(path: Path, value: Any) -> None:
@@ -208,6 +210,10 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
                 if os.name == "nt"
                 else {"start_new_session": True}
             )
+            if os.name == "posix":
+                from verified_execution import execution_lease_fds
+
+                options["pass_fds"] = execution_lease_fds(ROOT)
             with (job / "runner.stderr").open("ab") as errors:
                 worker = subprocess.Popen(
                     [
@@ -485,7 +491,26 @@ def serve() -> None:
             "openWorldHint": True,
         },
     }
-    for line in sys.stdin:
+    # A daemon reader lets transport shutdown stop intake even if the host
+    # keeps stdin open or sends only part of a JSON line. The main thread
+    # finishes an already accepted request and waits for its detached workers.
+    messages: queue.Queue[str | None] = queue.Queue()
+
+    def read_messages() -> None:
+        try:
+            for line in sys.stdin:
+                messages.put(line)
+        finally:
+            messages.put(None)
+
+    threading.Thread(target=read_messages, daemon=True).start()
+    while not _SHUTDOWN.is_set():
+        try:
+            line = messages.get(timeout=0.1)
+        except queue.Empty:
+            continue
+        if line is None:
+            break
         try:
             message = json.loads(line)
         except ValueError:
@@ -541,6 +566,8 @@ def main() -> int:
     args = parser.parse_args()
     if args.execute is not None:
         return _run(args.execute)
+    for signum in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(signum, lambda *_: _SHUTDOWN.set())
     try:
         serve()
     finally:
