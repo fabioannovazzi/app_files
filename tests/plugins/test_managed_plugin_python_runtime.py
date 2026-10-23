@@ -4,6 +4,7 @@ import ast
 import importlib.util
 import json
 import os
+import shutil
 import stat
 import subprocess
 import sys
@@ -1457,6 +1458,146 @@ def _load_vera_manager(monkeypatch: pytest.MonkeyPatch) -> Any:
         ),
     )
     return manager
+
+
+def standalone_launcher(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Any:
+    """Use real packaged helpers with isolated transport and an existing Python."""
+    root = tmp_path / "vera"
+    make_packaged_component(root)
+    (root / "requirements.txt").write_text("")
+    (root / "components.json").write_text(json.dumps({"plugins": ["prompt-optimizer"]}))
+    (root / "modules/studio-archive").rename(root / "modules/prompt-optimizer")
+    shutil.copyfile(
+        VERA_MANAGER.parent / "standalone_work.py", root / "scripts/standalone_work.py"
+    )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_assurance",
+        root / "vendor/modules/vera_assurance",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+    manager = _load_vera_manager(monkeypatch)
+    monkeypatch.setattr(
+        manager, "__file__", str(root / "scripts/managed_python_runtime.py")
+    )
+    monkeypatch.setattr(manager, "prepare_execution_root", lambda *args, **kwargs: root)
+    monkeypatch.setattr(
+        manager._IMPLEMENTATION,
+        "ensure_runtime",
+        lambda *args, **kwargs: (True, Path(sys.prefix), "Existing test interpreter"),
+    )
+    monkeypatch.setattr(
+        manager._IMPLEMENTATION, "runtime_python", lambda target: Path(sys.executable)
+    )
+    return manager
+
+
+@pytest.mark.parametrize(
+    ("selected_module", "module_namesake"),
+    [(None, False), ("prompt-optimizer", False), ("prompt-optimizer", True)],
+)
+def test_standalone_launcher_creates_reviewable_task_with_or_without_module(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capfd: pytest.CaptureFixture[str],
+    selected_module: str | None,
+    module_namesake: bool,
+) -> None:
+    manager = standalone_launcher(tmp_path, monkeypatch)
+    root = Path(manager.__file__).parents[1]
+    # A module-local namesake must not override this product-owned helper.
+    if module_namesake:
+        (root / "modules/prompt-optimizer/scripts/standalone_work.py").write_text(
+            "raise AssertionError('Wrong helper owner')\n"
+        )
+    source = tmp_path / "question.txt"
+    source.write_text("Synthetic standalone legal question", encoding="utf-8")
+    destination = tmp_path / "task"
+    failures = []
+    monkeypatch.setattr(
+        manager, "_independent_failure", lambda *args: failures.append(args)
+    )
+    prefix = ["--module", selected_module] if selected_module else []
+
+    result = manager.main(
+        [
+            *prefix,
+            "run",
+            "scripts/standalone_work.py",
+            "--destination",
+            str(destination),
+            "--workflow",
+            "prompt-optimizer",
+            "--source",
+            str(source),
+            "--label",
+            "Standalone question",
+            "--purpose",
+            "Prepare a legal answer",
+        ]
+    )
+
+    assert result == 0, capfd.readouterr().err
+    context = json.loads(capfd.readouterr().out)
+    assert Path(context["context_path"]).is_file()
+    assert context["schema_version"] == "vera.standalone_workflow_context.v1"
+    assert context["workflow_id"] == "prompt-optimizer"
+    assert (
+        Path(context["input_bindings"][0]["path"]).read_bytes() == source.read_bytes()
+    )
+    assert not list(destination.rglob("client.json"))
+    assert failures == []
+
+
+def test_standalone_launcher_rejects_root_helper_symlink_escape_before_execution(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    manager = standalone_launcher(tmp_path, monkeypatch)
+    root = Path(manager.__file__).parents[1]
+    helper = root / "scripts/standalone_work.py"
+    helper.unlink()
+    outside = tmp_path / "outside.py"
+    outside.write_text("raise AssertionError('Outside code executed')\n")
+    helper.symlink_to(outside)
+    failures = []
+    monkeypatch.setattr(
+        manager, "_independent_failure", lambda *args: failures.append(args)
+    )
+    monkeypatch.setattr(
+        manager,
+        "prepare_execution_root",
+        lambda *args, **kwargs: pytest.fail("Escaped helper reached execution setup"),
+    )
+
+    result = manager.main(
+        ["--module", "prompt-optimizer", "run", "scripts/standalone_work.py"]
+    )
+
+    assert result == 2
+    assert failures == [("execution-startup", "prompt-optimizer", "InvalidEntrypoint")]
+
+
+@pytest.mark.parametrize("product", ["clara", "lucia"])
+def test_other_products_keep_standalone_named_helpers_in_selected_module(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capfd: pytest.CaptureFixture[str],
+    product: str,
+) -> None:
+    manager = standalone_launcher(tmp_path, monkeypatch)
+    root = Path(manager.__file__).parents[1]
+    (root / ".codex-plugin/plugin.json").write_text(
+        json.dumps({"name": product, "version": "1.0.0"})
+    )
+    (root / "modules/prompt-optimizer/scripts/standalone_work.py").write_text(
+        "print('selected component helper')\n"
+    )
+
+    result = manager.main(
+        ["--module", "prompt-optimizer", "run", "scripts/standalone_work.py"]
+    )
+
+    assert result == 0
+    assert capfd.readouterr().out.strip() == "selected component helper"
 
 
 @pytest.mark.parametrize("returncode", [-9, 137, 247])

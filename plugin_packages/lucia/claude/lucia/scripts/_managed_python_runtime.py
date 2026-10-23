@@ -35,6 +35,7 @@ __all__ = [
     "main",
     "plugin_data_dir",
     "requirements_fingerprint",
+    "resolve_helper_root",
     "runtime_environment",
     "runtime_key",
     "runtime_python",
@@ -162,6 +163,18 @@ def select_runtime(
         requirements_files=tuple(requirements_files),
         scope=scope,
     )
+
+
+def resolve_helper_root(plugin_root: Path, component_root: Path, script: Path) -> Path:
+    """Resolve exact shipped ownership, independently of dependency selection."""
+    # Vera's standalone preparer is product-owned, including with --module.
+    # Other scripts retain their component boundary; no missing-file fallback.
+    if (
+        script == Path("scripts/standalone_work.py")
+        and _plugin_name(plugin_root) == "vera"
+    ):
+        return plugin_root.resolve()
+    return component_root
 
 
 def requirements_fingerprint(selection: RuntimeSelection) -> str:
@@ -926,8 +939,11 @@ def main(
         return 0
 
     selection = select_runtime(plugin_root, args.module, args.requirements)
-    script = (selection.requirement_root / args.script).resolve()
-    if not script.is_relative_to(selection.requirement_root) or not script.is_file():
+    script_root = resolve_helper_root(
+        plugin_root, selection.requirement_root, args.script
+    )
+    script = (script_root / args.script).resolve()
+    if not script.is_relative_to(script_root) or not script.is_file():
         LOGGER.error("Managed runtime script not found: %s", script)
         return 2
     command = [str(runtime_python(target)), str(script), *args.arguments]
@@ -935,7 +951,7 @@ def main(
         command = [
             str(runtime_python(target)),
             str(plugin_root / "scripts/technical_runner.py"),
-            str(selection.requirement_root),
+            str(script_root),
             str(diagnostic_path),
             str(script),
             *args.arguments,
@@ -947,7 +963,7 @@ def main(
         plugin_root=plugin_root,
         component=selection.requirement_root.name,
         arguments=[str(script), *args.arguments],
-        cwd=selection.requirement_root,
+        cwd=script_root,
         env=runtime_environment(target),
         check=False,
         stderr=stderr,

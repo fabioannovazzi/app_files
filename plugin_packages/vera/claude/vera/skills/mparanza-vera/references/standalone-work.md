@@ -32,11 +32,21 @@ Cowork's existing managed Python route; users do not run Terminal or edit JSON.
 Run from Vera's root after the maintained dependency setup for the selected module:
 
 ```bash
-python scripts/standalone_work.py --destination <new-absolute-task-folder> \
+python scripts/managed_python_runtime.py run scripts/standalone_work.py \
+  --destination <new-absolute-task-folder> \
   --workflow <invoice-xml|prompt-optimizer|deep-research-validator> \
   --source <explicitly-selected-absolute-source> [--source <another-source>] \
   --label <task-label> --purpose <actual-purpose>
 ```
+
+`standalone_work.py` belongs to Vera's root, not to the selected module. Use the
+command above without `--module`; `--workflow` selects the task being prepared.
+The launcher also accepts an existing `--module <module>` invocation of this
+exact helper and resolves it from Vera's root. Do not construct a `../` path or
+copy the helper into a module. Subsequent engine helpers use their module route.
+When using `vera_execute`, keep the selected workflow as `component`, set `script`
+to `scripts/standalone_work.py`, and pass the same helper arguments. The native
+service uses the same Vera-root ownership rule.
 
 The helper preserves originals, captures at most 32 selected files (64 MiB each,
 256 MiB total), and returns a distinct `vera.standalone_workflow_context.v1` with a

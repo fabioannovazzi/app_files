@@ -50,6 +50,8 @@ def _jobs() -> Path:
 
 def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     """Resolve only shipped Python helpers; never accept a shell or caller code."""
+    from _managed_python_runtime import resolve_helper_root
+
     components = json.loads((root / "components.json").read_text())["plugins"]
     component = args.get("component")
     if not isinstance(component, str) or component not in components:
@@ -67,9 +69,10 @@ def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     component_root = root / "modules" / component
     if not component_root.exists():
         component_root = root.parent / component
-    helper = component_root / script
+    script_root = resolve_helper_root(root, component_root, Path(script))
+    helper = script_root / script
     if helper.is_symlink() or not helper.resolve().is_relative_to(
-        component_root.resolve()
+        script_root.resolve()
     ):
         raise ValueError("Execution entrypoint is outside the selected component")
     if not helper.is_file():
