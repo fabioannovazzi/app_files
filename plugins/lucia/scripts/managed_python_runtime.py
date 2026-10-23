@@ -332,10 +332,12 @@ def main(argv: list[str] | None = None) -> int:
             runtime_selection = _IMPLEMENTATION.select_runtime(
                 root, selection.module, selection.requirements
             )
-            script = (
-                runtime_selection.requirement_root / arguments[run_index + 1]
-            ).resolve()
-            if not script.is_relative_to(runtime_selection.requirement_root):
+            helper = Path(arguments[run_index + 1])
+            script_root = _IMPLEMENTATION.resolve_helper_root(
+                root, runtime_selection.requirement_root, helper
+            )
+            script = (script_root / helper).resolve()
+            if not script.is_relative_to(script_root):
                 logging.error("Managed runtime script outside module root: %s", script)
                 _independent_failure(
                     "execution-startup", selection.module, "InvalidEntrypoint"

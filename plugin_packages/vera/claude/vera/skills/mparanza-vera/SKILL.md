@@ -820,6 +820,13 @@ module skill shows the shorter standalone `python scripts/...` form:
 python scripts/managed_python_runtime.py --module <module> run scripts/<helper>.py <arguments>
 ```
 
+Vera's root-level standalone preparer is the exception: run
+`python scripts/managed_python_runtime.py run scripts/standalone_work.py ...`
+as documented in `references/standalone-work.md`. Its `--workflow` chooses the
+task; it is not a script inside that module. The launcher recognizes this exact
+root helper even if `--module` was retained. Keep `--module` for the subsequent
+module engine scripts.
+
 The launcher uses that environment's own Python for the helper process. Do not run `pip
 install` directly. All Vera modules and the Clara and Lucia products share this
 environment through the published shared requirements.

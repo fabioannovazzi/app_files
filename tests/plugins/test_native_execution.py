@@ -56,16 +56,13 @@ def installed(tmp_path):
     # Runtime provisioning has its own integration suite. This fixture only
     # replaces environment selection, executing real child processes and the
     # real incident wrapper/CLI delivery boundary.
-    (scripts / "_managed_python_runtime.py").write_text(
-        "import logging,os,subprocess,sys\nfrom pathlib import Path\nfrom types import SimpleNamespace\n"
-        "LOGGER=logging.getLogger(__name__)\n"
-        "def unused(*a,**k): return None\n"
-        "activate_runtime=dependency_target=ensure_runtime=plugin_data_dir=requirements_fingerprint=runtime_environment=runtime_key=runtime_python=select_runtime=unused\n"
-        "def select_runtime(root,module,requirements=None): return SimpleNamespace(requirement_root=root/'modules'/module)\n"
-        "def main(root,arguments,stderr=None,diagnostic_path=None):\n"
-        "    from archive_cli import run_command\n"
-        "    module=arguments[1]; position=arguments.index('run'); script=root/'modules'/module/arguments[position+1]\n"
-        "    return run_command([sys.executable,str(script),*arguments[position+2:]],plugin_root=root,component=module,arguments=arguments,cwd=script.parent,env=dict(os.environ),stderr=stderr,check=False).returncode\n"
+    (root / "modules/fixture-component/requirements.txt").write_text("")
+    runtime = scripts / "_managed_python_runtime.py"
+    runtime.write_text(
+        runtime.read_text() + "\ndef ensure_runtime(*args, **kwargs):\n"
+        "    return True, Path(sys.prefix), 'Existing test interpreter'\n"
+        "def runtime_python(target): return Path(sys.executable)\n"
+        "def runtime_environment(target): return dict(os.environ)\n"
     )
     write_index(root)
     return root
@@ -208,6 +205,50 @@ def test_native_helper_retains_diagnostics_and_runs_once_across_service_restart(
     assert (tmp_path / "counter").read_text() == "run\n"
     state = json.loads((tmp_path / "incidents/state.json").read_text())
     assert any(key.startswith(args["task_id"] + ":") for key in state["operations"])
+
+
+def test_native_standalone_helper_creates_task_from_product_root(installed, tmp_path):
+    shutil.copyfile(
+        ROOT / "plugins/vera/scripts/standalone_work.py",
+        installed / "scripts/standalone_work.py",
+    )
+    shutil.copytree(
+        ROOT / "plugins/_shared/vendor/modules/vera_assurance",
+        installed / "vendor/modules/vera_assurance",
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
+    write_index(installed)
+    source = tmp_path / "question.txt"
+    source.write_text("Synthetic legal question", encoding="utf-8")
+    destination = tmp_path / "standalone-task"
+    args = request(
+        tmp_path,
+        script="scripts/standalone_work.py",
+        arguments=[
+            "--destination",
+            str(destination),
+            "--workflow",
+            "prompt-optimizer",
+            "--source",
+            str(source),
+            "--label",
+            "Standalone question",
+            "--purpose",
+            "Prepare a legal answer",
+        ],
+    )
+
+    with native(installed, tmp_path) as call:
+        result = call(args)
+
+    assert output(result)[0]["returncode"] == 0
+    context = json.loads(output(result)[1]["stdout"])
+    assert Path(context["context_path"]).is_file()
+    assert context["schema_version"] == "vera.standalone_workflow_context.v1"
+    assert (
+        Path(context["input_bindings"][0]["path"]).read_bytes() == source.read_bytes()
+    )
+    assert not list(destination.rglob("client.json"))
 
 
 def test_active_job_survives_removal_of_its_installed_cache(installed, tmp_path):

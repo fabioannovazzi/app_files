@@ -50,9 +50,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-21",
+    "reviewed_at": "2026-10-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "42866343ceb070de40e4c1d7c837b71600785b44298d806857c65aa922d45326"
+    "source_fingerprint": "7d2dac9dcdb7021a0f71a43505b7a353659ce99f37549bdfd4879e60185648fb"
   }
 }
