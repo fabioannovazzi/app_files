@@ -40,13 +40,14 @@ p { margin: 0 0 18px; }
 .lead { color: var(--navy); max-width: 800px; font-size: clamp(20px, 2.4vw, 25px); line-height: 1.45; letter-spacing: -.015em; }
 .note { color: var(--muted); font-size: 15px; max-width: 800px; }
 .hero .note { margin-top: 25px; margin-bottom: 0; }
+.collection-group { padding-bottom: 38px; scroll-margin-top: 25px; }
 .collection-head, .case-row { display: grid; grid-template-columns: 48px minmax(0, 1.7fr) minmax(0, 1fr) minmax(0, .8fr); gap: 28px; }
 .collection-head { padding: 20px 0; border-top: 1px solid var(--navy); color: var(--muted); font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
 .case-row { border-top: 1px solid var(--line); padding-block: 32px 36px; }
 .case-number { color: var(--blue); font-size: 15px; padding-top: 4px; }
-.case-row h2 { font-size: 26px; line-height: 1.2; margin: 0 0 14px; }
-.case-row h2 a { color: var(--navy); text-decoration: none; }
-.case-row h2 a:hover { text-decoration: underline; }
+.case-row h3 { font-size: 26px; line-height: 1.2; margin: 0 0 14px; }
+.case-row h3 a { color: var(--navy); text-decoration: none; }
+.case-row h3 a:hover { text-decoration: underline; }
 .case-row p { font-size: 16px; margin-bottom: 12px; }
 .case-row .case-meta { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
 .case-row .source-note { font-size: 13px; color: var(--muted); margin-top: 8px; }
@@ -83,6 +84,7 @@ summary { cursor: pointer; color: var(--navy); padding-block: 6px; }
 .prompt-text { white-space: pre-wrap; overflow-wrap: anywhere; background: var(--wash); padding: 28px; margin-top: 18px; font-size: 16px; line-height: 1.7; }
 .case-row .available { color: var(--blue); font-size: 15px; margin-bottom: 8px; }
 .answer-details { margin-top: 24px; }
+.answer-body h4 { color: var(--navy); font-size: 19px; font-weight: 500; margin: 28px 0 12px; }
 .answer-body { padding-top: 24px; overflow-wrap: anywhere; }
 .answer-body table { border-collapse: collapse; table-layout: fixed; width: 100%; margin-block: 24px; font-size: 14px; }
 .answer-body th, .answer-body td { text-align: left; vertical-align: top; padding: 10px 8px; border-bottom: 1px solid var(--line); }
@@ -115,7 +117,7 @@ summary { cursor: pointer; color: var(--navy); padding-block: 6px; }
   .collection-head { display: none; }
   .case-row { grid-template-columns: 26px minmax(0, 1fr); gap: 18px 12px; padding-block: 28px; }
   .case-row .case-problem { grid-row: auto; }
-  .case-row h2 { font-size: 26px; }
+  .case-row h3 { font-size: 26px; }
   .case-materials, .case-answer { grid-column: 2; }
   .case-links { gap: 2px; }
   .case-links a { min-height: 44px; display: inline-flex; align-items: center; }
