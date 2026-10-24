@@ -134,7 +134,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "c03105178e8dc8047d8911881b9985a1f1272a2ddb39662a37f6f746518e620e",
+  "catalogue_fingerprint": "619be48d26e483354001b7caab3786bcd088cc8cfa68fb3f61441c65a99fad77",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2251,5 +2251,10 @@
     "version": "0.1.486",
     "scope": "Root-owned standalone helper invocation and explicit launcher instructions; no changes to Geneva workflow eligibility or professional scope.",
     "evidence": "Real standalone task regression with retained source files; module namesake and path escape checks."
+  },
+  "mcp_release_binding_20261024": {
+    "version": "0.1.490",
+    "previous_catalogue_fingerprint": "c03105178e8dc8047d8911881b9985a1f1272a2ddb39662a37f6f746518e620e",
+    "scope": "Manifest version refresh only. All 55 skill entrypoint identities and bytes are unchanged from the recorded 0.1.486 catalogue. Existing jurisdiction assessments and acceptance limits are retained."
   }
 }
