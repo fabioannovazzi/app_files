@@ -2572,10 +2572,13 @@ def test_bank_reconciliation_kit_runs_current_comparison(
     )
 
 
-@pytest.mark.parametrize("phase,closed", [("demo", 2), ("practice", 3)])
+@pytest.mark.parametrize(
+    "phase,closed,expected_status",
+    [("demo", 2, "written_pending_review"), ("practice", 3, "final_ready")],
+)
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_open_item_kit_runs_current_pdf_ingestion_and_workpapers(
-    tmp_path, monkeypatch, phase, closed, language, record_property
+    tmp_path, monkeypatch, phase, closed, expected_status, language, record_property
 ):
     run = _bound_case(
         tmp_path,
@@ -2681,7 +2684,10 @@ runner.run_raw_input_reconciliation(
     if phase == "practice":
         third = next(row for row in rows if row["document_key"] == "3FF|2026")
         assert third["supporting_bank_date"] == "2026-04-04"
-    assert _read(output / "final_artifacts.json")["status"] != "final_ready"
+    # Exact source-verified matches complete automatically; the demo retains
+    # its unresolved item and the corresponding review handoff.
+    assert _read(output / "final_artifacts.json")["status"] == expected_status
+    assert _read(output / "professional_review.json")["origin"] == "automatic_checks"
 
     # The first table is the learner's actual result, in the chosen language.
     from docx import Document
