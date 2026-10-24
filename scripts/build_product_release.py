@@ -75,7 +75,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--check",
         action="store_true",
-        help="Check source drift and version alignment without writing.",
+        help="Check source drift and version alignment without writing; build local ZIPs first.",
     )
     args = parser.parse_args(argv)
     products = tuple(args.products) or PRODUCTS
@@ -103,6 +103,19 @@ def main(argv: list[str] | None = None) -> int:
     commands.append(["scripts/build_claude_plugin_zip.py", *products, *suffix])
     commands.append(["scripts/build_antigravity_plugin.py", *products, *suffix])
     try:
+        if args.check:
+            for product in products:
+                for host in ("plugin", "chatgpt-upload", "claude-plugin"):
+                    archive = (
+                        ROOT / "plugin_packages" / product / f"{product}-{host}.zip"
+                    )
+                    if not archive.is_file():
+                        raise FileNotFoundError(
+                            f"Local build artifact missing: {archive}. "
+                            "Run python scripts/build_product_release.py "
+                            + " ".join(products)
+                            + " first, or download this commit's product-archives CI artifact."
+                        )
         for command in commands:
             subprocess.run([sys.executable, *command], cwd=ROOT, check=True)
         versions = verify_versions(ROOT, products)

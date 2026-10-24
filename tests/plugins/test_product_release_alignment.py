@@ -88,6 +88,16 @@ def test_rejects_missing_distribution(tmp_path: Path) -> None:
         release.verify_versions(tmp_path, ("clara",))
 
 
+def test_check_explains_how_to_obtain_untracked_archives(tmp_path, monkeypatch, caplog):
+    monkeypatch.setattr(release, "ROOT", tmp_path)
+
+    result = release.main(["clara", "--check"])
+
+    assert result == 1
+    assert "python scripts/build_product_release.py clara" in caplog.text
+    assert "product-archives CI artifact" in caplog.text
+
+
 def test_default_command_checks_both_hosts_for_all_products(
     tmp_path, monkeypatch
 ) -> None:

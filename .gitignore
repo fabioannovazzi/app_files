@@ -18,6 +18,9 @@ venv/
 Thumbs.db
 
 # 5. Build / packaging artefacts
+# Product install/upload archives are built locally or downloaded from CI.
+# Keep the unpacked Claude sources and public website downloads tracked.
+/plugin_packages/*/*.zip
 build/
 dist/
 *.egg-info/

@@ -92,6 +92,15 @@ def main() -> int:
     parser.add_argument("--host-package", choices=("codex", "cowork"), default="codex")
     args = parser.parse_args()
     repo = Path(__file__).resolve().parents[1]
+    suffix = "plugin" if args.host_package == "codex" else "claude-plugin"
+    for product in ("vera", "clara", "lucia"):
+        archive = repo / f"plugin_packages/{product}/{product}-{suffix}.zip"
+        if not archive.is_file():
+            parser.error(
+                f"Local build artifact missing: {archive}. Build with "
+                "python scripts/build_product_release.py vera lucia clara "
+                "or download this commit's product-archives CI artifact first."
+            )
     results = []
     with tempfile.TemporaryDirectory(prefix="shared-cold-") as temporary:
         base = Path(temporary).resolve()
@@ -106,7 +115,6 @@ def main() -> int:
             ("clara", "reporting-engine"),
             ("lucia", "studio-archive"),
         ]:
-            suffix = "plugin" if args.host_package == "codex" else "claude-plugin"
             extracted = base / "packages" / product
             with ZipFile(
                 repo / f"plugin_packages/{product}/{product}-{suffix}.zip"

@@ -10,7 +10,11 @@ permissions:
   contents: read
 
 jobs:
+  product-archives:
+    uses: ./.github/workflows/build-product-archives.yml
+
   synthetic-acceptance:
+    needs: product-archives
     name: Synthetic cases and packaged execution
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -18,6 +22,11 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

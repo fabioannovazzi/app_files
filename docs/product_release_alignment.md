@@ -18,7 +18,22 @@ The Cowork builder validates the candidate before replacing its public copy.
 A failed overall build is not deployable; rerun the command after correcting
 the failure.
 
-The `Product release alignment` GitHub workflow runs on every PR and main push:
+The nine `plugin_packages/<product>/*.zip` files are local build outputs, ignored
+by Git. A fresh checkout must run the build above before package tests or checks.
+CI consumers download the `product-archives` artifact built from their own
+workflow's commit by `.github/workflows/build-product-archives.yml`. The artifact
+contains the three product directories; extract it into `plugin_packages/`.
+
+Teaching CI always runs its native execution, compiler and code-quality checks.
+Editorial verification runs when teaching sources, compiled courses or teaching
+runtime change, and on manual runs. Packaging configuration and test-only changes
+do not recertify unchanged lessons or refresh their historical review records.
+An unavailable comparison base requires full editorial verification.
+
+The reusable build rejects any changes to tracked generated files or public
+downloads. This prevents rebuilding from hiding stale committed distributions.
+The `Product release alignment` GitHub workflow runs on every PR and main push,
+downloads those build outputs, then runs:
 
 ```sh
 python scripts/build_product_release.py --check
@@ -27,9 +42,28 @@ python scripts/build_product_release.py --check
 Antigravity checks also start each packaged MCP server and request its tool list.
 It rejects source drift, missing distributions, version mismatches, and a public
 Cowork download that differs from the built ZIP even when the version matches.
-Include generated distributions in the release PR. Merge and deploy only after
-all checks pass. `make release-products` and `make check-product-releases` are
+Include the generated Claude directories and public website distributions in
+the release PR, but do not add the nine ignored local archives. Merge and deploy
+only after all checks pass. `make release-products` and `make check-product-releases` are
 aliases for these commands.
+
+`scripts/check_repository_archive_size.py` measures `git archive --format=tar.gz
+HEAD` and fails above 230 MiB, leaving headroom below the Claude directory's
+256 MiB compressed download limit. The target after removing the duplicate
+archives is at most 200 MiB. Git history is not part of this measurement.
+Do not use LFS, submodules or export-ignore attributes to reduce the download.
+
+Website ZIPs remain tracked at `static/shared/<product>/downloads/`, so existing
+download URLs continue to work. The Tesoreria PDF and PPTX also remain tracked:
+their presentation page links to both files. Both marketplace catalogs use
+plugin directories, not the ignored ZIPs.
+
+On a fresh server checkout, build the affected local Codex archive with
+`python scripts/build_codex_plugin_zip.py <product>` before using
+`scripts/manage_incidents.py` to validate an update remedy. A CI artifact from
+that exact release commit is also valid. Read-only incident inspection does not
+need archives. Cold-start acceptance likewise requires built or downloaded
+archives before it clears PATH and provisions its isolated runtime.
 
 Every custom skill in a Claude package uses the owned `mparanza-` prefix. The
 builder applies it to future skills automatically, including shared component

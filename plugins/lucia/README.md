@@ -108,7 +108,11 @@ La sorgente modificabile vive in `plugins/lucia`. I pacchetti generati sono:
 - `plugin_packages/lucia/lucia-claude-plugin.zip` per Claude Cowork, pubblicato
   anche come `static/shared/lucia/downloads/lucia-cowork-plugin.zip`.
 
-I pacchetti sono artefatti generati e non devono essere modificati a mano.
+I tre ZIP in `plugin_packages/lucia/` sono artefatti locali ignorati da Git e non
+devono essere modificati a mano. Si generano con
+`python scripts/build_product_release.py lucia`, oppure si scaricano dall'artefatto
+CI `product-archives` dello stesso commit, da estrarre in `plugin_packages/`.
+La directory sorgente per Claude e il download pubblico rimangono nel repository.
 
 Per ricostruirli e verificare che corrispondano alla sorgente:
 

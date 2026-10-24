@@ -2,6 +2,9 @@
 
 from __future__ import annotations
 
+import shutil
+import subprocess
+import sys
 from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
@@ -130,3 +133,143 @@ def test_teaching_acceptance_and_coverage_still_fail_on_errors() -> None:
         "macos-latest",
         "windows-latest",
     ]
+
+
+def committed_scope_case(root: Path, changed_path: str) -> str:
+    """Create two real commits so the workflow exercises Git's path semantics."""
+
+    def git(*args: str) -> str:
+        return subprocess.check_output(
+            [
+                "git",
+                "-c",
+                "user.name=Test",
+                "-c",
+                "user.email=test@example.com",
+                "-c",
+                "commit.gpgsign=false",
+                *args,
+            ],
+            cwd=root,
+            text=True,
+        ).strip()
+
+    git("init", "-q")
+    (root / "baseline.txt").write_text("baseline\n")
+    git("add", ".")
+    git("commit", "-qm", "baseline")
+    base = git("rev-parse", "HEAD")
+    path = root / changed_path
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("changed\n")
+    git("add", ".")
+    git("commit", "-qm", "change")
+    return base
+
+
+@pytest.mark.parametrize(
+    ("changed_path", "event", "base_mode", "expected"),
+    [
+        ("scripts/course_materials/kits_it.json", "pull_request", "valid", "true"),
+        (
+            "scripts/course_materials/release_reviews/vera/kit.json",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        (
+            "plugins/vera/assets/courses/kit/course.json",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        (
+            "plugins/_shared/vendor/modules/courseware/execution.py",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        (
+            "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        ("plugins/vera/scripts/local_teaching.py", "pull_request", "valid", "true"),
+        ("plugins/clara/scripts/local_courses.py", "pull_request", "valid", "true"),
+        (
+            "plugins/vera/scripts/local_onboarding_case.py",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        (
+            "plugins/vera/scripts/onboarding_session_start.py",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        ("plugins/vera/scripts/course_chat_mcp.cjs", "pull_request", "valid", "true"),
+        (
+            "plugins/vera/skills/learn-with-vera/SKILL.md",
+            "pull_request",
+            "valid",
+            "true",
+        ),
+        (
+            "tests/plugins/test_teaching_kit_execution.py",
+            "pull_request",
+            "valid",
+            "false",
+        ),
+        (".github/workflows/teaching-kits.yml", "pull_request", "valid", "false"),
+        ("scripts/build_product_release.py", "push", "valid", "false"),
+        ("scripts/build_product_release.py", "workflow_dispatch", "valid", "true"),
+        ("scripts/build_product_release.py", "push", "", "true"),
+        (
+            "scripts/build_product_release.py",
+            "push",
+            "0000000000000000000000000000000000000000",
+            "true",
+        ),
+        ("scripts/build_product_release.py", "pull_request", "missing-base", "true"),
+    ],
+)
+def test_editorial_scope_requires_review_for_changed_teaching_or_unknown_base(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    changed_path: str,
+    event: str,
+    base_mode: str,
+    expected: str,
+) -> None:
+    base = committed_scope_case(tmp_path, changed_path)
+    output = tmp_path / "github-output"
+    monkeypatch.setenv("BASE_REF", base if base_mode == "valid" else base_mode)
+    monkeypatch.setenv("EVENT_NAME", event)
+    monkeypatch.setenv("GITHUB_OUTPUT", output.as_posix())
+    steps = workflow("teaching-kits.yml")["jobs"]["teaching-kits"]["steps"]
+    scope = next(step for step in steps if step.get("id") == "teaching-scope")
+    if sys.platform == "win32":
+        # PATH can resolve Windows' WSL launcher instead of Git's native Bash.
+        git_executable = shutil.which("git")
+        assert git_executable is not None
+        bash = Path(git_executable).resolve().parents[1] / "bin" / "bash.exe"
+        assert bash.is_file()
+    else:
+        bash_executable = shutil.which("bash")
+        assert bash_executable is not None
+        bash = Path(bash_executable)
+
+    completed = subprocess.run(
+        [str(bash), "-e", "-c", scope["run"]],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+
+    assert completed.returncode == 0, completed.stdout + completed.stderr
+    assert output.read_text() == f"editorial_required={expected}\n"

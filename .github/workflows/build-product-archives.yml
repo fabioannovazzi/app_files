@@ -1,0 +1,35 @@
+name: Build product archive artifacts
+
+on:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Enforce repository download headroom
+        run: python scripts/check_repository_archive_size.py
+      - name: Install declared build dependencies
+        run: python -m pip install -r scripts/requirements-plugin-build.txt
+      - name: Build local product archives from this checkout
+        run: python scripts/build_product_release.py vera lucia clara
+      - name: Reject drift in tracked sources and public downloads
+        run: git diff --exit-code
+      - name: Retain install and upload archives for this workflow
+        uses: actions/upload-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages/*/*.zip
+          if-no-files-found: error
+          retention-days: 14
