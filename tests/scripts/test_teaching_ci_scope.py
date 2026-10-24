@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
+import shutil
 import subprocess
+import sys
 from fnmatch import fnmatchcase
 from pathlib import Path
 from typing import Any
@@ -245,15 +247,29 @@ def test_editorial_scope_requires_review_for_changed_teaching_or_unknown_base(
     output = tmp_path / "github-output"
     monkeypatch.setenv("BASE_REF", base if base_mode == "valid" else base_mode)
     monkeypatch.setenv("EVENT_NAME", event)
-    monkeypatch.setenv("GITHUB_OUTPUT", str(output))
+    monkeypatch.setenv("GITHUB_OUTPUT", output.as_posix())
     steps = workflow("teaching-kits.yml")["jobs"]["teaching-kits"]["steps"]
     scope = next(step for step in steps if step.get("id") == "teaching-scope")
+    if sys.platform == "win32":
+        # PATH can resolve Windows' WSL launcher instead of Git's native Bash.
+        git_executable = shutil.which("git")
+        assert git_executable is not None
+        bash = Path(git_executable).resolve().parents[1] / "bin" / "bash.exe"
+        assert bash.is_file()
+    else:
+        bash_executable = shutil.which("bash")
+        assert bash_executable is not None
+        bash = Path(bash_executable)
 
-    subprocess.run(
-        ["bash", "-e", "-c", scope["run"]],
+    completed = subprocess.run(
+        [str(bash), "-e", "-c", scope["run"]],
         cwd=tmp_path,
-        check=True,
+        check=False,
         capture_output=True,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
     )
 
+    assert completed.returncode == 0, completed.stdout + completed.stderr
     assert output.read_text() == f"editorial_required={expected}\n"
