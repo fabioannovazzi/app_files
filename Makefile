@@ -24,6 +24,18 @@ release-products:
 check-product-releases:
 	python scripts/build_product_release.py --check
 
+# Run after downloading the tested commit's product-archives CI artifact.
+.PHONY: stage-product-downloads
+stage-product-downloads:
+	@set -e; for product in vera clara lucia; do \
+		test -s "plugin_packages/$$product/$$product-plugin.zip"; \
+	done; \
+	for product in vera clara lucia; do \
+		target="static/shared/$$product/downloads/$$product-plugin.zip"; \
+		install -m 644 "plugin_packages/$$product/$$product-plugin.zip" "$$target.tmp"; \
+		mv "$$target.tmp" "$$target"; \
+	done
+
 # Native Cowork evidence is supplied explicitly; CI/shell tests cannot create it.
 .PHONY: check-cowork-acceptance
 check-cowork-acceptance:

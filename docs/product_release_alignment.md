@@ -53,8 +53,17 @@ HEAD` and fails above 230 MiB, leaving headroom below the Claude directory's
 archives is at most 200 MiB. Git history is not part of this measurement.
 Do not use LFS, submodules or export-ignore attributes to reduce the download.
 
-Website ZIPs remain tracked at `static/shared/<product>/downloads/`, so existing
-download URLs continue to work. The Tesoreria PDF and PPTX also remain tracked:
+Cowork and Antigravity website ZIPs remain tracked at
+`static/shared/<product>/downloads/`. Codex website ZIPs are deployment artifacts:
+after CI passes, download `product-archives` from the exact tested commit into
+`plugin_packages/`, then run `make stage-product-downloads`. This atomically stages
+the three Codex ZIPs at `static/shared/<product>/downloads/<product>-plugin.zip`,
+which the download page serves. These copies remain ignored by Git. Deploy them
+alongside every release, including fresh server checkouts, and verify the public
+download hashes against the tested artifacts. The old raw GitHub ZIP URLs no
+longer work because those files are no longer tracked.
+
+The Tesoreria PDF and PPTX remain tracked:
 their presentation page links to both files. Both marketplace catalogs use
 plugin directories, not the ignored ZIPs.
 

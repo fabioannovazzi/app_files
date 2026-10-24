@@ -19,8 +19,11 @@ Thumbs.db
 
 # 5. Build / packaging artefacts
 # Product install/upload archives are built locally or downloaded from CI.
-# Keep the unpacked Claude sources and public website downloads tracked.
+# Keep unpacked Claude sources and Cowork/Antigravity downloads tracked.
 /plugin_packages/*/*.zip
+/static/shared/vera/downloads/vera-plugin.zip*
+/static/shared/clara/downloads/clara-plugin.zip*
+/static/shared/lucia/downloads/lucia-plugin.zip*
 build/
 dist/
 *.egg-info/
