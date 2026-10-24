@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
+import shutil
 import subprocess
 from pathlib import Path
 from zipfile import ZipFile
@@ -15,6 +17,51 @@ SPEC = importlib.util.spec_from_file_location("product_release", SCRIPT)
 assert SPEC and SPEC.loader
 release = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(release)
+
+
+@pytest.mark.skipif(shutil.which("make") is None, reason="Deployment requires make")
+@pytest.mark.parametrize("product", release.PRODUCTS)
+def test_public_codex_download_link_resolves_to_staged_release(
+    tmp_path: Path, product: str
+) -> None:
+    for name in release.PRODUCTS:
+        release_case(tmp_path, name)
+    repo = SCRIPT.parents[1]
+    page = repo / "static/shared/plugin-downloads/index.html"
+    link = re.search(
+        rf'href="([^"]+)" download="{product}-plugin.zip"', page.read_text()
+    )
+    assert link is not None
+    expected = tmp_path / f"plugin_packages/{product}/{product}-plugin.zip"
+    public = tmp_path / "static/shared/plugin-downloads" / link.group(1)
+
+    subprocess.run(
+        ["make", "-f", str(repo / "Makefile"), "stage-product-downloads"],
+        cwd=tmp_path,
+        check=True,
+        capture_output=True,
+    )
+
+    assert public.resolve().read_bytes() == expected.read_bytes()
+
+
+@pytest.mark.skipif(shutil.which("make") is None, reason="Deployment requires make")
+def test_missing_codex_build_preserves_existing_public_download(tmp_path: Path) -> None:
+    for product in release.PRODUCTS:
+        release_case(tmp_path, product)
+    public = tmp_path / "static/shared/vera/downloads/vera-plugin.zip"
+    public.write_bytes(b"previous deployed archive")
+    (tmp_path / "plugin_packages/lucia/lucia-plugin.zip").unlink()
+
+    result = subprocess.run(
+        ["make", "-f", str(SCRIPT.parents[1] / "Makefile"), "stage-product-downloads"],
+        cwd=tmp_path,
+        check=False,
+        capture_output=True,
+    )
+
+    assert result.returncode != 0
+    assert public.read_bytes() == b"previous deployed archive"
 
 
 def write_archive(
