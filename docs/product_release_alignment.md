@@ -24,6 +24,12 @@ CI consumers download the `product-archives` artifact built from their own
 workflow's commit by `.github/workflows/build-product-archives.yml`. The artifact
 contains the three product directories; extract it into `plugin_packages/`.
 
+Teaching CI always runs its native execution, compiler and code-quality checks.
+Editorial verification runs when teaching sources, compiled courses or teaching
+runtime change, and on manual runs. Packaging configuration and test-only changes
+do not recertify unchanged lessons or refresh their historical review records.
+An unavailable comparison base requires full editorial verification.
+
 The reusable build rejects any changes to tracked generated files or public
 downloads. This prevents rebuilding from hiding stale committed distributions.
 The `Product release alignment` GitHub workflow runs on every PR and main push,

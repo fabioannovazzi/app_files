@@ -66,6 +66,34 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Include the PR merge's base parent without downloading ZIP history.
+          fetch-depth: 2
+      - name: Detect changes requiring teaching editorial verification
+        id: teaching-scope
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+          EVENT_NAME: ${{ github.event_name }}
+        shell: bash
+        run: |
+          editorial_required=true
+          if [ "$EVENT_NAME" != "workflow_dispatch" ] && [ -n "$BASE_REF" ] && [ "$BASE_REF" != "0000000000000000000000000000000000000000" ]; then
+            if git diff --quiet "$BASE_REF" HEAD -- \
+              scripts/course_materials \
+              'plugins/*/assets/courses/**' \
+              plugins/_shared/vendor/modules/courseware \
+              plugins/_shared/vendor/modules/desktop_teaching \
+              'plugins/*/scripts/*teaching*.py' \
+              'plugins/*/scripts/local_courses.py' \
+              'plugins/*/scripts/local_onboarding*.py' \
+              'plugins/*/scripts/onboarding_session_start.py' \
+              'plugins/*/scripts/course_chat*' \
+              'plugins/*/skills/learn-with-*'; then
+              editorial_required=false
+            fi
+          fi
+          echo "editorial_required=$editorial_required" >> "$GITHUB_OUTPUT"
+          echo "Editorial verification required: $editorial_required. Native execution and quality checks always run."
       - name: Download product archives built from this commit
         uses: actions/download-artifact@v4
         with:
@@ -177,7 +205,7 @@ jobs:
           tests/plugins/test_vera_local_onboarding.py
           --cov=plugins/_shared/vendor/modules/courseware --cov-fail-under=80
           --junitxml=${{ runner.temp }}/teaching-native.xml -o junit_family=legacy
-      - name: Check course runtime, compiler and editorial acceptance
+      - name: Check course runtime and compiler
         run: |
           python -m black --check tests/plugins/test_teaching_patent_box_execution.py
           python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py
@@ -187,7 +215,6 @@ jobs:
           python scripts/course_materials/build_public_catalog.py --check
           python -m black --check tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
           python -m isort --check-only tests/plugins/test_teaching_cnc_execution.py tests/plugins/test_teaching_scissione_execution.py
-          python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
           python scripts/course_materials/build_presentation_baselines.py --check
           python -m black --check scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
           python -m isort --check-only scripts/course_materials/build_presentation_baselines.py tests/plugins/_business_teaching.py tests/plugins/_presentation_teaching.py tests/plugins/test_teaching_presentation_execution.py
@@ -215,6 +242,9 @@ jobs:
           python -m isort --check-only plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
           python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/courseware/policy.py plugins/_shared/vendor/modules/courseware/library.py plugins/_shared/vendor/modules/courseware/execution.py scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
           python -m bandit -qr plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
+      - name: Verify editorial acceptance for changed teaching sources or manual runs
+        if: steps.teaching-scope.outputs.editorial_required == 'true'
+        run: python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
       - name: Check prepared Concordato source PDFs
         run: python scripts/course_materials/build_concordato_support.py --check
 
