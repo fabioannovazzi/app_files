@@ -2575,6 +2575,7 @@ def test_bank_reconciliation_kit_runs_current_comparison(
 @pytest.mark.parametrize(
     "phase,closed,expected_status",
     [("demo", 2, "written_pending_review"), ("practice", 3, "final_ready")],
+    ids=["demo-2", "practice-3"],
 )
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_open_item_kit_runs_current_pdf_ingestion_and_workpapers(
