@@ -10,7 +10,11 @@ permissions:
   contents: read
 
 jobs:
+  product-archives:
+    uses: ./.github/workflows/build-product-archives.yml
+
   alignment:
+    needs: product-archives
     name: Codex and Cowork release alignment
     runs-on: ubuntu-latest
     # Finished archives now execute all six isolated Vera CLIs on each host build.
@@ -19,6 +23,11 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -45,6 +54,14 @@ jobs:
         run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_release_alignment.py --cov --cov-config=tests/product_release.coveragerc
+      - name: Verify repository download limit and archive prerequisites
+        run: python -m pytest --noconftest -q -o addopts='' tests/scripts/test_repository_archive_size.py tests/scripts/test_product_archive_prerequisites.py --cov=scripts.check_repository_archive_size --cov-report=term-missing --cov-fail-under=80
+      - name: Check archive guard and release code quality
+        run: |
+          python -m black --check scripts/check_repository_archive_size.py scripts/build_product_release.py scripts/check_shared_runtime_cold_start.py tests/scripts/test_repository_archive_size.py tests/scripts/test_product_archive_prerequisites.py tests/plugins/test_product_release_alignment.py
+          python -m isort --check-only scripts/check_repository_archive_size.py scripts/build_product_release.py scripts/check_shared_runtime_cold_start.py tests/scripts/test_repository_archive_size.py tests/scripts/test_product_archive_prerequisites.py tests/plugins/test_product_release_alignment.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports scripts/check_repository_archive_size.py scripts/build_product_release.py
+          python -m bandit -q -ll scripts/check_repository_archive_size.py scripts/build_product_release.py scripts/check_shared_runtime_cold_start.py
       - name: Verify stale and duplicate installed-plugin rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_installed_product.py
       - name: Verify Antigravity download integrity checks

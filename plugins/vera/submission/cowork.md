@@ -102,6 +102,10 @@ python -m pytest tests/plugins/test_claude_plugin_packages.py \
   -k 'not static_page_and_skill_match_plugin_contract' -q
 ```
 
+Build the ignored local archive with `python scripts/build_product_release.py vera`,
+or download the release commit's `product-archives` CI artifact into
+`plugin_packages/`. The generated marketplace source directory remains in Git.
+
 Upload `plugin_packages/vera/vera-claude-plugin.zip` for a file-install smoke
 test. The generated directory is the marketplace source referenced by
 `.claude-plugin/marketplace.json`.

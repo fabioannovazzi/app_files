@@ -10,7 +10,11 @@ permissions:
   contents: read
 
 jobs:
+  product-archives:
+    uses: ./.github/workflows/build-product-archives.yml
+
   legal-documents:
+    needs: product-archives
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -20,6 +24,11 @@ jobs:
     steps:
       - run: git config --global core.autocrlf false
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

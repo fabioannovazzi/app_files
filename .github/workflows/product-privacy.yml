@@ -7,12 +7,21 @@ on:
 permissions:
   contents: read
 jobs:
+  product-archives:
+    uses: ./.github/workflows/build-product-archives.yml
+
   contracts:
+    needs: product-archives
     name: Vera Clara Lucia privacy contracts
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'

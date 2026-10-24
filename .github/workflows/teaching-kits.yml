@@ -54,7 +54,11 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  product-archives:
+    uses: ./.github/workflows/build-product-archives.yml
+
   teaching-kits:
+    needs: product-archives
     runs-on: ubuntu-latest
     # Native lesson executions and editorial acceptance belong to this workflow.
     timeout-minutes: 60
@@ -62,6 +66,11 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - name: Set local taxonomy fixture paths
         run: |
           echo "TEACHING_TAXONOMY_CATALOGUE=$RUNNER_TEMP/teaching-bilancio-catalogue.json" >> "$GITHUB_ENV"
@@ -210,6 +219,7 @@ jobs:
         run: python scripts/course_materials/build_concordato_support.py --check
 
   local-teaching:
+    needs: product-archives
     name: Local teaching (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -221,6 +231,11 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

@@ -68,6 +68,11 @@ The local smoke-test archive is:
 
 `plugin_packages/clara/clara-claude-plugin.zip`
 
+This ZIP is an ignored local build output. Run
+`python scripts/build_product_release.py clara` before using it, or download
+the `product-archives` CI artifact for the release commit and extract it into
+`plugin_packages/`. The generated marketplace source directory remains in Git.
+
 ## Release candidate
 
 - **Version:** 0.1.140

@@ -10,7 +10,11 @@ permissions:
   contents: read
 
 jobs:
+  product-archives:
+    uses: ./.github/workflows/build-product-archives.yml
+
   helper-environments:
+    needs: product-archives
     name: Local helper environment (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -18,6 +22,11 @@ jobs:
         os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -325,6 +334,7 @@ jobs:
           python -m bandit -q -r plugins/invoice-xml/scripts
 
   client-file-boundaries:
+    needs: product-archives
     name: Client file and privacy boundaries (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
@@ -336,6 +346,11 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -365,6 +380,7 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_studio_archive_file_identity.py tests/plugins/test_vera_model_data_report.py tests/plugins/test_plugin_update_notifications.py
 
   workflow-regressions:
+    needs: product-archives
     name: ${{ matrix.name }}
     # The Open-item suites alone take nearly an hour on hosted runners.
     strategy:
@@ -383,6 +399,11 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - name: Set local taxonomy fixture paths
         run: |
           echo "TEACHING_TAXONOMY_CATALOGUE=$RUNNER_TEMP/teaching-bilancio-catalogue.json" >> "$GITHUB_ENV"
@@ -644,10 +665,16 @@ jobs:
           --cov-report=term-missing --cov-fail-under=80
 
   adversarial-opinion:
+    needs: product-archives
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -716,10 +743,16 @@ jobs:
           python -m bandit -r plugins/business-planning/scripts -ll
 
   adeguati-assetti-integrity:
+    needs: product-archives
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -793,6 +826,7 @@ jobs:
           --cov-report=term-missing
 
   shared-runtime-launchers:
+    needs: product-archives
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -803,6 +837,11 @@ jobs:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -818,12 +857,18 @@ jobs:
           tests/plugins/test_cowork_archive_session.py
 
   managed-runtime-quality:
+    needs: product-archives
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
       PYTHONDONTWRITEBYTECODE: "1"
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -849,10 +894,16 @@ jobs:
           PY
 
   vera-packaged-mcp:
+    needs: product-archives
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -931,11 +982,17 @@ jobs:
           tests/test_final_pass_filter_samples.py
 
   vera-cowork-python:
+    needs: product-archives
     runs-on: ubuntu-latest
     # Fresh managed environments and 24 install/render cases exceed 15 minutes.
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -1113,6 +1170,7 @@ jobs:
           python -m bandit -q -ll plugins/vera/scripts/studio_work.py plugins/vera/scripts/studio_work_runtime.py
 
   studio-archive-adoption:
+    needs: product-archives
     name: Archive session recovery and standalone work
     runs-on: ${{ matrix.os }}
     strategy:
@@ -1122,6 +1180,11 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Download product archives built from this commit
+        uses: actions/download-artifact@v4
+        with:
+          name: product-archives
+          path: plugin_packages
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"

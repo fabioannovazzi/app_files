@@ -2690,7 +2690,7 @@ def test_standard_accounting_bundle_marketplace_contains_public_plugins() -> Non
         ) in names
 
 
-def test_only_configured_plugin_zip_artifacts_are_committed() -> None:
+def test_only_configured_plugin_zip_artifacts_are_built_locally() -> None:
     builder = load_builder()
     configured_targets = [*builder.load_packages(), *builder.load_bundles()]
     configured_zip_paths = sorted(
