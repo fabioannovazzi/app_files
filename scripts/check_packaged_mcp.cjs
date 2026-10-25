@@ -101,7 +101,7 @@ async function checkRemoteServer(name, config) {
 }
 
 function checkServer(root, name, config, runtime) {
-  if (config.type === "http" || config.serverUrl) return checkRemoteServer(name, {...config, url: config.url || config.serverUrl});
+  if (["http", "streamable-http"].includes(config.type) || config.serverUrl) return checkRemoteServer(name, {...config, url: config.url || config.serverUrl});
   return new Promise((resolve) => {
     if (config.command !== "node" || !Array.isArray(config.args)) {
       resolve({
@@ -111,6 +111,7 @@ function checkServer(root, name, config, runtime) {
       return;
     }
     const expand = (value) => value
+      .replaceAll("${PLUGIN_ROOT}", root)
       .replaceAll("${CLAUDE_PLUGIN_ROOT}", root)
       .replaceAll("${CODEX_PLUGIN_ROOT}", root);
     const child = spawn(process.execPath, config.args.map(expand), {

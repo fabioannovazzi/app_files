@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "html-deck",
-  "course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
+  "course_sha256": "63edff95e14bfc744ec363d138d5bb8e2cfa7820af937df96ae234307f155706",
   "reviewer": "Codex: first-use teaching-kit editorial review",
   "reviewed_at": "2026-09-14T21:09:24.777351+00:00",
   "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -649,5 +649,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.229684+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
+    "current_course_sha256": "63edff95e14bfc744ec363d138d5bb8e2cfa7820af937df96ae234307f155706",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

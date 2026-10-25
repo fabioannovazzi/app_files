@@ -84,7 +84,7 @@
     "source_review": "Reviewed the additive costing route, its exact arithmetic, archive-bound source checks and separate renderer. Existing reporting dispatch is unchanged unless analysis_kind is costing. This source refresh does not turn the monthly reporting lesson into a costing lesson.",
     "limits": "Preserves historical editorial and artifact evidence. Current regression execution is required; no fresh learner, voice, installed-host or professional acceptance is claimed."
   },
-  "course_sha256": "c8bcd49ad875e56716f4f20585a3ca30d06d4cec75d52d6d16c4101ed3933f46",
+  "course_sha256": "de19a3c39a566be1dd91954746f46b2d0a9e35947885d63d2acdfafa0427eebc",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.133138+00:00",
@@ -499,5 +499,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.644632+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "previous_course_sha256": "c8bcd49ad875e56716f4f20585a3ca30d06d4cec75d52d6d16c4101ed3933f46",
+    "current_course_sha256": "de19a3c39a566be1dd91954746f46b2d0a9e35947885d63d2acdfafa0427eebc",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

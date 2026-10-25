@@ -23,7 +23,7 @@
     ],
     "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
   },
-  "course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
+  "course_sha256": "fde7b28b48367bbe2b9131bb41f4288d30a4a89cb41f235cc4dc0574db2c72de",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -622,5 +622,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.534824+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "previous_course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
+    "current_course_sha256": "fde7b28b48367bbe2b9131bb41f4288d30a4a89cb41f235cc4dc0574db2c72de",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

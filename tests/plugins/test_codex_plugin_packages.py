@@ -1251,9 +1251,13 @@ def test_chatgpt_upload_zip_matches_source_without_replacing_install_zip(
         names = {name for name in archive.namelist() if not name.endswith("/")}
         assert names == set(builder.chatgpt_upload_entries(vera))
         assert archive.read("LICENSE") == (ROOT / "LICENSE").read_bytes()
-        assert archive.read(
-            ".codex-plugin/plugin.json"
-        ) == builder.project_chatgpt_manifest(source_manifest_before)
+        expected_manifest = json.loads(
+            builder.project_chatgpt_manifest(source_manifest_before)
+        )
+        expected_manifest["requires_local_executor"] = True
+        assert (
+            json.loads(archive.read(".codex-plugin/plugin.json")) == expected_manifest
+        )
 
 
 def _bundled_node_or_skip() -> str:

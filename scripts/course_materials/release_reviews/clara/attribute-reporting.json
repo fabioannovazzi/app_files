@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "attribute-reporting",
-  "course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
+  "course_sha256": "c093bc94c8535f4ca32c09642a902c9684dbc2231ecd1cba227fc5b01a6bdd46",
   "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
   "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
   "review_scope": "Reviewed five localized first-use lessons and actual demo/practice reports. Independent agent reviewed every exact rendered report and claim ledger, then the native browser QA and finalizer completed all ten reports. Automated regression separately tests native construction and refuses final semantic acceptance when independent review is missing. No learner participation or live retailer-data acquisition is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -554,5 +554,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.192011+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
+    "current_course_sha256": "c093bc94c8535f4ca32c09642a902c9684dbc2231ecd1cba227fc5b01a6bdd46",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

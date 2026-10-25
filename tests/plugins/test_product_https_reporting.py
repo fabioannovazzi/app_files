@@ -13,6 +13,58 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.mark.parametrize("product", ("vera", "clara", "lucia"))
+def test_public_upload_discovers_local_tools_from_portable_manifest(product):
+    """Portable ingestion must find the same executable services as native clients."""
+    with ZipFile(
+        ROOT / "plugin_packages" / product / f"{product}-chatgpt-upload.zip"
+    ) as archive:
+        manifest = json.loads(archive.read("plugin.json"))
+        legacy = json.loads(archive.read(".codex-plugin/plugin.json"))
+        mcp = json.loads(archive.read("mcp.json"))
+        native = json.loads(archive.read(".mcp.json"))["mcpServers"]
+
+    assert (
+        manifest["$schema"]
+        == "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+    )
+    assert manifest["name"] == product
+    assert manifest["version"] == legacy["version"]
+    assert not {"interface", "skills", "mcpServers", "apps", "hooks"} & manifest.keys()
+    assert manifest["extensions"]["com.openai"]["interface"] == legacy["interface"]
+    assert manifest["extensions"]["com.openai"]["requires_local_executor"] is True
+    assert mcp["$schema"] == "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json"
+    assert mcp["mcpServers"].keys() == native.keys()
+    assert all(server["type"] == "stdio" for server in mcp["mcpServers"].values())
+    assert all(server["command"] == "node" for server in mcp["mcpServers"].values())
+    assert all(
+        server["cwd"] == "${PLUGIN_ROOT}" for server in mcp["mcpServers"].values()
+    )
+    assert all("url" not in server for server in mcp["mcpServers"].values())
+    assert "CLAUDE_PLUGIN_ROOT" not in json.dumps(mcp)
+    assert "CODEX_PLUGIN_ROOT" not in json.dumps(mcp)
+
+
+@pytest.mark.parametrize("product", ("clara", "lucia"))
+def test_marketplace_preparation_preserves_known_metadata_without_inventing_review(
+    product,
+):
+    with ZipFile(
+        ROOT / "plugin_packages" / product / f"{product}-chatgpt-upload.zip"
+    ) as archive:
+        manifest = json.loads(archive.read("plugin.json"))
+        legacy = json.loads(archive.read(".codex-plugin/plugin.json"))
+        declared = json.loads(archive.read("submission/openai.json"))
+
+    openai = manifest["extensions"]["com.openai"]
+    assert openai["review"] == declared["review"]
+    assert openai["publication"] == declared["publication"]
+    assert legacy["extensions"]["com.openai"]["review"] == openai["review"]
+    assert openai["publication"]["release_notes"]
+    assert "demo_recording_url" not in openai["review"]
+    assert "countries" not in openai["publication"]
+
+
+@pytest.mark.parametrize("product", ("vera", "clara", "lucia"))
 def test_public_upload_omits_app_bindings_without_changing_local_mcp(product):
     source = ROOT / "plugins" / product
     with ZipFile(

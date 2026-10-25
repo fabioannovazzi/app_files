@@ -1473,6 +1473,97 @@ def project_chatgpt_component_manifest(content: bytes) -> bytes:
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
 
+def add_portable_upload_manifests(entries: dict[str, bytes]) -> None:
+    """Expose the existing upload through the Agent Plugins 1.0 format."""
+
+    legacy = json.loads(entries[".codex-plugin/plugin.json"])
+    manifest = {
+        "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+        **{
+            key: legacy[key]
+            for key in (
+                "name",
+                "version",
+                "description",
+                "author",
+                "homepage",
+                "repository",
+                "license",
+                "keywords",
+            )
+            if key in legacy
+        },
+    }
+    extensions = dict(legacy.get("extensions", {}))
+    openai = dict(extensions.get("com.openai", {}))
+    if "interface" in legacy:
+        openai["interface"] = legacy["interface"]
+    metadata_path = "submission/openai.json"
+    if metadata_path in entries:
+        metadata = json.loads(entries[metadata_path])
+        for key in ("review", "publication"):
+            if key in metadata:
+                openai[key] = {**openai.get(key, {}), **metadata[key]}
+    if ".mcp.json" in entries:
+        configured = json.loads(entries[".mcp.json"])["mcpServers"]
+        servers = {}
+        for name, original in configured.items():
+            server = {
+                key: original[key]
+                for key in (
+                    "command",
+                    "args",
+                    "cwd",
+                    "env",
+                    "url",
+                    "headers",
+                    "extensions",
+                )
+                if key in original
+            }
+            if original.get("command"):
+                server["type"] = "stdio"
+                openai["requires_local_executor"] = True
+                # Portable hosts provide PLUGIN_ROOT, not host-specific aliases.
+                server = json.loads(
+                    json.dumps(server)
+                    .replace("${CLAUDE_PLUGIN_ROOT}", "${PLUGIN_ROOT}")
+                    .replace("${CODEX_PLUGIN_ROOT}", "${PLUGIN_ROOT}")
+                )
+                server["cwd"] = server.get("cwd", "${PLUGIN_ROOT}")
+                if server["cwd"] == ".":
+                    server["cwd"] = "${PLUGIN_ROOT}"
+            else:
+                server["type"] = (
+                    "sse" if original.get("type") == "sse" else "streamable-http"
+                )
+            servers[name] = server
+        entries["mcp.json"] = (
+            json.dumps(
+                {
+                    "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+                    "mcpServers": servers,
+                },
+                indent=2,
+            )
+            + "\n"
+        ).encode("utf-8")
+    extensions["com.openai"] = openai
+    manifest["extensions"] = extensions
+    entries["plugin.json"] = (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
+    # Keep legacy clients on the same listing and review metadata.
+    for key in ("review", "publication"):
+        if key in openai:
+            legacy.setdefault("extensions", {}).setdefault("com.openai", {})[key] = (
+                openai[key]
+            )
+    if openai.get("requires_local_executor"):
+        legacy["requires_local_executor"] = True
+    entries[".codex-plugin/plugin.json"] = (json.dumps(legacy, indent=2) + "\n").encode(
+        "utf-8"
+    )
+
+
 def project_chatgpt_components(
     content: bytes,
     *,
@@ -2008,6 +2099,7 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         )
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
+    add_portable_upload_manifests(entries)
     project_chatgpt_course_sources(entries, packaged_entries, prefix)
     externalize_course_files(entries, plugin_name, root=ROOT)
     if plugin_name in {"vera", "clara", "lucia"}:
@@ -2217,8 +2309,8 @@ def build_chatgpt_upload(package: BuildTarget, output: Path) -> Path:
             for name, content in entries.items():
                 write_entry(archive, name, content)
         verify_zip_entries(temp_path, entries)
-        if ".mcp.json" in entries:
-            errors = verify_packaged_mcp(temp_path, ["."])
+        if "mcp.json" in entries:
+            errors = verify_packaged_mcp(temp_path, ["."], config_name="mcp.json")
             if errors:
                 raise ValueError("\n".join(errors))
         if "vera" in package.plugin_names:

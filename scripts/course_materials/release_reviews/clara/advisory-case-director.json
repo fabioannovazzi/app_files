@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-case-director",
-  "course_sha256": "e23fbaa133269b94c941d4187b9bc9dd41fdbd2544b4a1b4c07cbbcc22465306",
+  "course_sha256": "3f01f20c41ba15f886b89d0d388ae7d97641771df44a65407b506270e3635088",
   "reviewer": "Codex: five-language case lesson and actual native document review",
   "reviewed_at": "2026-09-14T21:09:24.765818+00:00",
   "review_scope": "Prepared material and native local execution review. Read the complete five-language outlines and fictional sources; reviewed all ten workpapers and delivery notes and the five updated evidence maps showing initial and revised conclusions. The final map bytes match those inspected; final workpaper prose is unchanged except corrected local links. The revised initial review notes were read separately. Fifty-four advisory/lineage tests pass, including ten phase-specific case exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain separate unverified acceptance steps. Model-authored regression interpretations live outside shipped teaching kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -692,5 +692,17 @@
     "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
     "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
     "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.168192+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "e23fbaa133269b94c941d4187b9bc9dd41fdbd2544b4a1b4c07cbbcc22465306",
+    "current_course_sha256": "3f01f20c41ba15f886b89d0d388ae7d97641771df44a65407b506270e3635088",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }
