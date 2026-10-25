@@ -918,6 +918,8 @@ jobs:
       - name: Exercise clean ZIPs and reject broken releases
         # These stdlib/Node checks do not need the application-wide fixtures.
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_packaged_mcp_startup.py
+      - name: Preserve source MCP capabilities in downloads and upload ZIPs
+        run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_product_download_capabilities.py
       - name: Verify cache tolerance without weakening source or link checks
         run: python -m pytest -q --confcutdir=tests/plugins tests/plugins/test_vera_implementation_bytecode.py -k "mcp or read_only or packaged_repair or actual_link_count"
       - name: Reconcile dated case 1 through reinstall, upgrade and review reconnect

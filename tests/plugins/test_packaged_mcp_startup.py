@@ -40,7 +40,7 @@ def write_zip(path: Path, entries: dict[str, bytes]) -> None:
             archive.writestr(name, content)
 
 
-@pytest.mark.parametrize("surface", ["cowork", "codex"])
+@pytest.mark.parametrize("surface", ["cowork", "codex", "upload"])
 @pytest.mark.parametrize("with_caches", [False, True])
 def test_vera_zip_local_servers_initialize_and_remote_contracts_validate(
     surface: str, with_caches: bool, cowork_entries: dict[str, bytes], tmp_path: Path
@@ -54,9 +54,14 @@ def test_vera_zip_local_servers_initialize_and_remote_contracts_validate(
         vera = next(
             package for package in builder.load_bundles() if package.name == "vera"
         )
-        entries = builder.expected_zip_entries(vera)
-        root = f"{vera.package_root}/plugins/vera"
-        config = f"{root}/.mcp.json"
+        if surface == "upload":
+            entries = builder.chatgpt_upload_entries(vera)
+            root = "."
+            config = ".mcp.json"
+        else:
+            entries = builder.expected_zip_entries(vera)
+            root = f"{vera.package_root}/plugins/vera"
+            config = f"{root}/.mcp.json"
     entries = dict(entries)
     if with_caches:
         prefix = "" if root == "." else f"{root}/"
@@ -164,6 +169,27 @@ def test_release_gate_requires_node(
     errors = builder.verify_packaged_mcp(tmp_path / "unopened.zip", ["."])
 
     assert errors == ["Node.js is required for the packaged MCP release check"]
+
+
+def test_upload_missing_launcher_preserves_existing_archive(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A ZIP with MCP declarations but no launcher must not replace a release."""
+    builder = load_builder("build_codex_plugin_zip")
+    package = next(item for item in builder.load_packages() if item.plugin == "clara")
+    entries = {
+        ".mcp.json": json.dumps(
+            {"mcpServers": {"missing": {"command": "node", "args": ["missing.cjs"]}}}
+        ).encode()
+    }
+    monkeypatch.setattr(builder, "chatgpt_upload_entries", lambda _: entries)
+    output = tmp_path / "upload.zip"
+    output.write_bytes(b"previous archive")
+
+    with pytest.raises(ValueError, match="packaged MCP startup failed"):
+        builder.build_chatgpt_upload(package, output)
+
+    assert output.read_bytes() == b"previous archive"
 
 
 def test_release_gate_rejects_a_missing_server_configuration(tmp_path: Path) -> None:

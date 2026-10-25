@@ -14,9 +14,9 @@ from zipfile import ZIP_DEFLATED, BadZipFile, ZipFile, ZipInfo
 from build_codex_plugin_zip import (
     RUNTIME_SUPPORT_FILES,
     add_vera_execution_manifest,
-    expected_zip_entries,
     load_bundles,
     load_packages,
+    source_zip_entries,
     verify_packaged_mcp,
     verify_vera_execution_zip,
     verify_zip_entries,
@@ -82,7 +82,7 @@ def package_entries(product: str = "vera") -> dict[str, bytes]:
         for target in [*load_packages(), *load_bundles()]
         if target.target_name == product
     )
-    source = expected_zip_entries(bundle)
+    source = source_zip_entries(bundle)
     prefix = f"{bundle.package_root}/plugins/{product}/"
     excluded = {".mcp.json", ".app.json", "hooks/hooks.json"}
     if product == "vera":
