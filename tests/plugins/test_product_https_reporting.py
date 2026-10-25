@@ -13,6 +13,32 @@ ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.mark.parametrize("product", ("vera", "clara", "lucia"))
+def test_public_upload_omits_app_bindings_without_changing_local_mcp(product):
+    source = ROOT / "plugins" / product
+    with ZipFile(
+        ROOT / "plugin_packages" / product / f"{product}-chatgpt-upload.zip"
+    ) as archive:
+        manifests = [
+            json.loads(archive.read(name))
+            for name in archive.namelist()
+            if name.endswith(".codex-plugin/plugin.json")
+        ]
+        assert ".app.json" not in archive.namelist()
+        assert manifests
+        assert all(manifest.get("apps") is None for manifest in manifests)
+        assert all(
+            manifest.get("extensions", {}).get("com.openai", {}).get("apps") is None
+            for manifest in manifests
+        )
+        assert archive.read(".mcp.json") == (source / ".mcp.json").read_bytes()
+    assert (
+        json.loads((source / ".codex-plugin/plugin.json").read_bytes())["apps"]
+        == "./.app.json"
+    )
+    assert json.loads((source / ".app.json").read_bytes()) == {"apps": {}}
+
+
+@pytest.mark.parametrize("product", ("vera", "clara", "lucia"))
 @pytest.mark.parametrize("host", ("codex", "chatgpt", "cowork", "antigravity"))
 def test_actual_package_keeps_local_reporting_and_has_no_remote_mcp(product, host):
     archives = {

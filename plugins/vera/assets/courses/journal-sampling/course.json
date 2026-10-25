@@ -74,7 +74,7 @@
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
       "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "32f5594b5d5146d95d80e35162d7b92bc15df6de96add67621e8ac7004082e70"
+      "sha256": "a04c60caf24a7522ce7f06905626f941831c67de7a613a3b8a858a0342156eb5"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",

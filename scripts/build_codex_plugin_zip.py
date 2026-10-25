@@ -165,7 +165,7 @@ SEVERE_CONTRACT_COVERAGE_AUDIT_SEVERITIES = {"blocker", "high", "medium"}
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPTS = 3
 CHATGPT_UPLOAD_MAX_DEFAULT_PROMPT_LENGTH = 128
 CHATGPT_UPLOAD_MAX_SUBTITLE_LENGTH = 30
-CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"hooks"}
+CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS = {"hooks", "apps"}
 CHATGPT_UPLOAD_UNSUPPORTED_INTERFACE_FIELDS = {"screenshots"}
 CROSS_SURFACE_PLUGINS = frozenset({"clara", "lucia", "vera"})
 SOURCE_PRESERVING_CHATGPT_PLUGINS = frozenset({"clara", "lucia", "vera"})
@@ -1412,13 +1412,9 @@ def named_browser_skill_cards(
 
 
 def project_chatgpt_manifest(content: bytes) -> bytes:
-    """Adapt upload metadata while retaining source MCP and app declarations."""
+    """Adapt public upload metadata while retaining source MCP declarations."""
 
-    manifest = json.loads(content.decode("utf-8"))
-    if not isinstance(manifest, dict):
-        raise ValueError("ChatGPT upload manifest must be a JSON object")
-    for field in CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS:
-        manifest.pop(field, None)
+    manifest = json.loads(project_chatgpt_component_manifest(content))
 
     interface = manifest.get("interface")
     if interface is not None and not isinstance(interface, dict):
@@ -1471,6 +1467,9 @@ def project_chatgpt_component_manifest(content: bytes) -> bytes:
         raise ValueError("ChatGPT component manifest must be a JSON object")
     for field in CHATGPT_UPLOAD_UNSUPPORTED_MANIFEST_FIELDS:
         manifest.pop(field, None)
+    openai = manifest.get("extensions", {}).get("com.openai")
+    if isinstance(openai, dict):
+        openai.pop("apps", None)
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
 
@@ -1934,6 +1933,14 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
             continue
         name = packaged_name.removeprefix(prefix)
         path_parts = name.split("/")
+        if path_parts[-1] == ".app.json":
+            if json.loads(content) != {"apps": {}}:
+                raise ValueError(
+                    f"{plugin_name}: {name} has app bindings requiring an explicit "
+                    "MCP replacement before public upload"
+                )
+            if name == ".app.json":
+                continue
         if any(
             name.startswith(f"modules/{component}/") for component in hidden_components
         ):

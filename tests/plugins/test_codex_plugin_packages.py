@@ -583,7 +583,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         if name.endswith(".codex-plugin/plugin.json")
     }
     assert projected_manifests
-    assert manifest["apps"] == "./.app.json"
+    assert "apps" not in manifest
     assert manifest["mcpServers"] == "./.mcp.json"
     assert "screenshots" not in manifest["interface"]
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
@@ -685,7 +685,7 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "python scripts/studio_archive.py",
     ):
         assert local_dependency not in gmail_section
-    assert ".app.json" in entries
+    assert ".app.json" not in entries
     assert ".mcp.json" in entries
     assert "modules/studio-archive/mcp/server.cjs" in entries
     assert not any(name.startswith("vera-codex-plugin/") for name in entries)
@@ -966,6 +966,47 @@ def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_source_hooks(
         json.loads(native_entries[prefix + ".codex-plugin/plugin.json"])["hooks"]
         == "./hooks/hooks.json"
     )
+
+
+@pytest.mark.parametrize(
+    "projection", ["project_chatgpt_manifest", "project_chatgpt_component_manifest"]
+)
+def test_public_upload_removes_app_bindings_from_compatibility_manifests(projection):
+    builder = load_builder()
+    source = {
+        "name": "example",
+        "apps": "./.app.json",
+        "mcpServers": "./.mcp.json",
+        "extensions": {
+            "com.openai": {"apps": "./.app.json", "review": {"notes": "Retain"}}
+        },
+    }
+
+    result = json.loads(getattr(builder, projection)(json.dumps(source).encode()))
+
+    assert "apps" not in result
+    assert result["extensions"]["com.openai"] == {"review": {"notes": "Retain"}}
+    assert result["mcpServers"] == "./.mcp.json"
+    assert source["apps"] == "./.app.json"
+
+
+@pytest.mark.parametrize("app_path", [".app.json", "modules/example/.app.json"])
+def test_public_upload_does_not_silently_drop_required_app_integration(
+    monkeypatch, app_path
+):
+    builder = load_builder()
+    target = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
+    source = builder.source_zip_entries(target)
+    prefix = f"{target.package_root}/plugins/vera/"
+    source[prefix + app_path] = json.dumps(
+        {"apps": {"required": {"id": "test-app"}}}
+    ).encode()
+    monkeypatch.setattr(builder, "source_zip_entries", lambda *args, **kwargs: source)
+
+    with pytest.raises(
+        ValueError, match="app bindings requiring an explicit MCP replacement"
+    ):
+        builder.chatgpt_upload_entries(target)
 
 
 def test_chatgpt_card_projection_uses_approved_instructions() -> None:

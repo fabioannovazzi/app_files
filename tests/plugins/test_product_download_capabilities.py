@@ -39,7 +39,8 @@ def test_package_preserves_source_mcp_capabilities(product, surface):
     mcp_files = {
         name: content
         for name, content in source.items()
-        if name.endswith((".mcp.json", ".app.json")) or "mcp" in name.split("/")
+        if (name.endswith((".mcp.json", ".app.json")) or "mcp" in name.split("/"))
+        and not (surface == "upload" and name == ".app.json")
     }
     assert mcp_files
     assert {name: entries[name] for name in mcp_files} == mcp_files
@@ -53,7 +54,8 @@ def test_package_preserves_source_mcp_capabilities(product, surface):
         name: {
             key: value
             for key, value in json.loads(content).items()
-            if key in {"mcpServers", "apps"}
+            if key
+            in ({"mcpServers"} if surface == "upload" else {"mcpServers", "apps"})
         }
         for name, content in source.items()
         if name.endswith(".codex-plugin/plugin.json")

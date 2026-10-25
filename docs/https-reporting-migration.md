@@ -5,6 +5,10 @@ remote Incidents MCP registration. The existing local MCP tools remain. These
 versions continue to use Mparanza for technical incidents, task usage and
 signed receipt delivery through ordinary HTTPS.
 
+Author-supplied public uploads omit the empty root app-binding file and app
+declarations in compatibility manifests. Native distributions retain their
+existing bindings. Both distributions retain the same local MCP servers.
+
 ## Operation mapping
 
 | Former remote operation | Normal desktop route | Independent browser route |

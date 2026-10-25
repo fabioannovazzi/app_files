@@ -622,7 +622,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "0da7b83c21b8ac5d20cbe2e1bfc911a8e1a9517e68f3483073e5fffb9760a3ff",
+      "sha256": "5c29c7b4c9e1300edc0516d60a719b29bdc638e6988140c1bed73310bc93cac6",
       "languages": [
         "it",
         "en",

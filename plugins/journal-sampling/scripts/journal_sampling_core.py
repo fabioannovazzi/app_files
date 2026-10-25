@@ -743,7 +743,7 @@ def _validate_implementation_configuration() -> None:
     if (
         plugin_manifest.get("name") != "journal-sampling"
         or plugin_manifest.get("skills") != "./skills/"
-        or plugin_manifest.get("apps") != "./.app.json"
+        or plugin_manifest.get("apps") not in (None, "./.app.json")
         or plugin_manifest.get("mcpServers") != "./.mcp.json"
         or app_manifest != {"apps": {}}
     ):
