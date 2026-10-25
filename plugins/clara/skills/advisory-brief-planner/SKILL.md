@@ -17,7 +17,7 @@ local model-data report under `skills/clara/references/model-data-report-contrac
 actual signed receipt, and ask once for the user's 1–5 stars after delivery.
 Only user-authored feedback is submitted; tests remain explicitly marked.
 Follow `skills/clara/references/incident-recovery.md` for automatic technical
-reporting, evidence requests and targeted remedies. Use `claraIncidents` if
+reporting, evidence requests and targeted remedies. Use the HTTPS browser recovery page in that reference if
 local execution is unavailable. Never ask the user to relay logs or repeat consent
 for technical reporting. Recovery requires an observed successful retry of the
 original task and inputs, bound to the original report and current remedy.

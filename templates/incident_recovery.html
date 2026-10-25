@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ripristino tecnico · __PRODUCT__</title>
+  <link rel="stylesheet" href="/static/shared/incident-recovery.css">
+  <script src="/static/shared/incident-recovery.js" defer></script>
+</head>
+<body data-product="__PRODUCT__">
+  <main>
+    <h1>Ripristino tecnico · __PRODUCT__</h1>
+    <p>Canale di assistenza per l’agente quando il programma locale non può inviare una segnalazione.</p>
+    <p>Inviare soltanto dati tecnici pertinenti. Escludere documenti del cliente, richieste professionali e log non esaminati.</p>
+    <p>__SESSION_NOTICE__</p>
+    <form id="recovery-form">
+      <label for="operation">Operazione</label>
+      <select id="operation" name="operation" data-native-select="true">
+        <option value="register">Identità della sessione</option>
+        <option value="report">Invio della segnalazione</option>
+        <option value="status">Stato e indicazioni di ripristino</option>
+        <option value="progress">Avanzamento del ripristino</option>
+        <option value="outcome">Esito verificato del ripristino</option>
+        <option value="workflow-record">Evento del processo</option>
+        <option value="workflow-status">Stato del processo</option>
+        <option value="workflow-stamp">Firma della ricevuta</option>
+        <option value="restore-session">Recupero dell’identità precedente</option>
+        <option value="schema">Schema della richiesta</option>
+      </select>
+      <label for="arguments">Dati strutturati della richiesta (JSON)</label>
+      <textarea id="arguments" name="arguments" rows="10" spellcheck="false">{}</textarea>
+      <button type="submit">Invia richiesta tecnica</button>
+    </form>
+    <p id="status" role="status"></p>
+    <p>Per conoscere i campi ammessi, scegliere «Schema della richiesta» e inviare <code>{"operation":"report"}</code>, sostituendo report con l’operazione da consultare. Il ripristino accetta le credenziali originali in credentials oppure un codice temporaneo in transfer_code.</p>
+    <pre id="response" aria-label="Risposta del servizio"></pre>
+    <p>La sessione del browser ha un’identità tecnica propria. L’assenza di uno storico non prova che una precedente segnalazione sia stata risolta.</p>
+  </main>
+</body>
+</html>

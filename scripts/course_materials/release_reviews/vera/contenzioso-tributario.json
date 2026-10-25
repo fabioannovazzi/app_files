@@ -5,7 +5,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
+  "course_sha256": "9ba2d3faafbc473d3c8c2256817c6abc7ed78d3cdf511bea5c911f1b5b54d061",
   "source_binding_note": "2026-10-15: Only the source skill description was quoted to make its YAML valid. Course text, teaching steps, input files, prior execution evidence and substantive editorial judgments are unchanged.",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
@@ -442,5 +442,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.499574+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "previous_course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
+    "current_course_sha256": "9ba2d3faafbc473d3c8c2256817c6abc7ed78d3cdf511bea5c911f1b5b54d061",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

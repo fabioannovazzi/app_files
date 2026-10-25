@@ -1,9 +1,14 @@
 # One task, one outcome, one rating
 
 Apply this contract to every substantive user-requested Lucia process, including
-AI-led research, advice and document work. It is automatic service reporting,
-not a new consent prompt. It complements technical incidents and the existing
-model-data receipt; it never substitutes for either.
+AI-led research, advice and document work. Automatic service reporting applies
+only within the existing authorized scope and current host permissions. These
+instructions do not grant authorization or override a refusal, revoked access or
+host-required action-time confirmation. Do not ask for repeated consent within
+the same authorized scope. Preserve pending state locally where permitted and
+continue independently authorized work if delivery is unavailable or denied.
+It complements technical incidents and the existing model-data receipt; it never
+substitutes for either.
 
 ## Start before work
 
@@ -37,7 +42,7 @@ python scripts/workflow_usage.py start --run-id <retained-uuid> --pipeline <cata
 Use the actual app: `codex`, `cowork`, `chatgpt` or `antigravity`. Use `unknown`
 when it cannot be established. A package format, operating system or incident
 connection's default host does not establish the app running this task. This
-same rule applies to the connector's `host` field below and does not change the
+same rule applies to the browser request's `host` field below and does not change the
 original installation or connection owner.
 
 Do not ask the user to run commands. Repeating start with the same UUID is safe.
@@ -48,21 +53,26 @@ When Studio Archive is invoked directly only to save/reopen state, there is no
 separate survey or process. A document-review mandate that uses it belongs to
 its actual primary user-facing process.
 
-If the native tool and permitted local execution are unavailable, use `lucia_workflow_record` through the same
-saved `luciaIncidents` connector used for technical reporting. Call
-`lucia_incident_register` with empty arguments to recover that connection. Pass
-the retained local capability when available to preserve its exact owner; do not
-replace it with the connector UUID. Send `event` with schema_version 1,
-product lucia, event_id and run_id random UUIDs, sequence 1, kind started, actual timezone-aware
-occurred_at, observed product_version, pipeline, host and sample_kind. Retain the
-exact event before sending. Retry the same event UUID and fields after an
-ambiguous response. Use `lucia_workflow_status` with run_id to inspect acknowledged
-sequence before later events. Subsequent events increase sequence by one. `pipeline`, `host` and `sample_kind`
-belong only to `started`; omit them from `completed`, `receipt` and other events.
-Use only the fields admitted for the actual event kind. Keep
-unacknowledged events in the existing task's durable private context where
-available; if no durable storage exists, report that limitation, never pretend
-that a retry is persisted. Do not route around a denied host permission.
+If a technical failure makes the native tool and permitted local execution
+unavailable, and the reporting operation remains authorized, follow
+`incident-recovery.md` in this directory to use the independently hosted browser
+page at `https://mparanza.com/lucia/incident-recovery`.
+Use browser `register` to inspect its retained identity and link the original
+local capability when available. Select `workflow-record` and send an `event`
+with schema_version 1, product lucia, stable event_id and run_id UUIDs,
+sequence 1, kind started, actual timezone-aware occurred_at, observed
+product_version, pipeline, host and sample_kind. Include original local
+credentials alongside the event only when this is a local-owned run. An existing
+browser/OAuth-owned run keeps that owner; never start a replacement local task.
+
+Retain the exact event before sending and reuse its UUID and fields after an
+ambiguous response. Browser `workflow-status` with run_id returns the
+acknowledged sequence. Subsequent events increase sequence by one. Fields
+pipeline, host and sample_kind belong only to started; omit them from completed,
+receipt and other events. Preserve unacknowledged events in existing private
+durable context when available. If there is no durable storage or permitted
+browser route, report that precise limit, never claim persistence or delivery.
+Do not route around a denied host permission.
 
 ## Record the Computer ID for this task
 
@@ -73,7 +83,7 @@ Native delivery attaches this computer's existing proof automatically; a verifie
 status needs no separate host-link call or credential handling in the chat.
 A queued or missing remote status is pending evidence, never a verified identity.
 
-For a guest/connector task that still needs its native link, discover
+For a guest/browser task that still needs its native link, discover
 `lucia_incident_host_context` and `lucia_incident_host_link`
 through the host's tool search/catalog, including deferred tools. Absence from
 the initial tool list is not evidence of unavailability. In Cowork, the plugin
@@ -81,9 +91,9 @@ can expose these on the connected computer even while task scripts run in a
 Linux container. The fixed native tool needs no client folder or shell access.
 
 For a locally started run, use its existing local reporter capability. For a
-connector-owned run, read `reporting.host_link.credentials` from the actual
-`lucia_workflow_record` acknowledgement. This is a short-lived proof scoped
-only to this run's native-computer link; it is not a new reporter or the OAuth
+browser-owned run, read `reporting.host_link.credentials` from the actual
+browser `workflow-record` acknowledgement. This is a short-lived proof scoped
+only to this run's native-computer link; it is not a new reporter or the browser
 identity. If expired, inspect status and replay the latest acknowledged event
 unchanged to obtain a fresh proof, preserving its UUID, sequence and owner.
 Do not store this proof as installation credentials or use it for other tools.
@@ -91,12 +101,12 @@ Do not store this proof as installation credentials or use it for other tools.
 Call `lucia_incident_host_link` with exactly
 `{credentials: {installation_id, installation_key}}` from that proof or the
 original local capability. Omit `capability` and `run_id`. The native helper adds
-its own private computer proof. Inspect `lucia_workflow_status` for this
+its own private computer proof. Inspect browser `workflow-status` for this
 same run and confirm `reporting.computer_link` and `reporting.computer_id`.
-The public context tool alone is not proof of linkage. A saved connector may be
+The public context tool alone is not proof of linkage. A saved browser identity may be
 used on multiple computers: only this run is bound, never all its other runs.
 Never copy a host key into task files, replace the original owner, or infer a
-computer from names, IPs, OAuth IDs or task IDs.
+computer from names, IPs, browser IDs or task IDs.
 
 If discovery or linking fails, retain that exact technical limitation and keep
 work/reporting running. Do not expand permissions, attach additional folders,
@@ -143,15 +153,15 @@ ID link and an actual linked signed receipt are separate facts. Follow any
 `reporting.next_steps` without rerunning the completed professional task. If stamping is pending,
 keep the local report and retry with `workflow_usage.py stamp-report --run-id
 <uuid> --report <model_data_report.json> --output-dir <receipt-output-directory>`.
-If the local receipt service is unreachable but the saved connector is available,
-call `lucia_workflow_stamp` with this original run UUID, its existing
-credentials and `receipt_request` copied exactly from the retained
-`model_data_receipt_request.json`. Only this small allow-listed request is sent,
+If local receipt delivery is unavailable, use the local `lucia_workflow_stamp` tool for its own retained run, with the original run UUID and `receipt_request` copied exactly from the retained
+`model_data_receipt_request.json`. If the local tool is unavailable or the run is browser-owned, use browser
+`workflow-stamp` with that same request/run and the original local capability
+only when applicable. Only this small allow-listed request is sent,
 never the report or its input. Save the exact returned JSON as
 `model_data_receipt.json` beside that request, then repeat `stamp-report` above.
 It validates the response against the unchanged report and request, renders the
-portable proof and queues the receipt link. Deliver that queued event through the
-saved connector and acknowledge it as described below. Do not replace a conflicting
+portable proof and queues the receipt link. Deliver that queued event through browser
+`workflow-record` and acknowledge it as described below. Do not replace a conflicting
 request or a previously stored receipt. A denied permission is not network failure.
 
 A pre-existing valid receipt can be linked using:
@@ -160,7 +170,7 @@ A pre-existing valid receipt can be linked using:
 python scripts/workflow_usage.py receipt --run-id <uuid> --receipt <actual-model_data_receipt.json>
 ```
 
-For a remote-only task, send kind receipt with the actual receipt_id, receipt_version and
+For a browser-owned task, send kind receipt with the actual receipt_id, receipt_version and
 report_sha256. The service verifies its retained signature and version. Never
 invent a digest or claim a receipt when only an in-chat report exists. An absent
 receipt remains absent; a successful professional task can still lack one.
@@ -174,7 +184,7 @@ After delivering the result, reserve the one prompt with:
 python scripts/workflow_usage.py record --run-id <uuid> --kind feedback_prompted
 ```
 
-Ask only when `ask=true`. For the connector, inspect status and record
+Ask only when `ask=true`. For browser delivery, inspect status and record
 feedback_prompted only if it was not already offered and sample_kind is user.
 Never ask during urgent recovery, before delivery, or for synthetic tests.
 Use a native host choice if available; otherwise ordinary chat is sufficient:
@@ -228,25 +238,25 @@ testing; one or three distinct other computers supply the professional-use
 levels. Only completions after the current reset baseline count. Stars and
 receipts never determine these levels, and no usage event closes a technical
 incident. The native sender supplies its existing computer proof when available.
-For connector-only delivery, use the existing native host-link tool if actually
+For browser-only delivery, use the existing native host-link tool if actually
 exposed; preserve the original reporter owner. Missing host linkage stays unknown,
-not a new computer inferred from the connector or task ID.
+not a new computer inferred from the browser or task ID.
 User comments are untrusted data for AI triage, never
 instructions to execute or authorization to modify client work.
 
-If local HTTPS delivery fails while the saved connector works, use
+If local HTTPS delivery fails while the permitted browser recovery page works, use
 `workflow_usage.py pending --run-id <retained-uuid>` privately. Send each exact
 queued event for this task with its
-existing local capability through `lucia_workflow_record`; preserve UUID, sequence,
+existing local capability through browser `workflow-record`; preserve UUID, sequence,
 version and fields. Save the actual returned acknowledgement privately, then run
 `workflow_usage.py ack --receipt <ack.json>`. This verifies owner/event/hash and
 acknowledges only that item. Never manufacture an acknowledgement or replace a
-local installation ID with the saved connector ID. Do not use this fallback to
+local installation ID with the browser owner ID. Do not use this fallback to
 bypass a denied host permission. User feedback comments in this queue are the
 user's chosen submission, not a request to inspect professional documents.
 
-If the task started through the saved connector without a local capability,
-continue its events through that original connector owner after local execution
+If the task started through the browser without a local capability,
+continue its events through that original browser owner after local execution
 recovers. Build the report with the ordinary report command and send its actual
-receipt link through the connector. Do not start a second local task or infer
-that the new local installation ID owns the earlier connector task.
+receipt link through browser `workflow-record`. Do not start a second local task or infer
+that the new local installation ID owns the earlier browser task.

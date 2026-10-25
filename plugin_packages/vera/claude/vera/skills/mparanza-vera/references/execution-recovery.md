@@ -47,8 +47,8 @@ chosen private `MPARANZA_INCIDENT_STATE_DIR`. Diagnostics, identities and queued
 failure/success evidence remain persistent. Automatic incident HTTP requests are
 blocked in that execution; the marked queue is not automatically flushed later
 even if the setting is omitted. Do not submit its reports through the independent
-connector while this no-transmission choice applies. This overrides the automatic
-delivery instructions below, including generic connector suggestions in retained
+browser recovery page while this no-transmission choice applies. This overrides the automatic
+delivery instructions below, including generic browser recovery page suggestions in retained
 stderr. It does not make model processing local-only or qualify a failed run.
 
 Before reading or executing an assured installed module, run this preflight
@@ -96,11 +96,11 @@ workflow or imports from the original installation. Read its
 retained locally, and neither means the original task is fixed. Follow
 `incident-recovery.md` automatically if delivery is queued or unavailable. Send
 the exact retained envelope with its original report UUID through the independent
-connector. For either receipt, read its private `outbox_path` with ordinary file tools,
-use that existing local capability to register/link the saved connector, then
+browser recovery page. For either receipt, read its private `outbox_path` with ordinary file tools,
+use that existing local capability to register/link the saved browser recovery page, then
 submit the original envelope with the same local credentials. Keep the saved
 connection identity distinct; never forward the state file or credentials as
 diagnostics. Require `recorded: true`; do not create a duplicate report or run
-unverified code. If that connector is unavailable too, state the precise reporting
+unverified code. If that browser recovery page is unavailable too, state the precise reporting
 boundary along with the workflow block. Do not ask the professional to send logs,
 consent again, or diagnose the installation.

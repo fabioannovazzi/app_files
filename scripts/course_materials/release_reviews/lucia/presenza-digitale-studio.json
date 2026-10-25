@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "presenza-digitale-studio",
-  "course_sha256": "2588253e40204e20028f4c0410c95a4e436ae0b6a7f52af9b1559771594dfe08",
+  "course_sha256": "358251d0c572f659316d1444030274980fdc6d0bc5338ef944db6dd933282e2c",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.893943+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -815,5 +815,17 @@
     "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
     "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
     "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.306252+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "2588253e40204e20028f4c0410c95a4e436ae0b6a7f52af9b1559771594dfe08",
+    "current_course_sha256": "358251d0c572f659316d1444030274980fdc6d0bc5338ef944db6dd933282e2c",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

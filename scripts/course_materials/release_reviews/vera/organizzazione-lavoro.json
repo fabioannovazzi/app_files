@@ -178,7 +178,7 @@
     "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "98c7e0f706a0874cb6e3a7da3bb8a43c421d93031ed78ea5163cade841ba3f9c",
+  "course_sha256": "7967c5940949dd98001519b5d04c60d3544714cdb72e9b95fda98625bf3ee20f",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -552,5 +552,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.680132+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "previous_course_sha256": "98c7e0f706a0874cb6e3a7da3bb8a43c421d93031ed78ea5163cade841ba3f9c",
+    "current_course_sha256": "7967c5940949dd98001519b5d04c60d3544714cdb72e9b95fda98625bf3ee20f",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

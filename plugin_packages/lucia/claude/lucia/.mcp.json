@@ -19,10 +19,6 @@
         "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
       ]
     },
-    "luciaIncidents": {
-      "type": "http",
-      "url": "https://mparanza.com/mcp/lucia-incidents"
-    },
     "luciaPromptOptimizer": {
       "command": "node",
       "args": [

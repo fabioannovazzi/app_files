@@ -3130,6 +3130,30 @@ def test_pristine_copied_implementation_tree_replays_through_mcp(
     assert result["ok"] is True
 
 
+def test_public_upload_without_empty_app_binding_can_sample_and_review(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    copied_plugin, _ = _copy_journal_implementation_tree(tmp_path)
+    manifest_path = copied_plugin / ".codex-plugin" / "plugin.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest.pop("apps")
+    manifest_path.write_text(json.dumps(manifest))
+    core = load_core()
+    monkeypatch.setattr(core, "_COMPONENT_ROOT", copied_plugin)
+
+    output_dir, _ = _real_journal_review_case(core, tmp_path)
+    result = _journal_transaction_call(
+        "validate_journal_sampling_review",
+        _implementation_attack_arguments(output_dir),
+        server_path=copied_plugin / "mcp" / "server.cjs",
+        env={"JOURNAL_SAMPLING_PYTHON": sys.executable},
+    )
+
+    assert (output_dir / "journal_sample.csv").is_file()
+    assert result["ok"] is True
+
+
 @pytest.mark.parametrize(
     ("implementation_root", "relative_path"),
     TRANSITIVE_IMPLEMENTATION_ATTACKS,

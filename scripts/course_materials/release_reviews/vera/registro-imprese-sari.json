@@ -135,7 +135,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "fa129e8ac31606a14217091e8c4650289d60d2fa9b46257a3478214e66be901c",
+  "course_sha256": "312969255b2c41525e96fd66ce7b292ca5fbb1f3f4f6f802ce07467d84ad8f8b",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -875,5 +875,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.751481+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "previous_course_sha256": "fa129e8ac31606a14217091e8c4650289d60d2fa9b46257a3478214e66be901c",
+    "current_course_sha256": "312969255b2c41525e96fd66ce7b292ca5fbb1f3f4f6f802ce07467d84ad8f8b",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

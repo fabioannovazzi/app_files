@@ -221,7 +221,7 @@ function validateJournalImplementationConfiguration() {
     serverObserved.nlink !== 1 ||
     PLUGIN_MANIFEST.name !== "journal-sampling" ||
     PLUGIN_MANIFEST.skills !== "./skills/" ||
-    PLUGIN_MANIFEST.apps !== "./.app.json" ||
+    ![undefined, null, "./.app.json"].includes(PLUGIN_MANIFEST.apps) ||
     PLUGIN_MANIFEST.mcpServers !== "./.mcp.json" ||
     journalReviewStableJson(APP_MANIFEST) !== '{"apps":{}}'
   ) {

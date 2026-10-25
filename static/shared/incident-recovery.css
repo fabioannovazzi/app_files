@@ -1,0 +1,14 @@
+@font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+body { font-family: "Instrument Sans", sans-serif; color: #142337; background: #fff; margin: 0; }
+main { max-width: 46rem; padding: 2rem 1.25rem; margin: auto; }
+h1 { font-size: 1.7rem; font-weight: 600; }
+p { line-height: 1.55; }
+form { max-width: 38rem; border-top: 1px solid #d6dce3; padding-top: 1.5rem; }
+label { display: block; margin: 1rem 0 .5rem; }
+select, textarea, button { box-sizing: border-box; font: inherit; border: 1px solid #aeb8c5; border-radius: .25rem; padding: .6rem; }
+select { max-width: 100%; background: white; }
+textarea { display: block; width: 100%; font-family: monospace; }
+button { margin-top: 1rem; color: white; background: #002060; cursor: pointer; }
+button:disabled { opacity: .6; cursor: wait; }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; font-size: .85rem; }

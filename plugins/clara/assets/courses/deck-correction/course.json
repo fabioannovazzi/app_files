@@ -220,7 +220,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
-      "sha256": "94402e61cd5fb2d1f5adee49c3610b6af9ee348f411394b0e8711f6b51979f6d"
+      "sha256": "11e364bace0d6bc91fb9ffaf4e7a1ff548d4a85cf81c44216bdeb107f0cd3d9b"
     },
     {
       "path": "scripts/match_feedback_frames_to_deck_slides.py",
@@ -240,7 +240,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
+      "sha256": "d9821773c32c5844acfe60a248b7160329cd199de982a73364ae3a3a47f29fb4"
     },
     {
       "path": "scripts/prepare_voice_deck_revision.py",
@@ -275,7 +275,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/clara/scripts/verified_execution.py",
-      "sha256": "660f90dcfa8860660d8fcc4948078c0dfb24ae603b799771321a74b188127d0c"
+      "sha256": "0b3ff925aa14ed025dfb2780bb3f35f981e7425047fbd0712fbab222d7180b14"
     },
     {
       "path": "scripts/verify_deck_revision_output.py",
@@ -290,7 +290,7 @@
     {
       "path": "skills/deck-correction/SKILL.md",
       "repository_path": "plugins/clara/skills/deck-correction/SKILL.md",
-      "sha256": "4f9ec8a017b2a513de8f1d1d2a03e70bc07a6e6e5b7e69475910ca436d4259ed"
+      "sha256": "7464a25bd37b19b62ba8052883b66675a50b23d2b651e0b00ddaf9e51a05e4e6"
     },
     {
       "path": "vendor/modules/__init__.py",

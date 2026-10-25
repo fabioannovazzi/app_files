@@ -1,0 +1,12 @@
+{
+  "review": {
+    "prompts": [
+      "Use Clara to prepare an advisory brief from these meeting notes, identifying the decision, evidence gaps and next work.",
+      "Use Clara to turn this Excel file into a presentation with findings, charts and recommendations grounded in the supplied data.",
+      "Open the Clara business-planning course and resume its existing working chat if one is already linked."
+    ]
+  },
+  "publication": {
+    "release_notes": "Desktop package with local course and technical-reporting MCP services. Remote reporting MCP registration has been removed; technical reporting uses ordinary HTTPS while retaining request identifiers and retry state. Includes the current advisory, presentation, interview and analysis workflows."
+  }
+}

@@ -2195,7 +2195,12 @@ def project_cowork_skill(
         text = _inject_named_execution_contract(
             text,
             heading="## Operational incident continuity",
-            contract="## Operational incident continuity\n\nAt task startup, follow `skills/vera/references/incident-recovery.md`. Call the\nindependent `vera_incident_register` tool with empty arguments to reuse the saved\nanonymous connector identity across fresh tasks. If local startup context or the\ninstalled `scripts/operational_incidents.py context` provides an opaque local\ncapability, pass it to register to link queued local reports. Never put OAuth\ntokens in prompts or diagnostic evidence. Read `vera_incident_status` and deliver\nany new remedy without interrupting ordinary work. Automatically report observed\ntechnical failures with complete relevant technical evidence and record the\nresumed original operation's actual outcome. Do not ask the user to report the\nfailure or answer a support questionnaire. Never send professional stdout,\nclient documents or unrelated personal information. Service failure does not\nblock the original task.\n\n",
+            contract=_extract_section(
+                (ROOT / "plugins/vera/skills/vera/SKILL.md").read_text(
+                    encoding="utf-8"
+                ),
+                "## Operational incident continuity",
+            ),
         )
     if relative_path in {
         "skills/vera/SKILL.md",
@@ -3128,8 +3133,7 @@ def _clara_package_entries(
         _json_bytes(
             {
                 "mcpServers": {
-                    name: source_servers[name]
-                    for name in ("claraIncidents", "claraIncidentHost")
+                    name: source_servers[name] for name in ("claraIncidentHost",)
                 }
             }
         )
@@ -3605,6 +3609,15 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
     lines = [
         "These servers run locally over stdio, exchanging data with local files and",
         "helper processes on the user's machine.",
+        "The local reporting service sends ordinary HTTPS to Mparanza for technical",
+        "incidents, task events, receipt signatures and user-authored feedback.",
+        f"Independent browser recovery uses https://mparanza.com/{product}/incident-recovery.",
+        "It is operated by the agent when the host permits browser control. Reporting",
+        "credentials authenticate requests; they are never diagnostic content.",
+        "The package does not require a remote MCP connection. Historical OAuth",
+        "owners can migrate through the legacy service before their connection is retired.",
+        "Client documents, professional output and unreviewed logs are not reporting inputs.",
+        "Privacy policy: https://mparanza.com/privacy.",
     ]
     if remote:
         lines.extend(

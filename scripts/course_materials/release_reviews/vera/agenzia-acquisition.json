@@ -23,7 +23,7 @@
     ],
     "course_sha256": "0ccb644d2664fd721a71860df0baa31c535caaf401686fa0b1e03c7aece2c86a"
   },
-  "course_sha256": "0d8cf5313f16a9c5b2724bfb7e10d3c7a19471e4f1961742b57588c40d7b1284",
+  "course_sha256": "1478cdd16d62832fa72b018b4a47b4bcb32811afac74a6bc1126031e65ed8845",
   "journal_pdf_source_binding_review_20261009": {
     "reviewed_at": "2026-10-09T17:33:15.861554+00:00",
     "reviewer": "Codex source-bound PDF workflow review",
@@ -252,5 +252,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.343299+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "previous_course_sha256": "0d8cf5313f16a9c5b2724bfb7e10d3c7a19471e4f1961742b57588c40d7b1284",
+    "current_course_sha256": "1478cdd16d62832fa72b018b4a47b4bcb32811afac74a6bc1126031e65ed8845",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

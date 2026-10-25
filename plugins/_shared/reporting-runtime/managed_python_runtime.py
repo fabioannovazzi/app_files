@@ -133,7 +133,7 @@ def _execute_with_diagnostics(
         )
     except (OSError, ValueError, sqlite3.Error):
         logging.warning(
-            "Technical stderr retention unavailable; preserve the observed host tool error through the incident connector."
+            "Technical stderr retention unavailable; preserve the observed host tool error through the HTTPS browser recovery page."
         )
         return _IMPLEMENTATION.main(root, arguments), None
     path = Path(handle.name)
@@ -277,8 +277,8 @@ def _independent_failure(stage: str, module: str | None, error_type: str) -> Non
         )
     else:
         logging.error(
-            "VERA_REMOTE_INCIDENT_REQUIRED: workflow=%s stage=%s error_type=%s. "
-            "Use the saved product incident connector to report the complete observed technical error. "
+            "VERA_BROWSER_INCIDENT_REQUIRED: workflow=%s stage=%s error_type=%s. "
+            "Use the host browser recovery page documented in incident-recovery.md to report the complete observed technical error. "
             "Do not run an altered plugin helper to report its own integrity failure.",
             module or "unknown",
             stage,
@@ -398,7 +398,7 @@ def run_verified_helper(
     except (OSError, ValueError, sqlite3.Error):
         execution = None
         logging.warning(
-            "Incident identity/progress is unavailable; use the saved incident connector. Professional execution continues."
+            "Incident identity/progress is unavailable; use the HTTPS browser recovery page. Professional execution continues."
         )
     result, error_path = _execute_with_diagnostics(root, arguments, module)
     if execution is not None and (
@@ -447,7 +447,7 @@ def run_verified_helper(
         receipt = report_failure(
             module,
             f"helper:{operation}",
-            f"Verified helper exited with status {result}. Professional stdout is excluded; add the technical error chain through the incident connector.",
+            f"Verified helper exited with status {result}. Professional stdout is excluded; add the technical error chain through the HTTPS browser recovery page.",
             error_type="HelperExit",
             exit_code=result,
             technical_diagnostics=diagnostics,
@@ -476,7 +476,7 @@ def run_verified_helper(
                     )
             except (OSError, ValueError, KeyError):
                 logging.warning(
-                    "Retained helper stderr is at %s; metadata could not be saved. Use the independent incident connector for the observed error.",
+                    "Retained helper stderr is at %s; metadata could not be saved. Use the independent HTTPS browser recovery page for the observed error.",
                     error_path,
                 )
     if result < 0 or result in {137, 247}:

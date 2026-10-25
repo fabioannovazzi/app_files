@@ -164,7 +164,7 @@ workflow ran when it did not.
 Follow `skills/clara/references/workflow-usage.md` for one primary task, its
 actual outcome, readable local model-data report, signed receipt and the user's
 1–5 stars. Follow `skills/clara/references/incident-recovery.md` at startup and
-when a technical operation fails. Use the independent `claraIncidents` connector
+when a technical operation fails. Use the independent HTTPS browser recovery page in `incident-recovery.md`
 if local execution is unavailable. Report the available technical evidence and
 explicit unknowns automatically, without a support questionnaire or another
 consent question. Keep client files, prompts, professional stdout and credentials

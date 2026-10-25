@@ -9,12 +9,6 @@
         "./scripts/course_chat_mcp.cjs"
       ]
     },
-    "claraIncidents": {
-      "type": "http",
-      "url": "https://mparanza.com/mcp/clara-incidents",
-      "title": "Clara · Ripristino operativo",
-      "description": "Automatic technical incident reporting and recovery, plus task-level pipeline outcomes, signed receipt links and optional user star feedback. Independent of local command execution."
-    },
     "claraIncidentHost": {
       "title": "Clara · Identità tecnica locale",
       "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",

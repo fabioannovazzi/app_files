@@ -147,10 +147,6 @@
         "scripts/incident_host_mcp.cjs"
       ]
     },
-    "veraIncidents": {
-      "type": "http",
-      "url": "https://mparanza.com/mcp/vera-incidents"
-    },
     "veraNativeWorkspace": {
       "command": "node",
       "args": [

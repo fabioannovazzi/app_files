@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-deliverable-validator",
-  "course_sha256": "40392599f87e07cab0b0fd8d1ab1bef03a6a87e4b348dbfc936e5cf36ccfb89d",
+  "course_sha256": "82d7283cb51b2af0bdc84cc485602992ae0b67a06ff73fc2fb12b1b565708ce9",
   "reviewer": "Codex: five-language whole-memo lesson and native output review",
   "reviewed_at": "2026-09-14T21:37:39.206080+00:00",
   "review_scope": "Prepared material and native local execution review. Read the five localized lesson outlines and source sets, all ten artifact cards and run-review notes, five full practice review packages and the demo-specific changed passages. Final package/card text matches the inspected run after temporary-path normalization; the final clarified run notes were read separately. Eighty-eight native advisory and validator checks pass, including ten distinct phase/language review exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain unverified. The authored fictional review interpretations are regression fixtures outside shipped kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -748,5 +748,17 @@
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
     "fresh_matching_junit_required": true,
     "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.180197+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "previous_course_sha256": "40392599f87e07cab0b0fd8d1ab1bef03a6a87e4b348dbfc936e5cf36ccfb89d",
+    "current_course_sha256": "82d7283cb51b2af0bdc84cc485602992ae0b67a06ff73fc2fb12b1b565708ce9",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

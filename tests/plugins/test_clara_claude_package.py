@@ -163,10 +163,11 @@ def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
     assert forbidden_exact.isdisjoint(clara_entries)
     assert "scripts/change_requests.py" in clara_entries
     assert "scripts/check_change_requests.py" in clara_entries
-    assert set(json.loads(clara_entries[".mcp.json"])["mcpServers"]) == {
-        "claraIncidents",
-        "claraIncidentHost",
-    }
+    servers = json.loads(clara_entries[".mcp.json"])["mcpServers"]
+    assert set(servers) == {"claraIncidentHost"}
+    assert servers["claraIncidentHost"]["command"] == "node"
+    assert "url" not in servers["claraIncidentHost"]
+    assert "scripts/incident_tool_schemas.json" in clara_entries
     assert "privacy/registry.json" in clara_entries
     assert "privacy/contracts/index.json" in clara_entries
     assert "skills/mparanza-privacy-surface-review/SKILL.md" in clara_entries
@@ -282,7 +283,16 @@ def test_clara_cowork_instructions_are_host_neutral(clara_entries) -> None:
         "without a support questionnaire"
         in instruction_docs["skills/mparanza-clara/SKILL.md"]
     )
-    assert "claraIncidents" in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    assert "claraIncidents" not in combined
+    assert "clara_workflow_usage" in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    assert (
+        "HTTPS browser recovery page"
+        in instruction_docs["skills/mparanza-clara/SKILL.md"]
+    )
+    assert (
+        "https://mparanza.com/clara/incident-recovery"
+        in instruction_docs["skills/mparanza-clara/references/incident-recovery.md"]
+    )
     assert "actual signed receipt" in instruction_docs["skills/mparanza-clara/SKILL.md"]
     assert (
         "Professional capability gap"

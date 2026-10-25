@@ -39,20 +39,23 @@ def test_package_preserves_source_mcp_capabilities(product, surface):
     mcp_files = {
         name: content
         for name, content in source.items()
-        if name.endswith((".mcp.json", ".app.json")) or "mcp" in name.split("/")
+        if (name.endswith((".mcp.json", ".app.json")) or "mcp" in name.split("/"))
+        and not (surface == "upload" and name == ".app.json")
     }
     assert mcp_files
     assert {name: entries[name] for name in mcp_files} == mcp_files
     servers = json.loads(entries[".mcp.json"])["mcpServers"]
     assert any(server.get("command") == "node" for server in servers.values())
-    assert servers[f"{product}Incidents"]["url"] == (
-        f"https://mparanza.com/mcp/{product}-incidents"
+    assert f"{product}Incidents" not in servers
+    assert all(
+        "url" not in server and "serverUrl" not in server for server in servers.values()
     )
     source_declarations = {
         name: {
             key: value
             for key, value in json.loads(content).items()
-            if key in {"mcpServers", "apps"}
+            if key
+            in ({"mcpServers"} if surface == "upload" else {"mcpServers", "apps"})
         }
         for name, content in source.items()
         if name.endswith(".codex-plugin/plugin.json")

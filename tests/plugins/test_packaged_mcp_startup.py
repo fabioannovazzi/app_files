@@ -57,7 +57,7 @@ def test_vera_zip_local_servers_initialize_and_remote_contracts_validate(
         if surface == "upload":
             entries = builder.chatgpt_upload_entries(vera)
             root = "."
-            config = ".mcp.json"
+            config = "mcp.json"
         else:
             entries = builder.expected_zip_entries(vera)
             root = f"{vera.package_root}/plugins/vera"
@@ -90,7 +90,7 @@ def test_vera_zip_local_servers_initialize_and_remote_contracts_validate(
     assert set(json.loads(entries[config])["mcpServers"]) == expected
     assert registered
 
-    errors = builder.verify_packaged_mcp(archive, [root])
+    errors = builder.verify_packaged_mcp(archive, [root], config_name=Path(config).name)
 
     assert errors == []
 
@@ -178,8 +178,16 @@ def test_upload_missing_launcher_preserves_existing_archive(
     builder = load_builder("build_codex_plugin_zip")
     package = next(item for item in builder.load_packages() if item.plugin == "clara")
     entries = {
-        ".mcp.json": json.dumps(
-            {"mcpServers": {"missing": {"command": "node", "args": ["missing.cjs"]}}}
+        "mcp.json": json.dumps(
+            {
+                "mcpServers": {
+                    "missing": {
+                        "type": "stdio",
+                        "command": "node",
+                        "args": ["${PLUGIN_ROOT}/missing.cjs"],
+                    }
+                }
+            }
         ).encode()
     }
     monkeypatch.setattr(builder, "chatgpt_upload_entries", lambda _: entries)

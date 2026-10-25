@@ -85,7 +85,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/lucia/scripts/managed_python_runtime.py",
-      "sha256": "94402e61cd5fb2d1f5adee49c3610b6af9ee348f411394b0e8711f6b51979f6d"
+      "sha256": "11e364bace0d6bc91fb9ffaf4e7a1ff548d4a85cf81c44216bdeb107f0cd3d9b"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -100,7 +100,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/lucia/scripts/operational_incidents.py",
-      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
+      "sha256": "d9821773c32c5844acfe60a248b7160329cd199de982a73364ae3a3a47f29fb4"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -110,7 +110,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/lucia/scripts/verified_execution.py",
-      "sha256": "660f90dcfa8860660d8fcc4948078c0dfb24ae603b799771321a74b188127d0c"
+      "sha256": "0b3ff925aa14ed025dfb2780bb3f35f981e7425047fbd0712fbab222d7180b14"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -120,7 +120,7 @@
     {
       "path": "skills/contenzioso-tributario/SKILL.md",
       "repository_path": "plugins/lucia/skills/contenzioso-tributario/SKILL.md",
-      "sha256": "6686f6b79027533e8abefe0255d30a80a70795c7d641caf3c9361c5b2e2c7358"
+      "sha256": "ff97b32e6dcdb73268b6dcecbec7ca1bb2abfe42a34af6d22fed61f71044ea01"
     },
     {
       "path": "vendor/modules/__init__.py",

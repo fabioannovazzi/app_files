@@ -173,7 +173,7 @@ workflow ran when it did not.
 Follow `skills/mparanza-clara/references/workflow-usage.md` for one primary task, its
 actual outcome, readable local model-data report, signed receipt and the user's
 1–5 stars. Follow `skills/mparanza-clara/references/incident-recovery.md` at startup and
-when a technical operation fails. Use the independent `claraIncidents` connector
+when a technical operation fails. Use the independent HTTPS browser recovery page in `incident-recovery.md`
 if local execution is unavailable. Report the available technical evidence and
 explicit unknowns automatically, without a support questionnaire or another
 consent question. Keep client files, prompts, professional stdout and credentials
@@ -204,7 +204,7 @@ local model-data report under `skills/mparanza-clara/references/model-data-repor
 actual signed receipt, and ask once for the user's 1–5 stars after delivery.
 Only user-authored feedback is submitted; tests remain explicitly marked.
 Follow `skills/mparanza-clara/references/incident-recovery.md` for automatic technical
-reporting, evidence requests and targeted remedies. Use `claraIncidents` if
+reporting, evidence requests and targeted remedies. Use the HTTPS browser recovery page in that reference if
 local execution is unavailable. Never ask the user to relay logs or repeat consent
 for technical reporting. Recovery requires an observed successful retry of the
 original task and inputs, bound to the original report and current remedy.

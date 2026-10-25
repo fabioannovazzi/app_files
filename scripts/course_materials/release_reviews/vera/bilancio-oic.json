@@ -302,7 +302,7 @@
     "limits": "No fresh learner, voice, installed-host, visual or professional acceptance is asserted by a source fingerprint refresh."
   },
   "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
+  "course_sha256": "a0fdf59ebdc9e203d18f57b3147b0846badd8c1a1dbb1a7f992d6794ea0d7c79",
   "isolated_launcher_source_compatibility_20261018": {
     "reviewer": "Codex exact retained-course and launcher-source review",
     "reviewed_at": "2026-10-18",
@@ -768,5 +768,17 @@
     "current_course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
     "main_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
     "scope": "Exact complete-course comparison against current main confirms only the reviewed case_service source SHA changes. All PDF recovery, course narrative, locale judgments and historical artifact evidence are retained. Fresh native CI must pass on this exact course digest. No new professional or installed-host acceptance."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "recorded_at": "2026-10-25T18:12:53.403370+00:00",
+    "recorder": "Codex - mechanical source inventory comparison",
+    "baseline_commit": "5f356f1a219114528b787d66d15e9fa441aa653a",
+    "previous_course_sha256": "2d3ec7704deb4e2698fa9ad5d3c556981455ab398a8730e5f08487ad0e1f724d",
+    "current_course_sha256": "a0fdf59ebdc9e203d18f57b3147b0846badd8c1a1dbb1a7f992d6794ea0d7c79",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
   }
 }

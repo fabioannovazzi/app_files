@@ -19,7 +19,7 @@
   "studioWork": "Persist studio tasks, deadlines and external-action receipts locally.",
   "varianceAnalysisWidgets": "Review accounting variance calculations and decisions.",
   "veraExecution": "Run published local helpers with retained results and diagnostics, task-scoped incident delivery and cancellation of the owned process tree. Helper output enters the selected host model when returned; it is not uploaded to the incident service.",
-  "veraIncidentHost": "Bind local installation/host identity for incident recovery.",
+  "veraIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.",
   "veraNativeWorkspace": "Expose local client workspaces, source selection and review tools.",
   "veraSalesPlan": "Describe the Actual-to-Plan workflow and its artifacts.",
   "veraStudioArchive": "Manage registered local client folders and engagement records.",
@@ -27,6 +27,6 @@
   "luciaDeepResearchValidator": "Review sourced legal answers and research evidence.",
   "luciaPromptOptimizer": "Review the legal answer plan.",
   "luciaStudioArchive": "Manage registered local client folders and engagement records.",
-  "claraIncidentHost": "Bind local installation/host identity for incident recovery.",
-  "luciaIncidentHost": "Bind local installation/host identity for incident recovery."
+  "claraIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.",
+  "luciaIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS."
 }
