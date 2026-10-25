@@ -14,6 +14,13 @@ python scripts/build_product_release.py
 Pass `vera`, `clara` or `lucia` to build selected products. The command builds the
 Codex install ZIP, its OpenAI upload ZIP, the Cowork ZIP and public download, and the Antigravity ZIP and version metadata.
 Existing builders project the same canonical source into each host format.
+Codex downloads and OpenAI upload ZIPs retain the source MCP registrations,
+local server implementations, remote endpoints and associated app manifests,
+including embedded components. The upload builder must not turn a plugin into
+a skills-only product by deleting these capabilities. It checks local MCP
+initialization and tool discovery before replacing the archive; remote endpoint
+contract checks do not establish remote runtime availability. Marketplace
+eligibility and publication remain separate from packaging.
 The Cowork builder validates the candidate before replacing its public copy.
 A failed overall build is not deployable; rerun the command after correcting
 the failure.

@@ -583,12 +583,8 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         if name.endswith(".codex-plugin/plugin.json")
     }
     assert projected_manifests
-    assert all(
-        "apps" not in component_manifest and "mcpServers" not in component_manifest
-        for component_manifest in projected_manifests.values()
-    )
-    assert "apps" not in manifest
-    assert "mcpServers" not in manifest
+    assert manifest["apps"] == "./.app.json"
+    assert manifest["mcpServers"] == "./.mcp.json"
     assert "screenshots" not in manifest["interface"]
     assert manifest["repository"] == "https://github.com/fabioannovazzi/app_files"
     assert manifest["license"] == "AGPL-3.0-only"
@@ -689,11 +685,9 @@ def test_chatgpt_upload_entries_put_vera_manifest_at_zip_root() -> None:
         "python scripts/studio_archive.py",
     ):
         assert local_dependency not in gmail_section
-    assert not any(
-        name.rsplit("/", maxsplit=1)[-1] in {".app.json", ".mcp.json"}
-        for name in entries
-    )
-    assert not any("mcp" in name.split("/") for name in entries)
+    assert ".app.json" in entries
+    assert ".mcp.json" in entries
+    assert "modules/studio-archive/mcp/server.cjs" in entries
     assert not any(name.startswith("vera-codex-plugin/") for name in entries)
     assert not any(name.startswith("plugins/vera/") for name in entries)
     assert not any(name.endswith("marketplace.json") for name in entries)
@@ -720,10 +714,6 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         if name.endswith(".codex-plugin/plugin.json")
     }
     assert projected_manifests
-    assert all(
-        "apps" not in component_manifest and "mcpServers" not in component_manifest
-        for component_manifest in projected_manifests.values()
-    )
     projected_skills = {
         name: content.decode("utf-8")
         for name, content in entries.items()
@@ -950,7 +940,7 @@ def test_cross_surface_plugins_define_chatgpt_runtime_in_main_skill(
 
 
 @pytest.mark.parametrize("plugin_name", ["clara", "lucia", "vera"])
-def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_native_hooks(
+def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_source_hooks(
     plugin_name: str,
 ) -> None:
     builder = load_builder()
@@ -959,7 +949,7 @@ def test_chatgpt_upload_omits_lifecycle_hooks_and_preserves_native_hooks(
     target = targets[plugin_name]
     prefix = f"{target.package_root}/plugins/{plugin_name}/"
     source_hooks = ROOT / "plugins" / plugin_name / "hooks" / "hooks.json"
-    native_entries = builder.expected_zip_entries(target)
+    native_entries = builder.source_zip_entries(target)
 
     entries = builder.chatgpt_upload_entries(target)
 
@@ -1288,12 +1278,11 @@ def test_projected_vera_upload_keeps_executable_new_client_review_bridges(
     assert dispatcher.is_file()
     for component in ("new-client", "client-file-preparation"):
         component_root = extracted / "modules" / component
-        projected_server = component_root / "scripts" / "review_mcp_server.cjs"
+        projected_server = component_root / "mcp" / "server.cjs"
         local_bridge = component_root / "scripts" / "review_server.py"
 
         assert projected_server.is_file()
         assert local_bridge.is_file()
-        assert not (component_root / "mcp").exists()
         assert _projected_review_tools(node, dispatcher, component) == set(
             NON_PLOTTING_REVIEW_TOOL_CONTRACTS[component]
         )
@@ -1322,9 +1311,7 @@ def test_projected_vera_upload_keeps_legal_tax_model_helper(tmp_path: Path) -> N
     root = tmp_path / prefix
     assert (root / "scripts/model_policy.py").is_file()
     assert (root / "assets/legal-tax-model.html").is_file()
-    tools = _projected_review_tools(
-        _bundled_node_or_skip(), root / "scripts/review_mcp_server.cjs"
-    )
+    tools = _projected_review_tools(_bundled_node_or_skip(), root / "mcp/server.cjs")
     assert {"check_legal_tax_model", "confirm_legal_tax_model"} <= tools
 
 
@@ -1374,8 +1361,8 @@ def test_projected_vera_assured_component_dependency_check_rejects_mixed_layout(
         builder.chatgpt_upload_entries(vera),
     )
     component_root = extracted / "modules" / component_name
-    (component_root / ".app.json").write_bytes(
-        (ROOT / "plugins" / component_name / ".app.json").read_bytes()
+    (component_root / "scripts/review_mcp_server.cjs").write_bytes(
+        (component_root / "mcp/server.cjs").read_bytes()
     )
 
     completed = subprocess.run(
@@ -1423,11 +1410,10 @@ def test_projected_vera_journal_bank_builds_exact_implementation_receipts(
         (receipt["root_id"], receipt["path"])
         for receipt in json.loads(completed.stdout)
     }
-    assert ("implementation", "scripts/review_mcp_server.cjs") in receipt_paths
-    assert ("implementation", "scripts/review_server.py") in receipt_paths
-    assert ("implementation", ".app.json") not in receipt_paths
-    assert ("implementation", ".mcp.json") not in receipt_paths
-    assert ("implementation", "mcp/server.cjs") not in receipt_paths
+    assert ("implementation", "scripts/review_mcp_server.cjs") not in receipt_paths
+    assert ("implementation", ".app.json") in receipt_paths
+    assert ("implementation", ".mcp.json") in receipt_paths
+    assert ("implementation", "mcp/server.cjs") in receipt_paths
 
 
 def test_projected_vera_report_builder_builds_exact_implementation_receipts(
@@ -1462,11 +1448,10 @@ def test_projected_vera_report_builder_builds_exact_implementation_receipts(
         (receipt["root_id"], receipt["path"])
         for receipt in json.loads(completed.stdout)
     }
-    assert ("implementation", "scripts/review_mcp_server.cjs") in receipt_paths
-    assert ("implementation", "scripts/review_server.py") in receipt_paths
-    assert ("implementation", ".app.json") not in receipt_paths
-    assert ("implementation", ".mcp.json") not in receipt_paths
-    assert ("implementation", "mcp/server.cjs") not in receipt_paths
+    assert ("implementation", "scripts/review_mcp_server.cjs") not in receipt_paths
+    assert ("implementation", ".app.json") in receipt_paths
+    assert ("implementation", ".mcp.json") in receipt_paths
+    assert ("implementation", "mcp/server.cjs") in receipt_paths
 
 
 def test_configured_bundle_zip_matches_repo_source() -> None:
@@ -1551,7 +1536,6 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
         "capabilities/gmail-search-export/capability.json",
         "scripts/agenzia_acquire.py",
         "scripts/ade_acquisition/engine.py",
-        "mcp/server.cjs",
         "ui/agenzia.html",
         "skills/agenzia-acquisition/SKILL.md",
         "capabilities/teamsystem-process/capability.json",
@@ -1561,6 +1545,7 @@ def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
             entries[f"{prefix}{relative_path}"]
             == (ROOT / "plugins" / "browser-automation" / relative_path).read_bytes()
         )
+    assert f"{prefix}mcp/server.cjs" in entries
     assert f"{prefix}scripts/capability_contract.py" not in entries
     for retired_path in (
         "scripts/agenzia_download.mjs",

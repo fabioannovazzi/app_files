@@ -647,20 +647,13 @@
       "services": [],
       "workstreams": [],
       "paths": {
-        "privacy/services/operational-incidents.json": [
-          ".mcp.json"
-        ],
         "privacy/workstreams/deep-research-validator.json": [
-          "mcp",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/prompt-optimizer.json": [
-          "mcp",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/studio-archive.json": [
-          ".mcp.json",
-          "mcp",
           "shared:vendor/modules/vera_assurance",
           "shared:vendor/modules/vera_ocr"
         ]

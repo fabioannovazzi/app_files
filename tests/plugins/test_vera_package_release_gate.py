@@ -248,11 +248,11 @@ def test_chatgpt_module_contract_rejects_invalid_layout_even_with_fresh_index(
     entries, root = release_entries("chatgpt")
     prefix = f"modules/{component}/"
     if change == "mixed":
-        entries[prefix + ".app.json"] = b"{}"
+        entries[prefix + "scripts/review_mcp_server.cjs"] = b"// obsolete layout"
     elif change == "extra":
         entries[prefix + "scripts/unexpected.py"] = b"# unexpected implementation"
     else:
-        del entries[prefix + "scripts/review_mcp_server.cjs"]
+        del entries[prefix + "mcp/server.cjs"]
     builder = load_builder("build_codex_plugin_zip")
     builder.add_vera_execution_manifest(entries)
     archive = tmp_path / "invalid-module.zip"

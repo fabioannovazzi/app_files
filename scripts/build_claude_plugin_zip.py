@@ -3025,7 +3025,7 @@ def _full_codex_plugin_entries(
         raise ValueError(f"{plugin_name}: expected one matching source plugin")
     package_root = getattr(source_target, "package_root")
     prefix = f"{package_root}/plugins/{plugin_name}/"
-    packaged_entries = builder.expected_zip_entries(
+    packaged_entries = builder.source_zip_entries(
         source_target, project_vera_privacy=False
     )
     entries = {
@@ -3376,7 +3376,7 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
         )
     if package.plugin != "vera":
         raise ValueError(f"Unsupported Claude package plugin: {package.plugin}")
-    packaged = builder.expected_zip_entries(source_target, project_vera_privacy=False)
+    packaged = builder.source_zip_entries(source_target, project_vera_privacy=False)
     prefix = f"{source_target.package_root}/plugins/{package.plugin}/"
     source_manifest_name = f"{prefix}.codex-plugin/plugin.json"
     if source_manifest_name not in packaged:

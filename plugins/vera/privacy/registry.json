@@ -1478,90 +1478,15 @@
         "privacy/services/managed-python-runtime.json": [
           "skills/studio-archive/references/cowork-runtime.md"
         ],
-        "privacy/services/native-workspace.json": [
-          ".mcp.json",
-          "mcp/selected-context.cjs",
-          "mcp/workspace.cjs"
-        ],
-        "privacy/services/operational-incidents.json": [
-          ".mcp.json"
-        ],
         "privacy/services/plugin-feedback.json": [
           "hooks/hooks.json"
         ],
         "privacy/services/plugin-update-check.json": [
           "hooks/hooks.json"
         ],
-        "privacy/services/research-subscriptions.json": [
-          "mcp/research-sources.cjs"
-        ],
-        "privacy/services/studio-work.json": [
-          "mcp/studio-work-panel.cjs",
-          "mcp/studio-work.cjs"
-        ],
-        "privacy/workstreams/archive-organization.json": [
-          ".mcp.json",
-          "mcp"
-        ],
-        "privacy/workstreams/bilancio-xbrl-it.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/browser-automation.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/check-entries.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/client-file-preparation.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/concordato-plan-review.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/deep-research-validator.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/financial-analysis.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/journal-bank-reconciliation.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/journal-sampling.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/new-client.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/open-item-reconciliation.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/previdenza-inps.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/prompt-optimizer.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/registro-imprese-sari.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/report-builder.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/sales-plan.json": [
-          "mcp"
-        ],
-        "privacy/workstreams/studio-archive.json": [
-          ".mcp.json",
-          "mcp"
-        ],
-        "privacy/workstreams/variance-analysis.json": [
-          "mcp"
-        ],
         "privacy/services/run-receipt-stamping.json": [
           "hooks/cowork-hooks.json",
-          "hooks/hooks.json",
-          "mcp/workspace.cjs"
+          "hooks/hooks.json"
         ]
       }
     },

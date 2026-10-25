@@ -520,9 +520,6 @@
       "services": [],
       "workstreams": [],
       "paths": {
-        "privacy/services/operational-incidents.json": [
-          ".mcp.json"
-        ],
         "privacy/services/plugin-feedback.json": [
           "hooks/cowork-hooks.json"
         ],
@@ -536,7 +533,6 @@
           "hooks/hooks.json"
         ],
         "privacy/workstreams/learn-with-clara.json": [
-          ".mcp.json",
           "hooks/hooks.json",
           "marketplace_skill_instructions.json"
         ],
@@ -549,7 +545,6 @@
           "scripts/build_monthly_pnl_reporting_handoff.py"
         ],
         "privacy/workstreams/variance-analysis.json": [
-          "mcp",
           "shared:vendor/modules/vera_assurance"
         ]
       }
