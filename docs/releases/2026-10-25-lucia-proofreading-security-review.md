@@ -50,7 +50,15 @@ transfer, and unavailable safe rendering. The same task and data boundaries
 apply through references. An existing authorization avoids repetitive consent;
 a refusal or mandatory host confirmation remains binding.
 
-Source/package parity and the canonical release checks must pass before handing
-off the rebuilt ZIP. Marketplace scanning, approval and installed-conversation
-acceptance are separate evidence. No Marketplace upload, submission or
-publication is part of this change.
+All four canonical Lucia host builds and source/package parity checks passed;
+packaged local MCP startup and both official portable manifest schemas passed.
+The broader package/privacy suite recorded 485 passes, one installed-cache skip
+and three outdated test expectations in `test_lucia_plugin.py`. Those expectations
+omitted the existing developer privacy skill, rejected the existing direct-skill
+privacy record, and omitted the existing Deep Research page. The relevant product
+files and test assertions were unchanged between the preceding candidate and
+this release. Only the tests were corrected; all 26 checks in the affected module
+then passed. The full broader suite was not rerun after these test-only edits.
+
+Marketplace scanning, approval and installed-conversation acceptance are separate
+evidence. No Marketplace upload, submission or publication is part of this change.

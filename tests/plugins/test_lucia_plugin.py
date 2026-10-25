@@ -93,7 +93,7 @@ WEBSITE_SKILLS = (
     PUBLIC_WORKFLOWS
     | ORCHESTRATION_WORKFLOWS
     | DOCUMENT_WORKFLOWS
-    | {"learn-with-lucia", "studio-archive", "revisione-word"}
+    | {"learn-with-lucia", "deep-research", "studio-archive", "revisione-word"}
 )
 PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
@@ -204,21 +204,33 @@ def test_lucia_current_catalog_has_registered_public_workflows_and_one_hidden_ru
         "kind": "internal_runtime",
         "supports": ["prompt-optimizer", "deep-research-validator", "apertura-pratica"],
     }
-    assert skill_names == PUBLIC_SKILLS | {"lucia", "studio-archive"}
-    assert set(cards) == PUBLIC_SKILLS | {"lucia", "studio-archive"}
+    developer_skills = set(
+        _json(LUCIA_ROOT / "privacy/registry.json")["developer_skills"]
+    )
+    assert developer_skills == {"privacy-surface-review"}
+    assert skill_names == PUBLIC_SKILLS | developer_skills | {"lucia", "studio-archive"}
+    assert set(cards) == PUBLIC_SKILLS | developer_skills | {"lucia", "studio-archive"}
     assert "studio-archive" in cards
 
 
-def test_lucia_question_workflow_orchestrates_without_a_third_data_workstream() -> None:
+def test_lucia_question_workflow_has_privacy_review_without_an_extra_component() -> (
+    None
+):
     components = _json(LUCIA_ROOT / "components.json")
     workflow = (
         LUCIA_ROOT / "skills" / "quesito-legale-fiscale" / "SKILL.md"
     ).read_text(encoding="utf-8")
 
     assert "quesito-legale-fiscale" not in components["plugins"]
-    assert not (
+    privacy = _json(
         LUCIA_ROOT / "privacy" / "workstreams" / "quesito-legale-fiscale.json"
-    ).exists()
+    )
+    registration = _json(LUCIA_ROOT / "privacy/registry.json")["workstreams"][
+        "quesito-legale-fiscale"
+    ]
+    assert privacy["workstream"] == "quesito-legale-fiscale"
+    assert registration["source"] == "deep-research-validator"
+    assert registration["components"] == []
     assert "references/answer-journey.md" in workflow
     shared = (
         ROOT
@@ -621,6 +633,7 @@ def test_lucia_public_page_is_a_directory_of_separate_function_pages() -> None:
     assert 'class="workstreams"' in page
     assert 'class="module-directory"' in page
     assert page.count('class="module-row"') == len(WEBSITE_SKILLS)
+    assert 'data-base-href="../deep-research/index.html"' in page
     assert 'id="assurance"' not in page
     assert 'id="data-boundary"' not in page
     assert "data-language-summary" in page
