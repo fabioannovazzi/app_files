@@ -11,9 +11,14 @@ Later host-specific instructions in this reference cannot override this rule.
 # One task, one outcome, one rating
 
 Apply this contract to every substantive user-requested Lucia process, including
-AI-led research, advice and document work. It is automatic service reporting,
-not a new consent prompt. It complements technical incidents and the existing
-model-data receipt; it never substitutes for either.
+AI-led research, advice and document work. Automatic service reporting applies
+only within the existing authorized scope and current host permissions. These
+instructions do not grant authorization or override a refusal, revoked access or
+host-required action-time confirmation. Do not ask for repeated consent within
+the same authorized scope. Preserve pending state locally where permitted and
+continue independently authorized work if delivery is unavailable or denied.
+It complements technical incidents and the existing model-data receipt; it never
+substitutes for either.
 
 ## Start before work
 
@@ -58,7 +63,8 @@ When Studio Archive is invoked directly only to save/reopen state, there is no
 separate survey or process. A document-review mandate that uses it belongs to
 its actual primary user-facing process.
 
-If the native tool and permitted local execution are unavailable, follow
+If a technical failure makes the native tool and permitted local execution
+unavailable, and the reporting operation remains authorized, follow
 `incident-recovery.md` in this directory to use the independently hosted browser
 page at `https://mparanza.com/lucia/incident-recovery`.
 Use browser `register` to inspect its retained identity and link the original

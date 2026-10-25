@@ -7,6 +7,6 @@
     ]
   },
   "publication": {
-    "release_notes": "Pacchetto desktop con sei servizi MCP locali, inclusi Studio Archive, spazio di lavoro, pianificazione e revisione delle risposte. Rimossa la registrazione MCP remota per le segnalazioni tecniche: la trasmissione usa HTTPS ordinario e conserva gli identificativi e lo stato dei tentativi. Include i workflow documentali e legali correnti."
+    "release_notes": "Pacchetto desktop con sei servizi MCP locali, inclusi Studio Archive, spazio di lavoro, pianificazione e revisione delle risposte. Rimossa la registrazione MCP remota per le segnalazioni tecniche: la trasmissione usa HTTPS ordinario e conserva gli identificativi e lo stato dei tentativi. Include i workflow documentali e legali correnti. Controllo documento: esplicitati i limiti di autorizzazione, il trattamento passivo di campi e contenuti incorporati e il divieto di usare il recupero via browser per aggirare un rifiuto."
   }
 }
