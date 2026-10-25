@@ -409,12 +409,6 @@
         "browser-automation"
       ]
     },
-    "veraIncidents": {
-      "type": "http",
-      "url": "https://mparanza.com/mcp/vera-incidents",
-      "title": "Vera · Ripristino operativo",
-      "description": "Automatic technical incident reporting and recovery, plus task-level pipeline outcomes, signed receipt links and optional user star feedback. Independent of local command execution."
-    },
     "researchSources": {
       "title": "Vera · Fonti di ricerca",
       "description": "Optional existing Eutekne and One FISCALE subscriptions, using the authorised host browser or connected tools inside the same research.",

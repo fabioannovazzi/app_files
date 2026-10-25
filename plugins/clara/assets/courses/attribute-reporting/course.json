@@ -250,7 +250,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/clara/scripts/managed_python_runtime.py",
-      "sha256": "94402e61cd5fb2d1f5adee49c3610b6af9ee348f411394b0e8711f6b51979f6d"
+      "sha256": "11e364bace0d6bc91fb9ffaf4e7a1ff548d4a85cf81c44216bdeb107f0cd3d9b"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -265,7 +265,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
+      "sha256": "d9821773c32c5844acfe60a248b7160329cd199de982a73364ae3a3a47f29fb4"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -275,7 +275,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/clara/scripts/verified_execution.py",
-      "sha256": "660f90dcfa8860660d8fcc4948078c0dfb24ae603b799771321a74b188127d0c"
+      "sha256": "0b3ff925aa14ed025dfb2780bb3f35f981e7425047fbd0712fbab222d7180b14"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -285,7 +285,7 @@
     {
       "path": "skills/attribute-reporting/SKILL.md",
       "repository_path": "plugins/clara/skills/attribute-reporting/SKILL.md",
-      "sha256": "0e57f4ee8eab007e0871f942789a47cac3d8173780fbcee72a8d4407d6312a19"
+      "sha256": "16893668438950f05c49ef91df777e2fe3309e0c24b5e871990b15c10842e6a7"
     },
     {
       "path": "vendor/modules/__init__.py",

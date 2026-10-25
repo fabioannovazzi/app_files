@@ -11,6 +11,8 @@ const ROOT = path.resolve(__dirname, "..");
 const manifestPath = fs.existsSync(path.join(ROOT, ".codex-plugin/plugin.json")) ? ".codex-plugin/plugin.json" : ".claude-plugin/plugin.json";
 const PRODUCT = JSON.parse(fs.readFileSync(path.join(ROOT, manifestPath), "utf8")).name;
 if (!["vera", "clara", "lucia"].includes(PRODUCT)) throw new Error("Unsupported reporting product");
+const RECOVERY_URL = `https://mparanza.com/${PRODUCT}/incident-recovery`;
+const RECOVERY_HELP = `use the host browser at ${RECOVERY_URL} with the original reporting owner and exact retained request`;
 const SESSION = randomUUID();
 class HostFailure extends Error {}
 const uuid = { type: "string", format: "uuid" };
@@ -37,12 +39,21 @@ const TOOLS = [
     } },
     annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true } },
 ];
+const REPORTING_TOOLS = require("./incident_tool_schemas.json").map(tool => {
+  for (const definition of Object.values(tool.inputSchema.$defs || {})) {
+    if (definition.properties?.product)
+      definition.properties.product = { type: "string", const: PRODUCT };
+  }
+  return { ...tool, name: tool.name.replace(/^vera_/, `${PRODUCT}_`),
+    description: tool.description.replaceAll("Vera", PRODUCT) };
+});
+TOOLS.push(...REPORTING_TOOLS);
 function checked(relative, index) {
   const file = path.join(ROOT, relative), info = fs.lstatSync(file);
   if (!info.isFile() || info.isSymbolicLink()) throw new HostFailure("Native incident component is unavailable");
   const bytes = fs.readFileSync(file);
   if (index && createHash("sha256").update(bytes).digest("hex") !== index[relative])
-    throw new HostFailure("Native incident component does not match its build index; use the independent incident connector");
+    throw new HostFailure(`Native incident component does not match its build index; ${RECOVERY_HELP}`);
   return bytes;
 }
 function bridge(command, args) {
@@ -53,11 +64,12 @@ function bridge(command, args) {
     if (!index || typeof index !== "object" || Array.isArray(index)) throw new HostFailure("Native incident build index is invalid");
   }
   else if (!(fs.existsSync(path.resolve(ROOT, "../../.git")) && fs.existsSync(path.resolve(ROOT, "../_shared"))))
-    throw new HostFailure("Native incident build index is unavailable; use the independent incident connector");
+    throw new HostFailure(`Native incident build index is unavailable; ${RECOVERY_HELP}`);
   checked("scripts/incident_host_mcp.cjs", index);
   const reporter = checked("scripts/operational_incidents.py", index);
   const productHelper = checked("scripts/reporting_product.py", index);
   const collector = checked("scripts/technical_runner.py", index);
+  checked("scripts/incident_tool_schemas.json", index);
   const manifest = fs.existsSync(path.join(ROOT, ".codex-plugin/plugin.json")) ? ".codex-plugin/plugin.json" : ".claude-plugin/plugin.json";
   const metadata = checked(manifest, index);
   const workflow = command === "workflow-usage" ? {
@@ -91,6 +103,9 @@ try:
     if sys.argv[1] == "workflow-usage":
         from workflow_usage import native_operation
         sys.stdout.write(json.dumps(native_operation(json.load(sys.stdin))))
+    elif sys.argv[1] == "reporting-request":
+        from operational_incidents import native_request
+        sys.stdout.write(json.dumps(native_request(json.load(sys.stdin))))
     else:
         runpy.run_path(str(root / "scripts/operational_incidents.py"), run_name="__main__")
 except Exception as error:
@@ -108,7 +123,7 @@ except Exception as error:
       env: { ...process.env, MPARANZA_INCIDENT_HOST_SESSION: SESSION },
     });
     if (result.error || result.status !== 0) {
-      const failure = new HostFailure("Native incident host operation unavailable; inspect its structured technical facts and keep reporting through the independent connector");
+      const failure = new HostFailure(`Native incident host operation unavailable; inspect its structured technical facts and ${RECOVERY_HELP}`);
       try { failure.technicalFacts = JSON.parse(result.stdout).native_error; } catch {}
       throw failure;
     }
@@ -117,7 +132,7 @@ except Exception as error:
 }
 function handle(message) {
   if (message.method === "initialize") return { protocolVersion: "2024-11-05", capabilities: { tools: {} }, serverInfo: { name: `${PRODUCT}-incident-host`, version: "1.0.0" },
-    instructions: `Use ${PRODUCT}_workflow_usage for task start, observed outcomes, status and task-scoped retries. It retains the installed product's existing identity and persistent queue without requiring chat-shell write access. Use native host linking automatically when available. The native broker's version is separate from the guest's current reporting-process and failed-worker versions. If this host route is unavailable, continue automatic reporting through the product incident connector; never infer device identity from its OAuth connection or a Linux guest UUID.` };
+    instructions: `Use ${PRODUCT}_workflow_usage for task start, observed outcomes, status and task-scoped retries. Incident tools send ordinary HTTPS using the same retained local identity. Use native host linking automatically when available. The native broker's version is separate from the guest's current reporting-process and failed-worker versions. If this host route is unavailable, ${RECOVERY_HELP}. Never infer a computer from a browser identity or a Linux guest UUID. Never bypass a denied host operation.` };
   if (message.method === "ping") return {};
   if (message.method === "tools/list") return { tools: TOOLS };
   if (message.method !== "tools/call") throw new HostFailure("Unsupported native incident method");
@@ -137,11 +152,18 @@ function handle(message) {
         throw new HostFailure("Invalid local incident capability. credentials must contain only installation_id (UUID) and installation_key (32-128 allowed characters), copied unchanged from the original guest incident context. Do not generate replacement credentials. No host linkage has occurred.");
       command = "host-link";
     } else if (name === TOOLS[2].name) command = "workflow-usage";
+    else if (REPORTING_TOOLS.some(tool => tool.name === name)) {
+      const operation = name === `${PRODUCT}_workflow_stamp` ? "workflow-stamp" : name.slice(`${PRODUCT}_incident_`.length);
+      if (Object.hasOwn(args, "credentials") || Object.hasOwn(args, "operation"))
+        throw new HostFailure("Native reporting uses its retained owner; credentials and operation are not tool inputs");
+      const value = bridge("reporting-request", { ...args, operation });
+      return { content: [{ type: "text", text: JSON.stringify(value) }], structuredContent: value };
+    }
     else throw new HostFailure("Unsupported native incident operation");
     const value = bridge(command, args);
     return { content: [{ type: "text", text: JSON.stringify(value) }], structuredContent: value };
-  } catch (error) { return { isError: true, content: [{ type: "text", text: error instanceof HostFailure ? error.message : "Native incident host operation unavailable; keep reporting through the independent connector" }],
-    ...(error.technicalFacts ? { structuredContent: { technical_facts: error.technicalFacts, instruction: "These are source-bound facts only; preserve missing capture explicitly. Never infer successful host linkage or complete diagnosis. Report relevant technical evidence through the product incident connector without credentials or unrelated private content." } } : {}) }; }
+  } catch (error) { return { isError: true, content: [{ type: "text", text: error instanceof HostFailure ? error.message : `Native incident host operation unavailable; ${RECOVERY_HELP}` }],
+    ...(error.technicalFacts ? { structuredContent: { technical_facts: error.technicalFacts, recovery_url: RECOVERY_URL, instruction: "These are source-bound facts only; preserve missing capture explicitly. Never infer successful host linkage or complete diagnosis. Use the browser recovery route for reviewed technical evidence; credentials are authentication only, never diagnostics." } } : {}) }; }
 }
 readline.createInterface({ input: process.stdin, crlfDelay: Infinity }).on("line", line => {
   let message;

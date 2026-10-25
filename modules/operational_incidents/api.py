@@ -32,6 +32,11 @@ from modules.operational_incidents.oauth import (
     IncidentOAuth,
     OAuthError,
 )
+from modules.operational_incidents.recovery import (
+    SESSION_SECONDS,
+    RecoverySessionError,
+    RecoverySessions,
+)
 from modules.operational_incidents.store import (
     ConnectionActor,
     IncidentConflict,
@@ -218,6 +223,225 @@ _NO_CACHE = {
     "Referrer-Policy": "no-referrer",
 }
 
+_RECOVERY_OPERATIONS = {
+    "register",
+    "report",
+    "status",
+    "outcome",
+    "progress",
+    "workflow-record",
+    "workflow-status",
+    "workflow-stamp",
+    "restore-session",
+    "schema",
+}
+
+
+def _recovery_schema(product: Product, operation: str) -> dict[str, Any]:
+    """Expose the existing input contract without requiring MCP discovery."""
+    name = (
+        f"{product}_{operation.replace('-', '_')}"
+        if operation.startswith("workflow-")
+        else f"{product}_incident_{operation}"
+    )
+    tool = next(
+        (tool for tool in _product_tools(product) if tool["name"] == name), None
+    )
+    if tool is None:
+        raise HTTPException(422, "Choose a reporting operation to inspect its schema")
+    schema = tool["inputSchema"]
+    definitions = schema.pop("$defs", {})
+
+    def references(value: Any) -> set[str]:
+        if isinstance(value, dict):
+            found = (
+                {value["$ref"].removeprefix("#/$defs/")} if "$ref" in value else set()
+            )
+            return found.union(*(references(item) for item in value.values()))
+        if isinstance(value, list):
+            return set().union(*(references(item) for item in value))
+        return set()
+
+    needed = references(schema)
+    pending = set(needed)
+    while pending:
+        added = references(definitions[pending.pop()]) - needed
+        needed.update(added)
+        pending.update(added)
+    if needed:
+        schema["$defs"] = {name: definitions[name] for name in sorted(needed)}
+    return {"operation": operation, "input_schema": schema}
+
+
+@router.get("/{product}/incident-recovery", response_class=HTMLResponse)
+def incident_recovery_page(
+    product: Product,
+    request: Request,
+    store: IncidentStore = Depends(get_incident_store),
+) -> HTMLResponse:
+    """Offer reporting through the host browser when local execution is unavailable."""
+    _admit(request.client.host if request.client else "unknown")
+    sessions = RecoverySessions(store)
+    cookie = f"__Host-mpr_{product}_recovery"
+    marker = f"__Host-mpr_{product}_recovery_known"
+    token = request.cookies.get(cookie)
+    notice = ""
+    if token:
+        try:
+            actor = sessions.actor(token, product)
+        except RecoverySessionError:
+            token = None
+            notice = "La precedente identità richiede il ripristino. Nessuna nuova identità è stata creata."
+    elif request.cookies.get(marker):
+        notice = "La precedente identità richiede il ripristino. Nessuna nuova identità è stata creata."
+    else:
+        token, actor = sessions.create(product)
+    path = Path(__file__).resolve().parents[2] / "templates/incident_recovery.html"
+    response = HTMLResponse(
+        path.read_text(encoding="utf-8")
+        .replace("__PRODUCT__", product)
+        .replace("__SESSION_NOTICE__", notice),
+        headers={
+            **_NO_CACHE,
+            "Content-Security-Policy": "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'",
+            "X-Content-Type-Options": "nosniff",
+        },
+    )
+    if not token:
+        return response
+    response.set_cookie(
+        cookie,
+        token,
+        max_age=SESSION_SECONDS,
+        secure=True,
+        httponly=True,
+        samesite="strict",
+        path="/",
+    )
+    # Keep a public marker after capability expiry so a returning browser does
+    # not silently abandon its previous reports by creating a different owner.
+    response.set_cookie(
+        marker,
+        str(actor.connection_id),
+        max_age=365 * 24 * 3600,
+        secure=True,
+        httponly=True,
+        samesite="strict",
+        path="/",
+    )
+    return response
+
+
+@router.post("/api/{product}/incident-recovery/{operation}")
+async def incident_recovery_operation(
+    product: Product,
+    operation: str,
+    request: Request,
+    store: IncidentStore = Depends(get_incident_store),
+) -> JSONResponse:
+    """Reuse incident semantics over HTTPS, without an MCP tool or local process."""
+    if (
+        request.headers.get("origin") != ISSUER
+        or request.headers.get("x-mparanza-recovery") != "1"
+    ):
+        raise HTTPException(403, "Reporting requires a same-origin browser request")
+    if operation not in _RECOVERY_OPERATIONS:
+        raise HTTPException(404, "Unsupported reporting operation")
+    arguments = await _body(request)
+    if operation == "schema":
+        if (
+            set(arguments) != {"operation"}
+            or not isinstance(arguments["operation"], str)
+            or arguments["operation"]
+            not in (_RECOVERY_OPERATIONS - {"schema", "restore-session"})
+        ):
+            raise HTTPException(
+                422, "Choose a reporting operation to inspect its schema"
+            )
+        return JSONResponse(
+            _recovery_schema(product, arguments["operation"]), headers=_NO_CACHE
+        )
+    if operation == "restore-session":
+        sessions = RecoverySessions(store)
+        current_token = request.cookies.get(f"__Host-mpr_{product}_recovery")
+        current_actor = None
+        if current_token:
+            try:
+                current_actor = sessions.actor(current_token, product)
+            except RecoverySessionError:
+                # Explicit restore still works after the browser capability
+                # expires. An expired cookie proves no additional ownership.
+                pass
+        try:
+            if set(arguments) == {"credentials"}:
+                credentials = Credentials.model_validate(arguments["credentials"])
+                store.register(credentials, product=product)
+                owner = ConnectionActor(
+                    credentials.installation_id, credentials.installation_id
+                )
+                code = sessions.transfer(owner)
+            elif set(arguments) == {"transfer_code"} and isinstance(
+                arguments["transfer_code"], str
+            ):
+                code = arguments["transfer_code"]
+            else:
+                raise HTTPException(
+                    422, "Original credentials or a transfer code are required"
+                )
+            token, actor = sessions.restore(code, product, current_actor)
+        except ValidationError as error:
+            raise HTTPException(422, "Invalid reporting identity schema") from error
+        except (IncidentNotFound, IncidentConflict) as error:
+            raise HTTPException(
+                401, "Original reporting identity is unavailable"
+            ) from error
+        except RecoverySessionError as error:
+            raise HTTPException(401, str(error), headers=_NO_CACHE) from error
+        response = JSONResponse(
+            {
+                "installation_id": str(actor.connection_id),
+                "binding": "browser-recovery",
+                "restored": True,
+            },
+            headers=_NO_CACHE,
+        )
+        response.set_cookie(
+            f"__Host-mpr_{product}_recovery",
+            token,
+            max_age=SESSION_SECONDS,
+            secure=True,
+            httponly=True,
+            samesite="strict",
+            path="/",
+        )
+        response.set_cookie(
+            f"__Host-mpr_{product}_recovery_known",
+            str(actor.connection_id),
+            max_age=365 * 24 * 3600,
+            secure=True,
+            httponly=True,
+            samesite="strict",
+            path="/",
+        )
+        return response
+    try:
+        actor = RecoverySessions(store).actor(
+            request.cookies.get(f"__Host-mpr_{product}_recovery", ""), product
+        )
+    except RecoverySessionError as error:
+        raise HTTPException(401, str(error), headers=_NO_CACHE) from error
+    try:
+        data = _connection_dispatch(store, actor, operation, arguments)
+    except ValidationError as error:
+        raise HTTPException(422, "Invalid technical reporting schema") from error
+    except IncidentNotFound as error:
+        raise HTTPException(404, str(error)) from error
+    except (IncidentConflict, WorkflowConflict) as error:
+        raise HTTPException(409, str(error)) from error
+    if data.get("binding") == "saved-connector":
+        data = {**data, "binding": "browser-recovery"}
+    return JSONResponse(data, headers=_NO_CACHE)
+
 
 def _oauth_error(error: OAuthError) -> JSONResponse:
     return JSONResponse({"error": error.code}, status_code=400, headers=_NO_CACHE)
@@ -353,6 +577,16 @@ def _connection_dispatch(
     operation: str,
     arguments: dict[str, Any],
 ) -> dict[str, Any]:
+    if operation == "recovery_transfer":
+        if arguments:
+            raise IncidentConflict("Identity transfer does not accept arguments")
+        product = store.product(actor)
+        return {
+            "installation_id": str(actor.connection_id),
+            "recovery_url": f"{ISSUER}/{product}/incident-recovery",
+            "transfer_code": RecoverySessions(store).transfer(actor),
+            "expires_in": 300,
+        }
     envelope = ConnectionEnvelope.model_validate(arguments)
     member = actor
     if envelope.credentials is not None:
@@ -475,7 +709,17 @@ TOOLS = [
 
 def _product_tools(product: Product) -> list[dict[str, Any]]:
     """Render product names without rewriting schemas or admitted identifiers."""
-    tools = json.loads(json.dumps(TOOLS))
+    tools = json.loads(
+        json.dumps(
+            TOOLS
+            + [
+                _tool(
+                    "vera_incident_recovery_transfer",
+                    "Before removing a legacy remote connection, transfer its original reporting identity to the HTTPS browser recovery channel. Pass no arguments. Enter the returned one-time code only in that product's incident-recovery page using restore-session, then discard the code. Never put it in a URL, diagnostics or a user-facing message. This preserves the existing owner and does not copy or reset reports.",
+                )
+            ]
+        )
+    )
     for tool in tools:
         tool["name"] = tool["name"].replace("vera_", product + "_", 1)
         tool["description"] = tool["description"].replace("Vera", product.title())

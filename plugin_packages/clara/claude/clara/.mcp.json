@@ -5,10 +5,6 @@
       "args": [
         "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
       ]
-    },
-    "claraIncidents": {
-      "type": "http",
-      "url": "https://mparanza.com/mcp/clara-incidents"
     }
   }
 }

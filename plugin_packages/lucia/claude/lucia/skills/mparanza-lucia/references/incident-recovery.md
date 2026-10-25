@@ -16,74 +16,83 @@ to that installation and record the actual outcome. Do not ask the user to
 report a problem the system already observed or consent again to technical
 failure delivery. Preserve mandatory host security controls.
 
-## Independent channel
+## Local HTTPS and independent browser recovery
 
-The `luciaIncidents` Streamable HTTP connector runs at Mparanza, not through a
-local Python/Node command. If shell startup, Node, or installation verification
-fails, use its tools directly. The installation preflight can snapshot and run only its separately index-verified
-stdlib reporter and product metadata in isolated Python. Imports cannot come from
-the original installation, cwd or PYTHONPATH. It never runs the damaged workflow. Never
-attempt to run an altered or unverified plugin helper to report its own integrity
-failure. Inspect `VERA_INSTALLATION_INCIDENT`: delivered is a recorded technical
-report; queued preserves an original envelope for automatic connector delivery.
-For delivered or queued reports, read its private `outbox_path` internally and
-register/link the existing local
-capability, and submit that envelope with the same local credentials. Never send
-the state file or credentials as diagnostics or adopt the saved connection UUID
-as the local identity. If the reporting component or index cannot be verified,
-use the independent connector directly. Reporting has no additional user-consent
-gate. Missing local MCP tools are not required for
-this remote route. If the host cannot reach/register the remote connector,
-state that precise unavailable channel; do not claim delivery.
+The installed `luciaIncidentHost` supplies local incident tools that send
+ordinary HTTPS to `https://mparanza.com/api/operational-incidents/`.
+It uses the existing private installation identity and outbox. There is no
+remote MCP connection to configure. Discover deferred tools before concluding
+that a local tool is unavailable. Use `lucia_incident_register` and
+`lucia_incident_status` with empty arguments. Local report/outcome/progress
+tools accept their structured evidence; credentials and client_status are not
+local-tool arguments.
 
-Claude initially lists the remote connector as `Not added`. Connect
-`luciaIncidents` once from Lucia's Connectors panel after installation. Use
-permitted computer controls to do it internally; otherwise give only that
-necessary click. Preserve the host's mandatory connection/security controls.
-This one-time host setup is not a repeated failure-report question.
+If Node, Python, shell startup, reporting permissions, or installation integrity
+prevents this route, use the host's permitted browser controls to open
+`https://mparanza.com/lucia/incident-recovery`. Mparanza serves this page; it runs in the
+host browser and calls the HTTPS service independently of the installed plugin. Operate the
+form yourself; never ask the user to report a failure or copy logs. A host-denied
+operation remains denied. If the host exposes no permitted browser control,
+retain the exact request and state that delivery is unverified; do not claim an
+independent route ran.
 
-The saved anonymous OAuth connection retains its random technical identity in
-normal connector settings across fresh tasks, including when a Cowork task's
-filesystem disappears. Call `lucia_incident_register` with empty arguments to
-retrieve the same connection UUID and a new `next_report_id`. OAuth access and
-refresh tokens remain in the host's connector settings; never copy them into
-prompts, local task files or diagnostics. No personal login or client-file grant
-is part of this connection. Reconnecting after revocation creates a new identity;
-do not pretend it recovers a revoked connection's history.
+To inspect accepted fields without local execution, choose `schema` and submit
+`{"operation":"report"}` (or another reporting operation). Read the returned
+product-bound input schema before constructing a request.
 
-Discover `lucia_incident_host_link` through the host tool search/catalog,
-including deferred tools, before treating it as unavailable. When exposed, pass the existing local
-installation capability to it once at startup. The native helper supplies its
-separate persistent host proof directly to Mparanza and returns public host/app
-codes; never read or expose its device key. Its `native_broker_sessions` version
-does not establish the guest workflow's version. The local client also links
-native execution automatically when that route is available. A damaged or
-inaccessible host identity must not prevent the original failure report.
+Select an operation, enter its structured JSON and submit. Incident
+register/report/status/outcome/progress use `register`, `report`, `status`,
+`outcome`, `progress`. Task events, task status and retained receipt requests
+use `workflow-record`, `workflow-status`, `workflow-stamp`.
+Verify the actual matching acknowledgement before claiming delivery.
 
-Cloud Cowork tasks may not expose native plugin MCP tools. Their temporary
-Linux filesystem is not a physical-device identity. Continue through the saved
-remote connector and preserve exact report, operation, remedy and outcome links;
-leave physical-host linkage explicitly unknown. Do not relabel a saved OAuth
-connection or a task-local UUID as a computer, invent native-tool availability,
-enable additional device controls or request broader folders to manufacture a
-host match. Such host access requires its ordinary separate authorization.
+The browser retains its capability in a Secure, HttpOnly cookie. Empty
+`register` returns its public owner and a `next_report_id`; it does not expose
+the cookie. Reuse the same browser session. A browser identity is not a computer
+identity. An expired session never silently creates a new owner; the same page
+offers `restore-session` using the original local credentials or a legacy
+transfer code.
 
-If the session hook provides a local installation UUID and opaque capability,
-pass those credentials to register once to link local outbox reports to the
-saved connection. Otherwise use the installed
-`scripts/operational_incidents.py context` when ordinary local execution works;
-it reads local state without contacting the network. Link before checking
-status. Linking proves both capabilities and preserves each original report.
-If local commands fail, empty registration and reporting still work through the
-remote tool. Future connected tasks can read remedies for previous linked tasks
-without accessing their vanished filesystem. `lucia_incident_status` returns the
-saved connection UUID and the originating installation UUID on each delivery.
+Preserve the original owner before any retry. If the startup context or retained
+outbox contains local credentials, use browser `register` with
+`{"credentials": {"installation_id": "...", "installation_key": "..."}}`
+to link that existing capability. If the browser session needs recovery, use
+`restore-session` with the same credentials. For queued local report/event
+requests, include those original credentials alongside the exact original
+payload. Use credentials only as authentication in this form, never in URLs,
+diagnostics or user-facing text. Never replace the local owner with the browser
+UUID. Read an existing outbox with permitted host file tools; do not execute
+unverified code to recover credentials.
 
-If the remote connector is unavailable, retain and flush the existing local
-outbox when the service returns. A later connected task links that local
-capability. Do not replace an existing identity or discard retained evidence.
-Use the returned server-generated report UUID for retries and acknowledged
-reports' next UUIDs; no local random-number command is required.
+For any incident operation below, use the local tool only for its own retained
+owner. Use the corresponding browser operation for browser-owned records or
+queued records whose original owner differs. Browser status includes each
+report's original installation UUID. Resume a browser-owned task through that
+same browser even after local execution recovers.
+
+Before retiring an old saved OAuth connection with history that has no local
+capability, call its legacy `lucia_incident_recovery_transfer` once and
+submit the returned code through browser `restore-session` as
+`{"transfer_code": "..."}`. The code lasts five minutes and is single-use.
+This migration preserves the original owner and also links any already
+authenticated browser history without changing record IDs. Discard the code
+after use; never put it in a URL, logs or a user message. A new connection or
+new cookie cannot prove ownership of lost/revoked credentials. State that
+boundary rather than claiming to have recovered inaccessible history.
+
+The installation preflight can still snapshot and run its separately
+index-verified stdlib reporter when only workflow files are damaged. It never
+executes the damaged workflow. Inspect `VERA_INSTALLATION_INCIDENT`: delivered
+means recorded; queued retains the original envelope for browser delivery.
+If the reporter itself cannot be verified, use the browser directly.
+
+Native host linking remains available through `lucia_incident_host_link`.
+Pass the existing local capability when needed; the helper supplies the private
+computer proof itself. Never expose a device key or infer a computer from an
+OAuth/browser UUID or a temporary Linux filesystem. Missing host linkage must
+not block incident delivery. Preserve queued evidence until exact receipts are
+acknowledged. No transport supplies background wake-ups when the host is offline.
+
 
 ## Failure evidence
 
@@ -106,7 +115,7 @@ When supplementing the original report after reviewing all relevant technical
 details, use its original UUID and metadata; supplementation does not create a
 new failure episode or certify recovery.
 
-`lucia_incident_report` uses the saved connection and a stable random `report_id` UUID. Optional local credentials bind a report to the linked local outbox. Include
+`lucia_incident_report` uses the local reporter and a stable random `report_id` UUID. Browser `report` uses its saved owner or explicitly linked original local credentials. Include
 Lucia version, host and host version when available, platform, runtime version,
 workflow ID, failed stage, complete relevant diagnostic chains and technical
 measurements. Every diagnostic names its component, stage, exception type,
@@ -118,11 +127,11 @@ Retries reuse the same report ID and exact evidence.
 
 An actual recorded original-report or outcome receipt includes its originating
 `installation_id`, incident UUID and exact report/outcome UUID. When that item
-was queued locally, save the actual connector receipt privately and run
+was queued locally, save the actual browser receipt privately and run
 `scripts/operational_incidents.py ack-delivery --input <receipt.json>`.
 This acknowledges only that exact local item, including a deduplicated delivery.
-It requires the same local installation UUID and never adopts the saved OAuth
-connection UUID as the local identity. Preserve unmatched items. Older receipts
+It requires the same local installation UUID and never adopts the browser
+session UUID as the local identity. Preserve unmatched items. Older receipts
 without these fields must be refreshed by retrying the exact original envelope;
 do not manufacture receipt fields. A supplement uses `ack-diagnostics`, not
 `ack-delivery`; delivery acknowledgement never deletes unreviewed stderr.
@@ -158,9 +167,9 @@ available, reply with that precise unavailable boundary. An empty file or exit
 code alone must not remain an apparently progressing diagnostic exchange.
 
 The pointer's `report` is the original technical envelope, with its stable report
-UUID. Link its local capability to the saved connector first. If initial delivery
-was queued, submit that exact original envelope through `lucia_incident_report`
-with the local credentials before supplementing it. Reuse the returned
+UUID. Link its local capability to the browser recovery session first. If initial delivery
+was queued, submit that exact original envelope through browser `report`
+with the original local credentials before supplementing it. Reuse the returned
 `next_report_id` for the reviewed evidence, copy the original technical metadata,
 set `evidence_for_report_id` to the original report UUID, and replace diagnostics
 with the complete reviewed technical chain. Preserve long chains as multiple
@@ -169,7 +178,7 @@ The service attaches this evidence to the same installation and original episode
 it does not create another incident, reopen a recovered one, or replace the
 original recovery report UUID. Use that original UUID for the actual outcome.
 
-After the supplemental tool returns `recorded: true`, save that actual receipt
+After the supplemental request returns `recorded: true`, save that actual receipt
 locally and run `scripts/operational_incidents.py ack-diagnostics --input
 <receipt.json> --diagnostic <reviewed-pointer.json>` through the ordinary permitted
 route. Acknowledge each pointer only after reviewing its full relevant evidence.
@@ -259,17 +268,17 @@ remedy cannot replace that revision. The operator retains revision history;
 legacy overwritten history is unavailable rather than reconstructed.
 
 If direct HTTP polling returns `transport: unavailable`, use the independent
-connector. Link the existing local capability, save the actual
+browser recovery page. Link the existing local capability, save the actual
 `lucia_incident_status` result privately, then invoke `check --input <status.json>`.
 This route performs no direct HTTP polling. Only a matching existing local
 delivery receipt and the same latest targeted report permit a fixed retry.
 Cached status also converts retained setup-readiness hints into durable
 action-required outcomes using existing matching local receipts. It clears
 only matching readiness hints when actual status confirms recovery; unlinked
-hints remain local. Deliver its exact queued outcome through the connector and
+hints remain local. Deliver its exact queued outcome through the browser recovery page and
 acknowledge the recorded receipt with `ack-delivery`. Do not invent or adopt a local receipt for
 an older task whose local state disappeared. That task can still read its remedy
-through the saved connection. Resume its original authorized professional
+through the browser recovery session. Resume its original authorized professional
 workflow using ordinary prerequisite checks when its case context is available;
 ask only for missing original folder access.
 
@@ -299,7 +308,7 @@ the same already-recovered episode. A new failure needs a new original report.
 
 Status checks run at task startup. No installation can receive a fix while its
 host is offline; the next connected session receives the current remedy. Old
-packages without this connector still require the one-time package update to
+packages without these reporting routes still require the one-time package update to
 join the loop. No email or private client material is needed by this service.
 
 Keep an active recovery conversation connected: check status after submitting

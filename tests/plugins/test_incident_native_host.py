@@ -33,6 +33,7 @@ def installed(
         "reporting_product.py",
         "technical_runner.py",
         "workflow_usage.py",
+        "incident_tool_schemas.json",
     ):
         shutil.copyfile(
             ROOT / "plugins" / product / "scripts" / name, root / "scripts" / name

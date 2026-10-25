@@ -30,6 +30,28 @@ VERA_PRIVACY_VALIDATOR = (
 )
 
 
+SERVICE_LAUNCH_ARGUMENTS = {
+    "veraNativeWorkspace": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_service_mcp.cjs",
+        "mcp/workspace.cjs",
+    ],
+    "studioWork": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_service_mcp.cjs",
+        "mcp/studio-work.cjs",
+    ],
+    "researchSources": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_service_mcp.cjs",
+        "mcp/research-sources.cjs",
+        "--stdio",
+    ],
+    "veraIncidentHost": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_service_mcp.cjs",
+        "scripts/incident_host_mcp.cjs",
+    ],
+    "veraExecution": ["${CLAUDE_PLUGIN_ROOT}/scripts/native_execution_mcp.cjs"],
+}
+
+
 def load_builder():
     # Match the CLI entrypoint import path when loading its script directly.
     if str(ROOT / "scripts") not in sys.path:
@@ -568,34 +590,18 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert set(cowork_mcp["mcpServers"]) == set(canonical_mcp["mcpServers"]) - {
         "courseChats"
     }
-    assert all(
-        server.get("args", [None])[0]
-        == (
-            "${CLAUDE_PLUGIN_ROOT}/mcp/workspace.cjs"
-            if name == "veraNativeWorkspace"
-            else (
-                "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
-                if name == "studioWork"
-                else (
-                    "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs"
-                    if name == "researchSources"
-                    else (
-                        "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
-                        if name == "veraIncidentHost"
-                        else (
-                            "${CLAUDE_PLUGIN_ROOT}/scripts/native_execution_mcp.cjs"
-                            if name == "veraExecution"
-                            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
-                        )
-                    )
-                )
+    for name, server in cowork_mcp["mcpServers"].items():
+        assert server["command"] == "node"
+        if name in SERVICE_LAUNCH_ARGUMENTS:
+            assert server["args"] == SERVICE_LAUNCH_ARGUMENTS[name]
+        else:
+            assert (
+                server["args"][0]
+                == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
             )
-        )
-        for name, server in cowork_mcp["mcpServers"].items()
-        if server.get("type") != "http"
-    )
+            assert len(server["args"]) == 2
     assert '"archive-organization"' in vera_entries[
-        "scripts/run_component_mcp.cjs"
+        "scripts/component_service.cjs"
     ].decode("utf-8")
     assert "skills/mparanza-vera/references/cowork-runtime.md" not in vera_entries
     assert (
@@ -698,47 +704,18 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
 
     canonical_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
     assert set(servers) == set(canonical_mcp["mcpServers"]) - {"courseChats"}
+    assert "veraIncidents" not in servers
     for name, server in servers.items():
-        if name == "veraIncidents":
-            assert server == {
-                "type": "http",
-                "url": "https://mparanza.com/mcp/vera-incidents",
-            }
-            continue
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
-        assert server["args"][0] == (
-            "${CLAUDE_PLUGIN_ROOT}/mcp/workspace.cjs"
-            if name == "veraNativeWorkspace"
-            else (
-                "${CLAUDE_PLUGIN_ROOT}/mcp/studio-work.cjs"
-                if name == "studioWork"
-                else (
-                    "${CLAUDE_PLUGIN_ROOT}/mcp/research-sources.cjs"
-                    if name == "researchSources"
-                    else (
-                        "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
-                        if name == "veraIncidentHost"
-                        else (
-                            "${CLAUDE_PLUGIN_ROOT}/scripts/native_execution_mcp.cjs"
-                            if name == "veraExecution"
-                            else "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
-                        )
-                    )
-                )
+        if name in SERVICE_LAUNCH_ARGUMENTS:
+            assert server["args"] == SERVICE_LAUNCH_ARGUMENTS[name]
+        else:
+            assert (
+                server["args"][0]
+                == "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs"
             )
-        )
-        assert len(server["args"]) == (
-            1
-            if name
-            in {
-                "veraNativeWorkspace",
-                "studioWork",
-                "veraIncidentHost",
-                "veraExecution",
-            }
-            else 2
-        )
+            assert len(server["args"]) == 2
         assert "cwd" not in server
         assert "icons" not in server
         assert "title" not in server
@@ -905,7 +882,7 @@ def test_cowork_build_rejects_studio_work_missing_from_source_registration(
     """Do not manufacture a declared service when its source registry is absent."""
     builder, _, package = configured
     codex_builder = builder._load_codex_builder()
-    original_entries = codex_builder.expected_zip_entries
+    original_entries = codex_builder.source_zip_entries
 
     def missing_registration(target, **options):
         entries = original_entries(target, **options)
@@ -915,7 +892,7 @@ def test_cowork_build_rejects_studio_work_missing_from_source_registration(
         entries[key] = json.dumps(components).encode()
         return entries
 
-    monkeypatch.setattr(codex_builder, "expected_zip_entries", missing_registration)
+    monkeypatch.setattr(codex_builder, "source_zip_entries", missing_registration)
     monkeypatch.setattr(builder, "_load_codex_builder", lambda: codex_builder)
 
     with pytest.raises(ValueError, match="missing Cowork shared services.*studio-work"):

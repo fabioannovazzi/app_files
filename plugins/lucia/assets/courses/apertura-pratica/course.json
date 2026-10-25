@@ -179,7 +179,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/lucia/scripts/operational_incidents.py",
-      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
+      "sha256": "d9821773c32c5844acfe60a248b7160329cd199de982a73364ae3a3a47f29fb4"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -194,7 +194,7 @@
     {
       "path": "skills/apertura-pratica/SKILL.md",
       "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
-      "sha256": "15b77eb2bdf1e3e1552766780952abcece2e64344f8f70c92227adcb4e9965d4"
+      "sha256": "b825165e100f105e50ea67f41b89e9ec650eccd03ea90a43c5b3bc08dfa3c601"
     },
     {
       "path": "vendor/modules/__init__.py",

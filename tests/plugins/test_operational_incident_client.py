@@ -692,7 +692,7 @@ def test_blocked_direct_poll_returns_independent_route_and_preserves_queue(
     result = module.check_incidents()
 
     assert result["transport"] == "unavailable"
-    assert result["independent_connector"] == "vera_incident_status"
+    assert result["recovery_url"] == "https://mparanza.com/vera/incident-recovery"
     assert result["error_type"] == "URLError"
     assert "403 Forbidden" in result["message"]
     assert module._read()["outbox"] == before
@@ -840,7 +840,7 @@ def test_integrity_failure_routes_to_remote_connector_without_unverified_report_
     result = launcher.main(["--module", "bandi-agevolazioni", "run", "helper.py"])
 
     assert result == 1
-    assert "VERA_REMOTE_INCIDENT_REQUIRED" in caplog.text
+    assert "VERA_BROWSER_INCIDENT_REQUIRED" in caplog.text
     assert "stage=installation-preparation" in caplog.text
     assert "Installation content mismatch: synthetic.py" in caplog.text
 
@@ -996,7 +996,7 @@ def test_startup_retains_capability_without_network_or_shell(tmp_path, monkeypat
     assert "vera_incident_register/status" in first
 
 
-def test_unavailable_local_state_routes_to_independent_connector(tmp_path, monkeypatch):
+def test_unavailable_local_state_routes_to_independent_browser(tmp_path, monkeypatch):
     module, _, _ = client(tmp_path, monkeypatch)
     monkeypatch.setattr(
         module, "_read", lambda: (_ for _ in ()).throw(PermissionError("private state"))
@@ -1004,8 +1004,8 @@ def test_unavailable_local_state_routes_to_independent_connector(tmp_path, monke
     result = module.report_failure(
         "journal-sampling", "dependency-setup", "setup failed"
     )
-    assert result["independent_connector"] == "vera_incident_report"
-    assert "vera_incident_register" in module.startup_context()
+    assert result["recovery_url"] == "https://mparanza.com/vera/incident-recovery"
+    assert "https://mparanza.com/vera/incident-recovery" in module.startup_context()
 
 
 def test_setup_helper_success_requires_original_case_verification(

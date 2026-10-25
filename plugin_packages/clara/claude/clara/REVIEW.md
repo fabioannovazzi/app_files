@@ -3,20 +3,18 @@
 ## MCP servers
 These servers run locally over stdio, exchanging data with local files and
 helper processes on the user's machine.
-This is their MCP transport, not an offline guarantee: browser acquisition
-can access user-selected websites; incident identity/recovery can contact
-the service below. Review widgets do not upload client documents.
-
-- `claraIncidentHost`: Bind local installation/host identity for incident recovery.
-
-Remote: `claraIncidents` at https://mparanza.com/mcp/clara-incidents.
-Receives technical incident metadata, reviewed diagnostics and recovery outcomes,
-plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings
-with optional user-authored feedback. It authenticates with its own installation/
-connection credentials. It does not automatically upload client documents, prompts
-or professional output. Optional feedback is the user's chosen text. Diagnostics
-exclude case text and passwords/API keys; credentials are authentication only.
+The local reporting service sends ordinary HTTPS to Mparanza for technical
+incidents, task events, receipt signatures and user-authored feedback.
+Independent browser recovery uses https://mparanza.com/clara/incident-recovery.
+It is operated by the agent when the host permits browser control. Reporting
+credentials authenticate requests; they are never diagnostic content.
+The package does not require a remote MCP connection. Historical OAuth
+owners can migrate through the legacy service before their connection is retired.
+Client documents, professional output and unreviewed logs are not reporting inputs.
 Privacy policy: https://mparanza.com/privacy.
+
+- `claraIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
+
 
 ## Lesson downloads
 Lesson data is fetched when the user starts or resumes a lesson, not installation.

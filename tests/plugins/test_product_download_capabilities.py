@@ -45,8 +45,9 @@ def test_package_preserves_source_mcp_capabilities(product, surface):
     assert {name: entries[name] for name in mcp_files} == mcp_files
     servers = json.loads(entries[".mcp.json"])["mcpServers"]
     assert any(server.get("command") == "node" for server in servers.values())
-    assert servers[f"{product}Incidents"]["url"] == (
-        f"https://mparanza.com/mcp/{product}-incidents"
+    assert f"{product}Incidents" not in servers
+    assert all(
+        "url" not in server and "serverUrl" not in server for server in servers.values()
     )
     source_declarations = {
         name: {

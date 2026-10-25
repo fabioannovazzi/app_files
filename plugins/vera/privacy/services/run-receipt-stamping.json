@@ -6,8 +6,8 @@
       "kind": "hosted_service",
       "destination": "Mparanza's fixed HTTPS Vera run-receipt endpoint and public verification page",
       "purpose": "Authenticate the existing machine Vera userID and bind the hash of each selected Archive run report to that run, revision and server time.",
-      "content": "For every run of the 13 selected Vera pipelines, Archive automatically prepares a schema-3 proof request containing product, receipt UUID, plugin version, canonical report SHA-256, existing Vera userID (installation_id), Archive run ID and report revision. The operational transport authenticates existing installation credentials and requires its existing verified machine link. Ordinary connection metadata also reaches Mparanza. No report body, outgoing payloads, source paths, source hashes, row counts, source values, prompts or model outputs are submitted. Verification supplies the receipt ID, report hash, Vera userID, Archive run ID and revision together.",
-      "retention": "The server retains the proof fields, server timestamp, signature and signing-key identity, with a unique userID/run/revision binding, without an automatic deletion period. Reports, exact Vera outgoing payloads, local database and receipts remain inside the local Archive run until the studio removes them. Deleting a server proof makes later server verification unavailable.",
+      "content": "For every run of the 13 selected Vera pipelines, Archive automatically prepares a schema-3 proof request containing product, receipt UUID, plugin version, canonical report SHA-256, existing Vera userID (installation_id), Archive run ID and report revision. The operational transport authenticates existing installation credentials and requires its existing verified machine link. Ordinary connection metadata also reaches Mparanza. No report body, outgoing payloads, source paths, source hashes, row counts, source values, prompts or model outputs are submitted. Verification supplies the receipt ID, report hash, Vera userID, Archive run ID and revision together. The replacement transport preserves the same closed reporting payloads. Browser cookies and optional original local credentials authenticate only; they are not diagnostic fields. Browser status and acknowledgements enter the selected host model context when the agent reads the rendered response. The schema view returns field definitions, not stored user data. The browser fallback sends no professional documents or raw model-data report.",
+      "retention": "The server retains the proof fields, server timestamp, signature and signing-key identity, with a unique userID/run/revision binding, without an automatic deletion period. Reports, exact Vera outgoing payloads, local database and receipts remain inside the local Archive run until the studio removes them. Deleting a server proof makes later server verification unavailable. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced.",
       "activation": "automatic_per_durable_run",
       "optional": false,
       "requires_confirmation": false,
@@ -26,7 +26,9 @@
         "Historical schema-1 and schema-2 receipts remain readable through their existing routes; the authenticated Archive proof does not depend on a separate workflow-usage link.",
         "The general verify command delegates schema-3 receipts to the same Archive verifier, defaults the expected owner to the existing local Vera installation identity, and requires exact agreement between the local receipt and the retained server proof. An explicit expected userID is supported for verification. Neither command rewrites the closed report or its professional artifacts. Legacy schema-1 and schema-2 verification remains independent of local installation credentials.",
         "A saved terminal lifecycle transition remains acknowledged when local report generation or resealing fails. Report files are not deleted as a recovery action, unavailable reporting is acknowledged separately, and same-run retry finishes reporting without recalculation or duplicate lifecycle transitions. A partially written local report is not claimed as final before generation and resealing finish. Terminal recovery attempts are isolated and rotated locally; closure occurs after the local report and reseal succeed. Post-tool recording failures return operation, failure stage and a validated opaque run ID where available while withholding unrecorded case content. These metadata acknowledgements add no hosted recipient or server payload field.",
-        "Ordinary operations recover only the exact selected client/engagement/run; unrelated pending report locks and server requests are not prerequisites. Explicit maintenance retains the bounded independent recovery queue. Failed or cancelled runs may close using sealed ownership and retained observation evidence even when original or execution input bytes are unavailable. Execution, completion and professional-artifact seals retain their full integrity checks. No new recipient, payload field or source-file transmission is introduced."
+        "Ordinary operations recover only the exact selected client/engagement/run; unrelated pending report locks and server requests are not prerequisites. Explicit maintenance retains the bounded independent recovery queue. Failed or cancelled runs may close using sealed ownership and retained observation evidence even when original or execution input bytes are unavailable. Execution, completion and professional-artifact seals retain their full integrity checks. No new recipient, payload field or source-file transmission is introduced.",
+        "Local native incident and workflow tools send ordinary HTTPS using the retained private installation owner. The plugin declares no remote MCP connection. When local execution is unavailable, the agent can operate the independently hosted recovery page using the host permitted browser controls. No browser capability or host approval is assumed. The browser authenticates with a Secure, HttpOnly, SameSite=Strict, host-only cookie. POST requests require the fixed same-origin Origin and custom header; no CORS is enabled. An expired or missing previously known capability does not silently create a new owner. Schema discovery exposes the product-bound operation contract without MCP discovery.",
+        "Original local credentials can link or restore their owner over HTTPS. A legacy OAuth owner can request a five-minute, single-use transfer code while the old connection is still available. Only hashes of browser tokens and transfer codes are stored. Transfer preserves original record owners and links already authenticated browser history. The code is submitted in the request body, never a URL. Lost or revoked credentials do not prove ownership and cannot be replaced by a new identity to claim old history."
       ]
     }
   ],
@@ -59,7 +61,9 @@
     "usage/pipelines.json",
     "scripts/component_gateway.py",
     "scripts/component_service.cjs",
-    "scripts/run_service_mcp.cjs"
+    "scripts/run_service_mcp.cjs",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/incident_tool_schemas.json"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -85,13 +89,17 @@
     "plugins/studio-archive/scripts/run_reporting.py",
     "plugins/studio-archive/scripts/client_ledger.py",
     "modules/operational_incidents/api.py",
-    "modules/operational_incidents/store.py"
+    "modules/operational_incidents/store.py",
+    "modules/operational_incidents/recovery.py",
+    "templates/incident_recovery.html",
+    "static/shared/incident-recovery.js",
+    "static/shared/incident-recovery.css"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-23",
+    "reviewed_at": "2026-10-25",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "0fc7ad35878c609a5258e2953056b98ec74fa643f6a36fbb285ab4aa577c2161"
+    "source_fingerprint": "bec6314719e8b6dbae6c55c4d7653f39d4aa5bbe9cac0c57392d123ee1e8d7e8"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -147,6 +155,18 @@
         "repository:modules/operational_incidents/store.py"
       ],
       "on_violation": "Oversized or excess requests receive an explicit 413 or 429 response without creating a receipt."
+    },
+    {
+      "id": "https-browser-reporting-continuity",
+      "control": "Local native incident and workflow tools send ordinary HTTPS using the retained private installation owner. The plugin declares no remote MCP connection. When local execution is unavailable, the agent can operate the independently hosted recovery page using the host permitted browser controls. No browser capability or host approval is assumed. The browser authenticates with a Secure, HttpOnly, SameSite=Strict, host-only cookie. POST requests require the fixed same-origin Origin and custom header; no CORS is enabled. An expired or missing previously known capability does not silently create a new owner. Schema discovery exposes the product-bound operation contract without MCP discovery. Original local credentials can link or restore their owner over HTTPS. A legacy OAuth owner can request a five-minute, single-use transfer code while the old connection is still available. Only hashes of browser tokens and transfer codes are stored. Transfer preserves original record owners and links already authenticated browser history. The code is submitted in the request body, never a URL. Lost or revoked credentials do not prove ownership and cannot be replaced by a new identity to claim old history.",
+      "implemented_by": [
+        "repository:modules/operational_incidents/recovery.py",
+        "repository:modules/operational_incidents/api.py",
+        "repository:static/shared/incident-recovery.js",
+        "scripts/operational_incidents.py",
+        "scripts/incident_host_mcp.cjs"
+      ],
+      "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
     }
   ],
   "service_id": "run-receipt-stamping"

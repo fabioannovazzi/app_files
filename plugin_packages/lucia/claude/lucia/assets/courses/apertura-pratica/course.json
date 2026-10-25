@@ -148,7 +148,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "0c22e5eeb086f633d70b7f921da4155aa7cac49bef010ec942139b379fd79103"
+      "sha256": "d9821773c32c5844acfe60a248b7160329cd199de982a73364ae3a3a47f29fb4"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -160,7 +160,7 @@
     },
     {
       "path": "skills/mparanza-apertura-pratica/SKILL.md",
-      "sha256": "1a3e557e465b1b175b9bf9989139d05db62f783e808bbc988d94b135cbeb2f17"
+      "sha256": "71c1dcd5f99e2e46d6a5edef57d1eeffc87cd419bf72f2e30baf975d1a378641"
     },
     {
       "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",
@@ -557,5 +557,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "62b6b9a423765002d4a6da1a2b101b6962574f4e29153ac03e048685f380dec8"
+  "canonical_course_sha256": "42a76b075339e1d5d5f6878375c181a2125708b2536014f44c703d5709d3eafe"
 }

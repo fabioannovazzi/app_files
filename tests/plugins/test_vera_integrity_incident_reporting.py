@@ -146,12 +146,12 @@ def test_every_preflight_delivers_exact_mismatch_and_stays_blocked(
     assert saved["outbox"] == []
     assert saved["receipts"][0]["report_id"] == report["report_id"]
     assert "VERA_INSTALLATION_INCIDENT" in caplog.text
-    assert "VERA_REMOTE_INCIDENT_REQUIRED" not in caplog.text
+    assert "VERA_BROWSER_INCIDENT_REQUIRED" not in caplog.text
     assert incident["status"] == "open"
     assert incident["outcomes"] == []
 
 
-def test_outage_retains_same_original_report_and_exposes_connector_route(
+def test_outage_retains_same_original_report_and_exposes_browser_route(
     tmp_path, monkeypatch, caplog
 ):
     root, _ = installed_copy(tmp_path)
@@ -178,7 +178,7 @@ def test_outage_retains_same_original_report_and_exposes_connector_route(
         == saved["outbox"][0]["payload"]["report"]["report_id"]
     )
     assert '"reporting": "queued"' in caplog.text
-    assert "VERA_REMOTE_INCIDENT_REQUIRED" in caplog.text
+    assert "VERA_BROWSER_INCIDENT_REQUIRED" in caplog.text
 
 
 @pytest.mark.parametrize(
@@ -209,7 +209,7 @@ def test_unverifiable_reporter_never_runs_and_requires_remote_route(
     assert not sentinel.exists()
     assert not (state / "state.json").exists()
     assert store.queue() == []
-    assert "VERA_REMOTE_INCIDENT_REQUIRED" in caplog.text
+    assert "VERA_BROWSER_INCIDENT_REQUIRED" in caplog.text
 
 
 def test_missing_inventory_entry_reports_no_arbitrary_filename_or_contents(
@@ -273,5 +273,5 @@ def test_real_reporter_process_excludes_unindexed_stdlib_shadows(tmp_path, locat
 
     assert result.returncode == 1
     assert not sentinel.exists()
-    assert "VERA_REMOTE_INCIDENT_REQUIRED" in result.stderr
+    assert "VERA_BROWSER_INCIDENT_REQUIRED" in result.stderr
     assert '"reporting": "local-state-unavailable"' in result.stderr

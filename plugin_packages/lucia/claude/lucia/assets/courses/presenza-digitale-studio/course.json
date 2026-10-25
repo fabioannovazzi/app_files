@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "4d2426eb1f4f50dbf895d8555eed1454ac1c8e572dfd3c624e407d16b75b8f5c"
+      "sha256": "2583f9177b8f986b388184df2a125013802e48237521b969dd77b619ba6bcb7f"
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/references/lucia-lawyer-profile.md",
@@ -430,5 +430,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2588253e40204e20028f4c0410c95a4e436ae0b6a7f52af9b1559771594dfe08"
+  "canonical_course_sha256": "358251d0c572f659316d1444030274980fdc6d0bc5338ef944db6dd933282e2c"
 }

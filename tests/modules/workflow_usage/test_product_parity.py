@@ -5,6 +5,8 @@ from __future__ import annotations
 import base64
 import hashlib
 import os
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 from uuid import uuid4
 
 import psycopg
@@ -27,6 +29,10 @@ from modules.operational_incidents.oauth import (
     IncidentOAuth,
     OAuthError,
 )
+from modules.operational_incidents.recovery import (
+    RecoverySessionError,
+    RecoverySessions,
+)
 from modules.operational_incidents.store import IncidentConflict, IncidentStore
 from modules.run_receipts import api as receipt_api
 from modules.run_receipts.signing import RunReceiptSigner
@@ -41,6 +47,33 @@ PIPELINES = {
     "clara": "business-planning",
     "lucia": "quesito-legale-fiscale",
 }
+
+
+@pytest.mark.parametrize("product", ("vera", "clara", "lucia"))
+def test_browser_identity_transfer_can_only_be_consumed_once_concurrently(
+    stores, product
+):
+    store, _ = stores
+    sessions = RecoverySessions(store)
+    _, original = sessions.create(product)
+    code = sessions.transfer(original)
+    ready = Barrier(2)
+
+    def restore():
+        ready.wait(timeout=10)
+        try:
+            token, actor = RecoverySessions(store).restore(code, product)
+        except RecoverySessionError:
+            return False
+        assert actor.connection_id == original.connection_id
+        assert RecoverySessions(store).actor(token, product) == original
+        return True
+
+    with ThreadPoolExecutor(max_workers=2) as executor:
+        attempts = [executor.submit(restore), executor.submit(restore)]
+        accepted = [attempt.result(timeout=20) for attempt in attempts]
+
+    assert sorted(accepted) == [False, True]
 
 
 @pytest.fixture

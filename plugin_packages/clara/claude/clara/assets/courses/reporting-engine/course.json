@@ -184,7 +184,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "94402e61cd5fb2d1f5adee49c3610b6af9ee348f411394b0e8711f6b51979f6d"
+      "sha256": "11e364bace0d6bc91fb9ffaf4e7a1ff548d4a85cf81c44216bdeb107f0cd3d9b"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -196,7 +196,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "1727aac344b96c565cf666947802c5b67bf9e2df93ab714d97370786c726d211"
+      "sha256": "c412170804561ab8ee6115dc6aa9591442a74bc2907068f8f7f4ec133fb62041"
     },
     {
       "path": "scripts/record_reporting_contribution.py",
@@ -208,7 +208,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "660f90dcfa8860660d8fcc4948078c0dfb24ae603b799771321a74b188127d0c"
+      "sha256": "0b3ff925aa14ed025dfb2780bb3f35f981e7425047fbd0712fbab222d7180b14"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -216,7 +216,7 @@
     },
     {
       "path": "skills/mparanza-reporting-engine/SKILL.md",
-      "sha256": "3328f4a0c27ed27df815c453f16e24d94e36f168c48c422270a06ea70e6d8965"
+      "sha256": "951bf479ad5b5baa8a2d6dd58a0466c52f5dd897e270d846259bf8a6f0ab39be"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -457,5 +457,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "105ea0e13ecf9157f29145a8850810d3d9cc0111aa376f24cad3e2c4d7d352dd"
+  "canonical_course_sha256": "a7c4d5366094b22d741811d8fabf39fb771bb277ebca6252f47c659bec6b3dd8"
 }

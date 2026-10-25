@@ -3,9 +3,15 @@
 ## MCP servers
 These servers run locally over stdio, exchanging data with local files and
 helper processes on the user's machine.
-This is their MCP transport, not an offline guarantee: browser acquisition
-can access user-selected websites; incident identity/recovery can contact
-the service below. Review widgets do not upload client documents.
+The local reporting service sends ordinary HTTPS to Mparanza for technical
+incidents, task events, receipt signatures and user-authored feedback.
+Independent browser recovery uses https://mparanza.com/vera/incident-recovery.
+It is operated by the agent when the host permits browser control. Reporting
+credentials authenticate requests; they are never diagnostic content.
+The package does not require a remote MCP connection. Historical OAuth
+owners can migrate through the legacy service before their connection is retired.
+Client documents, professional output and unreviewed logs are not reporting inputs.
+Privacy policy: https://mparanza.com/privacy.
 
 - `agenziaAcquisition`: Review and run user-authorized browser acquisition tasks.
 - `archiveOrganizationWidgets`: Review client-folder organization plans and decisions.
@@ -27,19 +33,11 @@ the service below. Review widgets do not upload client documents.
 - `studioWork`: Persist studio tasks, deadlines and external-action receipts locally.
 - `varianceAnalysisWidgets`: Review accounting variance calculations and decisions.
 - `veraExecution`: Run published local helpers with retained results and diagnostics, task-scoped incident delivery and cancellation of the owned process tree. Helper output enters the selected host model when returned; it is not uploaded to the incident service.
-- `veraIncidentHost`: Bind local installation/host identity for incident recovery.
+- `veraIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
 - `veraNativeWorkspace`: Expose local client workspaces, source selection and review tools.
 - `veraSalesPlan`: Describe the Actual-to-Plan workflow and its artifacts.
 - `veraStudioArchive`: Manage registered local client folders and engagement records.
 
-Remote: `veraIncidents` at https://mparanza.com/mcp/vera-incidents.
-Receives technical incident metadata, reviewed diagnostics and recovery outcomes,
-plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings
-with optional user-authored feedback. It authenticates with its own installation/
-connection credentials. It does not automatically upload client documents, prompts
-or professional output. Optional feedback is the user's chosen text. Diagnostics
-exclude case text and passwords/API keys; credentials are authentication only.
-Privacy policy: https://mparanza.com/privacy.
 
 ## Lesson downloads
 Lesson data is fetched when the user starts or resumes a lesson, not installation.
