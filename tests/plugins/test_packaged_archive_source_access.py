@@ -184,6 +184,4 @@ def test_packaged_intake_offers_actual_host_capabilities(
     assert "check-import-sources" in section
     assert "If the MCP tool is unavailable" in section
     assert "only when the current host offers it" in section
-    assert (root / "modules/studio-archive/mcp/server.cjs").exists() is (
-        host != "chatgpt"
-    )
+    assert (root / "modules/studio-archive/mcp/server.cjs").is_file()
