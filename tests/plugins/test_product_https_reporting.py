@@ -53,7 +53,9 @@ def test_marketplace_preparation_preserves_known_metadata_without_inventing_revi
     ) as archive:
         manifest = json.loads(archive.read("plugin.json"))
         legacy = json.loads(archive.read(".codex-plugin/plugin.json"))
-        declared = json.loads(archive.read("submission/openai.json"))
+        declared = json.loads(
+            (ROOT / "plugins" / product / "submission/openai.json").read_bytes()
+        )
 
     openai = manifest["extensions"]["com.openai"]
     assert openai["review"] == declared["review"]

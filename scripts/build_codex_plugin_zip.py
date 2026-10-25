@@ -1473,7 +1473,9 @@ def project_chatgpt_component_manifest(content: bytes) -> bytes:
     return (json.dumps(manifest, indent=2) + "\n").encode("utf-8")
 
 
-def add_portable_upload_manifests(entries: dict[str, bytes]) -> None:
+def add_portable_upload_manifests(
+    entries: dict[str, bytes], *, metadata: dict[str, Any] | None = None
+) -> None:
     """Expose the existing upload through the Agent Plugins 1.0 format."""
 
     legacy = json.loads(entries[".codex-plugin/plugin.json"])
@@ -1498,9 +1500,7 @@ def add_portable_upload_manifests(entries: dict[str, bytes]) -> None:
     openai = dict(extensions.get("com.openai", {}))
     if "interface" in legacy:
         openai["interface"] = legacy["interface"]
-    metadata_path = "submission/openai.json"
-    if metadata_path in entries:
-        metadata = json.loads(entries[metadata_path])
+    if metadata is not None:
         for key in ("review", "publication"):
             if key in metadata:
                 openai[key] = {**openai.get(key, {}), **metadata[key]}
@@ -2099,7 +2099,13 @@ def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
         )
     if ".codex-plugin/plugin.json" not in entries:
         raise ValueError("ChatGPT upload ZIP is missing .codex-plugin/plugin.json")
-    add_portable_upload_manifests(entries)
+    metadata_path = ROOT / "plugins" / plugin_name / "submission" / "openai.json"
+    add_portable_upload_manifests(
+        entries,
+        metadata=(
+            json.loads(metadata_path.read_bytes()) if metadata_path.is_file() else None
+        ),
+    )
     project_chatgpt_course_sources(entries, packaged_entries, prefix)
     externalize_course_files(entries, plugin_name, root=ROOT)
     if plugin_name in {"vera", "clara", "lucia"}:

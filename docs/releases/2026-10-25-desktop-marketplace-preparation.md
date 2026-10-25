@@ -68,3 +68,26 @@ refresh made the governed privacy fingerprints stale. After inspecting that
 metadata-only change, the local-onboarding and learn-with-clara fingerprints
 were refreshed without altering their data-flow declarations. The final
 all-host rebuild supersedes that interrupted build.
+
+## Verification completed
+
+The canonical all-product build and all-host source-parity checks passed.
+The final Clara/Lucia upload metadata and both official JSON schemas were
+checked again after rebuilding those two uploads. All eight local servers
+returned real MCP initialization/tool lists: 11 Clara tools and 74 Lucia tools,
+all with boolean read-only, destructive and open-world annotations.
+
+The package/update regression run recorded 429 passes, one skip and two failed
+new metadata assertions. Those assertions exposed that the native package's
+submission-directory exclusion also hid the new upload metadata. The builder
+now reads that metadata directly from its source file. All 24 affected checks
+then passed, including the two prior failures; both rebuilt uploads passed
+source-parity and schema validation. The unchanged teaching-review/icon source
+checks passed 39 tests. Black, Isort and Mypy passed; Bandit found no medium or
+high issue in the changed Python builder.
+
+The ZIPs copied into the primary checkout are generated from this release
+worktree, not from the primary checkout's unrelated uncommitted source edits.
+`plugin_packages/desktop-release-preparation.json` records the exact source
+commit and archive hashes. Website deployment and Marketplace actions are
+separate and have not been performed by this preparation task.
