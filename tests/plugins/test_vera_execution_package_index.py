@@ -42,18 +42,28 @@ def test_release_index_matches_every_final_host_projected_byte(host, product):
     assert "scripts/reporting_product.py" in expected
     assert "scripts/model_data_report.py" in expected
     assert "scripts/workflow_usage.py" in expected
+    assert "scripts/incident_tool_schemas.json" in expected
     assert "usage/pipelines.json" in expected
     with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
         connector = json.loads(archive.read(prefix + ".mcp.json"))["mcpServers"]
-        assert (
-            connector[f"{product}Incidents"]["url"]
-            == f"https://mparanza.com/mcp/{product}-incidents"
+        assert f"{product}Incidents" not in connector
+        assert connector[f"{product}IncidentHost"]["command"] == "node"
+        assert all(
+            "url" not in server and "serverUrl" not in server
+            for server in connector.values()
         )
         if product != "vera":
             root_contract = archive.read(prefix + f"skills/{router}/SKILL.md").decode()
             assert "MPARANZA_REPORTING_BEGIN" in root_contract
             assert "actual signed receipt" in root_contract
-            assert f"{product}Incidents" in root_contract
+            assert "HTTPS browser recovery page" in root_contract
+            recovery_reference = archive.read(
+                prefix + f"skills/{router}/references/incident-recovery.md"
+            ).decode()
+            assert (
+                f"https://mparanza.com/{product}/incident-recovery"
+                in recovery_reference
+            )
 
 
 @pytest.mark.parametrize("host", ["codex", "chatgpt-upload", "claude"])
