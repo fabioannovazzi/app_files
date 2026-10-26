@@ -92,7 +92,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "d0aad7ec150f825067e0428bffc8ba0e039ef521b5cf1c7bab2a8587c34e069e",
+  "course_sha256": "8a0825d471ac45a6787fe4863b0166cf2656cce7d9425c729e13d8aeb9a062e1",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:12.998454+00:00",
@@ -828,5 +828,15 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "reconciliation_repair_source_review_20261026": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-26",
+    "baseline_commit": "4cb1c20db5206ad2f1cbd23650eb01481b7900b6",
+    "previous_course_sha256": "d0aad7ec150f825067e0428bffc8ba0e039ef521b5cf1c7bab2a8587c34e069e",
+    "current_course_sha256": "8a0825d471ac45a6787fe4863b0166cf2656cce7d9425c729e13d8aeb9a062e1",
+    "content_review": "Compared the complete compiled course: only sources changed; every authored locale, input, checkpoint, execution configuration and expectation is unchanged. No new lesson, learner or professional acceptance is claimed.",
+    "source_review": "Repaired semantic allocation-policy enforcement, bounded citation IDs, evidence-total labels and zero groups, duplicate candidate balances, attributed explanation rendering, and pre-submission privacy origins. Instructions now describe the existing semantic fallback consistently. Jurisdiction, currencies, dates and Geneva-specific source rules remain unchanged.",
+    "validation": "The complete reconciliation suite passed 509 tests at 82.77 percent coverage; focused explanation, allocation-policy and reporting regressions pass. Live installed-host acceptance remains a separate pending step."
   }
 }

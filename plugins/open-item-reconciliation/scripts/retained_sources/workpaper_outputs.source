@@ -1857,6 +1857,8 @@ def _post_cutoff_summary_rows(
         }
     buckets: dict[tuple[str, str], dict[str, Any]] = {}
     origins: dict[tuple[str, str], dict[str, list[Any]]] = {}
+    seen_open: dict[tuple[str, str], set[str]] = {}
+    seen_evidence: dict[tuple[str, str], set[str]] = {}
     for row in rows:
         evidence_type = _evidence_type_label(row.get("evidence_type"), language)
         exact_match = _yes_no_label(row.get("exact_amount_match"), language)
@@ -1864,8 +1866,6 @@ def _post_cutoff_summary_rows(
         group = origins.setdefault(key, {label: [] for label in labels.values()})
         group[labels["evidence_type"]].append(_field_origin(row, "evidence_type"))
         group[labels["exact_match"]].append(_field_origin(row, "exact_amount_match"))
-        group[labels["open_amount"]].append(_field_origin(row, "open_amount"))
-        group[labels["evidence_amount"]].append(_field_origin(row, "evidence_amount"))
         group[labels["rows"]].append([])
         bucket = buckets.setdefault(
             key,
@@ -1882,8 +1882,18 @@ def _post_cutoff_summary_rows(
             filter(None, [row.get("open_record_id"), row.get("evidence_record_id")])
         )
         bucket[labels["rows"]] += 1
-        bucket[labels["open_amount"]] += _decimal(row.get("open_amount"))
-        bucket[labels["evidence_amount"]] += _decimal(row.get("evidence_amount"))
+        # Candidate relationships can repeat either endpoint. A balance is
+        # counted once per actual invoice/receipt, not once per relationship.
+        for id_field, amount_field, seen in (
+            ("open_record_id", "open_amount", seen_open),
+            ("evidence_record_id", "evidence_amount", seen_evidence),
+        ):
+            identity = str(row.get(id_field) or "")
+            selected = seen.setdefault(key, set())
+            if not identity or identity not in selected:
+                selected.add(identity)
+                bucket[labels[amount_field]] += _decimal(row.get(amount_field))
+                group[labels[amount_field]].append(_field_origin(row, amount_field))
 
     return [
         _ReportRow(

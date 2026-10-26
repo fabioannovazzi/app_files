@@ -148,7 +148,7 @@
       {
         "id": "bounded-semantic-residual-worker",
         "purpose": "Resolve unresolved open items into source-bound exact allocations",
-        "content": "The selected low-cost native model receives complete bounded currency/entity perimeters, capped at 120 combined target and bank rows and 48000 prompt bytes. Populated mapped fields include exact business document numbers, descriptions, parties, entities, dates, amounts, currencies, accounting sides and opaque record linkage IDs. Source paths and unmapped columns are excluded; professional data are not anonymized. Native worker launch and response evidence are retained locally and decisions are replayed into exact allocations with explicit residuals. Codex uses its capability-probed native capsule. Native raw preparation may therefore perform this bounded host-model phase; opening source documents or editing setup drafts does not. Bank receipts after the cut-off enter that same bounded packet only when the reviewed scope includes post-cut-off events. Local retained worker evidence preserves byte-hashed response and launch serialization for exact replay after sorted JSON persistence; this adds no recipient or model-visible source field. Unique complete literal invoice references in bank descriptions are resolved locally first; already determined matches are excluded from the residual worker. Automatic exact-match review is source-replayed local arithmetic and identity checking, not a model send or a claim of professional approval. Allocated payment dates remain in the generated summaries with their individual source origins.",
+        "content": "The selected low-cost native model receives complete bounded currency/entity perimeters, capped at 120 combined target and bank rows and 48000 prompt bytes. Populated mapped fields include exact business document numbers, descriptions, parties, entities, dates, amounts, currencies, accounting sides and opaque record linkage IDs. Source paths and unmapped columns are excluded; professional data are not anonymized. Native worker launch and response evidence are retained locally and decisions are replayed into exact allocations with explicit residuals. Codex uses its capability-probed native capsule. Native raw preparation may therefore perform this bounded host-model phase; opening source documents or editing setup drafts does not. Bank receipts after the cut-off enter that same bounded packet only when the reviewed scope includes post-cut-off events. Local retained worker evidence preserves byte-hashed response and launch serialization for exact replay after sorted JSON persistence; this adds no recipient or model-visible source field. Unique complete literal invoice references in bank descriptions are resolved locally first; already determined matches are excluded from the residual worker. Automatic exact-match review is source-replayed local arithmetic and identity checking, not a model send or a claim of professional approval. Allocated payment dates remain in the generated summaries with their individual source origins. The packet also carries the configured allocation policy, which is mechanically enforced on the returned relationships. Citation IDs and field names are constrained to the current packet; exact source quotes remain validated. Extracted row and field origins are registered before the worker submission, including runs whose document production later fails. Explanations are retained as attributed model assessments; structured amount and residual columns retain their separate arithmetic validation. These changes add no provider or external recipient.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -175,9 +175,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-22",
+    "reviewed_at": "2026-10-26",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "f3b4e1fad9184f3263aafdd41dbb4dcb38f0e600f46b98b354afed978f5b17f7"
+    "source_fingerprint": "737e0615fe6d27793782137a6d31e34efa7478f40a27851edfa3ff3abe316c55"
   },
   "role": "workflow",
   "runtime_profiles": [

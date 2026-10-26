@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "0.1.499",
+  "version": "0.1.502",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -5357,7 +5357,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "open-item-reconciliation-widgets",
-          "version": "0.1.78"
+          "version": "0.1.79"
         },
         "capabilities": {
           "tools": {},
@@ -10666,7 +10666,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.499"
+          "version": "0.1.502"
         }
       },
       "tools": [

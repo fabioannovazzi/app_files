@@ -106,9 +106,12 @@ metadata, not user decisions. Previously sealed receipts retain strict replay.
 
 ## Core Principle
 
-Deterministic code is the authority for row-level classifications.
-
-Codex/model review is a quality-control layer. It may find issues, identify missed patterns, or propose rule changes, but it must not silently override deterministic results. If review finds a material error, fix the deterministic rule, rerun, and regenerate outputs.
+Run the exact, source-bound matcher first. The maintained semantic fallback may
+resolve the remaining items from descriptions, references and counterparties.
+Mechanical checks enforce source identity, dates, currency, exact arithmetic,
+allocation policy and no duplicate use of cash in both paths. A semantic proposal
+becomes a match only after those checks and the required technical review.
+Keep unsupported relationships unresolved and deliver the other results.
 
 ## Required Questions
 
@@ -352,7 +355,10 @@ Load `../../references/evidence-and-checks.md` when deciding evidence strength, 
 Load `../../references/workflow-reference.md` for the exact source-decision contract,
 receipt replay points, gate meanings, and promotion rules.
 
-Core rule: row-level classifications must be supported by deterministic evidence and preserved source references. Candidate allocations and aggregate roll-forward checks may guide review, but they must not close individual rows unless a deterministic rule connects row-level evidence.
+Core rule: a closure must have preserved row-level source evidence and a validated
+allocation. Either exact matching or the maintained semantic fallback can
+establish the relationship. Aggregate roll-forward checks alone cannot close
+individual rows.
 
 ## Deterministic Run
 
@@ -451,11 +457,17 @@ then resume the same command and deliver the regenerated result. Missing actual
 host capabilities remain explicit; do not ask the user to perform the handoff.
 
 Models interpret references, descriptions, counterparties and competing matches.
-The engine verifies quoted evidence, exact amounts, accounting perimeters and no
-cash reuse, then writes supported allocations and residuals into native results,
+The engine verifies quoted evidence, exact amounts, accounting perimeters, the
+configured one-to-one or split-allocation policy and no cash reuse, then writes
+supported allocations and residuals into native results,
 workbooks and assurance ledgers. Partial, cumulative and excess payments retain
 exact open or unapplied balances. Equal amounts alone cannot close an item.
 Ambiguity, contradictory evidence and missing evidence stay visible.
+Explanations are retained as attributed model assessments. Their wording does
+not replace the separately validated amount and residual fields. An explanation
+may discuss several amounts without turning them into additional balances.
+The worker selects citation identifiers from its current packet; source quotes
+are still checked against the actual records.
 
 Inspect the returned `semantic_resolution` status and any blocks. The retained
 worker packets, launch evidence and decisions are bound to the prepared population

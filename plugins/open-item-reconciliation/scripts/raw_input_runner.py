@@ -3187,6 +3187,13 @@ def run_raw_input_reconciliation(
         imported_names = binding.get("imported_names", [])
         if len(imported_names) > 1:
             source["byte_identical_import_names"] = "; ".join(imported_names)
+    from vera_assurance.contracts import archive_projection_runtime
+
+    recorder = archive_projection_runtime(Path(__file__))
+    if recorder is not None:
+        # The worker's first send needs the extracted row/field coordinates,
+        # including when later production fails before workpapers are written.
+        recorder.register_rows(WORKFLOW_ID, out_dir, extracted["source_origins"])
     if "semantic_resolution" not in active:
         from reconciliation_helpers import reconcile_open_items
         from semantic_resolution import prepare_resolution
@@ -3202,9 +3209,6 @@ def run_raw_input_reconciliation(
     if review_rows_path and review_rows is None:
         review_rows = json.loads(Path(review_rows_path).read_text(encoding="utf-8"))
 
-    from vera_assurance.contracts import archive_projection_runtime
-
-    recorder = archive_projection_runtime(Path(__file__))
     authored_text_origins = {}
     argument_origin = getattr(recorder, "model_argument_origin", None)
     if callable(argument_origin):
@@ -3370,8 +3374,6 @@ def run_raw_input_reconciliation(
         extracted.get("account_rollforward_check", []),
     )
     write_json(out_dir / "codex_review_packet.json", result["review_rows"])
-    if recorder is not None:
-        recorder.register_rows(WORKFLOW_ID, out_dir, extracted["source_origins"])
     existing_review_session = result.get("review_session") or {}
     review_session = write_review_session_artifacts(
         out_dir,

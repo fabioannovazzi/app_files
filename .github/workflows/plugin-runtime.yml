@@ -505,7 +505,14 @@ jobs:
           MPARANZA_INCIDENT_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/identity
           MPARANZA_INCIDENT_DEVICE_DIR: ${{ runner.temp }}/reporting-open-item-native/device
           VERA_REPORTING_STATE_DIR: ${{ runner.temp }}/reporting-open-item-native/registry
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_native_open_items_intake.py tests/plugins/test_vera_native_open_items_intake_reporting.py tests/plugins/test_vera_native_open_items_regeneration.py tests/plugins/test_vera_native_open_items_intake_ui.py tests/plugins/test_vera_native_open_item_bridge_io.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_native_open_items_intake.py tests/plugins/test_vera_native_open_items_intake_reporting.py tests/plugins/test_vera_native_open_items_regeneration.py tests/plugins/test_vera_native_open_items_intake_ui.py tests/plugins/test_vera_native_open_item_bridge_io.py tests/plugins/test_archive_open_item_semantic_reporting.py
+      - name: Check semantic reconciliation and reporting regressions
+        if: matrix.suite == 'open-item-source'
+        run: |
+          python -m black --check plugins/open-item-reconciliation/scripts/semantic_resolution.py tests/open_item_reconciliation/test_semantic_resolution.py tests/plugins/test_archive_open_item_semantic_reporting.py
+          python -m isort --check-only plugins/open-item-reconciliation/scripts/semantic_resolution.py tests/open_item_reconciliation/test_semantic_resolution.py tests/plugins/test_archive_open_item_semantic_reporting.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/open-item-reconciliation/scripts/semantic_resolution.py
+          python -m bandit -q -ll plugins/open-item-reconciliation/scripts/semantic_resolution.py
       - name: Build the checksum-verified official taxonomy for local OIC execution
         if: matrix.suite == 'accounting'
         shell: bash

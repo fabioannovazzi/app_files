@@ -24,6 +24,7 @@ __all__ = [
     "apply_resolution",
     "resolution_ledgers",
     "semantic_artifact_paths",
+    "explanation_evidence",
 ]
 
 KEY = "semantic_resolution"
@@ -58,6 +59,7 @@ FIELDS = (
     "party",
     "evidence_type",
     "source_role",
+    "allocation_policy",
 )
 MAX_ROWS = 120
 MAX_PACKET_BYTES = 48_000
@@ -143,7 +145,7 @@ def _populations(
     }
 
 
-def _schema() -> dict[str, Any]:
+def _schema(packet: dict[str, Any]) -> dict[str, Any]:
     def obj(properties: dict[str, Any]) -> dict[str, Any]:
         return {
             "type": "object",
@@ -153,17 +155,34 @@ def _schema() -> dict[str, Any]:
         }
 
     text = {"type": "string"}
-    quote = obj({"record_id": text, "field": text, "quote": text})
+    records = [*packet["targets"], *packet["sources"]]
+    # IDs and field membership are mechanical selections, not model judgments.
+    quote = obj(
+        {
+            "record_id": {"type": "string", "enum": [r["record_id"] for r in records]},
+            "field": {
+                "type": "string",
+                "enum": sorted({key for r in records for key in r}),
+            },
+            "quote": text,
+        }
+    )
     allocation = obj(
         {
-            "source_id": text,
+            "source_id": {
+                "type": "string",
+                "enum": [r["record_id"] for r in packet["sources"]],
+            },
             "amount": text,
             "citations": {"type": "array", "items": quote},
         }
     )
     decision = obj(
         {
-            "target_id": text,
+            "target_id": {
+                "type": "string",
+                "enum": [r["record_id"] for r in packet["targets"]],
+            },
             "outcome": {
                 "type": "string",
                 "enum": ["supported", "ambiguous", "conflict", "missing_evidence"],
@@ -187,6 +206,10 @@ def _prompt(packet: dict[str, Any]) -> str:
         "Reject conflicting payers, references, directions, currencies or entities. If equally plausible alternatives "
         "remain, return ambiguous with no allocation. Missing evidence remains unresolved. "
         "A bank payment may settle several explicitly identified invoices; several payments may settle one invoice. "
+        "Respect each record's allocation_policy: one_to_one permits only one source per target and one target per source; "
+        "one_to_many permits splitting a source but only one source per target; many_to_one permits several sources "
+        "per target but only one target per source. many_to_many permits both. A prohibited relationship remains "
+        "unresolved with an explanation; never override the configured policy. "
         "Propose exact positive decimal allocations, never above either source cash or target open amount. "
         "Retain partial-payment and overpayment residuals. Do not allocate by invoice order or proportional guesses. "
         "Each allocation must cite exact non-empty quotes from BOTH its target and source, using their record_id and "
@@ -314,7 +337,7 @@ def prepare_resolution(
                 )
             execution = capsule.run_isolated_native_worker(
                 prompt=prompt,
-                output_schema=_schema(),
+                output_schema=_schema(packet),
                 output_dir=directory,
                 workflow_id="open-item-reconciliation",
                 packet_sha256=canonical_json_sha256(packet),
@@ -438,7 +461,7 @@ def _validate_batch(
             workflow_id="open-item-reconciliation",
             packet_sha256=canonical_json_sha256(packet),
             prompt=_prompt(packet),
-            output_schema=_schema(),
+            output_schema=_schema(packet),
             response=response,
         )
     requested = launch["requested_worker_configuration"]
@@ -454,7 +477,9 @@ def _validate_batch(
         != hashlib.sha256(_prompt(packet).encode()).hexdigest()
     ):
         raise ValueError("Semantic launch prompt is stale")
-    schema_bytes = (json.dumps(_schema(), ensure_ascii=False, indent=2) + "\n").encode()
+    schema_bytes = (
+        json.dumps(_schema(packet), ensure_ascii=False, indent=2) + "\n"
+    ).encode()
     if (
         launch["packet"]["output_schema_sha256"]
         != hashlib.sha256(schema_bytes).hexdigest()
@@ -624,10 +649,15 @@ def _validate_batch(
             )
     if not allocations:
         return decisions, None
+    shapes = _validate_allocation_policies(decisions, target_by_id, source_by_id)
     ledger = h.build_allocation_ledger(
         ledger_id="semantic." + canonical_json_sha256(packet)[:24],
         policy={
-            "relationship_shape": "many_to_many",
+            # Mixed per-record policies are enforced on their incident edges
+            # above; the batch ledger must also represent unrelated components.
+            "relationship_shape": (
+                next(iter(shapes)) if len(shapes) == 1 else "many_to_many"
+            ),
             "require_same_currency": True,
             "require_same_unit": True,
             "require_same_entity": any(
@@ -646,6 +676,46 @@ def _validate_batch(
         allocations=allocations,
     )
     return decisions, ledger
+
+
+def _validate_allocation_policies(
+    decisions: list[dict[str, Any]],
+    targets: dict[str, dict[str, Any]],
+    sources: dict[str, dict[str, Any]],
+) -> set[str]:
+    """Enforce explicit relationship cardinality without judging payment meaning."""
+    edges = [
+        (d["target_id"], a["source_id"]) for d in decisions for a in d["allocations"]
+    ]
+    source_targets: dict[str, set[str]] = {}
+    target_sources: dict[str, set[str]] = {}
+    for target_id, source_id in edges:
+        source_targets.setdefault(source_id, set()).add(target_id)
+        target_sources.setdefault(target_id, set()).add(source_id)
+    shapes: set[str] = set()
+    for target_id, source_id in edges:
+        for row in (targets[target_id], sources[source_id]):
+            shape = str(row.get("allocation_policy") or "many_to_many")
+            if shape not in {
+                "one_to_one",
+                "one_to_many",
+                "many_to_one",
+                "many_to_many",
+            }:
+                raise ValueError("Unknown semantic allocation policy")
+            if row.get("allocation_policy"):
+                shapes.add(shape)
+            if (
+                shape in {"one_to_one", "many_to_one"}
+                and len(source_targets[source_id]) > 1
+            ) or (
+                shape in {"one_to_one", "one_to_many"}
+                and len(target_sources[target_id]) > 1
+            ):
+                raise ValueError(
+                    f"Semantic allocation policy {shape} forbids this relationship"
+                )
+    return shapes or {"many_to_many"}
 
 
 def _replay(
@@ -697,6 +767,25 @@ def resolution_ledgers(
     ]
 
 
+def explanation_evidence(
+    rows: list[dict[str, Any]],
+    evidence: list[dict[str, Any]],
+    assumptions: dict[str, Any],
+) -> dict[str, dict[str, Any]]:
+    """Attribute reasoning to its validated worker response, not a guessed amount."""
+    replayed = _replay(rows, evidence, assumptions)
+    batches = assumptions.get(KEY, {}).get("batches", [])
+    return {
+        decision["target_id"]: {
+            "text": decision["reason"],
+            "packet_sha256": canonical_json_sha256(batch["packet"]),
+            "response_sha256": batch["launch_receipt"]["process"]["response_sha256"],
+        }
+        for batch, (decisions, _) in zip(batches, replayed, strict=True)
+        for decision in decisions
+    }
+
+
 def apply_resolution(
     rows: list[dict[str, Any]],
     evidence: list[dict[str, Any]],
@@ -735,7 +824,9 @@ def apply_resolution(
                     "matched_evidence_ids": "; ".join(ids),
                     "matched_evidence_type": "external_bank",
                     "matched_evidence_reference": "; ".join(ids),
-                    "matched_evidence_amounts": f"allocated={h.decimal_text(allocated)}; residual={h.decimal_text(residual)}",
+                    # Settlement and open residual already have distinct typed
+                    # columns; do not turn their two values into one amount cell.
+                    "matched_evidence_amounts": h.decimal_text(allocated),
                     "missing_evidence": (
                         ""
                         if residual == 0
