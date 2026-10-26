@@ -10,7 +10,8 @@ function main(root = path.resolve(__dirname, "..")) {
   require("./verify_mcp_package.cjs").verify(root);
   const catalog = JSON.parse(fs.readFileSync(path.join(root, "mcp-catalog.json"), "utf8"));
   const configurations = JSON.parse(fs.readFileSync(path.join(root, "mcp-services.json"), "utf8")).mcpServers;
-  if (catalog.schema_version !== 1) throw new Error("Unsupported Vera service catalogue");
+  if (catalog.schema_version !== 1) throw new Error("Unsupported service catalogue");
+  const product = catalog.product;
   const services = new Map();
   const active = new Map();
   const serverRequests = new Map();
@@ -38,14 +39,14 @@ function main(root = path.resolve(__dirname, "..")) {
   }
 
   async function service(name) {
-    if (closing) throw new Error("Vera connection is closing");
+    if (closing) throw new Error(`${product} connection is closing`);
     if (!services.has(name)) {
       const config = configurations[name];
-      if (!config) throw new Error(`Missing Vera service: ${name}`);
+      if (!config) throw new Error(`Missing ${product} service: ${name}`);
       const client = new ServiceClient(root, name, config, {
         notification: output,
         request: message => {
-          const id = `vera-service-${++serverSequence}`;
+          const id = `${product}-service-${++serverSequence}`;
           serverRequests.set(id, { client, id: message.id });
           output({ ...message, id });
         },
@@ -87,13 +88,13 @@ function main(root = path.resolve(__dirname, "..")) {
       initialization = message.params || {};
       output({ jsonrpc: "2.0", id, result: {
         protocolVersion: initialization.protocolVersion || "2024-11-05",
-        serverInfo: { name: "vera", version: catalog.version },
+        serverInfo: { name: product, version: catalog.version },
         capabilities: { tools: {}, resources: {}, prompts: {} },
         instructions: catalog.services.map(s => s.initialize.instructions).filter(Boolean).join("\n\n"),
       } });
       return;
     }
-    if (!initialization) { failure(id, -32002, "Initialize Vera before using tools"); return; }
+    if (!initialization) { failure(id, -32002, `Initialize ${product} before using tools`); return; }
     const lists = { "tools/list": ["tools", "tools"], "resources/list": ["resources", "resources"],
       "resources/templates/list": ["resourceTemplates", "resourceTemplates"], "prompts/list": ["prompts", "prompts"] };
     if (lists[message.method]) {
@@ -106,7 +107,7 @@ function main(root = path.resolve(__dirname, "..")) {
       : message.method === "prompts/get" ? prompts.get(message.params?.name)
       : ["resources/read", "resources/subscribe", "resources/unsubscribe"].includes(message.method)
         ? resources.get(message.params?.uri) : undefined;
-    if (!name) { failure(id, -32602, `Unknown Vera method or target: ${message.method}`); return; }
+    if (!name) { failure(id, -32602, `Unknown ${product} method or target: ${message.method}`); return; }
     if (active.has(id)) { failure(id, -32600, "Duplicate active request ID"); return; }
     const pending = {};
     active.set(id, pending);

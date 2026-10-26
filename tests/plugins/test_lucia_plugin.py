@@ -393,7 +393,7 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
                     "id": 3,
                     "method": "tools/call",
                     "params": {
-                        "name": "search_studio_archive",
+                        "name": "lucia_assurance_search_studio_archive",
                         "arguments": {"query": "x", "scope_id": "all"},
                     },
                 }
@@ -427,14 +427,15 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
     assert completed.returncode == 0, completed.stderr
     assert responses[1]["result"]["serverInfo"]["name"] == ("lucia-assurance-runtime")
     assert responses[3]["error"]["message"] == "Tool not available in Lucia."
+    assert all(name.startswith("lucia_assurance_") for name in listed_names)
     assert {
-        "search_studio_archive",
-        "open_studio_archive_source",
-        "plan_studio_archive_gmail_search",
-        "match_studio_archive_email",
-        "bind_studio_client_google_drive",
-        "snapshot_studio_client_google_drive",
-        "open_studio_google_drive_source",
+        "lucia_assurance_search_studio_archive",
+        "lucia_assurance_open_studio_archive_source",
+        "lucia_assurance_plan_studio_archive_gmail_search",
+        "lucia_assurance_match_studio_archive_email",
+        "lucia_assurance_bind_studio_client_google_drive",
+        "lucia_assurance_snapshot_studio_client_google_drive",
+        "lucia_assurance_open_studio_google_drive_source",
     }.isdisjoint(listed_names)
     assert set(prepare_tool["inputSchema"]["properties"]["workflow_id"]["enum"]) == (
         PRIVATE_LIFECYCLE_WORKFLOWS

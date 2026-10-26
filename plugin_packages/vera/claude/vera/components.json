@@ -42,6 +42,7 @@
     "lipe"
   ],
   "shared_services": [
+    "on-demand-mcp",
     "run-receipt-stamping",
     "managed-python-runtime",
     "cnc-authenticated-review",
