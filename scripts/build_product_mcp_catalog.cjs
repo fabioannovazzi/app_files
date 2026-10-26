@@ -8,7 +8,7 @@ async function build(root, runtime) {
   const configs = JSON.parse(fs.readFileSync(path.join(root, "mcp-services.json"), "utf8")).mcpServers;
   const manifestPath = [".codex-plugin/plugin.json", ".claude-plugin/plugin.json", "plugin.json"]
     .map(name => path.join(root, name)).find(file => fs.existsSync(file));
-  const version = JSON.parse(fs.readFileSync(manifestPath, "utf8")).version;
+  const { name: product, version } = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   const services = [];
   const names = { tools: new Set(), resources: new Set(), prompts: new Set() };
   for (const [name, config] of Object.entries(configs)) {
@@ -23,7 +23,7 @@ async function build(root, runtime) {
     try {
       const initialize = await client.initialize({
         protocolVersion: "2024-11-05", capabilities: {},
-        clientInfo: { name: "vera-catalog-builder", version: "1" },
+        clientInfo: { name: "product-catalog-builder", version: "1" },
       });
       const service = { name, initialize, tools: [], resources: [], resourceTemplates: [], prompts: [] };
       for (const [method, field, capability] of [
@@ -65,7 +65,7 @@ async function build(root, runtime) {
       clearTimeout(timer);
     }
   }
-  return { schema_version: 1, version, services };
+  return { schema_version: 1, product, version, services };
 }
 
 module.exports = { build };

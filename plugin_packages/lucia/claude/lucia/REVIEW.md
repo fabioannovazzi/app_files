@@ -13,6 +13,7 @@ Original local credentials can restore the browser reporting owner.
 Client documents, professional output and unreviewed logs are not reporting inputs.
 Privacy policy: https://mparanza.com/privacy.
 
+- `lucia`: Expose the packaged Lucia tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.
 - `luciaAssuranceRuntime`: Expose the limited local archive tools used by Lucia assurance.
 - `luciaDeepResearchValidator`: Review sourced legal answers and research evidence.
 - `luciaIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.

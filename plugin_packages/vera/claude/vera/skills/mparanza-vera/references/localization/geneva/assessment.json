@@ -45,6 +45,11 @@
     "scope": "All 55 entrypoints and existing jurisdiction judgments remain unchanged from the 0.1.389 source repair. Mandatory source and final-archive YAML validation covers all product builders; no new jurisdiction or installed-host acceptance is claimed.",
     "version": "0.1.390"
   },
+  "all_product_on_demand_release_binding": {
+    "date": "2026-10-26",
+    "version": "0.1.508",
+    "scope": "Rebound catalogue metadata after integrating the reporting cleanup and shared on-demand MCP transport. All skill entrypoint hashes are unchanged. Existing Geneva dispositions and acceptance limits are unchanged."
+  },
   "archive_automatic_reporting_release_binding": {
     "previous_catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
     "scope": "The same function IDs now use automatic reporting for the fixed 13 Archive pipelines. Other pipelines are excluded from this comparison report. Reports stay local and proof hashes bind to Vera userID. Existing Geneva jurisdiction dispositions are unchanged; automatic evidence collection does not establish new Swiss professional acceptance.",
@@ -134,7 +139,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "40236e69b0f5b0b865ce44d57ea8a86f15b13b2f8a5ecd7fd31fdf51ec2588b3",
+  "catalogue_fingerprint": "2fb8d2c26a05a139fe793dd8eb801cc0d9548915e98e53762b393cd6b077eb16",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -253,6 +258,11 @@
     "review": "Same function identities. The new costing path is limited to EUR and Italian/English reports. It does not inherit the recurring reporting path's CHF/French qualification. Existing Geneva reporting assessment is preserved with this explicit scope distinction; no new local-case acceptance is claimed.",
     "reviewed_at": "2026-10-03",
     "version": "0.1.337"
+  },
+  "course_dedup_release_binding": {
+    "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
+    "scope": "Only the canonical product version changed in the catalogue identity. Every skill entrypoint hash and all existing jurisdiction judgments are unchanged. Public course-file deduplication preserves attachment bytes and establishes no new Geneva professional acceptance.",
+    "version": "0.1.493"
   },
   "course_entry_release_binding": {
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged.",
@@ -411,6 +421,14 @@
     "scope": "Canonical release metadata only; all skill hashes, jurisdiction judgments and acceptance limits are unchanged.",
     "version": "0.1.359"
   },
+  "https_reporting_source_binding_20261025": {
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "previous_catalogue_fingerprint": "675f91978d8303e3f823355c4260d6898709fae380392df53e82cc81e0815d91",
+    "scope": "The Vera router now directs technical reporting through the retained local owner over ordinary HTTPS, with agent-operated HTTPS browser recovery when local execution is unavailable. The 55 function IDs and all existing Geneva assessment rows are unchanged. This infrastructure transport change establishes no additional jurisdiction support or professional acceptance.",
+    "version": "0.1.492"
+  },
   "incident_agent_recovery_release_binding": {
     "date": "2026-10-15",
     "scope": "Canonical manifest/version refresh. All 55 recorded skill entrypoints are unchanged; only the shared technical incident conversation and recovery service changed. Preserve existing Geneva judgments and jurisdiction limits; no additional professional workflow or Geneva acceptance is claimed.",
@@ -490,11 +508,36 @@
     "reviewed_at": "2026-10-02",
     "version": "0.1.336"
   },
+  "live_plugin_update_release_binding_20261022": {
+    "previous_catalogue_fingerprint": "61eb479db8cb6ec151d6e50cf740fc57a6f36377775b3eaa4c325f508d2b30b1",
+    "version": "0.1.480",
+    "scope": "Package runtime and version refresh; all skill entrypoint bytes and jurisdiction judgments remain unchanged."
+  },
+  "live_update_release_binding": {
+    "previous_catalogue_fingerprint": "89920afa40330f8cfb5fce2816f9106c3613bc1161068131038c17bade88848b",
+    "version": "0.1.478",
+    "basis": "All 55 skill IDs and entrypoint bytes are unchanged; only release identity and local service lifetime change. Existing jurisdiction assessments and acceptance limits remain unchanged."
+  },
   "manual_trial_status_release_binding": {
     "date": "2026-10-17",
     "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
     "scope": "Mechanical manifest/version binding refresh for the manual function-trial legend and reviewed teaching-source evidence. All function IDs and skill-entrypoint hashes match the 0.1.401 snapshot. Existing Geneva dispositions and limits are unchanged; no new jurisdiction, host, learner or professional acceptance is claimed.",
     "version": "0.1.402"
+  },
+  "mcp_preservation_release_binding_20261025": {
+    "version": "0.1.491",
+    "previous_catalogue_fingerprint": "619be48d26e483354001b7caab3786bcd088cc8cfa68fb3f61441c65a99fad77",
+    "scope": "Manifest version refresh only. All 55 skill entrypoint identities and bytes are unchanged from the recorded 0.1.490 catalogue. Existing jurisdiction assessments and acceptance limits are retained."
+  },
+  "mcp_process_release_binding_20261026": {
+    "version": "0.1.494",
+    "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
+    "scope": "Manifest version refresh only. All 55 skill entrypoints and existing jurisdiction judgments are unchanged. MCP launch lifetime changes establish no new jurisdiction or professional acceptance."
+  },
+  "mcp_release_binding_20261024": {
+    "version": "0.1.490",
+    "previous_catalogue_fingerprint": "c03105178e8dc8047d8911881b9985a1f1272a2ddb39662a37f6f746518e620e",
+    "scope": "Manifest version refresh only. All 55 skill entrypoint identities and bytes are unchanged from the recorded 0.1.486 catalogue. Existing jurisdiction assessments and acceptance limits are retained."
   },
   "model_advisory_release_binding_20261017": {
     "changed_entrypoints": [
@@ -644,6 +687,11 @@
     "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
     "reviewed_at": "2026-10-02",
     "version": "0.1.334"
+  },
+  "reconciliation_usability_release_binding_20261022": {
+    "previous_catalogue_fingerprint": "7589fc946a50b70cb8ec64bc166fc838e79487183ef5537a6f6024a4f6687602",
+    "version": "0.1.481",
+    "scope": "Open-item reconciliation entrypoint now uses the maintained import-to-delivery operation, automatically verifies unique exact source matches, and separates accounting readiness from reporting completeness. Dates and source provenance are retained. Existing jurisdiction assessments and professional acceptance limits remain unchanged; no new Geneva acceptance is claimed."
   },
   "recorded_artifact_read_binding_20261020": {
     "previous_catalogue_fingerprint": "e10793e12bb95d1fb6d28a0755332d7ea11ad01ac732e90eef24df52bb681036",
@@ -1989,6 +2037,11 @@
     "scope": "Refresh the exact source catalogue for the current release. Patent Box, LIPE and INPS now retain actual user confirmation of the specific proposal without mandatory professional credentials, signatures or mandates. Preserve every existing Geneva disposition and prior history. This binding adds no jurisdiction, professional or installed-host acceptance. Remove the unused legacy professional-signature approval adapter; optional signed-document verification uses selected tools and trust sources without a professional-role policy.",
     "version": "0.1.422"
   },
+  "standalone_helper_release_binding_20261023": {
+    "version": "0.1.486",
+    "scope": "Root-owned standalone helper invocation and explicit launcher instructions; no changes to Geneva workflow eligibility or professional scope.",
+    "evidence": "Real standalone task regression with retained source files; module namesake and path escape checks."
+  },
   "studio_archive_architecture_release_binding_20261020": {
     "basis": "All 55 skill IDs and paths are unchanged. The Vera entrypoint now prefers the native task-reporting service over shell writes to user-scoped state and makes reporting failures nonblocking for professional work. This changes reporting transport, not jurisdictional advice or specialist applicability. Other entrypoint hashes, Geneva judgments and acceptance status are unchanged.",
     "version": "0.1.445"
@@ -2174,6 +2227,11 @@
     "reviewed_at": "2026-09-29",
     "version": "0.1.280"
   },
+  "transparent_sidebar_icon_release_binding": {
+    "version": "0.1.500",
+    "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
+    "scope": "Manifest version only. All skill entries and professional judgments are unchanged; this binding does not establish professional or installed-host acceptance."
+  },
   "unicode_pdf_main_integration_20261018": {
     "scope": "All55 current-main skill entrypoint hashes and assessment rows retained. Updated product manifest binding only; no new Swiss professional or host acceptance.",
     "version": "0.1.416"
@@ -2232,67 +2290,19 @@
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
   },
-  "live_update_release_binding": {
-    "previous_catalogue_fingerprint": "89920afa40330f8cfb5fce2816f9106c3613bc1161068131038c17bade88848b",
-    "version": "0.1.478",
-    "basis": "All 55 skill IDs and entrypoint bytes are unchanged; only release identity and local service lifetime change. Existing jurisdiction assessments and acceptance limits remain unchanged."
-  },
-  "live_plugin_update_release_binding_20261022": {
-    "previous_catalogue_fingerprint": "61eb479db8cb6ec151d6e50cf740fc57a6f36377775b3eaa4c325f508d2b30b1",
-    "version": "0.1.480",
-    "scope": "Package runtime and version refresh; all skill entrypoint bytes and jurisdiction judgments remain unchanged."
-  },
-  "reconciliation_usability_release_binding_20261022": {
-    "previous_catalogue_fingerprint": "7589fc946a50b70cb8ec64bc166fc838e79487183ef5537a6f6024a4f6687602",
-    "version": "0.1.481",
-    "scope": "Open-item reconciliation entrypoint now uses the maintained import-to-delivery operation, automatically verifies unique exact source matches, and separates accounting readiness from reporting completeness. Dates and source provenance are retained. Existing jurisdiction assessments and professional acceptance limits remain unchanged; no new Geneva acceptance is claimed."
-  },
-  "standalone_helper_release_binding_20261023": {
-    "version": "0.1.486",
-    "scope": "Root-owned standalone helper invocation and explicit launcher instructions; no changes to Geneva workflow eligibility or professional scope.",
-    "evidence": "Real standalone task regression with retained source files; module namesake and path escape checks."
-  },
-  "mcp_release_binding_20261024": {
-    "version": "0.1.490",
-    "previous_catalogue_fingerprint": "c03105178e8dc8047d8911881b9985a1f1272a2ddb39662a37f6f746518e620e",
-    "scope": "Manifest version refresh only. All 55 skill entrypoint identities and bytes are unchanged from the recorded 0.1.486 catalogue. Existing jurisdiction assessments and acceptance limits are retained."
-  },
-  "mcp_preservation_release_binding_20261025": {
-    "version": "0.1.491",
-    "previous_catalogue_fingerprint": "619be48d26e483354001b7caab3786bcd088cc8cfa68fb3f61441c65a99fad77",
-    "scope": "Manifest version refresh only. All 55 skill entrypoint identities and bytes are unchanged from the recorded 0.1.490 catalogue. Existing jurisdiction assessments and acceptance limits are retained."
-  },
-  "https_reporting_source_binding_20261025": {
-    "changed_entrypoints": [
-      "vera"
-    ],
-    "previous_catalogue_fingerprint": "675f91978d8303e3f823355c4260d6898709fae380392df53e82cc81e0815d91",
-    "scope": "The Vera router now directs technical reporting through the retained local owner over ordinary HTTPS, with agent-operated HTTPS browser recovery when local execution is unavailable. The 55 function IDs and all existing Geneva assessment rows are unchanged. This infrastructure transport change establishes no additional jurisdiction support or professional acceptance.",
-    "version": "0.1.492"
-  },
-  "mcp_process_release_binding_20261026": {
-    "version": "0.1.494",
-    "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
-    "scope": "Manifest version refresh only. All 55 skill entrypoints and existing jurisdiction judgments are unchanged. MCP launch lifetime changes establish no new jurisdiction or professional acceptance."
-  },
-  "course_dedup_release_binding": {
-    "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
-    "scope": "Only the canonical product version changed in the catalogue identity. Every skill entrypoint hash and all existing jurisdiction judgments are unchanged. Public course-file deduplication preserves attachment bytes and establishes no new Geneva professional acceptance.",
-    "version": "0.1.493"
-  },
   "reconciliation_repair_release_binding_20261026": {
     "reviewed_at": "2026-10-26",
     "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
     "version": "0.1.508",
     "scope": "Canonical product manifest version changed. All Vera skill entrypoint identities and bytes are unchanged; existing Geneva judgments are preserved. Component reconciliation fixes preserve jurisdiction, currency and date constraints. This binding does not claim new jurisdiction acceptance."
   },
-  "transparent_sidebar_icon_release_binding": {
-    "version": "0.1.500",
-    "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
-    "scope": "Manifest version only. All skill entries and professional judgments are unchanged; this binding does not establish professional or installed-host acceptance."
-  },
   "filesystem_identity_release_binding_20261026": {
     "version": "0.1.508",
     "scope": "All skill entrypoint bytes and existing jurisdiction judgments are unchanged. Fully verified shared code can renew stale filesystem metadata; no new jurisdiction acceptance is claimed."
+  },
+  "combined_release_binding_20261026": {
+    "version": "0.1.509",
+    "previous_catalogue_fingerprint": "40236e69b0f5b0b865ce44d57ea8a86f15b13b2f8a5ecd7fd31fdf51ec2588b3",
+    "scope": "Combine the accepted reconciliation and verified runtime repairs with the on-demand transport from main. All 55 Vera skill entrypoint bytes and prior jurisdiction judgments are unchanged; no new jurisdiction acceptance is claimed."
   }
 }

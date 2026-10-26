@@ -1,0 +1,88 @@
+{
+  "mcpServers": {
+    "luciaPromptOptimizer": {
+      "title": "Lucia · Imposta la risposta",
+      "description": "Convalida e rende revisionabile il piano prodotto dal Legal/Tax Answer Planner condiviso con Vera.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "prompt-optimizer"
+      ]
+    },
+    "luciaDeepResearchValidator": {
+      "title": "Lucia · Valida la risposta",
+      "description": "Convalida e rende revisionabile il controllo prodotto dal Legal/Tax Answer Review condiviso con Vera.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/run_component_mcp.cjs",
+        "deep-research-validator"
+      ]
+    },
+    "luciaAssuranceRuntime": {
+      "title": "Lucia · Spazio di lavoro",
+      "description": "Infrastruttura privata per legare input e risultati dei percorsi Lucia a un incarico revisionabile.",
+      "icons": [
+        {
+          "src": "./assets/icon.svg",
+          "mimeType": "image/svg+xml",
+          "sizes": [
+            "24x24"
+          ]
+        }
+      ],
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/assurance_runtime_mcp.cjs"
+      ]
+    },
+    "luciaStudioArchive": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "studio-archive"
+      ],
+      "env": {
+        "LUCIA_ASSURANCE_HOST": "1"
+      }
+    },
+    "courseChats": {
+      "title": "Lucia · Corsi",
+      "description": "Open or resume the paired working chat for local courses.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/course_chat_mcp.cjs"
+      ]
+    },
+    "luciaIncidentHost": {
+      "title": "Lucia · Identità tecnica locale",
+      "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/incident_host_mcp.cjs"
+      ]
+    }
+  }
+}

@@ -620,11 +620,12 @@
     }
   },
   "services": [
-    "operational-incidents",
-    "run-receipt-stamping",
-    "workflow-usage",
     "managed-python-runtime",
-    "prepared-course-files"
+    "on-demand-mcp",
+    "operational-incidents",
+    "prepared-course-files",
+    "run-receipt-stamping",
+    "workflow-usage"
   ],
   "host_omissions": {
     "openai-codex": {
@@ -704,6 +705,9 @@
         "privacy/workstreams/studio-archive.json": [
           "shared:vendor/modules/vera_assurance",
           "shared:vendor/modules/vera_ocr"
+        ],
+        "privacy/services/on-demand-mcp.json": [
+          ".mcp.json"
         ]
       }
     }

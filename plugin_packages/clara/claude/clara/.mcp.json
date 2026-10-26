@@ -1,9 +1,9 @@
 {
   "mcpServers": {
-    "claraIncidentHost": {
+    "clara": {
       "command": "node",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
+        "${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"
       ]
     }
   }

@@ -485,6 +485,8 @@
   "services": [
     "hosted-interviews",
     "hosted-voice",
+    "managed-python-runtime",
+    "on-demand-mcp",
     "operational-incidents",
     "plugin-feedback",
     "plugin-update-check",
@@ -492,8 +494,7 @@
     "research-video-voice",
     "retail-data",
     "run-receipt-stamping",
-    "workflow-usage",
-    "managed-python-runtime"
+    "workflow-usage"
   ],
   "host_omissions": {
     "openai-codex": {
@@ -648,6 +649,9 @@
         ],
         "privacy/workstreams/variance-analysis.json": [
           "shared:vendor/modules/vera_assurance"
+        ],
+        "privacy/services/on-demand-mcp.json": [
+          ".mcp.json"
         ]
       }
     }

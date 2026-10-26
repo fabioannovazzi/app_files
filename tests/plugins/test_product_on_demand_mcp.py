@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 
-from scripts.build_vera_mcp_catalog import add_vera_mcp_catalog
+from scripts.build_product_mcp_catalog import add_product_mcp_catalog
 
 __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,13 +30,13 @@ def _seal(root: Path) -> None:
     )
 
 
-@pytest.fixture
-def installation(tmp_path: Path) -> Path:
+@pytest.fixture(params=["vera", "clara", "lucia"])
+def installation(tmp_path: Path, request) -> Path:
     root = tmp_path / "plugin"
     (root / "scripts").mkdir(parents=True)
     (root / ".codex-plugin").mkdir()
     (root / ".codex-plugin/plugin.json").write_text(
-        json.dumps({"name": "vera", "version": "0.1.999"})
+        json.dumps({"name": request.param, "version": "0.1.999"})
     )
     for name in (
         "on_demand_mcp.cjs",
@@ -64,7 +64,7 @@ def installation(tmp_path: Path) -> Path:
         for file in root.rglob("*")
         if file.is_file()
     }
-    add_vera_mcp_catalog(entries)
+    add_product_mcp_catalog(entries)
     (root / "mcp-catalog.json").write_bytes(entries["mcp-catalog.json"])
     (tmp_path / "starts").unlink()
     _seal(root)
@@ -84,7 +84,7 @@ class Session:
         self.reader = threading.Thread(target=self._read, daemon=True)
         self.reader.start()
         self.next_id = 0
-        self.call(
+        self.initialization = self.call(
             "initialize",
             {
                 "protocolVersion": "2024-11-05",
@@ -130,6 +130,10 @@ def session(installation):
 def test_catalogue_exposes_individual_tools_and_panels_without_starting_workers(
     session, installation
 ):
+    product = json.loads((installation / ".codex-plugin/plugin.json").read_text())[
+        "name"
+    ]
+    assert session.initialization["result"]["serverInfo"]["name"] == product
     tools = session.call("tools/list")["result"]["tools"]
     resources = session.call("resources/list")["result"]["resources"]
     prompts = session.call("prompts/list")["result"]["prompts"]
@@ -345,8 +349,8 @@ def test_catalogue_build_rejects_a_missing_service_instead_of_advertising_it(
         if file.is_file() and file.name != "service.cjs"
     }
 
-    with pytest.raises(ValueError, match="Vera catalogue generation failed"):
-        add_vera_mcp_catalog(entries)
+    with pytest.raises(ValueError, match="Product catalogue generation failed"):
+        add_product_mcp_catalog(entries)
 
 
 def test_cold_service_initialization_can_exceed_ten_seconds(installation):

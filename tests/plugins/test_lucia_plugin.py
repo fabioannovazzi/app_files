@@ -393,7 +393,7 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
                     "id": 3,
                     "method": "tools/call",
                     "params": {
-                        "name": "search_studio_archive",
+                        "name": "lucia_assurance_search_studio_archive",
                         "arguments": {"query": "x", "scope_id": "all"},
                     },
                 }
@@ -421,20 +421,21 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
     prepare_tool = next(
         tool
         for tool in listed_tools
-        if tool["name"] == "prepare_studio_client_workflow"
+        if tool["name"] == "lucia_assurance_prepare_studio_client_workflow"
     )
 
     assert completed.returncode == 0, completed.stderr
     assert responses[1]["result"]["serverInfo"]["name"] == ("lucia-assurance-runtime")
     assert responses[3]["error"]["message"] == "Tool not available in Lucia."
+    assert all(name.startswith("lucia_assurance_") for name in listed_names)
     assert {
-        "search_studio_archive",
-        "open_studio_archive_source",
-        "plan_studio_archive_gmail_search",
-        "match_studio_archive_email",
-        "bind_studio_client_google_drive",
-        "snapshot_studio_client_google_drive",
-        "open_studio_google_drive_source",
+        "lucia_assurance_search_studio_archive",
+        "lucia_assurance_open_studio_archive_source",
+        "lucia_assurance_plan_studio_archive_gmail_search",
+        "lucia_assurance_match_studio_archive_email",
+        "lucia_assurance_bind_studio_client_google_drive",
+        "lucia_assurance_snapshot_studio_client_google_drive",
+        "lucia_assurance_open_studio_google_drive_source",
     }.isdisjoint(listed_names)
     assert set(prepare_tool["inputSchema"]["properties"]["workflow_id"]["enum"]) == (
         PRIVATE_LIFECYCLE_WORKFLOWS
@@ -886,3 +887,44 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
     assert "senza server o API modello separate" in approved
     assert len(approved.split("\n\n")) == 5
     assert len(approved.split()) <= 250
+
+
+def test_private_runtime_routes_prefixed_tool_to_unchanged_archive_api(tmp_path):
+    node = _node_executable()
+    if node is None:
+        pytest.skip("Node is unavailable for the MCP smoke test")
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    wrapper = scripts / "assurance_runtime_mcp.cjs"
+    wrapper.write_bytes((LUCIA_ROOT / "scripts/assurance_runtime_mcp.cjs").read_bytes())
+    server = tmp_path / "modules/studio-archive/mcp/server.cjs"
+    server.parent.mkdir(parents=True)
+    server.write_text(
+        'const lines = require("node:readline").createInterface({ input: process.stdin });\n'
+        'lines.on("line", line => { const m = JSON.parse(line); '
+        'process.stdout.write(JSON.stringify({jsonrpc:"2.0", id:m.id, result:m.params}) + "\\n"); });\n'
+    )
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "lucia_assurance_studio_archive_status",
+            "arguments": {"session": "synthetic"},
+        },
+    }
+
+    completed = subprocess.run(
+        [node, str(wrapper)],
+        input=json.dumps(request) + "\n",
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["result"] == {
+        "name": "studio_archive_status",
+        "arguments": {"session": "synthetic"},
+    }

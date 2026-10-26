@@ -53,7 +53,8 @@
     "studio-work",
     "operational-incidents",
     "research-subscriptions",
-    "workflow-usage"
+    "workflow-usage",
+    "on-demand-mcp"
   ],
   "workflow_roles": {
     "new-client": {

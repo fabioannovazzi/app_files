@@ -1,0 +1,1096 @@
+{
+  "schema_version": 1,
+  "product": "clara",
+  "version": "0.1.358",
+  "services": [
+    {
+      "name": "claraIncidentHost",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {}
+        },
+        "serverInfo": {
+          "name": "clara-incident-host",
+          "version": "1.0.0"
+        },
+        "instructions": "Use clara_workflow_usage for task start, observed outcomes, status and task-scoped retries. Incident tools send ordinary HTTPS using the same retained local identity. Use native host linking automatically when available. The native broker's version is separate from the guest's current reporting-process and failed-worker versions. If this host route is unavailable, use the host browser at https://mparanza.com/clara/incident-recovery with the original reporting owner and exact retained request. Never infer a computer from a browser identity or a Linux guest UUID. Never bypass a denied host operation."
+      },
+      "tools": [
+        {
+          "name": "clara_incident_host_context",
+          "description": "Read or create the native host's random public incident code. Never returns its private key. A Cowork Linux guest remains explicitly unlinked. This does not report a guest workflow version.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "clara_incident_host_link",
+          "description": "Automatically bind a guest's existing local incident capability to this native host and app at Mparanza. Pass exactly {credentials: {installation_id, installation_key}} using the guest's existing values. The argument is credentials, not capability; do not add run_id. The host key stays out of tool results; no client files, diagnostics or commands are inputs. Does not close an incident.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "credentials": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "installation_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "installation_key": {
+                    "type": "string",
+                    "minLength": 32,
+                    "maxLength": 128,
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  }
+                },
+                "required": [
+                  "installation_id",
+                  "installation_key"
+                ]
+              }
+            },
+            "required": [
+              "credentials"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_workflow_usage",
+          "description": "Retain and deliver one task's usage events through this installed product's native service and existing userID/computer identity. Prefer this over a shell command that cannot write the user-scoped reporting database. Start requires pipeline, observed host and sample_kind; record requires an observed kind and its optional fields. Reuse the same UUID through retries. Status verifies the same task's server identity; flush retries only that task. No client documents, paths, shell commands, credentials or global queue operations are accepted. A reporting failure does not invalidate professional work.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "run_id"
+            ],
+            "properties": {
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "record",
+                  "status",
+                  "flush"
+                ]
+              },
+              "run_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "pipeline": {
+                "type": "string"
+              },
+              "host": {
+                "type": "string",
+                "enum": [
+                  "codex",
+                  "cowork",
+                  "chatgpt",
+                  "antigravity",
+                  "unknown"
+                ]
+              },
+              "sample_kind": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "synthetic",
+                  "agent_test"
+                ]
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "resumed",
+                  "completed",
+                  "failed",
+                  "cancelled",
+                  "feedback_prompted",
+                  "feedback",
+                  "incident"
+                ]
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "stars": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "comment": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "feedback_source": {
+                    "type": "string",
+                    "enum": [
+                      "user_chat",
+                      "user_form",
+                      "synthetic_test"
+                    ]
+                  },
+                  "incident_report_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_workflow_stamp",
+          "description": "Stamp the exact retained model_data_receipt_request.json through ordinary HTTPS for a run owned by this local reporter. Supply its original run_id and receipt_request, never report contents, paths or credentials. Save the exact returned receipt beside the request, then use workflow_usage.py stamp-report and deliver its queued receipt event. Stamping does not link the receipt or prove task completion. Browser-owned runs use the browser workflow-stamp operation.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "run_id": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Run Id"
+              },
+              "receipt_request": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RunReceiptStampRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "receipt_request",
+              "run_id"
+            ],
+            "$defs": {
+              "RunReceiptStampRequest": {
+                "additionalProperties": false,
+                "description": "The complete field allow-list accepted from a Vera run.",
+                "properties": {
+                  "schema_version": {
+                    "default": 1,
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "title": "Schema Version",
+                    "type": "integer"
+                  },
+                  "product": {
+                    "type": "string",
+                    "const": "clara"
+                  },
+                  "receipt_id": {
+                    "format": "uuid",
+                    "title": "Receipt Id",
+                    "type": "string"
+                  },
+                  "plugin_version": {
+                    "maxLength": 64,
+                    "minLength": 5,
+                    "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
+                    "title": "Plugin Version",
+                    "type": "string"
+                  },
+                  "report_sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "title": "Report Sha256",
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "User Id"
+                  },
+                  "archive_run_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^run_[0-9a-f]{24}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Archive Run Id"
+                  },
+                  "report_revision": {
+                    "anyOf": [
+                      {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Report Revision"
+                  }
+                },
+                "required": [
+                  "receipt_id",
+                  "plugin_version",
+                  "report_sha256"
+                ],
+                "title": "RunReceiptStampRequest",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_incident_register",
+          "description": "Register or inspect this installed product's retained local reporting identity through ordinary HTTPS. Pass no arguments. Private credentials stay in the reporter; this does not claim a browser-owned task.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {},
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": []
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_incident_report",
+          "description": "Automatically record an observed clara/setup/host execution failure, with all available relevant technical evidence. No extra confirmation or feature-request form. Use a stable random report UUID for retries. For reviewed diagnostics retained after a helper failure, set evidence_for_report_id to its original report UUID; this attaches the full technical chain without creating another failure episode. Never include professional/client outputs.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "report": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Report"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "report"
+            ],
+            "$defs": {
+              "Diagnostic": {
+                "additionalProperties": false,
+                "properties": {
+                  "component": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Component",
+                    "type": "string"
+                  },
+                  "error_type": {
+                    "maxLength": 150,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Error Type",
+                    "type": "string"
+                  },
+                  "error_code": {
+                    "anyOf": [
+                      {
+                        "maxLength": 150,
+                        "pattern": "^[A-Za-z0-9_.: -]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Error Code"
+                  },
+                  "errno": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Errno"
+                  },
+                  "exit_code": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Exit Code"
+                  },
+                  "message": {
+                    "maxLength": 65536,
+                    "minLength": 1,
+                    "title": "Message",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Stage",
+                    "type": "string"
+                  },
+                  "evidence_source": {
+                    "enum": [
+                      "observed-tool-result",
+                      "runtime-exception",
+                      "technical-log"
+                    ],
+                    "title": "Evidence Source",
+                    "type": "string"
+                  },
+                  "technical_frames": {
+                    "items": {
+                      "$ref": "#/$defs/TechnicalFrame"
+                    },
+                    "maxItems": 100,
+                    "title": "Technical Frames",
+                    "type": "array"
+                  },
+                  "technical_facts": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "maxProperties": 100,
+                    "title": "Technical Facts",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "component",
+                  "error_type",
+                  "message",
+                  "stage",
+                  "evidence_source"
+                ],
+                "title": "Diagnostic",
+                "type": "object"
+              },
+              "Report": {
+                "additionalProperties": false,
+                "properties": {
+                  "evidence_for_report_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Evidence For Report Id"
+                  },
+                  "response_to_remedy_revision": {
+                    "anyOf": [
+                      {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Response To Remedy Revision"
+                  },
+                  "report_id": {
+                    "format": "uuid",
+                    "title": "Report Id",
+                    "type": "string"
+                  },
+                  "product": {
+                    "type": "string",
+                    "const": "clara"
+                  },
+                  "product_version": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.+-]+$",
+                    "title": "Product Version",
+                    "type": "string"
+                  },
+                  "host": {
+                    "enum": [
+                      "codex",
+                      "cowork",
+                      "unknown"
+                    ],
+                    "title": "Host",
+                    "type": "string"
+                  },
+                  "platform": {
+                    "enum": [
+                      "macos",
+                      "windows",
+                      "linux",
+                      "unknown"
+                    ],
+                    "title": "Platform",
+                    "type": "string"
+                  },
+                  "host_version": {
+                    "anyOf": [
+                      {
+                        "maxLength": 100,
+                        "pattern": "^[A-Za-z0-9_. +()-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Host Version"
+                  },
+                  "runtime_version": {
+                    "anyOf": [
+                      {
+                        "maxLength": 100,
+                        "pattern": "^[A-Za-z0-9_. +()-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Runtime Version"
+                  },
+                  "worker_runtime_version": {
+                    "anyOf": [
+                      {
+                        "maxLength": 100,
+                        "pattern": "^[A-Za-z0-9_. +()-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Worker Runtime Version"
+                  },
+                  "worker_platform": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "macos",
+                          "windows",
+                          "linux",
+                          "unknown"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Worker Platform"
+                  },
+                  "workflow": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Workflow",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Stage",
+                    "type": "string"
+                  },
+                  "diagnostics": {
+                    "items": {
+                      "$ref": "#/$defs/Diagnostic"
+                    },
+                    "maxItems": 512,
+                    "minItems": 1,
+                    "title": "Diagnostics",
+                    "type": "array"
+                  },
+                  "measurements": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "maxProperties": 100,
+                    "title": "Measurements",
+                    "type": "object"
+                  },
+                  "unavailable": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100,
+                    "title": "Unavailable",
+                    "type": "array"
+                  },
+                  "capture_state": {
+                    "default": "legacy",
+                    "enum": [
+                      "legacy",
+                      "pending",
+                      "complete",
+                      "unavailable"
+                    ],
+                    "title": "Capture State",
+                    "type": "string"
+                  },
+                  "session_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Session Id"
+                  },
+                  "operation_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Operation Id"
+                  },
+                  "input_binding": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Input Binding"
+                  }
+                },
+                "required": [
+                  "report_id",
+                  "product_version",
+                  "host",
+                  "platform",
+                  "workflow",
+                  "stage",
+                  "diagnostics"
+                ],
+                "title": "Report",
+                "type": "object"
+              },
+              "TechnicalFrame": {
+                "additionalProperties": false,
+                "description": "Package-relative source coordinates; never locals, arguments or case text.",
+                "properties": {
+                  "file": {
+                    "maxLength": 250,
+                    "pattern": "^[A-Za-z0-9_./-]+$",
+                    "title": "File",
+                    "type": "string"
+                  },
+                  "line": {
+                    "minimum": 1,
+                    "title": "Line",
+                    "type": "integer"
+                  },
+                  "function": {
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9_.<>]+$",
+                    "title": "Function",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file",
+                  "line",
+                  "function"
+                ],
+                "title": "TechnicalFrame",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_incident_status",
+          "description": "Get targeted diagnostic requests, original-task resume instructions, required updates and recovery status. Answer technical requests automatically through supplemental reports tied to the exact request revision; then check for the recovery agent's reply. Remain linked to unresolved incidents.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {},
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": []
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_incident_outcome",
+          "description": "Record the actual result of recovery or a resumed operation against the current remedy revision. Only actual execution success matching the original report_id and current remedy revision closes that installation's delivery.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "outcome": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Outcome"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "outcome"
+            ],
+            "$defs": {
+              "Diagnostic": {
+                "additionalProperties": false,
+                "properties": {
+                  "component": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Component",
+                    "type": "string"
+                  },
+                  "error_type": {
+                    "maxLength": 150,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Error Type",
+                    "type": "string"
+                  },
+                  "error_code": {
+                    "anyOf": [
+                      {
+                        "maxLength": 150,
+                        "pattern": "^[A-Za-z0-9_.: -]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Error Code"
+                  },
+                  "errno": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Errno"
+                  },
+                  "exit_code": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Exit Code"
+                  },
+                  "message": {
+                    "maxLength": 65536,
+                    "minLength": 1,
+                    "title": "Message",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Stage",
+                    "type": "string"
+                  },
+                  "evidence_source": {
+                    "enum": [
+                      "observed-tool-result",
+                      "runtime-exception",
+                      "technical-log"
+                    ],
+                    "title": "Evidence Source",
+                    "type": "string"
+                  },
+                  "technical_frames": {
+                    "items": {
+                      "$ref": "#/$defs/TechnicalFrame"
+                    },
+                    "maxItems": 100,
+                    "title": "Technical Frames",
+                    "type": "array"
+                  },
+                  "technical_facts": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "maxProperties": 100,
+                    "title": "Technical Facts",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "component",
+                  "error_type",
+                  "message",
+                  "stage",
+                  "evidence_source"
+                ],
+                "title": "Diagnostic",
+                "type": "object"
+              },
+              "Outcome": {
+                "additionalProperties": false,
+                "properties": {
+                  "report_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Report Id"
+                  },
+                  "outcome_id": {
+                    "format": "uuid",
+                    "title": "Outcome Id",
+                    "type": "string"
+                  },
+                  "incident_id": {
+                    "format": "uuid",
+                    "title": "Incident Id",
+                    "type": "string"
+                  },
+                  "remedy_revision": {
+                    "minimum": 1,
+                    "title": "Remedy Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "recovered",
+                      "failed",
+                      "action-required"
+                    ],
+                    "title": "Status",
+                    "type": "string"
+                  },
+                  "diagnostics": {
+                    "items": {
+                      "$ref": "#/$defs/Diagnostic"
+                    },
+                    "maxItems": 512,
+                    "title": "Diagnostics",
+                    "type": "array"
+                  },
+                  "execution_succeeded": {
+                    "default": false,
+                    "title": "Execution Succeeded",
+                    "type": "boolean"
+                  },
+                  "operation_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Operation Id"
+                  },
+                  "input_binding": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Input Binding"
+                  },
+                  "original_task_verified": {
+                    "default": false,
+                    "title": "Original Task Verified",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "outcome_id",
+                  "incident_id",
+                  "remedy_revision",
+                  "status"
+                ],
+                "title": "Outcome",
+                "type": "object"
+              },
+              "TechnicalFrame": {
+                "additionalProperties": false,
+                "description": "Package-relative source coordinates; never locals, arguments or case text.",
+                "properties": {
+                  "file": {
+                    "maxLength": 250,
+                    "pattern": "^[A-Za-z0-9_./-]+$",
+                    "title": "File",
+                    "type": "string"
+                  },
+                  "line": {
+                    "minimum": 1,
+                    "title": "Line",
+                    "type": "integer"
+                  },
+                  "function": {
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9_.<>]+$",
+                    "title": "Function",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file",
+                  "line",
+                  "function"
+                ],
+                "title": "TechnicalFrame",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "clara_incident_progress",
+          "description": "Record observed remedy application or original-operation retry against its exact report and current revision. Progress never closes the original incident.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "progress": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RecoveryEvent"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "progress"
+            ],
+            "$defs": {
+              "RecoveryEvent": {
+                "additionalProperties": false,
+                "description": "An observed step for one original report and applicable remedy revision.",
+                "properties": {
+                  "event_id": {
+                    "format": "uuid",
+                    "title": "Event Id",
+                    "type": "string"
+                  },
+                  "incident_id": {
+                    "format": "uuid",
+                    "title": "Incident Id",
+                    "type": "string"
+                  },
+                  "report_id": {
+                    "format": "uuid",
+                    "title": "Report Id",
+                    "type": "string"
+                  },
+                  "remedy_revision": {
+                    "minimum": 1,
+                    "title": "Remedy Revision",
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "enum": [
+                      "remedy-received",
+                      "remedy-applied",
+                      "retry-started",
+                      "retry-failed",
+                      "retry-succeeded",
+                      "capture-unavailable"
+                    ],
+                    "title": "Kind",
+                    "type": "string"
+                  },
+                  "operation_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Operation Id"
+                  }
+                },
+                "required": [
+                  "event_id",
+                  "incident_id",
+                  "report_id",
+                  "remedy_revision",
+                  "kind"
+                ],
+                "title": "RecoveryEvent",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        }
+      ],
+      "resources": [],
+      "resourceTemplates": [],
+      "prompts": []
+    }
+  ]
+}
