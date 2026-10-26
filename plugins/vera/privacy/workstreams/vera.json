@@ -74,7 +74,8 @@
     "research-subscriptions",
     "run-receipt-stamping",
     "studio-work",
-    "workflow-usage"
+    "workflow-usage",
+    "on-demand-mcp"
   ],
   "public_explanations": {
     "vera-integrazioni": {

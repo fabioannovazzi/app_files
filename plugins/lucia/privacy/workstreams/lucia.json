@@ -56,14 +56,15 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-26",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "33f29ad4f1b80d4163ca59649eb6168f7ada60ea232f69689f411ce181306bec"
+    "source_fingerprint": "30db1623f8d940c1d75022f4245db4e12af3cd583e32f92a0bf1a072155f1ff7"
   },
   "service_ids": [
     "operational-incidents",
     "run-receipt-stamping",
     "workflow-usage",
     "managed-python-runtime",
-    "prepared-course-files"
+    "prepared-course-files",
+    "on-demand-mcp"
   ],
   "public_explanations": {}
 }

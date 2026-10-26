@@ -164,9 +164,14 @@ def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
     assert "scripts/change_requests.py" in clara_entries
     assert "scripts/check_change_requests.py" in clara_entries
     servers = json.loads(clara_entries[".mcp.json"])["mcpServers"]
-    assert set(servers) == {"claraIncidentHost"}
-    assert servers["claraIncidentHost"]["command"] == "node"
-    assert "url" not in servers["claraIncidentHost"]
+    assert set(servers) == {"clara"}
+    assert servers["clara"]["args"] == [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"
+    ]
+    services = json.loads(clara_entries["mcp-services.json"])["mcpServers"]
+    assert set(services) == {"claraIncidentHost"}
+    assert services["claraIncidentHost"]["command"] == "node"
+    assert "url" not in services["claraIncidentHost"]
     assert "scripts/incident_tool_schemas.json" in clara_entries
     assert "privacy/registry.json" in clara_entries
     assert "privacy/contracts/index.json" in clara_entries

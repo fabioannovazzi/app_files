@@ -1,0 +1,67 @@
+{
+  "schema_version": 2,
+  "service_id": "on-demand-mcp",
+  "display_name": "Clara on-demand MCP transport",
+  "governed_paths": [
+    ".mcp.json",
+    "mcp-services.json",
+    "scripts/on_demand_mcp.cjs"
+  ],
+  "governed_repository_paths": [
+    "plugins/vera/scripts/on_demand_mcp.cjs",
+    "plugins/vera/scripts/mcp_service_client.cjs",
+    "plugins/vera/scripts/verify_mcp_package.cjs",
+    "scripts/build_product_mcp_catalog.py",
+    "scripts/build_product_mcp_catalog.cjs",
+    "scripts/build_codex_plugin_zip.py",
+    "scripts/build_claude_plugin_zip.py"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "external_boundaries": [],
+  "security_controls": [
+    {
+      "id": "exact-owner-routing",
+      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply.",
+      "implemented_by": [
+        "scripts/on_demand_mcp.cjs",
+        "mcp-services.json"
+      ],
+      "on_violation": "Reject unknown targets and return worker failures without replaying possible side effects."
+    },
+    {
+      "id": "connection-lifetime",
+      "control": "Concurrent first requests share a worker. Used services retain their review state until the host connection closes; unused services never start during runtime discovery. Closing the connection ends worker input. Separately accepted native jobs retain their existing ownership policy.",
+      "implemented_by": [
+        "scripts/on_demand_mcp.cjs"
+      ],
+      "on_violation": "Close the transport on input closure or termination; do not introduce an update-protection companion or retained full-package snapshot."
+    }
+  ],
+  "service_details": {
+    "trigger": "The host opens one local entry process per product connection; only explicit tool, prompt or resource use starts its owner. Package builds query discovery in temporary storage with incident delivery disabled.",
+    "data_sent": [],
+    "data_returned": [
+      {
+        "content": "Existing tool schemas, resource descriptions and prompt definitions, followed by the unchanged selected service response. Requested professional content may enter the selected host model context under the existing workflow contract."
+      }
+    ],
+    "access": {
+      "arrangement": "The selected host and its authorized local OS account. This transport adds no account or external recipient."
+    },
+    "retention": {
+      "status": "documented",
+      "statement": "Routing maps, pending requests and child handles live in entry-process memory. The transport adds no case log or persistent output. Existing services retain their existing saved work and technical receipts."
+    }
+  },
+  "review": {
+    "reviewed_at": "2026-10-26",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "1d508608828b384eec3b00878bee67a82173ea78a6c604ce4123054fdc1d653f"
+  }
+}

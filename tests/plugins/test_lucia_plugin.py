@@ -421,7 +421,7 @@ def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> No
     prepare_tool = next(
         tool
         for tool in listed_tools
-        if tool["name"] == "prepare_studio_client_workflow"
+        if tool["name"] == "lucia_assurance_prepare_studio_client_workflow"
     )
 
     assert completed.returncode == 0, completed.stderr
@@ -886,3 +886,44 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
     assert "senza server o API modello separate" in approved
     assert len(approved.split("\n\n")) == 5
     assert len(approved.split()) <= 250
+
+
+def test_private_runtime_routes_prefixed_tool_to_unchanged_archive_api(tmp_path):
+    node = _node_executable()
+    if node is None:
+        pytest.skip("Node is unavailable for the MCP smoke test")
+    scripts = tmp_path / "scripts"
+    scripts.mkdir()
+    wrapper = scripts / "assurance_runtime_mcp.cjs"
+    wrapper.write_bytes((LUCIA_ROOT / "scripts/assurance_runtime_mcp.cjs").read_bytes())
+    server = tmp_path / "modules/studio-archive/mcp/server.cjs"
+    server.parent.mkdir(parents=True)
+    server.write_text(
+        'const lines = require("node:readline").createInterface({ input: process.stdin });\n'
+        'lines.on("line", line => { const m = JSON.parse(line); '
+        'process.stdout.write(JSON.stringify({jsonrpc:"2.0", id:m.id, result:m.params}) + "\\n"); });\n'
+    )
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "lucia_assurance_studio_archive_status",
+            "arguments": {"session": "synthetic"},
+        },
+    }
+
+    completed = subprocess.run(
+        [node, str(wrapper)],
+        input=json.dumps(request) + "\n",
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["result"] == {
+        "name": "studio_archive_status",
+        "arguments": {"session": "synthetic"},
+    }

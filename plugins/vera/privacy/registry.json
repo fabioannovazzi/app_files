@@ -1446,6 +1446,7 @@
     "local-onboarding",
     "managed-python-runtime",
     "native-workspace",
+    "on-demand-mcp",
     "operational-incidents",
     "plugin-feedback",
     "plugin-update-check",
@@ -1556,6 +1557,9 @@
         "privacy/services/run-receipt-stamping.json": [
           "hooks/cowork-hooks.json",
           "hooks/hooks.json"
+        ],
+        "privacy/services/on-demand-mcp.json": [
+          ".mcp.json"
         ]
       }
     }

@@ -243,6 +243,7 @@ COWORK_OMITTED_PATHS = frozenset(
     }
 )
 COWORK_SHARED_SERVICES = (
+    "on-demand-mcp",
     "run-receipt-stamping",
     "managed-python-runtime",
     "cnc-authenticated-review",
@@ -3128,15 +3129,9 @@ def _clara_package_entries(
     if not cowork_hook_path.is_file():
         raise FileNotFoundError(f"Clara Cowork hook does not exist: {cowork_hook_path}")
     entries["hooks/hooks.json"] = cowork_hook_path.read_bytes()
-    source_servers = json.loads(source_entries[".mcp.json"])["mcpServers"]
-    entries[".mcp.json"] = project_claude_mcp(
-        _json_bytes(
-            {
-                "mcpServers": {
-                    name: source_servers[name] for name in ("claraIncidentHost",)
-                }
-            }
-        )
+    entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
+    entries["mcp-services.json"] = project_claude_mcp(
+        source_entries["mcp-services.json"]
     )
     _overlay_cowork_agents(entries, plugin="clara")
     entries["LICENSE"] = (ROOT / "LICENSE").read_bytes()
@@ -3288,6 +3283,9 @@ def _lucia_package_entries(
         }
     )
     entries[".mcp.json"] = project_claude_mcp(source_entries[".mcp.json"])
+    entries["mcp-services.json"] = project_claude_mcp(
+        source_entries["mcp-services.json"]
+    )
     entries["usage/pipelines.json"] = source_entries["usage/pipelines.json"]
     for reference in (
         "workflow-usage",

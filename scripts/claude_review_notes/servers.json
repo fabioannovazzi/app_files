@@ -29,5 +29,7 @@
   "luciaPromptOptimizer": "Review the legal answer plan.",
   "luciaStudioArchive": "Manage registered local client folders and engagement records.",
   "claraIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.",
-  "luciaIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS."
+  "luciaIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.",
+  "clara": "Expose the packaged Clara tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.",
+  "lucia": "Expose the packaged Lucia tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection."
 }
