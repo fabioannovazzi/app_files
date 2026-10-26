@@ -1,213 +1,133 @@
 {
-  "schema": "mparanza.teaching_release_review.v1",
-  "product": "clara",
-  "workflow": "attribute-reporting",
-  "course_sha256": "c093bc94c8535f4ca32c09642a902c9684dbc2231ecd1cba227fc5b01a6bdd46",
-  "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
-  "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
-  "review_scope": "Reviewed five localized first-use lessons and actual demo/practice reports. Independent agent reviewed every exact rendered report and claim ledger, then the native browser QA and finalizer completed all ten reports. Automated regression separately tests native construction and refuses final semantic acceptance when independent review is missing. No learner participation or live retailer-data acquisition is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "archive_release_shared_runtime_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "fa0b67145989c08dd6a249ceb9cc6f4715734c16bd191e10851eeafed0a8645a",
+    "previous_course_sha256": "599564a55ff74de477c41dc846900aa2f4d00278fbab301c8af6494d146f835d",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "codex_course_qa_20260927": {
+    "course": 36,
+    "demo_file_set_unchanged": true,
+    "demo_files_preserved": 66,
+    "human_understanding_confirmed": false,
+    "limitations": [
+      "Native microphone/voice not tested",
+      "Physical two-window placement not verified",
+      "Other-language live journeys not tested",
+      "Installed Clara path unavailable; local current source tested",
+      "IAB viewport override ineffective; exact inner frame dimensions measured",
+      "Browser instrumentation MutationObserver exceptions retained separately from script-free report runtime"
+    ],
+    "no_install_deploy_publish": true,
+    "onboarding_phase": "interview",
+    "phase": "paused",
+    "practice_change": "New arrivals now blue sweaters; best-seller comparison unchanged. Fictional reassignment, not temporal market growth.",
+    "product": "clara",
+    "professional_approval": false,
+    "profile": null,
+    "repairs": [
+      "Localized current native bridge and comparison labels",
+      "Replaced stale authored pending-review sentence with verdict guidance",
+      "Passive course reader supports native report metadata/figures and omits controls/deactivates external product links",
+      "Report-first readable titles, collapsed technical disclosures, preserved table scrolling and separated text"
+    ],
+    "revision": 4,
+    "runs": {
+      "demo": {
+        "claims": 7,
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/demo-2c17023171801682",
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/demo-2c17023171801682/outputs/run/report/report.html",
+        "report_sha256": "28ed849e12f449ee0c58f1922641b56df2b49052033af714f82738b0e73bb5be",
+        "review_sha256": "8147eb245c5e22e747e7257a07f8397d99606c100063fa5a3025dd01387848e2",
+        "source_zip_sha256": "54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b",
+        "verdict": "correct_with_caveats"
+      },
+      "practice": {
+        "claims": 7,
+        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/practice-adc099a7379da3a4",
+        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/practice-adc099a7379da3a4/outputs/run/report/report.html",
+        "report_sha256": "233597fb9dcd1b064d83b311308f89bb7d4720584963b026fa029ffd9f8186ba",
+        "review_sha256": "7edd04703cd03da8214f89d59ecf00bf1d966bc83313a43380b13ef94f8899c0",
+        "source_zip_sha256": "0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f",
+        "verdict": "correct_with_caveats"
+      }
+    },
+    "scope": "Italian Codex simulated learner journey with distinct native demo/practice, independent teacher review, actual rendered results/source navigation and saved reopening",
+    "session_id": "5db4ac376a6122769f61307cefb8efcb",
+    "status": "passed",
+    "verified_at": "2026-09-27T21:29:32.281284+00:00",
+    "workflow": "attribute-reporting"
+  },
+  "course_sha256": "2aebf3c82b9ebd5cb45a092f1c4e6385150c39882aa310e454805d271b2f2e38",
+  "cowork_reporting_source_refresh_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/clara/scripts/operational_incidents.py",
+      "plugins/clara/scripts/workflow_usage.py",
+      "plugins/clara/skills/attribute-reporting/SKILL.md"
+    ],
+    "current_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "f097e6d4fec1523148a07ad52d3d6b248b0fc6bca4cb71e1896facdc4a7fa11d",
+    "reviewed_at": "2026-10-18T18:09:58.940232+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "c093bc94c8535f4ca32c09642a902c9684dbc2231ecd1cba227fc5b01a6bdd46",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
+    "recorded_at": "2026-10-25T18:12:53.192011+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "esg_source_refresh_20260929": {
+    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "current_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
+    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "previous_course_sha256": "3820e69f1b2234f6a2e0fc5b918db50bac32b6c5a8df3f44cf10b0d86fe1b9ff",
+    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
+  },
+  "esg_source_refresh_20260930": {
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "current_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "previous_course_sha256": "3820e69f1b2234f6a2e0fc5b918db50bac32b6c5a8df3f44cf10b0d86fe1b9ff",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
+  },
+  "filesystem_identity_source_binding_20261026": {
+    "scope": "Complete authored course content is unchanged. Reviewed shared runtime source renews stale filesystem metadata only after full byte verification and stable current directory identity. Existing editorial, learner and professional judgments remain unchanged; this is not new installed-host acceptance."
+  },
+  "integration_refresh": {
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
+  },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
-        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
-        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
-        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
-        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
-        "language_and_pacing": "The it lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-it]",
-        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
-        "reviewed_artifacts": [
-          {
-            "name": "report.html",
-            "sha256": "7fcda2d7e02789a7b0ff439122b30557ac77cfe2cb58d6c6e6420b401608e1a7"
-          },
-          {
-            "name": "claim_ledger.json",
-            "sha256": "755d43370d72fb99dd5dc63d9c095acc9eac725214b690c04f62bd429c5f25ee"
-          },
-          {
-            "name": "semantic_review.json",
-            "sha256": "af4ec7d9e1c2ab00868c7354908a990647b48576e1e93a43d32d6a220fe6c5fc"
-          },
-          {
-            "name": "browser_qa.json",
-            "sha256": "8c7916e04532e19ba2db01af967cbed6d081c29f38ef554d5edd926c04a4ec02"
-          },
-          {
-            "name": "correctness_verdict.json",
-            "sha256": "5c18e0907d339832401831ba871e003b402d0d20fc2f8f690835f8deff77f06a"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-it]",
-        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
-        "reviewed_artifacts": [
-          {
-            "name": "report.html",
-            "sha256": "74e4e0f9315e08cae5c14c7848f2acf65b6c0dd56605db8ea1819ce715efcf16"
-          },
-          {
-            "name": "claim_ledger.json",
-            "sha256": "05c57dbce1a17590b31f9aa7f9e269b71f7db8097a78bbae67a0d818690b97f2"
-          },
-          {
-            "name": "semantic_review.json",
-            "sha256": "5f265dab03278f94aea5e625b174a650b84436fb809a8dccf8fb2ce566dd805e"
-          },
-          {
-            "name": "browser_qa.json",
-            "sha256": "5c24cba2ba456e14cb031249745f3cc069018a3e83fc886babc511494ab53d24"
-          },
-          {
-            "name": "correctness_verdict.json",
-            "sha256": "eb83db91d702bace6c05255d1fe8760596111397d3ba749d7167e61dc87150d0"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
-        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
-        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
-        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
-        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
-        "language_and_pacing": "The en lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-en]",
-        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
-        "reviewed_artifacts": [
-          {
-            "name": "report.html",
-            "sha256": "c698e0d6ce18a3755e5acff270f430b8d3b94ec4f593f84dfc2b01333aee0a5e"
-          },
-          {
-            "name": "claim_ledger.json",
-            "sha256": "5d212f3f14d4e2c255aa6507835a94014dbf06f9703afe3131dbfa82088582ce"
-          },
-          {
-            "name": "semantic_review.json",
-            "sha256": "e3af100b2bb5cc5fe230721823ba725ab1f8b2f2926a2435aaf5a7e2c06ce5ae"
-          },
-          {
-            "name": "browser_qa.json",
-            "sha256": "7d5861338c587e99ed6a7bb6ee88ede9cfb844f4d261c297ad7d69d4e29a386c"
-          },
-          {
-            "name": "correctness_verdict.json",
-            "sha256": "b51ed8c91e0134079df50091b27dee4b5899d56c829019607961817f7d103d88"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-en]",
-        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
-        "reviewed_artifacts": [
-          {
-            "name": "report.html",
-            "sha256": "abb64e9c3fadd2abdba402095314035a053ea9da6f50822d399d5be738f8cfc2"
-          },
-          {
-            "name": "claim_ledger.json",
-            "sha256": "0d1f5e81918131ff82d0d53b5f58b4f973389ac6d2d707c4fb4905c81b4c4284"
-          },
-          {
-            "name": "semantic_review.json",
-            "sha256": "e3fb4130303b31bc989ee073e84289baca931cf6a901208d32e2c3f24675c1df"
-          },
-          {
-            "name": "browser_qa.json",
-            "sha256": "1361c485bf36d9e3dfedfc1e6a322290b60e6e130757b7f00eb175e214a59379"
-          },
-          {
-            "name": "correctness_verdict.json",
-            "sha256": "e4d84fb35744dbe8e43ecda5c4401ebb8db78f78e7d49d248546379b30e152db"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
-        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
-        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
-        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
-        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
-        "language_and_pacing": "The fr lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-fr]",
-        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
-        "reviewed_artifacts": [
-          {
-            "name": "report.html",
-            "sha256": "d7993c8059d426ae359f89d7d18949dacb474808d5036649508b42e3bc3fc17b"
-          },
-          {
-            "name": "claim_ledger.json",
-            "sha256": "11d93b86c048dd5104b139b45a85d2fbd73d2f91b54b8fa20af68f7df37f9210"
-          },
-          {
-            "name": "semantic_review.json",
-            "sha256": "4aec21b7e819537574e26082507e29b16fb71f4e8653a2818cd844bc29d16a90"
-          },
-          {
-            "name": "browser_qa.json",
-            "sha256": "40943022f6b179516fc0d64e435ad640a3ba1c7bb4be2da9f4a9f2523a19400d"
-          },
-          {
-            "name": "correctness_verdict.json",
-            "sha256": "d04237e826d03da352ec82fb37f5bf7b37059a9f2ae8b511dcb605e0c572e580"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-fr]",
-        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
-        "reviewed_artifacts": [
-          {
-            "name": "report.html",
-            "sha256": "00ca7bd4dfc2cc31b2a0d04b990a4fa8b6f5f6e4b3177a99c58cc5405b7d319e"
-          },
-          {
-            "name": "claim_ledger.json",
-            "sha256": "bf955b69824431d94d22c1c5b9ea33fb94c3122c2be63f5cc0b83f4684f0a73b"
-          },
-          {
-            "name": "semantic_review.json",
-            "sha256": "c96d0e677085dc3841cc45f0c4e6aa5a666bcf876000034895e2bf14c5840fe6"
-          },
-          {
-            "name": "browser_qa.json",
-            "sha256": "e360c4de590953a3ac822df755c0c54af30c5e3a5af046ede0afb9b28f215493"
-          },
-          {
-            "name": "correctness_verdict.json",
-            "sha256": "4b8c41bd22424c97a0a000186a2a2a104c71cc76756e9ea929851dadb7397616"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
-        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
-        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
-        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
-        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
-        "language_and_pacing": "The de lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-de]",
         "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
         "reviewed_artifacts": [
           {
@@ -230,10 +150,18 @@
             "name": "correctness_verdict.json",
             "sha256": "9f8cab282402bba8db131fa21a4c09107ab5dd4fb4c0b8adfb911023b11f0608"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "language_and_pacing": "The de lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-de]",
         "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
         "reviewed_artifacts": [
           {
@@ -256,21 +184,76 @@
             "name": "correctness_verdict.json",
             "sha256": "cd61982941aba91d13478602c6e88ea3cb1068cc50359a7100adc978033b8a68"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "c698e0d6ce18a3755e5acff270f430b8d3b94ec4f593f84dfc2b01333aee0a5e"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "5d212f3f14d4e2c255aa6507835a94014dbf06f9703afe3131dbfa82088582ce"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "e3af100b2bb5cc5fe230721823ba725ab1f8b2f2926a2435aaf5a7e2c06ce5ae"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "7d5861338c587e99ed6a7bb6ee88ede9cfb844f4d261c297ad7d69d4e29a386c"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "b51ed8c91e0134079df50091b27dee4b5899d56c829019607961817f7d103d88"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "language_and_pacing": "The en lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit."
+      },
+      "practice": {
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "abb64e9c3fadd2abdba402095314035a053ea9da6f50822d399d5be738f8cfc2"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "0d1f5e81918131ff82d0d53b5f58b4f973389ac6d2d707c4fb4905c81b4c4284"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "e3fb4130303b31bc989ee073e84289baca931cf6a901208d32e2c3f24675c1df"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "1361c485bf36d9e3dfedfc1e6a322290b60e6e130757b7f00eb175e214a59379"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "e4d84fb35744dbe8e43ecda5c4401ebb8db78f78e7d49d248546379b30e152db"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-en]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit.",
-        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
-        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
-        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
-        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
-        "language_and_pacing": "The es lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-es]",
         "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
         "reviewed_artifacts": [
           {
@@ -293,10 +276,18 @@
             "name": "correctness_verdict.json",
             "sha256": "9afebcee3c88c9e91c88f372c72378c420cf6e3bb68cd113fbecf3bf9191aec8"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "language_and_pacing": "The es lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-es]",
         "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
         "reviewed_artifacts": [
           {
@@ -319,252 +310,264 @@
             "name": "correctness_verdict.json",
             "sha256": "f13a9d07e54cb4e402408ac1e4a2e49754a2f8cf140130592fea810a576284f3"
           }
-        ]
-      }
-    }
-  },
-  "codex_course_qa_20260927": {
-    "status": "passed",
-    "course": 36,
-    "product": "clara",
-    "workflow": "attribute-reporting",
-    "scope": "Italian Codex simulated learner journey with distinct native demo/practice, independent teacher review, actual rendered results/source navigation and saved reopening",
-    "human_understanding_confirmed": false,
-    "professional_approval": false,
-    "session_id": "5db4ac376a6122769f61307cefb8efcb",
-    "phase": "paused",
-    "revision": 4,
-    "profile": null,
-    "onboarding_phase": "interview",
-    "runs": {
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
       "demo": {
-        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/demo-2c17023171801682",
-        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/demo-2c17023171801682/outputs/run/report/report.html",
-        "report_sha256": "28ed849e12f449ee0c58f1922641b56df2b49052033af714f82738b0e73bb5be",
-        "review_sha256": "8147eb245c5e22e747e7257a07f8397d99606c100063fa5a3025dd01387848e2",
-        "verdict": "correct_with_caveats",
-        "claims": 7,
-        "source_zip_sha256": "54721bc089e23f620665b2afe33d8152f6336cf126ffdb01169780be3e522f2b"
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "d7993c8059d426ae359f89d7d18949dacb474808d5036649508b42e3bc3fc17b"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "11d93b86c048dd5104b139b45a85d2fbd73d2f91b54b8fa20af68f7df37f9210"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "4aec21b7e819537574e26082507e29b16fb71f4e8653a2818cd844bc29d16a90"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "40943022f6b179516fc0d64e435ad640a3ba1c7bb4be2da9f4a9f2523a19400d"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "d04237e826d03da352ec82fb37f5bf7b37059a9f2ae8b511dcb605e0c572e580"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-fr]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "language_and_pacing": "The fr lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit."
       },
       "practice": {
-        "directory": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/practice-adc099a7379da3a4",
-        "report": "/private/tmp/teaching-acceptance-20260926/codex/clara-attribute-reporting/teaching/sessions/5db4ac376a6122769f61307cefb8efcb/files/practice-adc099a7379da3a4/outputs/run/report/report.html",
-        "report_sha256": "233597fb9dcd1b064d83b311308f89bb7d4720584963b026fa029ffd9f8186ba",
-        "review_sha256": "7edd04703cd03da8214f89d59ecf00bf1d966bc83313a43380b13ef94f8899c0",
-        "verdict": "correct_with_caveats",
-        "claims": 7,
-        "source_zip_sha256": "0d689c8ea53e4f72692ad9f1e8c27d3ab51f84c79905a28b825d9cab103cad7f"
-      }
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "00ca7bd4dfc2cc31b2a0d04b990a4fa8b6f5f6e4b3177a99c58cc5405b7d319e"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "bf955b69824431d94d22c1c5b9ea33fb94c3122c2be63f5cc0b83f4684f0a73b"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "c96d0e677085dc3841cc45f0c4e6aa5a666bcf876000034895e2bf14c5840fe6"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "e360c4de590953a3ac822df755c0c54af30c5e3a5af046ede0afb9b28f215493"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "4b8c41bd22424c97a0a000186a2a2a104c71cc76756e9ea929851dadb7397616"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-fr]"
+      },
+      "verdict": "accepted"
     },
-    "demo_files_preserved": 66,
-    "demo_file_set_unchanged": true,
-    "practice_change": "New arrivals now blue sweaters; best-seller comparison unchanged. Fictional reassignment, not temporal market growth.",
-    "repairs": [
-      "Localized current native bridge and comparison labels",
-      "Replaced stale authored pending-review sentence with verdict guidance",
-      "Passive course reader supports native report metadata/figures and omits controls/deactivates external product links",
-      "Report-first readable titles, collapsed technical disclosures, preserved table scrolling and separated text"
-    ],
-    "limitations": [
-      "Native microphone/voice not tested",
-      "Physical two-window placement not verified",
-      "Other-language live journeys not tested",
-      "Installed Clara path unavailable; local current source tested",
-      "IAB viewport override ineffective; exact inner frame dimensions measured",
-      "Browser instrumentation MutationObserver exceptions retained separately from script-free report runtime"
-    ],
-    "no_install_deploy_publish": true,
-    "verified_at": "2026-09-27T21:29:32.281284+00:00"
-  },
-  "release_freshness_20260928": {
-    "reviewer": "Codex /root - bounded release freshness review",
-    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
-    "previous_course_sha256": "b13bd3711afa16fdff0aa0653c8f99d683b1b4fd74487e17927f575d622d652c",
-    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
-    "changed_compiled_fields": [
-      "sources"
-    ],
-    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
-    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
-    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-36.md",
-    "italian_course_qa_sha256": "f393640b922572f2cb4da332bd3178131f7897be0786376d2ff6bc7fa2f61d8b",
-    "native_execution_evidence": {
-      "commit": "2431fbd29",
-      "run": 36392851481,
-      "job": 108832365397,
-      "passed": 1152,
-      "skipped": 3,
-      "phase": "Verify teaching-kit languages, real executions and native packages",
-      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
-    },
-    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
-  },
-  "esg_source_refresh_20260929": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
-    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
-    "previous_course_sha256": "3820e69f1b2234f6a2e0fc5b918db50bac32b6c5a8df3f44cf10b0d86fe1b9ff",
-    "current_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
-  },
-  "esg_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
-    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
-    "previous_course_sha256": "3820e69f1b2234f6a2e0fc5b918db50bac32b6c5a8df3f44cf10b0d86fe1b9ff",
-    "current_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
-  },
-  "studio_format_source_binding_20261001": {
-    "reviewer": "Codex - bounded studio-format source compatibility review",
-    "reviewed_at": "2026-10-01T18:46:46.276496+00:00",
-    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
-    "previous_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
-    "current_course_sha256": "11e4c24dfad346738d521950bd435cb2e8f9bddd179c2c9730b76d0705ea4df2",
-    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
-    "changed_sources": [
-      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
-    ],
-    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
-    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
-  },
-  "integration_refresh": {
-    "reviewer": "Codex /root",
-    "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
-  },
-  "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
-    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "5ee26d7f0f5c95530d2c8d5ce26ec5481c67d941a6330bf7ad43cea3b1eeaeb4",
-    "current_course_sha256": "9859210f304e5150ce11cda8da4b2dfa5f547bbcd90a29423f0fc2804a659acc",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
-    "changed_sources": [
-      "vendor/modules/courseware/policy.py"
-    ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "runtime8_dependency_binding_20261006": {
-    "previous_course_sha256": "f9e9a06b038f3dd0559eccd07a48e56226f5427e50e704056cee3b5d24cd341a",
-    "current_course_sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
-    "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
-  },
-  "source_binding_update": {
-    "reviewed_at": "2026-10-06",
-    "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
-  },
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
-    "current_course_sha256": "d5422b532e1eb8a14b23b446604d7d595f516e796bc513005378b5d1158b4a70",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
-  },
-  "product_reporting_source_binding_20261018": {
-    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
-    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
-    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
-    "previous_course_sha256": "d5422b532e1eb8a14b23b446604d7d595f516e796bc513005378b5d1158b4a70",
-    "current_course_sha256": "599564a55ff74de477c41dc846900aa2f4d00278fbab301c8af6494d146f835d",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
-    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
-  },
-  "archive_release_shared_runtime_compatibility_20261018": {
-    "reviewer": "Codex /root - bounded complete-course comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "599564a55ff74de477c41dc846900aa2f4d00278fbab301c8af6494d146f835d",
-    "current_course_sha256": "fa0b67145989c08dd6a249ceb9cc6f4715734c16bd191e10851eeafed0a8645a",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
-  },
-  "reporting_reference_binding_20261018": {
-    "reviewer": "Codex - bounded source compatibility review",
-    "reviewed_at": "2026-10-18",
-    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
-    "previous_course_sha256": "f097e6d4fec1523148a07ad52d3d6b248b0fc6bca4cb71e1896facdc4a7fa11d",
-    "current_course_sha256": "775dde65118fa213e253650868386a6ad8b15c1107fb44ed99c3f9ce316163dc",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12.",
-    "native_execution_evidence": {
-      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
-      "run": 39150899038,
-      "job": 117744153569,
-      "passed": 1710,
-      "skipped": 3,
-      "courseware_coverage_percent": 90.54,
-      "later_failure": "Editorial digest freshness; the original job is not represented as fully green."
-    },
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance."
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.940232+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "f097e6d4fec1523148a07ad52d3d6b248b0fc6bca4cb71e1896facdc4a7fa11d",
-    "current_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      "plugins/clara/scripts/operational_incidents.py",
-      "plugins/clara/scripts/workflow_usage.py",
-      "plugins/clara/skills/attribute-reporting/SKILL.md"
-    ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+    "it": {
+      "demo": {
+        "result_review": "The demo supports the black-cardigan signal in the declared recent cohort and best-seller evidence. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "7fcda2d7e02789a7b0ff439122b30557ac77cfe2cb58d6c6e6420b401608e1a7"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "755d43370d72fb99dd5dc63d9c095acc9eac725214b690c04f62bd429c5f25ee"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "af4ec7d9e1c2ab00868c7354908a990647b48576e1e93a43d32d6a220fe6c5fc"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "8c7916e04532e19ba2db01af967cbed6d081c29f38ef554d5edd926c04a4ec02"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "5c18e0907d339832401831ba871e003b402d0d20fc2f8f690835f8deff77f06a"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "All ten actual reports finalized Correct with caveats. The structured report has a summary, cohort evidence, brand context, emerging signal, bridge interpretation, product examples and method. Missing images and consumer reviews are disclosed; product counts and seller-defined cohorts are not sales volumes or causal evidence.",
+        "execution_and_checkpoints": "The current workflow generates evidence tables, renders the authored report, receives a separate agent review, runs desktop/mobile browser checks and finalizes the verdict. Checkpoints connect the original package and ordinary request to a supported conclusion and its review status.",
+        "inputs_and_request": "Localized briefs and fictional knitwear ZIPs contain source products, declared cohorts and computed comparisons, not a finished report or approved interpretation. Integrity checks run through the normal package intake.",
+        "language_and_pacing": "The it lesson uses a descriptive title, complete first-use request and concrete output checks. Its outline totals 390 seconds; execution, review and questions may extend it. Reports are localized, with a disclosed minor caveat for English comparison identifiers. Human timing and host interaction are not certified.",
+        "practice_and_repeat": "The practice package changes the recent cohort from black cardigans to blue sweaters. The report explains divergence from best sellers rather than claiming the same signal persists; actual source products support the examples. Practice writes a separate report and leaves the earlier report available.",
+        "purpose_and_first_use": "The learner supplies an existing retail evidence package, requests an assortment report and learns where to read the summary, comparisons, product evidence and verdict. The scope explicitly excludes separate data collection, central classification and Brand Fit."
+      },
+      "practice": {
+        "result_review": "The practice supports blue sweaters in the changed recent cohort, uses the correct recent product examples and explains that this differs from the best-seller signal. The independent review supports all four claims against exact evidence and report hashes. Desktop/mobile browser QA passed and native finalization produced Correct with caveats, preserving fictional-data, absent-image and absent-review limitations.",
+        "reviewed_artifacts": [
+          {
+            "name": "report.html",
+            "sha256": "74e4e0f9315e08cae5c14c7848f2acf65b6c0dd56605db8ea1819ce715efcf16"
+          },
+          {
+            "name": "claim_ledger.json",
+            "sha256": "05c57dbce1a17590b31f9aa7f9e269b71f7db8097a78bbae67a0d818690b97f2"
+          },
+          {
+            "name": "semantic_review.json",
+            "sha256": "5f265dab03278f94aea5e625b174a650b84436fb809a8dccf8fb2ce566dd805e"
+          },
+          {
+            "name": "browser_qa.json",
+            "sha256": "5c24cba2ba456e14cb031249745f3cc069018a3e83fc886babc511494ab53d24"
+          },
+          {
+            "name": "correctness_verdict.json",
+            "sha256": "eb83db91d702bace6c05255d1fe8760596111397d3ba749d7167e61dc87150d0"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_attribute_execution::test_assortment_kit_renders_native_comparisons_and_requires_independent_review[practice-it]"
+      },
+      "verdict": "accepted"
+    }
   },
   "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
+    "fresh_matching_junit_required": true,
     "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
     "parent_course_sha256": {
       "HEAD": "775dde65118fa213e253650868386a6ad8b15c1107fb44ed99c3f9ce316163dc",
       "origin/main": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59"
     },
-    "current_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.192011+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_course_sha256": "85ab8fff3f7855a040c0458039acd25859171f745283debcebc5739cbdf12c59",
-    "current_course_sha256": "c093bc94c8535f4ca32c09642a902c9684dbc2231ecd1cba227fc5b01a6bdd46",
+  "product": "clara",
+  "product_reporting_source_binding_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "current_course_sha256": "599564a55ff74de477c41dc846900aa2f4d00278fbab301c8af6494d146f835d",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted.",
+    "previous_course_sha256": "d5422b532e1eb8a14b23b446604d7d595f516e796bc513005378b5d1158b4a70",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json"
+  },
+  "rating_legalita_source_binding_20261002": {
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py"
+    ],
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "9859210f304e5150ce11cda8da4b2dfa5f547bbcd90a29423f0fc2804a659acc",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "5ee26d7f0f5c95530d2c8d5ce26ec5481c67d941a6330bf7ad43cea3b1eeaeb4",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "release_freshness_20260928": {
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-36.md",
+    "italian_course_qa_sha256": "f393640b922572f2cb4da332bd3178131f7897be0786376d2ff6bc7fa2f61d8b",
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest.",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "job": 108832365397,
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green.",
+      "passed": 1152,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "run": 36392851481,
+      "skipped": 3
+    },
+    "previous_course_sha256": "b13bd3711afa16fdff0aa0653c8f99d683b1b4fd74487e17927f575d622d652c",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "reviewer": "Codex /root - bounded release freshness review",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "d5422b532e1eb8a14b23b446604d7d595f516e796bc513005378b5d1158b4a70",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
+  },
+  "reporting_reference_binding_20261018": {
+    "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  }
+    "current_course_sha256": "775dde65118fa213e253650868386a6ad8b15c1107fb44ed99c3f9ce316163dc",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance.",
+    "native_execution_evidence": {
+      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
+      "courseware_coverage_percent": 90.54,
+      "job": 117744153569,
+      "later_failure": "Editorial digest freshness; the original job is not represented as fully green.",
+      "passed": 1710,
+      "run": 39150899038,
+      "skipped": 3
+    },
+    "previous_course_sha256": "f097e6d4fec1523148a07ad52d3d6b248b0fc6bca4cb71e1896facdc4a7fa11d",
+    "reviewed_at": "2026-10-18",
+    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
+    "reviewer": "Codex - bounded source compatibility review",
+    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
+  },
+  "review_scope": "Reviewed five localized first-use lessons and actual demo/practice reports. Independent agent reviewed every exact rendered report and claim ledger, then the native browser QA and finalizer completed all ten reports. Automated regression separately tests native construction and refuses final semantic acceptance when independent review is missing. No learner participation or live retailer-data acquisition is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
+  "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
+  "runtime8_dependency_binding_20261006": {
+    "current_course_sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
+    "previous_course_sha256": "f9e9a06b038f3dd0559eccd07a48e56226f5427e50e704056cee3b5d24cd341a",
+    "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
+  },
+  "schema": "mparanza.teaching_release_review.v1",
+  "source_binding_update": {
+    "reviewed_at": "2026-10-06",
+    "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "studio_format_source_binding_20261001": {
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "current_course_sha256": "11e4c24dfad346738d521950bd435cb2e8f9bddd179c2c9730b76d0705ea4df2",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge.",
+    "previous_course_sha256": "3cd301f9ca321a2cc3093496bcf0d1c04b351a921cfcb0e271d32f184eef15c1",
+    "reviewed_at": "2026-10-01T18:46:46.276496+00:00",
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths."
+  },
+  "workflow": "attribute-reporting"
 }

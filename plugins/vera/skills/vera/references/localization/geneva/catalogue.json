@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-10-26/vera-reconciliation-fix/plugins/vera",
-  "version": "0.1.505",
-  "captured_at": "2026-10-26T17:44:04.451707+00:00",
-  "catalogue_fingerprint": "7e5efeb4536a35a2d646e7b619640a4cfee6e23d2b39490b1b5071b5bdc9be3d",
-  "manifest_sha256": "e1f3f4056fa6cd8d5553890397ead3f1484f3ef985cd5b919136f122f6b7e2da",
+  "version": "0.1.507",
+  "captured_at": "2026-10-26T18:29:47.239855+00:00",
+  "catalogue_fingerprint": "8b0b3ced55b863238bbce4b2fb56ac6610d9a942b9373bebb682de4eaddf8d93",
+  "manifest_sha256": "4b27c4501731746f67f806444aae321b615a13fd1e80f759e922304646695af6",
   "entries": [
     {
       "function_id": "adeguati-assetti",

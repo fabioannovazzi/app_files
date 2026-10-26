@@ -134,7 +134,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "7e5efeb4536a35a2d646e7b619640a4cfee6e23d2b39490b1b5071b5bdc9be3d",
+  "catalogue_fingerprint": "8b0b3ced55b863238bbce4b2fb56ac6610d9a942b9373bebb682de4eaddf8d93",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2283,12 +2283,16 @@
   "reconciliation_repair_release_binding_20261026": {
     "reviewed_at": "2026-10-26",
     "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
-    "version": "0.1.505",
+    "version": "0.1.507",
     "scope": "Canonical product manifest version changed. All Vera skill entrypoint identities and bytes are unchanged; existing Geneva judgments are preserved. Component reconciliation fixes preserve jurisdiction, currency and date constraints. This binding does not claim new jurisdiction acceptance."
   },
   "transparent_sidebar_icon_release_binding": {
     "version": "0.1.500",
     "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
     "scope": "Manifest version only. All skill entries and professional judgments are unchanged; this binding does not establish professional or installed-host acceptance."
+  },
+  "filesystem_identity_release_binding_20261026": {
+    "version": "0.1.507",
+    "scope": "All skill entrypoint bytes and existing jurisdiction judgments are unchanged. Fully verified shared code can renew stale filesystem metadata; no new jurisdiction acceptance is claimed."
   }
 }

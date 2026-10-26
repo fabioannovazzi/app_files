@@ -791,11 +791,7 @@ def _shared_execution_root(
         record = directory / f"{digest}.json"
         identity = json.dumps({"identity": [info.st_dev, info.st_ino]})
         if record.exists():
-            if _read_regular(record)[0].decode() != identity:
-                raise ValueError("Shared execution directory identity changed")
-            record.touch()
-        else:
-            record.write_text(identity)
+            _read_regular(record)
         if root in _SHARED_ROOTS:
             descriptor, references = _SHARED_ROOTS[root]
             _SHARED_ROOTS[root] = (descriptor, references + 1)
@@ -821,8 +817,23 @@ def _shared_execution_root(
             if actual != data or links != 1:
                 raise ValueError(f"Shared execution code changed: {name}")
         _validate_module(root, module)
-        if (root.stat().st_dev, root.stat().st_ino) != (info.st_dev, info.st_ino):
-            raise ValueError("Shared execution directory changed during verification")
+        with execution_store_lock():
+            _real_ancestors(root)
+            if (root.stat().st_dev, root.stat().st_ino) != (info.st_dev, info.st_ino):
+                raise ValueError(
+                    "Shared execution directory changed during verification"
+                )
+            # Device numbers can change after a filesystem remount. Persistent
+            # identity is a collection receipt, not authority to execute code:
+            # renew it only after verifying every byte and the live identity.
+            descriptor, name = tempfile.mkstemp(prefix=".identity-", dir=directory)
+            receipt = Path(name)
+            try:
+                with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+                    handle.write(identity)
+                receipt.replace(record)
+            finally:
+                receipt.unlink(missing_ok=True)
         return root
     except BaseException:
         release_execution_root(root)
