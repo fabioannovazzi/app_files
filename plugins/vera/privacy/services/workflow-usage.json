@@ -102,7 +102,8 @@
       "controls": [
         "Both server receipt and event completion time must follow the baseline; old delayed deliveries do not repopulate a reset.",
         "Native computer IDs deduplicate apps and reporter instances. Unlinked completions stay pending until proven linkage; explicit test fixtures on other devices do not count as professionals.",
-        "The public response is an allowlisted projection of status-only fields; reset is available only to the server operator."
+        "The public response is an allowlisted projection of status-only fields; reset is available only to the server operator.",
+        "The operator can initialize a missing counting baseline with registered agent computers and an explicit timezone-aware past start. It includes retained completions after that boundary without replaying events. Initialization is transaction-serialized, idempotent for the exact configuration and cannot replace an existing baseline; reset remains a separate explicit operation."
       ]
     }
   ],
@@ -170,6 +171,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-26",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "683213c3aecd5a0bbb9f511125daa7eed81abe67b5ef5e956c726bb96b6b5ff5"
+    "source_fingerprint": "a1883641f68a2c4d6a78cf9885f2a9bda9c8f9c71d3929467fd404a16764d5ab"
   }
 }

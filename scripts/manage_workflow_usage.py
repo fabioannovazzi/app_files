@@ -36,6 +36,11 @@ def main() -> None:
     computers.add_argument("--days", type=int, default=30)
     reset = commands.add_parser("testing-reset")
     reset.add_argument("--agent-device", action="append", required=True)
+    initialize = commands.add_parser("testing-initialize")
+    initialize.add_argument("--agent-device", action="append", required=True)
+    initialize.add_argument(
+        "--since", required=True, help="Explicit timezone-aware counting baseline"
+    )
     args = parser.parse_args()
     load_env_from_secrets_file()
     store = IncidentStore(args.sqlite_path)
@@ -67,12 +72,18 @@ def main() -> None:
         )
     elif args.command == "show":
         result = store.workflow_inspect(args.run_id)
-    elif args.command == "testing-reset":
+    elif args.command in {"testing-reset", "testing-initialize"}:
         if args.product == "all":
             parser.error(
-                "Reset requires one explicit product; existing baselines stay separate"
+                "Testing configuration requires one explicit product; existing baselines stay separate"
             )
-        result = store.workflow_testing_reset(args.agent_device, product=args.product)
+        result = (
+            store.workflow_testing_initialize(
+                args.agent_device, args.since, product=args.product
+            )
+            if args.command == "testing-initialize"
+            else store.workflow_testing_reset(args.agent_device, product=args.product)
+        )
     else:
         result = (
             {product: store.workflow_testing(product=product) for product in PRODUCTS}

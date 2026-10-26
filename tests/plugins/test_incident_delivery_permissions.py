@@ -57,6 +57,24 @@ def test_new_automatic_task_delivers_without_releasing_local_only_history(
 
 
 @pytest.mark.parametrize("product", PRODUCTS)
+def test_local_only_task_without_an_initial_failure_stays_local_on_resume(
+    tmp_path, monkeypatch, product
+):
+    module, store, _ = client(tmp_path, monkeypatch, product)
+    monkeypatch.setenv("MPARANZA_INCIDENT_TASK_ID", str(uuid4()))
+    with monkeypatch.context() as local:
+        local.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+        module.execution_identity("journal-sampling", ["run", "helper.py"])
+    assert retained_state(module)["outbox"] == []
+
+    result = module.report_failure("journal-sampling", "execution", "Later failure")
+
+    assert result["reporting"] == "queued"
+    assert store.queue() == []
+    assert retained_state(module)["outbox"][0]["delivery_mode"] == "local-only"
+
+
+@pytest.mark.parametrize("product", PRODUCTS)
 def test_resumed_local_only_task_keeps_new_reports_local(
     tmp_path, monkeypatch, product
 ):

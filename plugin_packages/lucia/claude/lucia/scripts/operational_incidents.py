@@ -484,6 +484,12 @@ def _read(*, create: bool = True) -> dict[str, Any]:
 
 
 def _write(state: dict[str, Any]) -> None:
+    scope = _delivery_scope()
+    if _local_delivery_only() and scope:
+        # Even a successful first execution must retain this task's restriction.
+        restricted = state.setdefault("local_only_tasks", [])
+        if scope not in restricted:
+            restricted.append(scope)
     if any(item.get("delivery_mode") == "local-only" for item in state["outbox"]):
         # Older already-running reporters know only this guard. Keep them from
         # uploading restricted history; this runtime uses each event's permission.
@@ -858,6 +864,11 @@ def native_request(arguments: dict[str, Any]) -> dict[str, Any]:
         if identifier is not None:
             can_correct = _native_attempt(state, key)
         reply = _post(operation, {"credentials": state["credentials"], **payload})
+        if operation == "status":
+            # The managed launcher binds actual retry progress to this snapshot.
+            # Replace it even when empty so retired remedies cannot be replayed.
+            state["pending_incidents"] = reply["incidents"]
+            _write(state)
         if identifier is not None:
             if operation in {"report", "outcome", "progress"}:
                 if (

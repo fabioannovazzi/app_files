@@ -518,6 +518,16 @@ class IncidentStore:
                 connection, self._sql, agent_devices, _now(), product
             )
 
+    def workflow_testing_initialize(
+        self, agent_devices: list[str], since: str, product: Product = "vera"
+    ) -> dict[str, Any]:
+        """Initialize missing counts atomically without replacing an existing epoch."""
+        with self._connection() as connection:
+            self._schema(connection)
+            return workflow_testing.initialize(
+                connection, self._sql, agent_devices, since, _now(), product
+            )
+
     def workflow_testing(self, product: Product = "vera") -> dict[str, Any]:
         """Operator evidence for the current public testing levels."""
         with self._connection() as connection:

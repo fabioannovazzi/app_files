@@ -49,3 +49,32 @@ local-only tasks, native retries/supplements, legacy migration, exact selective
 authorization and outage retries. `test_native_incident_transport.py` also runs
 the actual native subprocess against a temporary HTTP service for all three
 products. These checks do not establish deployment or installed-host acceptance.
+
+## Automatic retry progress
+
+A successful native incident status call replaces the retained pending-remedy
+snapshot, including when the server returns an empty list. The managed launcher
+uses this snapshot to record actual retry starts and results for the matching
+original operation. A transport failure retains the last known snapshot; server
+revision and original-input checks still govern recovery. Reading status does not
+execute a remedy or mark an operation recovered.
+
+## First public testing baseline
+
+The public legend counts completed runs inside an explicit product baseline.
+An installation without that baseline remains untried even when usage arrived.
+Initialize it through the operator command, selecting an observed, registered
+agent computer and a timezone-aware start time:
+
+```sh
+python scripts/manage_workflow_usage.py --product vera testing-initialize \
+  --agent-device <registered-computer-uuid> --since <ISO-8601-start-time>
+```
+
+This includes already retained completions after that time without replaying
+events. Identical repeated initialization returns the existing baseline. A
+different time or computer list cannot replace an existing baseline, and a
+product's initialization cannot change another product's counts. The store's
+transaction lock serializes initialization across operator/API processes.
+Historical usage remains intact. `testing-reset` remains a separate explicit
+operation; deployment does not invoke it.
