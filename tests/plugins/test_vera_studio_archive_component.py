@@ -3138,7 +3138,7 @@ def test_vera_registers_archive_as_embedded_workflow() -> None:
         (ROOT / "plugins" / "vera" / "components.json").read_text(encoding="utf-8")
     )
     vera_mcp = json.loads(
-        (ROOT / "plugins" / "vera" / ".mcp.json").read_text(encoding="utf-8")
+        (ROOT / "plugins" / "vera" / "mcp-services.json").read_text(encoding="utf-8")
     )
     manifest = json.loads(
         (ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json").read_text(

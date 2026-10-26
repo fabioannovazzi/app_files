@@ -232,6 +232,17 @@ async function main() {
     for (const [name, config] of Object.entries(servers)) {
       results.push(await checkServer(root, name, config, runtime));
     }
+    if (fs.existsSync(path.join(root, "mcp-services.json"))) {
+      // Re-query the exact extracted workers: a valid static catalogue alone
+      // cannot prove that every advertised function still has a working owner.
+      const { build } = require("./build_vera_mcp_catalog.cjs");
+      const actual = await build(root, runtime);
+      const expected = JSON.parse(fs.readFileSync(path.join(root, "mcp-catalog.json"), "utf8"));
+      const equal = require("node:util").isDeepStrictEqual(actual, expected);
+      results.push(equal
+        ? { name: "vera-catalog", services: actual.services.length, tools: actual.services.reduce((n, service) => n + service.tools.length, 0) }
+        : { name: "vera-catalog", error: "Packaged service discovery differs from advertised catalogue" });
+    }
     process.stdout.write(`${JSON.stringify(results)}\n`);
     process.exitCode = results.some((result) => result.error) ? 1 : 0;
   } finally {

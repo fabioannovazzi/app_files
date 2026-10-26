@@ -3476,6 +3476,9 @@ def _claude_package_entries(package: ClaudePackage) -> dict[str, bytes]:
             ).replace(b"    # VERA_OPENAI_ONBOARDING_END\n", b"")
         if relative == ".mcp.json":
             content = project_claude_mcp(content)
+        elif relative == "mcp-services.json":
+            # Apply the same host capability projection to lazy service owners.
+            content = project_claude_mcp(content)
         elif relative == "skills/vera/references/optional-integrations.md":
             # This setup guide compares named hosts. Rebranding Codex as Claude
             # would incorrectly tell Cowork users to install a TOML configuration.
@@ -3581,6 +3584,8 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
     source = ROOT / "scripts/claude_review_notes"
     descriptions = json.loads((source / "servers.json").read_bytes())
     servers = json.loads(entries.get(".mcp.json", b'{"mcpServers":{}}'))["mcpServers"]
+    if "mcp-services.json" in entries:
+        servers.update(json.loads(entries["mcp-services.json"])["mcpServers"])
     local = []
     remote = []
     for name, config in servers.items():

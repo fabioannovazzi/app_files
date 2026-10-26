@@ -16,6 +16,7 @@ from uuid import uuid4
 
 import pytest
 
+from scripts.build_vera_mcp_catalog import add_vera_mcp_catalog
 from tests.plugins.test_vera_verified_execution import write_index
 
 __all__: list[str] = []
@@ -84,15 +85,24 @@ def environment(tmp_path):
 
 
 @contextmanager
-def native(root, tmp_path):
+def native(root, tmp_path, entry="native_execution_mcp.cjs"):
     process = subprocess.Popen(
-        ["node", str(root / "scripts/native_execution_mcp.cjs")],
+        ["node", str(root / "scripts" / entry)],
         stdin=subprocess.PIPE,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True,
         env=environment(tmp_path),
     )
+    if entry == "on_demand_mcp.cjs":
+        process.stdin.write(
+            json.dumps(
+                {"jsonrpc": "2.0", "id": 0, "method": "initialize", "params": {}}
+            )
+            + "\n"
+        )
+        process.stdin.flush()
+        assert "result" in json.loads(process.stdout.readline())
 
     def call(arguments):
         request = {
@@ -182,16 +192,46 @@ def test_closed_connection_retains_worker_code_then_releases_temporary_copies(
     assert (installed / "scripts/native_execution.py").is_file()
 
 
+@pytest.mark.parametrize("entry", ["native_execution_mcp.cjs", "on_demand_mcp.cjs"])
 def test_native_helper_retains_diagnostics_and_runs_once_across_service_restart(
-    installed, tmp_path
+    installed, tmp_path, entry
 ):
+    if entry == "on_demand_mcp.cjs":
+        for name in (
+            "on_demand_mcp.cjs",
+            "mcp_service_client.cjs",
+            "verify_mcp_package.cjs",
+        ):
+            shutil.copyfile(
+                ROOT / "plugins/vera/scripts" / name, installed / "scripts" / name
+            )
+        (installed / "mcp-services.json").write_text(
+            json.dumps(
+                {
+                    "mcpServers": {
+                        "veraExecution": {
+                            "command": "node",
+                            "args": ["./scripts/native_execution_mcp.cjs"],
+                        }
+                    }
+                }
+            )
+        )
+        entries = {
+            file.relative_to(installed).as_posix(): file.read_bytes()
+            for file in installed.rglob("*")
+            if file.is_file()
+        }
+        add_vera_mcp_catalog(entries)
+        (installed / "mcp-catalog.json").write_bytes(entries["mcp-catalog.json"])
+        write_index(installed)
     args = request(
         tmp_path, arguments=[str(tmp_path / "counter"), "0.3"], wait_seconds=0
     )
-    with native(installed, tmp_path) as call:
+    with native(installed, tmp_path, entry) as call:
         started = call(args)
         assert output(started)[0]["state"] == "running"
-    with native(installed, tmp_path) as call:
+    with native(installed, tmp_path, entry) as call:
         finished = call(
             {"operation": "status", "job_id": args["job_id"], "wait_seconds": 5}
         )
