@@ -1,4 +1,4 @@
-"""Actual connector-owned runs bind through the native proof, never OAuth identity."""
+"""Browser-owned runs bind to the native computer through its scoped proof."""
 
 from __future__ import annotations
 
@@ -10,26 +10,20 @@ from jsonschema import Draft202012Validator
 
 from modules.operational_incidents.contracts import Credentials
 from modules.operational_incidents.store import IncidentNotFound
-from tests.modules.operational_incidents.test_oauth import connection_headers
+from tests.modules.operational_incidents.support import browser_headers
 from tests.modules.workflow_usage.test_product_parity import (
-    oauth_grant,
     service,
     stores,
 )
 from tests.modules.workflow_usage.test_workflow_usage import event, setup
 
 
-def call(client, headers, name, **arguments):
+def call(client, headers, operation, **arguments):
     return client.post(
-        "/mcp/vera-incidents",
+        f"/api/vera/incident-recovery/{operation}",
         headers=headers,
-        json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {"name": name, "arguments": arguments},
-        },
-    ).json()["result"]
+        json=arguments,
+    )
 
 
 def start(client, headers, run_id=None):
@@ -37,10 +31,10 @@ def start(client, headers, run_id=None):
     result = call(
         client,
         headers,
-        "vera_workflow_record",
+        "workflow-record",
         event=item.model_dump(mode="json", exclude_none=True),
     )
-    return item, result["structuredContent"]
+    return item, result.json()
 
 
 def native_envelope(ack, device=None):
@@ -65,7 +59,7 @@ def native_envelope(ack, device=None):
 
 def test_connector_run_links_native_computer_without_changing_original_owner(setup):
     store, _, client = setup
-    headers = connection_headers(store)
+    headers = browser_headers(store)
     item, ack = start(client, headers)
     payload = native_envelope(ack)
 
@@ -73,9 +67,7 @@ def test_connector_run_links_native_computer_without_changing_original_owner(set
 
     assert response.status_code == 200
     assert response.json()["binding"] == "workflow-run"
-    status = call(client, headers, "vera_workflow_status", run_id=str(item.run_id))[
-        "structuredContent"
-    ]
+    status = call(client, headers, "workflow-status", run_id=str(item.run_id)).json()
     assert status["installation_id"] == ack["installation_id"]
     assert status["reporting"]["computer_id"] == payload["device"]["device_id"]
     assert status["reporting"]["computer_link"] == "verified"
@@ -88,7 +80,7 @@ def test_connector_run_links_native_computer_without_changing_original_owner(set
 
 def test_native_link_retry_is_idempotent_and_cannot_rebind_a_run(setup):
     store, _, client = setup
-    item, ack = start(client, connection_headers(store))
+    item, ack = start(client, browser_headers(store))
     payload = native_envelope(ack)
     client.post("/api/operational-incidents/register", json=payload)
 
@@ -108,7 +100,7 @@ def test_one_saved_connection_can_have_two_different_computers_and_test_exclusio
     setup,
 ):
     store, _, client = setup
-    headers = connection_headers(store)
+    headers = browser_headers(store)
     first, first_ack = start(client, headers)
     second, second_ack = start(client, headers)
     agent, user = native_envelope(first_ack), native_envelope(second_ack)
@@ -146,7 +138,7 @@ def test_scoped_link_rejects_missing_or_wrong_proof_without_registering_a_report
     setup, fault, expected
 ):
     store, _, client = setup
-    headers = connection_headers(store)
+    headers = browser_headers(store)
     item, ack = start(client, headers)
     payload = native_envelope(ack)
     if fault == "key":
@@ -161,9 +153,7 @@ def test_scoped_link_rejects_missing_or_wrong_proof_without_registering_a_report
     response = client.post("/api/operational-incidents/register", json=payload)
 
     assert response.status_code == expected
-    status = call(client, headers, "vera_workflow_status", run_id=str(item.run_id))[
-        "structuredContent"
-    ]
+    status = call(client, headers, "workflow-status", run_id=str(item.run_id)).json()
     assert status["reporting"]["computer_link"] == "unlinked"
 
 
@@ -174,7 +164,7 @@ def test_expired_ticket_can_only_be_replaced_by_same_owned_event_replay(
     monkeypatch.setattr(
         "modules.operational_incidents.store._now", lambda: "2026-10-18T12:00:00+00:00"
     )
-    headers = connection_headers(store)
+    headers = browser_headers(store)
     item, ack = start(client, headers)
     monkeypatch.setattr(
         "modules.operational_incidents.store._now", lambda: "2026-10-18T12:16:00+00:00"
@@ -189,9 +179,9 @@ def test_expired_ticket_can_only_be_replaced_by_same_owned_event_replay(
     replay = call(
         client,
         headers,
-        "vera_workflow_record",
+        "workflow-record",
         event=item.model_dump(mode="json", exclude_none=True),
-    )["structuredContent"]
+    ).json()
 
     assert replay["duplicate"] is True
     assert replay["current_sequence"] == 1
@@ -208,47 +198,40 @@ def test_expired_ticket_can_only_be_replaced_by_same_owned_event_replay(
     )
     unauthorized = call(
         client,
-        connection_headers(store),
-        "vera_workflow_record",
+        browser_headers(store),
+        "workflow-record",
         event=item.model_dump(mode="json", exclude_none=True),
     )
-    assert unauthorized["isError"] is True
-    assert "host_link" not in json.dumps(unauthorized)
+    assert unauthorized.status_code == 404
+    assert "host_link" not in unauthorized.text
 
 
-def test_rejected_completion_returns_actionable_shape_without_echoing_input(setup):
+def test_rejected_completion_leaves_run_unchanged_without_echoing_input(setup):
     store, _, client = setup
-    headers = connection_headers(store)
+    headers = browser_headers(store)
     item, _ = start(client, headers)
     invalid = event(item.run_id, 2, "completed").model_dump(
         mode="json", exclude_none=True
     )
     invalid.update(pipeline="private-client-content", host="cowork", sample_kind="user")
 
-    result = call(client, headers, "vera_workflow_record", event=invalid)
+    result = call(client, headers, "workflow-record", event=invalid)
 
-    assert result["isError"] is True
-    assert result["structuredContent"]["code"] == "invalid_workflow_event"
-    assert "pipeline" not in result["structuredContent"]["allowed_event_fields"]
-    assert "private-client-content" not in json.dumps(result)
+    assert result.status_code == 422
+    assert "private-client-content" not in result.text
     assert store.workflow_inspect(str(item.run_id))["run"]["sequence"] == 1
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_advertised_schema_rejects_start_only_fields_on_completion(setup, product):
     store, _, client = setup
-    tokens = oauth_grant(store, product)
     response = client.post(
-        f"/mcp/{product}-incidents",
-        headers={"Authorization": "Bearer " + tokens["access_token"]},
-        json={"jsonrpc": "2.0", "id": 1, "method": "tools/list"},
-    ).json()
-    tool = next(
-        t
-        for t in response["result"]["tools"]
-        if t["name"] == product + "_workflow_record"
+        f"/api/{product}/incident-recovery/schema",
+        headers=browser_headers(store, product),
+        json={"operation": "workflow-record"},
     )
-    validator = Draft202012Validator(tool["inputSchema"])
+    assert response.status_code == 200
+    validator = Draft202012Validator(response.json()["input_schema"])
     complete = event(uuid4(), 2, "completed", product=product).model_dump(
         mode="json", exclude_none=True
     )
@@ -273,8 +256,7 @@ def test_advertised_schema_rejects_start_only_fields_on_completion(setup, produc
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_native_scoped_link_works_for_each_product(service, product):
     client, store, _, _, _, _ = service
-    tokens = oauth_grant(store, product)
-    headers = {"Authorization": "Bearer " + tokens["access_token"]}
+    headers = browser_headers(store, product)
     start_event = event(
         uuid4(),
         host="cowork",
@@ -284,20 +266,10 @@ def test_native_scoped_link_works_for_each_product(service, product):
         ),
     )
     ack = client.post(
-        f"/mcp/{product}-incidents",
+        f"/api/{product}/incident-recovery/workflow-record",
         headers=headers,
-        json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {
-                "name": product + "_workflow_record",
-                "arguments": {
-                    "event": start_event.model_dump(mode="json", exclude_none=True)
-                },
-            },
-        },
-    ).json()["result"]["structuredContent"]
+        json={"event": start_event.model_dump(mode="json", exclude_none=True)},
+    ).json()
     payload = native_envelope(ack)
     payload["product"] = product
 

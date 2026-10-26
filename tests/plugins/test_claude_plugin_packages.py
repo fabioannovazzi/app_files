@@ -2006,3 +2006,21 @@ def test_finished_vera_cowork_courses_bind_to_final_skill_bytes(configured) -> N
             assert (
                 hashlib.sha256(entries[source["path"]]).hexdigest() == source["sha256"]
             ), source["path"]
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_claude_projection_rejects_retired_remote_reporting_endpoint(product):
+    builder = load_builder()
+    configuration = json.dumps(
+        {
+            "mcpServers": {
+                product
+                + "Incidents": {
+                    "type": "http",
+                    "url": f"https://mparanza.com/mcp/{product}-incidents",
+                }
+            }
+        }
+    ).encode()
+    with pytest.raises(ValueError, match="remote incident endpoints are retired"):
+        builder.project_claude_mcp(configuration)

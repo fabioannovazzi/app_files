@@ -23,7 +23,7 @@ from modules.run_receipts.store import RunReceiptStore
 from modules.workflow_usage.contracts import WorkflowEvent
 from modules.workflow_usage.reporting import render_html, summarize
 from modules.workflow_usage.repository import WorkflowConflict
-from tests.modules.operational_incidents.test_oauth import connection_headers
+from tests.modules.operational_incidents.support import browser_headers
 from tests.plugins.test_vera_customer_folder_ledger import (
     archive_core,
     archive_script_imports,
@@ -370,30 +370,20 @@ def test_another_installation_cannot_read_or_finish_a_task(setup):
         store.workflow_record(other, event(run, 2, "completed"))
 
 
-def test_saved_oauth_connector_records_ai_only_work_and_retains_identity(setup):
+def test_browser_records_ai_only_work_and_retains_identity(setup):
     store, _, client = setup
-    headers = connection_headers(store)
     run = uuid4()
-    call = {
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {
-            "name": "vera_workflow_record",
-            "arguments": {
-                "event": event(run, pipeline="quesito-legale-fiscale").model_dump(
-                    mode="json", exclude_none=True
-                )
-            },
+    response = client.post(
+        "/api/vera/incident-recovery/workflow-record",
+        headers=browser_headers(store),
+        json={
+            "event": event(run, pipeline="quesito-legale-fiscale").model_dump(
+                mode="json", exclude_none=True
+            )
         },
-    }
-
-    response = client.post("/mcp/vera-incidents", json=call, headers=headers).json()[
-        "result"
-    ]
-
-    assert response["isError"] is False
-    assert response["structuredContent"]["run_id"] == str(run)
+    )
+    assert response.status_code == 200
+    assert response.json()["run_id"] == str(run)
     assert store.workflow_overview()["total"] == 1
 
 
@@ -401,33 +391,25 @@ def test_saved_connector_stamps_exact_pending_receipt_and_links_original_run(set
     store, owner, client = setup
     run_id = uuid4()
     post(client, owner, event(run_id, host="cowork", sample_kind="agent_test"))
-    headers = connection_headers(store)
+    headers = browser_headers(store)
     proof = {
         "receipt_id": str(uuid4()),
         "report_sha256": "b" * 64,
         "plugin_version": "0.1.400",
         "schema_version": 1,
     }
-    call = {
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {
-            "name": "vera_workflow_stamp",
-            "arguments": {
-                "credentials": owner.model_dump(mode="json"),
-                "run_id": str(run_id),
-                "receipt_request": proof,
-            },
-        },
+    payload = {
+        "credentials": owner.model_dump(mode="json"),
+        "run_id": str(run_id),
+        "receipt_request": proof,
     }
 
-    first = client.post("/mcp/vera-incidents", json=call, headers=headers).json()[
-        "result"
-    ]
-    retry = client.post("/mcp/vera-incidents", json=call, headers=headers).json()[
-        "result"
-    ]
+    first = client.post(
+        "/api/vera/incident-recovery/workflow-stamp", json=payload, headers=headers
+    )
+    retry = client.post(
+        "/api/vera/incident-recovery/workflow-stamp", json=payload, headers=headers
+    )
     linked = post(
         client,
         owner,
@@ -441,10 +423,10 @@ def test_saved_connector_stamps_exact_pending_receipt_and_links_original_run(set
         ),
     )
 
-    assert first["isError"] is False
-    assert first == retry
-    assert first["structuredContent"]["signature_valid"] is True
-    assert first["structuredContent"]["receipt_id"] == proof["receipt_id"]
+    assert first.status_code == retry.status_code == 200
+    assert first.json() == retry.json()
+    assert first.json()["signature_valid"] is True
+    assert first.json()["receipt_id"] == proof["receipt_id"]
     assert linked.json()["reporting"]["model_data_receipt"] == "linked"
     assert store.workflow_status(owner, str(run_id))["state"] == "unknown"
 
@@ -479,18 +461,19 @@ def test_workflow_stamp_rejects_wrong_scope_and_unrelated_content(setup, invalid
         del payload["run_id"]
 
     result = client.post(
-        "/mcp/vera-incidents",
-        headers=connection_headers(store),
-        json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {"name": "vera_workflow_stamp", "arguments": payload},
-        },
-    ).json()["result"]
+        "/api/vera/incident-recovery/workflow-stamp",
+        headers=browser_headers(store),
+        json=payload,
+    )
 
-    assert result["isError"] is True
-    assert "PRIVATE_SENTINEL" not in json.dumps(result)
+    expected = {
+        "owner": 404,
+        "product": 409,
+        "private_content": 422,
+        "missing_run": 409,
+    }
+    assert result.status_code == expected[invalid]
+    assert "PRIVATE_SENTINEL" not in result.text
     assert api.get_run_receipt_store().get(proof["receipt_id"]) is None
 
 
