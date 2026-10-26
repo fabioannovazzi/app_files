@@ -134,7 +134,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
+  "catalogue_fingerprint": "8b6c8e42089afe1a3bf1d29bda5131498746712ec49c68004a8f9da7cadaf667",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2269,5 +2269,10 @@
     "previous_catalogue_fingerprint": "675f91978d8303e3f823355c4260d6898709fae380392df53e82cc81e0815d91",
     "scope": "The Vera router now directs technical reporting through the retained local owner over ordinary HTTPS, with agent-operated HTTPS browser recovery when local execution is unavailable. The 55 function IDs and all existing Geneva assessment rows are unchanged. This infrastructure transport change establishes no additional jurisdiction support or professional acceptance.",
     "version": "0.1.492"
+  },
+  "mcp_process_release_binding_20261026": {
+    "version": "0.1.494",
+    "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
+    "scope": "Manifest version refresh only. All 55 skill entrypoints and existing jurisdiction judgments are unchanged. MCP launch lifetime changes establish no new jurisdiction or professional acceptance."
   }
 }

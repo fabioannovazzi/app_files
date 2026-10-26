@@ -95,15 +95,15 @@
     "scripts/native_execution_mcp.cjs",
     "scripts/run_component_mcp.cjs",
     "scripts/component_service.cjs",
-    "scripts/component_gateway.py",
+    "scripts/verify_mcp_package.cjs",
     "scripts/run_service_mcp.cjs"
   ],
   "service_id": "managed-python-runtime",
   "review": {
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-23",
-    "source_fingerprint": "f9d54a0a6bd2acf4695a0c9970b3bac8ed5d5cd222a6a4dd329f35eeaa61edd2"
+    "reviewed_at": "2026-10-26",
+    "source_fingerprint": "83fec923812e7ede168024fe02cee128e0cc1c0d6d4a477e2f43e6629674b5d0"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -181,6 +181,17 @@
         "scripts/managed_python_runtime.py"
       ],
       "on_violation": "The maintained launcher must stop rather than resolving technical diagnostics from the caller working directory."
+    },
+    {
+      "id": "direct-mcp-package-integrity",
+      "control": "Review and product MCP services verify the complete package inventory and SHA-256 hashes in their Node process before starting. They have no persistent Python gateway or old-release routing. When Codex installs a component using hardlinks, only that verified component is copied to ordinary single-link temporary files for its existing implementation validator; the bridge removes its copy on normal exit. Forced termination may leave a temporary component copy. No client data, credentials or additional recipients are involved. Native helper jobs retain their separate existing code ownership.",
+      "implemented_by": [
+        "scripts/verify_mcp_package.cjs",
+        "scripts/run_component_mcp.cjs",
+        "scripts/component_service.cjs",
+        "scripts/run_service_mcp.cjs"
+      ],
+      "on_violation": "Reject altered or missing package code before service startup; never alter the host installation."
     }
   ],
   "display_name": "Managed Python runtime"

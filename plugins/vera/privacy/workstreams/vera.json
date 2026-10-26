@@ -7,7 +7,7 @@
     "skills/vera",
     "scripts/native_execution.py",
     "scripts/native_execution_mcp.cjs",
-    "scripts/component_gateway.py",
+    "scripts/verify_mcp_package.cjs",
     "scripts/component_service.cjs",
     "scripts/run_service_mcp.cjs"
   ],
@@ -23,7 +23,7 @@
       {
         "id": "selected-task-evidence",
         "purpose": "Carry out vera using the selected evidence and user instructions",
-        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Active runs bind that hash locally so calculation and review use their original release across a live update; this does not transmit additional source data or change the specialist payload.",
+        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Native calculation jobs retain their bound package. Component reviews and product MCP services verify and use the installed release without a persistent update gateway or routing to an older release. An update during use may require reopening the chat; interrupted mutations are not automatically replayed. This changes local code lifetime, not model payloads or external recipients.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork",
@@ -58,9 +58,9 @@
   "security_controls": [],
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-23",
+    "reviewed_at": "2026-10-26",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "7ded6642a5cb44f116da2c728792148b951eef93c13e80bc9ef0085f58ac6c89"
+    "source_fingerprint": "5000815fd533158c9e515a49d618a728eef670839458e1a3c245781ae8702769"
   },
   "service_ids": [
     "cnc-authenticated-review",

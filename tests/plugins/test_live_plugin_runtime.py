@@ -1,4 +1,4 @@
-"""Real processes retain verified code across cache replacement and upgrades."""
+"""Check lightweight MCP lifecycles and the native job code store."""
 
 from __future__ import annotations
 
@@ -114,7 +114,7 @@ def review_package(tmp_path, version="1"):
         "native_execution_mcp.cjs",
         "run_component_mcp.cjs",
         "component_service.cjs",
-        "component_gateway.py",
+        "verify_mcp_package.cjs",
         "archive_emission_mcp.cjs",
         "verified_execution.py",
         "reporting_product.py",
@@ -130,7 +130,7 @@ def review_package(tmp_path, version="1"):
         'const fs=require("node:fs"),path=require("node:path");\n'
         'require("node:readline").createInterface({input:process.stdin}).on("line",line=>{\n'
         'const message=JSON.parse(line); if(message.id===undefined)return; const metadata=JSON.parse(fs.readFileSync(path.resolve(__dirname,"../../../.codex-plugin/plugin.json")));\n'
-        'process.stdout.write(JSON.stringify({jsonrpc:"2.0",id:message.id,result:{version:metadata.version,cwd:process.cwd()}})+"\\n");});\n'
+        'process.stdout.write(JSON.stringify({jsonrpc:"2.0",id:message.id,result:{version:metadata.version,cwd:process.cwd(),pid:process.pid,ppid:process.ppid}})+"\\n");});\n'
     )
     write_index(root)
     return root
@@ -175,28 +175,18 @@ def stop(process):
     assert process.returncode == 0, errors
 
 
-def test_live_review_reads_files_and_cwd_after_reinstall_and_upgrade(tmp_path):
+def test_component_uses_only_bridge_and_server_without_retained_code(tmp_path):
     source = review_package(tmp_path)
-    old = launch_review(source, tmp_path)
-    new = None
+    process = launch_review(source, tmp_path)
     try:
-        before = call(old)
-        removed = source.with_name("plugin-backup")
-        source.rename(removed)
-        shutil.rmtree(removed)
-        source = review_package(tmp_path)
-        assert call(old) == before
-        shutil.rmtree(source)
-        source = review_package(tmp_path, "2")
-        new = launch_review(source, tmp_path)
-        assert call(new)["version"] == "2"
-        assert call(old) == before
-        assert before["version"] == "1"
-        assert Path(before["cwd"]).is_dir()
+        result = call(process)
+        assert result["version"] == "1"
+        assert result["ppid"] == process.pid
+        assert result["pid"] != process.pid
+        assert Path(result["cwd"]) == source / "modules/open-item-reconciliation"
+        assert not (tmp_path / "runtime/code").exists()
     finally:
-        stop(old)
-        if new:
-            stop(new)
+        stop(process)
 
 
 def call_tool(process, run):
@@ -231,7 +221,7 @@ def bound_review_package(tmp_path, version):
     return root
 
 
-def test_reconnected_review_uses_original_run_package_new_run_uses_upgrade(tmp_path):
+def test_reconnected_review_uses_installed_version_for_existing_and_new_runs(tmp_path):
     old_source = bound_review_package(tmp_path, "1")
     run = tmp_path / "run-original"
     run.mkdir()
@@ -248,7 +238,8 @@ def test_reconnected_review_uses_original_run_package_new_run_uses_upgrade(tmp_p
     new = launch_review(new_source, tmp_path)
     try:
         assert call(new)["version"] == "2"
-        assert call_tool(new, run)["version"] == "1"
+        assert call_tool(new, run)["version"] == "2"
+        assert not (run / "execution-runtime.json").exists()
         assert call_tool(new, fresh)["version"] == "2"
     finally:
         stop(new)
@@ -308,7 +299,7 @@ def test_concurrent_starts_publish_one_complete_copy(tmp_path, monkeypatch):
     assert not list((tmp_path / "runtime/code").glob(".staging-*"))
 
 
-def test_every_registered_local_service_uses_a_protected_launcher():
+def test_every_registered_local_service_uses_a_verified_launcher():
     config = json.loads((ROOT / "plugins/vera/.mcp.json").read_text())
     launchers = {
         "./scripts/native_execution_mcp.cjs",
@@ -322,7 +313,7 @@ def test_every_registered_local_service_uses_a_protected_launcher():
     )
 
 
-def test_product_workspace_survives_removed_cache(tmp_path):
+def test_product_service_runs_in_launcher_process_without_retained_code(tmp_path):
     source = review_package(tmp_path)
     shutil.copyfile(
         ROOT / "plugins/vera/scripts/run_service_mcp.cjs",
@@ -349,14 +340,15 @@ def test_product_workspace_survives_removed_cache(tmp_path):
         },
     )
     try:
-        before = call(process)
-        shutil.rmtree(source)
-        assert call(process) == before
+        result = call(process)
+        assert result["pid"] == process.pid
+        assert Path(result["cwd"]) == source
+        assert not (tmp_path / "runtime/code").exists()
     finally:
         stop(process)
 
 
-def test_crashed_review_returns_error_without_replaying_request(tmp_path):
+def test_crashed_review_exits_without_replaying_request(tmp_path):
     source = review_package(tmp_path)
     server = source / "modules/open-item-reconciliation/mcp/server.cjs"
     server.write_text(
@@ -371,8 +363,99 @@ def test_crashed_review_returns_error_without_replaying_request(tmp_path):
         assert call(process)["version"] == "1"
         process.stdin.write('{"jsonrpc":"2.0","id":2,"method":"crash"}\n')
         process.stdin.flush()
-        reply = json.loads(process.stdout.readline())
-        assert reply["id"] == 2
-        assert "Work may already be saved" in reply["error"]["message"]
+        assert process.stdout.readline() == ""
+        assert process.wait(timeout=10) == 7
+    finally:
+        process.stdin.close()
+        process.stdout.close()
+        process.stderr.close()
+        if process.poll() is None:
+            process.terminate()
+            process.wait(timeout=10)
+
+
+@pytest.mark.parametrize("damage", ["altered", "missing", "extra", "symlink"])
+def test_direct_component_rejects_damaged_package_before_server_start(tmp_path, damage):
+    source = review_package(tmp_path)
+    target = source / "modules/open-item-reconciliation/mcp/server.cjs"
+    if damage == "altered":
+        target.write_text(target.read_text() + "\n// altered\n")
+    elif damage == "missing":
+        target.unlink()
+    elif damage == "extra":
+        (source / "unexpected.cjs").write_text("process.exit(0)")
+    else:
+        original = tmp_path / "server.cjs"
+        target.rename(original)
+        target.symlink_to(original)
+
+    result = subprocess.run(
+        [
+            "node",
+            str(source / "scripts/run_component_mcp.cjs"),
+            "open-item-reconciliation",
+        ],
+        input='{"jsonrpc":"2.0","id":1,"method":"initialize"}\n',
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode != 0
+    assert result.stdout == ""
+    assert not (tmp_path / "runtime/code").exists()
+
+
+def test_direct_component_accepts_host_markers_and_unchanged_hardlinks(tmp_path):
+    source = review_package(tmp_path)
+    markers = source / ".in_use"
+    markers.mkdir()
+    (markers / "12345").touch()
+    (tmp_path / "host-alias").hardlink_to(source / "scripts/helper.py")
+    process = launch_review(source, tmp_path)
+    try:
+        result = call(process)
+        assert result["version"] == "1"
+        assert result["ppid"] == process.pid
     finally:
         stop(process)
+
+
+def test_hardlinked_component_uses_two_processes_and_removes_private_copy(tmp_path):
+    source = review_package(tmp_path)
+    server = source / "modules/open-item-reconciliation/mcp/server.cjs"
+    server.write_text(
+        server.read_text().replace(
+            'path.resolve(__dirname,"../../../.codex-plugin/plugin.json")',
+            "process.env.VERA_TEST_MANIFEST",
+        )
+    )
+    write_index(source)
+    alias = tmp_path / "host-server-alias"
+    alias.hardlink_to(server)
+    process = subprocess.Popen(
+        [
+            "node",
+            str(source / "scripts/run_component_mcp.cjs"),
+            "open-item-reconciliation",
+        ],
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        text=True,
+        env={
+            **os.environ,
+            "VERA_TEST_MANIFEST": str(source / ".codex-plugin/plugin.json"),
+        },
+    )
+    try:
+        result = call(process)
+        copied = Path(result["cwd"])
+        assert result["ppid"] == process.pid
+        assert copied != server.parent.parent
+        assert (copied / "mcp/server.cjs").stat().st_nlink == 1
+        assert server.stat().st_nlink == 2
+    finally:
+        stop(process)
+    assert not copied.exists()
+    assert alias.read_bytes() == server.read_bytes()

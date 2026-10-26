@@ -29,6 +29,14 @@ tasks' queued incidents untouched.
 When the user has requested no incident transmission, also pass
 `incident_delivery: local-only`; the service retains diagnostics locally.
 
+Component review MCP services verify the installed package at startup and run
+from that installation with one reporting bridge and one server process. Product
+MCP services run in one Node process. They do not retain an old package or route
+review calls to an earlier release. Finish work before updating Vera and reopen
+the chat after updating; do not automatically replay an interrupted mutation.
+The native helper service above still owns its actual Python jobs and retained
+job results; it is separate from these review-service launchers.
+
 The remaining shell instructions apply when the native service is unavailable.
 
 For an explicitly requested execution without incident transmission, set

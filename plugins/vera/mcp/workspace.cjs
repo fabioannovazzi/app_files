@@ -805,10 +805,11 @@ function packageVersion() {
   if (!manifest) throw new Error("Vera package manifest is unavailable");
   return JSON.parse(fs.readFileSync(manifest, "utf8")).version;
 }
-if (require.main === module) {
+function main() {
   readline.createInterface({ input: process.stdin }).on("line", line => {
     try { const result = handle(JSON.parse(line)); if (result) process.stdout.write(JSON.stringify(result) + "\n"); }
     catch (error) { process.stderr.write(error.message + "\n"); }
   });
 }
-module.exports = { TOOLS, URI, handle, resource };
+if (require.main === module) main();
+module.exports = { TOOLS, URI, handle, resource, main };

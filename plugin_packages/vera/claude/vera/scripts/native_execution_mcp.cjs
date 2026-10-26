@@ -7,7 +7,7 @@ const path = require("node:path");
 const os = require("node:os");
 const { createHash } = require("node:crypto");
 const { spawn } = require("node:child_process");
-function launch(mode = "native", args = []) {
+function launch() {
 const root = path.resolve(__dirname, "..");
 const indexPath = path.join(root, "execution-files.json");
 const development = fs.existsSync(path.resolve(root, "../../.git")) &&
@@ -23,8 +23,6 @@ function checked(relative) {
   return bytes;
 }
 checked("scripts/native_execution_mcp.cjs");
-if (mode === "component") checked("scripts/run_component_mcp.cjs");
-if (mode === "service") checked("scripts/run_service_mcp.cjs");
 const bootstrap = fs.mkdtempSync(path.join(os.tmpdir(), "vera-execution-bootstrap-"));
 const runtime = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
   ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
@@ -49,24 +47,9 @@ const program = [
   "    snapshot=prepare_execution_root(Path(sys.argv[2]),None,snapshot=True,shared=True)",
   "    os.chdir(snapshot)",
   "    os.environ['VERA_EXECUTION_PACKAGE_ID']=execution_package_id(snapshot) or 'development'",
-  "    if sys.argv[3]=='component':",
-  "        gateway=runpy.run_path(str(snapshot/'scripts/component_gateway.py'))",
-  "        sys.path.insert(0,str(snapshot/'scripts'))",
-  "        raise SystemExit(gateway['serve'](snapshot,sys.argv[4],sys.argv[5],shutdown))",
-  "    elif sys.argv[3]=='service':",
-  "        entry=sys.argv[5]",
-  "        if entry not in {'scripts/course_chat_mcp.cjs','mcp/workspace.cjs','mcp/studio-work.cjs','mcp/research-sources.cjs','scripts/incident_host_mcp.cjs'}: raise ValueError('Unknown Vera product service')",
-  "        fds=execution_lease_fds(snapshot) if os.name=='posix' else ()",
-  "        child=subprocess.Popen([sys.argv[4],str(snapshot/entry),*sys.argv[6:]],cwd=snapshot,**({'pass_fds':fds} if os.name=='posix' else {}))",
-  "        while child.poll() is None:",
-  "            if shutdown['requested']: child.terminate()",
-  "            try: child.wait(timeout=0.2)",
-  "            except subprocess.TimeoutExpired: pass",
-  "        raise SystemExit(child.returncode)",
-  "    else:",
-  "        script=snapshot/'scripts/native_execution.py'",
-  "        sys.argv=[str(script)]",
-  "        runpy.run_path(str(script),run_name='__main__',init_globals={'_SHUTDOWN':shutdown})",
+  "    script=snapshot/'scripts/native_execution.py'",
+  "    sys.argv=[str(script)]",
+  "    runpy.run_path(str(script),run_name='__main__',init_globals={'_SHUTDOWN':shutdown})",
   "finally:",
   "    if snapshot is not None: release_execution_root(snapshot)",
   "    release_execution_root(bootstrap)",
@@ -81,7 +64,7 @@ try {
   // The transport parent must release the replaceable installation directory
   // too: Windows prevents its removal while any process keeps it as cwd.
   process.chdir(os.tmpdir());
-  const child = spawn(python, ["-I", "-B", "-c", program, bootstrap, root, mode, process.execPath, ...args],
+  const child = spawn(python, ["-I", "-B", "-c", program, bootstrap, root],
     { cwd: bootstrap, env: process.env, stdio: "inherit" });
   // A host stop closes this transport, not the detached professional jobs.
   // Keep the owner alive until its workers release the leased code.

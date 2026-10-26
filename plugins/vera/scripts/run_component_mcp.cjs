@@ -1,4 +1,6 @@
 #!/usr/bin/env node
 "use strict";
-// Pin the complete package before loading any review service or bridge.
-require("./native_execution_mcp.cjs").launch("component", process.argv.slice(2));
+const path = require("node:path");
+require("./verify_mcp_package.cjs").verify(path.resolve(__dirname, ".."));
+// The transport and reporting bridge share this process; only the server is a child.
+require("./component_service.cjs");
