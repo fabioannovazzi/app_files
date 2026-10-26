@@ -17,7 +17,7 @@ input.on("line", line => {
     serverRequests.delete(m.id);
     return;
   }
-  if (m.method === "initialize") { setTimeout(() => reply(m.id, { protocolVersion: m.params.protocolVersion, serverInfo: { name, version: "1" }, capabilities: { tools: {}, resources: {}, prompts: {} }, instructions: `Use ${name} for reconciliation` }), 30); return; }
+  if (m.method === "initialize") { setTimeout(() => reply(m.id, { protocolVersion: m.params.protocolVersion, serverInfo: { name, version: "1" }, capabilities: { tools: {}, resources: {}, prompts: {} }, instructions: `Use ${name} for reconciliation` }), Number(process.env.INITIALIZE_DELAY_MS || 30)); return; }
   if (m.method === "tools/list") { reply(m.id, { tools: [tool] }); return; }
   if (m.method === "resources/list") { reply(m.id, { resources: [{ uri: `ui://${name}`, name, mimeType: "text/html;profile=mcp-app" }] }); return; }
   if (m.method === "resources/templates/list") { reply(m.id, { resourceTemplates: [] }); return; }

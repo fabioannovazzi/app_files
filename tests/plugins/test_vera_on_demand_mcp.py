@@ -102,13 +102,13 @@ class Session:
         self.process.stdin.write(json.dumps({"jsonrpc": "2.0", **message}) + "\n")
         self.process.stdin.flush()
 
-    def receive(self):
-        return self.messages.get(timeout=10)
+    def receive(self, timeout=10):
+        return self.messages.get(timeout=timeout)
 
-    def call(self, method, params=None):
+    def call(self, method, params=None, timeout=10):
         self.next_id += 1
         self.send({"id": self.next_id, "method": method, "params": params or {}})
-        return self.receive()
+        return self.receive(timeout=timeout)
 
     def close(self):
         self.process.stdin.close()
@@ -347,3 +347,19 @@ def test_catalogue_build_rejects_a_missing_service_instead_of_advertising_it(
 
     with pytest.raises(ValueError, match="Vera catalogue generation failed"):
         add_vera_mcp_catalog(entries)
+
+
+def test_cold_service_initialization_can_exceed_ten_seconds(installation):
+    config_path = installation / "mcp-services.json"
+    config = json.loads(config_path.read_text())
+    config["mcpServers"]["alpha"]["env"]["INITIALIZE_DELAY_MS"] = "11000"
+    config_path.write_text(json.dumps(config))
+    _seal(installation)
+    active = Session(installation)
+    try:
+        response = active.call("tools/call", {"name": "use_alpha"}, timeout=20)
+    finally:
+        active.close()
+
+    assert response["result"]["structuredContent"]["name"] == "alpha"
+    assert (installation.parent / "starts").read_text().count("alpha:") == 1
