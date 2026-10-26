@@ -106,6 +106,7 @@ def test_vera_current_surfaces_do_not_publish_the_competing_names() -> None:
     current_paths = (
         ROOT / "plugins" / "vera" / ".codex-plugin" / "plugin.json",
         ROOT / "plugins" / "vera" / ".mcp.json",
+        ROOT / "plugins" / "vera" / "mcp-services.json",
         ROOT / "plugins" / "vera" / "components.json",
         ROOT / "plugins" / "vera" / "README.md",
         ROOT / "plugins" / "vera" / "skills" / "vera" / "SKILL.md",

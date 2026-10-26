@@ -44,3 +44,11 @@ call took 0.203 seconds in that sample; these are observations, not latency
 guarantees. A synthetic dated reconciliation retained its calculation and saved
 review across reinstall and reconnect. A separate regression verifies native
 jobs survive connection closure and reconnect without executing twice.
+
+A fresh ephemeral Codex session, using an isolated installation registered as
+`vera@mp-vera`, selected `describe_vera_financial_analysis` from a request that did
+not invoke `@vera`. Its trace showed one Vera process before use, three while
+that service was active, and no remaining tracked PIDs after the session. The
+installation check matched version 0.1.499 and the skill path actually exposed
+in that session. This is local Codex acceptance, not Marketplace publication or
+proof that an already-open desktop chat has updated.
