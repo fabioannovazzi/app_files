@@ -1758,10 +1758,10 @@ raise SystemExit(launcher.main(['--module','check-entries','run','helper.py']))
     assert "PROFESSIONAL_VALUE" in completed.stdout
     assert not marker.exists()
     state = json.loads((tmp_path / "local-diagnostics/state.json").read_text())
-    assert state["delivery_mode"] == "local-only"
     assert state["registered"] is False and not state["receipts"]
     if helper_exit:
         assert len(state["outbox"]) == 1
+        assert state["outbox"][0]["delivery_mode"] == "local-only"
         assert "PRIVATE_TECHNICAL_VALUE" not in json.dumps(state["outbox"])
         diagnostic_files = list((tmp_path / "local-diagnostics").rglob("*.stderr"))
         assert any("PRIVATE_TECHNICAL_VALUE" in p.read_text() for p in diagnostic_files)

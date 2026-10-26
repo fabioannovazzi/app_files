@@ -86,7 +86,9 @@ class ServiceClient {
   }
 
   async initialize(params) {
-    const reply = await this.call("initialize", params, { timeout: 10000 });
+    // A cold native service verifies and copies its package before answering;
+    // Windows CI has exceeded ten seconds on this legitimate startup path.
+    const reply = await this.call("initialize", params, { timeout: 60000 });
     if (reply.error || !reply.result?.serverInfo || !reply.result?.capabilities)
       throw new Error(`${this.name}: invalid initialize response`);
     this.send({ jsonrpc: "2.0", method: "notifications/initialized" });

@@ -100,6 +100,89 @@ def test_unconfigured_service_starts_every_pipeline_at_untried(tmp_path):
     assert {row["status"] for row in result["pipelines"].values()} == {"untried"}
 
 
+def test_initialize_counts_retained_completed_run_without_replaying_or_resetting(
+    tmp_path, monkeypatch
+):
+    store = IncidentStore(tmp_path / "testing.sqlite3")
+    agent = device()
+    owner = register(store, agent)
+    monkeypatch.setattr(incident_store, "_now", lambda: AFTER)
+    run_id = record(store, owner, sample="agent_test")
+    retained = store.workflow_inspect(run_id)
+
+    initialized = store.workflow_testing_initialize([str(agent.device_id)], BASELINE)
+
+    result = store.workflow_testing()
+    assert initialized["created"] is True
+    assert result["pipelines"]["journal-sampling"]["agent_runs"] == [run_id]
+    assert result["pipelines"]["journal-sampling"]["status"] == "agent"
+    assert store.workflow_inspect(run_id) == retained
+
+
+def test_initialize_same_baseline_is_idempotent(setup):
+    store, agent, owner = setup
+    record(store, owner)
+    before = store.workflow_testing()
+
+    result = store.workflow_testing_initialize([str(agent.device_id)], BASELINE)
+
+    assert result["created"] is False
+    assert result["epoch_id"] == before["epoch_id"]
+    assert store.workflow_testing() == before
+
+
+@pytest.mark.parametrize("change", ["time", "computer"])
+def test_initialize_cannot_replace_existing_baseline_or_erase_counts(setup, change):
+    store, agent, owner = setup
+    record(store, owner)
+    before = store.workflow_testing()
+    since = AFTER if change == "time" else BASELINE
+    selected = device() if change == "computer" else agent
+
+    with pytest.raises(ValueError, match="already exists"):
+        store.workflow_testing_initialize([str(selected.device_id)], since)
+
+    assert store.workflow_testing() == before
+
+
+@pytest.mark.parametrize("since", ["2026-10-17T11:00:00", "2036-10-17T11:00:00+00:00"])
+def test_initialize_rejects_ambiguous_or_future_time_without_creating_epoch(
+    tmp_path, monkeypatch, since
+):
+    store = IncidentStore(tmp_path / "testing.sqlite3")
+    agent = device()
+    register(store, agent)
+    monkeypatch.setattr(incident_store, "_now", lambda: AFTER)
+
+    with pytest.raises(ValueError, match="timezone.*future"):
+        store.workflow_testing_initialize([str(agent.device_id)], since)
+
+    assert store.workflow_testing()["epoch_id"] is None
+
+
+@pytest.mark.parametrize("devices", [[], [str(uuid4())], ["not-a-device"]])
+def test_initialize_rejects_unknown_computer_without_creating_epoch(tmp_path, devices):
+    store = IncidentStore(tmp_path / "testing.sqlite3")
+
+    with pytest.raises(ValueError):
+        store.workflow_testing_initialize(devices, BASELINE)
+
+    assert store.workflow_testing()["epoch_id"] is None
+
+
+def test_initializing_another_product_preserves_existing_product_epoch(setup):
+    store, agent, _ = setup
+    before = store.workflow_testing("vera")
+
+    result = store.workflow_testing_initialize(
+        [str(agent.device_id)], BASELINE, "clara"
+    )
+
+    assert result["created"] is True
+    assert store.workflow_testing("vera") == before
+    assert store.workflow_testing("clara")["epoch_id"] == result["epoch_id"]
+
+
 def test_completed_run_is_counted_through_production_postgres_cursor(
     setup, monkeypatch
 ):
@@ -438,8 +521,12 @@ def test_missing_native_identity_does_not_block_usage_delivery(
     assert store.installation(owner["installation_id"])["host_link"] is None
 
 
-def test_supported_cli_resets_only_testing_and_reads_new_epoch(
-    setup, monkeypatch, capsys
+@pytest.mark.parametrize(
+    "command,extra",
+    [("testing-reset", []), ("testing-initialize", ["--since", BASELINE])],
+)
+def test_supported_cli_configures_only_testing_and_reads_epoch(
+    setup, monkeypatch, capsys, command, extra
 ):
     import sys
 
@@ -455,14 +542,15 @@ def test_supported_cli_resets_only_testing_and_reads_new_epoch(
         "argv",
         [
             "manage_workflow_usage.py",
-            "testing-reset",
+            command,
             "--agent-device",
             str(agent.device_id),
+            *extra,
         ],
     )
 
     manage_workflow_usage.main()
 
-    reset = json.loads(capsys.readouterr().out)
-    assert reset["agent_devices"] == [str(agent.device_id)]
-    assert store.workflow_testing()["epoch_id"] == reset["epoch_id"]
+    configured = json.loads(capsys.readouterr().out)
+    assert configured["agent_devices"] == [str(agent.device_id)]
+    assert store.workflow_testing()["epoch_id"] == configured["epoch_id"]

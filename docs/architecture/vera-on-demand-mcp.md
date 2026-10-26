@@ -39,8 +39,8 @@ The extracted 0.1.499 Codex candidate was measured on macOS on 2026-10-26:
 discovery advertised 607 tools and 20 resources with one process; the first
 `describe_vera_financial_analysis` call used three processes, a repeat stayed at
 three, and reading the workspace resource used four. All tracked PIDs exited
-after transport closure. Initialization took 0.200 seconds and the first tool
-call took 0.203 seconds in that sample; these are observations, not latency
+after transport closure. Initialization took 0.185 seconds and the first tool
+call took 0.193 seconds in that sample; these are observations, not latency
 guarantees. A synthetic dated reconciliation retained its calculation and saved
 review across reinstall and reconnect. A separate regression verifies native
 jobs survive connection closure and reconnect without executing twice.
@@ -52,3 +52,10 @@ that service was active, and no remaining tracked PIDs after the session. The
 installation check matched version 0.1.499 and the skill path actually exposed
 in that session. This is local Codex acceptance, not Marketplace publication or
 proof that an already-open desktop chat has updated.
+
+The final combined candidate also retains the incident-delivery release. Its
+Codex ZIP SHA-256 is `a83b6c44e0469c83fba7897aeae3b34670f2d2319a29553c8d1a31db75ef6a51`.
+A Windows cold start exceeded the original ten-second initialization limit;
+the client now allows up to sixty seconds for verified service startup. A
+delayed-service regression exercises the formerly failing path without
+replaying the tool call.
