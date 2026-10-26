@@ -860,6 +860,7 @@ def _completion_blockers(
     )
     successor_replayed = False
     pending_review_only = False
+    automatic_record_ids: set[str] = set()
     if assurance_path is not None and assurance_path.is_file():
         try:
             assurance = validate_assurance_run(
@@ -912,6 +913,13 @@ def _completion_blockers(
                     }
                 )
             authority = assurance.get("professional_review_authority")
+            if isinstance(authority, dict):
+                automatic_record_ids = {
+                    record["record_id"]
+                    for record in authority["records"]
+                    if record["review_status"] == "PASS"
+                    and record["reviewer_ref"] == "system-exact-match"
+                }
             successor_replayed = bool(
                 isinstance(authority, dict)
                 and authority.get("origin") == "applied_decisions"
@@ -935,6 +943,12 @@ def _completion_blockers(
             # not need a second acceptance to permit their normal regeneration.
             continue
         effect = effect_by_id.get(item.get("id"))
+        if (
+            effect is None
+            and item.get("item_type") == "closure_evidence_review"
+            and item.get("data", {}).get("record_id") in automatic_record_ids
+        ):
+            continue
         if effect is None:
             blockers.append(
                 {

@@ -134,7 +134,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "8eda46fce04eb0d94f66e0beb7dc75617e0812a64c8da84a2253beb44360b105",
+  "catalogue_fingerprint": "ea18b30b825212c1863d0d5c6e366eed141cfb8a513178b29748d75497c20b04",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2283,7 +2283,7 @@
   "reconciliation_repair_release_binding_20261026": {
     "reviewed_at": "2026-10-26",
     "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
-    "version": "0.1.503",
+    "version": "0.1.504",
     "scope": "Canonical product manifest version changed. All Vera skill entrypoint identities and bytes are unchanged; existing Geneva judgments are preserved. Component reconciliation fixes preserve jurisdiction, currency and date constraints. This binding does not claim new jurisdiction acceptance."
   },
   "transparent_sidebar_icon_release_binding": {

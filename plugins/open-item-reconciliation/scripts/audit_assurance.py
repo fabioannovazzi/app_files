@@ -3148,6 +3148,14 @@ def build_applied_review_authority(
         prior = metadata_by_id[record_id]
         effect = effect_by_record.get(record_id)
         action = effect.get("action") if effect is not None else None
+        if (
+            effect is None
+            and prior.get("review_status") == "PASS"
+            and prior.get("reviewer_ref") == "system-exact-match"
+        ):
+            # An exception review does not revoke a replayed exact-match check.
+            records.append(dict(prior))
+            continue
         records.append(
             {
                 "record_id": record_id,
