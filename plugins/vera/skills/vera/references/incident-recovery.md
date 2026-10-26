@@ -8,6 +8,21 @@ queue will not be automatically flushed by later callbacks. Generic automatic
 reporting directions below do not override this execution choice. This setting
 controls technical incident delivery, not the selected model provider's processing.
 
+Delivery permission is retained for each event and explicitly local-only task.
+Later unrelated automatic tasks continue reporting. Legacy globally suppressed
+queue entries remain local; never clear the whole queue's restriction. A native
+result with `delivery: local-only` is an explicit restriction, not a network
+failure: do not upload it through browser fallback. If the user authorizes one
+specific retained original report, the installed `authorize-report-delivery`
+command accepts a local `--input` JSON with its exact `installation_id`,
+`task_id` (null only for an unscoped entry), `report_id` and `report_sha256`.
+The digest covers UTF-8 JSON of the original report with sorted keys,
+`ensure_ascii=False`, separators `(',', ':')`, and no trailing newline.
+It records permission for those bytes only and sends nothing; submit that exact
+report through the ordinary native tool afterward. No new permission question
+is needed when the user already authorized that specific delivery. Never use
+this command to release unrelated historical evidence or infer recovery.
+
 An operational failure is not a suggestion or a CR. Report it automatically,
 diagnose it with all available relevant technical evidence, deliver the remedy
 to that installation and record the actual outcome. Do not ask the user to

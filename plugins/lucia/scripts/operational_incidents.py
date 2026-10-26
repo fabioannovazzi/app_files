@@ -43,6 +43,7 @@ __all__ = [
     "reporting_credentials",
     "workflow_transport",
     "native_request",
+    "authorize_report_delivery",
     "diagnostic_directory",
     "retain_diagnostic",
     "acknowledge_diagnostic",
@@ -76,10 +77,77 @@ def _in_scope(item: dict[str, Any]) -> bool:
     return scope is None or item.get("delivery_scope") == scope
 
 
-def _queue_item(item: dict[str, Any]) -> dict[str, Any]:
-    """Tag only newly created local entries; never relabel retained evidence."""
+def _queue_item(state: dict[str, Any], item: dict[str, Any]) -> dict[str, Any]:
+    """Retain explicit delivery permission without restricting later tasks."""
     scope = _delivery_scope()
-    return {**item, "delivery_scope": scope} if scope else item
+    evidence = item["payload"].get(item["operation"], {})
+    original_id = evidence.get("evidence_for_report_id") or (
+        evidence.get("report_id") if item["operation"] != "report" else None
+    )
+    original = next(
+        (
+            queued
+            for queued in state["outbox"]
+            if queued["operation"] == "report"
+            and queued["payload"]["report"]["report_id"] == original_id
+        ),
+        None,
+    )
+    if original is not None and scope is None:
+        scope = original.get("delivery_scope")
+    restricted_tasks = state.setdefault("local_only_tasks", [])
+    if _local_delivery_only() and scope and scope not in restricted_tasks:
+        restricted_tasks.append(scope)
+    result = {
+        **item,
+        "delivery_mode": (
+            "local-only"
+            if _local_delivery_only()
+            or scope in restricted_tasks
+            or original is not None
+            and not _delivery_allowed(state, original)
+            else "automatic"
+        ),
+    }
+    if scope:
+        result["delivery_scope"] = scope
+    return result
+
+
+def _delivery_allowed(state: dict[str, Any], item: dict[str, Any]) -> bool:
+    """Exact retained permissions prevent accidental upload of local-only evidence."""
+    if _local_delivery_only():
+        return False
+    if item.get("delivery_mode") == "authorized":
+        return item.get("delivery_authorization") == {
+            "report_sha256": _report_digest(item["payload"].get("report", {})),
+            "task_id": item.get("delivery_scope"),
+        }
+    return item.get("delivery_mode", "automatic") == "automatic" and item.get(
+        "delivery_scope"
+    ) not in state.get("local_only_tasks", [])
+
+
+def _report_digest(report: dict[str, Any]) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            report, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        ).encode()
+    ).hexdigest()
+
+
+def _migrate_delivery_permissions(state: dict[str, Any]) -> dict[str, Any]:
+    """Keep every legacy suppressed entry local; its global flag cannot bind new work."""
+    if state.get("delivery_mode") == "local-only":
+        for item in state["outbox"]:
+            item.setdefault("delivery_mode", "local-only")
+        for item in state.get("native_requests", {}).values():
+            if item["operation"] in {"report", "outcome", "progress"} and not item.get(
+                "receipt"
+            ):
+                item.setdefault("delivery_mode", "local-only")
+        state["delivery_permissions_version"] = 1
+    return state
 
 
 def _queued_count(state: dict[str, Any]) -> int:
@@ -399,7 +467,9 @@ def _read(*, create: bool = True) -> dict[str, Any]:
         metadata = path.lstat()
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
             raise ValueError("Incident state must be an ordinary private file")
-        return json.loads(path.read_text(encoding="utf-8"))
+        return _migrate_delivery_permissions(
+            json.loads(path.read_text(encoding="utf-8"))
+        )
     return {
         "credentials": {
             "installation_id": str(uuid4()),
@@ -414,8 +484,11 @@ def _read(*, create: bool = True) -> dict[str, Any]:
 
 
 def _write(state: dict[str, Any]) -> None:
-    if _local_delivery_only():
+    if any(item.get("delivery_mode") == "local-only" for item in state["outbox"]):
+        # Older already-running reporters know only this guard. Keep them from
+        # uploading restricted history; this runtime uses each event's permission.
         state["delivery_mode"] = "local-only"
+        state["delivery_permissions_version"] = 1
     path = _state_path()
     with tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", dir=path.parent, delete=False
@@ -696,20 +769,78 @@ def native_request(arguments: dict[str, Any]) -> dict[str, Any]:
             if item.get("attempt") != "rejected" or item.get("receipt") is not None:
                 raise ValueError("Reporting UUID already belongs to different evidence")
             state.setdefault("rejected_native_requests", []).append(item)
-            request_journal[key] = {"operation": operation, "payload": payload}
+            request_journal[key] = {
+                **{
+                    name: item[name]
+                    for name in ("delivery_mode", "delivery_scope")
+                    if name in item
+                },
+                "operation": operation,
+                "payload": payload,
+            }
             item = request_journal[key]
         if item is not None and item.get("receipt") is not None:
             return item["receipt"]
-        request_journal.setdefault(key, {"operation": operation, "payload": payload})
+        if key not in request_journal:
+            if operation in {"report", "outcome", "progress"}:
+                retained = next(
+                    (
+                        queued
+                        for queued in state["outbox"]
+                        if queued["operation"] == operation
+                        and queued["payload"][operation][identifier_field] == identifier
+                    ),
+                    None,
+                )
+                if retained is not None and retained["payload"] != payload:
+                    raise ValueError(
+                        "Reporting UUID already belongs to queued evidence"
+                    )
+                request_journal[key] = (
+                    dict(retained)
+                    if retained is not None
+                    else _queue_item(
+                        state, {"operation": operation, "payload": payload}
+                    )
+                )
+            else:
+                request_journal[key] = {"operation": operation, "payload": payload}
         if operation in {"report", "outcome", "progress"} and not any(
             queued["operation"] == operation
             and queued["payload"][operation][identifier_field] == identifier
             for queued in state["outbox"]
         ):
             state["outbox"].append(
-                _queue_item({"operation": operation, "payload": payload})
+                {
+                    name: value
+                    for name, value in request_journal[key].items()
+                    if name
+                    in {
+                        "operation",
+                        "payload",
+                        "delivery_mode",
+                        "delivery_scope",
+                        "delivery_authorization",
+                    }
+                }
             )
     _write(state)
+    if operation in {"report", "outcome", "progress"}:
+        queued = next(
+            entry
+            for entry in state["outbox"]
+            if entry["operation"] == operation
+            and entry["payload"][operation][identifier_field] == identifier
+        )
+        if not _delivery_allowed(state, queued) or not _delivery_allowed(
+            state, state["native_requests"][key]
+        ):
+            return {
+                "delivery": "local-only",
+                "operation": operation,
+                "installation_id": state["credentials"]["installation_id"],
+                "identifier": identifier,
+            }
     can_correct = False
     try:
         registration = _post("register", _registration_payload(state["credentials"]))
@@ -849,15 +980,21 @@ def _expand_success(
             {**outcome, "delivery_scope": item["delivery_scope"]}
             for outcome in outcomes
         ]
+    outcomes = [
+        {**outcome, "delivery_mode": item.get("delivery_mode", "automatic")}
+        for outcome in outcomes
+    ]
     state["outbox"][index : index + 1] = outcomes
     _write(state)
     return True
 
 
 def _flush(state: dict[str, Any]) -> None:
-    if _local_delivery_only() or state.get("delivery_mode") == "local-only":
+    if _local_delivery_only():
         return
-    if not any(_in_scope(item) for item in state["outbox"]):
+    if not any(
+        _in_scope(item) and _delivery_allowed(state, item) for item in state["outbox"]
+    ):
         return
     if not state["registered"]:
         _post("register", {"credentials": state["credentials"]})
@@ -884,7 +1021,14 @@ def _flush(state: dict[str, Any]) -> None:
     deadline = time.monotonic() + 16
     delivered = 0
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
-        item = next((item for item in state["outbox"] if _in_scope(item)), None)
+        item = next(
+            (
+                item
+                for item in state["outbox"]
+                if _in_scope(item) and _delivery_allowed(state, item)
+            ),
+            None,
+        )
         if item is None:
             break
         if item["operation"] == "observed-success":
@@ -1089,11 +1233,12 @@ def _report_failure(
         else:
             state["outbox"].extend(
                 _queue_item(
+                    state,
                     {
                         "operation": "report",
                         "payload": {"report": part},
                         "fingerprint": fingerprint,
-                    }
+                    },
                 )
                 for part in reports
             )
@@ -1474,6 +1619,7 @@ def record_execution_progress(execution: dict[str, str], kind: str) -> None:
             continue
         state["outbox"].append(
             _queue_item(
+                state,
                 {
                     "operation": "progress",
                     "payload": {
@@ -1486,7 +1632,7 @@ def record_execution_progress(execution: dict[str, str], kind: str) -> None:
                             "operation_id": execution["operation_id"],
                         }
                     },
-                }
+                },
             )
         )
     _write(state)
@@ -1537,7 +1683,7 @@ def verify_original_task(value: dict[str, Any]) -> dict[str, Any]:
         outcome["input_binding"] = value["input_binding"]
     outcome.update(outcome_id=str(uuid4()), status="recovered", diagnostics=[])
     state["outbox"].append(
-        _queue_item({"operation": "outcome", "payload": {"outcome": outcome}})
+        _queue_item(state, {"operation": "outcome", "payload": {"outcome": outcome}})
     )
     _write(state)
     try:
@@ -1738,6 +1884,7 @@ def check_incidents(
         )
         state["outbox"].append(
             _queue_item(
+                state,
                 {
                     "operation": "outcome",
                     "payload": {
@@ -1755,7 +1902,7 @@ def check_incidents(
                             "diagnostics": diagnostics,
                         }
                     },
-                }
+                },
             )
         )
         _write(state)
@@ -1815,6 +1962,7 @@ def record_success(workflow: str, operation: str) -> None:
         return
     state["outbox"].append(
         _queue_item(
+            state,
             {
                 "operation": "observed-success",
                 "payload": {
@@ -1823,7 +1971,7 @@ def record_success(workflow: str, operation: str) -> None:
                     "operation": operation,
                     "product_version": _identity()["product_version"],
                 },
-            }
+            },
         )
     )
     _write(state)
@@ -1872,6 +2020,52 @@ def local_context() -> dict[str, Any]:
         "pending_diagnostics": _pending_diagnostics(),
         "outbox_path": str(path),
         "host_binding": state.get("host_binding"),
+    }
+
+
+@_serialized
+def authorize_report_delivery(value: dict[str, Any]) -> dict[str, Any]:
+    """Authorize only the inspected owner/task/report bytes, without sending a queue."""
+    if set(value) != {"installation_id", "task_id", "report_id", "report_sha256"}:
+        raise ValueError("Exact owner, task, report and report hash are required")
+    state = _read()
+    if value["installation_id"] != state["credentials"]["installation_id"]:
+        raise ValueError("Delivery authorization belongs to another installation")
+    report_id = str(UUID(value["report_id"]))
+    task_id = str(UUID(value["task_id"])) if value["task_id"] is not None else None
+    item = next(
+        (
+            item
+            for item in state["outbox"]
+            if item["operation"] == "report"
+            and item["payload"]["report"]["report_id"] == report_id
+        ),
+        None,
+    )
+    if item is None:
+        raise ValueError("The exact original report is not queued")
+    if task_id != item.get("delivery_scope") or value[
+        "report_sha256"
+    ] != _report_digest(item["payload"]["report"]):
+        raise ValueError(
+            "Delivery authorization does not match retained task/report bytes"
+        )
+    authorization = {"task_id": task_id, "report_sha256": value["report_sha256"]}
+    request = state.get("native_requests", {}).get("report:" + report_id)
+    if request is not None and request["payload"] != item["payload"]:
+        raise ValueError("Native request differs from the retained original report")
+    item.update(delivery_mode="authorized", delivery_authorization=authorization)
+    if request is not None:
+        request.update(delivery_mode="authorized", delivery_authorization=authorization)
+    audit = state.setdefault("delivery_authorizations", [])
+    if value not in audit:
+        audit.append(dict(value))
+    _write(state)
+    return {
+        "authorized": True,
+        "report_id": report_id,
+        "task_id": task_id,
+        "sent": False,
     }
 
 
@@ -1931,12 +2125,20 @@ def main() -> None:
             "verify-task",
             "host-context",
             "host-link",
+            "authorize-report-delivery",
         ),
     )
     parser.add_argument("--input", type=Path)
     parser.add_argument("--diagnostic", type=Path)
     args = parser.parse_args()
-    if args.command == "request":
+    if args.command == "authorize-report-delivery":
+        if args.input is None:
+            parser.error("--input requires the exact report delivery authorization")
+        result = authorize_report_delivery(
+            json.loads(args.input.read_text(encoding="utf-8"))
+        )
+        sys.stdout.write(json.dumps(result) + "\n")
+    elif args.command == "request":
         sys.stdout.write(json.dumps(native_request(json.load(sys.stdin))) + "\n")
     elif args.command == "host-context":
         sys.stdout.write(json.dumps(host_identity()) + "\n")

@@ -24,6 +24,33 @@ from tests.plugins.test_operational_incident_client import client
 __all__: list[str] = []
 
 
+@pytest.mark.parametrize("product", ("vera", "clara", "lucia"))
+def test_native_migration_reports_new_failure_without_releasing_legacy_history(
+    native_service, tmp_path, product
+):
+    store, endpoint, _, _ = native_service
+    root = installed(tmp_path, endpoint, product)
+    device = tmp_path / "device"
+    call(root, device, f"{product}_incident_register", {})
+    state_path = tmp_path / "unused-task-state/state.json"
+    state = json.loads(state_path.read_text())
+    old_report = {**technical_report(), "product": product}
+    state["delivery_mode"] = "local-only"
+    state["outbox"] = [{"operation": "report", "payload": {"report": old_report}}]
+    state_path.write_text(json.dumps(state))
+    new_report = {**technical_report(), "product": product}
+
+    result = call(root, device, f"{product}_incident_report", {"report": new_report})
+
+    retained = json.loads(state_path.read_text())
+    assert result["structuredContent"]["report_id"] == new_report["report_id"]
+    assert retained["outbox"][0]["payload"]["report"] == old_report
+    assert retained["outbox"][0]["delivery_mode"] == "local-only"
+    assert retained["credentials"] == state["credentials"]
+    assert len(store.queue()[0]["reports"]) == 1
+    assert store.queue()[0]["reports"][0]["report_id"] == new_report["report_id"]
+
+
 def test_committed_native_tool_schemas_match_the_current_server_contract():
     root = Path(__file__).resolve().parents[2]
     actual = (

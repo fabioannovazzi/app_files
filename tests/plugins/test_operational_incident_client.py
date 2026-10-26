@@ -174,7 +174,8 @@ def test_local_delivery_retains_failure_and_success_without_transport(
     assert store.queue() == []
     state = json.loads(module._state_path().read_text())
     assert state["registered"] is False and state["receipts"] == []
-    assert state["delivery_mode"] == "local-only"
+    assert state["outbox"][0]["delivery_mode"] == "local-only"
+    assert state["delivery_permissions_version"] == 1
     assert [item["operation"] for item in state["outbox"]] == ["report"]
     installation_id = state["credentials"]["installation_id"]
     module.record_success("journal-sampling", "run_sample.py")

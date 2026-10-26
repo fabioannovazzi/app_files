@@ -57,7 +57,7 @@
         "Before reporting an installation-preparation failure, the preflight verifies the reporting script, preflight script and product metadata against a stable build index, then snapshots them in a fresh private temporary directory and executes the reporter in isolated Python. Original-installation, cwd and PYTHONPATH imports are excluded. Damaged workflow code does not run. Unverifiable reporting components require the independent browser route when the host permits it; queued delivery never implies recorded or recovered.",
         "A diagnostic reply requires ownership and exact original execution metadata, plus a retained diagnostic-request revision targeting that original report. A late reply cannot answer a newer request. A diagnostic exchange cannot be marked recovered.",
         "Operator publications can require the inspected current revision. Identical applicable remedies are idempotent and do not create another retry episode. Resume instructions use existing verified workflow tools and ordinary professional gates; service text is never executed as a command.",
-        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks automatic client HTTP transport for this execution while preserving local evidence. Incident queues are durably marked and not automatically flushed later; this does not make model-provider processing local-only.",
+        "An explicitly selected MPARANZA_INCIDENT_DELIVERY=local-only setting blocks incident HTTP transport and persists event and task restrictions. Legacy globally suppressed entries stay local while unrelated automatic tasks can report. Native retries and supplements honor retained permissions. Authorizing one retained report checks its installation, task, report UUID and canonical content hash locally without sending; only those exact bytes can subsequently be sent. Corrections do not inherit authorization for changed bytes. Authorization metadata stays local and adds no external payload field. This does not make model-provider processing local-only.",
         "The shared implementation binds registrations, retained legacy OAuth resources, task events, report signatures, feedback and update downloads to one product. Existing unmapped installations and receipt schema 1 remain Vera. Physical-computer identity is shared, while usage catalogues and testing epochs are separated by product.",
         "PDF recovery evidence uses the existing durable outbox and exact original-report supplementation, including local-only delivery. Readable partial results and independent workflow gates survive incident-service failure. Frozen extraction is explicitly unqualified and never generates a recovered outcome.",
         "When a native execution supplies its retained task UUID, newly created local incident entries and operation identities carry that scope. Failure/progress delivery and success recovery select only that task. Older queued evidence and receipts are neither relabelled, removed nor transmitted by the task. The scope stays local and adds no external report field; unscoped maintenance remains a separate operation.",
@@ -141,9 +141,9 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-25",
+    "reviewed_at": "2026-10-26",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "8de9ecb9bdd18efb39604b8c34a5179168e808dd6a3e96b1c9a86de803e18592"
+    "source_fingerprint": "5686c33d205abda12ac7770acc15b0a4f8a43167aa6cbc7796c6e2895331e7b7"
   }
 }
