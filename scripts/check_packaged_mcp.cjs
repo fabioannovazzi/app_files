@@ -6,102 +6,10 @@ const os = require("node:os");
 const path = require("node:path");
 const { spawn, spawnSync } = require("node:child_process");
 const readline = require("node:readline");
-const crypto = require("node:crypto");
-
-function validIncidentTools(tools, product = "vera") {
-  // Tool names are an exact transport contract, not a diagnostic classifier.
-  const expected = new Set(["register", "report", "status", "outcome", "progress"].map(action => `${product}_incident_${action}`));
-  // A release is built before its API deployment. Accept the existing incident
-  // contract or the complete usage extension, never a half-deployed pair.
-  if (product !== "vera" || (Array.isArray(tools) && tools.some(tool => typeof tool?.name === "string" && tool.name.startsWith(`${product}_workflow_`)))) {
-    expected.add(`${product}_workflow_record`);
-    expected.add(`${product}_workflow_status`);
-  }
-  // The receipt fallback may be deployed after its package has been built.
-  // Admit that one explicit extension while retaining the full base contract.
-  if (Array.isArray(tools) && tools.some(tool => tool?.name === `${product}_workflow_stamp`))
-    expected.add(`${product}_workflow_stamp`);
-  return Array.isArray(tools) && tools.length === expected.size &&
-    tools.every(tool => tool && tool.inputSchema?.type === "object" && expected.delete(tool.name)) &&
-    expected.size === 0;
-}
-
-async function checkRemoteServer(name, config) {
-  const product = ["vera", "clara", "lucia"].find(value => name === `${value}Incidents`);
-  let url;
-  try { url = new URL(config.url); } catch { return {name, error: "Invalid remote MCP URL"}; }
-  if (!product || url.protocol !== "https:" || url.username || url.password || url.search || url.hash ||
-      url.origin !== "https://mparanza.com" || url.pathname !== `/mcp/${product}-incidents`) {
-    return {name, error: "Remote MCP endpoint is outside the reviewed incident contract"};
-  }
-  if (process.env.MPARANZA_VERIFY_REMOTE_MCP !== "1") {
-    return {name, transport: "http", contractValid: true, remoteRuntimeChecked: false};
-  }
-  let credentials = null;
-  let metadata = null;
-  try {
-    const fixedFetch = async (target, options = {}) => {
-      const response = await fetch(target, {...options, redirect: "manual", signal: AbortSignal.timeout(10000)});
-      return response;
-    };
-    const advertised = await fixedFetch("https://mparanza.com/.well-known/oauth-authorization-server");
-    if (!advertised.ok) throw new Error("OAuth discovery unavailable");
-    metadata = await advertised.json();
-    const prefix = "https://mparanza.com/oauth/vera-incidents/";
-    if (metadata.issuer !== url.origin || metadata.registration_endpoint !== prefix + "register" ||
-        metadata.authorization_endpoint !== prefix + "authorize" || metadata.token_endpoint !== prefix + "token" ||
-        metadata.revocation_endpoint !== prefix + "revoke") throw new Error("Unexpected incident OAuth metadata");
-    const callback = "http://127.0.0.1:49191/vera-release-check";
-    const registered = await fixedFetch(metadata.registration_endpoint, {method: "POST", headers: {"Content-Type": "application/json"},
-      body: JSON.stringify({redirect_uris: [callback], token_endpoint_auth_method: "none"})});
-    if (!registered.ok) throw new Error("Anonymous verifier registration failed");
-    const {client_id} = await registered.json();
-    const verifier = crypto.randomBytes(48).toString("base64url");
-    const challenge = crypto.createHash("sha256").update(verifier).digest("base64url");
-    const state = crypto.randomBytes(32).toString("base64url");
-    const authorize = new URL(metadata.authorization_endpoint);
-    authorize.search = new URLSearchParams({client_id, redirect_uri: callback, response_type: "code", code_challenge_method: "S256",
-      code_challenge: challenge, resource: url.href, scope: `${product}:incidents`, state}).toString();
-    const authorized = await fixedFetch(authorize);
-    if (authorized.status !== 302) throw new Error("Anonymous verifier authorization failed");
-    const returned = new URL(authorized.headers.get("location"));
-    if (returned.origin + returned.pathname !== callback || returned.searchParams.get("state") !== state ||
-        !returned.searchParams.get("code")) throw new Error("Invalid verifier callback");
-    const tokens = await fixedFetch(metadata.token_endpoint, {method: "POST", headers: {"Content-Type": "application/x-www-form-urlencoded"},
-      body: new URLSearchParams({grant_type: "authorization_code", client_id, redirect_uri: callback,
-        code: returned.searchParams.get("code"), code_verifier: verifier, resource: url.href})});
-    if (!tokens.ok) throw new Error("Anonymous verifier token exchange failed");
-    credentials = {...await tokens.json(), client_id};
-    if (!credentials.access_token || !credentials.refresh_token) throw new Error("Incomplete verifier grant");
-    const rpc = async (id, method, params) => {
-      const response = await fetch(url, {method: "POST", redirect: "error",
-        headers: {"Content-Type": "application/json", "Accept": "application/json, text/event-stream", "Authorization": `Bearer ${credentials.access_token}`},
-        body: JSON.stringify({jsonrpc: "2.0", id, method, params}), signal: AbortSignal.timeout(10000)});
-      if (!response.ok) throw new Error(`Remote MCP HTTP ${response.status}`);
-      const text = await response.text();
-      if (text.length > 1000000) throw new Error("Remote MCP response exceeds handshake limit");
-      const result = JSON.parse(text);
-      if (result.error) throw new Error("Remote MCP protocol error");
-      return result.result;
-    };
-    const initialized = await rpc(1, "initialize", {protocolVersion: "2025-03-26", capabilities: {}, clientInfo: {name: "package-release-verifier", version: "1"}});
-    if (!initialized.serverInfo?.name || !initialized.capabilities?.tools) throw new Error("Invalid remote initialize response");
-    const listed = await rpc(2, "tools/list", {});
-    if (!validIncidentTools(listed.tools, product)) throw new Error("Invalid remote incident tools/list");
-    return {name, transport: "http", tools: listed.tools.length, remoteRuntimeChecked: true};
-  } catch (error) { return {name, error: error.message}; }
-  finally {
-    if (credentials && metadata) {
-      const revoked = await fetch(metadata.revocation_endpoint, {method: "POST", redirect: "error",
-        headers: {"Content-Type": "application/x-www-form-urlencoded"},
-        body: new URLSearchParams({client_id: credentials.client_id, token: credentials.refresh_token}), signal: AbortSignal.timeout(10000)});
-      if (!revoked.ok) throw new Error("Verifier credential revocation failed");
-    }
-  }
-}
-
 function checkServer(root, name, config, runtime) {
-  if (["http", "streamable-http"].includes(config.type) || config.serverUrl) return checkRemoteServer(name, {...config, url: config.url || config.serverUrl});
+  if (["http", "streamable-http"].includes(config.type) || config.serverUrl) {
+    return Promise.resolve({name, error: "Remote reporting MCP is retired; use HTTPS reporting"});
+  }
   return new Promise((resolve) => {
     if (config.command !== "node" || !Array.isArray(config.args)) {
       resolve({
@@ -261,7 +169,6 @@ async function main() {
   }
 }
 
-module.exports = { validIncidentTools };
 if (require.main === module) main().catch((error) => {
   process.stderr.write(`${error.stack}\n`);
   process.exitCode = 1;

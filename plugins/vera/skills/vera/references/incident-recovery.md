@@ -63,8 +63,7 @@ The browser retains its capability in a Secure, HttpOnly cookie. Empty
 `register` returns its public owner and a `next_report_id`; it does not expose
 the cookie. Reuse the same browser session. A browser identity is not a computer
 identity. An expired session never silently creates a new owner; the same page
-offers `restore-session` using the original local credentials or a legacy
-transfer code.
+offers `restore-session` using the original local credentials.
 
 Preserve the original owner before any retry. If the startup context or retained
 outbox contains local credentials, use browser `register` with
@@ -83,15 +82,9 @@ queued records whose original owner differs. Browser status includes each
 report's original installation UUID. Resume a browser-owned task through that
 same browser even after local execution recovers.
 
-Before retiring an old saved OAuth connection with history that has no local
-capability, call its legacy `vera_incident_recovery_transfer` once and
-submit the returned code through browser `restore-session` as
-`{"transfer_code": "..."}`. The code lasts five minutes and is single-use.
-This migration preserves the original owner and also links any already
-authenticated browser history without changing record IDs. Discard the code
-after use; never put it in a URL, logs or a user message. A new connection or
-new cookie cannot prove ownership of lost/revoked credentials. State that
-boundary rather than claiming to have recovered inaccessible history.
+The former remote MCP and OAuth endpoints are retired. Original local credentials
+or an authenticated browser session are required to access retained history.
+A new connection or cookie cannot prove ownership of inaccessible records.
 
 The installation preflight can still snapshot and run its separately
 index-verified stdlib reporter when only workflow files are damaged. It never
@@ -102,7 +95,7 @@ If the reporter itself cannot be verified, use the browser directly.
 Native host linking remains available through `vera_incident_host_link`.
 Pass the existing local capability when needed; the helper supplies the private
 computer proof itself. Never expose a device key or infer a computer from an
-OAuth/browser UUID or a temporary Linux filesystem. Missing host linkage must
+browser UUID or a temporary Linux filesystem. Missing host linkage must
 not block incident delivery. Preserve queued evidence until exact receipts are
 acknowledged. No transport supplies background wake-ups when the host is offline.
 

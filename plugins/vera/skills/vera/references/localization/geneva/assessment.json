@@ -46,9 +46,9 @@
     "version": "0.1.390"
   },
   "all_product_on_demand_release_binding": {
-    "previous_catalogue_fingerprint": "aa196403841a1c7e6263f042cf4f40fc5fce59fa999ef549dfc3716c143a5b70",
-    "review": "All Vera skill entrypoint hashes are unchanged. Rebind the existing assessment to the product version for shared on-demand MCP transport.",
-    "version": "0.1.506"
+    "date": "2026-10-26",
+    "version": "0.1.508",
+    "scope": "Rebound catalogue metadata after integrating the reporting cleanup and shared on-demand MCP transport. All skill entrypoint hashes are unchanged. Existing Geneva dispositions and acceptance limits are unchanged."
   },
   "archive_automatic_reporting_release_binding": {
     "previous_catalogue_fingerprint": "d746fb05d6f0d3a85b638c5ba6b8d620055462ff498599edc1c568fb6fd71652",
@@ -139,7 +139,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "fd550cbdb959d5101e7b9f49f7be424cd5a0743fd1c5b973752a17a2094b0e74",
+  "catalogue_fingerprint": "40236e69b0f5b0b865ce44d57ea8a86f15b13b2f8a5ecd7fd31fdf51ec2588b3",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",

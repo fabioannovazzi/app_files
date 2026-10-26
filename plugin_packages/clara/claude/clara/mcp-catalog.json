@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.355",
+  "version": "0.1.357",
   "services": [
     {
       "name": "claraIncidentHost",
@@ -292,7 +292,7 @@
         },
         {
           "name": "clara_incident_register",
-          "description": "Register or inspect this installed product's retained local reporting identity through ordinary HTTPS. Pass no arguments. Private credentials stay in the reporter; this does not recover a legacy OAuth or browser-owned task.",
+          "description": "Register or inspect this installed product's retained local reporting identity through ordinary HTTPS. Pass no arguments. Private credentials stay in the reporter; this does not claim a browser-owned task.",
           "inputSchema": {
             "additionalProperties": false,
             "properties": {},

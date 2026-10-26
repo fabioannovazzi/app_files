@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.181",
+  "version": "0.1.183",
   "services": [
     {
       "name": "luciaAssuranceRuntime",
@@ -1493,7 +1493,7 @@
         },
         {
           "name": "lucia_incident_register",
-          "description": "Register or inspect this installed product's retained local reporting identity through ordinary HTTPS. Pass no arguments. Private credentials stay in the reporter; this does not recover a legacy OAuth or browser-owned task.",
+          "description": "Register or inspect this installed product's retained local reporting identity through ordinary HTTPS. Pass no arguments. Private credentials stay in the reporter; this does not claim a browser-owned task.",
           "inputSchema": {
             "additionalProperties": false,
             "properties": {},

@@ -1136,15 +1136,9 @@ def project_claude_mcp(content: bytes) -> bytes:
         if not isinstance(server, dict):
             raise ValueError(f"MCP server {name} must be a JSON object")
         if server.get("type") == "http":
-            if server.get("url") not in {
-                f"https://mparanza.com/mcp/{product}-incidents"
-                for product in ("vera", "clara", "lucia")
-            }:
-                raise ValueError(
-                    f"MCP server {name} is outside the reviewed incident endpoint"
-                )
-            projected_servers[name] = {"type": "http", "url": server["url"]}
-            continue
+            raise ValueError(
+                f"MCP server {name}: remote incident endpoints are retired"
+            )
         command = server.get("command")
         args = server.get("args", [])
         env = server.get("env")
@@ -3585,26 +3579,9 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
     if "mcp-services.json" in entries:
         servers.update(json.loads(entries["mcp-services.json"])["mcpServers"])
     local = []
-    remote = []
     for name, config in servers.items():
         if "url" in config:
-            if (
-                name != product + "Incidents"
-                or config["url"] != f"https://mparanza.com/mcp/{product}-incidents"
-            ):
-                raise ValueError(f"Unreviewed remote server: {name}")
-            remote.extend(
-                [
-                    f"Remote: `{product}Incidents` at https://mparanza.com/mcp/{product}-incidents.",
-                    "Receives technical incident metadata, reviewed diagnostics and recovery outcomes,",
-                    "plus primary-task usage, outcome, receipt UUID/hash and actual 1-5-star ratings",
-                    "with optional user-authored feedback. It authenticates with its own installation/",
-                    "connection credentials. It does not automatically upload client documents, prompts",
-                    "or professional output. Optional feedback is the user's chosen text. Diagnostics",
-                    "exclude case text and passwords/API keys; credentials are authentication only.",
-                    "Privacy policy: https://mparanza.com/privacy.",
-                ]
-            )
+            raise ValueError(f"Unreviewed remote server: {name}")
         else:
             if config.get("command") != "node":
                 raise ValueError(f"Unreviewed local transport: {name}")
@@ -3617,21 +3594,13 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
         f"Independent browser recovery uses https://mparanza.com/{product}/incident-recovery.",
         "It is operated by the agent when the host permits browser control. Reporting",
         "credentials authenticate requests; they are never diagnostic content.",
-        "The package does not require a remote MCP connection. Historical OAuth",
-        "owners can migrate through the legacy service before their connection is retired.",
+        "Reporting uses HTTPS; the former remote MCP and OAuth endpoints are retired.",
+        "Original local credentials can restore the browser reporting owner.",
         "Client documents, professional output and unreviewed logs are not reporting inputs.",
         "Privacy policy: https://mparanza.com/privacy.",
     ]
-    if remote:
-        lines.extend(
-            [
-                "This is their MCP transport, not an offline guarantee: browser acquisition",
-                "can access user-selected websites; incident identity/recovery can contact",
-                "the service below. Review widgets do not upload client documents.",
-            ]
-        )
     server_text = (
-        "\n".join([*lines, "", *local, "", *remote])
+        "\n".join([*lines, "", *local])
         if local
         else "This package declares no MCP servers (.mcp.json is absent)."
     )

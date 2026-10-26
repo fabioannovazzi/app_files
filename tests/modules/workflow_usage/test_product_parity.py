@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import base64
-import hashlib
 import os
 from concurrent.futures import ThreadPoolExecutor
 from threading import Barrier
@@ -23,12 +21,6 @@ from modules.operational_incidents.contracts import (
     DeviceCredentials,
     Report,
 )
-from modules.operational_incidents.oauth import (
-    CLAUDE_CALLBACK,
-    CLAUDE_CLIENT,
-    IncidentOAuth,
-    OAuthError,
-)
 from modules.operational_incidents.recovery import (
     RecoverySessionError,
     RecoverySessions,
@@ -39,6 +31,7 @@ from modules.run_receipts.signing import RunReceiptSigner
 from modules.run_receipts.store import RunReceiptStore
 from modules.workflow_usage.contracts import WorkflowEvent
 from modules.workflow_usage.repository import WorkflowConflict
+from tests.modules.operational_incidents.support import browser_headers
 
 BEFORE = "2026-10-18T08:00:00+00:00"
 AFTER = "2026-10-18T09:00:00+00:00"
@@ -162,7 +155,6 @@ def test_connector_receipt_fallback_keeps_original_product_and_run(service, prod
             sample_kind="agent_test",
         ),
     )
-    grant = oauth_grant(store, product)
     request = {
         "schema_version": 2,
         "product": product,
@@ -172,27 +164,19 @@ def test_connector_receipt_fallback_keeps_original_product_and_run(service, prod
     }
 
     result = client.post(
-        f"/mcp/{product}-incidents",
-        headers={"Authorization": "Bearer " + grant["access_token"]},
+        f"/api/{product}/incident-recovery/workflow-stamp",
+        headers=browser_headers(store, product),
         json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {
-                "name": f"{product}_workflow_stamp",
-                "arguments": {
-                    "credentials": owners[product].model_dump(mode="json"),
-                    "run_id": str(run_id),
-                    "receipt_request": request,
-                },
-            },
+            "credentials": owners[product].model_dump(mode="json"),
+            "run_id": str(run_id),
+            "receipt_request": request,
         },
-    ).json()["result"]
+    )
 
-    assert result["isError"] is False
+    assert result.status_code == 200
     proof = receipts.get(request["receipt_id"])
     assert proof.product == product
-    assert signer.verify(proof.signed_payload, result["structuredContent"]["signature"])
+    assert signer.verify(proof.signed_payload, result.json()["signature"])
     assert store.workflow_status(owners[product], str(run_id))["state"] == "unknown"
     assert store.workflow_status(owners[product], str(run_id))["receipts"] == []
 
@@ -354,90 +338,6 @@ def test_product_cannot_be_reassigned_or_claimed_by_another_owner(service):
                 sample_kind="user",
             ),
         )
-
-
-def oauth_grant(store, product):
-    service = IncidentOAuth(store)
-    verifier = "a" * 64
-    challenge = (
-        base64.urlsafe_b64encode(hashlib.sha256(verifier.encode()).digest())
-        .decode()
-        .rstrip("=")
-    )
-    resource = f"https://mparanza.com/mcp/{product}-incidents"
-    code = service.authorize(
-        {
-            "client_id": CLAUDE_CLIENT,
-            "redirect_uri": CLAUDE_CALLBACK,
-            "response_type": "code",
-            "code_challenge_method": "S256",
-            "code_challenge": challenge,
-            "resource": resource,
-        }
-    )
-    return service.token(
-        {
-            "client_id": CLAUDE_CLIENT,
-            "redirect_uri": CLAUDE_CALLBACK,
-            "grant_type": "authorization_code",
-            "code": code,
-            "code_verifier": verifier,
-            "resource": resource,
-        }
-    )
-
-
-def test_saved_oauth_connection_cannot_cross_product_resources(service):
-    client, store, _, _, _, _ = service
-    grant = oauth_grant(store, "clara")
-    headers = {"Authorization": "Bearer " + grant["access_token"]}
-    request = {"jsonrpc": "2.0", "id": 1, "method": "tools/list"}
-
-    accepted = client.post("/mcp/clara-incidents", headers=headers, json=request)
-    rejected = client.post("/mcp/lucia-incidents", headers=headers, json=request)
-
-    assert accepted.status_code == 200
-    names = {item["name"] for item in accepted.json()["result"]["tools"]}
-    assert "clara_workflow_record" in names
-    assert "clara_workflow_stamp" in names
-    assert rejected.status_code == 401
-    with pytest.raises(OAuthError):
-        IncidentOAuth(store).token(
-            {
-                "client_id": CLAUDE_CLIENT,
-                "grant_type": "refresh_token",
-                "refresh_token": grant["refresh_token"],
-                "resource": "https://mparanza.com/mcp/vera-incidents",
-            }
-        )
-
-
-@pytest.mark.parametrize("product", PIPELINES)
-@pytest.mark.parametrize("method", ["initialize", "tools/list"])
-def test_remote_guidance_uses_the_host_exposed_primary_skill(service, product, method):
-    client, store, _, _, _, _ = service
-    grant = oauth_grant(store, product)
-
-    response = client.post(
-        f"/mcp/{product}-incidents",
-        headers={"Authorization": "Bearer " + grant["access_token"]},
-        json={"jsonrpc": "2.0", "id": 1, "method": method},
-    )
-
-    assert response.status_code == 200
-    result = response.json()["result"]
-    guidance = (
-        result["instructions"]
-        if method == "initialize"
-        else next(
-            item["description"]
-            for item in result["tools"]
-            if item["name"] == f"{product}_workflow_record"
-        )
-    )
-    assert "references/workflow-usage.md" in guidance
-    assert "directory exposed by your host" in guidance
-    assert "skills/" not in guidance
 
 
 def test_clara_receipt_cannot_attach_to_lucia_task(service):

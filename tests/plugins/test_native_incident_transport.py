@@ -16,7 +16,7 @@ from modules.operational_incidents.contracts import Remedy
 from modules.run_receipts.signing import RunReceiptSigner
 from modules.run_receipts.store import RunReceiptStore
 from scripts.sync_reporting_runtime import reporting_tool_schemas
-from tests.modules.operational_incidents.test_oauth import technical_report
+from tests.modules.operational_incidents.support import technical_report
 from tests.plugins.test_incident_native_host import call, installed
 from tests.plugins.test_native_workflow_usage import native_service, start_arguments
 from tests.plugins.test_operational_incident_client import client
