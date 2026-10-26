@@ -8,7 +8,7 @@ import logging
 from dataclasses import dataclass
 from pathlib import Path
 
-__all__ = ["IconSpec", "build_svg", "generate_icons", "main"]
+__all__ = ["IconSpec", "build_svg", "build_vera_sidebar_svg", "generate_icons", "main"]
 
 ROOT = Path(__file__).resolve().parents[1]
 LOGGER = logging.getLogger(__name__)
@@ -661,6 +661,21 @@ def build_svg(spec: IconSpec) -> str:
     return _frame(spec, _body(spec))
 
 
+def build_vera_sidebar_svg(color: str) -> str:
+    """Reuse Vera's figure with a transparent canvas and neckline cutout."""
+
+    figure = _body(IconSpec("vera", "Vera", "#000000", "#FFFFFF", "reviewer")).strip()
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="5 7 50 50" role="img" aria-label="Vera">
+  <defs>
+    <mask id="vera-figure" maskUnits="userSpaceOnUse" x="0" y="0" width="64" height="64">
+      {figure}
+    </mask>
+  </defs>
+  <rect width="64" height="64" fill="{color}" mask="url(#vera-figure)"/>
+</svg>
+"""
+
+
 def generate_icons(
     *,
     plugins_root: Path = ROOT / "plugins",
@@ -676,11 +691,20 @@ def generate_icons(
         if not icon_path.exists():
             LOGGER.warning("Skipping missing icon path: %s", icon_path)
             continue
-        content = build_svg(spec)
-        if icon_path.read_text(encoding="utf-8") == content:
-            continue
-        icon_path.write_text(content, encoding="utf-8")
-        changed.append(icon_path)
+        assets = {icon_path: build_svg(spec)}
+        if spec.plugin == "vera":
+            for theme, color in (("light", "#4B4B4B"), ("dark", "#DCDCDC")):
+                assets[icon_path.with_name(f"sidebar-{theme}.svg")] = (
+                    build_vera_sidebar_svg(color)
+                )
+        for asset_path, content in assets.items():
+            if (
+                asset_path.exists()
+                and asset_path.read_text(encoding="utf-8") == content
+            ):
+                continue
+            asset_path.write_text(content, encoding="utf-8")
+            changed.append(asset_path)
     return changed
 
 

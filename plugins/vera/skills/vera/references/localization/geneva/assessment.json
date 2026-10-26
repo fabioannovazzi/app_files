@@ -2285,5 +2285,10 @@
     "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
     "version": "0.1.503",
     "scope": "Canonical product manifest version changed. All Vera skill entrypoint identities and bytes are unchanged; existing Geneva judgments are preserved. Component reconciliation fixes preserve jurisdiction, currency and date constraints. This binding does not claim new jurisdiction acceptance."
+  },
+  "transparent_sidebar_icon_release_binding": {
+    "version": "0.1.500",
+    "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
+    "scope": "Manifest version only. All skill entries and professional judgments are unchanged; this binding does not establish professional or installed-host acceptance."
   }
 }
