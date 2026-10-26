@@ -86,6 +86,11 @@ Evidence: `outputs/vera-mcp-process-overhead-20261026/clara-lucia-process-counts
 - The first broad package run lacked ignored Clara and Lucia archive fixtures
   in the new worktree. It was interrupted, those source-derived prerequisites
   were built, and the required suite passed on rerun.
+- CI's dated-case integration still asserted uninterrupted review through live
+  deletion of the installation. It failed with `ENOENT: uv_cwd` after that
+  deletion. The scenario now reopens the service after reinstall and upgrade,
+  then validates the existing saved reconciliation and its original run receipt;
+  it no longer requires the removed live-update gateway.
 - `codex plugin list --json` could not provide an installed-version inventory:
   the existing mp-clara and mp-lucia source paths have no supported marketplace
   manifest; the restricted-shell remote catalog request also failed. Neither

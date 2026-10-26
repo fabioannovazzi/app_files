@@ -1,4 +1,4 @@
-"""Packaged regression: dated case 1 survives same-version reinstall and upgrade."""
+"""Packaged regression: saved dated case 1 reopens after reinstall and upgrade."""
 
 from __future__ import annotations
 
@@ -273,19 +273,27 @@ request = {
         for name in ("review_payload", "run_intake", "final_artifacts", "ui_decisions")
     },
 }
-old = MCP(installed)
-new = None
+connection = MCP(installed)
 responses = {}
 try:
+    responses["before_update"] = connection.call(
+        "tools/call",
+        {"name": "validate_open_item_reconciliation_review", "arguments": request},
+    )
+    connection.close()
+    connection = None
     backup = cache.with_name("plugin-backup")
     cache.rename(backup)
     shutil.rmtree(backup)
     with ZipFile(archive) as z:
         z.extractall(cache)
-    responses["after_same_version_reinstall"] = old.call(
+    connection = MCP(installed)
+    responses["after_same_version_reinstall_reconnected"] = connection.call(
         "tools/call",
         {"name": "validate_open_item_reconciliation_review", "arguments": request},
     )
+    connection.close()
+    connection = None
     backup = cache.with_name("plugin-backup")
     cache.rename(backup)
     shutil.rmtree(backup)
@@ -305,12 +313,8 @@ try:
     (installed / "execution-files.json").write_text(
         json.dumps({"schema_version": 1, "files": index})
     )
-    responses["after_upgrade_existing_connection"] = old.call(
-        "tools/call",
-        {"name": "validate_open_item_reconciliation_review", "arguments": request},
-    )
-    new = MCP(installed)
-    responses["after_upgrade_reconnected_review"] = new.call(
+    connection = MCP(installed)
+    responses["after_upgrade_reconnected_review"] = connection.call(
         "tools/call",
         {"name": "validate_open_item_reconciliation_review", "arguments": request},
     )
@@ -338,6 +342,7 @@ try:
                 "limits": [
                     "Isolated packaged-process regression, not an installed Codex chat or professional approval.",
                     "Upgrade B is a version-labelled package fixture made from candidate A.",
+                    "Services are reopened after updates; live installation replacement is not protected.",
                 ],
             },
             indent=2,
@@ -353,8 +358,7 @@ try:
         )
     )
 finally:
-    old.close()
-    if new:
-        new.close()
+    if connection:
+        connection.close()
     verification.release_execution_root(bound)
     verification.release_execution_root(pinned)
