@@ -8,7 +8,7 @@ from pathlib import Path
 __all__ = ["installed_course_command"]
 
 _MOCK_PUBLIC_DOWNLOADS = """
-import io, runpy, sys
+import io, json, runpy, sys
 from pathlib import Path
 from urllib.parse import urlsplit, unquote
 root, repository = Path(sys.argv[1]), Path(sys.argv[2])
@@ -19,7 +19,10 @@ class PublicFile(io.BytesIO):
     headers = {}
     def __init__(self, url):
         parsed = urlsplit(url)
-        path = repository / unquote(parsed.path).lstrip('/')
+        courses = repository / 'static/shared/courses'
+        relative = unquote(parsed.path).removeprefix('/static/shared/courses/')
+        aliases = json.loads((courses / 'file-aliases.json').read_bytes())['aliases']
+        path = courses / aliases.get(relative, relative)
         assert parsed.hostname == 'mparanza.com'
         assert path.resolve().is_relative_to((repository / 'static/shared/courses').resolve())
         super().__init__(path.read_bytes())

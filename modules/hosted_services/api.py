@@ -45,6 +45,7 @@ from modules.case_notes_voice.api import (
 from modules.change_requests import router as change_requests_router
 from modules.cnc_review.api import api_router as cnc_review_api_router
 from modules.cnc_review.api import site_router as cnc_review_site_router
+from modules.course_files import CourseFiles
 from modules.hosted_interviews.api import admin_router as hosted_interviews_admin_router
 from modules.hosted_interviews.api import (
     public_router as hosted_interviews_public_router,
@@ -1601,6 +1602,11 @@ def create_app() -> FastAPI:
             response = await call_next(request)
         return response
 
+    app.mount(
+        "/static/shared/courses",
+        CourseFiles(Path("static/shared/courses")),
+        name="course-files",
+    )
     app.mount("/static", StaticFiles(directory="static"), name="static")
     app.include_router(auth_router)
     app.include_router(auth_site_router)

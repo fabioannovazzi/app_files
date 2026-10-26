@@ -1,1 +1,0 @@
-Ejercicio independiente de corrección: partir de la presentación original. En la conclusión, sustituir la propuesta de prueba por pedir primero las dudas del personal sobre la ficha. No iniciar ni anunciar una prueba. Conservar lo demás y las dos copias corregidas.

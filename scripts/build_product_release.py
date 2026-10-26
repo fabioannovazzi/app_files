@@ -116,6 +116,11 @@ def main(argv: list[str] | None = None) -> int:
                             + " ".join(products)
                             + " first, or download this commit's product-archives CI artifact."
                         )
+            subprocess.run(
+                [sys.executable, "scripts/check_repository_archive_size.py"],
+                cwd=ROOT,
+                check=True,
+            )
         for command in commands:
             subprocess.run([sys.executable, *command], cwd=ROOT, check=True)
         versions = verify_versions(ROOT, products)

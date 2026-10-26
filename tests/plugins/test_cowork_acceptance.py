@@ -13,6 +13,7 @@ from zipfile import ZipFile
 import pymupdf  # Keep native bindings in the test isolation import snapshot.
 import pytest
 
+from scripts.course_materials.public_files import resolve_public_file
 from scripts.cowork_acceptance import cowork_acceptance as acceptance
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -36,10 +37,12 @@ def prepared(tmp_path, monkeypatch):
     def download(url, destination, expected):
         from urllib.parse import unquote, urlsplit
 
-        source = ROOT / unquote(urlsplit(url).path).lstrip("/")
-        assert source.resolve().is_relative_to(
-            (ROOT / "static/shared/courses/vera").resolve()
+        directory = ROOT / "static/shared/courses"
+        source = resolve_public_file(
+            directory,
+            unquote(urlsplit(url).path).removeprefix("/static/shared/courses/"),
         )
+        assert source.resolve().is_relative_to(directory.resolve())
         data = source.read_bytes()
         assert hashlib.sha256(data).hexdigest() == expected
         destination.write_bytes(data)

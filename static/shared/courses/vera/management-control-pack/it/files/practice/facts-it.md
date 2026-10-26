@@ -1,7 +1,0 @@
-# Arco — conti gestionali mensili fittizi
-
-Valuta EUR. Il foglio GL contiene movimenti mensili di conto economico, non saldi di chiusura cumulativi. Revenue è positivo; COGS e Operating expenses sono negativi. Il conto 4000 rappresenta i ricavi, 5000 il costo del venduto e 6000 i costi operativi. Budget usa le stesse categorie e gli stessi segni. Le date sono a fine mese nel 2026; l'esercizio inizia a gennaio. Il caso non comprende altri elementi operativi, ammortamenti, interessi o imposte: il risultato operativo qui è l'EBITDA, non l'utile netto. I dati sono fittizi e non costituiscono un bilancio civilistico.
-
-Il primo report copre gennaio–febbraio, con data di riferimento 28 febbraio 2026. Il totale di controllo di GL è EUR 53.000 e quello del budget EUR 47.000. La prova di marzo aggiunge un mese senza sostituire le righe precedenti: i totali progressivi diventano EUR 85.000 per GL ed EUR 77.000 per Budget. Entrambi i fogli comprendono gli stessi periodi e le stesse categorie. L'esercizio riguarda la preparazione e la lettura di un report; i dati non stabiliscono le cause degli scostamenti.
-
-Per il Management Control Pack e il budget di Clara, dopo avere esaminato i fogli, associare Revenue a revenue, COGS a cogs e Operating expenses a operating_expense. Le altre funzioni devono seguire i propri requisiti di preparazione e input. Questa nota spiega il significato dei dati del caso: non è una ricetta tecnica già rivista né un'approvazione professionale.

@@ -83,13 +83,16 @@
     "scripts/cowork_teaching",
     "static/shared/courses",
     "static/shared/learn-with-vera/index.html",
-    "static/shared/product-function-pages.js"
+    "static/shared/product-function-pages.js",
+    "scripts/course_materials/public_files.py",
+    "scripts/course_materials/build_public_catalog.py",
+    "modules/course_files.py"
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-10-23",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "d634d897c84f11b95a8d902b643969e9d8ea08ee5d79ea987d823bd8412ac150"
+    "source_fingerprint": "88ef43acec90110ba85e83bf5eccab53c5f07d1bc69153743374b4ecec5198af"
   },
   "runtime_profiles": [
     "openai-codex"
