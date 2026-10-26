@@ -2227,7 +2227,7 @@ def verify_packaged_mcp(
                 )
             else:
                 logging.getLogger(__name__).info(
-                    "[MCP OK] %s: %s server entries passed local startup or remote contract checks",
+                    "[MCP OK] %s: %s server entries passed local startup checks",
                     relative_root,
                     count,
                 )
