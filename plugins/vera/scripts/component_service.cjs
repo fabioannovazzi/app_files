@@ -40,7 +40,11 @@ const reportingScope = JSON.parse(fs.readFileSync(path.join(pluginRoot, "usage/p
 const recordsOutput = Object.prototype.hasOwnProperty.call(reportingScope, component);
 const packagedRoot = path.join(pluginRoot, "modules", component);
 const sourceRoot = path.resolve(pluginRoot, "..", component);
-const componentRoot = fs.existsSync(packagedRoot) ? packagedRoot : sourceRoot;
+const prepared = require("./verify_mcp_package.cjs").componentRoot(
+  pluginRoot, component, fs.existsSync(packagedRoot) ? packagedRoot : sourceRoot,
+);
+const componentRoot = prepared.root;
+process.on("exit", () => prepared.cleanup());
 const serverCandidates = [
   path.join(componentRoot, "mcp", "server.cjs"),
   path.join(componentRoot, "scripts", "review_mcp_server.cjs"),

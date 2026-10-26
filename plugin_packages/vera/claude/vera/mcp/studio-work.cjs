@@ -90,7 +90,7 @@ function handle(request) {
   }
   throw new Error("Unsupported method");
 }
-if (require.main === module) {
+function main() {
   readline.createInterface({ input: process.stdin }).on("line", line => {
     let request;
     try {
@@ -103,4 +103,5 @@ if (require.main === module) {
     }
   });
 }
-module.exports = { TOOLS, call, handle };
+if (require.main === module) main();
+module.exports = { TOOLS, call, handle, main };
