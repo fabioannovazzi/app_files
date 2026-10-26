@@ -1,1 +1,0 @@
-Korrekturhinweis: auf der Folie zu den Zuständigkeiten Sara durch Elena als vorgeschlagene Person für Aufnahme und Klärung ersetzen. Paolo bleibt für Beurteilung und Kostenvoranschlag zuständig. Titel, Reihenfolge, Stil und andere Folien erhalten. Nur die vorgeschlagene Zuständigkeit ändert sich; das Verfahren wird nicht genehmigt.

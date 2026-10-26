@@ -8,6 +8,11 @@ import re
 from pathlib import Path, PurePosixPath
 from typing import Any
 
+try:
+    from .public_files import resolve_public_file
+except ImportError:  # Direct script entry point.
+    from public_files import resolve_public_file
+
 __all__ = [
     "externalize_course_files",
     "immutable_path",
@@ -46,31 +51,10 @@ def immutable_path(asset: dict[str, Any]) -> str:
     return f"_files/{digest}/{_relative(asset['path']).name}"
 
 
-def _public_file(
-    root: Path, product: str, workflow: str, asset: dict[str, Any]
-) -> Path:
-    for language in asset["languages"]:
-        path = (
-            root
-            / "static/shared/courses"
-            / product
-            / _relative(workflow)
-            / _relative(language)
-            / _relative(asset["path"])
-        )
-        if (
-            path.is_file()
-            and hashlib.sha256(path.read_bytes()).hexdigest() == asset["sha256"]
-        ):
-            return path
-    raise ValueError(
-        f"No byte-identical public attachment: {product}/{workflow}/{asset['path']}"
-    )
-
-
 def publish_remote_files(root: Path = ROOT, *, check: bool = False) -> int:
-    """Add immutable copies; never remove assets needed by an older package."""
+    """Verify hash-addressed downloads, including aliases shared across products."""
     count = 0
+    public = root / "static/shared/courses"
     for product in sorted(PRODUCTS):
         assets = root / "plugins" / product / "assets/courses"
         index = json.loads((assets / "index.json").read_bytes())
@@ -79,24 +63,17 @@ def publish_remote_files(root: Path = ROOT, *, check: bool = False) -> int:
                 continue
             course = json.loads((assets / _relative(entry["path"])).read_bytes())
             for asset in course["files"]:
-                source = _public_file(root, product, workflow, asset)
-                if product in _publication_policy(root).get(
-                    "existing_language_downloads", []
-                ):
-                    # Existing bytes were hash-checked above; do not recreate _files.
-                    count += 1
-                    continue
-                target = (
-                    root / "static/shared/courses" / product / immutable_path(asset)
+                target = resolve_public_file(
+                    public, f"{product}/{immutable_path(asset)}"
                 )
-                content = source.read_bytes()
-                if target.exists() and target.read_bytes() != content:
-                    raise ValueError(f"Immutable course file changed: {target}")
-                if not target.exists():
-                    if check:
-                        raise ValueError(f"Missing immutable course file: {target}")
-                    target.parent.mkdir(parents=True, exist_ok=True)
-                    target.write_bytes(content)
+                if (
+                    not target.is_file()
+                    or hashlib.sha256(target.read_bytes()).hexdigest()
+                    != asset["sha256"]
+                ):
+                    raise ValueError(
+                        f"Missing or altered immutable course file: {target}; run build_public_catalog.py"
+                    )
                 count += 1
     return count
 
@@ -138,15 +115,10 @@ def externalize_course_files(
                     raise ValueError(f"Unreviewed packaged attachment: {packaged}")
             elif previous.get(key, {}).get("sha256") != asset["sha256"]:
                 raise ValueError(f"Missing packaged attachment: {packaged}")
-            source = _public_file(root, product, workflow, asset)
             url_path = immutable_path(asset)
-            if product in _publication_policy(root).get(
-                "existing_language_downloads", []
-            ):
-                url_path = source.relative_to(
-                    root / "static/shared/courses" / product
-                ).as_posix()
-            public = root / "static/shared/courses" / product / url_path
+            public = resolve_public_file(
+                root / "static/shared/courses", f"{product}/{url_path}"
+            )
             if (
                 not public.is_file()
                 or hashlib.sha256(public.read_bytes()).hexdigest() != asset["sha256"]
@@ -186,7 +158,7 @@ def externalize_course_files(
 
 
 def main() -> int:
-    """Prepare immutable website copies before building distributable packages."""
+    """Verify immutable website downloads before building distributable packages."""
     import argparse
 
     parser = argparse.ArgumentParser(description=__doc__)

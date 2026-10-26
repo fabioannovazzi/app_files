@@ -104,4 +104,4 @@ def test_catalogue_offers_introduction_before_workflow_selection():
     assert catalogue.index('id="inizia-con-vera"') < catalogue.index('id="vera"')
     for link in Page(catalogue).links:
         if link and "get-started/" in link:
-            assert (ROOT / "static/shared/courses" / link).is_file()
+            assert (ROOT / link.lstrip("/")).is_file()

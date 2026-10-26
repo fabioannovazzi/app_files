@@ -1,3 +1,0 @@
-# Operatività da verificare
-
-Il promotore propone prenotazioni telefoniche e ritiri in finestre concordate. Il mezzo sarebbe disponibile due pomeriggi alla settimana; capacità e durata del percorso non sono state provate. La stima di 40 ordini mensili è un’ipotesi da verificare, non capacità dimostrata. La responsabilità operativa sarebbe del titolare, da concordare; non vi è personale dedicato già assunto. Prima del pilota servono prova di percorso, disponibilità del mezzo e condizioni di prenotazione/cancellazione. Un test piccolo senza acquisto del mezzo è un’alternativa alla partenza su scala piena.
