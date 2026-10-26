@@ -14,7 +14,7 @@ from uuid import uuid4
 
 import pytest
 
-from modules.operational_incidents.api import TOOLS, _dispatch
+from modules.operational_incidents.api import _dispatch
 from modules.operational_incidents.contracts import Credentials, ReporterStatus
 from modules.operational_incidents.store import IncidentStore
 from tests.modules.operational_incidents.test_incidents import report
@@ -272,59 +272,36 @@ def test_native_identity_read_failure_returns_source_facts_without_key(tmp_path)
     assert secret not in json.dumps(result)
 
 
-@pytest.mark.parametrize(
-    "variant",
-    [
-        "deployed-contract",
-        "legacy-contract",
-        "missing-progress",
-        "duplicate",
-        "wrong-name",
-        "invalid-schema",
-        "invalid-list",
-        "invalid-name",
-    ],
-)
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
-def test_release_checker_requires_the_actual_remote_incident_tool_contract(
-    variant, product
+@pytest.mark.parametrize("transport", ["http", "streamable-http", "serverUrl"])
+def test_release_checker_rejects_retired_remote_incident_endpoints(
+    tmp_path, product, transport
 ):
-    tools = json.loads(json.dumps(TOOLS))
-    if variant == "legacy-contract":
-        tools = [tool for tool in tools if tool["name"].startswith("vera_incident_")]
-    elif variant == "missing-progress":
-        tools.pop()
-    elif variant == "duplicate":
-        tools[-1] = tools[0]
-    elif variant == "wrong-name":
-        tools[-1]["name"] = "unrelated_tool"
-    elif variant == "invalid-schema":
-        tools[-1]["inputSchema"] = {"type": "array"}
-    elif variant == "invalid-list":
-        tools = None
-    elif variant == "invalid-name":
-        tools[-1]["name"] = 42
-    if isinstance(tools, list):
-        for tool in tools:
-            if isinstance(tool["name"], str):
-                tool["name"] = tool["name"].replace("vera_", product + "_", 1)
+    url = f"https://mparanza.com/mcp/{product}-incidents"
+    configuration = (
+        {"serverUrl": url}
+        if transport == "serverUrl"
+        else {"type": transport, "url": url}
+    )
+    name = f"{product}Incidents"
+    (tmp_path / ".mcp.json").write_text(
+        json.dumps({"mcpServers": {name: configuration}})
+    )
     checker = ROOT / "scripts/check_packaged_mcp.cjs"
-    # A complete catalogue can exceed Linux's per-argument limit. It is test
-    # input, not executable source: pass the unchanged JSON over stdin.
-    program = "const {validIncidentTools}=require(process.argv[1]); const tools=JSON.parse(require('node:fs').readFileSync(0,'utf8')); process.stdout.write(JSON.stringify(validIncidentTools(tools, process.argv[2])));"
 
     result = subprocess.run(
-        ["node", "-e", program, str(checker), product],
-        input=json.dumps(tools),
-        check=True,
+        ["node", str(checker), str(tmp_path)],
+        env={**os.environ, "MPARANZA_VERIFY_REMOTE_MCP": "0"},
+        check=False,
         capture_output=True,
         text=True,
+        timeout=10,
     )
 
-    assert json.loads(result.stdout) is (
-        variant == "deployed-contract"
-        or (variant == "legacy-contract" and product == "vera")
-    )
+    assert result.returncode == 1
+    assert json.loads(result.stdout) == [
+        {"name": name, "error": "Remote reporting MCP is retired; use HTTPS reporting"}
+    ]
 
 
 def test_three_products_reuse_the_same_physical_computer_proof(tmp_path):

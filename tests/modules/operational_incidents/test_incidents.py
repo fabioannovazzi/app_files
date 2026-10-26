@@ -18,7 +18,7 @@ from modules.operational_incidents.store import (
     IncidentNotFound,
     IncidentStore,
 )
-from tests.modules.operational_incidents.test_oauth import connection_headers
+from tests.modules.operational_incidents.support import browser_headers
 
 
 def credentials() -> Credentials:
@@ -466,40 +466,31 @@ def test_unrelated_case_payload_and_remote_shell_repair_are_rejected():
         )
 
 
-def test_remote_mcp_report_works_without_starting_a_local_process(
-    tmp_path, monkeypatch
-):
+def test_browser_report_works_without_starting_a_local_process(tmp_path, monkeypatch):
     store, first = registered(tmp_path)
     app = FastAPI()
     app.include_router(router)
     app.dependency_overrides[get_incident_store] = lambda: store
 
     def blocked(*_args, **_kwargs):
-        raise AssertionError("The remote transport must not launch a local process")
+        raise AssertionError("The browser transport must not launch a local process")
 
     monkeypatch.setattr("subprocess.run", blocked)
     client = TestClient(app)
     response = client.post(
-        "/mcp/vera-incidents",
-        headers=connection_headers(store),
+        "/api/vera/incident-recovery/report",
+        headers=browser_headers(store),
         json={
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {
-                "name": "vera_incident_report",
-                "arguments": {
-                    "credentials": first.model_dump(mode="json"),
-                    "report": report().model_dump(mode="json"),
-                },
-            },
+            "credentials": first.model_dump(mode="json"),
+            "report": report().model_dump(mode="json"),
         },
     )
-    assert response.json()["result"]["structuredContent"]["recorded"] is True
+    assert response.status_code == 200
+    assert response.json()["recorded"] is True
     assert len(store.queue()) == 1
 
 
-def test_remote_registration_reuses_saved_identity_without_local_uuid_generator(
+def test_browser_registration_reuses_saved_identity_without_local_uuid_generator(
     tmp_path,
 ):
     store = IncidentStore(tmp_path / "store.sqlite3")
@@ -507,27 +498,21 @@ def test_remote_registration_reuses_saved_identity_without_local_uuid_generator(
     app.include_router(router)
     app.dependency_overrides[get_incident_store] = lambda: store
     client = TestClient(app)
-    headers = connection_headers(store)
-    payload = {
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {"name": "vera_incident_register", "arguments": {}},
-    }
+    headers = browser_headers(store)
 
-    reply = client.post("/mcp/vera-incidents", headers=headers, json=payload).json()[
-        "result"
-    ]["structuredContent"]
-    repeated = client.post("/mcp/vera-incidents", headers=headers, json=payload).json()[
-        "result"
-    ]["structuredContent"]
+    reply = client.post(
+        "/api/vera/incident-recovery/register", headers=headers, json={}
+    ).json()
+    repeated = client.post(
+        "/api/vera/incident-recovery/register", headers=headers, json={}
+    ).json()
 
     assert reply["installation_id"] == repeated["installation_id"]
-    assert reply["binding"] == "saved-connector"
+    assert reply["binding"] == "browser-recovery"
     assert "credentials" not in reply
 
 
-def test_mcp_schemas_have_resolvable_references():
+def test_native_tool_schemas_have_resolvable_references():
     tool = next(item for item in TOOLS if item["name"] == "vera_incident_report")
     validator = Draft202012Validator(tool["inputSchema"])
     validator.validate(
@@ -843,23 +828,16 @@ def test_saved_connector_supplement_requires_original_installation_link(
     app.include_router(router)
     app.dependency_overrides[get_incident_store] = lambda: store
     client = TestClient(app)
-    headers = connection_headers(store)
+    headers = browser_headers(store)
 
-    def invoke(name, arguments):
+    def invoke(operation, arguments):
         return client.post(
-            "/mcp/vera-incidents",
+            f"/api/vera/incident-recovery/{operation}",
             headers=headers,
-            json={
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "tools/call",
-                "params": {"name": name, "arguments": arguments},
-            },
-        ).json()["result"]
+            json=arguments,
+        )
 
-    registered_connection = invoke("vera_incident_register", {})["structuredContent"][
-        "installation_id"
-    ]
+    registered_connection = invoke("register", {}).json()["installation_id"]
     if linked:
         actor = ConnectionActor(
             UUID(registered_connection), UUID(registered_connection)
@@ -869,11 +847,9 @@ def test_saved_connector_supplement_requires_original_installation_link(
         update={"report_id": uuid4(), "evidence_for_report_id": original.report_id}
     )
 
-    result = invoke(
-        "vera_incident_report", {"report": evidence.model_dump(mode="json")}
-    )
+    result = invoke("report", {"report": evidence.model_dump(mode="json")})
 
-    assert result["isError"] is (not linked)
+    assert result.status_code == (200 if linked else 404)
     assert len(store.show(receipt["incident_id"])["evidence"]) == int(linked)
     assert store.status(owner)["incidents"][0]["latest_report_id"] == str(
         original.report_id

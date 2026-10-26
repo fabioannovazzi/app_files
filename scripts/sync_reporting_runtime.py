@@ -38,7 +38,7 @@ def reporting_tool_schemas() -> bytes:
             tool["description"] = (
                 "Register or inspect this installed product's retained local reporting identity "
                 "through ordinary HTTPS. Pass no arguments. Private credentials stay in the "
-                "reporter; this does not recover a legacy OAuth or browser-owned task."
+                "reporter; this does not claim a browser-owned task."
             )
         elif tool["name"] == "vera_workflow_stamp":
             tool["description"] = (
