@@ -219,6 +219,7 @@ def test_vera_shared_services_separate_runtime_update_and_feedback() -> None:
         "local-onboarding",
         "managed-python-runtime",
         "native-workspace",
+        "on-demand-mcp",
         "plugin-update-check",
         "plugin-feedback",
         "run-receipt-stamping",

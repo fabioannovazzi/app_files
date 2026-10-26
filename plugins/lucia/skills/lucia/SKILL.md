@@ -176,7 +176,7 @@ non sono sostituiti dal Legal/Tax Answer Review.
 
 Per preparare o riprendere cliente e incarico, leggi integralmente
 `../studio-archive/SKILL.md` e segui il modulo condiviso tramite
-`luciaStudioArchive`.
+`lucia`.
 
 Studio Archive è solo l'infrastruttura privata necessaria al contratto di
 input, output e tracciabilità. Non presentarlo come capacità Lucia e non usarlo

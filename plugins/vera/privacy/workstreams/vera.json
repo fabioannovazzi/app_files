@@ -60,7 +60,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-26",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "2bba9a2a1a08678ce9370b40616357338f6856481b0a22556ce1f0791cd87f7a"
+    "source_fingerprint": "bc6a5f3bbbfd71638b86eaac2039e84f41eeedcd470d669952d266d690b30874"
   },
   "service_ids": [
     "cnc-authenticated-review",
@@ -74,7 +74,8 @@
     "research-subscriptions",
     "run-receipt-stamping",
     "studio-work",
-    "workflow-usage"
+    "workflow-usage",
+    "on-demand-mcp"
   ],
   "public_explanations": {
     "vera-integrazioni": {

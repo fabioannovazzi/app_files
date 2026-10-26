@@ -16,7 +16,7 @@ from uuid import uuid4
 
 import pytest
 
-from scripts.build_vera_mcp_catalog import add_vera_mcp_catalog
+from scripts.build_product_mcp_catalog import add_product_mcp_catalog
 from tests.plugins.test_vera_verified_execution import write_index
 
 __all__: list[str] = []
@@ -222,7 +222,7 @@ def test_native_helper_retains_diagnostics_and_runs_once_across_service_restart(
             for file in installed.rglob("*")
             if file.is_file()
         }
-        add_vera_mcp_catalog(entries)
+        add_product_mcp_catalog(entries)
         (installed / "mcp-catalog.json").write_bytes(entries["mcp-catalog.json"])
         write_index(installed)
     args = request(

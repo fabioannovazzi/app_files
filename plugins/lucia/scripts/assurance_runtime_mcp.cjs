@@ -6,6 +6,8 @@ const path = require("node:path");
 const readline = require("node:readline");
 const { spawn } = require("node:child_process");
 
+// Distinguish the bounded lifecycle API from the full archive API in one catalogue.
+const TOOL_PREFIX = "lucia_assurance_";
 const ALLOWED_TOOLS = new Set([
   "studio_archive_status",
   "list_studio_archive_clients",
@@ -64,6 +66,7 @@ function filterToolDefinition(tool) {
   if (typeof filtered.description === "string") {
     filtered.description = filtered.description.replaceAll("Vera", "Lucia");
   }
+  filtered.name = TOOL_PREFIX + filtered.name;
   return filtered;
 }
 
@@ -89,7 +92,7 @@ childLines.on("line", (line) => {
   } else if (message.result?.serverInfo?.name === "vera-studio-archive") {
     message.result.serverInfo.name = "lucia-assurance-runtime";
     message.result.instructions =
-      "Private lifecycle for Lucia's registered assurance and matter-opening workflows. Do not use it for archive search, email, messaging, or unrelated workflows.";
+      "Private lifecycle tools use the lucia_assurance_ prefix for Lucia's registered assurance and matter-opening workflows. Do not use it for archive search, email, messaging, or unrelated workflows.";
   }
   send(message);
 });
@@ -110,7 +113,9 @@ clientLines.on("line", (line) => {
     return;
   }
   if (message.method === "tools/call") {
-    const toolName = message.params?.name;
+    const publicName = message.params?.name;
+    const toolName = typeof publicName === "string" && publicName.startsWith(TOOL_PREFIX)
+      ? publicName.slice(TOOL_PREFIX.length) : publicName;
     const workflowId = message.params?.arguments?.workflow_id;
     if (!ALLOWED_TOOLS.has(toolName)) {
       send({
@@ -131,6 +136,8 @@ clientLines.on("line", (line) => {
       });
       return;
     }
+    child.stdin.write(`${JSON.stringify({ ...message, params: { ...message.params, name: toolName } })}\n`);
+    return;
   }
   child.stdin.write(`${line}\n`);
 });

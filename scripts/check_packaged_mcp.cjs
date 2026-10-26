@@ -143,7 +143,7 @@ async function main() {
     if (fs.existsSync(path.join(root, "mcp-services.json"))) {
       // Re-query the exact extracted workers: a valid static catalogue alone
       // cannot prove that every advertised function still has a working owner.
-      const { build } = require("./build_vera_mcp_catalog.cjs");
+      const { build } = require("./build_product_mcp_catalog.cjs");
       const actual = await build(root, runtime);
       const expected = JSON.parse(fs.readFileSync(path.join(root, "mcp-catalog.json"), "utf8"));
       const equal = require("node:util").isDeepStrictEqual(actual, expected);

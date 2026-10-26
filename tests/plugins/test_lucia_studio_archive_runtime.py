@@ -24,7 +24,7 @@ def archive_runtime(tmp_path: Path):
         archive.extractall(plugin)
     node = shutil.which("node")
     assert node, "Node.js is required for this runtime regression"
-    server = json.loads((plugin / ".mcp.json").read_text())["mcpServers"][
+    server = json.loads((plugin / "mcp-services.json").read_text())["mcpServers"][
         "luciaStudioArchive"
     ]
     environment = {

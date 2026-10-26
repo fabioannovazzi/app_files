@@ -1,0 +1,4530 @@
+{
+  "schema_version": 1,
+  "product": "lucia",
+  "version": "0.1.183",
+  "services": [
+    {
+      "name": "luciaAssuranceRuntime",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "lucia-assurance-runtime",
+          "version": "0.1.68"
+        },
+        "capabilities": {
+          "tools": {}
+        },
+        "instructions": "Private lifecycle tools use the lucia_assurance_ prefix for Lucia's registered assurance and matter-opening workflows. Do not use it for archive search, email, messaging, or unrelated workflows."
+      },
+      "tools": [
+        {
+          "name": "lucia_assurance_studio_archive_status",
+          "title": "Check Lucia Studio Archive status",
+          "description": "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching. A fresh session can revalidate the approved private-profile root and save isolated session configuration; no client is created.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_list_studio_archive_clients",
+          "title": "List Studio Archive clients",
+          "description": "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local. Healthy clients remain usable when directory_complete or identity_registry_complete is false; report the returned issues. An incomplete directory does not prove a client is absent and must not trigger duplicate registration.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_get_studio_client_folder",
+          "title": "Get one Studio Archive client folder",
+          "description": "Return a digest-bound folder record for one stable registered client. Other Lucia workflows use this record to reject cross-client inputs and namespace engagement runs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$",
+                "description": "Stable client_id returned by Studio Archive."
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_create_studio_archive_client",
+          "title": "Create a new Studio Archive client",
+          "description": "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. For work starting from supplied files, first check_studio_import_sources for all selected files and resolve any unavailable inputs. This begins but does not complete Lucia's New Client professional workflow.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "legal_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "description": "Confirmed client legal name; Vera derives the folder label."
+              },
+              "email_addresses": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 254
+                },
+                "description": "Optional confirmed full email or PEC addresses."
+              },
+              "tax_identifiers": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 32
+                },
+                "description": "Optional confirmed codice fiscale or partita IVA values."
+              }
+            },
+            "required": [
+              "legal_name"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_import_studio_client_document",
+          "title": "Import a document into one client engagement",
+          "description": "Copy one authorized source, journal, or support file from this computer into the selected engagement with an immutable byte receipt. Check file access with check_studio_import_sources before creating any client or engagement for file-based work. If import fails, disclose and reuse the returned client_id and engagement_id; never create duplicates to retry. For a user-authorized document-only continuation, save the clearly identified Lucia-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "source_path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "description": "Absolute path to the selected source/journal/support file, including a derived follow-up prepared under the user's authority to continue this engagement."
+              },
+              "expected_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "description": "Original attachment SHA-256 when importing a transferred file. Rechecked during copying so an altered transfer cannot be registered."
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "journal",
+                  "source",
+                  "support"
+                ]
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$",
+                "description": "Exact engagement selected or created before this separate import action."
+              }
+            },
+            "required": [
+              "client_id",
+              "source_path",
+              "role",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_create_studio_client_engagement",
+          "title": "Create a Studio Archive client engagement",
+          "description": "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type. For work starting from supplied files, check_studio_import_sources must first establish access to all selected inputs; warn and resolve unavailable inputs before creation. Documentless work does not require a file check.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_label"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_list_studio_client_engagements",
+          "title": "List one client's Studio engagements",
+          "description": "List durable engagements, imported receipts (including saved derived support notes), persisted runs and available output paths. Resume from these records without chat history. An engagement can have follow-up notes without a workflow run. Verify a new document-only continuation's import receipt here before reporting that it is saved.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_prepare_studio_client_workflow",
+          "title": "Prepare a client-bound Lucia workflow run",
+          "description": "Prepare or replay one exact customer-folder run bound to selected immutable input receipts and upstream artifacts. A repeated request is idempotent; new_run must be explicit.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "workflow_id": {
+                "type": "string",
+                "enum": [
+                  "prompt-optimizer",
+                  "deep-research-validator",
+                  "apertura-pratica"
+                ]
+              },
+              "input_ids": {
+                "type": "array",
+                "maxItems": 10000,
+                "items": {
+                  "type": "string",
+                  "pattern": "^input_[0-9a-f]{24}$"
+                },
+                "description": "Exact imported input IDs selected for this run."
+              },
+              "upstream_artifacts": {
+                "type": "array",
+                "maxItems": 10000,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "run_id": {
+                      "type": "string",
+                      "pattern": "^run_[0-9a-f]{24}$"
+                    },
+                    "artifact_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "role": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    }
+                  },
+                  "required": [
+                    "run_id",
+                    "artifact_id",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Exact completed same-engagement artifact references."
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "new_run": {
+                "type": "boolean",
+                "description": "True only when the user explicitly requests a separate run. Reuse the same idempotency_key for safe retries and choose a new key for another distinct run."
+              }
+            },
+            "required": [
+              "engagement_id",
+              "workflow_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_start_studio_client_workflow",
+          "title": "Start a Lucia workflow run",
+          "description": "Move one exact prepared or failed run to running after its input receipts still validate.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_fail_studio_client_workflow",
+          "title": "Record a Lucia workflow failure",
+          "description": "Retain a failed run and record a bounded reason instead of treating its output folder as available.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_cancel_studio_client_workflow",
+          "title": "Cancel a Lucia workflow run",
+          "description": "Explicitly cancel one abandoned non-terminal run without deleting it.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_finalize_studio_client_workflow",
+          "title": "Finalize Lucia workflow artifacts",
+          "description": "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Lucia userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "expected_declaration_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "description": "Returned declaration_sha256 for a correction to purpose, audience or media type before completion. Prevents overwriting another review; the agent retains this value without an additional human approval."
+              },
+              "artifacts": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 20000,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "artifact_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "File path relative to this run's output_dir (for example result.pdf). Absolute paths inside output_dir and run-relative outputs/result.pdf are also accepted. An existing output-relative path takes precedence. The saved manifest always uses output-relative paths."
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "audience": {
+                      "type": "string",
+                      "enum": [
+                        "internal",
+                        "review",
+                        "deliverable"
+                      ]
+                    },
+                    "media_type": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "purpose",
+                    "audience",
+                    "media_type"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "artifacts"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_complete_studio_client_workflow",
+          "title": "Complete a Lucia workflow run",
+          "description": "Mark a review-ready run completed only while every declared artifact still matches its receipt.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_recover_studio_client_ledger",
+          "title": "Recover Lucia customer-folder ledger",
+          "description": "Recover private client pointers from portable customer manifests and inspect engagement, input, and run records independently. Preserve damaged aliases and records; return healthy work alongside explicit issues and completeness flags. An incomplete inventory is not an empty archive.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_report_studio_client_retention",
+          "title": "Review Lucia retention candidates",
+          "description": "Build a non-destructive size, age, and lifecycle report. This tool never deletes customer files.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "older_than_days": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 365000
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_assurance_configure_studio_archive",
+          "title": "Configure Lucia Studio Archive",
+          "description": "Set one absolute shared archive folder for this user. This writes only a private local configuration and discovers exact top-level search scopes.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "archive_root": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "description": "Absolute path to the shared or synced studio archive folder."
+              }
+            },
+            "required": [
+              "archive_root"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "resources": [],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
+      "name": "luciaDeepResearchValidator",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "deep-research-validator-widgets",
+          "version": "0.1.55"
+        },
+        "capabilities": {
+          "tools": {},
+          "resources": {},
+          "prompts": {}
+        },
+        "instructions": "Use validate_deep_research_review with the hash-bound local review reference before render_deep_research_review, then reuse the returned short-lived token. Prefer the MCP widget for answer-validation review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable."
+      },
+      "tools": [
+        {
+          "name": "validate_deep_research_review",
+          "title": "Validate answer-review payload",
+          "description": "Validate a hash-bound local answer-review reference (or a legacy inline payload) before rendering. Call this first, then render_deep_research_review with the returned short-lived token.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional ui_decisions.json object."
+              },
+              "final_artifacts": {
+                "type": "object",
+                "description": "Optional final_artifacts.json object."
+              }
+            },
+            "required": [],
+            "additionalProperties": true
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "render_deep_research_review",
+          "title": "Render answer-validation review",
+          "description": "Render a validated answer review through its short-lived token as an MCP HTML widget for source support, reasoning, professional judgment, source limits, audit checks, and artifacts.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional ui_decisions.json object."
+              },
+              "final_artifacts": {
+                "type": "object",
+                "description": "Optional final_artifacts.json object."
+              }
+            },
+            "required": [],
+            "additionalProperties": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://widget/deep-research-review.html",
+              "visibility": [
+                "model"
+              ]
+            },
+            "ui/resourceUri": "ui://widget/deep-research-review.html",
+            "openai/outputTemplate": "ui://widget/deep-research-review.html",
+            "openai/widgetAccessible": true,
+            "openai/toolInvocation/invoking": "Rendering answer-validation review",
+            "openai/toolInvocation/invoked": "Rendered answer-validation review"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "save_deep_research_decisions",
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          },
+          "title": "Save answer-validation decisions",
+          "description": "Validate answer-review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object with output_dir for persistence."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional current ui_decisions.json object."
+              },
+              "decisions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "string",
+                      "description": "Review item id from review_payload.items[].id."
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "request_more_documents",
+                        "skip"
+                      ]
+                    },
+                    "reviewer_note": {
+                      "type": "string",
+                      "description": "Optional reviewer note."
+                    },
+                    "edit_value": {
+                      "type": "string",
+                      "description": "Required replacement text or value when action is edit."
+                    },
+                    "requested_documents": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Optional document requests when action is request_more_documents."
+                    }
+                  },
+                  "required": [
+                    "item_id",
+                    "action"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              "decision_source": {
+                "type": "string",
+                "description": "Decision source label. Defaults to mcp_widget."
+              },
+              "reviewer": {
+                "type": "string",
+                "description": "Optional reviewer name or role."
+              }
+            },
+            "required": [
+              "decisions"
+            ],
+            "additionalProperties": true
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "apply_deep_research_decisions",
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          },
+          "title": "Apply answer-validation decisions",
+          "description": "Validate answer-review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object with output_dir for persistence."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional current ui_decisions.json object."
+              },
+              "decisions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "string",
+                      "description": "Review item id from review_payload.items[].id."
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "request_more_documents",
+                        "skip"
+                      ]
+                    },
+                    "reviewer_note": {
+                      "type": "string",
+                      "description": "Optional reviewer note."
+                    },
+                    "edit_value": {
+                      "type": "string",
+                      "description": "Required replacement text or value when action is edit."
+                    },
+                    "requested_documents": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Optional document requests when action is request_more_documents."
+                    }
+                  },
+                  "required": [
+                    "item_id",
+                    "action"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              "decision_source": {
+                "type": "string",
+                "description": "Decision source label. Defaults to mcp_widget."
+              },
+              "reviewer": {
+                "type": "string",
+                "description": "Optional reviewer name or role."
+              }
+            },
+            "required": [
+              "decisions"
+            ],
+            "additionalProperties": true
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "resources": [
+        {
+          "uri": "ui://widget/deep-research-review.html",
+          "name": "deep_research_review_widget",
+          "title": "Answer-validation review widget",
+          "description": "Renders answer-validation review-session payloads with searchable claims, separate reasoning and judgment findings, source limits, audit checks, and artifacts.",
+          "mimeType": "text/html;profile=mcp-app",
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://widget/deep-research-review.html"
+            },
+            "openai/widgetDescription": "Interactive answer-validation surface separating source support, reasoning, professional judgment, source limits, audit checks, and package artifacts.",
+            "openai/widgetPrefersBorder": false,
+            "openai/widgetCSP": {
+              "connect_domains": [],
+              "resource_domains": []
+            },
+            "openai/widgetDomain": "https://chatgpt.com"
+          }
+        }
+      ],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
+      "name": "luciaIncidentHost",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {}
+        },
+        "serverInfo": {
+          "name": "lucia-incident-host",
+          "version": "1.0.0"
+        },
+        "instructions": "Use lucia_workflow_usage for task start, observed outcomes, status and task-scoped retries. Incident tools send ordinary HTTPS using the same retained local identity. Use native host linking automatically when available. The native broker's version is separate from the guest's current reporting-process and failed-worker versions. If this host route is unavailable, use the host browser at https://mparanza.com/lucia/incident-recovery with the original reporting owner and exact retained request. Never infer a computer from a browser identity or a Linux guest UUID. Never bypass a denied host operation."
+      },
+      "tools": [
+        {
+          "name": "lucia_incident_host_context",
+          "description": "Read or create the native host's random public incident code. Never returns its private key. A Cowork Linux guest remains explicitly unlinked. This does not report a guest workflow version.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "lucia_incident_host_link",
+          "description": "Automatically bind a guest's existing local incident capability to this native host and app at Mparanza. Pass exactly {credentials: {installation_id, installation_key}} using the guest's existing values. The argument is credentials, not capability; do not add run_id. The host key stays out of tool results; no client files, diagnostics or commands are inputs. Does not close an incident.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "credentials": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "installation_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "installation_key": {
+                    "type": "string",
+                    "minLength": 32,
+                    "maxLength": 128,
+                    "pattern": "^[A-Za-z0-9_-]+$"
+                  }
+                },
+                "required": [
+                  "installation_id",
+                  "installation_key"
+                ]
+              }
+            },
+            "required": [
+              "credentials"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_workflow_usage",
+          "description": "Retain and deliver one task's usage events through this installed product's native service and existing userID/computer identity. Prefer this over a shell command that cannot write the user-scoped reporting database. Start requires pipeline, observed host and sample_kind; record requires an observed kind and its optional fields. Reuse the same UUID through retries. Status verifies the same task's server identity; flush retries only that task. No client documents, paths, shell commands, credentials or global queue operations are accepted. A reporting failure does not invalidate professional work.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operation",
+              "run_id"
+            ],
+            "properties": {
+              "operation": {
+                "type": "string",
+                "enum": [
+                  "start",
+                  "record",
+                  "status",
+                  "flush"
+                ]
+              },
+              "run_id": {
+                "type": "string",
+                "format": "uuid"
+              },
+              "pipeline": {
+                "type": "string"
+              },
+              "host": {
+                "type": "string",
+                "enum": [
+                  "codex",
+                  "cowork",
+                  "chatgpt",
+                  "antigravity",
+                  "unknown"
+                ]
+              },
+              "sample_kind": {
+                "type": "string",
+                "enum": [
+                  "user",
+                  "synthetic",
+                  "agent_test"
+                ]
+              },
+              "kind": {
+                "type": "string",
+                "enum": [
+                  "resumed",
+                  "completed",
+                  "failed",
+                  "cancelled",
+                  "feedback_prompted",
+                  "feedback",
+                  "incident"
+                ]
+              },
+              "fields": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "stars": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 5
+                  },
+                  "comment": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "feedback_source": {
+                    "type": "string",
+                    "enum": [
+                      "user_chat",
+                      "user_form",
+                      "synthetic_test"
+                    ]
+                  },
+                  "incident_report_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                }
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_workflow_stamp",
+          "description": "Stamp the exact retained model_data_receipt_request.json through ordinary HTTPS for a run owned by this local reporter. Supply its original run_id and receipt_request, never report contents, paths or credentials. Save the exact returned receipt beside the request, then use workflow_usage.py stamp-report and deliver its queued receipt event. Stamping does not link the receipt or prove task completion. Browser-owned runs use the browser workflow-stamp operation.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "run_id": {
+                "anyOf": [
+                  {
+                    "format": "uuid",
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null,
+                "title": "Run Id"
+              },
+              "receipt_request": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RunReceiptStampRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "receipt_request",
+              "run_id"
+            ],
+            "$defs": {
+              "RunReceiptStampRequest": {
+                "additionalProperties": false,
+                "description": "The complete field allow-list accepted from a Vera run.",
+                "properties": {
+                  "schema_version": {
+                    "default": 1,
+                    "enum": [
+                      1,
+                      2,
+                      3
+                    ],
+                    "title": "Schema Version",
+                    "type": "integer"
+                  },
+                  "product": {
+                    "type": "string",
+                    "const": "lucia"
+                  },
+                  "receipt_id": {
+                    "format": "uuid",
+                    "title": "Receipt Id",
+                    "type": "string"
+                  },
+                  "plugin_version": {
+                    "maxLength": 64,
+                    "minLength": 5,
+                    "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$",
+                    "title": "Plugin Version",
+                    "type": "string"
+                  },
+                  "report_sha256": {
+                    "pattern": "^[0-9a-f]{64}$",
+                    "title": "Report Sha256",
+                    "type": "string"
+                  },
+                  "user_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "User Id"
+                  },
+                  "archive_run_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^run_[0-9a-f]{24}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Archive Run Id"
+                  },
+                  "report_revision": {
+                    "anyOf": [
+                      {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Report Revision"
+                  }
+                },
+                "required": [
+                  "receipt_id",
+                  "plugin_version",
+                  "report_sha256"
+                ],
+                "title": "RunReceiptStampRequest",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_incident_register",
+          "description": "Register or inspect this installed product's retained local reporting identity through ordinary HTTPS. Pass no arguments. Private credentials stay in the reporter; this does not claim a browser-owned task.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {},
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": []
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_incident_report",
+          "description": "Automatically record an observed lucia/setup/host execution failure, with all available relevant technical evidence. No extra confirmation or feature-request form. Use a stable random report UUID for retries. For reviewed diagnostics retained after a helper failure, set evidence_for_report_id to its original report UUID; this attaches the full technical chain without creating another failure episode. Never include professional/client outputs.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "report": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Report"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "report"
+            ],
+            "$defs": {
+              "Diagnostic": {
+                "additionalProperties": false,
+                "properties": {
+                  "component": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Component",
+                    "type": "string"
+                  },
+                  "error_type": {
+                    "maxLength": 150,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Error Type",
+                    "type": "string"
+                  },
+                  "error_code": {
+                    "anyOf": [
+                      {
+                        "maxLength": 150,
+                        "pattern": "^[A-Za-z0-9_.: -]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Error Code"
+                  },
+                  "errno": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Errno"
+                  },
+                  "exit_code": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Exit Code"
+                  },
+                  "message": {
+                    "maxLength": 65536,
+                    "minLength": 1,
+                    "title": "Message",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Stage",
+                    "type": "string"
+                  },
+                  "evidence_source": {
+                    "enum": [
+                      "observed-tool-result",
+                      "runtime-exception",
+                      "technical-log"
+                    ],
+                    "title": "Evidence Source",
+                    "type": "string"
+                  },
+                  "technical_frames": {
+                    "items": {
+                      "$ref": "#/$defs/TechnicalFrame"
+                    },
+                    "maxItems": 100,
+                    "title": "Technical Frames",
+                    "type": "array"
+                  },
+                  "technical_facts": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "maxProperties": 100,
+                    "title": "Technical Facts",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "component",
+                  "error_type",
+                  "message",
+                  "stage",
+                  "evidence_source"
+                ],
+                "title": "Diagnostic",
+                "type": "object"
+              },
+              "Report": {
+                "additionalProperties": false,
+                "properties": {
+                  "evidence_for_report_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Evidence For Report Id"
+                  },
+                  "response_to_remedy_revision": {
+                    "anyOf": [
+                      {
+                        "minimum": 1,
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Response To Remedy Revision"
+                  },
+                  "report_id": {
+                    "format": "uuid",
+                    "title": "Report Id",
+                    "type": "string"
+                  },
+                  "product": {
+                    "type": "string",
+                    "const": "lucia"
+                  },
+                  "product_version": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.+-]+$",
+                    "title": "Product Version",
+                    "type": "string"
+                  },
+                  "host": {
+                    "enum": [
+                      "codex",
+                      "cowork",
+                      "unknown"
+                    ],
+                    "title": "Host",
+                    "type": "string"
+                  },
+                  "platform": {
+                    "enum": [
+                      "macos",
+                      "windows",
+                      "linux",
+                      "unknown"
+                    ],
+                    "title": "Platform",
+                    "type": "string"
+                  },
+                  "host_version": {
+                    "anyOf": [
+                      {
+                        "maxLength": 100,
+                        "pattern": "^[A-Za-z0-9_. +()-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Host Version"
+                  },
+                  "runtime_version": {
+                    "anyOf": [
+                      {
+                        "maxLength": 100,
+                        "pattern": "^[A-Za-z0-9_. +()-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Runtime Version"
+                  },
+                  "worker_runtime_version": {
+                    "anyOf": [
+                      {
+                        "maxLength": 100,
+                        "pattern": "^[A-Za-z0-9_. +()-]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Worker Runtime Version"
+                  },
+                  "worker_platform": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "macos",
+                          "windows",
+                          "linux",
+                          "unknown"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Worker Platform"
+                  },
+                  "workflow": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Workflow",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Stage",
+                    "type": "string"
+                  },
+                  "diagnostics": {
+                    "items": {
+                      "$ref": "#/$defs/Diagnostic"
+                    },
+                    "maxItems": 512,
+                    "minItems": 1,
+                    "title": "Diagnostics",
+                    "type": "array"
+                  },
+                  "measurements": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "maxProperties": 100,
+                    "title": "Measurements",
+                    "type": "object"
+                  },
+                  "unavailable": {
+                    "items": {
+                      "type": "string"
+                    },
+                    "maxItems": 100,
+                    "title": "Unavailable",
+                    "type": "array"
+                  },
+                  "capture_state": {
+                    "default": "legacy",
+                    "enum": [
+                      "legacy",
+                      "pending",
+                      "complete",
+                      "unavailable"
+                    ],
+                    "title": "Capture State",
+                    "type": "string"
+                  },
+                  "session_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Session Id"
+                  },
+                  "operation_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Operation Id"
+                  },
+                  "input_binding": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Input Binding"
+                  }
+                },
+                "required": [
+                  "report_id",
+                  "product_version",
+                  "host",
+                  "platform",
+                  "workflow",
+                  "stage",
+                  "diagnostics"
+                ],
+                "title": "Report",
+                "type": "object"
+              },
+              "TechnicalFrame": {
+                "additionalProperties": false,
+                "description": "Package-relative source coordinates; never locals, arguments or case text.",
+                "properties": {
+                  "file": {
+                    "maxLength": 250,
+                    "pattern": "^[A-Za-z0-9_./-]+$",
+                    "title": "File",
+                    "type": "string"
+                  },
+                  "line": {
+                    "minimum": 1,
+                    "title": "Line",
+                    "type": "integer"
+                  },
+                  "function": {
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9_.<>]+$",
+                    "title": "Function",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file",
+                  "line",
+                  "function"
+                ],
+                "title": "TechnicalFrame",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_incident_status",
+          "description": "Get targeted diagnostic requests, original-task resume instructions, required updates and recovery status. Answer technical requests automatically through supplemental reports tied to the exact request revision; then check for the recovery agent's reply. Remain linked to unresolved incidents.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {},
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": []
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_incident_outcome",
+          "description": "Record the actual result of recovery or a resumed operation against the current remedy revision. Only actual execution success matching the original report_id and current remedy revision closes that installation's delivery.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "outcome": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/Outcome"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "outcome"
+            ],
+            "$defs": {
+              "Diagnostic": {
+                "additionalProperties": false,
+                "properties": {
+                  "component": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Component",
+                    "type": "string"
+                  },
+                  "error_type": {
+                    "maxLength": 150,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Error Type",
+                    "type": "string"
+                  },
+                  "error_code": {
+                    "anyOf": [
+                      {
+                        "maxLength": 150,
+                        "pattern": "^[A-Za-z0-9_.: -]+$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Error Code"
+                  },
+                  "errno": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Errno"
+                  },
+                  "exit_code": {
+                    "anyOf": [
+                      {
+                        "type": "integer"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Exit Code"
+                  },
+                  "message": {
+                    "maxLength": 65536,
+                    "minLength": 1,
+                    "title": "Message",
+                    "type": "string"
+                  },
+                  "stage": {
+                    "maxLength": 100,
+                    "minLength": 1,
+                    "pattern": "^[A-Za-z0-9_.:-]+$",
+                    "title": "Stage",
+                    "type": "string"
+                  },
+                  "evidence_source": {
+                    "enum": [
+                      "observed-tool-result",
+                      "runtime-exception",
+                      "technical-log"
+                    ],
+                    "title": "Evidence Source",
+                    "type": "string"
+                  },
+                  "technical_frames": {
+                    "items": {
+                      "$ref": "#/$defs/TechnicalFrame"
+                    },
+                    "maxItems": 100,
+                    "title": "Technical Frames",
+                    "type": "array"
+                  },
+                  "technical_facts": {
+                    "additionalProperties": {
+                      "anyOf": [
+                        {
+                          "type": "integer"
+                        },
+                        {
+                          "type": "boolean"
+                        }
+                      ]
+                    },
+                    "maxProperties": 100,
+                    "title": "Technical Facts",
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "component",
+                  "error_type",
+                  "message",
+                  "stage",
+                  "evidence_source"
+                ],
+                "title": "Diagnostic",
+                "type": "object"
+              },
+              "Outcome": {
+                "additionalProperties": false,
+                "properties": {
+                  "report_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Report Id"
+                  },
+                  "outcome_id": {
+                    "format": "uuid",
+                    "title": "Outcome Id",
+                    "type": "string"
+                  },
+                  "incident_id": {
+                    "format": "uuid",
+                    "title": "Incident Id",
+                    "type": "string"
+                  },
+                  "remedy_revision": {
+                    "minimum": 1,
+                    "title": "Remedy Revision",
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "recovered",
+                      "failed",
+                      "action-required"
+                    ],
+                    "title": "Status",
+                    "type": "string"
+                  },
+                  "diagnostics": {
+                    "items": {
+                      "$ref": "#/$defs/Diagnostic"
+                    },
+                    "maxItems": 512,
+                    "title": "Diagnostics",
+                    "type": "array"
+                  },
+                  "execution_succeeded": {
+                    "default": false,
+                    "title": "Execution Succeeded",
+                    "type": "boolean"
+                  },
+                  "operation_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Operation Id"
+                  },
+                  "input_binding": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[a-f0-9]{64}$",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Input Binding"
+                  },
+                  "original_task_verified": {
+                    "default": false,
+                    "title": "Original Task Verified",
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "outcome_id",
+                  "incident_id",
+                  "remedy_revision",
+                  "status"
+                ],
+                "title": "Outcome",
+                "type": "object"
+              },
+              "TechnicalFrame": {
+                "additionalProperties": false,
+                "description": "Package-relative source coordinates; never locals, arguments or case text.",
+                "properties": {
+                  "file": {
+                    "maxLength": 250,
+                    "pattern": "^[A-Za-z0-9_./-]+$",
+                    "title": "File",
+                    "type": "string"
+                  },
+                  "line": {
+                    "minimum": 1,
+                    "title": "Line",
+                    "type": "integer"
+                  },
+                  "function": {
+                    "maxLength": 200,
+                    "pattern": "^[A-Za-z0-9_.<>]+$",
+                    "title": "Function",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "file",
+                  "line",
+                  "function"
+                ],
+                "title": "TechnicalFrame",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "lucia_incident_progress",
+          "description": "Record observed remedy application or original-operation retry against its exact report and current revision. Progress never closes the original incident.",
+          "inputSchema": {
+            "additionalProperties": false,
+            "properties": {
+              "progress": {
+                "anyOf": [
+                  {
+                    "$ref": "#/$defs/RecoveryEvent"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "default": null
+              }
+            },
+            "title": "ConnectionEnvelope",
+            "type": "object",
+            "required": [
+              "progress"
+            ],
+            "$defs": {
+              "RecoveryEvent": {
+                "additionalProperties": false,
+                "description": "An observed step for one original report and applicable remedy revision.",
+                "properties": {
+                  "event_id": {
+                    "format": "uuid",
+                    "title": "Event Id",
+                    "type": "string"
+                  },
+                  "incident_id": {
+                    "format": "uuid",
+                    "title": "Incident Id",
+                    "type": "string"
+                  },
+                  "report_id": {
+                    "format": "uuid",
+                    "title": "Report Id",
+                    "type": "string"
+                  },
+                  "remedy_revision": {
+                    "minimum": 1,
+                    "title": "Remedy Revision",
+                    "type": "integer"
+                  },
+                  "kind": {
+                    "enum": [
+                      "remedy-received",
+                      "remedy-applied",
+                      "retry-started",
+                      "retry-failed",
+                      "retry-succeeded",
+                      "capture-unavailable"
+                    ],
+                    "title": "Kind",
+                    "type": "string"
+                  },
+                  "operation_id": {
+                    "anyOf": [
+                      {
+                        "format": "uuid",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "default": null,
+                    "title": "Operation Id"
+                  }
+                },
+                "required": [
+                  "event_id",
+                  "incident_id",
+                  "report_id",
+                  "remedy_revision",
+                  "kind"
+                ],
+                "title": "RecoveryEvent",
+                "type": "object"
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": true
+          }
+        }
+      ],
+      "resources": [],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
+      "name": "luciaPromptOptimizer",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "prompt-optimizer-widgets",
+          "version": "0.1.54"
+        },
+        "capabilities": {
+          "tools": {},
+          "resources": {},
+          "prompts": {}
+        },
+        "instructions": "Use validate_prompt_optimizer_review with the hash-bound local review reference before render_prompt_optimizer_review, then reuse the returned short-lived token. Prefer the MCP widget for final Prompt Optimizer package review; use save_prompt_optimizer_decisions to persist review actions and apply_prompt_optimizer_decisions to write applied_decisions.json plus final_artifacts.json status; use available, permitted native question controls or chat for simple pre-draft intake decisions."
+      },
+      "tools": [
+        {
+          "name": "check_legal_tax_model",
+          "title": "Check the legal/tax model",
+          "description": "Record optional legal/tax model advice and actual identity evidence. Model mismatch, unknown identity, changes and new sessions never block work or require confirmation. preferred_model is optional; do not delay for catalogue access. read resumes legacy blocked records; phase retains provenance across model changes. Does not switch models or call model APIs. Cowork uses the same helper without UI.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "action",
+              "client_engagement",
+              "output_dir",
+              "run_id"
+            ],
+            "properties": {
+              "action": {
+                "type": "string",
+                "enum": [
+                  "prepare",
+                  "read",
+                  "phase"
+                ]
+              },
+              "client_engagement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "output_dir": {
+                "type": "string",
+                "minLength": 1
+              },
+              "run_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workflow_id": {
+                "type": "string",
+                "enum": [
+                  "prompt-optimizer",
+                  "deep-research-validator"
+                ]
+              },
+              "host": {
+                "type": "string",
+                "minLength": 1
+              },
+              "preferred_model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "selection_basis": {
+                "type": "string",
+                "minLength": 1
+              },
+              "session_ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observed_model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observation_reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "language": {
+                "type": "string",
+                "enum": [
+                  "it",
+                  "en",
+                  "fr",
+                  "de",
+                  "es"
+                ]
+              },
+              "expected_sha256": {
+                "type": "string",
+                "minLength": 1
+              },
+              "phase": {
+                "type": "string",
+                "enum": [
+                  "preparation",
+                  "research",
+                  "drafting",
+                  "validation",
+                  "opposing_opinion",
+                  "revision"
+                ]
+              },
+              "model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "execution_reference": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://widget/legal-tax-model.html",
+              "visibility": [
+                "model"
+              ]
+            },
+            "ui/resourceUri": "ui://widget/legal-tax-model.html",
+            "openai/outputTemplate": "ui://widget/legal-tax-model.html",
+            "openai/widgetAccessible": true
+          }
+        },
+        {
+          "name": "confirm_legal_tax_model",
+          "title": "Save model selection confirmation",
+          "description": "Optionally record an explicit human confirmation; never required to continue. Record it from the model-check panel or chat. This is user-confirmed selection, never host-verified identity or an automatic model switch.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "token",
+              "expected_sha256",
+              "confirmed_model",
+              "confirmation_source",
+              "confirmation_reference"
+            ],
+            "properties": {
+              "token": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expected_sha256": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confirmed_model": {
+                "type": "string",
+                "minLength": 1
+              },
+              "confirmation_source": {
+                "type": "string",
+                "enum": [
+                  "plugin_ui",
+                  "chat"
+                ]
+              },
+              "confirmation_reference": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ]
+            },
+            "openai/widgetAccessible": true
+          }
+        },
+        {
+          "name": "validate_prompt_optimizer_review",
+          "title": "Validate Prompt Optimizer review payload",
+          "description": "Validate a hash-bound local Prompt Optimizer review reference (or a legacy inline payload) before rendering. Call this first, then render_prompt_optimizer_review with the returned short-lived token.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional ui_decisions.json object."
+              },
+              "final_artifacts": {
+                "type": "object",
+                "description": "Optional final_artifacts.json object."
+              }
+            },
+            "required": [],
+            "additionalProperties": true
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "render_prompt_optimizer_review",
+          "title": "Render Prompt Optimizer review",
+          "description": "Render a validated Prompt Optimizer review through its short-lived token as an MCP HTML widget for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional ui_decisions.json object."
+              },
+              "final_artifacts": {
+                "type": "object",
+                "description": "Optional final_artifacts.json object."
+              }
+            },
+            "required": [],
+            "additionalProperties": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://widget/prompt-optimizer-review.html",
+              "visibility": [
+                "model"
+              ]
+            },
+            "ui/resourceUri": "ui://widget/prompt-optimizer-review.html",
+            "openai/outputTemplate": "ui://widget/prompt-optimizer-review.html",
+            "openai/widgetAccessible": true,
+            "openai/toolInvocation/invoking": "Rendering Prompt Optimizer review",
+            "openai/toolInvocation/invoked": "Rendered Prompt Optimizer review"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "save_prompt_optimizer_decisions",
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          },
+          "title": "Save Prompt Optimizer review decisions",
+          "description": "Validate Prompt Optimizer review decisions and persist them to ui_decisions.json when run_intake.output_dir is available.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object with output_dir for persistence."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional current ui_decisions.json object."
+              },
+              "decisions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "string",
+                      "description": "Review item id from review_payload.items[].id."
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "request_more_documents",
+                        "skip"
+                      ]
+                    },
+                    "reviewer_note": {
+                      "type": "string",
+                      "description": "Optional reviewer note."
+                    },
+                    "edit_value": {
+                      "type": "string",
+                      "description": "Required replacement text or value when action is edit."
+                    },
+                    "requested_documents": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Optional document requests when action is request_more_documents."
+                    }
+                  },
+                  "required": [
+                    "item_id",
+                    "action"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              "decision_source": {
+                "type": "string",
+                "description": "Decision source label. Defaults to mcp_widget."
+              },
+              "reviewer": {
+                "type": "string",
+                "description": "Optional reviewer name or role."
+              }
+            },
+            "required": [
+              "decisions"
+            ],
+            "additionalProperties": true
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "apply_prompt_optimizer_decisions",
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "model",
+                "app"
+              ]
+            }
+          },
+          "title": "Apply Prompt Optimizer review decisions",
+          "description": "Validate Prompt Optimizer review decisions, write applied_decisions.json, and update final_artifacts.json status when run_intake.output_dir is available.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_intake": {
+                "type": "object",
+                "description": "Optional run_intake.json object with output_dir for persistence."
+              },
+              "client_engagement": {
+                "type": "string",
+                "description": "Current absolute path to the managed run context.json."
+              },
+              "review_payload": {
+                "type": "object",
+                "properties": {
+                  "schema_version": {
+                    "type": "string"
+                  },
+                  "plugin": {
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "type": "string"
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_type": {
+                    "type": "string"
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "item_count": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "schema_version",
+                  "plugin",
+                  "workflow",
+                  "run_id",
+                  "items",
+                  "item_count"
+                ],
+                "additionalProperties": true
+              },
+              "review_reference": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "enum": [
+                      "review_payload.json"
+                    ]
+                  },
+                  "run_id": {
+                    "type": "string"
+                  },
+                  "review_payload_sha256": {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  }
+                },
+                "required": [
+                  "path",
+                  "run_id",
+                  "review_payload_sha256"
+                ],
+                "additionalProperties": false
+              },
+              "persistence_token": {
+                "type": "string",
+                "description": "Opaque short-lived token returned by validation or rendering."
+              },
+              "ui_decisions": {
+                "type": "object",
+                "description": "Optional current ui_decisions.json object."
+              },
+              "decisions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "item_id": {
+                      "type": "string",
+                      "description": "Review item id from review_payload.items[].id."
+                    },
+                    "action": {
+                      "type": "string",
+                      "enum": [
+                        "accept",
+                        "reject",
+                        "edit",
+                        "mark_unclear",
+                        "request_more_documents",
+                        "skip"
+                      ]
+                    },
+                    "reviewer_note": {
+                      "type": "string",
+                      "description": "Optional reviewer note."
+                    },
+                    "edit_value": {
+                      "type": "string",
+                      "description": "Required replacement text or value when action is edit."
+                    },
+                    "requested_documents": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Optional document requests when action is request_more_documents."
+                    }
+                  },
+                  "required": [
+                    "item_id",
+                    "action"
+                  ],
+                  "additionalProperties": true
+                }
+              },
+              "decision_source": {
+                "type": "string",
+                "description": "Decision source label. Defaults to mcp_widget."
+              },
+              "reviewer": {
+                "type": "string",
+                "description": "Optional reviewer name or role."
+              }
+            },
+            "required": [
+              "decisions"
+            ],
+            "additionalProperties": true
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": true,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "resources": [
+        {
+          "uri": "ui://widget/legal-tax-model.html",
+          "name": "legal_tax_model_check",
+          "title": "Legal/tax model selection",
+          "description": "Required model, observed identity and explicit user confirmation before preparation.",
+          "mimeType": "text/html;profile=mcp-app",
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://widget/legal-tax-model.html"
+            },
+            "openai/widgetDescription": "Interactive Prompt Optimizer review surface for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
+            "openai/widgetPrefersBorder": false,
+            "openai/widgetCSP": {
+              "connect_domains": [],
+              "resource_domains": []
+            },
+            "openai/widgetDomain": "https://chatgpt.com"
+          }
+        },
+        {
+          "uri": "ui://widget/prompt-optimizer-review.html",
+          "name": "prompt_optimizer_review_widget",
+          "title": "Prompt Optimizer review widget",
+          "description": "Renders Prompt Optimizer review-session payloads with searchable validation checks and generated artifacts.",
+          "mimeType": "text/html;profile=mcp-app",
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://widget/prompt-optimizer-review.html"
+            },
+            "openai/widgetDescription": "Interactive Prompt Optimizer review surface for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
+            "openai/widgetPrefersBorder": false,
+            "openai/widgetCSP": {
+              "connect_domains": [],
+              "resource_domains": []
+            },
+            "openai/widgetDomain": "https://chatgpt.com"
+          }
+        }
+      ],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
+      "name": "luciaStudioArchive",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "vera-studio-archive",
+          "version": "0.1.68"
+        },
+        "capabilities": {
+          "tools": {}
+        },
+        "instructions": "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing."
+      },
+      "tools": [
+        {
+          "name": "studio_archive_status",
+          "title": "Check Vera Studio Archive status",
+          "description": "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching. A fresh session can revalidate the approved private-profile root and save isolated session configuration; no client is created.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "list_studio_archive_clients",
+          "title": "List Studio Archive clients",
+          "description": "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local. Healthy clients remain usable when directory_complete or identity_registry_complete is false; report the returned issues. An incomplete directory does not prove a client is absent and must not trigger duplicate registration.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "resolve_studio_archive_client",
+          "title": "Resolve one exact Studio Archive client identity",
+          "description": "Compare one user-supplied email address, legal name, or tax identifier against the private local registry and return only matching safe client directory rows. The supplied value and stored identity values are not echoed. resolution_complete=false means some aliases are unavailable; resolution_status=incomplete is not proof of absence. Reuse a known stable client ID and validate its folder instead of creating a duplicate.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "identity_kind": {
+                "type": "string",
+                "enum": [
+                  "email_address",
+                  "legal_name",
+                  "tax_identifier"
+                ]
+              },
+              "identity_value": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 254
+              }
+            },
+            "required": [
+              "identity_kind",
+              "identity_value"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "get_studio_client_folder",
+          "title": "Get one Studio Archive client folder",
+          "description": "Return a digest-bound folder record for one stable registered client. Other Vera workflows use this record to reject cross-client inputs and namespace engagement runs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$",
+                "description": "Stable client_id returned by Studio Archive."
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "check_studio_import_sources",
+          "title": "Check file access before starting client work",
+          "description": "Check every selected file on the actual Archive import host before processing or creating records. No Archive configuration or records are needed. Without expected_sha256 only readability is checked; with original attachment hashes the tool reads bytes locally and verifies exact transfer identity without returning contents. If ready is false, explain the cause immediately. A chat path is not a file transfer. Use a supported host transfer into an ordinary connected working folder, verify the original hashes, then import with those same hashes. Never manually write managed engagement inputs. This path importer does not transfer attachments itself.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "source_paths": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096
+                },
+                "description": "Paths of all selected files; check in batches for more than 100 files before creating records."
+              },
+              "expected_sha256": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "description": "Optional original file hashes, one per selected path in the same order. Required when verifying an attachment transferred between environments; compute from originals using a file tool, never invent them."
+              }
+            },
+            "required": [
+              "source_paths"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "create_studio_archive_client",
+          "title": "Create a new Studio Archive client",
+          "description": "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. For work starting from supplied files, first check_studio_import_sources for all selected files and resolve any unavailable inputs. This begins but does not complete Vera's New Client professional workflow.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "legal_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160,
+                "description": "Confirmed client legal name; Vera derives the folder label."
+              },
+              "email_addresses": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 254
+                },
+                "description": "Optional confirmed full email or PEC addresses."
+              },
+              "tax_identifiers": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 32
+                },
+                "description": "Optional confirmed codice fiscale or partita IVA values."
+              }
+            },
+            "required": [
+              "legal_name"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "import_studio_client_document",
+          "title": "Import a document into one client engagement",
+          "description": "Copy one authorized source, journal, or support file from this computer into the selected engagement with an immutable byte receipt. Check file access with check_studio_import_sources before creating any client or engagement for file-based work. If import fails, disclose and reuse the returned client_id and engagement_id; never create duplicates to retry. For a user-authorized document-only continuation, save the clearly identified Vera-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "source_path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "description": "Absolute path to the selected source/journal/support file, including a derived follow-up prepared under the user's authority to continue this engagement."
+              },
+              "expected_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "description": "Original attachment SHA-256 when importing a transferred file. Rechecked during copying so an altered transfer cannot be registered."
+              },
+              "role": {
+                "type": "string",
+                "enum": [
+                  "journal",
+                  "source",
+                  "support"
+                ]
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$",
+                "description": "Exact engagement selected or created before this separate import action."
+              }
+            },
+            "required": [
+              "client_id",
+              "source_path",
+              "role",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "copy_studio_client_source_folder",
+          "title": "Copy an authorized delivery folder into client working files",
+          "description": "After explicit user authorization for this exact client, engagement and external source folder, copy its ordinary files and subfolders into a new readable delivery folder outside Vera/. Use this for a supplied tree that Archive Organization must inspect. Preserve originals, relative paths and duplicate copies. Never overwrite, merge with an existing delivery, assign document meaning or apply an organization plan. Exact retries verify the retained receipt and bytes; interrupted copies block snapshots until recovered by the same request. The default destination name is the selected folder name; ask for a new delivery name only when it conflicts.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "source_path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096
+              },
+              "destination_name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "copy_authorized": {
+                "type": "boolean",
+                "const": true
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "source_path",
+              "copy_authorized"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "snapshot_studio_client_folder",
+          "title": "Snapshot one Studio Archive client folder",
+          "description": "After selecting one registered client and open engagement, hash a bounded client-folder view locally and return its complete projected Archive Organization inventory. Raw hashes and absolute paths stay local; client documents are not copied or moved.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "studio_archive_google_drive_status",
+          "title": "Check Studio Archive Google Drive status",
+          "description": "Read whether a private Google Drive OAuth token and exact client-folder bindings are present. This does not call Google Drive.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "bind_studio_client_google_drive",
+          "title": "Bind one client to one Google Drive folder",
+          "description": "After explicit client and Google Drive folder selection, validate the remote folder ID and persist a one-to-one private binding. This calls Google Drive but does not move documents.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "folder_id": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9_-]{3,256}$",
+                "description": "Exact Google Drive client-folder ID selected by the user."
+              }
+            },
+            "required": [
+              "client_id",
+              "folder_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "snapshot_studio_client_google_drive",
+          "title": "Snapshot one bound Google Drive client folder",
+          "description": "Recursively read one exact bound My Drive or Shared Drive folder and return its complete projected Archive Organization inventory. Stable IDs, versions, parents, capabilities, and checksums stay in the local receipt.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "get_studio_archive_organization_inventory",
+          "title": "Resume one Archive Organization inventory",
+          "description": "Return the complete model-facing inventory for one immutable client snapshot. Opaque item references preserve local mapping while raw hashes, storage IDs, capabilities, and absolute paths stay local.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "snapshot_input_id": {
+                "type": "string",
+                "pattern": "^input_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "snapshot_input_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "open_studio_archive_organization_item",
+          "title": "Open one snapshotted Archive Organization item",
+          "description": "Resolve one opaque inventory item locally, revalidate its immutable snapshot identity, and return bounded citable content. Raw local paths, Drive IDs, hashes, versions, and capabilities are not returned.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "snapshot_input_id": {
+                "type": "string",
+                "pattern": "^input_[0-9a-f]{24}$"
+              },
+              "item_ref": {
+                "type": "string",
+                "pattern": "^archive_item_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "snapshot_input_id",
+              "item_ref"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "create_studio_client_engagement",
+          "title": "Create a Studio Archive client engagement",
+          "description": "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type. For work starting from supplied files, check_studio_import_sources must first establish access to all selected inputs; warn and resolve unavailable inputs before creation. Documentless work does not require a file check.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_label"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "list_studio_client_engagements",
+          "title": "List one client's Studio engagements",
+          "description": "List durable engagements, imported receipts (including saved derived support notes), persisted runs and available output paths. Resume from these records without chat history. An engagement can have follow-up notes without a workflow run. Verify a new document-only continuation's import receipt here before reporting that it is saved.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "verify_studio_client_inputs",
+          "title": "Verify selected Studio Archive inputs",
+          "description": "Verify receipt seals and complete controlled-file bytes for 1–100 exact inputs using maintained Archive readers. Supply prior input_id/content_sha256 pairs from import or verification receipts to prove preservation against that baseline. Set require_exact_input_set only to also verify all engagement inputs and reject additions or omissions. Returns verified paths and per-input failures without reading document text into the response, importing, repairing or approving anything. Use this before claiming a saved note or preserved continuation; never parse raw internal receipt JSON to guess paths.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "input_ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^input_[0-9a-f]{24}$"
+                }
+              },
+              "expected_receipts": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "description": "Prior receipt identities for every selected input; never invent a baseline.",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "input_id": {
+                      "type": "string",
+                      "pattern": "^input_[0-9a-f]{24}$"
+                    },
+                    "content_sha256": {
+                      "type": "string",
+                      "pattern": "^[0-9a-f]{64}$"
+                    }
+                  },
+                  "required": [
+                    "input_id",
+                    "content_sha256"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "require_exact_input_set": {
+                "type": "boolean",
+                "default": false
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "input_ids"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "prepare_studio_client_workflow",
+          "title": "Prepare a client-bound Vera workflow run",
+          "description": "Prepare or replay one exact customer-folder run bound to selected immutable input receipts and upstream artifacts. A repeated request is idempotent; new_run must be explicit.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "workflow_id": {
+                "type": "string",
+                "enum": [
+                  "agenzia-acquisition",
+                  "fatture-xml-check",
+                  "report-enti-locali",
+                  "posizioni-negoziali",
+                  "contenzioso-tributario",
+                  "lipe",
+                  "scissione-guidata",
+                  "esg-reporting-assurance",
+                  "treasury-forecast",
+                  "aml-review",
+                  "adeguati-assetti",
+                  "open-item-reconciliation",
+                  "archive-organization",
+                  "client-file-preparation",
+                  "new-client",
+                  "journal-sampling",
+                  "check-entries",
+                  "journal-bank-reconciliation",
+                  "passive-invoice-audit",
+                  "invoice-xml",
+                  "sales-plan",
+                  "business-planning",
+                  "business-valuation",
+                  "variance-analysis",
+                  "management-control-pack",
+                  "centrale-rischi-review",
+                  "financial-analysis",
+                  "report-builder",
+                  "concordato-plan-review",
+                  "composizione-negoziata",
+                  "prompt-optimizer",
+                  "deep-research-validator",
+                  "previdenza-inps",
+                  "registro-imprese-sari",
+                  "bandi-agevolazioni",
+                  "patent-box-review",
+                  "bilancio-xbrl-it",
+                  "apertura-pratica"
+                ]
+              },
+              "input_ids": {
+                "type": "array",
+                "maxItems": 10000,
+                "items": {
+                  "type": "string",
+                  "pattern": "^input_[0-9a-f]{24}$"
+                },
+                "description": "Exact imported input IDs selected for this run."
+              },
+              "upstream_artifacts": {
+                "type": "array",
+                "maxItems": 10000,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "run_id": {
+                      "type": "string",
+                      "pattern": "^run_[0-9a-f]{24}$"
+                    },
+                    "artifact_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "role": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 80
+                    }
+                  },
+                  "required": [
+                    "run_id",
+                    "artifact_id",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Exact completed same-engagement artifact references."
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "new_run": {
+                "type": "boolean",
+                "description": "True only when the user explicitly requests a separate run. Reuse the same idempotency_key for safe retries and choose a new key for another distinct run."
+              }
+            },
+            "required": [
+              "engagement_id",
+              "workflow_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "read_studio_run_artifact",
+          "title": "Read data from an active Archive run",
+          "description": "Read a bound input or generated data file for one exact active reporting run. Offset and limit select physical data units; columns are zero-based indices. Vera records the exact selection before returning it. Use for initial inspection and later reads in the 13 reporting pipelines.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Absolute bound-input/output path, or a path relative to this run's root, such as outputs/inspection.json."
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "columns": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "integer",
+                  "minimum": 0
+                }
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "path"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "start_studio_client_workflow",
+          "title": "Start a Vera workflow run",
+          "description": "Move one exact prepared or failed run to running after its input receipts still validate.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "start_check_entries_from_sample",
+          "title": "Start Check Entries from a completed sample",
+          "description": "Resolve and validate the complete internal Journal Sampling handoff, then prepare and start Check Entries against the selected support batch. The caller selects the sampling run and support inputs; no internal filenames or artifact IDs are required.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "sample_run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "support_input_ids": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 10000,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "pattern": "^input_[0-9a-f]{24}$"
+                }
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "new_run": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "sample_run_id",
+              "support_input_ids"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "fail_studio_client_workflow",
+          "title": "Record a Vera workflow failure",
+          "description": "Retain a failed run and record a bounded reason instead of treating its output folder as available.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "reason"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "cancel_studio_client_workflow",
+          "title": "Cancel a Vera workflow run",
+          "description": "Explicitly cancel one abandoned non-terminal run without deleting it.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "finalize_studio_client_workflow",
+          "title": "Finalize Vera workflow artifacts",
+          "description": "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "expected_declaration_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$",
+                "description": "Returned declaration_sha256 for a correction to purpose, audience or media type before completion. Prevents overwriting another review; the agent retains this value without an additional human approval."
+              },
+              "artifacts": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 20000,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "artifact_id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 120
+                    },
+                    "path": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "File path relative to this run's output_dir (for example result.pdf). Absolute paths inside output_dir and run-relative outputs/result.pdf are also accepted. An existing output-relative path takes precedence. The saved manifest always uses output-relative paths."
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 500
+                    },
+                    "audience": {
+                      "type": "string",
+                      "enum": [
+                        "internal",
+                        "review",
+                        "deliverable"
+                      ]
+                    },
+                    "media_type": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 160
+                    }
+                  },
+                  "required": [
+                    "artifact_id",
+                    "path",
+                    "purpose",
+                    "audience",
+                    "media_type"
+                  ],
+                  "additionalProperties": false
+                }
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "artifacts"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "complete_studio_client_workflow",
+          "title": "Complete a Vera workflow run",
+          "description": "Mark a review-ready run completed only while every declared artifact still matches its receipt.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "close_studio_client_engagement",
+          "title": "Close a Studio client engagement",
+          "description": "Close one engagement only after all prepared, running, or review-ready runs are completed or cancelled.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "recover_studio_client_ledger",
+          "title": "Recover Vera customer-folder ledger",
+          "description": "Recover private client pointers from portable customer manifests and inspect engagement, input, and run records independently. Preserve damaged aliases and records; return healthy work alongside explicit issues and completeness flags. An incomplete inventory is not an empty archive.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "report_studio_client_retention",
+          "title": "Review Vera retention candidates",
+          "description": "Build a non-destructive size, age, and lifecycle report. This tool never deletes customer files.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "older_than_days": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 365000
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "setup_studio_archive",
+          "title": "Set up Vera Studio Archive",
+          "description": "Open the operating system's native folder chooser, diagnose the selected shared archive folder, and save this user's private local configuration. Use this guided action before asking the user to type an absolute path.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "diagnose_studio_archive_access",
+          "title": "Diagnose Studio Archive access",
+          "description": "Check path resolution and root listing without persisting configuration. Returns path-safe categories for host sandbox denial, SMB session or credential errors, share reachability, and share/filesystem permissions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "archive_root": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "description": "Absolute local, mounted, or native Windows UNC path selected for the shared studio archive."
+              }
+            },
+            "required": [
+              "archive_root"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "configure_studio_archive",
+          "title": "Configure Vera Studio Archive",
+          "description": "Set one absolute shared archive folder for this user. This writes only a private local configuration and discovers exact top-level search scopes.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "archive_root": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4096,
+                "description": "Absolute path to the shared or synced studio archive folder."
+              }
+            },
+            "required": [
+              "archive_root"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "refresh_studio_archive",
+          "title": "Refresh Vera Studio Archive",
+          "description": "Hash every supported source, incrementally update this user's private local full-text index, adopt top-level scope changes, and report skipped or partially extracted documents. Source files are read but never modified. OCR is local-only and never downloads model weights.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "rebuild": {
+                "type": "boolean",
+                "description": "Discard and rebuild the derived local index."
+              },
+              "ocr_language": {
+                "type": "string",
+                "enum": [
+                  "it",
+                  "fr",
+                  "de",
+                  "en",
+                  "es"
+                ],
+                "description": "Explicit document OCR language, independent of jurisdiction. Defaults to it."
+              },
+              "enable_ocr": {
+                "type": "boolean",
+                "description": "Try already-installed local OCR for scans and sparse PDF pages."
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "search_studio_archive",
+          "title": "Search Vera Studio Archive",
+          "description": "Search one exact configured scope. Use scope_id='all' only when the user explicitly requests a studio-wide search. Results are candidates and must be opened before citation.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 500,
+                "description": "Compact lexical query; Claude may issue several variants."
+              },
+              "scope_id": {
+                "type": "string",
+                "pattern": "^(?:all|scope_[0-9a-f]{24})$",
+                "description": "Exact scope_id returned by studio_archive_status, or all after explicit user intent."
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20,
+                "description": "Maximum candidate chunks; defaults to 10."
+              }
+            },
+            "required": [
+              "query",
+              "scope_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "open_studio_archive_source",
+          "title": "Open and verify a Studio Archive source",
+          "description": "Open one search result by opaque source_id, re-hash the current file, and return its citable text and locator. Fails if the source changed after indexing.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "pattern": "^src_[0-9a-f]{24}$",
+                "description": "Opaque source_id returned by search_studio_archive."
+              },
+              "context_chunks": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2,
+                "description": "Adjacent chunks on each side; defaults to 0."
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "configure_studio_archive_client",
+          "title": "Register one existing Studio Archive client",
+          "description": "Assign a stable client ID and bind confirmed legal names, full email addresses, and tax identifiers to one exact existing archive scope in the private local registry. Vera stores no Gmail credentials, messages, or attachments.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "scope_id": {
+                "type": "string",
+                "pattern": "^scope_[0-9a-f]{24}$",
+                "description": "Exact client scope_id returned by studio_archive_status."
+              },
+              "email_addresses": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 3,
+                  "maxLength": 254
+                },
+                "description": "Confirmed full email or PEC addresses unique to this client."
+              },
+              "legal_names": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160
+                },
+                "description": "Confirmed legal names used only to find candidates, never for automatic routing."
+              },
+              "tax_identifiers": {
+                "type": "array",
+                "maxItems": 20,
+                "items": {
+                  "type": "string",
+                  "minLength": 5,
+                  "maxLength": 32
+                },
+                "description": "Confirmed codice fiscale or partita IVA values used to find candidates."
+              },
+              "replace_orphaned_scope_id": {
+                "type": "string",
+                "pattern": "^scope_[0-9a-f]{24}$",
+                "description": "Explicitly move one listed orphaned profile to this target scope. Supply no identity arrays in the same call."
+              }
+            },
+            "required": [
+              "scope_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "plan_studio_archive_gmail_search",
+          "title": "Plan a client-scoped Gmail search",
+          "description": "Return bounded Gmail-native queries for one exact client scope. This local tool does not call Gmail; Claude must use the connected Gmail search/read tools and review every shortlisted message.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "scope_id": {
+                "type": "string",
+                "pattern": "^scope_[0-9a-f]{24}$",
+                "description": "Exact client scope_id; studio-wide Gmail search is not supported."
+              },
+              "topic": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Optional compact topic phrase from the user's question."
+              },
+              "after": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "description": "Optional inclusive lower date bound in YYYY-MM-DD."
+              },
+              "before": {
+                "type": "string",
+                "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+                "description": "Optional exclusive upper date bound in YYYY-MM-DD."
+              }
+            },
+            "required": [
+              "scope_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "match_studio_archive_email",
+          "title": "Match Gmail headers to a Studio Archive client",
+          "description": "Match all available Gmail From, To, Cc, and Bcc header values only against unique confirmed full addresses. Missing, incomplete, or unparseable headers fail closed.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "header_addresses": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 100,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "description": "Raw address values copied from Gmail message headers."
+              },
+              "headers_complete": {
+                "type": "boolean",
+                "description": "True only after the full message read exposed all available From, To, Cc, and Bcc fields and every non-empty value was supplied."
+              },
+              "expected_scope_id": {
+                "type": "string",
+                "pattern": "^scope_[0-9a-f]{24}$",
+                "description": "Optional selected client scope used for the fail-closed answer check."
+              }
+            },
+            "required": [
+              "header_addresses",
+              "headers_complete"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "resources": [],
+      "resourceTemplates": [],
+      "prompts": []
+    }
+  ]
+}

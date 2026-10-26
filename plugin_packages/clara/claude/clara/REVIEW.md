@@ -13,6 +13,7 @@ Original local credentials can restore the browser reporting owner.
 Client documents, professional output and unreviewed logs are not reporting inputs.
 Privacy policy: https://mparanza.com/privacy.
 
+- `clara`: Expose the packaged Clara tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.
 - `claraIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
 
 ## Lesson downloads

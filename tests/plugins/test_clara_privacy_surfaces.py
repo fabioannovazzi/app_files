@@ -30,6 +30,7 @@ EXPECTED_HOSTED_SERVICES = {
     "retail-data",
     "prepared-course-files",
     "managed-python-runtime",
+    "on-demand-mcp",
 }
 
 

@@ -1,21 +1,12 @@
 {
   "mcpServers": {
-    "courseChats": {
-      "title": "Clara · Corsi",
-      "description": "Open or resume the paired working chat for local courses.",
+    "clara": {
+      "title": "Clara",
+      "description": "Clara tools. Each specialist starts only when one of its tools is used.",
       "cwd": ".",
       "command": "node",
       "args": [
-        "./scripts/course_chat_mcp.cjs"
-      ]
-    },
-    "claraIncidentHost": {
-      "title": "Clara · Identità tecnica locale",
-      "description": "Bind an existing incident reporter to the native host without client files or device-key disclosure.",
-      "cwd": ".",
-      "command": "node",
-      "args": [
-        "./scripts/incident_host_mcp.cjs"
+        "./scripts/on_demand_mcp.cjs"
       ]
     }
   }

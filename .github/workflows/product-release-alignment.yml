@@ -71,14 +71,15 @@ jobs:
           python -m bandit -q -ll scripts/check_repository_archive_size.py scripts/build_product_release.py scripts/check_shared_runtime_cold_start.py
       - name: Verify stale and duplicate installed-plugin rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_installed_product.py
-      - name: Verify Vera discovery without eager specialist startup
+      - name: Verify product discovery without eager specialist startup
         run: |
-          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_on_demand_mcp.py --cov=scripts.build_vera_mcp_catalog --cov-report=term-missing --cov-fail-under=80
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_on_demand_mcp.py --cov=scripts.build_product_mcp_catalog --cov-report=term-missing --cov-fail-under=80
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_on_demand_packages.py
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_native_execution.py -k retains_diagnostics_and_runs_once_across_service_restart
-          python -m black --check scripts/build_vera_mcp_catalog.py tests/plugins/test_vera_on_demand_mcp.py
-          python -m isort --check-only scripts/build_vera_mcp_catalog.py tests/plugins/test_vera_on_demand_mcp.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports scripts/build_vera_mcp_catalog.py
-          python -m bandit -q -ll scripts/build_vera_mcp_catalog.py
+          python -m black --check scripts/build_product_mcp_catalog.py tests/plugins/test_product_on_demand_mcp.py tests/plugins/test_product_on_demand_packages.py
+          python -m isort --check-only scripts/build_product_mcp_catalog.py tests/plugins/test_product_on_demand_mcp.py tests/plugins/test_product_on_demand_packages.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports scripts/build_product_mcp_catalog.py
+          python -m bandit -q -ll scripts/build_product_mcp_catalog.py
       - name: Verify Antigravity download integrity checks
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_antigravity_package.py
       - name: Validate every source skill before release

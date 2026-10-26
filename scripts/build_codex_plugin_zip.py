@@ -1202,9 +1202,9 @@ def add_vera_execution_manifest(entries: dict[str, bytes], prefix: str = "") -> 
     trust anchor. The index is not a publisher signature.
     """
 
-    from build_vera_mcp_catalog import add_vera_mcp_catalog
+    from build_product_mcp_catalog import add_product_mcp_catalog
 
-    add_vera_mcp_catalog(entries, prefix)
+    add_product_mcp_catalog(entries, prefix)
     name = f"{prefix}execution-files.json"
     files = {
         path.removeprefix(prefix): hashlib.sha256(content).hexdigest()
@@ -1330,6 +1330,15 @@ def source_zip_entries(
         externalize_course_files(
             entries, plugin_dir.name, f"{root}/plugins/{plugin_dir.name}/", root=ROOT
         )
+        if plugin_dir.name in {"vera", "clara", "lucia"}:
+            for helper in (
+                "on_demand_mcp.cjs",
+                "mcp_service_client.cjs",
+                "verify_mcp_package.cjs",
+            ):
+                entries[f"{root}/plugins/{plugin_dir.name}/scripts/{helper}"] = (
+                    ROOT / "plugins/vera/scripts" / helper
+                ).read_bytes()
         if plugin_dir.name == "vera":
             named_browser_skill_cards(entries, f"{root}/plugins/vera/")
             if project_vera_privacy:

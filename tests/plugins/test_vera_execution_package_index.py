@@ -46,11 +46,8 @@ def test_release_index_matches_every_final_host_projected_byte(host, product):
     assert "usage/pipelines.json" in expected
     with ZipFile(ROOT / "plugin_packages" / product / filename) as archive:
         connector = json.loads(archive.read(prefix + ".mcp.json"))["mcpServers"]
-        if product == "vera":
-            assert set(connector) == {"vera"}
-            connector = json.loads(archive.read(prefix + "mcp-services.json"))[
-                "mcpServers"
-            ]
+        assert set(connector) == {product}
+        connector = json.loads(archive.read(prefix + "mcp-services.json"))["mcpServers"]
         assert f"{product}Incidents" not in connector
         assert connector[f"{product}IncidentHost"]["command"] == "node"
         assert all(
