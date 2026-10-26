@@ -17,6 +17,10 @@ if (!process.env.VERA_WORKSPACE_BINDINGS) {
   if (process.env.VERA_WORKSPACE_ROLES === undefined) process.env.VERA_WORKSPACE_ROLES = "REVIEWER";
 }
 const ROOT = path.resolve(__dirname, "..");
+const SIDEBAR_ICONS = ["light", "dark"].map(theme => ({
+  src: `data:image/svg+xml;base64,${fs.readFileSync(path.join(ROOT, "assets", `sidebar-${theme}.svg`)).toString("base64")}`,
+  mimeType: "image/svg+xml", sizes: ["any"], theme,
+}));
 const URI = "ui://vera/workspace-v1.html";
 const MIME = "text/html;profile=mcp-app";
 const secret = randomBytes(32);
@@ -532,6 +536,7 @@ const TOOLS = [
   tool("vera_workspace_passive_qualify", "Rivedi fonti e controlli", "Use the public parser, reviewed ledger mapping, number convention and matching contract on explicit run input roles/controls. Store an attributed immutable intake review; adopt an existing job only after exact recipe/fingerprint replay. No semantic worker, accounting approval, automatic source choice or Archive completion.",schema({...passiveAuthority,fields:passiveFields,human_reviewed:{const:true}},[...passiveRequired,"fields","human_reviewed"]),true,true),
   tool("vera_workspace_passive_launch", "Avvia o riprendi controllo", "After exact explicit intake confirmation, retain durable actor-scoped launch intent and start the unchanged public audit in a separate local supervisor. Hold an actual process lease and native write guard; retain completed chunks on resume. Same-key retries never launch twice. Missing/uncertain ownership requires specialist verification, never automatic restart. Preserve native Codex qualification/Cowork pending boundary; no API key, model substitution, posting or approval.",schema({...passiveAuthority,human_reviewed:{const:true},idempotency_key:string},[...passiveRequired,"source_ref","human_reviewed","idempotency_key"]),true,true),
   { ...tool("vera_workspace_open", "Lavori dello studio", "Open the maintained local Studio Archive directory, then explicitly select one client, engagement and run. Operator-bound pilots retain their exact allowlist. Directory metadata stays in the panel; it is not a professional approval.", schema({ client_id: string, engagement_id: string, offset: { type: "integer", minimum: 0 } }), false),
+    icons: SIDEBAR_ICONS,
     _meta: { ui: { resourceUri: URI, visibility: ["app", "model"] },
       "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] } } },
   { ...tool("vera_workspace_archive_setup", "Scegli archivio dello studio", "Open the maintained operating-system folder chooser after the user's explicit local configuration choice. Accept no path argument, preserve session ownership and cancellation, and return no selected private root path.", schema({ confirmed: { const: true } }, ["confirmed"]), true, true), annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false } },
@@ -756,7 +761,7 @@ function handle(message) {
   const response = result => ({ jsonrpc: "2.0", id: message.id, result });
   if (message.id === undefined) return null;
   if (message.method === "initialize") return response({ protocolVersion: "2025-03-26", capabilities: { tools: {}, resources: {} },
-    serverInfo: { name: "vera-workspace", version: packageVersion() } });
+    serverInfo: { name: "vera-workspace", version: packageVersion(), icons: SIDEBAR_ICONS } });
   if (message.method === "tools/list") return response({ tools: TOOLS });
   if (message.method === "resources/list") return response({ resources: [{ uri: URI, name: "Lavori dello studio", mimeType: MIME }] });
   try {

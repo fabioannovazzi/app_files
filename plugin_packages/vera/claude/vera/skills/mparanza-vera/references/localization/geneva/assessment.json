@@ -2279,5 +2279,10 @@
     "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
     "scope": "Only the canonical product version changed in the catalogue identity. Every skill entrypoint hash and all existing jurisdiction judgments are unchanged. Public course-file deduplication preserves attachment bytes and establishes no new Geneva professional acceptance.",
     "version": "0.1.493"
+  },
+  "transparent_sidebar_icon_release_binding": {
+    "version": "0.1.500",
+    "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
+    "scope": "Manifest version only. All skill entries and professional judgments are unchanged; this binding does not establish professional or installed-host acceptance."
   }
 }
