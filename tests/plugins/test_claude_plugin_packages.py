@@ -592,7 +592,9 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     }
     for name, server in cowork_mcp["mcpServers"].items():
         assert server["command"] == "node"
-        if name in SERVICE_LAUNCH_ARGUMENTS:
+        if name == "vera":
+            assert server["args"] == ["${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"]
+        elif name in SERVICE_LAUNCH_ARGUMENTS:
             assert server["args"] == SERVICE_LAUNCH_ARGUMENTS[name]
         else:
             assert (
@@ -708,7 +710,9 @@ def test_optional_claude_mcp_projection_uses_only_installation_safe_paths() -> N
     for name, server in servers.items():
         assert set(server) <= {"command", "args", "env"}
         assert server["command"] == "node"
-        if name in SERVICE_LAUNCH_ARGUMENTS:
+        if name == "vera":
+            assert server["args"] == ["${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"]
+        elif name in SERVICE_LAUNCH_ARGUMENTS:
             assert server["args"] == SERVICE_LAUNCH_ARGUMENTS[name]
         else:
             assert (
@@ -1080,6 +1084,15 @@ def test_cowork_projects_user_facing_artifact_names_and_review_actor(
         "scripts/native_variance_narrative.py",
         "ui/workspace.js",
     }
+    # The generated discovery entry for that same native adapter must retain
+    # its exact executable identities too. Keep checking every other service.
+    catalog = json.loads(projected_text["mcp-catalog.json"])
+    catalog["services"] = [
+        service
+        for service in catalog["services"]
+        if service["name"] != "veraNativeWorkspace"
+    ]
+    projected_text["mcp-catalog.json"] = json.dumps(catalog)
     combined = "\n".join(
         content
         for name, content in projected_text.items()

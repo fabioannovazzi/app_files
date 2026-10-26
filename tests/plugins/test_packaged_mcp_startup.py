@@ -84,10 +84,13 @@ def test_vera_zip_local_servers_initialize_and_remote_contracts_validate(
         "mcpServers"
     ]
     expected = set(registered)
-    assert "courseChats" in expected
-    if surface == "cowork":
-        expected.remove("courseChats")
+    assert expected == {"vera"}
     assert set(json.loads(entries[config])["mcpServers"]) == expected
+    prefix = "" if root == "." else f"{root}/"
+    services = json.loads(entries[prefix + "mcp-services.json"])["mcpServers"]
+    catalog = json.loads(entries[prefix + "mcp-catalog.json"])
+    assert {service["name"] for service in catalog["services"]} == set(services)
+    assert ("courseChats" in services) == (surface != "cowork")
     assert registered
 
     errors = builder.verify_packaged_mcp(archive, [root], config_name=Path(config).name)

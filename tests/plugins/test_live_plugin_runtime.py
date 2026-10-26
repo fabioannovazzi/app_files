@@ -299,9 +299,11 @@ def test_concurrent_starts_publish_one_complete_copy(tmp_path, monkeypatch):
     assert not list((tmp_path / "runtime/code").glob(".staging-*"))
 
 
-def test_every_registered_local_service_uses_a_verified_launcher():
-    config = json.loads((ROOT / "plugins/vera/.mcp.json").read_text())
+@pytest.mark.parametrize("configuration", [".mcp.json", "mcp-services.json"])
+def test_every_registered_local_service_uses_a_verified_launcher(configuration):
+    config = json.loads((ROOT / "plugins/vera" / configuration).read_text())
     launchers = {
+        "./scripts/on_demand_mcp.cjs",
         "./scripts/native_execution_mcp.cjs",
         "./scripts/run_component_mcp.cjs",
         "./scripts/run_service_mcp.cjs",

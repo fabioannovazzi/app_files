@@ -1202,6 +1202,9 @@ def add_vera_execution_manifest(entries: dict[str, bytes], prefix: str = "") -> 
     trust anchor. The index is not a publisher signature.
     """
 
+    from build_vera_mcp_catalog import add_vera_mcp_catalog
+
+    add_vera_mcp_catalog(entries, prefix)
     name = f"{prefix}execution-files.json"
     files = {
         path.removeprefix(prefix): hashlib.sha256(content).hexdigest()
@@ -2184,6 +2187,9 @@ def verify_packaged_mcp(
                 continue
             configuration = json.loads(config_path.read_text(encoding="utf-8"))
             count = len(configuration["mcpServers"])
+            service_path = root / "mcp-services.json"
+            if service_path.is_file():
+                count += len(json.loads(service_path.read_text())["mcpServers"])
             try:
                 result = subprocess.run(
                     [

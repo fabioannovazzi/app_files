@@ -13,6 +13,7 @@ Original local credentials can restore the browser reporting owner.
 Client documents, professional output and unreviewed logs are not reporting inputs.
 Privacy policy: https://mparanza.com/privacy.
 
+- `vera`: Advertise all individual Vera tools and panel resources from the packaged catalogue. Start only the local specialist needed for a call; retain used specialists for the chat connection. The service owners below keep their existing data boundaries.
 - `agenziaAcquisition`: Review and run user-authorized browser acquisition tasks.
 - `archiveOrganizationWidgets`: Review client-folder organization plans and decisions.
 - `bilancioXbrlIt`: Prepare and review OIC accounts and XBRL workpapers.

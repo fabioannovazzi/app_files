@@ -878,6 +878,16 @@
         "scripts/selective_reporting.py"
       ],
       "on_violation": "Eligible runs retain binding and recording errors before case-payload delivery. Excluded non-Archive work remains governed by its own existing workspace, source and action checks."
+    },
+    {
+      "id": "on-demand-tool-routing",
+      "control": "Build-time discovery records individual tool schemas, annotations, resources, prompts and instructions from the packaged services. The local entry point advertises that package-bound catalogue without starting specialists. Exact tool/resource/prompt identities select only their owning local service. The entry point forwards existing request arguments, tool results, errors and app-only metadata without adding case content or a network recipient. Used services retain their review state for the chat transport lifetime. A failed call is never automatically replayed. Native execution retains its existing independent job lifetime. Catalogue generation uses a private temporary runtime and does not invoke professional tools.",
+      "implemented_by": [
+        "scripts/on_demand_mcp.cjs",
+        "scripts/mcp_service_client.cjs",
+        "mcp-services.json"
+      ],
+      "on_violation": "Return a protocol error for unknown targets; preserve worker failures without replaying potentially completed writes."
     }
   ],
   "governed_paths": [
@@ -1048,7 +1058,10 @@
     "skills/contenzioso-tributario/SKILL.md",
     "skills/studio-document-format/SKILL.md",
     "scripts/archive_emit.py",
-    "scripts/selective_reporting.py"
+    "scripts/selective_reporting.py",
+    "mcp-services.json",
+    "scripts/on_demand_mcp.cjs",
+    "scripts/mcp_service_client.cjs"
   ],
   "external_boundaries": [
     {
@@ -1095,8 +1108,8 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "e9bafcb7f89de6bff2a9977fcfe55c062abfe3cb4ac0313d88dfd5eaca5887b3",
-    "reviewed_at": "2026-10-21"
+    "source_fingerprint": "011ac344d5d5c7e86ed8f2b0f86777fa3fd4964936204fd19e7aedbee52d6e0c",
+    "reviewed_at": "2026-10-26"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",
