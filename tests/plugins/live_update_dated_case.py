@@ -202,11 +202,14 @@ finally:
 
 class MCP:
     def __init__(self, root):
+        configuration = json.loads((root / ".mcp.json").read_text())["mcpServers"][
+            "vera"
+        ]
         self.process = subprocess.Popen(
             [
-                "node",
-                str(root / "scripts/run_component_mcp.cjs"),
-                "open-item-reconciliation",
+                configuration["command"],
+                str(root / configuration["args"][0]),
+                *configuration["args"][1:],
             ],
             cwd=root,
             stdin=subprocess.PIPE,

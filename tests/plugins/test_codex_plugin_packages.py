@@ -1647,7 +1647,9 @@ def test_vera_routes_every_commercialista_module() -> None:
     components = json.loads(
         (plugin_root / "components.json").read_text(encoding="utf-8")
     )
-    mcp_config = json.loads((plugin_root / ".mcp.json").read_text(encoding="utf-8"))
+    mcp_config = json.loads(
+        (plugin_root / "mcp-services.json").read_text(encoding="utf-8")
+    )
     routed_mcp_modules = {
         server["args"][-1]
         for server in mcp_config["mcpServers"].values()

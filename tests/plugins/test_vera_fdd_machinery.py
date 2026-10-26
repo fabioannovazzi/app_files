@@ -688,7 +688,7 @@ def test_mcp_pack_registry_matches_python_runner() -> None:
         "contingent_liability_register",
         "financial_issue_register",
     ]
-    vera_mcp = json.loads((ROOT / "plugins" / "vera" / ".mcp.json").read_text())
+    vera_mcp = json.loads((ROOT / "plugins" / "vera" / "mcp-services.json").read_text())
     description = vera_mcp["mcpServers"]["financialAnalysisContracts"]["description"]
     assert "financial due-diligence" in description
 

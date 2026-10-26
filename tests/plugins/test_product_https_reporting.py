@@ -106,7 +106,7 @@ def test_actual_package_keeps_local_reporting_and_has_no_remote_mcp(product, hos
         configurations = {
             name: json.loads(archive.read(name))["mcpServers"]
             for name in archive.namelist()
-            if name.endswith((".mcp.json", "mcp_config.json"))
+            if name.endswith((".mcp.json", "mcp_config.json", "mcp-services.json"))
         }
         local_reporting = {
             name: server

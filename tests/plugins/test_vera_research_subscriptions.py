@@ -274,7 +274,8 @@ def test_cli_and_mcp_share_the_same_register(tmp_path):
 def test_vera_research_entries_include_saved_subscriptions_without_a_second_method():
     root = ROOT / "plugins/vera"
     assert (
-        "researchSources" in json.loads((root / ".mcp.json").read_text())["mcpServers"]
+        "researchSources"
+        in json.loads((root / "mcp-services.json").read_text())["mcpServers"]
     )
     for name in (
         "quesito-legale-fiscale",
