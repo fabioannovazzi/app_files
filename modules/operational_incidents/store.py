@@ -335,7 +335,6 @@ class IncidentStore:
         if link is None or link["device_id"] is None:
             next_steps.append(
                 f"For a browser-owned run, replay its latest acknowledged event unchanged through workflow-record at https://mparanza.com/{product}/incident-recovery "
-                f"(legacy connections can still use {product}_workflow_record) "
                 "to obtain reporting.host_link.credentials, a short-lived proof for this run only. "
                 f"Discover {product}_incident_host_link in the host tool catalog and "
                 "call it with exactly {credentials: {installation_id, installation_key}} "

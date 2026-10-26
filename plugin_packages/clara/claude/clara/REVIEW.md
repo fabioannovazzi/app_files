@@ -8,13 +8,12 @@ incidents, task events, receipt signatures and user-authored feedback.
 Independent browser recovery uses https://mparanza.com/clara/incident-recovery.
 It is operated by the agent when the host permits browser control. Reporting
 credentials authenticate requests; they are never diagnostic content.
-The package does not require a remote MCP connection. Historical OAuth
-owners can migrate through the legacy service before their connection is retired.
+Reporting uses HTTPS; the former remote MCP and OAuth endpoints are retired.
+Original local credentials can restore the browser reporting owner.
 Client documents, professional output and unreviewed logs are not reporting inputs.
 Privacy policy: https://mparanza.com/privacy.
 
 - `claraIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
-
 
 ## Lesson downloads
 Lesson data is fetched when the user starts or resumes a lesson, not installation.

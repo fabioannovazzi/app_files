@@ -6,8 +6,8 @@ are separate from historical failure versions. They establish neither that all
 open conversations updated nor the version of an unobserved worker process.
 Use them before prescribing another reinstall from an old report alone.
 
-The anonymous OAuth connection is deployed and its independent transport is
-verified. The recurring AI monitor inspects delivered technical reports; it
+Reporting uses ordinary HTTPS with local installation capabilities or an
+independent browser session. The former remote MCP and OAuth endpoints are retired. The recurring AI monitor inspects delivered technical reports; it
 cannot detect a failure that never reaches the service. Current scheduled
 recovery is authorized end to end, including targeted diagnostic requests,
 verified source fixes, green-CI merges and Git deployments. The active agent's
@@ -36,16 +36,14 @@ Every public Cowork skill entry carries the same operational continuity
 instructions, including direct specialist invocation. Codex additionally receives
 the durable capability in its session-start context.
 
-The `veraIncidents` HTTP MCP endpoint at `/mcp/vera-incidents` does not run a local
-command. It can receive observed host failures even when local Python/Node/shell
-startup fails, provided the host exposes and connects that remote tool. When no
-local capability is available, remote registration reuses the saved OAuth
-connection UUID and supplies a report ID. Link a local outbox by proving its
-capability through register; status then includes earlier linked task reports.
-The host retains OAuth tokens outside task prompts/files. No personal account or
-client-file access is granted. Older packages need one update to join this loop.
-In Claude, connect `veraIncidents` once from Vera's Connectors panel after
-installation; this is the host's normal connector setup.
+When local Python, Node or shell startup fails, the host can operate
+`https://mparanza.com/vera/incident-recovery` through permitted browser controls.
+The page sends ordinary HTTPS requests without starting the installed plugin.
+Its anonymous owner is retained in a Secure, HttpOnly cookie. Original local
+credentials can link an outbox or restore its owner; a new browser identity
+cannot claim inaccessible history. Browser reporting does not establish a
+physical-computer identity. If browser controls are unavailable, delivery remains
+unverified. Old packages that require the remote MCP must be updated.
 
 ## Operator workflow
 

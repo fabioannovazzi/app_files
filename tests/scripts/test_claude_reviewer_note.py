@@ -20,7 +20,6 @@ def test_reviewer_note_lists_only_declared_servers_and_existing_fonts(
             {
                 "mcpServers": {
                     "veraNativeWorkspace": {"command": "node"},
-                    "veraIncidents": {"url": "https://mparanza.com/mcp/vera-incidents"},
                 }
             }
         ).encode()
@@ -39,7 +38,7 @@ def test_reviewer_note_lists_only_declared_servers_and_existing_fonts(
     assert "25 MiB" in note
     assert "temporary file" in note
     assert "1 top-level" in note
-    assert ("`veraIncidents`" in note) == (product == "vera")
+    assert "veraIncidents" not in note
     assert ("`luciaStudioArchive`" in note) == (product == "lucia")
     assert ("`mcp/workspace.cjs`" in note) == (product == "vera")
     assert "fabio@mparanza.com" in note
@@ -72,3 +71,21 @@ def test_reviewer_note_rejects_undescribed_remote_server() -> None:
     }
     with pytest.raises(ValueError, match="Unreviewed remote server"):
         _reviewer_note("vera", entries)
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_reviewer_note_rejects_retired_reporting_server(product: str) -> None:
+    entries = {
+        ".mcp.json": json.dumps(
+            {
+                "mcpServers": {
+                    product
+                    + "Incidents": {
+                        "url": f"https://mparanza.com/mcp/{product}-incidents"
+                    }
+                }
+            }
+        ).encode()
+    }
+    with pytest.raises(ValueError, match="Unreviewed remote server"):
+        _reviewer_note(product, entries)

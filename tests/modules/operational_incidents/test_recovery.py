@@ -17,8 +17,7 @@ from modules.operational_incidents.contracts import Credentials, Remedy
 from modules.operational_incidents.store import IncidentStore
 from modules.run_receipts.signing import RunReceiptSigner
 from modules.run_receipts.store import RunReceiptStore
-from tests.modules.operational_incidents.test_oauth import technical_report
-from tests.modules.workflow_usage.test_product_parity import oauth_grant
+from tests.modules.operational_incidents.support import technical_report
 
 __all__: list[str] = []
 
@@ -311,92 +310,48 @@ def test_browser_workflow_stamp_and_status_preserve_product_and_original_run(
 
 
 @pytest.mark.parametrize("product", PRODUCTS)
-def test_legacy_oauth_owner_transfers_to_browser_without_copying_history(
-    service, product
-):
-    client, store, database = service
-    token = oauth_grant(store, product)["access_token"]
-
-    def legacy(operation, arguments):
-        return client.post(
-            f"/mcp/{product}-incidents",
-            headers={"Authorization": "Bearer " + token},
-            json={
-                "jsonrpc": "2.0",
-                "id": 1,
-                "method": "tools/call",
-                "params": {
-                    "name": f"{product}_incident_{operation}",
-                    "arguments": arguments,
-                },
-            },
-        ).json()["result"]["structuredContent"]
-
-    report = {**technical_report(), "product": product}
-    original = legacy("report", {"report": report})
-    transfer = legacy("recovery_transfer", {})
-
-    restored = request(
-        client, product, "restore-session", {"transfer_code": transfer["transfer_code"]}
+def test_retired_mcp_transfer_code_cannot_restore_browser(service, product):
+    client, _, _ = service
+    response = request(
+        client, product, "restore-session", {"transfer_code": "retired-synthetic-code"}
     )
-
-    assert restored.status_code == 200
-    assert restored.json()["installation_id"] == original["installation_id"]
-    assert transfer["transfer_code"] not in restored.text
-    status = request(client, product, "status").json()
-    assert status["binding"] == "browser-recovery"
-    assert status["incidents"][0]["latest_report_id"] == report["report_id"]
-    assert len(store.queue()) == 1
-    with sqlite3.connect(database) as connection:
-        retained = connection.execute(
-            "SELECT code_hash, used FROM operational_recovery_transfers"
-        ).fetchone()
-    assert retained == (
-        hashlib.sha256(transfer["transfer_code"].encode()).hexdigest(),
-        1,
-    )
-    assert (
-        request(
-            client,
-            product,
-            "restore-session",
-            {"transfer_code": transfer["transfer_code"]},
-        ).status_code
-        == 401
-    )
+    assert response.status_code == 422
+    assert "set-cookie" not in response.headers
 
 
-def test_transfer_for_another_product_is_rejected_without_consuming_it(service):
+def test_local_credentials_cannot_restore_another_product(service):
     client, store, _ = service
-    _, actor = recovery.RecoverySessions(store).create("clara")
-    code = recovery.RecoverySessions(store).transfer(actor)
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(owner, product="clara")
+    credentials = {"credentials": owner.model_dump(mode="json")}
 
-    rejected = request(client, "lucia", "restore-session", {"transfer_code": code})
+    rejected = request(client, "lucia", "restore-session", credentials)
+    restored = request(client, "clara", "restore-session", credentials)
 
     assert rejected.status_code == 401
-    assert (
-        request(client, "clara", "restore-session", {"transfer_code": code}).status_code
-        == 200
-    )
+    assert "set-cookie" not in rejected.headers
+    assert restored.status_code == 200
+    assert restored.json()["installation_id"] == str(owner.installation_id)
 
 
 @pytest.mark.parametrize("product", PRODUCTS)
-def test_restore_preserves_both_browser_and_legacy_reports_with_original_owners(
+def test_restore_preserves_browser_and_local_reports_with_original_owners(
     service, product
 ):
     client, store, _ = service
-    sessions = recovery.RecoverySessions(store)
-    _, legacy = sessions.create(product)
-    legacy_report = {**technical_report(), "product": product}
-    original = api._connection_dispatch(
-        store, legacy, "report", {"report": legacy_report}
-    )
+    owner = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(owner, product=product)
+    local_report = {**technical_report(), "product": product}
+    original = store.report(owner, api.Report.model_validate(local_report))
     client.get(f"/{product}/incident-recovery")
     browser_report = {**technical_report(), "product": product}
     browser = request(client, product, "report", {"report": browser_report}).json()
-    transfer = sessions.transfer(legacy)
-
-    restored = request(client, product, "restore-session", {"transfer_code": transfer})
+    restored = request(
+        client,
+        product,
+        "restore-session",
+        {"credentials": owner.model_dump(mode="json")},
+    )
 
     assert restored.status_code == 200
     assert restored.json()["installation_id"] == original["installation_id"]
@@ -405,7 +360,7 @@ def test_restore_preserves_both_browser_and_legacy_reports_with_original_owners(
         row["latest_report_id"]: row["installation_id"] for row in status["incidents"]
     }
     assert owners == {
-        legacy_report["report_id"]: original["installation_id"],
+        local_report["report_id"]: original["installation_id"],
         browser_report["report_id"]: browser["installation_id"],
     }
     assert len(store.queue()[0]["deliveries"]) == 2
@@ -481,3 +436,48 @@ def test_browser_exposes_product_bound_schema_without_local_tools_or_credentials
     assert "evidence_source" in schema["$defs"]["Diagnostic"]["required"]
     assert "RecoveryEvent" not in schema["$defs"]
     assert "set-cookie" not in result.headers
+
+
+def test_browser_links_local_reports_and_recovers_only_original_member(service):
+    client, store, _ = service
+    client.get("/vera/incident-recovery")
+    local = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(local)
+    receipt = store.report(local, api.Report.model_validate(technical_report()))
+    request(
+        client,
+        "vera",
+        "register",
+        {"credentials": local.model_dump(mode="json")},
+    )
+    another = Credentials(installation_id=uuid4(), installation_key=uuid4().hex)
+    store.register(another)
+    foreign = store.report(another, api.Report.model_validate(technical_report()))
+    foreign_outcome = {
+        "outcome_id": str(uuid4()),
+        "report_id": foreign["report_id"],
+        "incident_id": foreign["incident_id"],
+        "remedy_revision": 1,
+        "status": "recovered",
+        "execution_succeeded": True,
+        "original_task_verified": True,
+    }
+
+    rejected = request(client, "vera", "outcome", {"outcome": foreign_outcome})
+    recovered = request(
+        client,
+        "vera",
+        "outcome",
+        {
+            "outcome": {
+                **foreign_outcome,
+                "outcome_id": str(uuid4()),
+                "report_id": receipt["report_id"],
+            }
+        },
+    )
+
+    assert rejected.status_code == 404
+    assert recovered.status_code == 200
+    assert recovered.json()["status"] == "recovered"
+    assert store.status(another)["incidents"][0]["status"] == "open"

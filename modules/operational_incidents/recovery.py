@@ -85,7 +85,7 @@ class RecoverySessions:
         return actor
 
     def transfer(self, actor: ConnectionActor) -> str:
-        """Give an authenticated legacy owner a short-lived, single-use transfer."""
+        """Bind an authenticated owner to a short-lived, single-use restore proof."""
         self.store.product(actor)
         code = secrets.token_urlsafe(48)
         with self.store._connection() as connection:
