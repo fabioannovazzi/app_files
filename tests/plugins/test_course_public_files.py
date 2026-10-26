@@ -66,9 +66,8 @@ def test_course_publication_keeps_one_copy_across_products_and_filenames(tmp_pat
         == stored[0]
     )
     page = (generated / "vera/example/it/course.html").read_text()
-    assert (
-        "/static/shared/courses/" + stored[0].relative_to(generated).as_posix() in page
-    )
+    assert f"/static/shared/courses/vera/_files/{digest}/input.txt" in page
+    assert "practice.txt" not in page
 
 
 def test_course_rebuild_retains_old_pins_after_attachment_changes(tmp_path):

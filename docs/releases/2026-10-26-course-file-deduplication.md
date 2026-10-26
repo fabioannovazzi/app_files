@@ -16,7 +16,9 @@ hash-verification code is unchanged. GET, HEAD, conditional responses and range
 requests retain the standard static-file behavior. Rebuilds retain historical
 hash files and reject altered historical bytes before publication.
 
-Generated HTML views link to stored inputs on the same site. Original HTML
+Generated HTML views link to stored inputs on the same site, preserving each
+lesson's original download filename even when the canonical copy has another
+name. Original HTML
 attachments remain unchanged. The current original HTML attachments have no
 relative resource links requiring a separate resource bundle. Future attachment
 layouts must continue to pass the complete public-link tests.
@@ -73,3 +75,18 @@ source review.
   A later formatting change and the historical-file integrity check required
   refreshing their corresponding bindings again. These were build-preparation
   failures, not lesson-execution failures.
+- A sandboxed broad course run was interrupted after the preview fixtures
+  failed to bind their loopback servers with `PermissionError`. The same suite
+  was rerun with local-network permission. An isolated package-test invocation
+  excluded the repository's `vera_workflow_workspace` fixture; the affected
+  test passed when rerun with its normal fixture scope.
+- Review caught that a direct link to a canonical file with another name could
+  change the browser's downloaded filename. Page links now use the original
+  filename's hash URL, resolved by the same alias mapping; the cross-filename
+  regression checks both byte identity and the preserved link basename.
+- The broad course command completed with 835 passes and one skip. After the
+  filename correction, publication/link tests passed again (28 passes, one
+  skip, 90.83% new-code coverage) and the public compiler check reproduced the
+  tree. The earlier broad package run overlapped that correction and rebuild;
+  its mixed-revision results are not release evidence. Final package validation
+  uses the completed rebuild and the full repository fixture scope.

@@ -126,11 +126,14 @@ def deduplicate(generated: Path, previous: Path, root: Path) -> None:
 
     # Pinned HTML attachments are byte-for-byte originals. Their generated reading
     # views and lesson pages may link directly to the shared stored inputs.
+    # Keep each lesson's download filename even when identical bytes have a
+    # different canonical filename; the server resolves the hash-URL alias.
+    page_links = {**aliases, **immutable_urls}
     for path in sorted(generated.rglob("*.html")):
         relative = path.relative_to(generated).as_posix()
         if "/_files/" not in relative:
             path.write_text(
-                _rewrite_links(path.read_text(encoding="utf-8"), relative, aliases),
+                _rewrite_links(path.read_text(encoding="utf-8"), relative, page_links),
                 encoding="utf-8",
             )
 
