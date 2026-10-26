@@ -476,6 +476,44 @@ def generic_payment_case():
     return items, bank, proposal
 
 
+def test_blank_description_retains_reviewed_direction_in_worker_packet(
+    runtime, monkeypatch, tmp_path
+):
+    _, helpers, semantic = runtime
+    items, bank, proposal = generic_payment_case()
+    items[0]["allocation_policy"] = "one_to_one"
+    bank[0]["allocation_policy"] = "one_to_one"
+    bank[0]["description"] = ""
+    proposal["reason"] = (
+        "One invoice and one positive receipt from the same identified customer; "
+        "the reviewed receivable side and dates support settlement."
+    )
+    proposal["allocations"][0]["citations"][-1] = {
+        "record_id": "bank-0",
+        "field": "direction_policy",
+        "quote": "receivable",
+    }
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [proposal],
+        scope={"cutoff_date": "2026-07-01", "post_cutoff_events_excluded": False},
+    )
+    packet = assumptions[semantic.KEY]["batches"][0]["packet"]
+    assert packet["targets"][0]["direction_policy"] == "receivable"
+    assert packet["sources"][0]["direction_policy"] == "receivable"
+    assert "description" not in packet["sources"][0]
+    rows = helpers.reconcile_open_items(items, bank, assumptions)
+    assert rows[0]["reconciliation_status"] == "closed"
+    assert rows[0]["residual_amount"] == "0"
+    ledgers, failures = helpers.closed_bank_allocation_controls(rows, bank, assumptions)
+    assert failures == {}
+    assert ledgers[0]["policy"]["relationship_shape"] == "one_to_one"
+
+
 def test_generic_payment_customer_citations_close_case_three_with_exact_ledger(
     runtime, monkeypatch, tmp_path
 ):

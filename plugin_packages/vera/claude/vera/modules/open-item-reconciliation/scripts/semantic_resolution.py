@@ -42,6 +42,7 @@ FIELDS = (
     "currency",
     "unit",
     "direction",
+    "direction_policy",
     "expected_side",
     "account_side",
     "side",
@@ -217,6 +218,12 @@ def _prompt(packet: dict[str, Any]) -> str:
         "amounts alone are not evidence of identity. A generic transfer description can support a relationship "
         "through source-bound customer identity and the complete candidate population, even without an invoice reference. "
         "Use the payment description or direction when available to explain its settlement meaning. "
+        "direction_policy retains the reviewed accounting side (customer/receivable or supplier/payable); "
+        "consider it together with signed cash amounts and any explicit debit/credit direction. "
+        "A blank description or absent invoice reference is not itself a conflict. Source-bound party identity, "
+        "accounting side, cash amount and dates can establish settlement when the complete population leaves "
+        "one supported interpretation. A generic advance with competing invoices remains ambiguous unless "
+        "stronger evidence identifies the invoice; an exact amount alone does not resolve that ambiguity. "
         "Explain why those quotes support the relationship and why competing candidates are excluded. "
         "No external knowledge or tools. A supported decision is an agent assessment, never professional approval.\n"
         + json.dumps(packet, ensure_ascii=False, sort_keys=True)
