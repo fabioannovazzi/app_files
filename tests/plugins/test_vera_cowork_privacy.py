@@ -146,6 +146,12 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
         "local-onboarding": ["openai-codex"],
         "managed-python-runtime": RUNTIME_PROFILE_IDS,
         "native-workspace": ["openai-codex"],
+        "on-demand-mcp": [
+            "openai-codex",
+            "anthropic-cowork",
+            "openai-chatgpt",
+            "google-antigravity",
+        ],
         "plugin-feedback": ["openai-codex"],
         "plugin-update-check": ["openai-codex"],
         "run-receipt-stamping": RUNTIME_PROFILE_IDS,
