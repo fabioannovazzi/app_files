@@ -89,4 +89,11 @@ source review.
   skip, 90.83% new-code coverage) and the public compiler check reproduced the
   tree. The earlier broad package run overlapped that correction and rebuild;
   its mixed-revision results are not release evidence. Final package validation
-  uses the completed rebuild and the full repository fixture scope.
+  used the completed rebuild and the full repository fixture scope: 577 passes
+  and four skips.
+- CI found the Geneva catalogue still bound to Vera 0.1.492. Comparison verified
+  that all 55 skill entrypoint hashes and every manifest field except the
+  version were unchanged. The inventory and assessment binding were refreshed
+  to 0.1.493, followed by the corresponding privacy fingerprint and packages.
+  A macOS job failed during dependency installation because DNS resolution for
+  the package index failed; the same job passed on retry.
