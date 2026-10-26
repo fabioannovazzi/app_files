@@ -1,8 +1,4 @@
 {
   "withdrawn_lessons": [],
-  "existing_language_downloads": [
-    "vera",
-    "lucia"
-  ],
-  "evidence": "The owner requested git revert of diagnostic commit 9b74daa6030302ac3fe277d04da9178b8405afc1 and deployment to restore both tax-litigation courses and all downloads. Keep both courses in website and package catalogues. Existing language download URLs remain supported alongside restored immutable assets."
+  "evidence": "All prepared lessons remain published. The content-addressed store and generated file-aliases.json preserve the exact bytes at historical language and immutable URLs without duplicate files."
 }

@@ -11,6 +11,7 @@ from urllib.parse import unquote, urlsplit
 
 import pytest
 
+from scripts.course_materials.public_files import resolve_public_file
 from tests.plugins.test_prepared_courses import ROOT, builder
 
 sys.path.insert(0, str(ROOT / "plugins/_shared/vendor/modules"))
@@ -173,9 +174,18 @@ def test_public_catalogue_links_every_language_and_contains_no_local_requests():
             link = urlsplit(target)
             if link.scheme or link.netloc:
                 continue
-            destination = (
-                (path.parent / unquote(link.path)).resolve() if link.path else path
-            )
+            if link.path.startswith("/static/shared/courses/"):
+                destination = resolve_public_file(
+                    directory,
+                    unquote(link.path).removeprefix("/static/shared/courses/"),
+                ).resolve()
+            else:
+                destination = (
+                    (path.parent / unquote(link.path)).resolve() if link.path else path
+                )
+                destination = resolve_public_file(
+                    directory, destination.relative_to(directory.resolve()).as_posix()
+                ).resolve()
             assert destination.is_relative_to(directory.resolve()), (path, target)
             assert destination.is_file(), (path, target)
             if link.fragment and destination in documents:

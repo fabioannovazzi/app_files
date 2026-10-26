@@ -2274,5 +2274,10 @@
     "version": "0.1.494",
     "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
     "scope": "Manifest version refresh only. All 55 skill entrypoints and existing jurisdiction judgments are unchanged. MCP launch lifetime changes establish no new jurisdiction or professional acceptance."
+  },
+  "course_dedup_release_binding": {
+    "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
+    "scope": "Only the canonical product version changed in the catalogue identity. Every skill entrypoint hash and all existing jurisdiction judgments are unchanged. Public course-file deduplication preserves attachment bytes and establishes no new Geneva professional acceptance.",
+    "version": "0.1.493"
   }
 }

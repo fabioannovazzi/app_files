@@ -9,6 +9,7 @@ import tempfile
 from pathlib import Path
 
 from build_catalog import ROOT
+from public_files import deduplicate
 from remote_files import publish_remote_files
 from render_catalog import render
 
@@ -33,13 +34,10 @@ def build_public(*, check: bool = False) -> int:
     with tempfile.TemporaryDirectory(prefix="teaching-public-") as temporary:
         generated = Path(temporary).resolve() / "courses"
         render(generated, public=True)
+        deduplicate(generated, target, ROOT)
         expected = _manifest(generated)
         if check:
-            current = {
-                name: digest
-                for name, digest in _manifest(target).items()
-                if "/_files/" not in name
-            }
+            current = _manifest(target)
             if current != expected:
                 raise ValueError(
                     "Public catalogue is stale; run build_public_catalog.py"
@@ -47,8 +45,7 @@ def build_public(*, check: bool = False) -> int:
         else:
             target.mkdir(parents=True, exist_ok=True)
             for relative in _manifest(target).keys() - expected.keys():
-                if "/_files/" not in relative:
-                    (target / relative).unlink()
+                (target / relative).unlink()
             shutil.copytree(generated, target, dirs_exist_ok=True)
     publish_remote_files(ROOT, check=check)
     return len(expected)

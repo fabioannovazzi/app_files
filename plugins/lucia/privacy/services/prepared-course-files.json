@@ -8,7 +8,10 @@
   ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/courseware",
-    "scripts/course_materials/remote_files.py"
+    "scripts/course_materials/remote_files.py",
+    "scripts/course_materials/public_files.py",
+    "scripts/course_materials/build_public_catalog.py",
+    "modules/course_files.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -79,6 +82,6 @@
     "reviewed_at": "2026-10-23",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "7e581c6620b386d37b00575adca0fd08ce160bc3c35725b2969e8a9bc99b18d8"
+    "source_fingerprint": "d1f77aa9b4956fc0ea0b935c692795204acbe48c0d0404881b49bed5d44df6fe"
   }
 }

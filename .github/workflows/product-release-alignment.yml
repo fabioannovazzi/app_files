@@ -36,7 +36,7 @@ jobs:
           node-version: '22'
       - name: Install plugin build dependencies
         run: python -m pip install -r scripts/requirements-plugin-build.txt
-      - run: python -m pip install pytest pytest-cov beautifulsoup4 pyyaml black==25.1.0 isort==6.0.1 mypy bandit uv==0.12.10
+      - run: python -m pip install pytest pytest-cov beautifulsoup4 pyyaml starlette httpx black==25.1.0 isort==6.0.1 mypy bandit uv==0.12.10
       - name: Reject shared recipe changes without a policy revision upgrade
         env:
           BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
@@ -56,6 +56,13 @@ jobs:
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_release_alignment.py --cov --cov-config=tests/product_release.coveragerc
       - name: Verify repository download limit and archive prerequisites
         run: python -m pytest --noconftest -q -o addopts='' tests/scripts/test_repository_archive_size.py tests/scripts/test_product_archive_prerequisites.py --cov=scripts.check_repository_archive_size --cov-report=term-missing --cov-fail-under=80
+      - name: Verify single-copy course downloads and historical URLs
+        run: |
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_course_public_files.py --cov=scripts.course_materials.public_files --cov=modules.course_files --cov-report=term-missing --cov-fail-under=80
+          python -m black --check scripts/course_materials/public_files.py scripts/course_materials/build_public_catalog.py scripts/course_materials/remote_files.py modules/course_files.py tests/plugins/test_course_public_files.py
+          python -m isort --check-only scripts/course_materials/public_files.py scripts/course_materials/build_public_catalog.py scripts/course_materials/remote_files.py modules/course_files.py tests/plugins/test_course_public_files.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports scripts/course_materials/public_files.py scripts/course_materials/remote_files.py modules/course_files.py
+          python -m bandit -q -ll scripts/course_materials/public_files.py scripts/course_materials/build_public_catalog.py scripts/course_materials/remote_files.py modules/course_files.py
       - name: Check archive guard and release code quality
         run: |
           python -m black --check scripts/check_repository_archive_size.py scripts/build_product_release.py scripts/check_shared_runtime_cold_start.py tests/scripts/test_repository_archive_size.py tests/scripts/test_product_archive_prerequisites.py tests/plugins/test_product_release_alignment.py

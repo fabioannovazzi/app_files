@@ -13,6 +13,7 @@ from zipfile import ZipFile
 
 import pytest
 
+from scripts.course_materials.public_files import resolve_public_file
 from scripts.course_materials.remote_files import (
     externalize_course_files,
     publish_remote_files,
@@ -227,7 +228,7 @@ def public_case(tmp_path):
 
 
 def test_externalization_preserves_metadata_and_rejects_changed_public_file(tmp_path):
-    entries, public, _ = public_case(tmp_path)
+    entries, public, immutable = public_case(tmp_path)
     before = dict(entries)
     externalize_course_files(entries, "vera", root=tmp_path)
     assert entries["assets/courses/index.json"] == before["assets/courses/index.json"]
@@ -238,18 +239,24 @@ def test_externalization_preserves_metadata_and_rejects_changed_public_file(tmp_
     assert "assets/courses/sample/files/input.txt" not in entries
     # Reapplication is required when projecting an already slimmed native package.
     externalize_course_files(entries, "vera", root=tmp_path)
-    public.write_bytes(b"changed website material")
-    with pytest.raises(ValueError, match="byte-identical"):
+    public.unlink()
+    immutable.write_bytes(b"changed website material")
+    with pytest.raises(ValueError, match="Build immutable public course files first"):
         externalize_course_files(entries, "vera", root=tmp_path)
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
-@pytest.mark.parametrize("surface", ["plugin", "chatgpt-upload", "claude-plugin"])
+@pytest.mark.parametrize(
+    "surface", ["plugin", "chatgpt-upload", "claude-plugin", "antigravity-plugin"]
+)
 def test_actual_packages_contain_only_course_metadata_and_complete_remote_maps(
     product, surface
 ):
     archive = ROOT / f"plugin_packages/{product}/{product}-{surface}.zip"
     prefix = f"{product}-codex-plugin/plugins/{product}/" if surface == "plugin" else ""
+    if surface == "antigravity-plugin":
+        archive = ROOT / f"static/shared/{product}/downloads/{product}-{surface}.zip"
+        prefix = f"{product}/"
     with ZipFile(archive) as zipped:
         assets = prefix + "assets/courses/"
         names = {
@@ -276,7 +283,10 @@ def test_actual_packages_contain_only_course_metadata_and_complete_remote_maps(
                 key = f"{workflow}/{asset['path']}"
                 keys.add(key)
                 record = remote["files"][key]
-                public = ROOT / "static/shared/courses" / product / record["url_path"]
+                assert record["url_path"].startswith("_files/")
+                public = resolve_public_file(
+                    ROOT / "static/shared/courses", f"{product}/{record['url_path']}"
+                )
                 assert (
                     hashlib.sha256(public.read_bytes()).hexdigest()
                     == record["sha256"]
@@ -288,30 +298,6 @@ def test_actual_packages_contain_only_course_metadata_and_complete_remote_maps(
             assert manifest["privacyPolicyUrl"] == "https://mparanza.com/privacy"
 
 
-def test_new_material_retains_previous_immutable_attachment(tmp_path, monkeypatch):
-    from scripts.course_materials import remote_files
-
-    _, public, old = public_case(tmp_path)
-    monkeypatch.setattr(remote_files, "PRODUCTS", frozenset({"vera"}))
-    before = old.read_bytes()
-    course_path = tmp_path / "plugins/vera/assets/courses/sample/course.json"
-    course = json.loads(course_path.read_bytes())
-    public.write_bytes(b"revised fictional lesson data")
-    course["files"][0]["sha256"] = hashlib.sha256(public.read_bytes()).hexdigest()
-    course_path.write_text(json.dumps(course))
-
-    publish_remote_files(tmp_path)
-
-    new = (
-        tmp_path
-        / "static/shared/courses/vera"
-        / remote_files.immutable_path(course["files"][0])
-    )
-    assert old.read_bytes() == before
-    assert new.read_bytes() == public.read_bytes()
-    assert new != old
-
-
 def test_immutable_attachment_cannot_be_overwritten(tmp_path, monkeypatch):
     from scripts.course_materials import remote_files
 
@@ -319,7 +305,7 @@ def test_immutable_attachment_cannot_be_overwritten(tmp_path, monkeypatch):
     monkeypatch.setattr(remote_files, "PRODUCTS", frozenset({"vera"}))
     immutable.write_bytes(b"unexpected alteration")
 
-    with pytest.raises(ValueError, match="Immutable course file changed"):
+    with pytest.raises(ValueError, match="Missing or altered immutable course file"):
         publish_remote_files(tmp_path)
 
     assert immutable.read_bytes() == b"unexpected alteration"
@@ -338,39 +324,25 @@ def write_publication_policy(root, *, withdrawn=(), language_downloads=()):
     )
 
 
-def test_language_downloads_keep_exact_hash_and_never_recreate_removed_files(
-    tmp_path, monkeypatch
-):
+def test_hash_downloads_work_after_language_copies_are_removed(tmp_path, monkeypatch):
     from scripts.course_materials import remote_files
 
     entries, public, immutable = public_case(tmp_path)
     original_hash = hashlib.sha256(public.read_bytes()).hexdigest()
-    immutable.unlink()
-    write_publication_policy(tmp_path, language_downloads=("vera",))
+    public.unlink()
     monkeypatch.setattr(remote_files, "PRODUCTS", frozenset({"vera"}))
 
     assert publish_remote_files(tmp_path, check=True) == 1
     externalize_course_files(entries, "vera", root=tmp_path)
     externalize_course_files(entries, "vera", root=tmp_path)
-    publish_remote_files(tmp_path)
 
     remote = json.loads(entries["assets/courses/remote.json"])
     assert remote["files"]["sample/files/input.txt"] == {
-        "url_path": "sample/en/files/input.txt",
+        "url_path": f"_files/{original_hash}/input.txt",
         "sha256": original_hash,
     }
-    assert not immutable.exists()
-    assert hashlib.sha256(public.read_bytes()).hexdigest() == original_hash
-
-
-def test_language_downloads_reject_altered_or_missing_existing_material(tmp_path):
-    entries, public, immutable = public_case(tmp_path)
-    immutable.unlink()
-    write_publication_policy(tmp_path, language_downloads=("vera",))
-    public.write_bytes(b"different material")
-
-    with pytest.raises(ValueError, match="byte-identical"):
-        externalize_course_files(entries, "vera", root=tmp_path)
+    assert not public.exists()
+    assert hashlib.sha256(immutable.read_bytes()).hexdigest() == original_hash
 
 
 def test_explicit_withdrawal_removes_only_lesson_and_never_regenerates_it(

@@ -158,6 +158,10 @@ def test_default_command_checks_both_hosts_for_all_products(
 
     assert release.main(["--check"]) == 0
 
+    assert commands.pop(0) == [
+        release.sys.executable,
+        "scripts/check_repository_archive_size.py",
+    ]
     assert commands[0] == [
         release.sys.executable,
         "scripts/sync_reporting_runtime.py",
@@ -199,6 +203,27 @@ def test_failed_builder_stops_release_before_other_distributions(
 
     assert release.main(["clara"]) == 1
     assert len(calls) == 1
+
+
+def test_release_check_stops_when_repository_download_guard_fails(
+    tmp_path, monkeypatch
+):
+    release_case(tmp_path, "clara")
+    monkeypatch.setattr(release, "ROOT", tmp_path)
+    calls = []
+
+    def oversized(command, **kwargs):
+        calls.append(command)
+        raise subprocess.CalledProcessError(1, command)
+
+    monkeypatch.setattr(release.subprocess, "run", oversized)
+
+    result = release.main(["clara", "--check"])
+
+    assert result == 1
+    assert calls == [
+        [release.sys.executable, "scripts/check_repository_archive_size.py"]
+    ]
 
 
 def test_command_fails_when_builders_leave_a_stale_public_zip(

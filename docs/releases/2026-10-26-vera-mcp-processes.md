@@ -54,7 +54,7 @@ start Python synchronously only for a requested operation; their process ends
 with that call. The managed Python launcher also explicitly restricts shared
 release snapshots to Vera.
 
-The extracted Clara 0.1.347 and Lucia 0.1.176 packages both completed initialize
+The extracted Clara 0.1.349 and Lucia 0.1.177 packages both completed initialize
 and tools/list for every registered service, with zero descendants remaining
 after connection closure. No analogous persistent update-protection mechanism
 was found to remove, so this change does not alter their launch paths.
@@ -67,6 +67,10 @@ Evidence: `outputs/vera-mcp-process-overhead-20261026/clara-lucia-process-counts
   regression and icon tests also passed (20 tests in the focused run).
 - Real extracted-package probes passed for ordinary and hardlinked packages;
   all selected services initialized and returned their tool lists.
+- Integrated the merged course-file release before deployment. The rebuilt
+  packages retain its public attachment aliases and release versions. Clara
+  and Lucia's process counts and the saved dated-case reconnection regression
+  passed again on the combined source.
 - Codex, upload-format, Cowork and Antigravity packages were rebuilt. The
   product release `--check` verifies source parity and version alignment.
 - Required package, update-notification and extracted-MCP startup suites: 425 passed, 2 skipped. The skipped installed-Marketplace comparisons have no matching local cache and do not establish Marketplace installation acceptance.
