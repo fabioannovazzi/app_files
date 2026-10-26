@@ -3,14 +3,14 @@
 from __future__ import annotations
 
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Callable
 from uuid import UUID, uuid4
 
 from modules.workflow_usage.contracts import pipeline_catalog
 from modules.workflow_usage.products import Product, product_name
 
-__all__ = ["SCHEMA", "reset", "inspect", "public_status"]
+__all__ = ["SCHEMA", "initialize", "reset", "inspect", "public_status"]
 
 SCHEMA = (
     "CREATE TABLE IF NOT EXISTS vera_workflow_testing_epochs (epoch_id TEXT PRIMARY KEY, started_at TEXT NOT NULL, agent_devices_json TEXT NOT NULL)",
@@ -49,6 +49,44 @@ def reset(
         (epoch["epoch_id"], product),
     )
     return epoch
+
+
+def initialize(
+    connection: Any,
+    sql: Callable[[str], str],
+    agent_devices: list[str],
+    since: str,
+    now: str,
+    product: Product = "vera",
+) -> dict[str, Any]:
+    """Create one explicit baseline; exact identity checks prevent a hidden reset."""
+    product_name(product)
+    baseline = datetime.fromisoformat(since)
+    if baseline.tzinfo is None or baseline > datetime.fromisoformat(now):
+        raise ValueError("Testing baseline must have a timezone and cannot be future")
+    since = baseline.astimezone(timezone.utc).isoformat()
+    devices = sorted({str(UUID(value)) for value in agent_devices})
+    row = connection.execute(
+        sql(
+            "SELECT e.* FROM vera_workflow_testing_epochs e LEFT JOIN workflow_testing_epoch_products p ON p.epoch_id=e.epoch_id WHERE COALESCE(p.product,'vera')=? ORDER BY e.started_at DESC,e.epoch_id DESC LIMIT 1"
+        ),
+        (product,),
+    ).fetchone()
+    if row is not None:
+        if (
+            datetime.fromisoformat(row["started_at"]) != baseline
+            or json.loads(row["agent_devices_json"]) != devices
+        ):
+            raise ValueError(
+                "Testing baseline already exists; initialization cannot reset it"
+            )
+        return {
+            "epoch_id": row["epoch_id"],
+            "started_at": row["started_at"],
+            "agent_devices": devices,
+            "created": False,
+        }
+    return {**reset(connection, sql, devices, since, product), "created": True}
 
 
 def inspect(

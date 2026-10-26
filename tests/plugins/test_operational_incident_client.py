@@ -174,7 +174,8 @@ def test_local_delivery_retains_failure_and_success_without_transport(
     assert store.queue() == []
     state = json.loads(module._state_path().read_text())
     assert state["registered"] is False and state["receipts"] == []
-    assert state["delivery_mode"] == "local-only"
+    assert state["outbox"][0]["delivery_mode"] == "local-only"
+    assert state["delivery_permissions_version"] == 1
     assert [item["operation"] for item in state["outbox"]] == ["report"]
     installation_id = state["credentials"]["installation_id"]
     module.record_success("journal-sampling", "run_sample.py")
@@ -345,10 +346,12 @@ def test_agent_diagnosis_reply_and_corrected_original_task_end_to_end(
 
 
 @pytest.mark.parametrize("component", ["deep-research-validator", None])
+@pytest.mark.parametrize("status_route", ["native", "legacy"])
 def test_real_argument_failure_through_registry_retry_and_original_task_recovery(
     tmp_path,
     monkeypatch,
     component,
+    status_route,
 ):
     """A real failure must be diagnosable before its exact successful rerun closes."""
     import sys
@@ -400,7 +403,10 @@ def test_real_argument_failure_through_registry_retry_and_original_task_recovery
     assert report["worker_runtime_version"] == sys.version.split()[0]
     assert report["diagnostics"][0]["message"] == "Missing required options: --required"
     assert original["reporting_summary"]["evidence_received"] == 1
-    module.check_incidents(recover=False)
+    if status_route == "native":
+        module.native_request({"operation": "status"})
+    else:
+        module.check_incidents(recover=False)
     helper.write_text(
         "import argparse\np=argparse.ArgumentParser()\np.add_argument('--required')\np.parse_args()\n"
     )

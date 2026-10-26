@@ -100,7 +100,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "d9821773c32c5844acfe60a248b7160329cd199de982a73364ae3a3a47f29fb4"
+      "sha256": "50678acc2f396853fd8f12eded660f01aef37bf9e94b01d466af63e2a83d9184"
     },
     {
       "path": "scripts/selective_reporting.py",
