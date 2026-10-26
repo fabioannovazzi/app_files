@@ -1113,6 +1113,25 @@ def test_assurance_replay_rejects_self_expanded_root_tree_contract(
         assurance.validate_assurance_run(output_dir)
 
 
+def test_browser_apply_generates_identifier_for_display_reviewer(
+    tmp_path: Path,
+) -> None:
+    review_server, output_dir, decisions = assured_browser_case(tmp_path)
+    label = "Codex AI technical reviewer: synthetic — acceptance"
+    decisions["reviewer"] = label
+    applied = review_server.apply_decisions(output_dir, decisions)
+    assert applied["application_status"] == "awaiting_regeneration"
+    saved = json.loads((output_dir / "ui_decisions.json").read_text())
+    receipt = json.loads((output_dir / "applied_decisions.json").read_text())
+    authority = json.loads((output_dir / "professional_review.json").read_text())
+    assert saved["reviewer"] == label
+    assert receipt["reviewer"] == load_assurance().reviewer_reference(label)
+    assert {row["reviewer_ref"] for row in authority["records"]} == {
+        receipt["reviewer"]
+    }
+    assert authority["reviewer_ref_trust"] == "unsigned_untrusted_label"
+
+
 def test_browser_save_rejects_rogue_root_directory_without_writes(
     tmp_path: Path,
 ) -> None:

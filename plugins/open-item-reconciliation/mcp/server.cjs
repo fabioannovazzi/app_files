@@ -2406,6 +2406,12 @@ function auditReviewCanonicalSha256(value) {
     .digest("hex");
 }
 
+function auditReviewReviewerReference(label) {
+  // A display label is unsigned metadata, not an authenticated identity.
+  if (/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(label)) return label;
+  return "reviewer-" + auditReviewCanonicalSha256({ label }).slice(0, 24);
+}
+
 function auditReviewPythonCandidates() {
   const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
     ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
@@ -4372,6 +4378,8 @@ function applyDecisionPayload(inputArgs) {
 function applyDecisionPayloadWrites(inputArgs) {
   const parentState = inputArgs[AUDIT_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath, materializedArgs } = buildUiDecisions(inputArgs);
+  const reviewerLabel = shortString(uiDecisions.reviewer);
+  const reviewer = reviewerLabel ? auditReviewReviewerReference(reviewerLabel) : null;
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
   const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
@@ -4418,7 +4426,7 @@ function applyDecisionPayloadWrites(inputArgs) {
       : auditReviewProfessionalAuthority(
           reviewPayload,
           effects,
-          shortString(uiDecisions.reviewer),
+          reviewer,
           decisionFingerprint,
           assuranceReplay,
         )
@@ -4521,7 +4529,7 @@ function applyDecisionPayloadWrites(inputArgs) {
       successor_assurance_replayed: successorReplayed,
     };
   }
-  if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
+  if (reviewer) appliedDecisions.reviewer = reviewer;
 
   const finalArtifacts = finalArtifactsWithApplication(
     inputArgs,

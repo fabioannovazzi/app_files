@@ -104,6 +104,7 @@ try:
         retain_review_transition,
         review_completion_pending,
         review_decision_fingerprint,
+        reviewer_reference,
         run_review_output_transaction,
         validate_assurance_run,
     )
@@ -115,6 +116,7 @@ except ImportError:  # pragma: no cover - direct script/importlib support
         retain_review_transition,
         review_completion_pending,
         review_decision_fingerprint,
+        reviewer_reference,
         run_review_output_transaction,
         validate_assurance_run,
     )
@@ -1195,6 +1197,8 @@ def _apply_decisions_in_place(
 
     directory = _output_dir(output_dir)
     ui_decisions = _build_ui_decisions(directory, input_args)
+    reviewer_label = _short_string(ui_decisions.get("reviewer"))
+    reviewer = reviewer_reference(reviewer_label) if reviewer_label else None
     review_payload = build_session_payload(directory)["review_payload"]
     item_by_id = {item["id"]: item for item in review_payload["items"]}
     applied_at = _utc_now()
@@ -1238,7 +1242,7 @@ def _apply_decisions_in_place(
                 assurance=assurance,
                 review_payload=review_payload,
                 effects=effects,
-                reviewer=_short_string(ui_decisions.get("reviewer")) or None,
+                reviewer=reviewer,
                 decision_fingerprint=decision_fingerprint,
             )
             if isinstance(assurance, dict)
@@ -1326,8 +1330,8 @@ def _apply_decisions_in_place(
             "decision_fingerprint": decision_fingerprint,
             "successor_assurance_replayed": successor_replayed,
         }
-    if "reviewer" in ui_decisions:
-        applied_decisions["reviewer"] = ui_decisions["reviewer"]
+    if reviewer:
+        applied_decisions["reviewer"] = reviewer
     final_artifacts = _final_artifacts_with_application(
         directory,
         applied_decisions,

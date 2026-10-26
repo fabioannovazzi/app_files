@@ -182,6 +182,7 @@ __all__ = [
     "retain_review_transition",
     "review_decision_fingerprint",
     "review_completion_pending",
+    "reviewer_reference",
     "rollback_assurance_run",
     "reviewed_date_convention",
     "reviewed_money_convention",
@@ -529,6 +530,13 @@ def _canonical_iso_date(value: object, *, label: str) -> str:
     if parsed.isoformat() != value:
         raise AssuranceRunError(f"{label} must be canonical ISO date text")
     return value
+
+
+def reviewer_reference(label: str) -> str:
+    """Derive unsigned technical metadata while preserving the separate UI label."""
+    if REVIEWER_REF_RE.fullmatch(label) is not None:
+        return label
+    return "reviewer-" + canonical_json_sha256({"label": label})[:24]
 
 
 def _canonical_reviewer_ref(value: object, *, label: str) -> str:

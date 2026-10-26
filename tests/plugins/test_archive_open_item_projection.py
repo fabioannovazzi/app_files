@@ -1221,7 +1221,7 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
             for key in ("run_intake", "review_payload", "final_artifacts")
         },
         "decision_source": "codex_agent",
-        "reviewer": "agent.test",
+        "reviewer": "Codex AI technical reviewer: synthetic — acceptance",
         "decisions": [
             {"item_id": item["id"], "action": "accept", "note": "PRIVATE_REVIEW_NOTE"}
             for item in review["items"]
@@ -1259,6 +1259,15 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
 
     assert saved["structuredContent"]["decision_count"] == 3
     assert applied["structuredContent"]["decision_count"] == 3
+    saved_decisions = json.loads((output / "ui_decisions.json").read_text())
+    applied_decisions = json.loads((output / "applied_decisions.json").read_text())
+    authority = json.loads((output / "professional_review.json").read_text())
+    assert saved_decisions["reviewer"] == args["reviewer"]
+    assert applied_decisions["reviewer"].startswith("reviewer-")
+    assert {row["reviewer_ref"] for row in authority["records"]} == {
+        applied_decisions["reviewer"]
+    }
+    assert authority["reviewer_ref_trust"] == "unsigned_untrusted_label"
     pending = json.loads((output / "final_artifacts.json").read_text())
     assert applied["structuredContent"]["application_status"] == "awaiting_regeneration"
     assert applied["structuredContent"]["blocker_count"] == 0
