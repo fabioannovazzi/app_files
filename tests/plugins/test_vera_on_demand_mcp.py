@@ -334,3 +334,16 @@ def test_catalogue_tampering_is_rejected_before_discovery(installation):
     assert result.returncode != 0
     assert "Installation content mismatch: mcp-catalog.json" in result.stderr
     assert not (installation.parent / "starts").exists()
+
+
+def test_catalogue_build_rejects_a_missing_service_instead_of_advertising_it(
+    installation,
+):
+    entries = {
+        file.relative_to(installation).as_posix(): file.read_bytes()
+        for file in installation.rglob("*")
+        if file.is_file() and file.name != "service.cjs"
+    }
+
+    with pytest.raises(ValueError, match="Vera catalogue generation failed"):
+        add_vera_mcp_catalog(entries)

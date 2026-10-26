@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import os
@@ -83,6 +84,20 @@ def write_zip(path, entries):
     with ZipFile(path, "w") as archive:
         for name, content in entries.items():
             archive.writestr(ZipInfo(name, (1980, 1, 1, 0, 0, 0)), content)
+
+
+def reseal_invalid_fixture(entries):
+    """Keep a damaged test package indexed without invoking the build pipeline."""
+    entries["execution-files.json"] = json.dumps(
+        {
+            "schema_version": 1,
+            "files": {
+                name: hashlib.sha256(content).hexdigest()
+                for name, content in entries.items()
+                if name != "execution-files.json"
+            },
+        }
+    ).encode()
 
 
 def alter_skill(entries):
@@ -253,8 +268,7 @@ def test_chatgpt_module_contract_rejects_invalid_layout_even_with_fresh_index(
         entries[prefix + "scripts/unexpected.py"] = b"# unexpected implementation"
     else:
         del entries[prefix + "mcp/server.cjs"]
-    builder = load_builder("build_codex_plugin_zip")
-    builder.add_vera_execution_manifest(entries)
+    reseal_invalid_fixture(entries)
     archive = tmp_path / "invalid-module.zip"
     write_zip(archive, entries)
 
@@ -269,7 +283,7 @@ def test_course_hash_drift_is_rejected_even_when_execution_index_matches(tmp_pat
         row["path"] for row in course["sources"] if row["path"].startswith("skills/")
     )
     entries[source] += b"\nSynthetic final edit after sealing.\n"
-    load_builder("build_codex_plugin_zip").add_vera_execution_manifest(entries)
+    reseal_invalid_fixture(entries)
     archive = tmp_path / "stale-course.zip"
     write_zip(archive, entries)
 
@@ -290,7 +304,7 @@ def test_invalid_course_source_blocks_release(tmp_path, source, message):
     course = json.loads(entries[course_path])
     course["sources"][0]["path"] = source
     entries[course_path] = json.dumps(course).encode()
-    load_builder("build_codex_plugin_zip").add_vera_execution_manifest(entries)
+    reseal_invalid_fixture(entries)
     archive = tmp_path / "invalid-course.zip"
     write_zip(archive, entries)
 
