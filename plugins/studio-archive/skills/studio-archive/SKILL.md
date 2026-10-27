@@ -361,6 +361,9 @@ Continue the client workflow after the input checks above:
 5. Create a new engagement with `create_studio_client_engagement`, or select an
    existing engagement returned by `list_studio_client_engagements`. Ask when
    more than one engagement could fit; never choose from recency or filename.
+   Before creation, generate and retain an internal `idempotency_key` with the
+   exact client and label. Supply the same key on retries, including after a
+   lost reply; it recovers the same engagement. Never ask the user for this key.
 6. Explain that import preserves the external original and creates an immutable
    controlled snapshot plus a SHA-256 receipt. After authorization, call
    `import_studio_client_document` for each source. Use role `source`
@@ -371,9 +374,11 @@ Continue the client workflow after the input checks above:
    exact `input_ids` and same-engagement upstream artifacts needed for this run.
    Preparation creates an immutable input manifest and a closed run-local input
    view. Repeating the same request returns the same run; set `new_run=true`
-   only when the user explicitly wants a separate run. Reuse its
-   `idempotency_key` for safe retries; choose a new key for another intentionally
-   distinct run.
+   only when the user explicitly wants a separate run. Generate and durably
+   retain an `idempotency_key` before the first call, including an explicit new
+   run. Reuse it and the exact selection for retries; choose a new key only for
+   another intentionally distinct run. This recovers a committed run even if
+   its reply was lost or its original intake receipts later became unavailable.
 8. Call `start_studio_client_workflow`, then pass the prepared
    `client_engagement_path` unchanged to the workflow entry points. Execute only
    the paths in its hydrated `input_bindings`, and write only below its exact

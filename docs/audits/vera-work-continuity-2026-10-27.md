@@ -228,3 +228,99 @@ subprocesses, not waiting on a user response. Its final result must be collected
 After the reporting-control schema correction, Vera privacy validation reports
 67 stale fingerprints and no other schema/control errors. No fingerprint refresh
 or package generation has occurred yet.
+
+## Creation, handoff, acquisition and course recovery
+
+The previously pending producer/projection run completed **198 tests** in
+1019.54 seconds (five existing SWIG warnings). Its log is
+`/private/tmp/vera-continuity-projections-current.log`. This verifies the authored
+artifact routes and open-item, bank, report-builder and native projections after
+the implementation-inventory fixes. Intermediate local commit `e77f10809`
+retains those inventory and authored-save changes.
+
+Engagement creation now accepts a software-generated, retained request key. Its
+sealed creation intent precedes directory creation; exact retries keep the same
+ID and creation time, while a different label under the same key cannot replace
+the prior matter. Run preparation recognizes an explicit retained request before
+rereading original intake receipts, preserving the admitted version and current
+run state. Normalized labels, purposes and upstream roles compare consistently.
+The component, Vera and Cowork instructions require generating and saving these
+internal keys before the first call; the professional never supplies them.
+Unkeyed explicit-new requests still intentionally allocate separate runs.
+
+Actual subprocess exits after engagement/run commit and before response delivery
+were followed by fresh CLI retries. The same identities and bytes were returned;
+the committed run remained usable even after its original receipt was removed.
+A separate reproduced handoff failure required a completed producer's old input
+copies even though its selected result and sealed artifact receipt were intact.
+Handoff now verifies that exact result without reopening the producer's input
+gate. The current creation/concurrency/ledger/recovery selection passes
+**74 tests** (`/private/tmp/vera-continuity-archive-retry-final.log`).
+
+Owning-source inspection of Agenzia acquisition found three additional failures,
+all reproduced before repair: identity rediscovery on resume, CLI status delivery
+withheld by reporting storage failure, and a saved acquisition event interrupted
+by source-measurement failure. The adapter now retains its selected Archive run,
+uses immutable identity for report/output access, and reports measurement gaps
+separately. The MCP delivery bridge also preserves status when its reporting call
+fails. A foreign pipeline binding receives no measurements; other valid bindings
+still receive explicit gap records. The native panel's resume now carries the
+same Archive bindings as CLI resume. A new worker attempt may have another worker
+ID; it continues the same professional Archive runs and verified originals.
+Acquisition recovery checks passed 27 tests after panel repair, and the additional
+mixed-binding gap selection passed nine tests.
+
+Course recovery now has an explicit `local_onboarding.py relocate` operation for
+an authorized alternate folder. It preserves enrollment/session IDs, profile,
+progress and exact evidence bytes; resumes partial copies; refuses symlinks and
+unrelated destinations; and does not overwrite newer destination progress on
+replay. Retained absolute receipt paths resolve through the completed local
+relocation record, with exact current-byte checks. Original folders and receipt
+bytes are unchanged. No automatic upload, deletion or new permission is implied.
+An inaccessible source requires an available retained copy; the code does not
+promise recovery of unreadable bytes. A saved phase now retains its admitted
+procedure version across a plugin update, while receipt or evidence changes still
+prevent a false completion. The combined course/acquisition run passed **121
+tests** (`/private/tmp/vera-continuity-course-agenzia.log`). New recovery module
+Mypy and Bandit checks passed. Privacy controls and five localized course data
+explanations describe the actual additional local copies and path records.
+
+The broader course run initially had 162 passes and 35 failures: 30 stale prepared
+course fingerprints, two absent package ZIPs and three test-fixture lazy-import
+failures. The fixture restores its shared import root; the current catalog build
+regenerated 58 kits / 258 localized kits with no missing translations. The
+post-build runtime selection passed **199 tests**, with the two package-dependent
+checks deselected, in 181.29 seconds
+(`/private/tmp/vera-continuity-courses-rebuilt.log`). Those package-dependent
+checks still need built ZIPs.
+
+The native executor now checks an existing exact request before current-package
+admission. The previous implementation rejected a committed result after a valid
+newer package removed that component; the repaired fresh-service retry returns
+the saved result and rejects different arguments under the same job ID. The
+reproduction and passing target are recorded in `vera-continuity-native-retry-
+reproduced.log` and `vera-continuity-native-retry-final.log` under `/private/tmp`.
+The full native selection passed 45 checks with appropriate local process/sandbox
+permissions; its remaining failure was the new test fixture retaining empty
+directories outside its digest index. After correcting that fixture, the target
+passed separately. Earlier nested-sandbox failures in cancellation and OS sandbox
+probes passed with the required permissions. No installed Windows acceptance is
+inferred from these local processes.
+
+Additional owning-route findings: fusione imports Archive receipts once into
+SQLite blobs, and later `_base_issues` verifies retained blob hashes instead of
+reopening original folders. Legal document/matter helpers retain relative
+original snapshots, revision histories and output identities. Bilancio's
+jurisdiction adapter uses the repaired shared context loader; its case service
+has durable job/idempotency records and a separate controlled-input intake.
+Studio calendar instructions retain uncertain external outcomes and verify the
+specific event before retry. Studio document formatting has an upfront separate
+workspace and retains previous standard versions. The synthetic transformation
+route remains separate from Archive and keeps its bounded case/consent scope.
+These are inspected source boundaries, not full engine or host acceptance.
+
+Release work remains: finish the owning-route audit, integrate the newer main,
+review/refresh the changed privacy fingerprints, generate contracts,
+reserve noncolliding versions, rebuild all affected host packages and complete
+the relevant full quality/package checks. No deployment, Marketplace publication
+or installed-host fix is claimed. The active task branch/worktree is retained.

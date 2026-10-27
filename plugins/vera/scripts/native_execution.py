@@ -178,6 +178,28 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
     if job.is_symlink():
         raise ValueError("Execution job directory is not a regular retained job")
     if operation == "run":
+        retained = job / "request.json"
+        if retained.is_symlink():
+            raise ValueError("Execution request is not a regular retained record")
+        if retained.is_file():
+            # A retry reads an already admitted job. Current package files and
+            # reporting setup are requirements for a new launch, not its result.
+            spec = {
+                "component": args.get("component"),
+                "script": args.get("script", "scripts/check_dependencies.py"),
+                "arguments": args.get("arguments", []),
+                "task_id": _uuid(args.get("task_id", args["job_id"])),
+                "incident_delivery": args.get("incident_delivery"),
+                "requirements": args.get("requirements", []),
+            }
+            fingerprint = hashlib.sha256(
+                json.dumps(spec, sort_keys=True).encode()
+            ).hexdigest()
+            if json.loads(retained.read_text())["fingerprint"] != fingerprint:
+                raise ValueError("This job ID already belongs to a different execution")
+            return execute(
+                {"operation": "status", "job_id": job_id, "wait_seconds": wait}
+            )
         spec = _specification(args)
         fingerprint = hashlib.sha256(
             json.dumps(spec, sort_keys=True).encode()

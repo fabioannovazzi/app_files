@@ -36,6 +36,7 @@ else:
 
 from courseware.access import CourseAccessError, verify_course_access
 from courseware.execution import ExecutionError, collect_execution, verify_execution
+from courseware.recovery import previous_roots, relocate_course, resolve_course_path
 
 __all__ = ["OnboardingError", "Store", "default_root", "main"]
 
@@ -223,12 +224,16 @@ class Store:
         state = _read(self.path)
         _validate(state)
         for lesson in state["lessons"]:
-            if lesson["status"] in {"active", "complete"} and lesson.get(
-                "directory"
-            ) != str(self.root / "lessons" / lesson["workflow_id"]):
-                raise OnboardingError(
-                    "Lesson location changed; recover the original local scope"
-                )
+            if lesson["status"] in {"active", "complete"}:
+                current = self.root / "lessons" / lesson["workflow_id"]
+                if (
+                    resolve_course_path(self.root, lesson.get("directory", ""))
+                    != current
+                ):
+                    raise OnboardingError(
+                        "Lesson location changed; recover the same course with relocate"
+                    )
+                lesson["directory"] = str(current)
         if state["onboarding_id"] != enrollment.get("onboarding_id"):
             raise OnboardingError(
                 "Profile and enrollment differ; reconnect the original profile"
@@ -336,6 +341,14 @@ class Store:
         """Keep artifact paths bound to the enrollment's actual lesson directory."""
         return self.root / "lessons" / lesson["workflow_id"]
 
+    def previous_lesson_roots(self, lesson: dict[str, Any]) -> tuple[Path, ...]:
+        """Resolve retained receipt paths only through an explicit course copy."""
+        current = self.lesson_root(lesson)
+        if not current.is_relative_to(self.root):
+            return ()  # Real professional work remains in its selected scope.
+        relative = current.relative_to(self.root)
+        return tuple(root / relative for root in previous_roots(self.root))
+
     def _evidence(self, lesson: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
         paths = data.get("artifacts")
         if not isinstance(paths, list) or not paths or len(paths) > 30:
@@ -386,6 +399,7 @@ class Store:
                 worker_thread_id=pair["worker_thread_id"],
                 record_path=data.get("execution_record"),
                 artifacts=artifacts,
+                previous_roots=self.previous_lesson_roots(lesson),
             )
         except ExecutionError as exc:
             raise OnboardingError(str(exc)) from exc
@@ -400,6 +414,7 @@ class Store:
                 phase=phase,
                 recorded=lesson[phase].get("execution"),
                 artifacts=lesson[phase]["artifacts"],
+                previous_roots=self.previous_lesson_roots(lesson),
             )
         except ExecutionError as exc:
             raise OnboardingError(str(exc)) from exc
@@ -680,9 +695,11 @@ def main(argv: list[str] | None = None) -> int:
             "checkpoint",
             "worker",
             "recover",
+            "relocate",
         ],
     )
     parser.add_argument("--directory", type=Path, action="append", default=[])
+    parser.add_argument("--destination", type=Path)
     parser.add_argument("--revision", type=int)
     parser.add_argument("--input", type=Path)
     parser.add_argument("--thread-id")
@@ -707,6 +724,13 @@ def main(argv: list[str] | None = None) -> int:
                     "Select a verified local recovery copy with --input"
                 )
             result = store.recover(args.input)
+        elif args.command == "relocate":
+            if args.destination is None:
+                raise OnboardingError(
+                    "Select an authorized new course folder with --destination"
+                )
+            result = relocate_course(store.root, args.destination)
+            result["course"] = Store(args.destination).status()
         elif args.command == "worker":
             if not all((args.thread_id, args.workflow, args.token)):
                 raise OnboardingError(
@@ -726,7 +750,7 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps({**exc.as_dict(), "workspace": store.workspace()}) + "\n"
         )
         return 2
-    except (OnboardingError, OSError) as exc:
+    except (ValueError, OSError) as exc:
         sys.stdout.write(
             json.dumps({"phase": "recovery_required", "error": str(exc)}) + "\n"
         )

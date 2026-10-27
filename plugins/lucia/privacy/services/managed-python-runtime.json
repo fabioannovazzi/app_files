@@ -165,6 +165,15 @@
         "scripts/managed_python_runtime.py"
       ],
       "on_violation": "The maintained launcher must stop rather than resolving technical diagnostics from the caller working directory."
+    },
+    {
+      "id": "admitted-archive-work-checkpoints",
+      "control": "When a managed helper carries a selected Archive context, the launcher checkpoints that exact run before and after the helper. Owner-private storage outside the selected archive retains deduplicated admitted inputs, source-receipt snapshots, completed outputs and run headers. It adds local copies with no external upload or automatic deletion. Recovery selects the same IDs and exact byte hashes, retains changed evidence and refuses unrelated destinations. Missing optional checkpoint storage does not hide a committed result or invalidate unchanged available inputs. The selected model may receive checkpoint status, technical identities and local context/output paths from the owning tool; copying bytes itself does not send them to a model. Standalone helpers without Archive context do not create an Archive run.",
+      "implemented_by": [
+        "scripts/_managed_python_runtime.py",
+        "repository:plugins/_shared/vendor/modules/vera_assurance/recovery.py"
+      ],
+      "on_violation": "Keep the same job and accessible completed work, expose checkpoint availability separately, and recover only from actual verified copies at an authorized destination. Do not claim inaccessible or unsaved bytes were recovered."
     }
   ],
   "review": {
@@ -172,5 +181,8 @@
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
     "source_fingerprint": "eb9921e021f9df5087d98c0a06046d5b1ec1716bc66c973113b9bedc45940a95"
-  }
+  },
+  "governed_repository_paths": [
+    "plugins/_shared/vendor/modules/vera_assurance/recovery.py"
+  ]
 }

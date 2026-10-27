@@ -385,7 +385,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -416,6 +416,11 @@
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
       "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/recovery.py",
+      "sha256": "91edce4ba8fbdda238c506a57d03a839c26390b1a1418fdc225e46d557020dbc"
     },
     {
       "path": "vendor/modules/courseware/sales_plan_view.py",

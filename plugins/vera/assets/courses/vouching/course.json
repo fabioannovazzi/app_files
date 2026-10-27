@@ -65,12 +65,12 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "cf7d6a233146e8f3b020923d645ea2d6cbaf4a83a0a38964183e2ff8431867ac"
+      "sha256": "0c1bd62eec38f7c20169362779ab7ffd8ce79db71e34e928d8c0f8b226f6da7f"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/check-entries/scripts/implementation_bootstrap.py",
-      "sha256": "baeee0ba90dd7adff407069ca60e3acc74f1ae2ba4d8c2d054f64f17a0803a58"
+      "sha256": "2703a48cf95c6c998b6a353edb91522993858c581e0460afd8e3126aab300a22"
     },
     {
       "path": "modules/check-entries/scripts/implementation_contract.py",
@@ -145,7 +145,7 @@
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/decisions.py",
@@ -166,6 +166,11 @@
       "path": "modules/check-entries/vendor/modules/vera_assurance/money.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/check-entries/vendor/modules/vera_assurance/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/relationships.py",
@@ -215,7 +220,7 @@
     {
       "path": "skills/vouching/SKILL.md",
       "repository_path": "plugins/vera/skills/vouching/SKILL.md",
-      "sha256": "3dadb59125584ee539600474daf79501351b0256c188a724bf06aed59e97a358"
+      "sha256": "1c9cd925a5aafd2f5e97052f628026e77512ae574bbe866cfec3607472fe4104"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -295,7 +300,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -326,6 +331,11 @@
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
       "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/recovery.py",
+      "sha256": "91edce4ba8fbdda238c506a57d03a839c26390b1a1418fdc225e46d557020dbc"
     },
     {
       "path": "vendor/modules/courseware/sales_plan_view.py",
@@ -450,7 +460,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -471,6 +481,11 @@
       "path": "vendor/modules/vera_assurance/money.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",

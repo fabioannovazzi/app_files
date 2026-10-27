@@ -44,6 +44,12 @@ def store(request, tmp_path):
     )
 
 
+@pytest.fixture(autouse=True)
+def shared_module_imports(monkeypatch):
+    """Restore lazy-import roots after other plugin fixtures isolate sys.path."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+
+
 def change(store, action, **data):
     state = store.status()
     return store.change(action, state.get("session", state)["revision"], data)

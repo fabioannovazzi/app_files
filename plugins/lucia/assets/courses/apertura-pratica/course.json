@@ -132,6 +132,21 @@
       "sha256": "8cdc87341ab9d39c59446bb4a02994a24f4cdf024dfb9c284c80b7e540d15c4c"
     },
     {
+      "path": "scripts/archive_cli.py",
+      "repository_path": "plugins/lucia/scripts/archive_cli.py",
+      "sha256": "80e0c062fb3ce49b4cdad3a625e91cc7f5db6376718e9e2aad2df747124fc8e6"
+    },
+    {
+      "path": "scripts/archive_emit.py",
+      "repository_path": "plugins/lucia/scripts/archive_emit.py",
+      "sha256": "e6af4a0b8ac814638f85541cd18d9841760ca7f0410e8039256b92521c72416a"
+    },
+    {
+      "path": "scripts/archive_projection.py",
+      "repository_path": "plugins/lucia/scripts/archive_projection.py",
+      "sha256": "96dfa605cce28df808400ab76dab98cd3c27d7ae7fd71c343ea56dd8f7b3027c"
+    },
+    {
       "path": "scripts/archive_report_legacy.py",
       "repository_path": "plugins/lucia/scripts/archive_report_legacy.py",
       "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
@@ -159,7 +174,12 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/lucia/scripts/archive_reporting.py",
-      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
+      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+    },
+    {
+      "path": "scripts/archive_reporting_failure.py",
+      "repository_path": "plugins/lucia/scripts/archive_reporting_failure.py",
+      "sha256": "3705b3118295be6c25f125560baf1db7312c4c83e5d41cdff6f3cb661c893f5f"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -185,6 +205,11 @@
       "path": "scripts/selective_reporting.py",
       "repository_path": "plugins/lucia/scripts/selective_reporting.py",
       "sha256": "3c99afa7d416625bd94d1dc0aab41ea354df662f0362098f3b431a57fecba8ba"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "repository_path": "plugins/lucia/scripts/verified_execution.py",
+      "sha256": "1340e966090b0f85698efef60b554f8f7e7ff6ac93be0c98424cdcf8288acdf0"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -274,7 +299,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -305,6 +330,11 @@
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
       "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/recovery.py",
+      "sha256": "91edce4ba8fbdda238c506a57d03a839c26390b1a1418fdc225e46d557020dbc"
     },
     {
       "path": "vendor/modules/courseware/sales_plan_view.py",

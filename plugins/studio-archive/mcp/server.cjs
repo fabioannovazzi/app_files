@@ -403,7 +403,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.createEngagement,
       title: "Create a Studio Archive client engagement",
       description:
-        "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type. For work starting from supplied files, check_studio_import_sources must first establish access to all selected inputs; warn and resolve unavailable inputs before creation. Documentless work does not require a file check.",
+        "Create one durable engagement and managed input folder for an exact registered client without assuming a document type. Generate one idempotency_key for this intended engagement and retain it before calling; reuse it after any timeout, lost response or interrupted save to recover the same engagement. The professional never supplies this key. Check access to selected supplied inputs before creation; documentless work needs no file check.",
       inputSchema: objectSchema(
         {
           client_id: {
@@ -414,6 +414,10 @@ function toolDefinitions() {
             type: "string",
             minLength: 1,
             maxLength: 160,
+          },
+          idempotency_key: {
+            type: "string", minLength: 1, maxLength: 200,
+            description: "Software-managed request key. Generate once per intentionally new engagement and reuse unchanged on every retry.",
           },
         },
         ["client_id", "engagement_label"],
@@ -1195,18 +1199,21 @@ function commandForTool(name, rawArgs) {
     return command;
   }
   if (name === TOOL_NAMES.createEngagement) {
-    assertOnlyKeys(args, new Set(["client_id", "engagement_label"]));
+    assertOnlyKeys(args, new Set(["client_id", "engagement_label", "idempotency_key"]));
     const clientId = requireString(args.client_id, "client_id");
     if (!/^client_[0-9a-f]{24}$/.test(clientId)) {
       throw new Error("client_id must be an exact registered client.");
     }
-    return [
+    const command = [
       "create-engagement",
       "--client-id",
       clientId,
       "--engagement-label",
       requireString(args.engagement_label, "engagement_label"),
     ];
+    const key = optionalString(args.idempotency_key, "idempotency_key", 200);
+    if (key !== null) command.push("--idempotency-key", key);
+    return command;
   }
   if (name === TOOL_NAMES.snapshotFolder) {
     assertOnlyKeys(args, new Set(["client_id", "engagement_id"]));

@@ -2494,6 +2494,7 @@ def create_studio_client_engagement(
     client_id: str,
     engagement_label: str,
     *,
+    idempotency_key: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Create one durable engagement inside the selected customer folder."""
@@ -2504,11 +2505,15 @@ def create_studio_client_engagement(
     ]
     client_root = Path(folder["client_root"])
     try:
-        engagement = ledger.create_engagement(
-            client_root,
-            client_id,
-            _normalize_engagement_label(engagement_label),
-        )
+        label = _normalize_engagement_label(engagement_label)
+        if idempotency_key is None:
+            engagement = ledger.create_engagement(client_root, client_id, label)
+            created = True
+        else:
+            outcome = ledger.ensure_engagement(
+                client_root, client_id, label, idempotency_key=idempotency_key
+            )
+            engagement, created = outcome["engagement"], outcome["created"]
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Customer-folder engagement is invalid: {exc}") from exc
     input_root = (
@@ -2519,11 +2524,11 @@ def create_studio_client_engagement(
         / "inputs"
     )
     return {
-        "status": "created",
+        "status": "created" if created else "already_created",
         "client_id": client_id,
         "engagement": {**engagement, "imports": []},
         "input_dir": str(input_root.resolve(strict=True)),
-        "source_archive_mutated": True,
+        "source_archive_mutated": created,
     }
 
 

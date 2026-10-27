@@ -127,11 +127,27 @@ On macOS/Linux use the current host's matching permission controls and observed
 error; do not give Windows instructions. If even the helper cannot start, its
 launch error is the blocker and absence of JSON is never a successful check.
 
-A later failed save immediately stops new teaching steps and dispatches. Preserve
-existing files; save a pause checkpoint only if storage permits, otherwise say
-that the pause could not be saved. Resolve access and recheck before resuming
-from the last verified checkpoint. The user may leave the course for ordinary
-work; do not describe that choice as course progress or completion.
+A later failed save is a recovery of the same course. Preserve completed work,
+the current explanation, the enrollment and teaching-session IDs; do not repeat
+the interview, lesson or completed exercise. Keep independent work moving and
+retry only the affected save. Save accessible progress in an already-authorized
+durable location. If none is available, ask only for the alternate save location.
+
+When the course remains readable (or an exact retained copy is available), use
+`local_onboarding.py relocate --state-root "<existing-course>" --destination
+"<authorized-new-folder>"`. This copies the same enrollment, progress and files,
+verifies their bytes, preserves the originals and can resume an interrupted copy.
+It refuses to overwrite unrelated work. Use the returned `state_root` in both
+chats and all subsequent commands, verify ordinary access there, and resume the
+same lesson/session. Existing receipts retain their original bytes; recorded
+absolute paths resolve through the explicit relocation. Real professional work
+outside the course folder retains its separate selected destination.
+
+Do not claim inaccessible bytes were recovered or record an unsaved step as
+completed. If no readable copy exists, retain the current result wherever access
+permits and explain exactly which saved progress remains unavailable. A temporary
+storage problem does not cancel the course or require reenrollment. The user may
+leave the course for ordinary work; that choice is not course completion.
 
 Official host guidance (verify the installed host's controls if they differ):
 - https://learn.chatgpt.com/docs/windows/windows-app

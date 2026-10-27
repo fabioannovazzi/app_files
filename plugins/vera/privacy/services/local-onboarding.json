@@ -124,7 +124,7 @@
     },
     {
       "id": "resumable-evidence-and-concurrency",
-      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication. Repeated demonstrations and guided attempts have separate evidence, stale-result checks and exact native thread tokens. A user-selected real-work handoff binds source hashes and a separate destination, rotates the token and refuses use of the tutorial adapter. Real professional execution retains its selected specialist data boundaries and approvals. Before lesson creation and worker dispatch, exact workflow IDs must belong to Vera's catalog and resolve to a skill inside the same installed Vera root. Worker responses identify that product, root and exact skill path; native teacher/worker instructions prohibit cross-product teaching.",
+      "control": "Local exclusive save locks and revision checks prevent concurrent chat overwrites; separate enrollment detects a missing profile; lesson completion requires distinct demo/practice artifacts, replayed hashes and an explicit user-understanding attestation. Work and interests are assessed by the native model. Thread tokens coordinate one active lesson, not host authentication. Repeated demonstrations and guided attempts have separate evidence, stale-result checks and exact native thread tokens. A user-selected real-work handoff binds source hashes and a separate destination, rotates the token and refuses use of the tutorial adapter. Real professional execution retains its selected specialist data boundaries and approvals. Before lesson creation and worker dispatch, exact workflow IDs must belong to Vera's catalog and resolve to a skill inside the same installed Vera root. Worker responses identify that product, root and exact skill path; native teacher/worker instructions prohibit cross-product teaching. Replaying a saved phase validates its exact admitted execution receipt and current evidence bytes; a later installed procedure version does not require repeating that completed phase. New phase admission still checks the installed procedure.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",
@@ -161,14 +161,14 @@
     },
     {
       "id": "course-file-access",
-      "control": "Before teaching, instructions connect the existing shared course directory as the host workspace or request scoped host write access. The stdlib setup helper saves and reloads the real profile without advancing lessons or changing the saved revision. Temporary probes check create/read/write/update/replace/delete operations; state mutations and worker dispatch repeat checks for their actual directories. Diagnostics expose only the exact local paths, operation and native error to the selected host model. Grants are host-controlled; helpers neither change OS permissions nor infer successful access from an approval click. Existing profiles are not relocated or reset. No new network transport or external recipient is introduced.",
+      "control": "Before teaching, instructions connect the existing shared course directory as the host workspace or request scoped host write access. The stdlib setup helper saves and reloads the real profile without advancing lessons or changing the saved revision. Temporary probes check create/read/write/update/replace/delete operations; state mutations and worker dispatch repeat checks for their actual directories. Diagnostics expose only the exact local paths, operation and native error to the selected host model. Grants are host-controlled; helpers neither change OS permissions nor infer successful access from an approval click. A later unavailable destination can be recovered with an explicit copy to an authorized new folder, retaining the same enrollment and session IDs. No profile is reset. No new network transport or external recipient is introduced.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "scripts/local_teaching.py",
         "skills/learn-with-vera/references/file-access.md",
         "repository:plugins/_shared/vendor/modules/courseware/access.py"
       ],
-      "on_violation": "Failed checks or saves pause course progression. The host obtains the exact folder access, retries with normal sandbox permissions and preserves existing progress. Ordinary professional work remains optional and available."
+      "on_violation": "A failed save preserves existing progress and the current result. Recover the affected operation, obtaining only missing folder access or an alternate destination; never reenroll or repeat completed teaching. Do not claim inaccessible bytes were saved."
     },
     {
       "id": "native-course-chat-invitation",
@@ -181,6 +181,17 @@
         "repository:plugins/_shared/vendor/modules/courseware/native.cjs"
       ],
       "on_violation": "Block stale, expired, replaced, duplicate or interrupted claims; return to the teacher and preserve course files and progress."
+    },
+    {
+      "id": "course-relocation-continuity",
+      "control": "Explicit course relocation copies the selected local profile, enrollment, course files, execution receipts and lesson/session progress to an authorized new local folder. Exact file hashes are checked, symlinks and unrelated destinations are rejected, interrupted copies can resume, and completed retries do not roll back later progress. Originals remain in place with no automatic deletion or upload. A local sealed relocation record contains prior absolute roots, enrollment ID, relative file names and hashes; retained receipts resolve only through these aliases and current evidence hashes, without reading the former path. The host model may see the returned local path, enrollment ID, profile and progress when continuing the same course. Professional work outside the course retains its separate scope.",
+      "implemented_by": [
+        "scripts/local_onboarding.py",
+        "scripts/local_teaching.py",
+        "repository:plugins/_shared/vendor/modules/courseware/recovery.py",
+        "repository:plugins/_shared/vendor/modules/courseware/execution.py"
+      ],
+      "on_violation": "Preserve the source and any partial destination; report unavailable or changed bytes without claiming completed recovery or course completion."
     }
   ],
   "service_id": "local-onboarding"

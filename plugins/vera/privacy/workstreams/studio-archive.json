@@ -462,6 +462,10 @@
     {
       "id": "same-run-private-checkpoint-recovery",
       "control": "Preparation, start, lifecycle updates and managed helpers retain an independent owner-private checkpoint of one exact run. Authored saves through the Archive owner checkpoint their result too. Hash-addressed objects and sealed snapshots retain inputs, source receipts, run headers and outputs; SQLite reporting state uses a consistent database backup. No external upload or automatic deletion occurs. Recovery verifies the same immutable client/engagement/run identity and exact bytes, preserves changed inputs and partial copies, and never overwrites an unrelated destination. The authorized destination retains the same run IDs. Checkpoint failures remain explicit and never hide a committed result; unavailable optional backup storage does not invalidate unchanged available input copies. A restored engine may require its own supported path relocation; file recovery alone does not establish that continuation is supported."
+    },
+    {
+      "id": "retained-mutation-requests",
+      "control": "Software-generated request keys distinguish an exact engagement creation or run preparation from intentionally separate work. Engagement creation stores a sealed local intent with client and engagement IDs, label, original creation time and request hashes before creating the folder. The raw creation key is not stored in that intent. Run requests retain their existing idempotency key and admitted manifest. A repeated exact request reuses the committed identity and current progress without rereading original intake receipts; a changed selection under the same key is rejected without overwriting work. The host model receives the retained identities/status and ordinarily knows its generated request key; no external request is added."
     }
   ],
   "workstream": "studio-archive",

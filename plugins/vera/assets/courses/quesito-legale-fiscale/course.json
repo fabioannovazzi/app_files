@@ -160,7 +160,7 @@
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/decisions.py",
@@ -181,6 +181,11 @@
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/money.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/deep-research-validator/vendor/modules/vera_assurance/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/relationships.py",
@@ -215,7 +220,7 @@
     {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
       "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "0b28e74b58df5924db2d8bba44e509fcc414aea59f67be7bac49888cb5df9a5e"
+      "sha256": "c5aedeba1bc961928fe6206c44d3c34ae0f87414caa9658bbf87491e362e8ac9"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -310,7 +315,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -341,6 +346,11 @@
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
       "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/recovery.py",
+      "sha256": "91edce4ba8fbdda238c506a57d03a839c26390b1a1418fdc225e46d557020dbc"
     },
     {
       "path": "vendor/modules/courseware/sales_plan_view.py",
@@ -465,7 +475,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -486,6 +496,11 @@
       "path": "vendor/modules/vera_assurance/money.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",

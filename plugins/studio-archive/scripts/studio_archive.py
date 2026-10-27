@@ -139,6 +139,7 @@ def _parser() -> argparse.ArgumentParser:
     create_engagement = subparsers.add_parser("create-engagement")
     create_engagement.add_argument("--client-id", required=True)
     create_engagement.add_argument("--engagement-label", required=True)
+    create_engagement.add_argument("--idempotency-key")
 
     check_sources = subparsers.add_parser("check-import-sources")
     check_sources.add_argument(
@@ -385,6 +386,7 @@ def main(argv: list[str] | None = None) -> int:
             result = create_studio_client_engagement(
                 args.client_id,
                 args.engagement_label,
+                idempotency_key=args.idempotency_key,
             )
         elif args.command == "copy-client-source-folder":
             result = copy_studio_client_source_folder(

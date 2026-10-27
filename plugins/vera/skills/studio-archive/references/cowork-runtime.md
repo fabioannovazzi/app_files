@@ -205,12 +205,17 @@ Complete the supplied-file checks above before these record-creation steps.
    for a general label. Storage creation does not initiate professional
    onboarding. Retain the returned IDs throughout the work.
 3. Run `create-engagement` or `engagements` and select one exact engagement.
+   Before creation, generate and save an internal request key with the exact
+   client and label; pass `--idempotency-key`. Reuse that key after an interrupted
+   call or lost reply. The professional does not supply technical keys.
 4. Explain that import preserves the original and creates an immutable copy and
    SHA-256 receipt. After authorization, run `import-document` separately for
    each selected file with role `source`, `journal`, or `support`.
 5. Run `prepare-workflow` with the exact workflow ID, input IDs, and any exact
    finalized same-engagement upstream artifacts. Repeating the same request is
-   idempotent; use `--new-run` only for an explicitly separate run.
+   idempotent; use `--new-run` only for an explicitly separate run. Generate and
+   save a request key before calling, pass `--idempotency-key` (also with
+   `--new-run`), and retain it unchanged for retries of that same request.
 6. Run `start-workflow`. Pass the returned `client_engagement_path` unchanged to
    the specialist module. Execute only its hydrated input bindings and write
    only below its exact output directory.

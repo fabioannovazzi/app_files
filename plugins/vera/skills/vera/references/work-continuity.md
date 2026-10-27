@@ -37,6 +37,15 @@ Preparation and start return `recovery.status` for an independent owner-private
 checkpoint. Verify that it says `retained`; if unavailable, establish an available
 recovery location at intake while keeping the existing prepared job.
 
+Before each engagement creation or run preparation, generate a request key and
+save it with the exact requested operation in the task's durable working notes.
+Supply it as `idempotency_key` (CLI: `--idempotency-key`), including when creating
+an explicitly separate run. Reuse that same key and request after an interrupted
+tool call or lost reply. Never ask the professional to supply this internal key.
+Engagement creation records its intent before directory creation; run preparation
+recognizes a committed request before rereading intake sources. A retry returns
+the saved identity and current state, without allocating another engagement/run.
+
 ## During the work
 
 Passed startup choices stay passed for this job. Every helper inherits the same
