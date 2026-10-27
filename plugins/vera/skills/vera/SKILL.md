@@ -345,9 +345,11 @@ binds its hash to existing authenticated Vera userID, the same Archive run and
 report revision. Pending receipts retry automatically; they never invalidate
 professional work. To suppress transmission when the user requests it, save
 `model_data_report_options.json` with `{"local_only": true}` before the terminal
-Archive write. This does not suppress the local report. Verify an existing report
-with `scripts/archive_report_receipt.py verify --report PATH`; verification uses
-the current machine's Vera userID by default.
+Archive write. This does not suppress the local report. Verify an existing terminal report
+with `verify_studio_run_report` for the exact client, engagement and run; the
+service uses the current machine's Vera userID. An unavailable verification
+remains separate from the pipeline outcome; never rerun work or restamp a report
+merely to verify it. Follow `references/selective-reporting.md` for fallback.
 
 ## Synthetic transformation prototype
 

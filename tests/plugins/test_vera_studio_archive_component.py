@@ -2455,6 +2455,8 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
         "verify_studio_client_inputs",
         "prepare_studio_client_workflow",
         "read_studio_run_artifact",
+        "write_studio_run_artifact",
+        "verify_studio_run_report",
         "start_check_entries_from_sample",
         "start_studio_client_workflow",
         "fail_studio_client_workflow",
@@ -2481,6 +2483,7 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
         is True
     )
     external_tools = {
+        "verify_studio_run_report",
         "bind_studio_client_google_drive",
         "snapshot_studio_client_google_drive",
         "open_studio_archive_organization_item",
@@ -2766,7 +2769,23 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(
         state_dir=state_dir,
     )
     output_dir = Path(prepared["structuredContent"]["client_engagement"]["output_dir"])
-    (output_dir / "result.txt").write_text("Reviewed result\n", encoding="utf-8")
+    saved = _mcp_tool(
+        "write_studio_run_artifact",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "run_id": run_id,
+            "name": "result.txt",
+            "content": "--authored text must remain data\n",
+        },
+        state_dir=state_dir,
+    )
+    assert saved["isError"] is False
+    assert saved["structuredContent"]["run_id"] == run_id
+    assert (
+        Path(saved["structuredContent"]["path"]).read_text()
+        == "--authored text must remain data\n"
+    )
     disclosures = write_no_model_report(output_dir, workflow_id, run_id)
     finalized = _mcp_tool(
         "finalize_studio_client_workflow",
@@ -2778,7 +2797,7 @@ def test_mcp_executes_the_customer_folder_lifecycle_end_to_end(
                 *disclosures,
                 {
                     "artifact_id": "review.result",
-                    "path": "result.txt",
+                    "path": "authored/result.txt",
                     "purpose": "Present the result for professional review.",
                     "audience": "review",
                     "media_type": "text/plain",

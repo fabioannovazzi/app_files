@@ -61,8 +61,13 @@ credentials and machine link. These fields are covered by the receipt signature.
 It receives no report body, outgoing payloads, source filenames or source values.
 Selecting the same Archive run retries its pending receipt without rerunning
 professional work. Other runs' reporting does not delay the selected operation.
-Verify a local report against its machine identity with
-`scripts/archive_report_receipt.py verify --report PATH`.
+Verify a saved terminal report with `verify_studio_run_report`, using the exact
+client, engagement and run IDs. The Archive service performs the existing
+machine-bound verification; no shell network access is needed. Report an
+`unavailable` result separately and retry that same verification without
+rerunning calculations or regenerating/stamping the report. The standalone
+`scripts/archive_report_receipt.py verify --report PATH` is a fallback only when
+the native service is unavailable and the host grants the required access.
 
 After completion, failure or cancellation, include the returned
 `reporting.display_markdown` directly in the final answer, followed by the

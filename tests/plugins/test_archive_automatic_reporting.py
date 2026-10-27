@@ -34,6 +34,86 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+@pytest.mark.parametrize("problem", ["network", "foreign_report", "changed_report"])
+def test_service_verification_failure_preserves_completed_pipeline(
+    archive_core, client_case, monkeypatch, problem
+):
+    import archive_report_receipt
+    import operational_incidents
+    from archive_report_store import canonical
+
+    loaded = start(archive_core, client_case)
+    report = finish(archive_core, client_case, loaded)
+    root = Path(loaded["run_root"])
+    report_path = root / "outputs/model_data_report.json"
+    if problem == "foreign_report":
+        report["run_id"] = "run_" + "0" * 24
+        report_path.write_bytes(canonical(report))
+    baseline = {path: path.read_bytes() for path in root.rglob("*") if path.is_file()}
+    monkeypatch.setattr(
+        operational_incidents,
+        "reporting_credentials",
+        lambda: {"installation_id": USER_ID},
+    )
+
+    def verify(path, *, user_id):
+        assert problem != "foreign_report", "Foreign report must not reach the server"
+        if problem == "network":
+            raise OSError("Fixture network unavailable")
+        return {"report_sha256": "0" * 64}
+
+    monkeypatch.setattr(archive_report_receipt, "verify_report", verify)
+    monkeypatch.setattr(
+        archive_core.ledger,
+        "retry_reporting",
+        lambda *args, **kwargs: pytest.fail("Verification must not retry reporting"),
+    )
+
+    result = archive_core.verify_studio_run_report(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert result["status"] == "unavailable"
+    assert result["run_id"] == loaded["run"]["run_id"]
+    assert {
+        path: path.read_bytes() for path in root.rglob("*") if path.is_file()
+    } == baseline
+    assert json.loads((root / "run.json").read_text())["status"] == "completed"
+
+
+def test_service_verification_respects_saved_local_only_choice(
+    archive_core, client_case, monkeypatch
+):
+    import archive_report_receipt
+
+    loaded = start(archive_core, client_case)
+    output = Path(loaded["output_dir"])
+    (output / "model_data_report_options.json").write_text('{"local_only": true}')
+    finish(archive_core, client_case, loaded)
+    before = (output / "model_data_report.json").read_bytes()
+    monkeypatch.setattr(
+        archive_report_receipt,
+        "verify_report",
+        lambda *args, **kwargs: pytest.fail(
+            "Local-only report must not send verification metadata"
+        ),
+    )
+
+    result = archive_core.verify_studio_run_report(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert result["status"] == "not_requested"
+    assert result["reason"] == "local_only"
+    assert (output / "model_data_report.json").read_bytes() == before
+
+
 def test_word_run_reader_measures_selected_body_paragraphs_and_table_cells(tmp_path):
     from archive_report_measurements import measure_source, read_selection
     from docx import Document
@@ -477,6 +557,25 @@ def test_terminal_report_retries_real_authenticated_proof_without_changing_work(
         standalone, user_id=report["user_id"]
     )
     assert verified["report_sha256"] == receipt["report_sha256"]
+    retained_files = {
+        path: path.read_bytes() for path in root.rglob("*") if path.is_file()
+    }
+    monkeypatch.setattr(
+        archive_core.ledger,
+        "retry_reporting",
+        lambda *args, **kwargs: pytest.fail("Verification must not retry a stamp"),
+    )
+    service_verified = archive_core.verify_studio_run_report(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+    assert service_verified["status"] == "verified"
+    assert service_verified["report_sha256"] == receipt["report_sha256"]
+    assert {
+        path: path.read_bytes() for path in root.rglob("*") if path.is_file()
+    } == retained_files
     with pytest.raises(ValueError, match="another Vera userID"):
         archive_report_receipt.verify_report(standalone, user_id=USER_ID)
     standalone.write_bytes(before + b"\n")

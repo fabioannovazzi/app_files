@@ -194,6 +194,34 @@ def _dispatch(
     raise IncidentConflict("Required incident operation data is missing")
 
 
+def _schema_error_detail(error: ValidationError) -> list[dict[str, Any]]:
+    """Return schema coordinates, never values or caller-defined dictionary keys."""
+    schema = Envelope.model_json_schema()
+    fields = set(schema["properties"])
+    for definition in schema.get("$defs", {}).values():
+        fields.update(definition.get("properties", {}))
+    details = []
+    for issue in error.errors(
+        include_input=False, include_context=False, include_url=False
+    )[:20]:
+        detail = {
+            "loc": [
+                (
+                    part
+                    if isinstance(part, int) or part in fields
+                    else "unrecognized_field"
+                )
+                for part in issue["loc"][:10]
+            ],
+            "type": issue["type"],
+        }
+        # Fixed contract text is useful; arbitrary validator messages may quote data.
+        if issue["msg"] == "Value error, Complete capture requires technical evidence":
+            detail["msg"] = issue["msg"]
+        details.append(detail)
+    return details
+
+
 @router.post("/api/operational-incidents/{operation}")
 async def incident_operation(
     operation: str, request: Request, store: IncidentStore = Depends(get_incident_store)
@@ -206,8 +234,7 @@ async def incident_operation(
     except (IncidentConflict, WorkflowConflict) as error:
         raise HTTPException(409, str(error)) from error
     except ValidationError as error:
-        # Validation errors can contain original inputs. Do not echo them.
-        raise HTTPException(422, "Invalid technical incident schema") from error
+        raise HTTPException(422, _schema_error_detail(error)) from error
 
 
 _NO_CACHE = {
@@ -422,7 +449,7 @@ async def incident_recovery_operation(
     try:
         data = _connection_dispatch(store, actor, operation, arguments)
     except ValidationError as error:
-        raise HTTPException(422, "Invalid technical reporting schema") from error
+        raise HTTPException(422, _schema_error_detail(error)) from error
     except IncidentNotFound as error:
         raise HTTPException(404, str(error)) from error
     except (IncidentConflict, WorkflowConflict) as error:

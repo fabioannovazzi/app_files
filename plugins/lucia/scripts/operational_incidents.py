@@ -708,6 +708,41 @@ def _native_attempt(state: dict[str, Any], key: str) -> bool:
     return can_correct
 
 
+def _validation_issues(error: urllib.error.HTTPError) -> list[dict[str, Any]]:
+    """Expose bounded schema locations without echoing submitted input or context."""
+    if error.code != 422 or error.fp is None:
+        return []
+    try:
+        payload = json.loads(error.read(16 * 1024))
+    except (OSError, ValueError, UnicodeError):
+        return []
+    details = payload.get("detail") if isinstance(payload, dict) else None
+    if not isinstance(details, list):
+        return []
+    issues = []
+    for detail in details[:20]:
+        if not isinstance(detail, dict):
+            continue
+        location = detail.get("loc")
+        kind = detail.get("type")
+        if not isinstance(location, list) or not isinstance(kind, str):
+            continue
+        issue = {
+            "location": [str(part)[:80] for part in location[:10]],
+            "type": kind[:80],
+        }
+        # This exact server-owned explanation contains no caller values.
+        if (
+            detail.get("msg")
+            == "Value error, Complete capture requires technical evidence"
+        ):
+            issue["message"] = (
+                "Complete capture requires error_code or technical_frames; errno alone is insufficient."
+            )
+        issues.append(issue)
+    return issues
+
+
 def _native_rejection(
     state: dict[str, Any], key: str, error: urllib.error.HTTPError, can_correct: bool
 ) -> bool:
@@ -903,6 +938,11 @@ def native_request(arguments: dict[str, Any]) -> dict[str, Any]:
             "error_type": type(error).__name__,
             "http_status": (
                 error.code if isinstance(error, urllib.error.HTTPError) else None
+            ),
+            "validation_errors": (
+                _validation_issues(error)
+                if isinstance(error, urllib.error.HTTPError)
+                else []
             ),
             "instruction": (
                 "No operation was recorded. Correct the schema and retry the same UUID and owner."

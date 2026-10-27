@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-23/vera-standalone-panel-acceptance/work/panel-removal/plugins/vera",
-  "version": "0.1.510",
-  "captured_at": "2026-10-27T07:57:20.405840+00:00",
-  "catalogue_fingerprint": "a469259e84aece80c6566202c12e0d68d031011513f682a3d40616d3ca488463",
-  "manifest_sha256": "39a16086e3897ebffbe5e99bdcfcc6aa033f1e467e577396bb2d7f9f537e45f0",
+  "root": "/private/tmp/app-files-archive-repair/plugins/vera",
+  "version": "0.1.511",
+  "captured_at": "2026-10-27T11:43:15.512788+00:00",
+  "catalogue_fingerprint": "968b087a1db52e41fcb966445bba9593000cdb2a533c1defaf103ea3002373fb",
+  "manifest_sha256": "945cee2ca0d7484f3d723faaa1f845625f9b0c87459e9e979a5bed7422afcd80",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -139,12 +139,12 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "edd8805185a87bbf9c777bfb30a901cee042cc3187559132716243f1ddead7ad"
+      "sha256": "31ce530b7665a717a2e31330005c0468e269a9730bfeb74262f244cdc0d046ea"
     },
     {
       "function_id": "journal-sampling",
       "skill_path": "skills/journal-sampling/SKILL.md",
-      "sha256": "5d7abfdc6976175ec6b00e60a47a543b70b4780797e65dbeb29e4a81bfb417c1"
+      "sha256": "8989655eb8c33f48f9689415d134fbde48d30a6bf5a7d0523ba9ec147006b5aa"
     },
     {
       "function_id": "learn-with-vera",
@@ -249,7 +249,7 @@
     {
       "function_id": "studio-archive",
       "skill_path": "skills/studio-archive/SKILL.md",
-      "sha256": "12afac0ed5bd00af0193a41f79bb556f7c128031c65fe863aced4d6d3ad0fa34"
+      "sha256": "bdd5fb576354265167465aecd7f71fe4b5cbb2fccd223adedca825e16be39b75"
     },
     {
       "function_id": "studio-document-format",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "1bcd5c94b6740348686ba3b8e71715d8c871afba6a322ff0f67fee1b29e3a967"
+      "sha256": "8854d76ecdf3c89aec4c8f4e98bd2b2a396b55446cf674734c92274786425e10"
     },
     {
       "function_id": "vouching",

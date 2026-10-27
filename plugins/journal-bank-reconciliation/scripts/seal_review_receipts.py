@@ -66,6 +66,7 @@ import copy
 import hashlib
 import json
 import logging
+import os
 import re
 import tempfile
 from datetime import date
@@ -298,7 +299,12 @@ def main() -> int:
     parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--recipe", type=Path, required=True)
-    parser.add_argument("--decisions", type=Path, required=True)
+    decision_input = parser.add_mutually_exclusive_group(required=True)
+    decision_input.add_argument("--decisions", type=Path)
+    decision_input.add_argument(
+        "--decisions-json",
+        help="Complete agent-reviewed decisions; persist inside this run before sealing.",
+    )
     args = parser.parse_args()
     configure_logging()
     receipts_path = args.output_dir / "input_receipts.json"
@@ -306,7 +312,8 @@ def main() -> int:
         context = load_client_engagement_context_file(
             args.client_engagement,
             expected_workflow_id="journal-bank-reconciliation",
-            input_paths=[args.recipe, args.decisions, receipts_path],
+            input_paths=[args.recipe, receipts_path]
+            + ([args.decisions] if args.decisions is not None else []),
             output_dir=args.output_dir,
         )
         if not args.recipe.resolve().is_relative_to(Path(context["output_dir"])):
@@ -318,7 +325,48 @@ def main() -> int:
         return 2
     try:
         original_recipe = args.recipe.read_bytes()
-        decisions = read_json(args.decisions)
+        if args.decisions_json is not None:
+            decisions = json.loads(args.decisions_json)
+            # The service owns both writes. A denied/failed durable write must
+            # return before the dependent sealing operation is invoked.
+            payload = (
+                json.dumps(
+                    decisions,
+                    ensure_ascii=False,
+                    sort_keys=True,
+                    indent=2,
+                    allow_nan=False,
+                )
+                + "\n"
+            ).encode("utf-8")
+            digest = hashlib.sha256(payload).hexdigest()
+            decision_path = args.output_dir / f"review_decisions.{digest}.json"
+            if decision_path.exists() or decision_path.is_symlink():
+                if (
+                    decision_path.is_symlink()
+                    or not decision_path.is_file()
+                    or decision_path.read_bytes() != payload
+                ):
+                    raise ValueError(
+                        "Retained review decisions do not match this request"
+                    )
+            else:
+                pending = None
+                try:
+                    with tempfile.NamedTemporaryFile(
+                        dir=args.output_dir, delete=False
+                    ) as handle:
+                        pending = Path(handle.name)
+                        handle.write(payload)
+                        handle.flush()
+                        os.fsync(handle.fileno())
+                    # Publish complete bytes only; the name binds their exact digest.
+                    os.replace(pending, decision_path)
+                finally:
+                    if pending is not None:
+                        pending.unlink(missing_ok=True)
+        else:
+            decisions = read_json(args.decisions)
         result = seal_review_receipts(
             json.loads(original_recipe),
             decisions,

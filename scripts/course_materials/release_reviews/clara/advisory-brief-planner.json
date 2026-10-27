@@ -78,7 +78,7 @@
     "verified_at": "2026-09-27T19:37:37.497766+00:00",
     "workflow": "advisory-brief-planner"
   },
-  "course_sha256": "6b04acf71628fe4c125db0f7e1c91ae995ff8118c69027c7a83025e95dd6406f",
+  "course_sha256": "28108a4f872a688a0859b9910e84e41387d6b5e9a4c16aab50a32fbe0cf2c1b9",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -615,5 +615,14 @@
     "reviewer": "Codex - bounded studio-format source compatibility review",
     "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths."
   },
-  "workflow": "advisory-brief-planner"
+  "workflow": "advisory-brief-planner",
+  "archive_boundary_source_review_20261027": {
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "previous_course_sha256": "6b04acf71628fe4c125db0f7e1c91ae995ff8118c69027c7a83025e95dd6406f",
+    "course_sha256": "28108a4f872a688a0859b9910e84e41387d6b5e9a4c16aab50a32fbe0cf2c1b9",
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
+  }
 }

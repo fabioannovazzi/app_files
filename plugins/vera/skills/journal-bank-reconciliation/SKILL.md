@@ -155,3 +155,12 @@ The bank checker verifies original monetary tokens, printed balances or movement
 totals, and source coverage. Review document scope and column semantics through
 the normal mapping receipt; an individual payment confirmation is not a complete
 bank statement. Retain readable bank entries when those checks cannot pass.
+
+
+For routine technical review, send complete mapping/relationship decisions to
+`scripts/seal_review_receipts.py --decisions-json <complete JSON>` through
+`vera_execute`. The helper persists the decisions inside the exact Archive run
+before sealing. No separate chat-shell write is required. Inspect success before
+reinspection or calculation; a failed prerequisite must never trigger its
+consumer. Use `write_studio_run_artifact` for authored drafts and JSON controls;
+retain source-coordinate gaps honestly rather than inventing lineage.

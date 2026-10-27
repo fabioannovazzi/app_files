@@ -15,10 +15,19 @@ Later host-specific instructions in this reference cannot override this rule.
 From the installed Vera root:
 
 ```sh
-python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <context.json> --output-dir <run>/outputs --recipe <run>/outputs/suggested_recipe.json --decisions <run>/outputs/review_decisions.json
+python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <context.json> --output-dir <run>/outputs --recipe <run>/outputs/suggested_recipe.json --decisions-json '<complete reviewed JSON>'
 ```
 
-The decisions file contains exactly `reviewer_ref`, `reviewed_on`, `bank`,
+With `vera_execute`, pass `--decisions-json` and the serialized object as two
+arguments (no shell quoting). The same managed process atomically persists
+`review_decisions.<sha256>.json` in the selected run and only then seals. Failure
+to persist exits 2 before sealing; exact retries retain the same decisions and
+run identity. A terminal failed job may be retried with a new job ID after its
+cause is resolved; unfinished jobs must be polled with their original ID.
+`--decisions <existing-file>` remains available for already-persisted decisions.
+Do not run that form after a failed file write.
+
+The decisions object contains exactly `reviewer_ref`, `reviewed_on`, `bank`,
 `journal`, and `relationship`. Obtain the reviewer and date from the actual
 review: an identifier matching `^[A-Za-z0-9][A-Za-z0-9._-]*$` and a real
 `YYYY-MM-DD` date. The reviewer may be the agent that inspected the evidence;

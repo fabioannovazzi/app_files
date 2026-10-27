@@ -113,6 +113,8 @@ __all__ = [
     "start_check_entries_from_sample",
     "start_studio_client_workflow",
     "read_studio_run_artifact",
+    "write_studio_run_artifact",
+    "verify_studio_run_report",
     "studio_archive_status",
     "studio_google_drive_status",
 ]
@@ -4190,6 +4192,42 @@ def start_studio_client_workflow(
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not start: {exc}") from exc
     return _run_result(loaded)
+
+
+def verify_studio_run_report(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Verify a selected run's saved report without triggering reporting recovery."""
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=_state_dir(state_dir)
+    )
+    try:
+        return ledger.verify_run_report(root, engagement_id, run_id)
+    except (ledger.LedgerError, OSError) as exc:
+        raise ArchiveError(f"Report run could not be selected: {exc}") from exc
+
+
+def write_studio_run_artifact(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    name: str,
+    content: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Write one agent-authored text artifact through the Archive owner."""
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=_state_dir(state_dir)
+    )
+    try:
+        return ledger.write_run_artifact(root, engagement_id, run_id, name, content)
+    except (ledger.LedgerError, OSError) as exc:
+        raise ArchiveError(f"Run artifact was not saved: {exc}") from exc
 
 
 def read_studio_run_artifact(

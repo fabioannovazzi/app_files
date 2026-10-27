@@ -108,9 +108,11 @@ python scripts/inspect_journal.py <bound-journal-path> --output-dir <client-run-
    Review each source-family adapter, header/layout mapping,
    debit/credit or signed-amount convention, and localized number separators.
    Ask the user only for the smallest unresolved semantic decision.
-7. Record the reviewed recipe inside this run, for example
-   `<client-run-output>/vera-review/reviewed_recipe.json`, not plugin source or
-   a sibling scratch folder. An outside-run recipe is rejected before writes. The
+7. Save the complete reviewed recipe with `write_studio_run_artifact`, using
+   this exact client, engagement and run IDs, `name: reviewed_recipe.json`, and
+   the JSON as `content`. Wait for success and use its returned `path` as
+   `<saved-reviewed-recipe>` below. Changed recipes need a new filename; never
+   overwrite the inspected proposal or write through the chat shell. An outside-run recipe is rejected before writes. The
    reviewed contract must explicitly bind the source artifact, adapter and
    version, field mapping, posting identity, carry-forward policy, currency,
    unit, and the disposition of every additional monetary-labelled or numeric
@@ -123,7 +125,7 @@ python scripts/inspect_journal.py <bound-journal-path> --output-dir <client-run-
 8. Normalize rows:
 
 ```bash
-python scripts/normalize_journal.py <bound-journal-path> --output-dir <client-run-output>/normalization --recipe <client-run-output>/vera-review/reviewed_recipe.json --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/normalize_journal.py <bound-journal-path> --output-dir <client-run-output>/normalization --recipe <saved-reviewed-recipe> --client-engagement <client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 Require the complete normalization to retain the exact reviewed bytes as
@@ -297,7 +299,9 @@ ES: Usa Journal Sampling para <cliente> con el diario <ruta-archivo>. Idioma: es
 
 ## Mapping Recipe Rules
 
-Codex can adjust the recipe JSON generated in the work folder. Use:
+Review the generated recipe and save each revised version through
+`write_studio_run_artifact`. Pass the returned path to inspection/normalization;
+keep prior versions for replay. Use:
 
 - `header_rows`: 1-indexed header rows for tabular files;
 - `mapping`: source columns for `date`, `movement_number`, `line_number`,
@@ -314,7 +318,7 @@ Codex can adjust the recipe JSON generated in the work folder. Use:
   preserving the source-reported increment per emitted row;
 - per-file overrides under `files`.
 
-Do not ask the user to edit JSON. Ask the user in business terms, then Codex updates the recipe and reruns the deterministic scripts.
+Do not ask the user to edit JSON. Ask the user in business terms, then Codex saves the revised recipe through Archive and runs its dependent helper only after the save succeeds.
 
 ## Sampling Rules
 
