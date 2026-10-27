@@ -38,6 +38,9 @@ confirmation, plugin UI or model API credentials.
 
 # Validate Answer
 
+Read `../vera/references/opinion-delivery.md` before the shared method below.
+Its Vera delivery policy replaces all shared panel and review-queue handoffs.
+
 For subscription evidence, read `../vera/references/research-subscriptions.md`.
 Review the actual retained passages and their recorded access/retention limits;
 use genuine captures with `--no-fetch` when an authenticated source cannot be

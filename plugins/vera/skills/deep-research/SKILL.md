@@ -47,6 +47,9 @@ confirmation, plugin UI or model API credentials.
 
 # Research the prepared question
 
+Read `../vera/references/opinion-delivery.md` before the shared method below.
+Its Vera delivery policy replaces all shared panel and review-queue handoffs.
+
 Read `../vera/references/research-subscriptions.md` and the current saved source
 choices. Use relevant authorised subscriptions through actual callable browser
 or connector tools inside the shared loop; recheck access in this run and pass
