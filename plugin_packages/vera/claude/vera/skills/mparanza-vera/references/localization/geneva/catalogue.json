@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/Codex/2026-10-26/vera-reconciliation-fix/plugins/vera",
-  "version": "0.1.509",
-  "captured_at": "2026-10-26T21:19:36.617086+00:00",
-  "catalogue_fingerprint": "2fb8d2c26a05a139fe793dd8eb801cc0d9548915e98e53762b393cd6b077eb16",
-  "manifest_sha256": "b57fb33a681d99af323026570e7f38f3aa2dbce6a8bc0ff9cabec770bfb2c80e",
+  "root": "/Users/fabio/Documents/Codex/2026-10-23/vera-standalone-panel-acceptance/work/panel-removal/plugins/vera",
+  "version": "0.1.510",
+  "captured_at": "2026-10-27T07:57:20.405840+00:00",
+  "catalogue_fingerprint": "a469259e84aece80c6566202c12e0d68d031011513f682a3d40616d3ca488463",
+  "manifest_sha256": "39a16086e3897ebffbe5e99bdcfcc6aa033f1e467e577396bb2d7f9f537e45f0",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -14,7 +14,7 @@
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "be81f4930de676925263e624bb558899b56ab6d5121341ba54926915ff0b5d62"
+      "sha256": "c2847f94bc3402e606cdcb41727246bdd5d30d4799924facd776f04f1d5a802d"
     },
     {
       "function_id": "agenzia-acquisition",
@@ -99,7 +99,7 @@
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "aee6b642c33a364b92d0e65b48d7c723912f1ce4a898f8e7e8568d1f3034cf49"
+      "sha256": "fa1534b8eb1a98bb627cc3e3508abfe65600d5161d26063248653e644764a7ce"
     },
     {
       "function_id": "email-cliente",
@@ -159,7 +159,7 @@
     {
       "function_id": "legal-tax-answer-review",
       "skill_path": "skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "3903f66b3ac1ea70fc6a9e147a625f5c5ac46c2e3fc357299346fad2585e7e59"
+      "sha256": "d9df9c20d4affa1ed35fd233316e81a7fc94e4cded97cf69be18bcc9b28c9936"
     },
     {
       "function_id": "lipe",

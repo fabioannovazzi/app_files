@@ -23,7 +23,7 @@
       {
         "id": "report-and-source-review",
         "purpose": "Assess answer-contract conformance, claim coverage, source identity, semantic support, reasoning quality, professional-judgment boundaries, and proposed corrections",
-        "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files, including extracted PDF page text and page-coverage status, and HTML text parsed without tag attributes, comments, scripts or styles; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions. The canonical review record keeps each claim or scope assessment once and uses local references for mechanical observations and the complete audit rather than duplicating those records in each review item. Stable source resource IDs, selected capture IDs, immutable original bytes and extracted text, exact inventory revisions, passage types and actual original-inspection notes, pinned treatment evidence/effects and issue dependencies may be selected for the same host-model review. Developer evaluation records can retain the actual question, materials, research history, delivered answer, host/model/tool observations, package identity and assessor judgment locally; no evaluation helper calls a model or sends evidence externally.",
+        "content": "Generated or supplied answer, including a Deep Research report, memo, or one-page letter; answer contract; claims and surrounding text; citations; normalized captured text from fetched public pages or local source files, including extracted PDF page text and page-coverage status, and HTML text parsed without tag attributes, comments, scripts or styles; source-identity, semantic-support, reasoning, issue-treatment, disposition, and professional-judgment assessments; diagnostics; proposed corrections and review decisions. The canonical review record keeps each claim or scope assessment once and uses local references for mechanical observations and the complete audit rather than duplicating those records in each review item. Stable source resource IDs, selected capture IDs, immutable original bytes and extracted text, exact inventory revisions, passage types and actual original-inspection notes, pinned treatment evidence/effects and issue dependencies may be selected for the same host-model review. Developer evaluation records can retain the actual question, materials, research history, delivered answer, host/model/tool observations, package identity and assessor judgment locally; no evaluation helper calls a model or sends evidence externally. Vera delivers the reviewed answer, sources and material unresolved choices directly. Its opinion delivery policy removes the answer-review panel and per-record approval queue; compatibility payloads remain local internal artifacts, and actual substantive feedback remains in the research issue register.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -190,7 +190,7 @@
     },
     {
       "id": "hash-bound-canonical-review",
-      "control": "final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex or Cowork, when local MCP is callable, validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Without local MCP, both runtimes consume the same canonical local review records and keep decisions pending unless persisted artifacts prove save and apply; unmanaged or legacy runs may still use an inline payload."
+      "control": "Legacy/shared-component capability only: Vera no longer exposes the answer-review MCP service or invokes this UI route. final_artifacts.json binds the canonical review_payload.json with SHA-256. In Codex or Cowork, when local MCP is callable, validation can reload that regular local file through the managed run reference and issue a random, in-memory, four-hour token, so render/save/apply do not require the complete payload to be resent at every step. Without local MCP, both runtimes consume the same canonical local review records and keep decisions pending unless persisted artifacts prove save and apply; unmanaged or legacy runs may still use an inline payload."
     },
     {
       "id": "content-addressed-source-captures",
@@ -198,7 +198,7 @@
     },
     {
       "id": "local-review-output-download",
-      "control": "The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
+      "control": "Legacy/shared-component capability only: Vera no longer exposes the answer-review MCP service or invokes this UI route. The local review server requires the session token for output downloads. It accepts only files declared by the local run, within its output directory, rejects symlinks and traversal, and limits downloads to 50 MB. Files are downloaded as opaque bytes; HTML is not executed in the review origin. This does not claim atomic protection from concurrent filesystem changes. The browser may retain a user-requested downloaded copy; this route does not send document content to the model or an external service."
     },
     {
       "id": "exact-opinion-pair-binding",
@@ -206,7 +206,7 @@
     },
     {
       "id": "local-browser-private-review-payload",
-      "control": "The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review. Reload restores the persisted applied decisions for the same plugin and run through the existing browser path sanitization. It does not apply decisions again or change the external routes. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
+      "control": "Legacy/shared-component capability only: Vera no longer exposes the answer-review MCP service or invokes this UI route. The local review server requests component-only private review metadata only for the registered render tool. The browser receives that payload locally; normal MCP callers continue to receive structuredContent. This is transport separation, not anonymization of data selected for model review. Reload restores the persisted applied decisions for the same plugin and run through the existing browser path sanitization. It does not apply decisions again or change the external routes. Read-only local rendering accepts validated running, review-ready and completed contexts; Save/Apply still require a running context. Nested result folders resolve the owning portable run and validate the exact requested descendant before rendering. Archived views also show a localized read-only notice and disable Save/Apply; server-side write validation remains authoritative."
     },
     {
       "id": "standalone-exact-source-boundary",
@@ -238,10 +238,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-23",
+    "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cdafd9c28df09637b84636230a6b794df96b5996767615339f45aa8e94009d35"
+    "source_fingerprint": "d572d12388884b0f42eab7f09554611afc1efd1000749de166457dea1000678b"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",

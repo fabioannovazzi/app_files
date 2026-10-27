@@ -1662,6 +1662,7 @@ def test_vera_routes_every_commercialista_module() -> None:
     assert components["schema_version"] == 1
     assert set(components["plugins"]) == COMMERCIALISTA_MODULE_NAMES
     assert routed_mcp_modules == COMMERCIALISTA_MODULE_NAMES - {
+        "deep-research-validator",  # Validation stays; Vera has no opinion panel.
         "lipe",
         "scissione-guidata",
         "patent-box-review",

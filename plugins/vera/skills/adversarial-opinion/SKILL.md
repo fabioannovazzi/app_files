@@ -65,6 +65,9 @@ confirmation, plugin UI or model API credentials.
 
 # Parere contrapposto
 
+Read `../vera/references/opinion-delivery.md` before the shared method below.
+Its Vera delivery policy replaces all shared panel and review-queue handoffs.
+
 Read `../vera/references/research-subscriptions.md` before source investigation.
 Use relevant currently authorised subscription evidence in the same opposing
 examination, with actual access checks and retained passages; a prior connection
