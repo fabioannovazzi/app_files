@@ -44,7 +44,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "e5775bb4960feb306dd651abc673f0f7f661637b3cac4c04f542c26b14eb2913"
+      "sha256": "056832c28a023f63e802624b8153d42043bd5977021c2094708b510de91927cc"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "f07c57f65d16c6d5d5a147ddc89e4e076966e72a18663fd9940049330aee7b1e"
+      "sha256": "735ae5554a98fd844c6bb48e3aa32d86f2085bc0efa0767fbec20c1f6df9689b"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/native_host_worker.py",
@@ -80,11 +80,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
-      "sha256": "e88b381a6165460e25565c26f7b8231e7da008aa656e6fe2a08b7b4b3ee5ee2a"
+      "sha256": "bc5abf6ef05bbb873023507d3aa99b4a26441683bfa1ece4f6e3e3cf891c2c02"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
-      "sha256": "7e0c8d8d5ff6c733cba6c0e34b2e87fd345555b759669cf402ef1cb72674f39b"
+      "sha256": "385e9cb1577f827b51d1867a1f47e3f4a7053856e4569d14b0617fd3c637d114"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "e3b3829500ba2b9153b768aa981c44fc931062dc00184c76b369acdef8065056"
+      "sha256": "55fbbd95d321e60e13f5ef548976fb26dbe6c116ed89e879de9c5c5c64b66d90"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -609,5 +609,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c05c33876c105d17accd5a2e237cbab9bd2fa7de1671328f43b359bac8b7d466"
+  "canonical_course_sha256": "398ccf4f07ad56b7c12959c18021b105acf9c4a72077f64e0a94f47696b34c42"
 }

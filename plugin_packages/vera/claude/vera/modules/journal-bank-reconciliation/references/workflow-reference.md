@@ -245,7 +245,10 @@ is disabled, and currency and unit equality are mandatory. The policy also recor
 - exact amount tolerance;
 - date window in calendar days.
 
-Execution arguments must equal the reviewed tolerance and date window.
+Omitted execution options inherit the reviewed recipe policy’s exact amount tolerance
+and date window. Explicit `--tolerance` and `--date-window-days` options must equal
+the reviewed policy; conflicting options are rejected. The resolved values are
+recorded in the run intake and audit.
 Relationship tolerance accepts canonical decimal text, `Decimal`, or integer
 values and is persisted as canonical Decimal text. Floats, booleans,
 localized/noncanonical text, non-finite values, and negative values are
@@ -423,3 +426,24 @@ unresolved queue or approves a professional result.
 ## Missing counterparties under a required-party policy
 
 `require_same_party=true` permits an allocation only when both mapped party identifiers are present and equal. A missing counterparty remains unresolved in the normalized population, unmatched outputs and review queue; it does not block independent allocations elsewhere in the population. Two missing values never prove equality. Do not invent a counterparty or relax the reviewed policy to obtain a match. Currency, unit and required entity completeness checks remain in force. This is specified by the additive required-party residual extension contract; historical evaluation contracts remain unchanged.
+
+
+### Choosing and changing the matching tolerance
+
+The professional can state a tolerance in ordinary chat, including zero or a
+nonzero value (for example “use EUR 0.12”). Interpret an unambiguous localized
+amount into exact canonical Decimal text without rounding it. Carry that value
+into the relationship policy and seal it with the ordinary review helper.
+Do not substitute EUR 0 or EUR 1 for a user-selected or established studio value.
+If neither exists, disclose the selected value as a draft assumption, not as
+user approval; no obligatory technical questionnaire is needed to prepare a draft.
+
+When the professional changes the tolerance, retain the earlier recipe, receipt
+and outputs, prepare a revised recipe with the new value, and use
+`seal_review_receipts.py` again before recalculating into a fresh output directory
+(or a new managed run when the earlier run is closed). Do not edit old receipts
+or change execution flags alone. Read the resulting audit and review notes, and
+use that exact recorded value in downstream review and the delivered explanation.
+State whether it came from the professional, an established studio instruction,
+or a disclosed draft assumption. Matching within tolerance does not authorize a
+write-off or a new accounting entry: keep actual differences visible for review.

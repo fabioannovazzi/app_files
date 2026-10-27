@@ -96,14 +96,12 @@ def main() -> int:
     parser.add_argument("--recipe", type=Path, help="Optional recipe JSON.")
     parser.add_argument(
         "--tolerance",
-        default="1",
-        help="Allowed exact absolute amount difference in canonical/localized decimal text.",
+        help="Exact canonical decimal tolerance; omitted uses the reviewed recipe policy.",
     )
     parser.add_argument(
         "--date-window-days",
         type=int,
-        default=7,
-        help="Allowed date difference in calendar days.",
+        help="Date window in calendar days; omitted uses the reviewed recipe policy.",
     )
     add_common_args(parser)
     args = parser.parse_args()
