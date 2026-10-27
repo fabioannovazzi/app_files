@@ -1284,6 +1284,9 @@ def archive_case(
     tmp_path: Path, *, wrong_identity: bool = False
 ) -> tuple[Path, Path, Path]:
     """Create real archive receipts around fictional test evidence."""
+    shared_modules = str(ROOT / "plugins/_shared/vendor/modules")
+    if shared_modules not in sys.path:
+        sys.path.insert(0, shared_modules)
     spec = importlib.util.spec_from_file_location(
         "lipe_test_archive", ROOT / "plugins/studio-archive/scripts/client_ledger.py"
     )

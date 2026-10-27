@@ -7,9 +7,10 @@ work or restarting the user's job. An archive destination may be a general
 folder such as Vari; its internal ID is software-managed, not a professional
 identity or an automatic request for client onboarding.
 
-Current status: the 55-route source audit and the recovery, reporting, privacy,
-native execution and OCR regression selections are complete. Final packaging
-after embedded-component version bumps remains in progress. Earlier pending
+Current status: the 55-route source audit, local regression selections and final
+all-host package parity checks are complete. Draft PR #924 is under CI review;
+its Linux/Windows LIPE fixture failure has been reproduced and repaired locally.
+Earlier pending
 lists below are chronological findings, superseded by the later results.
 Source/package checks do not establish all-workflow live professional or
 installed-host acceptance.
@@ -446,3 +447,27 @@ parity run completed the Codex, ChatGPT-upload and Cowork checks; it was superse
 by these required component version changes during its Antigravity stage and
 therefore is not final release parity. Catalogs and affected privacy fingerprints
 were regenerated, and the final all-host rebuild is running.
+
+### Final local candidate and CI handoff
+
+Local commits `46a4571af` (source/metadata) and `1b472e344` (generated packages)
+are pushed in draft PR https://github.com/fabioannovazzi/app_files/pull/924.
+Remote main remains `ea8e5fe4a`; no intervening release was dropped.
+The final package selection passed **436 tests**, with two skips and four
+existing warnings; the separate alignment selection passed **19 tests**.
+The final `build_product_release.py vera clara lucia --check` passed every
+product/host, including startup checks and exact package/source parity.
+
+CI initially failed LIPE on both Linux and Windows because its direct ledger
+fixtures omitted the shared module search path. Two local tests reproduced the
+same missing import. The fixture setup is corrected without modifying production
+LIPE or Archive imports. The complete LIPE selection now passes **377 tests**
+with **90.99%** coverage, and its formatting checks pass. CI remains outstanding
+on the corrected commit; this does not establish installed-host acceptance.
+The GitHub connector could read the repository but refused PR creation with
+integration permission 403; the authenticated GitHub CLI created the draft.
+
+The active task retains two local branches, two actual remote branches, two
+registered worktrees and zero stashes. The primary checkout's unrelated work
+remains untouched. No merge, deployment, Marketplace publication or enabled
+installation update has occurred.
