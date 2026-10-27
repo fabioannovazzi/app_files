@@ -31,8 +31,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - run: python -m pip install pytest pytest-cov reportlab black==25.1.0 isort==6.0.1 mypy bandit -r plugins/journal-bank-reconciliation/requirements.txt
-      - name: Verify source and packaged Codex and Cowork launcher paths without MCP
+      - run: python -m pip install pytest pytest-cov reportlab black==25.1.0 isort==6.0.1 mypy bandit -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/studio-archive/requirements.txt
+      - name: Verify source and packaged Codex and Cowork receipt and Archive launcher paths
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_journal_bank_review_receipts.py

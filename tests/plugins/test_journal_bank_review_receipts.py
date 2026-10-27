@@ -269,7 +269,7 @@ def test_managed_archive_writer_preserves_text_and_replays_same_run(
             for line in completed.stdout.splitlines()
             if json.loads(line).get("id") == 1
         )["result"]
-        assert reply["isError"] is False, reply
+        assert reply["isError"] is False, json.dumps(reply, ensure_ascii=False)
         return reply["structuredContent"]
 
     call("configure_studio_archive", {"archive_root": str(archive_root)})
