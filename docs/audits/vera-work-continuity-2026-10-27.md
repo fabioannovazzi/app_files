@@ -12,8 +12,7 @@ all-host package parity checks are complete. Draft PR #924 is under CI review.
 Its first CI run exposed three implementation defects and several test setup/
 expectation issues, repaired in `42b853a66`. The second run confirmed the Windows
 Treasury recovery repair and exposed Windows newline expectations in CLI tests.
-Earlier pending
-lists below are chronological findings, superseded by the later results.
+Earlier pending lists below are chronological findings, superseded by the later results.
 Source/package checks do not establish all-workflow live professional or
 installed-host acceptance.
 
@@ -24,17 +23,18 @@ installed-host acceptance.
 | Prepared inputs | Both the shared worker context loader and Archive ledger reread original sources and receipts after copying verified inputs into a run. Losing an original interrupts a still-valid execution copy. | Consume the admitted copies and retained provenance; verify current execution bytes without reopening settled source admission. | Reproduced before repair; focused regression passes |
 | Reporting at start | Archive saves running status and then lets report initialization/status-write exceptions escape. | Acknowledge the running job, expose reporting as a separate recoverable issue, retain the same run. | Reproduced before repair; focused regression passes |
 | Archive destination | Creating a folder always returns a new-client onboarding handoff. | Allow an explicitly selected general destination without starting professional onboarding. | Implemented in Python/CLI/MCP; general-folder regressions pass |
-| Selected run lookup | Lifecycle APIs rediscover the archive/client for each operation. | Persist and recover the established job binding across helpers and service sessions. | Owner-private exact run binding implemented; lost-session-configuration regression passes. Cross-process coverage pending. |
-| Storage interruption | All execution copies and progress resided under the destination's client folder. | Preserve recoverable progress independently and support verified continuation/delivery to an available authorized location. | Independent private checkpoints, exact input repair and resumable restore implemented; eight targeted recovery checks pass. Engine relocation review remains incomplete. |
-| Agent instructions | Several paths say stop, block or create a fresh run without distinguishing retained work and recoverable operations. | Audit each workflow and its owning component; specify exact resume behavior without repeated settled setup. | Pending |
+| Selected run lookup | Lifecycle APIs rediscover the archive/client for each operation. | Persist and recover the established job binding across helpers and service sessions. | Owner-private exact run binding implemented; lost-session configuration and cross-process retry coverage pass. |
+| Storage interruption | All execution copies and progress resided under the destination's client folder. | Preserve recoverable progress independently and support verified continuation/delivery to an available authorized location. | Independent private checkpoints, exact input repair and resumable restore implemented; Archive, Treasury and course relocation regressions pass, including Windows checkpoints. |
+| Agent instructions | Several paths say stop, block or create a fresh run without distinguishing retained work and recoverable operations. | Audit each workflow and its owning component; specify exact resume behavior without repeated settled setup. | All 55 exposed routes and owning components audited; common contract and route-specific instructions updated. |
 
 The MCP adapter invokes the same Python CLI and passes explicit IDs. The observed
 input/readmission and reporting defects are below that transport boundary.
-MCP process/session continuity still needs separate verification. The adapter's
-five-minute worker-killing timeout has now been removed; this does not establish
-durable outcomes after a host/process disconnect.
+The adapter's five-minute worker-killing timeout has been removed. Exact retry
+regressions and the packaged dated-case acceptance exercise service reconnect
+without changing the professional run. These checks do not establish acceptance
+on the original Windows installation.
 
-## Completion evidence still required
+## Original completion evidence checklist
 
 - Account for every exposed Vera skill and owning component, including direct
   and studio-wide workflows, Codex and Cowork instruction projections.
@@ -478,7 +478,7 @@ installation update has occurred.
 
 - The reporting subprocess wrapper rejected the valid `env=None` option.
   A real child-process regression reproduced this; `None` now inherits the
-  environment, while an explicitly empty mapping remains empty. All three
+  environment, while an explicitly empty mapping does not inherit parent variables. All three
   environment cases pass. The operational-incident selection passes **551
   tests**, with **83.43%** coverage. Its initial local run hit the nested sandbox's
   loopback-socket restriction; the permitted rerun completed successfully.
@@ -551,3 +551,53 @@ production source and packages remain unchanged from `42b853a66`.
 
 CI is still outstanding. These results do not establish deployment, installed
 acceptance or live professional acceptance of every workflow.
+
+### Geneva catalogue binding after workflow instruction changes
+
+The accounting CI job passed its accounting and Geneva regressions but then
+correctly rejected the old localization catalogue snapshot. All 55 function
+IDs remain present; their entry-point hashes and the canonical Vera version
+changed in this repair. The catalogue now records version 0.1.513 and the
+current hashes. Existing Geneva assessment rows are unchanged. An explicit
+release-binding note records the common work-continuity instructions without
+claiming a new jurisdiction assessment or Swiss professional acceptance.
+The 22 Geneva regressions and six catalogue-helper tests pass, and the
+catalogue/assessment consistency check passes. Reviewed metadata fingerprints
+are refreshed and the Vera packages are rebuilt from these sources. Clara
+and Lucia source and package bytes are unchanged by this catalogue correction.
+
+On `a609dcf7f`, Windows reporting completes its full job, including separate
+native-emission and quality checks, and the Windows browser job also passes.
+The remaining CI jobs are being checked before the next push.
+
+The accounting steps after the stale catalogue check were also run locally.
+Annual-accounts previews pass **486 tests**; the synthetic Alfa v3 case passes
+**131 checks** through each of its direct and MCP routes. Code-quality steps
+pass. Concordato's exact calculation-receipt test omitted the newly owned
+`recovery.py` module from its expected inventory. The focused test reproduced
+the mismatch, then passed after correcting only that expected list; the
+production receipt continues to include the full implementation inventory.
+
+The complete Concordato selection otherwise passes **135 tests** with
+**89.75%** coverage. Open-item source CI passes **513 tests**, with **82.77%**
+coverage, and fails only its old 27-file inventory assertion. Its contract now
+contains 28 files because the recovery implementation is included. The test
+records the reviewed ordered inventory hash and explicitly checks `recovery.py`;
+the focused corrected assertion passes. The remaining Open-item steps are being
+run locally before pushing both test corrections together.
+
+The rebuilt Vera 0.1.513 packages pass the independent all-host source-parity
+check and startup checks after the catalogue refresh. The remaining accounting
+steps pass **61 Registry**, **71 website-evidence**, and **13 matter-opening**
+tests; each selection meets its configured coverage requirement.
+
+The release-alignment steps after the catalogue check pass **145 tests** with
+**98.68%** coverage of the shared Cowork skill-name projection. The preceding
+all-product CI package check passes before stopping at the same stale catalogue
+snapshot already corrected locally. Open-item public review CI also passes.
+
+All Open-item steps after the old inventory assertion now pass locally: the
+seven single-call delivery/reporting regressions, all **60 native intake,
+regeneration and reporting regressions**, and their formatting, typing and
+security checks. Only the already-running teaching CI job remains before
+pushing this final metadata/test correction batch.

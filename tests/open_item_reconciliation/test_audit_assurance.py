@@ -722,20 +722,21 @@ def fully_resealed_contradictory_predecessor(
     return assurance, output_dir, old_digest
 
 
-def test_implementation_receipts_match_exact_ordered_27_file_contract() -> None:
+def test_implementation_receipts_match_exact_ordered_28_file_contract() -> None:
     assurance = load_assurance()
 
     receipts = assurance.build_implementation_receipts()
 
     contract = [(item["root_id"], item["path"]) for item in receipts]
     assert contract == list(assurance.IMPLEMENTATION_CONTRACT)
-    assert len(contract) == 27
+    assert len(contract) == 28
     assert ("shared_assurance", "jurisdiction.py") in contract
+    assert ("shared_assurance", "recovery.py") in contract
     assert (
         hashlib.sha256(
             "\n".join(f"{root_id}:{path}" for root_id, path in contract).encode()
         ).hexdigest()
-        == "ce17adac3478bbddc5e09adf944bf40b1e56387993213391e28aa64fb31bd9dd"
+        == "e5f9eebf14ce252fbc6d1278130aba440205968723a0fbae7318a9869789d837"
     )
 
 
