@@ -10,7 +10,7 @@
     "reviewer": "Codex /root - bounded complete-course comparison",
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
   },
-  "course_sha256": "a99ba8b0a18aad2a0bec3bc90013b33e51ad2887da7c6b33b7d0bc0cf19537c8",
+  "course_sha256": "3e060efd17f435b98aec70ba2f6b12d8568469a0124933bd502ec7fee6ffe0f4",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -466,5 +466,21 @@
     "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
     "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
+  },
+  "work_continuity_source_binding_20261027": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "previous_course_sha256": "a99ba8b0a18aad2a0bec3bc90013b33e51ad2887da7c6b33b7d0bc0cf19537c8",
+    "current_course_sha256": "3e060efd17f435b98aec70ba2f6b12d8568469a0124933bd502ec7fee6ffe0f4",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
   }
 }

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "62fa17c44171a57aad200fb14bd85981ee73fe4796f0fc0239543943232dc01d",
+  "course_sha256": "8828c22ed8e0723d2b77e3a416f1804f71f035ab9ae66fa6d478bf49b7cf47fe",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.895553+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -392,5 +392,21 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "work_continuity_source_binding_20261027": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "previous_course_sha256": "62fa17c44171a57aad200fb14bd85981ee73fe4796f0fc0239543943232dc01d",
+    "current_course_sha256": "8828c22ed8e0723d2b77e3a416f1804f71f035ab9ae66fa6d478bf49b7cf47fe",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
   }
 }

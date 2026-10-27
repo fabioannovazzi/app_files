@@ -601,3 +601,20 @@ seven single-call delivery/reporting regressions, all **60 native intake,
 regeneration and reporting regressions**, and their formatting, typing and
 security checks. Only the already-running teaching CI job remains before
 pushing this final metadata/test correction batch.
+
+The last teaching CI job passes **1,711 tests**, with three skips and **84.81%**
+courseware coverage, and all runtime/compiler quality checks. Its final release
+checker correctly rejects stale course-review fingerprints. All **58** compiled
+lessons were compared with the exact historical snapshot whose SHA-256 matches
+their existing review: all fields except `sources` are identical. For 57 kits
+the reviewed snapshot is current main `ea8e5fe4a`; the bank-reconciliation review
+predates that main tolerance fix and matches `5ed3ccd73` exactly. That intervening
+source change was inspected and all authored lesson fields remain unchanged.
+
+Each review now records its current course digest and a separate, agent-attributed
+source-compatibility note. Historical reviewers, dates, language verdicts,
+editorial text and reviewed artifact hashes are preserved. No learner, visual
+or professional acceptance is invented. The **81** release-evidence tests and
+the catalogue/compiler check pass. The final CI still requires actual fresh
+demo/practice JUnit evidence bound to every current course digest. The prepared
+Concordato PDF source check also passes.
