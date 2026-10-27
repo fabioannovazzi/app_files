@@ -4364,7 +4364,7 @@ def verify_studio_run_report(
 ) -> dict[str, Any]:
     """Verify a selected run's saved report without triggering reporting recovery."""
     root = _selected_ledger_root(
-        client_id, engagement_id, state_dir=_state_dir(state_dir)
+        client_id, engagement_id, state_dir=_state_dir(state_dir), run_id=run_id
     )
     try:
         return ledger.verify_run_report(root, engagement_id, run_id)
@@ -4382,13 +4382,18 @@ def write_studio_run_artifact(
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Write one agent-authored text artifact through the Archive owner."""
+    private_state = _state_dir(state_dir)
     root = _selected_ledger_root(
-        client_id, engagement_id, state_dir=_state_dir(state_dir)
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
     try:
-        return ledger.write_run_artifact(root, engagement_id, run_id, name, content)
+        loaded = ledger._load_run_identity(root, engagement_id, run_id)
+        result = ledger.write_run_artifact(root, engagement_id, run_id, name, content)
     except (ledger.LedgerError, OSError) as exc:
         raise ArchiveError(f"Run artifact was not saved: {exc}") from exc
+    # The successful owned save is a completed stage, including outside the
+    # managed helper launcher. Retain it without hiding the write on backup failure.
+    return {**result, "recovery": _checkpoint_work(private_state, loaded)}
 
 
 def read_studio_run_artifact(

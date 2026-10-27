@@ -372,6 +372,9 @@ def test_pdf_memory_error_is_saved_as_explicit_inspection_diagnostic(
 
 
 def _load_customer_ledger() -> Any:
+    shared = str(ROOT / "plugins/_shared/vendor/modules")
+    if shared not in sys.path:
+        sys.path.insert(0, shared)
     ledger_path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
     module_name = "test_journal_bank_customer_ledger"
     ledger = sys.modules.get(module_name)

@@ -156,6 +156,107 @@ def test_unavailable_checkpoint_does_not_invalidate_unchanged_execution_inputs(c
     assert core.ledger.load_run(root, eid, rid)["run"]["status"] == "running"
 
 
+def test_owned_authored_save_retains_its_result_in_independent_checkpoint(
+    case, tmp_path
+):
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    saved = core.write_studio_run_artifact(
+        cid, eid, rid, "draft.md", "Completed authored work", state_dir=state
+    )
+    shutil.rmtree(studio)
+    (state / "config.json").unlink()
+
+    restored = core.restore_studio_client_workflow(
+        cid, eid, rid, tmp_path / "Alternate", state_dir=state
+    )
+
+    assert restored["run"]["run_id"] == saved["run_id"]
+    assert (
+        Path(restored["client_engagement"]["output_dir"])
+        .joinpath("authored/draft.md")
+        .read_text()
+        == "Completed authored work"
+    )
+
+
+def test_authored_save_remains_available_when_checkpoint_storage_fills(
+    case, monkeypatch
+):
+    import vera_assurance.recovery as recovery
+
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    latest = Path(prepared["recovery"]["store"]) / "latest.json"
+    retained = latest.read_bytes()
+
+    def full(*args, **kwargs):
+        raise OSError(28, "Synthetic checkpoint disk is full")
+
+    monkeypatch.setattr(recovery, "checkpoint_run", full)
+
+    result = core.write_studio_run_artifact(
+        cid, eid, rid, "draft.md", "Completed authored work", state_dir=state
+    )
+
+    assert result["run_id"] == rid
+    assert Path(result["path"]).read_text() == "Completed authored work"
+    assert result["recovery"]["status"] == "unavailable"
+    assert latest.read_bytes() == retained
+    assert core.ledger.load_run(root, eid, rid)["run"]["status"] == "running"
+
+
+def test_restore_refuses_a_different_runs_checkpoint_without_writing_destination(
+    case, tmp_path
+):
+    from vera_assurance.recovery import restore_run
+
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    destination = tmp_path / "Unrelated run destination"
+
+    with pytest.raises(ValueError, match="another run"):
+        restore_run(
+            Path(prepared["recovery"]["store"]),
+            destination,
+            (cid, eid, "run_" + "0" * 24),
+        )
+
+    assert not destination.exists()
+    assert core.ledger.load_run(root, eid, rid)["run"]["run_id"] == rid
+
+
+def test_restore_refuses_linked_destination_without_changing_its_target(case, tmp_path):
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    target = tmp_path / "Unrelated folder"
+    target.mkdir()
+    retained = target / "existing.txt"
+    retained.write_text("Unrelated original")
+    destination = tmp_path / "Linked destination"
+    destination.symlink_to(target, target_is_directory=True)
+
+    with pytest.raises(core.ArchiveError, match="symbolic links"):
+        core.restore_studio_client_workflow(cid, eid, rid, destination, state_dir=state)
+
+    assert retained.read_text() == "Unrelated original"
+    assert not (target / "Vera").exists()
+
+
+@pytest.mark.parametrize("operation", ["write", "verify"])
+def test_owned_artifact_tools_reuse_the_admitted_run_after_session_config_loss(
+    case, operation
+):
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    (state / "config.json").unlink()
+
+    if operation == "write":
+        result = core.write_studio_run_artifact(
+            cid, eid, rid, "draft.md", "Completed authored work", state_dir=state
+        )
+    else:
+        result = core.verify_studio_run_report(cid, eid, rid, state_dir=state)
+
+    assert result["run_id"] == rid
+    assert not (state / "config.json").exists()
+
+
 def test_interrupted_restore_continues_same_destination_and_preserves_partial_bytes(
     case, tmp_path, monkeypatch
 ):

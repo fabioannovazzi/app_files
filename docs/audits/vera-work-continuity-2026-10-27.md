@@ -149,3 +149,82 @@ Work is isolated at `/private/tmp/vera-work-continuity` on
 untouched. Main advanced through #922 (Archive owned artifact/verification tools)
 and #923 (reviewed tolerance preservation), to Vera 0.1.512. Integrate those
 changes before release and rebuild; do not replace either intervening repair.
+
+## Integration checkpoint
+
+The source repair was committed on the isolated branch and rebased onto
+`ea8e5fe4a` (#923), preserving #922 and #923. Current task commit:
+`9324cd125`. This is an intermediate local commit, not a release. The two merge
+conflicts retained the report-verification CLI command and authored-text stdin
+transport while adding checkpoint/restore and removing the worker deadline.
+
+The integrated selection passed **494 checks** and found six fixture setup
+failures: imported ledger helpers lost their shared module path after another
+test's cleanup. The test helpers now restore their own source import roots.
+The three formerly sandbox/import-blocked Treasury checks passed with local
+socket access, and the three native Treasury checks passed after fixture repair.
+
+Three new integration regressions then reproduced gaps in #922's new routes:
+the authored-save and report-verification APIs rediscovered session configuration
+after run admission, and authored-save results were absent from the independent
+checkpoint. Both APIs now select the retained exact run, and successful authored
+saves checkpoint that stage. All three regressions pass. The accompanying
+selection passed 20 checks and identified the sampling receipt inventory's
+missing recovery-module entry. The six assured producers' Python and Node
+inventory declarations have now been inspected and synchronized; broader
+producer/projection checks are running.
+
+Privacy review now describes the independent local copies and separate reporting
+failure in the Vera/Lucia Archive manifests and the Vera reporting service. The
+five localized Archive data-path explanations include these actual changes.
+Fingerprints and generated contracts remain stale pending the complete review
+and final source/version choices. An initial validation found 66 stale Vera,
+21 stale Clara and 25 stale Lucia reviews; one new service control needed its
+explicit executable paths and failure behavior, now supplied. No generated
+contracts or packages have been claimed current.
+
+## Workflow inventory and unresolved boundaries
+
+The 55 exposed wrappers all reference the continuity contract. Source inventory
+finds the shared context loader in 32 component script groups: adeguati-assetti,
+aml-review, archive-organization, bandi-agevolazioni, business-planning,
+business-valuation, centrale-rischi-review, check-entries,
+client-file-preparation, composizione-negoziata, concordato-plan-review,
+deep-research-validator, esg-reporting-assurance, financial-analysis, invoice-xml,
+journal-bank-reconciliation, journal-sampling, lipe, management-control-pack,
+new-client, open-item-reconciliation, passive-invoice-audit, patent-box-review,
+previdenza-inps, prompt-optimizer, rating-legalita, registro-imprese-sari,
+report-builder, sales-plan, scissione-guidata, treasury-forecast and
+variance-analysis. This establishes the shared repair's call sites, not acceptance
+of each engine's remaining internal checks or relocation behavior.
+
+Additional routes still need owning-source review: legal/tax vendor workflows,
+multi-company fusione, bilancio adapters, browser acquisition, synthetic
+trasformazione, studio-wide communications/formatting, calendars and tutorials.
+The ordinary calendar instructions already retain a proposal when external
+access is unavailable, without inventing connector success. The course file-access
+reference currently requires pausing later teaching when a save fails and reconnecting
+the same location. Its `OnboardingStore.status` rejects a changed lesson directory;
+`recover` restores only a matching enrollment profile at its existing root. That
+is an unresolved course relocation restriction, not evidence of universal recovery.
+
+MCP reconnect remains an explicit open item: removing the adapter timeout does
+not establish durable outgoing responses or prevent duplicate engagement creation
+after an uncertain response. Native jobs already have retained IDs/status routes;
+the generic Archive mutation boundary still needs exact-outcome verification.
+
+The expanded public recovery selection passed **14 tests** in 3.09 seconds
+(`/private/tmp/vera-continuity-recovery-expanded.log`), including a full checkpoint
+disk after successful authored saving, a foreign run's checkpoint and a linked
+destination. The existing result remains available in the storage-failure case;
+the two rejected restores leave unrelated destinations untouched. Mypy found no
+issues in the two new Python runtime modules, and Bandit reported no findings in
+those modules. Black, Isort and changed Node source syntax checks passed. These
+are selected checks, not the repository-wide quality/coverage gates.
+
+The producer/projection run remains active in
+`/private/tmp/vera-continuity-projections-current.log`; it is running real producer
+subprocesses, not waiting on a user response. Its final result must be collected.
+After the reporting-control schema correction, Vera privacy validation reports
+67 stale fingerprints and no other schema/control errors. No fingerprint refresh
+or package generation has occurred yet.

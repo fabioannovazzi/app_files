@@ -64,7 +64,8 @@
     "scripts/component_service.cjs",
     "scripts/run_service_mcp.cjs",
     "scripts/incident_host_mcp.cjs",
-    "scripts/incident_tool_schemas.json"
+    "scripts/incident_tool_schemas.json",
+    "scripts/archive_reporting_failure.py"
   ],
   "governed_repository_paths": [
     "modules/hosted_services/api.py",
@@ -168,6 +169,18 @@
         "scripts/incident_host_mcp.cjs"
       ],
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
+    },
+    {
+      "id": "reporting-failure-isolated-from-professional-delivery",
+      "control": "Reporting callbacks and pre/post-delivery collectors retain their failures separately from the professional pipeline. Exact source projections are recorded only when valid; failure returns unknown provenance and, where writable, saves a content-free measurement-gap record. CLI/stdout, preview, native job and MCP results remain deliverable with their actual operation status. Closed reports are not rewritten for late delivery; separate post-closure gap files preserve that limitation. Failed report closure or sidecar writes do not prevent sealing and delivering independently valid professional artifacts. This does not claim an unavailable report, missing source coordinate or unverified receipt passed.",
+      "implemented_by": [
+        "scripts/archive_reporting_failure.py",
+        "scripts/archive_reporting.py",
+        "scripts/archive_projection.py",
+        "scripts/archive_cli.py",
+        "scripts/archive_emission_mcp.cjs"
+      ],
+      "on_violation": "Retain the actual pipeline output or operation error and separately expose an unavailable or incomplete reporting outcome. Save a content-free gap when storage permits; never claim that unsaved measurements or an unverified receipt passed."
     }
   ],
   "service_id": "run-receipt-stamping"
