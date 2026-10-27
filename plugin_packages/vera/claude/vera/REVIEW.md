@@ -19,7 +19,6 @@ Privacy policy: https://mparanza.com/privacy.
 - `bilancioXbrlIt`: Prepare and review OIC accounts and XBRL workpapers.
 - `checkEntriesWidgets`: Review sampled journal entries against supporting documents.
 - `concordatoPlanReviewWidgets`: Review concordato plans and evidence.
-- `deepResearchValidatorWidgets`: Review sourced legal/tax answers and research evidence.
 - `financialAnalysisContracts`: Describe financial-analysis contracts and reviewed registers.
 - `journalBankWidgets`: Review bank-to-journal reconciliation results.
 - `journalSamplingWidgets`: Review qualified accounting journal samples.

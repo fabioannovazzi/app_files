@@ -35,13 +35,6 @@
         "concordato-plan-review"
       ]
     },
-    "deepResearchValidatorWidgets": {
-      "command": "node",
-      "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
-        "deep-research-validator"
-      ]
-    },
     "financialAnalysisContracts": {
       "command": "node",
       "args": [
