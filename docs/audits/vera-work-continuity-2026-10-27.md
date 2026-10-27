@@ -542,5 +542,12 @@ The lifecycle selection alone took 185 seconds on that runner. Its job budget
 is raised to ten minutes, retaining every test and assertion. This changes only
 CI scheduling, not any product timeout or gate.
 
+On `d6d22fb16`, Windows reporting completes **312 tests**, with 15 platform skips
+and no failures, in 831.54 seconds. The fifteen-minute job limit then cancels
+the separate native-emission step before quality checks. That reporting job now
+allows thirty minutes so all existing steps can finish. The corrected Windows
+browser job passes with its ten-minute budget. These are CI limits only; the
+production source and packages remain unchanged from `42b853a66`.
+
 CI is still outstanding. These results do not establish deployment, installed
 acceptance or live professional acceptance of every workflow.

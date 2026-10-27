@@ -10,7 +10,8 @@ jobs:
   reporting:
     name: Archive reports and machine-bound proofs (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 15
+    # Windows lifecycle coverage takes fourteen minutes before native emissions.
+    timeout-minutes: 30
     strategy:
       fail-fast: false
       matrix:
