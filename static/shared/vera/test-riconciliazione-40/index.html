@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#002060">
+  <meta name="robots" content="noindex">
+  <title>Vera · Le 40 prove di riconciliazione</title>
+  <meta name="description" content="Una sintesi per Federico Loffredo: cosa verificano le 40 prove di riconciliazione di Vera e l’ultimo esito disponibile per ogni caso.">
+  <link rel="canonical" href="https://mparanza.com/static/shared/vera/test-riconciliazione-40/index.html">
+  <link rel="stylesheet" href="page.css">
+  <script src="page.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#prove">Vai alle 40 prove</a>
+  <div class="shell">
+    <header>
+      <a class="brand" href="/">Mparanza<span> / Vera</span></a>
+      <span class="date">27 ottobre 2026</span>
+    </header>
+    <main>
+      <section class="hero" aria-labelledby="titolo">
+        <p class="eyebrow">Per Federico Loffredo</p>
+        <h1>40 prove di<br>riconciliazione.</h1>
+        <p class="lead">Abbiamo messo alla prova Vera su piccoli casi: collegare incassi e fatture, calcolare ciò che resta da pagare e riconoscere quando mancano le prove per un abbinamento.</p>
+        <div class="score" aria-label="Riepilogo degli ultimi esiti disponibili">
+          <div><strong>38<span>/40</span></strong><p>esiti contabili coerenti</p></div>
+          <div class="pending-score"><strong>2</strong><p>casi ancora da chiudere</p></div>
+        </div>
+        <p class="basis">Ultimo esito disponibile per ciascun caso, su versioni diverse. Non è una nuova esecuzione unica dei 40 test sulla versione finale.</p>
+      </section>
+
+      <aside class="reading-note" aria-label="Come leggere gli esiti">
+        <strong>Un esito corretto può lasciare una fattura aperta.</strong>
+        <p>Se un pagamento è ambiguo o non documentato, Vera deve segnalarlo. “Coerente” significa che il risultato rispetta le evidenze; non che tutto sia stato incassato.</p>
+      </aside>
+
+      <section id="prove" aria-labelledby="prove-title">
+        <div class="section-head"><h2 id="prove-title">Le prove, in breve</h2><a href="#da-chiudere">I due punti aperti ↓</a></div>
+        <p class="intro">Importi e nomi sono sintetici. Le fatture sono datate 1 luglio 2026, tranne il caso 12 (1 luglio 2025); i movimenti bancari vanno dal 10 al 24 luglio 2026.</p>
+        <div class="controls" hidden>
+          <div class="filters" role="group" aria-label="Filtra per esito">
+            <button type="button" data-filter="all" aria-pressed="true">Tutte le 40</button>
+            <button type="button" data-filter="pending" aria-pressed="false">Solo i 2 punti aperti</button>
+          </div>
+          <label class="search"><span class="visually-hidden">Cerca nelle prove</span><input type="search" id="search" placeholder="Cerca un caso o un importo…" autocomplete="off"></label>
+        </div>
+        <p id="count" class="count" role="status" aria-live="polite" hidden>40 prove mostrate</p>
+        <div class="table-wrap">
+          <table>
+            <caption class="visually-hidden">Le 40 prove: scenario, ultimo risultato contabile disponibile e valutazione</caption>
+            <thead><tr><th scope="col">N.</th><th scope="col">Cosa mettiamo alla prova</th><th scope="col">Ultimo risultato disponibile</th><th scope="col">Esito</th></tr></thead>
+            <tbody>
+              <tr id="caso-01"><th scope="row">01</th><td>Incasso esatto di €610 con numero fattura</td><td>Fattura chiusa; nessun residuo.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-02"><th scope="row">02</th><td>Due incassi distinti: €1.220 e €488</td><td>Ogni incasso collegato alla propria fattura.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-03"><th scope="row">03</th><td>Causale generica, stesso cliente e importo unico: €915</td><td>Abbinamento individuato; fattura chiusa.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-04"><th scope="row">04</th><td>Split payment: la PA versa solo €2.000 di imponibile</td><td>Credito chiuso senza aggiungere l’IVA versata all’Erario.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-05"><th scope="row">05</th><td>Un’uscita di €350 e un incasso di €671</td><td>Abbinato solo l’incasso; uscita tenuta separata.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-06"><th scope="row">06</th><td>Fattura esente: €1.000 più €2 di bollo</td><td>Incasso di €1.002 riconciliato, bollo compreso.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-07"><th scope="row">07</th><td>Importo con centesimi: €150,61</td><td>Abbinamento esatto, senza differenze di arrotondamento.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-08"><th scope="row">08</th><td>Due fatture, pagamento di una sola: €366</td><td>Chiusa quella indicata; l’altra, da €976, resta aperta.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-09"><th scope="row">09</th><td>Tre incassi: €244, €1.098 e €73,20</td><td>Tutti collegati alle rispettive fatture, senza residui.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-10"><th scope="row">10</th><td>Fattura con IVA al 10%: €1.320</td><td>Incasso abbinato al totale corretto.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-11"><th scope="row">11</th><td>Reverse charge: €5.000 senza IVA esposta</td><td>Credito chiuso per €5.000, senza aggiungere IVA.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-12"><th scope="row">12</th><td>Incasso di €780,80 per una fattura dell’anno precedente</td><td>Fattura del 2025 riconciliata con l’incasso del 2026.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-13"><th scope="row">13</th><td>Nome del cliente abbreviato dalla banca</td><td>Riconosciuto il cliente; fattura da €524,60 chiusa.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-14"><th scope="row">14</th><td>Tre incassi in ordine diverso dalle fatture</td><td>Abbinamenti corretti per €573,40, €122 e €305.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-15"><th scope="row">15</th><td>Due fatture da €610, una sola citata nel pagamento</td><td>Chiusa solo la fattura citata; l’altra resta aperta.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-16"><th scope="row">16</th><td>Numero fattura scritto senza separatori</td><td>“FT20260122” riconosciuto; €1.037 riconciliati.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-17"><th scope="row">17</th><td>Split payment con causale generica della PA</td><td>€3.000 collegati all’unica fattura dell’ente.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-18"><th scope="row">18</th><td>Fattura esente di €77,48 con €2 di bollo</td><td>Riconciliati €79,48 senza contare due volte il bollo.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-19"><th scope="row">19</th><td>Tre fatture, ma solo due incassi</td><td>Chiuse €366 e €854; €1.159 restano aperti.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-20"><th scope="row">20</th><td>Bonifico estero e reverse charge: €3.000</td><td>Cliente e riferimento riconosciuti; fattura chiusa.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-21"><th scope="row">21</th><td>Un incasso tra uscite e commissioni</td><td>Abbinati solo €512,40; gli altri movimenti restano separati.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-22"><th scope="row">22</th><td>Clienti quasi omonimi, stesso importo: €366</td><td>Usato il numero fattura, senza confondere Srl e Spa.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-23"><th scope="row">23</th><td>Arrotondamento IVA: €33,33 + €7,33</td><td>Totale di €40,66 riconciliato al centesimo.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-24"><th scope="row">24</th><td>Riferimento con spazi: “ft - 2026 - 0133”</td><td>Fattura riconosciuta; €2.928 chiusi senza residui.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-25"><th scope="row">25</th><td>Fattura con IVA al 5%: €840</td><td>Incasso abbinato al totale corretto.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-26"><th scope="row">26</th><td>Due fatture e due incassi dello stesso cliente</td><td>€1.220 e €732 abbinati separatamente, senza riutilizzare incassi.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-27"><th scope="row">27</th><td>Causale vuota, stesso cliente e importo unico: €1.913,57</td><td>Fattura chiusa; la causale resta vuota, senza dati inventati.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-28"><th scope="row">28</th><td>Un’altra fattura esente con bollo incluso</td><td>€1.002 riconciliati correttamente.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-29"><th scope="row">29</th><td>“Acconto lavori” di €550, fatture da €550 e €610</td><td>Nessun abbinamento forzato: l’acconto potrebbe riferirsi a entrambe.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-30" data-state="pending"><th scope="row">30</th><td>Un incasso di €610 per due fatture, con vincolo uno a uno</td><td>Ripartiti €366 + €244, ma il vincolo uno a uno non è stato verificato.</td><td class="status pending"><a href="#punto-30">Da chiudere ↗</a></td></tr>
+              <tr id="caso-31"><th scope="row">31</th><td>Acconto esplicito di €600 su una fattura da €1.220</td><td>Attribuiti €600; saldo ancora aperto di €620.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-32"><th scope="row">32</th><td>Due fatture da €549 e pagatore non riconoscibile</td><td>Nessun abbinamento: mancano elementi per scegliere.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-33"><th scope="row">33</th><td>Incasso di €512 senza una fattura corrispondente</td><td>Incasso non attribuito; nessuna chiusura inventata.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-34"><th scope="row">34</th><td>Importo giusto, ma numero fattura inesistente</td><td>Conflitto segnalato; €854 non assegnati automaticamente.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-35"><th scope="row">35</th><td>Due incassi di €488 per una sola fattura</td><td>Fattura chiusa una volta; secondo incasso segnalato come possibile doppio pagamento.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-36"><th scope="row">36</th><td>Pagamento in contanti dichiarato, ma non documentato</td><td>Fattura da €1.098 lasciata aperta in attesa di prova.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-37"><th scope="row">37</th><td>Incasso di €700 per una fattura da €610</td><td>Fattura chiusa; eccedenza di €90 tenuta separata.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-38"><th scope="row">38</th><td>Paga un terzo, senza un legame documentato con il cliente</td><td>€366 non attribuiti finché il rapporto non viene chiarito.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-39"><th scope="row">39</th><td>€427 ricevuti, ma la fattura citata vale €244</td><td>€244 alla fattura citata; €183 da chiarire. La fattura dell’altro cliente resta aperta.</td><td class="status">Coerente</td></tr>
+              <tr id="caso-40" data-state="pending"><th scope="row">40</th><td>Un incasso chiaro di €122 e uno generico di €200</td><td>€122 chiusi. €200 attribuiti a una fattura da €305: collegamento da confermare.</td><td class="status pending"><a href="#punto-40">Da chiudere ↗</a></td></tr>
+            </tbody>
+          </table>
+          <p id="empty" hidden>Nessuna prova corrisponde alla ricerca.</p>
+        </div>
+      </section>
+
+      <section class="open-points" id="da-chiudere" aria-labelledby="open-title">
+        <p class="eyebrow">Restano due verifiche</p>
+        <h2 id="open-title">Cosa manca per chiudere il quadro</h2>
+        <div class="points">
+          <article id="punto-30"><span class="point-number">30</span><h3>Rispettare il vincolo del test</h3><p>Il test richiede un solo abbinamento per movimento. L’esito disponibile divide €610 tra due fatture: serve una verifica con il vincolo uno a uno effettivamente applicato.</p></article>
+          <article id="punto-40"><span class="point-number">40</span><h3>Confermare l’incasso generico</h3><p>Il pagamento da €200 è stato interpretato come acconto sulla fattura da €305, con €105 residui. È un collegamento da confermare, non una riconciliazione definitivamente chiusa.</p></article>
+        </div>
+      </section>
+      <section class="scope" aria-labelledby="scope-title">
+        <h2 id="scope-title">Cosa significa questo riepilogo</h2>
+        <p>Valuta il risultato contabile dei casi sintetici. Non misura l’affidabilità su ogni possibile situazione reale e non certifica la completezza dei report sui dati inviati al modello, che restano una verifica separata.</p>
+      </section>
+    </main>
+    <footer><span>Mparanza · Vera</span><span>Sintesi per Federico Loffredo · 27 ottobre 2026</span></footer>
+  </div>
+</body>
+</html>
