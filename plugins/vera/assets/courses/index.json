@@ -32,7 +32,7 @@
     },
     "agenzia-acquisition": {
       "path": "agenzia-acquisition/course.json",
-      "sha256": "2ff576861d3802be46073295c3433f0748bbaf33055af3a4aaef5161f989292b",
+      "sha256": "acbf173c1778f2d35e49936ed633762ff13fbb5e0babf0df329172694b1118c6",
       "languages": [
         "it"
       ],
@@ -825,7 +825,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "04979acd4e3f606a918716561a5ca9ad1ba00678812adb4964a316e99c4b3296",
+      "sha256": "f713909a8f142fd667b063c71efe2a63f646e97bf172bddb5c70f5168dca2fd9",
       "languages": [
         "it",
         "en",

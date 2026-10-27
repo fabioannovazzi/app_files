@@ -7,8 +7,12 @@ work or restarting the user's job. An archive destination may be a general
 folder such as Vari; its internal ID is software-managed, not a professional
 identity or an automatic request for client onboarding.
 
-This audit is in progress. Source changes and narrow regressions do not establish
-all-workflow or installed-host acceptance.
+Current status: the 55-route source audit and the recovery, reporting, privacy,
+native execution and OCR regression selections are complete. Final packaging
+after embedded-component version bumps remains in progress. Earlier pending
+lists below are chronological findings, superseded by the later results.
+Source/package checks do not establish all-workflow live professional or
+installed-host acceptance.
 
 ## Inspected defects
 
@@ -330,3 +334,115 @@ review/refresh the changed privacy fingerprints, generate contracts,
 reserve noncolliding versions, rebuild all affected host packages and complete
 the relevant full quality/package checks. No deployment, Marketplace publication
 or installed-host fix is claimed. The active task branch/worktree is retained.
+
+## Owning-route audit closure and final preparation
+
+The 55 wrapper inventory is accounted for as follows. This is a source audit,
+with executable acceptance limited to the recorded regression suites; it is not
+55 independent live professional tasks.
+
+| Exposed route(s) | Owning continuation boundary inspected |
+| --- | --- |
+| adeguati-assetti, aml-review, archive-organization, bandi-agevolazioni, business-planning, business-valuation, centrale-rischi-review, composizione-negoziata, concordato-plan-review, esg-reporting-assurance, financial-analysis, journal-bank-reconciliation, journal-sampling, lipe, management-control-pack, new-client, patent-box-review, rating-legalita, registro-imprese-sari, sales-plan, scissione-guidata, variance-analysis | Corresponding component scripts consume the shared retained Archive context and exact execution copies. Changed evidence remains distinguishable from the admitted copies. |
+| avviso-intake, dati-fiscali-strutturati, email-cliente, fatture-xml-check | client-file-preparation and shared Archive context. |
+| adversarial-opinion, deep-research, legal-tax-answer-review, quesito-legale-fiscale | deep-research-validator; standalone task workspace remains available without invented client registration. |
+| legal-tax-answer-planner | prompt-optimizer and deep-research-validator. |
+| financial-report-builder, purchase-invoice-review, vouching | report-builder, passive-invoice-audit and check-entries respectively. Producer inventories include recovery implementation. |
+| open-item-reconciliation | Ordinary Archive reconciliation and assured component; retained producer result is verified independently of its old inputs. |
+| treasury-forecast | Session-relative references resolve against exact restored run bytes, without rewriting sealed forecast provenance. |
+| invoice-xml | Shared admitted context; prepare persists partial revisions and preview without professional approval. Later export checks exact proposal/source bytes and its declared approval record, without recreating intake. |
+| previdenza-inps | Shared context and persisted facts; routine source-image transcription now accepts honest agent review while preserving attribution and missing-check failures. Material decision and arithmetic confirmations are separate. |
+| bilancio-oic | bilancio-xbrl-it jurisdiction adapter and durable case jobs. |
+| fusione-guidata | SQLite retains imported source blobs; later validation verifies retained hashes. |
+| contenzioso-tributario, posizioni-negoziali | Shared italian_tax_litigation/deal_redux and legal document/matter helpers retain snapshots, versions and relative outputs. |
+| agenzia-acquisition, browser-automation, datev-invoice-start | Browser acquisition adapter retains professional Archive bindings; a resumed worker attempt is not a new professional task. |
+| trasformazione | Separate synthetic case store with retained case/consent scope. |
+| comunicazione-professionale, presenza-digitale-studio | Saved drafts and selected task workspace; external communication/publication remains a distinct requested action. |
+| organizzazione-lavoro | Studio calendar retains uncertain external outcomes and verifies the exact event before retry. |
+| studio-document-format | Separate upfront workspace and retained standard versions; adoption distinct from preparation. |
+| learn-with-vera | Explicit verified relocation retains enrollment, sessions, phase receipts and completed progress. |
+| research-subscriptions | Missing local register or subscription capability preserves current-task choices and permits available unsubscribed research. |
+| studio-archive | Persistent client/run bindings, exact request retries, independent checkpoints, restore and completed-result delivery. |
+| vera, privacy-surface-review | Routing/governance instructions inherit continuity; reporting outcomes stay separate from professional result delivery. |
+
+The execution-recovery reference now stops only an unverified launch, preserves
+existing job IDs/results and directs recovery of the affected operation.
+Acquisition wording distinguishes a worker attempt from its existing Archive run.
+The INPS visual-check validator accepts `agent_reviewer` only as an attributed
+source-image check, never fabricated human approval. Missing evidence checks,
+unknown roles and invalid timestamps remain rejected. The associated suite passed
+109 tests (five existing SWIG warnings). An initial invocation omitted the parent
+fixture; a second exposed its cached-ledger import-path defect. The fixture now
+restores the shared import root. No production import behavior was changed to
+satisfy that fixture.
+
+Deterministic checks here establish exact identifiers, bytes, source ownership,
+request equality and replay outcomes. These are mechanical invariants. They do
+not select legal relevance, resolve ambiguous professional facts or replace
+semantic judgment.
+
+Privacy review of the changed routes distinguishes additional private recovery
+copies and request records from existing model-visible inputs. Report failures
+record content-free gap metadata; they do not establish zero exposure. Course
+relocation retains a local path/file inventory and does not upload it. The new
+visual reviewer role changes attribution, not recipients or payload routing.
+Unchanged external-service boundaries are retained; their changed fingerprints
+reflect shared execution/reporting code and course source references. The
+selected stale records will be refreshed only after these source edits, then
+contract generation and package validation will run.
+
+Remote main was checked before reserving versions: Vera 0.1.512, Clara 0.1.359,
+Lucia 0.1.185, with no open release PRs. Local candidates are respectively
+0.1.513, 0.1.360 and 0.1.186. Nothing has been uploaded or published.
+
+### Current verification results
+
+- Black and Isort passed all 74 changed Python files at the first final check;
+  subsequent test-only edits are checked separately. Node syntax passed all 21
+  changed JavaScript files. Mypy passed the 11 reporting/native files and both
+  new recovery modules; Bandit found no medium/high issue in that selection.
+- The focused recovery set passed 142 tests, with 86.08% combined coverage
+  (Archive recovery 85%, course relocation 88%). Its first combined run exposed
+  a cached-module test import path; the owning fixture now restores its roots.
+- The current privacy selection passed 108 tests with 89.05% coverage using its
+  own coverage file. A prior premature package run lacked the still-building
+  Cowork ZIPs; no product failure was inferred from those missing artifacts.
+- Native emission tests passed eight tests with the repository's normal import
+  isolation. Combining them with the older `--confcutdir` reporting selection
+  had mixed identically named standalone component modules. CI now runs this
+  native selection separately with the repository fixture enabled.
+- The broad reporting selection initially had 324 passes, seven failures and
+  one setup error. Three failures were obsolete assertions expecting a reporting
+  error to hide the operation error or a missing report to block a result; one
+  required a downstream run to reread an altered original upstream receipt.
+  Those now assert preserved results and explicit reporting gaps. The acquisition
+  fixture now records the actual client/engagement/run identity fields written
+  by the producer. The remaining native failures were the import isolation
+  issue above. The complete reporting selection is being rerun independently.
+- All three product builds completed, including Codex, ChatGPT upload, Cowork
+  and Antigravity projections and their MCP startup checks. The package selection
+  passed 454 checks, with two existing skips; its remaining failure identified
+  missing patch bumps for changed embedded components. Those versions must be
+  advanced and the final packages regenerated before claiming release parity.
+
+These results are local source/package evidence. No merge, deployment,
+Marketplace action, installed-host replacement or professional acceptance has
+occurred. The goal remains active while final release checks are incomplete.
+
+The isolated final reporting run passed **324 tests**, with **85.08%** coverage.
+The full native execution selection passed **46 tests** with the required local
+process/sandbox permissions. Updated test formatting and changed CI YAML checks
+passed. New continuity tests and coverage are included in the existing Archive,
+reporting and teaching CI jobs; native emission tests use normal component import
+isolation in their own step.
+
+All 13 affected product/component versions differ from integrated main. Embedded
+candidates are browser-automation 0.5.32, check-entries 0.1.57,
+concordato-plan-review 0.1.43, journal-bank-reconciliation 0.1.80,
+journal-sampling 0.1.57, open-item-reconciliation 0.1.83,
+previdenza-inps 0.2.13, report-builder 0.1.46, studio-archive 0.1.70 and
+treasury-forecast 0.1.5. The failing version-check target now passes. The first
+parity run completed the Codex, ChatGPT-upload and Cowork checks; it was superseded
+by these required component version changes during its Antigravity stage and
+therefore is not final release parity. Catalogs and affected privacy fingerprints
+were regenerated, and the final all-host rebuild is running.

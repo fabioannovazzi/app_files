@@ -138,9 +138,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "f67834f0932083d7dcf80ad68348bf4ecce2148362e374f7eade02da8d927e26"
+    "source_fingerprint": "2a0938540a89631173402235ca24ec4a0ab54621d02de973a5ddb0f14209d120"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -172,6 +172,10 @@
     {
       "id": "exact-recipe-confirmation",
       "control": "Arithmetic recipes require an actual user confirmation with actor, reference, time and a hash of the exact formula, operands, source references and rounding. A professional_reviewer role, certificate, signature or mandate is not required. Changed recipes cannot reuse the prior confirmation; source-supported-claim and arithmetic validation remain enforced."
+    },
+    {
+      "id": "attributed-source-image-check",
+      "control": "OCR and captured text require an attributed per-anchor source-image comparison before a fact is confirmed. The agent can perform this routine check as agent_reviewer without claiming human or professional approval; missing checks and unknown actors remain invalid. No new recipient or data transfer is introduced."
     }
   ],
   "workstream": "previdenza-inps",

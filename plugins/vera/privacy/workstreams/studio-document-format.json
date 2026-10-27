@@ -54,9 +54,9 @@
   "security_controls": [],
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-18",
+    "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4bd419c4bbe1bd9415b1ff9d561f37fa1984abe07371466c74c428e30ad405e5"
+    "source_fingerprint": "f5e238154a4f8a082c7293d3e7a1cef349c96d575d664fff7cc8ce4c9168eea5"
   },
   "service_ids": [
     "local-onboarding",

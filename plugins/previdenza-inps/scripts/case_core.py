@@ -980,7 +980,7 @@ def extract_case_documents(
         "extraction_errors": extraction_errors,
         "notes": [
             "Filename and document content were not assigned a legal or contribution regime.",
-            "PaddleOCR text keeps its original page locator and requires visual human confirmation.",
+            "PaddleOCR text keeps its original page locator and requires an attributed source-image check.",
             "Visible text captured from an authenticated browser tab requires comparison with its captured page image.",
             "OCR model downloads are disabled unless explicitly authorized for the run.",
             "Symbolic links are inventoried but never followed outside the case folder.",

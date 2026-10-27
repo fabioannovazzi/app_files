@@ -1070,7 +1070,10 @@ def test_acquisition_registers_only_verified_originals_in_its_archive_run(
         json.dumps(
             {
                 "01234567890": {
-                    "context_path": str(Path(loaded["run_root"]) / "context.json")
+                    "context_path": str(Path(loaded["run_root"]) / "context.json"),
+                    "client_id": client_case.client_id,
+                    "engagement_id": client_case.engagement_id,
+                    "run_id": loaded["run"]["run_id"],
                 }
             }
         )

@@ -17,6 +17,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 @pytest.fixture
 def case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    # Cached modules outlive the per-test import-path cleanup.
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
     import archive_core as core
 

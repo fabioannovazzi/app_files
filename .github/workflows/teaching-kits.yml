@@ -284,9 +284,9 @@ jobs:
       - name: Verify local profiles, native lesson handoffs and transmission suppression
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py
+          tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py tests/plugins/test_vera_course_recovery.py
           --cov=local_teaching --cov=local_onboarding --cov=local_onboarding_case
-          --cov=onboarding_session_start --cov-fail-under=80
+          --cov=onboarding_session_start --cov=courseware.recovery --cov-fail-under=80
       - name: Verify Clara and Lucia local teaching, isolation and native handoffs
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
@@ -298,8 +298,8 @@ jobs:
         run: |
           python -m black --check plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
           python -m isort --check-only plugins/_shared/vendor/modules/desktop_teaching tests/plugins/test_desktop_teaching.py tests/plugins/test_teaching_product_scope.py tests/plugins/_teaching_execution.py tests/plugins/test_teaching_execution_evidence.py
-          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py
-          python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching
+          python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/desktop_teaching/onboarding.py plugins/_shared/vendor/modules/desktop_teaching/teaching.py plugins/_shared/vendor/modules/desktop_teaching/cases.py plugins/_shared/vendor/modules/courseware/recovery.py
+          python -m bandit -qr plugins/_shared/vendor/modules/desktop_teaching plugins/_shared/vendor/modules/courseware/recovery.py
       - name: Verify mandatory course file access on every platform
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

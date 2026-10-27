@@ -45,7 +45,7 @@
     {
       "path": "modules/previdenza-inps/references/workflow-reference.md",
       "repository_path": "plugins/previdenza-inps/references/workflow-reference.md",
-      "sha256": "f1afe6b8d3e82dad4b97eaf57684d1f78aecb42ac09843c6cf0a922a0908787d"
+      "sha256": "52d41ac635761b2089afac2204262239eb1acd07e2b933b6a04514a1e207e6a8"
     },
     {
       "path": "modules/previdenza-inps/requirements.txt",
@@ -60,7 +60,7 @@
     {
       "path": "modules/previdenza-inps/schemas/case_records.schema.json",
       "repository_path": "plugins/previdenza-inps/schemas/case_records.schema.json",
-      "sha256": "0c7550c48e3696292c1d43c489d874ee2872eb8f3cf8a5d355d6ec3dcac6cf61"
+      "sha256": "e2693bda9006bb5a39d51cd8281be8341385e90de9da8805ce9c4da82e813845"
     },
     {
       "path": "modules/previdenza-inps/schemas/claims_review.schema.json",
@@ -80,7 +80,7 @@
     {
       "path": "modules/previdenza-inps/scripts/case_core.py",
       "repository_path": "plugins/previdenza-inps/scripts/case_core.py",
-      "sha256": "e16764129720a6ee6e13fe4816eabcd11343c53a2b33be56fcfa41bad2ad82d0"
+      "sha256": "89b27943613fb49f569aa3a6ddb2ae3eb1abfc95369ecef4bc31a0096131b3af"
     },
     {
       "path": "modules/previdenza-inps/scripts/check_dependencies.py",
@@ -120,12 +120,12 @@
     {
       "path": "modules/previdenza-inps/scripts/validate_case_records.py",
       "repository_path": "plugins/previdenza-inps/scripts/validate_case_records.py",
-      "sha256": "7c6fbade21bf4f80621c0e9c3fbf3eb1f0d53ad6100118a60d49f5028792f752"
+      "sha256": "896b2e2bed625589c60bc2ee8f705211d4052aadf49d2f371d4a9edce466856b"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "39063ac07749c4886d2b083e4b885a317ba9a5098a5fe933f63e5d1662349630"
+      "sha256": "3f282d9293c7f0a3164028b5a4e1f176d7e4ba72219e8af96437b0f11f2f3d95"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
