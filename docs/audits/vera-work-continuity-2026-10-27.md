@@ -618,3 +618,20 @@ or professional acceptance is invented. The **81** release-evidence tests and
 the catalogue/compiler check pass. The final CI still requires actual fresh
 demo/practice JUnit evidence bound to every current course digest. The prepared
 Concordato PDF source check also passes.
+
+The next CI attempt (`184428f20`) exposed a missed metadata dependency: the
+teaching review records and release-review document are governed sources for
+Vera's local-onboarding service and Clara's learn-with-clara workstream. Their
+new source-compatibility notes therefore require new privacy fingerprints.
+The source changes were inspected: only review metadata changed, with no new
+payload fields, recipients or execution behavior. Only those two fingerprints
+were refreshed; all three product privacy registers validate. Their generated
+contracts/public bindings and affected Vera/Clara packages are rebuilt. The
+superseded task-only CI runs were cancelled before the corrected candidate.
+
+The two packaging tests that detected the stale onboarding fingerprint now
+pass. Vera and Clara rebuild successfully for every supported host, including
+MCP startup checks. A structural comparison verifies that only the two selected
+privacy `review/source_fingerprint` values changed, and all 58 teaching review
+digests still match the current courses. Independent final package parity and
+final-head CI are running in parallel.
