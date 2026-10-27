@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "42a76b075339e1d5d5f6878375c181a2125708b2536014f44c703d5709d3eafe",
+  "course_sha256": "6a6ad1ab9a9b9e109119719223c463d8ef51e8760ffc3c89a35a491ffaf535df",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.894710+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -771,5 +771,31 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "incident_reporting_source_binding_20261026": {
+    "reviewer": "Codex /root - bounded incident-reporting source compatibility review",
+    "reviewed_at": "2026-10-26T22:39:35.869605+00:00",
+    "baseline_commit": "a37a4f9c6f903a329c9bef0dd95c3c7294612bd6",
+    "previous_course_sha256": "42a76b075339e1d5d5f6878375c181a2125708b2536014f44c703d5709d3eafe",
+    "current_course_sha256": "6a6ad1ab9a9b9e109119719223c463d8ef51e8760ffc3c89a35a491ffaf535df",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/lucia/scripts/operational_incidents.py"
+    ],
+    "authored_content_unchanged": true,
+    "source_review": "Compared every compiled course field with the exact previously reviewed course digest. Only operational_incidents.py changed: local-only incident permissions are retained per task and report, explicit delivery authorization is bound to exact evidence, and native status refreshes pending incident snapshots. Matter-opening logic, prepared source inputs, localized lessons, checkpoints and execution contracts are unchanged. Historical editorial judgments and reviewed output-artifact hashes are preserved.",
+    "native_execution_evidence": {
+      "commit": "380a193ecf606fcb763adc8ea069475f77f57c26",
+      "run": 40404971075,
+      "job": 121867587515,
+      "passed": 1711,
+      "skipped": 3,
+      "courseware_coverage_percent": 90.54,
+      "later_failure": "Editorial course digest freshness; the overall job failed and is not represented as green."
+    },
+    "fresh_matching_junit_required": true,
+    "limits": "Source compatibility only. No new learner, rendered-output, installed-host or professional acceptance is asserted."
   }
 }

@@ -77,6 +77,77 @@ def test_cached_code_tamper_is_rejected_before_reuse(tmp_path, monkeypatch):
     recovery.release_execution_root(pinned)
 
 
+@pytest.mark.parametrize("changed_field", [0, 1])
+def test_cached_release_recovers_stale_identity_after_full_verification(
+    tmp_path, monkeypatch, changed_field
+):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    recovery = load_recovery()
+    source = package(tmp_path)
+    pinned = recovery.prepare_execution_root(source, None, shared=True)
+    recovery.release_execution_root(pinned)
+    record = pinned.with_suffix(".json")
+    identity = json.loads(record.read_text())
+    identity["identity"][changed_field] += 1
+    record.write_text(json.dumps(identity))
+
+    recovered = recovery.prepare_execution_root(source, None, shared=True)
+
+    assert recovered == pinned
+    assert (recovered / "scripts/helper.py").read_bytes() == (
+        source / "scripts/helper.py"
+    ).read_bytes()
+    info = recovered.stat()
+    assert json.loads(record.read_text()) == {"identity": [info.st_dev, info.st_ino]}
+    recovery.release_execution_root(recovered)
+    recovery.collect_execution_store(keep_idle=0)
+    assert not recovered.exists()
+
+
+def test_stale_identity_does_not_authorize_modified_cached_code(tmp_path, monkeypatch):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    recovery = load_recovery()
+    source = package(tmp_path)
+    pinned = recovery.prepare_execution_root(source, None, shared=True)
+    recovery.release_execution_root(pinned)
+    record = pinned.with_suffix(".json")
+    stale = json.dumps({"identity": [-1, -1]})
+    record.write_text(stale)
+    helper = pinned / "scripts/helper.py"
+    helper.chmod(0o600)
+    helper.write_text("raise RuntimeError('must not execute')")
+
+    with pytest.raises(ValueError, match="Shared execution code changed"):
+        recovery.prepare_execution_root(source, None, shared=True)
+
+    assert record.read_text() == stale
+    recovery.collect_execution_store(keep_idle=0)
+    assert pinned.exists(), "Unverified replacement must not become owned for cleanup"
+
+
+def test_cached_directory_replaced_during_verification_is_rejected(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    recovery = load_recovery()
+    source = package(tmp_path)
+    pinned = recovery.prepare_execution_root(source, None, shared=True)
+    recovery.release_execution_root(pinned)
+    record = pinned.with_suffix(".json")
+    before = record.read_bytes()
+
+    def replace_during_validation(root, module):
+        root.rename(root.with_name("moved-original"))
+        root.mkdir()
+
+    monkeypatch.setattr(recovery, "_validate_module", replace_during_validation)
+    with pytest.raises(ValueError, match="changed during verification"):
+        recovery.prepare_execution_root(source, None, shared=True)
+
+    assert record.read_bytes() == before
+    assert pinned.exists(), "The unverified replacement must remain untouched"
+
+
 def test_slow_component_verification_does_not_hold_catalog_lock(tmp_path, monkeypatch):
     from concurrent.futures import ThreadPoolExecutor
     from threading import Event

@@ -1221,7 +1221,7 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
             for key in ("run_intake", "review_payload", "final_artifacts")
         },
         "decision_source": "codex_agent",
-        "reviewer": "agent.test",
+        "reviewer": "Codex AI technical reviewer: synthetic — acceptance",
         "decisions": [
             {"item_id": item["id"], "action": "accept", "note": "PRIVATE_REVIEW_NOTE"}
             for item in review["items"]
@@ -1259,6 +1259,15 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
 
     assert saved["structuredContent"]["decision_count"] == 3
     assert applied["structuredContent"]["decision_count"] == 3
+    saved_decisions = json.loads((output / "ui_decisions.json").read_text())
+    applied_decisions = json.loads((output / "applied_decisions.json").read_text())
+    authority = json.loads((output / "professional_review.json").read_text())
+    assert saved_decisions["reviewer"] == args["reviewer"]
+    assert applied_decisions["reviewer"].startswith("reviewer-")
+    assert {row["reviewer_ref"] for row in authority["records"]} == {
+        applied_decisions["reviewer"]
+    }
+    assert authority["reviewer_ref_trust"] == "unsigned_untrusted_label"
     pending = json.loads((output / "final_artifacts.json").read_text())
     assert applied["structuredContent"]["application_status"] == "awaiting_regeneration"
     assert applied["structuredContent"]["blocker_count"] == 0
@@ -1393,6 +1402,82 @@ def test_public_review_save_apply_keeps_notes_private_and_report_complete(
         )
     measured = report(loaded)
     assert measured["collection_status"] == "complete", measured["errors"]
+
+
+@pytest.mark.parametrize("route", ["mcp", "browser"])
+def test_exception_only_review_preserves_automatic_exact_matches(
+    reconciled_case, tmp_path, route
+):
+    from tests.plugins.test_open_item_reconciliation_plugin import load_review_server
+
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    seal = json.loads((output / "assurance_receipts.json").read_text())
+    automatic = {
+        row["record_id"]: row
+        for row in seal["professional_review_authority"]["records"]
+        if row["reviewer_ref"] == "system-exact-match"
+    }
+    assert len(automatic) == 1
+    review = json.loads((output / "review_payload.json").read_text())
+    context = str(Path(loaded["run_root"]) / "context.json")
+    args = {
+        "client_engagement": context,
+        **{
+            key + "_path": str(output / (key + ".json"))
+            for key in ("run_intake", "review_payload", "final_artifacts")
+        },
+        "reviewer": "Technical reviewer: exceptions only",
+        "expected_predecessor_checkpoint": seal["content_sha256"],
+        "decisions": [
+            {"item_id": item["id"], "action": "accept"}
+            for item in review["items"]
+            if item["id"].startswith("review:")
+            and item["data"]["record_id"] not in automatic
+        ],
+    }
+    assert len(args["decisions"]) == 2
+    if route == "mcp":
+        with review_transport(tmp_path) as call:
+            applied = call("apply_open_item_reconciliation_decisions", args)[
+                "structuredContent"
+            ]
+    else:
+        applied = load_review_server().apply_decisions(output, args)
+    assert applied["application_status"] == "awaiting_regeneration"
+    authority = json.loads((output / "professional_review.json").read_text())
+    assert {
+        row["record_id"]: row
+        for row in authority["records"]
+        if row["record_id"] in automatic
+    } == automatic
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            str(PLUGIN.parent / "vera/scripts/native_open_item_bridge.py"),
+            str(PLUGIN),
+        ],
+        input=json.dumps(
+            {
+                "operation": "regenerate",
+                "output_dir": str(output),
+                "context": context,
+                "arguments": {
+                    "expected_predecessor_checkpoint": seal["content_sha256"]
+                },
+            }
+        ),
+        capture_output=True,
+        text=True,
+        timeout=90,
+    )
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout)["report_ready"] is True
+    final = json.loads((output / "final_artifacts.json").read_text())
+    assert final["status"] == "final_ready"
+    assert final["review_handoff"]["required_before_final_delivery"] is False
 
 
 def test_public_assurance_replay_reports_status_without_reemitting_source_rows(

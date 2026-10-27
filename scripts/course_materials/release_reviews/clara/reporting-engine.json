@@ -1,204 +1,19 @@
 {
-  "schema": "mparanza.teaching_release_review.v1",
-  "product": "clara",
-  "workflow": "reporting-engine",
-  "course_sha256": "a7c4d5366094b22d741811d8fabf39fb771bb277ebca6252f47c659bec6b3dd8",
-  "reviewer": "Codex lesson and actual generated report review",
-  "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
-  "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-  "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
-        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
-        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
-        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
-        "language_and_pacing": "The it lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-it]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-it]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "0a540457b751a74efd6bdbc196e7d5c9c25954765255839ed69c5d992f3a0762"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
-        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
-        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
-        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
-        "language_and_pacing": "The en lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-en]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "4a1067cf1a21597e1639fa0d9479d5538ea2bad546d3c3f416bd9dcac06a7c57"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-en]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "cff49767525b5f7bf0071cffab8bc530d904a5267790a70c3f689b01d1054250"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
-        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
-        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
-        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
-        "language_and_pacing": "The fr lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-fr]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "2b551d685d06a3124c9b9e706a00e9a7d2193c8428a28d241f1d5dbec2c3cbe2"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-fr]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "c7906d2a1523d25bf383b45d9911a14f461897ab098bcda9d36e635cf66e12cc"
-          }
-        ]
-      }
-    },
-    "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
-        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
-        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
-        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
-        "language_and_pacing": "The de lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-de]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "b4efb79cf6513c4b384911ec3dea593c01af45dde548903aae1cb15b4f0632f2"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-de]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "16ed7ac94fe2506ac53d328001381902d6df67d64f45fa5788b09721f6ed9618"
-          }
-        ]
-      }
-    },
-    "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
-        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
-        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
-        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
-        "language_and_pacing": "The es lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-es]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "0d8c084b3d7c027426eca490710230fc61754a72952533a4f6e29c8feb32fba2"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-es]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
-        "reviewed_artifacts": [
-          {
-            "name": "management_control_report.md",
-            "sha256": "4be553c72771064e8c9c1e9732e05a7a52d1a52f4d91a7c49afc4540f0910543"
-          }
-        ]
-      }
-    }
+  "archive_release_shared_runtime_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "0c293c66f82615a8366c7dd9348d47dd69639f4de7b25ee270d0ff7142c12cba",
+    "previous_course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
   },
   "codex_course_qa_20260928": {
-    "status": "passed",
     "course": 40,
-    "product": "clara",
-    "workflow": "reporting-engine",
-    "scope": "Italian Codex simulated learner demonstration and independent practice; actual native dashboards, workbook and report views, sources and saved reopening",
-    "human_understanding_confirmed": false,
-    "professional_approval": false,
-    "session_id": "010122d19eb6049a2dbd968fdab658fd",
-    "phase": "paused",
-    "revision": 4,
-    "profile": null,
-    "onboarding_phase": "interview",
-    "runs": {
-      "demo": {
-        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/demo-8d3810f74bb7da1f/explained-report/management_control_dashboard.html",
-        "sha256": "bb2a86d59f96c5987e5c6c67db657d7dc29a8dcad11f49bd62782c812d5fa430",
-        "execution_sha256": "a6c04b3dbe541216598b8dc893566196af2fdfef744a4bfda723115d2dc8dbfb",
-        "target": "2026-01 through 2026-02",
-        "native_preservation": "passed",
-        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-demo-browser-review.json"
-      },
-      "practice": {
-        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/practice-3eee091683921560/explained-report/management_control_dashboard.html",
-        "sha256": "9cd4edc9a7296833a185dd328dc2f2b05eb22244dad3811481bdd9c0fc45ace6",
-        "execution_sha256": "45229537c2a345425d1045aea61aa2b7a6243ca708f4e17fee88d8a83e1dca6a",
-        "target": "2026-01 through 2026-03",
-        "native_preservation": "passed",
-        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-practice-browser-review.json"
-      }
-    },
     "demo_files_preserved": 35,
-    "repairs": [
-      "Own receipt-checked local dashboard preview with active month controls; teaching instructions route dashboard and documents correctly",
-      "Removed internal QA status from learner guide"
-    ],
+    "human_understanding_confirmed": false,
     "limitations": [
       "Native voice and physical two-window placement unverified",
       "Other-language live journeys pending",
@@ -206,197 +21,385 @@
       "Print button clicked but native print dialog/output not observed; actual Codex UI checks cover month and cumulative controls, report and workbook reading"
     ],
     "no_install_deploy_publish": true,
-    "verified_at": "2026-09-27T23:12:51.754941+00:00"
-  },
-  "release_freshness_20260928": {
-    "reviewer": "Codex /root - bounded release freshness review",
-    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
-    "previous_course_sha256": "6f792148421640a7761b325031d14abed77952092b99898ebf132cca2df6de1e",
-    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
-    "changed_compiled_fields": [
-      "sources"
+    "onboarding_phase": "interview",
+    "phase": "paused",
+    "product": "clara",
+    "professional_approval": false,
+    "profile": null,
+    "repairs": [
+      "Own receipt-checked local dashboard preview with active month controls; teaching instructions route dashboard and documents correctly",
+      "Removed internal QA status from learner guide"
     ],
-    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
-    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
-    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-40.md",
-    "italian_course_qa_sha256": "fb8f02cf805512c3dbd4364d5b5414d474736b30eb26c87be60a48c270dc042f",
-    "native_execution_evidence": {
-      "commit": "2431fbd29",
-      "run": 36392851481,
-      "job": 108832365397,
-      "passed": 1152,
-      "skipped": 3,
-      "phase": "Verify teaching-kit languages, real executions and native packages",
-      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+    "revision": 4,
+    "runs": {
+      "demo": {
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-demo-browser-review.json",
+        "execution_sha256": "a6c04b3dbe541216598b8dc893566196af2fdfef744a4bfda723115d2dc8dbfb",
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/demo-8d3810f74bb7da1f/explained-report/management_control_dashboard.html",
+        "native_preservation": "passed",
+        "sha256": "bb2a86d59f96c5987e5c6c67db657d7dc29a8dcad11f49bd62782c812d5fa430",
+        "target": "2026-01 through 2026-02"
+      },
+      "practice": {
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-budget-practice-browser-review.json",
+        "execution_sha256": "45229537c2a345425d1045aea61aa2b7a6243ca708f4e17fee88d8a83e1dca6a",
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-budget-reporting/teaching/sessions/010122d19eb6049a2dbd968fdab658fd/files/practice-3eee091683921560/explained-report/management_control_dashboard.html",
+        "native_preservation": "passed",
+        "sha256": "9cd4edc9a7296833a185dd328dc2f2b05eb22244dad3811481bdd9c0fc45ace6",
+        "target": "2026-01 through 2026-03"
+      }
     },
-    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+    "scope": "Italian Codex simulated learner demonstration and independent practice; actual native dashboards, workbook and report views, sources and saved reopening",
+    "session_id": "010122d19eb6049a2dbd968fdab658fd",
+    "status": "passed",
+    "verified_at": "2026-09-27T23:12:51.754941+00:00",
+    "workflow": "reporting-engine"
   },
-  "esg_source_refresh_20260929": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
-    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
-    "previous_course_sha256": "6ad903edcf59b869b6626f88f9592baa850976096922e8745090405db537350c",
-    "current_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
-  },
-  "esg_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
-    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
-    "previous_course_sha256": "6ad903edcf59b869b6626f88f9592baa850976096922e8745090405db537350c",
-    "current_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
-  },
-  "studio_format_source_binding_20261001": {
-    "reviewer": "Codex - bounded studio-format source compatibility review",
-    "reviewed_at": "2026-10-01T18:46:46.181981+00:00",
-    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
-    "previous_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
-    "current_course_sha256": "09969fb6e92a3acd0546a33f0dc1fa276c965d32a2fcd5da203873d2841e767d",
-    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
-    "changed_sources": [
-      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
-    ],
-    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
-    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
-  },
-  "integration_refresh": {
-    "reviewer": "Codex /root",
-    "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
-  },
-  "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
-    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "72c41283362bc8f312d087bdadc2c842351322a0f78bf10c172fd96564ad19fc",
-    "current_course_sha256": "717b6d48cfff55aab26b1e93ee52b7aa297d8ae2114daf28f199bf9ab3529251",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
-    "changed_sources": [
-      "vendor/modules/courseware/policy.py"
-    ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "runtime8_dependency_binding_20261006": {
-    "previous_course_sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c",
-    "current_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
-    "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
-  },
-  "source_binding_update": {
-    "reviewed_at": "2026-10-06",
-    "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
-  },
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
-    "current_course_sha256": "5fe18e9028c985ce5490b9a286f54fd962fd08f19a3f649942bfc45babb0fdd0",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
-  },
-  "product_reporting_source_binding_20261018": {
-    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
-    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
-    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
-    "previous_course_sha256": "5fe18e9028c985ce5490b9a286f54fd962fd08f19a3f649942bfc45babb0fdd0",
-    "current_course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
-    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
-  },
-  "archive_release_shared_runtime_compatibility_20261018": {
-    "reviewer": "Codex /root - bounded complete-course comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
-    "current_course_sha256": "0c293c66f82615a8366c7dd9348d47dd69639f4de7b25ee270d0ff7142c12cba",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
-  },
-  "reporting_reference_binding_20261018": {
-    "reviewer": "Codex - bounded source compatibility review",
-    "reviewed_at": "2026-10-18",
-    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
-    "previous_course_sha256": "6442d94e47325bcb3466b0bc79371d83862fef21798ac647642d55bbf2ac06cd",
-    "current_course_sha256": "3e3c58e383783c04217abb5d7041e5db084406f80c0f9020ef6868e0b6447d69",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12.",
-    "native_execution_evidence": {
-      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
-      "run": 39150899038,
-      "job": 117744153569,
-      "passed": 1710,
-      "skipped": 3,
-      "courseware_coverage_percent": 90.54,
-      "later_failure": "Editorial digest freshness; the original job is not represented as fully green."
-    },
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance."
-  },
+  "course_sha256": "74e4a1cec94f1bccb651b761f517d833fc1b704fc3db640f2ec30ed96a68c319",
   "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.874935+00:00",
+    "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "6442d94e47325bcb3466b0bc79371d83862fef21798ac647642d55bbf2ac06cd",
-    "current_course_sha256": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
     "changed_sources": [
       "plugins/clara/scripts/operational_incidents.py",
       "plugins/clara/scripts/workflow_usage.py",
       "plugins/clara/skills/reporting-engine/SKILL.md"
     ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
-  },
-  "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
-    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
-    "parent_course_sha256": {
-      "HEAD": "3e3c58e383783c04217abb5d7041e5db084406f80c0f9020ef6868e0b6447d69",
-      "origin/main": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e"
-    },
     "current_course_sha256": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "6442d94e47325bcb3466b0bc79371d83862fef21798ac647642d55bbf2ac06cd",
+    "reviewed_at": "2026-10-18T18:09:58.874935+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
   },
   "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.242688+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
     "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_course_sha256": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e",
-    "current_course_sha256": "a7c4d5366094b22d741811d8fabf39fb771bb277ebca6252f47c659bec6b3dd8",
     "changed_fields": [
       "sources"
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  }
+    "current_course_sha256": "a7c4d5366094b22d741811d8fabf39fb771bb277ebca6252f47c659bec6b3dd8",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e",
+    "recorded_at": "2026-10-25T18:12:53.242688+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "esg_source_refresh_20260929": {
+    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "current_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
+    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "previous_course_sha256": "6ad903edcf59b869b6626f88f9592baa850976096922e8745090405db537350c",
+    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
+  },
+  "esg_source_refresh_20260930": {
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "current_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "previous_course_sha256": "6ad903edcf59b869b6626f88f9592baa850976096922e8745090405db537350c",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
+  },
+  "filesystem_identity_source_binding_20261026": {
+    "scope": "Complete authored course content is unchanged. Reviewed shared runtime source renews stale filesystem metadata only after full byte verification and stable current directory identity. Existing editorial, learner and professional judgments remain unchanged; this is not new installed-host acceptance."
+  },
+  "integration_refresh": {
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
+  },
+  "languages": {
+    "de": {
+      "demo": {
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "b4efb79cf6513c4b384911ec3dea593c01af45dde548903aae1cb15b4f0632f2"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "language_and_pacing": "The de lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow."
+      },
+      "practice": {
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "16ed7ac94fe2506ac53d328001381902d6df67d64f45fa5788b09721f6ed9618"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "4a1067cf1a21597e1639fa0d9479d5538ea2bad546d3c3f416bd9dcac06a7c57"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "language_and_pacing": "The en lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow."
+      },
+      "practice": {
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "cff49767525b5f7bf0071cffab8bc530d904a5267790a70c3f689b01d1054250"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-en]"
+      },
+      "verdict": "accepted"
+    },
+    "es": {
+      "demo": {
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "0d8c084b3d7c027426eca490710230fc61754a72952533a4f6e29c8feb32fba2"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "language_and_pacing": "The es lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow."
+      },
+      "practice": {
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "4be553c72771064e8c9c1e9732e05a7a52d1a52f4d91a7c49afc4540f0910543"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "2b551d685d06a3124c9b9e706a00e9a7d2193c8428a28d241f1d5dbec2c3cbe2"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-fr]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "language_and_pacing": "The fr lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow."
+      },
+      "practice": {
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "c7906d2a1523d25bf383b45d9911a14f461897ab098bcda9d36e635cf66e12cc"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-fr]"
+      },
+      "verdict": "accepted"
+    },
+    "it": {
+      "demo": {
+        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
+        "language_and_pacing": "The it lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved.",
+        "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
+        "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow."
+      },
+      "practice": {
+        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "reviewed_artifacts": [
+          {
+            "name": "management_control_report.md",
+            "sha256": "0a540457b751a74efd6bdbc196e7d5c9c25954765255839ed69c5d992f3a0762"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_clara_budget_execution::test_clara_reporting_kit_delivers_explained_report_and_preserves_prior_version[practice-it]"
+      },
+      "verdict": "accepted"
+    }
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e",
+    "fresh_matching_junit_required": true,
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
+    "parent_course_sha256": {
+      "HEAD": "3e3c58e383783c04217abb5d7041e5db084406f80c0f9020ef6868e0b6447d69",
+      "origin/main": "5031dc2e6466ba48a0cee9cee1f56ae3993ff6c52744dec110895228037f899e"
+    },
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
+  },
+  "product": "clara",
+  "product_reporting_source_binding_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "current_course_sha256": "852c45f5c39ccad4dcfcc41f6379e4802abe567e1405b189f38175a3ffffcfd8",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted.",
+    "previous_course_sha256": "5fe18e9028c985ce5490b9a286f54fd962fd08f19a3f649942bfc45babb0fdd0",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json"
+  },
+  "rating_legalita_source_binding_20261002": {
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py"
+    ],
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "717b6d48cfff55aab26b1e93ee52b7aa297d8ae2114daf28f199bf9ab3529251",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "72c41283362bc8f312d087bdadc2c842351322a0f78bf10c172fd96564ad19fc",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "release_freshness_20260928": {
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-40.md",
+    "italian_course_qa_sha256": "fb8f02cf805512c3dbd4364d5b5414d474736b30eb26c87be60a48c270dc042f",
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest.",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "job": 108832365397,
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green.",
+      "passed": 1152,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "run": 36392851481,
+      "skipped": 3
+    },
+    "previous_course_sha256": "6f792148421640a7761b325031d14abed77952092b99898ebf132cca2df6de1e",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "reviewer": "Codex /root - bounded release freshness review",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "5fe18e9028c985ce5490b9a286f54fd962fd08f19a3f649942bfc45babb0fdd0",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
+  },
+  "reporting_reference_binding_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "3e3c58e383783c04217abb5d7041e5db084406f80c0f9020ef6868e0b6447d69",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance.",
+    "native_execution_evidence": {
+      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
+      "courseware_coverage_percent": 90.54,
+      "job": 117744153569,
+      "later_failure": "Editorial digest freshness; the original job is not represented as fully green.",
+      "passed": 1710,
+      "run": 39150899038,
+      "skipped": 3
+    },
+    "previous_course_sha256": "6442d94e47325bcb3466b0bc79371d83862fef21798ac647642d55bbf2ac06cd",
+    "reviewed_at": "2026-10-18",
+    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
+    "reviewer": "Codex - bounded source compatibility review",
+    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
+  },
+  "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
+  "reviewer": "Codex lesson and actual generated report review",
+  "runtime8_dependency_binding_20261006": {
+    "current_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
+    "previous_course_sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c",
+    "scope": "Only source fingerprints changed. Authored content, fixtures, expectations and historical editorial/output reviews are unchanged. Declared Polars dependency excludes incompatible major version 2. Current executions remain a CI release gate; no new learner or visual acceptance is claimed."
+  },
+  "schema": "mparanza.teaching_release_review.v1",
+  "source_binding_update": {
+    "reviewed_at": "2026-10-06",
+    "scope": "Date parsing uses explicit string APIs and chart ordering is explicit for Polars 2.0. Authored lesson content and inputs are unchanged; current executions remain required CI evidence, with no new learner or visual acceptance claimed."
+  },
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "studio_format_source_binding_20261001": {
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "current_course_sha256": "09969fb6e92a3acd0546a33f0dc1fa276c965d32a2fcd5da203873d2841e767d",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge.",
+    "previous_course_sha256": "2d5709426546461a6b97cf4beb62ed7dc0a825df4bac3debb716b24b57937fd3",
+    "reviewed_at": "2026-10-01T18:46:46.181981+00:00",
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths."
+  },
+  "workflow": "reporting-engine"
 }

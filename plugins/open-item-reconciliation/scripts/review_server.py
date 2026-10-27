@@ -104,6 +104,7 @@ try:
         retain_review_transition,
         review_completion_pending,
         review_decision_fingerprint,
+        reviewer_reference,
         run_review_output_transaction,
         validate_assurance_run,
     )
@@ -115,6 +116,7 @@ except ImportError:  # pragma: no cover - direct script/importlib support
         retain_review_transition,
         review_completion_pending,
         review_decision_fingerprint,
+        reviewer_reference,
         run_review_output_transaction,
         validate_assurance_run,
     )
@@ -858,6 +860,7 @@ def _completion_blockers(
     )
     successor_replayed = False
     pending_review_only = False
+    automatic_record_ids: set[str] = set()
     if assurance_path is not None and assurance_path.is_file():
         try:
             assurance = validate_assurance_run(
@@ -910,6 +913,13 @@ def _completion_blockers(
                     }
                 )
             authority = assurance.get("professional_review_authority")
+            if isinstance(authority, dict):
+                automatic_record_ids = {
+                    record["record_id"]
+                    for record in authority["records"]
+                    if record["review_status"] == "PASS"
+                    and record["reviewer_ref"] == "system-exact-match"
+                }
             successor_replayed = bool(
                 isinstance(authority, dict)
                 and authority.get("origin") == "applied_decisions"
@@ -933,6 +943,12 @@ def _completion_blockers(
             # not need a second acceptance to permit their normal regeneration.
             continue
         effect = effect_by_id.get(item.get("id"))
+        if (
+            effect is None
+            and item.get("item_type") == "closure_evidence_review"
+            and item.get("data", {}).get("record_id") in automatic_record_ids
+        ):
+            continue
         if effect is None:
             blockers.append(
                 {
@@ -1195,6 +1211,8 @@ def _apply_decisions_in_place(
 
     directory = _output_dir(output_dir)
     ui_decisions = _build_ui_decisions(directory, input_args)
+    reviewer_label = _short_string(ui_decisions.get("reviewer"))
+    reviewer = reviewer_reference(reviewer_label) if reviewer_label else None
     review_payload = build_session_payload(directory)["review_payload"]
     item_by_id = {item["id"]: item for item in review_payload["items"]}
     applied_at = _utc_now()
@@ -1238,7 +1256,7 @@ def _apply_decisions_in_place(
                 assurance=assurance,
                 review_payload=review_payload,
                 effects=effects,
-                reviewer=_short_string(ui_decisions.get("reviewer")) or None,
+                reviewer=reviewer,
                 decision_fingerprint=decision_fingerprint,
             )
             if isinstance(assurance, dict)
@@ -1326,8 +1344,8 @@ def _apply_decisions_in_place(
             "decision_fingerprint": decision_fingerprint,
             "successor_assurance_replayed": successor_replayed,
         }
-    if "reviewer" in ui_decisions:
-        applied_decisions["reviewer"] = ui_decisions["reviewer"]
+    if reviewer:
+        applied_decisions["reviewer"] = reviewer
     final_artifacts = _final_artifacts_with_application(
         directory,
         applied_decisions,

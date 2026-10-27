@@ -1645,6 +1645,15 @@ WORD_OUTPUT_LABELS.update(
 )
 
 
+WORD_OUTPUT_LABELS["evidence_amount"] = {
+    "it": "Importo evidenza",
+    "en": "Evidence amount",
+    "es": "Importe de la evidencia",
+    "fr": "Montant du justificatif",
+    "de": "Belegbetrag",
+}
+
+
 def canonical_word_label(value: object) -> object:
     """Resolve exact renderer-owned captions; leave source text untouched."""
     if not isinstance(value, str):

@@ -1,271 +1,114 @@
 {
-  "installation_incident_binding": {
-    "reviewed_at": "2026-10-14",
-    "previous_course_sha256": "7bacb4de2f3848a667a72a08460a08b650c597c2f23d404f3d42faec776ab848",
-    "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed."
-  },
-  "schema": "mparanza.teaching_release_review.v1",
-  "course_sha256": "9ba2d3faafbc473d3c8c2256817c6abc7ed78d3cdf511bea5c911f1b5b54d061",
-  "source_binding_note": "2026-10-15: Only the source skill description was quoted to make its YAML valid. Course text, teaching steps, input files, prior execution evidence and substantive editorial judgments are unchanged.",
-  "isolated_launcher_source_compatibility_20261018": {
-    "reviewer": "Codex exact retained-course and launcher-source review",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "c50f7c15e55834ea53540ac9578ca5ea7705000c3d20ae3e7a3561112238c981",
-    "current_course_sha256": "18a1ec3a6f49bcec8b59e84adafa6a98dabd55b531507ca6639c701de00f2ecf",
+  "archive_release_shared_runtime_compatibility_20261018": {
+    "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
+    "current_course_sha256": "9e1dbef349b0cf5543e0a56cd73d9a219101e6f368dc3276ae56247395441195",
+    "previous_course_sha256": "9eb137ab8e8804b2c1a9c12cdaafbc1231c22c614db21ca5bba43cbe5dddc987",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "course_sha256": "1439f31065da56d5f864f2fb501109cfc1535164aafb83d342b77a2f3bbfc42e",
+  "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
-    "scope": "The maintained runtime launcher restores only its own script directory under isolated Python for technical diagnostics. Existing helper execution, incident delivery controls and professional gates are unchanged. Retained teaching content and attachments unchanged; native Vouching acceptance remains pending.",
-    "runtime_regression_tests": 199,
-    "sandbox_passed": 198,
-    "exact_loopback_permission_retry_passed": true,
-    "native_ui_qualified": false
-  },
-  "root_helper_capture_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-15",
-    "previous_course_sha256": "5a9e9e308f6a493ad78a45d5c3b902f61d5d6ccaf34a13bd093df7c4786ce81c",
-    "scope": "Only source bindings changed. Root helpers launched without --module now use the same structured failure, retry and original-task verification path. Built-in root recovery omits a nonexistent component selector. Authored lessons, prepared inputs and professional algorithms are unchanged; prior editorial/artifact judgments remain historical and fresh teaching CI is required.",
-    "validation": "161 runtime/launcher/recovery regressions passed; real argument-failure-to-original-task recovery case covers component and root paths."
-  },
-  "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
-  "usage_computer_binding_20261017": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "baseline_commit": "54da75ab0110a6f8ab32bd24952fbdd874cfe2fe",
-    "previous_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
-    "current_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
-    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
     "changed_sources": [
-      "scripts/operational_incidents.py"
+      "plugins/vera/scripts/operational_incidents.py",
+      "plugins/vera/scripts/workflow_usage.py",
+      "plugins/vera/skills/contenzioso-tributario/SKILL.md"
     ],
-    "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
-    "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head.",
-    "limits": "Retains original editorial and rendered-artifact review scope. This source-binding refresh is not a new professional test, learner acceptance or installed-host UI verification."
-  },
-  "native_identity_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-15",
-    "previous_course_sha256": "daac49eaf80de4101a9a3fa8a0a1296d0437d0a96074bcd1a9a7cbd0b1882532",
-    "changed_sources": [
-      {
-        "path": "scripts/operational_incidents.py",
-        "before": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d",
-        "after": "702b97c78e3387efdae0874364817c5f46c1c81bf0cf117c341e2f475d341973"
-      }
-    ],
-    "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
-  },
-  "incident_capture_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-15",
-    "previous_course_sha256": "68c5a85a9faad51efa30226f5a4025c00b4f3d2fdccc5af5720a20fb79474854",
-    "source_changes": [
-      {
-        "path": "scripts/check_dependencies.py",
-        "before": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae",
-        "after": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5"
-      },
-      {
-        "path": "scripts/managed_python_runtime.py",
-        "before": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2",
-        "after": "7955f763c39a8d74959791f3f6abbe877f9c57e59318d803de7a79a4843017f6"
-      },
-      {
-        "path": "scripts/operational_incidents.py",
-        "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
-        "after": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d"
-      },
-      {
-        "path": "scripts/verified_execution.py",
-        "before": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730",
-        "after": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31"
-      }
-    ],
-    "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
-    "source_review": "Reviewed the technical reporting changes in these four runtime helpers: package-relative structured errors and retained stderr, explicit capture gaps, operation-bound retries and host verification before recovery. Component dependency checks use the same path; an actual component-selector subprocess regression ruled out top-level recursion. No professional calculation or teaching output was changed.",
-    "limits": "Bounded source review only. No fresh learner, voice, installed-host or professional acceptance is asserted. Current complete native teaching CI remains required."
+    "current_course_sha256": "a4f859eb02856e8805b6876e2d111e45efe46e8db89ce4d4824c32dec81c70a4",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "0c9605f862440e03749773e7353c21569bd2c8953478cae20f74c4ce8c6db10c",
+    "reviewed_at": "2026-10-18T18:09:58.588009+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
   },
   "deploy_source_integration_20261018": {
-    "reviewer": "Codex /root - bounded integration review",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "18a1ec3a6f49bcec8b59e84adafa6a98dabd55b531507ca6639c701de00f2ecf",
-    "current_course_sha256": "9eb137ab8e8804b2c1a9c12cdaafbc1231c22c614db21ca5bba43cbe5dddc987",
     "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
+    "current_course_sha256": "9eb137ab8e8804b2c1a9c12cdaafbc1231c22c614db21ca5bba43cbe5dddc987",
+    "previous_course_sha256": "18a1ec3a6f49bcec8b59e84adafa6a98dabd55b531507ca6639c701de00f2ecf",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded integration review",
     "source_review": "Integrated already merged native-computer usage registration and monitoring disclosure with the tested Studio Archive session isolation and review fixes. Existing lesson content and prior named editorial judgments are preserved. No new learner, visual native-host or professional approval is asserted. Current CI must execute required demo/practice identities against the new digest."
   },
-  "local_incident_delivery_source_compatibility_20261018": {
-    "reviewer": "Codex runtime source review and exact retained-course field comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
-    "current_course_sha256": "c50f7c15e55834ea53540ac9578ca5ea7705000c3d20ae3e7a3561112238c981",
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
     "changed_fields": [
       "sources"
     ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "9ba2d3faafbc473d3c8c2256817c6abc7ed78d3cdf511bea5c911f1b5b54d061",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
+    "recorded_at": "2026-10-25T18:12:53.499574+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "filesystem_identity_source_binding_20261026": {
+    "scope": "Complete authored course content is unchanged. Reviewed shared runtime source renews stale filesystem metadata only after full byte verification and stable current directory identity. Existing editorial, learner and professional judgments remain unchanged; this is not new installed-host acceptance."
+  },
+  "incident_capture_source_refresh": {
+    "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
+    "limits": "Bounded source review only. No fresh learner, voice, installed-host or professional acceptance is asserted. Current complete native teaching CI remains required.",
+    "previous_course_sha256": "68c5a85a9faad51efa30226f5a4025c00b4f3d2fdccc5af5720a20fb79474854",
+    "reviewed_at": "2026-10-15",
+    "reviewer": "Codex /root",
+    "source_changes": [
+      {
+        "after": "4b68c6b70dfaf49f11d593117c559c6d24abe34bbaeba8f02722261dfe2bf5b5",
+        "before": "faeea239129331baf68b9e04c430aa867b13aa23a78cdd5e50cce8f527edf5ae",
+        "path": "scripts/check_dependencies.py"
+      },
+      {
+        "after": "7955f763c39a8d74959791f3f6abbe877f9c57e59318d803de7a79a4843017f6",
+        "before": "714a18f19a8ed3d8b9257574cf4294d5499e7bd209c3b2b9338dec2daeff04e2",
+        "path": "scripts/managed_python_runtime.py"
+      },
+      {
+        "after": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d",
+        "before": "739b9390ccdd77ead53fdc6536217af4a50e3f16f9b27fa8002cecaae2c06147",
+        "path": "scripts/operational_incidents.py"
+      },
+      {
+        "after": "8817cdb519cce486adf79d4f8feaf7bc3d4f89a810361855da823c6d9a852c31",
+        "before": "5a218a5bfe7920a201c283d218988f5a105cc9ed436bbc26492ca517891bd730",
+        "path": "scripts/verified_execution.py"
+      }
+    ],
+    "source_review": "Reviewed the technical reporting changes in these four runtime helpers: package-relative structured errors and retained stderr, explicit capture gaps, operation-bound retries and host verification before recovery. Component dependency checks use the same path; an actual component-selector subprocess regression ruled out top-level recursion. No professional calculation or teaching output was changed."
+  },
+  "installation_incident_binding": {
+    "basis": "Release metadata/source binding after automatic integrity-incident reporting correction. Existing authored lessons, professional methods, inputs and review dispositions remain unchanged. No new learner or customer recovery acceptance claimed.",
+    "previous_course_sha256": "7bacb4de2f3848a667a72a08460a08b650c597c2f23d404f3d42faec776ab848",
+    "reviewed_at": "2026-10-14"
+  },
+  "isolated_launcher_source_compatibility_20261018": {
     "authored_content_unchanged": true,
-    "scope": "Shared Vera incident client/runtime now honors an explicit local-only incident-delivery policy while preserving queued evidence, default automatic behavior and original professional execution gates. Authored lessons and input attachments unchanged. This records source compatibility only; no new native, learner or professional acceptance.",
-    "runtime_test_summary": "incident-local-only-validation-summary.json",
-    "runtime_behavior_checks": 113,
-    "sandbox_loopback_test_retry_passed": true,
-    "native_ui_qualified": false
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "18a1ec3a6f49bcec8b59e84adafa6a98dabd55b531507ca6639c701de00f2ecf",
+    "exact_loopback_permission_retry_passed": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "c50f7c15e55834ea53540ac9578ca5ea7705000c3d20ae3e7a3561112238c981",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex exact retained-course and launcher-source review",
+    "runtime_regression_tests": 199,
+    "sandbox_passed": 198,
+    "scope": "The maintained runtime launcher restores only its own script directory under isolated Python for technical diagnostics. Existing helper execution, incident delivery controls and professional gates are unchanged. Retained teaching content and attachments unchanged; native Vouching acceptance remains pending."
   },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
-        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
-        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
-        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
-        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
-        "language_and_pacing": "Read the complete it outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-it-vera]",
-        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
-        "reviewed_artifacts": [
-          {
-            "name": "review.csv",
-            "sha256": "69e0891115444268f06d486cc720598de90eebffb313bba8aa3f5e7068ad6ace"
-          },
-          {
-            "name": "bozza-intake.md",
-            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
-          },
-          {
-            "name": "matter.html",
-            "sha256": "15ecdfa0641827d60dbd901b37d00288467974fa4d508eb80d446ac171e3dfd0"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-it-vera]",
-        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
-        "reviewed_artifacts": [
-          {
-            "name": "review.csv",
-            "sha256": "f000b90e313004f0d813175ec90ab5c70f77ac97051d50bbf2562309ee1ca1ad"
-          },
-          {
-            "name": "bozza-intake.md",
-            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
-          },
-          {
-            "name": "matter.html",
-            "sha256": "d0dbc42d96eaf24a997711ea50d7bbb9ea79cdc3d8b8fc345dc7a4e2c1407843"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
-        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
-        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
-        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
-        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
-        "language_and_pacing": "Read the complete en outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-en-vera]",
-        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
-        "reviewed_artifacts": [
-          {
-            "name": "review.csv",
-            "sha256": "fc30ec42f60911ca9b0053f29e48b4b9abfb505166d9249537d1c7b52c1e5d00"
-          },
-          {
-            "name": "bozza-intake.md",
-            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
-          },
-          {
-            "name": "matter.html",
-            "sha256": "c8b6075b66fe86dd5c43ab005885579dca06f6771add12e839e6b5aedd3460b6"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-en-vera]",
-        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
-        "reviewed_artifacts": [
-          {
-            "name": "review.csv",
-            "sha256": "48c83ad784510530a41f2b7b469ba360128a12ca8d3fb53b89577c43a865bea3"
-          },
-          {
-            "name": "bozza-intake.md",
-            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
-          },
-          {
-            "name": "matter.html",
-            "sha256": "7aa61bef7fc0ac9bf83fd6c38d5a8e6e82cddcb26400b4474d59010075a8c1d8"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
-        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
-        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
-        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
-        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
-        "language_and_pacing": "Read the complete fr outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-fr-vera]",
-        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
-        "reviewed_artifacts": [
-          {
-            "name": "review.csv",
-            "sha256": "9716cdb9714e04a8547b76f007cc32257b2db8470df99ce21e8a643eec98b6d4"
-          },
-          {
-            "name": "bozza-intake.md",
-            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
-          },
-          {
-            "name": "matter.html",
-            "sha256": "280d8bc943f31920f94e34c3421a3017d80929d736585eaf9b26173f7fdd5e3e"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-fr-vera]",
-        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
-        "reviewed_artifacts": [
-          {
-            "name": "review.csv",
-            "sha256": "f7896c648b3e38be2f68adae7b0a7ba798188ce4a309e9a5837fd6c5b1b2694f"
-          },
-          {
-            "name": "bozza-intake.md",
-            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
-          },
-          {
-            "name": "matter.html",
-            "sha256": "a5aee4afc77802ed314ca6461eb1c8c83a0e27838cdcfcc55f8c3627aa527eb7"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
-        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
-        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
-        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
-        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
-        "language_and_pacing": "Read the complete de outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-de-vera]",
         "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
         "reviewed_artifacts": [
           {
@@ -280,10 +123,18 @@
             "name": "matter.html",
             "sha256": "f15fd1d178f6d2ae5cd7ae6f8eaf611eec6e86ce253d10fe2d4ff24398959451"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-de-vera]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "language_and_pacing": "Read the complete de outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-de-vera]",
         "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
         "reviewed_artifacts": [
           {
@@ -298,21 +149,60 @@
             "name": "matter.html",
             "sha256": "c566c429cf82363d4d6a203ef222e817384880dae22292085ff239b81cb4d011"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-de-vera]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "fc30ec42f60911ca9b0053f29e48b4b9abfb505166d9249537d1c7b52c1e5d00"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "c8b6075b66fe86dd5c43ab005885579dca06f6771add12e839e6b5aedd3460b6"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-en-vera]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "language_and_pacing": "Read the complete en outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it."
+      },
+      "practice": {
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "48c83ad784510530a41f2b7b469ba360128a12ca8d3fb53b89577c43a865bea3"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "7aa61bef7fc0ac9bf83fd6c38d5a8e6e82cddcb26400b4474d59010075a8c1d8"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-en-vera]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it.",
-        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
-        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
-        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
-        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
-        "language_and_pacing": "Read the complete es outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-es-vera]",
         "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
         "reviewed_artifacts": [
           {
@@ -327,10 +217,18 @@
             "name": "matter.html",
             "sha256": "12f89ccd578f493ab753d41841d84647b8700acb9602e9bc4b775773caae3d80"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-es-vera]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "language_and_pacing": "Read the complete es outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-es-vera]",
         "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
         "reviewed_artifacts": [
           {
@@ -345,114 +243,219 @@
             "name": "matter.html",
             "sha256": "1560c8a4d46d177fd840f519833ac8f2e5b887e752931dc6a720419a273df225"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-es-vera]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "9716cdb9714e04a8547b76f007cc32257b2db8470df99ce21e8a643eec98b6d4"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "280d8bc943f31920f94e34c3421a3017d80929d736585eaf9b26173f7fdd5e3e"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-fr-vera]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "language_and_pacing": "Read the complete fr outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it."
+      },
+      "practice": {
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "f7896c648b3e38be2f68adae7b0a7ba798188ce4a309e9a5837fd6c5b1b2694f"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "a5aee4afc77802ed314ca6461eb1c8c83a0e27838cdcfcc55f8c3627aa527eb7"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-fr-vera]"
+      },
+      "verdict": "accepted"
+    },
+    "it": {
+      "demo": {
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The initial acceptance receipt does not resolve delivery, legal research or filing.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "69e0891115444268f06d486cc720598de90eebffb313bba8aa3f5e7068ad6ace"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "803f7a8894f51bc7724ef5725425c8f5b2a770e5829ecd046e0d819318e81111"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "15ecdfa0641827d60dbd901b37d00288467974fa4d508eb80d446ac171e3dfd0"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[demo-it-vera]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Substantively inspected actual review.csv, bozza-intake.md and matter.html for demo and practice. Initial delivery date and due date are blank; practice adds source-cited 2026-10-02 while leaving due date blank pending law review. Missing cost documents and external filing remain visible. A working draft is not a reviewed pleading. The live outline requires actual source research, Word when available and a readable model-data report.",
+        "execution_and_checkpoints": "The real current helpers import the exact course inputs through a local-only teaching case, produce source-linked HTML/CSV/XLSX, persist and reopen questions, stages and a calendar, and preserve a sealed first run. Practice binds the actual previous matter artifact in the same engagement and prepares a new evidence pack. Narrative and stage decisions are labelled regression fixtures; research, Word, native voice and learner participation are not exercised by these regressions.",
+        "inputs_and_request": "Read the selected-language engagement note, fictional IRES notice, PEC acceptance and initial source pointers. EUR 2,880 IRES and EUR 12,000 maintenance costs remain statements in the notice. There is no delivery evidence initially, no invoice evidence, no preapproved legal rule, deadline or pleading output. The delivery receipt is supplied only for practice.",
+        "language_and_pacing": "Read the complete it outline: title, scope, files, request, six steps, deliverables, review, two checkpoints, practice, success and repeat. The narrative is localized; Italian sources, procedural jurisdiction and pleading language remain Italian. Six planned steps total 390 seconds; research and processing are expressly additional. No measured learner timing or understanding is claimed.",
+        "practice_and_repeat": "The second run adds the fictional delivery receipt rather than modifying the sealed evidence. Exact previous outputs remain byte-identical, same engagement is retained, the prior matter is selected upstream and the new receipt has current-pack citations. Acceptance on 2026-10-01 is not silently substituted for delivery on 2026-10-02. Legal review and filing questions remain open.",
+        "purpose_and_first_use": "Reviewed the full authored first-instance Italian lesson: document intake, evidence gaps, current-source research, procedural calendar, draft and saved continuation. The selected product owns the actual workflow; the outline does not replace it."
+      },
+      "practice": {
+        "result_review": "Actual evidence rendering, persisted source-linked calendar and bound archive lifecycle inspected. Unknown legal terms remain unknown. The second run imports the prior state, adds delivery evidence, changes only the supported event and preserves all previous output bytes.",
+        "reviewed_artifacts": [
+          {
+            "name": "review.csv",
+            "sha256": "f000b90e313004f0d813175ec90ab5c70f77ac97051d50bbf2562309ee1ca1ad"
+          },
+          {
+            "name": "bozza-intake.md",
+            "sha256": "0a91167611d9e60f8092aeb8b648669f56147a3c3fff85e08fb81450e3a84002"
+          },
+          {
+            "name": "matter.html",
+            "sha256": "d0dbc42d96eaf24a997711ea50d7bbb9ea79cdc3d8b8fc345dc7a4e2c1407843"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_tax_litigation_execution::test_tax_course_preserves_evidence_unknown_terms_and_prior_run[practice-it-vera]"
+      },
+      "verdict": "accepted"
     }
   },
-  "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
-  "workflow": "contenzioso-tributario",
-  "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
+  "local_incident_delivery_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "c50f7c15e55834ea53540ac9578ca5ea7705000c3d20ae3e7a3561112238c981",
+    "native_ui_qualified": false,
+    "previous_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex runtime source review and exact retained-course field comparison",
+    "runtime_behavior_checks": 113,
+    "runtime_test_summary": "incident-local-only-validation-summary.json",
+    "sandbox_loopback_test_retry_passed": true,
+    "scope": "Shared Vera incident client/runtime now honors an explicit local-only incident-delivery policy while preserving queued evidence, default automatic behavior and original professional execution gates. Authored lessons and input attachments unchanged. This records source compatibility only; no new native, learner or professional acceptance."
+  },
+  "native_identity_source_refresh": {
+    "changed_sources": [
+      {
+        "after": "702b97c78e3387efdae0874364817c5f46c1c81bf0cf117c341e2f475d341973",
+        "before": "9ddd89ed0c4f8e715c13ec513af309a3f3397a2c4a43a8ff21227753f151a55d",
+        "path": "scripts/operational_incidents.py"
+      }
+    ],
+    "previous_course_sha256": "daac49eaf80de4101a9a3fa8a0a1296d0437d0a96074bcd1a9a7cbd0b1882532",
+    "reviewed_at": "2026-10-15",
+    "reviewer": "Codex /root",
+    "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "02d14502aea54f683c93e8a486d4346a6cdaa760bec4db8720158c2329f31e8a",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "f41611578ac2140c5ba0c5c5c2850194b52c071129360ff9292672f7651c776e",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
+    "fresh_matching_junit_required": true,
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
+    "parent_course_sha256": {
+      "HEAD": "02d14502aea54f683c93e8a486d4346a6cdaa760bec4db8720158c2329f31e8a",
+      "origin/main": "a4f859eb02856e8805b6876e2d111e45efe46e8db89ce4d4824c32dec81c70a4"
+    },
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
+  },
+  "product": "vera",
+  "product_reporting_source_binding_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "current_course_sha256": "fac502ff58e9e57c351194f64dab26ce8aa905af638f383fb6e7eda52daf4e79",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted.",
+    "previous_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json"
+  },
   "restoration_source_binding_20261015": {
     "previous_course_sha256": "950a083cd9c0b08354298b21957c24f966fc3d2dd8f3a5ce3a998f00d0c5742a",
     "scope": "Compared against 9b74daa parent: every authored course field and fictional input is unchanged; only the source hash for plugins/vera/scripts/operational_incidents.py changes. Inspected diff: observed reporter protocol 2 to 3 and updated startup recovery guidance. Course legal workflow, narrative, steps and evidence inputs are unchanged. Original editorial dates, findings and artifact hashes remain historical; current demo/practice regressions are rerun separately.",
     "source_path": "plugins/vera/scripts/operational_incidents.py"
   },
-  "workflow_usage_source_binding_review_20261017": {
-    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
-    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
-    "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
-    "previous_course_sha256": "6550e2c990e4bf5bb85d63438bca34e82d5991a3d7d7b242a5513357bbf237ec",
-    "current_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
-    "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
-    "fresh_matching_junit_required": true
+  "review_scope": "Accepted prepared material and bounded real helper/Archive regressions. Semantic narrative and decisions are explicit test fixtures. This does not attest full live legal research, substantive pleading approval, native Word, native voice, installed-host learner execution or professional acceptance. Live lessons run the current specialist, not the fixtures.",
+  "reviewed_at": "2026-10-14T14:55:04.859840+00:00",
+  "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
+  "root_helper_capture_source_refresh": {
+    "previous_course_sha256": "5a9e9e308f6a493ad78a45d5c3b902f61d5d6ccaf34a13bd093df7c4786ce81c",
+    "reviewed_at": "2026-10-15",
+    "reviewer": "Codex /root",
+    "scope": "Only source bindings changed. Root helpers launched without --module now use the same structured failure, retry and original-task verification path. Built-in root recovery omits a nonexistent component selector. Authored lessons, prepared inputs and professional algorithms are unchanged; prior editorial/artifact judgments remain historical and fresh teaching CI is required.",
+    "validation": "161 runtime/launcher/recovery regressions passed; real argument-failure-to-original-task recovery case covers component and root paths."
   },
-  "product_reporting_source_binding_20261018": {
-    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
-    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
-    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
-    "previous_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
-    "current_course_sha256": "fac502ff58e9e57c351194f64dab26ce8aa905af638f383fb6e7eda52daf4e79",
+  "schema": "mparanza.teaching_release_review.v1",
+  "source_binding_note": "2026-10-15: Only the source skill description was quoted to make its YAML valid. Course text, teaching steps, input files, prior execution evidence and substantive editorial judgments are unchanged.",
+  "usage_computer_binding_20261017": {
     "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
-    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
-  },
-  "product": "vera",
-  "archive_release_shared_runtime_compatibility_20261018": {
-    "reviewer": "Codex /root - bounded complete-course comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "9eb137ab8e8804b2c1a9c12cdaafbc1231c22c614db21ca5bba43cbe5dddc987",
-    "current_course_sha256": "9e1dbef349b0cf5543e0a56cd73d9a219101e6f368dc3276ae56247395441195",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
-  },
-  "pdf_recovery_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact retained-course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
-    "previous_course_sha256": "f41611578ac2140c5ba0c5c5c2850194b52c071129360ff9292672f7651c776e",
-    "current_course_sha256": "02d14502aea54f683c93e8a486d4346a6cdaa760bec4db8720158c2329f31e8a",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.588009+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "0c9605f862440e03749773e7353c21569bd2c8953478cae20f74c4ce8c6db10c",
-    "current_course_sha256": "a4f859eb02856e8805b6876e2d111e45efe46e8db89ce4d4824c32dec81c70a4",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
+    "baseline_commit": "54da75ab0110a6f8ab32bd24952fbdd874cfe2fe",
     "changed_sources": [
-      "plugins/vera/scripts/operational_incidents.py",
-      "plugins/vera/scripts/workflow_usage.py",
-      "plugins/vera/skills/contenzioso-tributario/SKILL.md"
+      "scripts/operational_incidents.py"
     ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+    "current_course_sha256": "35bcf1bcb38b8406c972622947caa073f3e59aa543729750034329562e022c66",
+    "limits": "Retains original editorial and rendered-artifact review scope. This source-binding refresh is not a new professional test, learner acceptance or installed-host UI verification.",
+    "previous_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
+    "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head."
   },
-  "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
-    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
-    "parent_course_sha256": {
-      "HEAD": "02d14502aea54f683c93e8a486d4346a6cdaa760bec4db8720158c2329f31e8a",
-      "origin/main": "a4f859eb02856e8805b6876e2d111e45efe46e8db89ce4d4824c32dec81c70a4"
-    },
-    "current_course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
-    "changed_fields": [
-      "sources"
-    ],
+  "workflow": "contenzioso-tributario",
+  "workflow_usage_source_binding_review_20261017": {
     "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
+    "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
+    "current_course_sha256": "f430967f07637dc4e0dd8b0a3e767ba66ad770cb0f7a29b956781f0bd93acead",
     "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
-  },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.499574+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
-    "previous_course_sha256": "44b2f27a9cd8d93dfa2cbb434004ea5ddc483f7400d40111b7c977164d7b378e",
-    "current_course_sha256": "9ba2d3faafbc473d3c8c2256817c6abc7ed78d3cdf511bea5c911f1b5b54d061",
-    "changed_fields": [
-      "sources"
-    ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+    "previous_course_sha256": "6550e2c990e4bf5bb85d63438bca34e82d5991a3d7d7b242a5513357bbf237ec",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
+    "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
   }
 }

@@ -35,7 +35,7 @@ def isolated_engine(code: str, *arguments: object) -> dict:
 
 
 def prepared_raw_case(
-    tmp_path: Path, monkeypatch, nested: bool = True, complete_review: bool = True
+    tmp_path: Path, monkeypatch, nested: bool = True, review_selection: str = "all"
 ) -> dict:
     """Use real fictional teaching PDFs and the unchanged accounting adapters."""
     ledger = engine._load_customer_ledger()
@@ -110,9 +110,30 @@ def prepared_raw_case(
         },
     )
     initial = isolated_engine(
-        "\nresult=runner.run_raw_input_reconciliation(**json.loads(sys.argv[2]));output=runner.Path(result['run_output_dir']);checkpoint=json.loads((output/'assurance_receipts.json').read_bytes())['content_sha256'];review=json.loads((output/'review_payload.json').read_bytes());items=review['items'] if json.loads(sys.argv[3]) else review['items'][:1];review_server.apply_decisions(output,{'expected_predecessor_checkpoint':checkpoint,'reviewer':'fictional_reviewer','decisions':[{'item_id':row['id'],'action':'accept'} for row in items]});sys.stdout.write(json.dumps({'output':str(output),'checkpoint':checkpoint}))",
+        """
+result=runner.run_raw_input_reconciliation(**json.loads(sys.argv[2]))
+output=runner.Path(result['run_output_dir'])
+checkpoint=json.loads((output/'assurance_receipts.json').read_bytes())['content_sha256']
+review=json.loads((output/'review_payload.json').read_bytes())
+selection=json.loads(sys.argv[3])
+items=review['items']
+if selection != 'all':
+    assert selection in {'exact_only', 'exception_only'}
+    exact = selection == 'exact_only'
+    items=[row for row in items if row.get('data', {}).get('record_id')
+           and (row['item_type'] == 'closure_evidence_review') == exact]
+    assert len(items) == (2 if exact else 1)
+    if exact:
+        items=items[:1]
+review_server.apply_decisions(output,{
+    'expected_predecessor_checkpoint':checkpoint,
+    'reviewer':'fictional_reviewer',
+    'decisions':[{'item_id':row['id'],'action':'accept'} for row in items],
+})
+sys.stdout.write(json.dumps({'output':str(output),'checkpoint':checkpoint}))
+""",
         parameters,
-        complete_review,
+        review_selection,
     )
     output = Path(initial["output"])
     checkpoint = initial["checkpoint"]
@@ -306,17 +327,21 @@ def test_native_regeneration_mcp_refuses_forged_ticket_before_engine(
     assert engine._audit_tree_image(case["output"]) == before
 
 
-def test_native_regeneration_keeps_incomplete_professional_review_blocked(
-    tmp_path, monkeypatch
+@pytest.mark.parametrize(
+    "review_selection,report_ready,automatic_reviews",
+    [("exact_only", False, 1), ("exception_only", True, 2)],
+)
+def test_native_regeneration_preserves_exact_checks_and_requires_exception_review(
+    tmp_path, monkeypatch, review_selection, report_ready, automatic_reviews
 ):
-    case = prepared_raw_case(tmp_path, monkeypatch, complete_review=False)
+    case = prepared_raw_case(tmp_path, monkeypatch, review_selection=review_selection)
 
     result = case["service"].dispatch(
         "vera_workspace_open_items_regenerate", case["request"]
     )
 
     assert result["regenerated"] is True
-    assert result["report_ready"] is False
+    assert result["report_ready"] is report_ready
     canonical = json.loads(
         (
             case["output"] / "assurance_final_outputs/reconciliation_results.json"
@@ -324,13 +349,23 @@ def test_native_regeneration_keeps_incomplete_professional_review_blocked(
     )
     assert sorted(row["review_status"] for row in canonical["review_rows"]) == [
         "PASS",
-        "UNRESOLVED",
-        "UNRESOLVED",
+        "PASS",
+        "PASS" if report_ready else "UNRESOLVED",
     ]
     assert (
-        json.loads((case["output"] / "final_artifacts.json").read_bytes())["status"]
-        != "final_ready"
+        sum(
+            row["reviewer_ref"] == "system-exact-match"
+            for row in canonical["review_rows"]
+        )
+        == automatic_reviews
     )
+    assert [
+        row["reconciliation_status"] for row in canonical["reconciliation_rows"]
+    ] == ["closed", "closed", "unresolved"]
+    status = json.loads((case["output"] / "final_artifacts.json").read_bytes())[
+        "status"
+    ]
+    assert (status == "final_ready") is report_ready
 
 
 def test_raw_regeneration_downstream_failure_rolls_back_entire_package(

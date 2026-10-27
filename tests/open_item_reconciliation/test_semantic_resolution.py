@@ -182,6 +182,233 @@ def test_cumulative_receipt_creates_two_native_closures_and_conserved_ledger(
     assert assumptions[semantic.KEY]["status"] == "completed"
 
 
+@pytest.mark.parametrize("policy", ["one_to_one", "many_to_one"])
+def test_source_policy_prevents_semantic_split(runtime, monkeypatch, tmp_path, policy):
+    _, h, semantic = runtime
+    items, bank = population()
+    bank[0]["allocation_policy"] = policy
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [
+            decision("invoice-0", [("bank-0", "366")]),
+            decision("invoice-1", [("bank-0", "244")]),
+        ],
+    )
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    assert all(row["reconciliation_status"] != "closed" for row in rows)
+    assert assumptions[semantic.KEY]["batches"] == []
+    assert "allocation policy" in assumptions[semantic.KEY]["blocks"][0]["reason"]
+
+
+def test_explicit_split_policy_reaches_native_ledger(runtime, monkeypatch, tmp_path):
+    _, h, semantic = runtime
+    items, bank = population()
+    bank[0]["allocation_policy"] = "one_to_many"
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [
+            decision("invoice-0", [("bank-0", "366")]),
+            decision("invoice-1", [("bank-0", "244")]),
+        ],
+    )
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    ledger = semantic.resolution_ledgers(rows, bank, assumptions)[0]
+    assert [row["allocated_amount"] for row in rows] == ["366", "244"]
+    assert ledger["policy"]["relationship_shape"] == "one_to_many"
+    packet = assumptions[semantic.KEY]["batches"][0]["packet"]
+    assert packet["sources"][0]["allocation_policy"] == "one_to_many"
+
+
+def test_worker_schema_limits_citations_to_current_packet(runtime):
+    _, _, semantic = runtime
+    items, bank = population()
+    schema = semantic._schema({"targets": items, "sources": bank})
+    fields = schema["properties"]["decisions"]["items"]["properties"]
+    allocation = fields["allocations"]["items"]["properties"]
+    citation = allocation["citations"]["items"]["properties"]
+    assert fields["target_id"]["enum"] == ["invoice-0", "invoice-1"]
+    assert allocation["source_id"]["enum"] == ["bank-0"]
+    assert citation["record_id"]["enum"] == ["invoice-0", "invoice-1", "bank-0"]
+    assert "description" in citation["field"]["enum"]
+
+
+@pytest.mark.parametrize(
+    ("invoice", "payment", "outcome", "reason", "allocated", "residual"),
+    [
+        (
+            "1220",
+            "600",
+            "supported",
+            "EUR 600 received; EUR 620 remains open.",
+            "600",
+            "620",
+        ),
+        (
+            "610",
+            "700",
+            "supported",
+            "EUR 610 settles the invoice; EUR 90 remains unallocated.",
+            "610",
+            "0",
+        ),
+        (
+            "1913.57",
+            "1913.57",
+            "supported",
+            "The receipt settles the invoice.",
+            "1913.57",
+            "0",
+        ),
+        (
+            "305",
+            "200",
+            "conflict",
+            "The EUR 200 receipt has a conflicting payer; the EUR 305 invoice remains open.",
+            None,
+            None,
+        ),
+    ],
+)
+def test_semantic_explanations_and_residuals_reach_assured_documents(
+    runtime,
+    monkeypatch,
+    tmp_path,
+    invoice,
+    payment,
+    outcome,
+    reason,
+    allocated,
+    residual,
+):
+    workflow, _, _ = runtime
+    items, bank = population(amounts=(invoice,), payments=(payment,))
+    items[0]["source_role"] = "open_items"
+    bank[0]["source_role"] = "bank_statement"
+    proposal = decision(
+        "invoice-0", [("bank-0", allocated)] if allocated else [], outcome
+    )
+    proposal["reason"] = reason
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "results",
+        open_items=items,
+        evidence_rows=bank,
+        assumptions=assumptions,
+    )
+    from audit_assurance import validate_assurance_run
+    from openpyxl import load_workbook
+
+    row = result["reconciliation_rows"][0]
+    assert row["semantic_reason"] == reason
+    assert row.get("allocated_amount") == allocated
+    assert row.get("residual_amount") == residual
+    workbook = load_workbook(result["excel_path"], read_only=True)
+    assert reason in {
+        str(cell.value) for sheet in workbook for cells in sheet for cell in cells
+    }
+    workbook.close()
+    assert validate_assurance_run(tmp_path / "results")["content_sha256"]
+
+
+def test_duplicate_receipt_summary_counts_one_open_invoice(runtime, tmp_path):
+    workflow, _, _ = runtime
+    items, bank = population(amounts=("488",), payments=("488", "488"))
+    items[0]["document_key"] = "FT-2026-0141|2026"
+    for row in bank:
+        row["document_no"] = items[0]["document_no"]
+        row["document_key"] = items[0]["document_key"]
+    result = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path / "results",
+        open_items=items,
+        evidence_rows=bank,
+        assumptions={
+            "currency": "EUR",
+            "cutoff_date": "2026-10-01",
+            "post_cutoff_events_excluded": False,
+        },
+        language="it",
+    )
+    from audit_assurance import validate_assurance_run
+    from docx import Document
+
+    summary = next(
+        table
+        for table in Document(result["word_path"]).tables
+        if "Importo evidenza" in [cell.text for cell in table.rows[0].cells]
+    )
+    headers = [cell.text for cell in summary.rows[0].cells]
+    values = dict(
+        zip(headers, [cell.text for cell in summary.rows[1].cells], strict=True)
+    )
+    assert values["Importo aperto"] == "488,00"
+    assert values["Importo evidenza"] == "976,00"
+    assert validate_assurance_run(tmp_path / "results")["content_sha256"]
+
+
+@pytest.mark.parametrize("policy", ["one_to_one", "one_to_many"])
+def test_target_policy_prevents_multiple_semantic_receipts(
+    runtime, monkeypatch, tmp_path, policy
+):
+    _, h, semantic = runtime
+    items, bank = population(amounts=("610",), payments=("366", "244"))
+    items[0]["allocation_policy"] = policy
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [
+            decision("invoice-0", [("bank-0", "366"), ("bank-1", "244")]),
+        ],
+    )
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    assert rows[0]["reconciliation_status"] != "closed"
+    assert "allocation policy" in assumptions[semantic.KEY]["blocks"][0]["reason"]
+
+
+def test_changed_semantic_explanation_cannot_be_delivered(
+    runtime, monkeypatch, tmp_path
+):
+    workflow, _, _ = runtime
+    items, bank = population(amounts=("1220",), payments=("600",))
+    proposal = decision("invoice-0", [("bank-0", "600")])
+    proposal["reason"] = "EUR 600 received; EUR 620 remains open."
+    assumptions = prepare(runtime, monkeypatch, tmp_path, items, bank, [proposal])
+    writer = workflow.write_excel_workpaper
+
+    def changed_writer(*args, **kwargs):
+        from openpyxl import load_workbook
+
+        path = writer(*args, **kwargs)
+        workbook = load_workbook(path)
+        for sheet in workbook:
+            for row in sheet:
+                for cell in row:
+                    if cell.value == proposal["reason"]:
+                        cell.value = "EUR 600 received; the invoice is fully paid."
+        workbook.save(path)
+        workbook.close()
+        return path
+
+    monkeypatch.setattr(workflow, "write_excel_workpaper", changed_writer)
+    with pytest.raises(ValueError, match="semantic explanation differs"):
+        workflow.build_reconciliation_artifacts(
+            output_dir=tmp_path / "results",
+            open_items=items,
+            evidence_rows=bank,
+            assumptions=assumptions,
+        )
+
+
 def generic_payment_case():
     """Retain case 3's actual fields and the worker's customer-identity citations."""
     common = {
@@ -247,6 +474,44 @@ def generic_payment_case():
         ],
     }
     return items, bank, proposal
+
+
+def test_blank_description_retains_reviewed_direction_in_worker_packet(
+    runtime, monkeypatch, tmp_path
+):
+    _, helpers, semantic = runtime
+    items, bank, proposal = generic_payment_case()
+    items[0]["allocation_policy"] = "one_to_one"
+    bank[0]["allocation_policy"] = "one_to_one"
+    bank[0]["description"] = ""
+    proposal["reason"] = (
+        "One invoice and one positive receipt from the same identified customer; "
+        "the reviewed receivable side and dates support settlement."
+    )
+    proposal["allocations"][0]["citations"][-1] = {
+        "record_id": "bank-0",
+        "field": "direction_policy",
+        "quote": "receivable",
+    }
+    assumptions = prepare(
+        runtime,
+        monkeypatch,
+        tmp_path,
+        items,
+        bank,
+        [proposal],
+        scope={"cutoff_date": "2026-07-01", "post_cutoff_events_excluded": False},
+    )
+    packet = assumptions[semantic.KEY]["batches"][0]["packet"]
+    assert packet["targets"][0]["direction_policy"] == "receivable"
+    assert packet["sources"][0]["direction_policy"] == "receivable"
+    assert "description" not in packet["sources"][0]
+    rows = helpers.reconcile_open_items(items, bank, assumptions)
+    assert rows[0]["reconciliation_status"] == "closed"
+    assert rows[0]["residual_amount"] == "0"
+    ledgers, failures = helpers.closed_bank_allocation_controls(rows, bank, assumptions)
+    assert failures == {}
+    assert ledgers[0]["policy"]["relationship_shape"] == "one_to_one"
 
 
 def test_generic_payment_customer_citations_close_case_three_with_exact_ledger(

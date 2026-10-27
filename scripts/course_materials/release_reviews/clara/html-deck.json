@@ -1,201 +1,248 @@
 {
-  "schema": "mparanza.teaching_release_review.v1",
-  "product": "clara",
-  "workflow": "html-deck",
-  "course_sha256": "63edff95e14bfc744ec363d138d5bb8e2cfa7820af937df96ae234307f155706",
-  "reviewer": "Codex: first-use teaching-kit editorial review",
-  "reviewed_at": "2026-09-14T21:09:24.777351+00:00",
-  "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "archive_release_shared_runtime_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "3dcfede5598e02047e96264699e23140f6872824fbcc0faf474d3da48d030884",
+    "previous_course_sha256": "aec6d40ced0b8753d7e02b9adf7a8052cd6142afbf5822ee0a6bc6fd8d4e86ac",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "browser_preview_refresh": {
+    "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
+    "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed.",
+    "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
+    "previous_course_sha256": "13d28b2100727393c5dbd5277ad4f6653c945c1ea497fbafbc9104c3db4303c3",
+    "previous_source_commit": "19399a8c",
+    "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
+    "reviewed_at": "2026-09-17",
+    "reviewer": "Codex /root",
+    "source_changes": [
+      {
+        "after": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74",
+        "before": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24",
+        "path": "vendor/modules/courseware/library.py"
+      },
+      {
+        "after": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3",
+        "before": null,
+        "path": "vendor/modules/courseware/preview.py"
+      }
+    ],
+    "source_review": "Reviewed the shared CLI serve dispatch and loopback helper. Listing, loading and rendering retain their original implementation. Browser preview serves the complete rendered kit on an OS-selected loopback port and rejects resolved paths outside the kit and directory lists. Teaching instructions now require a browser target, preserve relative assets and distinguish queued/opened actions from learner-confirmed visibility."
+  },
+  "codex_course_qa_20260928": {
+    "course": 39,
+    "demo_files_preserved": 34,
+    "human_understanding_confirmed": false,
+    "limitations": [
+      "Native voice and physical two-window placement unverified",
+      "Other-language live journeys pending",
+      "Installed Clara unavailable; current local source tested",
+      "Native automated browser_qa script, print, reduced-motion setting, fullscreen and touch not exercised; actual Codex UI observations retained instead"
+    ],
+    "no_install_deploy_publish": true,
+    "onboarding_phase": "interview",
+    "phase": "paused",
+    "product": "clara",
+    "professional_approval": false,
+    "profile": null,
+    "repairs": [
+      "Process-step markers fit their supported label text; native deck rebuilt and actual Codex view retested; affected five-language prepared presentation baselines regenerated"
+    ],
+    "revision": 4,
+    "runs": {
+      "demo": {
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-html-demo-browser-review.json",
+        "execution_sha256": "2d372a6d0711d5c7660f74dcd427f19d076a65181ddb531089b96279ef469f50",
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-html-reporting/teaching/sessions/dc4bfafdb3d365ff0322e5065e256b52/files/demo-2fb1490d9395cac2/built/f6e96ee4cc0a24d8cc4022348b266437b64594e0c7d39a973f8708debfbfce69/index.html",
+        "native_preservation": "passed",
+        "sha256": "f6e96ee4cc0a24d8cc4022348b266437b64594e0c7d39a973f8708debfbfce69",
+        "target": "staff-meeting"
+      },
+      "practice": {
+        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-html-practice-browser-review.json",
+        "execution_sha256": "e4ef2237d8e5c2c6ecd2d94a660e6a99860863e14a39613408dfd12f778b7217",
+        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-html-reporting/teaching/sessions/dc4bfafdb3d365ff0322e5065e256b52/files/practice-3514f7b6b70439dc/built/beb846e127c27116fc326b5a1e0783f502c33d69d49fe3f6ad0bc37c92e2fcea/index.html",
+        "native_preservation": "passed",
+        "sha256": "beb846e127c27116fc326b5a1e0783f502c33d69d49fe3f6ad0bc37c92e2fcea",
+        "target": "new-colleagues"
+      }
+    },
+    "scope": "Italian Codex simulated learner demonstration and independent practice; actual rendered native presentations, sources and saved reopening",
+    "session_id": "dc4bfafdb3d365ff0322e5065e256b52",
+    "status": "passed",
+    "verified_at": "2026-09-27T22:46:27.915249+00:00",
+    "workflow": "html-deck"
+  },
+  "course_sha256": "6ec2b517fc67559e8d3ab2cd585725bf34ed3650b878d086d02d979d720f19e7",
+  "cowork_reporting_source_refresh_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/clara/scripts/operational_incidents.py",
+      "plugins/clara/scripts/workflow_usage.py",
+      "plugins/clara/skills/html-deck/SKILL.md"
+    ],
+    "current_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "0db5539f395f6cb68eabe3f184f6c45d8553e11df624495f4662f534639b16f9",
+    "reviewed_at": "2026-10-18T18:09:58.928054+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "63edff95e14bfc744ec363d138d5bb8e2cfa7820af937df96ae234307f155706",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
+    "recorded_at": "2026-10-25T18:12:53.229684+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "esg_source_refresh_20260929": {
+    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "current_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
+    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "previous_course_sha256": "23dd34f863d47720ab7d378dfba8a9b9714c1fdaa82f224352f8bf588e7a6ed4",
+    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
+  },
+  "esg_source_refresh_20260930": {
+    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
+    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
+    "current_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json",
+    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
+    "previous_course_sha256": "23dd34f863d47720ab7d378dfba8a9b9714c1fdaa82f224352f8bf588e7a6ed4",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
+  },
+  "filesystem_identity_source_binding_20261026": {
+    "scope": "Complete authored course content is unchanged. Reviewed shared runtime source renews stale filesystem metadata only after full byte verification and stable current directory identity. Existing editorial, learner and professional judgments remain unchanged; this is not new installed-host acceptance."
+  },
+  "freshness_review": {
+    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
+    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
+    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
+    "previous_course_sha256": "282f8160e6e4fa53f88e96b1b96499fcf407e74062fded6a95c1d963bf0361a9",
+    "prior_artifact_reviews_preserved": true,
+    "reviewed_at": "2026-09-15T07:45:34.150145+00:00",
+    "reviewer": "Codex /root",
+    "source_changes": [
+      {
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json"
+      }
+    ],
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "source_snapshot": "/private/tmp/clara-teaching-source-refresh-02/test_html_kit_builds_source_fa0/kit/course-provenance.json",
+    "voice_or_learner_completion_claimed": false
+  },
+  "integration_refresh": {
+    "date": "2026-10-02",
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
+  },
+  "interim_release_refresh": {
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
+    "previous_course_sha256": "264927335b3dbca4dd0c67147f1b8741688a1bc8f77f2bba49d5534bf83bfab2",
+    "previous_source_commit": "312b51de",
+    "reviewed_at": "2026-09-15T09:39:25.570507+00:00",
+    "reviewer": "Codex /root",
+    "source_changes": [
+      {
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa",
+        "before": null,
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css"
+      },
+      {
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5",
+        "before": null,
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json"
+      },
+      {
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f",
+        "before": null,
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py"
+      },
+      {
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24",
+        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
+        "path": "plugins/_shared/vendor/modules/courseware/library.py"
+      },
+      {
+        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1",
+        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py"
+      },
+      {
+        "after": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8",
+        "before": null,
+        "path": "plugins/clara/scripts/advisory_delivery.py"
+      },
+      {
+        "after": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009",
+        "before": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73",
+        "path": "plugins/clara/scripts/advisory_evidence_lineage.py"
+      },
+      {
+        "after": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1",
+        "before": null,
+        "path": "plugins/clara/scripts/case_store.py"
+      },
+      {
+        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c",
+        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
+        "path": "plugins/clara/scripts/check_dependencies.py"
+      },
+      {
+        "after": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef",
+        "before": "35e1c0318355134821ea5393d93334c1c152c4e1c3cbef32c74dd98cd5d515f6",
+        "path": "plugins/clara/scripts/verify_advisory_html_delivery.py"
+      },
+      {
+        "after": "a5a618bede89c5f161f84a1731e8265e4640c9ddd94ccde154cce01de4c5c5a1",
+        "before": "c9400e5f22ef351d2e0ebac2dc976d292b4a89e1dd71bb220d6595972dbbdfa3",
+        "path": "plugins/clara/skills/html-deck/SKILL.md"
+      },
+      {
+        "after": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1",
+        "before": "4f8277943aeb3261d3ea199cded967edf3d58741d671fc5b5e195d4529e402e6",
+        "path": "plugins/clara/skills/html-deck/scripts/build_html_deck.py"
+      }
+    ],
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced."
+  },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature.",
-        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
-        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
-        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
-        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
-        "language_and_pacing": "Italian instructions use concrete verbs (fornire, aprire, confrontare) and the same fictional names as the slides. The proposal remains a proposal in the notes and visible closing slide. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-it]",
-        "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
-        "reviewed_artifacts": [
-          {
-            "name": "index.html",
-            "sha256": "e0192d0e0646ee50d7f83e8b353612ea0ac6fe666b9e15f7ea462151ade9eb60"
-          },
-          {
-            "name": "content-ledger.json",
-            "sha256": "e8cc9dc33d0159f2fe257246866ce7336164bc350911f81afddf148cfa5483e7"
-          }
-        ],
-        "prior_supporting_reviewed_artifacts": [
-          {
-            "name": "built-validation.json",
-            "sha256": "d4786e1a38eadf375e749d284e01218fa07c07d4f4b3c5c7b6645166baa2f3aa"
-          },
-          {
-            "name": "browser-qa-final.json",
-            "sha256": "b73d9425ab4a131ddcde2b57bb902edc81ac53866355946323c08199175bb269"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-it]",
-        "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
-        "reviewed_artifacts": [
-          {
-            "name": "index.html",
-            "sha256": "39b8f07a9b08062b9f5c84703506c480ee7de92065a73318243f92df9d7cc9f8"
-          },
-          {
-            "name": "content-ledger.json",
-            "sha256": "21c33f88171ff533f46e5d8909447c3345ac1f788584fc97f61bbcf2170b2f20"
-          }
-        ],
-        "prior_supporting_reviewed_artifacts": [
-          {
-            "name": "built-validation.json",
-            "sha256": "882bff4b78cf8f9c0657142fa59035f8e56f2ad6ac1446d3dbf661bd60dafa42"
-          },
-          {
-            "name": "browser-qa-final.json",
-            "sha256": "1da2dfbf9506a326a9651895c8a8e23ef0be5ee1c78cc2396a1b338c45d5d385"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature.",
-        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
-        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
-        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
-        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
-        "language_and_pacing": "English request and exercise distinguish a proposal from current practice. Speaker notes, arrow navigation and preserving the original are explained without requiring internal component names. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-en]",
-        "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
-        "reviewed_artifacts": [
-          {
-            "name": "index.html",
-            "sha256": "eeecbab285b3d62cfaf2fcfc87c4af5e43df9bd453ce5e626507dc004d61b3e4"
-          },
-          {
-            "name": "content-ledger.json",
-            "sha256": "17a3036eacef9f0e476fcf7db67f86dd729a71c1d2a8fa5abeea0d2851dbaa0a"
-          }
-        ],
-        "prior_supporting_reviewed_artifacts": [
-          {
-            "name": "built-validation.json",
-            "sha256": "11463b10df90fe0325f6603c40ed8f533672a2c6628ecb00362bae433ae80b0c"
-          },
-          {
-            "name": "browser-qa-final.json",
-            "sha256": "e15849b30432d42a7f755c8a46b828cc37943aaf814edd2df5950a96b90d1179"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-en]",
-        "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
-        "reviewed_artifacts": [
-          {
-            "name": "index.html",
-            "sha256": "2900c245dd724045c3c260573f43d59d7b621a8c6c8f1c69c43996f394e31640"
-          },
-          {
-            "name": "content-ledger.json",
-            "sha256": "ab369002694531ad938f72a0bc7ae7eaa117391a7aa2e46479ccd8f4f9bc6c62"
-          }
-        ],
-        "prior_supporting_reviewed_artifacts": [
-          {
-            "name": "built-validation.json",
-            "sha256": "c745cf812980c4a9bb88e088501620c5d36b378bc41e860914295b2233488b49"
-          },
-          {
-            "name": "browser-qa-final.json",
-            "sha256": "a41296b360becf939c92326395db275dc194c9cae5d0210431927e392fa27996"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature.",
-        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
-        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
-        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
-        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
-        "language_and_pacing": "French brief, request and exercise use the same accueil and demandes context; the conditional roles and proposed status match the output. Public and objective are specified before creation. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-fr]",
-        "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
-        "reviewed_artifacts": [
-          {
-            "name": "index.html",
-            "sha256": "ed45925e0113d0def4c81ad59f6c1be095bd183d948cac513a0d503ce9453a1b"
-          },
-          {
-            "name": "content-ledger.json",
-            "sha256": "1b8c3f2cf0d5b041d41de04aa9dfc23bb0c656b69a965ca466c1977634aab31a"
-          }
-        ],
-        "prior_supporting_reviewed_artifacts": [
-          {
-            "name": "built-validation.json",
-            "sha256": "ea9e5bfa55f7d497d0799953b5268a3cd5ddf971ffc2160928639365b86ef142"
-          },
-          {
-            "name": "browser-qa-final.json",
-            "sha256": "a1ff44588e47c41fb758a059ab43fa32ee0431a22bb7cb3cd4a4c82146d10481"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-fr]",
-        "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
-        "reviewed_artifacts": [
-          {
-            "name": "index.html",
-            "sha256": "350a846df671c038d8e8906caf9b8ba38f70b021cca9d80b8d81562dbc712936"
-          },
-          {
-            "name": "content-ledger.json",
-            "sha256": "527a9883048cca5a5ef3706bdac3630e924ef91c8a58bb6cfb0478387baaec74"
-          }
-        ],
-        "prior_supporting_reviewed_artifacts": [
-          {
-            "name": "built-validation.json",
-            "sha256": "64af5f3fbc7b624fca0522172db4534044fb302c88b4a3ceda33e104048755fe"
-          },
-          {
-            "name": "browser-qa-final.json",
-            "sha256": "5bc5871266b19d3d33809841ebde78f13b194b1c47f532d9f110900f3618c7f4"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature.",
-        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
-        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
-        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
-        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
-        "language_and_pacing": "German brief, request and exercise consistently describe Anfragen, Zuständigkeiten and a Vorschlag. Longer headings fit the reviewed slides; no loan or savings claims are introduced. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-de]",
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "built-validation.json",
+            "sha256": "e93e49e5c8c15ba7313391602952e12b4bed0d9884689e70213415b9d7894009"
+          },
+          {
+            "name": "browser-qa-final.json",
+            "sha256": "87b3258403b9552c5c51c1f6d1088c1778256ac0b337a9adb59d6fbc31556b0a"
+          }
+        ],
         "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
         "reviewed_artifacts": [
           {
@@ -207,19 +254,27 @@
             "sha256": "5bb954fddb64d7568f8cc8d30d1ef71753eeb4cbd1229f359e1a1e2bbbf9a2c4"
           }
         ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
+        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
+        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
+        "language_and_pacing": "German brief, request and exercise consistently describe Anfragen, Zuständigkeiten and a Vorschlag. Longer headings fit the reviewed slides; no loan or savings claims are introduced. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed.",
+        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
+        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature."
+      },
+      "practice": {
         "prior_supporting_reviewed_artifacts": [
           {
             "name": "built-validation.json",
-            "sha256": "e93e49e5c8c15ba7313391602952e12b4bed0d9884689e70213415b9d7894009"
+            "sha256": "dab5f7522e183ff714ddccdea0ff30849aa2ba5ae2887a53f0282710368f63a3"
           },
           {
             "name": "browser-qa-final.json",
-            "sha256": "87b3258403b9552c5c51c1f6d1088c1778256ac0b337a9adb59d6fbc31556b0a"
+            "sha256": "680d2968c198409a3322a6b9dae1abfab196bd39ca7706ce9390f45ffa181dc0"
           }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-de]",
+        ],
         "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
         "reviewed_artifacts": [
           {
@@ -231,30 +286,81 @@
             "sha256": "8cb220ff5afbfd4b277423fd3dcb59758e4b1fc0fe15ea05e8f485517fc1b212"
           }
         ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
         "prior_supporting_reviewed_artifacts": [
           {
             "name": "built-validation.json",
-            "sha256": "dab5f7522e183ff714ddccdea0ff30849aa2ba5ae2887a53f0282710368f63a3"
+            "sha256": "11463b10df90fe0325f6603c40ed8f533672a2c6628ecb00362bae433ae80b0c"
           },
           {
             "name": "browser-qa-final.json",
-            "sha256": "680d2968c198409a3322a6b9dae1abfab196bd39ca7706ce9390f45ffa181dc0"
+            "sha256": "e15849b30432d42a7f755c8a46b828cc37943aaf814edd2df5950a96b90d1179"
           }
-        ]
-      }
+        ],
+        "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "eeecbab285b3d62cfaf2fcfc87c4af5e43df9bd453ce5e626507dc004d61b3e4"
+          },
+          {
+            "name": "content-ledger.json",
+            "sha256": "17a3036eacef9f0e476fcf7db67f86dd729a71c1d2a8fa5abeea0d2851dbaa0a"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
+        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
+        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
+        "language_and_pacing": "English request and exercise distinguish a proposal from current practice. Speaker notes, arrow navigation and preserving the original are explained without requiring internal component names. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed.",
+        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
+        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature."
+      },
+      "practice": {
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "built-validation.json",
+            "sha256": "c745cf812980c4a9bb88e088501620c5d36b378bc41e860914295b2233488b49"
+          },
+          {
+            "name": "browser-qa-final.json",
+            "sha256": "a41296b360becf939c92326395db275dc194c9cae5d0210431927e392fa27996"
+          }
+        ],
+        "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "2900c245dd724045c3c260573f43d59d7b621a8c6c8f1c69c43996f394e31640"
+          },
+          {
+            "name": "content-ledger.json",
+            "sha256": "ab369002694531ad938f72a0bc7ae7eaa117391a7aa2e46479ccd8f4f9bc6c62"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-en]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature.",
-        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
-        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
-        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
-        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
-        "language_and_pacing": "Spanish brief, request and exercise preserve propuesta, requested roles and the separate practice. The instructions identify the files and visible checks in ordinary language. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-es]",
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "built-validation.json",
+            "sha256": "4b909c102f5337a3a3fd42e9d4ecabeeaaaccb515559d3b51ab6a5903e6dcb90"
+          },
+          {
+            "name": "browser-qa-final.json",
+            "sha256": "8071e99bb700287927dba4930d8cc9e9673d08e65415d3ebd9bd6412a699f8ba"
+          }
+        ],
         "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
         "reviewed_artifacts": [
           {
@@ -266,19 +372,27 @@
             "sha256": "e82a6df1075fa4f62556cf274091b738c5dc85127aa9627969efbfedb140bc53"
           }
         ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
+        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
+        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
+        "language_and_pacing": "Spanish brief, request and exercise preserve propuesta, requested roles and the separate practice. The instructions identify the files and visible checks in ordinary language. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed.",
+        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
+        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature."
+      },
+      "practice": {
         "prior_supporting_reviewed_artifacts": [
           {
             "name": "built-validation.json",
-            "sha256": "4b909c102f5337a3a3fd42e9d4ecabeeaaaccb515559d3b51ab6a5903e6dcb90"
+            "sha256": "d76e4a34b391a73ca1b4864347cabc9f92846a0a42df645b282853bcfaec7696"
           },
           {
             "name": "browser-qa-final.json",
-            "sha256": "8071e99bb700287927dba4930d8cc9e9673d08e65415d3ebd9bd6412a699f8ba"
+            "sha256": "4fc6c70fc4099d5d4cd0567058597975b369b027dda85b32f24a924d80e98ceb"
           }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-es]",
+        ],
         "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
         "reviewed_artifacts": [
           {
@@ -290,376 +404,265 @@
             "sha256": "65e6b73b29ca34b0890e78d79a18b668566e85e6864712bfeb6fa834e84852aa"
           }
         ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
         "prior_supporting_reviewed_artifacts": [
           {
             "name": "built-validation.json",
-            "sha256": "d76e4a34b391a73ca1b4864347cabc9f92846a0a42df645b282853bcfaec7696"
+            "sha256": "ea9e5bfa55f7d497d0799953b5268a3cd5ddf971ffc2160928639365b86ef142"
           },
           {
             "name": "browser-qa-final.json",
-            "sha256": "4fc6c70fc4099d5d4cd0567058597975b369b027dda85b32f24a924d80e98ceb"
+            "sha256": "a1ff44588e47c41fb758a059ab43fa32ee0431a22bb7cb3cd4a4c82146d10481"
           }
-        ]
-      }
-    }
-  },
-  "refresh_review": {
-    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
-    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals.",
-    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
-    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed."
-  },
-  "freshness_review": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T07:45:34.150145+00:00",
-    "previous_course_sha256": "282f8160e6e4fa53f88e96b1b96499fcf407e74062fded6a95c1d963bf0361a9",
-    "source_snapshot": "/private/tmp/clara-teaching-source-refresh-02/test_html_kit_builds_source_fa0/kit/course-provenance.json",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
-        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
-      }
-    ],
-    "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
-    "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
-    "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
-    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
-    "prior_artifact_reviews_preserved": true,
-    "voice_or_learner_completion_claimed": false
-  },
-  "interim_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T09:39:25.570507+00:00",
-    "previous_course_sha256": "264927335b3dbca4dd0c67147f1b8741688a1bc8f77f2bba49d5534bf83bfab2",
-    "previous_source_commit": "312b51de",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
-        "before": null,
-        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+        ],
+        "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "ed45925e0113d0def4c81ad59f6c1be095bd183d948cac513a0d503ce9453a1b"
+          },
+          {
+            "name": "content-ledger.json",
+            "sha256": "1b8c3f2cf0d5b041d41de04aa9dfc23bb0c656b69a965ca466c1977634aab31a"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-fr]"
       },
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
-        "before": null,
-        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-        "before": null,
-        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/library.py",
-        "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
-        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/desktop_teaching/teaching.py",
-        "before": "8cfb8565b9a854c119e8a48e7bf068f2450786d21255da9b202a606226207a6e",
-        "after": "9b967e0c028397d9645bf731024dfe07c990d3f377a6175a5486c0dc870e9ec1"
-      },
-      {
-        "path": "plugins/clara/scripts/advisory_delivery.py",
-        "before": null,
-        "after": "877d87df4bc1d5b2322e3b96bfc86fd86d6fdb1a7a288ca84f439e104d2c71e8"
-      },
-      {
-        "path": "plugins/clara/scripts/advisory_evidence_lineage.py",
-        "before": "908e8740f18b5763b79de157cbaa6621f5758e6f432780e4b279a4245f765a73",
-        "after": "958a516f4341bafecd8fabafa4e848fed2e7b52d3bbf8f3f07292048261e3009"
-      },
-      {
-        "path": "plugins/clara/scripts/case_store.py",
-        "before": null,
-        "after": "46f7c0295caadc811e36a341404ff6f1d7bee5b803dc0c18281a9be24bb64dc1"
-      },
-      {
-        "path": "plugins/clara/scripts/check_dependencies.py",
-        "before": "d9dae8ecff0dece8e894498e7eedfa75f7c5dcbd8a50b109328112934a58c55c",
-        "after": "6e037df9002300cbd635b3e2a8795061abe8369880f71b8040b3fdaab103c22c"
-      },
-      {
-        "path": "plugins/clara/scripts/verify_advisory_html_delivery.py",
-        "before": "35e1c0318355134821ea5393d93334c1c152c4e1c3cbef32c74dd98cd5d515f6",
-        "after": "771dec6416bb5bd0eb2453caed09fbd9644c1386dab1c187c1d2b859e377d8ef"
-      },
-      {
-        "path": "plugins/clara/skills/html-deck/SKILL.md",
-        "before": "c9400e5f22ef351d2e0ebac2dc976d292b4a89e1dd71bb220d6595972dbbdfa3",
-        "after": "a5a618bede89c5f161f84a1731e8265e4640c9ddd94ccde154cce01de4c5c5a1"
-      },
-      {
-        "path": "plugins/clara/skills/html-deck/scripts/build_html_deck.py",
-        "before": "4f8277943aeb3261d3ea199cded967edf3d58741d671fc5b5e195d4529e402e6",
-        "after": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1"
-      }
-    ],
-    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
-    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
-    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
-    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
-  },
-  "portability_source_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T10:08:05.086182+00:00",
-    "previous_course_sha256": "fb0cf19a15919ac341279adb0865ec133379192bef14c25238b996dab3b50dc4",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
-        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a"
-      }
-    ],
-    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file."
-  },
-  "browser_preview_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-17",
-    "previous_course_sha256": "13d28b2100727393c5dbd5277ad4f6653c945c1ea497fbafbc9104c3db4303c3",
-    "previous_source_commit": "19399a8c",
-    "source_changes": [
-      {
-        "path": "vendor/modules/courseware/library.py",
-        "before": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24",
-        "after": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
-      },
-      {
-        "path": "vendor/modules/courseware/preview.py",
-        "before": null,
-        "after": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
-      }
-    ],
-    "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
-    "source_review": "Reviewed the shared CLI serve dispatch and loopback helper. Listing, loading and rendering retain their original implementation. Browser preview serves the complete rendered kit on an OS-selected loopback port and rejects resolved paths outside the kit and directory lists. Teaching instructions now require a browser target, preserve relative assets and distinguish queued/opened actions from learner-confirmed visibility.",
-    "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
-    "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
-    "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
-  },
-  "codex_course_qa_20260928": {
-    "status": "passed",
-    "course": 39,
-    "product": "clara",
-    "workflow": "html-deck",
-    "scope": "Italian Codex simulated learner demonstration and independent practice; actual rendered native presentations, sources and saved reopening",
-    "human_understanding_confirmed": false,
-    "professional_approval": false,
-    "session_id": "dc4bfafdb3d365ff0322e5065e256b52",
-    "phase": "paused",
-    "revision": 4,
-    "profile": null,
-    "onboarding_phase": "interview",
-    "runs": {
-      "demo": {
-        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-html-reporting/teaching/sessions/dc4bfafdb3d365ff0322e5065e256b52/files/demo-2fb1490d9395cac2/built/f6e96ee4cc0a24d8cc4022348b266437b64594e0c7d39a973f8708debfbfce69/index.html",
-        "sha256": "f6e96ee4cc0a24d8cc4022348b266437b64594e0c7d39a973f8708debfbfce69",
-        "execution_sha256": "2d372a6d0711d5c7660f74dcd427f19d076a65181ddb531089b96279ef469f50",
-        "target": "staff-meeting",
-        "native_preservation": "passed",
-        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-html-demo-browser-review.json"
+      "editorial": {
+        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
+        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
+        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
+        "language_and_pacing": "French brief, request and exercise use the same accueil and demandes context; the conditional roles and proposed status match the output. Public and objective are specified before creation. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed.",
+        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
+        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature."
       },
       "practice": {
-        "html": "/private/tmp/teaching-acceptance-20260926/codex/clara-html-reporting/teaching/sessions/dc4bfafdb3d365ff0322e5065e256b52/files/practice-3514f7b6b70439dc/built/beb846e127c27116fc326b5a1e0783f502c33d69d49fe3f6ad0bc37c92e2fcea/index.html",
-        "sha256": "beb846e127c27116fc326b5a1e0783f502c33d69d49fe3f6ad0bc37c92e2fcea",
-        "execution_sha256": "e4ef2237d8e5c2c6ecd2d94a660e6a99860863e14a39613408dfd12f778b7217",
-        "target": "new-colleagues",
-        "native_preservation": "passed",
-        "browser_review": "/private/tmp/teaching-acceptance-20260926/clara-html-practice-browser-review.json"
-      }
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "built-validation.json",
+            "sha256": "64af5f3fbc7b624fca0522172db4534044fb302c88b4a3ceda33e104048755fe"
+          },
+          {
+            "name": "browser-qa-final.json",
+            "sha256": "5bc5871266b19d3d33809841ebde78f13b194b1c47f532d9f110900f3618c7f4"
+          }
+        ],
+        "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "350a846df671c038d8e8906caf9b8ba38f70b021cca9d80b8d81562dbc712936"
+          },
+          {
+            "name": "content-ledger.json",
+            "sha256": "527a9883048cca5a5ef3706bdac3630e924ef91c8a58bb6cfb0478387baaec74"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-fr]"
+      },
+      "verdict": "accepted"
     },
-    "demo_files_preserved": 34,
-    "repairs": [
-      "Process-step markers fit their supported label text; native deck rebuilt and actual Codex view retested; affected five-language prepared presentation baselines regenerated"
-    ],
-    "limitations": [
-      "Native voice and physical two-window placement unverified",
-      "Other-language live journeys pending",
-      "Installed Clara unavailable; current local source tested",
-      "Native automated browser_qa script, print, reduced-motion setting, fullscreen and touch not exercised; actual Codex UI observations retained instead"
-    ],
-    "no_install_deploy_publish": true,
-    "verified_at": "2026-09-27T22:46:27.915249+00:00"
-  },
-  "release_freshness_20260928": {
-    "reviewer": "Codex /root - bounded release freshness review",
-    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
-    "previous_course_sha256": "83c411764aa6d3b3b55e43a4d02e195664fb5a9803013efca4d280c21dc8b78b",
-    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
-    "changed_compiled_fields": [
-      "sources"
-    ],
-    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
-    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
-    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-39.md",
-    "italian_course_qa_sha256": "37ded6e107a779bd55d195acd45112bbe2e372e7f01118268c95d92060782425",
-    "native_execution_evidence": {
-      "commit": "2431fbd29",
-      "run": 36392851481,
-      "job": 108832365397,
-      "passed": 1152,
-      "skipped": 3,
-      "phase": "Verify teaching-kit languages, real executions and native packages",
-      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
-    },
-    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
-  },
-  "esg_source_refresh_20260929": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-29T18:26:42.517707+00:00",
-    "baseline_commit": "6f26f0e8241a0fe3027c162e2c2cae4d97395465",
-    "previous_course_sha256": "23dd34f863d47720ab7d378dfba8a9b9714c1fdaa82f224352f8bf588e7a6ed4",
-    "current_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-29-vera-esg-course-source-review.json"
-  },
-  "esg_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
-    "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
-    "previous_course_sha256": "23dd34f863d47720ab7d378dfba8a9b9714c1fdaa82f224352f8bf588e7a6ed4",
-    "current_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
-    "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
-    "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
-  },
-  "studio_format_source_binding_20261001": {
-    "reviewer": "Codex - bounded studio-format source compatibility review",
-    "reviewed_at": "2026-10-01T18:46:46.256998+00:00",
-    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
-    "previous_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
-    "current_course_sha256": "8f5f40a5a2c7e21d513d88f3d1309d834a1a6fccabd7af0d13e00e07aa3d3c4b",
-    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
-    "changed_sources": [
-      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
-    ],
-    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths.",
-    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge."
-  },
-  "integration_refresh": {
-    "reviewer": "Codex /root",
-    "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
-  },
-  "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
-    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "e59cfea91caacdb2f4416f22d0fb3b4d669f9af171a47101333a2c79c61a1f6b",
-    "current_course_sha256": "3aa0242c21e4afe7f0fceb74cba430a0f8b60550918036bfaec56c0050ba1962",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
-    "changed_sources": [
-      "vendor/modules/courseware/policy.py"
-    ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
-  },
-  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "bf562c69bf59bd9ad8c6584369cc2489aadef89c6b1cb72504be671822f7cd5b",
-    "current_course_sha256": "3bf05b819d6ca92f70c8eae732229094289c14dab3263dc313a854b083b04ba9",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
-  },
-  "product_reporting_source_binding_20261018": {
-    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
-    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
-    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
-    "previous_course_sha256": "3bf05b819d6ca92f70c8eae732229094289c14dab3263dc313a854b083b04ba9",
-    "current_course_sha256": "aec6d40ced0b8753d7e02b9adf7a8052cd6142afbf5822ee0a6bc6fd8d4e86ac",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json",
-    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new learner, visual, installed-host or professional acceptance is asserted."
-  },
-  "archive_release_shared_runtime_compatibility_20261018": {
-    "reviewer": "Codex /root - bounded complete-course comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "aec6d40ced0b8753d7e02b9adf7a8052cd6142afbf5822ee0a6bc6fd8d4e86ac",
-    "current_course_sha256": "3dcfede5598e02047e96264699e23140f6872824fbcc0faf474d3da48d030884",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
-  },
-  "reporting_reference_binding_20261018": {
-    "reviewer": "Codex - bounded source compatibility review",
-    "reviewed_at": "2026-10-18",
-    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
-    "previous_course_sha256": "0db5539f395f6cb68eabe3f184f6c45d8553e11df624495f4662f534639b16f9",
-    "current_course_sha256": "f25029d9622c912055a0db2eea85de788a6b57fef5a349bc789e873e01c44925",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12.",
-    "native_execution_evidence": {
-      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
-      "run": 39150899038,
-      "job": 117744153569,
-      "passed": 1710,
-      "skipped": 3,
-      "courseware_coverage_percent": 90.54,
-      "later_failure": "Editorial digest freshness; the original job is not represented as fully green."
-    },
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance."
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.928054+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "0db5539f395f6cb68eabe3f184f6c45d8553e11df624495f4662f534639b16f9",
-    "current_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      "plugins/clara/scripts/operational_incidents.py",
-      "plugins/clara/scripts/workflow_usage.py",
-      "plugins/clara/skills/html-deck/SKILL.md"
-    ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
+    "it": {
+      "demo": {
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "built-validation.json",
+            "sha256": "d4786e1a38eadf375e749d284e01218fa07c07d4f4b3c5c7b6645166baa2f3aa"
+          },
+          {
+            "name": "browser-qa-final.json",
+            "sha256": "b73d9425ab4a131ddcde2b57bb902edc81ac53866355946323c08199175bb269"
+          }
+        ],
+        "result_review": "Five slides follow the brief: proposal, incomplete requests, four process steps, Sara/Paolo responsibilities and a decision about a trial. Source/claim linkage and proposed status were reviewed. No measured outcome is claimed. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "e0192d0e0646ee50d7f83e8b353612ea0ac6fe666b9e15f7ea462151ade9eb60"
+          },
+          {
+            "name": "content-ledger.json",
+            "sha256": "e8cc9dc33d0159f2fe257246866ce7336164bc350911f81afddf148cfa5483e7"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "The learner opens the actual standalone HTML, uses arrows and speaker notes, checks the final decision and keeps the editable package. Browser QA covered navigation, overview, notes, reduced motion and print at four viewports.",
+        "execution_and_checkpoints": "The working chat follows the current composer and builder; the voice chat explains actual progress. Checkpoints ask the learner to name the audience/decision and trace one displayed message to a source note.",
+        "inputs_and_request": "Each locale has the short fictional brief and an ordinary-language request specifying problem, proposal, roles, decision and speaker notes. No prepared output or authored content ledger is shipped as the lesson answer.",
+        "language_and_pacing": "Italian instructions use concrete verbs (fornire, aprire, confrontare) and the same fictional names as the slides. The proposal remains a proposal in the notes and visible closing slide. The six lesson segments total 390 seconds; the guide allows additional processing and question time. No human timed session has been observed.",
+        "practice_and_repeat": "The exercise adds an audience-change note and a concrete incomplete request. The learner asks for a second deck, preserves the first, and explains how the new audience changed the result. Repeat instructions name sources, audience, purpose and language.",
+        "purpose_and_first_use": "The lesson teaches producing and presenting a short source-based HTML deck. It starts with the staff meeting objective and audience, then covers the entire first-use cycle rather than a layout feature."
+      },
+      "practice": {
+        "prior_supporting_reviewed_artifacts": [
+          {
+            "name": "built-validation.json",
+            "sha256": "882bff4b78cf8f9c0657142fa59035f8e56f2ad6ac1446d3dbf661bd60dafa42"
+          },
+          {
+            "name": "browser-qa-final.json",
+            "sha256": "1da2dfbf9506a326a9651895c8a8e23ef0be5ee1c78cc2396a1b338c45d5d385"
+          }
+        ],
+        "result_review": "The six-slide version adds the incomplete-request example for new colleagues and asks for details without diagnosing a fault. The original proposal and roles remain visible. The new audience produces an actual changed deck. Fresh native execution produced the same HTML bytes as the visually reviewed four-viewport browser QA result.",
+        "reviewed_artifacts": [
+          {
+            "name": "index.html",
+            "sha256": "39b8f07a9b08062b9f5c84703506c480ee7de92065a73318243f92df9d7cc9f8"
+          },
+          {
+            "name": "content-ledger.json",
+            "sha256": "21c33f88171ff533f46e5d8909447c3345ac1f788584fc97f61bbcf2170b2f20"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_presentation_execution::test_html_kit_builds_source_faithful_standalone_slides[practice-it]"
+      },
+      "verdict": "accepted"
+    }
   },
   "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
+    "fresh_matching_junit_required": true,
     "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
     "parent_course_sha256": {
       "HEAD": "f25029d9622c912055a0db2eea85de788a6b57fef5a349bc789e873e01c44925",
       "origin/main": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719"
     },
-    "current_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.229684+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_course_sha256": "b9c3f4377e9d0a909019089009881857744321ca044ff0d64479a478201e7719",
-    "current_course_sha256": "63edff95e14bfc744ec363d138d5bb8e2cfa7820af937df96ae234307f155706",
+  "portability_source_refresh": {
+    "previous_course_sha256": "fb0cf19a15919ac341279adb0865ec133379192bef14c25238b996dab3b50dc4",
+    "reviewed_at": "2026-09-15T10:08:05.086182+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Authored lesson and input bytes are unchanged. Saved relative evidence paths use the same POSIX representation as the execution receipt. Journal Sampling uses os.lstat for real link counts because Windows DirEntry.stat reports zero; rejection of links and foreign implementation files remains required. No model input, output meaning or network route changes. Original editorial and artifact reviews are preserved; this source inspection is not a new independent or visual review. Current native execution is established separately by verify_release.py against its supplied JUnit file.",
+    "source_changes": [
+      {
+        "after": "c9c5ad72bee4ada303cbda72fe5ba81627f537e34418fc10d7ab8de5de04a71a",
+        "before": "215244f8e595127743e7fd1c97febd489056ebcc9d7907dec7098a6b498fca8b",
+        "path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py"
+      }
+    ]
+  },
+  "product": "clara",
+  "product_reporting_source_binding_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "be77d6749bb17278358bb22313ff0cd3c380f1dc",
+    "current_course_sha256": "aec6d40ced0b8753d7e02b9adf7a8052cd6142afbf5822ee0a6bc6fd8d4e86ac",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, installed-host or professional acceptance is asserted.",
+    "previous_course_sha256": "3bf05b819d6ca92f70c8eae732229094289c14dab3263dc313a854b083b04ba9",
+    "reviewed_at": "2026-10-18T09:29:46.492945+00:00",
+    "reviewer": "Codex /root - bounded reporting-runtime source compatibility review",
+    "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
+    "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json"
+  },
+  "rating_legalita_source_binding_20261002": {
+    "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
+    "changed_sources": [
+      "vendor/modules/courseware/policy.py"
+    ],
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "3aa0242c21e4afe7f0fceb74cba430a0f8b60550918036bfaec56c0050ba1962",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "e59cfea91caacdb2f4416f22d0fb3b4d669f9af171a47101333a2c79c61a1f6b",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "refresh_review": {
+    "native_evidence": "accepted-kit-refresh-01.xml: 60 distinct passing native demo/practice checks",
+    "output_comparison": "Primary output bytes match the previously reviewed files, except managed import IDs, source-block ordering and the displayed invoice proposal hash. Compared the exact old and new files to verify those bounded differences. The complete invoice preview HTML otherwise matches, including its layout. Primary artifact hashes here are from the current native runs.",
+    "retained_evidence": "Prior supporting validation, registry and browser-QA artifacts are retained separately where they contain older run paths or timestamps. Existing visual review is reused for identical slides/transcript text and the otherwise identical invoice preview. No fresh browser or voice acceptance is claimed.",
+    "source_review": "Inspected the local-hosted-workflow exclusion changes in CourseLibrary and desktop teaching, plus the Spanish client-file required-heading repair. Fictional inputs and lesson text are preserved. This refresh changes no professional approvals."
+  },
+  "release_freshness_20260928": {
+    "changed_compiled_fields": [
+      "sources"
+    ],
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
+    "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
+    "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-39.md",
+    "italian_course_qa_sha256": "37ded6e107a779bd55d195acd45112bbe2e372e7f01118268c95d92060782425",
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest.",
+    "native_execution_evidence": {
+      "commit": "2431fbd29",
+      "job": 108832365397,
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green.",
+      "passed": 1152,
+      "phase": "Verify teaching-kit languages, real executions and native packages",
+      "run": 36392851481,
+      "skipped": 3
+    },
+    "previous_course_sha256": "83c411764aa6d3b3b55e43a4d02e195664fb5a9803013efca4d280c21dc8b78b",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "reviewer": "Codex /root - bounded release freshness review",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "3bf05b819d6ca92f70c8eae732229094289c14dab3263dc313a854b083b04ba9",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "bf562c69bf59bd9ad8c6584369cc2489aadef89c6b1cb72504be671822f7cd5b",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
+  },
+  "reporting_reference_binding_20261018": {
+    "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  }
+    "current_course_sha256": "f25029d9622c912055a0db2eea85de788a6b57fef5a349bc789e873e01c44925",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial explanations and output-artifact reviews are retained. This records source compatibility only, not new editorial, visual, learner, installed-host or professional acceptance.",
+    "native_execution_evidence": {
+      "commit": "e10c4780399ea29daed7ff0a0d7b0739fd12194d",
+      "courseware_coverage_percent": 90.54,
+      "job": 117744153569,
+      "later_failure": "Editorial digest freshness; the original job is not represented as fully green.",
+      "passed": 1710,
+      "run": 39150899038,
+      "skipped": 3
+    },
+    "previous_course_sha256": "0db5539f395f6cb68eabe3f184f6c45d8553e11df624495f4662f534639b16f9",
+    "reviewed_at": "2026-10-18",
+    "reviewed_baseline_commit": "fae2e2b26719a7e5afeb8ec6402e7fea24a6ce84",
+    "reviewer": "Codex - bounded source compatibility review",
+    "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
+  },
+  "review_scope": "Prepared lesson, fictional inputs and actual outputs from source-bound regression cases, including visual review. Fixed model contributions are test-only. This is not human learner acceptance, native voice/two-window acceptance, or professional approval. Source dependency refresh after the localized advisory evidence-map repair: 35 current presentation/transcript checks pass in clara-teaching-source-refresh-02. All 60 recorded primary/supporting artifacts across these three kits are byte-identical to the previously inspected versions; the parity manifest retains actual paths. Existing editorial and visual judgments are preserved for unchanged material. No new voice, learner or GUI acceptance is asserted. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+  "reviewed_at": "2026-09-14T21:09:24.777351+00:00",
+  "reviewer": "Codex: first-use teaching-kit editorial review",
+  "schema": "mparanza.teaching_release_review.v1",
+  "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
+  "studio_format_source_binding_20261001": {
+    "baseline_commit": "b02a1e33ffef2a8f0bfa8d89d84144f8ee2f889b",
+    "changed_sources": [
+      "plugins/_shared/vendor/modules/desktop_teaching/cases.py"
+    ],
+    "content_review": "Complete compiled JSON equality with current main except source bindings. All narratives, input files, checkpoints, practice and timing are unchanged.",
+    "current_course_sha256": "8f5f40a5a2c7e21d513d88f3d1309d834a1a6fccabd7af0d13e00e07aa3d3c4b",
+    "limits": "This source review preserves historical editorial and output-hash evidence; it claims no fresh visual review or learner acceptance for existing lessons. Release CI must run each existing demo/practice identity against the current course digest before merge.",
+    "previous_course_sha256": "a54b222cffa806e6b1adc5d1b272c639749fe495d4de53f1b011705abd1f7289",
+    "reviewed_at": "2026-10-01T18:46:46.256998+00:00",
+    "reviewer": "Codex - bounded studio-format source compatibility review",
+    "source_review": "The shared teaching case conditional adds only studio-document-format to the pre-existing studio-workspace branch. All pre-existing workflow branches retain their behavior. Communication adds optional approved DOCX settings while retaining existing channel settings; report-builder adds explicit studio selection and frozen reviewed-format reuse. Actual new-format regression and ten course executions exercise these paths."
+  },
+  "workflow": "html-deck"
 }

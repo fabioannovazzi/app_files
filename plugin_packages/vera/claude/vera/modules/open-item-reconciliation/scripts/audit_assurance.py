@@ -182,6 +182,7 @@ __all__ = [
     "retain_review_transition",
     "review_decision_fingerprint",
     "review_completion_pending",
+    "reviewer_reference",
     "rollback_assurance_run",
     "reviewed_date_convention",
     "reviewed_money_convention",
@@ -529,6 +530,13 @@ def _canonical_iso_date(value: object, *, label: str) -> str:
     if parsed.isoformat() != value:
         raise AssuranceRunError(f"{label} must be canonical ISO date text")
     return value
+
+
+def reviewer_reference(label: str) -> str:
+    """Derive unsigned technical metadata while preserving the separate UI label."""
+    if REVIEWER_REF_RE.fullmatch(label) is not None:
+        return label
+    return "reviewer-" + canonical_json_sha256({"label": label})[:24]
 
 
 def _canonical_reviewer_ref(value: object, *, label: str) -> str:
@@ -3140,6 +3148,14 @@ def build_applied_review_authority(
         prior = metadata_by_id[record_id]
         effect = effect_by_record.get(record_id)
         action = effect.get("action") if effect is not None else None
+        if (
+            effect is None
+            and prior.get("review_status") == "PASS"
+            and prior.get("reviewer_ref") == "system-exact-match"
+        ):
+            # An exception review does not revoke a replayed exact-match check.
+            records.append(dict(prior))
+            continue
         records.append(
             {
                 "record_id": record_id,
@@ -4688,7 +4704,7 @@ def _rendered_value_formula(
     if header_token in {"evidence_amount", "evidence_amount_total"} and owner_refs:
         open_ids = {str(row["record_id"]) for row in reconciliation_rows}
         evidence_refs = [ref for ref in owner_refs if ref not in open_ids]
-        if evidence_refs and number == sum(
+        if number == sum(
             (
                 _row_numeric_field_total(rows_by_id[ref], "amount")
                 for ref in evidence_refs
@@ -4963,6 +4979,59 @@ def _native_rendered_value_addresses(
     request_id_headers = {c["headers"]["row_id"] for c in request_text.values()}
     request_amount_headers = {c["headers"]["amount"] for c in request_text.values()}
     reconciliation_by_id = {str(row["record_id"]): row for row in reconciliation_rows}
+    from semantic_resolution import explanation_evidence
+
+    explanations = explanation_evidence(
+        [dict(row) for row in reconciliation_rows],
+        list(prepared.get("evidence_rows") or []),
+        dict(prepared.get("assumptions") or {}),
+    )
+
+    def explanation_address(
+        text: object,
+        owner_refs: Sequence[str],
+        artifact_ref: str,
+        locator: str,
+        limit: int | None = None,
+    ) -> dict[str, Any] | None:
+        if text in (None, ""):
+            return None
+        owners = [
+            ref
+            for ref in owner_refs
+            if ref in explanations
+            and (
+                explanations[ref]["text"]
+                if limit is None
+                else explanations[ref]["text"].strip()[:limit]
+            )
+            == text
+        ]
+        if len(owners) != 1:
+            raise AssuranceRunError(
+                "semantic explanation differs from its retained worker response"
+            )
+        retained = explanations[owners[0]]
+        # Prose is an attributed assessment, not a newly calculated balance.
+        # Preserve exact text and worker binding; typed amounts retain their
+        # separate arithmetic/source validation below.
+        return {
+            **_rendered_value_address(
+                artifact_ref=artifact_ref,
+                locator=locator,
+                value=str(text),
+                owner_refs=owners,
+                formula={
+                    "kind": "retained_semantic_explanation",
+                    "packet_sha256": retained["packet_sha256"],
+                    "response_sha256": retained["response_sha256"],
+                    "text_limit": limit,
+                },
+            ),
+            "evidence_basis": "model_assessment",
+            "source_record_refs": [],
+        }
+
     record_rows = [*support_rows, *reconciliation_rows]
     # A declared calculation parameter is not a source-record amount. Match
     # only the exact renderer-owned line for the sealed value, in each locale.
@@ -5015,6 +5084,34 @@ def _native_rendered_value_addresses(
                         owner_refs = _row_record_refs(values, record_rows)
                         for index, cell in enumerate(row):
                             header = headers[index] if index < len(headers) else ""
+                            semantic_column = (
+                                _semantic_token(canonical_word_label(header))
+                                == "semantic_reason"
+                            )
+                            assessment_column = header == "evidenza usata" and any(
+                                ref in explanations for ref in owner_refs
+                            )
+                            if semantic_column or assessment_column:
+                                address = explanation_address(
+                                    cell.value,
+                                    owner_refs,
+                                    artifact_ref,
+                                    _locator(
+                                        "xlsx_semantic_explanation",
+                                        sheet=sheet.title,
+                                        cell=cell.coordinate,
+                                    ),
+                                    limit=500 if assessment_column else None,
+                                )
+                                if address is not None:
+                                    addresses.append(address)
+                                    if projection_groups is not None:
+                                        projection_groups.append(
+                                            locations.get(
+                                                (sheet.title, cell.coordinate)
+                                            )
+                                        )
+                                continue
                             if (
                                 sheet.title in assumption_sheets
                                 and header in value_headers
@@ -5030,10 +5127,15 @@ def _native_rendered_value_addresses(
                                         "reported amount tolerance differs from sealed tolerance"
                                     )
                                 continue
-                            value = _rendered_money(
-                                cell.value,
-                                material_column=index in material_columns,
-                            )
+                            try:
+                                value = _rendered_money(
+                                    cell.value,
+                                    material_column=index in material_columns,
+                                )
+                            except AssuranceRunError as exc:
+                                raise AssuranceRunError(
+                                    f"{sheet.title}:{cell.coordinate} ({header}): {exc}"
+                                ) from exc
                             if value is None:
                                 continue
                             if (
@@ -5127,6 +5229,33 @@ def _native_rendered_value_addresses(
                     values = [cell.text for cell in row.cells]
                     owner_refs = _row_record_refs(values, record_rows)
                     for cell_index, cell in enumerate(row.cells):
+                        header = (
+                            headers[cell_index] if cell_index < len(headers) else ""
+                        )
+                        if (
+                            _semantic_token(canonical_word_label(header))
+                            == "semantic_reason"
+                        ):
+                            address = explanation_address(
+                                cell.text,
+                                owner_refs,
+                                artifact_ref,
+                                _locator(
+                                    "docx_semantic_explanation",
+                                    table=table_index,
+                                    row=row_index,
+                                    cell=cell_index,
+                                ),
+                            )
+                            if address is not None:
+                                addresses.append(address)
+                                if projection_groups is not None:
+                                    projection_groups.extend(
+                                        paragraph_origins.get(p._p)
+                                        for p in cell.paragraphs
+                                        if p.text
+                                    )
+                            continue
                         value = _rendered_money(
                             cell.text,
                             material_column=cell_index in material_columns,

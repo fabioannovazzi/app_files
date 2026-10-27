@@ -2406,6 +2406,12 @@ function auditReviewCanonicalSha256(value) {
     .digest("hex");
 }
 
+function auditReviewReviewerReference(label) {
+  // A display label is unsigned metadata, not an authenticated identity.
+  if (/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(label)) return label;
+  return "reviewer-" + auditReviewCanonicalSha256({ label }).slice(0, 24);
+}
+
 function auditReviewPythonCandidates() {
   const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
     ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
@@ -2703,6 +2709,8 @@ function auditReviewProfessionalAuthority(
       );
     }
     const action = effectByRecord.get(recordId)?.action;
+    if (!effectByRecord.has(recordId) && prior.review_status === "PASS"
+        && prior.reviewer_ref === "system-exact-match") return { ...prior };
     return {
       record_id: recordId,
       review_status:
@@ -4014,7 +4022,7 @@ function nativeRegenerationPathsForEffect(effect) {
   return Array.from(new Set(paths.map(artifactPathKey).filter(Boolean)));
 }
 
-function completionBlockers(reviewPayload, effects, successorReplayed = false, pendingReviewOnly = false) {
+function completionBlockers(reviewPayload, effects, successorReplayed = false, pendingReviewOnly = false, automaticRecordIds = new Set()) {
   const blockers = [];
   const summary = isPlainObject(reviewPayload.summary) ? reviewPayload.summary : {};
   if (!pendingReviewOnly && (summary.checks_pass === false || Number(summary.failed_check_count || 0) > 0)) {
@@ -4028,6 +4036,8 @@ function completionBlockers(reviewPayload, effects, successorReplayed = false, p
     if (!isPlainObject(item) || !REQUIRED_REVIEW_ITEM_TYPES.has(item.item_type)) continue;
     if (pendingReviewOnly && item.item_type === "check_exception" && item.data?.check === "codex_review_completed") continue;
     const effect = effectById.get(item.id);
+    if (!effect && item.item_type === "closure_evidence_review"
+        && automaticRecordIds.has(item.data?.record_id)) continue;
     if (!effect) {
       blockers.push({
         kind: "pending_required_review",
@@ -4372,6 +4382,8 @@ function applyDecisionPayload(inputArgs) {
 function applyDecisionPayloadWrites(inputArgs) {
   const parentState = inputArgs[AUDIT_REVIEW_TRANSACTION_STATE] || null;
   const { uiDecisions, decisionOutputPath, materializedArgs } = buildUiDecisions(inputArgs);
+  const reviewerLabel = shortString(uiDecisions.reviewer);
+  const reviewer = reviewerLabel ? auditReviewReviewerReference(reviewerLabel) : null;
   const validationPayload = validateReviewPayload(inputArgs);
   const reviewPayload = validationPayload.review_payload;
   const itemById = new Map(reviewPayload.items.map((item) => [item.id, item]));
@@ -4418,7 +4430,7 @@ function applyDecisionPayloadWrites(inputArgs) {
       : auditReviewProfessionalAuthority(
           reviewPayload,
           effects,
-          shortString(uiDecisions.reviewer),
+          reviewer,
           decisionFingerprint,
           assuranceReplay,
         )
@@ -4464,11 +4476,15 @@ function applyDecisionPayloadWrites(inputArgs) {
   // Use the replayed complete result, never an accepted check card, to identify
   // the normal review-to-regeneration transition. Final readiness stays withheld.
   const pendingReviewOnly = assuranceReplay?.result?.review_completion_pending === true;
+  const automaticRecordIds = new Set((assuranceReplay?.authority?.records || [])
+    .filter((record) => record.review_status === "PASS" && record.reviewer_ref === "system-exact-match")
+    .map((record) => record.record_id));
   let completionGateBlockers = completionBlockers(
     reviewPayload,
     effects,
     successorReplayed,
     pendingReviewOnly,
+    automaticRecordIds,
   );
   const applicationStatus = statusFromEffects(
     effects,
@@ -4521,7 +4537,7 @@ function applyDecisionPayloadWrites(inputArgs) {
       successor_assurance_replayed: successorReplayed,
     };
   }
-  if (uiDecisions.reviewer) appliedDecisions.reviewer = uiDecisions.reviewer;
+  if (reviewer) appliedDecisions.reviewer = reviewer;
 
   const finalArtifacts = finalArtifactsWithApplication(
     inputArgs,

@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "8c49ca481b5ff0ded574d058cb7cfd3c847fdd903f74a22745ab2368a71b3d87"
+      "sha256": "05f03af2e31cddc0527fd92939b394b6520cb0a6c50242a955e38b58a52ee15c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "249bbcc5c83f2886e3754e3c6af83b7b68a6585949cc471176fb650b3839422f"
+      "sha256": "af3512a5e2d482c2d6f4e419be0939e944e7efa10b97c7aeaef5645f9d691b3a"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -104,7 +104,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
-      "sha256": "bb182c094b4f8fc76f9a80f6ce826f33db4c71d95499b39d6c5450cb20aa647b"
+      "sha256": "618cffe5e3b6a050bfb351b496879e51ef7df9756ed263dd552334838ff7b137"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
@@ -116,19 +116,19 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "40b2ddfc56a14ccd5140a32c39cf456670e669ca4f045c1eb1e76b49a36f3513"
+      "sha256": "7b4e2420780899353c515299149beadd8a198816c14508416f571dbe2a8e8349"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "03a67f43af1bbfd29e1d8db4bec9fdd79b822b4b01c7079466ec04bee4e85e6d"
+      "sha256": "ec565d482f254d4d5d55544c5dd5f05b1850cae677dcd879145567abd80375d0"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "6951ee8a2e9e872c0766475c44bb77bfd4debbc537d7041ef3a5441fb659a65a"
+      "sha256": "776908808edbdd4de0f9c7a1ac9f2cbe015ab7a96db733e4645fcc353d1aa92e"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
-      "sha256": "2714bc71e66ba2e7a82fa99b00410eeb52f66abfbdba2b4b586b8ae92d680099"
+      "sha256": "16bdff91902c159386d535d5e6d7de104645c7bc4c19aa09a30d05c3a357b0fa"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/references/geneva.md",
@@ -781,5 +781,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d0aad7ec150f825067e0428bffc8ba0e039ef521b5cf1c7bab2a8587c34e069e"
+  "canonical_course_sha256": "4dad140ad1d76d23a3779347ff96445f4b6471119225869755f1b17267d72d12"
 }
