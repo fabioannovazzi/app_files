@@ -3,6 +3,17 @@ name: fusione-guidata
 description: Prepare P1 domestic OIC incorporation workpapers for independent or directly wholly owned companies, with verified archive evidence, exact exchange allocations, accounting bridges, event calendars and reviewed dossiers. Later branches remain unsupported.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 

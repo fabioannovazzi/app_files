@@ -3,6 +3,16 @@ name: vera
 description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `references/work-continuity.md`. Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 

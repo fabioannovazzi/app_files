@@ -3,6 +3,17 @@ name: legal-tax-answer-review
 description: Use automatically before Vera delivers any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated. Do not use this skill to imply operational completeness for a return, declaration, filing, or form that lacks a dedicated workflow.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 

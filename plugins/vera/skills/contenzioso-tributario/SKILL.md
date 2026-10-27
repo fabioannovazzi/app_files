@@ -3,6 +3,17 @@ name: contenzioso-tributario
 description: "Prepare or resume Italian tax litigation for an authorized commercialista: reuse notice intake, verify procedural steps and sourced deadlines, organize evidence and prepare ricorsi, appelli or memorie with saved progress. Does not file, serve, sign, pay or activate reminders."
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 

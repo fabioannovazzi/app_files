@@ -83,8 +83,7 @@ def test_native_request_retains_exact_model_text_without_claiming_file_exposure(
 
     assert model_argument_origin("variance-analysis", output, text) == []
     assert model_argument_origin("variance-analysis", output, text + " changed") is None
-    with pytest.raises(ValueError, match="another pipeline"):
-        model_argument_origin("open-item-reconciliation", output, text)
+    assert model_argument_origin("open-item-reconciliation", output, text) is None
     events = store.events()
     declarations = [
         event for event in events if event["kind"] == "model_supplied_arguments"
@@ -190,7 +189,7 @@ def test_completed_result_can_be_reopened_without_rewriting_its_closed_report(
     assert store.path.read_bytes() == before
 
 
-def test_first_delivery_after_run_closure_remains_explicitly_blocked(
+def test_first_delivery_after_report_closure_preserves_work_and_reports_gap(
     archive_core, client_case, tmp_path, monkeypatch
 ):
     from archive_report_store import RunStore
@@ -202,10 +201,56 @@ def test_first_delivery_after_run_closure_remains_explicitly_blocked(
     store.save({**state, "collection_closed": True})
     before = store.events()
 
-    with pytest.raises(ValueError, match="closed or changed"):
-        module.execute(args)
+    result = module.execute(args)
 
     assert store.events() == before
+    assert result["structuredContent"]["output"][1]["stdout"] == "Undelivered value"
+    assert result["structuredContent"]["reporting"]["status"] == "unavailable"
+    assert "isError" not in result
+
+
+def test_completed_native_job_is_delivered_when_reporting_write_fails(
+    archive_core, client_case, tmp_path, monkeypatch
+):
+    from archive_report_store import RunStore
+
+    loaded = start(archive_core, client_case)
+    module, args = retained_job(tmp_path, monkeypatch, loaded, "Completed work")
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Synthetic full disk")
+
+    monkeypatch.setattr(RunStore, "event", unavailable)
+    result = module.execute(args)
+
+    metadata, streams = result["structuredContent"]["output"]
+    assert metadata["state"] == "completed"
+    assert metadata["returncode"] == 0
+    assert metadata["job_id"] == args["job_id"]
+    assert streams["stdout"] == "Completed work"
+    assert result["structuredContent"]["reporting"]["status"] == "unavailable"
+    assert "isError" not in result
+
+
+def test_native_job_starts_and_delivers_without_collector_start_record(
+    archive_core, client_case, tmp_path, monkeypatch
+):
+    from archive_report_store import RunStore
+
+    loaded = start(archive_core, client_case)
+    monkeypatch.setattr(RunStore, "state", lambda self: None)
+
+    result = submit_native_arguments(
+        tmp_path,
+        monkeypatch,
+        "variance-analysis",
+        ["--output-dir", loaded["output_dir"]],
+    )
+
+    assert result["structuredContent"]["output"][0]["state"] == "completed"
+    assert result["structuredContent"]["output"][0]["returncode"] == 0
+    assert result["structuredContent"]["reporting"]["status"] == "unavailable"
+    assert "isError" not in result
 
 
 @pytest.mark.parametrize(

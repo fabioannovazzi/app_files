@@ -170,15 +170,24 @@ def _execute_with_diagnostics(
                 and os.environ.get("VERA_REPORTING_INTERNAL") != "1"
             ):
                 from archive_emit import record_output
+                from archive_reporting_failure import (
+                    REPORTING_ERRORS,
+                    reporting_failure,
+                )
 
                 diagnostic = handle.read()
                 if diagnostic:
-                    record_output(
-                        module,
-                        arguments,
-                        {"stdout": "", "stderr": diagnostic},
-                        channel="cli",
-                    )
+                    try:
+                        record_output(
+                            module,
+                            arguments,
+                            {"stdout": "", "stderr": diagnostic},
+                            channel="cli",
+                        )
+                    except REPORTING_ERRORS as error:
+                        reporting_failure(
+                            module, arguments, error, stage="diagnostic_delivery"
+                        )
                 handle.seek(0)
             shutil.copyfileobj(handle, sys.stderr, length=16384)
     finally:

@@ -25,6 +25,77 @@ ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/vera/scripts"
 
 
+@pytest.mark.parametrize("failure_at", ["state", "event"])
+def test_archive_read_delivers_selected_input_when_reporting_is_unavailable(
+    archive_core, client_case, monkeypatch, failure_at
+):
+    from archive_report_store import RunStore
+
+    loaded = start(archive_core, client_case, "report-builder")
+    source = Path(loaded["context"]["input_bindings"][0]["path"])
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Synthetic collector failure")
+
+    monkeypatch.setattr(RunStore, failure_at, unavailable)
+    packet = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        source,
+        state_dir=client_case.state_dir,
+    )
+
+    assert source.read_text().strip() in json.dumps(packet["data"])
+    assert packet["reporting"]["status"] == "unavailable"
+    assert "vera_reporting" not in packet
+
+
+def test_unavailable_reporting_does_not_allow_reading_an_unbound_file(
+    archive_core, client_case, tmp_path, monkeypatch
+):
+    from archive_report_store import RunStore
+
+    loaded = start(archive_core, client_case, "report-builder")
+    other = tmp_path / "unbound.txt"
+    other.write_text("Unrelated confidential work")
+    monkeypatch.setattr(RunStore, "state", lambda self: None)
+
+    with pytest.raises(archive_core.ArchiveError, match="bound input"):
+        archive_core.read_studio_run_artifact(
+            client_case.client_id,
+            client_case.engagement_id,
+            loaded["run"]["run_id"],
+            other,
+            state_dir=client_case.state_dir,
+        )
+
+
+def test_completed_artifact_remains_readable_without_inputs_or_collector(
+    archive_core, client_case
+):
+    import shutil
+
+    loaded = start(archive_core, client_case, "report-builder")
+    finish(archive_core, client_case, loaded)
+    run_root = Path(loaded["run_root"])
+    report = Path(loaded["output_dir"]) / "model_data_report.json"
+    sealed_report = report.read_bytes()
+    shutil.rmtree(run_root / "inputs")
+
+    result = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        "outputs/result.txt",
+        state_dir=client_case.state_dir,
+    )
+
+    assert "Local professional result" in json.dumps(result["data"])
+    assert result["reporting"]["status"] == "unavailable"
+    assert report.read_bytes() == sealed_report
+
+
 @pytest.mark.parametrize("line_ending", ["\r\n", "\r", "\n"])
 def test_full_source_text_matches_universal_newlines_without_changing_saved_payload(
     archive_core, client_case, tmp_path, line_ending
@@ -184,9 +255,11 @@ def test_mcp_bridge_records_model_payload_and_keeps_app_metadata_out(
 
     assert result.returncode == 0, result.stderr
     if not recording_available:
-        assert json.loads(result.stdout)["result"]["isError"] is True
-        assert source.read_text().strip() not in result.stdout
-        assert "ONLY_IN_APP" not in result.stdout
+        response = json.loads(result.stdout)["result"]
+        assert "isError" not in response
+        assert response["content"][0] == payload["content"][0]
+        assert response["_meta"]["ui"] == "ONLY_IN_APP"
+        assert response["_meta"]["reporting"]["status"] == "unavailable"
         return
     assert json.loads(result.stdout)["result"] == payload
     events = [
@@ -200,7 +273,7 @@ def test_mcp_bridge_records_model_payload_and_keeps_app_metadata_out(
 
 
 @pytest.mark.parametrize("failure_stage", ["before_tool_start", "after_tool_return"])
-def test_recording_failure_distinguishes_unstarted_tool_from_returned_mutation(
+def test_recording_failure_delivers_mutation_result_without_repeating_work(
     tmp_path, failure_stage
 ):
     marker = tmp_path / "saved-mutation.txt"
@@ -247,21 +320,14 @@ def test_recording_failure_distinguishes_unstarted_tool_from_returned_mutation(
 
     assert result.returncode == 0, result.stderr
     response = json.loads(result.stdout)["result"]
-    assert response["isError"] is True
-    if failure_stage == "after_tool_return":
-        assert marker.read_bytes() == b"saved\n"
-    else:
-        assert not marker.exists()
-    detail = response["structuredContent"]
+    assert "isError" not in response
+    assert marker.read_bytes() == b"saved\n"
+    detail = response["_meta"]["reporting"]
     assert detail["failure_stage"] == failure_stage
     assert detail["operation"] == "save_review"
-    assert detail["response_delivered"] is False
-    assert "UNRECORDED_CASE_CONTENT" not in result.stdout
-    if failure_stage == "after_tool_return":
-        assert detail["archive_run_id"] == run_root.name
-        assert detail["retry_action"] == "inspect_existing_result"
-    else:
-        assert detail["retry_action"] == "restore_recording_then_retry"
+    assert detail["response_delivered"] is True
+    assert response["content"][0]["text"] == "UNRECORDED_CASE_CONTENT"
+    assert detail["retry_action"] == "retry_reporting_only"
 
 
 def test_changed_packet_cannot_reuse_an_already_recorded_token(
@@ -361,7 +427,7 @@ rl.on('line', line => {
     assert second_hashes == {digest(responses[1]), digest(responses[2])}
 
 
-def test_mcp_withholds_a_result_when_archive_closed_while_it_was_running(
+def test_mcp_delivers_result_with_separate_gap_when_report_closed_during_work(
     archive_core, client_case, tmp_path
 ):
     loaded = start(archive_core, client_case, "report-builder")
@@ -412,7 +478,21 @@ def test_mcp_withholds_a_result_when_archive_closed_while_it_was_running(
             stdout, stderr = process.communicate(timeout=20)
 
     assert process.returncode == 0, stderr
-    assert json.loads(stdout)["result"]["isError"] is True
-    assert "WITHHELD_CASE_VALUE" not in stdout + stderr
+    response = json.loads(stdout)["result"]
+    assert "isError" not in response
+    assert response["content"][0]["text"] == "WITHHELD_CASE_VALUE"
+    assert response["_meta"]["reporting"]["status"] == "unavailable"
     assert final["collection_status"] == "complete"
     assert final["sources"][0]["sent_quantity"] == 0
+    assert list(
+        (Path(loaded["run_root"]) / "reporting/delivery-after-closure").glob("*.json")
+    )
+    report_path = Path(loaded["output_dir"]) / "model_data_report.json"
+    sealed_report = report_path.read_bytes()
+    archive_core.complete_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+    assert report_path.read_bytes() == sealed_report

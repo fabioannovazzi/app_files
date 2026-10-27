@@ -448,7 +448,7 @@ def treasury_record(loaded: dict[str, Any]) -> dict[str, Any]:
     )
     sys.path.insert(0, str(module_root("treasury-forecast") / "scripts"))
     import run_treasury  # Registers the maintained assurance module path.
-    from treasury_session import current_record
+    from treasury_session import current_record, current_source_paths
     from vera_assurance import load_client_engagement_context_file
 
     output = Path(loaded["output_dir"])
@@ -456,7 +456,7 @@ def treasury_record(loaded: dict[str, Any]) -> dict[str, Any]:
     context = load_client_engagement_context_file(
         Path(loaded["context_path"]),
         expected_workflow_id="treasury-forecast",
-        input_paths=[Path(s["path"]) for s in state["sources"]],
+        input_paths=current_source_paths(output, state),
         allowed_statuses=("running", "ready_for_review", "completed"),
     )
     if context["schema_version"] != "vera.client_workflow_context.v2":
@@ -2650,29 +2650,51 @@ def _reporting_case(args: dict[str, Any]) -> dict[str, Any] | None:
 def bind_model_output(args: dict[str, Any]) -> dict[str, Any] | None:
     """Pin this operation's Archive revision before producing its response."""
     from archive_emit import bind_output
+    from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
 
     loaded = _reporting_case(args)
     if loaded is None:
         return None
-    return bind_output(
-        loaded["run"]["workflow_id"], {"client_engagement": loaded["context_path"]}
-    )
+    try:
+        return bind_output(
+            loaded["run"]["workflow_id"], {"client_engagement": loaded["context_path"]}
+        )
+    except REPORTING_ERRORS as error:
+        reporting_failure(
+            loaded["run"]["workflow_id"],
+            {},
+            error,
+            stage="workspace_bind",
+            root=Path(loaded["run_root"]),
+        )
+        raise
 
 
 def record_model_output(args: dict[str, Any]) -> dict[str, Any]:
     """Record the final model-visible projection after the MCP app split."""
     from archive_emit import record_output
+    from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
 
     loaded = _reporting_case(args)
     if loaded is None:
         return {"recorded": False}
-    record_output(
-        loaded["run"]["workflow_id"],
-        {"client_engagement": loaded["context_path"]},
-        args["payload"],
-        channel="mcp",
-        binding=args.get("binding"),
-    )
+    try:
+        record_output(
+            loaded["run"]["workflow_id"],
+            {"client_engagement": loaded["context_path"]},
+            args["payload"],
+            channel="mcp",
+            binding=args.get("binding"),
+        )
+    except REPORTING_ERRORS as error:
+        reporting_failure(
+            loaded["run"]["workflow_id"],
+            {},
+            error,
+            stage="workspace_delivery",
+            root=Path(loaded["run_root"]),
+        )
+        raise
     return {"recorded": True}
 
 

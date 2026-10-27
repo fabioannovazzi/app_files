@@ -182,19 +182,31 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         fingerprint = hashlib.sha256(
             json.dumps(spec, sort_keys=True).encode()
         ).hexdigest()
-        from archive_emit import bind_output
+        from archive_emit import bind_output, selected_run
+        from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
 
-        binding = bind_output(spec["component"], _arguments(spec))
+        selected = selected_run(spec["component"], _arguments(spec))
+        reporting = None
+        try:
+            binding = bind_output(spec["component"], _arguments(spec))
+            if binding is None and selected is not None:
+                raise ValueError("The selected reporting collection is closed")
+        except REPORTING_ERRORS as error:
+            binding = None
+            reporting = reporting_failure(
+                spec["component"], _arguments(spec), error, stage="bind", root=selected
+            )
         execution_root = ROOT
         from verified_execution import bind_execution_run, execution_package_id
 
-        if binding is not None:
-            execution_root = bind_execution_run(Path(binding["run_root"]), ROOT)
+        if selected is not None:
+            execution_root = bind_execution_run(selected, ROOT)
             spec = _specification(args, execution_root)
         request = {
             **spec,
             "fingerprint": fingerprint,
             "binding": binding,
+            "reporting": reporting,
             "package_sha256": execution_package_id(execution_root),
         }
         try:
@@ -291,55 +303,69 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
     }
     if value.get("returncode", 0) != 0 or "cancellation_error" in value:
         response["isError"] = True
-    if request["binding"] is not None:
-        from archive_emit import record_output
-        from archive_projection import register_metadata
-        from archive_report_store import RunStore, digest
+    from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
 
-        store = RunStore(Path(request["binding"]["run_root"]))
-        state = store.state()
-        if state is not None and state["collection_closed"]:
-            if operation == "cancel" or value.get("state") == "cancelled":
-                # Cancellation is already requested above. Its service-owned
-                # status can be confirmed without disclosing retained streams
-                # or rewriting the closed professional-data report.
-                payload = {"output": [metadata]}
-                response = {
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": json.dumps(payload, ensure_ascii=False),
-                        }
-                    ],
-                    "structuredContent": payload,
-                }
-                if "cancellation_error" in value:
-                    response["isError"] = True
-                return response
-            # Read-only recovery of an already delivered exact result preserves
-            # the sealed report. A newly completed payload still needs delivery
-            # under its active revision and cannot silently enter a closed run.
-            if any(
-                event["kind"] == "vera_send"
-                and event["response_sha256"] == digest(response)
-                for event in store.events()
-            ):
-                return response
+    reporting = request.get("reporting")
+    try:
+        if request["binding"] is not None:
+            from archive_emit import record_output
+            from archive_projection import register_metadata
+            from archive_report_store import RunStore, digest
 
-        # Only service-authored fields are metadata. Helper stdout/stderr must
-        # keep their producer evidence, including unknown-content gaps.
-        register_metadata(
-            request["component"],
-            Path(request["binding"]["run_root"]) / "outputs",
-            metadata,
-        )
-        record_output(
+            store = RunStore(Path(request["binding"]["run_root"]))
+            state = store.state()
+            if state is not None and state["collection_closed"]:
+                if operation == "cancel" or value.get("state") == "cancelled":
+                    # Cancellation is already requested above. Its service-owned
+                    # status can be confirmed without disclosing retained streams
+                    # or rewriting the closed professional-data report.
+                    payload = {"output": [metadata]}
+                    response = {
+                        "content": [
+                            {
+                                "type": "text",
+                                "text": json.dumps(payload, ensure_ascii=False),
+                            }
+                        ],
+                        "structuredContent": payload,
+                    }
+                    if "cancellation_error" in value:
+                        response["isError"] = True
+                    return response
+                # Reopening an exact prior delivery preserves its sealed report.
+                # A new delivery keeps the report sealed and exposes a reporting gap.
+                if any(
+                    event["kind"] == "vera_send"
+                    and event["response_sha256"] == digest(response)
+                    for event in store.events()
+                ):
+                    return response
+
+            # Only service-authored fields are metadata. Helper stdout/stderr must
+            # keep their producer evidence, including unknown-content gaps.
+            register_metadata(
+                request["component"],
+                Path(request["binding"]["run_root"]) / "outputs",
+                metadata,
+            )
+            record_output(
+                request["component"],
+                _arguments(request),
+                response,
+                channel="mcp",
+                binding=request["binding"],
+            )
+    except REPORTING_ERRORS as error:
+        reporting = reporting_failure(
             request["component"],
             _arguments(request),
-            response,
-            channel="mcp",
-            binding=request["binding"],
+            error,
+            stage="delivery",
+            root=Path(request["binding"]["run_root"]),
         )
+    if reporting is not None:
+        payload["reporting"] = reporting
+        response["content"][0]["text"] = json.dumps(payload, ensure_ascii=False)
     return response
 
 

@@ -3,6 +3,17 @@ name: research-subscriptions
 description: Connect, check or disconnect the user's existing Eutekne or One FISCALE research subscription for optional evidence inside Vera's existing legal and tax research. Use the user's authorised browser or a callable connector; no publisher API or partnership is required as a Vera policy.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 # Existing research subscriptions
 
 Read `../vera/references/research-subscriptions.md` completely. Open

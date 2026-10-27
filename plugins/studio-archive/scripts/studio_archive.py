@@ -43,6 +43,7 @@ from archive_core import (
     bind_studio_client_google_drive,
     cancel_studio_client_workflow,
     check_studio_import_sources,
+    checkpoint_studio_client_workflow,
     close_studio_client_engagement,
     complete_studio_client_workflow,
     configure_archive,
@@ -67,6 +68,7 @@ from archive_core import (
     refresh_archive,
     report_studio_client_retention,
     resolve_studio_client_identity,
+    restore_studio_client_workflow,
     search_archive,
     set_studio_client_identity,
     setup_archive_with_folder_picker,
@@ -130,6 +132,7 @@ def _parser() -> argparse.ArgumentParser:
 
     create_client = subparsers.add_parser("create-client")
     create_client.add_argument("--legal-name", required=True)
+    create_client.add_argument("--general-workspace", action="store_true")
     create_client.add_argument("--email-address", action="append", default=[])
     create_client.add_argument("--tax-identifier", action="append", default=[])
 
@@ -244,11 +247,15 @@ def _parser() -> argparse.ArgumentParser:
         "cancel-workflow",
         "complete-workflow",
         "verify-run-report",
+        "checkpoint-workflow",
+        "restore-workflow",
     ):
         lifecycle = subparsers.add_parser(command)
         lifecycle.add_argument("--client-id", required=True)
         lifecycle.add_argument("--engagement-id", required=True)
         lifecycle.add_argument("--run-id", required=True)
+        if command == "restore-workflow":
+            lifecycle.add_argument("--destination", required=True)
 
     write_artifact = subparsers.add_parser("write-run-artifact")
     write_artifact.add_argument("--client-id", required=True)
@@ -292,6 +299,7 @@ def _parser() -> argparse.ArgumentParser:
     retention.add_argument("--older-than-days", type=int)
 
     configure_client = subparsers.add_parser("configure-client")
+    configure_client.add_argument("--general-workspace", action="store_true")
     configure_client.add_argument("--scope-id", required=True)
     configure_client.add_argument("--email-address", action="append", default=[])
     configure_client.add_argument("--legal-name", action="append", default=[])
@@ -369,6 +377,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "create-client":
             result = create_studio_client(
                 args.legal_name,
+                general_workspace=args.general_workspace,
                 email_addresses=args.email_address,
                 tax_identifiers=args.tax_identifier,
             )
@@ -483,6 +492,14 @@ def main(argv: list[str] | None = None) -> int:
             result = start_studio_client_workflow(
                 args.client_id, args.engagement_id, args.run_id
             )
+        elif args.command == "checkpoint-workflow":
+            result = checkpoint_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "restore-workflow":
+            result = restore_studio_client_workflow(
+                args.client_id, args.engagement_id, args.run_id, args.destination
+            )
         elif args.command == "start-check-entries-from-sample":
             result = start_check_entries_from_sample(
                 args.client_id,
@@ -528,6 +545,7 @@ def main(argv: list[str] | None = None) -> int:
         elif args.command == "configure-client":
             result = set_studio_client_identity(
                 args.scope_id,
+                general_workspace=args.general_workspace,
                 email_addresses=args.email_address,
                 legal_names=args.legal_name,
                 tax_identifiers=args.tax_identifier,
@@ -583,11 +601,11 @@ def main(argv: list[str] | None = None) -> int:
                 record_error(vars(args), payload, channel="cli")
             except (OSError, ValueError, sqlite3.Error):
                 logging.exception("Studio Archive error recording failed")
-                payload = {
-                    "error": {
-                        "code": "archive_reporting_failed",
-                        "message": "Archive failed and could not save its outgoing error record. See the local worker log.",
-                    }
+                payload["reporting"] = {
+                    "status": "unavailable",
+                    "code": "archive_reporting_failed",
+                    "measurement_gap": True,
+                    "retry_action": "retry_reporting_only",
                 }
         _emit(payload)
         return 1

@@ -37,6 +37,8 @@ const TOOL_NAMES = {
   prepareWorkflow: "prepare_studio_client_workflow",
   startCheckEntriesFromSample: "start_check_entries_from_sample",
   startWorkflow: "start_studio_client_workflow",
+  checkpointWorkflow: "checkpoint_studio_client_workflow",
+  restoreWorkflow: "restore_studio_client_workflow",
   readRunArtifact: "read_studio_run_artifact",
   writeRunArtifact: "write_studio_run_artifact",
   verifyRunReport: "verify_studio_run_report",
@@ -64,6 +66,7 @@ const VERA_CLIENT_WORKFLOW_IDS = Object.freeze([
   "posizioni-negoziali",
   "contenzioso-tributario",
   "lipe",
+  "rating-legalita",
   "scissione-guidata",
   "esg-reporting-assurance",
   "treasury-forecast",
@@ -137,6 +140,20 @@ function annotations(readOnly, idempotent = true, openWorld = false) {
 
 function toolDefinitions() {
   return [
+    {
+      name: TOOL_NAMES.checkpointWorkflow,
+      title: "Retain this Archive run's completed stages",
+      description: "Save exact admitted inputs, provenance and current outputs to the owner-private recovery store independently of the archive destination. Reuse the existing client, engagement and run IDs; inspect recovery.status before claiming a checkpoint was saved.",
+      inputSchema: runIdentitySchema(),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.restoreWorkflow,
+      title: "Restore this Archive run to an available destination",
+      description: "Restore the retained exact run, including completed stages and its original IDs, to an explicitly authorized new local client folder. Preserve existing destination contents. Return the relocated context for continuation; do not create another run or repeat completed work.",
+      inputSchema: objectSchema({ ...runIdentityProperties(), destination: { type: "string", minLength: 1 } }, ["client_id", "engagement_id", "run_id", "destination"]),
+      annotations: annotations(false),
+    },
     {
       name: TOOL_NAMES.status,
       title: "Check Vera Studio Archive status",
@@ -213,16 +230,20 @@ function toolDefinitions() {
     },
     {
       name: TOOL_NAMES.createClient,
-      title: "Create a new Studio Archive client",
+      title: "Create a Studio Archive destination",
       description:
-        "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. For work starting from supplied files, first check_studio_import_sources for all selected files and resolve any unavailable inputs. This begins but does not complete Vera's New Client professional workflow.",
+        "Create the user's selected archive destination and generate its internal stable ID. Use general_workspace for a general label such as Vari without registering that label as a legal identity. Reuse an established destination. Check supplied inputs before starting dependent work. Folder creation does not start professional client onboarding.",
       inputSchema: objectSchema(
         {
           legal_name: {
             type: "string",
             minLength: 1,
             maxLength: 160,
-            description: "Confirmed client legal name; Vera derives the folder label.",
+            description: "Confirmed destination label; for a general workspace this can be Vari, without claiming a legal name.",
+          },
+          general_workspace: {
+            type: "boolean",
+            description: "The user selected a general archive destination rather than a named client. No legal, email or tax identity is required.",
           },
           email_addresses: {
             type: "array",
@@ -791,6 +812,10 @@ function toolDefinitions() {
             description:
               "Exact client scope_id returned by studio_archive_status.",
           },
+          general_workspace: {
+            type: "boolean",
+            description: "Register a user-selected general folder such as Vari without requiring client identity values.",
+          },
           email_addresses: {
             type: "array",
             maxItems: 20,
@@ -1081,13 +1106,14 @@ function commandForTool(name, rawArgs) {
   if (name === TOOL_NAMES.createClient) {
     assertOnlyKeys(
       args,
-      new Set(["legal_name", "email_addresses", "tax_identifiers"]),
+      new Set(["legal_name", "email_addresses", "tax_identifiers", "general_workspace"]),
     );
     const command = [
       "create-client",
       "--legal-name",
       requireString(args.legal_name, "legal_name"),
     ];
+    if (optionalBoolean(args.general_workspace, "general_workspace")) command.push("--general-workspace");
     for (const value of optionalStringArray(
       args.email_addresses,
       "email_addresses",
@@ -1437,6 +1463,14 @@ function commandForTool(name, rawArgs) {
   if (name === TOOL_NAMES.startWorkflow) {
     return runIdentityCommand(args, "start-workflow");
   }
+  if (name === TOOL_NAMES.checkpointWorkflow) {
+    return runIdentityCommand(args, "checkpoint-workflow");
+  }
+  if (name === TOOL_NAMES.restoreWorkflow) {
+    const command = runIdentityCommand(args, "restore-workflow", ["destination"]);
+    if (typeof args.destination !== "string" || !path.isAbsolute(args.destination)) throw new Error("Recovery destination must be an authorized absolute folder path");
+    return [...command, "--destination", args.destination];
+  }
   if (name === TOOL_NAMES.startCheckEntriesFromSample) {
     assertOnlyKeys(
       args,
@@ -1658,6 +1692,7 @@ function commandForTool(name, rawArgs) {
         "legal_names",
         "tax_identifiers",
         "replace_orphaned_scope_id",
+        "general_workspace",
       ]),
     );
     const scopeId = requireString(args.scope_id, "scope_id");
@@ -1665,6 +1700,7 @@ function commandForTool(name, rawArgs) {
       throw new Error("scope_id must be an exact configured client scope.");
     }
     const command = ["configure-client", "--scope-id", scopeId];
+    if (optionalBoolean(args.general_workspace, "general_workspace")) command.push("--general-workspace");
     const emails = optionalStringArray(
       args.email_addresses,
       "email_addresses",
@@ -1772,9 +1808,8 @@ function callTool(name, args) {
     encoding: "utf8",
     maxBuffer: MAX_OUTPUT_BYTES,
   };
-  if (name !== TOOL_NAMES.refresh) {
-    spawnOptions.timeout = 300_000;
-  }
+  // Import, snapshot and recovery duration depends on selected local data.
+  // A transport deadline must not kill a worker that is committing that work.
   // Authored text is data, never an argv option or a Windows command-line payload.
   if (name === TOOL_NAMES.writeRunArtifact) spawnOptions.input = args.content;
   const completed = spawnSync(
@@ -1881,9 +1916,15 @@ function recordToolError(args, payload) {
     // No acknowledgement means there is no evidence of a saved error record.
   }
   if (recorded.error || recorded.status !== 0 || !acknowledged) {
-    return toolError(Object.assign(new Error(
-      "Archive failed and could not save its outgoing error record. See the local worker log.",
-    ), { code: "archive_reporting_failed" }));
+    return {
+      ...payload,
+      content: [...payload.content, { type: "text", text:
+        "Archive could not save this error's reporting record. The original operation error is retained; recover that operation using its existing IDs." }],
+      _meta: { ...payload._meta, reporting: {
+        status: "unavailable", code: "archive_reporting_failed",
+        measurement_gap: true, retry_action: "retry_reporting_only",
+      } },
+    };
   }
   return payload;
 }

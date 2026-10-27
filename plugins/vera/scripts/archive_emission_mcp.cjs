@@ -33,27 +33,15 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
     input: JSON.stringify({ component, ...envelope }), encoding: "utf8",
     timeout: 30000, maxBuffer: 1024 * 1024, windowsHide: true,
   });
-  const withheld = (id, stage, request) => {
-    const returned = stage === "after_tool_return";
-    const root = request.binding?.run_root;
-    const runId = typeof root === "string" ? path.basename(root) : null;
-    // Report transport state, never unrecorded case content. A returned tool
-    // may already have saved work; its missing response is not permission to repeat it.
-    const detail = {
-      code: "archive_recording_unavailable",
-      operation: request.name,
-      failure_stage: stage,
-      response_delivered: false,
-      retry_action: returned ? "inspect_existing_result" : "restore_recording_then_retry",
-      ...(runId && /^run_[0-9a-f]{24}$/.test(runId) ? { archive_run_id: runId } : {}),
-    };
-    output.write(JSON.stringify({
-      jsonrpc: "2.0", id,
-      result: { isError: true, structuredContent: detail, content: [{ type: "text", text: returned
-        ? "The tool returned, but Vera could not save its outgoing-data record or deliver its response. Work may already be saved. Restore recording access and inspect the existing result in this same run before repeating any operation."
-        : "Vera could not prepare this run's outgoing-data record, so the tool was not started. Restore recording access, then retry the same operation.",
-      }] },
-    }) + "\n");
+  const failure = (stage, request) => ({
+    status: "unavailable", code: "archive_reporting_unavailable",
+    operation: request.name, failure_stage: stage, response_delivered: true,
+    measurement_gap: true, retry_action: "retry_reporting_only",
+  });
+  const recordedValue = result => {
+    if (result.status !== 0) return { ok: false, value: null };
+    try { return { ok: true, value: JSON.parse(result.stdout) }; }
+    catch { return { ok: false, value: null }; }
   };
   const incoming = readline.createInterface({ input, crlfDelay: Infinity });
   incoming.on("line", (line) => {
@@ -62,12 +50,11 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
       const args = message.params.arguments || {};
       const owner = tokenBindings.get(reviewToken(args));
       const boundArguments = owner ? { request: args, client_engagement: path.join(owner, "context.json") } : args;
-      const bound = record({ action: "bind", arguments: boundArguments });
-      if (bound.status !== 0) {
-        withheld(message.id, "before_tool_start", message.params);
-        return;
-      }
-      requests.set(message.id, { ...message.params, binding: JSON.parse(bound.stdout) });
+      const bound = recordedValue(record({ action: "bind", arguments: boundArguments }));
+      requests.set(message.id, {
+        ...message.params, binding: bound.value,
+        reporting: bound.ok ? null : failure("before_tool_start", message.params),
+      });
     }
     child.stdin.write(line + "\n");
   });
@@ -81,19 +68,21 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
       const args = request.arguments || {};
       const owner = tokenBindings.get(reviewToken(args));
       const boundArguments = owner ? { request: args, client_engagement: path.join(owner, "context.json") } : args;
-      const recorded = record({
+      const recorded = recordedValue(record({
           arguments: boundArguments, binding: request.binding,
           payload: message.result || { isError: true, content: [{ type: "text", text: JSON.stringify(message.error) }] },
           channel: "mcp", operation: request.name,
-      });
-      if (recorded.status !== 0) {
-        withheld(message.id, "after_tool_return", request);
-        return;
+      }));
+      const reporting = request.reporting || (recorded.ok ? null : failure("after_tool_return", request));
+      if (reporting && message.result) {
+        message.result = withReportingFailure(message.result, reporting);
+        line = JSON.stringify(message);
       }
       const summary = message.result?.structuredContent;
       const token = reviewToken(summary);
       if (typeof token === "string" && message.result?.isError !== true) {
-        tokenBindings.set(token, JSON.parse(recorded.stdout).run_root);
+        const root = request.binding?.run_root || recorded.value?.run_root;
+        if (root) tokenBindings.set(token, root);
       }
     }
     output.write(line + "\n");
@@ -102,4 +91,13 @@ function bridge(child, component, pluginRoot, input = process.stdin, output = pr
   return outgoing;
 }
 
-module.exports = { bridge };
+function withReportingFailure(result, detail) {
+  return {
+    ...result,
+    content: [...(result.content || []), { type: "text", text:
+      "The operation's result is available. Its model-data report is incomplete because recording failed. Continue with this result; retry reporting separately without repeating the work." }],
+    _meta: { ...(result._meta || {}), reporting: detail },
+  };
+}
+
+module.exports = { bridge, withReportingFailure };

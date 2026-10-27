@@ -3,6 +3,17 @@ name: learn-with-vera
 description: Teach only this installation's supported Vera workflows through a native voice conversation and a parallel working chat that runs real examples. Use for first onboarding, demonstrations, guided practice, discovering what Vera can do, revisiting an example, or applying it to user-selected files. Starts in desktop Codex; Claude Cowork is outside this feature.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 # Impara con Vera
 
 Help the commercialista obtain and understand a useful result by describing their

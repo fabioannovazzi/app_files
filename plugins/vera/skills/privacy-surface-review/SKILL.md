@@ -8,6 +8,10 @@ description: Review Vera, Clara or Lucia source, model-context paths, external s
 This developer workflow is identical in Vera, Clara and Lucia. It does not add a
 customer intake, a consent questionnaire or a professional process to usage
 counts. Ordinary authorized model processing follows the selected host account.
+For Vera work, apply `../vera/references/work-continuity.md`: resolve prerequisites
+upfront and preserve the admitted job and its progress. Missing or failed privacy
+reporting remains a separate issue and must not block the professional pipeline
+or delivery of its reviewable result.
 
 1. Resolve this installation's product root and read `privacy/registry.json`,
    `components.json` and `privacy/runtime-profiles.json`. Inventory every exposed

@@ -47,7 +47,41 @@ only its rebuildable search index, local configuration, and optional private
 contact metadata in the machine-local state directory, normally
 `~/.mparanza/vera-studio-archive/sessions/<session-key>`. Never place that private state inside the
 shared archive. It is not the source of truth for engagement inputs, runs, or
-artifacts.
+artifacts. An admitted run also has an owner-private independent recovery
+checkpoint containing exact inputs, retained receipts, run headers and saved
+outputs. These are additional local copies, not another client engagement.
+Check `recovery.status` at preparation and start. If checkpoint storage is
+unavailable, resolve a suitable recovery location at intake while retaining the
+same prepared job; do not claim protection that was not saved.
+
+## Continue the admitted job
+
+Resolve the destination, exact sources and actual engine prerequisites together
+before dependent work. An explicitly selected general folder such as Vari is
+valid: create or register it with `general_workspace: true` (`--general-workspace`
+in the CLI). Vera maintains its internal identifiers; this does not require a
+real client's legal identity or start the New Client workflow.
+
+Reuse the established client, engagement, run and any native job identifiers
+throughout the task. Passed source admission uses the exact prepared copies and
+retained receipts; loss of an original does not invalidate unchanged copies.
+Managed helpers checkpoint before and after execution. After direct edits or
+other completed stages use `checkpoint_studio_client_workflow` (CLI
+`checkpoint-workflow`) and inspect the returned retention status.
+
+If the destination becomes unavailable, use `restore_studio_client_workflow`
+(CLI `restore-workflow --destination ABSOLUTE_PATH`) with the same identifiers
+and an authorized alternate folder. Ask only for a destination if none is
+authorized. Continue from the returned context; retained completed work and IDs
+remain unchanged. An interrupted restore retries its same destination and keeps
+partial bytes. Never overwrite unrelated work, infer a new client, or repeat
+completed stages merely because storage or the transport failed.
+
+Privacy-report collection, saving and verification have separate outcomes.
+Their failure must remain visible, but cannot withhold an available professional
+result or erase its lifecycle state. Retry reporting separately. An uncertain
+mutation requires inspecting the saved outcome before retrying; a disconnected
+tool response is not evidence that the operation failed.
 
 An engagement can exist without a specialist workflow run. Its generated
 follow-up documents use the controlled document-import route described below;
@@ -314,15 +348,16 @@ Continue the client workflow after the input checks above:
    is not a user selection. Host-required action-time approvals still apply.
 3. For an existing registered client, retain the `client_id` recovered from its
    customer-folder manifest. For an existing but unregistered scope, call
-   `configure_studio_archive_client` with the confirmed scope and at least one
-   confirmed legal name, email/PEC address, or tax identifier; retain the
-   returned `client_id`. This writes `Vera/client.json` in that customer folder.
-4. Only after the user chooses New client, call
-   `create_studio_archive_client` with the confirmed legal name. Vera derives a
-   safe folder label; the user does not need to invent a folder name. The
-   result starts the separate `new-client` workflow and must remain
-   `new_client_workflow_pending`; creating a folder does not say the commercial
-   relationship is active.
+   `configure_studio_archive_client` with the confirmed scope. For a general
+   destination such as Vari, set `general_workspace: true`; no client identity
+   values are required. Otherwise use a confirmed legal name, email/PEC address
+   or tax identifier. Retain the returned internal `client_id`.
+4. If the user selects a new destination, call `create_studio_archive_client`
+   with its confirmed label. Set `general_workspace: true` for a general folder
+   such as Vari; the label is not registered as a legal identity. Vera derives
+   the folder name and internal ID. Creating storage does not initiate New
+   Client or assess a professional relationship. Resolve this destination at
+   intake, reuse it throughout the job, and never ask the user for a technical ID.
 5. Create a new engagement with `create_studio_client_engagement`, or select an
    existing engagement returned by `list_studio_client_engagements`. Ask when
    more than one engagement could fit; never choose from recency or filename.
@@ -961,9 +996,12 @@ generated ZIPs during an archive run.
   the same `client_id` is present in the customer-folder manifest; do not infer
   identity from the renamed folder label.
 - Run is prepared but not started: start it before invoking a workflow helper.
-- A receipt, selected input, upstream artifact, or run manifest is missing or
-  changed: stop. Do not substitute another engagement file or silently prepare
-  a new run.
+- An admitted execution input is missing or changed: preserve changed bytes
+  and restore the exact admitted copy from the run's checkpoint. Retain the
+  existing run and completed outputs. If its immutable run identity or available
+  recovery evidence cannot be verified, recover that specific evidence before
+  dependent calculation; continue independent work and deliver verified outputs.
+  Do not substitute another engagement file or silently prepare a new run.
 - A different client, engagement, input or run is unavailable: retain its
   reported issue and original files. Continue the selected work when its own
   identity and dependencies validate. An incomplete inventory is not an empty
@@ -971,10 +1009,13 @@ generated ZIPs during an archive run.
 - An unrelated native upload is interrupted: retain its recovery record. It
   does not prevent a separate upload or preparation from already verified
   ledger receipts. Never select an uncommitted upload as an input.
-- Execution fails: record the failed lifecycle state and reason. Do not expose
-  its output folder as available.
-- Artifacts do not close the physical output tree: do not complete the run;
-  fix or remove the unexplained output and finalize again.
+- An operation fails: retain the current run and its saved outputs, diagnose
+  and recover that operation, and reuse any existing native job ID. Mark the
+  whole run failed only when the task actually has that terminal outcome.
+  A result already produced remains deliverable with its actual limitations.
+- Artifacts do not close the physical output tree: retain all work, complete
+  accurate artifact declarations, and finalize the same run again. This closure
+  issue does not prevent delivering an independently verified draft.
 - A document-only continuation is present only in the chat workspace: the
   engagement save is incomplete. Import it as a derived support note and
   verify the returned receipt and controlled bytes before reporting success.

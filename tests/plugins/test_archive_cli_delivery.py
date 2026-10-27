@@ -17,6 +17,7 @@ from tests.plugins.test_archive_automatic_reporting import (
     archive_core,
     archive_script_imports,
     client_case,
+    finish,
     reporting_runtime,
     start,
 )
@@ -69,8 +70,9 @@ def test_cli_records_only_streams_it_releases_to_its_caller(
     assert private.read_text() == ("PRIVATE_DIAGNOSTIC" if private_stderr else "")
 
 
-def test_cli_withholds_case_data_when_recording_storage_fails(
-    archive_core, client_case, tmp_path, capfd, monkeypatch
+@pytest.mark.parametrize("failure", ["write", "start_record"])
+def test_cli_delivers_completed_work_when_recording_storage_fails(
+    archive_core, client_case, tmp_path, capfd, monkeypatch, failure
 ):
     from archive_cli import run_command
     from archive_report_store import RunStore
@@ -85,7 +87,11 @@ def test_cli_withholds_case_data_when_recording_storage_fails(
     def unavailable(*args, **kwargs):
         raise OSError("Synthetic full disk")
 
-    monkeypatch.setattr(RunStore, "event", unavailable)
+    real_event, real_state = RunStore.event, RunStore.state
+    if failure == "write":
+        monkeypatch.setattr(RunStore, "event", unavailable)
+    else:
+        monkeypatch.setattr(RunStore, "state", lambda self: None)
     result = run_command(
         [sys.executable, str(child), str(source)],
         plugin_root=PRODUCT,
@@ -95,14 +101,21 @@ def test_cli_withholds_case_data_when_recording_storage_fails(
     )
 
     streams = capfd.readouterr()
-    assert result.returncode == 70
-    assert streams.out == ""
+    assert result.returncode == 0
+    assert streams.out == source.read_text()
     assert source.read_text().strip() not in streams.err
-    assert "case payload was not returned" in streams.err
+    assert "archive_reporting_unavailable" in streams.err
+    assert list((Path(loaded["run_root"]) / "reporting/gaps").glob("*.json"))
+    monkeypatch.setattr(RunStore, "event", real_event)
+    monkeypatch.setattr(RunStore, "state", real_state)
+    report = finish(archive_core, client_case, loaded)
+    assert report["collection_status"] == "incomplete"
+    assert "reporting_operation_failed_measurements_incomplete" in report["errors"]
 
 
-def test_preview_startup_output_is_recorded_before_server_shutdown(
-    archive_core, client_case, tmp_path
+@pytest.mark.parametrize("recording_available", [True, False])
+def test_preview_keeps_running_and_returns_url_when_reporting_fails(
+    archive_core, client_case, tmp_path, recording_available
 ):
     from archive_report_store import RunStore
 
@@ -119,7 +132,14 @@ def test_preview_startup_output_is_recorded_before_server_shutdown(
         "import sys\nfrom pathlib import Path\n"
         f"sys.path.insert(0,{str(PRODUCT / 'scripts')!r})\n"
         "from archive_cli import run_command\n"
-        f"raise SystemExit(run_command([sys.executable,{str(child)!r},{str(release)!r}],"
+        + (
+            "import archive_cli\n"
+            "def unavailable(*args, **kwargs): raise OSError('Synthetic full disk')\n"
+            "archive_cli.record_send = unavailable\n"
+            if not recording_available
+            else ""
+        )
+        + f"raise SystemExit(run_command([sys.executable,{str(child)!r},{str(release)!r}],"
         f"plugin_root=Path({str(PRODUCT)!r}),component='management-control-pack',"
         f"arguments=[{str(child)!r},'--client-engagement',{loaded['context_path']!r}],check=False).returncode)\n"
     )
@@ -150,5 +170,9 @@ def test_preview_startup_output_is_recorded_before_server_shutdown(
 
     assert process.returncode == 0, stderr
     assert line == "http://127.0.0.1:9000/report\n"
-    assert len(events) == 1
-    assert events[0]["bytes"] > 0
+    if recording_available:
+        assert len(events) == 1
+        assert events[0]["bytes"] > 0
+    else:
+        assert events == []
+        assert "archive_reporting_unavailable" in stderr

@@ -3,6 +3,17 @@ name: studio-archive
 description: Use when Vera must create or resume a durable client engagement, import a source, journal, or support file, search one client's callable Gmail connector, inspect a capability-gated WhatsApp Desktop chat, or search connected studio documents without mixing clients.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->
 ## Connected studio knowledge
 
@@ -177,9 +188,13 @@ engagement closure, cancellation/failure and recovery remain on existing
 specialist routes. Missing native tools never
 block those persistent routes, including in Cowork. Operator-bound development
 pilots retain their explicit allowlist and do not adopt another archive session.
-Some prepared runs still require specialist recovery: a renamed treasury folder
-can leave its existing session's absolute source references unavailable. Native
-navigation retains the portable run identity and refuses to rewrite those receipts.
+After destination loss, use `restore_studio_client_workflow` with the retained
+IDs and an authorized alternate folder, then continue from its returned context.
+Checkpoint direct edits with `checkpoint_studio_client_workflow`. Treasury
+resolves its saved source references against exact admitted inputs after a rename
+or restore, preserving the original session and forecast bytes. Other engine
+formats may still need their maintained relocation route; inspect that route
+before claiming continuation, and keep completed results available.
 
 Choose the route before resolving any module:
 

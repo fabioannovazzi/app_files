@@ -9,6 +9,7 @@ from typing import Any
 
 from archive_emit import bound_run
 from archive_report_store import RunStore, digest, file_digest, run_lock
+from archive_reporting_failure import isolated_projection
 
 __all__ = [
     "is_recording",
@@ -34,6 +35,7 @@ def run_cli(main: Any, component_file: Path) -> int | None:
     return run_entrypoint(main, component_file)
 
 
+@isolated_projection
 def is_recording(component: str, output: Path) -> bool:
     """Identify an explicitly bound selected run through Archive's stored state."""
     return bound_run(component, {"output": str(output)}) is not None
@@ -76,6 +78,7 @@ def _positions(
     return workbooks[source["sha256"]].get(entry["sheet_name"], {})
 
 
+@isolated_projection
 def register_metadata(component: str, output: Path, payload: Any) -> None:
     """Declare an exact producer status message, never a semantic classification."""
     root = bound_run(component, {"output": str(output)})
@@ -91,6 +94,7 @@ def register_metadata(component: str, output: Path, payload: Any) -> None:
         )
 
 
+@isolated_projection
 def register_model_arguments(
     component: str, output: Path, arguments: list[str]
 ) -> None:
@@ -119,6 +123,7 @@ def register_model_arguments(
         )
 
 
+@isolated_projection
 def model_argument_origin(
     component: str, output: Path, value: str
 ) -> list[dict[str, Any]] | None:
@@ -136,6 +141,7 @@ def model_argument_origin(
     return None
 
 
+@isolated_projection
 def register_rows(
     component: str, output: Path, records: dict[str, dict[str, Any]]
 ) -> None:
@@ -154,6 +160,7 @@ def register_rows(
         )
 
 
+@isolated_projection
 def register_private_value(component: str, output: Path, value: Any) -> None:
     """Bind a locally produced review packet; this does not declare a model send."""
     root = bound_run(component, {"output": str(output)})
@@ -169,6 +176,7 @@ def register_private_value(component: str, output: Path, value: Any) -> None:
             )
 
 
+@isolated_projection
 def register_metadata_revision(
     component: str,
     path: Path,
@@ -228,6 +236,7 @@ def register_metadata_revision(
         )
 
 
+@isolated_projection
 def register_row_projection(
     component: str,
     output: Path,
@@ -257,6 +266,7 @@ def register_row_projection(
         )
 
 
+@isolated_projection
 def register_artifact_projection(
     component: str,
     path: Path,
@@ -339,6 +349,7 @@ def _row_entries(
     return entries
 
 
+@isolated_projection
 def register_table_projection(
     component: str, path: Path, cells: list[list[list[dict[str, Any]] | None]]
 ) -> None:
@@ -402,6 +413,7 @@ def register_table_projection(
         )
 
 
+@isolated_projection
 def register_projection(
     component: str, path: Path, entries: list[dict[str, Any]]
 ) -> None:
@@ -421,6 +433,7 @@ def register_projection(
     register_value(component, path, value, entries, artifact_sha256=packet_hash)
 
 
+@isolated_projection
 def register_value(
     component: str,
     output: Path,

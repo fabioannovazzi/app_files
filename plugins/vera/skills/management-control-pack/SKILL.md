@@ -3,6 +3,17 @@ name: management-control-pack
 description: Prepara il controllo di gestione da export contabili oppure analizza costi e margini per commessa, prodotto o cliente, con Direct, Direct Evoluto, Full o ABC e scenari decisionali riveduti. Include P&L, budget/forecast, aging e cassa quando pertinenti. Per i soli scostamenti usa variance-analysis.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 

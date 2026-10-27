@@ -772,12 +772,17 @@ function handle(message) {
       const args = message.params.arguments || {};
       const reporting = definition._meta.ui.visibility.includes("model") && args.work_ref;
       let binding = null;
+      let reportingFailure = null;
+      const failedReporting = stage => ({
+        status: "unavailable", code: "archive_reporting_unavailable",
+        operation: definition.name, failure_stage: stage, response_delivered: true,
+        measurement_gap: true, retry_action: "retry_reporting_only",
+      });
       if (reporting) {
         try {
           binding = bridge("__bind_model_output", { work_ref: args.work_ref, operation: definition.name });
         } catch {
-          return response({ isError: true, content: [{ type: "text", text:
-            "Vera could not bind this request to its outgoing-data record. The case payload was not returned." }] });
+          reportingFailure = failedReporting("before_tool_start");
         }
       }
       let result;
@@ -792,8 +797,12 @@ function handle(message) {
         try {
           bridge("__record_model_output", { work_ref: args.work_ref, operation: definition.name, payload: modelPayload, binding });
         } catch {
-          throw new Error("Vera could not save this run's outgoing-data record. The case payload was not returned.");
+          reportingFailure ||= failedReporting("after_tool_return");
         }
+      }
+      if (reportingFailure) {
+        const { withReportingFailure } = require("../scripts/archive_emission_mcp.cjs");
+        result = withReportingFailure(result, reportingFailure);
       }
       return response(result);
     }

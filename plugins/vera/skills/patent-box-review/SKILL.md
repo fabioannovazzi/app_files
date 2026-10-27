@@ -3,6 +3,17 @@ name: patent-box-review
 description: Prepare software, patent and design evidence, reviewed ledger costs and control proposals; export draft Word/PDF dossiers and retain user confirmation of exact proposals. Real calculations require current reviewed sources and user confirmation of the exact proposal.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 
