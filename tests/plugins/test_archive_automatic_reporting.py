@@ -1070,7 +1070,10 @@ def test_acquisition_registers_only_verified_originals_in_its_archive_run(
         json.dumps(
             {
                 "01234567890": {
-                    "context_path": str(Path(loaded["run_root"]) / "context.json")
+                    "context_path": str(Path(loaded["run_root"]) / "context.json"),
+                    "client_id": client_case.client_id,
+                    "engagement_id": client_case.engagement_id,
+                    "run_id": loaded["run"]["run_id"],
                 }
             }
         )
@@ -1514,16 +1517,24 @@ def test_table_with_missing_source_evidence_remains_unaccounted(
 
 
 @pytest.mark.parametrize("cells", [[], [[[]], [[]]], [[[], []]]])
-def test_table_registration_rejects_incomplete_output_cell_maps(
+def test_incomplete_cell_map_preserves_output_without_registering_false_provenance(
     table_projection_case, cells
 ):
     from archive_projection import register_table_projection
+    from archive_report_store import RunStore
 
     path = Path(table_projection_case["output_dir"]) / "derived.csv"
     path.write_text("amount\n7\n")
 
-    with pytest.raises(ValueError, match="exact shape"):
-        register_table_projection("journal-bank-reconciliation", path, cells)
+    register_table_projection("journal-bank-reconciliation", path, cells)
+
+    assert path.read_text() == "amount\n7\n"
+    root = Path(table_projection_case["run_root"])
+    assert not any(
+        event["kind"] == "prepared_table_projection"
+        for event in RunStore(root).events()
+    )
+    assert list((root / "reporting/gaps").glob("*.json"))
 
 
 @pytest.mark.parametrize("table_projection_case", ["xlsx"], indirect=True)

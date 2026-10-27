@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
-      "sha256": "b0409060ec3b9f7cc65a9088fcd46ebd1d028c8c97bbaa2ec0ab5152e6cd8e38"
+      "sha256": "57489cf773a1815a47821b4d5cfaa955b94bc0be3b395456e20f1c07e7d07eb8"
     },
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
@@ -117,7 +117,7 @@
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/decisions.py",
@@ -136,6 +136,10 @@
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
     },
     {
+      "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
+    },
+    {
       "path": "modules/concordato-plan-review/vendor/modules/vera_assurance/relationships.py",
       "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
@@ -149,7 +153,7 @@
     },
     {
       "path": "skills/mparanza-concordato-plan-review/SKILL.md",
-      "sha256": "8d17368dce4479551e856b497858edcac0c85ee49fedac34bbe1b42235ffd3d2"
+      "sha256": "14ff35f5bd4f3b6237f9a8e66c98c5a4dcc294b48eb7d020e086cf60c79ccbad"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -249,7 +253,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -266,6 +270,10 @@
     {
       "path": "vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -610,5 +618,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a17b81cec6cb79ac8289d96f4cf8a4bd168df6739d48c2352bf816ab8c892300"
+  "canonical_course_sha256": "b0bbb28c33dda4464916b1628228a27d50b63f251a2567d35883cf93ad89f69a"
 }

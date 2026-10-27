@@ -245,24 +245,36 @@ def test_incidental_file_does_not_prevent_allocating_independent_run(archive):
     assert incidental.read_bytes() == b"synthetic directory metadata"
 
 
-@pytest.mark.parametrize("linked_source", ["snapshot", "execution"])
-def test_linked_input_parent_cannot_supply_run_execution_context(
-    archive, tmp_path, linked_source
+def test_linked_original_snapshot_does_not_reopen_admitted_input_gate(
+    archive, tmp_path
 ):
     core, client, cid, eid, first, second, state, path = archive
-    engagement = client / "Vera/engagements" / eid
-    parents = {
-        "snapshot": engagement / "inputs",
-        "execution": Path(second["run_root"]) / "inputs",
-    }
-    source = parents[linked_source]
+    source = client / "Vera/engagements" / eid / "inputs"
     outside = tmp_path / "Outside source bytes"
     source.rename(outside)
     source.symlink_to(outside, target_is_directory=True)
     run_manifest = Path(second["run_root"]) / "run.json"
     before = run_manifest.read_bytes()
 
-    with pytest.raises(core.ledger.LedgerError, match="real directory"):
+    loaded = core.ledger.load_run(client, eid, second["run"]["run_id"])
+
+    retained = Path(loaded["context"]["input_bindings"][0]["path"])
+    assert retained.is_relative_to(Path(second["run_root"]))
+    assert retained.read_bytes() == b"synthetic input"
+    assert source.is_symlink()
+    assert run_manifest.read_bytes() == before
+
+
+def test_linked_execution_parent_cannot_supply_run_execution_context(archive, tmp_path):
+    core, client, cid, eid, first, second, state, path = archive
+    source = Path(second["run_root"]) / "inputs"
+    outside = tmp_path / "Outside source bytes"
+    source.rename(outside)
+    source.symlink_to(outside, target_is_directory=True)
+    run_manifest = Path(second["run_root"]) / "run.json"
+    before = run_manifest.read_bytes()
+
+    with pytest.raises(core.ledger.LedgerError, match="symbolic links"):
         core.ledger.load_run(client, eid, second["run"]["run_id"])
 
     assert core.ledger.load_engagement_manifest(client, eid)["status"] == "open"

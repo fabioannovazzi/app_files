@@ -3,6 +3,17 @@ name: vouching
 description: Use to check scritture campionate against fatture FatturaPA XML or supporting PDFs, using the qualified sample and lineage from Journal Sampling. Produces source-linked checks, exceptions and missing-document requests for those entries. To select the sample use journal-sampling; to review the whole passive-invoice population against booked entries use purchase-invoice-review.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 

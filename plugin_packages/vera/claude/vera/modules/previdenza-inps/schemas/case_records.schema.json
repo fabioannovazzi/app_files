@@ -190,7 +190,8 @@
                     "confirmed_by_role": {
                       "enum": [
                         "authorized_user",
-                        "professional_reviewer"
+                        "professional_reviewer",
+                        "agent_reviewer"
                       ]
                     },
                     "recorded_at": {

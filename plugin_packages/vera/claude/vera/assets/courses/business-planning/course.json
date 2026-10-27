@@ -150,7 +150,7 @@
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/business-planning/vendor/modules/vera_assurance/decisions.py",
@@ -169,6 +169,10 @@
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
     },
     {
+      "path": "modules/business-planning/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
+    },
+    {
       "path": "modules/business-planning/vendor/modules/vera_assurance/relationships.py",
       "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
     },
@@ -182,7 +186,7 @@
     },
     {
       "path": "skills/mparanza-business-planning/SKILL.md",
-      "sha256": "a24dfce1a8a4fa5191fbc19d39ad6250e902843eac0a5bf6ee1dfbce1a5534a0"
+      "sha256": "6d8d5d941f42e9cb117502899a597368e88dec16fd9d89d20b25ec661c217071"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -282,7 +286,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -299,6 +303,10 @@
     {
       "path": "vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -538,5 +546,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "598bd85e88677ac859fbd871c659db847b5a7cec0468d66436f3b368e5a09ada"
+  "canonical_course_sha256": "ca807a8b2148908159b0ff440595e107623289fb8f713f4b5cabc4eb2990ccb9"
 }

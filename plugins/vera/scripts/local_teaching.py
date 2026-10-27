@@ -27,6 +27,7 @@ from local_onboarding import (
     _text,
     _write,
     eligible_workflows,
+    resolve_course_path,
     teaching_contract,
 )
 
@@ -94,8 +95,10 @@ class TeachingStore(Store):
         _pair(state.get("pair"))
         for field in ("title", "goal", "updated_at"):
             _text(state.get(field), field)
-        if state.get("directory") != str(self.sessions / session_id / "files"):
+        current = self.sessions / session_id / "files"
+        if resolve_course_path(self.root, state.get("directory", "")) != current:
             raise OnboardingError("Teaching artifact directory changed")
+        state["directory"] = str(current)
         if state["phase"] == "complete" and (
             not state.get("demo")
             or not state.get("understanding")
@@ -578,7 +581,7 @@ def main(argv: list[str] | None = None) -> int:
             json.dumps({**exc.as_dict(), "workspace": store.workspace()}) + "\n"
         )
         return 2
-    except (OnboardingError, OSError) as exc:
+    except (ValueError, OSError) as exc:
         sys.stdout.write(json.dumps({"status": "blocked", "error": str(exc)}) + "\n")
         return 2
 

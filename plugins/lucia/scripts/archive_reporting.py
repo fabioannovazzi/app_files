@@ -124,8 +124,27 @@ def begin_run(loaded: Mapping[str, Any]) -> dict[str, Any]:
     return snapshot_run(loaded)
 
 
-@serialized_run
 def metadata_result(
+    loaded: Mapping[str, Any], result: dict[str, Any]
+) -> dict[str, Any]:
+    """Deliver a committed lifecycle result even when its reporting write fails."""
+    from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
+
+    try:
+        return _metadata_result(loaded, result)
+    except REPORTING_ERRORS as error:
+        reporting = reporting_failure(
+            loaded["run"]["workflow_id"],
+            {},
+            error,
+            stage="metadata_delivery",
+            root=Path(loaded["run_root"]),
+        )
+        return {**result, "reporting": reporting}
+
+
+@serialized_run
+def _metadata_result(
     loaded: Mapping[str, Any], result: dict[str, Any]
 ) -> dict[str, Any]:
     """Mark exact Archive lifecycle metadata without authoring exposure evidence."""
@@ -205,8 +224,54 @@ def _pieces(value: Any) -> list[Any]:
     return [value]
 
 
-@serialized_run
 def read_artifact(
+    loaded: Mapping[str, Any],
+    path: Path,
+    *,
+    offset: int = 0,
+    limit: int | None = None,
+    columns: list[int] | None = None,
+) -> dict[str, Any]:
+    """Read the selected artifact; collection faults cannot suppress its content."""
+    from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
+
+    try:
+        return _read_artifact(loaded, path, offset=offset, limit=limit, columns=columns)
+    except REPORTING_ERRORS as error:
+        # Recheck actual scope and bytes without relying on collector state. Data
+        # and ownership faults still raise; only the reporting dependency is optional.
+        root = Path(loaded["run_root"])
+        path = path.expanduser()
+        path = (path if path.is_absolute() else root / path).absolute()
+        inputs = loaded["context"]["input_bindings"]
+        binding = next((item for item in inputs if item["path"] == str(path)), None)
+        if any(item.is_symlink() for item in (path, *path.parents)) or (
+            binding is None
+            and not path.resolve().is_relative_to(Path(loaded["output_dir"]).resolve())
+        ):
+            raise ValueError(
+                "Read must use a bound input or this run's output"
+            ) from error
+        source = measure_source(
+            path, source_id="selected_artifact", role="input" if binding else "output"
+        )
+        if binding and source["sha256"] != binding["sha256"]:
+            raise ValueError(
+                "The selected input no longer matches its admitted bytes"
+            ) from error
+        data, _ = read_selection(source, offset=offset, limit=limit, columns=columns)
+        reporting = reporting_failure(
+            loaded["run"]["workflow_id"],
+            {},
+            error,
+            stage="artifact_delivery",
+            root=root,
+        )
+        return {"data": data, "reporting": reporting}
+
+
+@serialized_run
+def _read_artifact(
     loaded: Mapping[str, Any],
     path: Path,
     *,
@@ -453,6 +518,8 @@ def _report(
 ) -> dict[str, Any]:
     events = [item for item in store.events() if item["kind"] == "vera_send"]
     errors = list(state["errors"])
+    if any((store.root / "gaps").glob("*.json")):
+        errors.append("reporting_operation_failed_measurements_incomplete")
     if any(item["unmapped"] for item in events):
         errors.append("sent_data_has_no_source_coordinates")
     sources = []

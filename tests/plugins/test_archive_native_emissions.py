@@ -8,6 +8,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from tests.plugins.test_archive_automatic_reporting import (
     archive_script_imports,
     reporting_runtime,
@@ -22,7 +24,7 @@ from tests.plugins.test_vera_native_workspace import (
 )
 
 
-def assert_native_send(case, item_type):
+def assert_native_send(case, item_type, *, recorder_failure=None, tmp_path=None):
     from archive_report_store import RunStore, digest
 
     service, binding = case[:2]
@@ -47,8 +49,20 @@ def assert_native_send(case, item_type):
     store = RunStore(Path(loaded["run_root"]))
     previous = {event["event_id"] for event in store.events()}
 
+    command = ["node", str(SERVER)]
+    if recorder_failure:
+        shim = tmp_path / "unavailable-recorder.cjs"
+        shim.write_text(
+            "const cp = require('node:child_process'); const original = cp.spawnSync;"
+            "cp.spawnSync = (command, args, options) => {"
+            "const request = options?.input && JSON.parse(options.input);"
+            f"if (request?.tool === {json.dumps(recorder_failure)}) "
+            "return {status: 1, stderr: 'Synthetic recorder unavailable'};"
+            "return original(command, args, options); };"
+        )
+        command = ["node", "--require", str(shim), str(SERVER)]
     completed = subprocess.run(
-        ["node", str(SERVER)],
+        command,
         input=json.dumps(request) + "\n",
         text=True,
         capture_output=True,
@@ -61,6 +75,10 @@ def assert_native_send(case, item_type):
     assert result.get("isError") is not True, result
     assert result["structuredContent"]["work_ref"] == binding["work_ref"]
     assert result["structuredContent"]["untrusted_evidence"]
+    if recorder_failure:
+        assert result["_meta"]["reporting"]["status"] == "unavailable"
+        assert result["_meta"]["reporting"]["response_delivered"] is True
+        return
     emissions = [
         event
         for event in store.events()
@@ -73,6 +91,15 @@ def assert_native_send(case, item_type):
 
 def test_native_sampling_selection_is_recorded(sampling_workspace):
     assert_native_send(sampling_workspace, "sampled_entry")
+
+
+@pytest.mark.parametrize("failure", ["__bind_model_output", "__record_model_output"])
+def test_native_workspace_delivers_selected_evidence_when_reporting_fails(
+    sampling_workspace, tmp_path, failure
+):
+    assert_native_send(
+        sampling_workspace, "sampled_entry", recorder_failure=failure, tmp_path=tmp_path
+    )
 
 
 def test_native_vouching_selection_is_recorded(vouching_workspace):

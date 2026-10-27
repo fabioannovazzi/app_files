@@ -28,6 +28,7 @@ from treasury_inputs import (  # noqa: E402
 from treasury_session import (  # noqa: E402
     create_session,
     current_record,
+    current_source_paths,
     review_session,
     save_scenario,
 )
@@ -102,7 +103,7 @@ def main(argv: list[str] | None = None) -> int:
             )
         else:
             state, record = current_record(output)
-            source_paths = [Path(row["path"]) for row in state["sources"]]
+            source_paths = current_source_paths(output, state)
             validate_context(args.client_engagement, source_paths)
             if args.command == "serve":
                 from treasury_server import serve

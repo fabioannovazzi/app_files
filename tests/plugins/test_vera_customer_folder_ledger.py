@@ -1158,7 +1158,7 @@ def test_tampered_controlled_copy_blocks_run_preparation(
         )
 
 
-def test_tampered_input_receipt_blocks_an_existing_run(
+def test_tampered_original_receipt_does_not_reopen_admitted_run_inputs(
     client_case: SimpleNamespace,
     archive_core: ModuleType,
 ) -> None:
@@ -1172,15 +1172,33 @@ def test_tampered_input_receipt_blocks_an_existing_run(
         / client_case.imported["input_receipt"]["receipt_relative_path"]
     )
     receipt = json.loads(receipt_path.read_text(encoding="utf-8"))
+    original_name = receipt["original_name"]
     receipt["original_name"] = "changed.txt"
     receipt_path.write_text(json.dumps(receipt), encoding="utf-8")
 
-    with pytest.raises(archive_core.ArchiveError, match="content digest is stale"):
-        archive_core.start_studio_client_workflow(
-            client_case.client_id,
+    started = archive_core.start_studio_client_workflow(
+        client_case.client_id,
+        client_case.engagement_id,
+        prepared["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert started["run"]["status"] == "running"
+    binding = prepared["client_engagement"]["input_bindings"][0]
+    retained = (
+        Path(prepared["client_engagement"]["run_root"])
+        / "source-receipts"
+        / f"{binding['receipt_sha256']}.json"
+    )
+    assert json.loads(retained.read_text())["original_name"] == original_name
+    assert json.loads(receipt_path.read_text())["original_name"] == "changed.txt"
+    with pytest.raises(
+        archive_core.ledger.LedgerError, match="content digest is stale"
+    ):
+        archive_core.ledger.load_input_receipt(
+            client_case.client_root,
             client_case.engagement_id,
-            prepared["run"]["run_id"],
-            state_dir=client_case.state_dir,
+            client_case.imported["input_id"],
         )
 
 

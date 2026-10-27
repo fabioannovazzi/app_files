@@ -23,7 +23,7 @@
     ],
     "course_sha256": "e3995fb7117f3e08f80870d588b719f476d69366f0d614bb8c3d73de97ce1242"
   },
-  "course_sha256": "f9de4d1da30cb45880e0eac92d6776c762b4179124f44470c350d376aecd93d3",
+  "course_sha256": "817802948cc87b49c21bd5aa15c97d7259df17181155f8a4b2a6dd126c780939",
   "journal_pdf_source_binding_review_20261009": {
     "reviewed_at": "2026-10-09T17:33:15.638425+00:00",
     "reviewer": "Codex source-bound PDF workflow review",
@@ -324,5 +324,21 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "work_continuity_source_binding_20261027": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "previous_course_sha256": "f9de4d1da30cb45880e0eac92d6776c762b4179124f44470c350d376aecd93d3",
+    "current_course_sha256": "817802948cc87b49c21bd5aa15c97d7259df17181155f8a4b2a6dd126c780939",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
   }
 }

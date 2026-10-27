@@ -46,6 +46,7 @@ const REPORT_BUILDER_SHARED_IMPLEMENTATION_PATHS = [
   "money.py",
   "relationships.py",
   "review_output_transaction.cjs",
+  "recovery.py",
   "serialization.py",
 ];
 const REVIEW_TRANSACTION_RUNTIME = (() => {

@@ -23,7 +23,7 @@ const TOOLS = [
   tool("agenzia_workspace_save","Conserva selezione","Persist an exact-revision draft using only clients from the opened source plan. Saving is separate from launch.",schema({workspace_ref:string,revision:string,plan:{type:"object"}},["workspace_ref","revision","plan"]),true),
   tool("agenzia_workspace_start","Avvia acquisizione","Launch the same local acquisition worker for this exact saved plan. The operator logs in in visible Chrome; credentials never pass through this tool.",schema({workspace_ref:string,revision:string,request_id:string},["workspace_ref","revision","request_id"]),true),
   tool("agenzia_workspace_status","Stato acquisizione","Read a selected saved run. Model-visible output contains status and counts; client rows, original paths and financial evidence stay in private app metadata.",schema({...scope,offset:{type:"integer",minimum:0},exceptions_only:{type:"boolean"}},["workspace_ref","run_id"]),false,false),
-  ...["continue","cancel","resume","archive"].map(action=>tool(`agenzia_workspace_${action}`,{continue:"Ho completato l'accesso",cancel:"Interrompi acquisizione",resume:"Riprendi acquisizione",archive:"Importa in Studio Archive"}[action],{continue:"Continue this waiting run after the operator completed authentication in Chrome.",cancel:"Request cooperative cancellation; retained originals and results remain available.",resume:"Re-enumerate the same requested period in a new run, reusing only locally verified originals.",archive:"Import verified originals through the existing Studio Archive API and explicit client/engagement bindings; never infer client identity."}[action],schema(action==="resume"?{...scope,request_id:string}:scope,action==="resume"?["workspace_ref","run_id","request_id"]:["workspace_ref","run_id"]),true)),
+  ...["continue","cancel","resume","archive"].map(action=>tool(`agenzia_workspace_${action}`,{continue:"Ho completato l'accesso",cancel:"Interrompi acquisizione",resume:"Riprendi acquisizione",archive:"Importa in Studio Archive"}[action],{continue:"Continue this waiting run after the operator completed authentication in Chrome.",cancel:"Request cooperative cancellation; retained originals and results remain available.",resume:"Resume the selected acquisition in a new worker attempt, retaining its Archive runs and reusing locally verified originals.",archive:"Import verified originals through the existing Studio Archive API and explicit client/engagement bindings; never infer client identity."}[action],schema(action==="resume"?{...scope,request_id:string}:scope,action==="resume"?["workspace_ref","run_id","request_id"]:["workspace_ref","run_id"]),true)),
   tool("agenzia_workspace_f24","Prepara prospetto F24","Generate a non-submittable PDF working draft from the exact acquired report and explicitly reviewed residual amounts, due dates and notes. Does not send or pay.",schema({...scope,revision:string,review:{type:"object"}},["workspace_ref","run_id","revision","review"]),true),
   tool("agenzia_workspace_download","Scarica riepilogo","Return one allowed existing report file to the private app for local download.",schema({...scope,name:{enum:["riepilogo.xlsx","fatture.csv","model_data_report.md"]}},["workspace_ref","run_id","name"])),
 ];
@@ -66,7 +66,12 @@ function resultFor(data,ref,binding=null) {
   for(const key of ["downloaded","verified_existing","failed_documents","scopes_complete","scopes_expected","scopes_incomplete","scopes_not_attempted","cash_review_issue_count","error"])
     if(data[key]!==undefined)summary[key]=data[key];
   const modelPayload={content:[{type:"text",text:JSON.stringify(summary)}],structuredContent:summary};
-  if(binding&&data.run_id)bridge(binding,"record-output",{run_id:data.run_id,summary,model_payload:modelPayload});
+  if(binding&&data.run_id){
+    let reporting;
+    try{reporting=bridge(binding,"record-output",{run_id:data.run_id,summary,model_payload:modelPayload}).reporting;}
+    catch{reporting={status:"unavailable",measurement_gap:true,stage:"mcp_delivery"};}
+    if(reporting){summary.reporting=reporting;modelPayload.content[0].text=JSON.stringify(summary);}
+  }
   return {...modelPayload,_meta:{agenzia:{...data,workspace_ref:ref}}};
 }
 function callTool(name,args) {

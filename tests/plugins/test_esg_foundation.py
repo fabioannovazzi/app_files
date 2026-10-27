@@ -311,11 +311,25 @@ def test_draft_writes_readable_and_structured_immutable_files(case):
     )
 
 
-@pytest.mark.parametrize("target", ["input", "state", "artifact"])
+def test_changed_original_input_preserves_saved_case(case):
+    artifact = draft(case, case.result["reference"])
+    state = case.esg.resume_case(case.context)
+    path = case.output / ("esg-draft-" + artifact["reference"]["sha256"] + ".md")
+    retained = path.read_bytes()
+    imported = Path(case.receipt["path"])
+    imported.write_text("{}")
+
+    resumed = case.esg.resume_case(case.context)
+
+    assert resumed["state_sha256"] == state["state_sha256"]
+    assert path.read_bytes() == retained
+    assert imported.read_text() == "{}"
+
+
+@pytest.mark.parametrize("target", ["state", "artifact"])
 def test_changed_bytes_block_resume(case, target):
     artifact = draft(case, case.result["reference"])
     paths = {
-        "input": Path(case.receipt["path"]),
         "state": case.output / "esg_state.json",
         "artifact": case.output
         / ("esg-draft-" + artifact["reference"]["sha256"] + ".md"),

@@ -273,13 +273,21 @@ def test_foreign_input_reference_is_rejected(case: SimpleNamespace) -> None:
         cnc.apply_request(case.context, update)
 
 
-def test_changed_input_bytes_reject_resume(case: SimpleNamespace) -> None:
+def test_changed_original_input_preserves_admitted_workflow_history(
+    case: SimpleNamespace,
+) -> None:
     cnc.apply_request(case.context, initial(case))
     imported = Path(case.receipt["path"])
+    original = imported.read_bytes()
     imported.write_text("Changed without an archive import")
 
-    with pytest.raises(ledger.LedgerError, match="no longer matches"):
-        ledger.load_workflow_history(case.root, case.engagement_id, cnc.WORKFLOW)
+    history = ledger.load_workflow_history(case.root, case.engagement_id, cnc.WORKFLOW)
+
+    assert history[0]["run_id"] == case.run["run"]["run_id"]
+    assert (
+        Path(case.run["context"]["input_bindings"][0]["path"]).read_bytes() == original
+    )
+    assert imported.read_text() == "Changed without an archive import"
 
 
 def test_resume_from_fresh_process_and_successor_run_preserves_case(

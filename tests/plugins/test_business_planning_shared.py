@@ -93,6 +93,15 @@ def test_registered_business_workflow_preserves_shared_analysis_contract() -> No
         )
         assert onboarding_blocks == 1
         if product == "VERA":
+            normalized, continuity_blocks = re.subn(
+                r"\n<!-- VERA_WORK_CONTINUITY_BEGIN -->\n.*?"
+                r"<!-- VERA_WORK_CONTINUITY_END -->\n\n",
+                "",
+                normalized,
+                count=1,
+                flags=re.DOTALL,
+            )
+            assert continuity_blocks == 1
             normalized, knowledge_blocks = re.subn(
                 r"<!-- VERA_CONNECTED_KNOWLEDGE_BEGIN -->\n.*?"
                 r"<!-- VERA_CONNECTED_KNOWLEDGE_END -->\n\n",

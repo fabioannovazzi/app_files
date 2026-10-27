@@ -30,6 +30,14 @@ CHECK_DEPENDENCIES_PATH = COMPONENT_ROOT / "scripts" / "check_dependencies.py"
 MCP_SERVER_PATH = COMPONENT_ROOT / "mcp" / "server.cjs"
 
 
+@pytest.fixture(autouse=True)
+def archive_import_roots(monkeypatch):
+    """Keep late imports isolated from other tests' temporary module paths."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    monkeypatch.syspath_prepend(str(COMPONENT_ROOT / "scripts"))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
+
+
 @pytest.fixture(scope="module", autouse=True)
 def isolated_mcp_launcher(tmp_path_factory):
     """Exercise managed routing without installing shared dependencies in tests."""
@@ -517,8 +525,8 @@ def test_new_client_creation_derives_folder_and_defers_relationship_setup(
     assert result["client"]["registration_status"] == "registered"
     assert result["client_folder"]["scope_relative_dir"] == "Zecca SPA"
     assert (archive_root / "Zecca SPA").is_dir()
-    assert result["relationship_setup_status"] == "new_client_workflow_pending"
-    assert result["next_workflow"] == "new-client"
+    assert result["relationship_setup_status"] == "not_requested"
+    assert result["next_workflow"] is None
 
 
 def test_create_engagement_does_not_assume_a_document_type(
@@ -2459,6 +2467,8 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
         "verify_studio_run_report",
         "start_check_entries_from_sample",
         "start_studio_client_workflow",
+        "checkpoint_studio_client_workflow",
+        "restore_studio_client_workflow",
         "fail_studio_client_workflow",
         "cancel_studio_client_workflow",
         "finalize_studio_client_workflow",
@@ -2495,10 +2505,9 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
     workflow_enum = tool_by_name["prepare_studio_client_workflow"]["inputSchema"][
         "properties"
     ]["workflow_id"]["enum"]
-    # rating-legalita is already present only in the Python inventory on main.
-    # Preserve that unrelated known gap while requiring LIPE in the host schema.
+    # Every supported workflow must be selectable through the same host schema.
     assert "lipe" in workflow_enum
-    assert set(workflow_enum) | {"rating-legalita"} == set(EXPECTED_CLIENT_WORKFLOW_IDS)
+    assert set(workflow_enum) == set(EXPECTED_CLIENT_WORKFLOW_IDS)
     assert (
         tool_by_name["prepare_studio_client_workflow"]["annotations"]["idempotentHint"]
         is True

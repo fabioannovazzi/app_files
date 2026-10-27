@@ -139,3 +139,19 @@ helper changed: it now uses the shared Vera/Clara/Lucia register, host profiles,
 public-page contracts and actual-run report binding. Its technical-review purpose
 is unchanged. All existing Geneva judgments and professional acceptance limits
 are preserved; this release adds no Swiss legal or client-workflow qualification.
+
+
+## Work continuity catalogue binding — 27 October 2026
+
+The unpublished Vera 0.1.513 candidate retains all 55 function IDs and their
+existing Geneva assessment rows. Every entrypoint now references the shared
+continuity contract. The reviewed changes concern upfront prerequisites, retained
+execution inputs, general Archive destinations, recovery checkpoints and separate
+reporting failures. Routine technical review can record the agent that performed
+it; this does not supply professional adoption, signature or filing approval.
+
+This catalogue refresh binds those reviewed instruction changes and the canonical
+manifest. It does not change Geneva jurisdiction selection, professional methods
+or existing dispositions, and establishes no new Swiss professional acceptance.
+The source and recovery evidence is recorded in
+`docs/audits/vera-work-continuity-2026-10-27.md`.

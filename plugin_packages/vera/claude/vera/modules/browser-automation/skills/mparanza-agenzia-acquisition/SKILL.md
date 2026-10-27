@@ -241,8 +241,9 @@ call timeout. Poll the saved status at bounded intervals; report actual progress
 One destination permits one active worker. Never delete a lock to force a start.
 
 A failed or interrupted run retains its originals and per-record evidence.
-`resume` creates a new run for the same requested window, re-enumerates the portal
-and reuses only originals whose size and hash still match. Missing/corrupt originals
+`resume` creates a new worker attempt for the same requested window, retaining
+the existing professional Archive run IDs and bindings. It re-enumerates the
+portal and reuses only originals whose size and hash still match. Missing/corrupt originals
 are acquired again. A browser/session failure requires a fresh personal login.
 Cancellation is cooperative, so an in-progress browser action may finish first.
 Do not claim completeness when any scope is incomplete, unavailable or unattempted.

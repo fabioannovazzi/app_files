@@ -2811,3 +2811,20 @@ and 17 DOCX-rendered pages; independent LibreOffice recalculation matches all
 no learner comprehension, fresh installed-host or professional acceptance is
 claimed. Exact source and artifact fingerprints are in the business-valuation
 release review. No valuation-engine or shared course-framework behavior changed.
+
+## Work continuity source binding — 27 October 2026
+
+All 58 current compiled lessons retain every authored field from the exact
+historical snapshot identified by their existing review digest. Only `sources`
+changed. Fifty-seven snapshots match main `ea8e5fe4a`; bank reconciliation matches
+`5ed3ccd73` before the already-merged reviewed-tolerance inheritance fix.
+
+Root reviewed the shared continuity changes documented in
+`docs/audits/vera-work-continuity-2026-10-27.md`. Each review retains its historical
+editorial judgments, dates, reviewer identities, locale verdicts and artifact
+hashes, with a separate agent-attributed source-compatibility note and updated
+course digest. Teaching CI on `a609dcf7f` passed 1,711 tests (three skips), then
+correctly rejected the old review digests. The 81 release-evidence regressions
+and compiler check pass locally. Fresh final-head demo/practice JUnit evidence
+for the current digests remains required; this is not new learner, visual,
+installed-host or professional acceptance.

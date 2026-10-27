@@ -61,10 +61,10 @@
   "external_boundaries": [],
   "security_controls": [],
   "review": {
-    "reviewed_at": "2026-10-20",
+    "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c9a76a631eadd58c8f714225caac6f6e089542846c789a6c373d64177d6184c3"
+    "source_fingerprint": "90f46fa8ec77d4593b3eda21bc5c4d124db8cc290b04c4bbb1bb645a7ba0b6b9"
   },
   "governed_repository_paths": [
     "plugins/clara/skills/reporting-engine/SKILL.md"

@@ -217,10 +217,10 @@ def test_declaration_revision_cannot_reseal_changed_professional_bytes(
         revise_declaration(archive_core, client_case, loaded, declaration, initial)
 
 
-def test_retained_declaration_receipt_tampering_invalidates_the_bound_handoff(
+def test_later_upstream_receipt_tampering_preserves_the_admitted_handoff(
     archive_core, client_case
 ):
-    loaded, _, declaration, initial, downstream = declaration_revision_case(
+    loaded, output, declaration, initial, downstream = declaration_revision_case(
         archive_core, client_case
     )
     revise_declaration(archive_core, client_case, loaded, declaration, initial)
@@ -230,12 +230,24 @@ def test_retained_declaration_receipt_tampering_invalidates_the_bound_handoff(
     payload["artifacts"][0]["purpose"] = "Unrecorded replacement"
     receipt.write_text(json.dumps(payload))
 
-    with pytest.raises(archive_core.ledger.LedgerError, match="digest is stale"):
-        archive_core.ledger.load_run(
-            client_case.client_root,
-            client_case.engagement_id,
-            downstream["run"]["run_id"],
-        )
+    replayed = archive_core.ledger.load_run(
+        client_case.client_root,
+        client_case.engagement_id,
+        downstream["run"]["run_id"],
+    )
+
+    assert replayed["run"]["run_id"] == downstream["run"]["run_id"]
+    assert replayed["run"]["status"] == "prepared"
+    bound = next(
+        item
+        for item in replayed["context"]["input_bindings"]
+        if item.get("upstream_artifact_id") == "result"
+    )
+    assert Path(bound["path"]).read_bytes() == (output / "result.txt").read_bytes()
+    assert (
+        json.loads(receipt.read_text())["artifacts"][0]["purpose"]
+        == "Unrecorded replacement"
+    )
 
 
 def test_public_mcp_can_correct_review_ready_declarations(
@@ -466,7 +478,7 @@ def test_error_recorder_preserves_unrelated_or_inactive_report_state(
 
 
 @pytest.mark.parametrize("recorder_exit", [0, 1])
-def test_mcp_withholds_detailed_error_when_recording_write_fails(
+def test_mcp_retains_operation_error_when_recording_write_fails(
     tmp_path, monkeypatch, recorder_exit
 ):
     import tests.plugins.test_vera_studio_archive_component as component_tests
@@ -503,8 +515,9 @@ def test_mcp_withholds_detailed_error_when_recording_write_fails(
     )
 
     assert response["isError"] is True
-    assert response["structuredContent"]["error"]["code"] == "archive_reporting_failed"
-    assert "PRIVATE_UNRECORDED_ERROR" not in json.dumps(response)
+    assert response["structuredContent"]["error"]["code"] == "archive_operation_failed"
+    assert "PRIVATE_UNRECORDED_ERROR" in json.dumps(response)
+    assert response["_meta"]["reporting"]["status"] == "unavailable"
 
 
 def test_finalize_does_not_confuse_nested_outputs_with_run_relative_paths(

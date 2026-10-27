@@ -19,12 +19,17 @@ class ExecutionError(ValueError):
     """The supplied local run does not support this teaching checkpoint."""
 
 
-def _file(root: Path, value: Any) -> Path:
+def _file(root: Path, value: Any, previous_roots: tuple[Path, ...] = ()) -> Path:
     if not isinstance(value, str) or not value.strip():
         raise ExecutionError("Execution evidence needs a real local file path")
     path = Path(value)
     if not path.is_absolute():
         path = root / path
+    elif not path.is_relative_to(root):
+        for previous in previous_roots:
+            if path.is_relative_to(previous):
+                path = root / path.relative_to(previous)
+                break
     if any(part.is_symlink() for part in (path, *path.parents)):
         raise ExecutionError("Execution evidence must not use symlinks")
     path = path.resolve()
@@ -53,14 +58,16 @@ def _json(path: Path) -> dict[str, Any]:
     return value
 
 
-def _records(root: Path, values: Any, field: str) -> list[dict[str, str]]:
+def _records(
+    root: Path, values: Any, field: str, previous_roots: tuple[Path, ...] = ()
+) -> list[dict[str, str]]:
     if not isinstance(values, list) or not 1 <= len(values) <= 30:
         raise ExecutionError(f"Execution requires 1 to 30 {field}")
     records = []
     for value in values:
         if not isinstance(value, dict) or set(value) != {"path", "sha256"}:
             raise ExecutionError(f"Each {field} entry needs its path and SHA-256")
-        path = _file(root, value["path"])
+        path = _file(root, value["path"], previous_roots)
         digest = _digest(path)
         if value["sha256"] != digest:
             raise ExecutionError("Execution artifacts changed; inspect the current run")
@@ -95,10 +102,12 @@ def collect_execution(
     worker_thread_id: str | None,
     record_path: Any,
     artifacts: list[dict[str, str]],
+    previous_roots: tuple[Path, ...] = (),
+    recorded_sha256: str | None = None,
 ) -> dict[str, Any]:
     """Check exact scope, input/run/output hashes and prepared-file exclusion."""
     root = root.resolve()
-    path = _file(root, record_path)
+    path = _file(root, record_path, previous_roots)
     receipt = _json(path)
     if (
         receipt.get("schema") != "mparanza.teaching_execution.v1"
@@ -116,14 +125,20 @@ def collect_execution(
         or (worker_thread_id is not None and worker != worker_thread_id)
     ):
         raise ExecutionError("Execution belongs to another working thread")
+    # Saved phases retain their admitted procedure version. A later plugin update
+    # cannot require repeating that work; the exact receipt and files still must match.
+    if recorded_sha256 is not None and _digest(path) != recorded_sha256:
+        raise ExecutionError("Execution record changed; inspect the actual run")
     skill = plugin_root / "skills" / workflow / "SKILL.md"
-    if receipt.get("skill_sha256") != _digest(skill):
+    if recorded_sha256 is None and receipt.get("skill_sha256") != _digest(skill):
         raise ExecutionError(
             "The workflow changed; run and review its current procedure"
         )
-    inputs = _records(root, receipt.get("inputs"), "inputs")
-    native = _records(root, receipt.get("native_records"), "native run records")
-    outputs = _records(root, receipt.get("outputs"), "outputs")
+    inputs = _records(root, receipt.get("inputs"), "inputs", previous_roots)
+    native = _records(
+        root, receipt.get("native_records"), "native run records", previous_roots
+    )
+    outputs = _records(root, receipt.get("outputs"), "outputs", previous_roots)
     if outputs != artifacts:
         raise ExecutionError(
             "Lesson artifacts must match the execution's exact outputs"
@@ -163,7 +178,10 @@ def verify_execution(*, recorded: dict[str, Any], **kwargs: Any) -> None:
     if not isinstance(recorded, dict):
         raise ExecutionError("Record the actual working-thread execution first")
     current = collect_execution(
-        **kwargs, worker_thread_id=None, record_path=recorded.get("path")
+        **kwargs,
+        worker_thread_id=None,
+        record_path=recorded.get("path"),
+        recorded_sha256=recorded.get("sha256"),
     )
     if current != recorded:
         raise ExecutionError(

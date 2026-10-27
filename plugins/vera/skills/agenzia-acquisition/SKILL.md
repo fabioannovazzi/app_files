@@ -3,6 +3,17 @@ name: agenzia-acquisition
 description: Acquire Agenzia delle Entrate invoices, corrispettivi and quarterly bolli for selected delegated clients; resume verified originals, review exceptions and prepare an explicitly reviewed F24 working paper through Vera's single local worker and optional native panel.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 # Acquisizione Agenzia delle Entrate
 
 Resolve `../../modules/browser-automation` from this skill directory when it

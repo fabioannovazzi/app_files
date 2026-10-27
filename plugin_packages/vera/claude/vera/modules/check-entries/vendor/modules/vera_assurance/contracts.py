@@ -1413,6 +1413,14 @@ def _hydrate_v2_client_workflow_context(
     raw_bindings = _sequence(input_manifest.get("inputs"), label="run inputs")
     if not raw_bindings:
         raise AssuranceContractError("run input manifest is empty")
+    from .recovery import repair_run_inputs
+
+    try:
+        repair_run_inputs(context_path)
+    except (OSError, ValueError) as exc:
+        raise AssuranceContractError(
+            f"Admitted input recovery is unavailable: {exc}"
+        ) from exc
     bindings: list[dict[str, Any]] = []
     for index, raw_binding in enumerate(raw_bindings):
         item = _mapping(raw_binding, label=f"run inputs[{index}]")
@@ -1420,16 +1428,10 @@ def _hydrate_v2_client_workflow_context(
             item.get("source_relative_path"), label="source_relative_path"
         )
         source = client_root / relative_source
-        try:
-            if source.resolve(strict=True) != source:
-                raise AssuranceContractError(
-                    "bound workflow input path contains a symbolic link"
-                )
-        except OSError as exc:
-            raise AssuranceContractError(
-                f"bound workflow input path is unavailable: {exc}"
-            ) from exc
-        byte_count, sha256 = _stable_file_identity(source, label="bound workflow input")
+        # Preparation already admitted this exact source and copied its bytes.
+        # Reopening the original here would turn a passed intake into a late
+        # gate when the original moves or an upstream run is subsequently edited.
+        # The sealed input manifest retains provenance; execution uses its copy.
         relative_execution = _relative_path(
             item.get("execution_relative_path"), label="execution_relative_path"
         )
@@ -1449,10 +1451,6 @@ def _hydrate_v2_client_workflow_context(
         binding = _validate_v2_input_binding(
             {**item, "source_path": str(source), "path": str(execution)}
         )
-        if byte_count != binding["byte_count"] or sha256 != binding["sha256"]:
-            raise AssuranceContractError(
-                "bound workflow input no longer matches its receipt"
-            )
         if (
             execution_byte_count != binding["byte_count"]
             or execution_sha256 != binding["sha256"]
@@ -1460,81 +1458,6 @@ def _hydrate_v2_client_workflow_context(
             raise AssuranceContractError(
                 "run execution input no longer matches its receipt"
             )
-        receipt_path = client_root / binding["receipt_relative_path"]
-        try:
-            if receipt_path.resolve(strict=True) != receipt_path:
-                raise AssuranceContractError(
-                    "bound input receipt path contains a symbolic link"
-                )
-        except OSError as exc:
-            raise AssuranceContractError(
-                f"bound input receipt path is unavailable: {exc}"
-            ) from exc
-        receipt = _validated_sealed_manifest(
-            _read_bounded_regular_json(
-                receipt_path,
-                label="input receipt",
-                maximum_bytes=16 * 1024 * 1024,
-            ),
-            label="input receipt",
-        )
-        if receipt.get("content_sha256") != binding["receipt_sha256"]:
-            raise AssuranceContractError("bound input receipt digest is stale")
-        if binding["kind"] == "import":
-            if (
-                receipt.get("schema_version") != "vera.input_receipt.v1"
-                or receipt.get("client_id") != portable["client_id"]
-                or receipt.get("engagement_id") != portable["engagement_id"]
-                or receipt.get("input_id") != binding["binding_id"]
-                or receipt.get("sha256") != binding["sha256"]
-                or receipt.get("byte_count") != binding["byte_count"]
-                or receipt_path.parent / str(receipt.get("stored_name")) != source
-            ):
-                raise AssuranceContractError("import receipt does not match its input")
-        else:
-            if (
-                receipt.get("schema_version") != "vera.artifact_manifest.v1"
-                or receipt.get("client_id") != portable["client_id"]
-                or receipt.get("engagement_id") != portable["engagement_id"]
-                or receipt.get("run_id") != binding["upstream_run_id"]
-                or receipt.get("workflow_id") != binding["upstream_workflow_id"]
-            ):
-                raise AssuranceContractError("upstream artifact manifest is invalid")
-            upstream_run_manifest = _validated_portable_run_manifest(
-                _read_bounded_regular_json(
-                    receipt_path.parent / "run.json", label="upstream run manifest"
-                ),
-                label="upstream run manifest",
-            )
-            if (
-                upstream_run_manifest["client_id"] != portable["client_id"]
-                or upstream_run_manifest["engagement_id"] != portable["engagement_id"]
-                or upstream_run_manifest["run_id"] != binding["upstream_run_id"]
-                or upstream_run_manifest["workflow_id"]
-                != binding["upstream_workflow_id"]
-                or upstream_run_manifest["status"]
-                not in {"ready_for_review", "completed"}
-            ):
-                raise AssuranceContractError(
-                    "upstream run is no longer available for handoff"
-                )
-            artifacts = _sequence(receipt.get("artifacts"), label="upstream artifacts")
-            artifact = next(
-                (
-                    candidate
-                    for candidate in artifacts
-                    if isinstance(candidate, Mapping)
-                    and candidate.get("artifact_id") == binding["upstream_artifact_id"]
-                ),
-                None,
-            )
-            if (
-                artifact is None
-                or artifact.get("sha256") != binding["sha256"]
-                or artifact.get("byte_count") != binding["byte_count"]
-                or receipt_path.parent / "outputs" / str(artifact.get("path")) != source
-            ):
-                raise AssuranceContractError("upstream artifact binding is stale")
         bindings.append(binding)
     if len({item["binding_id"] for item in bindings}) != len(bindings):
         raise AssuranceContractError("run input bindings are duplicated")
@@ -1575,7 +1498,7 @@ def load_client_engagement_context_file(
         raise AssuranceContractError("allowed_statuses must be a status sequence")
     normalized_statuses = frozenset(allowed_statuses)
     readable_statuses = frozenset(
-        {"running", "ready_for_review", "completed", "failed", "cancelled"}
+        {"prepared", "running", "ready_for_review", "completed", "failed", "cancelled"}
     )
     if not normalized_statuses or not normalized_statuses.issubset(readable_statuses):
         raise AssuranceContractError(

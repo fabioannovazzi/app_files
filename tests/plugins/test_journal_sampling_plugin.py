@@ -166,6 +166,9 @@ TRANSITIVE_IMPLEMENTATION_ATTACKS = [
 
 
 def _load_customer_ledger() -> ModuleType:
+    shared = str(ROOT / "plugins/_shared/vendor/modules")
+    if shared not in sys.path:
+        sys.path.insert(0, shared)
     path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
     module_name = "test_journal_sampling_customer_ledger"
     existing = sys.modules.get(module_name)

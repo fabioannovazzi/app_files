@@ -1213,16 +1213,20 @@ jobs:
           tests/plugins/test_studio_archive_adoption.py
           tests/plugins/test_studio_archive_concurrency.py
           tests/plugins/test_archive_fault_isolation.py
+          tests/plugins/test_archive_work_recovery.py
+          tests/plugins/test_studio_archive_creation_recovery.py
+          tests/plugins/test_studio_archive_mcp_continuity.py
           tests/plugins/test_vera_studio_archive_gmail_routing.py
           tests/plugins/test_vera_standalone_work.py
           tests/plugins/test_cowork_archive_session.py
+          --cov=vera_assurance.recovery --cov-report=term-missing --cov-fail-under=80
       - name: Verify negotiation delivery and immutable round successors
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_studio_archive_component.py::test_negotiation_round_retains_delivery_and_starts_a_separate_successor
       - name: Check added helper quality
         run: |
-          python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
-          python -m isort --check-only plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py
-          python -m bandit -q -ll plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/vera/scripts/standalone_work.py
+          python -m black --check plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m isort --check-only plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py tests/plugins/test_studio_archive_adoption.py tests/plugins/test_vera_standalone_work.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py
+          python -m bandit -q -ll plugins/studio-archive/scripts/archive_preferences.py plugins/_shared/vendor/modules/vera_assurance/contracts.py plugins/_shared/vendor/modules/vera_assurance/recovery.py plugins/vera/scripts/standalone_work.py

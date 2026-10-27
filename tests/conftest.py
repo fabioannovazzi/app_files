@@ -36,8 +36,12 @@ _RUNTIME_IMPORT_SNAPSHOTS: dict[
 @pytest.fixture
 def vera_workflow_workspace(
     tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
 ) -> Callable[[str], dict[str, Any]]:
     """Build one real running v2 customer-folder context for Vera CLI tests."""
+
+    # Import cleanup between tests removes this root while the ledger is cached.
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
 
     created = 0
     engagements: dict[str, str] = {}

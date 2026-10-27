@@ -33,6 +33,9 @@ class Links(HTMLParser):
 
 
 def case(tmp_path: Path) -> tuple[Path, str, str, dict]:
+    shared_modules = str(SCRIPTS.parents[1] / "_shared/vendor/modules")
+    if shared_modules not in sys.path:
+        sys.path.insert(0, shared_modules)
     root = tmp_path / "Cliente sintetico"
     root.mkdir()
     cid = "client_" + "1" * 24

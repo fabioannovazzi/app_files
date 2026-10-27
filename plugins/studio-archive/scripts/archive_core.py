@@ -77,6 +77,8 @@ __all__ = [
     "SourceChangedError",
     "check_studio_import_sources",
     "cancel_studio_client_workflow",
+    "checkpoint_studio_client_workflow",
+    "restore_studio_client_workflow",
     "close_studio_client_engagement",
     "complete_studio_client_workflow",
     "configure_archive",
@@ -2221,6 +2223,7 @@ def set_studio_client_identity(
     legal_names: Sequence[str] = (),
     tax_identifiers: Sequence[str] = (),
     replace_orphaned_scope_id: str | None = None,
+    general_workspace: bool = False,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Replace one scope's confirmed private Gmail identity profile."""
@@ -2303,7 +2306,9 @@ def set_studio_client_identity(
     normalized_emails = _normalize_email_addresses(email_addresses)
     normalized_names = _normalize_legal_names(legal_names)
     normalized_tax_ids = _normalize_tax_identifiers(tax_identifiers)
-    if not (normalized_emails or normalized_names or normalized_tax_ids):
+    if not general_workspace and not (
+        normalized_emails or normalized_names or normalized_tax_ids
+    ):
         raise ArchiveError(
             "Configure at least one confirmed email address, legal name, "
             "or tax identifier."
@@ -2406,9 +2411,10 @@ def create_studio_client(
     *,
     email_addresses: Sequence[str] = (),
     tax_identifiers: Sequence[str] = (),
+    general_workspace: bool = False,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Create one registered client folder after the user chooses New client."""
+    """Create an explicitly selected archive destination, without onboarding."""
 
     private_state = _state_dir(state_dir)
     stored = _load_config(private_state, validate_scope_roots=False)
@@ -2445,7 +2451,7 @@ def create_studio_client(
             client_id=client_id,
             scope_id=scope.scope_id,
             email_addresses=normalized_emails,
-            legal_names=normalized_names,
+            legal_names=() if general_workspace else normalized_names,
             tax_identifiers=normalized_tax_ids,
             updated_at=_now_iso(),
         )
@@ -2476,9 +2482,10 @@ def create_studio_client(
         "status": "created",
         "client": _client_directory_record(record, scope=scope),
         "client_folder": folder["client_folder"],
-        "relationship_setup_status": "new_client_workflow_pending",
+        "relationship_setup_status": "not_requested",
+        "workspace_kind": "general" if general_workspace else "client",
         "source_archive_mutated": True,
-        "next_workflow": "new-client",
+        "next_workflow": None,
     }
 
 
@@ -2487,6 +2494,7 @@ def create_studio_client_engagement(
     client_id: str,
     engagement_label: str,
     *,
+    idempotency_key: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Create one durable engagement inside the selected customer folder."""
@@ -2497,11 +2505,15 @@ def create_studio_client_engagement(
     ]
     client_root = Path(folder["client_root"])
     try:
-        engagement = ledger.create_engagement(
-            client_root,
-            client_id,
-            _normalize_engagement_label(engagement_label),
-        )
+        label = _normalize_engagement_label(engagement_label)
+        if idempotency_key is None:
+            engagement = ledger.create_engagement(client_root, client_id, label)
+            created = True
+        else:
+            outcome = ledger.ensure_engagement(
+                client_root, client_id, label, idempotency_key=idempotency_key
+            )
+            engagement, created = outcome["engagement"], outcome["created"]
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Customer-folder engagement is invalid: {exc}") from exc
     input_root = (
@@ -2512,11 +2524,11 @@ def create_studio_client_engagement(
         / "inputs"
     )
     return {
-        "status": "created",
+        "status": "created" if created else "already_created",
         "client_id": client_id,
         "engagement": {**engagement, "imports": []},
         "input_dir": str(input_root.resolve(strict=True)),
-        "source_archive_mutated": True,
+        "source_archive_mutated": created,
     }
 
 
@@ -3524,6 +3536,8 @@ def prepare_studio_client_workflow(
         )
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Client workflow run is invalid: {exc}") from exc
+    binding_status = _remember_run_binding(private_state, client_root, prepared)
+    recovery = _checkpoint_work(private_state, prepared)
     return {
         "status": prepared["status"],
         "client_id": client_id,
@@ -3532,6 +3546,8 @@ def prepare_studio_client_workflow(
         "input_manifest": prepared["input_manifest"],
         "client_engagement": prepared["context"],
         "client_engagement_path": prepared["context_path"],
+        "work_binding": binding_status,
+        "recovery": recovery,
         "blocked_runs": prepared.get("blocked_runs", []),
         "blocked_clients": inventory["blocked_clients"],
         "directory_complete": inventory["complete"],
@@ -4123,6 +4139,150 @@ def list_studio_client_engagements(
     }
 
 
+def _run_binding_path(state: Path, identities: Sequence[str]) -> Path:
+    """Locate an owner-private binding without consulting archive discovery."""
+    owner = _archive_profile(state) or state
+    key = hashlib.sha256("\0".join(identities).encode("utf-8")).hexdigest()
+    return owner / "work-bindings" / f"{key}.json"
+
+
+def _recovery_store(state: Path, identities: Sequence[str]) -> Path:
+    owner = _archive_profile(state) or state
+    key = hashlib.sha256("\0".join(identities).encode("utf-8")).hexdigest()
+    return owner / "work-recovery" / key
+
+
+def _checkpoint_work(state: Path, loaded: Mapping[str, Any]) -> dict[str, Any]:
+    """A checkpoint failure must not hide the already committed professional work."""
+    from vera_assurance.recovery import checkpoint_run
+
+    run = loaded["run"]
+    try:
+        return checkpoint_run(
+            Path(loaded["context_path"]),
+            _recovery_store(
+                state, (run["client_id"], run["engagement_id"], run["run_id"])
+            ),
+        )
+    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+        return {
+            "status": "unavailable",
+            "reason": type(exc).__name__,
+            "retry_pending": True,
+        }
+
+
+def checkpoint_studio_client_workflow(
+    client_id: str, engagement_id: str, run_id: str, *, state_dir: Path | None = None
+) -> dict[str, Any]:
+    """Retain exact admitted inputs and completed stages outside the destination."""
+    state = _state_dir(state_dir)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=state, run_id=run_id
+    )
+    loaded = ledger.load_run(root, engagement_id, run_id)
+    return {"run": loaded["run"], "recovery": _checkpoint_work(state, loaded)}
+
+
+def restore_studio_client_workflow(
+    client_id: str,
+    engagement_id: str,
+    run_id: str,
+    destination: str | Path,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, Any]:
+    """Restore the selected job to an explicitly authorized available destination."""
+    from vera_assurance.recovery import restore_run
+
+    state = _state_dir(state_dir)
+    identities = (client_id, engagement_id, run_id)
+    try:
+        context_path = restore_run(
+            _recovery_store(state, identities), Path(destination), identities
+        )
+        root = context_path.parents[5]
+        loaded = ledger.load_run(root, engagement_id, run_id)
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        sqlite3.Error,
+        ledger.LedgerError,
+    ) as exc:
+        raise ArchiveError(f"Run recovery destination is unavailable: {exc}") from exc
+    return {
+        "status": "restored",
+        "run": loaded["run"],
+        "client_engagement_path": str(context_path),
+        "client_engagement": loaded["context"],
+        "work_binding": _remember_run_binding(state, root, loaded),
+        "recovery": {"status": "restored", "destination": str(root)},
+    }
+
+
+def _remember_run_binding(
+    state: Path, client_root: Path, loaded: Mapping[str, Any]
+) -> dict[str, str]:
+    """Retain admitted scope so losing session configuration cannot lose a job."""
+    run = loaded["run"]
+    record = {
+        "schema_version": "vera.work_binding.v1",
+        "client_id": run["client_id"],
+        "engagement_id": run["engagement_id"],
+        "run_id": run["run_id"],
+        "static_sha256": run["static_sha256"],
+        "client_root": str(client_root),
+    }
+    try:
+        path = _run_binding_path(
+            state, (run["client_id"], run["engagement_id"], run["run_id"])
+        )
+        path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        _write_private_json(path, record)
+    except (OSError, ValueError, ArchiveError) as exc:
+        # Preparation is already durable. Failure to retain a second pointer
+        # must not hide it or provoke duplicate creation; the exact context is
+        # also returned and can be used to recover the same job.
+        return {"status": "unavailable", "reason": type(exc).__name__}
+    return {"status": "retained", "path": str(path)}
+
+
+def _retained_run_root(
+    state: Path, client_id: str, engagement_id: str, run_id: str
+) -> Path | None:
+    """Use the established job, verifying its identity without relisting clients."""
+    identities = (client_id, engagement_id, run_id)
+    try:
+        record = preferences.read_json(_run_binding_path(state, identities))
+    except (OSError, ValueError, ArchiveError):
+        return None
+    if record is None or record.get("schema_version") != "vera.work_binding.v1":
+        return None
+    if (
+        tuple(record.get(key) for key in ("client_id", "engagement_id", "run_id"))
+        != identities
+    ):
+        return None
+    stored_root = record.get("client_root")
+    if not isinstance(stored_root, str) or not Path(stored_root).is_absolute():
+        return None
+    root = Path(stored_root)
+    try:
+        loaded = ledger._load_run_identity(root, engagement_id, run_id)
+    except (OSError, ledger.LedgerError):
+        # A moved folder can still be recovered by the ordinary portable-ID
+        # lookup. An unrelated folder is never authorized by this pointer.
+        return None
+    run = loaded["run"]
+    if run["client_id"] != client_id or run["static_sha256"] != record.get(
+        "static_sha256"
+    ):
+        return None
+    return root
+
+
 def _selected_ledger_root(
     client_id: str,
     engagement_id: str,
@@ -4130,6 +4290,10 @@ def _selected_ledger_root(
     state_dir: Path,
     run_id: str | None = None,
 ) -> Path:
+    if run_id is not None:
+        retained = _retained_run_root(state_dir, client_id, engagement_id, run_id)
+        if retained is not None:
+            return retained
     folder = get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"]
     client_root = Path(folder["client_root"])
     try:
@@ -4160,6 +4324,8 @@ def _selected_ledger_root(
 
 def _run_result(loaded: Mapping[str, Any]) -> dict[str, Any]:
     result = {"status": loaded["run"]["status"], "run": loaded["run"]}
+    if "recovery" in loaded:
+        result["recovery"] = loaded["recovery"]
     if "reporting" in loaded:
         result["reporting"] = loaded["reporting"]
         if loaded["reporting"].get("status") == "unavailable":
@@ -4191,7 +4357,7 @@ def start_studio_client_workflow(
         loaded = ledger.start_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not start: {exc}") from exc
-    return _run_result(loaded)
+    return _run_result({**loaded, "recovery": _checkpoint_work(private_state, loaded)})
 
 
 def verify_studio_run_report(
@@ -4203,7 +4369,7 @@ def verify_studio_run_report(
 ) -> dict[str, Any]:
     """Verify a selected run's saved report without triggering reporting recovery."""
     root = _selected_ledger_root(
-        client_id, engagement_id, state_dir=_state_dir(state_dir)
+        client_id, engagement_id, state_dir=_state_dir(state_dir), run_id=run_id
     )
     try:
         return ledger.verify_run_report(root, engagement_id, run_id)
@@ -4221,13 +4387,18 @@ def write_studio_run_artifact(
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Write one agent-authored text artifact through the Archive owner."""
+    private_state = _state_dir(state_dir)
     root = _selected_ledger_root(
-        client_id, engagement_id, state_dir=_state_dir(state_dir)
+        client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
     try:
-        return ledger.write_run_artifact(root, engagement_id, run_id, name, content)
+        loaded = ledger._load_run_identity(root, engagement_id, run_id)
+        result = ledger.write_run_artifact(root, engagement_id, run_id, name, content)
     except (ledger.LedgerError, OSError) as exc:
         raise ArchiveError(f"Run artifact was not saved: {exc}") from exc
+    # The successful owned save is a completed stage, including outside the
+    # managed helper launcher. Retain it without hiding the write on backup failure.
+    return {**result, "recovery": _checkpoint_work(private_state, loaded)}
 
 
 def read_studio_run_artifact(
@@ -4246,9 +4417,14 @@ def read_studio_run_artifact(
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
-    loaded = ledger.load_run(root, engagement_id, run_id)
-    if loaded["run"]["status"] not in {"running", "ready_for_review"}:
-        raise ArchiveError("Data reads require an active Archive run")
+    loaded = ledger._load_run_identity(root, engagement_id, run_id)
+    requested = Path(path).expanduser()
+    if not requested.is_absolute():
+        requested = Path(loaded["run_root"]) / requested
+    if not requested.resolve().is_relative_to(Path(loaded["output_dir"]).resolve()):
+        # Input reads still require the selected admitted bytes. Reading an
+        # existing result does not require the source copies to remain available.
+        loaded = ledger.load_run(root, engagement_id, run_id)
     ledger._reporting_runtime()
     from archive_reporting import read_artifact
 
@@ -4279,7 +4455,7 @@ def fail_studio_client_workflow(
         loaded = ledger.fail_run(root, engagement_id, run_id, reason)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow failure could not be recorded: {exc}") from exc
-    return _run_result(loaded)
+    return _run_result({**loaded, "recovery": _checkpoint_work(private_state, loaded)})
 
 
 @_readable_after_write
@@ -4300,7 +4476,7 @@ def cancel_studio_client_workflow(
         loaded = ledger.cancel_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not be cancelled: {exc}") from exc
-    return _run_result(loaded)
+    return _run_result({**loaded, "recovery": _checkpoint_work(private_state, loaded)})
 
 
 @_readable_after_write
@@ -4336,10 +4512,11 @@ def finalize_studio_client_workflow(
         "declaration_sha256": loaded["declaration_sha256"],
         "reporting": loaded["reporting"],
     }
+    result["recovery"] = _checkpoint_work(private_state, loaded)
     if ledger._reporting_runtime().selective_reporting_enabled():
         from archive_reporting import metadata_result
 
-        return metadata_result(loaded, result)
+        result = metadata_result(loaded, result)
     return result
 
 
@@ -4361,7 +4538,7 @@ def complete_studio_client_workflow(
         loaded = ledger.complete_run(root, engagement_id, run_id)
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Workflow run could not be completed: {exc}") from exc
-    return _run_result(loaded)
+    return _run_result({**loaded, "recovery": _checkpoint_work(private_state, loaded)})
 
 
 @_readable_after_write

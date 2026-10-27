@@ -59,6 +59,7 @@ IMPLEMENTATION_CONTRACT = (
     ("assurance_implementation", "money.py"),
     ("assurance_implementation", "relationships.py"),
     ("assurance_implementation", "review_output_transaction.cjs"),
+    ("assurance_implementation", "recovery.py"),
     ("assurance_implementation", "serialization.py"),
 )
 

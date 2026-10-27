@@ -17,6 +17,9 @@ ROOT = Path(__file__).resolve().parents[2]
 
 @pytest.fixture
 def case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
+    # Cached modules outlive the per-test import-path cleanup.
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
     monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
     import archive_core as core
 
@@ -25,6 +28,7 @@ def case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     studio.mkdir()
     monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(state))
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", "continuity-test-session")
     core.configure_archive(studio, state_dir=state)
     created = core.create_studio_client("Synthetic healthy client", state_dir=state)
     cid = created["client"]["client_id"]
@@ -64,6 +68,194 @@ def test_damaged_unrelated_client_does_not_prevent_selected_continuation(case):
     assert manifest.read_bytes() == b"{}"
     with pytest.raises(core.ArchiveError):
         core.get_studio_client_folder(other_id, state_dir=state)
+
+
+@pytest.mark.parametrize("unavailable", ["original", "receipt", "changed_original"])
+def test_started_run_uses_prepared_copy_when_original_changes(case, unavailable):
+    """A passed import must not become a new prerequisite between helpers."""
+    from vera_assurance import load_client_engagement_context_file
+
+    core, studio, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    run_id = prepared["run"]["run_id"]
+    core.start_studio_client_workflow(cid, eid, run_id, state_dir=state)
+    context = prepared["client_engagement"]
+    binding = context["input_bindings"][0]
+    original = root / binding["source_relative_path"]
+    receipt = root / binding["receipt_relative_path"]
+    progress = Path(context["output_dir"]) / "completed-work.md"
+    progress.write_text("Retained analysis", encoding="utf-8")
+    if unavailable == "changed_original":
+        original.write_text("Later source revision", encoding="utf-8")
+    else:
+        {"original": original, "receipt": receipt}[unavailable].unlink()
+
+    resumed = load_client_engagement_context_file(
+        prepared["client_engagement_path"],
+        expected_workflow_id="posizioni-negoziali",
+        input_paths=[binding["path"]],
+        output_dir=context["output_dir"],
+    )
+
+    assert resumed["run_id"] == run_id
+    assert Path(resumed["input_bindings"][0]["path"]).read_text() == (
+        "Synthetic retained source"
+    )
+    assert core.ledger.load_run(root, eid, run_id)["run"]["status"] == "running"
+    assert progress.read_text() == "Retained analysis"
+
+
+@pytest.mark.parametrize("failure_at", ["begin_report", "report_status_write"])
+def test_reporting_start_failure_keeps_started_work_recoverable(
+    case, monkeypatch, failure_at
+):
+    core, studio, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "financial-analysis", input_ids=[input_id], state_dir=state
+    )
+    run_id = prepared["run"]["run_id"]
+    runtime = core.ledger._reporting_runtime()
+    real_write = core.ledger._write_json
+
+    def unavailable_begin(loaded):
+        raise OSError("Synthetic unavailable reporting storage")
+
+    def unavailable_write(path, payload):
+        if path.name == "model_data_reporting.json":
+            raise OSError("Synthetic unavailable reporting status destination")
+        return real_write(path, payload)
+
+    monkeypatch.setattr(
+        runtime,
+        "begin_report",
+        (
+            unavailable_begin
+            if failure_at == "begin_report"
+            else lambda loaded: {"status": "started"}
+        ),
+    )
+    monkeypatch.setattr(
+        core.ledger,
+        "_write_json",
+        unavailable_write if failure_at == "report_status_write" else real_write,
+    )
+
+    result = core.start_studio_client_workflow(cid, eid, run_id, state_dir=state)
+
+    assert result["status"] == "running"
+    assert result["reporting"]["status"] == "unavailable"
+    assert result["reporting"]["retry_pending"] is True
+    assert core.ledger.load_run(root, eid, run_id)["run"]["status"] == "running"
+
+
+def test_general_destination_needs_no_client_identity_or_onboarding(case):
+    core, studio, state, root, cid, eid, input_id = case
+
+    created = core.create_studio_client("Vari", general_workspace=True, state_dir=state)
+
+    assert created["workspace_kind"] == "general"
+    assert created["client"]["identity_counts"] == {
+        "email_addresses": 0,
+        "legal_names": 0,
+        "tax_identifiers": 0,
+    }
+    assert created["next_workflow"] is None
+    assert Path(created["client_folder"]["client_root"]).name == "Vari"
+
+
+@pytest.mark.parametrize("failure_at", ["finish_report", "report_status_write"])
+def test_finalize_preserves_reviewable_output_when_reporting_fails(
+    case, monkeypatch, failure_at
+):
+    core, studio, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    run_id = prepared["run"]["run_id"]
+    core.start_studio_client_workflow(cid, eid, run_id, state_dir=state)
+    output = Path(prepared["client_engagement"]["output_dir"]) / "result.md"
+    output.write_text("Completed professional work", encoding="utf-8")
+    runtime = core.ledger._reporting_runtime()
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Synthetic reporting failure")
+
+    real_write = core.ledger._write_json
+
+    def unavailable_status(path, payload):
+        if path.name == "model_data_reporting.json":
+            unavailable()
+        return real_write(path, payload)
+
+    if failure_at == "finish_report":
+        monkeypatch.setattr(runtime, "finish_report", unavailable)
+    else:
+        monkeypatch.setattr(core.ledger, "_write_json", unavailable_status)
+
+    result = core.finalize_studio_client_workflow(
+        cid,
+        eid,
+        run_id,
+        [
+            {
+                "artifact_id": "result",
+                "path": "result.md",
+                "purpose": "Review",
+                "audience": "review",
+                "media_type": "text/markdown",
+            }
+        ],
+        state_dir=state,
+    )
+
+    assert result["status"] == "ready_for_review"
+    assert result["run"]["run_id"] == run_id
+    assert result["reporting"]["status"] == "unavailable"
+    assert output.read_text() == "Completed professional work"
+    assert (
+        core.ledger.validate_run_artifacts(root, eid, run_id)["artifacts"][0]["path"]
+        == "result.md"
+    )
+
+
+def test_existing_general_folder_registers_without_invented_client_name(case):
+    core, studio, state, root, cid, eid, input_id = case
+    (studio / "Vari").mkdir()
+    directory = core.list_studio_clients(state_dir=state)
+    scope = next(
+        item for item in directory["clients"] if item["display_name"] == "Vari"
+    )
+
+    registered = core.set_studio_client_identity(
+        scope["scope_id"], general_workspace=True, state_dir=state
+    )
+
+    assert registered["client"]["identity_counts"]["legal_names"] == 0
+    assert (
+        core.get_studio_client_folder(
+            registered["client"]["client_id"], state_dir=state
+        )["status"]
+        == "ready"
+    )
+
+
+def test_start_retains_selected_job_when_session_configuration_is_lost(case):
+    core, studio, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    core._config_path(state).unlink()
+
+    result = core.start_studio_client_workflow(
+        cid, eid, prepared["run"]["run_id"], state_dir=state
+    )
+
+    assert result["status"] == "running"
+    assert result["run"]["run_id"] == prepared["run"]["run_id"]
+    assert result["readable_archive"]["status"] == "unavailable"
+    assert not core._config_path(state).exists()
 
 
 @pytest.mark.parametrize("status", [[], {}, None])

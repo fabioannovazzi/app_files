@@ -210,7 +210,7 @@ def test_confirmed_fact_requires_visual_confirmation_for_ocr_fragment(
         ("basis", "", "missing_ocr_visual_confirmation_basis"),
     ],
 )
-def test_confirmed_ocr_fact_rejects_invalid_human_confirmation_fields(
+def test_confirmed_ocr_fact_rejects_invalid_confirmation_fields(
     tmp_path: Path,
     field: str,
     value: Any,
@@ -252,16 +252,16 @@ def test_unconfirmed_fact_may_cite_ocr_without_visual_confirmation(
 
 
 @pytest.mark.parametrize("extraction_method", ["paddle_ocr", "browser_visible_text"])
-def test_valid_human_confirmation_allows_confirmed_extracted_fact_and_is_auditable(
-    tmp_path: Path, extraction_method: str
+@pytest.mark.parametrize("reviewer_role", ["agent_reviewer", "professional_reviewer"])
+def test_source_image_review_allows_confirmed_extracted_fact_and_is_auditable(
+    tmp_path: Path, extraction_method: str, reviewer_role: str
 ) -> None:
     output_dir = tmp_path / "output"
     output_dir.mkdir(mode=0o700)
     inventory_path = _write_inventory(output_dir, extraction_method=extraction_method)
-    records_path = _write_records(
-        output_dir,
-        visual_confirmation=_valid_visual_confirmation(),
-    )
+    confirmation = _valid_visual_confirmation()
+    confirmation["confirmed_by_role"] = reviewer_role
+    records_path = _write_records(output_dir, visual_confirmation=confirmation)
     validator = _load_script("validate_case_records")
 
     audit = validator.validate_case_records(records_path, inventory_path, output_dir)
@@ -274,7 +274,7 @@ def test_valid_human_confirmation_allows_confirmed_extracted_fact_and_is_auditab
     assert row["extraction_method"] == extraction_method
     assert row["visual_confirmation_required"] == "True"
     assert row["visual_confirmation_confirmed"] == "True"
-    assert row["visual_confirmation_by_role"] == "professional_reviewer"
+    assert row["visual_confirmation_by_role"] == reviewer_role
 
 
 def test_fact_rejects_fragment_with_stripped_extraction_provenance(
@@ -321,4 +321,5 @@ def test_case_records_schema_declares_ocr_visual_confirmation_contract() -> None
     assert confirmation["properties"]["confirmed_by_role"]["enum"] == [
         "authorized_user",
         "professional_reviewer",
+        "agent_reviewer",
     ]

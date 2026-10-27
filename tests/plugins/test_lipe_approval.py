@@ -484,6 +484,9 @@ def disclosure(output: Path, run_id: str) -> Path:
 
 def archive_example(tmp_path, *, front_overrides=None, retained_report=False):
     """Exercise the REAL route with a real Archive ledger and fictional documents."""
+    shared_modules = str(PLUGIN.parent / "_shared/vendor/modules")
+    if shared_modules not in sys.path:
+        sys.path.insert(0, shared_modules)
     ledger = load_test_module(
         PLUGIN.parent / "studio-archive/scripts/client_ledger.py",
         "lipe_approval_archive_fixture",

@@ -8,6 +8,7 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -21,6 +22,119 @@ from tests.plugins.test_archive_automatic_reporting import (
 )
 
 COMPONENT = Path(__file__).resolve().parents[2] / "plugins/browser-automation"
+
+
+def test_acquisition_cli_delivers_saved_status_when_reporting_fails(
+    archive_core, client_case, monkeypatch, tmp_path, capsys
+):
+    from archive_report_store import RunStore
+
+    runs, worker, loaded = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch
+    )
+    import agenzia_acquire
+
+    def unavailable(_):
+        raise OSError("Synthetic reporting storage failure")
+
+    monkeypatch.setattr(RunStore, "state", unavailable)
+
+    agenzia_acquire._emit({"state": "complete", "downloaded": 2}, run=worker)
+
+    captured = capsys.readouterr()
+    assert json.loads(captured.out)["downloaded"] == 2
+    assert "measurement_gap" in captured.err
+    assert list((worker / "reporting-issues").glob("*.json"))
+    assert (
+        json.loads((Path(loaded["run_root"]) / "run.json").read_text())["status"]
+        == "running"
+    )
+
+
+def test_acquisition_event_retains_download_after_measurement_failure(
+    archive_core, client_case, monkeypatch, tmp_path
+):
+    import archive_report_measurements
+
+    runs, worker, _ = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch
+    )
+    from ade_acquisition.engine import Acquisition
+
+    acquired = worker / "original.xml"
+    acquired.write_text("Synthetic acquired original")
+    owner = SimpleNamespace(
+        run=worker,
+        store=SimpleNamespace(
+            verified=lambda record: True, safe_path=lambda path: acquired
+        ),
+    )
+    event = {
+        "client": "01234567890",
+        "record": {"artifacts": [{"path": "original.xml", "sha256": "0" * 64}]},
+    }
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Synthetic measurement failure")
+
+    monkeypatch.setattr(archive_report_measurements, "measure_source", unavailable)
+
+    Acquisition.event(owner, event)
+
+    assert acquired.read_text() == "Synthetic acquired original"
+    assert (
+        json.loads((worker / "events.jsonl").read_text())["record"] == event["record"]
+    )
+    assert list((worker / "reporting-issues").glob("*.json"))
+
+
+def test_acquisition_resume_uses_retained_binding_without_identity_rediscovery(
+    archive_core, client_case, monkeypatch, tmp_path
+):
+    runs, worker, loaded = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch
+    )
+    from ade_acquisition.contracts import Plan
+
+    plan = Plan.parse(
+        {
+            "schema_version": "vera-agenzia-plan/v1",
+            "clients": [
+                {
+                    "name": "Retained client",
+                    "tax_code": "01234567890",
+                    "vat_number": "01234567890",
+                    "archive_client_id": client_case.client_id,
+                    "archive_engagement_id": client_case.engagement_id,
+                }
+            ],
+            "date_from": "2026-01-01",
+            "date_to": "2026-01-31",
+            "operations": ["ricevute"],
+        }
+    )
+    state_directory = archive_core._state_dir
+    monkeypatch.setattr(
+        archive_core,
+        "_state_dir",
+        lambda value=None: state_directory(value or client_case.state_dir),
+    )
+
+    def unavailable(*args, **kwargs):
+        raise archive_core.ArchiveError("Synthetic identity registry unavailable")
+
+    monkeypatch.setattr(archive_core, "resolve_studio_client_identity", unavailable)
+
+    runs.prepare_runs(worker, plan)
+
+    binding = json.loads((worker / "archive-runs.json").read_text())["01234567890"]
+    assert binding["run_id"] == loaded["run"]["run_id"]
+    assert (
+        archive_core.ledger.load_run(
+            client_case.client_root, client_case.engagement_id, binding["run_id"]
+        )["run"]["status"]
+        == "running"
+    )
 
 
 def acquisition_binding(
@@ -74,15 +188,40 @@ def test_acquisition_status_records_exact_projection_and_metadata(
     assert report["sources"][0]["not_sent_quantity"] == 1
 
 
-def test_acquisition_status_rejects_a_binding_to_another_pipeline(
+def test_acquisition_status_does_not_attribute_a_foreign_pipeline(
     archive_core, client_case, monkeypatch, tmp_path
 ):
     runs, worker, _ = acquisition_binding(
         archive_core, client_case, tmp_path, monkeypatch, workflow="variance-analysis"
     )
 
-    with pytest.raises(runs.AcquisitionError, match="archive-client-identity-mismatch"):
-        runs.record_status_payload(worker, {}, {}, channel="cli")
+    result = runs.record_status_payload(worker, {}, {}, channel="cli")
+
+    assert result["status"] == "unavailable"
+    assert result["measurement_gap"] is True
+    assert list((worker / "reporting-issues").glob("*.json"))
+
+
+def test_acquisition_mcp_keeps_status_when_reporting_bridge_is_unavailable(tmp_path):
+    script = tmp_path / "interrupted-reporting.cjs"
+    script.write_text(
+        "const cp=require('node:child_process');"
+        "cp.spawnSync=(python,args,options)=>{if(!options.input)return {status:0,stdout:'/fixture/python'};const request=JSON.parse(options.input);"
+        "if(request.action==='record-output') return {status:1,stdout:JSON.stringify({error:'reporting-unavailable'})};"
+        "return {status:0,stdout:JSON.stringify({state:'complete',run_id:'a'.repeat(32),downloaded:2,source_revision:'fixture'})};};"
+        f"const server=require({json.dumps(str(COMPONENT / 'mcp/server.cjs'))});"
+        "const result=server.callTool('agenzia_workspace_open',{plan_path:'/selected-plan.json',output_directory:'/selected-output'});"
+        "process.stdout.write(JSON.stringify(result));"
+    )
+
+    completed = subprocess.run(
+        ["node", str(script)], capture_output=True, text=True, timeout=30
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    result = json.loads(completed.stdout)
+    assert result["structuredContent"]["downloaded"] == 2
+    assert result["structuredContent"]["reporting"]["status"] == "unavailable"
 
 
 def test_acquisition_status_does_not_mutate_a_closed_report(
@@ -105,6 +244,41 @@ def test_acquisition_status_does_not_mutate_a_closed_report(
 
     assert store.events() == events_before
     assert report_path.read_bytes() == report_before
+
+
+def test_foreign_binding_does_not_hide_a_later_clients_measurement_gap(
+    archive_core, client_case, monkeypatch, tmp_path
+):
+    from archive_report_store import RunStore
+
+    foreign = start(archive_core, client_case, "variance-analysis")
+    runs, worker, loaded = acquisition_binding(
+        archive_core, client_case, tmp_path, monkeypatch
+    )
+    path = worker / "archive-runs.json"
+    valid = json.loads(path.read_text())
+    path.write_text(
+        json.dumps(
+            {
+                "foreign": {
+                    "client_id": client_case.client_id,
+                    "engagement_id": client_case.engagement_id,
+                    "run_id": foreign["run"]["run_id"],
+                    "context_path": foreign["context"]["context_path"],
+                },
+                **valid,
+            }
+        )
+    )
+    foreign_store = RunStore(Path(foreign["run_root"]))
+    events_before = foreign_store.events()
+
+    result = runs.record_status_payload(worker, {}, {}, channel="cli")
+
+    assert result["measurement_gap"] is True
+    assert foreign_store.events() == events_before
+    report = finish(archive_core, client_case, loaded)
+    assert report["collection_status"] == "incomplete"
 
 
 def test_agenzia_mcp_status_records_counts_without_app_only_clients(

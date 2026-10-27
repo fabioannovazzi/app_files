@@ -6,6 +6,7 @@ import csv
 import http.client
 import io
 import json
+import shutil
 import subprocess
 import sys
 import threading
@@ -493,6 +494,77 @@ def test_cli_prepares_and_finalizes_actual_archive_run(tmp_path):
     assert finalized["run"]["status"] == "ready_for_review"
     rejected = subprocess.run(command, capture_output=True, text=True, timeout=30)
     assert rejected.returncode != 0
+
+
+@pytest.mark.parametrize("relocation", ["renamed", "restored"])
+def test_treasury_continues_relocated_run_without_repeating_completed_forecast(
+    tmp_path, relocation, monkeypatch
+):
+    monkeypatch.syspath_prepend(str(SCRIPTS.parent.parent / "_shared/vendor/modules"))
+    from vera_assurance.recovery import checkpoint_run, restore_run
+
+    workspace = archived_case(tmp_path)
+    source = next(
+        row["path"]
+        for row in workspace["context"]["input_bindings"]
+        if row["path"].endswith(".json")
+    )
+    command = [sys.executable, str(SCRIPTS / "run_treasury.py")]
+    prepared = subprocess.run(
+        [
+            *command,
+            "prepare",
+            "--client-engagement",
+            workspace["context_path"],
+            "--manifest",
+            source,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert prepared.returncode == 0, prepared.stderr
+    old_output = Path(workspace["output_dir"])
+    prior = current_record(old_output)[1]
+    sealed = {
+        path.relative_to(old_output): path.read_bytes()
+        for path in (old_output / "versions").rglob("*")
+        if path.is_file()
+    }
+    old_client = workspace["client"]
+    destination = tmp_path / "Available destination"
+    if relocation == "restored":
+        store = tmp_path / "private-checkpoint"
+        checkpoint_run(Path(workspace["context_path"]), store)
+        shutil.rmtree(old_client)
+        restore_run(
+            store,
+            destination,
+            tuple(
+                workspace["context"][key]
+                for key in ("client_id", "engagement_id", "run_id")
+            ),
+        )
+    else:
+        old_client.rename(destination)
+    context_path = destination / Path(workspace["context_path"]).relative_to(old_client)
+    output = destination / old_output.relative_to(old_client)
+
+    result = subprocess.run(
+        [*command, "context", "--client-engagement", str(context_path)],
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert current_record(output)[1]["record_sha256"] == prior["record_sha256"]
+    assert {
+        path.relative_to(output): path.read_bytes()
+        for path in (output / "versions").rglob("*")
+        if path.is_file()
+    } == sealed
+    assert not old_client.exists()
 
 
 def test_reused_bank_evidence_id_is_rejected_across_updates():

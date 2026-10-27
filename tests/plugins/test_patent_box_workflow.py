@@ -328,17 +328,27 @@ def test_overallocation_is_not_silently_clipped(
         workflow.calculate_draft(run["context"], digest=digest)
 
 
-def test_changed_selected_input_invalidates_review(
+def test_changed_selected_input_is_preserved_and_exact_reviewed_copy_recovers(
     tmp_path: Path, workflow: ModuleType
 ) -> None:
     run = running_case(tmp_path, workflow)
     digest = reviewed(run, workflow, model_proposal(run, workflow))
-    Path(run["session"]["inputs"][0]["selected_path"]).write_text(
-        "Changed after review"
-    )
+    selected = Path(run["session"]["inputs"][0]["selected_path"])
+    original = selected.read_bytes()
+    decision = run["output"] / f"decision_{digest}.json"
+    approved = decision.read_bytes()
+    selected.write_text("Changed after review")
 
-    with pytest.raises(ValueError):
-        workflow.calculate_draft(run["context"], digest=digest)
+    result = workflow.calculate_draft(run["context"], digest=digest)
+
+    assert selected.read_bytes() == original
+    (changed,) = (run["context"].parent / "recovery-evidence").glob("*/changed-input")
+    assert changed.read_text() == "Changed after review"
+    assert decision.read_bytes() == approved
+    assert result["result"]["additional_deduction"] == {
+        "income": "110000.00",
+        "irap": "88000.00",
+    }
 
 
 def test_changed_proposal_cannot_reuse_decision(

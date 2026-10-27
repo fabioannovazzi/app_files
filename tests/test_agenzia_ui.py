@@ -148,6 +148,15 @@ def test_startup_without_live_worker_expires_and_allows_explicit_resume(
         run / "status.json", {"state": "starting", "updated_at": old}
     )
     assert services.cli._summary(run)["state"] == "interrupted"
+    admitted = {
+        "01234567890": {
+            "client_id": "client-retained",
+            "engagement_id": "engagement-retained",
+            "run_id": "professional-run-retained",
+            "context_path": "/selected/context.json",
+        }
+    }
+    services.storage.atomic_json(run / "archive-runs.json", admitted)
     resumed = services.ui.dispatch(
         {
             **workspace,
@@ -156,6 +165,10 @@ def test_startup_without_live_worker_expires_and_allows_explicit_resume(
         }
     )
     assert resumed["run_id"] != run.name
+    assert (
+        services.storage.read_json(Path(resumed["run_directory"]) / "archive-runs.json")
+        == admitted
+    )
     assert len(resumed["recent_runs"]) == 2
     repeat = services.ui.dispatch(
         {

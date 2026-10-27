@@ -167,8 +167,21 @@ folders. Never infer the archive root or a client from a filename.
    accessible, reconnect the exact original folder; do not claim host persistence
    that was not observed. Run `recover-ledger` when ledger verification is needed.
    Recovery reads stable identities from `Vera/client.json`, not folder labels.
-4. If the connected root is unavailable or read-only, stop before client,
-   engagement, import, or lifecycle writes. Report the permission limitation.
+4. If the connected root is unavailable or read-only at intake, resolve an
+   available authorized destination before dependent writes. If this happens
+   during an admitted run, preserve its identity and progress and use
+   `restore-workflow --client-id ID --engagement-id ID --run-id ID --destination
+   ABSOLUTE_PATH` through the same session helper. Inspect the returned context
+   and continue there. Ask only for an alternate location if none is authorized;
+   do not create a replacement client/job or abandon already completed work.
+
+Preparation and start report the independent local checkpoint status. Managed
+helpers checkpoint before and after execution; after other completed stages use
+`checkpoint-workflow` with the existing IDs and verify `recovery.status`. A
+checkpoint failure remains visible and does not erase work at its current
+destination. Restore uses only exact retained bytes; never claim unsaved progress
+was recovered. Failed reporting or report verification is separate from delivery
+of an available result.
 
 Do not put private identity registries, OAuth material, credentials, tokens, or
 mail content in the customer ledger. The session-local index and configuration
@@ -185,17 +198,24 @@ Complete the supplied-file checks above before these record-creation steps.
 1. Run `clients`. Select one returned stable client semantically from the
    user's instruction. If ambiguous, ask; never choose by recency or filename.
 2. For an existing unregistered folder, run `configure-client` with its exact
-   returned scope ID and at least one user-confirmed legal name, full email/PEC,
-   or tax identifier. For a new client, run `create-client` only after the user
-   chooses New client; the resulting relationship remains
-   `new_client_workflow_pending`.
+   returned scope ID. Use `--general-workspace` for a selected general folder
+   such as Vari without inventing a legal identity; otherwise use a confirmed
+   legal name, email/PEC or tax identifier. For a new destination use
+   `create-client --legal-name <selected-label>`, adding `--general-workspace`
+   for a general label. Storage creation does not initiate professional
+   onboarding. Retain the returned IDs throughout the work.
 3. Run `create-engagement` or `engagements` and select one exact engagement.
+   Before creation, generate and save an internal request key with the exact
+   client and label; pass `--idempotency-key`. Reuse that key after an interrupted
+   call or lost reply. The professional does not supply technical keys.
 4. Explain that import preserves the original and creates an immutable copy and
    SHA-256 receipt. After authorization, run `import-document` separately for
    each selected file with role `source`, `journal`, or `support`.
 5. Run `prepare-workflow` with the exact workflow ID, input IDs, and any exact
    finalized same-engagement upstream artifacts. Repeating the same request is
-   idempotent; use `--new-run` only for an explicitly separate run.
+   idempotent; use `--new-run` only for an explicitly separate run. Generate and
+   save a request key before calling, pass `--idempotency-key` (also with
+   `--new-run`), and retain it unchanged for retries of that same request.
 6. Run `start-workflow`. Pass the returned `client_engagement_path` unchanged to
    the specialist module. Execute only its hydrated input bindings and write
    only below its exact output directory.

@@ -474,7 +474,7 @@
     {
       "path": "modules/variance-analysis/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/vera_assurance/decisions.py",
@@ -497,6 +497,11 @@
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
     },
     {
+      "path": "modules/variance-analysis/vendor/modules/vera_assurance/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
+    },
+    {
       "path": "modules/variance-analysis/vendor/modules/vera_assurance/relationships.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
       "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085"
@@ -514,17 +519,17 @@
     {
       "path": "scripts/archive_cli.py",
       "repository_path": "plugins/vera/scripts/archive_cli.py",
-      "sha256": "f115d95768459394be54777d96b55d026ba1f33fcabe1e85591d93eceb036f13"
+      "sha256": "e96d672fd62106622063a78f47c416ec35fa74bf16f6cdaa3ac7d4c49c4664f7"
     },
     {
       "path": "scripts/archive_emit.py",
       "repository_path": "plugins/vera/scripts/archive_emit.py",
-      "sha256": "26725652a10fa0cdaa9233c058f18abd6ace28f48638a366b635c36a9573b553"
+      "sha256": "e6af4a0b8ac814638f85541cd18d9841760ca7f0410e8039256b92521c72416a"
     },
     {
       "path": "scripts/archive_projection.py",
       "repository_path": "plugins/vera/scripts/archive_projection.py",
-      "sha256": "b528cbefbb8ce0f71984d31efe65f52f69bba830ac16779227a67674fd06beee"
+      "sha256": "96dfa605cce28df808400ab76dab98cd3c27d7ae7fd71c343ea56dd8f7b3027c"
     },
     {
       "path": "scripts/archive_report_legacy.py",
@@ -554,7 +559,12 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/vera/scripts/archive_reporting.py",
-      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
+      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+    },
+    {
+      "path": "scripts/archive_reporting_failure.py",
+      "repository_path": "plugins/vera/scripts/archive_reporting_failure.py",
+      "sha256": "3705b3118295be6c25f125560baf1db7312c4c83e5d41cdff6f3cb661c893f5f"
     },
     {
       "path": "scripts/check_dependencies.py",
@@ -569,7 +579,7 @@
     {
       "path": "scripts/managed_python_runtime.py",
       "repository_path": "plugins/vera/scripts/managed_python_runtime.py",
-      "sha256": "11e364bace0d6bc91fb9ffaf4e7a1ff548d4a85cf81c44216bdeb107f0cd3d9b"
+      "sha256": "0f6bb7331551e626b498fce93f43951a325c10541a5b458e0c4144e8158ee3bf"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -604,7 +614,7 @@
     {
       "path": "skills/variance-analysis/SKILL.md",
       "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
-      "sha256": "352ce76c0a47a20940ae7a0b98589192b4fad7dae8c8f71a7865a5c34e4b0f16"
+      "sha256": "e401c2ef07d3e4b441d4b0174442946bae120d2d53a8777223a9ca38dbf29c24"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -689,7 +699,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7d8fee1b7b1ca0952eaacd9e47b4741dee8bc0d2dbefe21ecd7f6044252bf5fa"
+      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -720,6 +730,11 @@
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
       "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+    },
+    {
+      "path": "vendor/modules/courseware/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/recovery.py",
+      "sha256": "91edce4ba8fbdda238c506a57d03a839c26390b1a1418fdc225e46d557020dbc"
     },
     {
       "path": "vendor/modules/courseware/sales_plan_view.py",
@@ -844,7 +859,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -865,6 +880,11 @@
       "path": "vendor/modules/vera_assurance/money.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/recovery.py",
+      "repository_path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",

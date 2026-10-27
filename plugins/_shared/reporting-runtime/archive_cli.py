@@ -3,8 +3,8 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
-import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -12,8 +12,9 @@ from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 from typing import Any
 
-from archive_emit import bind_output, bound_run
+from archive_emit import _run_roots, bind_output, selected_run
 from archive_reporting import record_send
+from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
 
 __all__ = ["run_command", "run_entrypoint"]
 
@@ -26,8 +27,13 @@ def run_entrypoint(main: Any, component_file: Path) -> int | None:
     ):
         return main()
     component = component_file.resolve().parents[1].name
-    if bound_run(component, sys.argv[1:]) is None:
-        return main()
+    try:
+        roots = _run_roots(sys.argv[1:])
+    except REPORTING_ERRORS as error:
+        reporting_failure(component, sys.argv[1:], error, stage="bind")
+    else:
+        if not roots:
+            return main()
     product_root = Path(__file__).resolve().parents[1]
     return run_command(
         [
@@ -59,8 +65,11 @@ def run_command(
     """Hand the code lease to the child before a launcher can be terminated."""
     from verified_execution import acquire_execution_lease
 
+    roots = _run_roots(arguments)
+    contexts = [root / "context.json" for root in roots] if len(roots) == 1 else []
     lease = acquire_execution_lease(plugin_root)
     try:
+        _checkpoint(contexts, plugin_root)
         if lease is not None:
             options["pass_fds"] = tuple(
                 dict.fromkeys((*options.get("pass_fds", ()), lease))
@@ -73,8 +82,33 @@ def run_command(
             **options,
         )
     finally:
+        _checkpoint(contexts, plugin_root)
         if lease is not None:
             os.close(lease)
+
+
+def _checkpoint(contexts: list[Path], plugin_root: Path) -> None:
+    """Preserve completed stages around helpers without making backup a new gate."""
+    if not contexts:
+        return
+    for vendor in (
+        plugin_root / "vendor/modules",
+        plugin_root.parent / "_shared/vendor/modules",
+    ):
+        if (vendor / "vera_assurance").is_dir():
+            if str(vendor) not in sys.path:
+                sys.path.insert(0, str(vendor))
+            break
+    try:
+        from vera_assurance.recovery import checkpoint_run
+
+        for context in contexts:
+            checkpoint_run(context)
+    except (*REPORTING_ERRORS, ImportError) as error:
+        logging.getLogger(__name__).warning(
+            "Work remains available; its recovery checkpoint could not refresh (%s). Retain this job and retry the checkpoint.",
+            type(error).__name__,
+        )
 
 
 def _run_command(
@@ -85,7 +119,7 @@ def _run_command(
     arguments: list[str],
     **options: Any,
 ) -> subprocess.CompletedProcess:
-    """Measure producer bytes; an unsuccessful record prevents payload delivery."""
+    """Measure producer bytes and deliver work even if its record cannot be saved."""
     manifest = next(
         (
             plugin_root / name
@@ -101,13 +135,22 @@ def _run_command(
         os.environ.get("VERA_REPORTING_INTERNAL") == "1"
         or manifest is None
         or json.loads(manifest.read_text())["name"] != "vera"
-        or bound_run(component, arguments) is None
     ):
         return subprocess.run(command, **options)
-    options["env"] = {**options.get("env", os.environ), "VERA_REPORTING_CAPTURED": "1"}
-    binding = bind_output(component, arguments)
+    environment = options.get("env")
+    options["env"] = {
+        **(os.environ if environment is None else environment),
+        "VERA_REPORTING_CAPTURED": "1",
+    }
+    try:
+        binding = bind_output(component, arguments)
+        if binding is None and selected_run(component, arguments) is not None:
+            raise ValueError("The selected reporting collection is closed")
+    except REPORTING_ERRORS as error:
+        reporting_failure(component, arguments, error, stage="bind")
+        binding = None
     if binding is None:
-        raise ValueError("Archive run closed before the command started")
+        return subprocess.run(command, **options)
     root = Path(binding["run_root"])
     destination = options.pop("stderr", None)
     if arguments and (component, Path(arguments[0]).name) in {
@@ -126,8 +169,8 @@ def _run_command(
             payload = {"stdout": out.decode("utf-8")}
             if destination is None:
                 payload["stderr"] = err.decode("utf-8")
-            # Pin the run before starting the command. A concurrent terminal write
-            # must withhold this later payload, not silently release it unrecorded.
+            # Pin the reporting revision; a concurrent closure must not rewrite
+            # its sealed report. A delivery gap is separate from the work outcome.
             record_send(
                 root,
                 payload,
@@ -135,11 +178,8 @@ def _run_command(
                 request=arguments,
                 expected_revision=binding["report_revision"],
             )
-        except (OSError, ValueError, sqlite3.Error):
-            sys.stderr.write(
-                "Vera could not save this run's outgoing-data record. The case payload was not returned.\n"
-            )
-            return subprocess.CompletedProcess(command, 70)
+        except REPORTING_ERRORS as error:
+            reporting_failure(component, arguments, error, stage="delivery", root=root)
         sys.stdout.buffer.write(out)
         sys.stdout.buffer.flush()
         if destination is None:
@@ -187,12 +227,10 @@ def _stream_preview(command, root, binding, component, destination, options):
                         channel="cli:" + component,
                         expected_revision=binding["report_revision"],
                     )
-                except (OSError, ValueError, sqlite3.Error):
-                    try:
-                        child.terminate()
-                    except ProcessLookupError:
-                        pass  # It exited after the failed record, before termination.
-                    return False
+                except REPORTING_ERRORS as error:
+                    reporting_failure(
+                        component, [], error, stage="preview_delivery", root=root
+                    )
                 target = sys.stdout if name == "stdout" else sys.stderr
                 target.buffer.write(line)
                 target.buffer.flush()
@@ -201,11 +239,7 @@ def _stream_preview(command, root, binding, component, destination, options):
         with ThreadPoolExecutor(max_workers=2) as workers:
             stdout = workers.submit(transfer, child.stdout, "stdout")
             stderr = workers.submit(transfer, child.stderr, "stderr")
-            succeeded = [stdout.result(), stderr.result()]
+            stdout.result()
+            stderr.result()
         code = child.wait()
-    if not all(succeeded):
-        sys.stderr.write(
-            "Vera could not save this run's outgoing-data record. The case payload was not returned.\n"
-        )
-        code = 70
     return subprocess.CompletedProcess(command, code)

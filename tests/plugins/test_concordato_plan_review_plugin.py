@@ -690,6 +690,7 @@ def test_calculation_receipt_binds_formula_sign_period_sources_and_candidates(
         ("assurance_implementation", "money.py"),
         ("assurance_implementation", "relationships.py"),
         ("assurance_implementation", "review_output_transaction.cjs"),
+        ("assurance_implementation", "recovery.py"),
         ("assurance_implementation", "serialization.py"),
     ]
     assert "remain reviewer judgment" in content["judgment_boundary"]

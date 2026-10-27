@@ -248,6 +248,11 @@ JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
     ),
     (
         "assurance_implementation",
+        "recovery.py",
+        "implementation.vera_assurance_recovery",
+    ),
+    (
+        "assurance_implementation",
         "serialization.py",
         "implementation.vera_assurance_serialization",
     ),

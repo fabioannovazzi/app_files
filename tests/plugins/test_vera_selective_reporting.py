@@ -124,7 +124,7 @@ def test_only_selected_public_function_pages_describe_archive_reporting():
         )
 
 
-def test_other_products_keep_their_existing_archive_report_requirement(
+def test_other_products_retain_result_and_report_a_missing_privacy_report(
     archive_core, client_case, monkeypatch
 ):
     monkeypatch.setattr(
@@ -134,8 +134,14 @@ def test_other_products_keep_their_existing_archive_report_requirement(
     )
     run_id, output = _start(archive_core, client_case, "financial-analysis")
 
-    with pytest.raises(archive_core.ArchiveError, match="requires both"):
-        _finish(archive_core, client_case, run_id, output)
+    result = _finish(archive_core, client_case, run_id, output)
+
+    assert result["status"] == "ready_for_review"
+    assert result["run"]["run_id"] == run_id
+    assert result["reporting"]["status"] == "unavailable"
+    assert result["reporting"]["retry_pending"] is True
+    assert (output / "result.txt").read_text() == "Reviewed synthetic calculation\n"
+    assert not (output / "model_data_report.json").exists()
 
 
 def test_archive_finalization_builds_bound_report_without_a_separate_trigger(

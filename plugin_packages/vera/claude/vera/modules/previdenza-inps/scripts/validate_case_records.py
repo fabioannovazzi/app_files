@@ -54,6 +54,8 @@ EXTRACTION_METHODS = {
     "paddle_ocr",
 }
 APPROVING_ROLES = {"authorized_user", "professional_reviewer"}
+# Source-image transcription is a routine evidence check, not professional adoption.
+VISUAL_REVIEW_ROLES = APPROVING_ROLES | {"agent_reviewer"}
 AMBIGUOUS_NUMERIC_DATE_RE = re.compile(r"^\d{1,2}[/-]\d{1,2}[/-]\d{2,4}$")
 
 
@@ -175,7 +177,7 @@ def _validate_ocr_visual_confirmation(
     anchor_path: str,
     issues: list[dict[str, str]],
 ) -> None:
-    """Require a human visual check before OCR text can confirm a fact."""
+    """Require an attributed source-image check before OCR confirms a fact."""
 
     confirmation = anchor.get("visual_confirmation")
     if not isinstance(confirmation, dict):
@@ -185,8 +187,8 @@ def _validate_ocr_visual_confirmation(
             field=f"{anchor_path}.visual_confirmation",
             message=(
                 "A confirmed fact citing OCR-derived, browser-captured, or mechanically weak text "
-                "requires a per-anchor visual confirmation by an authorized "
-                "human reviewer."
+                "requires a per-anchor visual confirmation by the agent or an "
+                "authorized human reviewer who inspected the source image."
             ),
         )
         return
@@ -202,16 +204,16 @@ def _validate_ocr_visual_confirmation(
             issues,
             code="missing_ocr_visual_confirmation_actor_id",
             field=f"{anchor_path}.visual_confirmation.confirmed_by_id",
-            message="Record a stable identifier for the human who checked the page image.",
+            message="Record a stable identifier for the reviewer who checked the page image.",
         )
-    if confirmation.get("confirmed_by_role") not in APPROVING_ROLES:
+    if confirmation.get("confirmed_by_role") not in VISUAL_REVIEW_ROLES:
         _issue(
             issues,
             code="invalid_ocr_visual_confirmation_role",
             field=f"{anchor_path}.visual_confirmation.confirmed_by_role",
             message=(
-                "Extracted-text visual confirmation must come from an authorized user or "
-                "professional reviewer, never the model."
+                "Record agent_reviewer, authorized_user or professional_reviewer "
+                "according to who actually inspected the source image."
             ),
         )
     if not _validate_iso_datetime(confirmation.get("recorded_at")):

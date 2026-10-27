@@ -32,7 +32,13 @@ def installed(tmp_path):
     for source in (ROOT / "plugins/_shared/reporting-runtime").glob("*.py"):
         shutil.copyfile(source, scripts / source.name)
     for name in ("native_execution.py", "native_execution_mcp.cjs"):
-        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, scripts / name)
+        source = (
+            Path(os.environ["NATIVE_EXECUTION_TEST_SOURCE"])
+            if name == "native_execution.py"
+            and os.environ.get("NATIVE_EXECUTION_TEST_SOURCE")
+            else ROOT / "plugins/vera/scripts" / name
+        )
+        shutil.copyfile(source, scripts / name)
     (root / ".codex-plugin").mkdir()
     (root / ".codex-plugin/plugin.json").write_text(
         json.dumps({"name": "vera", "version": "0.1.445"})
@@ -140,6 +146,27 @@ def request(tmp_path, **values):
 
 def output(result):
     return result["structuredContent"]["output"]
+
+
+def test_exact_run_retry_returns_saved_result_after_installed_component_is_removed(
+    installed, tmp_path
+):
+    args = request(tmp_path)
+    with native(installed, tmp_path) as call:
+        first = call(args)
+        assert output(first)[0]["state"] == "completed"
+    shutil.rmtree(installed / "modules")
+    (installed / "components.json").write_text(json.dumps({"plugins": []}))
+    write_index(installed)  # A valid newer package, with this old component retired.
+    with native(installed, tmp_path) as call:
+        replay = call(args)
+        different = call({**args, "arguments": ["different-request"]})
+
+    assert replay.get("isError") is not True, replay
+    assert output(replay) == output(first)
+    assert different["isError"] is True
+    assert "different execution" in json.dumps(different)
+    assert (tmp_path / "counter").read_text() == "run\n"
 
 
 @pytest.mark.parametrize("extra_arguments,expected_code", [([], 0), (["--fail"], 7)])

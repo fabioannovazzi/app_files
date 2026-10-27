@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import json
-import sqlite3
 import sys
 from pathlib import Path
 from typing import Any
@@ -12,7 +11,7 @@ from archive_report_store import RunStore, digest
 from archive_reporting import record_send
 from selective_reporting import report_pipeline
 
-__all__ = ["bound_run", "bind_output", "record_output", "main"]
+__all__ = ["selected_run", "bound_run", "bind_output", "record_output", "main"]
 
 # These are product routing identities, not classifications of user intent.
 _COMPONENT_PIPELINES = {
@@ -117,8 +116,8 @@ def _packet_recorded(root: Path, payload: Any) -> bool:
     return True
 
 
-def bound_run(component: str, arguments: Any) -> Path | None:
-    """Require a matching, started run when an eligible case is explicitly bound."""
+def selected_run(component: str, arguments: Any) -> Path | None:
+    """Resolve explicit run ownership independently of the reporting collector."""
     if component == "studio-archive":
         return None  # Archive records its own public results and exact read packets.
     pipelines = _COMPONENT_PIPELINES.get(component, {report_pipeline(component)}) - {
@@ -138,6 +137,14 @@ def bound_run(component: str, arguments: Any) -> Path | None:
         return None
     if pipeline not in pipelines:
         raise ValueError("Outgoing payload belongs to another pipeline")
+    return root
+
+
+def bound_run(component: str, arguments: Any) -> Path | None:
+    """Resolve a matching, active reporting collection for the selected run."""
+    root = selected_run(component, arguments)
+    if root is None:
+        return None
     state = RunStore(root).state()
     if state is None:
         raise ValueError("Outgoing payload requires Archive's start record")
@@ -218,7 +225,10 @@ def record_output(
 
 
 def main() -> int:
-    """The producer blocks payload delivery if its reporting write fails."""
+    """Report collector failure separately; the producer still delivers its work."""
+    from archive_reporting_failure import REPORTING_ERRORS, reporting_failure
+
+    envelope = {}
     try:
         envelope = json.load(sys.stdin)
         if envelope.get("action") == "bind":
@@ -235,8 +245,13 @@ def main() -> int:
             binding=envelope.get("binding"),
         )
         sys.stdout.write(json.dumps({"run_root": str(root) if root else None}) + "\n")
-    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
-        sys.stderr.write("Vera sending record failed: " + type(exc).__name__ + "\n")
+    except REPORTING_ERRORS as exc:
+        reporting_failure(
+            envelope.get("component", "unknown"),
+            envelope.get("arguments", {}),
+            exc,
+            stage="bind" if envelope.get("action") == "bind" else "delivery",
+        )
         return 1
     return 0
 

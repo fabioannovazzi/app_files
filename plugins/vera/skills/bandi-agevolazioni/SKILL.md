@@ -3,6 +3,17 @@ name: bandi-agevolazioni
 description: Use when Vera must discover source-first through a professionally reviewed query-scoped source selection, monitor, match, prepare, or review Italian grants, subsidies, tax credits, or subsidized finance without contacting clients, authenticating or signing; can prepare an approved portal draft and submit only after explicit final approval.
 ---
 
+<!-- VERA_WORK_CONTINUITY_BEGIN -->
+## Work continuity
+
+Before substantive work, read `../vera/references/work-continuity.md` (from the
+Vera root skill, `references/work-continuity.md`). Resolve prerequisites upfront,
+retain passed choices and the exact job context, and recover failed operations
+without discarding progress or making the user repeat settled setup. This also
+applies to direct invocation, standalone work and studio-wide workflows.
+<!-- VERA_WORK_CONTINUITY_END -->
+
+
 <!-- VERA_WORKFLOW_USAGE_BEGIN -->
 ## Task usage and user feedback
 

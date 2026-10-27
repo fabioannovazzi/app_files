@@ -392,10 +392,11 @@ def test_terminal_failure_retains_report_when_execution_input_is_unavailable(
     assert report["collection_closed"] is True
     assert report["run_id"] == loaded["run"]["run_id"]
     assert Path(client_case.imported["imported_path"]).read_bytes() == original
-    with pytest.raises(archive_core.ledger.LedgerError):
-        archive_core.ledger.load_run(
-            client_case.client_root, client_case.engagement_id, loaded["run"]["run_id"]
-        )
+    recovered = archive_core.ledger.load_run(
+        client_case.client_root, client_case.engagement_id, loaded["run"]["run_id"]
+    )
+    assert recovered["run"]["status"] == outcome
+    assert selected.read_bytes() == original
 
 
 def test_selected_read_does_not_recover_an_unrelated_pending_report(
@@ -463,23 +464,30 @@ def test_selected_read_does_not_retry_a_siblings_pending_server_receipt(
 
 
 @pytest.mark.parametrize("damage", ["missing", "changed"])
-def test_unavailable_execution_input_still_prevents_completion(
+def test_sealed_result_can_complete_without_reopening_input_admission(
     archive_core, client_case, damage
 ):
     loaded = _start(archive_core, client_case)
     _ready(archive_core, client_case, loaded)
     source = Path(loaded["context"]["input_bindings"][0]["path"])
+    reference = json.loads(
+        (Path(loaded["run_root"]) / "work-recovery.json").read_text()
+    )
+    import shutil
+
+    shutil.rmtree(reference["store"])
     if damage == "missing":
         source.unlink()
     else:
         source.write_bytes(b"Altered input")
 
-    with pytest.raises(archive_core.ArchiveError):
-        _terminate(archive_core, client_case, loaded, "completed")
+    result = _terminate(archive_core, client_case, loaded, "completed")
+
+    assert result["status"] == "completed"
 
     assert (
         json.loads((Path(loaded["run_root"]) / "run.json").read_text())["status"]
-        == "ready_for_review"
+        == "completed"
     )
 
 

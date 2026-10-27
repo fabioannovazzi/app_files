@@ -310,6 +310,10 @@ def _has_main_guard(tree: ast.AST) -> bool:
 
 
 def _load_customer_ledger() -> ModuleType:
+    # Other module-isolation fixtures may remove paths added at collection time.
+    # The ledger's late imports need the same shared worker root on every use.
+    if str(SHARED_MODULES) not in sys.path:
+        sys.path.insert(0, str(SHARED_MODULES))
     path = ROOT / "plugins" / "studio-archive" / "scripts" / "client_ledger.py"
     module_name = "test_vera_workflow_customer_ledger"
     existing = sys.modules.get(module_name)
