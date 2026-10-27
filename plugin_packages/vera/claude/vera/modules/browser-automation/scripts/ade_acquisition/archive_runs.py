@@ -2,10 +2,14 @@
 
 from __future__ import annotations
 
+import json
+import sqlite3
 import sys
 from dataclasses import asdict
+from functools import wraps
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 from .contracts import AcquisitionError, Plan
 from .storage import Store, atomic_json, read_json
@@ -18,6 +22,99 @@ __all__ = [
 ]
 
 
+def _loaded_binding(archive: Any, binding: dict[str, Any]) -> dict[str, Any]:
+    """Use the selected run's immutable identity, including an explicit restore."""
+    root = Path(binding["context_path"]).parents[5]
+    try:
+        loaded = archive.ledger._load_run_identity(
+            root, binding["engagement_id"], binding["run_id"]
+        )
+    except (OSError, archive.ledger.LedgerError):
+        root = archive._selected_ledger_root(
+            binding["client_id"],
+            binding["engagement_id"],
+            run_id=binding["run_id"],
+            state_dir=archive._state_dir(None),
+        )
+        loaded = archive.ledger._load_run_identity(
+            root, binding["engagement_id"], binding["run_id"]
+        )
+    if (
+        loaded["run"]["client_id"] != binding["client_id"]
+        or loaded["run"]["workflow_id"] != "agenzia-acquisition"
+    ):
+        raise AcquisitionError("archive-client-identity-mismatch")
+    return loaded
+
+
+def _reporting_boundary(function):
+    """A measurement outage must not cancel a saved acquisition or its delivery."""
+
+    @wraps(function)
+    def wrapped(run, *args, **kwargs):
+        try:
+            return function(run, *args, **kwargs)
+        except (
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            sqlite3.Error,
+            ImportError,
+        ) as error:
+            gap = {
+                "status": "unavailable",
+                "measurement_gap": True,
+                "stage": function.__name__,
+                "reason": type(error).__name__,
+                "gap_saved": False,
+            }
+            try:
+                directory = run / "reporting-issues"
+                directory.mkdir(mode=0o700, exist_ok=True)
+                atomic_json(
+                    directory / (uuid4().hex + ".json"), {**gap, "gap_saved": True}
+                )
+                gap["gap_saved"] = True
+            except (OSError, ValueError):
+                pass
+            # Attribute an incomplete report only to verified acquisition runs.
+            try:
+                archive = _archive()
+                archive.ledger._reporting_runtime()
+                from archive_reporting_failure import reporting_failure
+
+                for binding in read_json(run / "archive-runs.json").values():
+                    try:
+                        loaded = _loaded_binding(archive, binding)
+                    except (OSError, ValueError, KeyError, TypeError):
+                        continue  # A foreign/unavailable binding cannot hide other gaps.
+                    reporting_failure(
+                        "agenzia-acquisition",
+                        {},
+                        error,
+                        stage=function.__name__,
+                        root=Path(loaded["run_root"]),
+                    )
+            except (
+                OSError,
+                ValueError,
+                KeyError,
+                TypeError,
+                sqlite3.Error,
+                ImportError,
+            ):
+                pass  # The independent worker gap still records unavailable attribution.
+            try:
+                sys.stderr.write(json.dumps(gap) + "\n")
+            except OSError:
+                pass
+            return gap
+
+    return wrapped
+
+
+@_reporting_boundary
 def record_status_payload(
     run: Path, summary: dict[str, Any], payload: Any, *, channel: str
 ) -> None:
@@ -35,15 +132,7 @@ def record_status_payload(
     from archive_reporting import record_send
 
     for binding in read_json(path).values():
-        context = Path(binding["context_path"])
-        loaded = archive.ledger.load_run(
-            context.parents[5], binding["engagement_id"], binding["run_id"]
-        )
-        if (
-            loaded["run"]["workflow_id"] != "agenzia-acquisition"
-            or loaded["run"]["client_id"] != binding["client_id"]
-        ):
-            raise AcquisitionError("archive-client-identity-mismatch")
+        loaded = _loaded_binding(archive, binding)
         root = Path(loaded["run_root"])
         with run_lock(root):
             store = RunStore(root)
@@ -59,6 +148,7 @@ def record_status_payload(
             record_send(root, payload, channel=channel + ":agenzia-acquisition")
 
 
+@_reporting_boundary
 def record_acquired_event(run: Path, storage: Store, event: dict[str, Any]) -> None:
     """Measure originals at acquisition, under their existing client Archive run."""
     bindings_path = run / "archive-runs.json"
@@ -70,7 +160,7 @@ def record_acquired_event(run: Path, storage: Store, event: dict[str, Any]) -> N
     from archive_report_measurements import measure_source
     from archive_report_store import RunStore, digest, run_lock
 
-    root = Path(binding["context_path"]).parent
+    root = Path(_loaded_binding(archive, binding)["run_root"])
     with run_lock(root):
         collector = RunStore(root)
         if not storage.verified(event["record"]):
@@ -119,6 +209,16 @@ def _prepare_runs(archive: Any, run: Path, plan: Plan) -> None:
     bindings = read_json(bindings_path) if bindings_path.exists() else {}
     # Check every selected identity and engagement before importing any plan.
     for client in plan.clients:
+        if client.vat_number in bindings:
+            binding = bindings[client.vat_number]
+            if (
+                binding["client_id"] != client.archive_client_id
+                or binding["engagement_id"] != client.archive_engagement_id
+            ):
+                raise AcquisitionError("archive-client-identity-mismatch")
+            loaded = _loaded_binding(archive, binding)
+            binding["context_path"] = str(Path(loaded["run_root"]) / "context.json")
+            continue
         resolved = archive.resolve_studio_client_identity(
             "tax_identifier", client.tax_code
         )
@@ -140,19 +240,13 @@ def _prepare_runs(archive: Any, run: Path, plan: Plan) -> None:
             or engagement["status"] != "open"
         ):
             raise AcquisitionError("archive-engagement-not-open")
-        if client.vat_number in bindings:
-            binding = bindings[client.vat_number]
-            if (
-                binding["client_id"] != client.archive_client_id
-                or binding["engagement_id"] != client.archive_engagement_id
-            ):
-                raise AcquisitionError("archive-client-identity-mismatch")
     for client in plan.clients:
         if client.vat_number in bindings:
             binding = bindings[client.vat_number]
             archive.start_studio_client_workflow(
                 binding["client_id"], binding["engagement_id"], binding["run_id"]
             )
+            atomic_json(bindings_path, bindings)
             continue
         folder = run / "archive-plans" / client.archive_client_id
         folder.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -203,11 +297,7 @@ def _finish_runs(archive: Any, run: Path, state: dict[str, Any]) -> None:
 
     events = load_events(run)
     for vat, binding in read_json(binding_path).items():
-        loaded = archive.ledger.load_run(
-            Path(binding["context_path"]).parents[5],
-            binding["engagement_id"],
-            binding["run_id"],
-        )
+        loaded = _loaded_binding(archive, binding)
         if loaded["run"]["status"] in {"ready_for_review", "completed", "cancelled"}:
             continue
         if loaded["run"]["status"] == "failed":

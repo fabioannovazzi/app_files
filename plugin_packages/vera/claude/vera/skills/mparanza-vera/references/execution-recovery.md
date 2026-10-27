@@ -86,12 +86,17 @@ archives or additional dependency environments. Forced process termination or
 power loss can still leave an orphan; do not delete another active run's copy.
 
 Keep input/output paths absolute and outside the installation/code copy.
-All specialist persistence, professional-review and disclosure gates still apply.
+Retain the admitted job, completed stages and saved results. Apply the shared
+work-continuity contract: settled setup is not a new gate after a tool failure.
+Any unresolved substantive decision belongs to its affected operation.
 The dependency checker and managed Python CLI also perform this preflight
 automatically for the six assured components. No manual repair step is needed.
 An installed package without the index needs a supported Vera update.
 
-If preparation fails, retain the error and stop. Missing or altered files,
+If preparation fails, retain the error and stop that unverified launch. Preserve
+the existing job and all saved results; query its retained execution ID before
+attempting another launch. Continue available independent work and recover the
+affected operation through a verified installation. Missing or altered files,
 symlinks, special files, extra implementation files, changing sources and host
 permission denials are not repaired. Do not chmod, unlink, manually copy an
 installation, retry through another sandbox or relax checks. Explain the failure

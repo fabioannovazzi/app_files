@@ -82,6 +82,15 @@ the same run; do not repeat calculations or create a replacement run. Never
 present an older draft report as the missing final report.
 Do not ask the user to request the report separately.
 Treat accounting outcome and data-usage reporting completeness separately.
+This separation also applies before execution and during delivery: a missing
+collector start record or failed reporting write must not prevent the selected
+helper from running, kill a preview, or withhold its stdout, tool result or saved
+artifact. Return the work's actual outcome and the separate reporting status.
+The recorder retains content-free gap notes under the selected run when storage
+is available. Missing measurements stay incomplete after service recovery;
+successful reporting retries do not prove that earlier deliveries were measured.
+Deliveries after report closure retain a separate gap note and leave the sealed
+report unchanged. Reuse the completed job and do not rerun it to obtain a receipt.
 An incomplete measurement (including `sent_data_has_no_source_coordinates`) or
 pending server receipt does not turn a verified accounting result into a failed
 reconciliation and must not withhold its files. Deliver the result and the honest

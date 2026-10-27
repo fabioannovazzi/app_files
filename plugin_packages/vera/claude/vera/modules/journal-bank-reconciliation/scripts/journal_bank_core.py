@@ -338,6 +338,11 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "review_output_transaction.cjs",
     ),
     (
+        "implementation.shared.vera_assurance.recovery_py",
+        "shared_implementation",
+        "recovery.py",
+    ),
+    (
         "implementation.shared.vera_assurance.serialization_py",
         "shared_implementation",
         "serialization.py",

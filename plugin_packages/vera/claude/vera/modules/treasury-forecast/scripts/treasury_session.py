@@ -23,6 +23,7 @@ from treasury_report import write_artifacts
 __all__ = [
     "create_session",
     "current_record",
+    "current_source_paths",
     "review_session",
     "save_scenario",
     "source_check",
@@ -58,10 +59,53 @@ def _lock(output: Path) -> Iterator[None]:
         lock.unlink(missing_ok=True)
 
 
-def source_check(state: dict[str, Any]) -> None:
+def current_source_paths(output: Path, state: dict[str, Any]) -> list[Path]:
+    """Resolve retained source references against the same portable run.
+
+    Exact run identity, relative input paths and admitted hashes authorize a
+    location change. Sealed session and forecast bytes are never rewritten.
+    """
+    sources = [Path(row["path"]) for row in state["sources"]]
+    old_context = Path(state["context_path"])
+    context_path = output.resolve().parent / "context.json"
+    if old_context == context_path:
+        return sources
+    from vera_assurance import load_client_engagement_context_file
+
+    context = load_client_engagement_context_file(
+        context_path,
+        expected_workflow_id="treasury-forecast",
+        allowed_statuses=("running", "ready_for_review", "completed"),
+    )
+    if (
+        old_context.parent.name != context["run_id"]
+        or str(output.resolve()) != context["output_dir"]
+    ):
+        raise TreasuryError("Treasury session belongs to another Archive run")
+    admitted = {row["path"]: row["sha256"] for row in context["input_bindings"]}
+    resolved = []
+    for source, receipt in zip(sources, state["sources"], strict=True):
+        try:
+            relative = source.relative_to(old_context.parent)
+        except ValueError as exc:
+            raise TreasuryError("Treasury source is outside its admitted run") from exc
+        if ".." in relative.parts:
+            raise TreasuryError("Treasury source has an invalid relative path")
+        candidate = context_path.parent / relative
+        if admitted.get(str(candidate)) != receipt["sha256"]:
+            raise TreasuryError("Relocated treasury source is not the admitted input")
+        resolved.append(candidate)
+    return resolved
+
+
+def source_check(state: dict[str, Any], output: Path | None = None) -> None:
     """Exact hashes detect source changes; the CLI separately enforces archive binding."""
-    for source in state["sources"]:
-        path = Path(source["path"])
+    paths = (
+        current_source_paths(output, state)
+        if output is not None
+        else [Path(row["path"]) for row in state["sources"]]
+    )
+    for path, source in zip(paths, state["sources"], strict=True):
         if path.is_symlink() or not path.is_file():
             raise TreasuryError("A prepared source is missing or linked")
         if hashlib.sha256(path.read_bytes()).hexdigest() != source["sha256"]:
@@ -76,7 +120,7 @@ def _state(output: Path) -> dict[str, Any]:
         {k: v for k, v in state.items() if k != "state_sha256"}
     ):
         raise TreasuryError("Session integrity mismatch")
-    source_check(state)
+    source_check(state, output)
     return state
 
 

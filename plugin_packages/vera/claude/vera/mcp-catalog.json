@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.512",
+  "version": "0.1.513",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -265,7 +265,7 @@
         {
           "name": "agenzia_workspace_resume",
           "title": "Riprendi acquisizione",
-          "description": "Re-enumerate the same requested period in a new run, reusing only locally verified originals.",
+          "description": "Resume the selected acquisition in a new worker attempt, retaining its Archive runs and reusing locally verified originals.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -1550,7 +1550,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "check-entries-widgets",
-          "version": "0.1.56-managed-mcp.2"
+          "version": "0.1.57"
         },
         "capabilities": {
           "tools": {},
@@ -2086,7 +2086,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "concordato-plan-review-widgets",
-          "version": "0.1.42"
+          "version": "0.1.43"
         },
         "capabilities": {
           "tools": {},
@@ -2616,7 +2616,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "journal-bank-widgets",
-          "version": "0.1.79"
+          "version": "0.1.80"
         },
         "capabilities": {
           "tools": {},
@@ -3152,7 +3152,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "journal-sampling-widgets",
-          "version": "0.1.56"
+          "version": "0.1.57"
         },
         "capabilities": {
           "tools": {},
@@ -4778,7 +4778,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "open-item-reconciliation-widgets",
-          "version": "0.1.82"
+          "version": "0.1.83"
         },
         "capabilities": {
           "tools": {},
@@ -7090,7 +7090,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "report-builder-widgets",
-          "version": "0.1.45"
+          "version": "0.1.46"
         },
         "capabilities": {
           "tools": {},
@@ -10088,7 +10088,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.512",
+          "version": "0.1.513",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
@@ -36638,7 +36638,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "vera-studio-archive",
-          "version": "0.1.69"
+          "version": "0.1.70"
         },
         "capabilities": {
           "tools": {}
@@ -36646,6 +36646,79 @@
         "instructions": "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing."
       },
       "tools": [
+        {
+          "name": "checkpoint_studio_client_workflow",
+          "title": "Retain this Archive run's completed stages",
+          "description": "Save exact admitted inputs, provenance and current outputs to the owner-private recovery store independently of the archive destination. Reuse the existing client, engagement and run IDs; inspect recovery.status before claiming a checkpoint was saved.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "restore_studio_client_workflow",
+          "title": "Restore this Archive run to an available destination",
+          "description": "Restore the retained exact run, including completed stages and its original IDs, to an explicitly authorized new local client folder. Preserve existing destination contents. Return the relocated context for continuation; do not create another run or repeat completed work.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "destination": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "destination"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
         {
           "name": "studio_archive_status",
           "title": "Check Vera Studio Archive status",
@@ -36782,8 +36855,8 @@
         },
         {
           "name": "create_studio_archive_client",
-          "title": "Create a new Studio Archive client",
-          "description": "After the user explicitly chooses New client, create a safely named top-level folder, assign a stable client ID independent of that folder name, and register the confirmed identity. For work starting from supplied files, first check_studio_import_sources for all selected files and resolve any unavailable inputs. This begins but does not complete Vera's New Client professional workflow.",
+          "title": "Create a Studio Archive destination",
+          "description": "Create the user's selected archive destination and generate its internal stable ID. Use general_workspace for a general label such as Vari without registering that label as a legal identity. Reuse an established destination. Check supplied inputs before starting dependent work. Folder creation does not start professional client onboarding.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -36791,7 +36864,11 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 160,
-                "description": "Confirmed client legal name; Vera derives the folder label."
+                "description": "Confirmed destination label; for a general workspace this can be Vari, without claiming a legal name."
+              },
+              "general_workspace": {
+                "type": "boolean",
+                "description": "The user selected a general archive destination rather than a named client. No legal, email or tax identity is required."
               },
               "email_addresses": {
                 "type": "array",
@@ -37103,7 +37180,7 @@
         {
           "name": "create_studio_client_engagement",
           "title": "Create a Studio Archive client engagement",
-          "description": "Create one durable engagement and managed input folder for an exact registered client without assuming a journal or any other document type. For work starting from supplied files, check_studio_import_sources must first establish access to all selected inputs; warn and resolve unavailable inputs before creation. Documentless work does not require a file check.",
+          "description": "Create one durable engagement and managed input folder for an exact registered client without assuming a document type. Generate one idempotency_key for this intended engagement and retain it before calling; reuse it after any timeout, lost response or interrupted save to recover the same engagement. The professional never supplies this key. Check access to selected supplied inputs before creation; documentless work needs no file check.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -37115,6 +37192,12 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 160
+              },
+              "idempotency_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200,
+                "description": "Software-managed request key. Generate once per intentionally new engagement and reuse unchanged on every retry."
               }
             },
             "required": [
@@ -37242,6 +37325,7 @@
                   "posizioni-negoziali",
                   "contenzioso-tributario",
                   "lipe",
+                  "rating-legalita",
                   "scissione-guidata",
                   "esg-reporting-assurance",
                   "treasury-forecast",
@@ -38035,6 +38119,10 @@
                 "type": "string",
                 "pattern": "^scope_[0-9a-f]{24}$",
                 "description": "Exact client scope_id returned by studio_archive_status."
+              },
+              "general_workspace": {
+                "type": "boolean",
+                "description": "Register a user-selected general folder such as Vari without requiring client identity values."
               },
               "email_addresses": {
                 "type": "array",

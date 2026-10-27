@@ -289,11 +289,11 @@
     },
     {
       "path": "modules/report-builder/scripts/implementation_bootstrap.py",
-      "sha256": "0ba691a3158131b7c4c5d488d6ea56da1c335ecb896549f1457cf2d31d20354c"
+      "sha256": "5af67b412de209aaaf9052479efdbc8cfd52f35f4d115dcb52da01ecdba76cfd"
     },
     {
       "path": "modules/report-builder/scripts/implementation_contract.py",
-      "sha256": "d59c4651e56803b009d6556bc1ddad1a45565a9adcd557447610c73a83d901bc"
+      "sha256": "b7751d9388c6e90271b6cd95024469791a7798dfe60173052ed0d10852521927"
     },
     {
       "path": "modules/report-builder/scripts/inspect_inputs.py",
@@ -357,7 +357,7 @@
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
@@ -374,6 +374,10 @@
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/report-builder/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/relationships.py",
@@ -397,7 +401,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "6de52990c45d6967d0a841332a66b24eb3b402c3b664d0cf3ef06c99b1440a84"
+      "sha256": "e92826bbf959c6b6871a21c3ffd4eae767aa9c2aa27908675621deca5aef02e1"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -417,7 +421,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "c812020fdaf5aadc7d4bdbe2dfa3a7daa95794373a4e461c277fe1d31607358c"
+      "sha256": "8cf65de686502a721f96d07e45c0dae829bbb1700b60877b60d13e31be821e8e"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -445,7 +449,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "8edd8e15d7f5ae525b585639ca5261fb49684e1450b9e76101c0be3b2ddf4563"
+      "sha256": "eb636ff7d78f797e917907c19b207163467a4f4fa15d559fa87daf1ae4e035e3"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",
@@ -473,11 +477,11 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
-      "sha256": "01f106820bf5d30d45e20c713c2e2d641452a3cb90748a8a9396853389a963a4"
+      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
-      "sha256": "6d916c494345139147e557b7812bef2007315834b38ea04c0150af0333293d7a"
+      "sha256": "c36a84202d9d030232638c28f7bf721c26111fc4bbdcec1a27df150bbb2219d0"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",
@@ -497,7 +501,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -514,6 +518,10 @@
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "modules/studio-archive/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/relationships.py",
@@ -537,7 +545,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "fe86f01a273062f749667eb4fdc3058b22c646e7507c2244355dd3e5f9af0e46"
+      "sha256": "1d320f7511a4d5ebd5acd63144d652f99cf0427d53ea2ccc6e169665330276a1"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",
@@ -645,7 +653,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "618c55739ff238b7000704131ce0995d1129facd53152923f13805812f68fe49"
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -662,6 +670,10 @@
     {
       "path": "vendor/modules/vera_assurance/money.py",
       "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431"
+    },
+    {
+      "path": "vendor/modules/vera_assurance/recovery.py",
+      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -926,5 +938,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8443673c956c865129b795f0333fb4ce2a0125e5d274b9a1967e76d8c6150231"
+  "canonical_course_sha256": "35cf7b95af0655a6833742194b7341ab94ee595c3ab11ce063b676bf31658f78"
 }

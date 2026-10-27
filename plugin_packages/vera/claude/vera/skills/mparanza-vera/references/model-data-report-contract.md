@@ -23,6 +23,12 @@ of host hooks, transcripts or other tools. Local report schema 4 records exact
 outgoing payload hashes and measured source coordinates. Server receipt schema 3
 binds the frozen report hash to the existing Vera userID, run and revision. A
 pending receipt is retried through normal Archive use without changing the report.
+Collection or report-storage failure does not block the underlying work or its
+delivery. Preserve the actual pipeline outcome, return its result, and expose the
+reporting failure separately. Retain available measurement-gap evidence; never
+invent counts or claim collection succeeded merely because the work succeeded.
+Delivery after closure keeps the sealed report intact and records its gap
+separately. Retry reporting for the same work without rerunning the calculation.
 The manual build, substantive-work and phase-input rules below apply only to
 Clara and Lucia and to reading historical reports.
 

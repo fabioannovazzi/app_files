@@ -58,6 +58,7 @@ IMPLEMENTATION_CONTRACT = (
     ("shared_assurance", "money.py"),
     ("shared_assurance", "relationships.py"),
     ("shared_assurance", "review_output_transaction.cjs"),
+    ("shared_assurance", "recovery.py"),
     ("shared_assurance", "serialization.py"),
     ("shared_pdf", "__init__.py"),
     ("shared_pdf", "rules.py"),

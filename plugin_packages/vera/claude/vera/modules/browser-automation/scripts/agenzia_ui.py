@@ -103,10 +103,10 @@ def dispatch(request: dict[str, Any]) -> dict[str, Any]:
     if action == "record-output":
         from ade_acquisition.archive_runs import record_status_payload
 
-        record_status_payload(
+        gap = record_status_payload(
             run, args["summary"], args["model_payload"], channel="mcp"
         )
-        return {"recorded": True}
+        return {"recorded": gap is None, **({"reporting": gap} if gap else {})}
     if action == "continue":
         if read_json(run / "status.json")["state"] != "waiting_for_login":
             raise AcquisitionError("run-not-waiting-for-login")
@@ -121,8 +121,14 @@ def dispatch(request: dict[str, Any]) -> dict[str, Any]:
             raise AcquisitionError("start-request-id-invalid")
         with Store(path.parent).lock():
             recent = read_json(recent_path) if recent_path.exists() else []
+            binding_path = run / "archive-runs.json"
             started = _start(
-                store, plan, f"{source_revision}:resume:{run.name}:{request_id}"
+                store,
+                plan,
+                f"{source_revision}:resume:{run.name}:{request_id}",
+                archive_bindings=(
+                    read_json(binding_path) if binding_path.is_file() else None
+                ),
             )
             if not any(entry["run_id"] == started["run_id"] for entry in recent):
                 recent.append(

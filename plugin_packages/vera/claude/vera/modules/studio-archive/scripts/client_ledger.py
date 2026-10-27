@@ -49,6 +49,7 @@ __all__ = [
     "complete_run",
     "create_client_manifest",
     "create_engagement",
+    "ensure_engagement",
     "fail_run",
     "finalize_run",
     "find_client_manifests",
@@ -363,6 +364,13 @@ def _engagement_lock(client_root: Path, engagement_id: str) -> Iterator[None]:
     lock_path = (
         _engagement_root(client_root.resolve(), engagement_id) / _ENGAGEMENT_LOCK_NAME
     )
+    with _ledger_file_lock(lock_path):
+        yield
+
+
+@contextmanager
+def _ledger_file_lock(lock_path: Path) -> Iterator[None]:
+    """Serialize one exact ledger identity across local processes and threads."""
     thread_lock = _engagement_thread_lock(lock_path)
     with thread_lock:
         descriptor = -1
@@ -709,6 +717,98 @@ def create_engagement(
         shutil.rmtree(target, ignore_errors=True)
         raise
     return manifest
+
+
+def ensure_engagement(
+    client_root: Path,
+    client_id: str,
+    label: str,
+    *,
+    idempotency_key: str,
+) -> dict[str, Any]:
+    """Create or recover one exact request, even if its first response was lost.
+
+    A fixed request identity and OS lock prevent duplicate engagements. The
+    sealed intent precedes directory writes, so an interrupted initial save can
+    resume without inventing a new ID, timestamp or professional request.
+    """
+    root = _ordinary_directory(client_root, label="client folder")
+    client = load_client_manifest(root)
+    if client["client_id"] != client_id:
+        raise LedgerError("Customer folder belongs to another client.")
+    label = _text(label, label="engagement label", maximum=160)
+    key = _text(idempotency_key, label="idempotency_key", maximum=200)
+    identity = _canonical_json_sha256({"client_id": client_id, "key": key})
+    engagement_id = "eng_" + identity[:24]
+    request_sha = _canonical_json_sha256({"identity": identity, "label": label})
+    _ordinary_directory(_engagements_root(root), label="engagement ledger directory")
+    requests = root / LEDGER_DIRECTORY / ".engagement-requests"
+    requests.mkdir(mode=0o700, exist_ok=True)
+    _ordinary_directory(requests, label="engagement creation requests")
+    intent_path = requests / f"{engagement_id}.json"
+    target = _engagement_root(root, engagement_id)
+    with _ledger_file_lock(requests / f"{engagement_id}.lock"):
+        if intent_path.exists() or intent_path.is_symlink():
+            intent = _validate_seal(
+                _read_json(intent_path, label="engagement creation request"),
+                label="engagement creation request",
+            )
+            if (
+                intent.get("schema_version") != "vera.engagement_creation.v1"
+                or intent.get("request_sha256") != request_sha
+                or intent.get("client_id") != client_id
+                or intent.get("engagement_id") != engagement_id
+                or intent.get("label") != label
+            ):
+                raise LedgerError(
+                    "Creation key belongs to a different engagement request."
+                )
+            created_at = _text(intent.get("created_at"), label="created_at", maximum=80)
+        else:
+            if target.exists() or target.is_symlink():
+                raise LedgerError(
+                    "Unreceipted engagement already occupies the request identity."
+                )
+            created_at = _now_iso()
+            _write_json(
+                intent_path,
+                _sealed(
+                    {
+                        "schema_version": "vera.engagement_creation.v1",
+                        "request_sha256": request_sha,
+                        "client_id": client_id,
+                        "engagement_id": engagement_id,
+                        "label": label,
+                        "created_at": created_at,
+                    }
+                ),
+            )
+        manifest_path = target / "engagement.json"
+        if manifest_path.exists() or manifest_path.is_symlink():
+            manifest = load_engagement_manifest(root, engagement_id)
+            if manifest["label"] != label or manifest["created_at"] != created_at:
+                raise LedgerError("Saved engagement differs from its creation request.")
+            return {"engagement": manifest, "created": False}
+        _ordinary_directory(target, label="engagement", create=True)
+        for name in ("inputs", "runs"):
+            _ordinary_directory(
+                target / name, label="engagement collection", create=True
+            )
+        descriptor = _open_engagement_lock(target / _ENGAGEMENT_LOCK_NAME)
+        os.close(descriptor)
+        manifest = _sealed(
+            {
+                "schema_version": ENGAGEMENT_MANIFEST_SCHEMA,
+                "client_id": client_id,
+                "engagement_id": engagement_id,
+                "label": label,
+                "status": "open",
+                "created_at": created_at,
+                "closed_at": None,
+            }
+        )
+        _write_json(manifest_path, manifest)
+        return {"engagement": manifest, "created": True}
 
 
 def _iter_manifest_directories(root: Path, *, prefix: str, maximum: int) -> list[Path]:
@@ -1389,7 +1489,9 @@ def _load_artifact_binding(
     run_id = _identifier(reference["run_id"], label="run_id", pattern=_RUN_ID_RE)
     artifact_id = _text(reference["artifact_id"], label="artifact_id", maximum=120)
     role = _text(reference["role"], label="upstream artifact role", maximum=80)
-    upstream = load_run(client_root, engagement_id, run_id, verify_inputs=True)
+    # The next job selects a sealed output. Its exact artifact and provenance
+    # remain verifiable without reopening the completed producer's input gate.
+    upstream = _load_run_identity(client_root, engagement_id, run_id)
     if upstream["run"]["status"] not in {"ready_for_review", "completed"}:
         raise LedgerError("Upstream run is not available for handoff.")
     artifacts = validate_run_artifacts(client_root, engagement_id, run_id)
@@ -1784,20 +1886,19 @@ def load_run(
     input_path = run_root / "input_manifest.json"
     context_path = Path(loaded["context_path"])
     run, inputs, context = loaded["run"], loaded["input_manifest"], loaded["context"]
+    if verify_inputs:
+        from vera_assurance.recovery import repair_run_inputs
+
+        try:
+            repair_run_inputs(context_path)
+        except (OSError, ValueError) as exc:
+            raise LedgerError(f"Admitted input recovery is unavailable: {exc}") from exc
     resolved_bindings: list[dict[str, Any]] = []
     for binding in inputs["inputs"]:
-        source = _contained_input_path(root, root / binding["source_relative_path"])
-        if verify_inputs:
-            byte_count, sha256 = _stable_file_identity(
-                source,
-                label="bound workflow input",
-            )
-            if byte_count != binding["byte_count"] or sha256 != binding["sha256"]:
-                raise LedgerError(
-                    "A bound workflow input no longer matches its receipt."
-                )
-        else:
-            _ordinary_file(source, label="bound workflow input")
+        # The sealed run input manifest is the retained admission decision.
+        # Originals and upstream receipts were verified before these execution
+        # copies were made. Their later availability cannot reopen that gate.
+        source = root / binding["source_relative_path"]
         execution = _contained_input_path(
             run_root, run_root / binding["execution_relative_path"]
         )
@@ -1813,71 +1914,6 @@ def load_run(
                 raise LedgerError("Run execution input no longer matches its receipt.")
         else:
             _ordinary_file(execution, label="run execution input")
-        receipt_path = _contained_input_path(
-            root, root / binding["receipt_relative_path"]
-        )
-        _ordinary_file(receipt_path, label="bound workflow input receipt")
-        if binding["kind"] == "import":
-            receipt = _validate_input_receipt(
-                _read_json(receipt_path, label="bound input receipt"),
-                expected_client_id=client["client_id"],
-                expected_engagement_id=engagement_id,
-            )
-            expected_receipt_path = (
-                _engagement_root(root, engagement_id)
-                / "inputs"
-                / binding["binding_id"]
-                / "receipt.json"
-            )
-            if (
-                receipt_path != expected_receipt_path
-                or receipt["input_id"] != binding["binding_id"]
-                or receipt["content_sha256"] != binding["receipt_sha256"]
-                or receipt["sha256"] != binding["sha256"]
-                or receipt["byte_count"] != binding["byte_count"]
-                or receipt_path.parent / receipt["stored_name"] != source
-            ):
-                raise LedgerError("Bound input receipt no longer matches its run.")
-        else:
-            upstream_run_id = binding["upstream_run_id"]
-            expected_receipt_path = (
-                _run_root(root, engagement_id, upstream_run_id)
-                / "artifact_manifest.json"
-            )
-            if receipt_path != expected_receipt_path:
-                raise LedgerError("Upstream artifact receipt path is stale.")
-            artifact_manifest = validate_run_artifacts(
-                root,
-                engagement_id,
-                upstream_run_id,
-            )
-            if artifact_manifest["content_sha256"] != binding["receipt_sha256"]:
-                retained = _contained_input_path(
-                    root,
-                    receipt_path.parent
-                    / "artifact-manifest-history"
-                    / f"{binding['receipt_sha256']}.json",
-                )
-                artifact_manifest = _read_artifact_manifest(retained, artifact_manifest)
-            artifact = next(
-                (
-                    item
-                    for item in artifact_manifest["artifacts"]
-                    if item["artifact_id"] == binding["upstream_artifact_id"]
-                ),
-                None,
-            )
-            if (
-                artifact_manifest["content_sha256"] != binding["receipt_sha256"]
-                or artifact_manifest["workflow_id"] != binding["upstream_workflow_id"]
-                or artifact is None
-                or artifact["sha256"] != binding["sha256"]
-                or artifact["byte_count"] != binding["byte_count"]
-                or receipt_path.parent / "outputs" / artifact["path"] != source
-            ):
-                raise LedgerError(
-                    "Upstream artifact receipt no longer matches its run."
-                )
         resolved_bindings.append(
             {**binding, "source_path": str(source), "path": str(execution)}
         )
@@ -2160,6 +2196,89 @@ def append_workflow_snapshot(
         return row
 
 
+def _replay_prepared_request(
+    root: Path,
+    engagement_id: str,
+    workflow_id: str,
+    *,
+    input_ids: Sequence[str],
+    upstream_artifacts: Sequence[Mapping[str, Any]],
+    label: str | None,
+    purpose: str | None,
+    idempotency_key: str,
+    new_run: bool,
+) -> dict[str, Any] | None:
+    """Resolve a retained request before reopening source admission.
+
+    Exact selected IDs, roles and purpose distinguish a retry from different
+    work. The admitted run retains its original version metadata and receipts.
+    """
+    key = _text(idempotency_key, label="idempotency_key", maximum=200)
+    if new_run:
+        key = "new:" + hashlib.sha256(key.encode("utf-8")).hexdigest()
+    normalized_upstream = []
+    for reference in upstream_artifacts:
+        if set(reference) != {"run_id", "artifact_id", "role"}:
+            raise LedgerError("Upstream artifact reference shape is invalid.")
+        normalized_upstream.append(
+            {
+                "run_id": reference["run_id"],
+                "artifact_id": _text(
+                    reference["artifact_id"], label="artifact_id", maximum=120
+                ),
+                "role": _text(
+                    reference["role"], label="upstream artifact role", maximum=80
+                ),
+            }
+        )
+    with _engagement_lock(root, engagement_id):
+        headers, issues = _inspect_run_headers(root, engagement_id)
+        selected = [run for run in headers if run["idempotency_key"] == key]
+        if not selected:
+            return None
+        if len(selected) != 1:
+            raise LedgerError(
+                "Run request identity is ambiguous; preserve its existing runs."
+            )
+        run = selected[0]
+        identity = _load_run_identity(root, engagement_id, run["run_id"])
+        bindings = identity["input_manifest"]["inputs"]
+        expected_inputs = [
+            row["binding_id"] for row in bindings if row["kind"] == "import"
+        ]
+        expected_upstream = [
+            {
+                "run_id": row["upstream_run_id"],
+                "artifact_id": row["upstream_artifact_id"],
+                "role": row["role"],
+            }
+            for row in bindings
+            if row["kind"] == "upstream_artifact"
+        ]
+        if (
+            run["workflow_id"] != workflow_id
+            or run["label"]
+            != _text(
+                label or workflow_id.replace("-", " ").title(),
+                label="run label",
+                maximum=160,
+            )
+            or run["purpose"]
+            != _text(
+                purpose or f"Execute the {workflow_id} workflow for this engagement.",
+                label="run purpose",
+                maximum=500,
+            )
+            or list(input_ids) != expected_inputs
+            or normalized_upstream != expected_upstream
+        ):
+            raise LedgerError(
+                "Idempotency key is already bound to a different run request."
+            )
+        existing = load_run(root, engagement_id, run["run_id"])
+        return {"status": "already_prepared", **existing, "blocked_runs": issues}
+
+
 def prepare_run(
     client_root: Path,
     client_id: str,
@@ -2181,9 +2300,23 @@ def prepare_run(
     engagement = load_engagement_manifest(root, engagement_id)
     if client["client_id"] != client_id or engagement["client_id"] != client_id:
         raise LedgerError("Selected client and engagement do not match.")
+    workflow_id = _text(workflow_id, label="workflow_id", maximum=80)
+    if idempotency_key is not None:
+        replay = _replay_prepared_request(
+            root,
+            engagement_id,
+            workflow_id,
+            input_ids=input_ids,
+            upstream_artifacts=upstream_artifacts,
+            label=label,
+            purpose=purpose,
+            idempotency_key=idempotency_key,
+            new_run=new_run,
+        )
+        if replay is not None:
+            return replay
     if engagement["status"] != "open":
         raise LedgerError("A workflow cannot be prepared in a closed engagement.")
-    workflow_id = _text(workflow_id, label="workflow_id", maximum=80)
     workflow_version = _text(workflow_version, label="workflow_version", maximum=80)
     bindings = [
         _input_binding(load_input_receipt(root, engagement_id, input_id))
@@ -2313,6 +2446,17 @@ def prepare_run(
                     or copied_sha256 != binding["sha256"]
                 ):
                     raise LedgerError("Run execution input copy is not exact.")
+            provenance = run_root / "source-receipts"
+            provenance.mkdir(mode=0o700)
+            for binding in bindings:
+                receipt_path = root / binding["receipt_relative_path"]
+                receipt = _validate_seal(
+                    _read_json(receipt_path, label="admitted source receipt"),
+                    label="admitted source receipt",
+                )
+                if receipt["content_sha256"] != binding["receipt_sha256"]:
+                    raise LedgerError("Source receipt changed during run preparation.")
+                _write_json(provenance / f"{binding['receipt_sha256']}.json", receipt)
             inputs_content = {
                 "schema_version": INPUT_MANIFEST_SCHEMA,
                 "client_id": client_id,
@@ -2442,6 +2586,37 @@ def _finish_terminal_reporting(loaded: dict[str, Any]) -> dict[str, Any]:
     return {**loaded, "reporting": reporting}
 
 
+def _review_reporting_failure(
+    loaded: Mapping[str, Any], error: Exception
+) -> dict[str, Any]:
+    """Separate a missing review report from the retained professional outputs."""
+    logging.getLogger(__name__).warning(
+        "Run %s remains reviewable with pending reporting: %s",
+        loaded["run"]["run_id"],
+        type(error).__name__,
+    )
+    return {
+        "status": "unavailable",
+        "run_id": loaded["run"]["run_id"],
+        "retry_pending": True,
+        "error": {
+            "code": "archive_review_report_pending",
+            "reason": type(error).__name__,
+        },
+    }
+
+
+def _save_review_reporting(
+    loaded: Mapping[str, Any], reporting: dict[str, Any]
+) -> dict[str, Any]:
+    """A sidecar write cannot hide a committed review-ready artifact manifest."""
+    try:
+        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as error:
+        return _review_reporting_failure(loaded, error)
+    return reporting
+
+
 def _write_run_status_locked(
     client_root: Path,
     engagement_id: str,
@@ -2451,11 +2626,12 @@ def _write_run_status_locked(
     reason: str | None = None,
 ) -> dict[str, Any]:
     engagement = load_engagement_manifest(client_root, engagement_id)
-    # Failure/cancellation must remain recordable when execution inputs fail.
-    # Ownership and sealed metadata still validate; execution/completion retain
-    # the full input-byte checks through load_run and validate_run_artifacts.
+    # Input bytes are needed to execute or seal a result. Completing that sealed
+    # result checks its output bytes below, without reopening passed source intake.
     loader = (
-        _load_run_identity if target_status in {"failed", "cancelled"} else load_run
+        load_run
+        if target_status in {"running", "ready_for_review"}
+        else _load_run_identity
     )
     loaded = loader(client_root, engagement_id, run_id)
     run = loaded["run"]
@@ -2673,8 +2849,6 @@ def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, A
                 )
             if "running" not in _RUN_TRANSITIONS[current]:
                 raise LedgerError(f"Run cannot transition from {current} to running.")
-        runtime = _reporting_runtime()
-
         if current in {"failed", "ready_for_review"}:
             # The professional output tree is opened again by this explicit
             # transition. Reporting revisions are retained by the collector.
@@ -2689,8 +2863,37 @@ def start_run(client_root: Path, engagement_id: str, run_id: str) -> dict[str, A
                 history.mkdir(parents=True, mode=0o700)
                 manifest.rename(history / manifest.name)
         loaded = _write_run_status_locked(root, engagement_id, run_id, "running")
-        reporting = runtime.begin_report(loaded)
-        _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+        try:
+            reporting = _reporting_runtime().begin_report(loaded)
+            _write_json(
+                Path(loaded["run_root"]) / "model_data_reporting.json", reporting
+            )
+        except (
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            ImportError,
+            sqlite3.Error,
+        ) as exc:
+            # The run transition already committed. Report initialization must
+            # not misrepresent it as a failed start or cause a second run.
+            logging.getLogger(__name__).warning(
+                "Started Archive run %s has pending reporting: %s",
+                run_id,
+                type(exc).__name__,
+            )
+            reporting = {
+                "status": "unavailable",
+                "run_status_saved": True,
+                "run_id": run_id,
+                "retry_pending": True,
+                "error": {
+                    "code": "archive_report_start_pending",
+                    "reason": type(exc).__name__,
+                    "message": "Work has started. Its privacy report could not initialize; continue this run and retry reporting without repeating the work.",
+                },
+            }
         return {**loaded, "reporting": reporting}
 
 
@@ -2878,8 +3081,8 @@ def _finalize_run_locked(
 
     try:
         reporting = runtime.finish_report(loaded)
-    except (ValueError, OSError) as exc:
-        raise LedgerError(f"Run reporting evidence is invalid: {exc}") from exc
+    except (ValueError, OSError, KeyError, TypeError, sqlite3.Error) as exc:
+        reporting = _review_reporting_failure(loaded, exc)
     reporting = {
         **reporting,
         "run_id": run_id,
@@ -2923,7 +3126,17 @@ def _finalize_run_locked(
     if not files:
         raise LedgerError("An empty workflow output cannot be finalized.")
     if reporting["status"] in {"available", "created", "legacy_required"}:
-        _require_model_data_artifacts(loaded)
+        try:
+            _require_model_data_artifacts(loaded)
+        except (
+            LedgerError,
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            sqlite3.Error,
+        ) as exc:
+            reporting = _review_reporting_failure(loaded, exc)
     if isinstance(declarations, (str, bytes)) or len(declarations) > _MAX_ARTIFACTS:
         raise LedgerError("Artifact declarations are invalid or too numerous.")
     declared: dict[str, Mapping[str, Any]] = {}
@@ -3029,9 +3242,7 @@ def _finalize_run_locked(
                     f"Artifact receipt history could not be retained: {exc}"
                 ) from exc
         else:
-            _write_json(
-                Path(loaded["run_root"]) / "model_data_reporting.json", reporting
-            )
+            reporting = _save_review_reporting(loaded, reporting)
             return {
                 **loaded,
                 "artifact_manifest": existing,
@@ -3056,7 +3267,7 @@ def _finalize_run_locked(
             client_root, engagement_id, run_id, "ready_for_review"
         )
     reporting["review_ready_at"] = loaded["run"]["updated_at"]
-    _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
+    reporting = _save_review_reporting(loaded, reporting)
     return {
         **loaded,
         "artifact_manifest": manifest,
@@ -3106,7 +3317,9 @@ def validate_run_artifacts(
     client_root: Path, engagement_id: str, run_id: str
 ) -> dict[str, Any]:
     """Verify that a run's declared artifacts still close its exact output tree."""
-    loaded = load_run(client_root, engagement_id, run_id)
+    # Finalization already admitted the execution bytes. Delivering its sealed
+    # artifacts verifies their exact bytes and ownership without reopening intake.
+    loaded = _load_run_identity(client_root, engagement_id, run_id)
     manifest = _read_artifact_manifest(
         Path(loaded["run_root"]) / "artifact_manifest.json", loaded["run"]
     )

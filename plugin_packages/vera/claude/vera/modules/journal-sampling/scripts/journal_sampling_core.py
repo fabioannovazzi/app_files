@@ -221,6 +221,7 @@ ASSURANCE_IMPLEMENTATION_FILES = (
         "review_output_transaction.cjs",
         "implementation.vera_assurance_review_output_transaction",
     ),
+    ("recovery.py", "implementation.vera_assurance_recovery"),
     ("serialization.py", "implementation.vera_assurance_serialization"),
 )
 ZERO = Decimal("0")
