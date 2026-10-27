@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.184",
+  "version": "0.1.185",
   "services": [
     {
       "name": "luciaAssuranceRuntime",
@@ -9,7 +9,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "lucia-assurance-runtime",
-          "version": "0.1.68"
+          "version": "0.1.69"
         },
         "capabilities": {
           "tools": {}
@@ -1814,6 +1814,7 @@
                   },
                   "capture_state": {
                     "default": "legacy",
+                    "description": "Use complete only with an observed error_code or technical_frames in at least one diagnostic. errno, exit_code and prose alone do not satisfy complete capture; otherwise retain pending or unavailable and explain the missing evidence.",
                     "enum": [
                       "legacy",
                       "pending",
@@ -3070,7 +3071,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "vera-studio-archive",
-          "version": "0.1.68"
+          "version": "0.1.69"
         },
         "capabilities": {
           "tools": {}
@@ -3770,6 +3771,84 @@
             "required": [
               "engagement_id",
               "workflow_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "verify_studio_run_report",
+          "title": "Verify a saved Archive report receipt",
+          "description": "Verify the exact saved terminal report for this client, engagement and run against its machine identity and server receipt. Uses the service's network access; no shell command is needed. Returns verified, unavailable, not_requested for saved local-only reports, or not_applicable. Does not rerun calculations, regenerate reports, stamp receipts or change the run. Report unavailable verification separately from the pipeline outcome.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "write_studio_run_artifact",
+          "title": "Save authored text in one Archive run",
+          "description": "Save agent-authored JSON, Markdown or other text inside outputs/authored of this exact running run. No shell write is needed. Same name and bytes replay safely; changed content requires a new filename. Does not execute a helper, finalize, approve, or establish source lineage. Check success before any dependent operation.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "engagement_id": {
+                "type": "string",
+                "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "run_id": {
+                "type": "string",
+                "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "name": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$"
+              },
+              "content": {
+                "type": "string",
+                "maxLength": 65536
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "name",
+              "content"
             ],
             "additionalProperties": false
           },

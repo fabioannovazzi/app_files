@@ -50,7 +50,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "ee1d80728de8d4bb9f37949b43782749a94a1de69ec86b8a480253794e45e863",
+  "course_sha256": "8443673c956c865129b795f0333fb4ce2a0125e5d274b9a1967e76d8c6150231",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -783,5 +783,22 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "archive_boundary_source_review_20261027": {
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "previous_course_sha256": "ee1d80728de8d4bb9f37949b43782749a94a1de69ec86b8a480253794e45e863",
+    "course_sha256": "dde8c0c9aee6deff80ca6f8500a21d6931735d1f788f34ca272030959b2237de",
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
+  },
+  "archive_boundary_extension_source_review_20261027": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-27",
+    "previous_course_sha256": "dde8c0c9aee6deff80ca6f8500a21d6931735d1f788f34ca272030959b2237de",
+    "course_sha256": "8443673c956c865129b795f0333fb4ce2a0125e5d274b9a1967e76d8c6150231",
+    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
+    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
   }
 }

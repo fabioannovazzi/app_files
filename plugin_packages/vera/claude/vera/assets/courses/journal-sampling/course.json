@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/journal-sampling/references/pdf-recovery.md",
-      "sha256": "e0abc5dc0e62beded4b717d4b8b536c202eed658384233b00d998ba589dcd71b"
+      "sha256": "e7b7e21498bbf971608e5176b8ed8e78293c956fc8132d46c20639230ee16495"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "58ab5b8832dfe3dae1fe7e227eb169da1e3cfec211d381a1f1d11b3d5d1dec3a"
+      "sha256": "f3d08ad179c26e3a52d684662241dc062dde6e83fe14324003da1d1144e747fa"
     },
     {
       "path": "modules/journal-sampling/skills/mparanza-journal-sampling/references/geneva.md",
@@ -156,7 +156,7 @@
     },
     {
       "path": "skills/mparanza-journal-sampling/SKILL.md",
-      "sha256": "291e76c978f31f944d607dfea4b64e65865db9c24d00815fc8e3d62b930b3728"
+      "sha256": "a25a2609de6216b6fbd5670f3a17cfd59a4fe71af27338518031ea981c8f1767"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -561,5 +561,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "44b663d0c054d91fa07a383059d49bb0cc435353f291951e1b99c504c36d256d"
+  "canonical_course_sha256": "3233f12ae9d3936e50d7ae50a6369ce145b1ffd42fe6b2de4a814af6e3a90d24"
 }

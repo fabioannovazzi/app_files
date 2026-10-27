@@ -70,6 +70,8 @@ __all__ = [
     "snapshot_client_folder",
     "start_run",
     "validate_run_artifacts",
+    "write_run_artifact",
+    "verify_run_report",
 ]
 
 
@@ -2498,6 +2500,144 @@ def _write_run_status_locked(
     }:
         return _finish_terminal_reporting(loaded)
     return loaded
+
+
+def verify_run_report(
+    client_root: Path, engagement_id: str, run_id: str
+) -> dict[str, Any]:
+    """Verify the exact saved report without retrying, stamping or changing a run."""
+    loaded = _load_run_identity(client_root, engagement_id, run_id)
+    if not _reporting_runtime().selective_reporting_enabled():
+        return {"status": "not_applicable", "run_id": run_id}
+    from archive_report_receipt import verify_report
+    from operational_incidents import reporting_credentials
+
+    try:
+        output = _ordinary_directory(Path(loaded["output_dir"]), label="run outputs")
+        options_path = output / "model_data_report_options.json"
+        if options_path.exists() or options_path.is_symlink():
+            options = _read_json(options_path, label="report options")
+            if (
+                set(options) - {"local_only"}
+                or type(options.get("local_only", False)) is not bool
+            ):
+                raise LedgerError("Report options accept only boolean local_only.")
+            if options.get("local_only"):
+                # Respect the saved no-transmission choice even for read-only HTTP.
+                return {
+                    "status": "not_requested",
+                    "reason": "local_only",
+                    "run_id": run_id,
+                }
+        report_path = output / "model_data_report.json"
+        _ordinary_file(report_path, label="model-data report")
+        identity = _stable_file_identity(report_path, label="model-data report")
+        report = _read_json(report_path, label="model-data report")
+        # Exact ownership prevents a valid foreign receipt being attributed to this run.
+        if report.get("run_id") != run_id:
+            raise LedgerError("The saved report belongs to another Archive run.")
+        receipt = verify_report(
+            report_path, user_id=reporting_credentials()["installation_id"]
+        )
+        if (
+            receipt["report_sha256"] != identity[1]
+            or _stable_file_identity(report_path, label="model-data report") != identity
+        ):
+            raise LedgerError("The report changed during verification.")
+        return {
+            "status": "verified",
+            "run_id": run_id,
+            **{
+                key: receipt[key]
+                for key in (
+                    "user_id",
+                    "report_revision",
+                    "report_sha256",
+                    "verification_url",
+                )
+            },
+        }
+    except (
+        LedgerError,
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        sqlite3.Error,
+    ) as exc:
+        # Reporting failure is not a lifecycle transition or a failed calculation.
+        return {
+            "status": "unavailable",
+            "run_id": run_id,
+            "reason": "report_verification_failed",
+            "error_type": type(exc).__name__,
+            "message": "Saved report could not be verified; retain the pipeline outcome and retry verification for this run.",
+        }
+
+
+def write_run_artifact(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    name: str,
+    content: str,
+) -> dict[str, Any]:
+    """Persist authored text without allowing writes to inputs or producer receipts.
+
+    Exact retries are mechanically verifiable; different bytes require a new
+    name so a failed response can never cause silent replacement of evidence.
+    This records authored content, not source lineage or professional approval.
+    """
+    if not isinstance(name, str) or not re.fullmatch(
+        r"[A-Za-z0-9][A-Za-z0-9._-]{0,119}", name
+    ):
+        raise LedgerError("Authored artifact name must be a single filename.")
+    if not isinstance(content, str) or len(content.encode("utf-8")) > 64 * 1024:
+        raise LedgerError("Authored artifact content must be text of at most 64 KiB.")
+    payload = content.encode("utf-8")
+    root = _ordinary_directory(client_root, label="client folder")
+    with _engagement_lock(root, engagement_id):
+        loaded = load_run(root, engagement_id, run_id)
+        if loaded["run"]["status"] != "running":
+            raise LedgerError("Authored artifacts require a running run.")
+        output = _ordinary_directory(Path(loaded["output_dir"]), label="run outputs")
+        folder = _ordinary_directory(
+            output / "authored", label="authored outputs", create=True
+        )
+        target = folder / name
+        digest = hashlib.sha256(payload).hexdigest()
+        replayed = target.exists() or target.is_symlink()
+        if replayed:
+            if _stable_file_identity(target, label="authored artifact") != (
+                len(payload),
+                digest,
+            ):
+                raise LedgerError(
+                    "Artifact name already holds different bytes; use a new name."
+                )
+        else:
+            pending = None
+            try:
+                with tempfile.NamedTemporaryFile(dir=folder, delete=False) as handle:
+                    pending = Path(handle.name)
+                    handle.write(payload)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                os.replace(pending, target)
+            finally:
+                if pending is not None:
+                    pending.unlink(missing_ok=True)
+        return {
+            "client_id": loaded["run"]["client_id"],
+            "engagement_id": engagement_id,
+            "run_id": run_id,
+            "path": str(target),
+            "sha256": digest,
+            "byte_count": len(payload),
+            "replayed": replayed,
+            "origin": "agent_authored",
+            "source_lineage": "unverified",
+        }
 
 
 def _write_run_status(

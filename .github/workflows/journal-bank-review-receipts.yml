@@ -36,6 +36,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_journal_bank_review_receipts.py
+          tests/plugins/test_archive_authored_artifacts.py
           tests/plugins/test_archive_worker_reporting.py
           tests/plugins/test_journal_bank_reconciliation_plugin.py::test_reviewed_pdf_table_adapter_reconciles_amount_not_trailing_balance
           tests/plugins/test_journal_bank_reconciliation_plugin.py::test_canonical_snake_case_mapping_runs_amount_date_cascade_and_native_closure

@@ -40,11 +40,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/pdf-recovery.md",
-      "sha256": "9a89db2670d0085779240b66aa85d9c7de4d770fbcddb60fa93e784fb2697fb9"
+      "sha256": "2c91d8bbfecf17f175ca4c23d3a0104ad154d4ae043469c234a67a41136d5c58"
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "658c8c4233d2500a471303588ffaf9b3188b6da7db7c74115d3231f2850efe46"
+      "sha256": "e5775bb4960feb306dd651abc673f0f7f661637b3cac4c04f542c26b14eb2913"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
-      "sha256": "a9d70a6ad9a399cffb3795777def38b6e2b71f9708d1a5760985dc230354279e"
+      "sha256": "e5b67355ed81a51fae42576054a296e1cd930a11f2195f6c576fb8de9041ddc4"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
@@ -108,7 +108,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "1182e3d44410a3e12e4d468255248cb50d352e1d04215f7d0c6905e4635c878a"
+      "sha256": "e3b3829500ba2b9153b768aa981c44fc931062dc00184c76b369acdef8065056"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -180,7 +180,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "64e13b402ade129ba20aa55c063284f9511295ce21604891d919301958cd162b"
+      "sha256": "599e91c7997322adea41e17c5274ae5a3aeab2a3384388430778c30c48d9e4de"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -609,5 +609,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a41923102635e51651e0131bc2972553d7ba2308b40bbdce2e4c5cf64d2e9b3d"
+  "canonical_course_sha256": "c05c33876c105d17accd5a2e237cbab9bd2fa7de1671328f43b359bac8b7d466"
 }

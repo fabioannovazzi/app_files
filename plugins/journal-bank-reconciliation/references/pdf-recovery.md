@@ -35,7 +35,10 @@ implementation invalidates the session.
    coordinates yourself; ask the professional only for unresolved accounting
    meaning, currency or evidence. Never infer an opening total from the first
    printed total just to make the numbers agree.
-3. Save the proposed ordinary workflow recipe in the run. Use
+3. Save each proposed recipe with `write_studio_run_artifact`, using the exact
+   client, engagement and run IDs, a new filename for changed bytes, and the
+   complete JSON as `content`. Wait for success and pass its returned `path` as
+   `<proposed-recipe>`; do not assume a path or write through the chat shell. Use
    `--pdf-recovery trial --recipe <proposed-recipe> --pdf-reason <evidence-and-change>`.
    With ruled-layout options, every trial first scans the complete PDF for
    unsupported negative amount notation or missing sign decisions. It reports
@@ -53,8 +56,9 @@ implementation invalidates the session.
    `--pdf-recovery freeze` with the exact same recipe. This freshly replays the
    complete PDF and compares postings and diagnostics with the successful trial.
    It saves `frozen_layout.json` and `freeze_receipt.json`; neither is a mapping
-   approval or a qualified population. Copy the exact frozen layout, including
-   `source_sha256`, into the ordinary workflow recipe. Reinspect, obtain the
+   approval or a qualified population. Include the exact frozen layout, including
+   `source_sha256`, in a new recipe saved through `write_studio_run_artifact`,
+   and pass the returned path to the next helper. Reinspect, obtain the
    existing source-mapping decision receipt, normalize and continue through all
    existing replay/qualification and downstream gates.
 5. If the evidence cannot resolve the remaining problem or work is stopped,
@@ -149,8 +153,10 @@ coordinates. This full evidence stays local; select only necessary regions for
 model reasoning. The proposed five column bands, body, separator rules and
 explicit sign policy remain part of the mapping contract.
 
-Write a Python adapter under the same workflow output directory using the
-host's normal coding tools. It reads the inventory JSON on stdin and emits
+Save the complete Python adapter with `write_studio_run_artifact` in this exact
+running Archive run, using a `.py` filename. Use its returned `path` and `sha256`
+in `agent_adapter`; wait for successful persistence before launching a trial.
+Changed code requires a new filename. Do not use a chat-shell write. It reads the inventory JSON on stdin and emits
 exactly `{"rows": [...]}` on stdout. Each row has only:
 
 ```json

@@ -26,7 +26,7 @@
       {
         "id": "bounded-column-mapping-and-run-review",
         "purpose": "Map source columns before deterministic reconciliation and review run-level controls and limitations",
-        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt. Resolution-funnel and human-review aggregate values are partitioned by explicit currency and measurement unit. Mixed or unknown denominations withhold a scalar total and expose the qualification; no conversion is inferred.",
+        "content": "User instructions; source file metadata and raw column names; at most the first 20 normalized preview rows per qualified source; mapping assumptions and decisions; aggregate match and exception counts; assurance gates, limitations, review notes and artifact paths; when a worker selection is reviewed, its model/effort, reviewer reference, review status and benchmark digest may be read in the parent runtime. The selection review is retained in local evidence and is not added to the subordinate worker prompt. Resolution-funnel and human-review aggregate values are partitioned by explicit currency and measurement unit. Mixed or unknown denominations withhold a scalar total and expose the qualification; no conversion is inferred. For technical review the model can supply the complete decision JSON as a managed helper argument. The native service retains these received arguments privately and persists the exact decision object as a content-addressed run file before invoking the unchanged receipt validators. It does not request human approval or send a new model prompt. Failed persistence prevents dependent sealing; a retry keeps the same Archive run. Authored labels remain model-supplied content, not verified source coordinates.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -200,10 +200,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-21",
+    "reviewed_at": "2026-10-27",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "d34130b923754b7345c1bdc437d535a18a86a7163e40589faa43e93b8f9b803b"
+    "source_fingerprint": "19f96f4d1911651976228a2f3d6c78778fdf9d125f734b92f6525a7e3b9d6898"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md",

@@ -243,3 +243,42 @@ an on-demand view of the local application through Computer Use. There is no
 Vera or Mparanza WhatsApp webhook, background sync, hosted connector, message
 database, or retention period. WhatsApp content read for the task may still
 enter the model context of the user's selected Codex or ChatGPT account.
+
+## Authored files and execution prerequisites
+
+Use `write_studio_run_artifact` to persist agent-authored drafts, JSON recipes or Python adapter source in
+one exact running run. It writes only `outputs/authored/<name>`, returns the
+actual path and SHA-256, and never modifies imported inputs or specialist
+receipts. Repeating the same name and bytes returns the same artifact; changed
+content needs a new name. CLI fallback: `studio_archive.py write-run-artifact
+--client-id <id> --engagement-id <id> --run-id <id> --name <filename>
+--content=<complete text>` through the managed Archive service (one argv
+argument, or `--content-stdin` when the host supports stdin). Do not invent
+source lineage for authored text. Always pass the returned path to consumers;
+do not assume another output subfolder. This saves source code but does not
+execute it: use the specialist's maintained adapter/trial entrypoint. Finalize
+its returned path normally.
+
+For Vera's saved terminal privacy reports, use `verify_studio_run_report` with
+the exact client, engagement and run IDs. The service performs the read-only
+network verification without a chat-shell command. An `unavailable` result is
+a reporting issue, not a failed calculation: deliver the existing result and
+report the verification gap. Retry the same verification without regenerating
+the report, restamping it, or creating a new run. A saved local-only choice
+returns `not_requested` without contacting the receipt server.
+
+Wait for each required write to succeed before launching its consumer. A denied
+or failed write is not a completed prerequisite. Preserve the same client,
+engagement and run; resolve access through the owning service or normal host
+approval, then retry the exact operation. Never create a replacement run merely
+because a write failed. Poll an unfinished execution with its existing job ID;
+a new job is appropriate only after a confirmed terminal failure and correction.
+
+The on-disk `context.json` is a sealed, portable reference, not the expanded tool
+response. It deliberately points to `input_manifest.json` and contains no
+`input_bindings` or machine-specific absolute source paths. For helper code use
+`vera_assurance.load_client_engagement_context_file(path,
+expected_workflow_id=..., output_dir=...)`; it verifies and hydrates the manifest
+and current receipts before returning `input_bindings`. Archive tools already
+return this expanded projection. Do not parse raw context JSON as that projection
+or bypass the loader by constructing unverified paths from the manifest.

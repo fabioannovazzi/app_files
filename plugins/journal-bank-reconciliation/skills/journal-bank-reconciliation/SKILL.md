@@ -230,9 +230,13 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    explicitly review the recovered physical header, incoming/outgoing sign
    roles, and all running-balance or total columns. A PDF with no qualified
    physical column grid must use the dedicated reviewed registration adapter, if its supported structure is present; it cannot be approved merely by changing a table mapping.
-5. Record explicit decisions for every bank and journal file in
-   `review_decisions.json` inside the run output directory, following the JSON
-   contract in `../../references/workflow-reference.md`. Use the packaged
+5. Prepare explicit decisions for every bank and journal file following the JSON
+   contract in `../../references/workflow-reference.md`. Pass the complete JSON
+   as one `--decisions-json` argument to the packaged sealer through `vera_execute`.
+   The service persists a content-addressed `review_decisions.<sha256>.json` in
+   the same run before sealing. Do not first write it through the chat shell.
+   A failed write prevents sealing; retain the run and inspect the terminal job
+   result before retrying. Use the packaged
    `scripts/seal_review_receipts.py` entrypoint, which calls
    `journal_bank_core.build_mapping_review_receipt` to seal the
    reviewed header rows, mapping, CSV field delimiter, numeric separators,
@@ -269,7 +273,7 @@ Add `--sample <sample-file>` when a sample movement list is provided.
    From the installed Vera root:
 
 ```bash
-python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <client_engagement_path> --output-dir <client-run-output> --recipe <client-run-output>/suggested_recipe.json --decisions <client-run-output>/review_decisions.json
+python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation run scripts/seal_review_receipts.py --client-engagement <client_engagement_path> --output-dir <client-run-output> --recipe <client-run-output>/suggested_recipe.json --decisions-json '<complete reviewed JSON>'
 ```
 
    This path works without MCP on Codex and Cowork. Re-run inspection with the

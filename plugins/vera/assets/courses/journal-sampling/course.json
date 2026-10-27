@@ -44,7 +44,7 @@
     {
       "path": "modules/journal-sampling/references/pdf-recovery.md",
       "repository_path": "plugins/journal-sampling/references/pdf-recovery.md",
-      "sha256": "7ba98558d342b64ee24b7caec82d4825449b529c4567830f921be1fd2f48dc79"
+      "sha256": "43921b0c6db8a55197fd4f5c6e9375d374e0a65723c3fe7ad9046ec31ad4fc43"
     },
     {
       "path": "modules/journal-sampling/references/workflow-reference.md",
@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "b82c3df4f7e1dd95450b81f9720ff7a47f6674d2c4372847d4e04b521602ba7b"
+      "sha256": "8eaa7d82b8b34f0f235210ea848a8a830d42c8f41fbda1b7978c00028d634f57"
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
@@ -189,7 +189,7 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "5d7abfdc6976175ec6b00e60a47a543b70b4780797e65dbeb29e4a81bfb417c1"
+      "sha256": "8989655eb8c33f48f9689415d134fbde48d30a6bf5a7d0523ba9ec147006b5aa"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

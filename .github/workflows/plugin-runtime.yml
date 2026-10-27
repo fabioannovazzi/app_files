@@ -64,6 +64,7 @@ jobs:
           tests/plugins/test_incident_technical_runner.py
           tests/plugins/test_incident_native_host.py
           tests/plugins/test_native_incident_transport.py
+          tests/plugins/test_incident_validation_detail.py
           --cov --cov-config=tests/operational_incidents.coveragerc --cov-report=term-missing --cov-fail-under=80
       - name: Verify effective open-item projection coverage
         run: >-
@@ -1162,7 +1163,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_studio_archive_component.py
-          -k "mcp_verif or mcp_lists_strict or source_check or chat_upload_access or readable_chat_path or reachable_csvs_import or late_import_error or source_disappearing or transfer_changed"
+          -k "mcp_verif or mcp_lists_strict or mcp_executes_the_customer_folder_lifecycle_end_to_end or source_check or chat_upload_access or readable_chat_path or reachable_csvs_import or late_import_error or source_disappearing or transfer_changed"
 
   studio-work:
     name: Studio work register and calendar receipts

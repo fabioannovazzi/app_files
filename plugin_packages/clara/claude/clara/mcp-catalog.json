@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.358",
+  "version": "0.1.359",
   "services": [
     {
       "name": "claraIncidentHost",
@@ -613,6 +613,7 @@
                   },
                   "capture_state": {
                     "default": "legacy",
+                    "description": "Use complete only with an observed error_code or technical_frames in at least one diagnostic. errno, exit_code and prose alone do not satisfy complete capture; otherwise retain pending or unavailable and explain the missing evidence.",
                     "enum": [
                       "legacy",
                       "pending",

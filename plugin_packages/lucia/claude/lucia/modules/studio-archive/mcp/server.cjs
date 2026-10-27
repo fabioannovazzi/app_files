@@ -38,6 +38,8 @@ const TOOL_NAMES = {
   startCheckEntriesFromSample: "start_check_entries_from_sample",
   startWorkflow: "start_studio_client_workflow",
   readRunArtifact: "read_studio_run_artifact",
+  writeRunArtifact: "write_studio_run_artifact",
+  verifyRunReport: "verify_studio_run_report",
   failWorkflow: "fail_studio_client_workflow",
   cancelWorkflow: "cancel_studio_client_workflow",
   finalizeWorkflow: "finalize_studio_client_workflow",
@@ -484,6 +486,24 @@ function toolDefinitions() {
         },
         ["engagement_id", "workflow_id"],
       ),
+      annotations: annotations(false),
+    },
+    {
+      name: TOOL_NAMES.verifyRunReport,
+      title: "Verify a saved Archive report receipt",
+      description: "Verify the exact saved terminal report for this client, engagement and run against its machine identity and server receipt. Uses the service's network access; no shell command is needed. Returns verified, unavailable, not_requested for saved local-only reports, or not_applicable. Does not rerun calculations, regenerate reports, stamp receipts or change the run. Report unavailable verification separately from the pipeline outcome.",
+      inputSchema: runIdentitySchema(),
+      annotations: annotations(true, true, true),
+    },
+    {
+      name: TOOL_NAMES.writeRunArtifact,
+      title: "Save authored text in one Archive run",
+      description: "Save agent-authored JSON, Markdown or other text inside outputs/authored of this exact running run. No shell write is needed. Same name and bytes replay safely; changed content requires a new filename. Does not execute a helper, finalize, approve, or establish source lineage. Check success before any dependent operation.",
+      inputSchema: objectSchema({
+        ...runIdentitySchema().properties,
+        name: { type: "string", pattern: "^[A-Za-z0-9][A-Za-z0-9._-]{0,119}$" },
+        content: { type: "string", maxLength: 65536 },
+      }, ["client_id", "engagement_id", "run_id", "name", "content"]),
       annotations: annotations(false),
     },
     {
@@ -1390,6 +1410,15 @@ function commandForTool(name, rawArgs) {
     if (optionalBoolean(args.new_run, "new_run")) command.push("--new-run");
     return command;
   }
+  if (name === TOOL_NAMES.verifyRunReport) {
+    return runIdentityCommand(args, "verify-run-report");
+  }
+  if (name === TOOL_NAMES.writeRunArtifact) {
+    const command = runIdentityCommand(args, "write-run-artifact", ["name", "content"]);
+    if (typeof args.content !== "string" || Buffer.byteLength(args.content, "utf8") > 65536) throw new Error("content must be text of at most 64 KiB");
+    command.push("--name", requireString(args.name, "name"), "--content-stdin");
+    return command;
+  }
   if (name === TOOL_NAMES.readRunArtifact) {
     const command = runIdentityCommand(args, "read-run-artifact", ["path", "offset", "limit", "columns"]);
     command.push("--path", requireString(args.path, "path"));
@@ -1746,6 +1775,8 @@ function callTool(name, args) {
   if (name !== TOOL_NAMES.refresh) {
     spawnOptions.timeout = 300_000;
   }
+  // Authored text is data, never an argv option or a Windows command-line payload.
+  if (name === TOOL_NAMES.writeRunArtifact) spawnOptions.input = args.content;
   const completed = spawnSync(
     pythonExecutable(),
     workerArguments(commandForTool(name, args)),

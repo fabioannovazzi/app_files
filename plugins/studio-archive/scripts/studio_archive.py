@@ -77,6 +77,8 @@ from archive_core import (
     studio_archive_status,
     studio_google_drive_status,
     verify_studio_client_inputs,
+    verify_studio_run_report,
+    write_studio_run_artifact,
 )
 from archive_error_reporting import record_error
 
@@ -237,11 +239,25 @@ def _parser() -> argparse.ArgumentParser:
         help="Create the explicit-new namespace; retries with the same key remain idempotent.",
     )
 
-    for command in ("start-workflow", "cancel-workflow", "complete-workflow"):
+    for command in (
+        "start-workflow",
+        "cancel-workflow",
+        "complete-workflow",
+        "verify-run-report",
+    ):
         lifecycle = subparsers.add_parser(command)
         lifecycle.add_argument("--client-id", required=True)
         lifecycle.add_argument("--engagement-id", required=True)
         lifecycle.add_argument("--run-id", required=True)
+
+    write_artifact = subparsers.add_parser("write-run-artifact")
+    write_artifact.add_argument("--client-id", required=True)
+    write_artifact.add_argument("--engagement-id", required=True)
+    write_artifact.add_argument("--run-id", required=True)
+    write_artifact.add_argument("--name", required=True)
+    artifact_content = write_artifact.add_mutually_exclusive_group(required=True)
+    artifact_content.add_argument("--content")
+    artifact_content.add_argument("--content-stdin", action="store_true")
 
     read_artifact = subparsers.add_parser("read-run-artifact")
     read_artifact.add_argument("--client-id", required=True)
@@ -443,6 +459,15 @@ def main(argv: list[str] | None = None) -> int:
                 purpose=args.purpose,
                 idempotency_key=args.idempotency_key,
                 new_run=args.new_run,
+            )
+        elif args.command == "verify-run-report":
+            result = verify_studio_run_report(
+                args.client_id, args.engagement_id, args.run_id
+            )
+        elif args.command == "write-run-artifact":
+            content = sys.stdin.read(65537) if args.content_stdin else args.content
+            result = write_studio_run_artifact(
+                args.client_id, args.engagement_id, args.run_id, args.name, content
             )
         elif args.command == "read-run-artifact":
             result = read_studio_run_artifact(

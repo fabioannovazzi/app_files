@@ -10,7 +10,7 @@
     "reviewer": "Codex /root - bounded complete-course comparison",
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
   },
-  "course_sha256": "b57acc6f7ac8abd2596099924f60bdfdf97431d6161ad01d6d184303912bf9be",
+  "course_sha256": "d875de160615de5b5d5d537ffe6c2358fb0205d7b02a7c44cd9284cab9716402",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -341,5 +341,14 @@
   "reviewer": "Codex /root: five-language authored lesson and real evidence/progress output review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_note": "2026-10-15: Quoted the colon-bearing skill description as valid YAML. Course content, inputs, procedural instructions, prior execution evidence and editorial judgments are unchanged.",
-  "workflow": "contenzioso-tributario"
+  "workflow": "contenzioso-tributario",
+  "archive_boundary_source_review_20261027": {
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "previous_course_sha256": "b57acc6f7ac8abd2596099924f60bdfdf97431d6161ad01d6d184303912bf9be",
+    "course_sha256": "d875de160615de5b5d5d537ffe6c2358fb0205d7b02a7c44cd9284cab9716402",
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
+  }
 }

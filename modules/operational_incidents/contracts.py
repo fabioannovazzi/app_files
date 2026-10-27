@@ -159,7 +159,10 @@ class Report(StrictModel):
     diagnostics: list[Diagnostic] = Field(min_length=1, max_length=512)
     measurements: dict[str, int | bool] = Field(default_factory=dict, max_length=100)
     unavailable: list[str] = Field(default_factory=list, max_length=100)
-    capture_state: Literal["legacy", "pending", "complete", "unavailable"] = "legacy"
+    capture_state: Literal["legacy", "pending", "complete", "unavailable"] = Field(
+        default="legacy",
+        description="Use complete only with an observed error_code or technical_frames in at least one diagnostic. errno, exit_code and prose alone do not satisfy complete capture; otherwise retain pending or unavailable and explain the missing evidence.",
+    )
     session_id: UUID | None = None
     operation_id: UUID | None = None
     input_binding: str | None = Field(default=None, pattern=r"^[a-f0-9]{64}$")

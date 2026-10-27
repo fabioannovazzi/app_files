@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "6a6ad1ab9a9b9e109119719223c463d8ef51e8760ffc3c89a35a491ffaf535df",
+  "course_sha256": "aa1a1b489dd311c8ead022c4c4360cc17c59913916c7456333ae498207bc3d27",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.894710+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -797,5 +797,14 @@
     },
     "fresh_matching_junit_required": true,
     "limits": "Source compatibility only. No new learner, rendered-output, installed-host or professional acceptance is asserted."
+  },
+  "archive_boundary_source_review_20261027": {
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "previous_course_sha256": "6a6ad1ab9a9b9e109119719223c463d8ef51e8760ffc3c89a35a491ffaf535df",
+    "course_sha256": "aa1a1b489dd311c8ead022c4c4360cc17c59913916c7456333ae498207bc3d27",
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
   }
 }

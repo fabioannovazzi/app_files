@@ -44,12 +44,12 @@
     {
       "path": "modules/journal-bank-reconciliation/references/pdf-recovery.md",
       "repository_path": "plugins/journal-bank-reconciliation/references/pdf-recovery.md",
-      "sha256": "8d06b86752967f69caa7568a8f5117c3df889834d38b0f4cbd8821410a16b7fe"
+      "sha256": "aa4ffbcedeae822cd5855bf7c0aace4699ca1e9af60890490ab3c7ec0bdd7b2d"
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
       "repository_path": "plugins/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "28fbf5e2358c245a008f7f8bfa17a1a206e24a9410e844c0af8c2b4a1515471b"
+      "sha256": "98a32ecb25912719aa96b772f5d212e83d1267d968b4852e3bedb73528cd20fb"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py",
-      "sha256": "a9d70a6ad9a399cffb3795777def38b6e2b71f9708d1a5760985dc230354279e"
+      "sha256": "e5b67355ed81a51fae42576054a296e1cd930a11f2195f6c576fb8de9041ddc4"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
@@ -129,7 +129,7 @@
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "a13323845a340bd82a7bc543fcb4a44305d0735cdc0c21f034011a05cb91279c"
+      "sha256": "f80b50c4b0aadf7b2b12339e9a1836d3e0ea1865075b6ae7c7daeef22dda24d8"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -219,7 +219,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "edd8805185a87bbf9c777bfb30a901cee042cc3187559132716243f1ddead7ad"
+      "sha256": "31ce530b7665a717a2e31330005c0468e269a9730bfeb74262f244cdc0d046ea"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -37,7 +37,7 @@
     "source_review": "Preserves main’s synthetic Italian Fusione P1 teaching expansion and task’s optional host-connected repository consultation gates. Synthetic lessons use their bound inputs and do not query private repositories. Specialist calculations and qualification limits are unchanged.",
     "execution_requirement": "Fresh CI must execute the existing demo and practice cases bound to this exact compiled course digest before merge."
   },
-  "course_sha256": "9509f6437cb3b52fee8ca93261ae5f23ccd27aad10d911bca8c91c373b8851ef",
+  "course_sha256": "0ec62c6d6b1336ebb62f17ee024db77d667ca6da9d9e4915529b1c7256126669",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -586,5 +586,22 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "archive_boundary_source_review_20261027": {
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "previous_course_sha256": "9509f6437cb3b52fee8ca93261ae5f23ccd27aad10d911bca8c91c373b8851ef",
+    "course_sha256": "d41aad911979d85ccfee1df7821443d94833fd73e3408c49465ccd8cab701517",
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
+  },
+  "archive_boundary_extension_source_review_20261027": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-27",
+    "previous_course_sha256": "d41aad911979d85ccfee1df7821443d94833fd73e3408c49465ccd8cab701517",
+    "course_sha256": "0ec62c6d6b1336ebb62f17ee024db77d667ca6da9d9e4915529b1c7256126669",
+    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
+    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
   }
 }

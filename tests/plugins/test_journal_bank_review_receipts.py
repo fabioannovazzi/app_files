@@ -1,13 +1,16 @@
 from __future__ import annotations
 
 import copy
+import errno
 import importlib.util
 import json
 import os
+import shutil
 import subprocess
 import sys
 import venv
 from pathlib import Path
+from unittest.mock import Mock
 from zipfile import ZipFile
 
 import pytest
@@ -70,7 +73,9 @@ def _runtime_environment(root: Path, tmp_path: Path) -> dict[str, str]:
     }
 
 
-def _case(tmp_path: Path, *, registration_pdf: bool = False) -> dict:
+def _case(
+    tmp_path: Path, *, registration_pdf: bool = False, unfamiliar_pdf: bool = False
+) -> dict:
     ledger = _load_customer_ledger()
     client = tmp_path / "client"
     client.mkdir()
@@ -144,6 +149,10 @@ def _case(tmp_path: Path, *, registration_pdf: bool = False) -> dict:
                         ]
                     ],
                 )
+        if unfamiliar_pdf and side == "journal":
+            from tests.plugins.test_agentic_pdf_recovery import unfamiliar_source
+
+            layout = unfamiliar_source(source)
         imported = ledger.import_document(
             client,
             client_id,
@@ -160,9 +169,12 @@ def _case(tmp_path: Path, *, registration_pdf: bool = False) -> dict:
         "synthetic-test",
         input_ids=inputs,
     )
-    return ledger.start_run(
+    loaded = ledger.start_run(
         client, engagement["engagement_id"], prepared["run"]["run_id"]
     )
+    if unfamiliar_pdf:
+        loaded["test_pdf_layout"] = layout
+    return loaded
 
 
 def _decisions(recipe: dict) -> dict:
@@ -200,6 +212,192 @@ def _decisions(recipe: dict) -> dict:
             "date_window_days": 0,
         },
     }
+
+
+@pytest.mark.parametrize("host", ["source", "codex", "cowork"])
+def test_managed_archive_writer_preserves_text_and_replays_same_run(
+    tmp_path: Path, host: str
+) -> None:
+    root = ROOT / "plugins/vera"
+    if host != "source":
+        archive = (
+            ROOT
+            / "plugin_packages/vera"
+            / ("vera-plugin.zip" if host == "codex" else "vera-claude-plugin.zip")
+        )
+        with ZipFile(archive) as bundle:
+            bundle.extractall(tmp_path / "package")
+        root = next(
+            (tmp_path / "package").rglob("scripts/managed_python_runtime.py")
+        ).parents[1]
+    environment = {
+        **_runtime_environment(root, tmp_path),
+        "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "archive-state"),
+        "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str(tmp_path / "archive-profile"),
+        "VERA_STUDIO_ARCHIVE_SESSION_ID": "archive-writer-regression",
+        "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
+    }
+    archive_root = tmp_path / "archive"
+    archive_root.mkdir()
+    case = _case(archive_root, unfamiliar_pdf=True)
+    component = root / "modules/studio-archive"
+    if host == "source":
+        component = root.parent / "studio-archive"
+
+    def call(name: str, arguments: dict) -> dict:
+        completed = subprocess.run(
+            [shutil.which("node"), str(component / "mcp/server.cjs"), "--stdio"],
+            input=json.dumps(
+                {
+                    "jsonrpc": "2.0",
+                    "id": 1,
+                    "method": "tools/call",
+                    "params": {"name": name, "arguments": arguments},
+                }
+            )
+            + "\n",
+            capture_output=True,
+            text=True,
+            env=environment,
+            cwd=root,
+            timeout=90,
+            check=True,
+        )
+        reply = next(
+            json.loads(line)
+            for line in completed.stdout.splitlines()
+            if json.loads(line).get("id") == 1
+        )["result"]
+        assert reply["isError"] is False, reply
+        return reply["structuredContent"]
+
+    call("configure_studio_archive", {"archive_root": str(archive_root)})
+    # Reproduce a chat worker that cannot write to the client folder, while
+    # the separate Archive owner retains its authorized filesystem capability.
+    if sys.platform == "darwin" and Path("/usr/bin/sandbox-exec").is_file():
+        denied_path = Path(case["output_dir"]) / "shell-write.txt"
+        profile = (
+            "(version 1)(allow default)(deny file-write* (subpath "
+            + json.dumps(str(archive_root.resolve()))
+            + "))"
+        )
+        denied = subprocess.run(
+            [
+                "/usr/bin/sandbox-exec",
+                "-p",
+                profile,
+                sys.executable,
+                "-c",
+                "from pathlib import Path; import sys; Path(sys.argv[1]).write_text('denied')",
+                str(denied_path),
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert denied.returncode != 0 and "PermissionError" in denied.stderr
+        assert not denied_path.exists()
+    content = "--not-an-option\n" + "è" * 20000
+    arguments = {
+        key: case["run"][key] for key in ("client_id", "engagement_id", "run_id")
+    }
+    arguments.update(name="draft.md", content=content)
+
+    saved = call("write_studio_run_artifact", arguments)
+    replayed = call("write_studio_run_artifact", arguments)
+
+    assert Path(saved["path"]).read_text(encoding="utf-8") == content
+    assert saved["run_id"] == case["run"]["run_id"]
+    assert saved["sha256"] == replayed["sha256"]
+    assert replayed["replayed"] is True
+    assert saved["source_lineage"] == "unverified"
+
+    from tests.plugins.test_agentic_pdf_recovery import ADAPTER
+
+    adapter = call(
+        "write_studio_run_artifact",
+        {
+            **arguments,
+            "name": "pdf_adapter.py",
+            "content": ADAPTER.replace("CHANGE", ""),
+        },
+    )
+    layout = {
+        **case["test_pdf_layout"],
+        "agent_adapter": {"path": adapter["path"], "sha256": adapter["sha256"]},
+    }
+    inputs = {
+        item["role"]: Path(item["path"]) for item in case["context"]["input_bindings"]
+    }
+    recipe = call(
+        "write_studio_run_artifact",
+        {
+            **arguments,
+            "name": "pdf_recipe.json",
+            "content": json.dumps(
+                {
+                    "journal": {
+                        "files": {
+                            inputs["journal"].name: {"pdf_registration_layout": layout}
+                        }
+                    }
+                }
+            ),
+        },
+    )
+    command = [
+        sys.executable,
+        str(root / "scripts/managed_python_runtime.py"),
+        "--module",
+        "journal-bank-reconciliation",
+        "run",
+        "scripts/inspect_inputs.py",
+        str(inputs["source"]),
+        str(inputs["journal"]),
+        "--client-engagement",
+        case["context_path"],
+        "--output-dir",
+        case["output_dir"],
+        "--recipe",
+        recipe["path"],
+        "--pdf-currency",
+        "EUR",
+    ]
+
+    trial = subprocess.run(
+        [
+            *command,
+            "--pdf-recovery",
+            "trial",
+            "--pdf-reason",
+            "Reviewed unfamiliar header",
+        ],
+        env=environment,
+        cwd=root,
+        capture_output=True,
+        text=True,
+        timeout=90,
+        check=False,
+    )
+
+    assert trial.returncode == 0, trial.stderr
+    attempt = json.loads(
+        (Path(case["output_dir"]) / "pdf_recovery/attempt-01.json").read_text()
+    )
+    assert attempt["status"] == "ready_to_freeze"
+    assert attempt["diagnostics"]["emitted_row_count"] == 4
+    assert attempt["diagnostics"]["running_total_controls"][0]["matched"] is True
+    assert Path(adapter["path"]).read_text() == ADAPTER.replace("CHANGE", "")
+    verification = call(
+        "verify_studio_run_report",
+        {key: case["run"][key] for key in ("client_id", "engagement_id", "run_id")},
+    )
+    assert verification["status"] == "unavailable"  # This fixture run is still active.
+    assert (
+        json.loads((Path(case["run_root"]) / "run.json").read_text())["status"]
+        == "running"
+    )
 
 
 @pytest.mark.parametrize("host", ["source", "codex", "cowork"])
@@ -255,18 +453,18 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
     inspection = json.loads((output / "inspection.json").read_text())
     assert inspection["bank"]["row_count"] == inspection["journal"]["row_count"] == 0
     assert inspection["qualification_status"] == "needs_review"
-    decisions = output / "review_decisions.json"
-    decisions.write_text(json.dumps(_decisions(json.loads(recipe.read_text()))))
+    decisions = json.dumps(_decisions(json.loads(recipe.read_text())))
     sealed = run(
         "seal_review_receipts.py",
         "--output-dir",
         output,
         "--recipe",
         recipe,
-        "--decisions",
+        "--decisions-json",
         decisions,
     )
     assert sealed.returncode == 0, sealed.stderr
+    assert len(list(output.glob("review_decisions.*.json"))) == 1
     sealed_recipe = json.loads(recipe.read_text())
     assert (
         sealed_recipe["bank"]["files"]["bank.pdf"]["mapping_decision"]["reviewer_ref"]
@@ -621,3 +819,66 @@ def test_managed_registration_pdf_layout_sealing_and_reconciliation(
     normalized = (output / "reconciliation/normalized_journal.csv").read_text()
     assert "PDF page 1" in normalized and "PDF page 2" in normalized
     assert (output / "reconciliation/journal_bank_reconciliation.xlsx").is_file()
+
+
+@pytest.mark.parametrize("failure", ["fsync", "replace"])
+def test_inline_decisions_failed_write_never_seals_and_retry_preserves_run(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, failure: str
+) -> None:
+    core = load_core()
+    sealer = _load(
+        ROOT / "plugins/journal-bank-reconciliation/scripts/seal_review_receipts.py",
+        "seal_inline_receipts",
+    )
+    case = _case(tmp_path)
+    output = Path(case["output_dir"])
+    inputs = {
+        item["role"]: Path(item["path"]) for item in case["context"]["input_bindings"]
+    }
+    core.inspect_inputs(inputs["source"], inputs["journal"], output)
+    recipe = output / "suggested_recipe.json"
+    original = recipe.read_bytes()
+    run_path = Path(case["run_root"]) / "run.json"
+    original_run = run_path.read_bytes()
+    decisions = _decisions(json.loads(original))
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "seal_review_receipts.py",
+            "--client-engagement",
+            case["context_path"],
+            "--output-dir",
+            str(output),
+            "--recipe",
+            str(recipe),
+            "--decisions-json",
+            json.dumps(decisions),
+        ],
+    )
+    seal = Mock(wraps=sealer.seal_review_receipts)
+    monkeypatch.setattr(sealer, "seal_review_receipts", seal)
+    actual_operation = getattr(sealer.os, failure)
+    denied = Mock(side_effect=PermissionError(errno.EPERM, "fixture denied write"))
+    monkeypatch.setattr(sealer.os, failure, denied)
+
+    failed = sealer.main()
+
+    assert failed == 2
+    seal.assert_not_called()
+    assert recipe.read_bytes() == original
+    assert list(output.glob("review_decisions.*.json")) == []
+    monkeypatch.setattr(sealer.os, failure, actual_operation)
+
+    retried = sealer.main()
+
+    assert retried == 0
+    seal.assert_called_once()
+    retained = list(output.glob("review_decisions.*.json"))
+    assert len(retained) == 1
+    assert json.loads(retained[0].read_text()) == decisions
+    sealed = recipe.read_bytes()
+    assert sealer.main() == 0
+    assert recipe.read_bytes() == sealed
+    assert list(output.glob("review_decisions.*.json")) == retained
+    assert run_path.read_bytes() == original_run

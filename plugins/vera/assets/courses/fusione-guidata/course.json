@@ -115,7 +115,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "759ff0d79729cf1535ffa6fdad036f8a47b988500137c06ad6147e799cc7a969"
+      "sha256": "c812020fdaf5aadc7d4bdbe2dfa3a7daa95794373a4e461c277fe1d31607358c"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",

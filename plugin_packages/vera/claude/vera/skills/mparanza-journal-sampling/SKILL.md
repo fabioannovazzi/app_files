@@ -281,3 +281,8 @@ and readable entries, require independent checks and full-source replay plus the
 ordinary source-mapping receipt, and report technical issues and recoveries
 through the incident pipeline. Keep population operations blocked until complete
 qualification. Installed code and validators are not changed by local recovery.
+
+For reviewed recipes and run-local PDF adapters, use `write_studio_run_artifact`
+with this run's exact client, engagement and run IDs. Send the full text, wait
+for success, and pass the returned path to the specialist helper. Use a new
+filename for a revision. Do not save these prerequisites through the chat shell.

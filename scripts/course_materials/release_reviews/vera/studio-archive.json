@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "a032919ace30a569bae347e8cde009ea0be5d27d1ef431cf44b9347d4cf80b66",
+  "course_sha256": "5a11623b2fb9a2d0b54e204dc508971cb30d97343174f9189c7e1aa293415129",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -974,5 +974,22 @@
     ],
     "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
     "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
+  },
+  "archive_boundary_source_review_20261027": {
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "previous_course_sha256": "a032919ace30a569bae347e8cde009ea0be5d27d1ef431cf44b9347d4cf80b66",
+    "course_sha256": "7c9aa2c03776e4435cc5bc76580ab4b203ab057ce82de543d12fb2bac9a3c860",
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
+  },
+  "archive_boundary_extension_source_review_20261027": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-27",
+    "previous_course_sha256": "7c9aa2c03776e4435cc5bc76580ab4b203ab057ce82de543d12fb2bac9a3c860",
+    "course_sha256": "5a11623b2fb9a2d0b54e204dc508971cb30d97343174f9189c7e1aa293415129",
+    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
+    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
   }
 }
