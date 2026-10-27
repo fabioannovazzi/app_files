@@ -195,7 +195,7 @@ for a material ambiguity the evidence cannot resolve. These technical decisions
 authorize preparation of reviewable workpapers, not human approval, professional
 adoption, signing, filing or external actions.
 
-1. Ask for the bank file/folder, journal or ledger file/folder, sample file when the user wants to restrict the population, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Use the script defaults for amount tolerance and date window unless the user provides stricter thresholds or the data requires a different assumption.
+1. Ask for the bank file/folder, journal or ledger file/folder, sample file when the user wants to restrict the population, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Review the proposed recipe amount tolerance and date window, using the user’s thresholds or the evidence where supplied. Execution inherits the sealed policy.
 2. Run dependency checks from the plugin directory:
 
 ```bash
@@ -285,7 +285,7 @@ python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation r
 python scripts/run_reconciliation.py <managed-bank-input> <managed-journal-input> --client-engagement <client_engagement_path> --output-dir <client-run-output>/reconciliation --recipe <client-run-output>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.
+Omit `--tolerance` and `--date-window-days` to use the sealed recipe policy. If explicitly supplied, these options must match that policy. Incorporate user-provided thresholds into the reviewed policy before sealing it.
 
 8. Review the counts, stages, controls, and limitations in
    `reconciliation_audit.json`, `assurance_gates.json`, and `review_notes.md`
@@ -785,3 +785,24 @@ If `validate_implementation_tree` ever fails with a file/directory-contract
 mismatch, do not delete or modify files inside the installed plugin tree by hand
 and do not bypass a sandbox/permission rejection to do so. Stop and report the
 exact error instead.
+
+
+### Choosing and changing the matching tolerance
+
+The professional can state a tolerance in ordinary chat, including zero or a
+nonzero value (for example “use EUR 0.12”). Interpret an unambiguous localized
+amount into exact canonical Decimal text without rounding it. Carry that value
+into the relationship policy and seal it with the ordinary review helper.
+Do not substitute EUR 0 or EUR 1 for a user-selected or established studio value.
+If neither exists, disclose the selected value as a draft assumption, not as
+user approval; no obligatory technical questionnaire is needed to prepare a draft.
+
+When the professional changes the tolerance, retain the earlier recipe, receipt
+and outputs, prepare a revised recipe with the new value, and use
+`seal_review_receipts.py` again before recalculating into a fresh output directory
+(or a new managed run when the earlier run is closed). Do not edit old receipts
+or change execution flags alone. Read the resulting audit and review notes, and
+use that exact recorded value in downstream review and the delivered explanation.
+State whether it came from the professional, an established studio instruction,
+or a disclosed draft assumption. Matching within tolerance does not authorize a
+write-off or a new accounting entry: keep actual differences visible for review.

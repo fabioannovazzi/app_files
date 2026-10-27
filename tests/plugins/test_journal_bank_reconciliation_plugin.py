@@ -14108,3 +14108,35 @@ def test_native_worker_run_all_resumes_pending_packet_and_validates_funnel(
     receipt = json.loads(result["batches"][0]["launch_receipt"].read_text())
     assert receipt["runtime_attestation"]["os_isolation_probed"] is False
     assert receipt["requested_worker_configuration"]["host"] == host
+
+
+@pytest.mark.parametrize(
+    "relationship,error",
+    [
+        (None, "reviewed relationship and perimeter policy is required"),
+        ({"policy": {}}, "exact reviewed perimeter fields"),
+    ],
+)
+def test_omitted_execution_options_preserve_invalid_policy_failure_evidence(
+    tmp_path: Path, relationship: object, error: str
+) -> None:
+    core = load_core()
+    bank = tmp_path / "bank.csv"
+    journal = tmp_path / "journal.csv"
+    rows = [["Date", "Amount", "Reference"], ["2025-01-01", "100.00", "REF-100"]]
+    _save_csv(bank, rows)
+    _save_csv(journal, rows)
+    recipe_path = _prepare_reviewed_recipe(core, bank, journal, tmp_path / "recipe")
+    recipe = json.loads(recipe_path.read_text())
+    recipe["relationship"] = relationship
+    recipe_path.write_text(json.dumps(recipe))
+    output = tmp_path / "out"
+
+    with pytest.raises(core.ReconciliationBlockedError, match=error):
+        core.run_reconciliation(bank, journal, output, recipe_path)
+
+    audit = json.loads((output / "reconciliation_audit.json").read_text())
+    assert audit["status"] == "blocked"
+    assert audit["matched_count"] == 0
+    assert (output / "input_receipts.json").is_file()
+    assert not (output / "material_value_ledger.json").exists()

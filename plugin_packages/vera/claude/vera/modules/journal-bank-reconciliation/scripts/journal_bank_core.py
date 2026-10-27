@@ -6580,6 +6580,8 @@ def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
     lines = [f"# {words['title']}", ""]
     for key in (
         "language",
+        "tolerance",
+        "date_window_days",
         "bank_row_count",
         "journal_row_count",
         "matched_count",
@@ -6594,7 +6596,15 @@ def _write_review_notes(path: Path, audit: dict[str, Any]) -> None:
             lines.append(f"- {stage}: {count}")
     else:
         lines.append(f"- {words['none']}")
-    lines.extend(["", f"## {words['review']}", words["guidance"], ""])
+    lines.extend(
+        [
+            "",
+            f"## {words['review']}",
+            words["guidance"],
+            words["tolerance_guidance"],
+            "",
+        ]
+    )
     path.write_text("\n".join(lines), encoding="utf-8")
 
 
@@ -6942,8 +6952,8 @@ def run_reconciliation(
     recipe_path: Path | None = None,
     *,
     sample_path: Path | None = None,
-    tolerance: object = "1",
-    date_window_days: int = 7,
+    tolerance: object = None,
+    date_window_days: int | None = None,
     language: object | None = None,
     document_language: object | None = None,
     client_run_id: str | None = None,
@@ -6952,6 +6962,20 @@ def run_reconciliation(
     """Run exact, policy-bound journal-to-bank reconciliation."""
 
     recipe = read_json(recipe_path)
+    # Resolve omissions once, before recording intake or calculating matches.
+    # Invalid/missing policies still reach the existing persistent blocked-run
+    # path; these placeholders never authorize execution without a valid receipt.
+    policy = None
+    relationship = recipe.get("relationship")
+    if isinstance(relationship, dict):
+        try:
+            policy = _normalize_relationship_policy(relationship.get("policy"))
+        except ValueError:
+            pass
+    if tolerance is None:
+        tolerance = policy["amount_tolerance"] if policy is not None else "1"
+    if date_window_days is None:
+        date_window_days = policy["date_window_days"] if policy is not None else 7
     tolerance_value, tolerance_text = _canonical_tolerance(tolerance)
     if (
         not isinstance(date_window_days, int)

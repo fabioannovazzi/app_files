@@ -56,6 +56,9 @@ def review_notes_copy(language: object) -> dict[str, str]:
             "nessuna",
             "Controlli da svolgere",
             "Verifica conto, periodo e segno degli importi. Segui una corrispondenza nei due documenti e usa gli elenchi dei movimenti non riconciliati per richiedere le prove mancanti. Il confronto riguarda solo i file forniti; non verifica il trattamento contabile o fiscale dell'operazione.",
+            "Tolleranza di abbinamento",
+            "Finestra temporale (giorni)",
+            "La tolleranza non autorizza storni o nuove scritture; le differenze restano da valutare.",
         ),
         "en": (
             "Journal-Bank Reconciliation Review Notes",
@@ -69,6 +72,9 @@ def review_notes_copy(language: object) -> dict[str, str]:
             "none",
             "Review Policy",
             "Check the account, period and amount signs. Trace a match to both documents and use the unmatched lists to request missing evidence. The comparison covers only the supplied files; it does not verify the accounting or tax treatment of the transaction.",
+            "Matching tolerance",
+            "Date window (days)",
+            "Tolerance does not authorize write-offs or new entries; differences remain for review.",
         ),
         "fr": (
             "Revue du rapprochement bancaire",
@@ -82,6 +88,9 @@ def review_notes_copy(language: object) -> dict[str, str]:
             "aucune",
             "Contrôles à effectuer",
             "Vérifiez le compte, la période et le signe des montants. Retrouvez une correspondance dans les deux documents et utilisez les listes des mouvements non rapprochés pour demander les justificatifs manquants. La comparaison porte uniquement sur les fichiers fournis ; elle ne vérifie pas le traitement comptable ou fiscal de l'opération.",
+            "Tolérance de rapprochement",
+            "Fenêtre de dates (jours)",
+            "La tolérance ne permet ni annulation ni nouvelle écriture ; les écarts restent à examiner.",
         ),
         "de": (
             "Prüfung der Bankabstimmung",
@@ -95,6 +104,9 @@ def review_notes_copy(language: object) -> dict[str, str]:
             "keine",
             "Weitere Prüfung",
             "Prüfen Sie Konto, Zeitraum und Vorzeichen der Beträge. Verfolgen Sie eine Zuordnung in beiden Dokumenten und fordern Sie anhand der nicht zugeordneten Bewegungen fehlende Belege an. Der Vergleich umfasst nur die bereitgestellten Dateien; er prüft nicht die buchhalterische oder steuerliche Behandlung des Vorgangs.",
+            "Zuordnungstoleranz",
+            "Datumsfenster (Tage)",
+            "Die Toleranz erlaubt keine Abschreibungen oder neuen Buchungen; Differenzen bleiben zu prüfen.",
         ),
         "es": (
             "Notas de revisión de la conciliación entre diario y banco",
@@ -108,6 +120,9 @@ def review_notes_copy(language: object) -> dict[str, str]:
             "ninguno",
             "Política de revisión",
             "Compruebe la cuenta, el período y el signo de los importes. Siga una coincidencia en ambos documentos y utilice las listas de movimientos sin conciliar para solicitar los justificantes que faltan. La comparación abarca solo los archivos facilitados; no verifica el tratamiento contable o fiscal de la operación.",
+            "Tolerancia de conciliación",
+            "Ventana de fechas (días)",
+            "La tolerancia no autoriza cancelaciones ni nuevos asientos; las diferencias requieren revisión.",
         ),
     }
     keys = (
@@ -122,6 +137,9 @@ def review_notes_copy(language: object) -> dict[str, str]:
         "none",
         "review",
         "guidance",
+        "tolerance",
+        "date_window_days",
+        "tolerance_guidance",
     )
     return dict(zip(keys, rows.get(locale, rows["en"]), strict=True))
 

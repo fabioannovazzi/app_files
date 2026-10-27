@@ -195,7 +195,7 @@ for a material ambiguity the evidence cannot resolve. These technical decisions
 authorize preparation of reviewable workpapers, not human approval, professional
 adoption, signing, filing or external actions.
 
-1. Ask for the bank file/folder, journal or ledger file/folder, sample file when the user wants to restrict the population, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Use the script defaults for amount tolerance and date window unless the user provides stricter thresholds or the data requires a different assumption.
+1. Ask for the bank file/folder, journal or ledger file/folder, sample file when the user wants to restrict the population, working language, source-document language, and any known mapping hints only if they are not already provided or inferable. Do not ask for output richness. Review the proposed recipe amount tolerance and date window, using the user’s thresholds or the evidence where supplied. Execution inherits the sealed policy.
 2. Run dependency checks from the plugin directory:
 
 ```bash
@@ -285,7 +285,7 @@ python3 scripts/managed_python_runtime.py --module journal-bank-reconciliation r
 python scripts/run_reconciliation.py <managed-bank-input> <managed-journal-input> --client-engagement <client_engagement_path> --output-dir <client-run-output>/reconciliation --recipe <client-run-output>/suggested_recipe.json --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
-Use `--tolerance <amount>` and `--date-window-days <days>` when the user provides explicit thresholds.
+Omit `--tolerance` and `--date-window-days` to use the sealed recipe policy. If explicitly supplied, these options must match that policy. Incorporate user-provided thresholds into the reviewed policy before sealing it.
 
 8. Review the counts, stages, controls, and limitations in
    `reconciliation_audit.json`, `assurance_gates.json`, and `review_notes.md`

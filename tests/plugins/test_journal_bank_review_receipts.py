@@ -74,7 +74,11 @@ def _runtime_environment(root: Path, tmp_path: Path) -> dict[str, str]:
 
 
 def _case(
-    tmp_path: Path, *, registration_pdf: bool = False, unfamiliar_pdf: bool = False
+    tmp_path: Path,
+    *,
+    registration_pdf: bool = False,
+    unfamiliar_pdf: bool = False,
+    journal_amount: str = "100.00",
 ) -> dict:
     ledger = _load_customer_ledger()
     client = tmp_path / "client"
@@ -103,7 +107,7 @@ def _case(
                         "2026-01-10",
                         "Invoice Alpha",
                         "INV1001",
-                        "100.00",
+                        journal_amount if side == "journal" else "100.00",
                         "1100.00",
                         "EUR",
                     ],
@@ -400,9 +404,39 @@ def test_managed_archive_writer_preserves_text_and_replays_same_run(
     )
 
 
-@pytest.mark.parametrize("host", ["source", "codex", "cowork"])
+@pytest.mark.parametrize(
+    "host,tolerance,window,options,error",
+    [
+        ("source", "0", 0, [], None),
+        ("source", "0.125", 3, [], None),
+        (
+            "source",
+            "0.125",
+            3,
+            ["--tolerance", "0.125", "--date-window-days", "3"],
+            None,
+        ),
+        ("source", "0.125", 3, ["--tolerance", "0.125"], None),
+        ("source", "0.125", 3, ["--date-window-days", "3"], None),
+        ("source", "0", 3, ["--tolerance", "1"], "Execution tolerance differs"),
+        (
+            "source",
+            "0",
+            3,
+            ["--date-window-days", "7"],
+            "Execution date window differs",
+        ),
+        ("codex", "0", 0, [], None),
+        ("cowork", "0.125", 3, [], None),
+    ],
+)
 def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
-    tmp_path: Path, host: str
+    tmp_path: Path,
+    host: str,
+    tolerance: str,
+    window: int,
+    options: list[str],
+    error: str | None,
 ) -> None:
     root = ROOT / "plugins/vera"
     if host != "source":
@@ -453,7 +487,9 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
     inspection = json.loads((output / "inspection.json").read_text())
     assert inspection["bank"]["row_count"] == inspection["journal"]["row_count"] == 0
     assert inspection["qualification_status"] == "needs_review"
-    decisions = json.dumps(_decisions(json.loads(recipe.read_text())))
+    review = _decisions(json.loads(recipe.read_text()))
+    review["relationship"].update(amount_tolerance=tolerance, date_window_days=window)
+    decisions = json.dumps(review)
     sealed = run(
         "seal_review_receipts.py",
         "--output-dir",
@@ -495,12 +531,20 @@ def test_managed_pdf_inspection_sealing_reconciliation_and_stale_source(
         output / "reconciliation",
         "--recipe",
         recipe,
-        "--tolerance",
-        "0",
-        "--date-window-days",
-        "0",
+        *options,
     )
+    if error is not None:
+        assert reconciled.returncode != 0
+        assert error in reconciled.stderr
+        assert (output / "reconciliation/reconciliation_audit.json").is_file()
+        assert (output / "reconciliation/input_receipts.json").is_file()
+        return
     assert reconciled.returncode == 0, reconciled.stderr
+    audit = json.loads(
+        (output / "reconciliation/reconciliation_audit.json").read_text()
+    )
+    assert audit["tolerance"] == tolerance
+    assert audit["date_window_days"] == window
     assert (output / "reconciliation/material_value_ledger.json").is_file()
     assert "matched=2" in reconciled.stderr
 
@@ -882,3 +926,143 @@ def test_inline_decisions_failed_write_never_seals_and_retry_preserves_run(
     assert recipe.read_bytes() == sealed
     assert list(output.glob("review_decisions.*.json")) == retained
     assert run_path.read_bytes() == original_run
+
+
+@pytest.mark.parametrize("host", ["source", "codex", "cowork"])
+@pytest.mark.parametrize(
+    "chosen_tolerance,matched,difference_artifact,visible_value",
+    [
+        ("0", 1, "unmatched_journal.csv", "100.12"),
+        ("0.12", 2, "reconciliation_matches.csv", "0.12"),
+    ],
+)
+def test_cli_changed_professional_tolerance_controls_matches_and_saved_explanation(
+    tmp_path: Path,
+    host: str,
+    chosen_tolerance: str,
+    matched: int,
+    difference_artifact: str,
+    visible_value: str,
+) -> None:
+    root = ROOT / "plugins/vera"
+    if host != "source":
+        archive = (
+            ROOT
+            / "plugin_packages/vera"
+            / ("vera-plugin.zip" if host == "codex" else "vera-claude-plugin.zip")
+        )
+        with ZipFile(archive) as bundle:
+            bundle.extractall(tmp_path / "package")
+        root = next(
+            (tmp_path / "package").rglob("scripts/managed_python_runtime.py")
+        ).parents[1]
+    environment = _runtime_environment(root, tmp_path)
+    case = _case(tmp_path, journal_amount="100.12")
+    output = Path(case["output_dir"])
+    sources = {
+        item["role"]: Path(item["path"]) for item in case["context"]["input_bindings"]
+    }
+
+    def run(script: str, *args: object) -> None:
+        result = subprocess.run(
+            [
+                sys.executable,
+                str(root / "scripts/managed_python_runtime.py"),
+                "--module",
+                "journal-bank-reconciliation",
+                "run",
+                f"scripts/{script}",
+                "--client-engagement",
+                str(case["context_path"]),
+                *map(str, args),
+            ],
+            capture_output=True,
+            text=True,
+            env=environment,
+            cwd=root,
+            timeout=90,
+            check=False,
+        )
+        assert result.returncode == 0, result.stderr
+
+    run(
+        "inspect_inputs.py",
+        sources["source"],
+        sources["journal"],
+        "--output-dir",
+        output,
+    )
+    original_recipe = output / "suggested_recipe.json"
+    review = _decisions(json.loads(original_recipe.read_text()))
+    review["relationship"]["amount_tolerance"] = "1"
+    first_decisions = output / "initial-decisions.json"
+    first_decisions.write_text(json.dumps(review))
+    run(
+        "seal_review_receipts.py",
+        "--output-dir",
+        output,
+        "--recipe",
+        original_recipe,
+        "--decisions",
+        first_decisions,
+    )
+    previous = output / "previous"
+    run(
+        "run_reconciliation.py",
+        sources["source"],
+        sources["journal"],
+        "--output-dir",
+        previous,
+        "--recipe",
+        original_recipe,
+    )
+    previous_audit = (previous / "reconciliation_audit.json").read_bytes()
+    previous_recipe = original_recipe.read_bytes()
+    revised_recipe = output / "revised-recipe.json"
+    revised_recipe.write_bytes(previous_recipe)
+    review["relationship"]["amount_tolerance"] = chosen_tolerance
+    decisions = output / "professional-change.json"
+    decisions.write_text(json.dumps(review))
+
+    # A supported policy revision followed by an ordinary invocation without flags.
+    run(
+        "seal_review_receipts.py",
+        "--output-dir",
+        output,
+        "--recipe",
+        revised_recipe,
+        "--decisions",
+        decisions,
+    )
+    revised = output / "revised"
+    run(
+        "run_reconciliation.py",
+        sources["source"],
+        sources["journal"],
+        "--output-dir",
+        revised,
+        "--recipe",
+        revised_recipe,
+    )
+
+    audit = json.loads((revised / "reconciliation_audit.json").read_text())
+    intake = json.loads((revised / "run_intake.json").read_text())
+    recipe = json.loads(revised_recipe.read_text())
+    assert audit["tolerance"] == chosen_tolerance
+    assert audit["matched_count"] == matched
+    assert intake["assumptions"]["tolerance"] == chosen_tolerance
+    assert (
+        recipe["relationship"]["decision"]["content"]["policy"]["amount_tolerance"]
+        == chosen_tolerance
+    )
+    assert (
+        f"Matching tolerance: {chosen_tolerance}"
+        in (revised / "review_notes.md").read_text()
+    )
+    assert "does not authorize write-offs" in (revised / "review_notes.md").read_text()
+    assert "100.12" in (revised / "normalized_journal.csv").read_text()
+    assert visible_value in (revised / difference_artifact).read_text()
+    assert original_recipe.read_bytes() == previous_recipe
+    assert (previous / "reconciliation_audit.json").read_bytes() == previous_audit
+    # Downstream value verification replays the actual saved policy and allocations.
+    load_core().validate_material_value_ledger(revised)
