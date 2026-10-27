@@ -319,7 +319,13 @@ workspace and retains previous standard versions. The synthetic transformation
 route remains separate from Archive and keeps its bounded case/consent scope.
 These are inspected source boundaries, not full engine or host acceptance.
 
-Release work remains: finish the owning-route audit, integrate the newer main,
+The branch includes fetched `origin/main` at `ea8e5fe4a`; the primary checkout's
+local `main` is older (`e42c5d4a8`), so it must not replace the integrated #922/#923
+changes. The current repair set is local commit `f997fb4c2`. The worktree is clean.
+There are two local branches, one actual remote branch (excluding the symbolic
+`origin/HEAD`), two registered worktrees and zero stashes.
+
+Release work remains: finish the owning-route audit, verify the current remote,
 review/refresh the changed privacy fingerprints, generate contracts,
 reserve noncolliding versions, rebuild all affected host packages and complete
 the relevant full quality/package checks. No deployment, Marketplace publication
