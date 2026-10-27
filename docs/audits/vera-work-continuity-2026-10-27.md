@@ -535,5 +535,12 @@ No production source or package changes were required for that correction.
 A Linux service-lock job timed out fetching the repository before tests ran;
 that job was retried independently rather than counted as a product failure.
 
+The final-head Windows browser job hit its five-minute CI limit twice while
+passing tests: 245 Python tests, 38 lifecycle tests and the first Node suite
+completed, but the second Node suite was still advancing when CI cancelled it.
+The lifecycle selection alone took 185 seconds on that runner. Its job budget
+is raised to ten minutes, retaining every test and assertion. This changes only
+CI scheduling, not any product timeout or gate.
+
 CI is still outstanding. These results do not establish deployment, installed
 acceptance or live professional acceptance of every workflow.
