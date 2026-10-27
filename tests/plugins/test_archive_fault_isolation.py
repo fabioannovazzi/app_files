@@ -28,6 +28,7 @@ def case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
     studio.mkdir()
     monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(state))
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", "continuity-test-session")
     core.configure_archive(studio, state_dir=state)
     created = core.create_studio_client("Synthetic healthy client", state_dir=state)
     cid = created["client"]["client_id"]

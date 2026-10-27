@@ -561,7 +561,7 @@ def test_native_archive_picker_uses_existing_access_check_without_returning_root
     assert list(root.iterdir()) == []
 
 
-def test_native_registry_renamed_client_recovers_run_and_exposes_treasury_gap(
+def test_native_registry_renamed_client_reopens_the_same_treasury_review(
     registry_workspace,
 ):
     env, root, binding, output, _, _ = registry_workspace
@@ -577,10 +577,10 @@ def test_native_registry_renamed_client_recovers_run_and_exposes_treasury_gap(
     assert run["work_ref"] == original_ref
     assert run["client_label"] == destination.name
     assert run["inputs_valid"] is True
-    assert run["review_available"] is False
-    assert run["review_status"] == "specialist_recovery_required"
-    with pytest.raises(ValueError, match="prepared source is missing"):
-        native_call(env, "vera_workspace_view", {"work_ref": original_ref})
+    assert run["review_available"] is True
+    view = native_call(env, "vera_workspace_view", {"work_ref": original_ref})
+    assert view["kind"] == "treasury"
+    assert view["data"]["opening_cash"] == "40000.00"
     assert (
         native_call(env, "vera_workspace_resume_context", {"work_ref": original_ref})[
             "run_id"

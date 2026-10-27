@@ -623,6 +623,7 @@ def test_managed_run_prepares_and_exports_bound_invoice(
     import source_evidence
 
     repository = Path(__file__).resolve().parents[3]
+    monkeypatch.syspath_prepend(str(repository / "plugins/_shared/vendor/modules"))
     monkeypatch.syspath_prepend(str(repository / "plugins/studio-archive/scripts"))
     spec = importlib.util.spec_from_file_location(
         "invoice_test_ledger",

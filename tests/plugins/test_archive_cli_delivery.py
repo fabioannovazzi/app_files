@@ -25,6 +25,39 @@ from tests.plugins.test_archive_automatic_reporting import (
 PRODUCT = Path(__file__).resolve().parents[2] / "plugins/vera"
 
 
+@pytest.mark.parametrize(
+    ("child_env", "expected"),
+    [
+        (None, "inherited"),
+        ({}, "absent"),
+        ({"CONTINUITY_TEST_ENV": "explicit"}, "explicit"),
+    ],
+)
+def test_cli_preserves_subprocess_environment_semantics(
+    archive_core, client_case, monkeypatch, capfd, child_env, expected
+):
+    from archive_cli import run_command
+
+    loaded = start(archive_core, client_case, "report-builder")
+    monkeypatch.setenv("CONTINUITY_TEST_ENV", "inherited")
+
+    result = run_command(
+        [
+            sys.executable,
+            "-c",
+            "import os; print(os.environ.get('CONTINUITY_TEST_ENV', 'absent'))",
+        ],
+        plugin_root=PRODUCT,
+        component="report-builder",
+        arguments=[loaded["context_path"]],
+        env=child_env,
+        check=False,
+    )
+
+    assert result.returncode == 0
+    assert capfd.readouterr().out == expected + "\n"
+
+
 @pytest.mark.parametrize("private_stderr", [True, False])
 def test_cli_records_only_streams_it_releases_to_its_caller(
     archive_core, client_case, tmp_path, capfd, private_stderr

@@ -168,7 +168,8 @@ def _retain(source: Path, store: Path) -> dict[str, Any]:
             if _identity(temporary) != before or _identity(source) != before:
                 raise ValueError("Recovery source changed during copying")
         count, digest = _identity(temporary)
-        with temporary.open("rb") as handle:
+        # Windows requires a writable descriptor for flushing the retained copy.
+        with temporary.open("r+b") as handle:
             os.fsync(handle.fileno())
         target = store / "objects" / digest
         if target.exists():

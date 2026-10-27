@@ -24,6 +24,24 @@ def started(case):
     return core, studio, state, root, cid, eid, rid, prepared
 
 
+def test_checkpoint_flushes_writable_copy_handles(case, monkeypatch):
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    real_fsync = os.fsync
+
+    def require_writable_descriptor(descriptor):
+        # Windows rejects fsync on a read-only descriptor. A zero-byte write
+        # exercises the same requirement on the local platform without changes.
+        os.write(descriptor, b"")
+        real_fsync(descriptor)
+
+    monkeypatch.setattr(os, "fsync", require_writable_descriptor)
+
+    result = core.checkpoint_studio_client_workflow(cid, eid, rid, state_dir=state)
+
+    assert result["recovery"]["status"] == "retained"
+    assert result["run"]["run_id"] == rid
+
+
 def test_restore_selected_run_retains_completed_work_after_archive_loss(case, tmp_path):
     core, studio, state, root, cid, eid, rid, prepared = started(case)
     progress = Path(prepared["client_engagement"]["output_dir"]) / "completed-stage.md"

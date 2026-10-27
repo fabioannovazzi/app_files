@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "scripts/archive_cli.py",
-      "sha256": "80e0c062fb3ce49b4cdad3a625e91cc7f5db6376718e9e2aad2df747124fc8e6"
+      "sha256": "e96d672fd62106622063a78f47c416ec35fa74bf16f6cdaa3ac7d4c49c4664f7"
     },
     {
       "path": "scripts/archive_emit.py",
@@ -225,7 +225,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "e076124284737889539793c9df59494385ff1c07e8a8471159ff906d42f0e1ed"
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -594,5 +594,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fa789053126c9fc7c89e55d6706a86a8efbec463cf6a7c7d78378c168754b27d"
+  "canonical_course_sha256": "3e060efd17f435b98aec70ba2f6b12d8568469a0124933bd502ec7fee6ffe0f4"
 }

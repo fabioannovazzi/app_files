@@ -137,7 +137,11 @@ def _run_command(
         or json.loads(manifest.read_text())["name"] != "vera"
     ):
         return subprocess.run(command, **options)
-    options["env"] = {**options.get("env", os.environ), "VERA_REPORTING_CAPTURED": "1"}
+    environment = options.get("env")
+    options["env"] = {
+        **(os.environ if environment is None else environment),
+        "VERA_REPORTING_CAPTURED": "1",
+    }
     try:
         binding = bind_output(component, arguments)
         if binding is None and selected_run(component, arguments) is not None:

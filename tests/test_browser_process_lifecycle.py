@@ -1024,7 +1024,7 @@ def test_named_skill_is_discoverable_and_bound_in_package(
     monkeypatch.setattr(privacy, "project_privacy", lambda *_args, **_kwargs: {})
     builder = importlib.import_module("build_codex_plugin_zip")
     target = next(bundle for bundle in builder.load_bundles() if bundle.name == "vera")
-    entries = builder.expected_zip_entries(target, project_vera_privacy=False)
+    entries = builder.source_zip_entries(target, project_vera_privacy=False)
     prefix = f"{target.package_root}/plugins/vera/"
     for path in skill.rglob("*"):
         if path.is_file():
@@ -1037,7 +1037,7 @@ def test_named_skill_is_discoverable_and_bound_in_package(
             ] = path.read_bytes()
     monkeypatch.setattr(
         builder,
-        "expected_zip_entries",
+        "source_zip_entries",
         lambda _target, *, project_vera_privacy=True: entries,
     )
 

@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "863d1eada462391f6422422fdf0a1eef5b26e7a5b35114a78afb96324f0b0029",
+      "sha256": "195b2c879f93175198dc57974ae798e2f458bef0be658b604ee6b914a70836b9",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "8984b9c1ffb2755d820281225177ba975ac69a001492e2089b2fab053d73ebf7",
+      "sha256": "8ea9bbf0f91eb726a35d06059d7c351f43d96758d73cfddb970b8edf4d62df6b",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "2f75d90d0ed220c6ee6d5328d9d5332b4d28fb45e4abf8bc2a759321965a366a",
+      "sha256": "94939c265efc403572c6bf55e6e985361b38da38913412e8d08a6628c258dfe8",
       "languages": [
         "it",
         "en",

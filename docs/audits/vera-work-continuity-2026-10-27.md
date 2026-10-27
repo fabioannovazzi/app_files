@@ -7,10 +7,10 @@ work or restarting the user's job. An archive destination may be a general
 folder such as Vari; its internal ID is software-managed, not a professional
 identity or an automatic request for client onboarding.
 
-Current status: the 55-route source audit, local regression selections and final
-all-host package parity checks are complete. Draft PR #924 is under CI review;
-its Linux/Windows LIPE fixture failure has been reproduced and repaired locally.
-Earlier pending
+Current status: the 55-route source audit and initial all-host package parity
+checks are complete. Draft PR #924 is under CI review. Its first CI run exposed
+three implementation defects and several test setup/expectation issues; their
+repairs are being verified and the packages regenerated. Earlier pending
 lists below are chronological findings, superseded by the later results.
 Source/package checks do not establish all-workflow live professional or
 installed-host acceptance.
@@ -471,3 +471,52 @@ The active task retains two local branches, two actual remote branches, two
 registered worktrees and zero stashes. The primary checkout's unrelated work
 remains untouched. No merge, deployment, Marketplace publication or enabled
 installation update has occurred.
+
+### Corrections from the first cross-platform CI run
+
+- The reporting subprocess wrapper rejected the valid `env=None` option.
+  A real child-process regression reproduced this; `None` now inherits the
+  environment, while an explicitly empty mapping remains empty. All three
+  environment cases pass. The operational-incident selection passes **551
+  tests**, with **83.43%** coverage. Its initial local run hit the nested sandbox's
+  loopback-socket restriction; the permitted rerun completed successfully.
+- Windows CI could not flush read-only checkpoint handles, so it retained no
+  recovery snapshot. A focused writable-descriptor regression reproduced this
+  locally; retained copies are now opened read/write for `fsync`. The combined
+  Archive recovery/Treasury selection passed **208 tests**, with three existing
+  skips and **85.43%** recovery coverage. Two local HTTP tests initially met the
+  same sandbox socket restriction; both passed when rerun with socket access.
+  Real Windows confirmation remains pending on the corrected candidate.
+- The document-format CLI and packaged dated-case acceptance called the ledger
+  directly, without Archive core's shared-module bootstrap. This showed that the
+  earlier LIPE import diagnosis also affected actual callers. The ledger now
+  resolves its owned source/packaged recovery dependency itself. The real
+  document-format CLI regression failed before and its complete **19-test**
+  selection passes after repair. The rebuilt Vera ZIP also passes the dated-case
+  reconciliation through reinstall, simulated upgrade and MCP reconnect while
+  retaining its run. The later CI vouching failure had the same ledger import
+  cause; its focused cross-page PDF regression passes with this fix.
+- Cross-process creation fixtures now declare their synthetic session identity
+  instead of inheriting an incidental desktop host session absent in CI. The
+  reporting CI job installs the acquisition component's declared requirements
+  for its real MCP status test. The browser package test uses the current source
+  ZIP inventory API.
+- CNC, ESG, Patent Box and Archive isolation assertions now verify retained
+  admitted inputs and saved decisions, including preservation of changed bytes;
+  current execution symlinks and altered state/artifacts remain rejected.
+  The planning comparison excludes the explicit Vera continuity instruction
+  block while still comparing the shared analytical contract. The combined
+  CNC/ESG/planning/creation selection passes **131 tests**; Patent Box passes
+  **278 tests** with **82.84%** coverage, and invoice XML passes **49 tests**.
+- The three implementation corrections add no model-context fields, recipients
+  or network destinations. Affected source fingerprints and generated catalogs
+  are refreshed after reviewing these changes. Release versions remain the
+  same unpublished draft candidates. All host packages have been rebuilt and
+  their startup/version-alignment checks pass; the independent parity and
+  package regression checks are running.
+
+The corrected full reporting selection passes **327 tests**, with **85.09%**
+coverage. The separate native-emission selection passes **eight tests**.
+
+CI is still outstanding. These results do not establish deployment, installed
+acceptance or live professional acceptance of every workflow.

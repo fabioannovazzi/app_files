@@ -20,6 +20,7 @@ import secrets
 import shutil
 import sqlite3
 import stat
+import sys
 import tempfile
 import threading
 import time
@@ -1887,6 +1888,16 @@ def load_run(
     context_path = Path(loaded["context_path"])
     run, inputs, context = loaded["run"], loaded["input_manifest"], loaded["context"]
     if verify_inputs:
+        # Direct ledger callers do not pass through archive_core's bootstrap.
+        component = Path(__file__).resolve().parents[1]
+        for module_root in (
+            component / "vendor/modules",
+            component.parent / "_shared/vendor/modules",
+        ):
+            if (module_root / "vera_assurance").is_dir():
+                if str(module_root) not in sys.path:
+                    sys.path.insert(0, str(module_root))
+                break
         from vera_assurance.recovery import repair_run_inputs
 
         try:

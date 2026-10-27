@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "0137de8e64cba2403294a214c0d97b0ba9b7db98c2f6057ac50b29f0bec9295f",
+      "sha256": "a7de68df837852093049ecd77ded02060683698d4fafec03c607e9d97ddd30f2",
       "languages": [
         "it",
         "en",
@@ -60,7 +60,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "f46fc58ba9217c56690c706eab744d58c2c337698a2e055d544830b15536d209",
+      "sha256": "94ffc15ae866ebeda9c4cc367bb8842af5642704d88aa99178d89417f6bf1000",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "25a664a96e5d0bf2e53e3fcbdc1f9fe298b79e40689fba47c3ce7f2e465d59b4",
+      "sha256": "6034c20e134a5604178aee0fc8a6968f694f9b7c641f12b607abc9a10959fffd",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "2dc1668a17740ae4ca5fa49ba0ac91279632f8ee7f17298df97fa4ebd43e453b",
+      "sha256": "8828c22ed8e0723d2b77e3a416f1804f71f035ab9ae66fa6d478bf49b7cf47fe",
       "languages": [
         "it",
         "en"
@@ -135,7 +135,7 @@
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "8fdd13b76e13c59b26a04581982df2631898e0334e820436f0c4081aedd418ec",
+      "sha256": "d6e7bc6e0b21abb0d4098ea77888f2a4e54af794077997b5b7b4a6077c19c376",
       "languages": [
         "it",
         "en",
@@ -163,7 +163,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "aaf3bf48781050b23791b045469a4a8bab513d53925fd785e3e281e4c10de919",
+      "sha256": "2041fc2d99c7f6ae19e4d92f4232254976d5a8034383eb61b17a7c2e490efafc",
       "languages": [
         "it",
         "en",
@@ -191,7 +191,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "2e0bec1ea8b1b8d161b77bda07aeae0f5b15fee50ae109b9480e3ca317d9a914",
+      "sha256": "2ace285fb2f8152407aef362b48cddb7b36454650b22413ade71d7b99dc771d3",
       "languages": [
         "it",
         "en",
@@ -219,7 +219,7 @@
     },
     "transcribe": {
       "path": "transcribe/course.json",
-      "sha256": "741b1da46cc8de93ef669dd881b627e729a09bbe09fe891cd3f952e29b8d0f42",
+      "sha256": "89b1ba8c8f6983ae5aafd62859a65c82ba940af32e53e5d34c12b9fabea28b65",
       "languages": [
         "it",
         "en",
