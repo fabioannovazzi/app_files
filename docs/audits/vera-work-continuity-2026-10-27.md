@@ -7,10 +7,12 @@ work or restarting the user's job. An archive destination may be a general
 folder such as Vari; its internal ID is software-managed, not a professional
 identity or an automatic request for client onboarding.
 
-Current status: the 55-route source audit and initial all-host package parity
-checks are complete. Draft PR #924 is under CI review. Its first CI run exposed
-three implementation defects and several test setup/expectation issues; their
-repairs are being verified and the packages regenerated. Earlier pending
+Current status: the 55-route source audit, corrected local regressions and final
+all-host package parity checks are complete. Draft PR #924 is under CI review.
+Its first CI run exposed three implementation defects and several test setup/
+expectation issues, repaired in `42b853a66`. The second run confirmed the Windows
+Treasury recovery repair and exposed Windows newline expectations in CLI tests.
+Earlier pending
 lists below are chronological findings, superseded by the later results.
 Source/package checks do not establish all-workflow live professional or
 installed-host acceptance.
@@ -517,6 +519,21 @@ installation update has occurred.
 
 The corrected full reporting selection passes **327 tests**, with **85.09%**
 coverage. The separate native-emission selection passes **eight tests**.
+
+The correction candidate's package and release-alignment selection passes
+**455 tests**, with two existing skips and four warnings. The final all-host
+build and independent `build_product_release.py vera clara lucia --check` both
+pass, including exact source/package parity and MCP startup checks.
+
+The second CI run confirms Windows Treasury checkpoints, readable Archive on
+all three platforms, LIPE on Linux/Windows, invoice XML on Linux/Windows,
+operational incidents, the document-format CLI, and native boundaries on all
+three platforms. Windows reporting found five assertions expecting LF where
+child processes correctly emitted CRLF; the tests now compare native line
+endings/exact source bytes. Its full nine-test CLI selection passes locally.
+No production source or package changes were required for that correction.
+A Linux service-lock job timed out fetching the repository before tests ran;
+that job was retried independently rather than counted as a product failure.
 
 CI is still outstanding. These results do not establish deployment, installed
 acceptance or live professional acceptance of every workflow.

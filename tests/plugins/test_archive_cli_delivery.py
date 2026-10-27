@@ -55,7 +55,7 @@ def test_cli_preserves_subprocess_environment_semantics(
     )
 
     assert result.returncode == 0
-    assert capfd.readouterr().out == expected + "\n"
+    assert capfd.readouterr().out == expected + os.linesep
 
 
 @pytest.mark.parametrize("private_stderr", [True, False])
@@ -135,7 +135,7 @@ def test_cli_delivers_completed_work_when_recording_storage_fails(
 
     streams = capfd.readouterr()
     assert result.returncode == 0
-    assert streams.out == source.read_text()
+    assert streams.out == source.read_bytes().decode("utf-8")
     assert source.read_text().strip() not in streams.err
     assert "archive_reporting_unavailable" in streams.err
     assert list((Path(loaded["run_root"]) / "reporting/gaps").glob("*.json"))
