@@ -40,6 +40,7 @@
         "extractable_text",
         "text_chars",
         "amount_found",
+        "amount_difference_magnitude",
         "date_found",
         "beneficiary_found",
         "reason"

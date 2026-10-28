@@ -30,7 +30,7 @@
     {
       "path": "modules/check-entries/assets/check-entries-review-widget.html",
       "repository_path": "plugins/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "8a67185b62bbed1b022e06df9ba9c56e076d30d12728f8a7b42ea1b71dcd341c"
+      "sha256": "2264e2ecda0b3a1f975641c3845ba1e85668db183433d0a3a5af380115267b74"
     },
     {
       "path": "modules/check-entries/assets/icon.svg",
@@ -40,7 +40,7 @@
     {
       "path": "modules/check-entries/assets/review-workbench-adapter.json",
       "repository_path": "plugins/check-entries/assets/review-workbench-adapter.json",
-      "sha256": "a72b62284fa90d030f1413810fa1c2c1ceed511d22d6910b72696cf291189ea4"
+      "sha256": "825c68b13d61a2071a9d30ba7a9097cd113901e20efe784c72f0b9037c183529"
     },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "0c1bd62eec38f7c20169362779ab7ffd8ce79db71e34e928d8c0f8b226f6da7f"
+      "sha256": "466a716539f976c7b50cdf894a0198107d6d055f1a0e193769d8f973341a5571"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -110,7 +110,7 @@
     {
       "path": "modules/check-entries/scripts/review_session.py",
       "repository_path": "plugins/check-entries/scripts/review_session.py",
-      "sha256": "7f4e00669217b0a42d775ab96fe9f41ee817d57b86c6f2c95e84bbc0552f05c7"
+      "sha256": "c5c10666b38ad7955717fe851d3114a24564186b5f05bec3fafc25eb8e816557"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
@@ -125,7 +125,7 @@
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
       "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
-      "sha256": "0a4988379b91fe08036fa79a58a0ded6b332037daf1b4fac22c05daf53244386"
+      "sha256": "4bd0af783e0af1acda460b59b560729aafb6d67f8951e37edc43610645349f21"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",

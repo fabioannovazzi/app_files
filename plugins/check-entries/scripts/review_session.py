@@ -533,6 +533,13 @@ def _entry_items(rows: Sequence[dict[str, Any]], language: str) -> list[dict[str
         ]
         if row.get("amount_found") not in (None, ""):
             evidence.append({"kind": "amount_found", "value": row.get("amount_found")})
+        if row.get("amount_difference_magnitude") not in (None, ""):
+            evidence.append(
+                {
+                    "kind": "amount_difference_magnitude",
+                    "value": row["amount_difference_magnitude"],
+                }
+            )
         if row.get("date_found"):
             evidence.append({"kind": "date_found", "value": row.get("date_found")})
         if row.get("beneficiary_found"):

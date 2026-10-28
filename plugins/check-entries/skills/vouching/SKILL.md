@@ -246,6 +246,19 @@ python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-c
 - An authorized connector is an acquisition mechanism, not a matching rule.
   Record the connector name with `--connector-name` after it has produced a
   local export; the helper scripts do not authenticate or call provider APIs.
+- Extract observed PDF amounts independently of the journal value. Never select
+  a token because it matches the expected amount. A unique extracted monetary
+  value is available for comparison; distinct values require agent semantic
+  selection. Record that selection in the exact reviewed support relationship
+  using `amount_token_index` (one-based extracted-text token) and canonical
+  `amount_value`. Both must match the captured PDF; inspect `amount_candidates`
+  and their locators in `evidence_facts`. The agent records its own review, not
+  a fabricated professional approval. Reviewed relationship selection takes
+  precedence over incidental automatic candidates.
+- `amount_difference_magnitude` is document magnitude minus journal magnitude
+  in the same currency, available even while document direction is unresolved.
+  It is distinct from signed accounting differences. Preserve the observed
+  mismatch and all remaining review issues; support reuse must not hide it.
 - Amount magnitude checks use exact Decimal values with the configured
   canonical tolerance; binary floats and ambiguous numeric strings are
   rejected. Magnitude cannot pass alone: the sealed journal `amount_signed`
@@ -266,7 +279,9 @@ python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-c
   Signed support values, differences, and `ok` require an exact reviewed
   direction receipt bound to the normalized journal, prepared entry, captured
   support artifact, and exact locator. Without one they remain withheld/manual
-  review; stale or opposite-side decisions are rejected.
+  review; stale bindings are rejected. A source-bound reviewed opposite direction
+  is retained and reported as a mismatch, never rejected merely for disagreeing
+  with the journal.
 - Beneficiary containment is diagnostic only and cannot establish the reviewed
   party perimeter or promote a result.
 - Rows with missing support are `missing_support`.

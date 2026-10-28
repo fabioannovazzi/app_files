@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "21201b2859c46ea2b60ccef6a38df59ff20aafb68c7c41b2e195b41718792864"
+      "sha256": "183156cab1218bbae7cf968c4300b17becd007f99fff8943e81dcbe9ed72de74"
     },
     {
       "path": "modules/check-entries/assets/icon.svg",
@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/check-entries/assets/review-workbench-adapter.json",
-      "sha256": "a72b62284fa90d030f1413810fa1c2c1ceed511d22d6910b72696cf291189ea4"
+      "sha256": "825c68b13d61a2071a9d30ba7a9097cd113901e20efe784c72f0b9037c183529"
     },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "c6eb33a7b63547e14ced8d879d88f0de2db989a3a18320f3bd9e35dc2855dc61"
+      "sha256": "b477f71260ea7ba01df6862346c879b4b0e8e867a4f429fcc3ddacee65014723"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/scripts/review_session.py",
-      "sha256": "fb8caae15cfa29dbd9e7838b6ba454ff17f1fed59a9fcc938735b91b327da78f"
+      "sha256": "8011ee5b7d14e42fd8c1d9f3fec1b32d380e9f4672439b4cc78556178430adf6"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
-      "sha256": "a604eafc242c2e795bed5752a829bd6f6d37453947dc30bbc84b4ad4d5c053a2"
+      "sha256": "dca6a5808c13b558db5ffe24f4c5664e14b1608d0c0b3080b3e5f3cc6d16d3bd"
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
@@ -658,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d4a0c7e107f57798778120eb3af71f5bf5935db27b0f8111879ba79b2cfac21c"
+  "canonical_course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee"
 }
