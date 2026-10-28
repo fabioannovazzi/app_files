@@ -1,4 +1,4 @@
-# Vera 0.1.517: Vouching MCP Apps delivery
+# Vera 0.1.518: Vouching MCP Apps delivery
 
 The Vouching widget did not initialize the standard MCP Apps bridge. Its later
 tool-result handler selected the public row-free summary instead of the private
@@ -33,3 +33,8 @@ Acceptance requires the updated enabled installation and a fresh chat exposing
 that version, then a visible Vouching card. Only an existing expanded MCP Apps tab
 can be inspected/captured through the permitted UI API. Test 3 and the retained
 new Test 4 run must not be rerun or rewritten merely to obtain this evidence.
+
+The first release candidate CI passed the widget tests on all three operating
+systems, then caught the Geneva inventory still bound to the prior manifest
+version. The inventory and assessment binding were refreshed after confirming
+that every skill entrypoint hash and jurisdiction judgment is unchanged.
