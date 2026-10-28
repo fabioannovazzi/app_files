@@ -76,7 +76,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "69dbdea164652333f207a7ef1862725e058a457bb33d8c2dbb21989c2212eb74",
+      "sha256": "8803e3a4d16ae8dbcf77ec0c78713830c5b85739f7d00cab6037a1385f2a755e",
       "languages": [
         "it",
         "en",
@@ -685,7 +685,7 @@
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "55cc0cfba4f055249846cf23131d3e528388cda84bef49b2878848f50fda2931",
+      "sha256": "dee8621d7d2c7e1101fbe444f8e4a2aebc41f72d2be7da158f591ae4798fd87b",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "fa9da1be15dc71f89eca014d1a35a739854b87db43d85003e3f852e11837ead1",
+      "sha256": "2ff3a6af28e4bc01b0eaa58ea9afe5a30d90c9e81347cc00164c23b4254ee240",
       "languages": [
         "it",
         "en",

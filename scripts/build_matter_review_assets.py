@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import json
 from pathlib import Path
 
@@ -16,18 +15,8 @@ def build() -> dict[Path, str]:
     component = ROOT / "plugins/apertura-pratica"
     vocabulary = json.loads((component / "references/display-labels.json").read_text())
     template = (ROOT / "scripts/matter_review_template.html").read_text()
-    fonts = []
-    for weight, name in ((400, "Regular"), (600, "SemiBold")):
-        data = (
-            ROOT
-            / f"plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-{name}.ttf"
-        ).read_bytes()
-        encoded = base64.b64encode(data).decode("ascii")
-        fonts.append(
-            f'@font-face{{font-family:"Instrument Sans";font-style:normal;font-weight:{weight};src:url(data:font/ttf;base64,{encoded}) format("truetype");}}'
-        )
-    template = template.replace("__FONTS__", "\n".join(fonts)).replace(
-        "__LABELS__", json.dumps(vocabulary, ensure_ascii=True)
+    template = template.replace(
+        "__LABELS__", json.dumps(vocabulary, ensure_ascii=True, indent=2)
     )
     return {
         component / "assets" / name: template.replace("__EDITABLE__", editable)

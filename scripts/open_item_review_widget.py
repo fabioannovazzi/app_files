@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import base64
 import re
 from pathlib import Path
 
@@ -11,12 +10,6 @@ def customize_review(html: str) -> str:
     """Compose the accounting desk without changing other widget consumers."""
     assets = Path(__file__).with_name("review_widgets")
     css = (assets / "open_item.css").read_text(encoding="utf-8")
-    font_root = assets.parents[1] / "plugins/comunicazione-professionale/assets/fonts"
-    for weight, name in [(400, "Regular"), (600, "SemiBold")]:
-        encoded = base64.b64encode(
-            (font_root / f"InstrumentSans-{name}.ttf").read_bytes()
-        ).decode("ascii")
-        css += f'\n@font-face {{font-family:"Instrument Sans";font-style:normal;font-weight:{weight};src:url(data:font/ttf;base64,{encoded}) format("truetype");}}'
     javascript = (assets / "open_item.js").read_text(encoding="utf-8")
     # Replace complete top-level functions only. The accounting overrides also
     # bind browser-draft recovery to its original saved-decision baseline.

@@ -150,7 +150,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "d52c5fabc7b9b3a769c3fe56386508e85645f2a239def789d7b74e6cf93a8312",
+  "catalogue_fingerprint": "6add615c47982aafaef0aaa4456a7ebd908306b60381770b6d7bd9cf2a777583",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2395,5 +2395,19 @@
     ],
     "source_review": "docs/audits/vera-work-continuity-2026-10-27.md",
     "scope": "All 55 existing entrypoints now reference the shared continuity contract: resolve prerequisites upfront, retain admitted work and recover storage/reporting interruptions. General archive destinations do not imply professional client onboarding. The inspected shared runtime changes do not change Geneva jurisdiction selection, professional methods or the existing assessment dispositions. Agent-attributed routine technical review does not constitute professional adoption, signature, filing or new Swiss professional acceptance."
+  },
+  "test02_semantic_review_release_binding_20261028": {
+    "version": "0.1.516",
+    "reviewed_at": "2026-10-28T07:14:56.797840+00:00",
+    "previous_catalogue_fingerprint": "d52c5fabc7b9b3a769c3fe56386508e85645f2a239def789d7b74e6cf93a8312",
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "scope": "The general Vera entrypoint now identifies ordinary bounded semantic review through the existing authenticated worker as part of the requested task, retaining host controls. Shared reconciliation sources add exact-reference arithmetic drafts from declared payments with missing bank evidence explicit. Function IDs, professional purposes, jurisdiction dispositions and existing acceptance limits are unchanged. This release binding does not establish Geneva professional acceptance."
+  },
+  "directory_review_release_binding_20261028": {
+    "previous_catalogue_fingerprint": "d52c5fabc7b9b3a769c3fe56386508e85645f2a239def789d7b74e6cf93a8312",
+    "scope": "Canonical version update only; all skill entrypoint identities and hashes are unchanged. Widget font/formatting changes and runtime reviewer notes add no jurisdiction-specific behavior. Existing Geneva judgments and acceptance limits remain unchanged.",
+    "version": "0.1.515"
   }
 }

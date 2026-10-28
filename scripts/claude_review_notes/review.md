@@ -16,6 +16,9 @@ mparanza.com host and the course path are checked, including every redirect.
 {local_tokens}
 The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables.
 
+## Runtime download/execution findings (RUNTIME_FETCH_EXEC)
+{runtime_fetch_exec}
+
 ## Font references (UNREAD_ASSET_REFERENCED)
 {fonts}
 
