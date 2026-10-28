@@ -238,6 +238,7 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "professional_conclusion",
   "assurance_gate_status",
   "amount_found",
+  "amount_difference_magnitude",
   "date_found",
   "beneficiary_found",
   "reason",
