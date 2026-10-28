@@ -148,6 +148,15 @@ call.
 - In acceptance tests, report every block encountered, including recovered
   blocks, its cause, effect, recovery and evidenced justification.
 
+### Test and demo videos
+
+- Use the Codex-style conversation replay approved by Fabio on 2026-10-28 as
+  the default for test and demo videos. Follow
+  [the test and demo video standard](docs/test-demo-video-standard.md).
+- Show real prompts, answers, tables and deliverables in a polished conversation
+  layout, with a small persistent replay label. Reuse the template across tests;
+  preserve source provenance and distinguish a replay from native screen capture.
+
 ## Polars: streaming engine guidance
 
 We no longer recommend using `streaming=True` in examples or new code. Prefer selective use of `engine="streaming"` on the few heavy `collect`/`sink_*` steps that are memory‑bound. Do **not** remove existing `engine="streaming"` calls wholesale; keep them where they provide memory headroom or speed.
