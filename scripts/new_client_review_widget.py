@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import json
 from pathlib import Path
 
@@ -118,7 +117,7 @@ def customize_review(html: str) -> str:
         html = html.replace(before, after)
     css = """
     :root { --accent:#173f68; --accent-strong:#102f50; --accent-soft:#f0f6fb; }
-    body { font-family:"Instrument Sans",sans-serif; }
+    body { font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
     .row { grid-template-columns:minmax(0,1fr) 7rem; align-items:start; }
     .row > .type { display:none; }
     .row .title { min-width:0; overflow-wrap:anywhere; }
@@ -134,11 +133,4 @@ def customize_review(html: str) -> str:
     .new-client-record .new-client-facts { grid-template-columns:minmax(5rem,35%) minmax(0,1fr); }
     @media (max-width:700px) { .new-client-facts,.new-client-record .new-client-facts {grid-template-columns:1fr;} }
 """
-    for weight, name in ((400, "Regular"), (600, "SemiBold")):
-        font = (
-            root
-            / f"plugins/_shared/vendor/modules/courseware/assets/InstrumentSans-{name}.ttf"
-        )
-        encoded = base64.b64encode(font.read_bytes()).decode("ascii")
-        css += f'@font-face{{font-family:"Instrument Sans";font-style:normal;font-weight:{weight};src:url(data:font/ttf;base64,{encoded}) format("truetype");}}'
     return html.replace("</style>", css + "\n</style>", 1)

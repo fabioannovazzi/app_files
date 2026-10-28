@@ -1,10 +1,8 @@
 # Directory reviewer notes: vera
 
 ## MCP servers
-These servers run locally over stdio, exchanging data with local files and
-helper processes on the user's machine.
-The local reporting service sends ordinary HTTPS to Mparanza for technical
-incidents, task events, receipt signatures and user-authored feedback.
+These servers run locally over stdio with local files and helper processes.
+The local reporting service sends HTTPS to Mparanza for technical incidents, task events, receipt signatures and user-authored feedback.
 Independent browser recovery uses https://mparanza.com/vera/incident-recovery.
 It is operated by the agent when the host permits browser control. Reporting
 credentials authenticate requests; they are never diagnostic content.
@@ -53,6 +51,10 @@ Vera's check-entries creates `persistence_token` with `crypto.randomBytes(32)` d
 Scanner-listed review files: `modules/archive-organization/scripts/review_server.py`, `modules/client-file-preparation/scripts/review_server.py`, `modules/check-entries/mcp/server.cjs`.
 The flagged `.claude-plugin/plugin.json` contains plugin metadata, not these tokens or user credential values.
 The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables.
+
+## Runtime download/execution findings (RUNTIME_FETCH_EXEC)
+- `mcp/workspace.cjs`: bridge() uses spawnSync with bundled scripts/native_workspace_runtime.py and scripts/native_workspace.py; the resolver selects an already prepared Python runtime and never downloads or installs code.
+- `scripts/_python_bootstrap.py`: Separate setup downloads the pinned uv 0.12.10 wheel, verifies its SHA-256 before extraction/execution, then uses uv to provision CPython 3.12; retained as verified runtime setup.
 
 ## Font references (UNREAD_ASSET_REFERENCED)
 - `mcp/workspace.cjs`: Base64-embeds Instrument Sans Regular in widget CSS @font-face.

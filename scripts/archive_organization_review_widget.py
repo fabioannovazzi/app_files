@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import base64
 import json
 from pathlib import Path
 
@@ -105,16 +104,10 @@ def customize_review(html: str) -> str:
         html = html.replace(before, after)
     css = """
     :root { --accent:#173f68; --accent-strong:#102f50; --accent-soft:#f0f6fb; }
-    body { font-family:"Instrument Sans",sans-serif; }
+    body { font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
     .row { grid-template-columns:minmax(0,1fr) 7rem; align-items:start; }
     .row > .type, .row .row-support { display:none; }
     .row .title { display:block; }
 
 """
-    fonts = root / "plugins/comunicazione-professionale/assets/fonts"
-    for weight, name in ((400, "Regular"), (600, "SemiBold")):
-        encoded = base64.b64encode(
-            (fonts / f"InstrumentSans-{name}.ttf").read_bytes()
-        ).decode("ascii")
-        css += f'\n@font-face {{font-family:"Instrument Sans";font-style:normal;font-weight:{weight};src:url(data:font/ttf;base64,{encoded}) format("truetype");}}'
     return html.replace("  </style>", css + "\n  </style>", 1)

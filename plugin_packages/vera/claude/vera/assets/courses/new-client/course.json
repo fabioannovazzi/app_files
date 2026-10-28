@@ -160,7 +160,7 @@
     },
     {
       "path": "modules/new-client/assets/new-client-review-widget.html",
-      "sha256": "137e1e3c9de12ffbafb2d09bf4b8838da97b9617e678c6ca8fd3dc3b6988a185"
+      "sha256": "0c34d0c83c378dc0ea5d2847b2ee6e3677d452a17d0af196910ad3f5483164d4"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",
@@ -701,5 +701,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "55cc0cfba4f055249846cf23131d3e528388cda84bef49b2878848f50fda2931"
+  "canonical_course_sha256": "dee8621d7d2c7e1101fbe444f8e4a2aebc41f72d2be7da158f591ae4798fd87b"
 }

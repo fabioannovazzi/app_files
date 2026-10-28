@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "ba113ab238e948cd364498f2f97afbaeb2252372e5937751d877c8487f497978"
+      "sha256": "dde3374e3d71a1ebf9edc2e567dea54fae499a93a9e1c17416706ff6f9d4c135"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -793,5 +793,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "65491f7d2a3ea46657b3f30d023ee6b1e3b4a218cc8884e59026d8fc5b6f4f2f"
+  "canonical_course_sha256": "266685a46471eba92bf7f5bcf3a03ece762f593a52a29f4ad71605cd158f6490"
 }

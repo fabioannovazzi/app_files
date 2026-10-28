@@ -3587,10 +3587,8 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
                 raise ValueError(f"Unreviewed local transport: {name}")
             local.append(f"- `{name}`: {descriptions[name]}")
     lines = [
-        "These servers run locally over stdio, exchanging data with local files and",
-        "helper processes on the user's machine.",
-        "The local reporting service sends ordinary HTTPS to Mparanza for technical",
-        "incidents, task events, receipt signatures and user-authored feedback.",
+        "These servers run locally over stdio with local files and helper processes.",
+        "The local reporting service sends HTTPS to Mparanza for technical incidents, task events, receipt signatures and user-authored feedback.",
         f"Independent browser recovery uses https://mparanza.com/{product}/incident-recovery.",
         "It is operated by the agent when the host permits browser control. Reporting",
         "credentials authenticate requests; they are never diagnostic content.",
@@ -3605,6 +3603,12 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
         else "This package declares no MCP servers (.mcp.json is absent)."
     )
     font_descriptions = json.loads((source / "fonts.json").read_bytes())
+    runtime_descriptions = json.loads((source / "runtime-fetch-exec.json").read_bytes())
+    runtime_notes = [
+        f"- `{name}`: {purpose}"
+        for name, purpose in runtime_descriptions.items()
+        if name in entries
+    ]
     fonts = [
         f"- `{name}`: {purpose}"
         for name, purpose in font_descriptions.items()
@@ -3621,6 +3625,8 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
             product=product,
             servers=server_text,
             fonts="\n".join(fonts),
+            runtime_fetch_exec="\n".join(runtime_notes)
+            or "No listed runtime-fetch paths are present.",
             local_tokens=(source / f"{product}-local-tokens.md")
             .read_text(encoding="utf-8")
             .strip(),
