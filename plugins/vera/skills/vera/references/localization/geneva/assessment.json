@@ -150,7 +150,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "d52c5fabc7b9b3a769c3fe56386508e85645f2a239def789d7b74e6cf93a8312",
+  "catalogue_fingerprint": "c696f8877b61ca73f21d01db67eb700b0834387d27f17e94e45a175d357af0e4",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -359,6 +359,11 @@
     "current_catalogue_fingerprint": "dfb13325270705e5ba78219138181027468ee106ddffa3bf8fad5141fe667bda",
     "note": "Manifest-only catalogue update for the derived-output reporting repair. All 55 wrapper entrypoints and all jurisdiction assessment rows remain unchanged; no new jurisdiction acceptance is claimed.",
     "previous_catalogue_fingerprint": "ba1ddc1e2049f6b3f36edb1f7f805b5a40cac6b8236451161f04b830a1368ba7"
+  },
+  "directory_review_release_binding_20261028": {
+    "previous_catalogue_fingerprint": "d52c5fabc7b9b3a769c3fe56386508e85645f2a239def789d7b74e6cf93a8312",
+    "scope": "Canonical version update only; all skill entrypoint identities and hashes are unchanged. Widget font/formatting changes and runtime reviewer notes add no jurisdiction-specific behavior. Existing Geneva judgments and acceptance limits remain unchanged.",
+    "version": "0.1.515"
   },
   "draft_preparation_release_binding_20261020": {
     "previous_catalogue_fingerprint": "d2b3245cc089aa848c9d6b5b18ab7f513d0522766214b79761d55aa891248a50",
@@ -2241,6 +2246,11 @@
     },
     "version": "0.1.406"
   },
+  "tolerance_handoff_release_binding": {
+    "previous_catalogue_fingerprint": "968b087a1db52e41fcb966445bba9593000cdb2a533c1defaf103ea3002373fb",
+    "scope": "Reviewed exact-policy inheritance and normal-chat tolerance choice/revision instructions. Existing function identities and jurisdiction assessments are unchanged; this adds no Geneva acceptance.",
+    "version": "0.1.512"
+  },
   "transformation_course_release_binding": {
     "changed_entrypoints": [
       "browser-automation",
@@ -2316,26 +2326,7 @@
     "scope": "Retain the per-run Cowork reporting/native-link repair from PR865 and all existing catalogue history and Geneva dispositions. All 55 skill entrypoints match both parent catalogues; the combined source introduces no new professional or jurisdiction qualification.",
     "version": "0.1.417"
   },
-  "workflow_ui_source_review_20261014": {
-    "scope": "Native review routing and mechanical source/correction/citation persistence only. Existing jurisdiction assessments remain unchanged; no Geneva professional or native-host acceptance is inferred.",
-    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
-  },
-  "workflow_usage_release_binding": {
-    "integrated_main": "ca971774139328ea2fa03d7ef2276dc637807012",
-    "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
-    "reviewed_at": "2026-10-17",
-    "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
-    "version": "0.1.404"
-  },
-  "tolerance_handoff_release_binding": {
-    "version": "0.1.512",
-    "previous_catalogue_fingerprint": "968b087a1db52e41fcb966445bba9593000cdb2a533c1defaf103ea3002373fb",
-    "scope": "Reviewed exact-policy inheritance and normal-chat tolerance choice/revision instructions. Existing function identities and jurisdiction assessments are unchanged; this adds no Geneva acceptance."
-  },
   "work_continuity_release_binding_20261027": {
-    "version": "0.1.513",
-    "previous_catalogue_fingerprint": "5a199bce0d34b4f597bb30d29fa39701523e4bff204950ec25ce7a114b543d19",
-    "reviewed_at": "2026-10-27T19:11:03.058458+00:00",
     "changed_entrypoints": [
       "adeguati-assetti",
       "adversarial-opinion",
@@ -2393,7 +2384,21 @@
       "vera",
       "vouching"
     ],
+    "previous_catalogue_fingerprint": "5a199bce0d34b4f597bb30d29fa39701523e4bff204950ec25ce7a114b543d19",
+    "reviewed_at": "2026-10-27T19:11:03.058458+00:00",
+    "scope": "All 55 existing entrypoints now reference the shared continuity contract: resolve prerequisites upfront, retain admitted work and recover storage/reporting interruptions. General archive destinations do not imply professional client onboarding. The inspected shared runtime changes do not change Geneva jurisdiction selection, professional methods or the existing assessment dispositions. Agent-attributed routine technical review does not constitute professional adoption, signature, filing or new Swiss professional acceptance.",
     "source_review": "docs/audits/vera-work-continuity-2026-10-27.md",
-    "scope": "All 55 existing entrypoints now reference the shared continuity contract: resolve prerequisites upfront, retain admitted work and recover storage/reporting interruptions. General archive destinations do not imply professional client onboarding. The inspected shared runtime changes do not change Geneva jurisdiction selection, professional methods or the existing assessment dispositions. Agent-attributed routine technical review does not constitute professional adoption, signature, filing or new Swiss professional acceptance."
+    "version": "0.1.513"
+  },
+  "workflow_ui_source_review_20261014": {
+    "scope": "Native review routing and mechanical source/correction/citation persistence only. Existing jurisdiction assessments remain unchanged; no Geneva professional or native-host acceptance is inferred.",
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
+  },
+  "workflow_usage_release_binding": {
+    "integrated_main": "ca971774139328ea2fa03d7ef2276dc637807012",
+    "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
+    "reviewed_at": "2026-10-17",
+    "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
+    "version": "0.1.404"
   }
 }

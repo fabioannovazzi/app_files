@@ -53,3 +53,6 @@ stale privacy and course-source fingerprints after the asset/version changes;
 the affected records were reviewed and regenerated. The sandbox denied a
 headless browser process and loopback listener; the visual preview uses the
 existing Chrome surface and an approved loopback-only server.
+CI also detected that Vera's localization catalogue still bound version 0.1.513.
+The release snapshot was rebound to 0.1.515 after proving all 55 skill entrypoint
+IDs and hashes unchanged; existing jurisdiction judgments were retained.
