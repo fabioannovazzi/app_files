@@ -41,6 +41,33 @@ recovered blocks in the test evidence even when the short video uses excerpts.
 A presentation remake uses the saved results: it does not require rerunning the
 pipeline, regenerating a privacy report or issuing a new receipt.
 
+## Complete user-visible workflow
+
+Show **all the user sees** during the test, not just the conversation and final
+answer. Plan capture before execution. Record each relevant user-visible stage:
+the request and inputs, progress and questions, native Vera or host panels,
+review lists, selected-item details and evidence, decisions or confirmations
+presented to the user, output and file views, and privacy status. Capture
+meaningful navigation and intermediate screens; omit idle duplicates and
+unrelated information.
+
+Where the workbench offers relevant views, include those actually displayed,
+such as a representative match, an exception and its evidence, the review or
+decision area, and the output/file view. Record whether each view was observed
+during the original run, reopened later, reconstructed, unavailable or not
+inspected. Do not present a later reopening as original footage or infer that
+interactive review worked from a completed-run read-only view.
+
+Use permitted real captures of supported product surfaces. Never bypass a
+denied capture or other security restriction. If actual capture is unavailable,
+preserve exact visible messages and diagnostics in a clearly labelled edited
+transcript and identify missing product views. Do not fabricate screens,
+interactions, approvals or unseen states, or describe partial coverage as complete.
+
+For every meaningful frame or clip, retain stage, time, source surface,
+run/version and provenance, including whether it is original or later reopened.
+Report material capture gaps. Preserve original evidence and previous videos.
+
 ## Reuse and delivery
 
 Maintain one reusable renderer/template driven by a scene or transcript JSON.
