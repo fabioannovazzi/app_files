@@ -1090,7 +1090,7 @@
 // Embedded in the legal/tax widgets; source and origin checks protect review writes.
 (() => {
   const pending = new Map(), listeners = new Set();
-  let sequence = 0, initialized = false, origin = null;
+  let sequence = 0, initialized = false, origin = null, hostContext = {};
   const framed = Boolean(window.parent && window.parent !== window);
   function request(method, params, timeout = 15000) {
     return new Promise((resolve, reject) => {
@@ -1117,6 +1117,9 @@
       else entry.resolve(message.result);
       return;
     }
+    if (origin && message.method === "ui/notifications/host-context-changed") {
+      hostContext = { ...hostContext, ...message.params };
+    }
     if (origin && message.method === "ui/notifications/tool-result") {
       for (const listener of listeners) listener(message.params);
     }
@@ -1125,7 +1128,8 @@
     protocolVersion: "2026-01-26",
     appInfo: { name: "Vera Vouching review", version: "1.0.0" },
     appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
-  }, 15000).then(() => {
+  }, 15000).then((result) => {
+    hostContext = result.hostContext || {};
     initialized = true;
     window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, origin);
     window.dispatchEvent(new Event("mparanza:review-host-ready"));
@@ -1133,6 +1137,20 @@
   }).catch(() => false) : Promise.resolve(false);
   window.mparanzaReviewHost = {
     canCallTools: () => initialized || typeof window.openai?.callTool === "function",
+    async requestDisplayMode(mode) {
+      if (await ready) {
+        if (!hostContext.availableDisplayModes?.includes(mode)) {
+          return { mode: hostContext.displayMode || "inline" };
+        }
+        const result = await request("ui/request-display-mode", { mode });
+        hostContext.displayMode = result.mode;
+        return result;
+      }
+      if (typeof window.openai?.requestDisplayMode === "function") {
+        return window.openai.requestDisplayMode({ mode });
+      }
+      return { mode: window.openai?.displayMode || "inline" };
+    },
     async callTool(name, args) {
       if (await ready) return request("tools/call", { name, arguments: args });
       if (typeof window.openai?.callTool === "function") return window.openai.callTool(name, args);
@@ -2259,11 +2277,24 @@
       const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);
       if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;
       state.payload = nextPayload;
+      requestPresentation(nextPayload);
       loadInitialDecisions();
       render();
     });
     window.addEventListener("mparanza:review-host-ready", render);
+    let presentationRequested = false;
+    function requestPresentation(payload) {
+      const mode = payload?.requested_display_mode;
+      if (presentationRequested || !["inline", "fullscreen"].includes(mode)) return;
+      presentationRequested = true;
+      window.mparanzaReviewHost.requestDisplayMode(mode).then((result) => {
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+      }).catch((error) => {
+        console.warn("Review display mode request failed.", error);
+      });
+    }
     state.payload = toolOutput();
+    requestPresentation(state.payload);
     loadInitialDecisions();
     render();
   </script>
