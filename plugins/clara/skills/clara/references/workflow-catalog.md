@@ -45,8 +45,10 @@ their bounded purpose matches the requested contribution.
   with fixed-stage rendering, motion, navigation, and browser QA.
 - `hosted-interview`: prepare and operate an adaptive hosted external interview,
   including brief selection, participant link, retrieval, and quality review.
-- `research-video`: turn an approved ordered set of research scene images into
-  a source-faithful 16:9 narrated MP4 with restrained motion, synchronized
+- `research-video`: turn an approved ordered set of research scene images or
+  user-supplied real-estate photographs into a source-faithful landscape,
+  vertical, or square narrated MP4 with restrained motion, optional approved
+  on-screen text and rights-cleared local background music, synchronized
   narration generated through authenticated Mparanza access in English, Italian, French, German, or Spanish, a
   visible localized AI-voice disclosure, captions, a narration script, and
   mechanical media QA, without a user API key. Mparanza sends only the approved

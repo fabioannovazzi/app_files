@@ -1,6 +1,6 @@
 {
   "name": "clara",
-  "version": "0.1.361",
+  "version": "0.1.362",
   "description": "Clara supports consultants with commercial due diligence, evidence synthesis, interviews, business analysis, reports and presentations.",
   "author": {
     "name": "Mparanza",
@@ -69,6 +69,8 @@
     "animated-html",
     "research-video",
     "narrated-video",
+    "real-estate-video",
+    "property-video",
     "voice-over",
     "codex",
     "codex-desktop"
@@ -78,7 +80,7 @@
   "interface": {
     "displayName": "Clara",
     "shortDescription": "AI companion for consultants",
-    "longDescription": "Clara helps consultants plan advisory assignments as reviewable contracts and direct the living case. She states the current answer, keeps evidence, assumptions and contradictions visible, chooses the next decision-relevant work, and revises the position when research, data, interviews or partner judgement change it.\n\nShe prepares the strategic and commercial business plan of startups and established companies, covering market evidence, positioning, options, recommendations, initiatives, milestones, KPIs and risks. She also analyzes markets, customers, products, competitors and operations, creates presentations, reports and reviewable workpapers, validates completed deliverables, and supports grounded research videos, Retailer Signals and Brand Fit.\n\nProfessional judgement stays with the consultant.",
+    "longDescription": "Clara helps consultants plan advisory assignments as reviewable contracts and direct the living case. She states the current answer, keeps evidence, assumptions and contradictions visible, chooses the next decision-relevant work, and revises the position when research, data, interviews or partner judgement change it.\n\nShe prepares the strategic and commercial business plan of startups and established companies, covering market evidence, positioning, options, recommendations, initiatives, milestones, KPIs and risks. She also analyzes markets, customers, products, competitors and operations, creates presentations, reports and reviewable workpapers, validates completed deliverables, and creates grounded research or property videos from approved images.\n\nProfessional judgement stays with the consultant.",
     "developerName": "Fabio Annovazzi · Mparanza",
     "category": "Productivity",
     "capabilities": [
@@ -92,7 +94,7 @@
     "termsOfServiceURL": "https://mparanza.com/terms",
     "defaultPrompt": [
       "Use Clara to plan or direct this case, organize the evidence, choose the next work, or validate a deliverable.",
-      "Use Clara to run an interview, transcribe a recording, correct a deck, or narrate approved research scenes as a grounded video.",
+      "Use Clara to run an interview, transcribe a recording, correct a deck, or create a reviewed research or property video.",
       "Use this Excel file to prepare an interactive HTML presentation with key findings, supporting charts and recommendations."
     ],
     "brandColor": "#002060",

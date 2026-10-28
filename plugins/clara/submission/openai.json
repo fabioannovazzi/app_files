@@ -7,6 +7,6 @@
     ]
   },
   "publication": {
-    "release_notes": "Desktop package with local course and technical-reporting MCP services. Remote reporting MCP registration has been removed; technical reporting uses ordinary HTTPS while retaining request identifiers and retry state. Includes the current advisory, presentation, interview and analysis workflows."
+    "release_notes": "Adds reviewed promotional property videos from user-supplied photographs, with approved image order, landscape, vertical or square format, on-screen text, rights-cleared local music and narrated MP4 output. Photos and music remain local; only approved narration follows the existing hosted voice path."
   }
 }

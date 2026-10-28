@@ -91,6 +91,13 @@
       "must_not_route_to": ["clara:html-deck", "clara:transcribe", "clara:deck-correction", "clara:hosted-interview"]
     },
     {
+      "id": "real-estate-promotional-video",
+      "prompt": "Use Clara to create a vertical promotional property video from these approved photographs. Keep my image order, add the supplied on-screen text, mix this rights-cleared local music below Italian narration, and do not invent property features or upload the photos or music.",
+      "required_signals": ["promotional property video", "approved photographs", "vertical", "on-screen text", "rights-cleared local music", "Italian narration", "do not invent property features"],
+      "expected_skill": "clara:research-video",
+      "must_not_route_to": ["clara:html-deck", "clara:transcribe", "clara:deck-correction", "clara:hosted-interview"]
+    },
+    {
       "id": "one-command-deck-feedback-capture",
       "prompt": "Clara, record feedback on this deck, open the capture for me, and import it when I finish.",
       "required_signals": ["record feedback", "this deck", "open the capture", "import"],

@@ -1,6 +1,6 @@
 ---
 name: research-video
-description: Turn a user-approved ordered set of research scene images into a source-faithful 16:9 narrated MP4 with restrained motion, synchronized narration in English, Italian, French, German, or Spanish, captions, a reviewable narration script, and mechanical media validation. Use for a research explainer, executive briefing video, client education video, or narrated visual short. Do not use for filming, avatar video, generative scene invention, or revising an existing video.
+description: Turn user-approved research scenes or real-estate photographs into a source-faithful narrated MP4 with approved ordering, landscape, vertical or square format, restrained motion, optional on-screen text and local background music, synchronized narration in English, Italian, French, German, or Spanish, captions, a reviewable script, and mechanical media validation. Use for a research explainer, executive briefing, client education video, narrated visual short, or promotional property video. Do not use for filming, avatar video, generative scene invention, or revising an existing video.
 ---
 <!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
@@ -43,10 +43,12 @@ Current user requests take precedence over saved preferences.
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../clara/SKILL.md`.
 
-Create one short, source-faithful research video from an ordered set of approved
-scene images. The supplied images and source material remain authoritative.
-Clara may write narration and recommend scene order, but must not invent a
-claim, statistic, map feature, figure label, visual object, or source basis.
+Create one short, source-faithful video from an ordered set of approved research
+scenes or user-supplied real-estate photographs. The supplied images and source
+material remain authoritative. Clara may write narration, on-screen text and
+recommend scene order, but must not invent a claim, statistic, property feature,
+price, availability, legal status, map feature, figure label, visual object, or
+source basis.
 
 ## Runtime and output boundary
 
@@ -59,8 +61,8 @@ provider credential and makes no direct speech-provider call.
 The hosted service is currently open to every authenticated Mparanza account;
 there is no Research Video email allowlist. Only the exact approved narration,
 language, scene identifiers, and approval/plan hashes cross the hosted boundary.
-Images, research sources, source-basis notes, Vera artifacts, and local paths
-stay in the local workspace. Mparanza builds the response ZIP in memory and does
+Images, research sources, source-basis notes, Vera artifacts, local music, and
+local paths stay in the local workspace. Mparanza builds the response ZIP in memory and does
 not write the request or generated audio to application storage. OpenAI receives
 the narration under Mparanza's provider arrangement; do not infer or promise an
 OpenAI retention period from this workflow.
@@ -75,9 +77,11 @@ argument, a log, or an artifact.
 Clara owns semantic work through model-led review:
 
 - selecting and ordering only the user-approved research scenes;
+- selecting and ordering only the user-approved property photographs;
 - interpreting the supplied material;
 - drafting concise narration in the approved language (`en`, `it`, `fr`, `de`,
   or `es`);
+- drafting concise optional on-screen text that is supported by the same source basis;
 - deciding what each scene contributes to the argument;
 - checking that narration says no more than its recorded source basis;
 - identifying qualifications, uncertainty, and claims that should be removed.
@@ -85,11 +89,12 @@ Clara owns semantic work through model-led review:
 Deterministic code owns work whose correctness is mechanically verifiable:
 
 - scene-plan schema, path, file-type, dimension, and size validation;
+- landscape, vertical, or square frame selection and local music validation;
 - SHA-256 fingerprints for the plan and every visual layer;
 - approval binding to the exact narration and visual plan;
 - hosted voice request and bundle-manifest shape, scene-audio conversion and
-  hashes, scene timing, caption timing, motion rendering, cross-fades, audio
-  normalization, MP4 assembly, decoding, and artifact hashes.
+  hashes, scene timing, caption timing, motion rendering, cross-fades, approved
+  local music mixing, audio normalization, MP4 assembly, decoding, and artifact hashes.
 
 Mparanza sends the exact approved narration to OpenAI using the centrally
 selected model and language-specific voice, then returns an in-memory ZIP. The
@@ -120,14 +125,15 @@ an assurance substitute.
 ## Hosted-Voice Run UX
 
 Before write-heavy work, show a compact Run Intake table with source files,
-approved scene images, audience, target duration, language, work folder, output
-root, privacy boundary, and review status. Keep a short checklist for source
+approved scene images, video type, image order, landscape/vertical/square format,
+optional on-screen text and rights-cleared local music, audience, target duration,
+language, work folder, output root, privacy boundary, and review status. Keep a short checklist for source
 inspection, scene plan, narration review, approval, render, mechanical checks,
 semantic review, and delivery.
 
 Use a Decision Table for resolved facts and evidence: scene order, source basis,
-visual-layer availability, selected motion, narration status, approval hash,
-and render status. These are facts to verify, not choices to propose after the
+visual-layer availability, selected motion, on-screen text, output format,
+local music and mix level, narration status, approval hash, and render status. These are facts to verify, not choices to propose after the
 user has already requested a complete narrated video.
 
 Before voice generation, show one execution checkpoint naming the run folder,
@@ -157,10 +163,13 @@ Run Clara's dependency check from the Clara plugin root:
 python scripts/check_dependencies.py
 ```
 
-Inspect every proposed scene image and the controlling research sources. Confirm
-the audience, intended duration, narration language (`en`, `it`, `fr`, `de`, or
-`es`), output folder, and whether any scene has genuine separated background and
-transparent foreground layers. Ask only about unresolved choices that
+Inspect every proposed scene image and the controlling research or property
+sources. Confirm the audience, intended duration, narration language (`en`, `it`,
+`fr`, `de`, or `es`), output folder, video type, image order, format
+(`landscape_16_9`, `vertical_9_16`, or `square_1_1`), on-screen text, and whether
+any scene has genuine separated background and transparent foreground layers.
+If music is requested, use only a user-supplied local file after the user confirms
+usage rights; record `music_rights_confirmed: true` and keep the file local. Ask only about unresolved choices that
 materially change the story or output.
 
 Use chat and Markdown for review. A separate HTML application is unnecessary
@@ -169,11 +178,14 @@ for this bounded ordered-scene workflow.
 ### 2. Author the scene plan
 
 Create `scene-plan.json` outside plugin source using
-`references/scene-plan.schema.json`. Each scene requires:
+`references/scene-plan.schema.json`. Use schema version 2 for real-estate videos,
+select `video_type: real_estate_promotion`, and record the requested `format`.
+The scene array is the approved image order. Each scene requires:
 
 - a stable `id`;
 - one approved local `image`;
 - the exact narration text to synthesize in the declared language;
+- optional approved `on_screen_text`;
 - at least one `source_basis` item naming a reference and what it supports;
 - optional restrained `motion`.
 
@@ -221,7 +233,9 @@ python scripts/managed_python_runtime.py run \
 ```
 
 Any later change to narration, scene order, motion, source basis, or image bytes
-invalidates the approval and requires preparation and approval again.
+invalidates the approval and requires preparation and approval again. Format,
+on-screen text, local music bytes, rights confirmation, and music volume are also
+approval-bound.
 Approval writes `narration_approval.json` and the minimal,
 hash-bound `mparanza_voice_request.json`.
 
@@ -264,7 +278,7 @@ attached hosted voice artifacts, applies calm professional delivery already
 captured in those files, and displays the localized disclosure that the voice
 is AI-generated. It produces:
 
-- `research_video.mp4` — 16:9 H.264 video with AAC voice-over;
+- `research_video.mp4` — selected landscape, vertical, or square H.264 video with AAC narration and optional local music;
 - `poster.jpg` — first-scene poster;
 - `captions.vtt` — scene-aligned captions in the narration language;
 - `narration_script.md` — the approved narration;
@@ -283,7 +297,8 @@ Intake table with the audience, language, intended duration, ordered scene
 images, source basis, output directory, and missing inputs.
 
 Show a Decision Table only when a missing choice materially changes the scene
-order, narration, visual treatment, destination, or professional-review scope.
+order, output format, narration, on-screen text, music mix, visual treatment,
+destination, or professional-review scope.
 The Default output policy is to prepare the review packet, wait for exact
 approval, attach the authenticated hosted bundle, render locally, and validate
 the final artifacts; these are not choices to propose when the user has already
@@ -308,12 +323,14 @@ render report, and final artifact manifest. Mechanical validation proves media
 shape and byte integrity, not scientific fidelity or editorial quality. Check:
 
 - every spoken claim against its supplied source basis;
+- every property statement and on-screen phrase against the supplied photographs or listing material;
 - figures, maps, text, labels, and statistics remain legible and uncropped;
 - scene order supports the intended research argument;
 - motion clarifies rather than distracts;
 - transitions do not interrupt speech;
 - pronunciation, pacing, captions, AI-voice disclosure, and qualifications are
   acceptable.
+- optional music is rights-cleared, subordinate to narration, and appropriate for the intended channel.
 
 If any issue is material, revise the scene plan, prepare again, obtain a new
 approval, and rerender. Deliver only when the final review is complete. State

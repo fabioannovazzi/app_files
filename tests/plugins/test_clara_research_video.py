@@ -76,6 +76,30 @@ def _scene_plan(
     }
 
 
+def _property_scene_plan(
+    first: Path,
+    second: Path,
+    music: Path,
+) -> dict[str, Any]:
+    """Return the smallest real-estate promotional scene-plan contract."""
+
+    plan = _scene_plan(first, second, language="it")
+    plan.update(
+        {
+            "schema_version": 2,
+            "video_type": "real_estate_promotion",
+            "format": "vertical_9_16",
+            "background_music": str(music),
+            "background_music_volume": 0.10,
+            "music_rights_confirmed": True,
+        }
+    )
+    plan["title"] = "Appartamento approvato"
+    plan["scenes"][0]["on_screen_text"] = "Zona giorno luminosa"
+    plan["scenes"][1]["on_screen_text"] = "Contattaci per una visita"
+    return plan
+
+
 def _prepare_fixture(
     tmp_path: Path,
     *,
@@ -270,6 +294,68 @@ def test_prepare_run_rejects_unsupported_narration_language(tmp_path: Path) -> N
 
     with pytest.raises(ValueError, match="language must be one of: de, en, es, fr, it"):
         renderer.prepare_run(plan_path, tmp_path / "run")
+
+
+def test_prepare_run_accepts_property_format_text_and_local_music(
+    tmp_path: Path,
+) -> None:
+    renderer = _load_renderer()
+    first = _write_image(tmp_path / "first.png", (10, 20, 30))
+    second = _write_image(tmp_path / "second.png", (40, 50, 60))
+    music = tmp_path / "music.wav"
+    _write_test_voice(music, "licensed music fixture")
+    plan = _property_scene_plan(first, second, music)
+    plan_path = tmp_path / "scene-plan.json"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+
+    intake = renderer.prepare_run(plan_path, tmp_path / "run")
+    canonical = json.loads(
+        (tmp_path / "run" / "scene_plan.json").read_text(encoding="utf-8")
+    )
+    review = (tmp_path / "run" / "review_packet.md").read_text(encoding="utf-8")
+
+    assert intake["video_type"] == "real_estate_promotion"
+    assert intake["format"] == "vertical_9_16"
+    assert intake["data_posture"]["background_music_uploaded"] is False
+    assert intake["audio_inventory"][0]["sha256"] == renderer._sha256(music)
+    assert canonical["scenes"][0]["on_screen_text"] == "Zona giorno luminosa"
+    assert canonical["music_rights_confirmed"] is True
+    assert "usage rights confirmed" in review
+    assert "vertical_9_16" in review
+
+
+def test_prepare_run_rejects_music_without_rights_confirmation(tmp_path: Path) -> None:
+    renderer = _load_renderer()
+    first = _write_image(tmp_path / "first.png", (10, 20, 30))
+    second = _write_image(tmp_path / "second.png", (40, 50, 60))
+    music = tmp_path / "music.wav"
+    _write_test_voice(music, "music fixture")
+    plan = _property_scene_plan(first, second, music)
+    plan.pop("music_rights_confirmed")
+    plan_path = tmp_path / "scene-plan.json"
+    plan_path.write_text(json.dumps(plan), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="music_rights_confirmed=true"):
+        renderer.prepare_run(plan_path, tmp_path / "run")
+
+
+def test_approval_fails_when_background_music_bytes_change(tmp_path: Path) -> None:
+    renderer = _load_renderer()
+    first = _write_image(tmp_path / "first.png", (10, 20, 30))
+    second = _write_image(tmp_path / "second.png", (40, 50, 60))
+    music = tmp_path / "music.wav"
+    _write_test_voice(music, "music fixture")
+    plan_path = tmp_path / "scene-plan.json"
+    plan_path.write_text(
+        json.dumps(_property_scene_plan(first, second, music)),
+        encoding="utf-8",
+    )
+    run_dir = tmp_path / "run"
+    renderer.prepare_run(plan_path, run_dir)
+    music.write_bytes(music.read_bytes() + b"changed")
+
+    with pytest.raises(ValueError, match="Audio changed after preparation"):
+        renderer.approve_run(run_dir, confirmed_by_user=True)
 
 
 def test_approval_requires_explicit_user_confirmation(tmp_path: Path) -> None:
@@ -487,6 +573,57 @@ def test_render_run_builds_decodable_hosted_voice_artifacts_without_network(
         renderer.render_run(run_dir)
 
 
+def test_render_run_builds_vertical_property_video_with_text_and_local_music(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    pytest.importorskip("imageio_ffmpeg")
+    renderer = _load_renderer()
+    first = _write_image(tmp_path / "first.png", (0, 32, 96))
+    second = _write_image(tmp_path / "second.png", (0, 160, 210))
+    music = tmp_path / "music.wav"
+    _write_test_voice(music, "music fixture")
+    plan_path = tmp_path / "scene-plan.json"
+    plan_path.write_text(
+        json.dumps(_property_scene_plan(first, second, music)),
+        encoding="utf-8",
+    )
+    run_dir = tmp_path / "property-video"
+    renderer.prepare_run(plan_path, run_dir)
+    renderer.approve_run(run_dir, confirmed_by_user=True)
+    _attach_fixture_voice(renderer, run_dir, tmp_path)
+    monkeypatch.setattr(renderer, "FRAME_WIDTH", 320)
+    monkeypatch.setattr(renderer, "FRAME_HEIGHT", 180)
+    monkeypatch.setattr(renderer, "FRAME_RATE", 10)
+    monkeypatch.setattr(renderer, "LEAD_SECONDS", 0.1)
+    monkeypatch.setattr(renderer, "TAIL_SECONDS", 0.1)
+    monkeypatch.setattr(renderer, "INTER_SCENE_PAUSE_SECONDS", 0.2)
+    monkeypatch.setattr(renderer, "TRANSITION_SECONDS", 0.1)
+
+    report = renderer.render_run(run_dir)
+
+    assert report["video_type"] == "real_estate_promotion"
+    assert report["format"] == "vertical_9_16"
+    assert report["frame_dimensions"] == {"width": 180, "height": 320}
+    assert report["media"]["width"] == 180
+    assert report["media"]["height"] == 320
+    assert report["background_music"] == {
+        "included": True,
+        "sha256": renderer._sha256(music),
+        "volume": 0.1,
+        "uploaded": False,
+    }
+    with Image.open(run_dir / "poster.jpg") as poster:
+        assert poster.size == (180, 320)
+        top_band = poster.crop((0, 0, poster.width, round(poster.height * 0.25)))
+        navy_pixels = sum(
+            1
+            for red, green, blue in top_band.getdata()
+            if blue > red * 1.35 and blue > green * 1.1
+        )
+    assert navy_pixels > 10
+
+
 def test_skill_and_router_expose_the_research_video_contract() -> None:
     skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
     normalized_skill = " ".join(skill.split())
@@ -521,7 +658,13 @@ def test_skill_and_router_expose_the_research_video_contract() -> None:
     assert '"source": {"const": "mparanza_hosted_openai_voice"}' in voice_schema
     assert "https://mparanza.com/case-notes/research-video/voice" in skill
     assert "- `research-video`:" in catalog
-    assert set(routed) == {"narrated-research-video"}
+    assert set(routed) == {
+        "narrated-research-video",
+        "real-estate-promotional-video",
+    }
+    assert "real-estate photographs" in skill
+    assert "vertical_9_16" in skill
+    assert "music_rights_confirmed: true" in skill
 
 
 def _small_render_fixture(
