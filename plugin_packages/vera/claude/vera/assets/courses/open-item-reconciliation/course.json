@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/simple-reconciliation.md",
-      "sha256": "5f382b1bc2a3e84c50955489a9f76605364e25cc08c17b133e8f44ebcde88370"
+      "sha256": "b7077b57be2c6e2e1a6149c232f9a59081c95fd81cf6c0f4f41547a7ff9bdf55"
     },
     {
       "path": "modules/open-item-reconciliation/references/starter-prompts.md",
@@ -60,7 +60,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
-      "sha256": "d6ce493341ca34240df5bd485f3da94567f4edf0c62da1550e3d83bb4a192642"
+      "sha256": "079ba519195e9f68b5ae0eacdf6b7a0af972b12883ae2cea4a6bf0a4e9277e13"
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "05f03af2e31cddc0527fd92939b394b6520cb0a6c50242a955e38b58a52ee15c"
+      "sha256": "d9b12dbcff226a192c812febc05fa02c6c6851e6e9483ce66a2b93a20c6d984c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "af3512a5e2d482c2d6f4e419be0939e944e7efa10b97c7aeaef5645f9d691b3a"
+      "sha256": "ed80f1f497bae4168d15520fa92bb337f82738a1748e470baad690698786ff2d"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -104,11 +104,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
-      "sha256": "618cffe5e3b6a050bfb351b496879e51ef7df9756ed263dd552334838ff7b137"
+      "sha256": "9f96315b4fce56ba6ef0ea22d9f053bcb846a587cfcea275aa5d11a8bbad51b3"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
-      "sha256": "72952ef0fe7e2f21154de88099a3f9c20dbfb12b6fe12b8cc151f3ad1cbb1f06"
+      "sha256": "4f87b53f029a66bfcbd911787a5da4d76d10348d8fc5a7971629dc9bd6c81c7b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
@@ -116,7 +116,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "7b4e2420780899353c515299149beadd8a198816c14508416f571dbe2a8e8349"
+      "sha256": "4ad56843bc8c3d4a871d76df1d86385083dfe8d3eaa973c532d7b2a6bf9ff7ca"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -223,12 +223,16 @@
       "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
     },
     {
+      "path": "modules/studio-archive/scripts/open_items_source_preflight.py",
+      "sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b"
+    },
+    {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
-      "sha256": "8454114d6385a67f62b89fa216bf747f231555e7f79d02221809577a05286380"
+      "sha256": "04f97595d2991697c2474d5a1add4a024df817c3789cc161c4da913333570b35"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
@@ -793,5 +797,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "65491f7d2a3ea46657b3f30d023ee6b1e3b4a218cc8884e59026d8fc5b6f4f2f"
+  "canonical_course_sha256": "fa9da1be15dc71f89eca014d1a35a739854b87db43d85003e3f852e11837ead1"
 }

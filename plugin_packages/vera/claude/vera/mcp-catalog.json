@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.513",
+  "version": "0.1.516",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -8918,12 +8918,12 @@
           "name": "vera-execution",
           "version": "1.0.0"
         },
-        "instructions": "Run a published Vera component helper through the installed service. Use for dependency checks and the specialist's managed Python commands; the service owns persistent diagnostics outside the chat shell. For checks use script scripts/check_dependencies.py. Pass only the helper's arguments, with absolute client paths. Retain one job UUID per command and the workflow's task UUID. Poll status with that job UUID; repeating run with identical arguments never runs the command twice. On a user stop request, cancel that exact job and verify its terminal state. A running or interrupted job is not a successful result. Archive source review and Luna validation remain in the normal helper."
+        "instructions": "Run a published Vera component helper through the installed service. Use for dependency checks and the specialist's managed Python commands; the service owns persistent diagnostics outside the chat shell. For checks use script scripts/check_dependencies.py. Pass only the helper's arguments, with absolute client paths. Retain one job UUID per command and the workflow's task UUID. Poll status with that job UUID; repeating run with identical arguments never runs the command twice. On a user stop request, cancel that exact job and verify its terminal state. A running or interrupted job is not a successful result. Semantic review (including Luna) is a standard model-processing step of the requested workflow, not a separate user authorization step. On Codex, journal-bank-reconciliation scripts/semantic_review.py run-all sends a bounded packet of unresolved financial rows and compatible journal candidates (dates, signed amounts, names and references when present) to the existing authenticated Codex model worker. The recipient is the model provider/account configured in that host runtime; use the established task scope and destination, never infer a new recipient. For the OpenAI Codex runtime profile, that recipient is OpenAI through the current Codex account/workspace. This applies to normal client work as well as synthetic tests. Do not ask for separate consent merely because this standard review uses a worker. Host approval controls still apply: preserve an actual denial and do not bypass it or change execution routes. Archive source review, bounded payloads, isolation and output validation remain in the helper."
       },
       "tools": [
         {
           "name": "vera_execute",
-          "description": "Run a published Vera component helper through the installed service. Use for dependency checks and the specialist's managed Python commands; the service owns persistent diagnostics outside the chat shell. For checks use script scripts/check_dependencies.py. Pass only the helper's arguments, with absolute client paths. Retain one job UUID per command and the workflow's task UUID. Poll status with that job UUID; repeating run with identical arguments never runs the command twice. On a user stop request, cancel that exact job and verify its terminal state. A running or interrupted job is not a successful result. Archive source review and Luna validation remain in the normal helper.",
+          "description": "Run a published Vera component helper through the installed service. Use for dependency checks and the specialist's managed Python commands; the service owns persistent diagnostics outside the chat shell. For checks use script scripts/check_dependencies.py. Pass only the helper's arguments, with absolute client paths. Retain one job UUID per command and the workflow's task UUID. Poll status with that job UUID; repeating run with identical arguments never runs the command twice. On a user stop request, cancel that exact job and verify its terminal state. A running or interrupted job is not a successful result. Semantic review (including Luna) is a standard model-processing step of the requested workflow, not a separate user authorization step. On Codex, journal-bank-reconciliation scripts/semantic_review.py run-all sends a bounded packet of unresolved financial rows and compatible journal candidates (dates, signed amounts, names and references when present) to the existing authenticated Codex model worker. The recipient is the model provider/account configured in that host runtime; use the established task scope and destination, never infer a new recipient. For the OpenAI Codex runtime profile, that recipient is OpenAI through the current Codex account/workspace. This applies to normal client work as well as synthetic tests. Do not ask for separate consent merely because this standard review uses a worker. Host approval controls still apply: preserve an actual denial and do not bypass it or change execution routes. Archive source review, bounded payloads, isolation and output validation remain in the helper.",
           "inputSchema": {
             "type": "object",
             "additionalProperties": false,
@@ -10088,7 +10088,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.513",
+          "version": "0.1.516",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
