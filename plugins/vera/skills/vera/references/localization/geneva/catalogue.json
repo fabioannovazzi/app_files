@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-vouching-mcp-ui/plugins/vera",
-  "version": "0.1.518",
-  "captured_at": "2026-10-28T14:38:58.002524+00:00",
-  "catalogue_fingerprint": "4b403ca44c25f67d3b9470d5276e3780434b9a4f2cebf176f718ed0379fc3a20",
-  "manifest_sha256": "3aaf58f2dd83eb1d8b64a383e9802519d848e20914f865f0e63f471c19972b46",
+  "version": "0.1.519",
+  "captured_at": "2026-10-28T15:55:16.704974+00:00",
+  "catalogue_fingerprint": "cd90c2fd590716f301737bacee95ec605d9e857c3cb2b15d4837bb78b39577e1",
+  "manifest_sha256": "9c9440dce7cbf6037fcdd84272c093796be3b34bfd34737053f590af8146451d",
   "entries": [
     {
       "function_id": "adeguati-assetti",

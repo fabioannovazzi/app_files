@@ -1,4 +1,4 @@
-# Vera 0.1.518: Vouching MCP Apps delivery
+# Vera 0.1.519: Vouching MCP Apps delivery
 
 The Vouching widget did not initialize the standard MCP Apps bridge. Its later
 tool-result handler selected the public row-free summary instead of the private
@@ -38,3 +38,11 @@ The first release candidate CI passed the widget tests on all three operating
 systems, then caught the Geneva inventory still bound to the prior manifest
 version. The inventory and assessment binding were refreshed after confirming
 that every skill entrypoint hash and jurisdiction judgment is unchanged.
+
+The next CI run completed 1,717 native teaching tests with three skips, then
+identified seven stale editorial source bindings already present on the release
+base. Complete-course comparisons found unchanged authored content. The changed
+source paths were reviewed and their compatibility recorded without rewriting
+historical editorial judgments or artifact evidence. Final CI must pass the same
+native execution and editorial checks. Native JUnit evidence is now retained as
+a CI artifact even if a later gate fails.

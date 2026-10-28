@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "d33924b87c353793406f34ab5c296ac90057d36886da60282a95df1de0361177",
+  "course_sha256": "1e338dc7b725f1b7f35f1a1163bcfc6804eef3c41bf9739d862ba1b9fc888b7b",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.894710+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -822,5 +822,16 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "main_release_source_compatibility_20261028": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-28",
+    "previous_course_sha256": "d33924b87c353793406f34ab5c296ac90057d36886da60282a95df1de0361177",
+    "current_course_sha256": "1e338dc7b725f1b7f35f1a1163bcfc6804eef3c41bf9739d862ba1b9fc888b7b",
+    "source_baseline": "33b414876 -> b261044555252fc869343404d08c8d2e1c22fe66",
+    "scope": "Both matter-review HTML scripts are identical after normalizing VOCABULARY JSON formatting. Embedded fonts were removed in favor of system fallbacks and CSS formatting expanded. No new visual acceptance is claimed.",
+    "authored_content_comparison": "The complete course differs only in sources. All authored lessons, locales, inputs, checkpoints and execution contracts are unchanged. The current compiled course is identical to the release base on main.",
+    "execution_evidence": "PR 928 head 19f1aa563e68826d9d1629be207c058db113de5b, Teaching kits run 40708933998: 1717 passed and 3 skipped; the subsequent editorial gate failed on these stale source bindings. Matching native execution and the unmodified editorial gate must pass again for the final release.",
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This is source compatibility review only, not new visual, learner, professional or installed-host acceptance."
   }
 }

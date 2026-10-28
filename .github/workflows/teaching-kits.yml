@@ -242,6 +242,14 @@ jobs:
           python -m isort --check-only plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py
           python -m mypy --follow-imports=skip plugins/_shared/vendor/modules/courseware/policy.py plugins/_shared/vendor/modules/courseware/library.py plugins/_shared/vendor/modules/courseware/execution.py scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
           python -m bandit -qr plugins/_shared/vendor/modules/courseware scripts/course_materials/build_catalog.py scripts/course_materials/render_catalog.py
+      - name: Retain native teaching execution evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: teaching-native-evidence
+          path: ${{ runner.temp }}/teaching-native.xml
+          if-no-files-found: warn
+          retention-days: 14
       - name: Verify editorial acceptance for changed teaching sources or manual runs
         if: steps.teaching-scope.outputs.editorial_required == 'true'
         run: python scripts/course_materials/verify_release.py --junit "$RUNNER_TEMP/teaching-native.xml"
