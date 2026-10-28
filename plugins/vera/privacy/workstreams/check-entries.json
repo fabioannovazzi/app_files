@@ -122,7 +122,7 @@
     },
     {
       "id": "component-private-review-transport",
-      "control": "MCP validation can load review_payload.json inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete digest-valid payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface."
+      "control": "MCP validation can load review_payload.json inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete digest-valid payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface. The MCP Apps path initializes before accepting results, pins the parent origin, reads _meta.private_review_payload before the public summary and ignores untrusted, errored or summary-only updates; the legacy toolResponseMetadata path remains supported. Host mounting and visible display require separate acceptance."
     },
     {
       "id": "bounded-selected-case-projection",
@@ -166,10 +166,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-10-28",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "817d6971c84db319467a26154beb16ea6973a3841d67e4fa5e3de45a5556be1d"
+    "source_fingerprint": "f90fe940a9054b950f8bd7118ef7f1d5ccc91bd19ca525c89d46353c7ad70443"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

@@ -150,7 +150,7 @@
     "scope": "Italian OIC closing-account workflow and Alfa v3 synthetic acceptance only. Existing function IDs and Geneva dispositions are retained. No Swiss accounting framework, Geneva professional acceptance, native-host acceptance or filing capability is added or claimed.",
     "version": "0.1.394"
   },
-  "catalogue_fingerprint": "6add615c47982aafaef0aaa4456a7ebd908306b60381770b6d7bd9cf2a777583",
+  "catalogue_fingerprint": "cd90c2fd590716f301737bacee95ec605d9e857c3cb2b15d4837bb78b39577e1",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2409,5 +2409,10 @@
     "previous_catalogue_fingerprint": "d52c5fabc7b9b3a769c3fe56386508e85645f2a239def789d7b74e6cf93a8312",
     "scope": "Canonical version update only; all skill entrypoint identities and hashes are unchanged. Widget font/formatting changes and runtime reviewer notes add no jurisdiction-specific behavior. Existing Geneva judgments and acceptance limits remain unchanged.",
     "version": "0.1.515"
+  },
+  "vouching_mcp_release_binding_20261028": {
+    "version": "0.1.519",
+    "previous_catalogue_fingerprint": "6add615c47982aafaef0aaa4456a7ebd908306b60381770b6d7bd9cf2a777583",
+    "scope": "Only the canonical manifest version and its catalogue identity changed. All skill entrypoint hashes and existing jurisdiction assessments remain unchanged. The MCP Apps widget fix establishes no new jurisdiction acceptance."
   }
 }
