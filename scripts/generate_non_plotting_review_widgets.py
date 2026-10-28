@@ -5904,6 +5904,45 @@ def render_target(target: dict[str, Any]) -> str:
             from new_client_review_widget import customize_review
 
         return _readable_json_constants(customize_review(html))
+    if target["plugin"] == "check-entries":
+        # Vouching keeps rows in component-only metadata. Initialize the MCP
+        # Apps bridge before accepting host notifications, then hydrate from
+        # that private payload rather than the model's row-free summary.
+        bridge = (
+            (ROOT / "scripts/review_mcp_apps_bridge.js")
+            .read_text(encoding="utf-8")
+            .replace("Mparanza legal and tax review", "Vera Vouching review")
+            .replace(
+                "appCapabilities: {}",
+                'appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] }',
+            )
+        )
+        html = (
+            html.replace(
+                'typeof window.openai?.callTool === "function"',
+                "window.mparanzaReviewHost.canCallTools()",
+            )
+            .replace(
+                'typeof window.openai?.callTool !== "function"',
+                "!window.mparanzaReviewHost.canCallTools()",
+            )
+            .replace("window.openai.callTool(", "window.mparanzaReviewHost.callTool(")
+        )
+        html = html.replace(
+            'window.addEventListener("message", (event) => {\n'
+            '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
+            "      const nextPayload = pickPayload(event.data.params);\n"
+            "      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;",
+            "window.mparanzaReviewHost.onToolResult((result) => {\n"
+            "      if (result?.isError) return;\n"
+            "      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);\n"
+            "      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;",
+        ).replace(
+            "    state.payload = toolOutput();",
+            '    window.addEventListener("mparanza:review-host-ready", render);\n'
+            "    state.payload = toolOutput();",
+        )
+        return html.replace("<script>", f"<script>\n{bridge}\n", 1)
     if target["plugin"] in {"prompt-optimizer", "deep-research-validator"}:
         bridge = (ROOT / "scripts/review_mcp_apps_bridge.js").read_text(
             encoding="utf-8"
