@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "9818628cb8a3578d1b657aacdb5838919318d03534b677b47fcc75f6259e55f6",
+      "sha256": "0002aa76e174da9d172acaea3515749ae30f10eea7a917cd59aa582fff1765d9",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "65491f7d2a3ea46657b3f30d023ee6b1e3b4a218cc8884e59026d8fc5b6f4f2f",
+      "sha256": "fa9da1be15dc71f89eca014d1a35a739854b87db43d85003e3f852e11837ead1",
       "languages": [
         "it",
         "en",
@@ -993,7 +993,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "3882911178b274d8d702a11891b794d426cbc7de2e687e404c42d32983617418",
+      "sha256": "22df3fc742721d889c2f9b39b0a3924e5b94556291b41f75d14469e984ad0d95",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "a90c50698c363506a9e61c4b630b33d24e3b748f39d258b2768b7c35eb583a61",
+      "sha256": "8e810c696d7de408c08a3bebf207b5a600e3d8e460a11d0b6fc934bad4d76f03",
       "languages": [
         "it",
         "en",

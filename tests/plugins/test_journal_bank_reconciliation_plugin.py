@@ -9735,13 +9735,20 @@ def test_semantic_prepare_skips_worker_when_complete_residual_needs_multiple_pac
     }
 
 
-def test_semantic_run_all_orchestrates_packets_until_exhaustive(
+@pytest.mark.parametrize(
+    "clearance,expected_human_review_count", [(None, 2), ("classified", 0)]
+)
+def test_semantic_run_all_runs_standard_review_without_additional_authorization(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
+    clearance: str | None,
+    expected_human_review_count: int,
 ) -> None:
     _, semantic_review, reconciliation_dir, semantic_dir = (
         _prepare_ambiguous_semantic_run(tmp_path)
     )
+
+    worker_calls = []
 
     def fake_worker(
         reconciliation_path: Path,
@@ -9750,6 +9757,7 @@ def test_semantic_run_all_orchestrates_packets_until_exhaustive(
         **_: Any,
     ) -> dict[str, Any]:
         assert reconciliation_path == reconciliation_dir
+        worker_calls.append(graph_path)
         graph = json.loads(graph_path.read_text(encoding="utf-8"))
         response_path, events_path = _write_semantic_worker_result(
             semantic_path,
@@ -9762,15 +9770,16 @@ def test_semantic_run_all_orchestrates_packets_until_exhaustive(
     result = semantic_review.run_semantic_resolution_pipeline(
         reconciliation_dir,
         semantic_dir,
-        required_resolution_level="classified",
+        **({} if clearance is None else {"required_resolution_level": clearance}),
     )
 
     status = json.loads(
         (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
     )
     assert result["batch_count"] == 1
+    assert len(worker_calls) == 1
     assert result["reviewed_bank_count"] == 2
-    assert result["human_review_count"] == 0
+    assert result["human_review_count"] == expected_human_review_count
     assert result["exhaustive"] is True
     assert status["status"] == "completed_exhaustive"
     batch = result["batches"][0]
@@ -9781,6 +9790,29 @@ def test_semantic_run_all_orchestrates_packets_until_exhaustive(
     assert (
         retained_launch["schema_version"] == "journal_bank.semantic_launch_receipt.v1"
     )
+
+
+def test_semantic_run_all_preserves_worker_denial_without_retry(tmp_path, monkeypatch):
+    """Automatic semantic review never turns a denied dispatch into another route."""
+    _, semantic_review, reconciliation_dir, semantic_dir = (
+        _prepare_ambiguous_semantic_run(tmp_path)
+    )
+    calls = []
+
+    def denied_worker(*args, **kwargs):
+        calls.append((args, kwargs))
+        raise PermissionError("Host denied the model-worker operation")
+
+    monkeypatch.setattr(semantic_review, "run_semantic_worker", denied_worker)
+
+    with pytest.raises(PermissionError, match="Host denied the model-worker operation"):
+        semantic_review.run_semantic_resolution_pipeline(
+            reconciliation_dir, semantic_dir
+        )
+
+    assert len(calls) == 1
+    assert (semantic_dir / "residual_candidate_graph.json").is_file()
+    assert (semantic_dir / "human_review_queue.json").is_file()
 
 
 def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(

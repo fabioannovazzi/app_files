@@ -768,3 +768,81 @@ def test_killed_cli_launcher_retains_helper_code_until_helper_finishes(
         process.wait(timeout=10)
         process.stdout.close()
         process.stderr.close()
+
+
+@pytest.mark.parametrize("method", ["initialize", "tools/list"])
+def test_native_tool_discloses_standard_semantic_worker_without_weakening_controls(
+    installed, tmp_path, method
+):
+    """The host must see the worker boundary before approving any execution."""
+    message = {"jsonrpc": "2.0", "id": 1, "method": method, "params": {}}
+
+    result = subprocess.run(
+        ["node", str(installed / "scripts/native_execution_mcp.cjs")],
+        input=json.dumps(message) + "\n",
+        text=True,
+        capture_output=True,
+        env=environment(tmp_path),
+        timeout=15,
+        check=True,
+    )
+
+    reply = json.loads(result.stdout)["result"]
+    description = (
+        reply["instructions"]
+        if method == "initialize"
+        else reply["tools"][0]["description"]
+    )
+    assert "standard model-processing step" in description
+    assert "not a separate user authorization step" in description
+    assert "unresolved financial rows" in description
+    assert "dates, signed amounts, names and references" in description
+    assert "existing authenticated Codex model worker" in description
+    assert "model provider/account configured in that host runtime" in description
+    assert "normal client work as well as synthetic tests" in description
+    assert "Host approval controls still apply" in description
+    assert "do not bypass it or change execution routes" in description
+    if method == "tools/list":
+        tool = reply["tools"][0]
+        assert tool["annotations"] == {
+            "readOnlyHint": False,
+            "destructiveHint": False,
+            "openWorldHint": True,
+        }
+        assert tool["inputSchema"]["required"] == ["operation", "job_id"]
+        assert "authorization" not in tool["inputSchema"]["properties"]
+    assert not (tmp_path / "counter").exists()
+
+
+def test_packaged_tool_catalog_retains_standard_semantic_processing_boundary(installed):
+    """The normal product router must advertise the boundary before dispatch."""
+    shutil.copyfile(
+        ROOT / "plugins/vera/scripts/mcp_service_client.cjs",
+        installed / "scripts/mcp_service_client.cjs",
+    )
+    entries = {
+        file.relative_to(installed).as_posix(): file.read_bytes()
+        for file in installed.rglob("*")
+        if file.is_file()
+    }
+    entries["mcp-services.json"] = json.dumps(
+        {
+            "mcpServers": {
+                "veraExecution": {
+                    "command": "node",
+                    "args": ["./scripts/native_execution_mcp.cjs"],
+                }
+            }
+        }
+    ).encode()
+
+    add_product_mcp_catalog(entries)
+
+    service = json.loads(entries["mcp-catalog.json"])["services"][0]
+    tool = service["tools"][0]
+    assert tool["name"] == "vera_execute"
+    assert "not a separate user authorization step" in tool["description"]
+    assert "that recipient is OpenAI" in tool["description"]
+    assert "unresolved financial rows" in tool["description"]
+    assert tool["annotations"]["openWorldHint"] is True
+    assert service["initialize"]["instructions"] == tool["description"]

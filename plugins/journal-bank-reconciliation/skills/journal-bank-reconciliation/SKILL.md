@@ -311,6 +311,21 @@ Omit `--tolerance` and `--date-window-days` to use the sealed recipe policy. If 
 ## Native semantic residual resolution
 
 Use this path after a qualified deterministic run leaves unmatched bank movements.
+Semantic review is a standard step of the requested reconciliation, including
+normal client work. Continue automatically with `semantic_review.py run-all`;
+do not ask for a second authorization, a model-transfer consent receipt or
+special wording in the user's request. On Codex, this sends one bounded packet
+of unresolved financial rows and compatible journal candidates to the existing
+authenticated Codex model worker (Luna), using the model provider/account
+configured in that host. Populated dates, signed amounts, names and references
+can enter that packet; synthetic status does not change their financial-data
+classification. Keep the established task scope and destination. This is not
+permission for a new provider, broader source access or external delivery.
+Host approval controls remain authoritative: preserve an actual denial and
+its context, do not retry through another route, and distinguish that host
+refusal from a missing user decision. No Vera-specific consent checkpoint
+precedes the standard review.
+
 Cowork and Antigravity use their native subagent handoff described in
 `references/native-host-workers.md`; complete it automatically before delivery. The purpose is to remove as much routine human work
 as the user's required certainty permits, not merely to attach suggestions.

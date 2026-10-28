@@ -15,7 +15,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-__all__ = ["finish_reconciliation", "reconcile", "main"]
+__all__ = ["check_sources", "finish_reconciliation", "reconcile", "main"]
 
 SCRIPTS = Path(__file__).resolve().parent
 if str(SCRIPTS) not in sys.path:
@@ -202,6 +202,21 @@ def finish_reconciliation(
     return _delivery(loaded, terminal)
 
 
+def check_sources(request: dict[str, Any]) -> dict[str, Any]:
+    """Check current cells before imports; source meaning stays agent-selected."""
+    script = SCRIPTS / "open_items_source_preflight.py"
+    result = subprocess.run(  # nosec B603
+        [sys.executable, "-I", "-B", str(script)],
+        input=json.dumps(request),
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode:
+        raise archive.ArchiveError("Source preflight failed: " + result.stderr.strip())
+    return json.loads(result.stdout)
+
+
 def reconcile(
     request: dict[str, Any], *, state_dir: Path | None = None
 ) -> dict[str, Any]:
@@ -212,6 +227,7 @@ def reconcile(
         raise archive.ArchiveError("A stable request_id is required for resumption.")
     if not request["sources"]:
         raise archive.ArchiveError("Select the reconciliation sources.")
+    check_sources(request)
     mappings = {}
     input_ids = []
     for source in request["sources"]:
@@ -301,6 +317,11 @@ def main() -> int:
     parser.add_argument("--request", required=True, type=Path)
     parser.add_argument("--state-dir", type=Path)
     parser.add_argument(
+        "--check-sources",
+        action="store_true",
+        help="Read-only source capability check; no client or engagement required.",
+    )
+    parser.add_argument(
         "--finish-run", help="Resume delivery after ordinary review/regeneration."
     )
     parser.add_argument(
@@ -309,7 +330,9 @@ def main() -> int:
     )
     args = parser.parse_args()
     request = _json(args.request)
-    if args.finish_run:
+    if args.check_sources:
+        result = check_sources(request)
+    elif args.finish_run:
         result = finish_reconciliation(
             request["client_id"],
             request["engagement_id"],
