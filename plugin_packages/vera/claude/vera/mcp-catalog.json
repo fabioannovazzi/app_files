@@ -1659,7 +1659,7 @@
         {
           "name": "render_check_entries_review",
           "title": "Render Vouching review",
-          "description": "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts.",
+          "description": "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts. Set display_mode to fullscreen to request automatic expansion into the host panel; the host decides whether it is available.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -1740,6 +1740,14 @@
                 "type": "string",
                 "pattern": "^[A-Za-z0-9_-]{43}$",
                 "description": "Opaque review reference returned by validation."
+              },
+              "display_mode": {
+                "type": "string",
+                "enum": [
+                  "inline",
+                  "fullscreen"
+                ],
+                "description": "Optional presentation request. Omit to keep the normal host default."
               }
             },
             "required": [],
@@ -2069,6 +2077,12 @@
             },
             "openai/widgetDescription": "Interactive Vouching review surface for support coverage, mismatches, missing support, manual-review rows, PDF extraction, and generated artifacts.",
             "openai/widgetPrefersBorder": false,
+            "openai/ui": {
+              "availableDisplayModes": [
+                "inline",
+                "fullscreen"
+              ]
+            },
             "openai/widgetCSP": {
               "connect_domains": [],
               "resource_domains": []

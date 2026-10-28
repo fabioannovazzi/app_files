@@ -1121,7 +1121,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "f165aa9acabac5f541200ab86e5f434f9f8c3f9cb2a816d0641097992d7fb944",
+      "sha256": "a77ffa0efa4e4207d0e94bd54e96f7bf1099e3d3fc2562ad536669096d0f232a",
       "languages": [
         "it",
         "en",

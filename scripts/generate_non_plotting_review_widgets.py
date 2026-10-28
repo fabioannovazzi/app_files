@@ -5922,6 +5922,38 @@ def render_target(target: dict[str, Any]) -> str:
                 "appCapabilities: {}",
                 'appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] }',
             )
+            .replace(
+                "let sequence = 0, initialized = false, origin = null;",
+                "let sequence = 0, initialized = false, origin = null, hostContext = {};",
+            )
+            .replace(
+                ").then(() => {\n    initialized = true;",
+                ").then((result) => {\n    hostContext = result.hostContext || {};\n    initialized = true;",
+            )
+            .replace(
+                '    if (origin && message.method === "ui/notifications/tool-result") {',
+                '    if (origin && message.method === "ui/notifications/host-context-changed") {\n'
+                "      hostContext = { ...hostContext, ...message.params };\n    }\n"
+                '    if (origin && message.method === "ui/notifications/tool-result") {',
+            )
+            .replace(
+                "    async callTool(name, args) {",
+                """    async requestDisplayMode(mode) {
+      if (await ready) {
+        if (!hostContext.availableDisplayModes?.includes(mode)) {
+          return { mode: hostContext.displayMode || "inline" };
+        }
+        const result = await request("ui/request-display-mode", { mode });
+        hostContext.displayMode = result.mode;
+        return result;
+      }
+      if (typeof window.openai?.requestDisplayMode === "function") {
+        return window.openai.requestDisplayMode({ mode });
+      }
+      return { mode: window.openai?.displayMode || "inline" };
+    },
+    async callTool(name, args) {""",
+            )
         )
         html = (
             html.replace(
@@ -5934,19 +5966,38 @@ def render_target(target: dict[str, Any]) -> str:
             )
             .replace("window.openai.callTool(", "window.mparanzaReviewHost.callTool(")
         )
-        html = html.replace(
-            'window.addEventListener("message", (event) => {\n'
-            '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
-            "      const nextPayload = pickPayload(event.data.params);\n"
-            "      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;",
-            "window.mparanzaReviewHost.onToolResult((result) => {\n"
-            "      if (result?.isError) return;\n"
-            "      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);\n"
-            "      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;",
-        ).replace(
-            "    state.payload = toolOutput();",
-            '    window.addEventListener("mparanza:review-host-ready", render);\n'
-            "    state.payload = toolOutput();",
+        html = (
+            html.replace(
+                'window.addEventListener("message", (event) => {\n'
+                '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
+                "      const nextPayload = pickPayload(event.data.params);\n"
+                "      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;",
+                "window.mparanzaReviewHost.onToolResult((result) => {\n"
+                "      if (result?.isError) return;\n"
+                "      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);\n"
+                "      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;",
+            )
+            .replace(
+                "    state.payload = toolOutput();",
+                '    window.addEventListener("mparanza:review-host-ready", render);\n'
+                """    let presentationRequested = false;
+    function requestPresentation(payload) {
+      const mode = payload?.requested_display_mode;
+      if (presentationRequested || !["inline", "fullscreen"].includes(mode)) return;
+      presentationRequested = true;
+      window.mparanzaReviewHost.requestDisplayMode(mode).then((result) => {
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+      }).catch((error) => {
+        console.warn("Review display mode request failed.", error);
+      });
+    }
+    state.payload = toolOutput();
+    requestPresentation(state.payload);""",
+            )
+            .replace(
+                "state.payload = nextPayload;",
+                "state.payload = nextPayload;\n      requestPresentation(nextPayload);",
+            )
         )
         return html.replace("<script>", f"<script>\n{bridge}\n", 1)
     if target["plugin"] in {"prompt-optimizer", "deep-research-validator"}:
