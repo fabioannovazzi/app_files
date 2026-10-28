@@ -571,6 +571,7 @@
       "python_entrypoints": [
         "modules/studio-archive/scripts/build_model_data_report.py",
         "modules/studio-archive/scripts/check_dependencies.py",
+        "modules/studio-archive/scripts/open_items_source_preflight.py",
         "modules/studio-archive/scripts/reconcile_open_items.py",
         "modules/studio-archive/scripts/studio_archive.py"
       ]
