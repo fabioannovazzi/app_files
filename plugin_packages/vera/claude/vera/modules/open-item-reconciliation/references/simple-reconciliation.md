@@ -10,6 +10,13 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # One import-to-delivery operation
 
+Before creating a new engagement or importing sources, run the same operation
+with `--request <path> --check-sources`. This read-only check needs only `sources`
+and optional `assumptions`, validates current source bytes and reviewed tabular
+cells, and creates no Archive records. It checks capability, not source
+authenticity or professional adoption. The execution call repeats this check
+before imports. Reuse an existing engagement after correcting a source mapping.
+
 For an explicitly selected client and engagement, the agent writes one JSON
 request and invokes Studio Archive's `scripts/reconcile_open_items.py --request
 <absolute-path>`. Vera uses `vera_execute`; the professional never authors this
@@ -53,3 +60,5 @@ that retained checkpoint, pass its separately saved original hash through
 
 For an explicitly isolated test session, `--state-dir <path>` selects that
 session's Archive configuration. Never substitute another client's state or run.
+
+Invoice and declared-payment lists use the truthful roles in `tabular-source-layout.md`. Their arithmetic draft remains `review_required`: deliver the files and explain the source limitation without requiring professional approval to prepare or deliver them.

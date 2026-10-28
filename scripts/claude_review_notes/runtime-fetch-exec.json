@@ -1,0 +1,7 @@
+{
+  "mcp/workspace.cjs": "bridge() uses spawnSync with bundled scripts/native_workspace_runtime.py and scripts/native_workspace.py; the resolver selects an already prepared Python runtime and never downloads or installs code.",
+  "scripts/_python_bootstrap.py": "Separate setup downloads the pinned uv 0.12.10 wheel, verifies its SHA-256 before extraction/execution, then uses uv to provision CPython 3.12; retained as verified runtime setup.",
+  "modules/distribution-analysis/vendor/modules/data/common_data_utils.py": "get_table_download_link() encodes local table/file bytes as browser download links; no network fetch, package runner or subprocess execution.",
+  "modules/mix-contribution-analysis/vendor/modules/data/common_data_utils.py": "get_table_download_link() encodes local table/file bytes as browser download links; no network fetch, package runner or subprocess execution.",
+  "modules/period-comparison/vendor/modules/data/common_data_utils.py": "get_table_download_link() encodes local table/file bytes as browser download links; no network fetch, package runner or subprocess execution."
+}

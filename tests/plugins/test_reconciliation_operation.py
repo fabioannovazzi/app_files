@@ -261,3 +261,58 @@ def test_reviewed_draft_finishes_with_retained_checkpoint_without_recalculation(
     assert finished["status"] == "completed"
     assert finished["report_ready"] is True
     assert finished["run_id"] == draft["run_id"]
+
+
+def test_unsupported_source_is_rejected_before_any_archive_write(
+    operation, tmp_path, monkeypatch
+):
+    source = tmp_path / "payments.csv"
+    source.write_text("InvoiceX;DateX;ValueX\nF1;01/09/2026;100\n")
+    mapping = spec(source)
+    mapping["role"] = "payment_order"
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Invalid source must not create Archive records")
+
+    monkeypatch.setattr(operation.archive, "import_studio_client_document", forbidden)
+    request = {
+        "client_id": "unused",
+        "engagement_id": "unused",
+        "request_id": "invalid",
+        "sources": [{"path": str(source), "mapping": mapping}],
+    }
+    with pytest.raises(
+        operation.archive.ArchiveError, match="does not support this source role"
+    ):
+        operation.reconcile(request)
+
+
+def test_declared_lists_normal_operation_delivers_draft_and_reports_separately(
+    operation, client_case, tmp_path, reporting_runtime
+):
+    from tests.open_item_reconciliation.test_declared_payment_lists import case
+
+    source, assumptions = case(tmp_path)
+    mappings = assumptions.pop("reviewed_source_decisions")
+    request = {
+        "client_id": client_case.client_id,
+        "engagement_id": client_case.engagement_id,
+        "request_id": "declared-list-draft",
+        "assumptions": assumptions,
+        "sources": [
+            {"path": str(source / name), "mapping": mapping}
+            for name, mapping in mappings.items()
+        ],
+    }
+    result = operation.reconcile(request, state_dir=client_case.state_dir)
+
+    assert result["accounting_status"] == "review_required"
+    assert result["report_ready"] is False
+    assert result["artifacts"] and all(Path(p).is_file() for p in result["artifacts"])
+    output = Path(result["output_dir"])
+    rows = json.loads((output / "reconciliation_results.json").read_text())[
+        "reconciliation_rows"
+    ]
+    assert [row["residual_amount"] for row in rows] == ["0.00", "150.00"]
+    assert (output.parent / "model_data_report.json").is_file()
+    assert result["reporting"]["status"] != "not_applicable"

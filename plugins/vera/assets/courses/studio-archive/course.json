@@ -83,6 +83,11 @@
       "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
     },
     {
+      "path": "modules/studio-archive/scripts/open_items_source_preflight.py",
+      "repository_path": "plugins/studio-archive/scripts/open_items_source_preflight.py",
+      "sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b"
+    },
+    {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
       "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
@@ -90,7 +95,7 @@
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
       "repository_path": "plugins/studio-archive/scripts/reconcile_open_items.py",
-      "sha256": "8454114d6385a67f62b89fa216bf747f231555e7f79d02221809577a05286380"
+      "sha256": "04f97595d2991697c2474d5a1add4a024df817c3789cc161c4da913333570b35"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",

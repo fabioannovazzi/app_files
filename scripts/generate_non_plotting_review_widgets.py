@@ -5829,6 +5829,33 @@ def _widget_snippets(target: dict[str, Any]) -> dict[str, str]:
     }
 
 
+def _readable_json_constants(html: str) -> str:
+    """Expand widget data without touching JavaScript or text inside JSON strings."""
+    names = (
+        "CONFIG",
+        "UI_TEXT",
+        "GROUP_TEXT",
+        "IT_METADATA_LABELS",
+        "NEW_CLIENT_LABELS",
+        "ARCHIVE_LABELS",
+    )
+    for name in names:
+        prefix = f"    const {name} = "
+        start = html.find(prefix)
+        if start < 0:
+            continue
+        end = html.index("\n", start)
+        value = json.loads(html[start + len(prefix) : end].removesuffix(";"))
+        html = (
+            html[:start]
+            + prefix
+            + json.dumps(value, ensure_ascii=True, indent=2)
+            + ";"
+            + html[end:]
+        )
+    return html
+
+
 def render_target(target: dict[str, Any]) -> str:
     config = adapter_config(target)
     html = TEMPLATE.format(
@@ -5862,21 +5889,21 @@ def render_target(target: dict[str, Any]) -> str:
         else:
             from archive_organization_review_widget import customize_review
 
-        return customize_review(html)
+        return _readable_json_constants(customize_review(html))
     if target["plugin"] == "open-item-reconciliation":
         if __package__:
             from scripts.open_item_review_widget import customize_review
         else:
             from open_item_review_widget import customize_review
 
-        return customize_review(html)
+        return _readable_json_constants(customize_review(html))
     if target["plugin"] == "new-client":
         if __package__:
             from scripts.new_client_review_widget import customize_review
         else:
             from new_client_review_widget import customize_review
 
-        return customize_review(html)
+        return _readable_json_constants(customize_review(html))
     if target["plugin"] in {"prompt-optimizer", "deep-research-validator"}:
         bridge = (ROOT / "scripts/review_mcp_apps_bridge.js").read_text(
             encoding="utf-8"

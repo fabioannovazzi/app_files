@@ -13,6 +13,35 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize(
+    "asset",
+    [
+        "apertura-pratica/assets/apertura-pratica-review-widget.html",
+        "apertura-pratica/assets/apertura-pratica-review.html",
+        "archive-organization/assets/archive-organization-review-widget.html",
+        "new-client/assets/new-client-review-widget.html",
+        "open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
+    ],
+)
+def test_review_assets_are_readable_without_embedded_or_remote_fonts(asset):
+    html = (ROOT / "plugins" / asset).read_text()
+
+    assert max(map(len, html.splitlines())) <= 2000
+    assert "@font-face" not in html
+    assert "data:font/" not in html
+    assert (
+        '"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif' in html
+    )
+
+
+def test_matter_assets_match_their_builder():
+    from scripts.build_matter_review_assets import build
+
+    generated = build()
+
+    assert {path: path.read_text() for path in generated} == generated
+
+
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 def test_matter_widget_shows_request_sources_and_escapes_case_text(language):
     html = (

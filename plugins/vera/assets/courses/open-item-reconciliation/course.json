@@ -34,7 +34,7 @@
     {
       "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
       "repository_path": "plugins/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
-      "sha256": "fbd73bbeeb58153a4fbf0132599115992e15878de5524e65320a2bb22b1811e7"
+      "sha256": "785aa1562612aa4ca7f4e185861f93362f6b1057abba3101edbe5c5424ccf21e"
     },
     {
       "path": "modules/open-item-reconciliation/assets/review-workbench-adapter.json",
@@ -59,7 +59,7 @@
     {
       "path": "modules/open-item-reconciliation/references/simple-reconciliation.md",
       "repository_path": "plugins/open-item-reconciliation/references/simple-reconciliation.md",
-      "sha256": "4b14263d96a4e8ac38059ae37109b82a4dbcbefb080cec4e1d33008004390173"
+      "sha256": "3285e972f1d8519638b5379a8d47bcb4f8660141dc2300ba6543208286ef1a27"
     },
     {
       "path": "modules/open-item-reconciliation/references/starter-prompts.md",
@@ -69,7 +69,7 @@
     {
       "path": "modules/open-item-reconciliation/references/tabular-source-layout.md",
       "repository_path": "plugins/open-item-reconciliation/references/tabular-source-layout.md",
-      "sha256": "99fe36083a15d14646f6f11841dbd6d6c2ad798405937a0b8d149c2da6795f00"
+      "sha256": "d0f2d01294797eb07e497fe5713c8f4ca04b49944bf49b6f61f4b6dc0f6fb449"
     },
     {
       "path": "modules/open-item-reconciliation/references/workflow-reference.md",
@@ -84,7 +84,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "05f03af2e31cddc0527fd92939b394b6520cb0a6c50242a955e38b58a52ee15c"
+      "sha256": "d9b12dbcff226a192c812febc05fa02c6c6851e6e9483ce66a2b93a20c6d984c"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -109,7 +109,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "af3512a5e2d482c2d6f4e419be0939e944e7efa10b97c7aeaef5645f9d691b3a"
+      "sha256": "ed80f1f497bae4168d15520fa92bb337f82738a1748e470baad690698786ff2d"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
@@ -124,12 +124,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/locale_support.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/locale_support.source",
-      "sha256": "618cffe5e3b6a050bfb351b496879e51ef7df9756ed263dd552334838ff7b137"
+      "sha256": "9f96315b4fce56ba6ef0ea22d9f053bcb846a587cfcea275aa5d11a8bbad51b3"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/reconciliation_helpers.source",
-      "sha256": "72952ef0fe7e2f21154de88099a3f9c20dbfb12b6fe12b8cc151f3ad1cbb1f06"
+      "sha256": "4f87b53f029a66bfcbd911787a5da4d76d10348d8fc5a7971629dc9bd6c81c7b"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
@@ -139,7 +139,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
-      "sha256": "7b4e2420780899353c515299149beadd8a198816c14508416f571dbe2a8e8349"
+      "sha256": "4ad56843bc8c3d4a871d76df1d86385083dfe8d3eaa973c532d7b2a6bf9ff7ca"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
@@ -272,6 +272,11 @@
       "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
     },
     {
+      "path": "modules/studio-archive/scripts/open_items_source_preflight.py",
+      "repository_path": "plugins/studio-archive/scripts/open_items_source_preflight.py",
+      "sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b"
+    },
+    {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "repository_path": "plugins/studio-archive/scripts/readable_archive.py",
       "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
@@ -279,7 +284,7 @@
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
       "repository_path": "plugins/studio-archive/scripts/reconcile_open_items.py",
-      "sha256": "8454114d6385a67f62b89fa216bf747f231555e7f79d02221809577a05286380"
+      "sha256": "04f97595d2991697c2474d5a1add4a024df817c3789cc161c4da913333570b35"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",

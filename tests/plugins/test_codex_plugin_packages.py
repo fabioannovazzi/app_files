@@ -1799,6 +1799,46 @@ def test_plugin_skills_include_run_output_location_policy() -> None:
         assert builder.REQUIRED_OUTPUT_LOCATION_SNIPPET in combined_skill_text
 
 
+def _required_release_versions(
+    changed_plugins: set[str], product_components: dict[str, set[str]]
+) -> set[str]:
+    """Check cache identities of actual installable products, including all owners.
+
+    Embedded components are shipped inside the owning product's version cache;
+    they are not separately installed by Codex. Undeclared plugins retain their
+    own version check rather than escaping the gate.
+    """
+    required: set[str] = set()
+    for plugin in changed_plugins:
+        owners = {
+            product
+            for product, components in product_components.items()
+            if plugin == product or plugin in components
+        }
+        required.update(owners or {plugin})
+    return required
+
+
+@pytest.mark.parametrize(
+    "changed,expected",
+    [
+        ({"journal-bank-reconciliation"}, {"vera"}),
+        ({"shared-engine"}, {"vera", "lucia"}),
+        ({"vera"}, {"vera"}),
+        ({"undeclared-plugin"}, {"undeclared-plugin"}),
+    ],
+)
+def test_release_version_gate_checks_each_installable_owner(changed, expected):
+    products = {
+        "vera": {"journal-bank-reconciliation", "shared-engine"},
+        "lucia": {"shared-engine"},
+    }
+
+    required = _required_release_versions(changed, products)
+
+    assert required == expected
+
+
 def test_changed_plugin_sources_bump_manifest_version() -> None:
     result = subprocess.run(
         ["git", "diff", "--name-only", "HEAD", "--", "plugins"],
@@ -1818,7 +1858,22 @@ def test_changed_plugin_sources_bump_manifest_version() -> None:
         if len(path_parts) >= 3 and path_parts[2] != "privacy"
     }
 
-    for plugin_name in sorted(changed_plugins):
+    builder = load_builder()
+    products = {
+        product
+        for target in [*builder.load_packages(), *builder.load_bundles()]
+        for product in target.marketplace_plugin_names
+    }
+    components = {}
+    for product in products:
+        source = ROOT / "plugins" / product / "components.json"
+        components[product] = (
+            set(json.loads(source.read_text())["plugins"])
+            if source.is_file()
+            else set()
+        )
+
+    for plugin_name in sorted(_required_release_versions(changed_plugins, components)):
         manifest_path = ROOT / "plugins" / plugin_name / ".codex-plugin" / "plugin.json"
         if not manifest_path.exists():
             continue

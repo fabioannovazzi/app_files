@@ -194,7 +194,7 @@
     {
       "path": "modules/new-client/assets/new-client-review-widget.html",
       "repository_path": "plugins/new-client/assets/new-client-review-widget.html",
-      "sha256": "c860ab520b909a7cd0bbda9eddcec7af334b992db860746aa30d945773447fba"
+      "sha256": "e90aea04077ee9dfb92a5ba255f120756d75e13480c701cc3514779ba98743de"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",

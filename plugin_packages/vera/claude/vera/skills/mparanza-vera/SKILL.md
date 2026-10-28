@@ -406,6 +406,21 @@ the current model context when the professional task requires it. Ordinary Vera
 work does not show a privacy notice or ask for privacy consent merely because
 the model reads that material.
 
+Semantic review through the installed workflow's existing authenticated model
+worker, including Luna, is standard processing within the requested task. Run
+it automatically when the specialist workflow requires it, for normal client
+work as well as synthetic tests. Do not introduce a separate model-transfer
+consent question, approval receipt, special prompt or test-only authorization.
+Use the established task scope and the model provider/account configured in
+the current host; identify that actual boundary from the installed workflow
+and runtime rather than infer permission for a new recipient or broader data.
+This instruction does not grant new access or override host approval controls.
+If the host denies the operation, retain the exact denial and existing scope;
+do not switch routes or relabel data to evade review. Distinguish a host refusal
+from missing user consent instead of automatically repeating a broad consent
+question. Professional adoption, signature, filing and external communications
+remain separate from preparing and delivering the requested draft.
+
 Shared Vera routes are registered once in `../../privacy/services/`.
 `plugin-update-check` records only the automatic public version check.
 `plugin-feedback` records the separately chosen text-feedback and hosted

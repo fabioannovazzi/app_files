@@ -358,6 +358,8 @@ BANK_ACCOUNT_TERMS = (
     "c/c",
 )
 SUPPORTED_SOURCE_ROLES = {
+    "invoice_list",
+    "payment_list",
     "open_items",
     "counterparty_open_items",
     "ledger",

@@ -1,9 +1,57 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Lucia · Matter review</title>
 <style>
-__FONTS__
-:root{font-family:"Instrument Sans",sans-serif;color:#18202c;background:#fff;--navy:#002060;--blue:#087acc;--muted:#5f6876;--rule:#d9e0e7}
-*{box-sizing:border-box}body{margin:0}main{width:min(1040px,calc(100% - 40px));margin:36px auto 72px}header{border-top:4px solid var(--blue);padding:24px 0;border-bottom:1px solid var(--rule)}.brand{color:var(--blue);font-size:13px;font-weight:600}h1{font-size:36px;line-height:1.1;margin:12px 0;color:var(--navy)}p{line-height:1.6;white-space:pre-line}header p{max-width:780px;color:var(--muted)}h2{font-size:18px;margin:0}h3{font-size:16px;margin:0 0 14px}.toolbar{display:flex;gap:20px;align-items:end;flex-wrap:wrap;margin:26px 0}label{display:grid;gap:8px;font-size:14px;font-weight:600}input,select,textarea,button{font:inherit}input,select,textarea{padding:10px 12px;border:1px solid #aeb9c6;border-radius:3px;background:#fff;max-width:100%}input{width:300px}button{padding:12px 18px;border:0;border-radius:3px;background:var(--navy);color:#fff;cursor:pointer;font-weight:600}button:disabled{opacity:.5;cursor:not-allowed}.review-item{border-bottom:1px solid var(--rule)}.review-item>summary{display:flex;gap:20px;align-items:baseline;justify-content:space-between;padding:22px 0;cursor:pointer;list-style:none}.review-item>summary:after{content:"+";color:var(--blue);font-size:22px}.review-item[open]>summary:after{content:"−"}.review-item>summary h2{flex:1}.state{font-size:13px;color:var(--muted)}.content{padding:0 0 28px}.facts{display:grid;grid-template-columns:180px minmax(0,1fr);gap:13px 22px;margin:12px 0}.facts dt{font-size:13px;color:var(--muted);line-height:1.5}.facts dd{margin:0;line-height:1.55;white-space:pre-line;overflow-wrap:anywhere}.facts .facts{grid-template-columns:150px minmax(0,1fr)}.record{padding:10px 0;border-bottom:1px solid #edf0f3}.record:last-child{border-bottom:0}.technical{margin:18px 0;color:var(--muted);font-size:13px}.technical summary{cursor:pointer}code{font:12px/1.5 ui-monospace,monospace;overflow-wrap:anywhere}.decision-controls{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;margin-top:26px;padding-top:20px;border-top:1px solid var(--rule)}textarea{width:100%;min-height:88px;resize:vertical}.evidence{font-size:13px;color:var(--muted);margin-top:18px}.notice{color:var(--muted)}#status{min-height:24px;line-height:1.5}.bad{color:#9b1c1c}.good{color:#087447}[hidden]{display:none!important}@media(max-width:700px){main{width:calc(100% - 28px);margin-top:20px}h1{font-size:29px}.facts,.facts .facts,.decision-controls{grid-template-columns:1fr;gap:7px}.facts dd{margin-bottom:12px}.review-item>summary{gap:10px;flex-wrap:wrap}.state{font-size:12px}}
+:root{font-family:"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#18202c;background:#fff;--navy:#002060;--blue:#087acc;--muted:#5f6876;--rule:#d9e0e7}
+
+*{box-sizing:border-box}
+body{margin:0}
+main{width:min(1040px,calc(100% - 40px));margin:36px auto 72px}
+header{border-top:4px solid var(--blue);padding:24px 0;border-bottom:1px solid var(--rule)}
+.brand{color:var(--blue);font-size:13px;font-weight:600}
+h1{font-size:36px;line-height:1.1;margin:12px 0;color:var(--navy)}
+p{line-height:1.6;white-space:pre-line}
+header p{max-width:780px;color:var(--muted)}
+h2{font-size:18px;margin:0}
+h3{font-size:16px;margin:0 0 14px}
+.toolbar{display:flex;gap:20px;align-items:end;flex-wrap:wrap;margin:26px 0}
+label{display:grid;gap:8px;font-size:14px;font-weight:600}
+input,select,textarea,button{font:inherit}
+input,select,textarea{padding:10px 12px;border:1px solid #aeb9c6;border-radius:3px;background:#fff;max-width:100%}
+input{width:300px}
+button{padding:12px 18px;border:0;border-radius:3px;background:var(--navy);color:#fff;cursor:pointer;font-weight:600}
+button:disabled{opacity:.5;cursor:not-allowed}
+.review-item{border-bottom:1px solid var(--rule)}
+.review-item>summary{display:flex;gap:20px;align-items:baseline;justify-content:space-between;padding:22px 0;cursor:pointer;list-style:none}
+.review-item>summary:after{content:"+";color:var(--blue);font-size:22px}
+.review-item[open]>summary:after{content:"−"}
+.review-item>summary h2{flex:1}
+.state{font-size:13px;color:var(--muted)}
+.content{padding:0 0 28px}
+.facts{display:grid;grid-template-columns:180px minmax(0,1fr);gap:13px 22px;margin:12px 0}
+.facts dt{font-size:13px;color:var(--muted);line-height:1.5}
+.facts dd{margin:0;line-height:1.55;white-space:pre-line;overflow-wrap:anywhere}
+.facts .facts{grid-template-columns:150px minmax(0,1fr)}
+.record{padding:10px 0;border-bottom:1px solid #edf0f3}
+.record:last-child{border-bottom:0}
+.technical{margin:18px 0;color:var(--muted);font-size:13px}
+.technical summary{cursor:pointer}
+code{font:12px/1.5 ui-monospace,monospace;overflow-wrap:anywhere}
+.decision-controls{display:grid;grid-template-columns:260px minmax(0,1fr);gap:22px;margin-top:26px;padding-top:20px;border-top:1px solid var(--rule)}
+textarea{width:100%;min-height:88px;resize:vertical}
+.evidence{font-size:13px;color:var(--muted);margin-top:18px}
+.notice{color:var(--muted)}
+#status{min-height:24px;line-height:1.5}
+.bad{color:#9b1c1c}
+.good{color:#087447}
+[hidden]{display:none!important}
+@media(max-width:700px){main{width:calc(100% - 28px);margin-top:20px}
+h1{font-size:29px}
+.facts,.facts .facts,.decision-controls{grid-template-columns:1fr;gap:7px}
+.facts dd{margin-bottom:12px}
+.review-item>summary{gap:10px;flex-wrap:wrap}
+.state{font-size:12px}
+}
+
 </style></head><body><main>
 <header><div class="brand">LUCIA</div><h1 id="title"></h1><p id="intro"></p></header>
 <div class="toolbar" id="toolbar"><label><span id="reviewer-label"></span><input id="reviewer" autocomplete="name" maxlength="160" required></label><button id="save" disabled></button></div>

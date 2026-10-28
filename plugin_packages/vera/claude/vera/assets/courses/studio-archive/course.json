@@ -72,12 +72,16 @@
       "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
     },
     {
+      "path": "modules/studio-archive/scripts/open_items_source_preflight.py",
+      "sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b"
+    },
+    {
       "path": "modules/studio-archive/scripts/readable_archive.py",
       "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
-      "sha256": "8454114d6385a67f62b89fa216bf747f231555e7f79d02221809577a05286380"
+      "sha256": "04f97595d2991697c2474d5a1add4a024df817c3789cc161c4da913333570b35"
     },
     {
       "path": "modules/studio-archive/scripts/run_reporting.py",
@@ -698,5 +702,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "3882911178b274d8d702a11891b794d426cbc7de2e687e404c42d32983617418"
+  "canonical_course_sha256": "22df3fc742721d889c2f9b39b0a3924e5b94556291b41f75d14469e984ad0d95"
 }

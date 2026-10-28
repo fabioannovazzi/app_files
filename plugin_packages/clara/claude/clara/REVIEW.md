@@ -1,10 +1,8 @@
 # Directory reviewer notes: clara
 
 ## MCP servers
-These servers run locally over stdio, exchanging data with local files and
-helper processes on the user's machine.
-The local reporting service sends ordinary HTTPS to Mparanza for technical
-incidents, task events, receipt signatures and user-authored feedback.
+These servers run locally over stdio with local files and helper processes.
+The local reporting service sends HTTPS to Mparanza for technical incidents, task events, receipt signatures and user-authored feedback.
 Independent browser recovery uses https://mparanza.com/clara/incident-recovery.
 It is operated by the agent when the host permits browser control. Reporting
 credentials authenticate requests; they are never diagnostic content.
@@ -30,6 +28,12 @@ This Cowork package has no `review_server.py` or `X-Mparanza-Review-Token` bridg
 The applicable local preview files are `modules/reporting-engine/scripts/budget_report_preview.py` and `modules/management-control-pack/scripts/preview_report.py`. Each creates a random URL path with `secrets.token_urlsafe(24)` at startup, serves it only on `127.0.0.1`, and loses the in-memory route when the server session ends. These are not user credentials, are not read from the user's environment or files, and are not sent to remote hosts by the preview servers.
 `.claude-plugin/plugin.json` contains plugin metadata, not these tokens or user credential values.
 The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables.
+
+## Runtime download/execution findings (RUNTIME_FETCH_EXEC)
+- `scripts/_python_bootstrap.py`: Separate setup downloads the pinned uv 0.12.10 wheel, verifies its SHA-256 before extraction/execution, then uses uv to provision CPython 3.12; retained as verified runtime setup.
+- `modules/distribution-analysis/vendor/modules/data/common_data_utils.py`: get_table_download_link() encodes local table/file bytes as browser download links; no network fetch, package runner or subprocess execution.
+- `modules/mix-contribution-analysis/vendor/modules/data/common_data_utils.py`: get_table_download_link() encodes local table/file bytes as browser download links; no network fetch, package runner or subprocess execution.
+- `modules/period-comparison/vendor/modules/data/common_data_utils.py`: get_table_download_link() encodes local table/file bytes as browser download links; no network fetch, package runner or subprocess execution.
 
 ## Font references (UNREAD_ASSET_REFERENCED)
 - `execution-files.json`: Records font SHA-256 hashes for package integrity, not execution.

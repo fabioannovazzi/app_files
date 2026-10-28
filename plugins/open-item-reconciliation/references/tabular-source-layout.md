@@ -1,7 +1,8 @@
 # Reviewed CSV/XLSX source layout
 
 Use `reviewed_tabular_accounting_v1` for an ordinary rectangular header-based
-CSV or XLSX source with role `open_items`, `bank_statement` or `journal`.
+CSV or XLSX source with role `open_items`, `bank_statement`, `journal`,
+`invoice_list` or `payment_list`.
 This is an additive adapter; existing PDF, print-journal and payment-order
 adapters keep their existing contracts.
 
@@ -161,3 +162,28 @@ the same reader. The source, preparation, reconciliation, semantic review,
 reporting and publication gates retain their distinct meanings.
 
 Worksheet dimensions are optional cached metadata. The reader derives bounded physical row and column extents from actual XML cells and ignores missing or stale dimensions; source bytes and reviewed row/header selectors remain authoritative.
+
+## Invoice lists and declared payments
+
+Use `invoice_list` / `invoice_record` for a supplied invoice list, and
+`payment_list` / `declared_payment` for declared payment records. Neither role
+asserts journal or bank provenance. Invoice lists require document number,
+document date and amount. Payment lists require `source_record_id`,
+`document_no`, `payment_date` and amount; map the actual payment date to
+`payment_date`, never invent a posting or invoice date. Keep a missing payment
+party null; do not copy invoice customer names into normalized payment records.
+
+For a draft, one exact literal invoice reference must identify one open item
+across the selected population (including years and counterparties), and one
+payment with a unique source payment ID. Entity, currency, units and direction
+must agree; an explicit payment party must also agree. If invoice lists were
+selected, exactly one matching invoice must agree on party, date and amount
+within the selected `amount_tolerance`. Amounts do not disambiguate identities.
+Cutoff policy uses the original payment date. Repeated references, multiple
+payment records per invoice, overpayments or inconsistent invoice evidence
+remain unresolved; no residual is invented.
+
+The draft retains `needs_evidence`, with declared amount and arithmetic residual
+(including zero for fully declared settlement). This is not an independently
+verified bank settlement. Deliver the useful draft with that limitation;
+professional adoption and obtaining stronger evidence are separate steps.

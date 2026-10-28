@@ -1013,6 +1013,9 @@ def _rule_label(rule: object, language: str) -> str:
 
 
 def _source_role_label(source_role: object, language: str) -> str:
+    caption = word_output_label(source_role, _language_code(language))
+    if caption != source_role:
+        return str(caption)
     labels = _locale_catalog(
         language, ITALIAN_SOURCE_ROLE_LABELS, SPANISH_SOURCE_ROLE_LABELS
     )
@@ -1729,6 +1732,9 @@ def _yes_no_label(value: object, language: str) -> str:
 
 
 def _evidence_type_label(evidence_type: object, language: str) -> str:
+    caption = word_output_label(evidence_type, _language_code(language))
+    if caption != evidence_type:
+        return str(caption)
     value = str(evidence_type or "unknown")
     if _is_italian(language):
         return {
@@ -3170,6 +3176,7 @@ def _reconciliation_cell_origin(
     if field in {"allocated_amount", "residual_amount"} and row.get("rule_applied") in {
         "exact_document_partial_bank_payment",
         "exact_document_partial_compensation",
+        "declared_payment_draft",
     }:
         evidence_id = str(row.get("matched_evidence_id") or "")
         evidence = normalized.get(evidence_id, {})
@@ -3662,6 +3669,7 @@ def write_word_report(
         row
         for row in reconciliation_rows or []
         if row.get("reconciliation_status") == "partially_paid"
+        or row.get("rule_applied") == "declared_payment_draft"
     ]
     if partial_rows:
         add_heading(

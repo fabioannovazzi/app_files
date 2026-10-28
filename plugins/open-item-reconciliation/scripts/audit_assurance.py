@@ -483,6 +483,8 @@ CURRENCY_TEXT_RE = re.compile(
     rf"|(?<![\d.,])({RENDERED_DECIMAL_PATTERN}|-?\d+)\s*(?:EUR|USD|GBP|CHF|€|\$|£)"
 )
 SOURCE_ROLES = {
+    "invoice_list",
+    "payment_list",
     "open_items",
     "counterparty_open_items",
     "ledger",
@@ -774,6 +776,7 @@ TABULAR_COLUMNS = frozenset(
         "document_no",
         "document_date",
         "posting_date",
+        "payment_date",
         "value_date",
         "due_date",
         "amount",
@@ -805,7 +808,13 @@ def _validate_tabular_layout(
     }
     if not isinstance(value, Mapping) or set(value) != keys:
         raise AssuranceRunError("tabular layout requires exact reviewed fields")
-    if role not in {"open_items", "journal", "bank_statement"}:
+    if role not in {
+        "open_items",
+        "journal",
+        "bank_statement",
+        "invoice_list",
+        "payment_list",
+    }:
         raise AssuranceRunError("tabular adapter does not support this source role")
     for key in ("header_row", "first_data_row", "last_data_row"):
         if type(value[key]) is not int or not 1 <= value[key] <= 100000:
@@ -840,8 +849,12 @@ def _validate_tabular_layout(
     columns = value["columns"]
     required = (
         {"amount", "document_no", "document_date"}
-        if role == "open_items"
-        else {"amount", "posting_date"}
+        if role in {"open_items", "invoice_list"}
+        else (
+            {"amount", "payment_date", "document_no", "source_record_id"}
+            if role == "payment_list"
+            else {"amount", "posting_date"}
+        )
     )
     if (
         not isinstance(columns, Mapping)
@@ -870,6 +883,8 @@ def _validate_tabular_layout(
             }
         )
     )
+    if role in {"invoice_list", "payment_list"}:
+        allowed = {"invoice_record" if role == "invoice_list" else "declared_payment"}
     mapping = value["evidence_type_map"]
     if not isinstance(mapping, Mapping) or not all(
         isinstance(k, str)
@@ -5851,6 +5866,7 @@ def read_reviewed_tabular_source(
                 elif field in {
                     "document_date",
                     "posting_date",
+                    "payment_date",
                     "value_date",
                     "due_date",
                 }:
@@ -5866,8 +5882,12 @@ def read_reviewed_tabular_source(
             role = content["role"]
             for field in (
                 {"document_no", "document_date"}
-                if role == "open_items"
-                else {"posting_date"}
+                if role in {"open_items", "invoice_list"}
+                else (
+                    {"payment_date", "document_no", "source_record_id"}
+                    if role == "payment_list"
+                    else {"posting_date"}
+                )
             ):
                 if not row.get(field):
                     raise AssuranceRunError(f"required mapped {field} is empty")

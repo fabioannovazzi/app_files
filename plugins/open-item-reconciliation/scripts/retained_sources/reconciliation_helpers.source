@@ -3807,6 +3807,113 @@ def withhold_bank_settlement_for_opposing_entries(
     return result
 
 
+def declared_payment_drafts(
+    rows: list[dict[str, Any]],
+    evidence_rows: list[dict[str, Any]],
+    assumptions: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Compute a source-limited draft by exact identity and Decimal subtraction.
+
+    This mechanical join never supplies missing source parties or dates and
+    never promotes a declaration to bank evidence or an assured closure.
+    Repeated references are unresolved even when amounts could disambiguate them.
+    """
+    payments = [e for e in evidence_rows if e.get("source_role") == "payment_list"]
+    invoices = [e for e in evidence_rows if e.get("source_role") == "invoice_list"]
+    result = []
+    for row in rows:
+        current = dict(row)
+        number = clean_text(row.get("document_no"))
+        candidates = [p for p in payments if clean_text(p.get("document_no")) == number]
+        if not number or not candidates or not is_open_item_in_scope(row, assumptions):
+            result.append(current)
+            continue
+        # A declared list cannot override a result supported by independent evidence.
+        if row.get("reconciliation_status") in {"closed", "partially_paid"}:
+            result.append(current)
+            continue
+        reason = missing_evidence_message("declared_payment_unresolved", assumptions)
+        owners = [r for r in rows if clean_text(r.get("document_no")) == number]
+        invoice_matches = [
+            e for e in invoices if clean_text(e.get("document_no")) == number
+        ]
+        payment = candidates[0]
+        amount = amount_for_matching(row)
+        paid = amount_for_matching(payment)
+        payment_date = parse_date(payment.get("payment_date"))
+        cutoff = parse_date(assumptions.get("cutoff_date"))
+        same_perimeter = all(
+            clean_text(row.get(field))
+            and clean_text(row.get(field)) == clean_text(payment.get(field))
+            for field in ("entity_ref", "currency", "unit", "direction_policy")
+        )
+        party = clean_text(payment.get("party_ref"))
+        invoice_ok = not invoices or (
+            len(invoice_matches) == 1
+            and accounting_perimeters_compatible(row, invoice_matches[0])
+            and clean_text(row.get("document_date"))
+            == clean_text(invoice_matches[0].get("document_date"))
+            and amounts_equal(
+                amount,
+                amount_for_matching(invoice_matches[0]),
+                assumptions.get("amount_tolerance", "0.01"),
+            )
+        )
+        unique_payment_id = (
+            sum(
+                clean_text(p.get("source_record_id"))
+                == clean_text(payment.get("source_record_id"))
+                for p in payments
+            )
+            == 1
+        )
+        if (
+            len(owners) == 1
+            and len(candidates) == 1
+            and unique_payment_id
+            and same_perimeter
+            and (not party or party == clean_text(row.get("party_ref")))
+            and invoice_ok
+            and amount is not None
+            and paid is not None
+            and Decimal("0") < paid <= amount
+            and payment_date is not None
+            and cutoff is not None
+            and (
+                not assumptions.get("post_cutoff_events_excluded")
+                or payment_date <= cutoff
+            )
+        ):
+            current.update(
+                reconciliation_status="needs_evidence",
+                evidence_level="weak_internal",
+                rule_applied="declared_payment_draft",
+                matched_evidence_type="declared_payment",
+                matched_evidence_id=payment["record_id"],
+                matched_evidence_reference=evidence_reference(payment),
+                matched_evidence_amounts=evidence_amount_summary(payment),
+                allocated_amount=f"{paid:.2f}",
+                residual_amount=f"{amount - paid:.2f}",
+                missing_evidence=missing_evidence_message(
+                    (
+                        "declared_payment_settled"
+                        if paid == amount
+                        else "declared_payment_partial"
+                    ),
+                    assumptions,
+                ),
+            )
+        else:
+            current.update(
+                reconciliation_status="needs_evidence",
+                evidence_level="none",
+                rule_applied="declared_payment_unresolved",
+                missing_evidence=reason,
+            )
+        result.append(current)
+    return result
+
+
 def reconcile_open_items(
     open_items: list[dict[str, Any]],
     evidence_rows: list[dict[str, Any]],
@@ -3880,7 +3987,9 @@ def reconcile_open_items(
     )
     from semantic_resolution import apply_resolution
 
-    return apply_resolution(controlled, evidence_rows, active)
+    return declared_payment_drafts(
+        apply_resolution(controlled, evidence_rows, active), evidence_rows, active
+    )
 
 
 def reconciliation_checks(

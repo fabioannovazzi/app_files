@@ -1677,3 +1677,133 @@ def word_output_label(value: object, language: str) -> object:
 def amount_tolerance_line(value: str, language: str) -> str:
     """Render the declared calculation parameter with its exact sealed value."""
     return f"{word_output_label('amount_tolerance', language)}: {value}"
+
+
+# Source declarations retain their evidential limits in every report language.
+WORD_OUTPUT_LABELS.update(
+    {
+        "declared_payment_draft": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Bozza da pagamenti dichiarati",
+                    "Draft from declared payments",
+                    "Projet fondé sur des paiements déclarés",
+                    "Entwurf aus erklärten Zahlungen",
+                    "Borrador de pagos declarados",
+                ),
+            )
+        ),
+        "declared_payment_unresolved": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Pagamenti dichiarati da chiarire",
+                    "Declared payments unresolved",
+                    "Paiements déclarés à clarifier",
+                    "Erklärte Zahlungen ungeklärt",
+                    "Pagos declarados sin resolver",
+                ),
+            )
+        ),
+        "invoice_list": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Elenco fatture",
+                    "Invoice list",
+                    "Liste de factures",
+                    "Rechnungsliste",
+                    "Lista de facturas",
+                ),
+            )
+        ),
+        "payment_list": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Elenco pagamenti dichiarati",
+                    "Declared payment list",
+                    "Liste de paiements déclarés",
+                    "Liste erklärter Zahlungen",
+                    "Lista de pagos declarados",
+                ),
+            )
+        ),
+        "invoice_record": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Fattura dichiarata",
+                    "Listed invoice",
+                    "Facture déclarée",
+                    "Aufgeführte Rechnung",
+                    "Factura declarada",
+                ),
+            )
+        ),
+        "declared_payment": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Pagamento dichiarato, non verificato in banca",
+                    "Declared payment, not bank verified",
+                    "Paiement déclaré, non vérifié en banque",
+                    "Erklärte Zahlung, nicht bankbestätigt",
+                    "Pago declarado, no verificado en banco",
+                ),
+            )
+        ),
+        "payment_date": dict(
+            zip(
+                SUPPORTED_LANGUAGES,
+                (
+                    "Data del pagamento dichiarato",
+                    "Declared payment date",
+                    "Date du paiement déclaré",
+                    "Datum der erklärten Zahlung",
+                    "Fecha del pago declarado",
+                ),
+            )
+        ),
+    }
+)
+for _language, _settled, _partial, _unresolved in (
+    (
+        "it",
+        "Bozza: saldo aritmetico nullo dai pagamenti dichiarati; manca verifica bancaria indipendente.",
+        "Bozza: residuo dopo i pagamenti dichiarati; manca verifica bancaria indipendente.",
+        "Riferimenti di pagamento ambigui o dati incoerenti; residuo non calcolato.",
+    ),
+    (
+        "en",
+        "Draft: zero arithmetic balance from declared payments; independent bank verification is missing.",
+        "Draft: residual after declared payments; independent bank verification is missing.",
+        "Ambiguous payment references or inconsistent data; residual not calculated.",
+    ),
+    (
+        "fr",
+        "Projet : solde arithmétique nul selon les paiements déclarés ; vérification bancaire indépendante manquante.",
+        "Projet : solde après paiements déclarés ; vérification bancaire indépendante manquante.",
+        "Références de paiement ambiguës ou données incohérentes ; solde non calculé.",
+    ),
+    (
+        "de",
+        "Entwurf: rechnerischer Nullsaldo aus erklärten Zahlungen; unabhängiger Banknachweis fehlt.",
+        "Entwurf: Restbetrag nach erklärten Zahlungen; unabhängiger Banknachweis fehlt.",
+        "Mehrdeutige Zahlungsreferenzen oder widersprüchliche Daten; Restbetrag nicht berechnet.",
+    ),
+    (
+        "es",
+        "Borrador: saldo aritmético cero según pagos declarados; falta verificación bancaria independiente.",
+        "Borrador: saldo tras pagos declarados; falta verificación bancaria independiente.",
+        "Referencias de pago ambiguas o datos incoherentes; saldo no calculado.",
+    ),
+):
+    LANGUAGE_PACKS[_language]["missing_evidence"].update(
+        {
+            "declared_payment_settled": _settled,
+            "declared_payment_partial": _partial,
+            "declared_payment_unresolved": _unresolved,
+        }
+    )

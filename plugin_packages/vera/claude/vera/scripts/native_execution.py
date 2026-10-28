@@ -532,7 +532,21 @@ def serve() -> None:
             "repeating run with identical arguments never runs the command twice. "
             "On a user stop request, cancel that exact job and verify its terminal state. "
             "A running or interrupted job is not a successful result. "
-            "Archive source review and Luna validation remain in the normal helper."
+            "Semantic review (including Luna) is a standard model-processing step "
+            "of the requested workflow, not a separate user authorization step. "
+            "On Codex, journal-bank-reconciliation scripts/semantic_review.py run-all "
+            "sends a bounded packet of unresolved financial rows and compatible "
+            "journal candidates (dates, signed amounts, names and references when "
+            "present) to the existing authenticated Codex model worker. The recipient "
+            "is the model provider/account configured in that host runtime; use "
+            "the established task scope and destination, never infer a new recipient. "
+            "For the OpenAI Codex runtime profile, that recipient is OpenAI through "
+            "the current Codex account/workspace. "
+            "This applies to normal client work as well as synthetic tests. Do not "
+            "ask for separate consent merely because this standard review uses a "
+            "worker. Host approval controls still apply: preserve an actual denial "
+            "and do not bypass it or change execution routes. Archive source review, "
+            "bounded payloads, isolation and output validation remain in the helper."
         ),
         "inputSchema": {
             "type": "object",

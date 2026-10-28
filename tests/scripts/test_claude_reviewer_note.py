@@ -65,12 +65,69 @@ def test_packaged_reviewer_note_names_existing_token_files(product: str) -> None
     assert 'Local review tokens (flagged as "Uses a credential")' in note
 
 
+@pytest.mark.parametrize(
+    "product,component,asset",
+    [
+        ("lucia", "apertura-pratica", "apertura-pratica-review-widget.html"),
+        ("lucia", "apertura-pratica", "apertura-pratica-review.html"),
+        ("vera", "archive-organization", "archive-organization-review-widget.html"),
+        ("vera", "new-client", "new-client-review-widget.html"),
+        (
+            "vera",
+            "open-item-reconciliation",
+            "open-item-reconciliation-review-widget.html",
+        ),
+    ],
+)
+def test_cowork_archive_contains_readable_offline_review_assets(
+    product: str, component: str, asset: str
+) -> None:
+    root = Path(__file__).resolve().parents[2]
+    with ZipFile(
+        root / "plugin_packages" / product / f"{product}-claude-plugin.zip"
+    ) as archive:
+        html = archive.read(f"modules/{component}/assets/{asset}").decode()
+
+    assert max(map(len, html.splitlines())) <= 2000
+    assert "@font-face" not in html
+    assert "data:font/" not in html
+
+
 def test_reviewer_note_rejects_undescribed_remote_server() -> None:
     entries = {
         ".mcp.json": b'{"mcpServers":{"newRemote":{"url":"https://example.test"}}}'
     }
     with pytest.raises(ValueError, match="Unreviewed remote server"):
         _reviewer_note("vera", entries)
+
+
+@pytest.mark.parametrize(
+    "product,paths,explanation",
+    [
+        ("vera", ["mcp/workspace.cjs"], "never downloads or installs code"),
+        ("lucia", ["scripts/_python_bootstrap.py"], "verifies its SHA-256"),
+        (
+            "clara",
+            [
+                "modules/distribution-analysis/vendor/modules/data/common_data_utils.py",
+                "modules/mix-contribution-analysis/vendor/modules/data/common_data_utils.py",
+                "modules/period-comparison/vendor/modules/data/common_data_utils.py",
+            ],
+            "no network fetch, package runner or subprocess execution",
+        ),
+    ],
+)
+def test_reviewer_note_explains_only_present_runtime_findings(
+    product: str, paths: list[str], explanation: str
+) -> None:
+    note = _reviewer_note(product, dict.fromkeys(paths, b"fixture")).decode()
+
+    section = note.split(
+        "## Runtime download/execution findings (RUNTIME_FETCH_EXEC)\n"
+    )[1].split("\n\n", 1)[0]
+    assert len(section.splitlines()) == len(paths)
+    assert section.count(explanation) == len(paths)
+    assert all(f"`{path}`" in section for path in paths)
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])

@@ -47,7 +47,8 @@
     "plugins/journal-bank-reconciliation/scripts/native_host_worker.py",
     "plugins/journal-bank-reconciliation/scripts/worker_capabilities.py",
     "plugins/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
-    "plugins/studio-archive/scripts/reconcile_open_items.py"
+    "plugins/studio-archive/scripts/reconcile_open_items.py",
+    "plugins/studio-archive/scripts/open_items_source_preflight.py"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
@@ -170,14 +171,24 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "declared-list-source-preflight",
+        "purpose": "Check supported source mappings before imports and deliver source-limited arithmetic drafts",
+        "content": "The agent-selected source paths, SHA-256 hashes, roles and exact column mappings are passed to a local read-only preflight. It reads selected cells locally and returns paths, hashes, roles and row counts or diagnostic errors; it creates no Archive record and makes no model or network call. Errors may include paths or selected column labels. Invoice lists and declared payments retain original invoice references, customers when present, currency, dates and amounts; missing payment parties and invoice dates are not manufactured. Reviewable drafts show declared paid amounts and arithmetic residuals with missing bank verification explicit. Selected source previews and opened draft cells can enter the existing host model context. No new recipient is introduced. Pre-run reads have no Archive run report; subsequent report measurement remains separate and incomplete observations stay visible.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "google-antigravity"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-10-28",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "b3d403e1cc2048f1113488a2ddeea17381aba6d79cb308c17edcd1c023641a54"
+    "source_fingerprint": "6b7db2ae9fd4e6573a6232ecd0ba755beda2092e3f94e60aa94d27150a5c81e0"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -268,7 +279,8 @@
           "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali.",
           "Se apre la scheda operativa generata, il modello riceve le righe e le colonne selezionate, che possono includere riferimenti fattura, date, importi, residui e descrizioni. Archive collega le celle lette alle fonti quando dispone della provenienza verificabile; testo libero non tracciato e altre letture non misurate restano esplicitamente fuori da questa verifica.",
           "Aprendo i file di stato o delle decisioni salvate, il modello può ricevere anche riferimenti e importi delle fatture. I valori copiati sono collegati alle celle originali quando la provenienza è verificabile. Le note libere e i file modificati senza provenienza restano esplicitamente non misurati.",
-          "In Cowork e Antigravity, lo stesso pacchetto delimitato entra nel contesto della chat principale e di un agente secondario nativo: la chat lo legge per avviare il lavoro. Vera conserva la chiamata e il risultato osservati dal coordinatore, senza cambiare il modello principale né chiamare API del fornitore. La verifica non certifica il modello del fornitore, non prova un isolamento del filesystem e non esclude le istruzioni aggiunte dall’host. Le trascrizioni degli agenti possono restare nell’host. Se mancano le capacità richieste o il risultato completo, le partite restano irrisolte."
+          "In Cowork e Antigravity, lo stesso pacchetto delimitato entra nel contesto della chat principale e di un agente secondario nativo: la chat lo legge per avviare il lavoro. Vera conserva la chiamata e il risultato osservati dal coordinatore, senza cambiare il modello principale né chiamare API del fornitore. La verifica non certifica il modello del fornitore, non prova un isolamento del filesystem e non esclude le istruzioni aggiunte dall’host. Le trascrizioni degli agenti possono restare nell’host. Se mancano le capacità richieste o il risultato completo, le partite restano irrisolte.",
+          "Prima di importare, un controllo locale legge le celle selezionate e restituisce percorsi, impronte, ruoli e conteggi o errori tecnici, senza creare un run o chiamare un modello. Gli elenchi di fatture e pagamenti dichiarati conservano riferimenti, date e importi originali. Aprendo le bozze, il modello può ricevere gli importi dichiarati e i residui, con la mancanza di verifica bancaria esplicita. Le letture precedenti al run non hanno un report Archive."
         ],
         "en": [
           "The model understands the structure",
@@ -285,7 +297,8 @@
           "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local.",
           "When it opens the generated operational workbook, the model receives the selected rows and columns, which may include invoice references, dates, amounts, residual balances and descriptions. Archive links the cells read to sources when verifiable provenance is available; untraced free text and other unmeasured reads remain explicitly outside that verification.",
           "Opening status or saved-decision files can also give the model invoice references and amounts. Copied values are linked to their original cells when provenance is verifiable. Free-form notes and changed files without provenance remain explicitly unmeasured.",
-          "In Cowork and Antigravity, the same bounded packet enters both the main chat and a native child agent: the parent reads it to dispatch the work. Vera retains the invocation and result observed by the parent, without changing the main model or calling a provider API. This evidence does not attest provider model identity, prove filesystem isolation or exclude host-added instructions. Child transcripts may persist in the host. Missing capabilities or an incomplete result leave items unresolved."
+          "In Cowork and Antigravity, the same bounded packet enters both the main chat and a native child agent: the parent reads it to dispatch the work. Vera retains the invocation and result observed by the parent, without changing the main model or calling a provider API. This evidence does not attest provider model identity, prove filesystem isolation or exclude host-added instructions. Child transcripts may persist in the host. Missing capabilities or an incomplete result leave items unresolved.",
+          "Before import, a local check reads selected cells and returns paths, hashes, roles and counts or technical errors, without creating a run or calling a model. Invoice lists and declared payments retain original references, dates and amounts. Opening drafts can expose declared amounts and residuals to the model, with missing bank verification explicit. Reads before the run have no Archive report."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -302,7 +315,8 @@
           "Studio Archive délimite chaque exécution de ce processus et crée automatiquement un rapport des données envoyées par Vera. Vera enregistre ses propres envois ; le rapport n’inspecte ni la conversation ni les autres outils. Le rapport reste sur la machine même lorsque toutes les données ont été envoyées. Les comptages manquants sont signalés comme indéterminés. Le serveur reçoit uniquement l’empreinte du rapport et les références de vérification, liées au Vera userID de la machine, à la même exécution et à la révision. Le contenu du rapport et les preuves restent locaux.",
           "Lorsqu’il ouvre le classeur opérationnel produit, le modèle reçoit les lignes et colonnes sélectionnées, qui peuvent inclure des références de factures, dates, montants, soldes résiduels et descriptions. Archive rattache les cellules lues aux sources lorsque leur provenance est vérifiable ; les textes libres non traçables et les autres lectures non mesurées restent explicitement hors de cette vérification.",
           "En ouvrant les fichiers de statut ou de décisions enregistrées, le modèle peut aussi recevoir des références et des montants de factures. Les valeurs copiées sont rattachées aux cellules originales lorsque leur provenance est vérifiable. Les notes libres et les fichiers modifiés sans provenance restent explicitement non mesurés.",
-          "Dans Cowork et Antigravity, le même paquet limité entre dans le contexte de la conversation principale et d’un sous-agent natif : le parent le lit pour lancer le travail. Vera conserve l’appel et le résultat observés par le parent, sans changer le modèle principal ni appeler une API du fournisseur. Ces éléments ne certifient pas le modèle du fournisseur, ne prouvent pas l’isolation du système de fichiers et n’excluent pas les instructions ajoutées par l’hôte. Les transcriptions peuvent persister dans l’hôte. Les capacités manquantes ou un résultat incomplet laissent les postes non résolus."
+          "Dans Cowork et Antigravity, le même paquet limité entre dans le contexte de la conversation principale et d’un sous-agent natif : le parent le lit pour lancer le travail. Vera conserve l’appel et le résultat observés par le parent, sans changer le modèle principal ni appeler une API du fournisseur. Ces éléments ne certifient pas le modèle du fournisseur, ne prouvent pas l’isolation du système de fichiers et n’excluent pas les instructions ajoutées par l’hôte. Les transcriptions peuvent persister dans l’hôte. Les capacités manquantes ou un résultat incomplet laissent les postes non résolus.",
+          "Avant importation, un contrôle local lit les cellules sélectionnées et retourne chemins, empreintes, rôles et nombres de lignes ou erreurs techniques, sans créer de run ni appeler un modèle. Les listes de factures et paiements déclarés conservent références, dates et montants originaux. Les projets ouverts peuvent exposer au modèle les montants déclarés et soldes, avec vérification bancaire manquante explicite. Les lectures antérieures au run n’ont pas de rapport Archive."
         ],
         "de": [
           "Das Modell versteht die Struktur",
@@ -319,7 +333,8 @@
           "Studio Archive grenzt jede Ausführung dieses Prozesses ab und erstellt automatisch einen Bericht über die von Vera gesendeten Daten. Vera erfasst die eigenen Sendungen; der Bericht untersucht weder den Chat noch andere Werkzeuge. Der Bericht bleibt auf dem Rechner, auch wenn alle Daten gesendet wurden. Fehlende Mengenangaben werden ausdrücklich als unbekannt ausgewiesen. Der Server erhält nur den Berichtshash und die Prüfverweise, gebunden an die Vera userID des Rechners, dieselbe Ausführung und Revision. Berichtsinhalte und Nachweise bleiben lokal.",
           "Beim Öffnen der erzeugten operativen Arbeitsmappe erhält das Modell die ausgewählten Zeilen und Spalten, gegebenenfalls mit Rechnungsreferenzen, Daten, Beträgen, Restbeträgen und Beschreibungen. Archive ordnet gelesene Zellen den Quellen zu, soweit ihre Herkunft überprüfbar ist; nicht zuordenbarer Freitext und andere nicht gemessene Lesezugriffe bleiben ausdrücklich außerhalb dieser Prüfung.",
           "Beim Öffnen von Statusdateien oder gespeicherten Prüfentscheidungen kann das Modell auch Rechnungsreferenzen und Beträge erhalten. Kopierte Werte werden ihren ursprünglichen Zellen zugeordnet, wenn ihre Herkunft überprüfbar ist. Freie Notizen und geänderte Dateien ohne Herkunftsnachweis bleiben ausdrücklich ungemessen.",
-          "In Cowork und Antigravity gelangt dasselbe begrenzte Datenpaket in den Hauptchat und einen nativen Unteragenten: Der Hauptchat liest es, um die Arbeit zu starten. Vera bewahrt den vom Hauptchat beobachteten Aufruf und das Ergebnis auf, ohne das Hauptmodell zu ändern oder eine Anbieter-API aufzurufen. Diese Nachweise bestätigen weder die Modellidentität beim Anbieter noch eine Dateisystem-Isolation und schließen vom Host ergänzte Anweisungen nicht aus. Unteragenten-Protokolle können im Host gespeichert bleiben. Fehlende Fähigkeiten oder unvollständige Ergebnisse lassen Posten ungeklärt."
+          "In Cowork und Antigravity gelangt dasselbe begrenzte Datenpaket in den Hauptchat und einen nativen Unteragenten: Der Hauptchat liest es, um die Arbeit zu starten. Vera bewahrt den vom Hauptchat beobachteten Aufruf und das Ergebnis auf, ohne das Hauptmodell zu ändern oder eine Anbieter-API aufzurufen. Diese Nachweise bestätigen weder die Modellidentität beim Anbieter noch eine Dateisystem-Isolation und schließen vom Host ergänzte Anweisungen nicht aus. Unteragenten-Protokolle können im Host gespeichert bleiben. Fehlende Fähigkeiten oder unvollständige Ergebnisse lassen Posten ungeklärt.",
+          "Vor dem Import liest eine lokale Prüfung ausgewählte Zellen und liefert Pfade, Hashes, Rollen und Zeilenzahlen oder technische Fehler, ohne einen Lauf oder Modellaufruf anzulegen. Rechnungslisten und erklärte Zahlungen behalten ursprüngliche Referenzen, Daten und Beträge. Geöffnete Entwürfe können erklärte Beträge und Restbeträge an das Modell geben; fehlende Bankbestätigung bleibt ausdrücklich sichtbar. Lesezugriffe vor dem Lauf haben keinen Archive-Bericht."
         ],
         "es": [
           "El modelo comprende la estructura",
@@ -336,7 +351,8 @@
           "Studio Archive delimita cada ejecución de este proceso y crea automáticamente un informe de los datos enviados por Vera. Vera registra sus propios envíos; el informe no inspecciona el chat ni otras herramientas. El informe permanece en el equipo incluso cuando se han enviado todos los datos. Los recuentos que faltan se indican como indeterminados. El servidor recibe únicamente la huella del informe y las referencias de verificación, vinculadas al Vera userID del equipo, a la misma ejecución y revisión. El contenido del informe y las evidencias permanecen locales.",
           "Al abrir el libro operativo generado, el modelo recibe las filas y columnas seleccionadas, que pueden incluir referencias de facturas, fechas, importes, saldos residuales y descripciones. Archive vincula las celdas leídas con las fuentes cuando dispone de una procedencia verificable; el texto libre sin trazabilidad y otras lecturas no medidas quedan expresamente fuera de esa verificación.",
           "Al abrir archivos de estado o de decisiones guardadas, el modelo también puede recibir referencias e importes de facturas. Los valores copiados se vinculan a sus celdas originales cuando su procedencia es verificable. Las notas libres y los archivos modificados sin procedencia quedan expresamente sin medir.",
-          "En Cowork y Antigravity, el mismo paquete delimitado entra en el contexto del chat principal y de un agente secundario nativo: el chat lo lee para iniciar el trabajo. Vera conserva la llamada y el resultado observados por el coordinador, sin cambiar el modelo principal ni llamar a una API del proveedor. Esta evidencia no certifica la identidad del modelo, no prueba el aislamiento del sistema de archivos ni excluye las instrucciones añadidas por el host. Las transcripciones pueden permanecer en el host. Si faltan capacidades o el resultado está incompleto, las partidas siguen sin resolver."
+          "En Cowork y Antigravity, el mismo paquete delimitado entra en el contexto del chat principal y de un agente secundario nativo: el chat lo lee para iniciar el trabajo. Vera conserva la llamada y el resultado observados por el coordinador, sin cambiar el modelo principal ni llamar a una API del proveedor. Esta evidencia no certifica la identidad del modelo, no prueba el aislamiento del sistema de archivos ni excluye las instrucciones añadidas por el host. Las transcripciones pueden permanecer en el host. Si faltan capacidades o el resultado está incompleto, las partidas siguen sin resolver.",
+          "Antes de importar, un control local lee las celdas seleccionadas y devuelve rutas, huellas, roles y recuentos o errores técnicos, sin crear una ejecución ni llamar a un modelo. Las listas de facturas y pagos declarados conservan referencias, fechas e importes originales. Al abrir borradores, el modelo puede recibir importes declarados y saldos, indicando la falta de verificación bancaria. Las lecturas anteriores a la ejecución no tienen informe Archive."
         ]
       }
     }
