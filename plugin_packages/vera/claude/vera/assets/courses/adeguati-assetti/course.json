@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/adeguati-assetti/assets/construction-intake.html",
-      "sha256": "ce286701adbffc94aae09b5fe86d9cb10d692c830f5a49490fa5ce4ad7ffbbb1"
+      "sha256": "be9a1e207f000f5ee759f19680953d74aa18a5ab7c5be53debc9218efeb44217"
     },
     {
       "path": "modules/adeguati-assetti/assets/icon.svg",
@@ -991,5 +991,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "60326575a31e18276221f5bc88fd0ca9288c7c50acc43ea1fc23bd2fcfdfef28"
+  "canonical_course_sha256": "f188955685be05207ffcd4e24dd81551a82c74a0d8e3865aec8741ae4545ee17"
 }

@@ -164,10 +164,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "6075b80900c2ee2a89ad92f0dba882a2870c1f17be20797c7902b7e545e11fdd"
+    "source_fingerprint": "5d55ecad34e067f31d37c7737036c48d2a9dcb2d4563b0e670f45eec202b168e"
   },
   "governed_repository_paths": [],
   "public_explanations": {

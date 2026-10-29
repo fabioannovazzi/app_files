@@ -587,6 +587,15 @@ jobs:
           tests/plugins/test_non_plotting_review_workbench.py
           --cov --cov-config=tests/plugin_new_client.coveragerc
           --cov-report=term-missing --cov-fail-under=80
+      - name: Verify central Vera workflow theme
+        if: matrix.suite == 'accounting'
+        run: |
+          python scripts/sync_vera_ui_theme.py --check
+          python -m pytest -q -o addopts='' tests/scripts/test_vera_ui_theme.py
+          python -m black --check scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py tests/scripts/test_vera_ui_theme.py
+          python -m isort --check-only scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py tests/scripts/test_vera_ui_theme.py
+          python -m mypy --follow-imports=skip scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py
+          python -m bandit -q -ll scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py
       - name: Verify Geneva common-core adapters and source boundaries
         if: matrix.suite == 'accounting'
         run: |

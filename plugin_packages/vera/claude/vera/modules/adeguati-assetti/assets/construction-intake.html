@@ -8,8 +8,150 @@
 <style>
 /* The generator embeds the already licensed Instrument Sans file here. */
 __FONT_FACE__
-:root{font-family:'Instrument Sans',sans-serif;color:#182a3b;background:#fff;font-size:17px;line-height:1.55;--blue:#124a7e;--muted:#526577;--rule:#dce3e9}
-*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:1000px;margin:auto;padding:24px clamp(22px,6vw,70px)}header{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);font-size:.9rem}header strong{color:var(--blue);letter-spacing:.04em}main{min-height:70vh;padding-top:clamp(35px,6vw,70px)}h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.12;letter-spacing:-.035em;font-weight:600;max-width:800px;margin:12px 0 24px}h2{font-size:1.35rem;line-height:1.35;margin:12px 0 22px;font-weight:600}p{max-width:650px}small,.muted{color:var(--muted)}.eyebrow{font-size:.84rem;color:var(--blue);font-weight:600}button,input,textarea{font:inherit}button{border:1px solid var(--rule);background:#fff;color:var(--blue);padding:10px 18px;cursor:pointer;border-radius:4px}button:hover{background:#f2f6f9}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #2785bc;outline-offset:3px}label{display:block;margin:12px 0 7px}input[type=text],textarea{display:block;width:100%;border:1px solid #aab9c7;border-radius:4px;padding:12px;color:inherit;background:#fff}textarea{min-height:180px;resize:vertical}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.spaced{margin:28px 0}.secondary{margin-top:28px;padding-top:22px;border-top:1px solid var(--rule)}fieldset{border:0;padding:0;margin:18px 0;display:flex;gap:18px;flex-wrap:wrap}fieldset label{margin:0;display:flex;gap:7px;align-items:center}legend{color:var(--muted);font-size:.85rem;margin-bottom:9px}details{margin-top:20px}summary{cursor:pointer;color:var(--blue)}footer{border-top:1px solid var(--rule);font-size:.8rem;color:var(--muted)}#message{min-height:28px;margin-top:20px;color:#83361d}#overview article{border-bottom:1px solid var(--rule);padding:18px 0}#overview pre{white-space:pre-wrap;font:inherit;overflow-wrap:anywhere}.hidden,[hidden]{display:none!important}.progress{font-size:.85rem;color:var(--muted)}.form-width{max-width:710px}.import-label{display:inline-block;color:var(--blue);cursor:pointer;text-decoration:underline}#import{max-width:100%;font-size:.85rem}@media(max-width:600px){header{gap:14px}h1{font-size:2rem}.row button{flex-grow:1}fieldset{gap:12px}main{padding-top:32px}}
+:root{font-family:'Instrument Sans',sans-serif;color:var(--ink);background:#fff;font-size:17px;line-height:1.55;--blue:var(--accent);--muted:var(--muted);--rule:var(--border)}
+*{box-sizing:border-box}body{margin:0}header,main,footer{max-width:1000px;margin:auto;padding:24px clamp(22px,6vw,70px)}header{display:flex;justify-content:space-between;border-bottom:1px solid var(--rule);font-size:.9rem}header strong{color:var(--blue);letter-spacing:.04em}main{min-height:70vh;padding-top:clamp(35px,6vw,70px)}h1{font-size:clamp(2rem,4vw,3.1rem);line-height:1.12;letter-spacing:-.035em;font-weight:600;max-width:800px;margin:12px 0 24px}h2{font-size:1.35rem;line-height:1.35;margin:12px 0 22px;font-weight:600}p{max-width:650px}small,.muted{color:var(--muted)}.eyebrow{font-size:.84rem;color:var(--blue);font-weight:600}button,input,textarea{font:inherit}button{border:1px solid var(--rule);background:#fff;color:var(--blue);padding:10px 18px;cursor:pointer;border-radius:4px}button:hover{background:var(--soft)}button.primary{background:var(--blue);color:#fff;border-color:var(--blue)}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid var(--accent);outline-offset:3px}label{display:block;margin:12px 0 7px}input[type=text],textarea{display:block;width:100%;border:1px solid var(--border-strong);border-radius:4px;padding:12px;color:inherit;background:#fff}textarea{min-height:180px;resize:vertical}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.spaced{margin:28px 0}.secondary{margin-top:28px;padding-top:22px;border-top:1px solid var(--rule)}fieldset{border:0;padding:0;margin:18px 0;display:flex;gap:18px;flex-wrap:wrap}fieldset label{margin:0;display:flex;gap:7px;align-items:center}legend{color:var(--muted);font-size:.85rem;margin-bottom:9px}details{margin-top:20px}summary{cursor:pointer;color:var(--blue)}footer{border-top:1px solid var(--rule);font-size:.8rem;color:var(--muted)}#message{min-height:28px;margin-top:20px;color:var(--danger)}#overview article{border-bottom:1px solid var(--rule);padding:18px 0}#overview pre{white-space:pre-wrap;font:inherit;overflow-wrap:anywhere}.hidden,[hidden]{display:none!important}.progress{font-size:.85rem;color:var(--muted)}.form-width{max-width:710px}.import-label{display:inline-block;color:var(--blue);cursor:pointer;text-decoration:underline}#import{max-width:100%;font-size:.85rem}@media(max-width:600px){header{gap:14px}h1{font-size:2rem}.row button{flex-grow:1}fieldset{gap:12px}main{padding-top:32px}}
+
+/* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
+/* Canonical Vera workflow theme. Derived from the Vouching review surface.
+ * Run: python scripts/sync_vera_ui_theme.py after changing this file.
+ * Embedded at build time: no remote fonts, imports, or host CSS dependencies.
+ */
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --soft: #fafafa;
+  --soft-strong: #f3f4f2;
+  --ink: #1f2421;
+  --text: #3f4541;
+  --muted: #727972;
+  --border: #e8eae7;
+  --border-strong: #d8dcd7;
+  --accent: #35463f;
+  --accent-strong: #202a26;
+  --accent-soft: #f3f6f4;
+  --danger: #7b4b44;
+  --danger-bg: #fbf7f6;
+  --warning: #6f6247;
+  --warning-bg: #fbfaf6;
+  --ok: #4b6759;
+  --ok-bg: #f7faf8;
+  --info: #52646e;
+  --info-bg: #f7fafb;
+  --radius: 8px;
+  --font-ui: "Aptos", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-ui: 1rem;
+  --font-size-control: 0.875rem;
+  --font-size-title: 1.25rem;
+  --font-size-heading: 1.05rem;
+  --control-padding: 0.55rem 0.75rem;
+  --control-height: 2.5rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  /* Compatibility aliases for existing layout-specific selectors. */
+  --navy: var(--accent);
+  --blue: var(--accent);
+  --cyan: var(--accent);
+  --line: var(--border);
+  --rule: var(--border);
+  --wash: var(--soft);
+  --bg: var(--paper);
+  --focus-border-color: var(--accent);
+  --focus-ring-color: var(--border-strong);
+  --mparanza-pill-font-family: var(--font-ui);
+  --white: var(--paper);
+  --line-strong: var(--border-strong);
+  --quiet: var(--muted);
+  --blue-wash: var(--accent-soft);
+  --green: var(--ok);
+  --green-wash: var(--ok-bg);
+  --amber: var(--warning);
+  --amber-wash: var(--warning-bg);
+  --red: var(--danger);
+  --red-wash: var(--danger-bg);
+  --focus: var(--accent);
+  --teal: var(--accent);
+  --teal-soft: var(--accent-soft);
+  --green-soft: var(--ok-bg);
+  --amber-soft: var(--warning-bg);
+  --red-soft: var(--danger-bg);
+  --sans: var(--font-ui);
+  --serif: var(--font-ui);
+}
+:root body {
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+:root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
+:root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }
+:root :is(h2, h3) { font-size: var(--font-size-heading); font-weight: 650; line-height: 1.3; letter-spacing: 0; }
+:root .brand { font-size: 1.25rem; font-weight: 650; letter-spacing: -0.04em; }
+:root :is(main, .main) > button { margin-inline-end: var(--space-sm); margin-block-end: var(--space-sm); }
+:root :is(a, summary, .eyebrow, .product) { color: var(--accent); }
+:root :is(button, input, textarea, select, .button) {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  line-height: 1.4;
+  letter-spacing: 0;
+  accent-color: var(--accent);
+}
+:root :is(button, .button, .custom-select__button) {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  background-image: none;
+  color: var(--text);
+  box-shadow: none;
+  padding: var(--control-padding);
+  min-height: var(--control-height);
+}
+:root :is(button, .button, .custom-select__button):hover:not(:disabled) {
+  background: var(--soft-strong);
+  border-color: var(--border-strong);
+}
+:root :is(button.primary, .button.primary) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+:root :is(button.primary, .button.primary):hover:not(:disabled) {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--paper);
+}
+:root :is(button.secondary, .button.secondary, button.quiet) { background: var(--surface); color: var(--text); }
+:root :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]), textarea, select) {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: var(--control-padding);
+}
+:root :is(button, input, textarea, select, a, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+:root :is(button[aria-current=page], button[aria-pressed=true], .custom-select__option.is-active) {
+  background: var(--accent-soft);
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+:root .custom-select__list { background: var(--surface); border-color: var(--border-strong); box-shadow: none; border-radius: var(--radius); }
+:root :is(.error, #error, #status.error, .negative) { color: var(--danger); }
+:root :is(.saved, .status--ok) { color: var(--ok); }
+:root :is(.severity, .status--warning) { color: var(--warning); }
+:root .severity.blocker { color: var(--danger); }
+:root .severity.info { color: var(--info); }
+/* VERA_SHARED_THEME_END */
 </style>
 </head>
 <body>

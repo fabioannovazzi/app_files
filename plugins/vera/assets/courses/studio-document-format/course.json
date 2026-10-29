@@ -305,7 +305,7 @@
     {
       "path": "modules/report-builder/assets/report-builder-review-widget.html",
       "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
-      "sha256": "b1b0fc0a1320296ec669cca1ddb5df33bf7c5cb1947ee1f24b90516c8b9266e9"
+      "sha256": "e2562c0a9d9b266c9910d16cbd20b7ec853039e822b2b5e2db1af485ab55a891"
     },
     {
       "path": "modules/report-builder/assets/review-workbench-adapter.json",

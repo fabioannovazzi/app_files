@@ -1340,6 +1340,9 @@ def source_zip_entries(
                     ROOT / "plugins/vera/scripts" / helper
                 ).read_bytes()
         if plugin_dir.name == "vera":
+            from scripts.vera_ui_theme import theme_package_resources
+
+            theme_package_resources(entries, f"{root}/plugins/vera/")
             named_browser_skill_cards(entries, f"{root}/plugins/vera/")
             if project_vera_privacy:
                 projection = _project_vera_codex_privacy(
