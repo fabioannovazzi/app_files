@@ -116,7 +116,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "312237d064a050ae3b7ecbe13c0129a01787ece9cebfda65635ae2de6310b0bf",
+  "course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -1032,5 +1032,14 @@
     "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
     "fresh_matching_junit_required": true,
     "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "previous_course_sha256": "312237d064a050ae3b7ecbe13c0129a01787ece9cebfda65635ae2de6310b0bf",
+    "current_course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
   }
 }

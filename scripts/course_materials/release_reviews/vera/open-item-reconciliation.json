@@ -92,7 +92,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "24411ad13570e860a2ad6cf0bb102f92db0f2fd179feaaf65ae875a61c3e3bf7",
+  "course_sha256": "c3cb331032cee102201510feb6dbd54866eb8c3c6c9a177c30394e768104eeca",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:12.998454+00:00",
@@ -923,5 +923,14 @@
       "base_course_sha256": "8d888adf34a156c7e6e37cd278288fccc480824fe0d4b805f8635fcc891724d9",
       "authored_content_unchanged": true
     }
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "previous_course_sha256": "24411ad13570e860a2ad6cf0bb102f92db0f2fd179feaaf65ae875a61c3e3bf7",
+    "current_course_sha256": "c3cb331032cee102201510feb6dbd54866eb8c3c6c9a177c30394e768104eeca",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
   }
 }

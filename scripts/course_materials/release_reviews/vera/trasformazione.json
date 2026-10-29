@@ -66,7 +66,7 @@
     "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository."
   },
-  "course_sha256": "d92c0422308c8402400479481b682eb9d589733bee0627673426037ee347a05c",
+  "course_sha256": "bb2548afd0fe2c3a00a8db29d83b9dbf0711b49f3c3443bba0acf25207c8432a",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -773,5 +773,14 @@
     "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
     "fresh_matching_junit_required": true,
     "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "previous_course_sha256": "d92c0422308c8402400479481b682eb9d589733bee0627673426037ee347a05c",
+    "current_course_sha256": "bb2548afd0fe2c3a00a8db29d83b9dbf0711b49f3c3443bba0acf25207c8432a",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
   }
 }

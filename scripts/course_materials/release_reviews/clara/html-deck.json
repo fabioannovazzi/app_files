@@ -77,7 +77,7 @@
     "verified_at": "2026-09-27T22:46:27.915249+00:00",
     "workflow": "html-deck"
   },
-  "course_sha256": "512d2c85d30a2e6f6ba60b55ff20f4d49cea441d6a8ebd2c6715597d1f8b392f",
+  "course_sha256": "e9569f6070a828ca4877c12366d168ba3427f69b63754795296b7b5e3988b72e",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -703,5 +703,14 @@
     "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
     "fresh_matching_junit_required": true,
     "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "previous_course_sha256": "512d2c85d30a2e6f6ba60b55ff20f4d49cea441d6a8ebd2c6715597d1f8b392f",
+    "current_course_sha256": "e9569f6070a828ca4877c12366d168ba3427f69b63754795296b7b5e3988b72e",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
   }
 }

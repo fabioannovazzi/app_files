@@ -324,6 +324,89 @@ def load_apply_review_edits() -> Any:
     return module
 
 
+def _retained_sampling_package(store: Path, *, new_theme: bool) -> Path:
+    """Build a retained runtime tree whose owned bytes can be replayed."""
+    stage = store / ("new" if new_theme else "historical")
+    component = stage / "modules/journal-sampling"
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo")
+    shutil.copytree(ROOT / "plugins/journal-sampling", component, ignore=ignore)
+    for module in ("vera_assurance", "vera_journal_pdf"):
+        shutil.copytree(
+            ROOT / "plugins/_shared/vendor/modules" / module,
+            component / "vendor/modules" / module,
+            ignore=ignore,
+        )
+    # Old product launchers are outside the receipted sampling boundary and
+    # must never be imported by the private historical replay.
+    (stage / ".codex-plugin").mkdir()
+    (stage / ".codex-plugin/plugin.json").write_text('{"name": "vera"}')
+    (stage / "scripts").mkdir()
+    (stage / "scripts/archive_projection.py").write_text(
+        "raise RuntimeError('unreceipted historical launcher executed')\n"
+    )
+    if new_theme:
+        widget = component / "assets/journal-sampling-review-widget.html"
+        widget.write_bytes(widget.read_bytes() + b"\n<!-- updated theme -->\n")
+    files = {
+        path.relative_to(stage)
+        .as_posix(): hashlib.sha256(path.read_bytes())
+        .hexdigest()
+        for path in stage.rglob("*")
+        if path.is_file()
+    }
+    index = json.dumps({"schema_version": 1, "files": files}, sort_keys=True).encode()
+    (stage / "execution-files.json").write_bytes(index)
+    destination = store / hashlib.sha256(index).hexdigest()
+    stage.rename(destination)
+    return destination / "modules/journal-sampling"
+
+
+@pytest.mark.parametrize(
+    "fault", [None, "source_changed", "historical_changed", "historical_missing"]
+)
+def test_new_theme_replays_exact_retained_upstream_without_rewriting_history(
+    tmp_path: Path, monkeypatch: Any, fault: str | None
+) -> None:
+    normalized = _qualified_journal(
+        tmp_path / "source",
+        [{"date": "2025-01-02", "movement": "M-1", "debit": "100.00"}],
+    )
+    historical = _retained_sampling_package(tmp_path / "code", new_theme=False)
+    current = _retained_sampling_package(tmp_path / "code", new_theme=True)
+    core = load_core()
+    monkeypatch.setattr(core, "_journal_sampling_component_root", lambda: current)
+    monkeypatch.setattr(
+        core,
+        "implementation_artifact_roots",
+        lambda: {
+            "implementation": ROOT / "plugins/check-entries",
+            "assurance_implementation": current / "vendor/modules/vera_assurance",
+        },
+    )
+    if fault == "source_changed":
+        source = _qualified_journal_source(normalized)
+        source.write_bytes(source.read_bytes() + b"changed")
+    elif fault == "historical_changed":
+        (historical / "scripts/journal_sampling_core.py").write_text(
+            "raise RuntimeError('must not execute')\n"
+        )
+    elif fault == "historical_missing":
+        shutil.rmtree(historical.parents[1])
+    before = _tree_snapshot(normalized.parent)
+    support = tmp_path / "support"
+    support.mkdir()
+    output = tmp_path / "checks"
+
+    if fault is None:
+        core.run_entry_checks(normalized, support, output)
+        assert (output / "check_audit.json").is_file()
+    else:
+        with pytest.raises(ValueError):
+            core.run_entry_checks(normalized, support, output)
+
+    assert _tree_snapshot(normalized.parent) == before
+
+
 def test_exact_file_read_preserves_windows_line_endings_and_control_z(
     tmp_path: Path,
 ) -> None:

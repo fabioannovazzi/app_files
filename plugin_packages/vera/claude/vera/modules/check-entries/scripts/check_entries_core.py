@@ -1217,6 +1217,71 @@ def _journal_sampling_component_root() -> Path:
     return root
 
 
+def _journal_sampling_replay_roots(envelope: Mapping[str, Any]) -> dict[str, Path]:
+    """Find exact historical bytes for read-only replay, never for new work.
+
+    A newer widget is not evidence of damaged historical data. Keep every
+    historical receipt intact and mechanically verify a complete retained
+    implementation instead of comparing it to an unrelated current release.
+    """
+    current = _journal_sampling_component_root()
+    shared = implementation_artifact_roots()["assurance_implementation"]
+    _validate_journal_sampling_implementation_tree(current, shared)
+    candidates = [(current, shared)]
+    package = current.parent.parent
+    # Only inspect sibling indexed runtime packages, never caller-supplied paths.
+    if current.parent.name == "modules" and re.fullmatch(r"[0-9a-f]{64}", package.name):
+        for retained in sorted(package.parent.iterdir()):
+            if retained == package or not re.fullmatch(r"[0-9a-f]{64}", retained.name):
+                continue
+            if retained.is_symlink() or not retained.is_dir():
+                continue
+            index = retained / "execution-files.json"
+            try:
+                index_bytes = _stable_regular_bytes(
+                    index,
+                    label="Historical package index",
+                    maximum_bytes=10 * 1024 * 1024,
+                )
+            except (OSError, ValueError):
+                continue
+            if hashlib.sha256(index_bytes).hexdigest() != retained.name:
+                continue
+            component = retained / "modules" / "journal-sampling"
+            candidates.append((component, component / "vendor/modules/vera_assurance"))
+    receipts = [
+        item
+        for item in envelope["artifact_receipts"]
+        if item["role"] == "implementation"
+    ]
+    expected = [
+        (root_id, path, artifact_id)
+        for root_id, path, artifact_id in JOURNAL_SAMPLING_IMPLEMENTATION_SPECS
+    ]
+    if [
+        (item["root_id"], item["path"], item["artifact_id"]) for item in receipts
+    ] != expected:
+        raise ValueError("Journal Sampling implementation receipt set is not exact.")
+    for component, assurance in candidates:
+        roots = {
+            "implementation": component,
+            "assurance_implementation": assurance,
+            "pdf_implementation": assurance.parent / "vera_journal_pdf",
+        }
+        try:
+            _validate_journal_sampling_implementation_tree(component, assurance)
+            for receipt in receipts:
+                validate_artifact_receipt(roots, receipt)
+        except (OSError, ValueError):
+            continue
+        return roots
+    raise ValueError(
+        "Journal Sampling historical implementation is unavailable or changed; "
+        "restore its verified package for read-only replay. Historical receipts "
+        "and source data have not been rewritten."
+    )
+
+
 def _validate_journal_sampling_implementation_tree(
     implementation_root: Path,
     assurance_root: Path,
@@ -1589,8 +1654,8 @@ def _run_journal_sampling_replay(
 ) -> dict[str, Any]:
     """Run the receipted upstream replay CLI in an isolated interpreter."""
 
-    component_root = _journal_sampling_component_root()
-    replay_script = component_root / "scripts" / "replay_normalization.py"
+    replay_roots = _journal_sampling_replay_roots(envelope)
+    component_root = replay_roots["implementation"]
     normalized_resolved = normalized_path.expanduser().resolve(strict=True)
     diagnostics_context = diagnostics.get("client_engagement")
     if (
@@ -1654,6 +1719,32 @@ def _run_journal_sampling_replay(
         prefix="check-entries-journal-replay-"
     ) as temporary_name:
         temporary_root = Path(temporary_name)
+        # Execute only the receipted historical boundary in a private snapshot.
+        # No unrelated old product launcher/reporting code is imported, and
+        # collection of an idle runtime package cannot change the running copy.
+        replay_component = temporary_root / "journal-sampling"
+        snapshot_roots = {
+            "implementation": replay_component,
+            "assurance_implementation": replay_component
+            / "vendor/modules/vera_assurance",
+            "pdf_implementation": replay_component / "vendor/modules/vera_journal_pdf",
+        }
+        for receipt in envelope["artifact_receipts"]:
+            if receipt["role"] != "implementation":
+                continue
+            payload = _stable_regular_bytes(
+                replay_roots[receipt["root_id"]] / receipt["path"],
+                label="Historical replay implementation",
+                maximum_bytes=10 * 1024 * 1024,
+            )
+            if not _bytes_match_receipt(payload, receipt):
+                raise ValueError(
+                    "Historical replay implementation changed during capture."
+                )
+            target = snapshot_roots[receipt["root_id"]] / receipt["path"]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(payload)
+        replay_script = replay_component / "scripts/replay_normalization.py"
         receipt_path = temporary_root / "normalization_replay.json"
         try:
             # Exact receipted CLI argv; no shell or caller-controlled executable.
@@ -1672,7 +1763,7 @@ def _run_journal_sampling_replay(
                     str(client_engagement_path),
                     "--read-only-upstream",
                 ],
-                cwd=component_root,
+                cwd=replay_component,
                 capture_output=True,
                 text=True,
                 check=False,
@@ -1698,6 +1789,13 @@ def _run_journal_sampling_replay(
             label="Journal Sampling replay receipt",
             maximum_bytes=1024 * 1024,
         )
+        # Detect changed retained code during this read-only verification.
+        _validate_journal_sampling_implementation_tree(
+            component_root, replay_roots["assurance_implementation"]
+        )
+        for receipt in envelope["artifact_receipts"]:
+            if receipt["role"] == "implementation":
+                validate_artifact_receipt(replay_roots, receipt)
     try:
         replay = json.loads(payload_bytes.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -1742,13 +1840,11 @@ def _validate_upstream_assurance(
         diagnostics.get("reviewed_decisions"),
         label="reviewed_decisions",
     )
+    envelope_payload = read_json(envelope_path)
     upstream_roots = {
         "source": source_root,
         "normalization": normalization_root,
-        "implementation": _journal_sampling_component_root(),
-        "assurance_implementation": implementation_artifact_roots()[
-            "assurance_implementation"
-        ],
+        **_journal_sampling_replay_roots(envelope_payload),
     }
     upstream_roots["pdf_implementation"] = (
         upstream_roots["assurance_implementation"].parent / "vera_journal_pdf"
@@ -1758,7 +1854,7 @@ def _validate_upstream_assurance(
         upstream_roots["assurance_implementation"],
     )
     envelope = validate_assurance_envelope(
-        read_json(envelope_path),
+        envelope_payload,
         artifact_roots=upstream_roots,
     )
     if (

@@ -24,7 +24,7 @@
       {
         "id": "bounded-entry-and-support-structure",
         "purpose": "Understand the prepared sample and selected support batch before deterministic checks",
-        "content": "User instructions; the selected Journal Sampling handoff and support batch; and inspection.json. The inspection artifact can expose the first 20 prepared rows from the complete normalized population with prepared-entry and qualification IDs, journal fields and source locators; metadata for every selected PDF including filename, path, support and qualification IDs, capture hash, extractability, text length and error; and one structured record for every parsed FatturaPA document including source name, document type and polarity, invoice number and date, total and currency, supplier and customer names and tax IDs. The complete normalized population is replayed locally for qualification and one-to-one sample closure, the selected support batch is parsed locally in full, and matching is performed only for sampled entries. A professional may direct the selected runtime to open additional exact evidence when structure or sufficiency cannot be resolved; the workflow does not claim that source files are anonymized.",
+        "content": "User instructions; the selected Journal Sampling handoff and support batch; and inspection.json. The inspection artifact can expose the first 20 prepared rows from the complete normalized population with prepared-entry and qualification IDs, journal fields and source locators; metadata for every selected PDF including filename, path, support and qualification IDs, capture hash, extractability, text length and error; and one structured record for every parsed FatturaPA document including source name, document type and polarity, invoice number and date, total and currency, supplier and customer names and tax IDs. The complete normalized population is replayed locally for qualification and one-to-one sample closure, the selected support batch is parsed locally in full, and matching is performed only for sampled entries. A professional may direct the selected runtime to open additional exact evidence when structure or sufficiency cannot be resolved; the workflow does not claim that source files are anonymized. Read-only upstream verification resolves the exact receipted implementation from retained local runtime packages and copies only that verified boundary into a private temporary replay directory. Historical source data, recipes, normalized bytes and receipts remain unchanged; retained code is not used to start new workflow work. This adds no model payload or external recipient.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork"
@@ -173,7 +173,7 @@
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f506110f1da213b1c97b8662022005352493f03cf1085f0923296d8ab518a3e7"
+    "source_fingerprint": "24f128fa1e76fce10f1ece003e50b747019e347f49d4d34541aa1139b009de92"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

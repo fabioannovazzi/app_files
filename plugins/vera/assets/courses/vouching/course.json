@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "466a716539f976c7b50cdf894a0198107d6d055f1a0e193769d8f973341a5571"
+      "sha256": "cff03e60d5615b11bdf992f9aa35fa8e8c9e57c267ca08728febf5b52d8ada55"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",

@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "6acfb1916d601f08add09bc1a6ebdb461bdd3f6d72cebf4a2a1ede83f4a32df3",
+      "sha256": "7a4fe1cd15ec821659ad44e8d50239b077987844244c873a55215df8cf0b9d9b",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
         "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
       },
-      "source_sha256": "05a0be207582e89f580cc617a5abfd2dc126577e8c88b295d21cf839bd3bcfe9"
+      "source_sha256": "2efdba68377bcc67b2c9eebd0f4422e6182be9a9be7116e7840d6d2602f9c8cd"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
@@ -62,7 +62,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "fb040b35e22df16346566d571e2cb38b5fcfffd71f7dc9f7b64eb30e3fd99be9",
+      "sha256": "04025d6c4ef7f3ff19c63b6fe8720a3c354da4626e6a9d58a2555a45a0ac01ae",
       "languages": [
         "it",
         "en",
@@ -87,7 +87,7 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "6c01ebe24b6c5cb987d828c86548dc676505b2ce46036075883615a187304e96"
+      "source_sha256": "e2f7b7e58444474502bcb96d4952401ae0c0e310d8f0485b33099168fdfa266a"
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
