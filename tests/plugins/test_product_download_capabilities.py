@@ -23,6 +23,12 @@ __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.fixture(autouse=True)
+def packaged_archive_session(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    """Share an explicit synthetic session between fixtures and CLI subprocesses."""
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", str(tmp_path))
+
+
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 @pytest.mark.parametrize("surface", ["download", "upload"])
 def test_package_preserves_source_mcp_capabilities(product, surface):
