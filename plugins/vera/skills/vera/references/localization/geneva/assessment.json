@@ -2432,7 +2432,7 @@
     "scope": "Manifest version and Claude listing metadata only. Exact skill entrypoint bytes are unchanged; existing jurisdiction judgments retained."
   },
   "shared_ui_theme_release_binding_20261029": {
-    "version": "0.1.524",
+    "version": "0.1.523",
     "reviewed_at": "2026-10-29",
     "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
     "scope": "Shared offline workflow CSS only. Exact skill entrypoints and existing jurisdiction judgments are unchanged. No new jurisdiction, installed-session or professional acceptance is asserted."
@@ -2442,5 +2442,11 @@
     "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
     "scope": "Canonical manifest refresh for the historical read-only sampling replay and separate post-closure delivery measurement. All 55 skill entrypoints are byte-identical to the recorded catalogue. Existing jurisdiction judgments and professional acceptance limits are unchanged; source and synthetic checks do not establish Geneva or installed-host acceptance.",
     "version": "0.1.525"
+  },
+  "clara_lucia_neutral_ui_release_binding_20261029": {
+    "version": "0.1.524",
+    "reviewed_at": "2026-10-29",
+    "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
+    "scope": "Canonical manifest patch version and shared workflow presentation metadata only. All55 exact skill entrypoint IDs and bytes match the preceding release; all jurisdiction assessment rows are unchanged. No new Geneva, installed-host or professional acceptance is asserted."
   }
 }
