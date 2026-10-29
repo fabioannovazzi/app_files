@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "apertura-pratica",
-  "course_sha256": "2efdba68377bcc67b2c9eebd0f4422e6182be9a9be7116e7840d6d2602f9c8cd",
+  "course_sha256": "c557b708e739e16d0e1ec3cfae5ec4f91d4abf1d39ea994fb7061535a96ed5fa",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.894710+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -856,5 +856,16 @@
     "current_course_sha256": "2efdba68377bcc67b2c9eebd0f4422e6182be9a9be7116e7840d6d2602f9c8cd",
     "authored_content_unchanged": true,
     "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
+  },
+  "durable_sampling_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "997c69d0f49368a81ecc81acf932b660d40c6647",
+    "previous_course_sha256": "2efdba68377bcc67b2c9eebd0f4422e6182be9a9be7116e7840d6d2602f9c8cd",
+    "current_course_sha256": "c557b708e739e16d0e1ec3cfae5ec4f91d4abf1d39ea994fb7061535a96ed5fa",
+    "authored_content_unchanged": true,
+    "source_review": "Compared complete compiled course objects: only source bindings change. Runtime collection now preserves index-verified Journal Sampling module bytes for read-only historical replay outside executable-release GC; source and code tampering remain rejected. Vouching instructions place agent-reviewed row/document/direction bindings before comparison. No course text, exercise, input, checkpoint or professional conclusion changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial identities, dates and artifact reviews remain historical. New CI on these course digests is required; no new learner, installed-host or professional acceptance claimed."
   }
 }

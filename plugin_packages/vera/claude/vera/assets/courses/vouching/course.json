@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "329b91ace50947702b37d0b926b7fd3fe505ad00b4d0c4ff4f68a37768ad03a0"
+      "sha256": "961eeb8bfa188d3dd45e65415a23e649864e73e4fec5b6c8dcf9a3486bea580d"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
-      "sha256": "dca6a5808c13b558db5ffe24f4c5664e14b1608d0c0b3080b3e5f3cc6d16d3bd"
+      "sha256": "688cb5098cb32b2fd064a4e6748bc886c3904cdb772c6f43655431df9c89a15f"
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
@@ -658,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "de75f30233fea445787b2ae97332d50a4c783c03843403d886e945a1b2120ef1"
+  "canonical_course_sha256": "ac257951864c4399dd2c7e20156636d34c3a18df33dee028632e78f0c42dff43"
 }

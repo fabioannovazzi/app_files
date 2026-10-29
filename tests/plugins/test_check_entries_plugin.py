@@ -324,7 +324,9 @@ def load_apply_review_edits() -> Any:
     return module
 
 
-def _retained_sampling_package(store: Path, *, new_theme: bool) -> Path:
+def _retained_sampling_package(
+    store: Path, *, new_theme: bool, theme_revision: int = 1
+) -> Path:
     """Build a retained runtime tree whose owned bytes can be replayed."""
     stage = store / ("new" if new_theme else "historical")
     component = stage / "modules/journal-sampling"
@@ -346,7 +348,10 @@ def _retained_sampling_package(store: Path, *, new_theme: bool) -> Path:
     )
     if new_theme:
         widget = component / "assets/journal-sampling-review-widget.html"
-        widget.write_bytes(widget.read_bytes() + b"\n<!-- updated theme -->\n")
+        widget.write_bytes(
+            widget.read_bytes()
+            + f"\n<!-- updated theme {theme_revision} -->\n".encode()
+        )
     files = {
         path.relative_to(stage)
         .as_posix(): hashlib.sha256(path.read_bytes())
@@ -403,6 +408,85 @@ def test_new_theme_replays_exact_retained_upstream_without_rewriting_history(
     else:
         with pytest.raises(ValueError):
             core.run_entry_checks(normalized, support, output)
+
+    assert _tree_snapshot(normalized.parent) == before
+
+
+@pytest.mark.parametrize("language", ["it", "fr"])
+@pytest.mark.parametrize("fault", [None, "changed_archive", "changed_source"])
+def test_sampling_handoff_survives_restarts_and_release_collection(
+    tmp_path: Path, monkeypatch: Any, language: str, fault: str | None
+) -> None:
+    normalized = _qualified_journal(
+        tmp_path / "source",
+        [{"date": "2025-01-02", "movement": "M-1", "debit": "100.00"}],
+    )
+    runtime = tmp_path / "runtime"
+    historical = _retained_sampling_package(runtime / "code", new_theme=False)
+    current = _retained_sampling_package(runtime / "code", new_theme=True)
+    (runtime / "code").chmod(0o700)
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(runtime))
+    for component, order in ((historical, 1), (current, 2)):
+        package = component.parents[1]
+        info = package.stat()
+        record = package.parent / f"{package.name}.json"
+        record.write_text(json.dumps({"identity": [info.st_dev, info.st_ino]}))
+        os.utime(record, (order, order))
+    collector = [
+        sys.executable,
+        "-I",
+        "-B",
+        "-c",
+        "import runpy,sys; runpy.run_path(sys.argv[1])"
+        "['collect_execution_store'](keep_idle=1)",
+        str(ROOT / "plugins/vera/scripts/verified_execution.py"),
+    ]
+    subprocess.run(collector, check=True, capture_output=True)
+    newer = _retained_sampling_package(
+        runtime / "code", new_theme=True, theme_revision=2
+    )
+    subprocess.run(collector, check=True, capture_output=True)
+    assert not historical.exists()
+    assert not current.exists()
+    archived = runtime / "journal-sampling-replay" / historical.parents[1].name
+    assert not (archived / "scripts/archive_projection.py").exists()
+    core = load_core()
+    monkeypatch.setattr(core, "_journal_sampling_component_root", lambda: newer)
+    monkeypatch.setattr(
+        core,
+        "implementation_artifact_roots",
+        lambda: {
+            "implementation": ROOT / "plugins/check-entries",
+            "assurance_implementation": newer / "vendor/modules/vera_assurance",
+        },
+    )
+    if fault == "changed_archive":
+        changed = archived / "modules/journal-sampling/scripts/journal_sampling_core.py"
+        changed.chmod(0o600)
+        changed.write_text("raise RuntimeError('altered history must not execute')\n")
+    elif fault == "changed_source":
+        changed = _qualified_journal_source(normalized)
+        changed.write_bytes(changed.read_bytes() + b"changed")
+    before = _tree_snapshot(normalized.parent)
+    support = tmp_path / "support"
+    support.mkdir()
+
+    if fault is None:
+        result = core.run_entry_checks(
+            normalized, support, tmp_path / "checks", language=language
+        )
+        assert result.frame.to_dicts()[0]["amount_signed"] == "100"
+        assert result.frame.to_dicts()[0]["status"] == "missing_support"
+        assert result.frame.to_dicts()[0]["professional_conclusion"] == "pending_review"
+        assert (
+            result.audit["source_preparation"]["upstream_assurance"][
+                "normalization_replay"
+            ]["status"]
+            == "passed"
+        )
+    else:
+        with pytest.raises(ValueError):
+            core.run_entry_checks(normalized, support, tmp_path / "checks")
 
     assert _tree_snapshot(normalized.parent) == before
 
