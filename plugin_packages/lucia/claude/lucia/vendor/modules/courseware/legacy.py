@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any
 
 from .access import verify_course_access
+from .theme import theme_lesson
 
 __all__ = ["CourseError", "CourseLibrary"]
 
@@ -190,7 +191,13 @@ class CourseLibrary:
         specimen = self._specimen(course, copy, ui, language)
         (destination / "example.html").write_text(specimen, encoding="utf-8")
         (destination / "course.html").write_text(
-            self._page(course, copy, ui, language, files), encoding="utf-8"
+            theme_lesson(
+                self._page(course, copy, ui, language, files),
+                self.product,
+                self.root,
+                destination,
+            ),
+            encoding="utf-8",
         )
         (destination / "teacher.md").write_text(
             self._teacher(course, copy, ui), encoding="utf-8"

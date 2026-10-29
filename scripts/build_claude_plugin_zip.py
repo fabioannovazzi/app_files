@@ -3314,6 +3314,7 @@ def _lucia_package_entries(
             "constraints-shared-macos-py312.txt",
         }:
             entries[name] = content
+    entries["ui/theme.css"] = source_entries["ui/theme.css"]
     # The shared archive skill calls these helpers; ship the same canonical
     # bytes with the shared component instead of dangling Vera-only references.
     for helper in ("studio_archive_session.py", "studio_archive_windows.ps1"):

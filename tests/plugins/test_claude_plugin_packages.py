@@ -2073,3 +2073,16 @@ def test_directory_listing_metadata_and_icon_survive_packaging(product, language
     )
     assert manifest["author"]["name"] == "Mparanza"
     assert manifest["keywords"]
+
+
+def test_lucia_cowork_distribution_keeps_canonical_lesson_theme_and_report_styles():
+    archive_path = ROOT / "plugin_packages/lucia/lucia-claude-plugin.zip"
+    theme = (ROOT / "plugins/_shared/ui/vera-theme.css").read_bytes()
+    report_css = (
+        ROOT / "plugins/_shared/vendor/modules/courseware/assets/course.css"
+    ).read_bytes()
+
+    with ZipFile(archive_path) as archive:
+        assert archive.read("ui/theme.css") == theme
+        assert archive.read("vendor/modules/courseware/assets/course.css") == report_css
+        assert b"theme_lesson" in archive.read("vendor/modules/courseware/library.py")

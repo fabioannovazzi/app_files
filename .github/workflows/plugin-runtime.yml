@@ -389,6 +389,11 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vouching_mcp_ui.py
+      - name: Verify historical upstream receipts across plugin updates
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_check_entries_plugin.py
+          -k "new_theme_replays or unsafe_upstream_implementation or changed_original_journal or fresh_upstream_replay"
       - name: Verify Journal Sampling to Vouching handoff
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

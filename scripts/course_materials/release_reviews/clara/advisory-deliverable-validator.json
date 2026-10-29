@@ -87,7 +87,7 @@
     "verified_at": "2026-09-27T20:38:47.818370+00:00",
     "workflow": "advisory-deliverable-validator"
   },
-  "course_sha256": "90b7cd227c7ac579b58ec4eaaa00a991306be438ec3345d6ccd80ccc800fab87",
+  "course_sha256": "a786f829394970ef0c8f79e8b03ab2624771c5f3d219f126f24dd651db1e0298",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -789,13 +789,27 @@
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
   },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "94ffc15ae866ebeda9c4cc367bb8842af5642704d88aa99178d89417f6bf1000",
+    "current_course_sha256": "31b311d0eac763b7342b31e25c9b2dd409898032c8ce0a60dfd7c9736af827df",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
   "test04_historical_replay_source_review_20261029": {
     "reviewer": "Codex /root - differential source review",
     "reviewed_at": "2026-10-29",
-    "baseline_commit": "HEAD",
-    "previous_course_sha256": "94ffc15ae866ebeda9c4cc367bb8842af5642704d88aa99178d89417f6bf1000",
-    "current_course_sha256": "90b7cd227c7ac579b58ec4eaaa00a991306be438ec3345d6ccd80ccc800fab87",
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "previous_course_sha256": "31b311d0eac763b7342b31e25c9b2dd409898032c8ce0a60dfd7c9736af827df",
+    "current_course_sha256": "a786f829394970ef0c8f79e8b03ab2624771c5f3d219f126f24dd651db1e0298",
     "authored_content_unchanged": true,
-    "scope": "Every authored course field equals the exact previously reviewed version. Only governed source hashes changed. Read-only historical assurance replay and separate local post-closure delivery measurement were reviewed. Original editorial and historical artifact reviews remain intact. Current teaching CI remains required; no new learner, installed-host or visual acceptance is asserted."
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
   }
 }

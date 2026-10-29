@@ -123,7 +123,7 @@
     },
     "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
   },
-  "course_sha256": "79983e6bc655d6d7ea73f0bb4e447bb8071cd60455d31c58996f0e024035851d",
+  "course_sha256": "149afe2538168ffeebf6dcbcc6af1bb6a2b218e87b7caa848782a3f8d59ed5a8",
   "dated_calculation_review": {
     "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
     "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
@@ -1271,5 +1271,19 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "79983e6bc655d6d7ea73f0bb4e447bb8071cd60455d31c58996f0e024035851d",
+    "current_course_sha256": "149afe2538168ffeebf6dcbcc6af1bb6a2b218e87b7caa848782a3f8d59ed5a8",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
   }
 }
