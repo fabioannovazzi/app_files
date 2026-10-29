@@ -62,6 +62,9 @@ LOGGER = logging.getLogger(__name__)
 _MEDIA_LOG_DIRECTORY: ContextVar[Path | None] = ContextVar(
     "media_log_directory", default=None
 )
+_FRAME_DIMENSIONS: ContextVar[tuple[int, int] | None] = ContextVar(
+    "frame_dimensions", default=None
+)
 
 PLUGIN_ROOT = Path(__file__).resolve().parents[3]
 if str(PLUGIN_ROOT / "scripts") not in sys.path:
@@ -111,6 +114,13 @@ MAX_IMAGE_PIXELS = 100_000_000
 MAX_AUDIO_BYTES = 100 * 1024 * 1024
 MAX_VOICE_BUNDLE_BYTES = 500 * 1024 * 1024
 MAX_NARRATION_CHARACTERS = 2500
+MAX_ON_SCREEN_TEXT_CHARACTERS = 180
+DEFAULT_MUSIC_VOLUME = 0.12
+MIN_MUSIC_VOLUME = 0.02
+MAX_MUSIC_VOLUME = 0.35
+VIDEO_TYPES = {"research", "real_estate_promotion"}
+VIDEO_FORMATS = {"landscape_16_9", "vertical_9_16", "square_1_1"}
+DEFAULT_VIDEO_FORMAT = "landscape_16_9"
 MOTION_VALUES = {
     "zoom_in",
     "zoom_out",
@@ -236,6 +246,31 @@ def _inspect_image(path_value: object, *, field: str) -> dict[str, Any]:
     }
 
 
+def _inspect_audio(path_value: object, *, field: str) -> dict[str, Any]:
+    """Validate and fingerprint one user-supplied local audio file."""
+
+    if not isinstance(path_value, str) or not path_value.strip():
+        raise ValueError(f"{field} must name a local audio file")
+    candidate = Path(path_value).expanduser()
+    if candidate.is_symlink():
+        raise ValueError(f"{field} must not be a symbolic link")
+    path = candidate.resolve()
+    if not path.is_file():
+        raise ValueError(f"{field} does not exist: {path}")
+    if path.suffix.lower() not in AUDIO_SUFFIXES:
+        supported = ", ".join(sorted(AUDIO_SUFFIXES))
+        raise ValueError(f"{field} must use a supported audio type: {supported}")
+    size = path.stat().st_size
+    if size <= 0 or size > MAX_AUDIO_BYTES:
+        raise ValueError(f"{field} has an unsupported size: {size} bytes")
+    return {
+        "path": str(path),
+        "sha256": _sha256(path),
+        "size_bytes": size,
+        "format": path.suffix.lower().lstrip("."),
+    }
+
+
 def _validate_source_basis(value: object, *, scene_id: str) -> list[dict[str, str]]:
     """Validate explicit source-basis records without judging their meaning."""
 
@@ -266,18 +301,69 @@ def _validate_source_basis(value: object, *, scene_id: str) -> list[dict[str, st
 
 def _canonicalize_plan(
     raw: Mapping[str, Any],
-) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+) -> tuple[dict[str, Any], list[dict[str, Any]], list[dict[str, Any]]]:
     """Validate one scene plan and return canonical content plus visual inventory."""
 
-    if set(raw) != {"schema_version", "title", "language", "scenes"}:
+    required_fields = {"schema_version", "title", "language", "scenes"}
+    extended_fields = {
+        "video_type",
+        "format",
+        "background_music",
+        "background_music_volume",
+        "music_rights_confirmed",
+    }
+    if (
+        not required_fields <= set(raw)
+        or not set(raw) <= required_fields | extended_fields
+    ):
         raise ValueError("Scene plan has unexpected or missing top-level fields")
-    if raw["schema_version"] != 1:
-        raise ValueError("scene_plan.schema_version must be 1")
+    schema_version = raw["schema_version"]
+    if schema_version not in {1, 2}:
+        raise ValueError("scene_plan.schema_version must be 1 or 2")
+    if schema_version == 1 and set(raw) & extended_fields:
+        raise ValueError("Promotional video fields require scene_plan.schema_version 2")
+    if schema_version == 2 and not {"video_type", "format"} <= set(raw):
+        raise ValueError("Scene plan version 2 requires video_type and format")
     language = raw["language"]
     if language not in SUPPORTED_LANGUAGES:
         supported = ", ".join(sorted(SUPPORTED_LANGUAGES))
         raise ValueError(f"scene_plan.language must be one of: {supported}")
     title = _nonempty_text(raw["title"], field="title", maximum=180)
+    video_type = raw.get("video_type", "research")
+    if video_type not in VIDEO_TYPES:
+        supported = ", ".join(sorted(VIDEO_TYPES))
+        raise ValueError(f"scene_plan.video_type must be one of: {supported}")
+    video_format = raw.get("format", DEFAULT_VIDEO_FORMAT)
+    if video_format not in VIDEO_FORMATS:
+        supported = ", ".join(sorted(VIDEO_FORMATS))
+        raise ValueError(f"scene_plan.format must be one of: {supported}")
+    music_value = raw.get("background_music")
+    music_volume_value = raw.get("background_music_volume")
+    rights_value = raw.get("music_rights_confirmed")
+    audio_inventory: list[dict[str, Any]] = []
+    music: dict[str, Any] | None = None
+    if music_value is not None:
+        if rights_value is not True:
+            raise ValueError("background_music requires music_rights_confirmed=true")
+        music = _inspect_audio(music_value, field="background_music")
+        audio_inventory.append({"role": "background_music", **music})
+        if music_volume_value is None:
+            music_volume = DEFAULT_MUSIC_VOLUME
+        elif not isinstance(music_volume_value, (int, float)) or isinstance(
+            music_volume_value, bool
+        ):
+            raise ValueError("background_music_volume must be a number")
+        else:
+            music_volume = float(music_volume_value)
+        if not MIN_MUSIC_VOLUME <= music_volume <= MAX_MUSIC_VOLUME:
+            raise ValueError(
+                "background_music_volume must be between "
+                f"{MIN_MUSIC_VOLUME} and {MAX_MUSIC_VOLUME}"
+            )
+    elif music_volume_value is not None or rights_value is not None:
+        raise ValueError(
+            "background_music_volume and music_rights_confirmed require background_music"
+        )
     scenes_value = raw["scenes"]
     if not isinstance(scenes_value, list) or not 2 <= len(scenes_value) <= MAX_SCENES:
         raise ValueError(f"Scene plan requires 2-{MAX_SCENES} scenes")
@@ -290,6 +376,7 @@ def _canonicalize_plan(
         "image",
         "foreground_image",
         "narration",
+        "on_screen_text",
         "motion",
         "source_basis",
     }
@@ -298,6 +385,8 @@ def _canonicalize_plan(
             raise ValueError(f"Scene {index + 1} has unsupported fields")
         if not {"id", "image", "narration", "source_basis"} <= set(value):
             raise ValueError(f"Scene {index + 1} is missing required fields")
+        if schema_version == 1 and "on_screen_text" in value:
+            raise ValueError("on_screen_text requires scene_plan.schema_version 2")
         scene_id = _nonempty_text(value["id"], field="scene.id", maximum=64)
         if not SCENE_ID_PATTERN.fullmatch(scene_id):
             raise ValueError(f"Invalid scene id: {scene_id!r}")
@@ -356,6 +445,12 @@ def _canonicalize_plan(
                 scene_id=scene_id,
             ),
         }
+        if "on_screen_text" in value:
+            canonical_scene["on_screen_text"] = _nonempty_text(
+                value["on_screen_text"],
+                field=f"Scene {scene_id} on_screen_text",
+                maximum=MAX_ON_SCREEN_TEXT_CHARACTERS,
+            )
         if foreground is not None:
             canonical_scene["foreground_image"] = foreground["path"]
         canonical_scenes.append(canonical_scene)
@@ -374,15 +469,20 @@ def _canonicalize_plan(
                     **foreground,
                 }
             )
-    return (
-        {
-            "schema_version": 1,
-            "title": title,
-            "language": language,
-            "scenes": canonical_scenes,
-        },
-        inventory,
-    )
+    canonical_plan: dict[str, Any] = {
+        "schema_version": schema_version,
+        "title": title,
+        "language": language,
+        "scenes": canonical_scenes,
+    }
+    if schema_version == 2:
+        canonical_plan["video_type"] = video_type
+        canonical_plan["format"] = video_format
+        if music is not None:
+            canonical_plan["background_music"] = music["path"]
+            canonical_plan["background_music_volume"] = music_volume
+            canonical_plan["music_rights_confirmed"] = True
+    return canonical_plan, inventory, audio_inventory
 
 
 def _narration_markdown(plan: Mapping[str, Any]) -> str:
@@ -394,6 +494,8 @@ def _narration_markdown(plan: Mapping[str, Any]) -> str:
         "",
         f"- Narration language: {SUPPORTED_LANGUAGES[language]} (`{language}`)",
         f"- On-screen voice disclosure: {VOICE_DISCLOSURES[language]}",
+        f"- Video type: `{plan.get('video_type', 'research')}`",
+        f"- Format: `{plan.get('format', DEFAULT_VIDEO_FORMAT)}`",
         "",
         "## Narration script",
         "",
@@ -407,6 +509,8 @@ def _narration_markdown(plan: Mapping[str, Any]) -> str:
                 "",
             ]
         )
+        if "on_screen_text" in scene:
+            lines.extend([f"On-screen text: {scene['on_screen_text']}", ""])
     return "\n".join(lines)
 
 
@@ -438,6 +542,17 @@ def _review_markdown(plan: Mapping[str, Any]) -> str:
     lines = [
         f"# Research video review — {plan['title']}",
         "",
+        f"- Video type: `{plan.get('video_type', 'research')}`",
+        f"- Format: `{plan.get('format', DEFAULT_VIDEO_FORMAT)}`",
+        (
+            "- Background music: `none`"
+            if "background_music" not in plan
+            else (
+                f"- Background music: `{Path(plan['background_music']).name}` at "
+                f"volume `{plan['background_music_volume']:.2f}`; usage rights confirmed"
+            )
+        ),
+        "",
         "Review every narration scene against its image and source basis before approval.",
         (
             "After approval, upload the generated Mparanza voice request to the "
@@ -465,6 +580,7 @@ def _review_markdown(plan: Mapping[str, Any]) -> str:
                 f"- Image: `{Path(scene['image']).name}`",
                 f"- Motion: `{scene['motion']}`",
                 f"- Narration: {scene['narration']}",
+                f"- On-screen text: {scene.get('on_screen_text', 'none')}",
                 "- Source basis:",
             ]
         )
@@ -482,7 +598,7 @@ def prepare_run(scene_plan_path: Path, output_dir: Path) -> dict[str, Any]:
     if (output_root / "narration_approval.json").exists():
         raise ValueError("Use a fresh output directory for a changed approved plan")
     raw = _read_json(scene_plan_path.expanduser().resolve())
-    plan, inventory = _canonicalize_plan(raw)
+    plan, inventory, audio_inventory = _canonicalize_plan(raw)
     plan_hash = _json_sha256(plan)
     _write_json(output_root / "scene_plan.json", plan)
     (output_root / "narration_script.md").write_text(
@@ -500,9 +616,12 @@ def prepare_run(scene_plan_path: Path, output_dir: Path) -> dict[str, Any]:
         "created_at": _utc_now(),
         "title": plan["title"],
         "language": plan["language"],
+        "video_type": plan.get("video_type", "research"),
+        "format": plan.get("format", DEFAULT_VIDEO_FORMAT),
         "scene_count": len(plan["scenes"]),
         "scene_plan_sha256": plan_hash,
         "visual_inventory": inventory,
+        "audio_inventory": audio_inventory,
         "voice": {
             "provider": "Mparanza",
             "upstream_provider": HOSTED_VOICE_PROVIDER,
@@ -513,7 +632,9 @@ def prepare_run(scene_plan_path: Path, output_dir: Path) -> dict[str, Any]:
             "disclosure_placement": "visible footer on every scene",
         },
         "data_posture": {
-            "local_files_read": [item["path"] for item in inventory],
+            "local_files_read": [
+                item["path"] for item in [*inventory, *audio_inventory]
+            ],
             "mparanza_hosted_processing": (
                 "After approval, exact narration and binding metadata are sent to "
                 "the authenticated Mparanza service and OpenAI"
@@ -521,6 +642,7 @@ def prepare_run(scene_plan_path: Path, output_dir: Path) -> dict[str, Any]:
             "boundary_beyond_local_workspace": "Mparanza and OpenAI",
             "user_api_key_required": False,
             "images_uploaded": False,
+            "background_music_uploaded": False,
             "source_basis_uploaded": False,
         },
         "execution_trace": [
@@ -545,7 +667,7 @@ def prepare_run(scene_plan_path: Path, output_dir: Path) -> dict[str, Any]:
 
 
 def _verify_visual_inventory(run_dir: Path, intake: Mapping[str, Any]) -> None:
-    """Fail when an approved visual changed or disappeared."""
+    """Fail when approved local visual or music bytes changed or disappeared."""
 
     for item in intake["visual_inventory"]:
         path = Path(item["path"])
@@ -553,6 +675,12 @@ def _verify_visual_inventory(run_dir: Path, intake: Mapping[str, Any]) -> None:
             raise ValueError(f"Visual is unavailable or no longer ordinary: {path}")
         if _sha256(path) != item["sha256"]:
             raise ValueError(f"Visual changed after preparation: {path.name}")
+    for item in intake.get("audio_inventory", []):
+        path = Path(item["path"])
+        if not path.is_file() or path.is_symlink():
+            raise ValueError(f"Audio is unavailable or no longer ordinary: {path}")
+        if _sha256(path) != item["sha256"]:
+            raise ValueError(f"Audio changed after preparation: {path.name}")
     plan = _read_json(run_dir / "scene_plan.json")
     if _json_sha256(plan) != intake["scene_plan_sha256"]:
         raise ValueError("scene_plan.json changed after preparation")
@@ -586,8 +714,8 @@ def approve_run(
             maximum=120,
         ),
         "scope": (
-            "exact narration, hosted voice generation, scene order, motion, "
-            "source basis, and visual bytes"
+            "exact narration, hosted voice generation, scene order, format, motion, "
+            "on-screen text, source basis, visual bytes, and local music bytes and mix"
         ),
         "scene_plan_sha256": intake["scene_plan_sha256"],
         "narration_script_sha256": _sha256(narration_path),
@@ -1051,40 +1179,88 @@ def _verify_hosted_voice(
     return manifest, paths, durations
 
 
+def _frame_dimensions(video_format: str) -> tuple[int, int]:
+    """Return render dimensions for one supported aspect-ratio format."""
+
+    if video_format == "landscape_16_9":
+        return FRAME_WIDTH, FRAME_HEIGHT
+    if video_format == "vertical_9_16":
+        return FRAME_HEIGHT, FRAME_WIDTH
+    if video_format == "square_1_1":
+        return FRAME_HEIGHT, FRAME_HEIGHT
+    raise ValueError(f"Unsupported video format: {video_format!r}")
+
+
+def _current_frame_dimensions() -> tuple[int, int]:
+    """Return dimensions bound to the current render attempt."""
+
+    return _FRAME_DIMENSIONS.get() or (FRAME_WIDTH, FRAME_HEIGHT)
+
+
 def _fit_canvas(
     source: Path,
     output: Path,
     *,
     transparent: bool,
     voice_disclosure: str | None = None,
+    on_screen_text: str | None = None,
 ) -> None:
-    """Fit an image on a safe 16:9 canvas without cropping source content."""
+    """Fit an image on the selected safe canvas without cropping source content."""
 
+    frame_width, frame_height = _current_frame_dimensions()
     with Image.open(source) as opened:
         image = opened.convert("RGBA")
-        margin = 0.86 if voice_disclosure and not transparent else 0.90
-        maximum = (round(FRAME_WIDTH * margin), round(FRAME_HEIGHT * margin))
+        has_overlay = (voice_disclosure or on_screen_text) and not transparent
+        margin = 0.84 if has_overlay else 0.90
+        maximum = (round(frame_width * margin), round(frame_height * margin))
         image.thumbnail(maximum, Image.Resampling.LANCZOS)
         background = (0, 0, 0, 0) if transparent else (250, 250, 248, 255)
-        canvas = Image.new("RGBA", (FRAME_WIDTH, FRAME_HEIGHT), background)
+        canvas = Image.new("RGBA", (frame_width, frame_height), background)
         position = (
-            (FRAME_WIDTH - image.width) // 2,
-            (FRAME_HEIGHT - image.height) // 2,
+            (frame_width - image.width) // 2,
+            (frame_height - image.height) // 2,
         )
         canvas.alpha_composite(image, dest=position)
+        if on_screen_text and not transparent:
+            draw = ImageDraw.Draw(canvas)
+            font_size = max(10, round(frame_height * 0.035))
+            font = ImageFont.load_default(size=font_size)
+            line_width = max(18, round(46 * frame_width / max(frame_height, 1)))
+            wrapped = "\n".join(textwrap.wrap(on_screen_text, width=line_width))
+            text_box = draw.multiline_textbbox((0, 0), wrapped, font=font, spacing=4)
+            text_width = text_box[2] - text_box[0]
+            text_height = text_box[3] - text_box[1]
+            padding_x = max(8, round(frame_width * 0.018))
+            padding_y = max(5, round(frame_height * 0.012))
+            left = max(8, round(frame_width * 0.05))
+            top = max(8, round(frame_height * 0.05))
+            right = min(frame_width - left, left + text_width + 2 * padding_x)
+            bottom = min(frame_height - top, top + text_height + 2 * padding_y)
+            draw.rounded_rectangle(
+                (left, top, right, bottom),
+                radius=max(4, padding_y),
+                fill=(0, 32, 96, 225),
+            )
+            draw.multiline_text(
+                (left + padding_x, top + padding_y - text_box[1]),
+                wrapped,
+                font=font,
+                fill=(255, 255, 255, 255),
+                spacing=4,
+            )
         if voice_disclosure and not transparent:
             draw = ImageDraw.Draw(canvas)
-            font_size = max(8, round(FRAME_HEIGHT * 0.019))
+            font_size = max(8, round(frame_height * 0.019))
             font = ImageFont.load_default(size=font_size)
             text_box = draw.textbbox((0, 0), voice_disclosure, font=font)
             text_width = text_box[2] - text_box[0]
             text_height = text_box[3] - text_box[1]
-            padding_x = max(3, round(FRAME_WIDTH * 0.004))
-            padding_y = max(1, round(FRAME_HEIGHT * 0.003))
+            padding_x = max(3, round(frame_width * 0.004))
+            padding_y = max(1, round(frame_height * 0.003))
             # The disclosure is part of the moving scene canvas. Keep it beyond
             # the maximum 3.5% pan/zoom crop so it stays wholly visible.
-            right = FRAME_WIDTH - max(8, round(FRAME_WIDTH * 0.05))
-            bottom = FRAME_HEIGHT - max(6, round(FRAME_HEIGHT * 0.05))
+            right = frame_width - max(8, round(frame_width * 0.05))
+            bottom = frame_height - max(6, round(frame_height * 0.05))
             left = right - text_width - 2 * padding_x
             top = bottom - text_height - 2 * padding_y
             draw.rounded_rectangle(
@@ -1108,8 +1284,9 @@ def _motion_filter(motion: str, frame_count: int) -> str:
 
     frames = max(frame_count, 1)
     denominator = max(frames - 1, 1)
+    frame_width, frame_height = _current_frame_dimensions()
     if motion == "static":
-        return f"scale={FRAME_WIDTH}:{FRAME_HEIGHT}:flags=lanczos,fps={FRAME_RATE},format=yuv420p"
+        return f"scale={frame_width}:{frame_height}:flags=lanczos,fps={FRAME_RATE},format=yuv420p"
     if motion == "zoom_in":
         zoom = "min(zoom+0.00035,1.035)"
         x = "iw/2-(iw/zoom/2)"
@@ -1124,7 +1301,7 @@ def _motion_filter(motion: str, frame_count: int) -> str:
         x = f"(iw-iw/zoom)*(on/{denominator})"
     return (
         f"zoompan=z='{zoom}':x='{x}':y='ih/2-(ih/zoom/2)':"
-        f"d={frames}:s={FRAME_WIDTH}x{FRAME_HEIGHT}:fps={FRAME_RATE},"
+        f"d={frames}:s={frame_width}x{frame_height}:fps={FRAME_RATE},"
         "format=yuv420p"
     )
 
@@ -1141,6 +1318,7 @@ def _render_scene_clip(
     """Render one silent H.264 scene with restrained motion."""
 
     frames = max(round(duration * FRAME_RATE), 1)
+    frame_width, frame_height = _current_frame_dimensions()
     command = [ffmpeg, "-y", "-v", "error", "-loop", "1", "-i", str(background)]
     if foreground is None:
         command.extend(["-vf", _motion_filter(motion, frames)])
@@ -1151,7 +1329,7 @@ def _render_scene_clip(
         )
         overlay = (
             f"[0:v]{background_filter}[bg];"
-            f"[1:v]scale={FRAME_WIDTH}:{FRAME_HEIGHT}:flags=lanczos,format=rgba[fg];"
+            f"[1:v]scale={frame_width}:{frame_height}:flags=lanczos,format=rgba[fg];"
             f"[bg][fg]overlay=x='4*sin(2*PI*t/{max(duration, 0.1):.6f})':"
             f"y='3*cos(2*PI*t/{max(duration, 0.1):.6f})':shortest=1,"
             "format=yuv420p[v]"
@@ -1240,8 +1418,11 @@ def _join_audio(
     scenes: Sequence[Path],
     output: Path,
     work_dir: Path,
+    *,
+    background_music: Path | None = None,
+    background_music_volume: float = DEFAULT_MUSIC_VOLUME,
 ) -> float:
-    """Join scene speech with bounded silence and normalize the final voice track."""
+    """Join narration and optional local background music into one normalized track."""
 
     silence_specs = [LEAD_SECONDS, INTER_SCENE_PAUSE_SECONDS, TAIL_SECONDS]
     silence_paths: list[Path] = []
@@ -1271,9 +1452,19 @@ def _join_audio(
         if index < len(scenes) - 1:
             inputs.append(silence_paths[1])
     inputs.append(silence_paths[2])
+    target_duration = (
+        LEAD_SECONDS
+        + TAIL_SECONDS
+        + sum(_wav_duration(path) for path in scenes)
+        + INTER_SCENE_PAUSE_SECONDS * (len(scenes) - 1)
+    )
     command: list[str] = [ffmpeg, "-y", "-v", "error"]
     for path in inputs:
         command.extend(["-i", str(path)])
+    music_input_index: int | None = None
+    if background_music is not None:
+        music_input_index = len(inputs)
+        command.extend(["-stream_loop", "-1", "-i", str(background_music)])
     filters: list[str] = []
     labels: list[str] = []
     for index in range(len(inputs)):
@@ -1283,10 +1474,31 @@ def _join_audio(
             f"[{index}:a]aresample=48000,aformat=sample_fmts=fltp:"
             f"channel_layouts=mono[{label}]"
         )
-    filters.append(
-        f"{''.join(labels)}concat=n={len(inputs)}:v=0:a=1,"
-        f"loudnorm=I={TARGET_LOUDNESS_LUFS}:TP=-1.5:LRA=11[aout]"
-    )
+    filters.append(f"{''.join(labels)}concat=n={len(inputs)}:v=0:a=1[voice_mono]")
+    if music_input_index is None:
+        filters.append(
+            f"[voice_mono]loudnorm=I={TARGET_LOUDNESS_LUFS}:TP=-1.5:LRA=11[aout]"
+        )
+    else:
+        fade_duration = min(1.0, max(target_duration / 4, 0.1))
+        fade_start = max(target_duration - fade_duration, 0.0)
+        filters.extend(
+            [
+                "[voice_mono]pan=stereo|c0=c0|c1=c0[voice]",
+                (
+                    f"[{music_input_index}:a]aresample=48000,"
+                    "aformat=sample_fmts=fltp:channel_layouts=stereo,"
+                    f"volume={background_music_volume:.6f},"
+                    f"atrim=duration={target_duration:.6f},asetpts=N/SR/TB,"
+                    f"afade=t=out:st={fade_start:.6f}:d={fade_duration:.6f}[music]"
+                ),
+                (
+                    "[voice][music]amix=inputs=2:duration=first:"
+                    "dropout_transition=0:normalize=0,"
+                    f"loudnorm=I={TARGET_LOUDNESS_LUFS}:TP=-1.5:LRA=11[aout]"
+                ),
+            ]
+        )
     command.extend(
         [
             "-filter_complex",
@@ -1305,12 +1517,7 @@ def _join_audio(
         ]
     )
     _run_media(command)
-    return (
-        LEAD_SECONDS
-        + TAIL_SECONDS
-        + sum(_wav_duration(path) for path in scenes)
-        + INTER_SCENE_PAUSE_SECONDS * (len(scenes) - 1)
-    )
+    return target_duration
 
 
 def _mux(ffmpeg: str, visual: Path, audio: Path, output: Path) -> None:
@@ -1381,6 +1588,7 @@ def _write_captions(
 
 def _validate_media(ffmpeg: str, video: Path) -> dict[str, Any]:
     """Decode the complete MP4 and report measured stream properties."""
+    frame_width, frame_height = _current_frame_dimensions()
     _run_media(
         [
             ffmpeg,
@@ -1452,7 +1660,7 @@ def _validate_media(ffmpeg: str, video: Path) -> dict[str, Any]:
     if (
         video_codec != "h264"
         or audio_codec != "aac"
-        or (width, height) != (FRAME_WIDTH, FRAME_HEIGHT)
+        or (width, height) != (frame_width, frame_height)
         or not math.isfinite(rate)
         or abs(rate - FRAME_RATE) > 0.01
         or not math.isfinite(duration)
@@ -1585,6 +1793,10 @@ def _verify_existing_render(run_dir: Path, report: dict[str, Any]) -> dict[str, 
 def render_run(run_dir: Path) -> dict[str, Any]:
     """Render with durable attempt state and retained failure artifacts."""
     root = run_dir.expanduser().resolve()
+    plan = _read_json(root / "scene_plan.json")
+    frame_token = _FRAME_DIMENSIONS.set(
+        _frame_dimensions(plan.get("format", DEFAULT_VIDEO_FORMAT))
+    )
     with media_attempt(root) as work:
         token = _MEDIA_LOG_DIRECTORY.set(work)
         try:
@@ -1593,6 +1805,7 @@ def render_run(run_dir: Path) -> dict[str, Any]:
             return result
         finally:
             _MEDIA_LOG_DIRECTORY.reset(token)
+            _FRAME_DIMENSIONS.reset(frame_token)
 
 
 def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
@@ -1623,6 +1836,7 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
                 "Use a fresh output directory for a different rendered plan"
             )
     ffmpeg = _resolve_ffmpeg()
+    frame_width, frame_height = _current_frame_dimensions()
 
     final_video = root / "research_video.mp4"
     final_poster = root / "poster.jpg"
@@ -1636,6 +1850,7 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
             canvas_path,
             transparent=False,
             voice_disclosure=intake["voice"]["disclosure"],
+            on_screen_text=scene.get("on_screen_text"),
         )
         canvas_paths.append(canvas_path)
         foreground_path: Path | None = None
@@ -1682,7 +1897,19 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
     visual = work / "visual.mp4"
     audio = work / "voice.m4a"
     _join_visuals(ffmpeg, clips, clip_durations, visual)
-    target_duration = _join_audio(ffmpeg, narration_paths, audio, work)
+    background_music = (
+        Path(plan["background_music"]) if "background_music" in plan else None
+    )
+    target_duration = _join_audio(
+        ffmpeg,
+        narration_paths,
+        audio,
+        work,
+        background_music=background_music,
+        background_music_volume=float(
+            plan.get("background_music_volume", DEFAULT_MUSIC_VOLUME)
+        ),
+    )
     rendered = work / "research_video.mp4"
     _mux(ffmpeg, visual, audio, rendered)
     media = _validate_media(ffmpeg, rendered)
@@ -1715,6 +1942,9 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
         "hosted_voice_manifest_sha256": _sha256(root / "hosted_voice_manifest.json"),
         "scene_count": len(plan["scenes"]),
         "language": plan["language"],
+        "video_type": plan.get("video_type", "research"),
+        "format": plan.get("format", DEFAULT_VIDEO_FORMAT),
+        "frame_dimensions": {"width": frame_width, "height": frame_height},
         "target_duration_seconds": round(target_duration, 3),
         "caption_validation": caption_validation,
         "scene_speech_durations_seconds": [
@@ -1735,6 +1965,14 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
             "disclosure": intake["voice"]["disclosure"],
             "disclosure_placement": "visible footer on every scene",
         },
+        "background_music": {
+            "included": background_music is not None,
+            "sha256": _sha256(background_music) if background_music else None,
+            "volume": (
+                float(plan["background_music_volume"]) if background_music else None
+            ),
+            "uploaded": False,
+        },
         "media": media,
         "requires_semantic_review": True,
         "requires_voice_content_review": True,
@@ -1752,6 +1990,7 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
                 str(root / "scene_plan.json"),
                 str(root / "narration_approval.json"),
                 str(root / "hosted_voice_manifest.json"),
+                *([str(background_music)] if background_music else []),
             ],
             "outputs": [
                 str(final_video),
@@ -1771,6 +2010,13 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
         "voice_disclosure": {
             "text": intake["voice"]["disclosure"],
             "placement": "visible footer on every scene",
+        },
+        "video_type": plan.get("video_type", "research"),
+        "format": plan.get("format", DEFAULT_VIDEO_FORMAT),
+        "background_music": {
+            "included": background_music is not None,
+            "uploaded": False,
+            "rights_confirmed": plan.get("music_rights_confirmed") is True,
         },
         "outputs": [
             _artifact(final_video, "video/mp4", root=root),
@@ -1806,6 +2052,10 @@ def _render_run(run_dir: Path, work: Path) -> dict[str, Any]:
                 "the upstream provider's semantic delivery."
             ),
             "Flat images use restrained pan or zoom, not true parallax.",
+            (
+                "Background music remains local and its approval record does not "
+                "independently establish third-party licensing."
+            ),
         ],
         "next_actions": [
             "Watch the complete video and review every scene against its source basis.",

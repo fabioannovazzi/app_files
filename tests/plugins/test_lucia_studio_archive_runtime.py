@@ -16,27 +16,73 @@ ROOT = Path(__file__).resolve().parents[2]
 __all__: list[str] = []
 
 
-@pytest.fixture()
-def archive_runtime(tmp_path: Path):
-    """Extract only Lucia and create one isolated synthetic engagement via MCP."""
-    plugin = tmp_path / "lucia"
-    with ZipFile(ROOT / "plugin_packages/lucia/lucia-claude-plugin.zip") as archive:
-        archive.extractall(plugin)
+@pytest.fixture(params=["cowork_mcp", "codex_cli"])
+def archive_runtime(tmp_path: Path, request):
+    """Exercise the registered Cowork and unregistered Codex package routes."""
+    cli = request.param == "codex_cli"
+    filename = "lucia-plugin.zip" if cli else "lucia-claude-plugin.zip"
+    extracted = tmp_path / "package"
+    with ZipFile(ROOT / "plugin_packages/lucia" / filename) as archive:
+        archive.extractall(extracted)
+    plugin = extracted / "lucia-codex-plugin/plugins/lucia" if cli else extracted
     node = shutil.which("node")
-    assert node, "Node.js is required for this runtime regression"
-    server = json.loads((plugin / "mcp-services.json").read_text())["mcpServers"][
-        "luciaStudioArchive"
-    ]
+    server = (
+        {}
+        if cli
+        else json.loads((plugin / "mcp-services.json").read_text())["mcpServers"][
+            "luciaStudioArchive"
+        ]
+    )
     environment = {
         **os.environ,
-        **server["env"],
+        **server.get("env", {}),
+        "LUCIA_ASSURANCE_HOST": "1",
         "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "state"),
         "VERA_STUDIO_ARCHIVE_SESSION_ID": str(tmp_path),
         "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
+        "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incident-state"),
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
     }
     transcript = []
 
     def call(name: str, arguments: dict) -> dict:
+        if cli:
+            commands = {
+                "configure_studio_archive": "configure",
+                "create_studio_archive_client": "create-client",
+                "create_studio_client_engagement": "create-engagement",
+                "import_studio_client_document": "import-document",
+                "prepare_studio_client_workflow": "prepare-workflow",
+                "start_studio_client_workflow": "start-workflow",
+            }
+            command = [
+                sys.executable,
+                str(plugin / "modules/studio-archive/scripts/studio_archive.py"),
+                commands[name],
+            ]
+            for key, value in arguments.items():
+                if key == "input_ids":
+                    for identifier in value:
+                        command.extend(["--input-id", identifier])
+                else:
+                    command.extend(["--" + key.replace("_", "-"), str(value)])
+            result = subprocess.run(
+                command,
+                capture_output=True,
+                text=True,
+                cwd=tmp_path,
+                env=environment,
+                timeout=30,
+                check=False,
+            )
+            assert result.returncode == 0, result.stderr
+            payload = json.loads(result.stdout)
+            transcript.append({"command": command, "result": payload})
+            (tmp_path / "cli-transcript.json").write_text(
+                json.dumps(transcript, indent=2)
+            )
+            return payload
+        assert node, "Node.js is required for the Cowork MCP regression"
         request = {
             "jsonrpc": "2.0",
             "id": 1,

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-case-director",
-  "course_sha256": "462f2734d1ecc33ef1ad626b697fd3a1224e1b3dbf6995e594d2e4846f99c5b6",
+  "course_sha256": "31f0d7deb5add80dcd10be6515b91f312cbf8c9de5941a9dff9f2b2e3ac14984",
   "reviewer": "Codex: five-language case lesson and actual native document review",
   "reviewed_at": "2026-09-14T21:09:24.765818+00:00",
   "review_scope": "Prepared material and native local execution review. Read the complete five-language outlines and fictional sources; reviewed all ten workpapers and delivery notes and the five updated evidence maps showing initial and revised conclusions. The final map bytes match those inspected; final workpaper prose is unchanged except corrected local links. The revised initial review notes were read separately. Fifty-four advisory/lineage tests pass, including ten phase-specific case exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain separate unverified acceptance steps. Model-authored regression interpretations live outside shipped teaching kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -734,5 +734,16 @@
     "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
     "fresh_matching_junit_required": true,
     "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
+  "branch_consolidation_20261029": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-29",
+    "previous_course_sha256": "462f2734d1ecc33ef1ad626b697fd3a1224e1b3dbf6995e594d2e4846f99c5b6",
+    "current_course_sha256": "31f0d7deb5add80dcd10be6515b91f312cbf8c9de5941a9dff9f2b2e3ac14984",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared all lesson fields against origin/main. Only source references changed for clarified reporting documentation; localized teaching content, inputs, exercises and expected deliverables are unchanged. Existing editorial and artifact reviews retained. Fresh native CI is required; no new learner or installed-host acceptance asserted."
   }
 }

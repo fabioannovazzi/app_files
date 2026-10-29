@@ -2897,6 +2897,206 @@ def test_deep_research_mcp_managed_output_reference_is_rejected_without_writes(
     assert not (tmp_path / "outside").exists()
 
 
+@pytest.fixture
+def standalone_panel(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> dict[str, Any]:
+    """Build a source-bound standalone review through the real assurance contract."""
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/_shared/vendor/modules"))
+    from vera_assurance.contracts import create_standalone_task
+
+    source = tmp_path / "question.txt"
+    source.write_text("Synthetic tax question", encoding="utf-8")
+    context = create_standalone_task(
+        tmp_path / "task",
+        workflow_id="deep-research-validator",
+        sources=[source],
+        label="Standalone panel regression",
+        purpose="Review a synthetic tax answer without a registered client",
+    )
+    output_dir = Path(context["output_dir"])
+    evidence = output_dir / "answer.md"
+    evidence.write_text("A conditional synthetic answer.", encoding="utf-8")
+    intake = {
+        "schema_version": "1.0",
+        "plugin": "deep-research-validator",
+        "workflow": "deep-research-validator",
+        "run_id": context["run_id"],
+        "path_reference": "run_root_relative",
+        "output_dir": "outputs",
+    }
+    review = {
+        **{
+            key: intake[key]
+            for key in ("schema_version", "plugin", "workflow", "run_id")
+        },
+        "review_type": "legal_tax_pipeline_review",
+        "item_count": 1,
+        "items": [
+            {
+                "id": "answer",
+                "item_type": "validation_artifact",
+                "title": "Synthetic answer",
+                "output_path": "answer.md",
+                "allowed_actions": ["accept", "mark_unclear", "skip"],
+                "status": "needs_review",
+            }
+        ],
+        "source_bindings": [
+            {
+                "path": "answer.md",
+                "sha256": hashlib.sha256(evidence.read_bytes()).hexdigest(),
+            }
+        ],
+    }
+    (output_dir / "run_intake.json").write_text(json.dumps(intake), encoding="utf-8")
+    review_path = output_dir / "review_payload.json"
+    review_path.write_text(json.dumps(review), encoding="utf-8")
+    review_hash = hashlib.sha256(review_path.read_bytes()).hexdigest()
+    (output_dir / "final_artifacts.json").write_text(
+        json.dumps(
+            {
+                **{
+                    key: intake[key]
+                    for key in ("schema_version", "plugin", "workflow", "run_id")
+                },
+                "review_payload_sha256": review_hash,
+                "outputs": [{"path": "answer.md", "kind": "md", "status": "written"}],
+                "caveats": [],
+                "next_actions": [],
+                "status": "written_pending_review",
+            }
+        ),
+        encoding="utf-8",
+    )
+    return {
+        "run_intake": intake,
+        "client_engagement": context["context_path"],
+        "review_reference": {
+            "path": "review_payload.json",
+            "run_id": context["run_id"],
+            "review_payload_sha256": review_hash,
+        },
+    }
+
+
+def test_standalone_panel_validates_renders_and_persists_decisions(
+    standalone_panel: dict[str, Any], tmp_path: Path
+) -> None:
+    messages = [
+        {
+            "jsonrpc": "2.0",
+            "id": index,
+            "method": "tools/call",
+            "params": {
+                "name": tool,
+                "arguments": {
+                    **standalone_panel,
+                    "decisions": [{"item_id": "answer", "action": "mark_unclear"}],
+                },
+            },
+        }
+        for index, tool in enumerate(
+            [
+                "validate_deep_research_review",
+                "render_deep_research_review",
+                "save_deep_research_decisions",
+                "apply_deep_research_decisions",
+            ]
+        )
+    ]
+
+    responses = [response["result"] for response in _call_mcp_server(messages)]
+
+    assert responses[0]["structuredContent"]["ok"] is True
+    assert (
+        len(responses[0]["structuredContent"]["review_reference"]["persistence_token"])
+        == 43
+    )
+    assert responses[1]["structuredContent"]["widget_type"] == "deep_research_review"
+    assert responses[1]["structuredContent"]["review_payload"]["item_count"] == 1
+    assert responses[2]["structuredContent"]["ok"] is True
+    assert responses[3]["structuredContent"]["ok"] is True
+    output_dir = tmp_path / "task/outputs"
+    assert (
+        json.loads((output_dir / "ui_decisions.json").read_text())["decisions"][0][
+            "action"
+        ]
+        == "mark_unclear"
+    )
+    assert (
+        json.loads((output_dir / "applied_decisions.json").read_text())[
+            "decision_count"
+        ]
+        == 1
+    )
+    assert (output_dir / "answer.md").read_text() == "A conditional synthetic answer."
+    assert not list(tmp_path.rglob("client.json"))
+
+
+@pytest.mark.parametrize(
+    "violation",
+    [
+        "wrong_hash",
+        "wrong_run",
+        "output_escape",
+        "changed_evidence",
+        "changed_input",
+        "wrong_schema",
+        "unknown_token",
+    ],
+)
+@pytest.mark.parametrize(
+    "tool_name",
+    [
+        "validate_deep_research_review",
+        "render_deep_research_review",
+        "save_deep_research_decisions",
+        "apply_deep_research_decisions",
+    ],
+)
+def test_standalone_panel_rejects_integrity_violations_without_writes(
+    standalone_panel: dict[str, Any], tmp_path: Path, violation: str, tool_name: str
+) -> None:
+    arguments = standalone_panel
+    arguments["decisions"] = [{"item_id": "answer", "action": "accept"}]
+    if violation == "wrong_hash":
+        arguments["review_reference"]["review_payload_sha256"] = "0" * 64
+    elif violation == "wrong_run":
+        arguments["review_reference"]["run_id"] = "task_foreign"
+    elif violation == "output_escape":
+        arguments["run_intake"]["output_dir"] = "outputs/../../foreign"
+    elif violation == "changed_evidence":
+        (tmp_path / "task/outputs/answer.md").write_text("Changed after review.")
+    elif violation == "changed_input":
+        context_path = Path(arguments["client_engagement"])
+        context = json.loads(context_path.read_text())
+        (context_path.parent / context["inputs"][0]["path"]).write_text(
+            "Unreviewed input."
+        )
+    elif violation == "wrong_schema":
+        context_path = Path(arguments["client_engagement"])
+        context = json.loads(context_path.read_text())
+        context["schema_version"] = "unknown.context.v1"
+        context_path.write_text(json.dumps(context))
+    else:
+        arguments = {"persistence_token": "a" * 43}
+    before = _file_snapshot(tmp_path)
+
+    response = _call_mcp_server(
+        [
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": tool_name, "arguments": arguments},
+            }
+        ]
+    )[0]["result"]
+
+    assert response["isError"] is True
+    assert response["structuredContent"]["ok"] is False
+    assert _file_snapshot(tmp_path) == before
+
+
 def test_source_pdf_capture_contains_extracted_pages_not_binary_bytes(
     tmp_path: Path,
 ) -> None:

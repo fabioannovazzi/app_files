@@ -1,14 +1,25 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://mparanza.com/schemas/clara-research-video-scene-plan-v1.json",
+  "$id": "https://mparanza.com/schemas/clara-research-video-scene-plan-v2.json",
   "title": "Clara research video scene plan",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "title", "language", "scenes"],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": {"enum": [1, 2]},
     "title": {"type": "string", "minLength": 1, "maxLength": 180},
     "language": {"enum": ["de", "en", "es", "fr", "it"]},
+    "video_type": {"enum": ["research", "real_estate_promotion"]},
+    "format": {
+      "enum": ["landscape_16_9", "vertical_9_16", "square_1_1"]
+    },
+    "background_music": {"type": "string", "minLength": 1},
+    "background_music_volume": {
+      "type": "number",
+      "minimum": 0.02,
+      "maximum": 0.35
+    },
+    "music_rights_confirmed": {"const": true},
     "scenes": {
       "type": "array",
       "minItems": 2,
@@ -28,6 +39,11 @@
             "type": "string",
             "minLength": 1,
             "maxLength": 2500
+          },
+          "on_screen_text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 180
           },
           "motion": {
             "enum": [
@@ -80,5 +96,23 @@
         ]
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"schema_version": {"const": 2}}},
+      "then": {"required": ["video_type", "format"]}
+    },
+    {
+      "if": {"required": ["background_music"]},
+      "then": {"required": ["music_rights_confirmed"]}
+    },
+    {
+      "if": {"required": ["background_music_volume"]},
+      "then": {"required": ["background_music"]}
+    },
+    {
+      "if": {"required": ["music_rights_confirmed"]},
+      "then": {"required": ["background_music"]}
+    }
+  ]
 }

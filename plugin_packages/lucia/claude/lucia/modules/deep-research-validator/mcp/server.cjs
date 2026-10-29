@@ -1918,7 +1918,8 @@ function preflightClientRun(outputDir, expectedRunId) {
   if (
     !isPlainObject(parsed) ||
     parsed.ok !== true ||
-    parsed.schema_version !== "vera.client_workflow_context.v2" ||
+    // Both contracts are validated by the Python preflight, including source and run binding.
+    !["vera.client_workflow_context.v2", "vera.standalone_workflow_context.v1"].includes(parsed.schema_version) ||
     parsed.workflow_id !== "deep-research-validator" ||
     typeof parsed.client_run_id !== "string" ||
     !parsed.client_run_id.trim() ||

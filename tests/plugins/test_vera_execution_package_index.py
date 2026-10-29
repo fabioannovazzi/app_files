@@ -58,7 +58,7 @@ def test_release_index_matches_every_final_host_projected_byte(host, product):
             root_contract = archive.read(prefix + f"skills/{router}/SKILL.md").decode()
             assert "MPARANZA_REPORTING_BEGIN" in root_contract
             assert "actual signed receipt" in root_contract
-            assert "HTTPS browser recovery page" in root_contract
+            assert "HTTPS browser recovery page" in " ".join(root_contract.split())
             recovery_reference = archive.read(
                 prefix + f"skills/{router}/references/incident-recovery.md"
             ).decode()

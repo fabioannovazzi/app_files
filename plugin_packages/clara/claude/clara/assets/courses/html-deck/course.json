@@ -129,7 +129,7 @@
     },
     {
       "path": "skills/mparanza-html-deck/SKILL.md",
-      "sha256": "c6358be9e5694f2cb22bfe8491852c19010252174686344f15fa54e3fbb864b9"
+      "sha256": "dcc0e7d17e21212224727392cae7221a1090afe2419d613a54248d44f5d4a96b"
     },
     {
       "path": "skills/mparanza-html-deck/references/evidence-bindings.md",
@@ -458,5 +458,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8d8e5f7b59d26d9a9040fa9de704dee0b48837bb1a972c539c1fc1a027112e44"
+  "canonical_course_sha256": "bef49f26d572e56a40a3b440864bc7a7be74340c8217c3e8833d21adcfbd4c20"
 }

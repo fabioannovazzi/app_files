@@ -11,6 +11,7 @@ import hashlib
 import importlib.util
 import json
 import re
+import shutil
 import sys
 from pathlib import Path
 from urllib.parse import unquote
@@ -21,6 +22,30 @@ from tests.plugins._teaching_release import record_native_check
 
 ROOT = Path(__file__).resolve().parents[2]
 CLARA = ROOT / "plugins/clara"
+
+
+@pytest.fixture(scope="module")
+def complete_clara_course_root(tmp_path_factory: pytest.TempPathFactory) -> Path:
+    """Supply package-injected sources in an isolated local teaching fixture."""
+    destination = (
+        tmp_path_factory.mktemp("clara-course-source") / "repository/plugins/clara"
+    )
+    shutil.copytree(CLARA, destination)
+    for course_path in (destination / "assets/courses").glob("*/course.json"):
+        for source in json.loads(course_path.read_text())["sources"]:
+            target = destination / source["path"]
+            if not target.is_file():
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(ROOT / source["repository_path"], target)
+    return destination
+
+
+@pytest.fixture(autouse=True)
+def use_complete_clara_course_root(
+    monkeypatch: pytest.MonkeyPatch, complete_clara_course_root: Path
+) -> None:
+    """Keep helper paths and their output boundary inside the fixture layout."""
+    monkeypatch.setattr(sys.modules[__name__], "CLARA", complete_clara_course_root)
 
 
 def _read(path):

@@ -15,11 +15,25 @@ report through the ordinary native tool afterward. No new permission question
 is needed when the user already authorized that specific delivery. Never use
 this command to release unrelated historical evidence or infer recovery.
 
-An operational failure is not a suggestion or a CR. Report it automatically,
-diagnose it with all available relevant technical evidence, deliver the remedy
-to that installation and record the actual outcome. Do not ask the user to
-report a problem the system already observed or consent again to technical
-failure delivery. Preserve mandatory host security controls.
+For an observed technical failure in the user's requested Clara task, use the
+existing Mparanza reporting route to diagnose the failure, deliver a remedy to
+that installation and record the actual outcome. This is technical recovery,
+separate from an optional feature suggestion or change request.
+
+Automatic delivery is limited to the existing user-authorized reporting scope
+and host permissions. Reuse that authorization without another per-incident
+consent question or asking the user to relay logs. These instructions do not
+grant authorization, override required action-time approval or expand access.
+An explicit restriction or denial applies to local tools and browser fallback
+alike. When transmission is not permitted, keep evidence locally where allowed,
+state that delivery is unverified, and continue authorized professional work.
+
+Mparanza receives only the technical metadata and reviewed failure diagnostics
+specified below. Exclude assignments, contracts, client documents, prompts,
+professional outputs, raw logs, client file paths and secrets. Authentication
+capabilities belong only in the existing private authentication channel. Review
+retained stderr locally and send only the relevant technical facts, never the
+raw file or unrelated client/personal text.
 
 ## Local HTTPS and independent browser recovery
 

@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "982ca13eecf7ad8a21b34de4ce392abef71d734b5d3db9220ac971bdf9caf613",
+      "sha256": "f49632ce7c795818b72b68afa5febe54bdbffeda206782593c7d7ef8300ab53f",
       "languages": [
         "it",
         "en",
@@ -29,11 +29,11 @@
         "de": "Lernen, aus einer Anfrage einen klaren Auftrag mit Entscheidung, Quellen, Ergebnis und nächsten Arbeitsschritten zu machen.",
         "es": "Aprender a convertir una petición en un encargo claro: decisión, fuentes, entregable y trabajo siguiente."
       },
-      "source_sha256": "4723698f871c31ce6c5673696c83ef788d11a6fad329d90ea41b8786b309527e"
+      "source_sha256": "b9b61dff98c88487f41e8a73b7022883d678dbd3bf6055660d2bb5bb21ff837f"
     },
     "advisory-case-director": {
       "path": "advisory-case-director/course.json",
-      "sha256": "d63f66f7a6ef4876295cbbcbe207de0ed11eceea69091afde8f08f57c5381084",
+      "sha256": "d6a75d6fd843fdccb6f67fc487ec42b859079652990879fc83b9dcff43894508",
       "languages": [
         "it",
         "en",
@@ -58,11 +58,11 @@
         "de": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
         "es": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información."
       },
-      "source_sha256": "462f2734d1ecc33ef1ad626b697fd3a1224e1b3dbf6995e594d2e4846f99c5b6"
+      "source_sha256": "31f0d7deb5add80dcd10be6515b91f312cbf8c9de5941a9dff9f2b2e3ac14984"
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "e1de40b78ee09fb07808543b7f312ad845868d1a476ba2c26f5e0ca634a03e44",
+      "sha256": "77963a3779eea519708f91de40d5a4100ec5748b2502b0032de7aede7bff1863",
       "languages": [
         "it",
         "en",
@@ -87,11 +87,11 @@
         "de": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
         "es": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles."
       },
-      "source_sha256": "a786f829394970ef0c8f79e8b03ab2624771c5f3d219f126f24dd651db1e0298"
+      "source_sha256": "fd5841eb4efe25ee76ffae3f51c511e001dd83ffa3a55738a07103f481ba3d1a"
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "819ed30cf5df842f8ccf4ad8b0860e829d705b871397737dafbc0fa96e71d0c7",
+      "sha256": "ee98c21b0a8ab20e17edc787e7acad144d874a3173dc5e1cbffe74bd6a72e4a2",
       "languages": [
         "it",
         "en",
@@ -116,11 +116,11 @@
         "de": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
         "es": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado."
       },
-      "source_sha256": "46f2372d941e8802b97e13a8a5049dea2596d97fc2be62dbf360a274bb25a04d"
+      "source_sha256": "bc8ec05a3ac3530c490a227c18298a3bde08847da67172673c07f9754ae8699a"
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "9842c9bca0f3f787ceb1317fc8c8f2711a90d4b37e3d8c5ebcbd55ada0c34bae",
+      "sha256": "f77ebb28f1b12166511882af7475e16bad0e23daa0469f9fbe3a32441675a587",
       "languages": [
         "it",
         "en"
@@ -136,11 +136,11 @@
         "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       },
-      "source_sha256": "0b374e2f3ab52ae600b5fed54bbdd67e305d0dd48516e5a6de37b1c50816f88c"
+      "source_sha256": "a221db796a1065d326f3d30fcda83fe195245fba180a0fb4f861b0dd2fb33883"
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "5f68a3919856591aebd14ab668dca11ff4ec468726246b12f36476ee6b351b1a",
+      "sha256": "cbc3853f1171d711923681240aaba0ddcecda140cc21c0ad1532d7509148e94b",
       "languages": [
         "it",
         "en",
@@ -165,11 +165,11 @@
         "de": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
         "es": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador."
       },
-      "source_sha256": "e9569f6070a828ca4877c12366d168ba3427f69b63754795296b7b5e3988b72e"
+      "source_sha256": "a073f1e22432901230a0fd1ba5693afec4ef833d98aa36db76eefb52da952798"
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "84cc8e4be88da724e8b1c8b2e14b988284be606959b91533d0bc3d19bc5e53c1",
+      "sha256": "c0b3340af77d937b394e7fc77fb8272369341d53054ba3d51a6d0621503796df",
       "languages": [
         "it",
         "en",
@@ -194,7 +194,7 @@
         "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
         "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
       },
-      "source_sha256": "c3bdf2887f16b49442d28ae2339515c82de8105551920e81d8944703bfe3f58e"
+      "source_sha256": "ff7a4589c8376112c491d188bfffd928432b257ed84c57fafccd0d13f150800c"
     }
   }
 }

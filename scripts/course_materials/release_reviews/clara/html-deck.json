@@ -77,7 +77,7 @@
     "verified_at": "2026-09-27T22:46:27.915249+00:00",
     "workflow": "html-deck"
   },
-  "course_sha256": "e9569f6070a828ca4877c12366d168ba3427f69b63754795296b7b5e3988b72e",
+  "course_sha256": "a073f1e22432901230a0fd1ba5693afec4ef833d98aa36db76eefb52da952798",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -712,5 +712,16 @@
     "current_course_sha256": "e9569f6070a828ca4877c12366d168ba3427f69b63754795296b7b5e3988b72e",
     "authored_content_unchanged": true,
     "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
+  },
+  "branch_consolidation_20261029": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-29",
+    "previous_course_sha256": "e9569f6070a828ca4877c12366d168ba3427f69b63754795296b7b5e3988b72e",
+    "current_course_sha256": "a073f1e22432901230a0fd1ba5693afec4ef833d98aa36db76eefb52da952798",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared all lesson fields against origin/main. Only source references changed for clarified reporting documentation; localized teaching content, inputs, exercises and expected deliverables are unchanged. Existing editorial and artifact reviews retained. Fresh native CI is required; no new learner or installed-host acceptance asserted."
   }
 }

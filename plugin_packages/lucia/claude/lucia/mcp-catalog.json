@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.192",
+  "version": "0.1.193",
   "services": [
     {
       "name": "luciaAssuranceRuntime",
@@ -640,7 +640,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "deep-research-validator-widgets",
-          "version": "0.1.55"
+          "version": "0.1.56"
         },
         "capabilities": {
           "tools": {},

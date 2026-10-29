@@ -147,6 +147,23 @@ call.
   rather than treating an existing rejection as correct merely because it exists.
 - In acceptance tests, report every block encountered, including recovered
   blocks, its cause, effect, recovery and evidenced justification.
+- Privacy reporting remains part of testing and must be checked, documented
+  and repaired when defective. A missing, incomplete or failed privacy report
+  must not block the underlying pipeline or delivery of its useful result, and
+  must not by itself make an otherwise successful pipeline test fail.
+- Record the pipeline outcome and the privacy-report outcome separately. Keep
+  missing reports, measurement gaps and receipt/hash/userID verification failures
+  visible as open issues to fix; do not call privacy reporting out of scope or
+  claim it passed merely because the pipeline passed.
+
+### Test and demo videos
+
+- Use the Codex-style conversation replay approved by Fabio on 2026-10-28 as
+  the default for test and demo videos. Follow
+  [the test and demo video standard](docs/test-demo-video-standard.md).
+- Show real prompts, answers, tables and deliverables in a polished conversation
+  layout, with a small persistent replay label. Reuse the template across tests;
+  preserve source provenance and distinguish a replay from native screen capture.
 
 ### Test and demo videos
 
