@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "cff03e60d5615b11bdf992f9aa35fa8e8c9e57c267ca08728febf5b52d8ada55"
+      "sha256": "f9d7865b5f53dc71a610ede1ead27e0b81d4cbca331ae7e608f18b8d1f69e014"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -125,7 +125,7 @@
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
       "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
-      "sha256": "4bd0af783e0af1acda460b59b560729aafb6d67f8951e37edc43610645349f21"
+      "sha256": "4fbd947882c545b7dbc40c49f71cd232b01017b7007923536911def17724c354"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",

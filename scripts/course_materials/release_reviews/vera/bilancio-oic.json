@@ -119,7 +119,7 @@
     "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository."
   },
-  "course_sha256": "5d87bbf3a5e0443dda2d948be26a9353643a165a70e36205eb57223db25a978c",
+  "course_sha256": "d118054e9c2a74fe790216635aa058a8ed088ffb157b9596684e5c954ac809ad",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -831,5 +831,16 @@
     "current_course_sha256": "5d87bbf3a5e0443dda2d948be26a9353643a165a70e36205eb57223db25a978c",
     "authored_content_unchanged": true,
     "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
+  },
+  "durable_sampling_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "997c69d0f49368a81ecc81acf932b660d40c6647",
+    "previous_course_sha256": "5d87bbf3a5e0443dda2d948be26a9353643a165a70e36205eb57223db25a978c",
+    "current_course_sha256": "d118054e9c2a74fe790216635aa058a8ed088ffb157b9596684e5c954ac809ad",
+    "authored_content_unchanged": true,
+    "source_review": "Compared complete compiled course objects: only source bindings change. Runtime collection now preserves index-verified Journal Sampling module bytes for read-only historical replay outside executable-release GC; source and code tampering remain rejected. Vouching instructions place agent-reviewed row/document/direction bindings before comparison. No course text, exercise, input, checkpoint or professional conclusion changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial identities, dates and artifact reviews remain historical. New CI on these course digests is required; no new learner, installed-host or professional acceptance claimed."
   }
 }

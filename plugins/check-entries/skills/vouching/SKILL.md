@@ -154,12 +154,22 @@ python scripts/inspect_entries.py <bound-normalized-journal> <bound-support-path
    diagnostics hash, receipt, row closure, or exact monetary closure fails, stop
    and return to Journal Sampling. Do not repair or infer preparation inside
    Vouching.
-7. Record only Vouching settings such as exact amount tolerance and date
-   window in the work-folder recipe.
+7. Before comparison, read the selected support evidence and the inspected
+   journal rows. Record the agent's actual review in a work-folder recipe:
+   bind each evidenced relationship to the exact `prepared_entry_id`,
+   `support_artifact_id` and support locator from inspection. Record the
+   document's evidenced direction separately, and any required party/currency
+   decision using the receipts described below. A document covering one line
+   does not support its counterparty line. If multiple monetary tokens exist,
+   select the evidenced amount and its locator independently of the expected
+   journal amount. Keep unresolved relationships unreviewed; do not invent
+   human approval or ask for a human step to record the agent's own judgment.
+   Preserve the inspected recipe settings, including exact tolerance and date
+   window, and save the result as `agent_reviewed_recipe.json`.
 8. Run deterministic checks:
 
 ```bash
-python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-closed-folder> --output-dir <client-run-output>/checks --recipe <client-run-output>/inspection/suggested_recipe.json --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
+python scripts/run_checks.py <bound-normalized-journal> <bound-support-path-or-closed-folder> --output-dir <client-run-output>/checks --recipe <client-run-output>/inspection/agent_reviewed_recipe.json --client-engagement <check-client-engagement.json> --language <it|en|fr|de|es> --document-language <auto|it|en|fr|de|es>
 ```
 
 9. Review `check_audit.json`, `pdf_inventory.json`, `check_results.csv`, and
@@ -319,8 +329,9 @@ the work-folder recipe:
   confirmed status, and a non-empty recording exception.
 - `reviewed_direction_decisions`: type `check_entries_direction`, adapter
   `check_entries.direction@1`, exact normalized-journal plus support-artifact
-  bindings, one prepared-entry ID, exact locator, direction equal to sealed
-  `amount_signed`, confirmed status, and a non-empty recording exception.
+  bindings, one prepared-entry ID, exact locator, the direction evidenced by
+  the support, confirmed status, and a non-empty recording exception. A reviewed
+  direction opposite to sealed `amount_signed` must remain a mismatch.
 
 Do not infer or fabricate reviewer identity, review date, party perimeter,
 relationship, or recording exception. If the reviewer has not made the

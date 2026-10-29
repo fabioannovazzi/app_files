@@ -667,6 +667,57 @@ def _remove_code(root: Path) -> None:
     shutil.rmtree(root)
 
 
+def _preserve_sampling_replay(root: Path) -> None:
+    """Retain indexed sampling bytes before GC, without retaining a launcher.
+
+    Historical assurance receipts need exact bytes even after presentation
+    updates. This archive is outside the executable release store and is used
+    only by the independently receipt-validated, read-only normalization replay.
+    """
+    manifest, links = _read_regular(root / MANIFEST)
+    if links != 1 or hashlib.sha256(manifest).hexdigest() != root.name:
+        raise ValueError("Historical package index changed before preservation")
+    prefix = "modules/journal-sampling/"
+    expected = {
+        name: digest
+        for name, digest in _manifest(manifest).items()
+        if name.startswith(prefix)
+    }
+    if not expected:
+        return
+    contents = {MANIFEST: manifest}
+    for name, digest in expected.items():
+        data, links = _read_regular(root / name)
+        if links != 1 or hashlib.sha256(data).hexdigest() != digest:
+            raise ValueError("Historical sampling bytes changed before preservation")
+        contents[name] = data
+    archive = root.parent.parent / "journal-sampling-replay"
+    archive.mkdir(mode=0o700, exist_ok=True)
+    _real_ancestors(archive)
+    destination = archive / root.name
+    if destination.exists():
+        files, _ = _inventory(destination)
+        if files.keys() != contents.keys() or any(
+            _read_regular(files[name]) != (data, 1) for name, data in contents.items()
+        ):
+            raise ValueError("Preserved sampling implementation changed")
+        return
+    stage = Path(tempfile.mkdtemp(prefix=".staging-", dir=archive))
+    try:
+        for name, data in contents.items():
+            path = stage / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            with path.open("xb") as handle:
+                handle.write(data)
+            path.chmod(0o400)
+        for folder, _, _ in os.walk(stage, topdown=False):
+            Path(folder).chmod(0o500)
+        stage.rename(destination)
+    finally:
+        if stage.exists():
+            _remove_code(stage)
+
+
 def _collect_execution_store(directory: Path, keep_idle: int) -> None:
     idle = []
     # The catalog lock excludes every creator/collector. A terminated creator's
@@ -742,6 +793,15 @@ def _collect_execution_store(directory: Path, keep_idle: int) -> None:
     retired = []
     try:
         for _, root, record, _ in sorted(idle, reverse=True)[keep_idle:]:
+            try:
+                _preserve_sampling_replay(root)
+            except (OSError, ValueError):
+                # Preserve the original if archiving fails; collection must not
+                # destroy replay evidence or block unrelated current work.
+                LOGGER.warning(
+                    "Historical sampling preservation pending: %s", root, exc_info=True
+                )
+                continue
             _remove_code(root)
             record.unlink()
             retired.append(root.name)

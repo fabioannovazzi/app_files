@@ -85,6 +85,17 @@ exception, with process-exit cleanup as a fallback. They are never client
 archives or additional dependency environments. Forced process termination or
 power loss can still leave an orphan; do not delete another active run's copy.
 
+Native services retain two inactive executable releases plus live leases. Before
+collecting a package containing Journal Sampling, they preserve its verified
+module and unchanged package index in `runtime/journal-sampling-replay`, outside
+the executable release store. This durable archive contains shipped code only,
+not client data or product launchers; it is not automatically collected. Vouching
+revalidates every historical receipt and uses it only for private read-only
+normalization replay. New work uses current code. Failed preservation retains
+the original release without blocking current work. Explicit removal of the
+archive may make historical verification unavailable; it never authorizes
+rewriting receipts or substituting current calculations.
+
 Keep input/output paths absolute and outside the installation/code copy.
 Retain the admitted job, completed stages and saved results. Apply the shared
 work-continuity contract: settled setup is not a new gate after a tool failure.

@@ -76,6 +76,28 @@ def test_clean_installation_keeps_original_root(tmp_path):
     assert prepared == root
 
 
+def test_collection_keeps_replay_source_when_archive_storage_is_unavailable(
+    tmp_path, monkeypatch, caplog
+):
+    recovery = load_recovery()
+    root = installation(tmp_path, "journal-sampling")
+    prepared = recovery.prepare_execution_root(root, None, snapshot=True, shared=True)
+    recovery.release_execution_root(prepared)
+    archive = tmp_path / "runtime/journal-sampling-replay"
+    archive.write_text("Synthetic unavailable archive destination")
+    original = (
+        prepared / "modules/journal-sampling/scripts/journal_sampling_core.py"
+    ).read_bytes()
+
+    recovery.collect_execution_store(keep_idle=0)
+
+    assert prepared.is_dir()
+    assert (
+        prepared / "modules/journal-sampling/scripts/journal_sampling_core.py"
+    ).read_bytes() == original
+    assert "Historical sampling preservation pending" in caplog.text
+
+
 def test_managed_launcher_loads_by_path_outside_its_script_directory(tmp_path):
     scripts = tmp_path / "installed-vera" / "scripts"
     scripts.mkdir(parents=True)
