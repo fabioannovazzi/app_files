@@ -1232,30 +1232,42 @@ def _journal_sampling_replay_roots(envelope: Mapping[str, Any]) -> dict[str, Pat
     # Inspect only indexed runtime packages and the fixed replay archive.
     # Archive indexes retain their original bytes; no historical receipt changes.
     if current.parent.name == "modules" and re.fullmatch(r"[0-9a-f]{64}", package.name):
-        stores = (package.parent, package.parent.parent / "journal-sampling-replay")
-        for retained in sorted(
-            child
-            for store in stores
-            if store.is_dir() and not store.is_symlink()
-            for child in store.iterdir()
-        ):
-            if retained == package or not re.fullmatch(r"[0-9a-f]{64}", retained.name):
-                continue
-            if retained.is_symlink() or not retained.is_dir():
-                continue
-            index = retained / "execution-files.json"
-            try:
-                index_bytes = _stable_regular_bytes(
-                    index,
-                    label="Historical package index",
-                    maximum_bytes=10 * 1024 * 1024,
-                )
-            except (OSError, ValueError):
-                continue
-            if hashlib.sha256(index_bytes).hexdigest() != retained.name:
-                continue
-            component = retained / "modules" / "journal-sampling"
-            candidates.append((component, component / "vendor/modules/vera_assurance"))
+        runtime = package.parent.parent
+    elif os.environ.get("MPARANZA_RUNTIME_ROOT"):
+        runtime = Path(os.environ["MPARANZA_RUNTIME_ROOT"]).expanduser()
+    elif os.name == "nt":
+        runtime = (
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData/Local")))
+            / "mpr"
+        )
+    else:
+        runtime = Path.home() / ".local/share/mparanza/runtime"
+    # MCP hosts can load a version-named cache rather than a hash-named runtime.
+    # Both must resolve the same retained, receipt-verified historical boundary.
+    stores = (runtime / "code", runtime / "journal-sampling-replay")
+    for retained in sorted(
+        child
+        for store in stores
+        if store.is_dir() and not store.is_symlink()
+        for child in store.iterdir()
+    ):
+        if retained == package or not re.fullmatch(r"[0-9a-f]{64}", retained.name):
+            continue
+        if retained.is_symlink() or not retained.is_dir():
+            continue
+        index = retained / "execution-files.json"
+        try:
+            index_bytes = _stable_regular_bytes(
+                index,
+                label="Historical package index",
+                maximum_bytes=10 * 1024 * 1024,
+            )
+        except (OSError, ValueError):
+            continue
+        if hashlib.sha256(index_bytes).hexdigest() != retained.name:
+            continue
+        component = retained / "modules" / "journal-sampling"
+        candidates.append((component, component / "vendor/modules/vera_assurance"))
     receipts = [
         item
         for item in envelope["artifact_receipts"]

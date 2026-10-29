@@ -105,7 +105,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "fbaddae97809b437156da915f696d688c02cac6d984389095fe37130eb9fa46d",
+  "course_sha256": "80acb7c5013c27fedeb5adc4e888df34cb4660e82c2c47a2ab600f4da85e8f8f",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.225501+00:00",
@@ -1013,5 +1013,11 @@
     "source_review": "Compared complete compiled course objects: only source bindings change. Runtime collection now preserves index-verified Journal Sampling module bytes for read-only historical replay outside executable-release GC; source and code tampering remain rejected. Vouching instructions place agent-reviewed row/document/direction bindings before comparison. No course text, exercise, input, checkpoint or professional conclusion changes.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial identities, dates and artifact reviews remain historical. New CI on these course digests is required; no new learner, installed-host or professional acceptance claimed."
+  },
+  "mcp_cache_replay_source_review_20261029": {
+    "reviewer": "Codex /root",
+    "previous_course_sha256": "fbaddae97809b437156da915f696d688c02cac6d984389095fe37130eb9fa46d",
+    "source_review": "Reviewed cache-path historical runtime discovery and local-only runtime-root environment propagation. Exact implementation index and receipt validation retained. No new model fields or recipient.",
+    "content_review": "Complete course JSON unchanged except sources; original language judgments preserved. No new learner or installed-host acceptance claimed. Current CI must validate native execution."
   }
 }
