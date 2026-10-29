@@ -155,7 +155,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
+  "catalogue_fingerprint": "fac3282d561be91c15c606a1454ecd3cbae5ccb3626207dbb677310be5932d68",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2436,5 +2436,11 @@
     "reviewed_at": "2026-10-29",
     "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
     "scope": "Shared offline workflow CSS only. Exact skill entrypoints and existing jurisdiction judgments are unchanged. No new jurisdiction, installed-session or professional acceptance is asserted."
+  },
+  "test04_historical_replay_release_binding_20261029": {
+    "date": "2026-10-29",
+    "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
+    "scope": "Canonical manifest refresh for the historical read-only sampling replay and separate post-closure delivery measurement. All 55 skill entrypoints are byte-identical to the recorded catalogue. Existing jurisdiction judgments and professional acceptance limits are unchanged; source and synthetic checks do not establish Geneva or installed-host acceptance.",
+    "version": "0.1.525"
   }
 }
