@@ -155,7 +155,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "2a6b07b3befe15f9ed99fc65ba9fadbfeb567d13f829b0d97d3b862c92ecfad4",
+  "catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2448,5 +2448,10 @@
     "reviewed_at": "2026-10-29",
     "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
     "scope": "Canonical manifest patch version and shared workflow presentation metadata only. All55 exact skill entrypoint IDs and bytes match the preceding release; all jurisdiction assessment rows are unchanged. No new Geneva, installed-host or professional acceptance is asserted."
+  },
+  "durable_sampling_replay_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "2a6b07b3befe15f9ed99fc65ba9fadbfeb567d13f829b0d97d3b862c92ecfad4",
+    "scope": "Canonical version refresh to 0.1.527; all skill entrypoint IDs and bytes are unchanged. The shared runtime preserves indexed sampling code for historical read-only replay, and the underlying Vouching component places agent evidence review before comparison. Existing Geneva dispositions and acceptance limits are preserved; these source regressions do not establish Swiss professional or fresh installed-host acceptance.",
+    "version": "0.1.527"
   }
 }

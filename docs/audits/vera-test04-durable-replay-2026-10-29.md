@@ -77,6 +77,14 @@ The real Test3 replay was repeated successfully afterwards. Privacy source
 fingerprints were refreshed after reviewing those exact runtime, version and
 unchanged authored-course differences; no historical privacy result was upgraded.
 
+Two jobs in the first CI attempt found the recorded Geneva catalogue still
+bound to 0.1.526. All 55 skill entrypoint IDs and bytes matched the snapshot. Its version
+binding and the assessment's release note were refreshed, preserving every
+jurisdiction judgment, then the affected privacy projection and packages were
+regenerated. This was stale release metadata, not a failed calculation. A macOS
+job was cancelled before any runner acquired it; a targeted retry passed,
+without weakening the required checks.
+
 ## Remaining host acceptance
 
 At audit start the enabled installation and this chat's exposed skill were Vera
