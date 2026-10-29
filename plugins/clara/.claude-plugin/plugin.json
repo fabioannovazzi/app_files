@@ -33,6 +33,10 @@
   "agents": [
     "./agents/clara.md"
   ],
-  "version": "0.1.301",
-  "privacyPolicyUrl": "https://mparanza.com/privacy"
+  "privacyPolicyUrl": "https://mparanza.com/privacy",
+  "shortDescription": "AI companion for consultants",
+  "icon": "./assets/icon.svg",
+  "documentationUrl": "https://mparanza.com/static/shared/clara/index.html?lang=en",
+  "supportUrl": "https://mparanza.com/support",
+  "termsOfServiceUrl": "https://mparanza.com/terms"
 }
