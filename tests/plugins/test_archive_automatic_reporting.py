@@ -327,6 +327,55 @@ def read_sent(loaded, **selection):
     return read_artifact(loaded, path, **selection)
 
 
+def test_read_after_closure_measures_delivery_without_rewriting_sealed_report(
+    archive_core, client_case
+):
+    from archive_report_store import RunStore, digest
+    from archive_reporting import read_artifact
+
+    loaded = start(archive_core, client_case)
+    finish(archive_core, client_case, loaded)
+    root = Path(loaded["run_root"])
+    report_path = root / "outputs/model_data_report.json"
+    report_before = report_path.read_bytes()
+    events_before = RunStore(root).events()
+
+    packet = read_artifact(loaded, root / "outputs/result.txt")
+
+    receipt = json.loads(Path(packet["reporting"]["receipt_path"]).read_text())
+    assert packet["reporting"]["status"] == "recorded"
+    assert receipt["scope"] == "artifact_delivery_after_closure"
+    assert receipt["data_sha256"] == digest(packet["data"])
+    assert receipt["selection"]["stop"] > receipt["selection"]["start"]
+    assert Path(packet["reporting"]["report_path"]).is_file()
+    assert report_path.read_bytes() == report_before
+    assert RunStore(root).events() == events_before
+
+
+def test_closed_artifact_delivery_survives_measurement_storage_failure(
+    archive_core, client_case, monkeypatch
+):
+    import archive_reporting
+
+    loaded = start(archive_core, client_case)
+    finish(archive_core, client_case, loaded)
+    root = Path(loaded["run_root"])
+    report_path = root / "outputs/model_data_report.json"
+    report_before = report_path.read_bytes()
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Synthetic full disk")
+
+    monkeypatch.setattr(archive_reporting, "atomic_bytes", unavailable)
+
+    packet = archive_reporting.read_artifact(loaded, root / "outputs/result.txt")
+
+    assert packet["data"]["rows"] == [["Local professional result"]]
+    assert packet["reporting"]["status"] == "unavailable"
+    assert packet["reporting"]["measurement_gap"] is True
+    assert report_path.read_bytes() == report_before
+
+
 def finish(core, case, loaded):
     output = Path(loaded["output_dir"])
     (output / "result.txt").write_text("Local professional result\n")

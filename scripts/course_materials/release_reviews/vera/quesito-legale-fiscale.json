@@ -111,7 +111,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "c906e0cf138cd79339b1c361e567ca66d7b72ba35406ed3c3a117950390f6a20",
+  "course_sha256": "9e40a3f66be8e2f7f20078dc89209e9416b6c8bcb1c686645e28ee7045451a0c",
   "encoding_preview_source_binding_review_20261013": {
     "reviewed_at": "2026-10-13T19:28:41.735928+00:00",
     "scope": "Reviewed the shared UI projection fix against unsupported-encoding, UTF-8 BOM and malformed-control regressions. Native source inventory changes only; authored lessons, multilingual inputs, deliverables and all prior professional-acceptance limits are preserved. Unsupported raw captures retain their bytes and hashes and display an explicit encoding limit. No new research method, law judgment, recipient or model API is introduced."
@@ -823,5 +823,25 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "c3da3aedac6bbd00f8195d98ae3a77e731f5f7658c748c141560ddca7d4100e4",
+    "current_course_sha256": "9e40a3f66be8e2f7f20078dc89209e9416b6c8bcb1c686645e28ee7045451a0c",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "historical_binding_recovered": {
+      "commit": "33b414876bcd451b85da71a24569dfc06bec03d8",
+      "reviewed_course_sha256": "c906e0cf138cd79339b1c361e567ca66d7b72ba35406ed3c3a117950390f6a20",
+      "base_course_sha256": "c3da3aedac6bbd00f8195d98ae3a77e731f5f7658c748c141560ddca7d4100e4",
+      "authored_content_unchanged": true
+    }
   }
 }

@@ -30,7 +30,7 @@
     {
       "path": "modules/check-entries/assets/check-entries-review-widget.html",
       "repository_path": "plugins/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "43f3835390166eea29520c349c564442122ba9e4777b516af83347c039162e88"
+      "sha256": "59cbce8ea8faafcd22299fbe4d57ef4c7a633ca8373d3b58fb1577e6d70150a4"
     },
     {
       "path": "modules/check-entries/assets/icon.svg",
@@ -40,7 +40,7 @@
     {
       "path": "modules/check-entries/assets/review-workbench-adapter.json",
       "repository_path": "plugins/check-entries/assets/review-workbench-adapter.json",
-      "sha256": "a72b62284fa90d030f1413810fa1c2c1ceed511d22d6910b72696cf291189ea4"
+      "sha256": "825c68b13d61a2071a9d30ba7a9097cd113901e20efe784c72f0b9037c183529"
     },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
@@ -65,7 +65,7 @@
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
       "repository_path": "plugins/check-entries/scripts/check_entries_core.py",
-      "sha256": "0c1bd62eec38f7c20169362779ab7ffd8ce79db71e34e928d8c0f8b226f6da7f"
+      "sha256": "cff03e60d5615b11bdf992f9aa35fa8e8c9e57c267ca08728febf5b52d8ada55"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -110,7 +110,7 @@
     {
       "path": "modules/check-entries/scripts/review_session.py",
       "repository_path": "plugins/check-entries/scripts/review_session.py",
-      "sha256": "7f4e00669217b0a42d775ab96fe9f41ee817d57b86c6f2c95e84bbc0552f05c7"
+      "sha256": "c5c10666b38ad7955717fe851d3114a24564186b5f05bec3fafc25eb8e816557"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
@@ -125,7 +125,7 @@
     {
       "path": "modules/check-entries/skills/vouching/SKILL.md",
       "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
-      "sha256": "0a4988379b91fe08036fa79a58a0ded6b332037daf1b4fac22c05daf53244386"
+      "sha256": "4bd0af783e0af1acda460b59b560729aafb6d67f8951e37edc43610645349f21"
     },
     {
       "path": "modules/check-entries/skills/vouching/references/geneva.md",
@@ -310,12 +310,12 @@
     {
       "path": "vendor/modules/courseware/legacy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+      "sha256": "ba650a5da883f2ea5ea741a1fd5118011c8c9215ff2a06e17f3a41785d004c8f"
     },
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "888a3fc6f6ba005e9a9aff844c4d63d623af8be921354632f7f77ef6bd69d737"
+      "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
     },
     {
       "path": "vendor/modules/courseware/native.cjs",
@@ -341,6 +341,11 @@
       "path": "vendor/modules/courseware/sales_plan_view.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
       "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/theme.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/theme.py",
+      "sha256": "26501b56d6e6f99573a40343de95221671758db13d23a14a7012590a89ae2631"
     },
     {
       "path": "vendor/modules/courseware/website_view.py",

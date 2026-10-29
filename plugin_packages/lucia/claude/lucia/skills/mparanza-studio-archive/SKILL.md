@@ -37,4 +37,10 @@ Use `lucia` for the shared MCP tools. Its host configuration
 also enables Lucia's `apertura-pratica` lifecycle. The component's `Vera/`
 ledger paths and private state names remain the shared storage contract.
 
+When the host has no registered MCP tools, use the component's documented
+`scripts/studio_archive.py` CLI with `LUCIA_ASSURANCE_HOST=1` in that command's
+environment. This enables the same Lucia workflow list, including
+`apertura-pratica`. Keep the same client, engagement, imported inputs and
+prepare/start/finalize/complete sequence; the agent runs these commands.
+
 Lucia's public experience and deliverables are in Italian.

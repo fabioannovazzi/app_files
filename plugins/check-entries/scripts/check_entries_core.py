@@ -324,6 +324,7 @@ RESULT_COLUMNS = [
     "support_amount_signed",
     "amount_difference_signed",
     "amount_difference_abs",
+    "amount_difference_magnitude",
 ]
 DATE_FORMATS = (
     "%Y-%m-%d",
@@ -337,9 +338,7 @@ DATE_FORMATS = (
 DATE_TOKEN_RE = re.compile(
     r"\b(\d{1,2}[./-]\d{1,2}[./-]\d{2,4}|\d{4}[./-]\d{1,2}[./-]\d{1,2})\b"
 )
-AMOUNT_TOKEN_RE = re.compile(
-    r"(?<!\w)\(?-?\d{1,3}(?:[.,\s]\d{3})*(?:[.,]\d{2})\)?(?!\w)"
-)
+AMOUNT_TOKEN_RE = re.compile(r"(?<!\w)\(?-?\d+(?:[.,\s]\d{3})*(?:[.,]\d{2})\)?(?!\w)")
 WORD_RE = re.compile(r"[a-z0-9]+")
 ZERO = Decimal("0")
 # ISO 4217 codes are a fixed mechanical vocabulary here: an explicit,
@@ -1218,6 +1217,71 @@ def _journal_sampling_component_root() -> Path:
     return root
 
 
+def _journal_sampling_replay_roots(envelope: Mapping[str, Any]) -> dict[str, Path]:
+    """Find exact historical bytes for read-only replay, never for new work.
+
+    A newer widget is not evidence of damaged historical data. Keep every
+    historical receipt intact and mechanically verify a complete retained
+    implementation instead of comparing it to an unrelated current release.
+    """
+    current = _journal_sampling_component_root()
+    shared = implementation_artifact_roots()["assurance_implementation"]
+    _validate_journal_sampling_implementation_tree(current, shared)
+    candidates = [(current, shared)]
+    package = current.parent.parent
+    # Only inspect sibling indexed runtime packages, never caller-supplied paths.
+    if current.parent.name == "modules" and re.fullmatch(r"[0-9a-f]{64}", package.name):
+        for retained in sorted(package.parent.iterdir()):
+            if retained == package or not re.fullmatch(r"[0-9a-f]{64}", retained.name):
+                continue
+            if retained.is_symlink() or not retained.is_dir():
+                continue
+            index = retained / "execution-files.json"
+            try:
+                index_bytes = _stable_regular_bytes(
+                    index,
+                    label="Historical package index",
+                    maximum_bytes=10 * 1024 * 1024,
+                )
+            except (OSError, ValueError):
+                continue
+            if hashlib.sha256(index_bytes).hexdigest() != retained.name:
+                continue
+            component = retained / "modules" / "journal-sampling"
+            candidates.append((component, component / "vendor/modules/vera_assurance"))
+    receipts = [
+        item
+        for item in envelope["artifact_receipts"]
+        if item["role"] == "implementation"
+    ]
+    expected = [
+        (root_id, path, artifact_id)
+        for root_id, path, artifact_id in JOURNAL_SAMPLING_IMPLEMENTATION_SPECS
+    ]
+    if [
+        (item["root_id"], item["path"], item["artifact_id"]) for item in receipts
+    ] != expected:
+        raise ValueError("Journal Sampling implementation receipt set is not exact.")
+    for component, assurance in candidates:
+        roots = {
+            "implementation": component,
+            "assurance_implementation": assurance,
+            "pdf_implementation": assurance.parent / "vera_journal_pdf",
+        }
+        try:
+            _validate_journal_sampling_implementation_tree(component, assurance)
+            for receipt in receipts:
+                validate_artifact_receipt(roots, receipt)
+        except (OSError, ValueError):
+            continue
+        return roots
+    raise ValueError(
+        "Journal Sampling historical implementation is unavailable or changed; "
+        "restore its verified package for read-only replay. Historical receipts "
+        "and source data have not been rewritten."
+    )
+
+
 def _validate_journal_sampling_implementation_tree(
     implementation_root: Path,
     assurance_root: Path,
@@ -1590,8 +1654,8 @@ def _run_journal_sampling_replay(
 ) -> dict[str, Any]:
     """Run the receipted upstream replay CLI in an isolated interpreter."""
 
-    component_root = _journal_sampling_component_root()
-    replay_script = component_root / "scripts" / "replay_normalization.py"
+    replay_roots = _journal_sampling_replay_roots(envelope)
+    component_root = replay_roots["implementation"]
     normalized_resolved = normalized_path.expanduser().resolve(strict=True)
     diagnostics_context = diagnostics.get("client_engagement")
     if (
@@ -1655,6 +1719,32 @@ def _run_journal_sampling_replay(
         prefix="check-entries-journal-replay-"
     ) as temporary_name:
         temporary_root = Path(temporary_name)
+        # Execute only the receipted historical boundary in a private snapshot.
+        # No unrelated old product launcher/reporting code is imported, and
+        # collection of an idle runtime package cannot change the running copy.
+        replay_component = temporary_root / "journal-sampling"
+        snapshot_roots = {
+            "implementation": replay_component,
+            "assurance_implementation": replay_component
+            / "vendor/modules/vera_assurance",
+            "pdf_implementation": replay_component / "vendor/modules/vera_journal_pdf",
+        }
+        for receipt in envelope["artifact_receipts"]:
+            if receipt["role"] != "implementation":
+                continue
+            payload = _stable_regular_bytes(
+                replay_roots[receipt["root_id"]] / receipt["path"],
+                label="Historical replay implementation",
+                maximum_bytes=10 * 1024 * 1024,
+            )
+            if not _bytes_match_receipt(payload, receipt):
+                raise ValueError(
+                    "Historical replay implementation changed during capture."
+                )
+            target = snapshot_roots[receipt["root_id"]] / receipt["path"]
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(payload)
+        replay_script = replay_component / "scripts/replay_normalization.py"
         receipt_path = temporary_root / "normalization_replay.json"
         try:
             # Exact receipted CLI argv; no shell or caller-controlled executable.
@@ -1673,7 +1763,7 @@ def _run_journal_sampling_replay(
                     str(client_engagement_path),
                     "--read-only-upstream",
                 ],
-                cwd=component_root,
+                cwd=replay_component,
                 capture_output=True,
                 text=True,
                 check=False,
@@ -1699,6 +1789,13 @@ def _run_journal_sampling_replay(
             label="Journal Sampling replay receipt",
             maximum_bytes=1024 * 1024,
         )
+        # Detect changed retained code during this read-only verification.
+        _validate_journal_sampling_implementation_tree(
+            component_root, replay_roots["assurance_implementation"]
+        )
+        for receipt in envelope["artifact_receipts"]:
+            if receipt["role"] == "implementation":
+                validate_artifact_receipt(replay_roots, receipt)
     try:
         replay = json.loads(payload_bytes.decode("utf-8"))
     except (UnicodeDecodeError, json.JSONDecodeError) as exc:
@@ -1743,13 +1840,11 @@ def _validate_upstream_assurance(
         diagnostics.get("reviewed_decisions"),
         label="reviewed_decisions",
     )
+    envelope_payload = read_json(envelope_path)
     upstream_roots = {
         "source": source_root,
         "normalization": normalization_root,
-        "implementation": _journal_sampling_component_root(),
-        "assurance_implementation": implementation_artifact_roots()[
-            "assurance_implementation"
-        ],
+        **_journal_sampling_replay_roots(envelope_payload),
     }
     upstream_roots["pdf_implementation"] = (
         upstream_roots["assurance_implementation"].parent / "vera_journal_pdf"
@@ -1759,7 +1854,7 @@ def _validate_upstream_assurance(
         upstream_roots["assurance_implementation"],
     )
     envelope = validate_assurance_envelope(
-        read_json(envelope_path),
+        envelope_payload,
         artifact_roots=upstream_roots,
     )
     if (
@@ -3005,6 +3100,9 @@ def _prepared_support_facts(records: Sequence[dict[str, Any]]) -> pl.DataFrame:
                     row.get("amount_difference_signed") or ""
                 ),
                 "amount_difference_abs": str(row.get("amount_difference_abs") or ""),
+                "amount_difference_magnitude": str(
+                    row.get("amount_difference_magnitude") or ""
+                ),
                 "amount_source_locator": str(facts.get("amount_source_locator") or ""),
                 "support_currency": str(_support_currency_for_record(facts) or ""),
             }
@@ -3017,6 +3115,7 @@ def _prepared_support_facts(records: Sequence[dict[str, Any]]) -> pl.DataFrame:
         "support_amount_signed",
         "amount_difference_signed",
         "amount_difference_abs",
+        "amount_difference_magnitude",
         "amount_source_locator",
         "support_currency",
     ]
@@ -3211,9 +3310,50 @@ def _numeric_evidence_ledger(
                         },
                     ],
                     "calculation_ref": None,
-                    "decision_ref": None,
+                    "decision_ref": facts.get("amount_decision_ref"),
                     "limitations": [
                         "The locator addresses deterministic extraction from captured support bytes; it does not establish party or accounting sufficiency."
+                    ],
+                }
+            )
+        magnitude_delta = record.get("amount_difference_magnitude")
+        if magnitude_delta not in (None, ""):
+            facts = json.loads(str(record["evidence_facts"]))
+            field = "amount_difference_magnitude"
+            value = str(magnitude_delta)
+            support_row = support_fact_row_by_entry[prepared_entry_id]
+            entries.append(
+                {
+                    "evidence_id": f"numeric.check_entries.{field}.{prepared_entry_id}",
+                    "value": value,
+                    "unit": str(record["unit"]),
+                    "currency": str(record["currency"]),
+                    "source": {
+                        "artifact_ref": str(record["support_artifact_id"]),
+                        "locator": f"{record['matched_support']}::{facts['amount_source_locator']};journal_magnitude={record['amount_abs']}",
+                        "value": value,
+                    },
+                    "prepared": {
+                        "artifact_ref": prepared_support["artifact_id"],
+                        "locator": f"row={support_row};column={field}",
+                        "value": value,
+                    },
+                    "outputs": [
+                        {
+                            "artifact_ref": results_csv["artifact_id"],
+                            "locator": f"row={result_index};column={field}",
+                            "value": value,
+                        },
+                        {
+                            "artifact_ref": results_xlsx["artifact_id"],
+                            "locator": f"Sheet1!{_excel_column(RESULT_COLUMNS.index(field) + 1)}{result_index}",
+                            "value": value,
+                        },
+                    ],
+                    "calculation_ref": "calculation.support_magnitude_minus_journal_magnitude.v1",
+                    "decision_ref": None,
+                    "limitations": [
+                        "Compares magnitudes only; does not establish document direction or professional sufficiency."
                     ],
                 }
             )
@@ -3485,6 +3625,26 @@ def _validate_numeric_artifact_addresses(
                         raise ValueError(
                             "Signed support amount arithmetic does not close."
                         )
+            magnitude_delta = record.get("amount_difference_magnitude")
+            if magnitude_delta not in (None, ""):
+                field = "amount_difference_magnitude"
+                support_row = support_by_entry[str(record["prepared_entry_id"])]
+                if (
+                    support_row[field] != magnitude_delta
+                    or result_rows[row_index][field] != magnitude_delta
+                    or str(sheet.cell(index, RESULT_COLUMNS.index(field) + 1).value)
+                    != magnitude_delta
+                    or parse_canonical_decimal(magnitude_delta, label=field)
+                    != abs(
+                        parse_canonical_decimal(
+                            record["amount_found"], label="support amount"
+                        )
+                    )
+                    - parse_canonical_decimal(amount_abs, label="journal magnitude")
+                ):
+                    raise ValueError(
+                        "Magnitude difference numeric evidence does not close."
+                    )
             amount_found = record.get("amount_found")
             if amount_found in (None, ""):
                 continue
@@ -3672,7 +3832,7 @@ def _contains_labeled_movement_identifier(
         return False
     identifier = r"[^a-z0-9]+".join(re.escape(part) for part in parts)
     label = (
-        r"(?:movement|movimento|registrazione(?:[^a-z0-9]+contabile)?|entry|posting|asiento|"
+        r"(?:movement|(?:movimento|registrazione)(?:[^a-z0-9]+contabile)?|entry|posting|asiento|"
         r"ecriture|buchung)"
     )
     text = _norm_label(value)
@@ -3825,7 +3985,10 @@ def _reviewed_recipe_decisions(
             "relationship_status",
             "recording_exception",
         }
-        if set(content) != expected_fields:
+        if set(content) not in (
+            expected_fields,
+            expected_fields | {"amount_token_index", "amount_value"},
+        ):
             raise ValueError(
                 f"reviewed_support_relationships[{index}] content fields are invalid."
             )
@@ -3848,8 +4011,34 @@ def _reviewed_recipe_decisions(
             raise ValueError(
                 "A prepared entry may have only one reviewed support relationship."
             )
+        amount_selection: dict[str, Any] = {}
+        if "amount_token_index" in content:
+            token_index = content["amount_token_index"]
+            pdf = captured.pdfs.get(locator)
+            if type(token_index) is not int or token_index < 1 or pdf is None:
+                raise ValueError(
+                    "Reviewed amount selection requires a PDF token locator."
+                )
+            candidates = _amount_candidates(str(pdf["text"]))
+            selected = next(
+                (
+                    item
+                    for item in candidates
+                    if item[1] == f"extracted_text.amount_token[{token_index}]"
+                ),
+                None,
+            )
+            if selected is None or decimal_text(selected[0]) != content["amount_value"]:
+                raise ValueError(
+                    "Reviewed amount selection does not match captured evidence."
+                )
+            amount_selection = {
+                "amount_value": content["amount_value"],
+                "amount_source_locator": selected[1],
+            }
         relationship_by_key[key] = {
             "decision_ref": decision["decision_id"],
+            **amount_selection,
             "recording_exception": recording_exception,
         }
         reviewed.append(decision)
@@ -3955,15 +4144,11 @@ def _reviewed_recipe_decisions(
         locator = _clean_text(content["support_locator"])
         expected_direction = _clean_text(content["expected_direction"])
         recording_exception = _clean_text(content["recording_exception"])
-        entry_direction = _journal_direction(
-            entry_records.get(prepared_entry_id, {}).get("amount_signed")
-        )
         if (
             prepared_entry_id not in entry_ids
             or locator not in support_locators
             or locator_artifact_ids.get(locator) != artifact_id
             or expected_direction not in {"debit", "credit"}
-            or expected_direction != entry_direction
             or content["direction_status"] != "confirmed"
             or not recording_exception
         ):
@@ -4142,6 +4327,11 @@ def _match_pdf_for_entry(
                     "relationship": relationship,
                 }
             )
+    reviewed_candidates = [
+        candidate for candidate in candidates if candidate["relationship"] is not None
+    ]
+    if reviewed_candidates:
+        candidates = reviewed_candidates
     if len(candidates) == 1:
         return {"status": "matched", **candidates[0]}
     if len(candidates) > 1:
@@ -4156,21 +4346,6 @@ def _match_pdf_for_entry(
     return {"status": "missing", "filename": None, "signals": []}
 
 
-def _amounts_in_text(text: str) -> list[Decimal]:
-    values: list[Decimal] = []
-    for match in AMOUNT_TOKEN_RE.finditer(text):
-        try:
-            values.append(
-                parse_localized_decimal(
-                    match.group(0),
-                    label="support PDF monetary token",
-                )
-            )
-        except MoneyValidationError:
-            continue
-    return values
-
-
 def _dates_in_text(text: str) -> list[date]:
     values: list[date] = []
     for match in DATE_TOKEN_RE.finditer(text):
@@ -4180,21 +4355,35 @@ def _dates_in_text(text: str) -> list[date]:
     return values
 
 
-def _amount_found(
-    expected: object,
-    text: str,
-    tolerance: Decimal,
-) -> tuple[str | None, str | None]:
-    if expected in (None, ""):
-        return None, None
-    expected_value = parse_canonical_decimal(expected, label="entry amount_abs")
-    values = _amounts_in_text(text)
-    for token_index, value in enumerate(values, start=1):
-        _, within = difference_within_tolerance(
-            abs(value), abs(expected_value), tolerance
-        )
-        if within:
-            return decimal_text(value), f"extracted_text.amount_token[{token_index}]"
+def _amount_candidates(text: str) -> list[tuple[Decimal, str]]:
+    """Parse monetary tokens, excluding overlapping date spans mechanically."""
+    date_spans = [match.span() for match in DATE_TOKEN_RE.finditer(text)]
+    candidates: list[tuple[Decimal, str]] = []
+    for index, match in enumerate(AMOUNT_TOKEN_RE.finditer(text), start=1):
+        if any(
+            start < match.end() and match.start() < end for start, end in date_spans
+        ):
+            continue
+        try:
+            value = parse_localized_decimal(
+                match.group(0), label="support PDF monetary token"
+            )
+        except MoneyValidationError:
+            continue
+        candidates.append((value, f"extracted_text.amount_token[{index}]"))
+    return candidates
+
+
+def _amount_found(text: str) -> tuple[str | None, str | None]:
+    """Extract a unique value independently of the expected journal amount.
+
+    Selecting among distinct values is semantic review; equality to the journal
+    is not evidence that a token is the relevant document amount.
+    """
+    candidates = _amount_candidates(text)
+    if len({value for value, _ in candidates}) == 1:
+        value, locator = candidates[0]
+        return decimal_text(value), locator
     return None, None
 
 
@@ -4400,14 +4589,20 @@ def _check_one_entry(
     review_notes: list[str] = []
 
     expected_amount = entry.get("amount_abs")
-    amount_value, amount_locator = _amount_found(
-        expected_amount,
-        text,
-        amount_tolerance,
-    )
+    amount_value, amount_locator = _amount_found(text)
+    amount_relationship = match.get("relationship") or {}
+    if "amount_value" in amount_relationship:
+        amount_value = amount_relationship["amount_value"]
+        amount_locator = amount_relationship["amount_source_locator"]
     if expected_amount not in (None, ""):
         checks_run.append("amount")
         if amount_value is None:
+            mismatches.append("amount_requires_review")
+        elif not difference_within_tolerance(
+            abs(parse_canonical_decimal(amount_value, label="support amount")),
+            parse_canonical_decimal(expected_amount, label="entry amount_abs"),
+            amount_tolerance,
+        )[1]:
             mismatches.append("amount")
 
     expected_date = entry.get("entry_date")
@@ -4482,6 +4677,8 @@ def _check_one_entry(
         )
     else:
         checks_run.append("direction")
+        if reviewed_support_direction != expected_direction:
+            mismatches.append("direction")
 
     relationship = (
         match.get("relationship")
@@ -4530,7 +4727,11 @@ def _check_one_entry(
     required_checks = {"amount", "date", "currency", "direction"}
     missing_checks = sorted(required_checks - set(checks_run))
     if missing_checks:
-        status = "manual_review"
+        status = (
+            "mismatch"
+            if any(issue in mismatches for issue in ("amount", "direction"))
+            else "manual_review"
+        )
         review_notes.append(
             (
                 "Faltan campos obligatorios para las comprobaciones de importe, fecha y moneda."
@@ -4539,8 +4740,12 @@ def _check_one_entry(
             )
         )
         mismatches.extend(f"missing_{check}" for check in missing_checks)
-    elif party_missing or direction_missing:
-        status = "manual_review"
+    elif party_missing or direction_missing or "amount_requires_review" in mismatches:
+        status = (
+            "mismatch"
+            if any(issue in mismatches for issue in ("amount", "direction"))
+            else "manual_review"
+        )
     elif mismatches:
         status = "mismatch"
     else:
@@ -4552,6 +4757,15 @@ def _check_one_entry(
         "support_match_signals": support_signals,
         "amount_found": amount_value,
         "amount_source_locator": amount_locator,
+        "amount_candidates": [
+            {"value": decimal_text(value), "locator": locator}
+            for value, locator in _amount_candidates(text)
+        ],
+        "amount_decision_ref": (
+            amount_relationship.get("decision_ref")
+            if "amount_value" in amount_relationship
+            else None
+        ),
         "date_found": date_value,
         "currency_found": currency_value,
         "currency_explicit_codes": list(explicit_currency_codes),
@@ -4792,6 +5006,8 @@ def _check_entry_with_support_ladder(
         )
         if direction_missing:
             mismatches.append("direction_requires_review")
+        elif reviewed_support_direction != expected_direction:
+            mismatches.append("direction")
         observed_checks = {
             "amount": entry.get("amount_abs") not in (None, "")
             and invoice.total_amount is not None,
@@ -4805,9 +5021,13 @@ def _check_entry_with_support_ladder(
         )
         mismatches.extend(f"missing_{check}" for check in missing_checks)
         status = (
-            "manual_review"
-            if party_missing or direction_missing
-            else ("mismatch" if mismatches else "ok")
+            "mismatch"
+            if any(issue in mismatches for issue in ("amount", "direction"))
+            else (
+                "manual_review"
+                if party_missing or direction_missing
+                else ("mismatch" if mismatches else "ok")
+            )
         )
         evidence_facts = {
             "support_match_status": "matched",
@@ -4978,7 +5198,8 @@ def _apply_support_reuse_review(
             record.get("support_match_signals") or ""
         ).split(","):
             continue
-        record["status"] = "manual_review"
+        if record["status"] != "mismatch":
+            record["status"] = "manual_review"
         mismatches = [
             value for value in str(record.get("mismatches") or "").split(",") if value
         ]
@@ -5150,6 +5371,20 @@ def _build_entry_checks_run(
         )
         for row in entries.to_dicts()
     ]
+    for record in records:
+        facts = json.loads(str(record["evidence_facts"]))
+        observed = record.get("amount_found")
+        currency = _support_currency_for_record(facts)
+        record["amount_difference_magnitude"] = (
+            decimal_text(
+                abs(parse_canonical_decimal(observed, label="support amount"))
+                - parse_canonical_decimal(
+                    record["amount_abs"], label="journal magnitude"
+                )
+            )
+            if observed not in (None, "") and currency == record.get("currency")
+            else None
+        )
     records = _apply_support_reuse_review(
         records,
         language=languages["language"],

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "business-planning",
-  "course_sha256": "8828c22ed8e0723d2b77e3a416f1804f71f035ab9ae66fa6d478bf49b7cf47fe",
+  "course_sha256": "a221db796a1065d326f3d30fcda83fe195245fba180a0fb4f861b0dd2fb33883",
   "reviewer": "Codex /root - Deal Redux source compatibility review",
   "reviewed_at": "2026-10-14T08:00:57.895553+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
@@ -408,5 +408,30 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "8828c22ed8e0723d2b77e3a416f1804f71f035ab9ae66fa6d478bf49b7cf47fe",
+    "current_course_sha256": "0b374e2f3ab52ae600b5fed54bbdd67e305d0dd48516e5a6de37b1c50816f88c",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
+  "branch_consolidation_20261029": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-10-29",
+    "previous_course_sha256": "0b374e2f3ab52ae600b5fed54bbdd67e305d0dd48516e5a6de37b1c50816f88c",
+    "current_course_sha256": "a221db796a1065d326f3d30fcda83fe195245fba180a0fb4f861b0dd2fb33883",
+    "changed_fields": [
+      "sources"
+    ],
+    "authored_content_unchanged": true,
+    "scope": "Compared all lesson fields against origin/main. Only source references changed for clarified reporting documentation; localized teaching content, inputs, exercises and expected deliverables are unchanged. Existing editorial and artifact reviews retained. Fresh native CI is required; no new learner or installed-host acceptance asserted."
   }
 }

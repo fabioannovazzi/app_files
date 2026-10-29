@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "b78368af7dfb48c95329a959907ec7ae3e595954998a44a65de4af24d488b1c4"
+      "sha256": "29f7023e1754d438107f30a46a60a658e0ea0810dc20a380841dd30c0a0dffc5"
     },
     {
       "path": "modules/check-entries/assets/icon.svg",
@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/check-entries/assets/review-workbench-adapter.json",
-      "sha256": "a72b62284fa90d030f1413810fa1c2c1ceed511d22d6910b72696cf291189ea4"
+      "sha256": "825c68b13d61a2071a9d30ba7a9097cd113901e20efe784c72f0b9037c183529"
     },
     {
       "path": "modules/check-entries/references/workflow-reference.md",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "c6eb33a7b63547e14ced8d879d88f0de2db989a3a18320f3bd9e35dc2855dc61"
+      "sha256": "329b91ace50947702b37d0b926b7fd3fe505ad00b4d0c4ff4f68a37768ad03a0"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/check-entries/scripts/review_session.py",
-      "sha256": "fb8caae15cfa29dbd9e7838b6ba454ff17f1fed59a9fcc938735b91b327da78f"
+      "sha256": "8011ee5b7d14e42fd8c1d9f3fec1b32d380e9f4672439b4cc78556178430adf6"
     },
     {
       "path": "modules/check-entries/scripts/run_checks.py",
@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/SKILL.md",
-      "sha256": "a604eafc242c2e795bed5752a829bd6f6d37453947dc30bbc84b4ad4d5c053a2"
+      "sha256": "dca6a5808c13b558db5ffe24f4c5664e14b1608d0c0b3080b3e5f3cc6d16d3bd"
     },
     {
       "path": "modules/check-entries/skills/mparanza-vouching/references/geneva.md",
@@ -658,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6ed81f1747e9529abcd3f37dedaad14c8efbf46521a9590f56577574e3967fad"
+  "canonical_course_sha256": "de75f30233fea445787b2ae97332d50a4c783c03843403d886e945a1b2120ef1"
 }

@@ -1,9 +1,23 @@
 # One task, one outcome, one rating
 
-Apply this contract to every substantive user-requested Clara process, including
-AI-led research, advice and document work. It is automatic service reporting,
-not a new consent prompt. It complements technical incidents and the existing
-model-data receipt; it never substitutes for either.
+Apply this contract to the user's requested Clara process, including AI-led
+research, advice and document work. Mparanza receives only the task lifecycle
+fields defined below: random run/event identifiers, sequence, pipeline, host,
+product version, timestamps, task state and existing incident/receipt links.
+Optional ratings contain only the score and comment deliberately supplied for
+the Clara team. Do not copy the assignment, contract, client files, prompts or
+professional outputs into events or feedback. Receipt stamping sends its minimal
+request, including the local report digest, never the report itself.
+
+Reuse the user's existing authorization for this same reporting scope and honor
+the host's permissions. Do not add a per-run consent question or ask the user to
+relay logs. This contract does not grant permission, override an action-time
+approval, expand access or authorize a new recipient or payload. Respect explicit
+restrictions and denied transmissions on every transport, including the browser
+fallback. Keep permitted local evidence, report delivery as unverified, and
+continue the professional task when external reporting is unavailable or denied.
+Task usage complements technical incidents and the local model-data report; it
+never substitutes for either.
 
 ## Start before work
 

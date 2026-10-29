@@ -71,7 +71,7 @@ CLARA_DISCOVERY_TERMS = (
         ),
         (
             "research-video",
-            "Create narrated research videos",
+            "Create narrated videos",
             "clara-research-video",
         ),
     ],
@@ -102,7 +102,7 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         "deck-correction": "Revise presentations from feedback",
         "html-deck": "Create HTML presentations",
         "hosted-interview": "Prepare and conduct interviews",
-        "privacy-surface-review": "Review workflow data handling",
+        "privacy-surface-review": "Revisione privacy",
         "reporting-engine": "Analyze business data",
         "research-video": "Create narrated research videos",
         "transcribe": "Transcribe recordings and voice notes",
@@ -118,7 +118,11 @@ def test_clara_marketplace_names_match_public_tasks_and_codex_metadata() -> None
         metadata = (
             PLUGIN_ROOT / "skills" / skill_name / "agents" / "openai.yaml"
         ).read_text(encoding="utf-8")
-        assert f'display_name: "{display_name}"' in metadata
+        codex_label = {
+            "research-video": "Create narrated videos",
+            "privacy-surface-review": "Privacy Surface Review",
+        }.get(skill_name, display_name)
+        assert f'display_name: "{codex_label}"' in metadata
 
     public_function_source = (
         ROOT / "static" / "shared" / "product-function-pages.js"
@@ -212,6 +216,9 @@ process.stdout.write(JSON.stringify(window.MPARANZA_FUNCTION_PAGES));
         text=True,
     )
     catalog = json.loads(result.stdout)
+    contracts = json.loads(
+        (ROOT / "static/shared/privacy-contracts/clara.json").read_text()
+    )["pages"]
     for relative_path in function_paths:
         function_page = (page_root / relative_path).read_text(encoding="utf-8")
         key = re.search(r'data-function-page="([^"]+)"', function_page)
@@ -228,7 +235,9 @@ process.stdout.write(JSON.stringify(window.MPARANZA_FUNCTION_PAGES));
                 "not-relevant",
                 "placeholder",
             }
-            assert translations[language]["modelData"], (relative_path, language)
+            contract = contracts[key.group(1)]
+            assert contract["status"] in {"relevant", "not-relevant", "placeholder"}
+            assert contract["copy"][language], (relative_path, language)
 
 
 def test_clara_spanish_catalog_uses_only_native_spanish_audio() -> None:

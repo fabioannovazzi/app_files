@@ -324,6 +324,89 @@ def load_apply_review_edits() -> Any:
     return module
 
 
+def _retained_sampling_package(store: Path, *, new_theme: bool) -> Path:
+    """Build a retained runtime tree whose owned bytes can be replayed."""
+    stage = store / ("new" if new_theme else "historical")
+    component = stage / "modules/journal-sampling"
+    ignore = shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo")
+    shutil.copytree(ROOT / "plugins/journal-sampling", component, ignore=ignore)
+    for module in ("vera_assurance", "vera_journal_pdf"):
+        shutil.copytree(
+            ROOT / "plugins/_shared/vendor/modules" / module,
+            component / "vendor/modules" / module,
+            ignore=ignore,
+        )
+    # Old product launchers are outside the receipted sampling boundary and
+    # must never be imported by the private historical replay.
+    (stage / ".codex-plugin").mkdir()
+    (stage / ".codex-plugin/plugin.json").write_text('{"name": "vera"}')
+    (stage / "scripts").mkdir()
+    (stage / "scripts/archive_projection.py").write_text(
+        "raise RuntimeError('unreceipted historical launcher executed')\n"
+    )
+    if new_theme:
+        widget = component / "assets/journal-sampling-review-widget.html"
+        widget.write_bytes(widget.read_bytes() + b"\n<!-- updated theme -->\n")
+    files = {
+        path.relative_to(stage)
+        .as_posix(): hashlib.sha256(path.read_bytes())
+        .hexdigest()
+        for path in stage.rglob("*")
+        if path.is_file()
+    }
+    index = json.dumps({"schema_version": 1, "files": files}, sort_keys=True).encode()
+    (stage / "execution-files.json").write_bytes(index)
+    destination = store / hashlib.sha256(index).hexdigest()
+    stage.rename(destination)
+    return destination / "modules/journal-sampling"
+
+
+@pytest.mark.parametrize(
+    "fault", [None, "source_changed", "historical_changed", "historical_missing"]
+)
+def test_new_theme_replays_exact_retained_upstream_without_rewriting_history(
+    tmp_path: Path, monkeypatch: Any, fault: str | None
+) -> None:
+    normalized = _qualified_journal(
+        tmp_path / "source",
+        [{"date": "2025-01-02", "movement": "M-1", "debit": "100.00"}],
+    )
+    historical = _retained_sampling_package(tmp_path / "code", new_theme=False)
+    current = _retained_sampling_package(tmp_path / "code", new_theme=True)
+    core = load_core()
+    monkeypatch.setattr(core, "_journal_sampling_component_root", lambda: current)
+    monkeypatch.setattr(
+        core,
+        "implementation_artifact_roots",
+        lambda: {
+            "implementation": ROOT / "plugins/check-entries",
+            "assurance_implementation": current / "vendor/modules/vera_assurance",
+        },
+    )
+    if fault == "source_changed":
+        source = _qualified_journal_source(normalized)
+        source.write_bytes(source.read_bytes() + b"changed")
+    elif fault == "historical_changed":
+        (historical / "scripts/journal_sampling_core.py").write_text(
+            "raise RuntimeError('must not execute')\n"
+        )
+    elif fault == "historical_missing":
+        shutil.rmtree(historical.parents[1])
+    before = _tree_snapshot(normalized.parent)
+    support = tmp_path / "support"
+    support.mkdir()
+    output = tmp_path / "checks"
+
+    if fault is None:
+        core.run_entry_checks(normalized, support, output)
+        assert (output / "check_audit.json").is_file()
+    else:
+        with pytest.raises(ValueError):
+            core.run_entry_checks(normalized, support, output)
+
+    assert _tree_snapshot(normalized.parent) == before
+
+
 def test_exact_file_read_preserves_windows_line_endings_and_control_z(
     tmp_path: Path,
 ) -> None:
@@ -2727,6 +2810,7 @@ def test_accept_only_review_is_replayed_and_resealed(
     )
 
     result = responses[0]["result"]["structuredContent"]
+    assert (output_dir / "applied_decisions.json").exists(), result
     applied = json.loads((output_dir / "applied_decisions.json").read_text())
     resealed = json.loads((output_dir / "assurance_envelope.json").read_text())
 
@@ -5330,6 +5414,33 @@ def test_filename_occurrence_alone_does_not_establish_pdf_identity(
     assert result.frame.to_dicts()[0]["status"] == "missing_support"
 
 
+def test_run_entry_checks_matches_movimento_contabile_label_for_distinctive_id(
+    monkeypatch: Any, tmp_path: Path
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [{"date": "2026-09-01", "movement": "MOV-NUOVO-A81", "debit": "120"}],
+    )
+    support_dir = tmp_path / "support"
+    support_dir.mkdir()
+    (support_dir / "support.pdf").write_bytes(b"%PDF")
+    monkeypatch.setattr(
+        core,
+        "_extract_pdf_text",
+        lambda _path, _payload: (
+            "Movimento contabile MOV-NUOVO-A81\nData 01/09/2026\nImporto EUR 120.00"
+        ),
+    )
+
+    result = core.run_entry_checks(normalized, support_dir, tmp_path / "out")
+
+    row = result.frame.to_dicts()[0]
+    assert row["matched_support"] == "support.pdf"
+    assert row["status"] == "manual_review"
+    assert row["professional_conclusion"] == "pending_review"
+
+
 def test_labeled_pdf_identity_and_exact_reviewed_tax_id_can_emit_ok(
     monkeypatch: Any,
     tmp_path: Path,
@@ -6983,11 +7094,11 @@ def test_fatturapa_without_reviewed_direction_withholds_signed_closure(
     assert facts["direction_decision_ref"] is None
 
 
-@pytest.mark.parametrize("mutation", ["opposite_direction", "stale_entry"])
-def test_fatturapa_rejects_mismatched_or_stale_direction_decision(
+def _direction_decision_case(
     tmp_path: Path,
     mutation: str,
-) -> None:
+    support_type: str = "xml",
+) -> tuple[Any, Path, Path, Path]:
     core = load_core()
     from vera_assurance import build_reviewed_decision_receipt
 
@@ -7002,13 +7113,17 @@ def test_fatturapa_rejects_mismatched_or_stale_direction_decision(
             }
         ],
     )
-    support = tmp_path / "document.xml"
+    support = tmp_path / f"document.{support_type}"
     support.write_bytes(
         _fatturapa_xml(
             document_type="TD01",
             number="DOC-STALE",
             invoice_date="2025-08-19",
             amount="10",
+        )
+        if support_type == "xml"
+        else _text_pdf_bytes(
+            ["Movimento contabile M-97-STALE", "Data 19/08/2025", "Importo EUR 10.00"]
         )
     )
     recipe_path = _reviewed_party_recipe(
@@ -7023,7 +7138,7 @@ def test_fatturapa_rejects_mismatched_or_stale_direction_decision(
     content = {
         "prepared_entry_id": row["prepared_entry_id"],
         "support_artifact_id": artifact_id,
-        "support_locator": "document.xml",
+        "support_locator": support.name,
         "expected_direction": "credit",
         "direction_status": "confirmed",
         "recording_exception": (
@@ -7052,13 +7167,31 @@ def test_fatturapa_rejects_mismatched_or_stale_direction_decision(
         encoding="utf-8",
     )
 
+    return core, normalized, support, recipe_path
+
+
+def test_fatturapa_rejects_stale_direction_binding(tmp_path: Path) -> None:
+    core, normalized, support, recipe_path = _direction_decision_case(
+        tmp_path, "stale_entry"
+    )
     with pytest.raises(ValueError, match="direction decision binding is stale"):
-        core.run_entry_checks(
-            normalized,
-            support,
-            tmp_path / "out",
-            recipe_path,
-        )
+        core.run_entry_checks(normalized, support, tmp_path / "out", recipe_path)
+
+
+@pytest.mark.parametrize("support_type", ["xml", "pdf"])
+def test_reviewed_opposite_direction_is_a_mismatch(
+    tmp_path: Path, support_type: str
+) -> None:
+    core, normalized, support, recipe_path = _direction_decision_case(
+        tmp_path, "opposite_direction", support_type
+    )
+    result = core.run_entry_checks(normalized, support, tmp_path / "out", recipe_path)
+    row = result.frame.to_dicts()[0]
+    assert row["status"] == "mismatch"
+    assert "direction" in row["mismatches"].split(",")
+    assert row["amount_difference_magnitude"] == "0"
+    assert row["amount_difference_signed"] == "20"
+    assert row["professional_conclusion"] == "pending_review"
 
 
 @pytest.mark.parametrize(
@@ -9737,14 +9870,14 @@ def test_real_cli_closes_recipe_options_and_chf_review_intake(
     result_rows = list(csv.DictReader((output / "check_results.csv").open()))
     assert len(result_rows) == 1
     assert result_rows[0]["matched_support"]
-    assert result_rows[0]["status"] == "manual_review"
+    assert result_rows[0]["status"] == (
+        "mismatch" if explicit_zero else "manual_review"
+    )
     assert result_rows[0]["professional_conclusion"] == "pending_review"
     facts = json.loads(result_rows[0]["evidence_facts"])
-    if explicit_zero:
-        assert facts["amount_found"] is None and facts["date_found"] is None
-    else:
-        assert Decimal(facts["amount_found"]) == Decimal("123.46")
-        assert facts["date_found"] == "2025-01-04"
+    assert facts["amount_found"] == "123.46"
+    assert result_rows[0]["amount_difference_magnitude"] == "0.01"
+    assert facts["date_found"] == (None if explicit_zero else "2025-01-04")
 
     validated = _check_transaction_call(
         "validate_check_entries_review",
@@ -9765,6 +9898,9 @@ def test_real_cli_closes_recipe_options_and_chf_review_intake(
         ("Registrazione contabile\nREG26-0002", True),
         ("Registrazione contabile n. REG26-0002", True),
         ("Registrazione REG26-0002", True),
+        ("Movimento contabile REG26-0002", True),
+        ("Movimento contabile n. REG26-0002", True),
+        ("Movimento contabile del cliente REG26-0002", False),
         ("Registrazione del cliente REG26-0002", False),
         ("Fattura REG26-0002", False),
         ("REG26-0002.pdf", False),
@@ -9956,3 +10092,247 @@ def test_embedded_check_review_uses_prepared_managed_python(
         assert response["ok"] is False, response
         assert "managed Python runtime is not ready" in response["error"]
         assert "review_reference" not in response
+
+
+@pytest.mark.parametrize(
+    ("amount_line", "found", "delta", "status"),
+    [
+        ("Importo EUR 80.00", "80", "0", "manual_review"),
+        ("Importo EUR 85.00", "85", "5", "mismatch"),
+        ("Importo EUR 75.00", "75", "-5", "mismatch"),
+        ("Importo EUR 1080.00", "1080", "1000", "mismatch"),
+        ("Importo EUR 1.080,00", "1080", "1000", "mismatch"),
+        ("Importo EUR 85.00; anticipo EUR 80.00", None, None, "manual_review"),
+        ("Data 28.10.2026", None, None, "manual_review"),
+    ],
+)
+def test_pdf_observed_amount_is_not_selected_by_expected_value(
+    tmp_path: Path, amount_line: str, found: str | None, delta: str | None, status: str
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path, [{"date": "2026-10-28", "movement": "MOV-OBS-B92", "debit": "80"}]
+    )
+    support = tmp_path / "evidence.pdf"
+    support.write_bytes(
+        _text_pdf_bytes(
+            [
+                "Movimento contabile MOV-OBS-B92",
+                "Data 28/10/2026",
+                amount_line,
+            ]
+        )
+    )
+
+    result = core.run_entry_checks(normalized, support, tmp_path / "out")
+
+    row = result.frame.to_dicts()[0]
+    assert row["matched_support"] == "evidence.pdf"
+    assert row["amount_found"] == found
+    assert row["amount_difference_magnitude"] == delta
+    assert row["status"] == status
+    assert row["support_amount_signed"] is None
+    assert row["professional_conclusion"] == "pending_review"
+    entries = result.audit["numeric_evidence_ledger"]["entries"]
+    magnitudes = [
+        item["value"]
+        for item in entries
+        if ".amount_difference_magnitude." in item["evidence_id"]
+    ]
+    assert magnitudes == ([] if delta is None else [delta])
+
+
+def test_reviewed_pdf_amount_selection_resolves_multiple_values(tmp_path: Path) -> None:
+    core = load_core()
+    from vera_assurance import build_reviewed_decision_receipt
+
+    normalized = _qualified_journal(
+        tmp_path, [{"date": "2026-10-28", "movement": "MOV-OBS-B92", "debit": "80"}]
+    )
+    support = tmp_path / "evidence.pdf"
+    support.write_bytes(
+        _text_pdf_bytes(
+            [
+                "Movimento contabile MOV-OBS-B92",
+                "Data 28/10/2026",
+                "Totale EUR 85.00; anticipo EUR 80.00",
+            ]
+        )
+    )
+    recipe_path = _reviewed_relationship_recipe(
+        core,
+        normalized,
+        support,
+        tmp_path / "recipe.json",
+        support_locator="evidence.pdf",
+    )
+    recipe = json.loads(recipe_path.read_text())
+    previous = recipe["reviewed_support_relationships"][0]
+    recipe["reviewed_support_relationships"] = [
+        build_reviewed_decision_receipt(
+            decision_id=previous["decision_id"],
+            decision_type=previous["decision_type"],
+            status="reviewed",
+            reviewer_ref="agent.test",
+            reviewed_on="2026-10-28",
+            adapter_id="check_entries.relationship",
+            adapter_version="1",
+            source_artifact_refs=previous["source_artifact_refs"],
+            content={
+                **previous["content"],
+                "amount_token_index": 1,
+                "amount_value": "85",
+            },
+        )
+    ]
+    recipe_path.write_text(json.dumps(recipe))
+
+    result = core.run_entry_checks(normalized, support, tmp_path / "out", recipe_path)
+
+    row = result.frame.to_dicts()[0]
+    assert row["status"] == "mismatch"
+    assert row["amount_found"] == "85"
+    assert row["amount_difference_magnitude"] == "5"
+    assert (
+        json.loads(row["evidence_facts"])["amount_decision_ref"]
+        == previous["decision_id"]
+    )
+
+
+def test_reviewed_pdf_relationship_overrides_incidental_candidate(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path, [{"date": "2026-10-28", "movement": "MOV-OBS-B92", "debit": "80"}]
+    )
+    support_dir = tmp_path / "support"
+    support_dir.mkdir()
+    chosen = support_dir / "chosen.pdf"
+    chosen.write_bytes(
+        _text_pdf_bytes(
+            ["Movimento contabile MOV-OBS-B92", "Data 28/10/2026", "Importo EUR 85.00"]
+        )
+    )
+    recipe = _reviewed_relationship_recipe(
+        core, normalized, chosen, tmp_path / "recipe.json", support_locator="chosen.pdf"
+    )
+    (support_dir / "incidental.pdf").write_bytes(
+        _text_pdf_bytes(
+            ["Movimento contabile MOV-OBS-B92", "Data 28/10/2026", "Importo EUR 80.00"]
+        )
+    )
+
+    result = core.run_entry_checks(normalized, support_dir, tmp_path / "out", recipe)
+
+    row = result.frame.to_dicts()[0]
+    assert row["matched_support"] == "chosen.pdf"
+    assert row["amount_found"] == "85"
+    assert row["amount_difference_magnitude"] == "5"
+    assert row["status"] == "mismatch"
+
+
+def test_six_postings_preserve_observed_mismatch_reuse_and_missing_support(
+    tmp_path: Path,
+) -> None:
+    core = load_core()
+    normalized = _qualified_journal(
+        tmp_path,
+        [
+            {"date": "2026-09-01", "movement": "MOV-NEW-A81", "debit": "120"},
+            {"date": "2026-09-01", "movement": "MOV-NEW-A81", "credit": "120"},
+            {"date": "2026-09-02", "movement": "MOV-NEW-B92", "debit": "80"},
+            {"date": "2026-09-02", "movement": "MOV-NEW-B92", "credit": "80"},
+            {"date": "2026-09-03", "movement": "MOV-NEW-C73", "debit": "60"},
+            {"date": "2026-09-03", "movement": "MOV-NEW-C73", "credit": "60"},
+        ],
+    )
+    support = tmp_path / "support"
+    support.mkdir()
+    (support / "a.pdf").write_bytes(
+        _text_pdf_bytes(
+            ["Movimento contabile MOV-NEW-A81", "Data 01/09/2026", "Importo EUR 120.00"]
+        )
+    )
+    (support / "b.pdf").write_bytes(
+        _text_pdf_bytes(
+            ["Movimento contabile MOV-NEW-B92", "Data 02/09/2026", "Importo EUR 85.00"]
+        )
+    )
+
+    result = core.run_entry_checks(normalized, support, tmp_path / "out")
+
+    assert result.audit["status_counts"] == {
+        "manual_review": 2,
+        "mismatch": 2,
+        "missing_support": 2,
+    }
+    rows = result.frame.to_dicts()
+    assert [row["amount_found"] for row in rows] == [
+        "120",
+        "120",
+        "85",
+        "85",
+        None,
+        None,
+    ]
+    assert [row["amount_difference_magnitude"] for row in rows] == [
+        "0",
+        "0",
+        "5",
+        "5",
+        None,
+        None,
+    ]
+    assert "support_reuse_requires_review" in rows[2]["mismatches"]
+    assert "direction_requires_review" in rows[2]["mismatches"]
+    assert rows[2]["support_amount_signed"] is None
+    assert rows[2]["professional_conclusion"] == "pending_review"
+
+
+@pytest.mark.parametrize(
+    ("token_index", "amount_value"), [(1, "80"), (9, "85"), (True, "85")]
+)
+def test_reviewed_amount_cannot_invent_value_or_locator(
+    tmp_path: Path, token_index: object, amount_value: str
+) -> None:
+    core = load_core()
+    from vera_assurance import build_reviewed_decision_receipt
+
+    normalized = _qualified_journal(
+        tmp_path, [{"date": "2026-10-28", "movement": "MOV-BOUND-93", "debit": "80"}]
+    )
+    support = tmp_path / "evidence.pdf"
+    support.write_bytes(
+        _text_pdf_bytes(["Movimento contabile MOV-BOUND-93", "Importo EUR 85.00"])
+    )
+    recipe_path = _reviewed_relationship_recipe(
+        core,
+        normalized,
+        support,
+        tmp_path / "recipe.json",
+        support_locator="evidence.pdf",
+    )
+    recipe = json.loads(recipe_path.read_text())
+    previous = recipe["reviewed_support_relationships"][0]
+    recipe["reviewed_support_relationships"] = [
+        build_reviewed_decision_receipt(
+            decision_id=previous["decision_id"],
+            decision_type=previous["decision_type"],
+            status="reviewed",
+            reviewer_ref="agent.test",
+            reviewed_on="2026-10-28",
+            adapter_id="check_entries.relationship",
+            adapter_version="1",
+            source_artifact_refs=previous["source_artifact_refs"],
+            content={
+                **previous["content"],
+                "amount_token_index": token_index,
+                "amount_value": amount_value,
+            },
+        )
+    ]
+    recipe_path.write_text(json.dumps(recipe))
+
+    with pytest.raises(ValueError, match="Reviewed amount selection"):
+        core.run_entry_checks(normalized, support, tmp_path / "out", recipe_path)

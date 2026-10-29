@@ -380,6 +380,20 @@ jobs:
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_check_entries_plugin.py
           -k "file_capture or exact_file_read or recipe_capture"
+      - name: Verify observed Vouching evidence and semantic selections
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_check_entries_plugin.py
+          -k "observed_amount or reviewed_pdf_amount_selection or six_postings or cannot_invent or relationship_overrides or real_cli_closes or movimento_contabile or unrelated_pdf or explicit_pdf_candidates or filename_occurrence or reviewed_opposite_direction or stale_direction_binding"
+      - name: Verify Vouching MCP Apps handshake and private rows
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vouching_mcp_ui.py
+      - name: Verify historical upstream receipts across plugin updates
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_check_entries_plugin.py
+          -k "new_theme_replays or unsafe_upstream_implementation or changed_original_journal or fresh_upstream_replay"
       - name: Verify Journal Sampling to Vouching handoff
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
@@ -578,6 +592,15 @@ jobs:
           tests/plugins/test_non_plotting_review_workbench.py
           --cov --cov-config=tests/plugin_new_client.coveragerc
           --cov-report=term-missing --cov-fail-under=80
+      - name: Verify central Vera workflow theme
+        if: matrix.suite == 'accounting'
+        run: |
+          python scripts/sync_vera_ui_theme.py --check
+          python -m pytest -q -o addopts='' tests/scripts/test_vera_ui_theme.py
+          python -m black --check scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py tests/scripts/test_vera_ui_theme.py
+          python -m isort --check-only scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py tests/scripts/test_vera_ui_theme.py
+          python -m mypy --follow-imports=skip scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py
+          python -m bandit -q -ll scripts/vera_ui_theme.py scripts/sync_vera_ui_theme.py
       - name: Verify Geneva common-core adapters and source boundaries
         if: matrix.suite == 'accounting'
         run: |
@@ -636,7 +659,7 @@ jobs:
           python -m bandit -q -ll -r plugins/new-client/scripts scripts/new_client_review_widget.py
           python -m black --check plugins/apertura-pratica/scripts/validate_run.py plugins/apertura-pratica/scripts/apertura_pratica_core.py plugins/apertura-pratica/scripts/apertura_pratica_display.py plugins/apertura-pratica/tests/test_apertura_pratica.py scripts/build_matter_review_assets.py tests/plugins/_matter_teaching.py tests/plugins/test_matter_review_presentation.py
           python -m isort --check-only plugins/apertura-pratica/scripts/validate_run.py plugins/apertura-pratica/scripts/apertura_pratica_core.py plugins/apertura-pratica/scripts/apertura_pratica_display.py plugins/apertura-pratica/tests/test_apertura_pratica.py scripts/build_matter_review_assets.py tests/plugins/_matter_teaching.py tests/plugins/test_matter_review_presentation.py
-          python -m mypy --follow-imports=silent plugins/apertura-pratica/scripts/validate_run.py plugins/apertura-pratica/scripts/apertura_pratica_core.py plugins/apertura-pratica/scripts/apertura_pratica_display.py scripts/build_matter_review_assets.py
+          python -m mypy --explicit-package-bases --follow-imports=silent plugins/apertura-pratica/scripts/validate_run.py plugins/apertura-pratica/scripts/apertura_pratica_core.py plugins/apertura-pratica/scripts/apertura_pratica_display.py scripts/build_matter_review_assets.py
           python -m bandit -q -ll plugins/apertura-pratica/scripts/validate_run.py plugins/apertura-pratica/scripts/apertura_pratica_core.py plugins/apertura-pratica/scripts/apertura_pratica_display.py scripts/build_matter_review_assets.py
           python -m black --check plugins/presenza-digitale-studio/scripts/workflow_core.py tests/plugins/test_presenza_digitale_studio.py
           python -m isort --check-only plugins/presenza-digitale-studio/scripts/workflow_core.py tests/plugins/test_presenza_digitale_studio.py

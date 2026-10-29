@@ -28,11 +28,11 @@
   "sources": [
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
-      "sha256": "ce1270b66e02789aef96e4c869e9893bd16343f3025626f99c0aa3aef604bee5"
+      "sha256": "c4d724e5fd6c60228965cff667769e399875d371a204274803745f42f0e86c85"
     },
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
-      "sha256": "54182be7c2edc36a744e0d96aec38a5c68ec8f0eb6df3705ac85b5877b7ff2b6"
+      "sha256": "c2722ed576b1740324d6ac5628729aed6e173247cc224677ebbd14fe2a070eb4"
     },
     {
       "path": "modules/apertura-pratica/assets/icon.svg",
@@ -144,7 +144,7 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+      "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
@@ -577,5 +577,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1e338dc7b725f1b7f35f1a1163bcfc6804eef3c41bf9739d862ba1b9fc888b7b"
+  "canonical_course_sha256": "95fcdab740efb7973d23d864161d59689538914c82166770535aa9de35ebc36c"
 }

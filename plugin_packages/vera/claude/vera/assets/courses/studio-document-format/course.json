@@ -249,7 +249,7 @@
     },
     {
       "path": "modules/report-builder/assets/report-builder-review-widget.html",
-      "sha256": "e7422f2a42d36e3e0d183b847664b2ba03405b01a882b6bef4539ec347fa0f97"
+      "sha256": "bcf180b7274aac4919c00bbb05e881c74fc4d9647b0107564f539df2de186159"
     },
     {
       "path": "modules/report-builder/assets/review-workbench-adapter.json",
@@ -481,7 +481,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
-      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+      "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
@@ -942,5 +942,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8e810c696d7de408c08a3bebf207b5a600e3d8e460a11d0b6fc934bad4d76f03"
+  "canonical_course_sha256": "48674e19a5afc7c010f23924631b131c9868c4a5f3f57228ed290bada986f501"
 }

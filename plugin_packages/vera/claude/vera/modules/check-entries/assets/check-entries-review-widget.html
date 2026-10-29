@@ -5,36 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Vouching Review</title>
   <style>
-    :root {
-      color-scheme: light;
-      --paper: #ffffff;
-      --surface: #ffffff;
-      --soft: #fafafa;
-      --soft-strong: #f3f4f2;
-      --ink: #1f2421;
-      --text: #3f4541;
-      --muted: #727972;
-      --border: #e8eae7;
-      --border-strong: #d8dcd7;
-      --accent: #35463f;
-      --accent-strong: #202a26;
-      --accent-soft: #f3f6f4;
-      --danger: #7b4b44;
-      --danger-bg: #fbf7f6;
-      --warning: #6f6247;
-      --warning-bg: #fbfaf6;
-      --ok: #4b6759;
-      --ok-bg: #f7faf8;
-      --info: #52646e;
-      --info-bg: #f7fafb;
-      --radius: 8px;
-      --content: 1240px;
-    }
+    :root { --content: 1240px; }
     * { box-sizing: border-box; }
     html, body { margin: 0; max-width: 100%; background: var(--paper); }
     body {
       color: var(--text);
-      font-family: "Aptos", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: var(--font-ui);
       font-size: 1rem;
       line-height: 1.5;
       letter-spacing: 0;
@@ -1028,7 +1004,149 @@
       .tabs, .state-filters { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; padding-bottom: 4px; }
       .tabs > *, .state-filters > * { flex: 0 0 auto; white-space: nowrap; }
     }
-  </style>
+
+/* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
+/* Canonical Vera workflow theme. Derived from the Vouching review surface.
+ * Run: python scripts/sync_vera_ui_theme.py after changing this file.
+ * Embedded at build time: no remote fonts, imports, or host CSS dependencies.
+ */
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --soft: #fafafa;
+  --soft-strong: #f3f4f2;
+  --ink: #1f2421;
+  --text: #3f4541;
+  --muted: #727972;
+  --border: #e8eae7;
+  --border-strong: #d8dcd7;
+  --accent: #35463f;
+  --accent-strong: #202a26;
+  --accent-soft: #f3f6f4;
+  --danger: #7b4b44;
+  --danger-bg: #fbf7f6;
+  --warning: #6f6247;
+  --warning-bg: #fbfaf6;
+  --ok: #4b6759;
+  --ok-bg: #f7faf8;
+  --info: #52646e;
+  --info-bg: #f7fafb;
+  --radius: 8px;
+  --font-ui: "Aptos", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-ui: 1rem;
+  --font-size-control: 0.875rem;
+  --font-size-title: 1.25rem;
+  --font-size-heading: 1.05rem;
+  --control-padding: 0.55rem 0.75rem;
+  --control-height: 2.5rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  /* Compatibility aliases for existing layout-specific selectors. */
+  --navy: var(--accent);
+  --blue: var(--accent);
+  --cyan: var(--accent);
+  --line: var(--border);
+  --rule: var(--border);
+  --wash: var(--soft);
+  --bg: var(--paper);
+  --focus-border-color: var(--accent);
+  --focus-ring-color: var(--border-strong);
+  --mparanza-pill-font-family: var(--font-ui);
+  --white: var(--paper);
+  --line-strong: var(--border-strong);
+  --quiet: var(--muted);
+  --blue-wash: var(--accent-soft);
+  --green: var(--ok);
+  --green-wash: var(--ok-bg);
+  --amber: var(--warning);
+  --amber-wash: var(--warning-bg);
+  --red: var(--danger);
+  --red-wash: var(--danger-bg);
+  --focus: var(--accent);
+  --teal: var(--accent);
+  --teal-soft: var(--accent-soft);
+  --green-soft: var(--ok-bg);
+  --amber-soft: var(--warning-bg);
+  --red-soft: var(--danger-bg);
+  --sans: var(--font-ui);
+  --serif: var(--font-ui);
+}
+:root body {
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+:root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
+:root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }
+:root :is(h2, h3) { font-size: var(--font-size-heading); font-weight: 650; line-height: 1.3; letter-spacing: 0; }
+:root .brand { font-size: 1.25rem; font-weight: 650; letter-spacing: -0.04em; }
+:root :is(main, .main) > button { margin-inline-end: var(--space-sm); margin-block-end: var(--space-sm); }
+:root :is(a, summary, .eyebrow, .product) { color: var(--accent); }
+:root :is(button, input, textarea, select, .button) {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  line-height: 1.4;
+  letter-spacing: 0;
+  accent-color: var(--accent);
+}
+:root :is(button, .button, .custom-select__button) {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  background-image: none;
+  color: var(--text);
+  box-shadow: none;
+  padding: var(--control-padding);
+  min-height: var(--control-height);
+}
+:root :is(button, .button, .custom-select__button):hover:not(:disabled) {
+  background: var(--soft-strong);
+  border-color: var(--border-strong);
+}
+:root :is(button.primary, .button.primary) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+:root :is(button.primary, .button.primary):hover:not(:disabled) {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--paper);
+}
+:root :is(button.secondary, .button.secondary, button.quiet) { background: var(--surface); color: var(--text); }
+:root :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]), textarea, select) {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: var(--control-padding);
+}
+:root :is(button, input, textarea, select, a, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+:root :is(button[aria-current=page], button[aria-pressed=true], .custom-select__option.is-active) {
+  background: var(--accent-soft);
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+:root .custom-select__list { background: var(--surface); border-color: var(--border-strong); box-shadow: none; border-radius: var(--radius); }
+:root :is(.error, #error, #status.error, .negative) { color: var(--danger); }
+:root :is(.saved, .status--ok) { color: var(--ok); }
+:root :is(.severity, .status--warning) { color: var(--warning); }
+:root .severity.blocker { color: var(--danger); }
+:root .severity.info { color: var(--info); }
+/* VERA_SHARED_THEME_END */
+</style>
 </head>
 <body>
   <main class="app">
@@ -1086,7 +1204,82 @@
     </div>
   </main>
   <script>
-    const CONFIG = {"schemaVersion":"1.0","plugin":"check-entries","title":"Vouching Review","reviewTitle":"Journal Entry Support Review","queueTitle":"Entry Checks","detailTitle":"Entry Vs Support","detailMode":"entry-support-desk","detailHelp":"Compare the journal entry, matched support document, and deterministic finding before deciding.","detailGroups":[{"title":"Journal Entry","variant":"ledger","fields":["movement_number","entry_date","account","beneficiary_expected","amount_signed","amount_abs","source_file","source_sheet","source_page","source_row","status"],"empty":"No journal entry fields."},{"title":"Support Document","variant":"source","fields":["requested_document","matched_pdf","matched_support","support_type","support_match_status","support_match_signals","filename","extractable_text","text_chars","amount_found","date_found","beneficiary_found","reason"],"empty":"No support document fields."},{"title":"Finding","variant":"finding","fields":["checks_run","mismatches","review_notes","evidence_facts","professional_conclusion","assurance_gate_status","artifact_receipt","receipt_status","error","exists","size_bytes","path"],"empty":"No finding fields."}],"panels":["Journal entry","Support document","Finding"],"localized":{"es":{"title":"Verificaci\u00f3n documental","reviewTitle":"Verificaci\u00f3n documental","queueTitle":"Asientos","detailTitle":"Asiento y justificante","detailHelp":"Compare el asiento, el justificante y el hallazgo antes de decidir.","search":"Buscar movimiento, PDF, estado, anomal\u00eda, beneficiario"},"it":{"title":"Verifica documentale","reviewTitle":"Verifica documentale","queueTitle":"Scritture","detailTitle":"Scrittura e supporto","detailHelp":"Confronta la registrazione con la fattura XML o il PDF collegato e rivedi i punti ancora da chiarire.","search":"Cerca movimento, PDF, stato, anomalia, beneficiario"},"fr":{"title":"Contr\u00f4le sur pi\u00e8ces","reviewTitle":"Contr\u00f4le sur pi\u00e8ces","queueTitle":"Ecritures","detailTitle":"Ecriture et justificatif","detailHelp":"Comparez l'ecriture, le justificatif et le constat avant de decider.","search":"Chercher mouvement, PDF, statut, ecart, beneficiaire"},"de":{"title":"Belegpr\u00fcfung","reviewTitle":"Belegpr\u00fcfung","queueTitle":"Buchungen","detailTitle":"Buchung und Beleg","detailHelp":"Buchung, Beleg und Feststellung vor der Entscheidung vergleichen.","search":"Buchung, PDF, Status, Abweichung, Empfaenger suchen"}},"saveTool":"save_check_entries_decisions","applyTool":"apply_check_entries_decisions","widgetType":"check_entries_review","demo":{"review_type":"journal_entry_support_review","items":[{"id":"check.entry.demo-1001","item_type":"supported_entry","title":"1001 | 123.45 | 2025-01-02","source_path":"entries.xlsx","output_path":"check_results.csv","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"status":"ok","prepared_entry_id":"entry.demo-1001","source_qualification_id":"qualification.demo-journal","movement_number":"1001","entry_date":"2025-01-02","beneficiary_expected":"ACME Spa","amount_abs":"123.45","matched_pdf":"support_1001.pdf","checks_run":"amount,date,beneficiary","source_row":"1","professional_conclusion":"pending_review","assurance_gate_status":"reconciliation_passed;semantic_review_withheld","target_artifact":"check_results.csv","target_id_field":"prepared_entry_id","target_record_id":"entry.demo-1001","target_field":"review_notes","edit_hint":"Editing this row updates review_notes for the stable prepared identity."},"evidence":[{"kind":"deterministic_checks","checks_run":"amount,date,beneficiary","review_notes":"All checks passed against support_1001.pdf.","matched_pdf":"support_1001.pdf","professional_conclusion":"pending_review"}]},{"id":"check.entry.demo-1002","item_type":"missing_support","title":"1002 | 88.00 | 2025-01-03","source_path":"entries.xlsx","output_path":"check_results.csv","allowed_actions":["edit","mark_unclear","request_more_documents","skip"],"recommended_action":"request_more_documents","data":{"status":"missing_support","prepared_entry_id":"entry.demo-1002","source_qualification_id":"qualification.demo-journal","movement_number":"1002","entry_date":"2025-01-03","amount_abs":"88","mismatches":"support_pdf","source_row":"2","professional_conclusion":"pending_review","assurance_gate_status":"reconciliation_failed;semantic_review_withheld","target_artifact":"check_results.csv","target_id_field":"prepared_entry_id","target_record_id":"entry.demo-1002","target_field":"review_notes","edit_hint":"Editing this row updates review_notes for the stable prepared identity.","requested_document":"Supporting PDF for movement 1002","reason":"No supporting PDF contains the explicit movement identifier."},"evidence":[{"kind":"deterministic_checks","checks_run":"","mismatches":"support_pdf","review_notes":"No explicit unique PDF movement reference was found.","professional_conclusion":"pending_review"},{"kind":"missing_document_request","requested_document":"Supporting PDF for movement 1002","reason":"No supporting PDF contains the explicit movement identifier.","status":"needs_evidence"}]}]},"injectLocalServer":false};
+"use strict";
+// Embedded in the legal/tax widgets; source and origin checks protect review writes.
+(() => {
+  const pending = new Map(), listeners = new Set();
+  let sequence = 0, initialized = false, origin = null, hostContext = {};
+  const framed = Boolean(window.parent && window.parent !== window);
+  function request(method, params, timeout = 15000) {
+    return new Promise((resolve, reject) => {
+      const id = `review-ui-${++sequence}`;
+      const timer = setTimeout(() => {
+        pending.delete(id);
+        reject(new Error(`Review host did not respond to ${method}.`));
+      }, timeout);
+      pending.set(id, { resolve, reject, timer });
+      window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, origin || "*");
+    });
+  }
+  window.addEventListener("message", (event) => {
+    if (!framed || event.source !== window.parent || (origin && event.origin !== origin)) return;
+    const message = event.data;
+    if (!message || message.jsonrpc !== "2.0") return;
+    const entry = pending.get(message.id);
+    if (entry) {
+      // Pin the actual parent after our initialization response, before any case data.
+      origin = event.origin;
+      clearTimeout(entry.timer);
+      pending.delete(message.id);
+      if (message.error) entry.reject(new Error(message.error.message || "Review host request failed."));
+      else entry.resolve(message.result);
+      return;
+    }
+    if (origin && message.method === "ui/notifications/host-context-changed") {
+      hostContext = { ...hostContext, ...message.params };
+    }
+    if (origin && message.method === "ui/notifications/tool-result") {
+      for (const listener of listeners) listener(message.params);
+    }
+  });
+  const ready = framed ? request("ui/initialize", {
+    protocolVersion: "2026-01-26",
+    appInfo: { name: "Vera Vouching review", version: "1.0.0" },
+    appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
+  }, 15000).then((result) => {
+    hostContext = result.hostContext || {};
+    initialized = true;
+    window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, origin);
+    window.dispatchEvent(new Event("mparanza:review-host-ready"));
+    return true;
+  }).catch(() => false) : Promise.resolve(false);
+  window.mparanzaReviewHost = {
+    canCallTools: () => initialized || typeof window.openai?.callTool === "function",
+    async requestDisplayMode(mode) {
+      if (await ready) {
+        if (!hostContext.availableDisplayModes?.includes(mode)) {
+          return { mode: hostContext.displayMode || "inline" };
+        }
+        const result = await request("ui/request-display-mode", { mode });
+        hostContext.displayMode = result.mode;
+        return result;
+      }
+      if (typeof window.openai?.requestDisplayMode === "function") {
+        return window.openai.requestDisplayMode({ mode });
+      }
+      return { mode: window.openai?.displayMode || "inline" };
+    },
+    async callTool(name, args) {
+      if (await ready) return request("tools/call", { name, arguments: args });
+      if (typeof window.openai?.callTool === "function") return window.openai.callTool(name, args);
+      throw new Error("Review host is unavailable. Keep decisions pending or export them for fallback review.");
+    },
+    onToolResult: (listener) => listeners.add(listener),
+  };
+})();
+
+
+    const CONFIG = {"schemaVersion":"1.0","plugin":"check-entries","title":"Vouching Review","reviewTitle":"Journal Entry Support Review","queueTitle":"Entry Checks","detailTitle":"Entry Vs Support","detailMode":"entry-support-desk","detailHelp":"Compare the journal entry, matched support document, and deterministic finding before deciding.","detailGroups":[{"title":"Journal Entry","variant":"ledger","fields":["movement_number","entry_date","account","beneficiary_expected","amount_signed","amount_abs","source_file","source_sheet","source_page","source_row","status"],"empty":"No journal entry fields."},{"title":"Support Document","variant":"source","fields":["requested_document","matched_pdf","matched_support","support_type","support_match_status","support_match_signals","filename","extractable_text","text_chars","amount_found","amount_difference_magnitude","date_found","beneficiary_found","reason"],"empty":"No support document fields."},{"title":"Finding","variant":"finding","fields":["checks_run","mismatches","review_notes","evidence_facts","professional_conclusion","assurance_gate_status","artifact_receipt","receipt_status","error","exists","size_bytes","path"],"empty":"No finding fields."}],"panels":["Journal entry","Support document","Finding"],"localized":{"es":{"title":"Verificaci\u00f3n documental","reviewTitle":"Verificaci\u00f3n documental","queueTitle":"Asientos","detailTitle":"Asiento y justificante","detailHelp":"Compare el asiento, el justificante y el hallazgo antes de decidir.","search":"Buscar movimiento, PDF, estado, anomal\u00eda, beneficiario"},"it":{"title":"Verifica documentale","reviewTitle":"Verifica documentale","queueTitle":"Scritture","detailTitle":"Scrittura e supporto","detailHelp":"Confronta la registrazione con la fattura XML o il PDF collegato e rivedi i punti ancora da chiarire.","search":"Cerca movimento, PDF, stato, anomalia, beneficiario"},"fr":{"title":"Contr\u00f4le sur pi\u00e8ces","reviewTitle":"Contr\u00f4le sur pi\u00e8ces","queueTitle":"Ecritures","detailTitle":"Ecriture et justificatif","detailHelp":"Comparez l'ecriture, le justificatif et le constat avant de decider.","search":"Chercher mouvement, PDF, statut, ecart, beneficiaire"},"de":{"title":"Belegpr\u00fcfung","reviewTitle":"Belegpr\u00fcfung","queueTitle":"Buchungen","detailTitle":"Buchung und Beleg","detailHelp":"Buchung, Beleg und Feststellung vor der Entscheidung vergleichen.","search":"Buchung, PDF, Status, Abweichung, Empfaenger suchen"}},"saveTool":"save_check_entries_decisions","applyTool":"apply_check_entries_decisions","widgetType":"check_entries_review","demo":{"review_type":"journal_entry_support_review","items":[{"id":"check.entry.demo-1001","item_type":"supported_entry","title":"1001 | 123.45 | 2025-01-02","source_path":"entries.xlsx","output_path":"check_results.csv","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"status":"ok","prepared_entry_id":"entry.demo-1001","source_qualification_id":"qualification.demo-journal","movement_number":"1001","entry_date":"2025-01-02","beneficiary_expected":"ACME Spa","amount_abs":"123.45","matched_pdf":"support_1001.pdf","checks_run":"amount,date,beneficiary","source_row":"1","professional_conclusion":"pending_review","assurance_gate_status":"reconciliation_passed;semantic_review_withheld","target_artifact":"check_results.csv","target_id_field":"prepared_entry_id","target_record_id":"entry.demo-1001","target_field":"review_notes","edit_hint":"Editing this row updates review_notes for the stable prepared identity."},"evidence":[{"kind":"deterministic_checks","checks_run":"amount,date,beneficiary","review_notes":"All checks passed against support_1001.pdf.","matched_pdf":"support_1001.pdf","professional_conclusion":"pending_review"}]},{"id":"check.entry.demo-1002","item_type":"missing_support","title":"1002 | 88.00 | 2025-01-03","source_path":"entries.xlsx","output_path":"check_results.csv","allowed_actions":["edit","mark_unclear","request_more_documents","skip"],"recommended_action":"request_more_documents","data":{"status":"missing_support","prepared_entry_id":"entry.demo-1002","source_qualification_id":"qualification.demo-journal","movement_number":"1002","entry_date":"2025-01-03","amount_abs":"88","mismatches":"support_pdf","source_row":"2","professional_conclusion":"pending_review","assurance_gate_status":"reconciliation_failed;semantic_review_withheld","target_artifact":"check_results.csv","target_id_field":"prepared_entry_id","target_record_id":"entry.demo-1002","target_field":"review_notes","edit_hint":"Editing this row updates review_notes for the stable prepared identity.","requested_document":"Supporting PDF for movement 1002","reason":"No supporting PDF contains the explicit movement identifier."},"evidence":[{"kind":"deterministic_checks","checks_run":"","mismatches":"support_pdf","review_notes":"No explicit unique PDF movement reference was found.","professional_conclusion":"pending_review"},{"kind":"missing_document_request","requested_document":"Supporting PDF for movement 1002","reason":"No supporting PDF contains the explicit movement identifier.","status":"needs_evidence"}]}]},"injectLocalServer":false};
     const ACTION_LABELS = {
       accept: "Accept",
       reject: "Reject",
@@ -1198,7 +1391,7 @@
     function esc(value) {
       return String(value ?? "").replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]);
     }
-    const IT_METADATA_LABELS = {"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato", "sampling_control": "Parametri campione", "sampled_entry": "Riga estratta", "sample_artifact": "Campione", "review_artifact": "Tracciato", "entry_date": "Data registrazione", "movement_number": "Registrazione", "line_number": "Riga", "line_desc": "Descrizione", "amount_signed": "Importo con segno", "amount_abs": "Importo assoluto", "method": "Metodo", "sample_size": "Righe estratte", "requested_size": "Righe richieste", "population_size_after_filters": "Righe nella popolazione", "seed": "Seme casuale", "source_file": "File sorgente", "source_row": "Riga sorgente", "needs_review": "Da rivedere", "reported_increment": "Precisione importi", "filters": "Filtri", "population_proof": "Controlli sulla popolazione", "sampling_parameters": "Parametri di estrazione", "kind": "Tipo", "manual_review": "Da rivedere", "matched_support": "Documento abbinato", "support_type": "Tipo documento", "support_artifact_id": "Identificativo tecnico del documento", "support_match_status": "Abbinamento", "support_match_signals": "Elementi di confronto", "amount_found": "Importo nel documento", "date_found": "Data nel documento", "checks_run": "Controlli eseguiti", "mismatches": "Punti da chiarire", "review_notes": "Note di revisione", "evidence_facts": "Dati estratti dal documento", "professional_conclusion": "Conclusione professionale", "assurance_gate_status": "Stato dei controlli", "deterministic_checks": "Confronti automatici", "value": "Valore", "pending_review": "In attesa di revisione", "fatturapa_xml": "Fattura XML", "party_perimeter_requires_review": "Soggetto da confermare", "direction_requires_review": "Segno contabile da confermare", "missing_direction": "Confronto del segno non ancora concluso", "reconciliation_failed": "Confronto da completare", "semantic_review_withheld": "Giudizio professionale in attesa", "party_perimeter": "Soggetto", "report_section": "Sezione del report", "table_evidence": "Tabella di supporto", "review_issue": "Punto da rivedere", "section": "Sezione", "draft_text": "Testo della bozza", "codex_comment": "Testo attuale", "preview_rows": "Anteprima delle righe", "sheet_name": "Foglio", "source_table": "Tabella fonte", "metric": "Misura", "period": "Periodo", "reason": "Motivo", "blocker": "Impedimento", "proposed_fix": "Modifica proposta"};
+    const IT_METADATA_LABELS = {"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato", "sampling_control": "Parametri campione", "sampled_entry": "Riga estratta", "sample_artifact": "Campione", "review_artifact": "Tracciato", "entry_date": "Data registrazione", "movement_number": "Registrazione", "line_number": "Riga", "line_desc": "Descrizione", "amount_signed": "Importo con segno", "amount_abs": "Importo assoluto", "method": "Metodo", "sample_size": "Righe estratte", "requested_size": "Righe richieste", "population_size_after_filters": "Righe nella popolazione", "seed": "Seme casuale", "source_file": "File sorgente", "source_row": "Riga sorgente", "needs_review": "Da rivedere", "reported_increment": "Precisione importi", "filters": "Filtri", "population_proof": "Controlli sulla popolazione", "sampling_parameters": "Parametri di estrazione", "kind": "Tipo", "manual_review": "Da rivedere", "matched_support": "Documento abbinato", "support_type": "Tipo documento", "support_artifact_id": "Identificativo tecnico del documento", "support_match_status": "Abbinamento", "support_match_signals": "Elementi di confronto", "amount_found": "Importo nel documento", "amount_difference_magnitude": "Differenza importi (senza segno contabile)", "date_found": "Data nel documento", "checks_run": "Controlli eseguiti", "mismatches": "Punti da chiarire", "review_notes": "Note di revisione", "evidence_facts": "Dati estratti dal documento", "professional_conclusion": "Conclusione professionale", "assurance_gate_status": "Stato dei controlli", "deterministic_checks": "Confronti automatici", "value": "Valore", "pending_review": "In attesa di revisione", "fatturapa_xml": "Fattura XML", "party_perimeter_requires_review": "Soggetto da confermare", "direction_requires_review": "Segno contabile da confermare", "missing_direction": "Confronto del segno non ancora concluso", "reconciliation_failed": "Confronto da completare", "semantic_review_withheld": "Giudizio professionale in attesa", "party_perimeter": "Soggetto", "report_section": "Sezione del report", "table_evidence": "Tabella di supporto", "review_issue": "Punto da rivedere", "section": "Sezione", "draft_text": "Testo della bozza", "codex_comment": "Testo attuale", "preview_rows": "Anteprima delle righe", "sheet_name": "Foglio", "source_table": "Tabella fonte", "metric": "Misura", "period": "Periodo", "reason": "Motivo", "blocker": "Impedimento", "proposed_fix": "Modifica proposta"};
     function humanize(value) {
       const key = String(value || "");
       if (activeLanguage() === "it" && IT_METADATA_LABELS[key]) return IT_METADATA_LABELS[key];
@@ -1394,7 +1587,7 @@
       node.innerHTML = cells.join("");
     }
     function canPersistThroughBridge() {
-      return Boolean(state.payload.decision_policy?.can_persist) && typeof window.openai?.callTool === "function";
+      return Boolean(state.payload.decision_policy?.can_persist) && window.mparanzaReviewHost.canCallTools();
     }
     function recoveryLine(label, value) {
       if (!value) return "";
@@ -2070,12 +2263,12 @@
     }
     async function saveCurrentDecisions() {
       const saveTool = state.payload.decision_policy?.save_tool || CONFIG.saveTool;
-      if (typeof window.openai?.callTool !== "function") {
+      if (!window.mparanzaReviewHost.canCallTools()) {
         await copyDecisionJson();
         setRecoveryIssue("fallback", uiText("fallbackActive", "JSON fallback active"), uiText("fallbackBody", "Copy or download ui_decisions.json. Use the MCP or local-server review surface to persist and apply decisions."), saveTool);
         return { ok: true, copied: true, message: uiText("toolCopied", "Tool bridge unavailable. JSON copied.") };
       }
-      const result = parseToolResult(await window.openai.callTool(saveTool, saveToolArgs()));
+      const result = parseToolResult(await window.mparanzaReviewHost.callTool(saveTool, saveToolArgs()));
       if (!result?.ok) throw new Error(result?.error || uiText("saveFailed", "Decision save failed."));
       if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;
       return result;
@@ -2097,7 +2290,7 @@
     async function handleApplyDecisions() {
       const decisions = collectDecisionInputs();
       try { validateDecisionInputs(decisions); } catch (error) { setSaveStatus(error.message || String(error), "error"); return; }
-      if (typeof window.openai?.callTool !== "function") {
+      if (!window.mparanzaReviewHost.canCallTools()) {
         try {
           await copyDecisionJson();
           setRecoveryIssue("fallback", uiText("applyFailedTitle", "Apply did not persist"), uiText("applyRequiresMcp", "Apply requires the MCP or local-server review surface."), state.payload.decision_policy?.apply_tool || CONFIG.applyTool);
@@ -2112,7 +2305,7 @@
       try {
         await saveCurrentDecisions();
         const applyTool = state.payload.decision_policy?.apply_tool || CONFIG.applyTool;
-        const result = parseToolResult(await window.openai.callTool(applyTool, applyToolArgs()));
+        const result = parseToolResult(await window.mparanzaReviewHost.callTool(applyTool, applyToolArgs()));
         if (!result?.ok) throw new Error(result?.error || uiText("applyFailed", "Decision apply failed."));
         if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
         if (result.applied_decisions) state.payload.applied_decisions = result.applied_decisions;
@@ -2197,15 +2390,29 @@
     document.getElementById("apply-decisions").addEventListener("click", handleApplyDecisions);
     document.getElementById("copy-decisions").addEventListener("click", () => copyDecisionJson().then(() => setSaveStatus(uiText("jsonCopied", "JSON copied."), "ok")).catch((error) => setSaveStatus(error.message || String(error), "error")));
     document.getElementById("download-decisions").addEventListener("click", downloadDecisionJson);
-    window.addEventListener("message", (event) => {
-      if (event?.data?.method !== "ui/notifications/tool-result") return;
-      const nextPayload = pickPayload(event.data.params);
-      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;
+    window.mparanzaReviewHost.onToolResult((result) => {
+      if (result?.isError) return;
+      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);
+      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;
       state.payload = nextPayload;
+      requestPresentation(nextPayload);
       loadInitialDecisions();
       render();
     });
+    window.addEventListener("mparanza:review-host-ready", render);
+    let presentationRequested = false;
+    function requestPresentation(payload) {
+      const mode = payload?.requested_display_mode;
+      if (presentationRequested || !["inline", "fullscreen"].includes(mode)) return;
+      presentationRequested = true;
+      window.mparanzaReviewHost.requestDisplayMode(mode).then((result) => {
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+      }).catch((error) => {
+        console.warn("Review display mode request failed.", error);
+      });
+    }
     state.payload = toolOutput();
+    requestPresentation(state.payload);
     loadInitialDecisions();
     render();
   </script>

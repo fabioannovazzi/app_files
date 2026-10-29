@@ -55,7 +55,7 @@
       "kind": "hosted_service",
       "destination": "Mparanza Research Video Voice; OpenAI speech service configured by Mparanza",
       "purpose": "After explicit narration and visual-plan approval",
-      "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Research images, property photographs, research and listing sources, source-basis notes, Vera artifacts, local music, and local paths are excluded.",
+      "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Images, research sources, source-basis notes, Vera artifacts, and local paths are excluded.",
       "retention": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source.",
       "activation": "explicit_user_choice",
       "optional": true,
@@ -78,7 +78,7 @@
       "kind": "hosted_service",
       "destination": "Mparanza Research Video Voice; OpenAI speech service configured by Mparanza",
       "purpose": "When Mparanza generates each approved scene narration",
-      "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, research images, property photographs, sources, Vera artifacts, local music, and local paths are not forwarded.",
+      "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, images, sources, Vera artifacts, and local paths are not forwarded.",
       "retention": "Mparanza builds narration audio and the response ZIP in process memory without writing narration requests or audio to application storage. This does not establish deletion from provider systems or technical infrastructure logs. The browser downloads the ZIP, and Clara may retain attached narration and copies in local render attempts or published snapshots until those local files are removed. Provider-side processing, retention and deletion are not established by the inspected application source.",
       "activation": "explicit_user_choice",
       "optional": true,
@@ -135,12 +135,12 @@
       {
         "id": "bound-hosted-request",
         "when": "After explicit narration and visual-plan approval",
-        "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Research images, property photographs, research and listing sources, source-basis notes, Vera artifacts, local music, and local paths are excluded."
+        "content": "Exact approved narration per scene, narration language, stable scene identifiers, scene-plan SHA-256, approval SHA-256, and explicit confirmation flag sent to Mparanza. Images, research sources, source-basis notes, Vera artifacts, and local paths are excluded."
       },
       {
         "id": "openai-speech-request",
         "when": "When Mparanza generates each approved scene narration",
-        "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, research images, property photographs, sources, Vera artifacts, local music, and local paths are not forwarded."
+        "content": "Exact approved narration for that scene, fixed speech model, language-selected voice, and professional delivery instructions sent by Mparanza to OpenAI. Mparanza authentication, scene-plan and approval hashes, images, sources, Vera artifacts, and local paths are not forwarded."
       }
     ],
     "data_returned": [
@@ -166,9 +166,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "38f81d8cb9d156af1ddd4f591271bbedd1d218c90eb5c408ec73497c6cceb046"
+    "source_fingerprint": "6da2faba0116e075f782ca21180fce78f5adffc7c77ac4c01ea08e9f5467a250"
   }
 }

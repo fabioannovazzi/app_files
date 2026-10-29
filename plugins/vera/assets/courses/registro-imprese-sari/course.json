@@ -35,7 +35,7 @@
     {
       "path": "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
       "repository_path": "plugins/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
-      "sha256": "df4a4f000a127956a98784ed9babd30397c853e58a3263033838e0e80fa167cb"
+      "sha256": "758cdf7054ea0c41adc998010513b305229664fb7ce0418906b6054c00ff312c"
     },
     {
       "path": "modules/registro-imprese-sari/assets/registry-display.json",
@@ -280,12 +280,12 @@
     {
       "path": "vendor/modules/courseware/legacy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+      "sha256": "ba650a5da883f2ea5ea741a1fd5118011c8c9215ff2a06e17f3a41785d004c8f"
     },
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "888a3fc6f6ba005e9a9aff844c4d63d623af8be921354632f7f77ef6bd69d737"
+      "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
     },
     {
       "path": "vendor/modules/courseware/native.cjs",
@@ -311,6 +311,11 @@
       "path": "vendor/modules/courseware/sales_plan_view.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
       "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/theme.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/theme.py",
+      "sha256": "26501b56d6e6f99573a40343de95221671758db13d23a14a7012590a89ae2631"
     },
     {
       "path": "vendor/modules/courseware/website_view.py",

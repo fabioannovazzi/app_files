@@ -191,6 +191,7 @@ TARGETS: list[dict[str, Any]] = [
                     "extractable_text",
                     "text_chars",
                     "amount_found",
+                    "amount_difference_magnitude",
                     "date_found",
                     "beneficiary_found",
                     "reason",
@@ -3065,36 +3066,12 @@ TEMPLATE = """<!doctype html>
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
   <title>{title}</title>
   <style>
-    :root {{
-      color-scheme: light;
-      --paper: #ffffff;
-      --surface: #ffffff;
-      --soft: #fafafa;
-      --soft-strong: #f3f4f2;
-      --ink: #1f2421;
-      --text: #3f4541;
-      --muted: #727972;
-      --border: #e8eae7;
-      --border-strong: #d8dcd7;
-      --accent: #35463f;
-      --accent-strong: #202a26;
-      --accent-soft: #f3f6f4;
-      --danger: #7b4b44;
-      --danger-bg: #fbf7f6;
-      --warning: #6f6247;
-      --warning-bg: #fbfaf6;
-      --ok: #4b6759;
-      --ok-bg: #f7faf8;
-      --info: #52646e;
-      --info-bg: #f7fafb;
-      --radius: 8px;
-      --content: 1240px;
-    }}
+    :root {{ --content: 1240px; }}
     * {{ box-sizing: border-box; }}
     html, body {{ margin: 0; max-width: 100%; background: var(--paper); }}
     body {{
       color: var(--text);
-      font-family: \"Aptos\", \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;
+      font-family: var(--font-ui);
       font-size: 1rem;
       line-height: 1.5;
       letter-spacing: 0;
@@ -4242,7 +4219,7 @@ TEMPLATE = """<!doctype html>
     function esc(value) {{
       return String(value ?? \"\").replace(/[&<>\"']/g, (char) => ({{ \"&\": \"&amp;\", \"<\": \"&lt;\", \">\": \"&gt;\", '\"': \"&quot;\", \"'\": \"&#39;\" }})[char]);
     }}
-    const IT_METADATA_LABELS = {{"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato", "sampling_control": "Parametri campione", "sampled_entry": "Riga estratta", "sample_artifact": "Campione", "review_artifact": "Tracciato", "entry_date": "Data registrazione", "movement_number": "Registrazione", "line_number": "Riga", "line_desc": "Descrizione", "amount_signed": "Importo con segno", "amount_abs": "Importo assoluto", "method": "Metodo", "sample_size": "Righe estratte", "requested_size": "Righe richieste", "population_size_after_filters": "Righe nella popolazione", "seed": "Seme casuale", "source_file": "File sorgente", "source_row": "Riga sorgente", "needs_review": "Da rivedere", "reported_increment": "Precisione importi", "filters": "Filtri", "population_proof": "Controlli sulla popolazione", "sampling_parameters": "Parametri di estrazione", "kind": "Tipo", "manual_review": "Da rivedere", "matched_support": "Documento abbinato", "support_type": "Tipo documento", "support_artifact_id": "Identificativo tecnico del documento", "support_match_status": "Abbinamento", "support_match_signals": "Elementi di confronto", "amount_found": "Importo nel documento", "date_found": "Data nel documento", "checks_run": "Controlli eseguiti", "mismatches": "Punti da chiarire", "review_notes": "Note di revisione", "evidence_facts": "Dati estratti dal documento", "professional_conclusion": "Conclusione professionale", "assurance_gate_status": "Stato dei controlli", "deterministic_checks": "Confronti automatici", "value": "Valore", "pending_review": "In attesa di revisione", "fatturapa_xml": "Fattura XML", "party_perimeter_requires_review": "Soggetto da confermare", "direction_requires_review": "Segno contabile da confermare", "missing_direction": "Confronto del segno non ancora concluso", "reconciliation_failed": "Confronto da completare", "semantic_review_withheld": "Giudizio professionale in attesa", "party_perimeter": "Soggetto", "report_section": "Sezione del report", "table_evidence": "Tabella di supporto", "review_issue": "Punto da rivedere", "section": "Sezione", "draft_text": "Testo della bozza", "codex_comment": "Testo attuale", "preview_rows": "Anteprima delle righe", "sheet_name": "Foglio", "source_table": "Tabella fonte", "metric": "Misura", "period": "Periodo", "reason": "Motivo", "blocker": "Impedimento", "proposed_fix": "Modifica proposta"}};
+    const IT_METADATA_LABELS = {{"matched_pair": "Movimenti abbinati", "unmatched_bank": "Movimento bancario non abbinato", "unmatched_journal": "Registrazione non abbinata", "entry": "Registrazione", "counterparty": "Controparte", "amount": "Importo", "date": "Data", "description": "Descrizione", "status": "Stato", "reference": "Riferimento", "match_method": "Metodo di abbinamento", "bank_amount": "Importo bancario", "journal_amount": "Importo contabile", "difference": "Differenza", "source_path": "Documento di origine", "output_path": "Documento prodotto", "artifact": "Documento prodotto", "report_artifact": "Report", "chart_artifact": "Grafico", "evidence": "Evidenza", "account": "Conto", "currency": "Valuta", "debit": "Dare", "credit": "Avere", "invoice_number": "Numero fattura", "exact": "Esatto", "matched": "Abbinato", "unmatched": "Non abbinato", "sampling_control": "Parametri campione", "sampled_entry": "Riga estratta", "sample_artifact": "Campione", "review_artifact": "Tracciato", "entry_date": "Data registrazione", "movement_number": "Registrazione", "line_number": "Riga", "line_desc": "Descrizione", "amount_signed": "Importo con segno", "amount_abs": "Importo assoluto", "method": "Metodo", "sample_size": "Righe estratte", "requested_size": "Righe richieste", "population_size_after_filters": "Righe nella popolazione", "seed": "Seme casuale", "source_file": "File sorgente", "source_row": "Riga sorgente", "needs_review": "Da rivedere", "reported_increment": "Precisione importi", "filters": "Filtri", "population_proof": "Controlli sulla popolazione", "sampling_parameters": "Parametri di estrazione", "kind": "Tipo", "manual_review": "Da rivedere", "matched_support": "Documento abbinato", "support_type": "Tipo documento", "support_artifact_id": "Identificativo tecnico del documento", "support_match_status": "Abbinamento", "support_match_signals": "Elementi di confronto", "amount_found": "Importo nel documento", {vouching_amount_label}"date_found": "Data nel documento", "checks_run": "Controlli eseguiti", "mismatches": "Punti da chiarire", "review_notes": "Note di revisione", "evidence_facts": "Dati estratti dal documento", "professional_conclusion": "Conclusione professionale", "assurance_gate_status": "Stato dei controlli", "deterministic_checks": "Confronti automatici", "value": "Valore", "pending_review": "In attesa di revisione", "fatturapa_xml": "Fattura XML", "party_perimeter_requires_review": "Soggetto da confermare", "direction_requires_review": "Segno contabile da confermare", "missing_direction": "Confronto del segno non ancora concluso", "reconciliation_failed": "Confronto da completare", "semantic_review_withheld": "Giudizio professionale in attesa", "party_perimeter": "Soggetto", "report_section": "Sezione del report", "table_evidence": "Tabella di supporto", "review_issue": "Punto da rivedere", "section": "Sezione", "draft_text": "Testo della bozza", "codex_comment": "Testo attuale", "preview_rows": "Anteprima delle righe", "sheet_name": "Foglio", "source_table": "Tabella fonte", "metric": "Misura", "period": "Periodo", "reason": "Motivo", "blocker": "Impedimento", "proposed_fix": "Modifica proposta"}};
     function humanize(value) {{
       const key = String(value || \"\");
       if (activeLanguage() === \"it\" && IT_METADATA_LABELS[key]) return IT_METADATA_LABELS[key];
@@ -5857,9 +5834,28 @@ def _readable_json_constants(html: str) -> str:
 
 
 def render_target(target: dict[str, Any]) -> str:
+    """Render the workflow with the shared Vera theme when bundled by Vera."""
+    if __package__:
+        from scripts.vera_ui_theme import theme_html
+    else:
+        from vera_ui_theme import theme_html
+
+    html = _render_target(target)
+    components = json.loads((ROOT / "plugins/vera/components.json").read_text())[
+        "plugins"
+    ]
+    return theme_html(html) if target["plugin"] in components else html
+
+
+def _render_target(target: dict[str, Any]) -> str:
     config = adapter_config(target)
     html = TEMPLATE.format(
         title=target["title"],
+        vouching_amount_label=(
+            '"amount_difference_magnitude": "Differenza importi (senza segno contabile)", '
+            if target["plugin"] == "check-entries"
+            else ""
+        ),
         search=target["search"],
         config_json=json.dumps(config, ensure_ascii=True, separators=(",", ":")),
         i18n_json=json.dumps(UI_I18N, ensure_ascii=True, separators=(",", ":")),
@@ -5904,6 +5900,96 @@ def render_target(target: dict[str, Any]) -> str:
             from new_client_review_widget import customize_review
 
         return _readable_json_constants(customize_review(html))
+    if target["plugin"] == "check-entries":
+        # Vouching keeps rows in component-only metadata. Initialize the MCP
+        # Apps bridge before accepting host notifications, then hydrate from
+        # that private payload rather than the model's row-free summary.
+        bridge = (
+            (ROOT / "scripts/review_mcp_apps_bridge.js")
+            .read_text(encoding="utf-8")
+            .replace("Mparanza legal and tax review", "Vera Vouching review")
+            .replace(
+                "appCapabilities: {}",
+                'appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] }',
+            )
+            .replace(
+                "let sequence = 0, initialized = false, origin = null;",
+                "let sequence = 0, initialized = false, origin = null, hostContext = {};",
+            )
+            .replace(
+                ").then(() => {\n    initialized = true;",
+                ").then((result) => {\n    hostContext = result.hostContext || {};\n    initialized = true;",
+            )
+            .replace(
+                '    if (origin && message.method === "ui/notifications/tool-result") {',
+                '    if (origin && message.method === "ui/notifications/host-context-changed") {\n'
+                "      hostContext = { ...hostContext, ...message.params };\n    }\n"
+                '    if (origin && message.method === "ui/notifications/tool-result") {',
+            )
+            .replace(
+                "    async callTool(name, args) {",
+                """    async requestDisplayMode(mode) {
+      if (await ready) {
+        if (!hostContext.availableDisplayModes?.includes(mode)) {
+          return { mode: hostContext.displayMode || "inline" };
+        }
+        const result = await request("ui/request-display-mode", { mode });
+        hostContext.displayMode = result.mode;
+        return result;
+      }
+      if (typeof window.openai?.requestDisplayMode === "function") {
+        return window.openai.requestDisplayMode({ mode });
+      }
+      return { mode: window.openai?.displayMode || "inline" };
+    },
+    async callTool(name, args) {""",
+            )
+        )
+        html = (
+            html.replace(
+                'typeof window.openai?.callTool === "function"',
+                "window.mparanzaReviewHost.canCallTools()",
+            )
+            .replace(
+                'typeof window.openai?.callTool !== "function"',
+                "!window.mparanzaReviewHost.canCallTools()",
+            )
+            .replace("window.openai.callTool(", "window.mparanzaReviewHost.callTool(")
+        )
+        html = (
+            html.replace(
+                'window.addEventListener("message", (event) => {\n'
+                '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
+                "      const nextPayload = pickPayload(event.data.params);\n"
+                "      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;",
+                "window.mparanzaReviewHost.onToolResult((result) => {\n"
+                "      if (result?.isError) return;\n"
+                "      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);\n"
+                "      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;",
+            )
+            .replace(
+                "    state.payload = toolOutput();",
+                '    window.addEventListener("mparanza:review-host-ready", render);\n'
+                """    let presentationRequested = false;
+    function requestPresentation(payload) {
+      const mode = payload?.requested_display_mode;
+      if (presentationRequested || !["inline", "fullscreen"].includes(mode)) return;
+      presentationRequested = true;
+      window.mparanzaReviewHost.requestDisplayMode(mode).then((result) => {
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+      }).catch((error) => {
+        console.warn("Review display mode request failed.", error);
+      });
+    }
+    state.payload = toolOutput();
+    requestPresentation(state.payload);""",
+            )
+            .replace(
+                "state.payload = nextPayload;",
+                "state.payload = nextPayload;\n      requestPresentation(nextPayload);",
+            )
+        )
+        return html.replace("<script>", f"<script>\n{bridge}\n", 1)
     if target["plugin"] in {"prompt-optimizer", "deep-research-validator"}:
         bridge = (ROOT / "scripts/review_mcp_apps_bridge.js").read_text(
             encoding="utf-8"

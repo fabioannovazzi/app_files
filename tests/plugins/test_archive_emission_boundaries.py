@@ -71,10 +71,16 @@ def test_unavailable_reporting_does_not_allow_reading_an_unbound_file(
         )
 
 
-def test_completed_artifact_remains_readable_without_inputs_or_collector(
-    archive_core, client_case
+@pytest.mark.parametrize(
+    ("collector_available", "expected_status"),
+    [(True, "recorded"), (False, "unavailable")],
+)
+def test_completed_artifact_remains_readable_after_inputs_removed(
+    archive_core, client_case, monkeypatch, collector_available, expected_status
 ):
     import shutil
+
+    from archive_report_store import RunStore
 
     loaded = start(archive_core, client_case, "report-builder")
     finish(archive_core, client_case, loaded)
@@ -82,6 +88,8 @@ def test_completed_artifact_remains_readable_without_inputs_or_collector(
     report = Path(loaded["output_dir"]) / "model_data_report.json"
     sealed_report = report.read_bytes()
     shutil.rmtree(run_root / "inputs")
+    if not collector_available:
+        monkeypatch.setattr(RunStore, "state", lambda self: None)
 
     result = archive_core.read_studio_run_artifact(
         client_case.client_id,
@@ -92,7 +100,7 @@ def test_completed_artifact_remains_readable_without_inputs_or_collector(
     )
 
     assert "Local professional result" in json.dumps(result["data"])
-    assert result["reporting"]["status"] == "unavailable"
+    assert result["reporting"]["status"] == expected_status
     assert report.read_bytes() == sealed_report
 
 

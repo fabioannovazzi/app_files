@@ -103,7 +103,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "55cc0cfba4f055249846cf23131d3e528388cda84bef49b2878848f50fda2931",
+  "course_sha256": "d569a2fd27002197b028212f51b3bda1f2b6943c1b721a80086a8327ff063194",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -824,5 +824,36 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "main_release_source_compatibility_20261028": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-10-28",
+    "previous_course_sha256": "55cc0cfba4f055249846cf23131d3e528388cda84bef49b2878848f50fda2931",
+    "current_course_sha256": "dee8621d7d2c7e1101fbe444f8e4a2aebc41f72d2be7da158f591ae4798fd87b",
+    "source_baseline": "33b414876 -> b261044555252fc869343404d08c8d2e1c22fe66",
+    "scope": "Widget JSON formatting and removal of embedded fonts in favor of system fallbacks; no JavaScript behavior change.",
+    "authored_content_comparison": "The complete course differs only in sources. All authored lessons, locales, inputs, checkpoints and execution contracts are unchanged. The current compiled course is identical to the release base on main.",
+    "execution_evidence": "PR 928 head 19f1aa563e68826d9d1629be207c058db113de5b, Teaching kits run 40708933998: 1717 passed and 3 skipped; the subsequent editorial gate failed on these stale source bindings. Matching native execution and the unmodified editorial gate must pass again for the final release.",
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This is source compatibility review only, not new visual, learner, professional or installed-host acceptance."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "c64c2d37a1fe9192143049d7220370e7550d35de6006d6f41049c8d59c96b9f3",
+    "current_course_sha256": "d569a2fd27002197b028212f51b3bda1f2b6943c1b721a80086a8327ff063194",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "historical_binding_recovered": {
+      "commit": "b261044555252fc869343404d08c8d2e1c22fe66",
+      "reviewed_course_sha256": "dee8621d7d2c7e1101fbe444f8e4a2aebc41f72d2be7da158f591ae4798fd87b",
+      "base_course_sha256": "c64c2d37a1fe9192143049d7220370e7550d35de6006d6f41049c8d59c96b9f3",
+      "authored_content_unchanged": true
+    }
   }
 }

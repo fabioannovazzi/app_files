@@ -21,6 +21,7 @@ from archive_report_measurements import (
 )
 from archive_report_store import (
     RunStore,
+    atomic_bytes,
     atomic_json,
     canonical,
     digest,
@@ -282,10 +283,11 @@ def _read_artifact(
     """Return an exact run artifact and record what Vera sends before returning."""
     store = RunStore(Path(loaded["run_root"]))
     state = store.state()
-    if state is None or state["finished_at"] is not None:
+    if state is None:
         raise ValueError(
             "Data reads require this Archive run's active reporting record"
         )
+    closed = state["finished_at"] is not None or state["collection_closed"]
     path = path.expanduser()
     if not path.is_absolute():
         # Resolve against the selected run, never the resident service's cwd.
@@ -315,9 +317,53 @@ def _read_artifact(
             ).hexdigest()[:24],
             role="output",
         )
-        store.source(source)
+        if not closed:
+            store.source(source)
     data, evidence = read_selection(source, offset=offset, limit=limit, columns=columns)
     token = secrets.token_hex(24)
+    if closed:
+        # A later delivery is a new measured event, not a revision of the sealed run.
+        # Coordinates and payload hashes are mechanically verifiable at this boundary.
+        delivery = {
+            "schema_version": "vera.artifact_delivery.v1",
+            "scope": "artifact_delivery_after_closure",
+            "run_id": state["run_id"],
+            "recorded_at": now(),
+            "selection": evidence,
+            "characters": len(canonical(data).decode("utf-8")),
+            "bytes": len(canonical(data)),
+            "data_sha256": digest(data),
+            "historical_report_unchanged": True,
+        }
+        directory = Path(loaded["run_root"]) / "reporting" / "artifact-deliveries"
+        receipt_path = directory / f"{token}.json"
+        report_path = directory / f"{token}.md"
+        atomic_json(receipt_path, delivery)
+        atomic_bytes(
+            report_path,
+            (
+                "# Dati inviati da Vera al modello — lettura successiva\n\n"
+                f"Esecuzione di origine: `{state['run_id']}`.\n\n"
+                "Questa misurazione riguarda soltanto la nuova lettura; "
+                "il report storico e la sua ricevuta restano invariati.\n\n"
+                f"Fonte: `{source['source_id']}`\n\n"
+                f"Unità inviate: {evidence['stop'] - evidence['start']} "
+                f"({evidence['unit']}); colonne: {len(evidence['columns'])}.\n\n"
+                f"Caratteri del contenuto restituito: {delivery['characters']}.\n\n"
+                f"SHA256 del contenuto: `{delivery['data_sha256']}`.\n\n"
+                "Misurazione locale; questa ricevuta di lettura non è firmata dal server.\n"
+            ).encode("utf-8"),
+        )
+        return {
+            "data": data,
+            "reporting": {
+                "status": "recorded",
+                "scope": delivery["scope"],
+                "receipt_path": str(receipt_path),
+                "report_path": str(report_path),
+                "historical_report_unchanged": True,
+            },
+        }
     store.event("packet:" + token, {"kind": "prepared_packet", "selection": evidence})
     packet = {
         "data": data,

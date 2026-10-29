@@ -6,6 +6,11 @@ import argparse
 import json
 from pathlib import Path
 
+if __package__:
+    from scripts.vera_ui_theme import theme_html
+else:
+    from vera_ui_theme import theme_html
+
 __all__ = ["build", "main"]
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -18,6 +23,7 @@ def build() -> dict[Path, str]:
     template = template.replace(
         "__LABELS__", json.dumps(vocabulary, ensure_ascii=True, indent=2)
     )
+    template = theme_html(template)
     return {
         component / "assets" / name: template.replace("__EDITABLE__", editable)
         for name, editable in (

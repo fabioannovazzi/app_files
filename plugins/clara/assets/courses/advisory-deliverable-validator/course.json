@@ -94,7 +94,7 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/clara/scripts/archive_reporting.py",
-      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+      "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
@@ -204,7 +204,7 @@
     {
       "path": "skills/advisory-deliverable-validator/SKILL.md",
       "repository_path": "plugins/clara/skills/advisory-deliverable-validator/SKILL.md",
-      "sha256": "5d7f72935822c27704a34baea76448e5cdaf59ceacce2127ef6131b1fadfa881"
+      "sha256": "a958c0d3d6b4f978f73dc2ef7163b3019f28549e1278e00c30845fa187a5f7ca"
     },
     {
       "path": "skills/advisory-deliverable-validator/references/advisory-contract.md",
@@ -309,12 +309,12 @@
     {
       "path": "vendor/modules/courseware/legacy.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/legacy.py",
-      "sha256": "9a556fd4e574e1a5249bc2d4a6f5243f33571aae4df679a832ccae48cd4ae49b"
+      "sha256": "ba650a5da883f2ea5ea741a1fd5118011c8c9215ff2a06e17f3a41785d004c8f"
     },
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "888a3fc6f6ba005e9a9aff844c4d63d623af8be921354632f7f77ef6bd69d737"
+      "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
     },
     {
       "path": "vendor/modules/courseware/native.cjs",
@@ -340,6 +340,11 @@
       "path": "vendor/modules/courseware/sales_plan_view.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/sales_plan_view.py",
       "sha256": "115977d03c034ed5f363d6fd5c8c82648ed1349067ac61e48d0701b10caa7e7b"
+    },
+    {
+      "path": "vendor/modules/courseware/theme.py",
+      "repository_path": "plugins/_shared/vendor/modules/courseware/theme.py",
+      "sha256": "26501b56d6e6f99573a40343de95221671758db13d23a14a7012590a89ae2631"
     },
     {
       "path": "vendor/modules/courseware/website_view.py",

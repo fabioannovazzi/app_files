@@ -552,6 +552,11 @@ def test_claude_manifest_uses_canonical_vera_identity_and_version(
         "author": template["author"],
         "homepage": template["homepage"],
         "privacyPolicyUrl": template["privacyPolicyUrl"],
+        "shortDescription": template["shortDescription"],
+        "icon": template["icon"],
+        "documentationUrl": template["documentationUrl"],
+        "supportUrl": template["supportUrl"],
+        "termsOfServiceUrl": template["termsOfServiceUrl"],
         "repository": template["repository"],
         "license": template["license"],
         "keywords": template["keywords"],
@@ -2039,3 +2044,45 @@ def test_claude_projection_rejects_retired_remote_reporting_endpoint(product):
     ).encode()
     with pytest.raises(ValueError, match="remote incident endpoints are retired"):
         builder.project_claude_mcp(configuration)
+
+
+@pytest.mark.parametrize(
+    ("product", "language"), [("vera", "it"), ("lucia", "it"), ("clara", "en")]
+)
+def test_directory_listing_metadata_and_icon_survive_packaging(product, language):
+    builder = load_builder()
+    _, packages = builder.load_configuration()
+    package = next(item for item in packages if item.plugin == product)
+    canonical = json.loads(
+        (ROOT / "plugins" / product / ".codex-plugin/plugin.json").read_text()
+    )
+
+    entries = builder.claude_package_entries(package)
+
+    manifest = json.loads(entries[".claude-plugin/plugin.json"])
+    assert manifest["shortDescription"] == canonical["interface"]["shortDescription"]
+    assert manifest["documentationUrl"] == (
+        f"https://mparanza.com/static/shared/{product}/index.html?lang={language}"
+    )
+    assert manifest["supportUrl"] == "https://mparanza.com/support"
+    assert manifest["termsOfServiceUrl"] == "https://mparanza.com/terms"
+    assert manifest["icon"] == "./assets/icon.svg"
+    assert (
+        entries["assets/icon.svg"]
+        == (ROOT / "plugins" / product / "assets/icon.svg").read_bytes()
+    )
+    assert manifest["author"]["name"] == "Mparanza"
+    assert manifest["keywords"]
+
+
+def test_lucia_cowork_distribution_keeps_canonical_lesson_theme_and_report_styles():
+    archive_path = ROOT / "plugin_packages/lucia/lucia-claude-plugin.zip"
+    theme = (ROOT / "plugins/_shared/ui/vera-theme.css").read_bytes()
+    report_css = (
+        ROOT / "plugins/_shared/vendor/modules/courseware/assets/course.css"
+    ).read_bytes()
+
+    with ZipFile(archive_path) as archive:
+        assert archive.read("ui/theme.css") == theme
+        assert archive.read("vendor/modules/courseware/assets/course.css") == report_css
+        assert b"theme_lesson" in archive.read("vendor/modules/courseware/library.py")

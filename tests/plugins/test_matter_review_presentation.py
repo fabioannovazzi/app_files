@@ -29,8 +29,10 @@ def test_review_assets_are_readable_without_embedded_or_remote_fonts(asset):
     assert max(map(len, html.splitlines())) <= 2000
     assert "@font-face" not in html
     assert "data:font/" not in html
-    assert (
-        '"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif' in html
+    assert "@import" not in html
+    assert re.search(
+        r"(?:font-family|--font-ui)\s*:[^;{}]*(?:system-ui|-apple-system)[^;{}]*sans-serif",
+        html,
     )
 
 
@@ -110,3 +112,21 @@ process.stdout.write(JSON.stringify({body:nodes['#items'].innerHTML,title:nodes[
     assert "<pre>" not in actual["body"]
     assert "[object Object]" not in actual["body"]
     assert "<select" not in actual["body"]
+
+
+def test_matter_builder_preserves_central_theme_after_regeneration(
+    monkeypatch, tmp_path
+):
+    from scripts import vera_ui_theme
+    from scripts.build_matter_review_assets import build
+
+    stylesheet = ":root { --accent: #454545; }\n"
+    theme_path = tmp_path / "theme.css"
+    theme_path.write_text(stylesheet)
+    monkeypatch.setattr(vera_ui_theme, "THEME_PATH", theme_path)
+
+    generated = build()
+
+    assert len(generated) == 2
+    assert all(stylesheet in page for page in generated.values())
+    assert all(page.count(vera_ui_theme.START) == 1 for page in generated.values())

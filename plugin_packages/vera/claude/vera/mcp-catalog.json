@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.516",
+  "version": "0.1.526",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -1550,7 +1550,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "check-entries-widgets",
-          "version": "0.1.57"
+          "version": "0.1.59"
         },
         "capabilities": {
           "tools": {},
@@ -1659,7 +1659,7 @@
         {
           "name": "render_check_entries_review",
           "title": "Render Vouching review",
-          "description": "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts.",
+          "description": "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts. Set display_mode to fullscreen to request automatic expansion into the host panel; the host decides whether it is available.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -1740,6 +1740,14 @@
                 "type": "string",
                 "pattern": "^[A-Za-z0-9_-]{43}$",
                 "description": "Opaque review reference returned by validation."
+              },
+              "display_mode": {
+                "type": "string",
+                "enum": [
+                  "inline",
+                  "fullscreen"
+                ],
+                "description": "Optional presentation request. Omit to keep the normal host default."
               }
             },
             "required": [],
@@ -2069,6 +2077,12 @@
             },
             "openai/widgetDescription": "Interactive Vouching review surface for support coverage, mismatches, missing support, manual-review rows, PDF extraction, and generated artifacts.",
             "openai/widgetPrefersBorder": false,
+            "openai/ui": {
+              "availableDisplayModes": [
+                "inline",
+                "fullscreen"
+              ]
+            },
             "openai/widgetCSP": {
               "connect_domains": [],
               "resource_domains": []
@@ -10088,7 +10102,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.516",
+          "version": "0.1.526",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",

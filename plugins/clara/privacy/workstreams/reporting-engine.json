@@ -232,10 +232,10 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "c4ca7bb1afcfebc4c7b77509fd5ef6e95fbc59eb2e9d193ae916dd87eeac6b03"
+    "source_fingerprint": "2a1e3e061642235332699152562490a965c235feb8d94a76ef05947d26cc3b0b"
   },
   "governed_repository_paths": [
     "plugins/management-control-pack/scripts",

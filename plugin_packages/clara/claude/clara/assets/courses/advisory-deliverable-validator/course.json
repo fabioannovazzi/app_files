@@ -80,7 +80,7 @@
     },
     {
       "path": "scripts/archive_reporting.py",
-      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+      "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
@@ -168,7 +168,7 @@
     },
     {
       "path": "skills/mparanza-advisory-deliverable-validator/SKILL.md",
-      "sha256": "dbf0428e9e866fa48471739c60cc10e60993181434ad1c80d56f39fd80877978"
+      "sha256": "9182255adf05b7b2c60111505ce65f3dfd486cd9ae69d3565ce044376bbc8a17"
     },
     {
       "path": "skills/mparanza-advisory-deliverable-validator/references/advisory-contract.md",
@@ -597,5 +597,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "94ffc15ae866ebeda9c4cc367bb8842af5642704d88aa99178d89417f6bf1000"
+  "canonical_course_sha256": "bbf6a9f10c00bb551b36b79f4428b064a16853575c7cff4b0326b7a7b1ee1c9e"
 }

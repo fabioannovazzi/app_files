@@ -238,6 +238,7 @@ const MODEL_CASE_DATA_FIELDS = new Set([
   "professional_conclusion",
   "assurance_gate_status",
   "amount_found",
+  "amount_difference_magnitude",
   "date_found",
   "beneficiary_found",
   "reason",
@@ -608,6 +609,7 @@ function widgetResourceMeta(uri) {
     "openai/widgetDescription":
       "Interactive Vouching review surface for support coverage, mismatches, missing support, manual-review rows, PDF extraction, and generated artifacts.",
     "openai/widgetPrefersBorder": false,
+    "openai/ui": { availableDisplayModes: ["inline", "fullscreen"] },
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
   };
@@ -704,8 +706,14 @@ function toolDefinitions() {
       name: TOOL_NAMES.renderReview,
       title: "Render Vouching review",
       description:
-        "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts.",
-      inputSchema,
+        "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts. Set display_mode to fullscreen to request automatic expansion into the host panel; the host decides whether it is available.",
+      inputSchema: {
+        ...inputSchema,
+        properties: {
+          ...inputSchema.properties,
+          display_mode: { type: "string", enum: ["inline", "fullscreen"], description: "Optional presentation request. Omit to keep the normal host default." },
+        },
+      },
       _meta: toolUiMeta(WIDGET_URI, TOOL_NAMES.renderReview),
       annotations: {
         readOnlyHint: true,
@@ -4776,13 +4784,19 @@ function callTool(name, args = {}) {
     return result;
   }
   if (name === TOOL_NAMES.renderReview) {
+    if (args.display_mode != null && !["inline", "fullscreen"].includes(args.display_mode)) {
+      throw new Error("display_mode must be inline or fullscreen");
+    }
     const trustedArgs = args.persistence_token != null
       ? args
       : readOnlyAssuredReviewArgs(args);
     const resolved = privatePayloadForRender(trustedArgs);
     return {
       ...modelContextIndex(resolved.token, resolved.context),
-      _private_review_payload: resolved.context.privatePayload,
+      _private_review_payload: {
+        ...resolved.context.privatePayload,
+        ...(args.display_mode == null ? {} : { requested_display_mode: args.display_mode }),
+      },
     };
   }
   if (name === TOOL_NAMES.caseContext) {

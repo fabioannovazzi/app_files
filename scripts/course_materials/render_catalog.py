@@ -49,6 +49,11 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         shutil.copyfile(assets / name, destination / name)
     for name in ("course-start.css", "course-start.js"):
         shutil.copyfile(Path(__file__).parent / name, destination / name)
+    from scripts.vera_ui_theme import THEME_PATH, theme_course_page
+
+    (destination / "workflow-theme.css").write_text(
+        THEME_PATH.read_text(), encoding="utf-8"
+    )
     introduction = render_introduction(ROOT, destination)
     sections = []
     for product in ("vera", "clara", "lucia"):
@@ -125,6 +130,14 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
                         "OFL.txt",
                     ):
                         (folder / shared).unlink()
+                if product in {"clara", "lucia"}:
+                    page = folder / "course.html"
+                    page.write_text(
+                        theme_course_page(page.read_text(encoding="utf-8")),
+                        encoding="utf-8",
+                    )
+                if public:
+                    (folder / "workflow-theme.css").unlink(missing_ok=True)
                 target = (folder / "course.html").relative_to(destination).as_posix()
                 links.append(
                     f'<a href="{html.escape(target, quote=True)}" lang="{language}">{LANGUAGE_NAMES[language]}</a>'
