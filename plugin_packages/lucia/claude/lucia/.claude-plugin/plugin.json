@@ -10,6 +10,11 @@
   },
   "homepage": "https://mparanza.com/static/shared/lucia/index.html?lang=it",
   "privacyPolicyUrl": "https://mparanza.com/privacy",
+  "shortDescription": "Assistente AI per avvocati",
+  "icon": "./assets/icon.svg",
+  "documentationUrl": "https://mparanza.com/static/shared/lucia/index.html?lang=it",
+  "supportUrl": "https://mparanza.com/support",
+  "termsOfServiceUrl": "https://mparanza.com/terms",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
@@ -23,6 +28,6 @@
     "law-firm-website",
     "professional-services"
   ],
-  "version": "0.1.188",
+  "version": "0.1.189",
   "skills": "./skills/"
 }
