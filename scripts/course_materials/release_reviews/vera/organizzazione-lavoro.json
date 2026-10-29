@@ -52,7 +52,7 @@
     "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
     "workflow": "organizzazione-lavoro"
   },
-  "course_sha256": "47667b33a0c0110d458e4125450c750d1c5ae086f5700bb8970a4a746fd5e71d",
+  "course_sha256": "2b7b36f6a88c6a6f9b91c38db104dfbfcd357990cbce30758bbab6df1bcff449",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -592,5 +592,14 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "HEAD",
+    "previous_course_sha256": "47667b33a0c0110d458e4125450c750d1c5ae086f5700bb8970a4a746fd5e71d",
+    "current_course_sha256": "2b7b36f6a88c6a6f9b91c38db104dfbfcd357990cbce30758bbab6df1bcff449",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the exact previously reviewed version. Only governed source hashes changed. Read-only historical assurance replay and separate local post-closure delivery measurement were reviewed. Original editorial and historical artifact reviews remain intact. Current teaching CI remains required; no new learner, installed-host or visual acceptance is asserted."
   }
 }

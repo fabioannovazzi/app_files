@@ -481,7 +481,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/archive_reporting.py",
-      "sha256": "6780ae9902370df3fe897568a235fbd49e8bda489897b3a939ce7453e9f789bd"
+      "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
@@ -942,5 +942,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "56853a604c91ae13d69b6def0b5f39a66ad838e00e629d2df4653857250f48bf"
+  "canonical_course_sha256": "a038f938c4f9a26b09f60be9568fdda8b299db27cc1a63e88d83d94cfc6f6e18"
 }

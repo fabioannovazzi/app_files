@@ -105,7 +105,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee",
+  "course_sha256": "924bef1409182f5582e0d75011fa9df23aa0ff4785d3ac04ab22253ecf9210b8",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.225501+00:00",
@@ -973,5 +973,14 @@
     "reviewed_at": "2026-10-28",
     "scope": "Compared complete compiled course against both integration parents: only source bindings differ. Retains observed-amount and optional fullscreen source reviews, all authored inputs/locales and historical judgments. No new learner, professional or installed-host acceptance asserted. Fresh native execution remains required.",
     "course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee"
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "62bbc15e92aaea86ed6f97b6aa61aa85c24c2e5c",
+    "previous_course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee",
+    "current_course_sha256": "924bef1409182f5582e0d75011fa9df23aa0ff4785d3ac04ab22253ecf9210b8",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the exact previously reviewed version. Only governed source hashes changed. Read-only historical assurance replay and separate local post-closure delivery measurement were reviewed. Original editorial and historical artifact reviews remain intact. Current teaching CI remains required; no new learner, installed-host or visual acceptance is asserted."
   }
 }

@@ -105,7 +105,7 @@
     "verified_at": "2026-09-27T22:28:21.991635+00:00",
     "workflow": "deck-correction"
   },
-  "course_sha256": "d6e7bc6e0b21abb0d4098ea77888f2a4e54af794077997b5b7b4a6077c19c376",
+  "course_sha256": "b23a86b3fafeb7328b3de169381893fd4ff8ebe9857ec504e372885134f399e5",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -808,5 +808,14 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "reviewer": "Codex /root - differential source review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "HEAD",
+    "previous_course_sha256": "d6e7bc6e0b21abb0d4098ea77888f2a4e54af794077997b5b7b4a6077c19c376",
+    "current_course_sha256": "b23a86b3fafeb7328b3de169381893fd4ff8ebe9857ec504e372885134f399e5",
+    "authored_content_unchanged": true,
+    "scope": "Every authored course field equals the exact previously reviewed version. Only governed source hashes changed. Read-only historical assurance replay and separate local post-closure delivery measurement were reviewed. Original editorial and historical artifact reviews remain intact. Current teaching CI remains required; no new learner, installed-host or visual acceptance is asserted."
   }
 }
