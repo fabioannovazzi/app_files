@@ -413,9 +413,14 @@ def test_new_theme_replays_exact_retained_upstream_without_rewriting_history(
 
 
 @pytest.mark.parametrize("language", ["it", "fr"])
+@pytest.mark.parametrize("launch_layout", ["runtime", "mcp_cache"])
 @pytest.mark.parametrize("fault", [None, "changed_archive", "changed_source"])
 def test_sampling_handoff_survives_restarts_and_release_collection(
-    tmp_path: Path, monkeypatch: Any, language: str, fault: str | None
+    tmp_path: Path,
+    monkeypatch: Any,
+    language: str,
+    launch_layout: str,
+    fault: str | None,
 ) -> None:
     normalized = _qualified_journal(
         tmp_path / "source",
@@ -450,6 +455,10 @@ def test_sampling_handoff_survives_restarts_and_release_collection(
     assert not current.exists()
     archived = runtime / "journal-sampling-replay" / historical.parents[1].name
     assert not (archived / "scripts/archive_projection.py").exists()
+    if launch_layout == "mcp_cache":
+        cached = tmp_path / "host-cache/vera/0.1.527/modules/journal-sampling"
+        shutil.copytree(newer, cached)
+        newer = cached
     core = load_core()
     monkeypatch.setattr(core, "_journal_sampling_component_root", lambda: newer)
     monkeypatch.setattr(
@@ -10111,19 +10120,46 @@ def test_readonly_review_paths_enforce_actual_assurance_replay(
     "tool_name", ["validate_check_entries_review", "render_check_entries_review"]
 )
 @pytest.mark.parametrize("runtime_ready", [True, False])
+@pytest.mark.parametrize(
+    "sampling_release", ["current", "historical_override", "historical_default"]
+)
 def test_embedded_check_review_uses_prepared_managed_python(
     monkeypatch: Any,
     tmp_path: Path,
     tool_name: str,
     runtime_ready: bool,
+    sampling_release: str,
 ) -> None:
     _, output, _, _ = _supported_assurance_run(monkeypatch, tmp_path / "case")
-    plugin, _ = _copy_check_entries_runtime(tmp_path / "installation")
+    plugin, _ = _copy_check_entries_runtime(
+        tmp_path / "host-cache/vera/0.1.527/modules"
+    )
     shutil.copytree(
         ROOT / "plugins/journal-sampling",
         plugin.parent / "journal-sampling",
         ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
     )
+    if sampling_release != "current":
+        if sampling_release == "historical_override":
+            runtime = tmp_path / "managed-runtime"
+            monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(runtime))
+        else:
+            home = tmp_path / "home"
+            monkeypatch.delenv("MPARANZA_RUNTIME_ROOT", raising=False)
+            monkeypatch.setenv("HOME", str(home))
+            monkeypatch.setenv("USERPROFILE", str(home))
+            monkeypatch.setenv("LOCALAPPDATA", str(home / "AppData/Local"))
+            runtime = (
+                home / "AppData/Local/mpr"
+                if os.name == "nt"
+                else home / ".local/share/mparanza/runtime"
+            )
+        _retained_sampling_package(runtime / "journal-sampling-replay", new_theme=False)
+        widget = (
+            plugin.parent
+            / "journal-sampling/assets/journal-sampling-review-widget.html"
+        )
+        widget.write_bytes(widget.read_bytes() + b"\n<!-- new release -->\n")
     launcher = plugin.parent / "vera/scripts/managed_python_runtime.py"
     launcher.parent.mkdir(parents=True)
     launcher.write_text(

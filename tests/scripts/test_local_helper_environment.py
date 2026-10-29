@@ -22,6 +22,7 @@ def test_child_environment_excludes_credentials_and_preserves_platform_paths(
         "HOME": "/home/user",
         "VIRTUAL_ENV": "/venv",
         "MPARANZA_REVIEW_NODE": "/node",
+        "MPARANZA_RUNTIME_ROOT": "/private-runtime",
         "LANG": "en_US.UTF-8",
         "GITHUB_TOKEN": "fake-token",
         "OPENAI_API_KEY": "fake-key",
@@ -44,6 +45,7 @@ def test_child_environment_excludes_credentials_and_preserves_platform_paths(
     assert "TEMP" not in actual
     assert actual["PYTHON"] == "chosen-python"
     assert actual["MPARANZA_REVIEW_NODE"] == "/node"
+    assert actual["MPARANZA_RUNTIME_ROOT"] == "/private-runtime"
     if platform == "windows":
         assert actual["SystemRoot"] == "C:/Windows"
         assert actual["Path"] == "C:/bin"
@@ -54,6 +56,7 @@ def test_node_child_environment_matches_shared_allowlist() -> None:
         "PATH": "/bin",
         "SystemRoot": "C:/Windows",
         "PYTHON": sys.executable,
+        "MPARANZA_RUNTIME_ROOT": "/private-runtime",
         "GITHUB_TOKEN": "fake-token",
         "OPENAI_API_KEY": "fake-key",
     }

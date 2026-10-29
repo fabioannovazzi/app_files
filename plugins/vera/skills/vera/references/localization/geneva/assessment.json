@@ -155,7 +155,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",
+  "catalogue_fingerprint": "8921a57c78627ba97d2b63a6b11a96c16e41e0048f221b5886b88a65b0f057cc",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2453,5 +2453,10 @@
     "previous_catalogue_fingerprint": "2a6b07b3befe15f9ed99fc65ba9fadbfeb567d13f829b0d97d3b862c92ecfad4",
     "scope": "Canonical version refresh to 0.1.527; all skill entrypoint IDs and bytes are unchanged. The shared runtime preserves indexed sampling code for historical read-only replay, and the underlying Vouching component places agent evidence review before comparison. Existing Geneva dispositions and acceptance limits are preserved; these source regressions do not establish Swiss professional or fresh installed-host acceptance.",
     "version": "0.1.527"
+  },
+  "mcp_historical_path_release_binding_20261029": {
+    "version": "0.1.528",
+    "previous_catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",
+    "scope": "Version-only catalogue refresh; all skill entrypoints are unchanged. MCP historical replay lookup now supports version-named host caches. Existing Geneva dispositions and acceptance limits remain unchanged; no installed-host or professional acceptance is claimed."
   }
 }
