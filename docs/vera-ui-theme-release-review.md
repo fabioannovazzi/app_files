@@ -38,8 +38,8 @@ This does not resolve the separate incomplete measurements in historical runs.
 Vera's Geneva skill entrypoint IDs and bytes were checked unchanged. The
 catalogue/assessment release binding was updated without new jurisdiction or
 professional acceptance claims. Clara 0.1.362 is reserved by existing PR927;
-this shared-component release therefore uses Clara 0.1.363, Vera 0.1.522 and
-Lucia 0.1.189.
+this shared-component release therefore uses Clara 0.1.364, Vera 0.1.523 and
+Lucia 0.1.190.
 
 ## Validation and recovered preparation blocks
 
@@ -74,3 +74,8 @@ Marketplace publication is not authorized. Website branding, plugin icons and
 report/chart styles are outside this workflow theme. Deploying server code and
 public archives does not update an existing local installation or already-open
 chat. Installed/fresh-session acceptance must be reported separately.
+
+A pre-deployment recheck found PR931 had concurrently reserved Vera0.1.522,
+Clara0.1.363 and Lucia0.1.189. This release advances above all those candidates;
+the UI source and its data boundaries are unchanged. All packages and reviewed
+version bindings are regenerated before final CI/deployment.

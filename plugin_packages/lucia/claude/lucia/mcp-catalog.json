@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.189",
+  "version": "0.1.190",
   "services": [
     {
       "name": "luciaAssuranceRuntime",
