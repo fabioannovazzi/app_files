@@ -77,7 +77,7 @@
     "verified_at": "2026-09-27T22:46:27.915249+00:00",
     "workflow": "html-deck"
   },
-  "course_sha256": "2041fc2d99c7f6ae19e4d92f4232254976d5a8034383eb61b17a7c2e490efafc",
+  "course_sha256": "512d2c85d30a2e6f6ba60b55ff20f4d49cea441d6a8ebd2c6715597d1f8b392f",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -689,5 +689,19 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "2041fc2d99c7f6ae19e4d92f4232254976d5a8034383eb61b17a7c2e490efafc",
+    "current_course_sha256": "512d2c85d30a2e6f6ba60b55ff20f4d49cea441d6a8ebd2c6715597d1f8b392f",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
   }
 }

@@ -1,4 +1,4 @@
-# Vera workflow UI theme
+# Shared workflow UI theme
 
 The canonical stylesheet is `plugins/_shared/ui/vera-theme.css`. It uses the
 Vouching review's neutral surfaces, green-grey accent, system font stack,
@@ -31,13 +31,21 @@ of shared courseware before computing the package integrity manifest. It also
 embeds the latest canonical theme in the workflow resources, so a normal host
 package rebuild picks up a central edit even before source previews are synced.
 Lesson metadata pins the themed bytes and retains the original source hashes.
-Other products' courseware is unchanged. Regenerate and verify host packages through
+Clara and Lucia use that same theme on course-chat panels and lesson shells;
+linked input/report pages retain their original course styles. Regenerate and verify host packages through
 the normal release process after source changes.
 
 Legacy variables such as `--blue`, `--navy` and `--cyan` are neutral aliases
 of `--accent`. Their names are retained so layout-specific selectors and
 generated views keep working. They no longer imply a blue brand treatment.
 Errors, warnings and successful states retain distinct muted semantic colours.
+
+The same compiler now covers Clara and Lucia component widgets, Lucia's local
+matter review and firm-method editor, and the hosted interview, voice and
+video-narration controls. Clara/Lucia public lesson shells link the generated
+`static/shared/courses/workflow-theme.css`; the catalogue compiler owns that
+projection. Source and package surfaces are listed in
+`docs/clara-lucia-ui-theme-release-review.md`.
 
 This theme governs plugin workflow interfaces. It does not restyle the public
 website, professional report templates, quantitative chart palettes or plugin

@@ -2,7 +2,7 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "clara",
   "workflow": "advisory-case-director",
-  "course_sha256": "863101dd3a32a43ef0e8bf9eec3c0d717b3386e679889c0dac380592a436b48d",
+  "course_sha256": "462f2734d1ecc33ef1ad626b697fd3a1224e1b3dbf6995e594d2e4846f99c5b6",
   "reviewer": "Codex: five-language case lesson and actual native document review",
   "reviewed_at": "2026-09-14T21:09:24.765818+00:00",
   "review_scope": "Prepared material and native local execution review. Read the complete five-language outlines and fictional sources; reviewed all ten workpapers and delivery notes and the five updated evidence maps showing initial and revised conclusions. The final map bytes match those inspected; final workpaper prose is unchanged except corrected local links. The revised initial review notes were read separately. Fifty-four advisory/lineage tests pass, including ten phase-specific case exercises. Native voice, window presentation, human timing, learner comprehension and professional approval remain separate unverified acceptance steps. Model-authored regression interpretations live outside shipped teaching kits. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
@@ -720,5 +720,19 @@
     "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
     "fresh_matching_junit_required": true,
     "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "863101dd3a32a43ef0e8bf9eec3c0d717b3386e679889c0dac380592a436b48d",
+    "current_course_sha256": "462f2734d1ecc33ef1ad626b697fd3a1224e1b3dbf6995e594d2e4846f99c5b6",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
   }
 }

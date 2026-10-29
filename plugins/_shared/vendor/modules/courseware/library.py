@@ -26,6 +26,7 @@ from urllib.request import HTTPRedirectHandler, build_opener
 
 from .access import CourseAccessError, verify_course_access
 from .policy import local_unavailability, unavailable_local_workflows
+from .theme import theme_lesson
 
 __all__ = ["CourseError", "CourseLibrary", "main"]
 
@@ -782,7 +783,13 @@ class CourseLibrary:
                 displayed["preview_path"] = preview
             files.append(displayed)
         (destination / "course.html").write_text(
-            self._page(course, copy, ui, language, files), encoding="utf-8"
+            theme_lesson(
+                self._page(course, copy, ui, language, files),
+                self.product,
+                self.root,
+                destination,
+            ),
+            encoding="utf-8",
         )
         (destination / "teacher.md").write_text(
             self._teacher(course, copy, ui), encoding="utf-8"

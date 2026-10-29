@@ -1,4 +1,4 @@
-"""Embed Vera's canonical workflow theme into self-contained UI resources."""
+"""Embed the canonical workflow theme into self-contained UI resources."""
 
 from __future__ import annotations
 
@@ -7,7 +7,13 @@ import json
 import re
 from pathlib import Path
 
-__all__ = ["THEME_PATH", "theme_css", "theme_html", "theme_package_resources"]
+__all__ = [
+    "THEME_PATH",
+    "theme_css",
+    "theme_html",
+    "theme_package_resources",
+    "theme_course_page",
+]
 
 THEME_PATH = Path(__file__).resolve().parents[1] / "plugins/_shared/ui/vera-theme.css"
 START = (
@@ -36,7 +42,7 @@ def theme_html(html: str, *, theme: str | None = None) -> str:
 
 
 def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
-    """Compile the latest theme into Vera's host resources before integrity hashes."""
+    """Compile the latest theme into product host resources before integrity hashes."""
     theme = THEME_PATH.read_text(encoding="utf-8")
     css_resources = {
         "ui/workspace.css",
@@ -44,13 +50,20 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
         "modules/browser-automation/ui/agenzia.css",
         "modules/bilancio-xbrl-it/ui/workspace.css",
         "modules/treasury-forecast/assets/review.css",
-        "vendor/modules/courseware/assets/course.css",
-        "vendor/modules/courseware/assets/legacy-course.css",
     }
+    if prefix.rstrip("/").split("/")[-1] == "vera":
+        css_resources.update(
+            {
+                "vendor/modules/courseware/assets/course.css",
+                "vendor/modules/courseware/assets/legacy-course.css",
+            }
+        )
     html_resources = {
         "modules/adeguati-assetti/assets/construction-intake.html",
         "modules/prompt-optimizer/assets/legal-tax-model.html",
         "vendor/modules/courseware/assets/chat.html",
+        "assets/playbook-editor.html",
+        "modules/apertura-pratica/assets/apertura-pratica-review.html",
     }
     original_resources: dict[str, bytes] = {}
     for name in list(entries):
@@ -108,3 +121,14 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
             json.dumps(index, ensure_ascii=False, indent=2) + "\n"
         ).encode()
     entries[prefix + "ui/theme.css"] = theme.encode("utf-8")
+
+
+def theme_course_page(html: str) -> str:
+    """Theme the lesson shell only; never restyle linked reports or input artifacts."""
+    html = html.replace(
+        'href="workflow-theme.css"', 'href="../../../workflow-theme.css"'
+    )
+    link = '<link rel="stylesheet" href="../../../workflow-theme.css">'
+    if link in html or 'href="/static/shared/courses/workflow-theme.css"' in html:
+        return html
+    return html.replace("</head>", link + "</head>", 1)
