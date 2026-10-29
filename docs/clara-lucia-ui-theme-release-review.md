@@ -114,3 +114,11 @@ compared unchanged with the prior release. The historical0.1.523 review binding
 is preserved; the new0.1.524 binding is separate. This is release provenance,
 not new jurisdiction or professional acceptance. Affected packaged metadata
 and privacy fingerprints are rebuilt before final CI.
+
+
+A later accounting CI run completed its behavioral tests and failed in Mypy's
+module discovery: the generator's package/CLI imports exposed the same theme
+module under two names. The accounting quality command now uses explicit
+package bases, retaining its imported-module checks. The exact corrected
+command is verified locally; product code and package bytes are unchanged.
+This is a test-harness correction, not a relaxation of product behavior.
