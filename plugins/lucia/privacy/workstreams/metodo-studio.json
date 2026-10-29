@@ -26,7 +26,8 @@
     "scripts/legal_proofreading_labels.json",
     "scripts/legal_word_bridge.py",
     "skills/revisione-contratti/references",
-    "skills/lucia/references/model-data-report-contract.md"
+    "skills/lucia/references/model-data-report-contract.md",
+    "assets/playbook-editor.html"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -54,9 +55,9 @@
   "security_controls": [],
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8432b943b5761f1b14e84b51f4448650474d2acbee6dd9e367e8e7daf6381691"
+    "source_fingerprint": "87a7854b5297cf5692a5c08d5e69fd945f0cafe8d4547742ab4edc13def2f932"
   },
   "service_ids": [
     "managed-python-runtime",

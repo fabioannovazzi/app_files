@@ -9,10 +9,15 @@ from pathlib import Path
 
 if __package__:
     from scripts import generate_non_plotting_review_widgets as widgets
-    from scripts.vera_ui_theme import theme_css, theme_html
+    from scripts.vera_ui_theme import (
+        THEME_PATH,
+        theme_course_page,
+        theme_css,
+        theme_html,
+    )
 else:
     import generate_non_plotting_review_widgets as widgets
-    from vera_ui_theme import theme_css, theme_html
+    from vera_ui_theme import THEME_PATH, theme_course_page, theme_css, theme_html
 
 __all__ = ["CSS_SURFACES", "HTML_SURFACES", "expected_resources", "main"]
 
@@ -28,6 +33,12 @@ CSS_SURFACES = (
 HTML_SURFACES = (
     "plugins/adeguati-assetti/assets/construction-intake.html",
     "plugins/prompt-optimizer/assets/legal-tax-model.html",
+    "plugins/lucia/assets/playbook-editor.html",
+    "plugins/apertura-pratica/assets/apertura-pratica-review.html",
+    "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
+    "templates/hosted_interview.html",
+    "templates/case_notes_voice.html",
+    "templates/research_video_voice.html",
     "plugins/previdenza-inps/assets/previdenza-inps-review-widget.html",
     "plugins/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
     # These widgets maintain specialist persistence adaptations outside the
@@ -48,14 +59,30 @@ def expected_resources() -> dict[Path, str]:
     for name in HTML_SURFACES:
         path = ROOT / name
         resources[path] = theme_html(path.read_text(encoding="utf-8"))
-    components = json.loads((ROOT / "plugins/vera/components.json").read_text())[
-        "plugins"
-    ]
+    components = set()
+    for product in ("vera", "clara", "lucia"):
+        components.update(
+            json.loads((ROOT / f"plugins/{product}/components.json").read_text())[
+                "plugins"
+            ]
+        )
     for target in widgets.TARGETS:
         if target["plugin"] in components:
             path = ROOT / "plugins" / target["plugin"] / "assets" / target["asset"]
             if path not in resources:
                 resources[path] = widgets.render_target(target)
+    for component in sorted(components):
+        for path in (ROOT / "plugins" / component / "assets").glob(
+            "*-review-widget.html"
+        ):
+            if path not in resources:
+                resources[path] = theme_html(path.read_text(encoding="utf-8"))
+    resources[ROOT / "static/shared/courses/workflow-theme.css"] = THEME_PATH.read_text(
+        encoding="utf-8"
+    )
+    for product in ("clara", "lucia"):
+        for path in (ROOT / f"static/shared/courses/{product}").glob("*/*/course.html"):
+            resources[path] = theme_course_page(path.read_text(encoding="utf-8"))
     return resources
 
 
@@ -66,7 +93,7 @@ def main() -> int:
     args = parser.parse_args()
     stale = []
     for path, expected in expected_resources().items():
-        if path.read_text(encoding="utf-8") == expected:
+        if path.exists() and path.read_text(encoding="utf-8") == expected:
             continue
         if args.check:
             stale.append(path.relative_to(ROOT).as_posix())

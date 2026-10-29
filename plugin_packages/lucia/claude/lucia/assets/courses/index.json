@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "afc8f91d50cf974ec2560590e04f1ee53ee91756e87c08eb2f75a319cb3d7bdd",
+      "sha256": "6acfb1916d601f08add09bc1a6ebdb461bdd3f6d72cebf4a2a1ede83f4a32df3",
       "languages": [
         "it",
         "en",
@@ -28,11 +28,12 @@
         "fr": "Apprenez à partir de la demande et des documents du client, obtenir un dossier à revoir et identifier ce qui manque avant son ouverture.",
         "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
         "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
-      }
+      },
+      "source_sha256": "05a0be207582e89f580cc617a5abfd2dc126577e8c88b295d21cf839bd3bcfe9"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "b5b07538db741fdb21ed761a06fcc9cacf66029fe882b9700e7f268d81c25524",
+      "sha256": "13b3a1769f6af790ed9366f7694ca5517eac092a7b25d22c0e7ef25124f3a4ee",
       "languages": [
         "it",
         "en",
@@ -56,11 +57,12 @@
         "fr": "Apprendre à partir d’un sujet et de sources sélectionnées, préparer une communication pour un public précis et revoir le dossier avant utilisation.",
         "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
         "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
-      }
+      },
+      "source_sha256": "f0192545bd0b5ee866a2dee6e4270ed5eb5c517749eab8d6b3d21f092824c3e4"
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "8ea9bbf0f91eb726a35d06059d7c351f43d96758d73cfddb970b8edf4d62df6b",
+      "sha256": "fb040b35e22df16346566d571e2cb38b5fcfffd71f7dc9f7b64eb30e3fd99be9",
       "languages": [
         "it",
         "en",
@@ -84,11 +86,12 @@
         "fr": "Apprendre à partir des actes, vérifier étapes et délais, préparer une ébauche et actualiser le même dossier lorsqu’une nouvelle preuve arrive.",
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
-      }
+      },
+      "source_sha256": "6c01ebe24b6c5cb987d828c86548dc676505b2ce46036075883615a187304e96"
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "910738098e34c8634812afe9c163309273291b63acdea60f2ad3313114a7e9d5",
+      "sha256": "26e1b6f9614363a81d12fba2cb186bb16c88d2dd6b25a023106138c47e9e8d44",
       "languages": [
         "it",
         "en",
@@ -112,11 +115,12 @@
         "fr": "Apprendre à partir des informations du cabinet, obtenir un site fonctionnel et le revoir avant de choisir sa publication.",
         "de": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
         "es": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación."
-      }
+      },
+      "source_sha256": "40b83941cebd081ac1f60bf943eb1dbed3744905c45cbd747ed1e95e959198a8"
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "e6139a646f2865f2a837ebefc923ea269df32503fa2106874fc35974b2281702",
+      "sha256": "9cd2668d8a3f336ba443af0a186ca0a85071dbf2bacccdf85f67be26b8a999e9",
       "languages": [
         "it",
         "en",
@@ -140,7 +144,8 @@
         "fr": "Apprendre à poser une question professionnelle, suivre la recherche et les vérifications et utiliser la réponse avec ses sources et points ouverts.",
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
-      }
+      },
+      "source_sha256": "3231491c07a9b4fbe17a969bc2608f1ba6dbfb5d19cfdb5e1c7ecfe2d2857bc0"
     }
   }
 }

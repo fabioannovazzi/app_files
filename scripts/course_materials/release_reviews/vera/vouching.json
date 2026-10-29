@@ -105,7 +105,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee",
+  "course_sha256": "1be2d6dc2e8c396c85e262c9b5ce4ae8c173debd1c8eaa3c7f76341fd1e28bc6",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.225501+00:00",
@@ -973,5 +973,25 @@
     "reviewed_at": "2026-10-28",
     "scope": "Compared complete compiled course against both integration parents: only source bindings differ. Retains observed-amount and optional fullscreen source reviews, all authored inputs/locales and historical judgments. No new learner, professional or installed-host acceptance asserted. Fresh native execution remains required.",
     "course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee"
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "reviewed_at": "2026-10-29",
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "previous_course_sha256": "435c145c20951a2369ad9499a23a8c69ab97cfb3997d30b50a135076e1de0e6a",
+    "current_course_sha256": "1be2d6dc2e8c396c85e262c9b5ce4ae8c173debd1c8eaa3c7f76341fd1e28bc6",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "historical_binding_recovered": {
+      "commit": "62bbc15e92aaea86ed6f97b6aa61aa85c24c2e5c",
+      "reviewed_course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee",
+      "base_course_sha256": "435c145c20951a2369ad9499a23a8c69ab97cfb3997d30b50a135076e1de0e6a",
+      "authored_content_unchanged": true
+    }
   }
 }
