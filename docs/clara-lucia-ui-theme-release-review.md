@@ -96,3 +96,11 @@ run, cancelled or changed.
 Vera 0.1.524, Clara 0.1.365 and Lucia 0.1.191 exceed main's release identities
 and Clara 0.1.362 reserved by open PR927. All product/host packages are rebuilt.
 Marketplace, installed caches and active chats are outside this deployment.
+
+
+The final accounting/reporting CI run passed 252 regressions but found that the
+matter asset generator still emitted the old appearance. Its output now passes
+through the same central theme compiler. The shipped editable/widget bytes are
+unchanged; a regression proves a future central edit survives regeneration in
+both surfaces. This repairs a real regeneration path, not the test's drift
+assertion. Final CI is repeated after this developer-generator correction.
