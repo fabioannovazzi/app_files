@@ -2046,8 +2046,10 @@ def test_claude_projection_rejects_retired_remote_reporting_endpoint(product):
         builder.project_claude_mcp(configuration)
 
 
-@pytest.mark.parametrize("product", ["vera", "lucia", "clara"])
-def test_directory_listing_metadata_and_icon_survive_packaging(product):
+@pytest.mark.parametrize(
+    ("product", "language"), [("vera", "it"), ("lucia", "it"), ("clara", "en")]
+)
+def test_directory_listing_metadata_and_icon_survive_packaging(product, language):
     builder = load_builder()
     _, packages = builder.load_configuration()
     package = next(item for item in packages if item.plugin == product)
@@ -2060,7 +2062,7 @@ def test_directory_listing_metadata_and_icon_survive_packaging(product):
     manifest = json.loads(entries[".claude-plugin/plugin.json"])
     assert manifest["shortDescription"] == canonical["interface"]["shortDescription"]
     assert manifest["documentationUrl"] == (
-        f"https://mparanza.com/static/shared/{product}/index.html?lang=it"
+        f"https://mparanza.com/static/shared/{product}/index.html?lang={language}"
     )
     assert manifest["supportUrl"] == "https://mparanza.com/support"
     assert manifest["termsOfServiceUrl"] == "https://mparanza.com/terms"
