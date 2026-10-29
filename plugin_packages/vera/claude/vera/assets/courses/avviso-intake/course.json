@@ -28,7 +28,7 @@
   "sources": [
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "b9bd5e14e415cec52e6a3bc1be5c5bb2bffa1e930d19e2a627a68bf4df08ff88"
+      "sha256": "389d1228d7efcc17ef8176be047a31b4599f329792f93fd9bdb58588a065987b"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -497,5 +497,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "030db5a166fef052ac09358d4f56ff16fa84ac7bf8544f5f3b4afabf3d8e517c"
+  "canonical_course_sha256": "5dc53b76d59ce7ab09f92a705fd1b30a349e4b8a467c5a7e38d72dc785ba9ab4"
 }

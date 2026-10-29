@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/variance-analysis/assets/variance-analysis-review-widget.html",
-      "sha256": "e183760e6663846080476fa8cd875cab850e815e59cf5a9642b05c02e64057c2"
+      "sha256": "c700fef36f84a302663122b680cb0594b3d2a3f7604c8986043e274db02eeff0"
     },
     {
       "path": "modules/variance-analysis/references/legacy_inventory.json",
@@ -905,5 +905,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4a25a1c18b8bec89cd67f2f081d983d32be99798f21a50c52125a0955cb2b751"
+  "canonical_course_sha256": "0cf0ff46b58ca3a863723e0bd655defac5b2d21f24b49a4b1457876c0c1b091d"
 }

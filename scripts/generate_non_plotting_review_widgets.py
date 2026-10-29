@@ -3066,36 +3066,12 @@ TEMPLATE = """<!doctype html>
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
   <title>{title}</title>
   <style>
-    :root {{
-      color-scheme: light;
-      --paper: #ffffff;
-      --surface: #ffffff;
-      --soft: #fafafa;
-      --soft-strong: #f3f4f2;
-      --ink: #1f2421;
-      --text: #3f4541;
-      --muted: #727972;
-      --border: #e8eae7;
-      --border-strong: #d8dcd7;
-      --accent: #35463f;
-      --accent-strong: #202a26;
-      --accent-soft: #f3f6f4;
-      --danger: #7b4b44;
-      --danger-bg: #fbf7f6;
-      --warning: #6f6247;
-      --warning-bg: #fbfaf6;
-      --ok: #4b6759;
-      --ok-bg: #f7faf8;
-      --info: #52646e;
-      --info-bg: #f7fafb;
-      --radius: 8px;
-      --content: 1240px;
-    }}
+    :root {{ --content: 1240px; }}
     * {{ box-sizing: border-box; }}
     html, body {{ margin: 0; max-width: 100%; background: var(--paper); }}
     body {{
       color: var(--text);
-      font-family: \"Aptos\", \"SF Pro Text\", -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif;
+      font-family: var(--font-ui);
       font-size: 1rem;
       line-height: 1.5;
       letter-spacing: 0;
@@ -5858,6 +5834,20 @@ def _readable_json_constants(html: str) -> str:
 
 
 def render_target(target: dict[str, Any]) -> str:
+    """Render the workflow with the shared Vera theme when bundled by Vera."""
+    if __package__:
+        from scripts.vera_ui_theme import theme_html
+    else:
+        from vera_ui_theme import theme_html
+
+    html = _render_target(target)
+    components = json.loads((ROOT / "plugins/vera/components.json").read_text())[
+        "plugins"
+    ]
+    return theme_html(html) if target["plugin"] in components else html
+
+
+def _render_target(target: dict[str, Any]) -> str:
     config = adapter_config(target)
     html = TEMPLATE.format(
         title=target["title"],

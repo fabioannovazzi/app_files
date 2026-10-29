@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "183156cab1218bbae7cf968c4300b17becd007f99fff8943e81dcbe9ed72de74"
+      "sha256": "29f7023e1754d438107f30a46a60a658e0ea0810dc20a380841dd30c0a0dffc5"
     },
     {
       "path": "modules/check-entries/assets/icon.svg",
@@ -658,5 +658,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9c954dca8789baac85ee280a326c8f74679b131944e3e730569a59fd9e0f7dee"
+  "canonical_course_sha256": "697960aa71a8a406c1abb0ce8eab02a4e0a8c3584dda604bd81c987d3575ff86"
 }
