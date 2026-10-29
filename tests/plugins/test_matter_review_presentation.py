@@ -29,8 +29,10 @@ def test_review_assets_are_readable_without_embedded_or_remote_fonts(asset):
     assert max(map(len, html.splitlines())) <= 2000
     assert "@font-face" not in html
     assert "data:font/" not in html
-    assert (
-        '"Instrument Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif' in html
+    assert "@import" not in html
+    assert re.search(
+        r"(?:font-family|--font-ui)\s*:[^;{}]*(?:system-ui|-apple-system)[^;{}]*sans-serif",
+        html,
     )
 
 

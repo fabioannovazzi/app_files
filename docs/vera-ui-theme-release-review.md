@@ -58,6 +58,16 @@ used a Vera-only service name on Clara/Lucia and was rejected; their actual
 registered records were then resolved with the validator. None of these
 preparation attempts establishes a deployed or installed release.
 
+The first accounting CI run passed 251 checks but rejected two themed assets
+because an older readability regression required the literal Instrument Sans
+stack. The test now requires a system fallback and generic sans-serif in the
+font declaration, while retaining the no-embedded-font checks and explicitly
+rejecting CSS imports. It accepts the approved Vouching system typography without
+changing production behavior to satisfy an obsolete font-name expectation.
+A local rerun also caught an undefined variable left in a newly separated test
+fixture; it was corrected in the test only. The expanded final source suite
+passed 158 checks before the corrected CI submission.
+
 ## Rollout boundary
 
 Marketplace publication is not authorized. Website branding, plugin icons and

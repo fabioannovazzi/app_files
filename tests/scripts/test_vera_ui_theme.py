@@ -103,11 +103,7 @@ def lesson_entries():
     original_ui = b"<style>body { margin: 0; }</style><p>Lesson</p>"
     source_hash = hashlib.sha256(original_ui).hexdigest()
     course = json.dumps(
-        {
-            "sources": [
-                {"path": relative, "sha256": "0" * 64 if stale_source else source_hash}
-            ]
-        }
+        {"sources": [{"path": relative, "sha256": source_hash}]}
     ).encode()
     entries = {
         prefix + relative: original_ui,
@@ -123,8 +119,6 @@ def lesson_entries():
 
 def test_themed_lesson_binds_exact_shipped_ui(lesson_entries):
     entries, prefix, relative, source_hash = lesson_entries
-    course = entries[prefix + "assets/courses/example/course.json"]
-
     vera_ui_theme.theme_package_resources(entries, prefix)
 
     shipped_course = entries[prefix + "assets/courses/example/course.json"]
