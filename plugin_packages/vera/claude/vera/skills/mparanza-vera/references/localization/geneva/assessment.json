@@ -2426,6 +2426,11 @@
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
   },
+  "claude_listing_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
+    "version": "0.1.522",
+    "scope": "Manifest version and Claude listing metadata only. Exact skill entrypoint bytes are unchanged; existing jurisdiction judgments retained."
+  },
   "shared_ui_theme_release_binding_20261029": {
     "version": "0.1.523",
     "reviewed_at": "2026-10-29",

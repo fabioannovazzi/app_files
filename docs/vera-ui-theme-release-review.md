@@ -79,3 +79,11 @@ A pre-deployment recheck found PR931 had concurrently reserved Vera0.1.522,
 Clara0.1.363 and Lucia0.1.189. This release advances above all those candidates;
 the UI source and its data boundaries are unchanged. All packages and reviewed
 version bindings are regenerated before final CI/deployment.
+
+After all108 checks passed on candidate933623324, merge was refused because
+PR931 had merged into main as8d7248566. Its new listing fields, product-specific
+documentation languages and metadata review are retained. Conflicting generated
+files are regenerated from the combined source. The approved CSS and workflow
+logic remain unchanged; source reviews, packages and final CI are repeated for
+the integrated tree. PR baseRefOid was not a reliable live-main indicator; the
+actual Git main ref is checked before final merge/deployment.

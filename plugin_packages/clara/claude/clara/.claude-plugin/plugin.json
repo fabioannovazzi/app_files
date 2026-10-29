@@ -10,6 +10,11 @@
   },
   "homepage": "https://mparanza.com/static/shared/clara/index.html?lang=en",
   "privacyPolicyUrl": "https://mparanza.com/privacy",
+  "shortDescription": "AI companion for consultants",
+  "icon": "./assets/icon.svg",
+  "documentationUrl": "https://mparanza.com/static/shared/clara/index.html?lang=en",
+  "supportUrl": "https://mparanza.com/support",
+  "termsOfServiceUrl": "https://mparanza.com/terms",
   "repository": "https://github.com/fabioannovazzi/app_files",
   "license": "AGPL-3.0-only",
   "keywords": [
