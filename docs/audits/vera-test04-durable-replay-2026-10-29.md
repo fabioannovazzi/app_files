@@ -100,5 +100,6 @@ The package/update suite reports 412 passes and two skips; two checks fail on
 pre-existing local artifacts: a versioned Clara0.1.348 upload ZIP outside the
 configured build names, and an already-staged public Clara Codex ZIP where the
 404 test assumes no local file exists. Those files are unrelated and retained.
-The same checks are to be verified in the task's clean temporary worktree before
-merge; production code is not changed to satisfy these environmental assumptions.
+Both checks pass in the task's clean temporary worktree with the nine configured
+release ZIPs. Production code was not changed to satisfy these environmental
+assumptions.
