@@ -3071,7 +3071,9 @@
       for (const item of matches) {
         const b = button("", () => openWork(state.work_ref, state.offset, itemId(item), state.revision), "finding");
         b.setAttribute("aria-pressed", String(Boolean(selected) && itemId(selected) === itemId(item)));
-        b.append(node("strong", title(item)), node("small", statusLabels[item.review_status || item.status || item.data?.status] || "Da esaminare")); list.append(b);
+        const saved = state.workflow === "journal-bank-reconciliation" && state.data.ui_decisions?.decisions?.find(row => row.item_id === itemId(item));
+        const badge = saved ? `Decisione salvata · ${statusLabels[saved.status] || actionLabels[saved.action] || saved.action}` : statusLabels[item.review_status || item.status || item.data?.status] || "Da esaminare";
+        b.append(node("strong", title(item)), node("small", badge)); list.append(b);
       }
       if (!matches.length) list.append(node("p", "Nessun elemento in questa pagina corrisponde alla ricerca.", "empty"));
     }
@@ -3095,7 +3097,9 @@
       for (const group of state.data.adapter.detailGroups || []) {
         const evidence = node("div", undefined, "evidence-group"); const values = Object.fromEntries(group.fields.filter(key => key in (selected.data || {})).map(key => [key, selected.data[key]]));
         const concordatoGroups = { "Procedure and Documents": "Procedura e documenti", "Creditor Treatment": "Trattamento dei creditori", "Feasibility and Issues": "Fattibilità e rilievi" };
-        const groupTitle = state.workflow === "concordato-plan-review" ? concordatoGroups[group.title] || group.title : group.title;
+        const bankGroups = { "Journal Entry": "Scrittura contabile", "Bank Statement": "Movimento bancario", "Match Result": "Esito del confronto" };
+        const groups = state.workflow === "concordato-plan-review" ? concordatoGroups : state.workflow === "journal-bank-reconciliation" ? bankGroups : {};
+        const groupTitle = groups[group.title] || group.title;
         evidence.append(node("h3", groupTitle), Object.keys(values).length ? readFields(values) : node("p", "Nessun dato registrato in questo gruppo.", "caption")); parent.append(evidence);
       }
       if (state.workflow === "client-file-preparation") {
@@ -3240,7 +3244,15 @@
     if (!submission) submission = { name, args: { ...scope(), ...extra, human_reviewed: true, review_ticket: state.review_ticket, idempotency_key: crypto.randomUUID() } };
     say("Salvataggio nel servizio del fascicolo…");
     await call(submission.name, submission.args);
-    dirty = false; fields = {}; await openWork(state.work_ref, state.offset);
+    const selectedId = state.workflow === "journal-bank-reconciliation" && state.selection ? itemId(state.selection) : undefined;
+    dirty = false; fields = {}; await openWork(state.work_ref, state.offset, selectedId);
+    if (name === "vera_workspace_apply" && state.workflow === "journal-bank-reconciliation") {
+      const applied = state.data.applied_decisions;
+      if (!applied) { say("Richiesta registrata. L’esito dell’applicazione non è disponibile: riapri il lavoro per verificarlo."); return; }
+      const regenerated = Array.isArray(applied.native_regenerated_paths) ? applied.native_regenerated_paths.length : 0;
+      say(`Revisione applicata: ${applied.decision_count} decisioni su ${applied.item_count} casi contabili. Rilievi aperti: ${applied.blocker_count}. File aggiornati: ${applied.target_update_count}. File rigenerati: ${regenerated}.`);
+      return;
+    }
     if (name === "vera_workspace_open_items_regenerate") { say("Fascicolo rigenerato e assurance riletta. Controlla gli output e i rilievi residui prima della chiusura in Studio Archive."); return; }
     say(name === "vera_workspace_apply" ? (state.workflow === "open-item-reconciliation" ? "Revisione applicata e riletta. Se disponibile, conferma «Rigenera fascicolo e verifica» prima della consegna." : state.workflow === "archive-organization" ? "Piano compilato. I file restano al loro posto: rivedi «Esecuzione del piano» per una conferma separata." : state.workflow === "new-client" ? "Revisione applicata. Controlla gli impedimenti residui del dossier; il rapporto non è stato attivato." : "Decisioni applicate. Stato riletto dal servizio: controlla i file rigenerati.") : "Decisione salvata. Stato riletto dal lavoro.");
   }
@@ -3294,6 +3306,7 @@
       parent.append(node("p", "La decisione invalida la validazione corrente e non approva il bilancio.", "caption")); discard(parent); return;
     }
     const saved = state.data.ui_decisions?.decisions?.find(row => row.item_id === selected.id); if (saved) parent.append(readFields(saved));
+    if (state.workflow === "journal-bank-reconciliation" && fields.action === undefined && saved) fields.action = saved.action;
     for (const action of selected.allowed_actions) {
       const label = node("label", undefined, "choice"), choice = node("input"); choice.type = "radio"; choice.name = "decision"; choice.value = action; choice.checked = fields.action === action;
       choice.addEventListener("change", () => { fields.action = action; changed(); }); label.append(choice, node("span", actionLabels[action] || action)); parent.append(label);
@@ -3302,7 +3315,7 @@
     if (selected.allowed_actions.includes("edit")) input(parent,
       state.workflow === "client-file-preparation" && ["draft_memo_section", "draft_client_email"].includes(selected.item_type) ? "Nuovo testo completo della bozza" : "Valore da modificare",
       "edit_value", saved?.edit_value || "", "textarea", ["client-file-preparation", "report-builder", "concordato-plan-review"].includes(state.workflow) ? 10000 : 4000);
-    if (selected.allowed_actions.includes("request_more_documents")) input(parent, "Documenti richiesti", "requested_documents");
+    if (selected.allowed_actions.includes("request_more_documents")) input(parent, "Documenti richiesti", "requested_documents", (saved?.requested_documents || []).join("\n"));
     if (state.workflow === "open-item-reconciliation") {
       parent.append(node("p", "Per applicare una revisione con assurance, inserisci il riferimento di controllo della versione precedente conservato separatamente dal run. Il motore verifica che corrisponda; non viene ricavato dai file da modificare.", "caption"));
       input(parent, "Riferimento di controllo conservato separatamente", "expected_predecessor_checkpoint");
@@ -3315,7 +3328,7 @@
         ...(fields.action === "request_more_documents" ? { requested_documents: fields.requested_documents.split("\n").filter(Boolean) } : {}) };
     };
     const submissionFields = () => ({ decisions: [decision()], ...(fields.expected_predecessor_checkpoint ? { expected_predecessor_checkpoint: fields.expected_predecessor_checkpoint } : {}) });
-    const applyLabel = state.workflow === "archive-organization" ? "Compila piano approvato" : ["open-item-reconciliation", "new-client", "concordato-plan-review"].includes(state.workflow) ? "Applica revisione" : "Applica e rigenera";
+    const applyLabel = state.workflow === "archive-organization" ? "Compila piano approvato" : ["open-item-reconciliation", "new-client", "concordato-plan-review", "journal-bank-reconciliation"].includes(state.workflow) ? "Applica revisione" : "Applica e rigenera";
     const actions = node("div", undefined, "actions");
     if (state.workflow === "report-builder" && state.data.applied_decisions) {
       actions.append(button("Conserva bozza", async () => {

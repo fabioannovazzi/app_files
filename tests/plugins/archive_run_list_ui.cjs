@@ -15,12 +15,12 @@ class Element {
 }
 const elements = { app: new Element("main"), status: new Element("p"), refresh: new Element("button") };
 const document = { getElementById: key => elements[key], createElement: tag => new Element(tag) };
-const fixture = JSON.parse(fs.readFileSync(0, "utf8")), importMode = process.argv[3] === "import", navigationMode = process.argv[3] === "navigation";
+const fixture = JSON.parse(fs.readFileSync(0, "utf8")), importMode = process.argv[3] === "import", navigationMode = process.argv[3] === "navigation", reviewMode = process.argv[3] === "review";
 const calls = [];
 const listeners = {}, parent = { postMessage(message) {
-  if ((!importMode && !navigationMode) || !message.id) return;
+  if ((!importMode && !navigationMode && !reviewMode) || !message.id) return;
   let result = message.method === "ui/initialize" ? {} : { _meta: { workspace: fixture.import_setup } };
-  if (navigationMode && message.method === "tools/call") {
+  if ((navigationMode || reviewMode) && message.method === "tools/call") {
     calls.push(message.params);
     const name = message.params.name;
     let workspace;
@@ -29,8 +29,11 @@ const listeners = {}, parent = { postMessage(message) {
     else if (name === "vera_workspace_bank_draft_read") workspace = { draft: null };
     else if (name === "vera_workspace_bank_draft_save") workspace = { draft_revision: "saved-draft" };
     else if (name === "vera_workspace_bank_draft_clear") workspace = {};
+    else if (reviewMode && name === "vera_workspace_view") workspace = {...fixture.review, selection: fixture.review.items.find(row => row.id === message.params.arguments.item_id) || null};
+    else if (reviewMode && name === "vera_workspace_draft_read") workspace = {draft:null};
+    else if (reviewMode && ["vera_workspace_save", "vera_workspace_apply"].includes(name)) workspace = {saved:true};
     else throw new Error(`Unexpected UI call: ${name}`);
-    result = fixture.fail_save && name === "vera_workspace_bank_draft_save"
+    result = fixture.fail_save && ["vera_workspace_bank_draft_save", "vera_workspace_save"].includes(name)
       ? { isError: true, content: [{ type: "text", text: "Draft write failed" }] }
       : { _meta: { workspace } };
   }
@@ -45,13 +48,34 @@ vm.runInNewContext(fs.readFileSync(process.argv[2], "utf8"), {
   document, window, globalThis: factories, setTimeout: () => 1, clearTimeout() {},
   crypto: require("node:crypto").webcrypto, structuredClone,
 }, { filename: process.argv[2] });
-const catalogue = importMode || navigationMode ? fixture.catalogue : fixture;
+const catalogue = importMode || navigationMode || reviewMode ? fixture.catalogue : fixture;
 listeners.message({ source: parent, data: {
   jsonrpc: "2.0", method: "ui/notifications/tool-result", params: { _meta: { workspace: catalogue } },
 } });
 const collect = element => [element, ...element.children.flatMap(collect)];
 (async () => {
-  if (navigationMode) {
+  if (reviewMode) {
+    await new Promise(resolve => setImmediate(resolve));
+    const click = async text => {
+      const target = collect(elements.app).find(el => el.tagName === "BUTTON" && el.textContent === text);
+      if (!target) throw new Error(`Missing button: ${text}`);
+      await target.listeners.click();
+    };
+    await click("Apri lavoro →");
+    const row = collect(elements.app).find(el => el.className === "finding");
+    await row.listeners.click();
+    if (fixture.action) {
+      const check = collect(elements.app).find(el => el.type === "checkbox");
+      check.checked = true;
+      await click(fixture.action);
+    }
+    const nodes = collect(elements.app);
+    process.stdout.write(JSON.stringify({calls, status:elements.status.textContent,
+      text:nodes.map(el=>el.textContent || "").join(" "),
+      fields: nodes.filter(el=>el.tagName === "LABEL" && el.className === "field").map(el=>({label:el.children[0].textContent,value:el.children[1].value})),
+      selected:nodes.filter(el=>el.className === "finding" && el.attributes["aria-pressed"] === "true").length,
+    }));
+  } else if (navigationMode) {
     await new Promise(resolve => setImmediate(resolve));
     const click = async text => {
       const target = collect(elements.app).find(element => element.tagName === "BUTTON" && element.textContent === text);

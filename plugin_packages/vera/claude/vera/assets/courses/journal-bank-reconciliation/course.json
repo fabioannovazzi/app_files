@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
-      "sha256": "245c31b32038b7db5e047dedf6e7a6a66652ca9cf0c975ac03cfce01b56f6e74"
+      "sha256": "632b6e4aed5bbe36a4234e45641a5150bbe86ba4a75ce2cd1db12f7f0a8319ac"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/check_dependencies.py",
@@ -72,7 +72,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "7e3008ddc652c73ab01b063d2973f1b822af58900da7649d2ebe0e257ec28e76"
+      "sha256": "89042e84c702cef273117eb6aaceb249531f647ff2b4503f396ae25783403b18"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/native_host_worker.py",
@@ -80,7 +80,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
-      "sha256": "bc5abf6ef05bbb873023507d3aa99b4a26441683bfa1ece4f6e3e3cf891c2c02"
+      "sha256": "2f397ce53042a1d71ee6de14e8f4e7936335d1710164a83cd19bd0bdc330a490"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
@@ -617,5 +617,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8686b0b755463bddc3efdd8a8dc2400e78a694b074716e4c93b66756ba4be588"
+  "canonical_course_sha256": "2b1b9c53783f80550dea67f39ffab78f6e6c7ca3fa39aa595221df88edbd8ce6"
 }

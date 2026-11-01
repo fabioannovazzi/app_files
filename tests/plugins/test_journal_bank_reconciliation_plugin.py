@@ -2759,7 +2759,7 @@ def test_spanish_run_localizes_review_notes_and_strict_contract(tmp_path: Path) 
     )
     artifact_item = next(
         item
-        for item in review_payload["items"]
+        for item in review_payload["artifact_items"]
         if item["item_type"] == "workpaper_artifact"
     )
 
@@ -10957,7 +10957,7 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         "ledger_support_FEE9.pdf"
     ]
     apply_result = responses[7]["result"]["structuredContent"]
-    assert apply_result["ok"] is True
+    assert apply_result["ok"] is True, apply_result
     assert apply_result["persisted"] is True
     assert apply_result["run_intake_path"] == str(output_dir / "run_intake.json")
     assert apply_result["decision_count"] == len(decisions)
