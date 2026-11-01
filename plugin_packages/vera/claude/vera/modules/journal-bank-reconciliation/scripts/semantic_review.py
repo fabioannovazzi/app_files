@@ -1289,6 +1289,61 @@ def _source_replay_snapshots(output_dir: Path) -> dict[str, dict[str, Any]]:
     }
 
 
+def _validate_native_source_copies(
+    paths: Mapping[str, Path | None],
+    context: Mapping[str, Any],
+) -> None:
+    """Bind native source copies to exact run imports, never arbitrary outputs.
+
+    Path identity, byte counts and hashes are mechanical provenance checks.
+    The envelope separately closes the selected population and reviewed roles.
+    """
+    output = Path(context["output_dir"])
+    bindings = {item["binding_id"]: item for item in context["input_bindings"]}
+    selected: set[str] = set()
+    for side, directory in paths.items():
+        if directory is None or not directory.is_relative_to(output):
+            continue
+        expected = output / "bank-preparation" / "sources" / side
+        if directory != expected or not directory.is_dir():
+            raise ValueError(
+                "Journal–Bank source paths must resolve to the run's exact receipts"
+            )
+        if any(path.is_symlink() for path in (directory, *directory.parents)):
+            raise ValueError("Native source copies cannot contain linked directories")
+        files = []
+        for path in directory.rglob("*"):
+            if path.is_symlink():
+                raise ValueError("Native source copies cannot contain links")
+            if not path.is_dir():
+                files.append(path)
+        if not files:
+            raise ValueError("Native source copies must contain selected run inputs")
+        for path in files:
+            relative = path.relative_to(directory)
+            identity = relative.parts[0]
+            binding = bindings.get(identity)
+            if (
+                len(relative.parts) != 2
+                or binding is None
+                or identity in selected
+                or path.name != Path(binding["execution_relative_path"]).name
+            ):
+                raise ValueError(
+                    "Native source copy is not an exact selected run input"
+                )
+            _, payload, digest = _stable_file_snapshot(
+                path,
+                maximum_bytes=binding["byte_count"],
+                label="Native source copy",
+            )
+            if len(payload) != binding["byte_count"] or digest != binding["sha256"]:
+                raise ValueError(
+                    "Native source copy differs from its run input receipt"
+                )
+            selected.add(identity)
+
+
 def _artifact_roots_from_intake(
     output_dir: Path,
     intake: Mapping[str, Any],
@@ -1349,20 +1404,8 @@ def _artifact_roots_from_intake(
             if recipe_value is not None
             else None
         )
-        workflow_output_value = client_engagement.get("output_dir")
-        if not isinstance(workflow_output_value, str) or not workflow_output_value:
-            raise ValueError("Client engagement output root is unavailable")
-        workflow_output = Path(workflow_output_value).expanduser().resolve(strict=True)
-        if any(
-            path == workflow_output or path.is_relative_to(workflow_output)
-            for path in (bank_path, journal_path, sample_path)
-            if path is not None
-        ):
-            raise ValueError(
-                "Journal–Bank source paths must resolve to the run's exact receipts"
-            )
         # Receipt membership and path containment are exact audit properties.
-        validate_client_workflow_run(
+        validated_context = validate_client_workflow_run(
             client_engagement,
             expected_workflow_id="journal-bank-reconciliation",
             input_paths=[
@@ -1371,6 +1414,10 @@ def _artifact_roots_from_intake(
                 *(path for path in (sample_path, recipe_path) if path is not None),
             ],
             output_dir=output_dir,
+        )
+        _validate_native_source_copies(
+            {"bank": bank_path, "journal": journal_path, "sample": sample_path},
+            validated_context,
         )
         return _artifact_roots(
             bank_path=bank_path,

@@ -197,13 +197,17 @@
     {
       "id": "current-host-worker-selection",
       "control": "The shared owned configuration provides cost candidates; the running Codex app-server model/list provides actual model and reasoning capabilities without creating a conversation. The receipt retains catalog and policy hashes and observed runtime. Availability does not establish model quality. Cowork and Antigravity packages select their own host and explicitly retain unresolved residuals because a verified isolated invocation adapter is not implemented; they never silently launch Codex."
+    },
+    {
+      "id": "native-source-copy-receipts",
+      "control": "Semantic preparation accepts the native bank-preparation source folders only when every regular single-link file has an exact selected run binding, original filename, byte count and SHA-256. Foreign inputs, altered copies, links and arbitrary output paths are rejected. The existing assurance envelope separately verifies the selected source population, roles and producer implementation. These local provenance checks add no model payload or external transmission."
     }
   ],
   "review": {
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "5d3c2c77aa145184f94bcd6e051b5cb2ad4e2e9b3b75df2e7f7b490e758de522"
+    "source_fingerprint": "622494ade28b57576e5de0ec10b98edb2379112178ebea12dcbf5cc339961395"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md",

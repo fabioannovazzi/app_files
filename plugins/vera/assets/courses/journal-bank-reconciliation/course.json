@@ -109,7 +109,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "3bfeeccce78f11b8dbd6cba3009c48f7834769de9f70428953f4145ee79378d5"
+      "sha256": "4240ec779396f591571a3ed574324d21fd94bdfe04d297632ac75f8e0e8b4b4d"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
