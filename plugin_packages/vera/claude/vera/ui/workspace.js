@@ -82,6 +82,13 @@
     if (generation !== epoch) return;
     catalogue = result; planningAuthorWork = null; businessPlanWork = null; salesWork = null; state = null; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; query = ""; renderCatalogue(); say("Scegli un lavoro collegato a Studio Archive.");
   }
+  function refreshCatalogue() {
+    return loadCatalogue({
+      ...(catalogue?.client_id ? { client_id: catalogue.client_id } : {}),
+      ...(catalogue?.engagement_id ? { engagement_id: catalogue.engagement_id } : {}),
+      ...(Number.isInteger(catalogue?.offset) ? { offset: catalogue.offset } : {}),
+    });
+  }
   async function openWork(workRef, offset = 0, selected, revision, sourceRef, view) {
     leaveDraft(); await draftTask; const generation = ++epoch;
     if (!sourceRef && state?.work_ref === workRef && ["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) sourceRef = state.data.selection.source_ref;
@@ -2478,11 +2485,12 @@
     const stored = await call("vera_workspace_bank_draft_read", { work_ref: workRef });
     state = null; bankWork = workRef; bankDraftContext = null;
     const { nav, main } = shell();
-    nav.append(button("Scarta e torna ai lavori", async () => { if (initial.can_write) await clearBankDraft(); dirty = false; return loadCatalogue(); }));
+    const returnToWorks = () => loadCatalogue({ client_id: initial.client_id, engagement_id: initial.engagement_id });
+    nav.append(button("Scarta e torna ai lavori", async () => { if (initial.can_write) await clearBankDraft(); dirty = false; return returnToWorks(); }));
     if (initial.can_write) nav.append(button("Conserva e torna ai lavori", async () => {
       if (dirty) await flushBankDraft();
       clearTimeout(bankDraftTimer); await bankDraftTask;
-      bankDraftContext = null; dirty = false; await loadCatalogue();
+      bankDraftContext = null; dirty = false; await returnToWorks();
       say("Bozza conservata. Recuperala quando riapri questo lavoro.");
     }));
     main.append(node("p", "Giornale e banca", "eyebrow"), node("h1", initial.label), node("p", "Scegli le fonti, verifica la mappatura delle colonne e il perimetro, poi esegui la riconciliazione. Gli esiti richiedono la revisione del professionista.", "sub"));
@@ -3446,7 +3454,7 @@
     setDirty(value){dirty=value;}, enter(){state=null;return ++epoch;},
     isCurrent(generation){return generation===epoch;}
   });
-  document.getElementById("refresh").addEventListener("click", () => run(() => practicePanel.active() ? practicePanel.refresh() : openItemsIntakePanel.active() ? openItemsIntakePanel.refresh() : browserPanel.active() ? browserPanel.refresh() : fusionPanel.active() ? fusionPanel.refresh() : ratingPanel.active() ? ratingPanel.refresh() : transformationPanel.active() ? transformationPanel.refresh() : websitePanel.active() ? websitePanel.refresh() : patentBoxPanel.active() ? patentBoxPanel.refresh() : bandiAuthorPanel.active ? bandiAuthorPanel.refresh() : noteContext ? Promise.reject(new Error("Conserva gli appunti e torna all’incarico prima di aggiornare.")) : amlAuthorContext ? Promise.reject(new Error("Conserva la bozza AML e torna ai record prima di aggiornare.")) : planningIntakeContext ? Promise.reject(new Error("Conserva la bozza e torna all’incarico prima di aggiornare.")) : planningReviewContext ? Promise.reject(new Error("Conserva la bozza e torna al piano prima di aggiornare.")) : treasuryIntakeContext || salesAuthorContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la preparazione.")) : closureContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la chiusura.")) : amlDraftContext ? Promise.reject(new Error("Conserva e torna al record prima di aggiornare il riesame.")) : financialWork && financialPage ? financialPage() : crWork && crPage ? crPage() : amlWork ? openAml(amlWork.workRef, 0, amlWork.workflow) : planningAuthorWork ? planningAuthorWork.exact ? openPlanningMandate(planningAuthorWork.exact,planningAuthorWork.stageRef) : renderPlanningAuthor(planningAuthorWork.selected) : businessPlanWork ? openBusinessPlan(businessPlanWork) : salesWork ? openSales(salesWork) : lipeWork ? openLipe(lipeWork) : bankWork ? openBank(bankWork) : state ? openWork(state.work_ref, state.offset) : loadCatalogue()));
+  document.getElementById("refresh").addEventListener("click", () => run(() => practicePanel.active() ? practicePanel.refresh() : openItemsIntakePanel.active() ? openItemsIntakePanel.refresh() : browserPanel.active() ? browserPanel.refresh() : fusionPanel.active() ? fusionPanel.refresh() : ratingPanel.active() ? ratingPanel.refresh() : transformationPanel.active() ? transformationPanel.refresh() : websitePanel.active() ? websitePanel.refresh() : patentBoxPanel.active() ? patentBoxPanel.refresh() : bandiAuthorPanel.active ? bandiAuthorPanel.refresh() : noteContext ? Promise.reject(new Error("Conserva gli appunti e torna all’incarico prima di aggiornare.")) : amlAuthorContext ? Promise.reject(new Error("Conserva la bozza AML e torna ai record prima di aggiornare.")) : planningIntakeContext ? Promise.reject(new Error("Conserva la bozza e torna all’incarico prima di aggiornare.")) : planningReviewContext ? Promise.reject(new Error("Conserva la bozza e torna al piano prima di aggiornare.")) : treasuryIntakeContext || salesAuthorContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la preparazione.")) : closureContext ? Promise.reject(new Error("Conserva e torna ai lavori prima di aggiornare la chiusura.")) : amlDraftContext ? Promise.reject(new Error("Conserva e torna al record prima di aggiornare il riesame.")) : financialWork && financialPage ? financialPage() : crWork && crPage ? crPage() : amlWork ? openAml(amlWork.workRef, 0, amlWork.workflow) : planningAuthorWork ? planningAuthorWork.exact ? openPlanningMandate(planningAuthorWork.exact,planningAuthorWork.stageRef) : renderPlanningAuthor(planningAuthorWork.selected) : businessPlanWork ? openBusinessPlan(businessPlanWork) : salesWork ? openSales(salesWork) : lipeWork ? openLipe(lipeWork) : bankWork ? openBank(bankWork) : state ? openWork(state.work_ref, state.offset) : refreshCatalogue()));
   window.addEventListener("message", event => {
     if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
     const message = event.data;
