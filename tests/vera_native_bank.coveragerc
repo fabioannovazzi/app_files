@@ -1,0 +1,8 @@
+[run]
+patch = subprocess
+include =
+    */plugins/vera/scripts/native_bank_preparation.py
+
+[report]
+show_missing = True
+fail_under = 80

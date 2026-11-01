@@ -269,7 +269,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "809720228752f38bc725d53c0ece49e2114bd6b2af1f46565aa020989d86d193",
+      "sha256": "756c55b48bdeb926edac689e8dd44d8816d69ef40fabf2e81b474ab4b5ece750",
       "languages": [
         "it",
         "en",
@@ -294,7 +294,7 @@
         "de": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
         "es": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes."
       },
-      "source_sha256": "dd7fa4dbfdd46758e01898ea614d425790f3166d449c1f2ebc8ad4b7383d7f57"
+      "source_sha256": "b8c076c2b6f50fbaab70b3a9a2a7b8e9929d88b1aad420585fee0eea89206135"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",

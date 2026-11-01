@@ -26,6 +26,7 @@ def test_bank_source_draft_survives_new_process_without_official_artifacts(
     initial_bank,
 ):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
     saved = rpc_program(
         env,
         SOURCE_DRAFT
@@ -42,7 +43,7 @@ def test_bank_source_draft_survives_new_process_without_official_artifacts(
     assert reopened["draft"]["fields"]["language"] == "fr"
     assert reopened["draft"]["fields"]["choices"]
     assert reopened["draft"]["draft_revision"] == saved["draft_revision"]
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
     path = next((output.parent / ".native-workspace").glob("bank-draft-*.json"))
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
 
@@ -91,6 +92,7 @@ const result={{first,changed,retained}};
 )
 def test_bank_draft_invalid_scope_or_fields_write_nothing(initial_bank, change):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
 
     result = rpc_program(
         env,
@@ -100,7 +102,7 @@ def test_bank_draft_invalid_scope_or_fields_write_nothing(initial_bank, change):
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
     assert list((output.parent / ".native-workspace").glob("bank-draft-*.json")) == []
 
 
@@ -190,6 +192,7 @@ const result={stale,cleared,after};
 
 def test_bank_viewer_cannot_save_draft(initial_bank):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
     env["VERA_WORKSPACE_ROLES"] = "VIEWER"
 
     result = rpc_program(
@@ -197,11 +200,12 @@ def test_bank_viewer_cannot_save_draft(initial_bank):
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
 
 
 def test_bank_draft_tampered_bytes_are_refused(initial_bank):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
     rpc_program(
         env,
         SOURCE_DRAFT
@@ -218,7 +222,7 @@ def test_bank_draft_tampered_bytes_are_refused(initial_bank):
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
 
 
 @pytest.mark.parametrize("namespace", ["actor", "tenant"])
@@ -252,6 +256,7 @@ def test_bank_draft_is_not_read_under_another_authorized_namespace(
 @pytest.mark.parametrize("link", ["symbolic", "hard"])
 def test_bank_draft_linked_existing_file_is_refused(initial_bank, link):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
     rpc_program(
         env,
         SOURCE_DRAFT
@@ -272,4 +277,4 @@ def test_bank_draft_linked_existing_file_is_refused(initial_bank, link):
 
     assert result["isError"] is True
     assert "regular single-link" in result["content"][0]["text"]
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
