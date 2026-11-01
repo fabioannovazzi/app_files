@@ -103,6 +103,56 @@ const ready = payload(call('vera_workspace_bank_setup', {work_ref:'initial-bank'
 """
 
 
+@pytest.mark.parametrize("report_state", ["automatic", "incomplete"])
+def test_initial_bank_inspection_preserves_automatic_privacy_reports(
+    initial_bank, report_state
+):
+    """Start-time reporting must not masquerade as a previous accounting execution."""
+    env, output, _ = initial_bank
+    report = output / "model_data_report.json"
+    markdown = output / "model_data_report.md"
+    assert report.is_file() and markdown.is_file()
+    if report_state == "incomplete":
+        report.write_text("{unfinished privacy report")
+        markdown.unlink()
+    reports_before = {path.name: path.read_bytes() for path in output.iterdir()}
+
+    result = rpc_program(env, INITIAL + "const result = {initial, page};")
+
+    assert result["initial"]["status"] == "not_inspected"
+    assert result["initial"]["can_write"] is True
+    assert result["initial"]["total"] == 2
+    assert result["page"]["status"] == "inspected"
+    assert {
+        name: (output / name).read_bytes() for name in reports_before
+    } == reports_before
+    assert not (output / "reconciliation").exists()
+
+
+@pytest.mark.parametrize(
+    "existing_entry",
+    ["reconciliation", "unexpected.json", "model_data_report.json.backup"],
+)
+def test_initial_bank_existing_accounting_or_unknown_output_requires_recovery(
+    initial_bank, existing_entry
+):
+    env, output, _ = initial_bank
+    existing = output / existing_entry
+    existing.write_text("Existing result must remain untouched")
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
+
+    result = rpc_program(
+        env,
+        INITIAL.split("const inspected =")[0]
+        + "const result = {initial, attempt:call('vera_workspace_bank_inspect', inspectArgs)};",
+    )
+
+    assert result["initial"]["status"] == "recovery_required"
+    assert result["initial"]["can_write"] is False
+    assert result["attempt"]["isError"] is True
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
+
+
 def test_initial_bank_inspection_review_and_execution_keep_engine_gates(initial_bank):
     env, output, _ = initial_bank
     result = rpc_program(
@@ -145,10 +195,11 @@ const result = {initial, inspected, page, reviewed, ready, reconciled, view};
         "document_language:'xx'",
     ],
 )
-def test_initial_bank_invalid_selection_or_authority_keeps_outputs_empty(
+def test_initial_bank_invalid_selection_or_authority_preserves_outputs(
     initial_bank, change
 ):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
     result = rpc_program(
         env,
         INITIAL.split("const inspected =")[0]
@@ -157,12 +208,13 @@ def test_initial_bank_invalid_selection_or_authority_keeps_outputs_empty(
         + "});",
     )
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
 
 
 @pytest.mark.parametrize("role", ["VIEWER", ""])
 def test_initial_bank_viewer_reads_labels_but_cannot_inspect(initial_bank, role):
     env, output, _ = initial_bank
+    before = {path.name: path.read_bytes() for path in output.iterdir()}
     result = rpc_program(
         {**env, "VERA_WORKSPACE_ROLES": role},
         INITIAL.split("const inspected =")[0]
@@ -170,7 +222,7 @@ def test_initial_bank_viewer_reads_labels_but_cannot_inspect(initial_bank, role)
     )
     assert result["initial"]["can_write"] is False
     assert result["write"]["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {path.name: path.read_bytes() for path in output.iterdir()} == before
 
 
 def test_initial_bank_identical_inspection_retry_keeps_one_generation(initial_bank):

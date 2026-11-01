@@ -12,9 +12,26 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from archive_reporting import REPORT_FILES
+
 __all__ = ["dispatch"]
 
 LANGUAGES = {"it", "en", "fr", "de", "es"}
+
+
+def has_preparation_outputs(output: Path) -> bool:
+    """Preserve uncertain work, excluding exact regular Archive reporting sidecars.
+
+    Archive creates these files before inspection. Their names are a producer
+    contract, not evidence of an earlier reconciliation or of report validity.
+    """
+    return any(
+        path.name not in REPORT_FILES
+        or path.is_symlink()
+        or not path.is_file()
+        or path.stat().st_nlink != 1
+        for path in output.iterdir()
+    )
 
 
 def draft_fields(
@@ -264,7 +281,7 @@ def dispatch(
         }
         for identity, row in inputs.items()
     ]
-    if not saved and any(output.iterdir()):
+    if not saved and has_preparation_outputs(output):
         result.update(status="recovery_required", can_write=False)
     if any(
         not ({"result", "refusal"} & api.read_json(path).keys())
@@ -507,7 +524,7 @@ def dispatch(
             raise ValueError(
                 "This bank run already has results; review its existing outputs"
             )
-        if not saved and any(output.iterdir()):
+        if not saved and has_preparation_outputs(output):
             raise ValueError(
                 "Existing output requires the maintained specialist recovery route"
             )
