@@ -164,6 +164,15 @@ invoking product's incident service and rating form remain available. Follow the
 primary task's workflow-usage contract and product identity. Tutorials retain
 their no-reporting boundary.
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace or a published folder. Use

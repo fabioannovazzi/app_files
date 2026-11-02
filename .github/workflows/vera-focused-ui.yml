@@ -45,3 +45,26 @@ jobs:
         with:
           name: vera-focused-ui-results
           path: vera-focused-ui.xml
+
+  one-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m pip install pytest pytest-cov playwright reportlab beautifulsoup4 pypdf -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/client-file-preparation/requirements.txt -r plugins/report-builder/requirements.txt
+      - run: python -m playwright install --with-deps chromium
+      - name: Verify that exactly one review opens and only relevant controls are visible
+        env:
+          VERA_REVIEW_SCREENSHOTS: /tmp/vera-review-screenshots
+        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vera-review-screens
+          path: /tmp/vera-review-screenshots

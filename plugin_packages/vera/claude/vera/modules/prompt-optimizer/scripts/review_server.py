@@ -1118,6 +1118,9 @@ def main(argv: list[str] | None = None) -> int:
             plugin_dir=_plugin_dir_from_args(args.plugin, args.plugin_dir),
             output_dir=_output_dir(args.output_dir),
         )
+        if (workbench.plugin_dir.parent.parent / "ui/review-routes.json").is_file():
+            LOGGER.info("Apri la revisione da Lavori dello studio nella chat di Vera.")
+            return 0
         _validate_vera_customer_run(workbench, read_only=True)
         serve_review(
             workbench,

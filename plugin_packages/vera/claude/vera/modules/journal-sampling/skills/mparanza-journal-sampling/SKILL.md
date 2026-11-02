@@ -3,6 +3,15 @@ name: mparanza-journal-sampling
 description: Use when a user wants Claude to qualify and extract accounting journal entries from reviewed CSV, Excel, or bounded print-friendly Excel layouts, normalize exact monetary rows, and generate reproducible audit samples with diagnostics and an audit trail. This is a Claude workflow plugin; users should not operate the helper CLIs directly.
 ---
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace, `static/shared`, `protected_downloads`, or any GitHub Pages/static-site folder unless the task is explicitly plugin packaging/release. A user-data run must use the exact output root in the Studio Archive `client_engagement` context. Inspection and normalization use its `normalization` child; sampling uses its `sample` child. Do not invent a sibling output folder or run an unbound product CLI.

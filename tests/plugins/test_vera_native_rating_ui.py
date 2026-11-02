@@ -27,7 +27,7 @@ def test_rating_ui_recovers_literal_selection_without_confirmation_or_preview():
     result = events(
         """
 const ui=fixture(source);await ui.panel.open('fictional-rating');ui.field(confirm).checked=true;
-const field=ui.field('Caso JSON registrato');field.value='case-one';field.dispatch('change');
+const field=ui.field('Caso registrato');field.value='case-one';field.dispatch('change');
 const note=ui.field('Nota privata · non entra nel dossier');note.value='  Literal fictional note  ';note.dispatch('input');
 await ui.panel.flush();await ui.panel.refresh();process.stdout.write(JSON.stringify({fields:ui.page.fields,confirmed:ui.field(confirm).checked,calls:ui.calls}));
 """
@@ -43,7 +43,7 @@ await ui.panel.flush();await ui.panel.refresh();process.stdout.write(JSON.string
 def test_rating_ui_requires_whole_preview_then_renewed_confirmation():
     result = events(
         """
-const ui=fixture(source);await ui.panel.open('fictional-rating');const field=ui.field('Caso JSON registrato');field.value='case-one';field.dispatch('change');await ui.panel.flush();
+const ui=fixture(source);await ui.panel.open('fictional-rating');const field=ui.field('Caso registrato');field.value='case-one';field.dispatch('change');await ui.panel.flush();
 let withoutPreview=false,withoutConsent=false;ui.field(confirm).checked=true;try{await ui.button('Conserva dossier').action();}catch(error){withoutPreview=true;}
 await ui.button('Controlla dossier scelto').action();try{await ui.button('Conserva dossier').action();}catch(error){withoutConsent=true;}
 const whole=ui.text();ui.field(confirm).checked=true;await ui.button('Conserva dossier').action();process.stdout.write(JSON.stringify({withoutPreview,withoutConsent,whole,calls:ui.calls}));
@@ -73,7 +73,7 @@ const ui=fixture(source);await ui.panel.open('fictional-rating');await ui.button
 def test_rating_ui_viewer_reads_whole_case_without_mutation():
     result = events(
         """
-const ui=fixture(source,{can_write:false,can_render:false});await ui.panel.open('fictional-rating');const field=ui.field('Caso JSON registrato');field.value='case-one';field.dispatch('change');await ui.button('Controlla dossier scelto').action();process.stdout.write(JSON.stringify({disabled:ui.button('Conserva dossier').disabled,calls:ui.calls,text:ui.text()}));
+const ui=fixture(source,{can_write:false,can_render:false});await ui.panel.open('fictional-rating');const field=ui.field('Caso registrato');field.value='case-one';field.dispatch('change');await ui.button('Controlla dossier scelto').action();process.stdout.write(JSON.stringify({disabled:ui.button('Conserva dossier').disabled,calls:ui.calls,text:ui.text()}));
 """
     )
     assert result["disabled"] is True

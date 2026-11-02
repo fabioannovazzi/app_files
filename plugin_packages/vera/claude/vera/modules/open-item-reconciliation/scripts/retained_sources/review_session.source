@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import re
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -68,7 +69,7 @@ def completed_review_handoff(
                 else "review_applied" if regeneration_pending else "review_completed"
             ),
             "required_before_final_delivery": False,
-            "server": {**handoff.get("server", {}), "required": False},
+            **({"server": {**handoff["server"], "required": False}} if "server" in handoff else {}),
         },
         "next_actions": [actions.get(language, actions["en"])],
     }
@@ -90,7 +91,7 @@ class ReviewSessionResult:
     run_intake_path: Path
     review_payload_path: Path
     ui_decisions_path: Path
-    review_html_path: Path
+    review_html_path: Path | None
     artifact_card_path: Path
     final_artifacts_path: Path
     review_item_count: int
@@ -330,6 +331,12 @@ def _load_json_object(path: Path) -> dict[str, Any]:
     except (OSError, UnicodeDecodeError, json.JSONDecodeError):
         return {}
     return payload if isinstance(payload, dict) else {}
+
+
+def _vera_review_panel() -> bool:
+    """The Vera distribution owns review. The standalone module has its own host."""
+    product = Path(__file__).resolve().parents[3]
+    return os.environ.get("VERA_COMPONENT_HOST") == "1" or (product / "ui/review-routes.json").is_file()
 
 
 def _write_standalone_review_html(
@@ -1406,6 +1413,24 @@ def _write_artifact_card(
         missing_evidence_requests_path or result.get("missing_evidence_requests_path"),
         output_dir,
     )
+    if _vera_review_panel():
+        spanish = _is_spanish(language)
+        lines = ["# " + ("Conciliación de partidas abiertas" if spanish else "Riconciliazione delle partite aperte"), ""]
+        for label, filename in (
+            ("Verifiche" if not spanish else "Controles", audit_workbook),
+            ("Prospetto" if not spanish else "Cuadro", accountant_workbook),
+            ("Relazione" if not spanish else "Informe", word_report),
+            ("Documenti richiesti" if not spanish else "Documentos solicitados", missing_requests),
+        ):
+            if filename:
+                lines.append(f"- {label}: {filename}")
+        if unresolved_count:
+            lines.append(f"\n{'Partidas pendientes' if spanish else 'Partite da chiarire'}: {unresolved_count}")
+        path = output_dir / "artifact_card.md"
+        text = "\n".join(lines) + "\n"
+        path.write_text(text, encoding="utf-8")
+        _record_produced_value(path, text, text, [])
+        return path
     client_engagement = result.get("client_engagement")
     if not isinstance(client_engagement, dict):
         client_engagement = None
@@ -1775,7 +1800,7 @@ def write_review_session_artifacts(
         records=[],
     )
 
-    review_html_path = _write_standalone_review_html(
+    review_html_path = None if _vera_review_panel() else _write_standalone_review_html(
         output_dir,
         run_intake=_load_json_object(run_intake_path),
         review_payload=review_payload,
@@ -1838,6 +1863,9 @@ def write_review_session_artifacts(
         ]
     )
 
+    if _vera_review_panel():
+        next_actions = next_actions[-2:]
+
     final_artifacts_path = _write_registered_json(
         output_dir / "final_artifacts.json",
         {
@@ -1868,6 +1896,10 @@ def write_review_session_artifacts(
             ),
             "caveats": caveats,
             "review_handoff": {
+                "primary": "vera_open_review",
+                "required_before_final_delivery": False,
+                "artifact_card": {"path": artifact_card_path.name, "announce_to_user": False},
+            } if _vera_review_panel() else {
                 "primary": "local_browser_server",
                 "status": "browser_review_required",
                 "required_before_final_delivery": True,

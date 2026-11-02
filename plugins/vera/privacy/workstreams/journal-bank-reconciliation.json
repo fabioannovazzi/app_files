@@ -136,7 +136,7 @@
     },
     {
       "id": "component-private-review-transport",
-      "control": "MCP validation can load the sibling review JSON inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and retains the complete human review surface. The local widget displays the existing native bank and journal dates and amounts, shared references and deltas with localized labels. Read-only reopening resolves and validates the owning portable run, including nested result folders. Archived results show a read-only notice and disabled save/apply buttons; server write authority still requires a running run. This adds no model payload or external route."
+      "control": "The Vera panel opens one authorised saved run. The model receives status and an opaque work reference when supplied. The selected item and saved choices reach the panel in app-only metadata. A requested current-chat discussion can retrieve selected source evidence. The native writer checks the current revision, selected item and signed review ticket. Standalone component review transports are not separate editors in Vera."
     },
     {
       "id": "bounded-selected-case-projection",
@@ -211,14 +211,18 @@
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "54feaa432d08cc5b5c7fc8742c55dbf85245f712c57a57c76352ed096cd9715a"
+    "source_fingerprint": "f300c9693342712752518798d1349be4d037366e30829416c375b6a1a6d95fa3"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
     "plugins/vera/agents/reconciliation-reviewer.md",
     "plugins/journal-bank-reconciliation/scripts/native_host_worker.py",
     "plugins/journal-bank-reconciliation/scripts/worker_capabilities.py",
-    "plugins/journal-bank-reconciliation/scripts/semantic_worker_policy.json"
+    "plugins/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/scripts/native_workspace.py",
+    "plugins/vera/ui/review-routes.json",
+    "plugins/vera/ui/workspace.js"
   ],
   "public_explanations": {
     "journal-bank-reconciliation": {

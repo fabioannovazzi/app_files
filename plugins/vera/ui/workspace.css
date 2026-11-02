@@ -235,3 +235,19 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
 :root .severity.blocker { color: var(--danger); }
 :root .severity.info { color: var(--info); }
 /* VERA_SHARED_THEME_END */
+
+[hidden] { display: none !important; }
+.split.single-item { grid-template-columns: minmax(0, 1fr); }
+.single-item > .detail { padding: 0; border: 0; }
+.other-tools > summary, .detail details > summary { cursor: pointer; padding-block: .45rem; }
+.other-tools[open] > button { display: block; margin-block: .35rem; }
+.finding-reason { margin-block: .4rem 1rem; }
+
+.supporting-details > summary { cursor: pointer; padding-block: .6rem; }
+.pagination:has(button:disabled):not(:has(button:enabled)) { display: none; }
+
+#status:empty { display: none; }
+.text-action { border: 0; padding-inline: 0; text-decoration: underline; text-underline-offset: .2em; }
+.queue-picker { border-bottom: 1px solid var(--line); }
+
+@media (max-width: 900px) { .shell { align-content: start; } }

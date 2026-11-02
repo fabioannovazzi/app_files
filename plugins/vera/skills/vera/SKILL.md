@@ -123,6 +123,17 @@ Do not show this recommendation on startup, after a trivial response, or more
 than once in the same conversation. Installation is never a prerequisite for
 continuing the useful in-chat work.
 
+## Reviewing saved work
+
+Deliver the result in this chat with its ordinary files. Use a panel only for a
+review that needs interaction or when the user asks to open it. In Codex call
+`vera_open_review` with the exact Archive client, engagement and run identifiers
+(or its work reference). This opens the same editor as **Lavori dello studio →
+Apri lavoro**. Never start a second editor or launch a localhost review server.
+If the panel is unavailable, keep the useful result in the chat and documents.
+Legal opinions, research and internal answer checks have no review UI.
+See `references/review-routing.md` for direct specialist invocations and other hosts.
+
 # Vera
 
 For journal-bank-reconciliation, open-item-reconciliation, journal-sampling,

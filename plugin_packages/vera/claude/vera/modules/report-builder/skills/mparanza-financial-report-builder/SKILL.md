@@ -3,6 +3,15 @@ name: mparanza-financial-report-builder
 description: Use when a user wants Claude to inspect financial Excel/CSV/text-PDF inputs, map tables to report sections, write or refine the report narrative in Claude, and produce reviewable Markdown/DOCX/JSON outputs. This is a Claude workflow plugin; users should not operate the helper CLIs directly.
 ---
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace or a published folder. Use

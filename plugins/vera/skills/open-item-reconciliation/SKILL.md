@@ -81,8 +81,8 @@ question. The agent supplies mappings; technical reviewer labels are generated.
 
 Read `accounting_status`, `report_ready` and the returned artifacts. Exact,
 unique, source-verified matches complete automatically. Deliver those files
-directly; the browser is optional. For `review_required`, deliver the draft and
-its unresolved items, then use the existing review tools for the remaining
+directly. For `review_required`, deliver the draft and
+its unresolved items, then use the saved work’s single editor for the remaining
 decisions. After review/regeneration, call the same operation with
 `--finish-run <run_id>`. Never invent human approval. A data-usage warning is
 reported alongside the result; it does not negate a verified reconciliation or
@@ -105,7 +105,7 @@ before this handoff. These source-qualified controls still require installed
 native-host and representative professional acceptance; use the ordinary
 persistent specialist route when the panel is unavailable, including in Cowork.
 
-For an already prepared review, use `vera_workspace_open` when callable and the
+For an already prepared review, use `vera_open_review` when callable and the
 exact Studio Archive run has a trusted operator binding. Read
 `../vera/references/native-workspace.md` before the handoff. The panel uses the
 maintained Python review service; discussion retrieves only the selected case

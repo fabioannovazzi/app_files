@@ -125,7 +125,7 @@
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
-      "sha256": "3f282d9293c7f0a3164028b5a4e1f176d7e4ba72219e8af96437b0f11f2f3d95"
+      "sha256": "fae5e6b726312ecdfa0db5d8bca0ef4fea00444f47bbf12145665726e38c66fe"
     },
     {
       "path": "modules/previdenza-inps/skills/previdenza-inps/agents/openai.yaml",
@@ -195,7 +195,7 @@
     {
       "path": "skills/previdenza-inps/SKILL.md",
       "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
-      "sha256": "ec54d36b46d9fdc24691160426655daf027309600ed4bd4fdbadb48b5797a603"
+      "sha256": "cc89f02b5c0bea20189b67373d895a54800ce53754977d1f45f4a202eeabe1ce"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

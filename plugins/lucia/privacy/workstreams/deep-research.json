@@ -56,7 +56,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "5d4cd70527393773ed69c768a006f110f0430167d28afc84ac17dcafa1ad030b"
+    "source_fingerprint": "f58d0c844971ab73e0d38aa91d56c06fa00741bcb5ae12145ed739f40cd9ed09"
   },
   "service_ids": [
     "managed-python-runtime",

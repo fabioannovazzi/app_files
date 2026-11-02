@@ -496,3 +496,26 @@ def test_fusion_p1_export_keeps_workpaper_outputs_and_canonical_report(p1_merger
     assert export["case_report"]["history"] == before
     assert "model_report" not in export
     assert demo.store.report()["history"] == before
+
+
+def test_studio_review_opens_only_the_bound_merger_without_an_archive_reporting_warning(
+    merger,
+):
+    env, _, _, _ = merger
+    result = rpc_program(
+        env,
+        """
+const args={workflow:"fusione-guidata", work_ref:"fictional-merger"};
+const opened=call("vera_open_review",args);
+const other=call("vera_open_review",{...args,work_ref:"unbound-merger"});
+const result={route:payload(opened),reporting:opened._meta.reporting||null,foreign:other.isError};
+""",
+    )
+    assert result["route"] == {
+        "kind": "review_route",
+        "workflow": "fusione-guidata",
+        "view": "task",
+        "work_ref": "fictional-merger",
+    }
+    assert result["reporting"] is None
+    assert result["foreign"] is True

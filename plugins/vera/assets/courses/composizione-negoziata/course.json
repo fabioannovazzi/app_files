@@ -165,7 +165,7 @@
     {
       "path": "scripts/native_bank_preparation.py",
       "repository_path": "plugins/vera/scripts/native_bank_preparation.py",
-      "sha256": "fd5c8b7b393c0b343bbc736336c2b9c836f54f74ea0642fdb1a8a5dbec3bf2cd"
+      "sha256": "0446693596c9264017e5842bf6c2f0517d5ee3e8acc547e4ed745c908c1d6894"
     },
     {
       "path": "scripts/native_cnc.py",

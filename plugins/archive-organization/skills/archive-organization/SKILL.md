@@ -3,6 +3,15 @@ name: archive-organization
 description: Use when Vera must screen one registered client folder, detect exact or probable duplicates, propose studio-policy categories and safe file destinations, collect collaborator decisions, and only then apply or roll back the approved organization plan.
 ---
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 # Vera · Riordino archivio
 
 Use this workflow for the mess inside one client folder. Use `studio-archive`

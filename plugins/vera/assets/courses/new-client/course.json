@@ -119,7 +119,7 @@
     {
       "path": "modules/client-file-preparation/skills/client-file-preparation/SKILL.md",
       "repository_path": "plugins/client-file-preparation/skills/client-file-preparation/SKILL.md",
-      "sha256": "00b69742577995070896e7262df2d9a02bfc555842ef8422a39b90f989a51bed"
+      "sha256": "41ec7a85426e9b1da8e48d01d6ef3f6751355748709a0fd3b9f0e12742d9451b"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -274,7 +274,7 @@
     {
       "path": "modules/new-client/skills/new-client/SKILL.md",
       "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
-      "sha256": "edad472f0955bb90ba5033edac68479122b6edc2688ff15fd4e711f7a7b2a10a"
+      "sha256": "32aa627569affd4475fad0a691d07539ea8624edfb9a0c14889bdb8a6d28055f"
     },
     {
       "path": "modules/new-client/skills/new-client/references/geneva.md",
@@ -339,7 +339,7 @@
     {
       "path": "skills/new-client/SKILL.md",
       "repository_path": "plugins/vera/skills/new-client/SKILL.md",
-      "sha256": "e7ddcc67928d8c9c6da4ca267aeb5e7e86cdc1b8900b62cb7aa9d5c53520381d"
+      "sha256": "da8f93738d06809534afac4075ad285e3912b47903b7a194dd7f1665385c3886"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

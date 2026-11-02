@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-client-file-preparation/SKILL.md",
-      "sha256": "3867d1169317b7a6f3bbf0f1048fcd82cce20c9f0c2c8fc33ca89f07bca3d441"
+      "sha256": "614846ee566179f73ae52831f2690e6298f389cdc03df0e44e242379c28249d0"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -224,7 +224,7 @@
     },
     {
       "path": "modules/new-client/skills/mparanza-new-client/SKILL.md",
-      "sha256": "6375d16009636aeaa62da277dc411a1c0cd47e0586673f55d9fa0b494ee45bca"
+      "sha256": "ffec43b1e9dd49ecb57f6bdf3cc89ae3f226b3a253dcaa3fb2c2535009aca326"
     },
     {
       "path": "modules/new-client/skills/mparanza-new-client/references/geneva.md",
@@ -276,7 +276,7 @@
     },
     {
       "path": "skills/mparanza-new-client/SKILL.md",
-      "sha256": "aa10a19d9359a0811149a7a7c7cf2df9720d91bda2bfdd68e4b91f0f12d26c83"
+      "sha256": "fbedc87f6c04808a782571be5994f973c7913ecf8ce84533f7b1c149ca97d2c0"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -701,5 +701,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4b585b439a514d447b8166f8bd1c18261ea4034cae64e49dd80fcc589a207527"
+  "canonical_course_sha256": "2026f791f047da83154efbbd885f31a90c4ce88dd4b7bb7d97e38019df4f04ea"
 }

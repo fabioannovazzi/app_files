@@ -3,6 +3,15 @@ name: open-item-reconciliation
 description: Use when a user has a population reported as open at a cut-off and wants Codex to determine which items are closed, partly closed, or still open from ledgers, journals, bank statements, payment orders, factoring or advance evidence, and compensation evidence, then produce reviewable Excel and Word workpapers. Do not use for direct bank-statement-to-journal matching; use journal-bank-reconciliation for that task. This is a Codex workflow plugin, not a standalone CLI.
 ---
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace or a published folder. Use

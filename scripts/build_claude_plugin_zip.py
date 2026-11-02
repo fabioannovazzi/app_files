@@ -1761,24 +1761,11 @@ def _project_new_client_cowork_skill(text: str) -> str:
 
 
 def _project_new_client_wrapper_cowork_skill(text: str) -> str:
-    text = text.replace(
-        "Both MCP toolsets belong to this workflow:",
-        "When callable, these MCP toolsets are optional persistence " "enhancements:",
+    """Cowork can deliver the prepared files in its current conversation."""
+    return text.replace(
+        "If the panel is unavailable, deliver the prepared documents in chat and identify",
+        "In Cowork, deliver the prepared documents in the current chat and identify",
     )
-    text = _sub_required(
-        text,
-        r"(?ms)^When host MCP tools are unavailable, use each resolved module's "
-        r"persistent\nloopback workbench.*$",
-        "The normal Cowork handoff is the reviewable draft, artifact card, and "
-        "source/review files in the connected folder. Review them directly. "
-        "When a validated MCP or local workbench is callable, it may optionally "
-        "persist save/apply actions. If it is unavailable, deliver the useful "
-        "file-based package and keep professional review pending. Never claim "
-        "that decisions were applied or that the package reached `final_ready` "
-        "unless corresponding persisted artifacts prove it.\n",
-        label="New Client Cowork wrapper review handoff",
-    )
-    return text
 
 
 def _project_presenza_digitale_cowork_skill(text: str) -> str:

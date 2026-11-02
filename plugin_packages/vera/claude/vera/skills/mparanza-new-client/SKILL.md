@@ -253,15 +253,10 @@ preparation engine as `../../modules/client-file-preparation` when installed or
 Read that module's `skills/mparanza-new-client/SKILL.md` completely. When incoming
 documents need preparation, also read the engine's
 `skills/mparanza-client-file-preparation/SKILL.md` completely and execute that as phase
-one. When callable, these MCP toolsets are optional persistence enhancements:
-
-- `validate_client_file_preparation_review`,
-  `render_client_file_preparation_review`,
-  `save_client_file_preparation_decisions`, and
-  `apply_client_file_preparation_decisions` review phase one;
-- `validate_new_client_review`, `render_new_client_review`,
-  `save_new_client_decisions`, and `apply_new_client_decisions` review the
-  professional-setup phases.
+one. Deliver the result of each phase in chat. When a phase needs review, call
+`vera_open_review` on that phase’s saved run. Revising prepared client files
+and reviewing the subsequent engagement are distinct jobs. Do not open a
+second editor for the same phase. Read `../mparanza-vera/references/review-routing.md`.
 
 Treat the relevant resolved module root as the plugin working directory for each
 command. Present every phase and artifact to the user under **New Client**.
@@ -315,4 +310,5 @@ seal each group file through the separate Archive closure before explicitly
 selecting its canonical JSON and originals as upstream audit inputs. Only an
 explicit selected-source discussion returns a bounded excerpt to the model.
 
-The normal Cowork handoff is the reviewable draft, artifact card, and source/review files in the connected folder. Review them directly. When a validated MCP or local workbench is callable, it may optionally persist save/apply actions. If it is unavailable, deliver the useful file-based package and keep professional review pending. Never claim that decisions were applied or that the package reached `final_ready` unless corresponding persisted artifacts prove it.
+In Cowork, deliver the prepared documents in the current chat and identify
+any outstanding decisions. Reopen the same saved work when review is needed.

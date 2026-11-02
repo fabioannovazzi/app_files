@@ -241,6 +241,8 @@ Without a repository, continue ordinary work. Studio skills remain independently
 invoked by the user; Vera does not dispatch them.
 <!-- VERA_CONNECTED_KNOWLEDGE_END -->
 
+In Vera, use the [saved review routing](../mparanza-vera/references/review-routing.md) for all professional review handoffs, including when following a standalone module below. Only when interactive review is needed, call `vera_open_review` for the saved Archive run.
+
 # Vouching
 
 For an already prepared checks run, use `vera_workspace_open` when callable and

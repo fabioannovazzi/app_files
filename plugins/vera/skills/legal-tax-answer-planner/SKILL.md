@@ -47,6 +47,8 @@ model when it differs, is unknown or changes, including in a new chat or any
 authorized delegation. Record available provenance without requiring a switch,
 confirmation, plugin UI or model API credentials.
 
+In Vera, use the [saved review routing](../vera/references/review-routing.md) for all professional review handoffs, including when following a standalone module below. Deliver this answer preparation in chat and documents; no review editor is needed.
+
 # Plan The Answer
 
 Read `../vera/references/research-subscriptions.md` and the saved optional source

@@ -3,6 +3,15 @@ name: treasury-forecast
 description: Prepare and update one company's EUR or CHF cash forecast from fixed bank, outstanding-item, settlement, adjustment and planned-flow tables; review dates, retain decisions and explain changes between accepted forecasts.
 ---
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 # Budget di tesoreria
 
 ## Jurisdiction and Geneva

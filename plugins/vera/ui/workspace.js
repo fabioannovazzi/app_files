@@ -48,7 +48,22 @@
   names["rating-legalita"] = "Rating di legalità";
   const technicalKeys = new Set(["id", "event_id", "issue_id", "source_ref", "document_id", "content_sha256", "record_sha256", "proposal_sha256", "target_artifact", "target_id_field", "target_record_id", "target_field", "rule_id", "model_context", "context_sha256", "review_ticket", "field_ref", "source_text_sha256", "source_sha256", "group_ref", "duplicate_key"]);
   const itemId = item => item.issue_id || item.id || item.event_id;
-  const title = item => item.title || item.description || item.message || "Elemento da esaminare";
+  const internalField = key => technicalKeys.has(key) ||
+    ["run_id","client_id","engagement_id","work_ref","idempotency_key","schema_version","execution_trace"].includes(key) ||
+    key.endsWith("_sha256");
+  function title(item) {
+    const data = item.data || {};
+    if (state?.workflow === "journal-bank-reconciliation" &&
+        ["unmatched_bank", "unmatched_journal", "matched_pair"].includes(item.item_type)) {
+      const description = data.description || data.bank_description || data.journal_description;
+      const amount = data.amount_signed ?? data.bank_amount ?? data.amount;
+      const money = amount != null && amount !== "" && Number.isFinite(Number(amount))
+        ? new Intl.NumberFormat("it-IT", {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(Number(amount)) : "";
+      const reference = data.reference || data.shared_references;
+      return [description || reference || "Movimento", [money, data.currency].filter(Boolean).join(" ")].filter(Boolean).join(" · ");
+    }
+    return item.title || item.description || item.message || "Elemento da esaminare";
+  }
   const node = (tag, text, cls) => { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (cls) el.className = cls; return el; };
   const button = (text, action, cls = "", flushLocal = true) => { const el = node("button", text, cls); el.type = "button"; el.addEventListener("click", () => run(action, flushLocal)); return el; };
   const say = (text, error = false) => { status.textContent = text; status.classList.toggle("error", error); };
@@ -77,6 +92,7 @@
   }
   function leaveDraft() { if (dirty) throw new Error(state ? "Ci sono modifiche non salvate. Salvale o scegli «Scarta modifiche» prima di cambiare lavoro o selezione." : "Questo modulo contiene modifiche. Completa l’azione oppure scegli «Scarta e torna agli incarichi» prima di cambiare pagina."); }
   async function loadCatalogue(args = {}) {
+    notifiedReview = null;
     leaveDraft(); crWork = null; crPage = null;financialWork=null;financialPage=null; const generation = ++epoch;
     const result = await call("vera_workspace_open", args);
     if (generation !== epoch) return;
@@ -89,14 +105,54 @@
       ...(Number.isInteger(catalogue?.offset) ? { offset: catalogue.offset } : {}),
     });
   }
-  async function openWork(workRef, offset = 0, selected, revision, sourceRef, view) {
+  async function openReview(workRef) {
+    const route = await call("vera_workspace_review_route", {work_ref:workRef});
+    return showReviewRoute(route);
+  }
+
+  let notifiedReview = null;
+  async function showReviewRoute(route) {
+    leaveDraft();
+    if (route.kind !== "review_route" || !Object.hasOwn(globalThis.VeraReviewRoutes, route.workflow) ||
+        globalThis.VeraReviewRoutes[route.workflow] !== route.view) throw new Error("Percorso di revisione non valido.");
+    if (!catalogue && route.client_id) catalogue = {client_id:route.client_id, engagement_id:route.engagement_id};
+    if (!route.view) {
+      say("Il risultato di questo lavoro si consulta nella chat e nei documenti consegnati.");
+      return;
+    }
+    const ref = route.work_ref;
+
+    const taskViews = {
+      "registro-imprese-sari":openSariReview, "previdenza-inps":openInps,
+      "variance-analysis":openVariance, "business-valuation":openValuation, "business-planning":openBusinessPlan,
+      "management-control-pack":openManagement, "sales-plan":openSales, "centrale-rischi-review":openCr,
+      "composizione-negoziata":openCnc, "esg-reporting-assurance":openEsg, "lipe":openLipe,
+      "aml-review":id=>openAml(id,0,"aml-review"), "adeguati-assetti":id=>openAml(id,0,"adeguati-assetti"),
+      "scissione-guidata":id=>openAml(id,0,"scissione-guidata"), "invoice-xml":openInvoice,
+      "passive-invoice-audit":openPassive, "financial-analysis":openFinancial, "bandi-agevolazioni":openBandi,
+      "patent-box-review":id=>patentBoxPanel.open(id), "rating-legalita":id=>ratingPanel.open(id),
+      "trasformazione":id=>transformationPanel.open(id), "fusione-guidata":id=>fusionPanel.open(id),
+      "presenza-digitale-studio":id=>websitePanel.open(id), "comunicazione-professionale":id=>communicationPanel.open(id),
+      "browser-automation":id=>browserPanel.open(id),
+    };
+    if (route.view === "items") return openWork(ref, 0, undefined, undefined, undefined, undefined, true);
+    if (!taskViews[route.workflow]) throw new Error("Questo lavoro non ha una revisione disponibile.");
+    return taskViews[route.workflow](ref);
+  }
+
+  async function openWork(workRef, offset = 0, selected, revision, sourceRef, view, resume = false) {
     leaveDraft(); await draftTask; const generation = ++epoch;
     if (!sourceRef && state?.work_ref === workRef && ["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) sourceRef = state.data.selection.source_ref;
     if (!view && state?.work_ref === workRef && state.workflow === "client-file-preparation") view = state.view;
     say("Lettura dello stato salvato…");
-    const next = await call("vera_workspace_view", { work_ref: workRef, offset, ...(selected ? { item_id: selected } : {}), ...(revision ? { revision } : {}), ...(sourceRef ? { source_ref: sourceRef } : {}), ...(view ? { view } : {}) });
+    if (state?.work_ref !== workRef) query = "";
+    const next = await call("vera_workspace_view", { work_ref: workRef, offset, ...(resume ? { resume_review: true } : {}), ...(selected ? { item_id: selected } : {}), ...(revision ? { revision } : {}), ...(sourceRef ? { source_ref: sourceRef } : {}), ...(view ? { view } : {}) });
     if (generation !== epoch) return;
-    state = next; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; submission = null; renderWork(); say("Stato letto dal lavoro salvato.");
+    // Every internal return link (including post-preparation) uses the same editor.
+    if (next.total === 1 && !next.selection && next.items.length === 1 && !selected) {
+      return openWork(workRef, offset, itemId(next.items[0]), next.revision, sourceRef, view);
+    }
+    state = next; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; submission = null; renderWork(); say("");
     if (["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) { if (selected && window.innerWidth < 760) document.getElementById("detail").scrollIntoView({block:"start"}); return; }
     if (state.view === "ARCHIVE_EXECUTION" || (state.kind === "bilancio" && state.view?.startsWith("AREA_"))) return;
     const draft = await call("vera_workspace_draft_read", { work_ref: state.work_ref });
@@ -142,9 +198,12 @@
     input.addEventListener("input", () => { query = input.value; change(); });
   }
   function renderCatalogue() {
-    const { nav, main } = shell(); nav.append(button("Clienti e incarichi", loadCatalogue),button("Comunicazioni dello studio",()=>communicationPanel.catalogue()),button("Sito dello studio",()=>websitePanel.catalogue()),button("Automazione web · processi e lotti",()=>browserPanel.catalogue()),button("Fusione guidata",()=>fusionPanel.catalogue()),button("Trasformazione · prototipi sintetici",()=>transformationPanel.catalogue()));
-    nav.append(button("Pratiche e formato documenti",()=>practicePanel.catalogue()));
-    nav.append(button("Organizzazione del lavoro", async () => {
+    const { nav, main } = shell();
+    const services = node("details", undefined, "other-tools");
+    services.append(node("summary", "Altri strumenti dello studio")); nav.append(services);
+    services.append(button("Comunicazioni dello studio",()=>communicationPanel.catalogue()),button("Sito dello studio",()=>websitePanel.catalogue()),button("Automazione web · processi e lotti",()=>browserPanel.catalogue()),button("Fusione guidata",()=>fusionPanel.catalogue()),button("Trasformazione · prototipi sintetici",()=>transformationPanel.catalogue()));
+    services.append(button("Pratiche e formato documenti",()=>practicePanel.catalogue()));
+    services.append(button("Organizzazione del lavoro", async () => {
       leaveDraft();
       const text = "Apri vera_studio_work_panel_open per consultare il registro degli impegni, le riunioni e le ricevute calendario dello studio. Usa lo stesso registro owner-local di organizzazione-lavoro. Questa richiesta non autorizza operazioni calendario né configura automazioni.";
       if (host.hostCapabilities?.message?.text) {
@@ -169,7 +228,7 @@
       }, "primary")); return;
     }
     if (archive) {
-      nav.append(button("Aggiorna registro e fascicoli", async () => {
+      services.append(button("Aggiorna registro e fascicoli", async () => {
         say("Verifica del registro e aggiornamento dell'indice locale…");
         const result = await call("vera_workspace_archive_refresh", { confirmed: true });
         await loadCatalogue();
@@ -181,7 +240,11 @@
       if(catalogue.collection_issues?.length)main.append(node("p","L’elenco dei lavori è incompleto: una parte dell’archivio non è leggibile. I record conservati restano invariati.","notice"));
       if (catalogue.can_prepare) main.append(button("Importa documenti", () => renderImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Appunti del colloquio", () => renderNoteImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Prepara un lavoro", renderPreparation), button("Nuova domanda per il Business plan", () => renderPlanningAuthor({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})));
     }
-    const list = node("div", undefined, "works"); search(main, archive ? "Cerca nella pagina corrente" : "Cerca cliente, incarico o funzione", rows); main.append(list);
+    const list = node("div", undefined, "works");
+    const records = archive && catalogue.level !== "runs" ? (catalogue.clients || catalogue.engagements || []) : catalogue.works;
+    if (records.length > 1) search(main, archive ? "Cerca nella pagina corrente" : "Cerca cliente, incarico o funzione", rows);
+    else query = "";
+    main.append(list);
     function rows() {
       list.replaceChildren();
       if (archive && catalogue.level !== "runs") {
@@ -204,8 +267,8 @@
         const row = node("section", undefined, "work-row"), text = node("div");
         text.append(node("p", work.client_label, "eyebrow"), node("h2", work.label), node("p", work.engagement_label), node("p", names[work.workflow] || work.workflow), node("p", statusLabels[work.status] || work.status, "caption"));
         row.append(text);
-        if (work.closure_available) row.append(button("Output e chiusura del run →", () => openClosure(work)));
-        if (work.source_groups_available) row.append(button("Originali CH-GE e JSON rivisto →", () => openSourceGroup(work.work_ref)));
+        if (work.closure_available) row.append(button("Documenti e chiusura del lavoro →", () => openClosure(work)));
+        if (work.source_groups_available) row.append(button("Confronta i documenti originali →", () => openSourceGroup(work.work_ref)));
         if (work.can_start) {
           const start = node("div", undefined, "run-start");
           start.append(node("p", "L’avvio cambia lo stato del run. Il motore e la qualificazione delle fonti proseguono nel percorso della funzione.", "caption"), button("Avvia lavorazione", async () => {
@@ -214,10 +277,11 @@
             say("Run in lavorazione. Riprendi la funzione nella chat per eseguire il motore.");
           })); row.append(start);
         }
-        if (work.setup_available) row.append(work.workflow === "passive-invoice-audit" ? button("Controllo fatture passive →", () => openPassive(work.work_ref)) : work.workflow === "sales-plan" ? button("Piano vendite →", () => openSales(work.work_ref)) : work.workflow === "business-planning" ? button("Business plan →", () => openBusinessPlan(work.work_ref)) : work.workflow === "business-valuation" ? button("Valutazione d’impresa →", () => openValuation(work.work_ref)) : work.workflow === "rating-legalita" ? button("Dossier Rating di legalità →", () => ratingPanel.open(work.work_ref)) : work.workflow === "patent-box-review" ? button("Fascicolo Patent Box →", () => patentBoxPanel.open(work.work_ref)) : work.workflow === "bandi-agevolazioni" ? button("Dossier Bandi →", () => openBandi(work.work_ref)): work.workflow === "registro-imprese-sari" ? button("Fascicolo Registro Imprese →", () => openSari(work.work_ref)) : work.workflow === "previdenza-inps" ? button("Fascicolo INPS →", () => openInps(work.work_ref)) : work.workflow === "esg-reporting-assurance" ? button("Fascicolo ESG →", () => openEsg(work.work_ref)) : work.workflow === "composizione-negoziata" ? button("Composizione negoziata →", () => openCnc(work.work_ref)) : work.workflow === "management-control-pack" ? button("Controllo di gestione →", () => openManagement(work.work_ref)) : work.workflow === "variance-analysis" ? button("Analisi degli scostamenti →", () => openVariance(work.work_ref)) : work.workflow === "open-item-reconciliation" ? button("Prepara partite aperte →", () => openItemsIntakePanel.open(work.work_ref)) : work.workflow === "treasury-forecast" ? button("Prepara Budget di tesoreria →", () => openTreasuryPreparation(work.work_ref)) : work.workflow === "invoice-xml" ? button("Fatture XML →", () => openInvoice(work.work_ref)) : work.workflow === "centrale-rischi-review" ? button("Centrale Rischi →", () => openCr(work.work_ref)) : work.workflow === "financial-analysis" ? button("Analisi finanziaria →", () => openFinancial(work.work_ref)) : work.workflow === "lipe" ? button("Calcoli LIPE →", () => openLipe(work.work_ref)) : ["aml-review", "adeguati-assetti", "scissione-guidata"].includes(work.workflow) ? button(work.workflow === "scissione-guidata" ? "Versioni della Scissione →" : work.workflow === "adeguati-assetti" ? "Valutazioni degli assetti →" : "Revisioni antiriciclaggio →", () => openAml(work.work_ref, 0, work.workflow)) : button("Prepara Giornale e banca →", () => openBank(work.work_ref)));
-        if ((!archive && !work.setup_available) || work.review_available) row.append(button("Apri lavoro →", () => openWork(work.work_ref)));
+        const separatePreparation = ["journal-bank-reconciliation", "open-item-reconciliation", "treasury-forecast", "registro-imprese-sari"].includes(work.workflow);
+        if (work.setup_available && (!work.review_available || separatePreparation)) row.append(work.workflow === "passive-invoice-audit" ? button("Controllo fatture passive →", () => openPassive(work.work_ref)) : work.workflow === "sales-plan" ? button("Piano vendite →", () => openSales(work.work_ref)) : work.workflow === "business-planning" ? button("Business plan →", () => openBusinessPlan(work.work_ref)) : work.workflow === "business-valuation" ? button("Valutazione d’impresa →", () => openValuation(work.work_ref)) : work.workflow === "rating-legalita" ? button("Dossier Rating di legalità →", () => ratingPanel.open(work.work_ref)) : work.workflow === "patent-box-review" ? button("Fascicolo Patent Box →", () => patentBoxPanel.open(work.work_ref)) : work.workflow === "bandi-agevolazioni" ? button("Dossier Bandi →", () => openBandi(work.work_ref)): work.workflow === "registro-imprese-sari" ? button("Fascicolo Registro Imprese →", () => openSari(work.work_ref)) : work.workflow === "previdenza-inps" ? button("Fascicolo INPS →", () => openInps(work.work_ref)) : work.workflow === "esg-reporting-assurance" ? button("Fascicolo ESG →", () => openEsg(work.work_ref)) : work.workflow === "composizione-negoziata" ? button("Composizione negoziata →", () => openCnc(work.work_ref)) : work.workflow === "management-control-pack" ? button("Controllo di gestione →", () => openManagement(work.work_ref)) : work.workflow === "variance-analysis" ? button("Analisi degli scostamenti →", () => openVariance(work.work_ref)) : work.workflow === "open-item-reconciliation" ? button("Prepara partite aperte →", () => openItemsIntakePanel.open(work.work_ref)) : work.workflow === "treasury-forecast" ? button("Prepara Budget di tesoreria →", () => openTreasuryPreparation(work.work_ref)) : work.workflow === "invoice-xml" ? button("Fatture XML →", () => openInvoice(work.work_ref)) : work.workflow === "centrale-rischi-review" ? button("Centrale Rischi →", () => openCr(work.work_ref)) : work.workflow === "financial-analysis" ? button("Analisi finanziaria →", () => openFinancial(work.work_ref)) : work.workflow === "lipe" ? button("Calcoli LIPE →", () => openLipe(work.work_ref)) : ["aml-review", "adeguati-assetti", "scissione-guidata"].includes(work.workflow) ? button(work.workflow === "scissione-guidata" ? "Versioni della Scissione →" : work.workflow === "adeguati-assetti" ? "Valutazioni degli assetti →" : "Revisioni antiriciclaggio →", () => openAml(work.work_ref, 0, work.workflow)) : button("Prepara Giornale e banca →", () => openBank(work.work_ref)));
+        if (globalThis.VeraReviewRoutes[work.workflow] && ((!archive && !work.setup_available) || work.review_available)) row.append(button("Apri lavoro →", () => openReview(work.work_ref)));
         else if (archive && !work.inputs_valid) row.append(node("p", "Una fonte del run è mancante o cambiata. Verifica il fascicolo prima di riprenderlo.", "notice"));
-        else {
+        else if (!work.setup_available) {
           if (work.review_status === "specialist_recovery_required") row.append(node("p", work.workflow === "treasury-forecast" ? "La sessione di tesoreria richiede recupero nel percorso specialistico. Le fonti del run restano verificate; il pannello non modifica i riferimenti del motore." : "I risultati preparati richiedono verifica nel percorso della funzione. Il pannello conserva le fonti e le ricevute del run.", "notice"));
           if (work.review_status === "canonical_connection_required") row.append(node("p", "Il caso contabile deve essere collegato e autorizzato per questo incarico. Riprendi Bilancio nella chat per verificare il collegamento.", "notice"));
           row.append(button("Riprendi nella chat", () => resumeWorkInChat(row, work)));
@@ -227,7 +291,7 @@
       if (!selected.length) list.append(node("p", "Nessun lavoro disponibile. Il workspace mostra soltanto i run collegati e autorizzati in Studio Archive.", "empty"));
     }
     rows();
-    if (archive) {
+    if (archive && (catalogue.offset || catalogue.has_more)) {
       const group = node("div", undefined, "pagination");
       const currentScope = { ...(catalogue.client_id ? { client_id: catalogue.client_id } : {}), ...(catalogue.engagement_id ? { engagement_id: catalogue.engagement_id } : {}) };
       const previous = button("Precedenti", () => loadCatalogue({ ...currentScope, offset: Math.max(0, catalogue.offset - 30) })); previous.disabled = !catalogue.offset;
@@ -622,9 +686,9 @@
   async function resumeWorkInChat(parent, work) {
     const exact = await call("vera_workspace_resume_context", { work_ref: work.work_ref });
     const text = `Riprendi questo run di Vera attraverso Archivio dello studio e la skill specialistica. Verifica gli identificativi nel registro prima di usare le fonti; non creare un nuovo run, non approvare e non inviare output.\nCliente: ${exact.client_id}\nIncarico: ${exact.engagement_id}\nRun: ${exact.run_id}\nFunzione: ${exact.workflow_id}`;
-    if (host.hostCapabilities?.message?.text && host.hostCapabilities?.experimental?.["openai/message"]) {
-      const result = await request("ui/message", { role: "user", content: [{ type: "text", text }], _meta: { "openai/message": { target: "new" } } });
-      say(result?.isError ? "Invio annullato. Il run resta invariato." : "Richiesta inviata nella nuova chat. Il run resta da riprendere e verificare.");
+    if (host.hostCapabilities?.message?.text) {
+      const result = await request("ui/message", { role: "user", content: [{ type: "text", text }] });
+      say(result?.isError ? "Invio annullato. Il run resta invariato." : "Richiesta inviata nella chat corrente. Il run resta da riprendere e verificare.");
     } else {
       parent.append(node("p", "Copia questa richiesta nella chat con Vera per riprendere il run selezionato.", "caption"));
       const requestText = node("textarea", undefined, "request"); requestText.readOnly = true; requestText.value = text; parent.append(requestText); requestText.focus(); requestText.select();
@@ -674,7 +738,7 @@
   async function discussSourceGroup(parent,args){
     await flushSourceGroup();const result=await request("tools/call",{name:"vera_workspace_source_group_explain",arguments:args});if(result.isError)throw new Error(result.content?.[0]?.text||"La fonte scelta non è più disponibile.");
     const text=`Discuti soltanto l’originale selezionato per il gruppo CH-GE. Non abbinare altre fonti, non modificare l’estrazione e non registrare approvazioni. Leggi prima vera_workspace_source_group_explain con questi riferimenti esatti:\n${JSON.stringify(args)}`;
-    if(host.hostCapabilities?.message?.text&&host.hostCapabilities?.experimental?.["openai/message"]){const delivered=await request("ui/message",{role:"user",content:[{type:"text",text}],_meta:{"openai/message":{target:"new"}}});if(delivered?.isError)throw new Error("La chat non ha accettato la richiesta. Verifica le chat aperte prima di riprovare.");say("Richiesta della sola fonte selezionata inviata alla chat.");}
+    if(host.hostCapabilities?.message?.text){const delivered=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(delivered?.isError)throw new Error("La chat non ha accettato la richiesta. Verifica le chat aperte prima di riprovare.");say("Richiesta della sola fonte selezionata inviata alla chat.");}
     else{const copy=node("textarea",undefined,"request");copy.readOnly=true;copy.value=text;parent.append(copy);copy.focus();copy.select();say("Copia la richiesta nella chat per discutere la fonte selezionata.");}
   }
   function groupSourcePicker(parent,label,identity,inputs,choose){
@@ -689,7 +753,7 @@
     state=null;salesWork=null;bankWork=null;passiveContext=null;humanContext=null;sourceGroupContext=null;query="";
     const context={page,fields:carried?structuredClone(carried):recovery&&!page.draft.stale?structuredClone(page.draft.fields):{canonical_id:canonicalId,originals:{},operator_ref:"",decision_basis:""},stamp:page.draft.draft_revision};
     context.fields.originals||={};context.saved=JSON.stringify(carried&&!page.draft.stale?page.draft.fields:context.fields);dirty=JSON.stringify(context.fields)!==context.saved;if(sourceGroupRequest&&sourceGroupRequest.work_ref!==workRef)sourceGroupRequest=null;
-    const {nav,main}=shell();sourceGroupContext=context;if(dirty)sourceGroupTimer=setTimeout(()=>persistSourceGroup().catch(()=>{}),500);main.append(node("p",page.label,"eyebrow"),node("h1","Originali e JSON CH-GE rivisto"),node("p","Scegli il JSON già rivisto e abbina ogni percorso dichiarato al suo originale registrato. Il gruppo conserva file e revisione esistenti. L’estrazione e il riesame professionale proseguono nel percorso della funzione.","sub"));
+    const {nav,main}=shell();sourceGroupContext=context;if(dirty)sourceGroupTimer=setTimeout(()=>persistSourceGroup().catch(()=>{}),500);main.append(node("p",page.label,"eyebrow"),node("h1","Originali e JSON CH-GE rivisto"),node("p","Scegli il documento già rivisto e abbina ogni percorso dichiarato al suo originale registrato. Il gruppo conserva file e revisione esistenti. L’estrazione e il riesame professionale proseguono nel percorso della funzione.","sub"));
     nav.append(button("← Lavori dello studio",()=>loadCatalogue()));
     if(page.interrupted)main.append(node("p","Una preparazione è interrotta o contiene file senza una ricevuta completa. Verifica intenti e output nel percorso specialistico prima di un altro gruppo.","notice"));
     if(page.groups.length){main.append(node("h2","Gruppi preparati"));for(const group of page.groups){const row=node("section",undefined,"finding");row.append(node("p",`${group.invoice_count} ${group.invoice_count===1?"fattura":"fatture"} · ${group.operator_ref}`),button("Esamina file del gruppo",async()=>{const files=await call("vera_workspace_source_group_outputs",{work_ref:workRef,revision:page.revision,...(canonicalId?{source_ref:canonicalId}:{}),group_ref:group.id});const area=node("div",undefined,"outputs");for(const file of files.outputs){const entry=node("div",undefined,"output");entry.append(node("p",file.name));passiveFile(entry,file);area.append(entry);}row.append(area);}));main.append(row);}main.append(node("p","Dichiara e sigilla tutti i file in «Output e chiusura del run» prima di riusarli in un controllo fatture.","caption"));}
@@ -697,7 +761,7 @@
     if(!page.can_write){main.append(button("Riprendi verifica con Vera",()=>resumeWorkInChat(main,{work_ref:workRef})));return;}
     let confirmed;
     function changed(){dirty=true;sourceGroupRequest=null;if(confirmed)confirmed.checked=false;clearTimeout(sourceGroupTimer);sourceGroupTimer=setTimeout(()=>persistSourceGroup().catch(()=>{}),500);}
-    groupSourcePicker(main,"Scegli il JSON già rivisto",canonicalId,page.inputs.filter(row=>row.title.toLowerCase().endsWith(".json")),async id=>{await flushSourceGroup();const next={...context.fields,canonical_id:id,originals:{}};sourceGroupContext=null;dirty=false;await openSourceGroup(workRef,id,0,false,next);});
+    groupSourcePicker(main,"Scegli il documento già rivisto",canonicalId,page.inputs.filter(row=>row.title.toLowerCase().endsWith(".json")),async id=>{await flushSourceGroup();const next={...context.fields,canonical_id:id,originals:{}};sourceGroupContext=null;dirty=false;await openSourceGroup(workRef,id,0,false,next);});
     const evidence=node("section"),preview=node("div");main.append(evidence,preview);
     async function showSource(id){const selected=await call("vera_workspace_source_group_source",{work_ref:workRef,revision:page.revision,...(canonicalId?{source_ref:canonicalId}:{}),item_id:id});preview.replaceChildren(node("h3",selected.selection.title));if(selected.selection.excerpt!==null)preview.append(node("pre",selected.selection.excerpt,"source-excerpt"));else preview.append(node("p","Fonte binaria: apri l’originale per il riesame.","caption"));passiveFile(preview,{name:selected.selection.title,path:selected.selection.path});preview.append(button("Discuti questa fonte con Vera",()=>discussSourceGroup(preview,{work_ref:workRef,revision:page.revision,...(canonicalId?{source_ref:canonicalId}:{}),item_id:id})));}
     if(canonicalId){evidence.append(node("h2",`${page.invoice_count} ${page.invoice_count===1?"fattura":"fatture"} · ${page.total} ${page.total===1?"originale dichiarato":"originali dichiarati"}`),readFields({revisione_estrazione_esistente:page.extraction_review}),button("Esamina JSON selezionato",()=>showSource(canonicalId)));for(const document of page.documents){const row=node("section",undefined,"finding");row.append(node("h3",document.path),node("p",`Impronta dichiarata: ${document.sha256}`,"caption"));groupSourcePicker(row,"Scegli l’originale registrato",context.fields.originals[document.path],page.inputs.filter(input=>input.id!==canonicalId),id=>{context.fields.originals[document.path]=id;changed();});row.append(button("Esamina originale",()=>{const id=context.fields.originals[document.path];if(!id)throw new Error("Scegli prima un originale registrato.");return showSource(id);}));evidence.append(row);}const pages=node("div",undefined,"pagination"),change=async next=>{await flushSourceGroup();const carried=structuredClone(context.fields);sourceGroupContext=null;dirty=false;await openSourceGroup(workRef,canonicalId,next,false,carried);};const previous=button("Originali precedenti",()=>change(Math.max(0,offset-30))),next=button("Originali successivi",()=>change(offset+30));previous.disabled=!offset;next.disabled=offset+30>=page.total;pages.append(previous,node("span",`${offset+1}–${Math.min(offset+30,page.total)} di ${page.total}`),next);evidence.append(pages);}
@@ -784,7 +848,7 @@
     await flushPassive();const result=await request("tools/call",{name:"vera_workspace_passive_explain",arguments:args});
     if(result.isError)throw new Error(result.content?.find(item=>item.type==="text")?.text||"La selezione è cambiata.");
     const text=`Spiegami soltanto la prova selezionata del controllo fatture passive. Non registrare decisioni e non approvare la contabilità. Leggi prima vera_workspace_passive_explain con questi riferimenti esatti:\n${JSON.stringify(args)}`;
-    if(host.hostCapabilities?.message?.text&&host.hostCapabilities?.experimental?.["openai/message"])await request("ui/message",{role:"user",content:[{type:"text",text}],_meta:{"openai/message":{target:"new"}}});
+    if(host.hostCapabilities?.message?.text)await request("ui/message",{role:"user",content:[{type:"text",text}]});
     else{parent.append(node("p","Copia la richiesta nella chat con Vera per discutere questa prova.","caption"));const input=node("textarea",undefined,"request");input.readOnly=true;input.value=text;parent.append(input);}
   }
   async function openPassiveView(page, view="exceptions", offset=0, itemId, memberRef) {
@@ -827,7 +891,7 @@
     await flushHuman();const args={work_ref:page.work_ref,revision:page.revision,source_ref:page.data.selection.source_ref,review_ref:page.selected_review.review_ref,item_id:id};
     const result=await request("tools/call",{name:"vera_workspace_passive_review_explain",arguments:args});if(result.isError)throw new Error(result.content?.[0]?.text||"La valutazione è cambiata.");
     const text=`Spiegami solo l’etichetta o il problema mancato selezionato. Non modificare etichette o contabilità. Leggi prima vera_workspace_passive_review_explain con questi riferimenti esatti:\n${JSON.stringify(args)}`;
-    if(host.hostCapabilities?.message?.text&&host.hostCapabilities?.experimental?.["openai/message"])await request("ui/message",{role:"user",content:[{type:"text",text}],_meta:{"openai/message":{target:"new"}}});
+    if(host.hostCapabilities?.message?.text)await request("ui/message",{role:"user",content:[{type:"text",text}]});
     else {parent.append(node("p","Copia la richiesta nella chat con Vera.","caption"));const input=node("textarea",undefined,"request");input.readOnly=true;input.value=text;parent.append(input);}
   }
   async function openHumanReview(workRef, offset=0, reference, recovery=false, versionOffset=0) {
@@ -1066,7 +1130,10 @@
     if(page.recovery_required)main.append(node("p","Un’operazione non è conclusa con evidenza certa. Verifica il fascicolo nel flusso ordinario prima di altre scritture o della chiusura.","notice"));
     const context={workRef,page,fields:structuredClone(page.fields),stamp:page.draft_revision,saved:JSON.stringify(page.fields),editable:page.can_write&&!page.draft_stale};bandiContext=context;
     const scopeLabels={source_baseline:"Fonti",requirements:"Requisiti",assessments:"Valutazioni",dossier:"Intero dossier"};
-    if(page.setup_status!=="empty_run")for(const [key,label] of Object.entries(scopeLabels))nav.append(button(label,()=>openBandi(workRef,key)));
+    if(page.setup_status!=="empty_run"){
+      const sections=supportingDetails("Sezioni del dossier");nav.append(sections);
+      for(const [key,label] of Object.entries(scopeLabels))sections.append(button(label,()=>openBandi(workRef,key)));
+    }
     if(page.setup_status!=="empty_run")nav.append(button("Contributi per il dossier",()=>bandiAuthorPanel.open(workRef)));
     const changed=()=>{if(context.confirm)context.confirm.checked=false;context.submission=null;dirty=true;clearTimeout(bandiTimer);bandiTimer=setTimeout(persistBandi,450);};
     if(page.draft_stale){
@@ -1116,7 +1183,7 @@
     const save=button("Conserva domanda incompleta",flushSariFollowup);save.disabled=!context.editable;
     const create=button("Crea nuova bozza con Vera",async()=>{await flushSariFollowup();if(!context.confirm.checked)throw new Error("Conferma nuovamente domanda, fonti e nuova esecuzione.");context.submission||={...sariReviewAuthority(context),fields:structuredClone(context.fields),confirmed:true,idempotency_key:crypto.randomUUID()};const result=await call("vera_workspace_sari_followup_create",context.submission);sariFollowupContext=null;dirty=false;await openSariProposal({work_ref:result.work_ref,grant_ref:result.grant_ref});},"primary");create.disabled=!context.editable;main.append(save,create);
     const recover=node("button","Riapri soltanto la domanda conservata");recover.type="button";recover.addEventListener("click",()=>run(async()=>{clearTimeout(sariFollowupTimer);await sariFollowupTask;sariFollowupContext=null;dirty=false;await openSariFollowup(workRef,offset);},false));main.append(recover);
-    for(const row of page.successors)main.append(button("Apri nuova esecuzione "+row.run_id,()=>openSari(row.work_ref)));
+    for(const row of page.successors)main.append(button("Apri la revisione successiva",()=>openSari(row.work_ref)));
     say(page.can_create?"Domanda recuperata; conferma della nuova esecuzione da esprimere.":"Seguito consultabile; creazione non disponibile.");
   }
   function persistSariReview() {
@@ -1649,7 +1716,7 @@
     const kinds={fact:"Fatto",allocation:"Assegnazione",liability:"Passività",ownership:"Partecipazioni",valuation:"Valutazione",tax_position:"Posizione fiscale",rule:"Fonte normativa",decision:"Decisione",deadline:"Scadenza",document:"Documento"};
     const valueLabels={owner_id:"Identificativo del socio",share_before:"Quota prima dell’operazione",share_after:"Quota dopo l’operazione",units_exact:"Unità prima dell’arrotondamento",units_rounded:"Unità arrotondate",unit_residual:"Residuo di arrotondamento",economic_before:"Valore economico prima dell’operazione",economic_remaining:"Valore economico residuo",economic_transferred:"Valore economico trasferito",economic_bridge:"Rettifica del valore economico",shareholder_tax_cost:"Costo fiscale del socio",record_id:"Record d’origine",item_id:"Voce d’origine",side:"Attività o passività"};
     for (const [key,item] of Object.entries(value || {})) {
-      if (technicalKeys.has(key)) continue;
+      if (internalField(key)) continue;
       dl.append(node("dt",valueLabels[key] || labels[key] || key.replaceAll("_"," ")));const dd=node("dd");
       if (item === null) dd.append(node("span","Non disponibile"));
       else if (typeof item !== "object") dd.append(node("span",typeof item === "boolean" ? item ? "Sì" : "No" : key === "kind" ? kinds[item] || String(item) : statusLabels[item] || String(item)));
@@ -1803,7 +1870,7 @@
       results.replaceChildren(node("h2","Consultazione conservata"),salesFields(page.request));
       if(page.status!=="queried"){results.append(node("p",page.error,"notice"));return;}
       results.append(node("p",`${page.total} righe corrispondenti · ${page.population_rows_scanned} righe dello scenario esaminate. Pagina ${page.total ? offset+1 : 0}–${offset+page.rows.length}; nessun campionamento nei file conservati.`,"caption"));renderPreparedArtifact(results,{columns:page.columns,rows:page.rows});
-      const prev=button("Righe precedenti",()=>show(queryRef,Math.max(0,offset-20))),next=button("Righe successive",()=>show(queryRef,offset+20));prev.disabled=!offset;next.disabled=!page.has_more;results.append(prev,next,node("p","Su richiesta esplicita, la discussione passa al modello domanda, filtri, colonne e tutte le corrispondenze. Se il risultato completo supera il limite del contesto, serve una nuova consultazione più circoscritta; non viene sostituito con un campione.","caption"),button("Discuti tutte queste corrispondenze",()=>requestDiscussion(results,`Spiegami questa consultazione conservata dello scenario Sales Plan.\nLavoro: ${scope.work_ref}\nVersione: ${scope.revision}\nFonte scelta: ${scope.source_ref}\nConsultazione: ${scope.query_ref}\nLeggi la domanda e tutte le corrispondenze esatte con vera_workspace_sales_plan_query_explain. Non sostituire con una pagina o un campione; se il risultato completo è troppo ampio chiedimi di restringere la consultazione. Non salvare decisioni e non approvare il Plan.`)));
+      const prev=button("Righe precedenti",()=>show(queryRef,Math.max(0,offset-20))),next=button("Righe successive",()=>show(queryRef,offset+20));prev.disabled=!offset;next.disabled=!page.has_more;results.append(prev,next,node("p","Su richiesta esplicita, la discussione passa al modello domanda, filtri, colonne e tutte le corrispondenze. Se il risultato completo supera il limite del contesto, serve una nuova consultazione più circoscritta; non viene sostituito con un campione.","caption"),button("Discuti tutte queste corrispondenze",()=>requestCurrentDiscussion(results,`Spiegami questa consultazione conservata dello scenario Sales Plan.\nLavoro: ${scope.work_ref}\nVersione: ${scope.revision}\nFonte scelta: ${scope.source_ref}\nConsultazione: ${scope.query_ref}\nLeggi la domanda e tutte le corrispondenze esatte con vera_workspace_sales_plan_query_explain. Non sostituire con una pagina o un campione; se il risultato completo è troppo ampio chiedimi di restringere la consultazione. Non salvare decisioni e non approvare il Plan.`)));
     }
     async function list(offset=0){
       const page=await call("vera_workspace_sales_plan_query_setup",{...exact,offset});history.replaceChildren(node("h2","Consultazioni di questa revisione"));for(const row of page.items)history.append(button(row.status==="queried"?"Apri consultazione conservata":"Apri richiesta da correggere",()=>show(row.query_ref)));
@@ -2121,11 +2188,11 @@
     state=null;crWork=null;crPage=null;financialWork=workRef;financialPage=()=>openFinancial(workRef);
     const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
     nav.append(button("Prepara o modifica un caso",()=>openFinancialAuthor(workRef)));
-    main.append(node("p","Analisi finanziaria","eyebrow"),node("h1","Caso riesaminato e fonti"),node("p","Scegli una ricetta e il caso JSON già riesaminato. Abbina ciascuna fonte dichiarata ai documenti registrati. Il motore verifica i contratti ed esegue i calcoli; significato contabile, completezza e conclusioni restano da riesaminare.","notice"));
+    main.append(node("p","Analisi finanziaria","eyebrow"),node("h1","Caso riesaminato e fonti"),node("p","Scegli una ricetta e il caso già riesaminato. Abbina ciascuna fonte dichiarata ai documenti registrati. Il motore verifica i contratti ed esegue i calcoli; significato contabile, completezza e conclusioni restano da riesaminare.","notice"));
     if(setup.recovery_required)main.append(node("p","Un’esecuzione interrotta o output alterati richiedono verifica prima di nuove scritture o della chiusura del run.","notice"));
     const context=financialChoices(setup,workRef),makeSelect=(title,choices,value,changed)=>{const label=node("label",title,"field"),select=node("select");select.setAttribute("aria-label",title);for(const [id,text] of [["","Da scegliere"],...choices]){const option=node("option",text);option.value=id;option.selected=id===value;select.append(option);}select.disabled=!setup.can_write;select.addEventListener("change",()=>{changed(select.value);changeFinancial(context);});label.append(select);main.append(label);return select;};
     makeSelect("Ricetta finanziaria",Object.keys(setup.packs).map(id=>[id,financialRecipes[id]||id]),context.fields.pack_id,value=>{context.fields.pack_id=value;context.fields.source_bindings={};});
-    makeSelect("Caso JSON registrato",setup.inputs.filter(row=>row.title.toLowerCase().endsWith('.json')).map(row=>[row.id,row.title]),context.fields.case_input_id,value=>{context.fields.case_input_id=value;context.fields.source_bindings={};});
+    makeSelect("Caso registrato",setup.inputs.filter(row=>row.title.toLowerCase().endsWith('.json')).map(row=>[row.id,row.title]),context.fields.case_input_id,value=>{context.fields.case_input_id=value;context.fields.source_bindings={};});
     const save=button("Conserva scelte in bozza",flushFinancialDraft),clear=button("Azzera scelte in bozza",async()=>{context.fields={pack_id:"",case_input_id:"",source_bindings:{}};changeFinancial(context);await flushFinancialDraft();await openFinancial(workRef);});save.disabled=clear.disabled=!setup.can_write;main.append(save,clear);financialRecovery(main,()=>openFinancial(workRef));
     main.append(button("Consulta caso e abbina le fonti",async()=>{await flushFinancialDraft();if(!context.fields.pack_id||!context.fields.case_input_id)throw new Error("Scegli ricetta e caso registrato.");await openFinancialCase(workRef);}));
     main.append(node("h2","Calcoli conservati"));for(const row of setup.versions)main.append(button(`${financialRecipes[row.pack_id]||row.pack_id} · ${{passed:'controlli superati',failed:'controlli non superati',qualified:'con riserve'}[row.status]||row.status}`,()=>openFinancialVersion(workRef,row.source_ref)));
@@ -2586,8 +2653,8 @@
       fileArea.append(form, button("Discuti questa ispezione", async () => {
         await exactPage(page.offset, id);
         const text = "Spiegami questa ispezione di Giornale e banca.\nLavoro: " + workRef + "\nSelezione: " + id + "\nVersione: " + initial.revision + "\nLeggi prima la selezione esatta con vera_workspace_bank_explain. Non approvare e non eseguire il lavoro.";
-        if (host.hostCapabilities?.message?.text && host.hostCapabilities?.experimental?.["openai/message"]) {
-          const delivered = await request("ui/message", { role: "user", content: [{ type: "text", text }], _meta: { "openai/message": { target: "new" } } }); say(delivered?.isError ? "Invio annullato." : "Richiesta inviata nella nuova chat; il lavoro resta da verificare.");
+        if (host.hostCapabilities?.message?.text) {
+          const delivered = await request("ui/message", { role: "user", content: [{ type: "text", text }] }); say(delivered?.isError ? "Invio annullato." : "Richiesta inviata nella chat corrente; il lavoro resta da verificare.");
         } else { const copy = node("textarea", undefined, "request"); copy.readOnly = true; copy.value = text; fileArea.append(copy); copy.focus(); copy.select(); }
       }));
     }
@@ -2762,7 +2829,7 @@
     }
     const context=financialChoices(setup,workRef);context.management=true;
     const selector=(caption,key,options)=>{const label=node("label",caption,"field"),select=node("select");select.setAttribute("aria-label",caption);const entries=[["","Da scegliere"],...options];if(context.fields[key]&&!entries.some(row=>row[0]===context.fields[key]))entries.push([context.fields[key],"Scelta conservata in un’altra pagina"]);for(const [value,title]of entries){const option=node("option",title);option.value=value;select.append(option);}select.value=context.fields[key];select.disabled=!setup.can_prepare;select.addEventListener("change",()=>{context.fields[key]=select.value;changeFinancial(context);});label.append(select);main.append(label);};
-    selector("Lavoro richiesto","mode",[["reporting","Reporting ricorrente"],["costing","Costi e margini"]]);selector("Ricetta o caso JSON già riesaminato","recipe_input_id",setup.items.filter(row=>row.suffix.toLowerCase()===".json").map(row=>[row.id,row.name]));
+    selector("Lavoro richiesto","mode",[["reporting","Reporting ricorrente"],["costing","Costi e margini"]]);selector("Ricetta o caso già riesaminato","recipe_input_id",setup.items.filter(row=>row.suffix.toLowerCase()===".json").map(row=>[row.id,row.name]));
     main.append(node("h2","Fonti registrate da usare"),node("p","Scegli tutte le fonti del caso. Il significato delle colonne, le classificazioni e i metodi sono quelli della ricetta riscontrata; i nomi dei file non assegnano ruoli.","caption"));for(const row of setup.items){const label=node("label",undefined,"confirmation"),check=node("input");check.type="checkbox";check.checked=context.fields.input_ids.includes(row.id);check.disabled=!setup.can_prepare;check.addEventListener("change",()=>{context.fields.input_ids=check.checked?[...context.fields.input_ids,row.id]:context.fields.input_ids.filter(value=>value!==row.id);changeFinancial(context);});label.append(check,document.createTextNode(row.name));main.append(label);}
     const previous=button("Fonti precedenti",()=>openManagement(workRef,Math.max(0,offset-30))),next=button("Fonti successive",()=>openManagement(workRef,offset+30));previous.disabled=!offset;next.disabled=!setup.has_more;main.append(previous,node("p",`${setup.total} fonti totali · ${context.fields.input_ids.length} scelte conservate`,"caption"),next);
     const preview=node("section"),save=button("Conserva scelte in bozza",flushFinancialDraft),read=button("Consulta caso e fonti",async()=>{await flushFinancialDraft();const fresh=await call("vera_workspace_management_setup",{work_ref:workRef}),page=await call("vera_workspace_management_case",{work_ref:workRef,revision:fresh.revision,fields:context.fields});preview.replaceChildren(node("h2","Caso completo e fonti selezionate"),crFields(page));});save.disabled=read.disabled=!setup.can_prepare;main.append(save,read,preview);financialRecovery(main,()=>openManagement(workRef,offset));context.confirmation=confirmation(main,"Ho riesaminato questo percorso, il caso completo e tutte le fonti scelte. Confermo il calcolo, mantenendo distinta l’approvazione professionale del rapporto.");context.confirmation.disabled=!setup.can_prepare;let submitted;
@@ -2843,7 +2910,7 @@
   async function openVariance(workRef,offset=0,artifactName,start=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_variance_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
     state=null;const {nav,main}=shell();financialWork=workRef;financialPage=()=>openVariance(workRef,offset,artifactName,start);
-    nav.append(button("← Clienti e incarichi",loadCatalogue));main.append(node("p","Analisi degli scostamenti","eyebrow"),node("h1",setup.source_ref?"Scostamenti conservati":"Fonti e confronto"),node("p","Il motore confronta gli importi o prezzo, volume e mix quando le quantità lo consentono. Conserva tabelle, grafici, dieci sequenze alternative e rapporto con il suo stato di revisione. Le sequenze mostrano contributi residui; non dimostrano cause economiche. Lo stato del rapporto dipende dai controlli e dai riscontri dichiarati. L’interpretazione finale resta da verificare.","notice"));
+    nav.append(button("← Clienti e incarichi",loadCatalogue));main.append(node("p","Analisi degli scostamenti","eyebrow"),node("h1",setup.source_ref?"Scostamenti conservati":"Fonti e confronto"),node("p","Confronta gli importi o i contributi di prezzo, volume e mix. Le differenze calcolate non dimostrano da sole una causa economica.","notice"));
     main.append(button("Prepara o correggi confronto nella chat",()=>openVarianceAuthor(workRef)));
     if(setup.status==="recovery_required"){main.append(node("p","L’esportazione o la preparazione è incerta. Riprendi il recupero nel percorso della funzione prima di ripetere l’esecuzione o chiudere il run.","notice"));return;}
     if(setup.status==="authoring"){main.append(node("p","La domanda e l’ispezione sono conservate. Apri la preparazione per scegliere una proposta e riscontrarla; il confronto verrà registrato in un nuovo run prima del calcolo.","notice"));return;}
@@ -2884,14 +2951,14 @@
       const exact={work_ref:workRef,source_ref:sourceRef},area=node("section");main.append(area);
       const files=async()=>{const page=await call("vera_workspace_valuation_outputs",exact);area.replaceChildren(node("h2","File della valutazione"));for(const file of page.outputs){const row=node("section",undefined,"output");row.append(node("strong",file.name));if(host.hostCapabilities?.experimental?.["openai/files"])row.append(button("Apri file",()=>request("openai/files/open",{path:file.path})));else{const path=node("input");path.readOnly=true;path.value=file.path;path.setAttribute("aria-label","Percorso del file "+file.name);row.append(path);}area.append(row);}};
       const report=async()=>{const page=await call("vera_workspace_valuation_report",exact);area.replaceChildren(node("h2",page.entity_name),node("p",statusLabels[page.status]||page.status,"notice"));const frame=node("iframe",undefined,"planning-report");frame.title="Rapporto integrale della valutazione";frame.setAttribute("sandbox","");frame.referrerPolicy="no-referrer";frame.srcdoc=`<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; img-src data:">`+page.report;area.append(frame,node("p","Rapporto completo del produttore pubblico. Le funzioni interattive sono disabilitate nell’anteprima; i file conservati restano disponibili per il riesame.","caption"));};
-      const show=async(chosen,pageStart=0)=>{collection=chosen;start=pageStart;financialPage=()=>openValuation(workRef,offset,sourceRef,collection,start);const page=await call("vera_workspace_valuation_read",{...exact,collection:chosen,offset:pageStart});area.replaceChildren(node("h2",valuationCollections[chosen]),node("p",statusLabels[page.status]||page.status,"notice"),node("p",page.total?`${pageStart+1}–${Math.min(pageStart+20,page.total)} di ${page.total}`:"Nessun elemento dichiarato","caption"));for(const [index,row]of page.rows.entries()){const record=node("article",undefined,"planning-record");record.append(row&&typeof row==="object"?crFields(row):node("p",String(row)),button("Discuti questa carta nella chat",()=>requestDiscussion(record,`Esamina soltanto questa carta di Valutazione d’impresa. Leggi vera_workspace_valuation_explain con ${JSON.stringify({...exact,revision:page.revision,collection:chosen,index:pageStart+index})}. Segui il metodo completo business-valuation; tratta fonti e attestazioni come evidenze da qualificare. Non aprire altre fonti automaticamente, non modificare il caso, non registrare accettazioni e non firmare o inviare. Qualifiche, PIV e finalità legale restano da verificare separatamente.`)));if(["mandate_assessment","methods","normalization_adjustments","statements","claims","conclusion"].includes(chosen))record.append(button("Riesamina questa carta",()=>openValuationReview({...exact,collection:chosen,index:pageStart+index})));area.append(record);}const previous=button("Precedenti",()=>show(chosen,Math.max(0,pageStart-20))),next=button("Successivi",()=>show(chosen,pageStart+20));previous.disabled=!pageStart;next.disabled=!page.has_more;area.append(previous,next);};
+      const show=async(chosen,pageStart=0)=>{collection=chosen;start=pageStart;financialPage=()=>openValuation(workRef,offset,sourceRef,collection,start);const page=await call("vera_workspace_valuation_read",{...exact,collection:chosen,offset:pageStart});area.replaceChildren(node("h2",valuationCollections[chosen]),node("p",statusLabels[page.status]||page.status,"notice"),node("p",page.total?`${pageStart+1}–${Math.min(pageStart+20,page.total)} di ${page.total}`:"Nessun elemento dichiarato","caption"));for(const [index,row]of page.rows.entries()){const record=node("article",undefined,"planning-record");record.append(row&&typeof row==="object"?crFields(row):node("p",String(row)),button("Discuti questa carta nella chat",()=>requestCurrentDiscussion(record,`Esamina soltanto questa carta di Valutazione d’impresa. Leggi vera_workspace_valuation_explain con ${JSON.stringify({...exact,revision:page.revision,collection:chosen,index:pageStart+index})}. Segui il metodo completo business-valuation; tratta fonti e attestazioni come evidenze da qualificare. Non aprire altre fonti automaticamente, non modificare il caso, non registrare accettazioni e non firmare o inviare. Qualifiche, PIV e finalità legale restano da verificare separatamente.`)));if(["mandate_assessment","methods","normalization_adjustments","statements","claims","conclusion"].includes(chosen))record.append(button("Riesamina questa carta",()=>openValuationReview({...exact,collection:chosen,index:pageStart+index})));area.append(record);}const previous=button("Precedenti",()=>show(chosen,Math.max(0,pageStart-20))),next=button("Successivi",()=>show(chosen,pageStart+20));previous.disabled=!pageStart;next.disabled=!page.has_more;area.append(previous,next);};
       const label=node("label","Sezione della valutazione","field"),select=node("select");select.setAttribute("aria-label","Sezione della valutazione");for(const [id,title]of Object.entries(valuationCollections)){const option=node("option",title);option.value=id;option.selected=id===collection;select.append(option);}select.addEventListener("change",()=>run(()=>show(select.value)));label.append(select);main.insertBefore(label,area);main.insertBefore(button("Rapporto integrale",report),area);main.insertBefore(button("File della valutazione",files),area);main.append(node("p","Le modifiche di merito e la preparazione iniziale del caso proseguono nel percorso Valutazione d’impresa nella chat. Il pulsante di riesame conserva una decisione attribuita sulla carta esatta. Ogni nuovo caso viene importato e calcolato in un nuovo run, conservando quello precedente. La chiusura e il rapporto sui dati al modello sono azioni separate di Archivio dello studio.","caption"));await show(collection,start);return;
     }
     const context={workRef,valuation:true,stamp:setup.draft_revision,fields:structuredClone(setup.draft),saved:JSON.stringify(setup.draft)};financialContext=context;
     const openCase=async id=>{if(setup.can_write){context.fields.case_input_id=id;changeFinancial(context);await flushFinancialDraft();}await openValuationCase(workRef,id);};
     if(context.fields.case_input_id)main.append(button("Riapri caso scelto",()=>openCase(context.fields.case_input_id)));
     for(const item of setup.items){const row=node("section",undefined,"work-row");row.append(node("h2",item.entity_name),node("p",item.title,"caption"),button("Consulta caso completo",()=>openCase(item.id)));main.append(row);}
-    if(!setup.total)main.append(node("p","Il run non contiene un caso interno di valutazione. Riprendi Valutazione d’impresa nella chat per prepararlo dalle evidenze e dalle scelte professionali; non devi compilare JSON.","notice"));
+    if(!setup.total)main.append(node("p","Il run non contiene un caso interno di valutazione. Riprendi Valutazione d’impresa nella chat per prepararlo dalle evidenze e dalle scelte professionali.","notice"));
     const clear=button("Azzera scelta in bozza",async()=>{context.fields.case_input_id="";changeFinancial(context);await flushFinancialDraft();await openValuation(workRef,offset);});clear.disabled=!setup.can_write;main.append(clear);financialRecovery(main,()=>openValuation(workRef,offset));
     if(offset||setup.has_more){const previous=button("Casi precedenti",()=>openValuation(workRef,Math.max(0,offset-30))),next=button("Altri casi",()=>openValuation(workRef,offset+30));previous.disabled=!offset;next.disabled=!setup.has_more;main.append(previous,next);}
     say("Scelta recuperata. Nessuna conferma o attestazione professionale ripristinata.");
@@ -2921,7 +2988,7 @@
     if(value===null)return node("p","Non disponibile");
     if(typeof value!=="object")return node("p",String(value));
     if(Array.isArray(value)){const list=node("ol");for(const row of value){const item=node("li");item.append(completePlanningRecord(row));list.append(item);}if(!value.length)list.append(node("li","Nessun elemento dichiarato"));return list;}
-    const list=node("dl");for(const [key,item] of Object.entries(value)){list.append(node("dt",labels[key]||key.replaceAll("_"," ")));const entry=node("dd");if(item!==null&&typeof item==="object"){const detail=node("details");detail.append(node("summary",Array.isArray(item)?`${item.length} elementi`:"Contenuto completo"),completePlanningRecord(item));entry.append(detail);}else entry.append(completePlanningRecord(item));list.append(entry);}return list;
+    const list=node("dl");for(const [key,item] of Object.entries(value)){if(internalField(key))continue;list.append(node("dt",labels[key]||key.replaceAll("_"," ")));const entry=node("dd");if(item!==null&&typeof item==="object"){const detail=node("details");detail.append(node("summary",Array.isArray(item)?`${item.length} elementi`:"Contenuto completo"),completePlanningRecord(item));entry.append(detail);}else entry.append(completePlanningRecord(item));list.append(entry);}return list;
   }
   function planningReviewScope(context, page=context.page) {
     return {...context.exact,revision:page.revision,item_id:page.selection.id,review_ticket:page.review_ticket,expected_draft_revision:context.stamp};
@@ -2951,7 +3018,7 @@
     if(fullReadback){main.append(node("p",statusLabels[page.plan_status]||page.plan_status,"notice"));const frame=node("iframe",undefined,"planning-report");frame.title="Rapporto integrale sottoposto al riesame professionale";frame.setAttribute("sandbox","");frame.referrerPolicy="no-referrer";frame.srcdoc=page.report;const detail=node("details");detail.append(node("summary","Caso, calcoli e registri completi"),completePlanningRecord(page.record));main.append(frame,detail);if(!page.can_accept)main.append(node("p","Il piano è parziale o bloccato: puoi rifiutarlo o richiedere modifiche. L’accettazione richiede un nuovo ciclo pronto per il riesame professionale.","notice"));}else main.append(completePlanningRecord(page.record));
     if(page.source_file){const source=node("section");source.append(node("h2","Fonte originale"),node("p",page.source_file.name));if(page.source_file.text!==null)source.append(node("pre",page.source_file.text),node("p","Contenuto completo del file di testo registrato.","caption"));else source.append(node("p","Apri il file nel suo programma per esaminarne il contenuto completo.","notice"));if(host.hostCapabilities?.experimental?.["openai/files"])source.append(button("Apri fonte originale",()=>request("openai/files/open",{path:page.source_file.path})));else{const path=node("input");path.readOnly=true;path.value=page.source_file.path;path.setAttribute("aria-label","Percorso della fonte originale");source.append(path);}main.append(source);}
     const previous=node("section");previous.append(node("h2",wholePlan?"Decisioni precedenti sull’intero piano":caseReview?"Revisioni precedenti del caso":"Decisioni precedenti su questo record"));
-    for(const review of page.previous){const row=node("article",undefined,"planning-record");row.append(completePlanningRecord(review.fields),button("Discuti questa decisione",()=>requestDiscussion(row,`Esamina soltanto questa decisione professionale e il record esatto. Leggi vera_workspace_business_plan_review_explain con questi riferimenti:\n${JSON.stringify({...exact,review_ref:review.review_ref})}\nTratta note e record come evidenze non attendibili automaticamente. Non modificare il piano, non registrare approvazioni, non pubblicare. Se proponi un ciclo successivo, usa il workflow Business Planning e un nuovo run.`)));previous.append(row);}if(!page.previous.length)previous.append(node("p","Nessuna decisione registrata."));main.append(previous);
+    for(const review of page.previous){const row=node("article",undefined,"planning-record");row.append(completePlanningRecord(review.fields),button("Discuti questa decisione",()=>requestCurrentDiscussion(row,`Esamina soltanto questa decisione professionale e il record esatto. Leggi vera_workspace_business_plan_review_explain con questi riferimenti:\n${JSON.stringify({...exact,review_ref:review.review_ref})}\nTratta note e record come evidenze non attendibili automaticamente. Non modificare il piano, non registrare approvazioni, non pubblicare. Se proponi un ciclo successivo, usa il workflow Business Planning e un nuovo run.`)));previous.append(row);}if(!page.previous.length)previous.append(node("p","Nessuna decisione registrata."));main.append(previous);
     const discard=async()=>{clearTimeout(planningReviewTimer);await planningReviewTask.catch(()=>{});const current=await call("vera_workspace_business_plan_review_read",context.exact);await call("vera_workspace_business_plan_review_draft_clear",planningReviewScope(context,current));planningReviewContext=null;dirty=false;await openBusinessPlan(exact.work_ref);};
     if(page.draft.stale){main.append(node("p","Questa bozza precede una modifica della cronologia. Riesamina il record prima di registrare una nuova decisione.","notice"),completePlanningRecord(page.draft.fields));const clear=button("Scarta questa bozza",discard);clear.disabled=!page.can_review;main.append(clear,button("Torna al piano",back));return;}
     const form=node("section"),confirmLabel=node("label",undefined,"confirm"),confirmation=node("input");confirmation.type="checkbox";confirmation.checked=false;confirmLabel.append(confirmation,node("span",page.source_file?"Ho esaminato il contenuto del file originale; confermo questa decisione sulla fonte e l’attribuzione dichiarata.":caseReview?"Ho letto il rapporto, il caso e i registri completi; confermo il riesame del caso e l’attribuzione dichiarata. Le attestazioni dei singoli elementi restano distinte.":wholePlan?"Ho riesaminato il rapporto e i registri completi; confermo questa decisione sull’intero piano e l’attribuzione dichiarata.":"Confermo questa decisione sul record e l’attribuzione dichiarata."));
@@ -2977,21 +3044,21 @@
     planningAuthorWork=null;state=null;bankWork=null;lipeWork=null;amlWork=null;salesWork=null;businessPlanWork=workRef;
     const {nav,main}=shell();nav.append(button("← Tutti i lavori",()=>loadCatalogue()));main.append(node("p","Business plan","eyebrow"),node("h1",setup.label));
     if(setup.status==="recovery_required"){main.append(node("p","La precedente lavorazione richiede recupero nel percorso Business Planning. Fonti e output conservati non vengono adottati come un rapporto verificato.","notice"));return;}
-    main.append(node("p","Ogni ciclo usa le fonti registrate in questo run. Il rapporto conserva valutazioni, calcoli, limiti e condizioni del prossimo riesame; la sua preparazione non registra un’approvazione professionale.","notice"));
+    main.append(node("p","Il rapporto riunisce valutazioni, calcoli e questioni da riesaminare.","notice"));
     const area=node("section");main.append(area);
     const files=async exact=>{const output=await call("vera_workspace_business_plan_outputs",exact);area.replaceChildren(node("h2","File del ciclo"));for(const file of output.outputs){const row=node("section",undefined,"output");row.append(node("strong",file.name));if(host.hostCapabilities?.experimental?.["openai/files"])row.append(button("Apri file",()=>request("openai/files/open",{path:file.path})));else{const path=node("input");path.readOnly=true;path.value=file.path;path.setAttribute("aria-label","Percorso del file "+file.name);row.append(path);}area.append(row);}area.append(node("p","La dichiarazione dei dati effettivamente inviati al modello e la chiusura degli output proseguono in Studio Archive.","caption"));};
     const showReport=async exact=>{const report=await call("vera_workspace_business_plan_report",exact);area.replaceChildren(node("h2",report.entity_name),node("p",statusLabels[report.status]||report.status,"notice"));const frame=node("iframe",undefined,"planning-report");frame.title="Rapporto integrale del ciclo Business Planning";frame.setAttribute("sandbox","");frame.referrerPolicy="no-referrer";frame.srcdoc=report.report;area.append(frame,node("p","Rapporto completo del compilatore pubblico. Tutte le viste sono presenti; i comandi interattivi del rapporto sono disabilitati nel pannello. Apri il file HTML per la consultazione specialistica.","caption"));};
-    const showPage=async (collection,start=0,caseId)=>{const exact={work_ref:workRef,revision:setup.revision,...(setup.generation?{generation:setup.generation}:{case_input_id:caseId})};const page=await call(setup.generation?"vera_workspace_business_plan_read":"vera_workspace_business_plan_inspect",{...exact,collection,offset:start});area.replaceChildren(node("h2",planningCollections[collection]),node("p",statusLabels[page.status]||page.status,"notice"),node("p",page.total?`${start+1}–${Math.min(start+20,page.total)} di ${page.total}`:"Nessun elemento dichiarato","caption"));page.rows.forEach((row,index)=>{const record=node("article",undefined,"planning-record");record.append(completePlanningRecord(row));if(setup.generation)record.append(button("Rivedi questo record",()=>openPlanningReview({...exact,collection,index:start+index})),button("Discuti questo record",()=>requestDiscussion(record,`Spiegami soltanto il record selezionato del Business plan. Prima leggi vera_workspace_business_plan_explain con questi riferimenti esatti:\n${JSON.stringify({...exact,collection,index:start+index})}\nNon registrare approvazioni o modifiche e non pubblicare. Se servono ulteriori evidenze, chiedi quelle pertinenti.`)));area.append(record);});const previous=button("Precedenti",()=>showPage(collection,Math.max(0,start-20),caseId)),next=button("Successivi",()=>showPage(collection,start+20,caseId));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};
+    const showPage=async (collection,start=0,caseId)=>{const exact={work_ref:workRef,revision:setup.revision,...(setup.generation?{generation:setup.generation}:{case_input_id:caseId})};const page=await call(setup.generation?"vera_workspace_business_plan_read":"vera_workspace_business_plan_inspect",{...exact,collection,offset:start});area.replaceChildren(node("h2",planningCollections[collection]),node("p",statusLabels[page.status]||page.status,"notice"),node("p",page.total?`${start+1}–${Math.min(start+20,page.total)} di ${page.total}`:"Nessun elemento dichiarato","caption"));page.rows.forEach((row,index)=>{const record=node("article",undefined,"planning-record");record.append(completePlanningRecord(row));if(setup.generation)record.append(button("Rivedi questo record",()=>openPlanningReview({...exact,collection,index:start+index})),button("Discuti questo record",()=>requestCurrentDiscussion(record,`Spiegami soltanto il record selezionato del Business plan. Prima leggi vera_workspace_business_plan_explain con questi riferimenti esatti:\n${JSON.stringify({...exact,collection,index:start+index})}\nNon registrare approvazioni o modifiche e non pubblicare. Se servono ulteriori evidenze, chiedi quelle pertinenti.`)));area.append(record);});const previous=button("Precedenti",()=>showPage(collection,Math.max(0,start-20),caseId)),next=button("Successivi",()=>showPage(collection,start+20,caseId));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};
     const sections=(parent,caseId)=>{const label=node("label",undefined,"field"),select=node("select");select.setAttribute("aria-label","Sezione del ciclo");label.append(node("span","Sezione del ciclo"));for(const [value,title] of Object.entries(planningCollections)){const option=node("option",title);option.value=value;select.append(option);}select.addEventListener("change",()=>run(()=>showPage(select.value,0,caseId)));label.append(select);parent.append(label);};
-    if(setup.generation){const exact={work_ref:workRef,revision:setup.revision,generation:setup.generation};const controls=node("section",undefined,"planning-controls");main.insertBefore(controls,area);controls.append(button("Rapporto integrale",()=>showReport(exact)),button("File del ciclo",()=>files(exact)),button("Rivedi il caso completo",()=>openPlanningReview({...exact,collection:"case_review",index:0})),button("Ricalcola con le revisioni",()=>openReviewedPlanningCase({...exact,collection:"case_review",index:0})),button("Decisione sull’intero piano",()=>openPlanningReview({...exact,collection:"whole_plan",index:0})),button("Decisioni professionali",async()=>{const show=async start=>{const page=await call("vera_workspace_business_plan_review_history",{work_ref:workRef,revision:setup.revision,offset:start});area.replaceChildren(node("h2","Decisioni professionali"),node("p","Le decisioni sui singoli record riguardano solo quei record. La decisione sull’intero piano riguarda la generazione esatta; il rapporto resta conservato.","notice"));if(page.whole_plan_decision){area.append(node("h3",page.professional_plan_approval?"Intero piano accettato":"Ultima decisione sull’intero piano"),completePlanningRecord(page.whole_plan_decision.fields),node("p",page.whole_plan_decision.review_ref,"caption"));}else area.append(node("p","Nessuna decisione sull’intero piano registrata.","caption"));for(const review of page.rows){const row=node("article",undefined,"planning-record");row.append(node("h3",review.target.collection==="whole_plan"?"Intero piano":review.target.collection==="case_review"?"Riesame del caso":planningCollections[review.target.collection]),completePlanningRecord(review.fields),button("Apri contenuto e decisioni",()=>openPlanningReview({...exact,collection:review.target.collection,index:review.target.index})));area.append(row);}if(!page.total)area.append(node("p","Nessuna decisione registrata."));const previous=button("Precedenti",()=>show(Math.max(0,start-20))),next=button("Successive",()=>show(start+20));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};await show(0);}));sections(controls);controls.append(node("p","Per una nuova domanda, torna all’incarico e scegli «Nuova domanda per il Business plan». La chat prepara il caso; il pannello conserva la proposta ed esegue un nuovo run. Per riutilizzare questo piano e le decisioni professionali, sigilla prima tutti gli output in Studio Archive e selezionali esplicitamente tra le fonti.","caption"));await showReport(exact);return;}
-    if(!setup.items.length)main.append(node("p","Questo run non contiene ancora un caso interno Business Planning v3. Riprendi la funzione nella chat per l’analisi delle fonti e la preparazione del ciclo. Non è richiesto al professionista di scrivere JSON.","notice"));
+    if(setup.generation){const exact={work_ref:workRef,revision:setup.revision,generation:setup.generation};const controls=supportingDetails("Riesami e revisioni del piano");main.insertBefore(controls,area);const filesButton=button("File del ciclo",()=>files(exact));main.insertBefore(filesButton,controls);controls.append(button("Torna al rapporto",()=>showReport(exact)),button("Rivedi il caso completo",()=>openPlanningReview({...exact,collection:"case_review",index:0})),button("Ricalcola con le revisioni",()=>openReviewedPlanningCase({...exact,collection:"case_review",index:0})),button("Decisione sull’intero piano",()=>openPlanningReview({...exact,collection:"whole_plan",index:0})),button("Decisioni professionali",async()=>{const show=async start=>{const page=await call("vera_workspace_business_plan_review_history",{work_ref:workRef,revision:setup.revision,offset:start});area.replaceChildren(node("h2","Decisioni professionali"),node("p","Le decisioni sui singoli record riguardano solo quei record. La decisione sull’intero piano riguarda la generazione esatta; il rapporto resta conservato.","notice"));if(page.whole_plan_decision){area.append(node("h3",page.professional_plan_approval?"Intero piano accettato":"Ultima decisione sull’intero piano"),completePlanningRecord(page.whole_plan_decision.fields),node("p","Decisione conservata","caption"));}else area.append(node("p","Nessuna decisione sull’intero piano registrata.","caption"));for(const review of page.rows){const row=node("article",undefined,"planning-record");row.append(node("h3",review.target.collection==="whole_plan"?"Intero piano":review.target.collection==="case_review"?"Riesame del caso":planningCollections[review.target.collection]),completePlanningRecord(review.fields),button("Apri contenuto e decisioni",()=>openPlanningReview({...exact,collection:review.target.collection,index:review.target.index})));area.append(row);}if(!page.total)area.append(node("p","Nessuna decisione registrata."));const previous=button("Precedenti",()=>show(Math.max(0,start-20))),next=button("Successive",()=>show(start+20));previous.disabled=!start;next.disabled=!page.has_more;area.append(previous,next);};await show(0);}));sections(controls);controls.append(node("p","Per una nuova domanda, torna all’incarico e scegli «Nuova domanda per il Business plan». La chat prepara il caso; il pannello conserva la proposta ed esegue un nuovo run. Per riutilizzare questo piano e le decisioni professionali, sigilla prima tutti gli output in Studio Archive e selezionali esplicitamente tra le fonti.","caption"));await showReport(exact);return;}
+    if(!setup.items.length)main.append(node("p","Questo run non contiene ancora un caso interno Business Planning v3. Riprendi la funzione nella chat per l’analisi delle fonti e la preparazione del ciclo.","notice"));
     for(const item of setup.items){const choice=node("section",undefined,"work-row"),description=node("div"),controls=node("div");description.append(node("h2",item.entity_name),node("p",item.question||"Domanda del ciclo non dichiarata"),node("p",item.title,"caption"));controls.append(button("Esamina il ciclo",()=>showPage("assessment",0,item.id)));sections(controls,item.id);if(setup.can_prepare){let request;controls.append(button("Calcola e conserva rapporto",async()=>{request||={work_ref:workRef,revision:setup.revision,review_ticket:setup.review_ticket,case_input_id:item.id,idempotency_key:crypto.randomUUID()};await call("vera_workspace_business_plan_prepare",request);await openBusinessPlan(workRef);say("Rapporto conservato. Esamina lo stato e le questioni aperte prima del riesame professionale.");},"primary"));}choice.append(description,controls);main.insertBefore(choice,area);}
     if(offset||setup.has_more){const previous=button("Cicli precedenti",()=>openBusinessPlan(workRef,Math.max(0,offset-30))),next=button("Altri cicli registrati",()=>openBusinessPlan(workRef,offset+30));previous.disabled=!offset;next.disabled=!setup.has_more;main.append(previous,next);}
   }
   function readFields(value, depth = 0, limit = 20, maxDepth = 3) {
     const dl = node("dl");
     for (const [key, item] of Object.entries(value || {})) {
-      if (item == null || technicalKeys.has(key) || key === "allowed_actions" || key === "recommended_action" || key === "edit_hint") continue;
+      if (item == null || internalField(key) || key === "allowed_actions" || key === "recommended_action" || key === "edit_hint") continue;
       dl.append(node("dt", labels[key] || key.replaceAll("_", " ")));
       const dd = node("dd");
       if (typeof item === "object") {
@@ -3003,20 +3070,28 @@
     }
     return dl;
   }
+  function supportingDetails(label) {
+    const section = node("details", undefined, "supporting-details");
+    section.append(node("summary", label));
+    return section;
+  }
   function technical(parent, value) {
     const details = node("details", undefined, "technical"); details.append(node("summary", "Dettagli tecnici"), node("p", JSON.stringify(value))); parent.append(details);
   }
   function pagination(parent) {
+    if (!state.offset && !state.has_more) return;
     const group = node("div", undefined, "pagination");
     const previous = button("Precedenti", () => openWork(state.work_ref, Math.max(0, state.offset - 30))); previous.disabled = !state.offset;
     const next = button("Successivi", () => openWork(state.work_ref, state.offset + 30)); next.disabled = !state.has_more;
     group.append(previous, node("span", state.total ? `${state.offset + 1}–${Math.min(state.offset + 30, state.total)} di ${state.total}` : "0 elementi"), next); parent.append(group);
   }
   function renderWork() {
-    const { nav, main } = shell(); nav.append(button("← Clienti e incarichi", loadCatalogue), button("Revisione", async () => { leaveDraft(); if (state.view === "ARCHIVE_EXECUTION") await openWork(state.work_ref); else renderWork(); }), button("File del lavoro", showOutputs));
+    const {nav, main} = shell();
+    nav.append(button("← Lavori dello studio", refreshCatalogue), button("File del lavoro", showOutputs));
+    if (state.view === "ARCHIVE_EXECUTION") nav.append(button("Revisione del piano", () => openReview(state.work_ref)));
     if (state.workflow === "archive-organization") nav.append(button("Esecuzione del piano", () => openWork(state.work_ref, 0, undefined, undefined, undefined, "ARCHIVE_EXECUTION")));
-    const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", state.label));
-    technical(header, { lavoro: state.work_ref, cliente: state.client_id, incarico: state.engagement_id, revisione: state.revision }); main.append(header);
+    const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", /^run_[a-f0-9]{24}$/i.test(state.label) ? (names[state.workflow] || "Revisione") : state.label));
+    main.append(header);
     if (state.workflow === "client-file-preparation") {
       const views = node("nav", undefined, "actions"); views.setAttribute("aria-label", "Viste della revisione documenti");
       for (const [view, label] of [["REVIEW", "Tutti gli elementi"], ["INTAKE_FISCAL", "Dati fiscali e copertura"], ["INTAKE_XML_INVOICES", "Fatture XML · corpi"], ["INTAKE_XML", "Anomalie XML e duplicati"], ["INTAKE_NOTICE_REFERENCES", "Avvisi · date e riferimenti"], ["INTAKE_NOTES", "Memo e documenti mancanti"]]) {
@@ -3064,18 +3139,40 @@
     if (state.kind === "bilancio" && !state.data.validation_current) main.append(node("p", "La validazione non è aggiornata a questa revisione. Rivalida il fascicolo prima di registrare una nuova decisione.", "notice"));
     const split = node("div", undefined, "split"), queue = node("section", undefined, "queue"), detail = node("section", undefined, "detail"); detail.id = "detail"; detail.setAttribute("aria-label", "Evidenza e decisione");
     queue.append(node("h2", state.kind === "treasury" ? "Eventi e date" : "Elementi da esaminare"));
-    const list = node("div"); search(queue, "Cerca nella pagina corrente", rows); queue.append(list); pagination(queue); split.append(queue, detail); main.append(split);
+    const list = node("div");
+    if (state.items.length > 1) search(queue, "Cerca nella pagina corrente", rows);
+    else query = "";
+    queue.append(list); pagination(queue);
+    if (state.total > 1 && window.matchMedia("(max-width: 900px)").matches && state.selection) {
+      const chooser = supportingDetails("Scegli un elemento (" + state.total + ")");
+      chooser.classList.add("queue-picker");
+      chooser.append(queue); split.append(chooser);
+    } else if (state.total > 1) split.append(queue);
+    else split.classList.add("single-item");
+    split.append(detail); main.append(split);
     function rows() {
       list.replaceChildren(); const selected = state.selection?.issue || state.selection;
       const matches = state.items.filter(item => JSON.stringify(item).toLowerCase().includes(query.toLowerCase()));
       for (const item of matches) {
-        const b = button("", () => openWork(state.work_ref, state.offset, itemId(item), state.revision), "finding");
+        const b = button("", () => {
+          if (selected && itemId(selected) === itemId(item)) {
+            const chooser = queue.closest("details");
+            if (chooser) chooser.open = false;
+            return;
+          }
+          return openWork(state.work_ref, state.offset, itemId(item), state.revision);
+        }, "finding");
+        b.dataset.reviewItem = itemId(item);
         b.setAttribute("aria-pressed", String(Boolean(selected) && itemId(selected) === itemId(item)));
         const saved = state.workflow === "journal-bank-reconciliation" && state.data.ui_decisions?.decisions?.find(row => row.item_id === itemId(item));
         const badge = saved ? `Decisione salvata · ${statusLabels[saved.status] || actionLabels[saved.action] || saved.action}` : statusLabels[item.review_status || item.status || item.data?.status] || "Da esaminare";
         b.append(node("strong", title(item)), node("small", badge)); list.append(b);
       }
       if (!matches.length) list.append(node("p", "Nessun elemento in questa pagina corrisponde alla ricerca.", "empty"));
+    }
+    if (!state.total) {
+      detail.append(node("p", "Nessun elemento da rivedere.", "empty"));
+      return;
     }
     rows(); renderSelection(detail);
   }
@@ -3092,15 +3189,24 @@
   function renderSelection(parent) {
     const selected = state.selection?.issue || state.selection;
     if (!selected) { parent.append(node("p", "Seleziona un elemento per confrontare le fonti, discuterlo e registrare una decisione.", "empty")); return; }
-    parent.append(node("h2", title(selected)), node("h3", "Evidenza disponibile"));
+    parent.append(node("h2", title(selected)));
+    const finding = state.workflow === "journal-bank-reconciliation" && {
+      unmatched_bank: "Nessuna scrittura corrispondente nel giornale fornito.",
+      unmatched_journal: "Nessun movimento corrispondente nell’estratto conto fornito.",
+      matched_pair: "Movimento bancario e scrittura del giornale abbinati.",
+    }[selected.item_type];
+    if (finding || selected.data?.reason) parent.append(node("p", finding || selected.data.reason, "finding-reason"));
     if (state.kind === "workbench") {
+      const evidenceGroups = supportingDetails(selected.source_path ? "Fonte · " + selected.source_path.replace(/; (?:row|fila) (\d+)$/i, ", riga $1") : "Verifica le fonti");
       for (const group of state.data.adapter.detailGroups || []) {
-        const evidence = node("div", undefined, "evidence-group"); const values = Object.fromEntries(group.fields.filter(key => key in (selected.data || {})).map(key => [key, selected.data[key]]));
+        const values = Object.fromEntries(group.fields.filter(key => key in (selected.data || {})).map(key => [key, selected.data[key]]));
         const concordatoGroups = { "Procedure and Documents": "Procedura e documenti", "Creditor Treatment": "Trattamento dei creditori", "Feasibility and Issues": "Fattibilità e rilievi" };
         const bankGroups = { "Journal Entry": "Scrittura contabile", "Bank Statement": "Movimento bancario", "Match Result": "Esito del confronto" };
         const groups = state.workflow === "concordato-plan-review" ? concordatoGroups : state.workflow === "journal-bank-reconciliation" ? bankGroups : {};
         const groupTitle = groups[group.title] || group.title;
-        evidence.append(node("h3", groupTitle), Object.keys(values).length ? readFields(values) : node("p", "Nessun dato registrato in questo gruppo.", "caption")); parent.append(evidence);
+        if (Object.values(values).every(value => value == null || value === "")) continue;
+        const source = node("details");
+        source.append(node("summary", groupTitle), readFields(values)); evidenceGroups.append(source);
       }
       if (state.workflow === "client-file-preparation") {
         const {invoices, ...record} = selected.data || {};
@@ -3114,7 +3220,8 @@
         }
         if (selected.item_type === "extracted_fiscal_field") parent.append(node("p", "Il valore e la copertura provengono dall’estrazione. Una decisione di revisione non corregge automaticamente il valore: usa il modulo di correzione, quando disponibile, per rigenerare una run separata.", "caption"));
       }
-      parent.append(readFields({ source_path: selected.source_path }), readFields({ evidence: selected.evidence }));
+      if (selected.evidence?.length) evidenceGroups.append(readFields({evidence: selected.evidence}));
+      if (evidenceGroups.children.length > 1 || selected.source_path) parent.append(evidenceGroups);
     } else if (state.kind === "bilancio") {
       const evidence = state.selection.evidence;
       if (!evidence.anchors.length) parent.append(node("p", "Il rilievo non contiene un collegamento diretto a una cella. Scegli una fonte da consultare: la tua selezione non costituisce un collegamento automatico.", "notice"));
@@ -3151,8 +3258,8 @@
     }
     else if (["aml", "assetti"].includes(state.kind)) { parent.append(readFields(selected.data)); if (selected.sources) parent.append(readFields({sources:selected.sources})); if (state.kind === "assetti") for (const key of ["linked_actions", "linked_findings", "linked_observations"]) if (selected[key]?.length) parent.append(readFields({[key]:selected[key]})); }
     else parent.append(readFields(selected));
-    technical(parent, Object.fromEntries(Object.entries(selected).filter(([key]) => technicalKeys.has(key))));
-    parent.append(button("Discuti questa selezione", () => discuss(parent)), node("p", "La richiesta contiene solo riferimenti leggibili. Vera leggerà questa selezione e la versione indicata; una spiegazione non salva decisioni.", "caption"));
+
+    parent.append(button("Discuti con Vera", () => discuss(parent), "text-action"));
     if(state.kind === "invoice"){parent.append(node("p","Le correzioni richiedono una nuova proposta con evidenze e decisioni aggiornate. Riprendi la fattura con Vera; l’esportazione si approva separatamente dopo il riesame di tutti i campi.","notice"),button("Riprendi Fatture XML nella chat",()=>resumeWorkInChat(parent,{work_ref:state.work_ref})));return;}
     if (state.kind === "scissione") {
       parent.append(node("p", "Il riesame conserva il caso e approva solo il record selezionato nella versione corrente. Il motore verifica dipendenze, fonti e condizioni del calcolo. Per modificare fatti, aggiungere documenti o proseguire l’operazione riprendi il flusso Scissione.", "notice"));
@@ -3223,6 +3330,8 @@
   }
   function changed() {
     dirty = true; submission = null; clearTimeout(draftTimer);
+    const discardButton = root.querySelector("[data-discard-review]");
+    if (discardButton) discardButton.hidden = false;
     draftTimer = setTimeout(() => {
       const args = { ...scope(), review_ticket: state.review_ticket, fields: { ...fields } };
       draftTask = draftTask.catch(() => {}).then(() => call("vera_workspace_draft_save", args)).catch(error => say("Bozza non conservata: " + error.message, true));
@@ -3244,7 +3353,7 @@
     if (!submission) submission = { name, args: { ...scope(), ...extra, human_reviewed: true, review_ticket: state.review_ticket, idempotency_key: crypto.randomUUID() } };
     say("Salvataggio nel servizio del fascicolo…");
     await call(submission.name, submission.args);
-    const selectedId = state.workflow === "journal-bank-reconciliation" && state.selection ? itemId(state.selection) : undefined;
+    const selectedId = state.kind === "workbench" && state.selection ? itemId(state.selection) : undefined;
     dirty = false; fields = {}; await openWork(state.work_ref, state.offset, selectedId);
     if (name === "vera_workspace_apply" && state.workflow === "journal-bank-reconciliation") {
       const applied = state.data.applied_decisions;
@@ -3257,12 +3366,13 @@
     say(name === "vera_workspace_apply" ? (state.workflow === "open-item-reconciliation" ? "Revisione applicata e riletta. Se disponibile, conferma «Rigenera fascicolo e verifica» prima della consegna." : state.workflow === "archive-organization" ? "Piano compilato. I file restano al loro posto: rivedi «Esecuzione del piano» per una conferma separata." : state.workflow === "new-client" ? "Revisione applicata. Controlla gli impedimenti residui del dossier; il rapporto non è stato attivato." : "Decisioni applicate. Stato riletto dal servizio: controlla i file rigenerati.") : "Decisione salvata. Stato riletto dal lavoro.");
   }
   function discard(parent) {
-    parent.append(button("Scarta modifiche", async () => {
+    const control = button("Scarta modifiche", async () => {
       clearTimeout(draftTimer); await draftTask;
       await call("vera_workspace_draft_save", { ...scope(), fields: {}, review_ticket: state.review_ticket });
       dirty = false; fields = {}; submission = null; await openWork(state.work_ref, state.offset);
       say("Modifiche non applicate scartate.");
-    }));
+    });
+    control.dataset.discardReview = ""; control.hidden = !dirty; parent.append(control);
   }
   function renderFiscalCorrection(parent, selected) {
     const form = node("section", undefined, "evidence-group");
@@ -3287,8 +3397,8 @@
   function renderDecision(parent, selected) {
     if (selected.item_type === "notice_extracted_reference") { parent.append(node("p", "Data, importo o riferimento estratti dalla fonte. Il termine legale richiede una valutazione separata. Rivedi il memo e i documenti mancanti nella loro vista, senza reinizializzare l’intake.", "caption")); return; }
     if (selected.item_type === "xml_invoice_body") { parent.append(node("p", "Metadati del corpo letti dal produttore. Questo controllo in sola lettura non conferma il trattamento fiscale. Le anomalie e i candidati duplicati hanno una decisione separata.", "caption")); return; }
-    parent.append(node("h3", "La tua decisione"));
-    if (state.run_status !== "running" || state.data.local_review_read_only || state.data.status === "accepted") { parent.append(node("p", "Questo lavoro è in consultazione. Riprendi il run o crea un aggiornamento attraverso Studio Archive per modificarlo.", "notice")); return; }
+    if (state.kind !== "workbench") parent.append(node("h3", "La tua decisione"));
+    if (state.run_status !== "running" || state.data.local_review_read_only || state.data.status === "accepted") { parent.append(node("p", "Questo lavoro è in sola lettura.", "notice")); return; }
     if (state.kind === "bilancio" && (!state.data.validation_current || selected.severity === "BLOCKER" || !selected.override_allowed)) { parent.append(node("p", "Correggi i dati o completa le evidenze e rivalida il fascicolo. Questo rilievo non può essere superato da qui.", "notice")); return; }
     if (state.kind === "treasury") {
       input(parent, "Data attesa", "expected_date", selected.expected_date || "", "date"); input(parent, "Base della data attesa", "basis", selected.basis || "");
@@ -3305,17 +3415,30 @@
       parent.append(button("Salva decisione", () => save("vera_workspace_save", { action: selected.severity === "HIGH" ? "OVERRIDDEN" : "ACKNOWLEDGED", reason: fields.reason.trim() }, check), "primary"));
       parent.append(node("p", "La decisione invalida la validazione corrente e non approva il bilancio.", "caption")); discard(parent); return;
     }
-    const saved = state.data.ui_decisions?.decisions?.find(row => row.item_id === selected.id); if (saved) parent.append(readFields(saved));
-    if (state.workflow === "journal-bank-reconciliation" && fields.action === undefined && saved) fields.action = saved.action;
+    const saved = state.data.ui_decisions?.decisions?.find(row => row.item_id === selected.id);
+    if (saved) parent.append(node("p", "Decisione salvata · " + (actionLabels[saved.action] || saved.action), "caption"));
+    fields.action ??= saved?.action || "";
+    const label = node("label", undefined, "field"), choice = node("select");
+    choice.setAttribute("aria-label", "Decisione");
+    const placeholder = node("option", "Scegli una decisione"); placeholder.value = ""; choice.append(placeholder);
     for (const action of selected.allowed_actions) {
-      const label = node("label", undefined, "choice"), choice = node("input"); choice.type = "radio"; choice.name = "decision"; choice.value = action; choice.checked = fields.action === action;
-      choice.addEventListener("change", () => { fields.action = action; changed(); }); label.append(choice, node("span", actionLabels[action] || action)); parent.append(label);
+      const option = node("option", actionLabels[action] || action); option.value = action; choice.append(option);
     }
-    input(parent, "Nota del revisore", "reviewer_note", saved?.reviewer_note || "");
-    if (selected.allowed_actions.includes("edit")) input(parent,
-      state.workflow === "client-file-preparation" && ["draft_memo_section", "draft_client_email"].includes(selected.item_type) ? "Nuovo testo completo della bozza" : "Valore da modificare",
-      "edit_value", saved?.edit_value || "", "textarea", ["client-file-preparation", "report-builder", "concordato-plan-review"].includes(state.workflow) ? 10000 : 4000);
-    if (selected.allowed_actions.includes("request_more_documents")) input(parent, "Documenti richiesti", "requested_documents", (saved?.requested_documents || []).join("\n"));
+    choice.value = fields.action;
+    label.append(node("span", "Decisione"), choice); parent.append(label);
+    const note = input(parent, "Nota del revisore", "reviewer_note", saved?.reviewer_note || "");
+    const editLabel = state.workflow === "client-file-preparation" && ["draft_memo_section", "draft_client_email"].includes(selected.item_type)
+      ? "Nuovo testo completo della bozza" : "Valore da modificare";
+    const edit = selected.allowed_actions.includes("edit") && input(parent, editLabel, "edit_value", saved?.edit_value || "", "textarea", ["client-file-preparation", "report-builder", "concordato-plan-review"].includes(state.workflow) ? 10000 : 4000);
+    const documents = selected.allowed_actions.includes("request_more_documents") && input(parent, "Documenti richiesti", "requested_documents", (saved?.requested_documents || []).join("\n"));
+    function showActionFields() {
+      note.parentElement.hidden = !fields.action && !note.value;
+      if (edit) edit.parentElement.hidden = fields.action !== "edit";
+      if (documents) documents.parentElement.hidden = fields.action !== "request_more_documents";
+      check.parentElement.hidden = !fields.action;
+      actions.hidden = !fields.action;
+    }
+    choice.addEventListener("change", () => { fields.action = choice.value; showActionFields(); changed(); });
     if (state.workflow === "open-item-reconciliation") {
       parent.append(node("p", "Per applicare una revisione con assurance, inserisci il riferimento di controllo della versione precedente conservato separatamente dal run. Il motore verifica che corrisponda; non viene ricavato dai file da modificare.", "caption"));
       input(parent, "Riferimento di controllo conservato separatamente", "expected_predecessor_checkpoint");
@@ -3340,7 +3463,7 @@
     if (!(state.workflow === "concordato-plan-review" && selected.item_type === "codex_review_memo" && state.data.memo_application_available === false)) {
       actions.append(button(applyLabel, () => save("vera_workspace_apply", submissionFields(), check)));
     }
-    parent.append(actions);
+    parent.append(actions); showActionFields();
     if (state.workflow === "archive-organization") parent.append(node("p", "La compilazione applica le decisioni al piano e non sposta i file. Rivedi tutte le destinazioni prima della conferma separata in «Esecuzione del piano».", "notice"));
     if (state.workflow === "new-client") parent.append(node("p", "Applica aggiorna solo la revisione del dossier. Una modifica materiale resta una proposta e richiede un nuovo run; non riscrive i fatti né elimina i controlli mancanti.", "notice"));
     if (state.workflow === "client-file-preparation") parent.append(node("p", "Le modifiche a memo ed email sostituiscono il testo completo della bozza attraverso il motore. Applica conserva l'originale, riesegue i controlli previsti e sigilla gli output aggiornati. Le decisioni mancanti restano da rivedere; l'email non viene inviata.", "notice"));
@@ -3361,7 +3484,8 @@
         }));
       } else parent.append(node("p", "La rigenerazione richiede decisioni già applicate e impostazioni originali conservate dal motore. Per un run precedente o preparato da righe normalizzate, continua nel flusso specialistico.", "caption"));
     }
-    parent.append(node("p", state.workflow === "report-builder" && state.data.applied_decisions ? "Una proposta successiva resta una bozza finché confermi Applica. Il motore conserva la revisione precedente e verifica il riferimento di integrità separato." : "Salva conserva la revisione. Applica consuma le decisioni nel motore e aggiorna gli output previsti dal flusso.", "caption")); discard(parent);
+    if (state.workflow === "report-builder" && state.data.applied_decisions) parent.append(node("p", "La proposta resta in bozza fino all’applicazione.", "caption"));
+    discard(parent);
   }
   function renderAcceptance(parent) {
     parent.replaceChildren(node("h2", "Accetta la previsione"), node("p", "Conferma soltanto la previsione appena letta. L'accettazione conserva una versione immutabile; le modifiche successive richiedono un nuovo run.", "caption"));
@@ -3407,7 +3531,7 @@
   async function discuss(parent) {
     leaveDraft(); const exact = scope(); await call("vera_workspace_view", exact);
     const text = `Spiegami questa selezione del workspace Vera.\nLavoro: ${exact.work_ref}\nSelezione: ${exact.item_id}\nVersione: ${exact.revision}${exact.source_ref ? "\nFonte scelta: " + exact.source_ref : ""}\nLeggi prima la selezione esatta con vera_workspace_explain. Non salvare decisioni e non approvare il lavoro.`;
-    return requestDiscussion(parent,text);
+    return requestCurrentDiscussion(parent,text);
   }
   async function requestCurrentDiscussion(parent,text) {
     if(host.hostCapabilities?.message?.text){
@@ -3419,16 +3543,6 @@
       const copy=node("textarea",undefined,"request");copy.readOnly=true;copy.value=text;copy.setAttribute("aria-label","Richiesta da copiare nella chat corrente");parent.append(copy);copy.focus();copy.select();
     }
   }
-  async function requestDiscussion(parent,text) {
-    if (host.hostCapabilities?.message?.text && host.hostCapabilities?.experimental?.["openai/message"]) {
-      say("Conferma l'invio nella nuova chat oppure annulla nella finestra del Codex.");
-      const result = await request("ui/message", { role: "user", content: [{ type: "text", text }], _meta: { "openai/message": { target: "new" } } });
-      say(result?.isError ? "Invio annullato. La decisione non è stata modificata." : "Richiesta inviata in una nuova chat. La decisione resta da esaminare.");
-    } else {
-      parent.append(node("p", "Questo host non apre una nuova chat dal pannello. Copia la richiesta leggibile in una nuova conversazione con Vera.", "caption"));
-      const requestText = node("textarea", undefined, "request"); requestText.readOnly = true; requestText.value = text; parent.append(requestText); requestText.focus(); requestText.select();
-    }
-  }
   async function showOutputs() {
     leaveDraft(); const output = await call("vera_workspace_outputs", { work_ref: state.work_ref, ...(["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind) ? {revision:state.revision,source_ref:state.data.selection.source_ref} : {}) });
     const main = root.querySelector("main"); main.replaceChildren(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", "File del lavoro"));
@@ -3438,16 +3552,20 @@
     if (output.status === "unfinalized_scissione_review") main.append(node("p", "File della versione esatta scelta, conservati nel run. Non attestano firma, deposito, validità giuridica o chiusura dell’operazione. Richieste di lavoro, tutte le versioni e report sui dati richiedono ancora la dichiarazione degli output nel flusso Scissione.", "notice"));
     if (output.status === "unfinalized_assetti_review") main.append(node("p", "Record e memo della valutazione scelta. Il run resta da completare nel flusso Adeguati assetti; questi file non attestano adozione aziendale, funzionamento dei controlli, firma autenticata o certificazione di adeguatezza.", "notice"));
     if (output.status === "unfinalized_aml_review") main.append(node("p", "Record e memo della revisione scelta. Il run resta da completare nel flusso Antiriciclaggio; questi file non attestano conformità, firma autenticata o invio di una SOS.", "notice"));
+    const supporting = node("details"); supporting.append(node("summary", "File di supporto"));
     for (const file of output.outputs) {
       const row = node("section", undefined, "output"); row.append(node("strong", state.kind === "invoice" ? file.name.split("/").slice(1).join("/") : file.name));
       if (host.hostCapabilities?.experimental?.["openai/files"]) row.append(button("Apri file", () => request("openai/files/open", { path: file.path })));
       else { const text = node("input"); text.type = "text"; text.readOnly = true; text.value = file.path; text.setAttribute("aria-label", "Percorso del file " + file.name); row.append(text); }
-      list.append(row);
+      const basename = file.name.split("/").pop();
+      const owner = /^(?:ui_decisions|applied_decisions|review_payload|run_intake|final_artifacts|run_manifest|execution_trace|.+_receipt)\.json$/i.test(basename) ? supporting : list;
+      owner.append(row);
     }
     if (!output.outputs.length) list.append(node("p", "Non ci sono ancora output dichiarati disponibili. Completa la fase prevista dal flusso e aggiorna questa vista.", "empty"));
     main.append(button("← Torna alla revisione", async () => renderWork()));
+    if (supporting.children.length > 1) main.append(supporting);
   }
-  openItemsIntakePanel = globalThis.VeraOpenItemsIntake.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,openReview:openWork,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
+  openItemsIntakePanel = globalThis.VeraOpenItemsIntake.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,openReview,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
   browserPanel = globalThis.VeraBrowser.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
   fusionPanel = globalThis.VeraFusion.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
   ratingPanel = globalThis.VeraRating.create({node,button,call,say,shell,leaveDraft,confirmation:esgConfirmation,openWorks:loadCatalogue,setDirty(value){dirty=value;},isDirty(){return dirty;},enter(){state=null;return ++epoch;},isCurrent(generation){return generation===epoch;}});
@@ -3472,10 +3590,18 @@
     if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
     const message = event.data;
     if (pending.has(message.id)) { const p = pending.get(message.id); pending.delete(message.id); clearTimeout(p.timer); message.error ? p.reject(new Error(message.error.message)) : p.resolve(message.result); return; }
-    if (message.method === "ui/notifications/tool-result" && !catalogue) {
+    if (message.method === "ui/notifications/tool-result") {
       const result = message.params?._meta?.workspace;
       if (result?.error) { say(result.error, true); root.setAttribute("aria-busy", "false"); }
-      else if (result?.works) { catalogue = result; renderCatalogue(); say("Scegli un lavoro collegato a Studio Archive."); root.setAttribute("aria-busy", "false"); }
+      else if (result?.kind === "review_route") {
+        if (notifiedReview === result.work_ref) return;
+        notifiedReview = result.work_ref;
+        showReviewRoute(result).catch(error => {
+          notifiedReview = null;
+          say(error.message, true);
+        }).finally(() => root.setAttribute("aria-busy", "false"));
+      }
+      else if (result?.works && !catalogue) { catalogue = result; renderCatalogue(); say("Scegli un lavoro collegato a Studio Archive."); root.setAttribute("aria-busy", "false"); }
     }
     if (message.method === "ui/notifications/host-context-changed") host.hostContext = { ...host.hostContext, ...message.params };
     if (message.method === "ui/resource-teardown") {

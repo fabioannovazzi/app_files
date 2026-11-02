@@ -7,6 +7,7 @@ import errno
 import hashlib
 import importlib.util
 import json
+import logging
 import os
 import re
 import subprocess
@@ -700,6 +701,27 @@ def concordato_review(
     return helper._sanitize_browser_payload(result, redactions=redactions)
 
 
+def review_position(output: Path, work_ref: str) -> Path:
+    """Store navigation separately for each reviewer, work and studio."""
+    identity = [
+        os.environ.get("VERA_WORKSPACE_TENANT_ID"),
+        os.environ.get("VERA_WORKSPACE_ACTOR_ID"),
+        work_ref,
+    ]
+    return ui_state_directory(output, create=False) / (
+        "position-" + digest(identity) + ".json"
+    )
+
+
+def saved_review_item(output: Path, work_ref: str) -> str | None:
+    """A missing or obsolete navigation preference does not block a review."""
+    try:
+        record = review_position(output, work_ref)
+        return read_json(record).get("item_id") if record.is_file() else None
+    except (OSError, ValueError):
+        return None
+
+
 def snapshot(
     binding: dict[str, Any], loaded: dict[str, Any], args: dict[str, Any]
 ) -> dict[str, Any]:
@@ -967,6 +989,31 @@ def snapshot(
                 )
             elif str(args.get("item_id", "")).startswith("notice-ref-"):
                 selected = notice_page["selection"]
+        if args.get("resume_review") and not args.get("item_id") and not offset:
+            by_id = {row["id"]: (index, row) for index, row in enumerate(all_items)}
+            decisions = (data.get("ui_decisions") or {}).get("decisions", [])
+            last = max(
+                (row for row in decisions if row.get("item_id") in by_id),
+                key=lambda row: row.get("decided_at") or "",
+                default=None,
+            )
+            preferred = saved_review_item(output, binding["work_ref"])
+            if preferred not in by_id:
+                preferred = last["item_id"] if last else None
+            if preferred in by_id and args.get("view", "REVIEW") == "REVIEW":
+                index, selected = by_id[preferred]
+                offset = index // 30 * 30
+                items = all_items[offset : offset + 30]
+            elif items and (total == 1 or args.get("view", "REVIEW") == "REVIEW"):
+                selected = next(
+                    (
+                        row
+                        for row in items
+                        if row.get("item_type")
+                        in {"unmatched_bank", "unmatched_journal"}
+                    ),
+                    items[0],
+                )
         data = {
             key: data.get(key)
             for key in (
@@ -976,6 +1023,8 @@ def snapshot(
                 "local_review_read_only",
             )
         }
+        if "REVIEWER" not in os.environ.get("VERA_WORKSPACE_ROLES", "").split(","):
+            data["local_review_read_only"] = True
         if intake_counts is not None:
             data["intake_view_counts"] = intake_counts
             data["fiscal_correction_available"] = loaded["run"][
@@ -1362,7 +1411,53 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
             module_root("comunicazione-professionale"),
             SimpleNamespace(atomic_json=atomic_json, write_lock=write_lock),
         )
+    if tool == "vera_open_review" and args.get("workflow"):
+        # These five studio tools have their own operator-scoped bindings. A
+        # similarly named Archive run does not grant access to a pilot case.
+        import native_browser
+        import native_communication
+        import native_fusion
+        import native_transformation
+        import native_website
+
+        lookup = {
+            "browser-automation": native_browser.configuration,
+            "comunicazione-professionale": native_communication.bindings,
+            "fusione-guidata": native_fusion.bindings,
+            "presenza-digitale-studio": native_website.bindings,
+            "trasformazione": native_transformation.bindings,
+        }[args["workflow"]]
+        _, bindings = lookup()
+        if not any(row["work_ref"] == args["work_ref"] for row in bindings):
+            raise PermissionError("Il lavoro richiesto non è disponibile.")
+        return {
+            "kind": "review_route",
+            "workflow": args["workflow"],
+            "view": "task",
+            "work_ref": args["work_ref"],
+        }
     config = configuration()
+    if tool == "vera_open_review" and not args.get("work_ref"):
+        from native_archive_navigation import work_ref
+
+        ids = [args.get(key, "") for key in ("client_id", "engagement_id", "run_id")]
+        if not all(
+            re.fullmatch(prefix + r"_[a-f0-9]{24}", value)
+            for prefix, value in zip(("client", "eng", "run"), ids, strict=True)
+        ):
+            raise ValueError("Supply the exact client, engagement and run")
+        if config["mode"] == "studio-archive":
+            resolved = work_ref(*ids)
+        else:
+            matches = [
+                b
+                for b in config["bindings"]
+                if [b[key] for key in ("client_id", "engagement_id", "run_id")] == ids
+            ]
+            if len(matches) != 1:
+                raise PermissionError("Il lavoro richiesto non è disponibile.")
+            resolved = matches[0]["work_ref"]
+        args = {**args, "work_ref": resolved}
     if config["mode"] == "studio-archive":
         from native_archive_navigation import (
             archive_action,
@@ -1670,6 +1765,22 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     if binding is None:
         raise PermissionError("Run is not authorised in this workspace")
     loaded = load_binding(binding)
+    if tool in {"vera_open_review", "vera_workspace_review_route"}:
+        component = binding_component(binding)
+        routes = read_json(ROOT / "ui/review-routes.json")
+        if not routes.get(component):
+            raise ValueError(
+                "Il risultato si consulta nella chat e nei documenti consegnati."
+            )
+        return {
+            "kind": "review_route",
+            "workflow": component,
+            "view": routes[component],
+            **{
+                key: binding[key]
+                for key in ("work_ref", "client_id", "engagement_id", "run_id")
+            },
+        }
     output = Path(loaded["output_dir"])
     if tool == "vera_workspace_fiscal_correction_prepare":
         from types import SimpleNamespace
@@ -2546,6 +2657,16 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                     "status": "applied" if tool.endswith("apply") else "saved",
                 }
             atomic_json(receipt, {"request_sha256": fingerprint, "result": result})
+            if current["kind"] == "workbench" and args.get("item_id"):
+                try:
+                    atomic_json(
+                        review_position(output, binding["work_ref"]),
+                        {"item_id": args["item_id"]},
+                    )
+                except (OSError, ValueError):
+                    logging.getLogger(__name__).warning(
+                        "Review saved, but its position could not be retained."
+                    )
             draft_path(output, config["actor_id"]).unlink(missing_ok=True)
             return result
     current = snapshot(binding, loaded, args)

@@ -109,12 +109,12 @@
     {
       "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
-      "sha256": "ed80f1f497bae4168d15520fa92bb337f82738a1748e470baad690698786ff2d"
+      "sha256": "28ae0eb64df06d502203c2d110a7f1491d59ce8ce92d751a5f80b14fdd8f4e7d"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/reconciliation_workflow.py",
-      "sha256": "0db8b1aa827c5047be2e8113692d89581f4d530c53b1d77bc150ea5c788f959c"
+      "sha256": "7799829872483e24169d4940a0262aad26051e51645f917739090f3ea22ef1a1"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
@@ -134,7 +134,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
       "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/review_session.source",
-      "sha256": "29504ad81ad2ebf46f6d380d8c34c68ede1269d35ea34ed7806671c05a94992e"
+      "sha256": "2abc7fb7752f6a3dc66f2c94cbf0710ab14a3287ce28f3b3ab6982c6f895709a"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/workpaper_outputs.source",
@@ -144,7 +144,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/review_server.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/review_server.py",
-      "sha256": "3a53e40e08ddf9630b0e2914444fd40044678b6e042007e3d5f5b00003dcb0c3"
+      "sha256": "4d4d256b03b9528c6854b78a49673023da915deac921de2fd6263574dbba1506"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
@@ -154,7 +154,7 @@
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "ddf74226609e086230905afe2fb8be6e5a2a835031a6ea8166366ef7045fe5c8"
+      "sha256": "4334e6b50f030f7ade4de7956da1869b5e7f9a4c824a277a7cfaedff8fbc2bb0"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/references/geneva.md",
@@ -414,7 +414,7 @@
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "7d19121a3641c675bb6f39f78d61950987882bb68517808a1eb6af8d35c3b034"
+      "sha256": "2b18680e8f7e431e230a37b7a7fa3c3f133d79234dea83ba771e9908117097ce"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
