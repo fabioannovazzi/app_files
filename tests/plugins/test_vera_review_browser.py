@@ -270,6 +270,16 @@ def test_specialist_review_shows_only_fields_for_selected_action(
         expect(select).to_be_visible()
         expect(correction).to_be_hidden()
         expect(required).to_be_hidden()
+        visible = panel.locator("main").inner_text()
+        assert "fact id" not in visible
+        assert "evidence count" not in visible
+        if fixture == "inps_run":
+            expect(
+                panel.get_by_role("heading", name="Decorrenza del rapporto")
+            ).to_be_visible()
+            expect(panel.locator("blockquote")).to_have_text(
+                "decorre dal 1 gennaio 2021"
+            )
         select.click()
         panel.get_by_role("option", name=edit, exact=True).click()
         correction.fill("Correggere la data")
@@ -282,6 +292,9 @@ def test_specialist_review_shows_only_fields_for_selected_action(
         panel.get_by_role("option", name=edit, exact=True).click()
         expect(correction).to_have_value("Correggere la data")
         expect(required).to_be_hidden()
+        panel.locator("body").evaluate(
+            "(body) => body.ownerDocument.defaultView.scrollTo(0, 0)"
+        )
         folder = Path(os.environ.get("VERA_REVIEW_SCREENSHOTS", tmp_path))
         folder.mkdir(exist_ok=True, parents=True)
         page.screenshot(path=folder / f"{binding['workflow_id']}.png")
