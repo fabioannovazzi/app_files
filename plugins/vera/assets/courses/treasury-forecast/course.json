@@ -95,7 +95,7 @@
     {
       "path": "modules/treasury-forecast/scripts/treasury_server.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
-      "sha256": "20d5d6820a90f8679ccc11c563b4420a1822769c426378a11b529988c8e4581f"
+      "sha256": "dd1c2dc5be546e269ccfdbfa918fefdf8d92a0d53529df1e3c038530e7fe53b5"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
@@ -105,7 +105,7 @@
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
       "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "aedcbd186d331328aee4af95b66c5591601ebeea9877d953bfadb1b607c17da3"
+      "sha256": "69ddc12f096a2b4ccb111b2ccf8fa98f12aac5040f0dee5fa408172c1154334b"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
@@ -170,7 +170,7 @@
     {
       "path": "skills/treasury-forecast/SKILL.md",
       "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
-      "sha256": "07dfafaf28a775e4f23ff819114604781c49a8752c93598bdbe72442929072a7"
+      "sha256": "a3d87e9b039890387989555dd351a0a87027e2fb11b0dd681fb691b1fa5c9f6f"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

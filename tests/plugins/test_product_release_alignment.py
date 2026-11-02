@@ -145,6 +145,32 @@ def test_check_explains_how_to_obtain_untracked_archives(tmp_path, monkeypatch, 
     assert "product-archives CI artifact" in caplog.text
 
 
+def test_stale_vera_catalogue_prevents_build_before_any_zip_is_written(
+    tmp_path, monkeypatch, capfd
+) -> None:
+    source = SCRIPT.parents[1]
+    verifier = Path(".agents/skills/localize-vera/scripts/catalogue.py")
+    snapshot = Path("plugins/vera/skills/vera/references/localization/geneva")
+    for entry in (
+        verifier,
+        snapshot / "catalogue.json",
+        snapshot / "assessment.json",
+        Path("plugins/vera/skills/vera/SKILL.md"),
+    ):
+        destination = tmp_path / entry
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source / entry, destination)
+    manifest = tmp_path / "plugins/vera/.codex-plugin/plugin.json"
+    manifest.parent.mkdir(parents=True)
+    manifest.write_text(json.dumps({"name": "vera", "version": "changed"}))
+    monkeypatch.setattr(release, "ROOT", tmp_path)
+
+    assert release.main(["vera"]) == 1
+
+    assert "current catalogue differs" in capfd.readouterr().err
+    assert not (tmp_path / "plugin_packages").exists()
+
+
 def test_default_command_checks_both_hosts_for_all_products(
     tmp_path, monkeypatch
 ) -> None:
@@ -161,6 +187,11 @@ def test_default_command_checks_both_hosts_for_all_products(
     assert commands.pop(0) == [
         release.sys.executable,
         "scripts/check_repository_archive_size.py",
+    ]
+    catalogue_check = commands.pop(0)
+    assert catalogue_check[1:3] == [
+        ".agents/skills/localize-vera/scripts/catalogue.py",
+        "check",
     ]
     assert commands[0] == [
         release.sys.executable,

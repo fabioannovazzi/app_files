@@ -3,6 +3,15 @@ name: new-client
 description: Use when a commercialista or studio wants Vera to prepare an owner-only, reviewable new-client relationship dossier covering identity, representatives and beneficial owners, engagement scope, mandate/privacy/AI applicability, assisted AML assessment, missing evidence, document planning, and ongoing monitoring; it verifies a final-ready client-file-preparation binding or records explicit standalone evidence, but never renders client documents, signs, sends, screens externally, or activates the relationship.
 ---
 
+## Review in Vera
+
+Deliver the result and usable documents in the current chat. If comparing or
+editing saved items requires a panel, open the exact work with `vera_open_review`.
+**Lavori dello studio → Apri lavoro** opens the same editor. Instructions below
+for standalone widgets, browser servers and editable HTML files apply only to
+the independent component. In Vera, keep outstanding decisions pending if the
+panel is unavailable. Source checks and the workflow's save/apply rules still apply.
+
 ## Output Location Rule
 
 Never write run outputs inside this Git workspace or a published folder. Use

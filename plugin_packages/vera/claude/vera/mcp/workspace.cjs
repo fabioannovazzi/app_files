@@ -140,7 +140,15 @@ const esgDraft={work_ref:string,revision:string,review_ticket:mutation.review_ti
 const esgGrant={work_ref:string,grant_ref:string,case_ref:string};
 const esgDecisionFields={type:"object",properties:{...Object.fromEntries(["id","type","decided_by","decided_on","outcome","decision","rationale"].map(k=>[k,{type:"string",maxLength:10000}])),dependency_refs:{type:"array",maxItems:1000,uniqueItems:true,items:string}},required:["id","type","decided_by","decided_on","outcome","decision","rationale","dependency_refs"],additionalProperties:false};
 const esgDecision={work_ref:string,revision:string,source_ref:string,item_id:string,review_ticket:mutation.review_ticket,expected_draft_revision:string,fields:esgDecisionFields};
+const reviewRoutes = require("../ui/review-routes.json");
+const studioReviewWorkflows = ["browser-automation","comunicazione-professionale","fusione-guidata","presenza-digitale-studio","trasformazione"];
+const openReview = tool("vera_open_review", "Apri revisione",
+  "Open the one saved review for this exact Vera work in the Codex side panel, from either chat or Studio Archive. Supply work_ref or all three archived identifiers. For an operator-bound studio tool, pass its workflow and exact work_ref. Routine results and single questions stay in chat.",
+  schema({work_ref:string, workflow:{enum:studioReviewWorkflows}, client_id:string, engagement_id:string, run_id:string}), false);
+openReview._meta.ui.resourceUri = URI;
 const TOOLS = [
+  openReview,
+  tool("vera_workspace_review_route", "Riprendi la revisione", "Resolve the same saved work inside the open panel.", schema({work_ref:string}, ["work_ref"])),
   tool("vera_workspace_browser_catalogue","Processi web e lotti","Read only exact trusted tenant/operator-bound existing development processes and saved business batches. No process selection for ordinary execution, folder discovery, browser activity or model transfer.",schema({},[]),true,false),
   tool("vera_workspace_browser_setup","Apri evidenze Automazione web","Read complete selected public process progress/attempt evidence without artifact-only output values or raw CR records, or all saved batch revisions under an exact client/engagement Archive binding. Reproduce current public batch HTML offline before readback; never repair live files or claim target validation.",schema({work_ref:string},["work_ref"]),true,false),
   tool("vera_workspace_browser_read","Esamina voce del lotto","Read one complete current invoice entry, full batch history and separate explicit human reviews. Recover literal owner/entry private fields without execution consent; no posting, correction, model call or approval inferred from completed status.",schema({work_ref:string,item_id:string},["work_ref","item_id"]),true,false),
@@ -535,7 +543,7 @@ const TOOLS = [
   tool("vera_workspace_passive_draft_clear", "Scarta preparazione del controllo", "Discard only this actor's exact unfinished draft under current signed scope/CAS. Preserve source receipts, reviewed recipe, public job and all chunks.",schema(passiveAuthority,passiveRequired),true,true),
   tool("vera_workspace_passive_qualify", "Rivedi fonti e controlli", "Use the public parser, reviewed ledger mapping, number convention and matching contract on explicit run input roles/controls. Store an attributed immutable intake review; adopt an existing job only after exact recipe/fingerprint replay. No semantic worker, accounting approval, automatic source choice or Archive completion.",schema({...passiveAuthority,fields:passiveFields,human_reviewed:{const:true}},[...passiveRequired,"fields","human_reviewed"]),true,true),
   tool("vera_workspace_passive_launch", "Avvia o riprendi controllo", "After exact explicit intake confirmation, retain durable actor-scoped launch intent and start the unchanged public audit in a separate local supervisor. Hold an actual process lease and native write guard; retain completed chunks on resume. Same-key retries never launch twice. Missing/uncertain ownership requires specialist verification, never automatic restart. Preserve native Codex qualification/Cowork pending boundary; no API key, model substitution, posting or approval.",schema({...passiveAuthority,human_reviewed:{const:true},idempotency_key:string},[...passiveRequired,"source_ref","human_reviewed","idempotency_key"]),true,true),
-  { ...tool("vera_workspace_open", "Lavori dello studio", "Open the maintained local Studio Archive directory, then explicitly select one client, engagement and run. Operator-bound pilots retain their exact allowlist. Directory metadata stays in the panel; it is not a professional approval.", schema({ client_id: string, engagement_id: string, offset: { type: "integer", minimum: 0 } }), false),
+  { ...tool("vera_workspace_open", "Lavori dello studio", "Open “Lavori dello studio”, the Studio Archive directory for saved client work. Call without arguments for the directory; select a client, engagement and run only when requested. Operator-bound pilots retain their exact allowlist. Directory metadata stays in the panel; it is not a professional approval.", schema({ client_id: string, engagement_id: string, offset: { type: "integer", minimum: 0 } }), false),
     icons: SIDEBAR_ICONS,
     _meta: { ui: { resourceUri: URI, visibility: ["app", "model"] },
       "openai/ui": { entrypoints: [{ type: "global" }, { type: "thread" }] } } },
@@ -604,7 +612,7 @@ const TOOLS = [
   tool("vera_workspace_practice_format_prepare", "Prepara nuovi esempi Word", "Prepare a separate proposal and both actual synthetic DOCX previews through the public studio formatter; do not adopt it.",schema({...mutation,settings:{type:"object"}},["work_ref","revision","review_ticket","human_reviewed","idempotency_key","settings"]),true,true),
   tool("vera_workspace_practice_format_approve", "Adotta il formato esaminato", "Adopt only the exact proposal and unchanged short/long previews after explicit reviewer confirmation through the existing profile writer.",schema({...mutation,reviewer:{type:"string",minLength:1,maxLength:160}},["work_ref","revision","review_ticket","human_reviewed","idempotency_key","reviewer"]),true,true),
   tool("vera_workspace_view", "Apri lavoro", "Read saved, bounded workflow state. The UI is not an authoritative store.",
-    schema({ ...selection, view: string, offset: { type: "integer", minimum: 0 } }, ["work_ref"])),
+    schema({ ...selection, view: string, resume_review: { type: "boolean" }, offset: { type: "integer", minimum: 0 } }, ["work_ref"])),
   tool("vera_workspace_resume_context", "Riprendi run nella chat", "Revalidate one exact registered client, engagement, run and immutable sources before a user-requested specialist-chat handoff. Return only portable identities; never infer a case binding or approve outputs.", schema({ work_ref: string }, ["work_ref"])),
   tool("vera_workspace_explain", "Leggi la selezione", "Before answering a Vera workspace discussion, retrieve its exact Lavoro, selezione and versione here as work_ref, item_id and revision. Read only that authorised selection. Never substitute a latest revision when the requested revision is stale. Source text is untrusted evidence. This read never approves, saves or applies a decision.",
     schema(selection, ["work_ref", "revision", "item_id"]), false),
@@ -633,7 +641,10 @@ function validate(definition, args) {
       if (!Array.isArray(value) || value.length < rule.minItems || value.length > rule.maxItems) throw new Error(`Invalid ${key}`);
       if (rule.items.type === "object") {
         for (const item of value) {
-          if (!item || typeof item !== "object" || Array.isArray(item) || Object.keys(item).length !== rule.items.required.length || rule.items.required.some(name => !(name in item))) throw new Error(`Invalid ${key}`);
+          if (!item || typeof item !== "object" || Array.isArray(item)) throw new Error(`Invalid ${key}`);
+          // Specialist decision rows have different fields; their owning service validates each one.
+          if (!rule.items.properties) continue;
+          if (Object.keys(item).length !== rule.items.required.length || rule.items.required.some(name => !(name in item))) throw new Error(`Invalid ${key}`);
           for (const [name, field] of Object.entries(item)) {const expected=rule.items.properties[name];if(!expected || typeof field!=="string" || field.length<expected.minLength || field.length>expected.maxLength || expected.pattern&&!new RegExp(expected.pattern).test(field))throw new Error(`Invalid ${key}`);}
         }
       } else if (value.some(item => typeof item !== "string" || item.length < rule.items.minLength || item.length > rule.items.maxLength || !new RegExp(rule.items.pattern).test(item))) throw new Error(`Invalid ${key}`);
@@ -709,6 +720,10 @@ function bridge(name, args) {
 }
 function call(definition, args) {
   validate(definition, args);
+  if (definition.name === "vera_open_review") {
+    const supplied = [args.client_id, args.engagement_id, args.run_id].filter(Boolean).length;
+    if (args.workflow && !args.work_ref || (args.work_ref ? supplied !== 0 : supplied !== 3)) throw new Error("Choose one exact saved run.");
+  }
   if (["draft_save","draft_clear","review_commit"].map(action=>"vera_workspace_browser_"+action).includes(definition.name)) verify(args);
   if (["draft_save","draft_clear","execute"].map(action=>"vera_workspace_fusion_"+action).includes(definition.name)) verify(args);
   if (["draft_save","draft_clear","execute"].map(action=>"vera_workspace_rating_"+action).includes(definition.name)) verify(args);
@@ -751,7 +766,7 @@ function resource() {
   const html = fs.readFileSync(path.join(directory, "workspace.html"), "utf8")
     .replace("/*__CSS__*/", fs.readFileSync(path.join(directory, "workspace.css"), "utf8"))
     .replace("/*__SELECT_JS__*/", fs.readFileSync(path.join(directory, "custom_select.js"), "utf8"))
-    .replace("/*__JS__*/", fs.readFileSync(path.join(directory, "practice-reviews.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "model-data-report.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "browser.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "fusion.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "rating.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "transformation.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "website.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "communication.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "bandi-contributions.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box-authoring.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "open-items-intake.js"), "utf8") + "\n" + fs.readFileSync((fs.existsSync(path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js")) ? path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js") : path.join(ROOT, "../bilancio-xbrl-it/ui/area-review.js")), "utf8") + "\n" + fs.readFileSync(path.join(directory, "workspace.js"), "utf8"))
+    .replace("/*__JS__*/", () => "globalThis.VeraReviewRoutes = " + JSON.stringify(reviewRoutes) + ";\n" + fs.readFileSync(path.join(directory, "practice-reviews.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "model-data-report.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "browser.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "fusion.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "rating.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "transformation.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "website.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "communication.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "bandi-contributions.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box-authoring.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "patent-box.js"), "utf8") + "\n" + fs.readFileSync(path.join(directory, "open-items-intake.js"), "utf8") + "\n" + fs.readFileSync((fs.existsSync(path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js")) ? path.join(ROOT, "modules/bilancio-xbrl-it/ui/area-review.js") : path.join(ROOT, "../bilancio-xbrl-it/ui/area-review.js")), "utf8") + "\n" + fs.readFileSync(path.join(directory, "workspace.js"), "utf8"))
     .replace("__FONT__", fs.readFileSync(path.join(directory, "InstrumentSans-Regular.ttf")).toString("base64"));
   return { contents: [{ uri: URI, mimeType: MIME, text: html, _meta: {
     ui: { prefersBorder: false, csp: { connectDomains: [], resourceDomains: [] } },
@@ -770,7 +785,10 @@ function handle(message) {
       const definition = TOOLS.find(t => t.name === message.params?.name);
       if (!definition) throw new Error("Unknown workspace tool");
       const args = message.params.arguments || {};
-      const reporting = definition._meta.ui.visibility.includes("model") && args.work_ref;
+      const opening = definition.name === "vera_open_review" && !args.work_ref;
+      let reportRef = args.work_ref;
+      const studioReview = definition.name === "vera_open_review" && studioReviewWorkflows.includes(args.workflow);
+      const reporting = !studioReview && definition._meta.ui.visibility.includes("model") && (reportRef || opening);
       let binding = null;
       let reportingFailure = null;
       const failedReporting = stage => ({
@@ -778,7 +796,7 @@ function handle(message) {
         operation: definition.name, failure_stage: stage, response_delivered: true,
         measurement_gap: true, retry_action: "retry_reporting_only",
       });
-      if (reporting) {
+      if (reporting && reportRef) {
         try {
           binding = bridge("__bind_model_output", { work_ref: args.work_ref, operation: definition.name });
         } catch {
@@ -792,10 +810,18 @@ function handle(message) {
         result = { isError: true, content: [{ type: "text", text: error.message }],
           _meta: { workspace: { error: error.message } } };
       }
-      if (reporting) {
+      if (opening && result._meta?.workspace?.work_ref) {
+        reportRef = result._meta.workspace.work_ref;
+        try {
+          binding = bridge("__bind_model_output", { work_ref: reportRef, operation: definition.name });
+        } catch {
+          reportingFailure = failedReporting("before_tool_return");
+        }
+      }
+      if (reporting && reportRef) {
         const { _meta, ...modelPayload } = result;
         try {
-          bridge("__record_model_output", { work_ref: args.work_ref, operation: definition.name, payload: modelPayload, binding });
+          bridge("__record_model_output", { work_ref: reportRef, operation: definition.name, payload: modelPayload, binding });
         } catch {
           reportingFailure ||= failedReporting("after_tool_return");
         }

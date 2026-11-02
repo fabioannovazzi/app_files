@@ -53,13 +53,9 @@ system interpreter. A missing import in the ambient Python does not establish
 that the managed environment lacks the package. After a failed attempt, inspect
 its run and reuse it when resumable; do not create another case just to retry.
 
-Launch the local review server with that same ready managed Python as well.
-When repository source uses the shared `scripts/serve_review_workbench.py`
-fallback, invoke it with the exact interpreter returned by runtime status.
-Starting the web server in system Python may render successfully while its
-later Save/Apply helper fails from missing component dependencies. The shared
-server forwards its interpreter to the Node bridge by default; an explicit
-`PYTHON` override must point to the selected ready component environment.
+When a teaching case needs review, open its saved work with `vera_open_review`
+in the current chat. Use the same panel and recorded decisions as an ordinary
+case. Deliver the workpapers in chat when the exercise only needs the result.
 
 Follow the specialist's documented commands using these returned values. For
 an intake wrapper the actual ledger workflow is `client-file-preparation`.

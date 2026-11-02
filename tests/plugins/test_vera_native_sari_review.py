@@ -204,8 +204,8 @@ def test_sari_review_declared_edits_and_documents_remain_unapplied_case_revision
         os.environ.copy(),
         review_program(prepared_sari)
         + """
-privateFields.decisions[selectedReview.item_id]={action:'edit',reviewer_note:'Fictional explicit revision',edit_value:'Exact requested fictional change',requested_documents:''};
-privateFields.decisions[reviewPage.rows[1].item_id]={action:'request_more_documents',reviewer_note:'Fictional missing document',edit_value:'',requested_documents:'First fictional original\nSecond fictional original'};
+privateFields.decisions[selectedReview.item_id]={action:'edit',reviewer_note:'Fictional explicit revision',edit_value:'Exact requested fictional change',requested_documents:'Superseded private request'};
+privateFields.decisions[reviewPage.rows[1].item_id]={action:'request_more_documents',reviewer_note:'Fictional missing document',edit_value:'Superseded private correction',requested_documents:'First fictional original\nSecond fictional original'};
 """.replace(
             "original\nSecond", "original\\nSecond"
         )
@@ -218,6 +218,8 @@ privateFields.decisions[reviewPage.rows[1].item_id]={action:'request_more_docume
     assert after["practice_plan_draft.json"] == before["practice_plan_draft.json"]
     assert b"Exact requested fictional change" in after["applied_decisions.json"]
     assert b"Second fictional original" in after["ui_decisions.json"]
+    assert b"Superseded private" not in after["ui_decisions.json"]
+    assert b"Superseded private" not in after["applied_decisions.json"]
 
 
 def test_sari_prepared_all_accepts_never_authorize_filing(prepared_sari):

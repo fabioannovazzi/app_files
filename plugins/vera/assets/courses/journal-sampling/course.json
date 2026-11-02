@@ -104,7 +104,7 @@
     {
       "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
-      "sha256": "8eaa7d82b8b34f0f235210ea848a8a830d42c8f41fbda1b7978c00028d634f57"
+      "sha256": "ba03235d3db6f9c93804620442bdc9cceeba906a2bf244d3edbaea30fe07a055"
     },
     {
       "path": "modules/journal-sampling/skills/journal-sampling/references/geneva.md",
@@ -194,7 +194,7 @@
     {
       "path": "skills/journal-sampling/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
-      "sha256": "a006d17c75bb16c0eb060684849d6c696dfaa20a8b24c3a683abcd5a5dd65683"
+      "sha256": "fe2ade5b9b6e3cdc6a5904cdb9a8bc3dc0886ff0a0576333b3e9294136013170"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

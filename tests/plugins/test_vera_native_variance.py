@@ -220,6 +220,7 @@ def test_native_variance_preserves_rich_public_outputs_and_accounting_state(
 def test_native_variance_draft_recovers_empty_cas_without_calculation(variance_run):
     env, output, _, values = variance_run
 
+    before = {p.name: p.read_bytes() for p in output.iterdir()}
     result = rpc_program(
         env,
         BEGIN
@@ -238,7 +239,7 @@ const result={recovered,cleared,stale,current:payload(call('vera_workspace_varia
     assert result["recovered"]["draft_revision"] != result["cleared"]["draft_revision"]
     assert result["stale"]["isError"] is True
     assert result["current"]["draft"] == dict.fromkeys(values, "")
-    assert list(output.iterdir()) == []
+    assert {p.name: p.read_bytes() for p in output.iterdir()} == before
 
 
 @pytest.mark.parametrize(
@@ -255,6 +256,7 @@ def test_native_variance_refuses_foreign_or_incomplete_setup_without_intent(
 ):
     env, output, _, values = variance_run
 
+    before = {p.name: p.read_bytes() for p in output.iterdir()}
     result = rpc_program(
         env,
         BEGIN
@@ -264,13 +266,14 @@ def test_native_variance_refuses_foreign_or_incomplete_setup_without_intent(
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name: p.read_bytes() for p in output.iterdir()} == before
     assert not list(output.parent.glob(".native-workspace/variance-request-*"))
 
 
 def test_native_variance_unsigned_execution_creates_no_output(variance_run):
     env, output, _, fields = variance_run
 
+    before = {p.name: p.read_bytes() for p in output.iterdir()}
     result = rpc_program(
         env,
         BEGIN
@@ -279,7 +282,7 @@ def test_native_variance_unsigned_execution_creates_no_output(variance_run):
     )
 
     assert result["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name: p.read_bytes() for p in output.iterdir()} == before
 
 
 @pytest.mark.parametrize("variance_run", ["many"], indirect=True)
@@ -313,6 +316,7 @@ def test_native_variance_viewer_cannot_save_or_calculate(variance_run):
     env, output, _, values = variance_run
     env = {**env, "VERA_WORKSPACE_ROLES": "VIEWER"}
 
+    before = {p.name: p.read_bytes() for p in output.iterdir()}
     result = rpc_program(
         env,
         BEGIN
@@ -322,7 +326,7 @@ def test_native_variance_viewer_cannot_save_or_calculate(variance_run):
 
     assert result["setup"]["can_prepare"] is False
     assert result["saved"]["isError"] is True
-    assert list(output.iterdir()) == []
+    assert {p.name: p.read_bytes() for p in output.iterdir()} == before
 
 
 @pytest.mark.parametrize(

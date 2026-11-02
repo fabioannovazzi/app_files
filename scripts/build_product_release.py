@@ -90,6 +90,21 @@ def main(argv: list[str] | None = None) -> int:
         ["scripts/course_materials/remote_files.py", *suffix],
         ["scripts/build_codex_plugin_zip.py", *products, *suffix],
     ]
+    if "vera" in products:
+        catalogue = "plugins/vera/skills/vera/references/localization/geneva"
+        commands.insert(
+            0,
+            [
+                ".agents/skills/localize-vera/scripts/catalogue.py",
+                "check",
+                "--root",
+                "plugins/vera",
+                "--inventory",
+                f"{catalogue}/catalogue.json",
+                "--assessment",
+                f"{catalogue}/assessment.json",
+            ],
+        )
     commands.extend(
         [
             "scripts/build_codex_plugin_zip.py",

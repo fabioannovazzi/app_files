@@ -10,6 +10,8 @@ Later host-specific instructions in this reference cannot override this rule.
 
 # Native workspace in Claude
 
+For reviewing a prepared work, follow [Review of saved Vera work](review-routing.md).
+
 Use the callable tools and current returned state to determine availability.
 Historical development checkpoint results do not disable a repaired route.
 When a current operation fails, retain its exact error and use the maintained

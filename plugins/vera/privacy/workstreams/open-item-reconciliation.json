@@ -48,7 +48,8 @@
     "plugins/journal-bank-reconciliation/scripts/worker_capabilities.py",
     "plugins/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
     "plugins/studio-archive/scripts/reconcile_open_items.py",
-    "plugins/studio-archive/scripts/open_items_source_preflight.py"
+    "plugins/studio-archive/scripts/open_items_source_preflight.py",
+    "plugins/vera/ui/review-routes.json"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
@@ -188,7 +189,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a7d1013303834cb59aa072c6a4f7abb3662d30a9298ddc0d8260d44978887d0e"
+    "source_fingerprint": "61695146e978b82354c26be678ba2acc1140abed8dee3f603a5d207e227f182d"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -208,11 +209,11 @@
     },
     {
       "id": "local-review-service",
-      "control": "The review server binds to loopback and constrains review writes to the selected run folder. A browser draft is restored only against the saved-decision signature on which it was created, so cached notes cannot overwrite a newer saved review. Unchanged saved baselines still recover unsaved drafts in local session storage."
+      "control": "The Vera panel opens one authorised saved run. The model receives status and an opaque work reference when supplied. The selected item and saved choices reach the panel in app-only metadata. A requested current-chat discussion can retrieve selected source evidence. The native writer checks the current revision, selected item and signed review ticket. Standalone component review transports are not separate editors in Vera."
     },
     {
       "id": "component-private-review-transport",
-      "control": "MCP validation loads review_payload.json inside the local server and returns only a non-identifying index plus a random four-hour reference. Rendering exposes the complete validated payload only in tool-result _meta, which is component-only, while model-visible content and structuredContent contain the index. The widget hydrates from toolResponseMetadata and preserves the complete human review surface."
+      "control": "The Vera panel opens one authorised saved run. The model receives status and an opaque work reference when supplied. The selected item and saved choices reach the panel in app-only metadata. A requested current-chat discussion can retrieve selected source evidence. The native writer checks the current revision, selected item and signed review ticket. Standalone component review transports are not separate editors in Vera."
     },
     {
       "id": "bounded-selected-case-projection",

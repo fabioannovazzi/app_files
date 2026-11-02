@@ -123,8 +123,11 @@ def audit_run(output: Path, api: Any) -> dict:
         for p in output.glob("variance-*")
     )
     if not saved:
+        from native_bank_preparation import is_reporting_sidecar
+
         recovery |= any(
-            p.name not in authoring["intakes"] for p in output.iterdir()
+            p.name not in authoring["intakes"] and not is_reporting_sidecar(p)
+            for p in output.iterdir()
         ) or bool(requests)
     return {
         "saved": saved,

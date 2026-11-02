@@ -62,6 +62,8 @@ change request, stamp a tutorial receipt or call hosted interviews for a tutoria
 Current user requests take precedence over saved preferences.
 <!-- VERA_OPENAI_ONBOARDING_END -->
 
+In Vera, use the [saved review routing](../vera/references/review-routing.md) for all professional review handoffs, including when following a standalone module below. Only when interactive review is needed, call `vera_open_review` for the saved Archive run.
+
 # Riordino archivio
 
 After substantive use of this workflow, read and follow the `Plugin Improvement Feedback` section in `../vera/SKILL.md`.

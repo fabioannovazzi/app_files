@@ -193,6 +193,9 @@ def make_server(
 
 
 def serve(output: Path, validate: Callable[[], Any], *, port: int = 0) -> None:
+    if (Path(__file__).resolve().parents[3] / "ui/review-routes.json").is_file():
+        logging.info("Apri la previsione da Lavori dello studio in Vera.")
+        return
     server, token = make_server(output, validate, port=port)
     logging.info("Review: http://127.0.0.1:%s/#token=%s", server.server_port, token)
     try:

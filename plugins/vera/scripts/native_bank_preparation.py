@@ -19,19 +19,19 @@ __all__ = ["dispatch"]
 LANGUAGES = {"it", "en", "fr", "de", "es"}
 
 
-def has_preparation_outputs(output: Path) -> bool:
-    """Preserve uncertain work, excluding exact regular Archive reporting sidecars.
-
-    Archive creates these files before inspection. Their names are a producer
-    contract, not evidence of an earlier reconciliation or of report validity.
-    """
-    return any(
-        path.name not in REPORT_FILES
-        or path.is_symlink()
-        or not path.is_file()
-        or path.stat().st_nlink != 1
-        for path in output.iterdir()
+def is_reporting_sidecar(path: Path) -> bool:
+    """An existing regular Archive report is not evidence of a partial calculation."""
+    return (
+        path.name in REPORT_FILES
+        and not path.is_symlink()
+        and path.is_file()
+        and path.stat().st_nlink == 1
     )
+
+
+def has_preparation_outputs(output: Path) -> bool:
+    """Distinguish existing accounting work from Archive reporting."""
+    return any(not is_reporting_sidecar(path) for path in output.iterdir())
 
 
 def draft_fields(

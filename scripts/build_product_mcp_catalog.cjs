@@ -3,12 +3,59 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
+// The module-local servers also ship independently. In the Vera distribution
+// their review engines stay callable by the owning editor, but no sibling
+// renderer is advertised alongside the one archived-work entry point.
+const companionSurfaces = {
+  veraNativeWorkspace: "ui://vera/workspace-v1.html",
+  courseChats: "ui://vera/course-chats-v1.html",
+  agenziaAcquisition: "ui://vera/agenzia-acquisition-v1.html",
+  researchSources: "ui://vera/research-sources.html",
+  studioWork: "ui://vera/studio-work-v1.html",
+};
+
+function projectVeraReview(service, config, routes) {
+  const component = config.args?.at(-1);
+  const allowed = companionSurfaces[service.name];
+  const isComponent = Object.hasOwn(routes, component);
+  const unwanted = uri => typeof uri === "string" && uri.startsWith("ui://") && uri !== allowed;
+  // Standalone component editors are not Vera entry points. An entirely new
+  // service needs an explicit product decision before it can show another UI.
+  if (!isComponent && [...service.resources, ...(service.resourceTemplates || [])]
+      .some(row => unwanted(row.uri || row.uriTemplate))) {
+    throw new Error("Unassigned Vera UI resource in " + service.name);
+  }
+  service.resources = service.resources.filter(row => !unwanted(row.uri));
+  service.resourceTemplates = (service.resourceTemplates || []).filter(row => !unwanted(row.uriTemplate));
+  service.tools = service.tools.filter(tool => {
+    if (isComponent && tool.name.startsWith("validate_") && /render_|before rendering|prima della visualizzazione/i.test(tool.description)) {
+      tool.description = "Validate the existing component review using its declared inputs." +
+        (routes[component] ? " Open the saved work with vera_open_review only if interactive review is needed." : " Deliver the result in chat.");
+    }
+    const meta = tool._meta || {};
+    if (![meta.ui?.resourceUri, meta["ui/resourceUri"], meta["openai/outputTemplate"]].some(unwanted)) return true;
+    if (!isComponent) throw new Error("Unassigned Vera renderer " + tool.name);
+    if (tool.name.startsWith("render_")) return false;
+    delete meta.ui?.resourceUri;
+    delete meta["ui/resourceUri"];
+    delete meta["openai/outputTemplate"];
+    return true;
+  });
+  if (isComponent && !allowed) {
+    service.initialize.instructions = routes[component] === null
+      ? "Deliver this Vera workflow in chat and its documents."
+      : "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget.";
+  }
+}
+
 async function build(root, runtime) {
   const { ServiceClient } = require(path.join(root, "scripts/mcp_service_client.cjs"));
   const configs = JSON.parse(fs.readFileSync(path.join(root, "mcp-services.json"), "utf8")).mcpServers;
   const manifestPath = [".codex-plugin/plugin.json", ".claude-plugin/plugin.json", "plugin.json"]
     .map(name => path.join(root, name)).find(file => fs.existsSync(file));
   const { name: product, version } = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+  const routes = product === "vera" && configs.veraNativeWorkspace
+    ? JSON.parse(fs.readFileSync(path.join(root, "ui/review-routes.json"), "utf8")) : null;
   const services = [];
   const names = { tools: new Set(), resources: new Set(), prompts: new Set() };
   for (const [name, config] of Object.entries(configs)) {
@@ -57,6 +104,7 @@ async function build(root, runtime) {
           cursors.add(cursor);
         } while (cursor);
       }
+      if (routes) projectVeraReview(service, config, routes);
       services.push(service);
     } finally {
       client.close();
@@ -68,7 +116,7 @@ async function build(root, runtime) {
   return { schema_version: 1, product, version, services };
 }
 
-module.exports = { build };
+module.exports = { build, projectVeraReview };
 if (require.main === module) build(path.resolve(process.argv[2]), path.resolve(process.argv[3]))
   .then(catalog => process.stdout.write(JSON.stringify(catalog, null, 2) + "\n"))
   .catch(error => { process.stderr.write(error.stack + "\n"); process.exitCode = 1; });

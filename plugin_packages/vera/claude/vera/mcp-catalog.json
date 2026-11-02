@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.535",
+  "version": "0.1.541",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -453,13 +453,13 @@
           "tools": {},
           "resources": {}
         },
-        "instructions": "Validate and render the dry-run archive plan, then persist collaborator decisions. Applying review decisions only writes approved_plan.json. Never claim that it moved files; filesystem execution requires a separate explicit apply approval."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_archive_organization_review",
           "title": "Validate archive organization review",
-          "description": "Validate one dry-run archive organization payload before rendering it. This never changes client files.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -517,43 +517,6 @@
               "review_payload"
             ],
             "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_archive_organization_review",
-          "title": "Render archive organization review",
-          "description": "Render searchable file, destination, duplicate, anomaly, and confidence rows for collaborator review.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "review_reference": {
-                "type": "string",
-                "pattern": "^archive_review_[0-9a-f]{32}$"
-              }
-            },
-            "required": [
-              "review_reference"
-            ],
-            "additionalProperties": false
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/archive-organization-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/archive-organization-review.html",
-            "openai/outputTemplate": "ui://widget/archive-organization-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering archive organization review",
-            "openai/toolInvocation/invoked": "Rendered archive organization review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -707,27 +670,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/archive-organization-review.html",
-          "name": "archive_organization_review_widget",
-          "title": "Archive organization review widget",
-          "description": "Reviews source paths, proposed destinations, duplicate evidence, anomalies, confidence, and collaborator actions.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/archive-organization-review.html"
-            },
-            "openai/widgetDescription": "Interactive review of a dry-run client-folder organization plan. Saving or applying decisions never performs filesystem moves.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -741,7 +684,8 @@
         "serverInfo": {
           "name": "vera-bilancio-xbrl-it",
           "version": "0.1.23"
-        }
+        },
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
@@ -1557,13 +1501,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Pass review_payload_path to validate_check_entries_review so the private payload is loaded inside the server. Render with the opaque reference and use get_check_entries_case_context only for selected cases; request exact identifiers only when needed. The widget receives the complete payload through component-only metadata. Use save_check_entries_decisions and apply_check_entries_decisions for decisions."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_check_entries_review",
           "title": "Validate Vouching review payload",
-          "description": "Validate the Vouching review-session payload before rendering. Call this first, then render_check_entries_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -1648,123 +1592,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_check_entries_review",
-          "title": "Render Vouching review",
-          "description": "Render a Vouching review-session payload as an MCP HTML widget for support coverage, exceptions, PDFs, and artifacts. Set display_mode to fullscreen to request automatic expansion into the host panel; the host decides whether it is available.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string",
-                "description": "Absolute path to the current portable customer-run context.json."
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "run_intake_path": {
-                "type": "string",
-                "description": "Optional local path to run_intake.json in the run output folder."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "review_payload_path": {
-                "type": "string",
-                "description": "Preferred model-led input: local path to review_payload.json so private rows are loaded inside the MCP server."
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "ui_decisions_path": {
-                "type": "string",
-                "description": "Optional local path to ui_decisions.json in the run output folder."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              },
-              "final_artifacts_path": {
-                "type": "string",
-                "description": "Optional local path to final_artifacts.json in the run output folder."
-              },
-              "persistence_token": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9_-]{43}$",
-                "description": "Opaque review reference returned by validation."
-              },
-              "display_mode": {
-                "type": "string",
-                "enum": [
-                  "inline",
-                  "fullscreen"
-                ],
-                "description": "Optional presentation request. Omit to keep the normal host default."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/check-entries-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/check-entries-review.html",
-            "openai/outputTemplate": "ui://widget/check-entries-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Vouching review",
-            "openai/toolInvocation/invoked": "Rendered Vouching review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -2064,33 +1891,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/check-entries-review.html",
-          "name": "check_entries_review_widget",
-          "title": "Vouching review widget",
-          "description": "Renders Vouching review-session payloads with searchable rows and evidence details.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/check-entries-review.html"
-            },
-            "openai/widgetDescription": "Interactive Vouching review surface for support coverage, mismatches, missing support, manual-review rows, PDF extraction, and generated artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/ui": {
-              "availableDisplayModes": [
-                "inline",
-                "fullscreen"
-              ]
-            },
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -2107,13 +1908,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_concordato_plan_review before render_concordato_plan_review. Prefer the MCP widget for the Concordato Preventivo review handoff; use save_concordato_plan_decisions to persist actions and apply_concordato_plan_decisions to update applied_decisions.json and final_artifacts.json; fall back to Markdown only when MCP is unavailable."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_concordato_plan_review",
           "title": "Validate Concordato Preventivo review payload",
-          "description": "Validate a reference-bound persisted Concordato Preventivo review before rendering. The complete review rows remain local.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -2160,77 +1961,6 @@
               "review_reference"
             ],
             "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_concordato_plan_review",
-          "title": "Render Concordato Preventivo review",
-          "description": "Render the reference-bound Concordato Preventivo review. The model receives counts and status; the component receives the complete local review payload.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string",
-                "description": "Absolute path to the current portable customer-run context.json."
-              },
-              "review_reference": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "output_dir": {
-                    "type": "string"
-                  },
-                  "review_payload_content_sha256": {
-                    "type": "string",
-                    "pattern": "^[0-9a-f]{64}$"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "workflow",
-                  "run_id",
-                  "output_dir",
-                  "review_payload_content_sha256"
-                ],
-                "additionalProperties": false
-              },
-              "language": {
-                "type": "string",
-                "description": "Optional response language hint."
-              }
-            },
-            "required": [
-              "client_engagement",
-              "review_reference"
-            ],
-            "additionalProperties": false
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/concordato-plan-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/concordato-plan-review.html",
-            "openai/outputTemplate": "ui://widget/concordato-plan-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Concordato Preventivo review",
-            "openai/toolInvocation/invoked": "Rendered Concordato Preventivo review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -2433,13 +2163,10 @@
           },
           "_meta": {
             "ui": {
-              "resourceUri": "ui://widget/concordato-plan-review.html",
               "visibility": [
                 "app"
               ]
             },
-            "ui/resourceUri": "ui://widget/concordato-plan-review.html",
-            "openai/outputTemplate": "ui://widget/concordato-plan-review.html",
             "openai/widgetAccessible": true
           },
           "annotations": {
@@ -2550,13 +2277,10 @@
           },
           "_meta": {
             "ui": {
-              "resourceUri": "ui://widget/concordato-plan-review.html",
               "visibility": [
                 "app"
               ]
             },
-            "ui/resourceUri": "ui://widget/concordato-plan-review.html",
-            "openai/outputTemplate": "ui://widget/concordato-plan-review.html",
             "openai/widgetAccessible": true
           },
           "annotations": {
@@ -2567,27 +2291,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/concordato-plan-review.html",
-          "name": "concordato_plan_review_widget",
-          "title": "Concordato Preventivo review widget",
-          "description": "Renders Concordato Preventivo payloads with searchable procedure, creditor, issue, evidence, check, and appendix rows.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/concordato-plan-review.html"
-            },
-            "openai/widgetDescription": "Interactive Concordato Preventivo review for procedure, documents, creditor treatment, feasibility, issues, mechanical checks, and the numerical appendix.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -2601,7 +2305,8 @@
         "serverInfo": {
           "name": "vera-financial-analysis",
           "version": "0.2.9"
-        }
+        },
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
@@ -2637,13 +2342,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Pass review_payload_path to validate_journal_bank_review so the private payload is loaded inside the server. Render with the opaque reference and use get_journal_bank_case_context only for selected cases; request exact identifiers only when needed. The widget receives the complete payload through component-only metadata. Use save_journal_bank_decisions and apply_journal_bank_decisions for decisions."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_journal_bank_review",
           "title": "Validate Journal-Bank review payload",
-          "description": "Validate the Journal-Bank Reconciliation review-session payload before rendering. Call this first, then render_journal_bank_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -2734,121 +2439,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_journal_bank_review",
-          "title": "Render Journal-Bank review",
-          "description": "Render a Journal-Bank Reconciliation review-session payload as an MCP HTML widget for matched pairs, unmatched rows, diagnostics, and artifacts.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string",
-                "description": "Absolute path to the current portable customer-run context.json."
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "run_intake_path": {
-                "type": "string",
-                "description": "Optional local path to run_intake.json in the run output folder."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "artifact_items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "review_payload_path": {
-                "type": "string",
-                "description": "Preferred model-led input: local path to review_payload.json so private rows are loaded inside the MCP server."
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "ui_decisions_path": {
-                "type": "string",
-                "description": "Optional local path to ui_decisions.json in the run output folder."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              },
-              "final_artifacts_path": {
-                "type": "string",
-                "description": "Optional local path to final_artifacts.json in the run output folder."
-              },
-              "persistence_token": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9_-]{43}$",
-                "description": "Opaque review reference returned by validation."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/journal-bank-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/journal-bank-review.html",
-            "openai/outputTemplate": "ui://widget/journal-bank-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Journal-Bank review",
-            "openai/toolInvocation/invoked": "Rendered Journal-Bank review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -3160,34 +2750,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/journal-bank-review.html",
-          "name": "journal_bank_review_widget",
-          "title": "Journal-Bank review widget",
-          "description": "Renders Journal-Bank review-session payloads with searchable matched and unmatched rows.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/journal-bank-review.html"
-            },
-            "openai/widgetDescription": "Interactive Journal-Bank Reconciliation review surface for matched pairs, unmatched bank rows, unmatched journal rows, diagnostics, and generated artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/ui": {
-              "preferredDisplayMode": "fullscreen",
-              "availableDisplayModes": [
-                "inline",
-                "fullscreen"
-              ]
-            },
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -3204,13 +2767,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_journal_sampling_review before render_journal_sampling_review. Prefer the MCP widget for Journal Sampling review handoff; use save_journal_sampling_decisions to persist reviewer actions to ui_decisions.json and apply_journal_sampling_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_journal_sampling_review",
           "title": "Validate Journal Sampling review payload",
-          "description": "Validate the minimized Journal Sampling model-review context before rendering. The complete assured payload remains local.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3306,126 +2869,6 @@
               "model_review_context"
             ],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_journal_sampling_review",
-          "title": "Render Journal Sampling review",
-          "description": "Render the minimized Journal Sampling review context as an MCP HTML widget while complete control metadata remains local.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string",
-                "description": "Absolute path to the current portable customer-run context.json."
-              },
-              "model_review_context": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "review_ref": {
-                    "type": "string"
-                  },
-                  "review_payload_content_sha256": {
-                    "type": "string"
-                  },
-                  "review": {
-                    "type": "object",
-                    "properties": {
-                      "schema_version": {
-                        "type": "string"
-                      },
-                      "plugin": {
-                        "type": "string"
-                      },
-                      "workflow": {
-                        "type": "string"
-                      },
-                      "run_id": {
-                        "type": "string"
-                      },
-                      "language": {
-                        "type": "string"
-                      },
-                      "review_type": {
-                        "type": "string"
-                      },
-                      "items": {
-                        "type": "array",
-                        "items": {
-                          "type": "object"
-                        }
-                      },
-                      "item_count": {
-                        "type": "number"
-                      },
-                      "status": {
-                        "type": "string"
-                      }
-                    },
-                    "required": [
-                      "schema_version",
-                      "plugin",
-                      "workflow",
-                      "run_id",
-                      "items",
-                      "item_count"
-                    ],
-                    "additionalProperties": true
-                  },
-                  "intake": {
-                    "type": "object"
-                  },
-                  "minimization": {
-                    "type": "object"
-                  },
-                  "content_sha256": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "review_ref",
-                  "review_payload_content_sha256",
-                  "review",
-                  "content_sha256"
-                ],
-                "additionalProperties": true
-              }
-            },
-            "required": [
-              "model_review_context"
-            ],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/journal-sampling-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/journal-sampling-review.html",
-            "openai/outputTemplate": "ui://widget/journal-sampling-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Journal Sampling review",
-            "openai/toolInvocation/invoked": "Rendered Journal Sampling review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -3755,27 +3198,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/journal-sampling-review.html",
-          "name": "journal_sampling_review_widget",
-          "title": "Journal Sampling review widget",
-          "description": "Renders Journal Sampling review-session payloads with searchable sampled entries and audit details.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/journal-sampling-review.html"
-            },
-            "openai/widgetDescription": "Interactive Journal Sampling review surface for sampling parameters, filters, sampled entries, and generated artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -3792,13 +3215,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_client_file_preparation_review before render_client_file_preparation_review. Prefer the MCP widget for New Client · File Preparation review handoff; use save_client_file_preparation_decisions to persist reviewer actions to ui_decisions.json and apply_client_file_preparation_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_client_file_preparation_review",
           "title": "Validate New Client · File Preparation review payload",
-          "description": "Validate the New Client · File Preparation review-session payload before rendering. Call this first, then render_client_file_preparation_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3861,93 +3284,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_client_file_preparation_review",
-          "title": "Render New Client · File Preparation review",
-          "description": "Render a New Client · File Preparation review-session payload as an MCP HTML widget for document inventory, exceptions, fields, memo, and email review.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string"
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/client-file-preparation-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/client-file-preparation-review.html",
-            "openai/outputTemplate": "ui://widget/client-file-preparation-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering client file preparation review",
-            "openai/toolInvocation/invoked": "Rendered client file preparation review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -4217,27 +3553,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/client-file-preparation-review.html",
-          "name": "client_file_preparation_review_widget",
-          "title": "New Client · File Preparation review widget",
-          "description": "Renders New Client · File Preparation review-session payloads with searchable review items and source previews.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/client-file-preparation-review.html"
-            },
-            "openai/widgetDescription": "Interactive New Client · File Preparation review surface for document inventory, missing documents, fiscal fields, memo, and client email draft.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -4254,13 +3570,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Call validate_new_client_review before render_new_client_review. Save/apply only record professional review decisions; they never modify domain artifacts, sign documents, contact the client, or activate the relationship."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_new_client_review",
           "title": "Validate new client review",
-          "description": "Validate the private professional review before calling render_new_client_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -4356,121 +3672,6 @@
             "readOnlyHint": true,
             "destructiveHint": false,
             "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_new_client_review",
-          "title": "Open new client review",
-          "description": "Render the professional review surface without exposing the local output directory or raw client documents.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string"
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "contract_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_revision": {
-                    "type": "integer",
-                    "minimum": 1
-                  },
-                  "temporal_validity": {
-                    "type": "object"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "status": {
-                    "type": "string"
-                  },
-                  "item_count": {
-                    "type": "integer",
-                    "minimum": 0,
-                    "maximum": 2500
-                  },
-                  "items": {
-                    "type": "array",
-                    "maxItems": 2500,
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "source_artifacts": {
-                    "type": "object"
-                  },
-                  "basis_hashes": {
-                    "type": "object"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "contract_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "review_revision",
-                  "temporal_validity",
-                  "review_type",
-                  "status",
-                  "item_count",
-                  "items",
-                  "source_artifacts",
-                  "basis_hashes"
-                ],
-                "additionalProperties": true
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional current ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional current final_artifacts.json object."
-              }
-            },
-            "required": [
-              "review_payload"
-            ],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/new-client-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/new-client-review.html",
-            "openai/outputTemplate": "ui://widget/new-client-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering new client review",
-            "openai/toolInvocation/invoked": "Rendered new client review"
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": false,
             "openWorldHint": false
           }
         },
@@ -4793,27 +3994,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/new-client-review.html",
-          "name": "new_client_review_widget",
-          "title": "New Client professional setup review",
-          "description": "Interactive professional review of a new-client case.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/new-client-review.html"
-            },
-            "openai/widgetDescription": "Professional review of client facts, engagement scope, AML assessment, documents, and monitoring plan.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -4830,13 +4011,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "For a normal Open-item Reconciliation run, the primary visible handoff is the local browser review server from scripts/review_server.py plus the mandatory artifact_card.md in the output folder. State the localhost URL explicitly to the reviewer. This MCP server remains an optional integrated professional review surface. When using it, call validate_open_item_reconciliation_review with the complete review payload only from an app-private call. For model-led use, pass local run output paths such as review_payload_path and run_intake_path so the full payload is loaded inside the MCP server. Validation returns an opaque reference and a non-identifying case index. Pass that reference to render_open_item_reconciliation_review. Use get_open_item_reconciliation_case_context for at most 25 specifically selected cases at a time; request exact identifiers only when the accounting judgment requires them. The render tool returns openai/outputTemplate for ui://widget/open-item-reconciliation-review.html. Use save_open_item_reconciliation_decisions to persist reviewer actions to ui_decisions.json and apply_open_item_reconciliation_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected. Use review_ui.html only as a static fallback when the local browser server cannot start or the browser cannot be opened; static HTML can copy or download JSON but cannot persist decisions by itself."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_open_item_reconciliation_review",
           "title": "Validate Open-item Reconciliation review payload",
-          "description": "Validate the Open-item Reconciliation review-session payload before optional MCP rendering. Call this first, then render_open_item_reconciliation_review when using the integrated Claude surface.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -4924,118 +4105,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_open_item_reconciliation_review",
-          "title": "Render Open-item Reconciliation review",
-          "description": "Render an Open-item Reconciliation review-session payload as an optional MCP app for row review, checks, evidence requests, and artifacts. The normal visible handoff is the local browser server from scripts/review_server.py; call validate_open_item_reconciliation_review first when using this integrated Claude surface.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string",
-                "description": "Absolute path to the current portable customer-run context.json."
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "run_intake_path": {
-                "type": "string",
-                "description": "Optional local path to run_intake.json in the run output folder."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "language": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "review_payload_path": {
-                "type": "string",
-                "description": "Optional local path to review_payload.json. Use this instead of inlining large payloads."
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "ui_decisions_path": {
-                "type": "string",
-                "description": "Optional local path to ui_decisions.json in the run output folder."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              },
-              "final_artifacts_path": {
-                "type": "string",
-                "description": "Optional local path to final_artifacts.json in the run output folder."
-              },
-              "persistence_token": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9_-]{43}$",
-                "description": "Opaque reference returned by validation. Use it to render without resending the private review payload."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/open-item-reconciliation-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/open-item-reconciliation-review.html",
-            "openai/outputTemplate": "ui://widget/open-item-reconciliation-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Open-item Reconciliation review",
-            "openai/toolInvocation/invoked": "Rendered Open-item Reconciliation review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -5390,31 +4459,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/open-item-reconciliation-review.html",
-          "name": "open_item_reconciliation_review_widget",
-          "title": "Open-item Reconciliation review widget",
-          "description": "Interactive Open-item Reconciliation review surface for deterministic row checks, exceptions, missing evidence, workpaper artifacts, and follow-up requests.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "openai/widgetDescription": "Interactive Open-item Reconciliation review surface for deterministic row checks, exceptions, missing evidence, workpaper artifacts, and follow-up requests.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "ui": {
-              "prefersBorder": false,
-              "csp": {
-                "connectDomains": [],
-                "resourceDomains": [],
-                "frameDomains": []
-              }
-            }
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -5431,13 +4476,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Call validate_previdenza_inps_review before render_previdenza_inps_review. Use save_previdenza_inps_decisions and apply_previdenza_inps_decisions for durable decisions; persistence is confined to run_intake.output_dir."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_previdenza_inps_review",
           "title": "Validate previdenza INPS review",
-          "description": "Validate a bounded previdenza INPS review payload before rendering it. This tool does not write files.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -5505,98 +4550,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_previdenza_inps_review",
-          "title": "Render previdenza INPS review",
-          "description": "Validate and render facts, findings, calculations, missing evidence, authorities, audit checks, and artifacts in an interactive review widget.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string"
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string",
-                    "const": "previdenza-inps"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "language": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    },
-                    "maxItems": 2500
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional current ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/previdenza-inps-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/previdenza-inps-review.html",
-            "openai/outputTemplate": "ui://widget/previdenza-inps-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering previdenza INPS review",
-            "openai/toolInvocation/invoked": "Rendered previdenza INPS review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -5860,27 +4813,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/previdenza-inps-review.html",
-          "name": "previdenza_inps_review_widget",
-          "title": "Previdenza INPS review",
-          "description": "Interactive evidence and decision review for a local previdenza INPS case run.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/previdenza-inps-review.html"
-            },
-            "openai/widgetDescription": "Evidence-first review of previdenza INPS facts, findings, calculations, authorities, gaps, checks, and artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -5897,7 +4830,7 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_prompt_optimizer_review with the hash-bound local review reference before render_prompt_optimizer_review, then reuse the returned short-lived token. Prefer the MCP widget for final Prompt Optimizer package review; use save_prompt_optimizer_decisions to persist review actions and apply_prompt_optimizer_decisions to write applied_decisions.json plus final_artifacts.json status; use available, permitted native question controls or chat for simple pre-draft intake decisions."
+        "instructions": "Deliver this Vera workflow in chat and its documents."
       },
       "tools": [
         {
@@ -6007,13 +4940,10 @@
           },
           "_meta": {
             "ui": {
-              "resourceUri": "ui://widget/legal-tax-model.html",
               "visibility": [
                 "model"
               ]
             },
-            "ui/resourceUri": "ui://widget/legal-tax-model.html",
-            "openai/outputTemplate": "ui://widget/legal-tax-model.html",
             "openai/widgetAccessible": true
           }
         },
@@ -6075,7 +5005,7 @@
         {
           "name": "validate_prompt_optimizer_review",
           "title": "Validate Prompt Optimizer review payload",
-          "description": "Validate a hash-bound local Prompt Optimizer review reference (or a legacy inline payload) before rendering. Call this first, then render_prompt_optimizer_review with the returned short-lived token.",
+          "description": "Validate the existing component review using its declared inputs. Deliver the result in chat.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -6167,122 +5097,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_prompt_optimizer_review",
-          "title": "Render Prompt Optimizer review",
-          "description": "Render a validated Prompt Optimizer review through its short-lived token as an MCP HTML widget for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "client_engagement": {
-                "type": "string",
-                "description": "Current absolute path to the managed run context.json."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "review_reference": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "string",
-                    "enum": [
-                      "review_payload.json"
-                    ]
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_payload_sha256": {
-                    "type": "string",
-                    "pattern": "^[a-f0-9]{64}$"
-                  }
-                },
-                "required": [
-                  "path",
-                  "run_id",
-                  "review_payload_sha256"
-                ],
-                "additionalProperties": false
-              },
-              "persistence_token": {
-                "type": "string",
-                "description": "Opaque short-lived token returned by validation or rendering."
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/prompt-optimizer-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/prompt-optimizer-review.html",
-            "openai/outputTemplate": "ui://widget/prompt-optimizer-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Prompt Optimizer review",
-            "openai/toolInvocation/invoked": "Rendered Prompt Optimizer review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -6612,46 +5426,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/legal-tax-model.html",
-          "name": "legal_tax_model_check",
-          "title": "Legal/tax model selection",
-          "description": "Required model, observed identity and explicit user confirmation before preparation.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/legal-tax-model.html"
-            },
-            "openai/widgetDescription": "Interactive Prompt Optimizer review surface for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        },
-        {
-          "uri": "ui://widget/prompt-optimizer-review.html",
-          "name": "prompt_optimizer_review_widget",
-          "title": "Prompt Optimizer review widget",
-          "description": "Renders Prompt Optimizer review-session payloads with searchable validation checks and generated artifacts.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/prompt-optimizer-review.html"
-            },
-            "openai/widgetDescription": "Interactive Prompt Optimizer review surface for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -6668,13 +5443,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Call validate_registro_imprese_sari_review before render_registro_imprese_sari_review; save/apply use a run-scoped opaque persistence token and never perform portal actions."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_registro_imprese_sari_review",
           "title": "Valida revisione Registro Imprese e SARI",
-          "description": "Valida il payload di revisione prima della visualizzazione. Chiamare prima di render_registro_imprese_sari_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -6748,99 +5523,6 @@
             "readOnlyHint": true,
             "destructiveHint": false,
             "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_registro_imprese_sari_review",
-          "title": "Apri revisione Registro Imprese e SARI",
-          "description": "Mostra fonti ufficiali, passaggi DIRE, informazioni mancanti e controlli della pratica.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string"
-              },
-              "run_intake": {
-                "type": "object"
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "language": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "status": {
-                    "type": "string"
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "filing_status": {
-                    "type": "string"
-                  },
-                  "filing_authorized": {
-                    "type": "boolean"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "item_count",
-                  "items"
-                ],
-                "additionalProperties": true
-              },
-              "ui_decisions": {
-                "type": "object"
-              },
-              "final_artifacts": {
-                "type": "object"
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/registro-imprese-sari-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/registro-imprese-sari-review.html",
-            "openai/outputTemplate": "ui://widget/registro-imprese-sari-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Apertura revisione Registro Imprese",
-            "openai/toolInvocation/invoked": "Revisione Registro Imprese aperta"
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": false,
             "openWorldHint": false
           }
         },
@@ -7105,27 +5787,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/registro-imprese-sari-review.html",
-          "name": "registro_imprese_sari_review_widget",
-          "title": "Revisione Registro Imprese e SARI",
-          "description": "Superficie interattiva per la revisione professionale della pratica.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/registro-imprese-sari-review.html"
-            },
-            "openai/widgetDescription": "Revisione professionale di fonti ufficiali, passaggi DIRE, informazioni mancanti e controlli della pratica Registro Imprese.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -7141,13 +5803,13 @@
           "tools": {},
           "resources": {}
         },
-        "instructions": "Use validate_report_builder_review before render_report_builder_review. Prefer the MCP widget for Build Report review handoff; use save_report_builder_decisions to persist reviewer actions to ui_decisions.json and apply_report_builder_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_report_builder_review",
           "title": "Validate Build Report review payload",
-          "description": "Validate the Build Report review-session payload before rendering. Call this first, then render_report_builder_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -7218,101 +5880,6 @@
               "review_payload"
             ],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_report_builder_review",
-          "title": "Render Build Report review",
-          "description": "Render a Build Report review-session payload as an MCP HTML widget for report sections, table evidence, narrative gaps, and report artifacts.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_engagement": {
-                "type": "string",
-                "description": "Absolute path to the current portable customer-run context.json."
-              },
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              },
-              "expected_predecessor_checkpoint": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$",
-                "description": "Externally retained predecessor checkpoint. Required when validating or changing a successor review state."
-              }
-            },
-            "required": [
-              "review_payload"
-            ],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/report-builder-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/report-builder-review.html",
-            "openai/outputTemplate": "ui://widget/report-builder-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Build Report review",
-            "openai/toolInvocation/invoked": "Rendered Build Report review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -7584,27 +6151,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/report-builder-review.html",
-          "name": "report_builder_review_widget",
-          "title": "Build Report review widget",
-          "description": "Renders Build Report review-session payloads with searchable sections, table evidence, issues, and generated artifacts.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/report-builder-review.html"
-            },
-            "openai/widgetDescription": "Interactive Build Report review surface for report sections, table evidence, narrative gaps, and generated Word/Markdown artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -8195,7 +6742,7 @@
         },
         {
           "name": "vera_studio_work_panel_open",
-          "description": "Open the optional owner-local studio work panel. Register content stays in app metadata; calendar execution remains in the connected host workflow.",
+          "description": "Open the studio agenda for appointments, meetings and commitments. For “Lavori dello studio” (the directory of saved client work), use vera_workspace_open instead. Calendar execution stays in the connected host workflow.",
           "inputSchema": {
             "type": "object",
             "additionalProperties": false,
@@ -8210,7 +6757,8 @@
               ],
               "resourceUri": "ui://vera/studio-work-v1.html"
             }
-          }
+          },
+          "title": "Agenda dello studio"
         },
         {
           "name": "vera_studio_work_panel_page",
@@ -8497,13 +7045,13 @@
           "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_variance_analysis_review before render_variance_analysis_review. Prefer the MCP widget for Variance Analysis review handoff; use save_variance_analysis_decisions to persist reviewer actions to ui_decisions.json and apply_variance_analysis_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable."
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
           "name": "validate_variance_analysis_review",
           "title": "Validate Variance Analysis review payload",
-          "description": "Validate the Variance Analysis review-session payload before rendering. Call this first, then render_variance_analysis_review.",
+          "description": "Validate the existing component review using its declared inputs. Open the saved work with vera_open_review only if interactive review is needed.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -8571,98 +7119,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_variance_analysis_review",
-          "title": "Render Variance Analysis review",
-          "description": "Render a Variance Analysis review-session payload as an MCP HTML widget for drivers, charts, source contexts, follow-ups, and artifacts.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "client_engagement": {
-                "type": "string",
-                "description": "Current absolute path to the managed Vera run context.json."
-              },
-              "persistence_token": {
-                "type": "string",
-                "description": "Expiring local reference returned by review validation."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/variance-analysis-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/variance-analysis-review.html",
-            "openai/outputTemplate": "ui://widget/variance-analysis-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Variance Analysis review",
-            "openai/toolInvocation/invoked": "Rendered Variance Analysis review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -8928,27 +7384,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/variance-analysis-review.html",
-          "name": "variance_analysis_review_widget",
-          "title": "Variance Analysis review widget",
-          "description": "Renders Variance Analysis review-session payloads with searchable driver rows, chart artifacts, contexts, and follow-up requests.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/variance-analysis-review.html"
-            },
-            "openai/widgetDescription": "Interactive Variance Analysis review surface for variance drivers, generated charts, source contexts, follow-up requests, and final artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -10133,7 +8569,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.535",
+          "version": "0.1.541",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
@@ -10155,6 +8591,92 @@
         }
       },
       "tools": [
+        {
+          "name": "vera_open_review",
+          "title": "Apri revisione",
+          "description": "Open the one saved review for this exact Vera work in the Codex side panel, from either chat or Studio Archive. Supply work_ref or all three archived identifiers. For an operator-bound studio tool, pass its workflow and exact work_ref. Routine results and single questions stay in chat.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "work_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "workflow": {
+                "enum": [
+                  "browser-automation",
+                  "comunicazione-professionale",
+                  "fusione-guidata",
+                  "presenza-digitale-studio",
+                  "trasformazione"
+                ]
+              },
+              "client_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "engagement_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "run_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ],
+              "resourceUri": "ui://vera/workspace-v1.html"
+            }
+          }
+        },
+        {
+          "name": "vera_workspace_review_route",
+          "title": "Riprendi la revisione",
+          "description": "Resolve the same saved work inside the open panel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "work_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "work_ref"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        },
         {
           "name": "vera_workspace_browser_catalogue",
           "title": "Processi web e lotti",
@@ -32581,7 +31103,7 @@
         {
           "name": "vera_workspace_open",
           "title": "Lavori dello studio",
-          "description": "Open the maintained local Studio Archive directory, then explicitly select one client, engagement and run. Operator-bound pilots retain their exact allowlist. Directory metadata stays in the panel; it is not a professional approval.",
+          "description": "Open “Lavori dello studio”, the Studio Archive directory for saved client work. Call without arguments for the directory; select a client, engagement and run only when requested. Operator-bound pilots retain their exact allowlist. Directory metadata stays in the panel; it is not a professional approval.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -36148,6 +34670,9 @@
                 "minLength": 1,
                 "maxLength": 200
               },
+              "resume_review": {
+                "type": "boolean"
+              },
               "offset": {
                 "type": "integer",
                 "minimum": 0
@@ -36654,7 +35179,8 @@
         "serverInfo": {
           "name": "vera-sales-plan",
           "version": "0.1.10"
-        }
+        },
+        "instructions": "Deliver results in chat. For interactive review use vera_open_review on the saved work in this chat. Do not launch a browser or another widget."
       },
       "tools": [
         {
@@ -36688,7 +35214,7 @@
         "capabilities": {
           "tools": {}
         },
-        "instructions": "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing."
+        "instructions": "Deliver this Vera workflow in chat and its documents."
       },
       "tools": [
         {

@@ -888,6 +888,16 @@
         "mcp-services.json"
       ],
       "on_violation": "Return a protocol error for unknown targets; preserve worker failures without replaying potentially completed writes."
+    },
+    {
+      "id": "one-saved-work-review",
+      "control": "Both launch routes recheck the same local owner and work before returning the editor route. The panel reads the selected saved item privately. The model-visible launch summary contains status and an opaque work reference when supplied. Follow-up discussion uses the current chat and the selected workflow projection. The catalogue hides the independent component renderers.",
+      "implemented_by": [
+        "mcp/workspace.cjs",
+        "scripts/native_workspace.py",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject an unknown, ambiguous or unauthorised work and leave the saved work unchanged."
     }
   ],
   "governed_paths": [
@@ -1108,12 +1118,14 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "cc3befd4430b972b9e13bd8b403b2b0217fd5ec63cceaefb84a7c7befa4a6780",
+    "source_fingerprint": "03ef5a5839db4ffddfabee8b9ec495df8a5db3b664bdf91b9e2a725f34c89c4c",
     "reviewed_at": "2026-10-29"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",
-    "plugins/bilancio-xbrl-it/ui/area-review.js"
+    "plugins/bilancio-xbrl-it/ui/area-review.js",
+    "plugins/vera/ui/review-routes.json",
+    "scripts/build_product_mcp_catalog.cjs"
   ],
   "runtime_profiles": [
     "openai-codex"

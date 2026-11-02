@@ -3396,7 +3396,11 @@ def run_raw_input_reconciliation(
         "run_intake_path": managed_reference(review_session.run_intake_path),
         "review_payload_path": managed_reference(review_session.review_payload_path),
         "ui_decisions_path": managed_reference(review_session.ui_decisions_path),
-        "review_html_path": managed_reference(review_session.review_html_path),
+        **(
+            {"review_html_path": managed_reference(review_session.review_html_path)}
+            if review_session.review_html_path
+            else {}
+        ),
         "final_artifacts_path": managed_reference(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }

@@ -644,7 +644,11 @@ def build_reconciliation_artifacts(
         "run_intake_path": str(review_session.run_intake_path),
         "review_payload_path": str(review_session.review_payload_path),
         "ui_decisions_path": str(review_session.ui_decisions_path),
-        "review_html_path": str(review_session.review_html_path),
+        **(
+            {"review_html_path": str(review_session.review_html_path)}
+            if review_session.review_html_path
+            else {}
+        ),
         "final_artifacts_path": str(review_session.final_artifacts_path),
         "review_item_count": review_session.review_item_count,
     }

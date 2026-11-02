@@ -23,7 +23,7 @@
       {
         "id": "selected-task-evidence",
         "purpose": "Carry out vera using the selected evidence and user instructions",
-        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Native calculation jobs retain their bound package. Component reviews and product MCP services verify and use the installed release without a persistent update gateway or routing to an older release. An update during use may require reopening the chat; interrupted mutations are not automatically replayed. This changes local code lifetime, not model payloads or external recipients.",
+        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Native calculation jobs retain their bound package. Component reviews and product MCP services verify and use the installed release without a persistent update gateway or routing to an older release. An update during use may require reopening the chat; interrupted mutations are not automatically replayed. This changes local code lifetime, not model payloads or external recipients. Opening a saved review sends the launch status and, when supplied, an opaque work reference to the host model. The registered panel receives case data in app-only metadata. A user-selected discussion passes the selection reference to the current chat and can retrieve the workflow’s bounded evidence. Opening a directory or review alone does not send the whole table to chat.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork",
@@ -60,7 +60,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "c045cfdf5101d519d2599e345d3d9e45d2e56a1de523252ea1e6d30a18e3b585"
+    "source_fingerprint": "778be5f18094a2a7129bcdffe94fe042b612fcc5e496739ca1007f79b69827aa"
   },
   "service_ids": [
     "cnc-authenticated-review",
@@ -230,6 +230,10 @@
     }
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/ui/review-routes.json",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "scripts/build_product_mcp_catalog.cjs"
   ]
 }

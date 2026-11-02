@@ -1625,6 +1625,9 @@ def serve_review(
 ) -> None:
     """Serve the review UI on localhost and optionally open the system browser."""
 
+    if (Path(__file__).resolve().parents[3] / "ui/review-routes.json").is_file():
+        LOGGER.info("Apri la revisione delle partite da Lavori dello studio in Vera.")
+        return
     directory = _output_dir(output_dir)
     safe_host = _validate_loopback_host(host)
     _readable_client_context(directory)

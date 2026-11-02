@@ -90,10 +90,34 @@ def test_answer_panel_removed_only_from_vera_discovery(product, host):
     assert ("ui://widget/deep-research-review.html" in json.dumps(catalog)) == (
         product == "lucia"
     )
-    assert "render_prompt_optimizer_review" in tool_names
+    assert "validate_prompt_optimizer_review" in tool_names
+    assert ("render_prompt_optimizer_review" in tool_names) == (product == "lucia")
+    assert ("ui://widget/prompt-optimizer-review.html" in json.dumps(catalog)) == (
+        product == "lucia"
+    )
     assert entries["modules/deep-research-validator/scripts/package_validation.py"]
     assert entries["modules/deep-research-validator/scripts/research_record.py"]
     assert entries["modules/deep-research-validator/scripts/adversarial_opinion.py"]
+
+
+@pytest.mark.parametrize("host", ["codex", "cowork"])
+def test_archive_directory_and_agenda_are_distinct_in_model_tool_discovery(host):
+    entries = _package_entries("vera", host)
+    catalog = json.loads(entries["mcp-catalog.json"])
+    labels = {"Lavori dello studio", "Agenda dello studio"}
+    advertised = [
+        tool
+        for service in catalog["services"]
+        for tool in service["tools"]
+        if tool.get("title") in labels and "model" in tool["_meta"]["ui"]["visibility"]
+    ]
+
+    assert sorted((tool["title"], tool["name"]) for tool in advertised) == [
+        ("Agenda dello studio", "vera_studio_work_panel_open"),
+        ("Lavori dello studio", "vera_workspace_open"),
+    ]
+    assert all(not tool["inputSchema"].get("required") for tool in advertised)
+    assert len({tool["_meta"]["ui"]["resourceUri"] for tool in advertised}) == 2
 
 
 @pytest.mark.parametrize("host", ["codex", "cowork", "chatgpt"])

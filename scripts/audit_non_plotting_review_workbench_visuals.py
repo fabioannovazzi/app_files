@@ -34,11 +34,11 @@ DEFAULT_VIEWPORTS = {
 }
 DEFAULT_LANGUAGES = ("en",)
 LANGUAGE_LABELS = {
-    "en": ("Save decisions", "Final outputs", "Helper execution routes"),
-    "it": ("Salva decisioni", "Output finali", "Postura dati"),
-    "fr": ("Enregistrer decisions", "Sorties finales", "Posture donnees"),
-    "de": ("Entscheidungen speichern", "Finale Ausgaben", "Datenhaltung"),
-    "es": ("Guardar decisiones", "Salidas finales", "Rutas de ejecución auxiliares"),
+    "en": ("Save decisions",),
+    "it": ("Salva decisioni",),
+    "fr": ("Enregistrer decisions",),
+    "de": ("Entscheidungen speichern",),
+    "es": ("Guardar decisiones",),
 }
 SEVERITY_RANK = {
     "info": 1,
@@ -412,10 +412,6 @@ def _evaluate_page(page: Any, language: str) -> dict[str, Any]:
   const selectors = {
     appTitle: !!document.querySelector("#app-title"),
     details: !!document.querySelector("#details"),
-    finalOutputs: !!document.querySelector("#artifact-strip .artifact-header"),
-    dataPosture: (document.querySelector("#data-posture")?.innerText || "").trim().length > 40,
-    executionProvenance: document.querySelector("#execution-provenance")?.classList.contains("is-visible"),
-    safeguards: (document.querySelector("#review-safeguards")?.innerText || "").trim().length > 40,
     emptyPayload: text.includes("No review payload loaded"),
   };
   const missingExpectedLabels = expectedLabels.filter((label) => !text.includes(label));
@@ -431,7 +427,7 @@ def _evaluate_page(page: Any, language: str) -> dict[str, Any]:
     rowCount: rows.length,
     decisionCount: decisionChoices.length,
     selectedRowText: rows[0]?.innerText || "",
-    detailTextLength: (document.querySelector("#details")?.innerText || "").trim().length,
+    selectedTitle: document.querySelector("#details h3")?.textContent?.trim(),
     selectors,
     documentScrollWidth: document.documentElement.scrollWidth,
     bodyScrollWidth: document.body.scrollWidth,
@@ -487,14 +483,6 @@ def _run_viewport(
         report.document_scroll_width = int(result["documentScrollWidth"])
         report.viewport_width = int(result["viewportWidth"])
 
-        if report.body_text_length < 500:
-            report.issues.append(
-                _issue(
-                    "high",
-                    "body_text_too_short",
-                    "Rendered workbench body text is unexpectedly short.",
-                )
-            )
         if report.row_count < target.item_count:
             report.issues.append(
                 _issue(
@@ -502,6 +490,10 @@ def _run_viewport(
                     "missing_demo_rows",
                     f"Rendered {report.row_count} queue rows for {target.item_count} demo items.",
                 )
+            )
+        if not result["selectedTitle"]:
+            report.issues.append(
+                _issue("high", "missing_finding", "The selected finding has no title.")
             )
         if report.decision_count == 0:
             report.issues.append(
@@ -548,14 +540,6 @@ def _run_viewport(
                         f"Expected visible workbench section {key} is missing.",
                     )
                 )
-        if int(result["detailTextLength"]) < 80:
-            report.issues.append(
-                _issue(
-                    "medium",
-                    "detail_panel_too_thin",
-                    "Selected detail panel did not render enough evidence/decision text.",
-                )
-            )
         overflow_nodes = result["overflowNodes"]
         scroll_width = max(
             int(result["documentScrollWidth"]),

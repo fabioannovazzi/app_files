@@ -84,15 +84,10 @@ preparation engine as `../../modules/client-file-preparation` when installed or
 Read that module's `skills/new-client/SKILL.md` completely. When incoming
 documents need preparation, also read the engine's
 `skills/client-file-preparation/SKILL.md` completely and execute that as phase
-one. Both MCP toolsets belong to this workflow:
-
-- `validate_client_file_preparation_review`,
-  `render_client_file_preparation_review`,
-  `save_client_file_preparation_decisions`, and
-  `apply_client_file_preparation_decisions` review phase one;
-- `validate_new_client_review`, `render_new_client_review`,
-  `save_new_client_decisions`, and `apply_new_client_decisions` review the
-  professional-setup phases.
+one. Deliver the result of each phase in chat. When a phase needs review, call
+`vera_open_review` on that phase’s saved run. Revising prepared client files
+and reviewing the subsequent engagement are distinct jobs. Do not open a
+second editor for the same phase. Read `../vera/references/review-routing.md`.
 
 Treat the relevant resolved module root as the plugin working directory for each
 command. Present every phase and artifact to the user under **New Client**.
@@ -146,20 +141,5 @@ seal each group file through the separate Archive closure before explicitly
 selecting its canonical JSON and originals as upstream audit inputs. Only an
 explicit selected-source discussion returns a bounded excerpt to the model.
 
-When host MCP tools are unavailable, use each resolved module's persistent
-loopback workbench instead of treating chat text as saved decisions. From an
-installed/package module root, run:
-
-```bash
-python scripts/review_server.py <phase-output-directory>
-```
-
-From either component root in repository source, run:
-
-```bash
-python ../../scripts/serve_review_workbench.py <phase-output-directory> --plugin-dir .
-```
-
-The packaged workbench invokes the same validate/render/save/apply contract.
-If it cannot run, the review may continue in Markdown for inspection only;
-leave its JSON decisions pending and say they were not applied.
+If the panel is unavailable, deliver the prepared documents in chat and identify
+any outstanding decisions. Reopen the same saved work when review is needed.

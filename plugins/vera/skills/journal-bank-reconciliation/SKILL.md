@@ -71,12 +71,11 @@ the Archive import host. If any input is unavailable, explain the access problem
 and folder-connection option immediately, before creating anything. After a late
 import failure, report and reuse the existing client and engagement IDs.
 
-For a prepared reconciliation, validate the saved review and render its opaque
-reference with `render_journal_bank_review`. The normal render requests the
-expanded Codex panel for those same rows. If the host keeps the review inline,
-“Apri pannello” requests expansion again. To reopen it from the thread's
-“Lavori dello studio” entry, select the same client, engagement and run, then
-“Apri lavoro”. Opening the saved review does not require another calculation.
+For a prepared reconciliation that needs interactive review, call
+`vera_open_review` with the exact saved run identifiers. From **Lavori dello studio**
+choose **Apri lavoro** to reopen that same bank review. Use the chat and files
+for routine delivery. Do not recalculate or launch a browser copy.
+Read `../vera/references/review-routing.md`.
 
 For Studio Archive navigation or native preparation, use `vera_workspace_open` when
 callable and the exact Studio Archive run is authorised through the owned archive

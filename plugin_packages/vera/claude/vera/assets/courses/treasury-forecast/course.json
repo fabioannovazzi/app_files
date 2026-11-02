@@ -80,7 +80,7 @@
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_server.py",
-      "sha256": "20d5d6820a90f8679ccc11c563b4420a1822769c426378a11b529988c8e4581f"
+      "sha256": "dd1c2dc5be546e269ccfdbfa918fefdf8d92a0d53529df1e3c038530e7fe53b5"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
@@ -88,7 +88,7 @@
     },
     {
       "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/SKILL.md",
-      "sha256": "16fc9ad2e872382f17edd46dc110977f5fd6a2f99852873b95d79d572d6b5da3"
+      "sha256": "d7222579876db330289367f69bd3914f81a609f8f9f8980f7d63486ef77db238"
     },
     {
       "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/references/geneva.md",
@@ -140,7 +140,7 @@
     },
     {
       "path": "skills/mparanza-treasury-forecast/SKILL.md",
-      "sha256": "470974da283d75b91c9644960125518ac078dd53e17034a2611cf6c98b749f1b"
+      "sha256": "2154de1d43320820fea64f440f10f2cda3c604a3feb034e79e3ada23acf6792f"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -458,5 +458,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a7cd4f918c6f92f8e9424bb90c8be67cd573117d8568df3f0b8495d7447d72cc"
+  "canonical_course_sha256": "bc601dc8a54daabe0fa6484c7e69d950219f7586b512e4cdc789df9d84c88952"
 }
