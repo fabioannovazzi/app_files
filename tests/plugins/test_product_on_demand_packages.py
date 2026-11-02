@@ -90,7 +90,11 @@ def test_answer_panel_removed_only_from_vera_discovery(product, host):
     assert ("ui://widget/deep-research-review.html" in json.dumps(catalog)) == (
         product == "lucia"
     )
-    assert "render_prompt_optimizer_review" in tool_names
+    assert "validate_prompt_optimizer_review" in tool_names
+    assert ("render_prompt_optimizer_review" in tool_names) == (product == "lucia")
+    assert ("ui://widget/prompt-optimizer-review.html" in json.dumps(catalog)) == (
+        product == "lucia"
+    )
     assert entries["modules/deep-research-validator/scripts/package_validation.py"]
     assert entries["modules/deep-research-validator/scripts/research_record.py"]
     assert entries["modules/deep-research-validator/scripts/adversarial_opinion.py"]
