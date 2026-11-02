@@ -1001,6 +1001,10 @@ def _baseline_integrity_errors(
     )
     errors = list(delta_errors)
     roots = _source_roots(output_dir)
+    try:
+        validate_exact_implementation_receipts(envelope, artifact_roots=roots)
+    except (OSError, ValueError) as exc:
+        return [*errors, f"Original implementation replay failed: {exc}"], set()
     for receipt in envelope.get("artifact_receipts", []):
         if not isinstance(receipt, dict):
             errors.append("Original envelope contains a non-object artifact receipt.")

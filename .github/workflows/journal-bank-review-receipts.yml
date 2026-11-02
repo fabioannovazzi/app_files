@@ -37,6 +37,18 @@ jobs:
           python -m isort --check-only plugins/vera/scripts/native_bank_preparation.py tests/plugins/test_vera_native_bank_preparation.py tests/plugins/test_vera_native_bank_drafts.py
           python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/native_bank_preparation.py
           python -m bandit -q -ll plugins/vera/scripts/native_bank_preparation.py
+      - name: Verify retained review population, feedback and scoped navigation
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_bank_review_feedback.py
+          tests/plugins/test_vera_workspace_navigation.py
+      - name: Check review feedback regressions and UI syntax
+        run: |
+          python -m black --check tests/plugins/test_vera_bank_review_feedback.py tests/plugins/test_vera_workspace_navigation.py
+          python -m isort --check-only tests/plugins/test_vera_bank_review_feedback.py tests/plugins/test_vera_workspace_navigation.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports tests/plugins/test_vera_bank_review_feedback.py tests/plugins/test_vera_workspace_navigation.py
+          node --check plugins/vera/ui/workspace.js
+          node --check plugins/journal-bank-reconciliation/mcp/server.cjs
 
   review-receipts:
     needs: product-archives

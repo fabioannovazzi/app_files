@@ -239,10 +239,15 @@ def dispatch(
     tenant = os.environ["VERA_WORKSPACE_TENANT_ID"]
     implementation = engine_call(root, {"operation": "implementation"})["sha256"]
     if saved:
-        if saved["implementation_sha256"] != implementation:
+        if (
+            saved["implementation_sha256"] != implementation
+            and saved["status"] != "reconciled"
+        ):
             raise ValueError(
                 "Bank inspection belongs to a changed maintained implementation"
             )
+        # Completed preparation remains readable after an update. This path
+        # cannot execute again; current result receipts are verified downstream.
         verify_copies(base, saved["selection"], inputs)
         generation = base / saved["generation"]
         if tree_hash(generation) != saved["generation_hashes"]:

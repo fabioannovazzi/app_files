@@ -269,7 +269,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "756c55b48bdeb926edac689e8dd44d8816d69ef40fabf2e81b474ab4b5ece750",
+      "sha256": "569bf9daef16b76fcfc9df279d32c6fdf3ee9fb996c8da9711e2deb19f3cb0fd",
       "languages": [
         "it",
         "en",
@@ -294,7 +294,7 @@
         "de": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
         "es": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes."
       },
-      "source_sha256": "b8c076c2b6f50fbaab70b3a9a2a7b8e9929d88b1aad420585fee0eea89206135"
+      "source_sha256": "03ed2f60583f2d52b67a915d8a967204a85b1d9f0b8d5bb26a5054db95106e4f"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
@@ -617,7 +617,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "d7ed8337324091e85886cc06bd33f0b9acaa2892c3db8739ff812b7859ed13ec",
+      "sha256": "dacae2cf193ecf0a2bb7c9f254b64a238d546d24a8e10165e080369b4d72447d",
       "languages": [
         "it",
         "en",
@@ -642,7 +642,7 @@
         "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
         "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       },
-      "source_sha256": "0fc33a169d00a46973263ecffd391e1abf10a37f4c70fce442bfe9ab6effb6ef"
+      "source_sha256": "8141f8c292f3f9c21c8a0298b61312b397807147d172252a0f363cef71d25e78"
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",

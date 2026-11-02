@@ -137,7 +137,7 @@
     },
     {
       "path": "scripts/native_bank_preparation.py",
-      "sha256": "28ee496a7aeb9f3eadd70b45b31cba11140f7b3cc0dae16520dbdce4838a6c42"
+      "sha256": "fd5c8b7b393c0b343bbc736336c2b9c836f54f74ea0642fdb1a8a5dbec3bf2cd"
     },
     {
       "path": "scripts/native_cnc.py",
@@ -909,5 +909,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "041d1a64dd25654e6d57f75568ab93c993963b6bce892739cc42e6b648764304"
+  "canonical_course_sha256": "6943d9fe0d00d41c586a320968d0a71902739708ef9d7cf7f08eb5ab272d676b"
 }

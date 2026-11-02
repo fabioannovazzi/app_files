@@ -916,6 +916,14 @@ def snapshot(
             data["local_review_read_only"] = loaded["run"]["status"] != "running"
         revision = start_revision
         all_items = data["review_payload"]["items"]
+        if component == "journal-bank-reconciliation":
+            # Technical outputs remain in Files; the review queue contains the
+            # producer's accounting cases, not artifact-existence check rows.
+            all_items = [
+                item
+                for item in all_items
+                if item["item_type"] not in {"review_artifact", "workpaper_artifact"}
+            ]
         intake_counts = None
         if component == "client-file-preparation":
             from native_intake_views import (

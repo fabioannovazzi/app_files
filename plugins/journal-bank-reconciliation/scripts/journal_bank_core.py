@@ -6834,10 +6834,12 @@ def _validate_implementation_spec_coverage(roots: dict[str, Path]) -> None:
     )
 
 
-def build_implementation_artifact_receipts() -> list[dict[str, Any]]:
+def build_implementation_artifact_receipts(
+    roots: dict[str, Path] | None = None,
+) -> list[dict[str, Any]]:
     """Snapshot the exact ordered transitive implementation set."""
 
-    roots = implementation_artifact_roots()
+    roots = roots or implementation_artifact_roots()
     _validate_implementation_spec_coverage(roots)
     specs = (
         IMPLEMENTATION_ARTIFACT_SPECS
@@ -6863,12 +6865,51 @@ def build_implementation_artifact_receipts() -> list[dict[str, Any]]:
     return receipts
 
 
+def _retained_implementation_roots(roots: dict[str, Path]) -> dict[str, Path]:
+    """Read original indexed code as evidence; never import or execute it."""
+    run = roots.get("run")
+    if run is None:
+        raise ValueError("Historical implementation needs a retained run binding")
+    candidates = (run, *run.parents)
+    run_root = next(
+        (parent for parent in candidates if (parent / "context.json").is_file()), None
+    )
+    if run_root is None:
+        raise ValueError("Historical implementation needs a retained run binding")
+    binding_path = _ordinary_single_link_implementation_file(
+        run_root, "execution-runtime.json"
+    )
+    binding = json.loads(binding_path.read_bytes())
+    digest = binding.get("package_sha256")
+    if not isinstance(digest, str) or re.fullmatch(r"[0-9a-f]{64}", digest) is None:
+        raise ValueError("Invalid historical execution package binding")
+    if os.environ.get("MPARANZA_RUNTIME_ROOT"):
+        runtime = Path(os.environ["MPARANZA_RUNTIME_ROOT"]).expanduser()
+    elif os.name == "nt":
+        runtime = (
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home() / "AppData/Local")))
+            / "mpr"
+        )
+    else:
+        runtime = Path.home() / ".local/share/mparanza/runtime"
+    package = runtime / "code" / digest
+    index = _ordinary_single_link_implementation_file(package, "execution-files.json")
+    if hashlib.sha256(index.read_bytes()).hexdigest() != digest:
+        raise ValueError("Historical execution index changed")
+    component = package / "modules/journal-bank-reconciliation"
+    return {
+        "implementation": component,
+        "shared_implementation": component / "vendor/modules/vera_assurance",
+        "pdf_implementation": component / "vendor/modules/vera_journal_pdf",
+    }
+
+
 def validate_exact_implementation_receipts(
     envelope: dict[str, Any],
     *,
     artifact_roots: dict[str, Path] | None = None,
 ) -> list[dict[str, Any]]:
-    """Replay the exact ordered code receipts against ordinary current bytes."""
+    """Replay exact code receipts against current or run-bound retained bytes."""
 
     expected = build_implementation_artifact_receipts()
     expected_refs = [receipt["artifact_id"] for receipt in expected]
@@ -6883,9 +6924,22 @@ def validate_exact_implementation_receipts(
         for receipt in raw_artifacts
         if isinstance(receipt, dict) and receipt.get("role") == "implementation"
     ]
+    roots = (
+        artifact_roots
+        if artifact_roots is not None
+        else implementation_artifact_roots()
+    )
     if implementation_receipts != expected:
-        raise ValueError("assurance implementation receipts are not exact")
-    roots = artifact_roots or implementation_artifact_roots()
+        try:
+            retained = _retained_implementation_roots(roots)
+            historical = build_implementation_artifact_receipts(retained)
+        except (OSError, ValueError, RuntimeError) as exc:
+            raise ValueError("assurance implementation receipts are not exact") from exc
+        if implementation_receipts != historical:
+            raise ValueError(
+                "assurance historical implementation receipts are not exact"
+            )
+        roots.update(retained)
     for receipt in implementation_receipts:
         validate_artifact_receipt(roots, receipt)
     return implementation_receipts

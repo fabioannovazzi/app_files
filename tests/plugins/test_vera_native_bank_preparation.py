@@ -171,12 +171,100 @@ const result = {initial, inspected, page, reviewed, ready, reconciled, view};
     assert result["reconciled"]["professional_approval"] is False
     assert result["reconciled"]["run_completed"] is False
     assert result["view"]["workflow"] == "journal-bank-reconciliation"
+    assert result["view"]["total"] == 1
+    assert result["view"]["items"][0]["item_type"] == "matched_pair"
     assert (output / "reconciliation/review_payload.json").is_file()
     recipe = next((output / "bank-preparation").glob("review-*/reviewed_recipe.json"))
     assert (
         json.loads(recipe.read_bytes())["relationship"]["decision"]["reviewer_ref"]
         == "fictional-reviewer"
     )
+
+
+@pytest.mark.parametrize("source_change", [None, "bytes", "foreign", "link"])
+def test_native_bank_results_continue_into_managed_semantic_review(
+    initial_bank, source_change
+):
+    """Exercise the native producer/semantic consumer boundary, without a provider."""
+    from tests.plugins.test_journal_bank_reconciliation_plugin import (
+        _semantic_cli_fixture_command,
+    )
+
+    env, output, _ = initial_bank
+    rpc_program(
+        env,
+        INITIAL
+        + REVIEW
+        + "const result = payload(call('vera_workspace_bank_reconcile', "
+        "{...scopeBank(ready), idempotency_key:'fictional-reconcile'}));",
+    )
+    bank_source = next((output / "bank-preparation/sources/bank").glob("*/*.csv"))
+    if source_change == "bytes":
+        bank_source.write_bytes(bank_source.read_bytes().replace(b"80.00", b"90.00"))
+    elif source_change == "foreign":
+        foreign = bank_source.parent.with_name("input_" + "f" * 24)
+        foreign.mkdir()
+        (foreign / bank_source.name).write_bytes(bank_source.read_bytes())
+    elif source_change == "link":
+        original = bank_source.with_suffix(".original")
+        bank_source.rename(original)
+        bank_source.symlink_to(original)
+
+    completed = subprocess.run(
+        [
+            *_semantic_cli_fixture_command(),
+            "prepare",
+            str(output / "reconciliation"),
+            "--output-dir",
+            str(output / "semantic-review"),
+            "--client-engagement",
+            str(output.parent / "context.json"),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=120,
+    )
+
+    if source_change is not None:
+        assert completed.returncode == 2
+        assert "source cop" in completed.stderr.lower()
+        assert not (output / "semantic-review/residual_candidate_graph.json").exists()
+        return
+    assert completed.returncode == 0, completed.stderr
+    graph = json.loads(
+        (output / "semantic-review/residual_candidate_graph.json").read_bytes()
+    )
+    assert graph["selected_components"] == []
+
+
+def test_reconciled_bank_remains_readable_after_implementation_update(initial_bank):
+    """An older preparation identity cannot prevent opening saved results."""
+    env, output, _ = initial_bank
+    rpc_program(
+        env,
+        INITIAL
+        + REVIEW
+        + "const result = payload(call('vera_workspace_bank_reconcile', "
+        "{...scopeBank(ready), idempotency_key:'fictional-reconcile'}));",
+    )
+    state_path = output.parent / ".native-workspace/bank-preparation.json"
+    state = json.loads(state_path.read_bytes())
+    state["implementation_sha256"] = "0" * 64
+    state_path.write_text(json.dumps(state))
+    before = state_path.read_bytes()
+
+    result = rpc_program(
+        env,
+        "const page = payload(call('vera_workspace_bank_setup', {work_ref:'initial-bank'}));"
+        "const result = {page, retry:call('vera_workspace_bank_reconcile', "
+        "{work_ref:page.work_ref, revision:page.revision, review_ticket:page.review_ticket,"
+        " human_reviewed:true, idempotency_key:'not-a-new-execution'})};",
+    )
+
+    assert result["page"]["status"] == "reconciled"
+    assert result["retry"]["isError"] is True
+    assert state_path.read_bytes() == before
 
 
 @pytest.mark.parametrize(

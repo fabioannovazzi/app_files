@@ -395,6 +395,7 @@ function toolDefinitions() {
       review_type: { type: "string" },
       items: { type: "array", items: { type: "object" } },
       item_count: { type: "number" },
+      artifact_items: { type: "array", items: { type: "object" } },
       status: { type: "string" },
     },
     ["schema_version", "plugin", "workflow", "run_id", "items", "item_count"],
@@ -692,6 +693,18 @@ function validateReviewPayload(inputArgs) {
     throw new Error("review_payload.item_count must equal review_payload.items.length");
   }
   reviewPayload.items.forEach((item, index) => validateItem(item, index));
+  // Retained runs may include technical file checks in the old case population.
+  // Validate their original count first, then project them into file metadata;
+  // never rewrite the sealed source payload or manufacture review decisions.
+  const technicalTypes = new Set(["review_artifact", "workpaper_artifact"]);
+  const technicalItems = reviewPayload.items.filter(item => technicalTypes.has(item.item_type));
+  const accountingItems = reviewPayload.items.filter(item => !technicalTypes.has(item.item_type));
+  const actionablePayload = technicalItems.length ? {
+    ...reviewPayload,
+    items: accountingItems,
+    item_count: accountingItems.length,
+    artifact_items: [...(reviewPayload.artifact_items || []), ...technicalItems],
+  } : reviewPayload;
   const payload = {
     widget_type: "journal_bank_review",
     client_engagement:
@@ -699,7 +712,7 @@ function validateReviewPayload(inputArgs) {
         ? inputArgs.client_engagement
         : null,
     run_intake: isPlainObject(inputArgs.run_intake) ? inputArgs.run_intake : null,
-    review_payload: reviewPayload,
+    review_payload: actionablePayload,
     ui_decisions: isPlainObject(inputArgs.ui_decisions) ? inputArgs.ui_decisions : null,
     final_artifacts: isPlainObject(inputArgs.final_artifacts) ? inputArgs.final_artifacts : null,
     decision_policy: {
@@ -2871,7 +2884,7 @@ function applyDecisionPayloadWrites({
       trustedAssuranceBaseline,
       expectedAppliedDecisions: appliedDecisions,
       expectedFinalArtifacts: finalArtifacts,
-      expectedReviewPayload: reviewPayload,
+      expectedReviewPayload: materializePrivateReviewArgs(inputArgs).review_payload,
       expectedUiDecisions: uiDecisions,
     },
   );
@@ -3210,7 +3223,7 @@ function scanImplementationRoot(root, scanRoots, rootFiles) {
   return { files, directories };
 }
 
-function validateImplementationPhysicalTree() {
+function validateImplementationPhysicalTree(roots = implementationArtifactRoots()) {
   const pluginPaths = IMPLEMENTATION_ARTIFACT_SPECS
     .filter(([, rootId]) => rootId === "implementation")
     .map(([, , relativePath]) => relativePath);
@@ -3218,16 +3231,16 @@ function validateImplementationPhysicalTree() {
     .filter(([, rootId]) => rootId === "shared_implementation")
     .map(([, , relativePath]) => relativePath);
   const pluginTree = scanImplementationRoot(
-    PLUGIN_ROOT,
+    roots.implementation,
     [".codex-plugin", "assets", "mcp", "scripts"],
     [".app.json", ".mcp.json"],
   );
   const sharedTree = scanImplementationRoot(
-    SHARED_ASSURANCE_ROOT,
+    roots.shared_implementation,
     ["."],
     [],
   );
-  const pdfTree = scanImplementationRoot(SHARED_PDF_ROOT, ["."], []);
+  const pdfTree = scanImplementationRoot(roots.pdf_implementation, ["."], []);
   const pdfPaths = IMPLEMENTATION_ARTIFACT_SPECS
     .filter(([, rootId]) => rootId === "pdf_implementation")
     .map(([, , relativePath]) => relativePath);
@@ -3248,20 +3261,8 @@ function validateImplementationPhysicalTree() {
   }
 }
 
-function validateImplementationSpecCoverage(roots) {
-  if (
-    path.resolve(roots.implementation) !== PLUGIN_ROOT ||
-    path.resolve(roots.shared_implementation) !== SHARED_ASSURANCE_ROOT ||
-    path.resolve(roots.pdf_implementation) !== SHARED_PDF_ROOT
-  ) {
-    throw new Error("implementation receipt roots are invalid");
-  }
-  validateImplementationPhysicalTree();
-}
-
-function buildImplementationArtifactReceipts() {
-  const roots = implementationArtifactRoots();
-  validateImplementationSpecCoverage(roots);
+function buildImplementationArtifactReceipts(roots = implementationArtifactRoots()) {
+  validateImplementationPhysicalTree(roots);
   return IMPLEMENTATION_ARTIFACT_SPECS.map(
     ([artifactId, rootId, relativePath]) => {
       const artifactPath = validateReceiptPath(roots[rootId], relativePath);
@@ -3285,6 +3286,30 @@ function buildImplementationArtifactReceipts() {
   );
 }
 
+function retainedImplementationRoots(roots) {
+  // The run chooses its original indexed package. It is data for hash replay,
+  // never a launcher or a substitute for the current review implementation.
+  if (!roots.run) throw new Error("Historical implementation needs a retained run binding");
+  let runRoot = path.resolve(roots.run);
+  while (!pathEntryStat(path.join(runRoot, "context.json"))?.isFile()) {
+    const parent = path.dirname(runRoot);
+    if (parent === runRoot) throw new Error("Historical implementation needs a retained run binding");
+    runRoot = parent;
+  }
+  const binding = readPrivateReviewJson(validateReceiptPath(runRoot, "execution-runtime.json"), "Historical run binding");
+  const digest = binding.package_sha256;
+  if (typeof digest !== "string" || !/^[0-9a-f]{64}$/.test(digest)) throw new Error("Invalid historical execution package binding");
+  const home = require("node:os").homedir();
+  const runtime = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32" ? path.join(process.env.LOCALAPPDATA || path.join(home, "AppData", "Local"), "mpr") : path.join(home, ".local/share/mparanza/runtime"));
+  const packageRoot = path.join(runtime, "code", digest);
+  const indexPath = validateReceiptPath(packageRoot, "execution-files.json");
+  if (fs.lstatSync(indexPath).nlink !== 1) throw new Error("Historical execution index is linked");
+  const index = readRegularFileSnapshot(indexPath);
+  if (index.sha256 !== digest) throw new Error("Historical execution index changed");
+  const component = path.join(packageRoot, "modules/journal-bank-reconciliation");
+  return {implementation:component, shared_implementation:path.join(component,"vendor/modules/vera_assurance"), pdf_implementation:path.join(component,"vendor/modules/vera_journal_pdf")};
+}
+
 function validateExactImplementationReceipts(envelope, roots) {
   const expected = buildImplementationArtifactReceipts();
   const expectedRefs = expected.map((receipt) => receipt.artifact_id);
@@ -3299,7 +3324,14 @@ function validateExactImplementationReceipts(envelope, roots) {
     (receipt) => isPlainObject(receipt) && receipt.role === "implementation",
   );
   if (!canonicalJsonEqual(actual, expected)) {
-    throw new Error("assurance implementation receipts are not exact");
+    let retained;
+    try {
+      retained = retainedImplementationRoots(roots);
+      if (!canonicalJsonEqual(actual, buildImplementationArtifactReceipts(retained))) throw new Error("Historical implementation changed");
+    } catch {
+      throw new Error("assurance implementation receipts are not exact");
+    }
+    Object.assign(roots, retained);
   }
   for (const receipt of actual) {
     validateArtifactReceiptAgainstRoots(receipt, roots);
@@ -3497,6 +3529,7 @@ function validateAssuranceEnvelopeStructure(envelope, roots) {
   ) {
     throw new Error("assurance envelope is invalid");
   }
+  validateExactImplementationReceipts(envelope, roots);
   const artifacts = envelope.artifact_receipts.map((receipt) =>
     validateArtifactReceiptAgainstRoots(receipt, roots),
   );
@@ -3521,7 +3554,6 @@ function validateAssuranceEnvelopeStructure(envelope, roots) {
   ) {
     throw new Error("assurance implementation binding is invalid");
   }
-  validateExactImplementationReceipts(envelope, roots);
   const decisions = envelope.reviewed_decisions.map(validateReviewedDecisionReceipt);
   const decisionById = new Map();
   for (const decision of decisions) {
@@ -5770,9 +5802,11 @@ function validateWorkflowApplyResultAgainstStaging(
       preChildSnapshots,
     );
     const roots = sourceRootsForOutput(outputDir);
+    const baselineRoots = { ...roots };
+    validateExactImplementationReceipts(context.trustedAssuranceBaseline.envelope, baselineRoots);
     for (const receipt of context.trustedAssuranceBaseline.envelope.artifact_receipts) {
       if (receipt.root_id !== "run") {
-        validateArtifactReceiptAgainstRoots(receipt, roots);
+        validateArtifactReceiptAgainstRoots(receipt, baselineRoots);
       }
     }
     const applicationDecision = validateReviewedDecisionApplication(

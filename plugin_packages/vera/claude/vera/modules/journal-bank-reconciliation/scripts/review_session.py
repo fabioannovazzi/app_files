@@ -1186,7 +1186,7 @@ def write_review_session_artifacts(
         )
     )
     items.extend(_match_items(match_rows, language))
-    items.extend(_artifact_items(audit, output_dir, language))
+    artifact_items = _artifact_items(audit, output_dir, language)
     gate_register = _json_object_if_present(output_dir / "assurance_gates.json")
     gate_entries = gate_register.get("gates")
     gate_statuses = (
@@ -1214,6 +1214,7 @@ def write_review_session_artifacts(
         "review_type": "journal_bank_reconciliation_review",
         "items": items,
         "item_count": len(items),
+        "artifact_items": artifact_items,
         "columns": _review_columns(language),
         "source_artifacts": {
             "run_intake": _as_output_ref(run_intake_path, output_dir),
