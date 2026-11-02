@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/treasury-forecast/assets/review.css",
-      "sha256": "502d415d5e80f488677259510076e2f9e3ee3bcb937f2213125fde4292e9c57d"
+      "sha256": "a6de4a7538a67ca38a8861c6934d2d6555c046fc74348c245d7289a817716462"
     },
     {
       "path": "modules/treasury-forecast/assets/review.html",
@@ -458,5 +458,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "577c3d36c1610e4157d7e7cb78fb9655c66040efdb68d860c6b7574bf69bcfa4"
+  "canonical_course_sha256": "a7cd4f918c6f92f8e9424bb90c8be67cd573117d8568df3f0b8495d7447d72cc"
 }

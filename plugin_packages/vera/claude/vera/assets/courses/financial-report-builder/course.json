@@ -33,7 +33,7 @@
     },
     {
       "path": "modules/report-builder/assets/report-builder-review-widget.html",
-      "sha256": "bcf180b7274aac4919c00bbb05e881c74fc4d9647b0107564f539df2de186159"
+      "sha256": "a4ea5af63627a090bcc23536dd83ddaadd4e84311ef4b7a270659e244f797cf5"
     },
     {
       "path": "modules/report-builder/assets/review-workbench-adapter.json",
@@ -586,5 +586,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "8819d19f9e6ad8cee10ac5ea1d2e9cbd2e46090be5135625de31bed04a0b98d6"
+  "canonical_course_sha256": "9313ec9db2935bd916cc1368a2a2aa0aa4ad5debfd06ca1c1858f3c28495a400"
 }

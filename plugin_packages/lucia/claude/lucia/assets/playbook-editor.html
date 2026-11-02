@@ -120,6 +120,22 @@ main{max-width:1180px;margin:0 auto;padding:52px 24px 100px}.intro{max-width:820
   background: var(--soft-strong);
   border-color: var(--border-strong);
 }
+/* Review controls keep their label width at every panel breakpoint. */
+:root :is(.action-buttons, .tabs, .state-filters, .decision-grid) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+}
+:root :is(.action-buttons, .tabs, .state-filters, .decision-grid) > button {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
+  justify-content: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 :root :is(button.primary, .button.primary) {
   background: var(--accent);
   border-color: var(--accent);

@@ -100,34 +100,53 @@ async function call(name,args){return (await rpc('tools/call',{name,arguments:ar
 
 @pytest.mark.parametrize("delivery", ["mcp", "legacy"])
 @pytest.mark.parametrize(
-    "presentation", ["default", "fullscreen", "unsupported", "declined"]
+    ("plugin", "presentation"),
+    [
+        ("check-entries", "default"),
+        ("check-entries", "fullscreen"),
+        ("check-entries", "unsupported"),
+        ("check-entries", "declined"),
+        ("journal-bank-reconciliation", "fullscreen"),
+        ("journal-bank-reconciliation", "unsupported"),
+        ("journal-bank-reconciliation", "declined"),
+        ("journal-bank-reconciliation", "preferred"),
+    ],
 )
-def test_vouching_hydrates_private_rows_and_ignores_untrusted_updates(
+def test_widget_hydrates_private_rows_and_ignores_untrusted_updates(
     delivery: str,
+    plugin: str,
     presentation: str,
 ) -> None:
-    """Execute the complete widget against both documented host delivery paths."""
-    widget = ROOT / "plugins/check-entries/assets/check-entries-review-widget.html"
+    """Execute the shipped widget against the host's result delivery paths."""
+    bank = plugin == "journal-bank-reconciliation"
+    resource = (
+        "journal-bank-review-widget.html"
+        if bank
+        else "check-entries-review-widget.html"
+    )
+    widget = ROOT / "plugins" / plugin / "assets" / resource
     program = r"""
 const fs = require('node:fs'), vm = require('node:vm');
 const html = fs.readFileSync(process.argv[1], 'utf8');
 const script = html.match(/<script>([\s\S]*)<\/script>/)[1];
 const elements = new Map(), listeners = new Map(), sent = [];
 const node = id => ({id, textContent:'', innerHTML:'', className:'', value:'',
-  disabled:false, style:{}, dataset:{}, addEventListener(){}, appendChild(){},
+  disabled:false, style:{}, dataset:{}, addEventListener(name, cb){this['on'+name]=cb;}, appendChild(){},
   remove(){}, select(){}, setAttribute(){}, closest(){return null;}});
 const document = {title:'', documentElement:{lang:'en',dataset:{}}, body:node('body'),
   getElementById(id){if(!elements.has(id)) elements.set(id,node(id)); return elements.get(id);},
   createElement:node, execCommand(){return true;}};
-const privatePayload = {widget_type:'check_entries_review',
-  review_payload:{schema_version:'2.0',plugin:'check-entries',workflow:'check-entries',
+const plugin = process.argv[4];
+const widgetType = plugin === 'check-entries' ? 'check_entries_review' : 'journal_bank_review';
+const privatePayload = {widget_type:widgetType,
+  review_payload:{schema_version:'2.0',plugin,workflow:plugin,
     run_id:'diagnostic-only',status:'ready_for_review',item_count:1,
     items:[{id:'entry-diagnostic',item_type:'missing_support',title:'Synthetic private row',
       status:'missing_support',data:{movement_number:'DIAG-1'},evidence:[],
       allowed_actions:['mark_unclear'],recommended_action:'mark_unclear'}],summary:{}},
-  ui_decisions:{decisions:[]},final_artifacts:{outputs:[]},decision_policy:{can_persist:false}};
+  ui_decisions:{decisions:[]},final_artifacts:{outputs:[]},decision_policy:{can_persist:true}};
 const result = {content:[{type:'text',text:'1 item'}],
-  structuredContent:{ok:true,widget_type:'check_entries_review',item_count:1},
+  structuredContent:{ok:true,widget_type:widgetType,item_count:1},
   _meta:{private_review_payload:privatePayload}};
 const presentation = process.argv[3];
 if(presentation!=='default') privatePayload.requested_display_mode='fullscreen';
@@ -150,7 +169,7 @@ const read = () => vm.runInContext('({count:items().length, title:items()[0]?.ti
   const init = sent.find(x=>x.message.method==='ui/initialize');
   if(init){
     send({jsonrpc:'2.0',id:init.message.id,result:{protocolVersion:'2026-01-26',hostCapabilities:{},
-      hostContext:{displayMode:'inline',availableDisplayModes:presentation==='unsupported'?['inline']:['inline','fullscreen']}}});
+      hostContext:{displayMode:presentation==='preferred'?'fullscreen':'inline',availableDisplayModes:presentation==='unsupported'?['inline']:['inline','fullscreen']}}});
     await Promise.resolve(); await Promise.resolve();
   }
   const notify = payload => ({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:payload});
@@ -159,6 +178,7 @@ const read = () => vm.runInContext('({count:items().length, title:items()[0]?.ti
   // independently below, to distinguish handshake from payload-selection bugs.
   if(process.argv[2]==='mcp' && initializedBeforeResult)send(notify(result));
   const normal = read();
+  const controlsAvailable = vm.runInContext('canPersistThroughBridge()',context);
   send(notify(result));
   const forcedDelivery = read();
   const malicious = {...result,_meta:{private_review_payload:{...privatePayload,
@@ -173,14 +193,27 @@ const read = () => vm.runInContext('({count:items().length, title:items()[0]?.ti
   for(const request of modeRequests) send({jsonrpc:'2.0',id:request.message.id,
     result:{mode:presentation==='declined'?'inline':'fullscreen'}});
   await Promise.resolve(); await Promise.resolve(); await Promise.resolve();
-  process.stdout.write(JSON.stringify({initializes:!!init,initializedBeforeResult,
+  let reopened = false;
+  if (plugin === 'journal-bank-reconciliation' && presentation === 'declined') {
+    const button = document.getElementById('open-bank-panel');
+    if (!html.includes('id="open-bank-panel"')) throw Error('No inline reopen control');
+    const pending = button.onclick();
+    await Promise.resolve(); await Promise.resolve();
+    const last = sent.at(-1);
+    if (last.message.method !== 'ui/request-display-mode' || last === modeRequests[0])
+      throw Error('Reopen did not request a fresh host surface');
+    send({jsonrpc:'2.0',id:last.message.id,result:{mode:'fullscreen'}});
+    await pending;
+    reopened = read().count === 1 && document.documentElement.dataset.reviewDisplayMode === 'fullscreen';
+  }
+  process.stdout.write(JSON.stringify({reopened,initializes:!!init,initializedBeforeResult,
     modeRequests,actualDisplayMode:document.documentElement.dataset.reviewDisplayMode,
     displayModes:init?.message.params.appCapabilities.availableDisplayModes,
-    normal,forcedDelivery,afterUntrusted,afterSummary}));
+    normal,controlsAvailable,forcedDelivery,afterUntrusted,afterSummary}));
 })().catch(e=>{process.stderr.write(e.stack);process.exitCode=1;});
 """
     completed = subprocess.run(
-        ["node", "-e", program, str(widget), delivery, presentation],
+        ["node", "-e", program, str(widget), delivery, presentation, plugin],
         capture_output=True,
         text=True,
         check=True,
@@ -188,20 +221,27 @@ const read = () => vm.runInContext('({count:items().length, title:items()[0]?.ti
     )
     observed = json.loads(completed.stdout)
     expected = {"count": 1, "title": "Synthetic private row"}
+    assert observed["initializes"] is True, observed
+    assert observed["initializedBeforeResult"] is True, observed
     assert observed["normal"] == expected, observed
+    assert observed["controlsAvailable"] is True, observed
     assert observed["forcedDelivery"] == expected, observed
     assert observed["afterUntrusted"] == expected, observed
     assert observed["afterSummary"] == expected, observed
-    assert observed["initializes"] is True, observed
-    assert observed["initializedBeforeResult"] is True, observed
     assert observed["displayModes"] == ["inline", "fullscreen"], observed
     requests = observed["modeRequests"]
-    if presentation in {"fullscreen", "declined"}:
+    if presentation in {"fullscreen", "declined", "preferred"}:
         assert len(requests) == 1, observed
         assert requests[0]["message"]["params"] == {"mode": "fullscreen"}
         assert requests[0]["origin"] == "https://host.example"
     else:
         assert requests == [], observed
     if presentation != "default":
-        expected_mode = "fullscreen" if presentation == "fullscreen" else "inline"
+        if bank and presentation == "declined":
+            assert observed["reopened"] is True
+        expected_mode = (
+            "fullscreen"
+            if presentation in {"fullscreen", "preferred"} or observed["reopened"]
+            else "inline"
+        )
         assert observed["actualDisplayMode"] == expected_mode, observed

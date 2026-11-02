@@ -18,6 +18,8 @@ from tests.plugins import test_journal_bank_reconciliation_plugin as bank
 
 __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]
+# Three maintained operations share one subprocess budget on CI runners.
+REVIEW_BATCH_TIMEOUT_SECONDS = 30
 
 
 @pytest.mark.parametrize("damage", [None, "code", "index", "missing"])
@@ -189,6 +191,7 @@ def test_accounting_population_excludes_files_and_preserves_open_evidence(
             )
         ],
         env={**os.environ, "PYTHON": sys.executable},
+        timeout_seconds=REVIEW_BATCH_TIMEOUT_SECONDS,
     )
 
     rendered = responses[0]["result"]["_meta"]["private_review_payload"]

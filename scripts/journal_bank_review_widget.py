@@ -88,6 +88,25 @@ def customize_review(html: str) -> str:
     labels = {
         language: dict(zip(_KEYS, values)) for language, values in _LABELS.items()
     }
+    html = html.replace(
+        '<div class="top-actions">',
+        '<div class="top-actions"><button type="button" id="open-bank-panel" class="secondary"></button>',
+        1,
+    ).replace(
+        "    function renderChrome() {",
+        """    const openPanel = document.getElementById("open-bank-panel");
+    const openPanelLabels = {it:"Apri pannello", en:"Open panel", fr:"Ouvrir le panneau", de:"Panel öffnen", es:"Abrir panel"};
+    const inlineLabels = {it:"Il pannello rimane nella chat.", en:"The review remains in the chat.", fr:"La revue reste dans la discussion.", de:"Die Prüfung bleibt im Chat.", es:"La revisión permanece en el chat."};
+    openPanel.addEventListener("click", async () => {
+      try {
+        const result = await window.mparanzaReviewHost.requestDisplayMode("fullscreen");
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+        if (result.mode !== "fullscreen") setSaveStatus(inlineLabels[activeLanguage()], "");
+      } catch (error) { setSaveStatus(error.message, "error"); }
+    });
+    function renderChrome() {
+      openPanel.textContent = openPanelLabels[activeLanguage()];""",
+    )
     return html.replace(
         "    function humanize(value) {",
         "    const JOURNAL_BANK_LABELS = "

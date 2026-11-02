@@ -380,6 +380,7 @@ function widgetResourceMeta(uri) {
     "openai/widgetDescription":
       "Interactive Journal-Bank Reconciliation review surface for matched pairs, unmatched bank rows, unmatched journal rows, diagnostics, and generated artifacts.",
     "openai/widgetPrefersBorder": false,
+    "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["inline", "fullscreen"] },
     "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
     "openai/widgetDomain": "https://chatgpt.com",
   };
@@ -6013,7 +6014,7 @@ function callTool(name, args = {}) {
     const resolved = privatePayloadForRender(args);
     return {
       ...modelContextIndex(resolved.token, resolved.context),
-      _private_review_payload: resolved.context.privatePayload,
+      _private_review_payload: { ...resolved.context.privatePayload, requested_display_mode: "fullscreen" },
     };
   }
   if (name === TOOL_NAMES.caseContext) {

@@ -5871,7 +5871,7 @@ def _render_target(target: dict[str, Any]) -> str:
         else:
             from journal_bank_review_widget import customize_review
 
-        return customize_review(html)
+        html = customize_review(html)
     if target["plugin"] == "client-file-preparation":
         if __package__:
             from scripts.client_file_review_widget import customize_review
@@ -5900,15 +5900,20 @@ def _render_target(target: dict[str, Any]) -> str:
             from new_client_review_widget import customize_review
 
         return _readable_json_constants(customize_review(html))
-    if target["plugin"] == "check-entries":
-        # Vouching keeps rows in component-only metadata. Initialize the MCP
-        # Apps bridge before accepting host notifications, then hydrate from
-        # that private payload rather than the model's row-free summary.
+    if target["plugin"] in {"journal-bank-reconciliation", "check-entries"}:
+        # Initialize before delivery. The row-free summary and the component's
+        # private review data arrive together through the trusted host bridge.
+        vouching = target["plugin"] == "check-entries"
+        app_name = (
+            "Vera Vouching review" if vouching else "Vera bank reconciliation review"
+        )
         bridge = (
             (ROOT / "scripts/review_mcp_apps_bridge.js")
             .read_text(encoding="utf-8")
-            .replace("Mparanza legal and tax review", "Vera Vouching review")
-            .replace(
+            .replace("Mparanza legal and tax review", app_name)
+        )
+        bridge = (
+            bridge.replace(
                 "appCapabilities: {}",
                 'appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] }',
             )
@@ -5956,21 +5961,24 @@ def _render_target(target: dict[str, Any]) -> str:
             )
             .replace("window.openai.callTool(", "window.mparanzaReviewHost.callTool(")
         )
-        html = (
-            html.replace(
-                'window.addEventListener("message", (event) => {\n'
-                '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
-                "      const nextPayload = pickPayload(event.data.params);\n"
-                "      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;",
-                "window.mparanzaReviewHost.onToolResult((result) => {\n"
-                "      if (result?.isError) return;\n"
-                "      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);\n"
-                "      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;",
-            )
-            .replace(
-                "    state.payload = toolOutput();",
-                '    window.addEventListener("mparanza:review-host-ready", render);\n'
-                """    let presentationRequested = false;
+        html = html.replace(
+            'window.addEventListener("message", (event) => {\n'
+            '      if (event?.data?.method !== "ui/notifications/tool-result") return;\n'
+            "      const nextPayload = pickPayload(event.data.params);\n"
+            "      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;",
+            "window.mparanzaReviewHost.onToolResult((result) => {\n"
+            "      if (result?.isError) return;\n"
+            "      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);\n"
+            "      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;",
+        )
+        html = html.replace(
+            "    state.payload = toolOutput();",
+            '    window.addEventListener("mparanza:review-host-ready", render);\n'
+            "    state.payload = toolOutput();",
+        )
+        html = html.replace(
+            "    state.payload = toolOutput();",
+            """    let presentationRequested = false;
     function requestPresentation(payload) {
       const mode = payload?.requested_display_mode;
       if (presentationRequested || !["inline", "fullscreen"].includes(mode)) return;
@@ -5983,11 +5991,9 @@ def _render_target(target: dict[str, Any]) -> str:
     }
     state.payload = toolOutput();
     requestPresentation(state.payload);""",
-            )
-            .replace(
-                "state.payload = nextPayload;",
-                "state.payload = nextPayload;\n      requestPresentation(nextPayload);",
-            )
+        ).replace(
+            "state.payload = nextPayload;",
+            "state.payload = nextPayload;\n      requestPresentation(nextPayload);",
         )
         return html.replace("<script>", f"<script>\n{bridge}\n", 1)
     if target["plugin"] in {"prompt-optimizer", "deep-research-validator"}:

@@ -250,7 +250,14 @@ the Archive import host. If any input is unavailable, explain the access problem
 and folder-connection option immediately, before creating anything. After a late
 import failure, report and reuse the existing client and engagement IDs.
 
-When the user chooses the native review panel, use `vera_workspace_open` when
+For a prepared reconciliation, validate the saved review and render its opaque
+reference with `render_journal_bank_review`. The normal render requests the
+expanded Claude panel for those same rows. If the host keeps the review inline,
+“Apri pannello” requests expansion again. To reopen it from the thread's
+“Lavori dello studio” entry, select the same client, engagement and run, then
+“Apri lavoro”. Opening the saved review does not require another calculation.
+
+For Studio Archive navigation or native preparation, use `vera_workspace_open` when
 callable and the exact Studio Archive run is authorised through the owned archive
 or a trusted operator binding. The panel is optional: ordinary chat preparation
 uses the persistent specialist route below, with recorded agent review of routine

@@ -155,7 +155,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "d98026af04f8103ff6d7fd16dc4149c36a33d763a72c6f858025de55faa2a828",
+  "catalogue_fingerprint": "f5920a2a4d7b063d18987e890651cf48c8ba0a71167a21fd76292b64353f68a5",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2465,5 +2465,13 @@
     "current_catalogue_fingerprint": "743542caeefba461e4587e2762a269b37eee7e80f9325f81f45018e4b9389b4a",
     "changed_entrypoints": [],
     "scope": "Only the canonical product manifest/version binding changes; all 55 function IDs and skill entrypoint hashes are identical. Existing Geneva dispositions and acceptance limits are preserved. Local preparation now distinguishes automatic privacy reports from prior accounting outputs; source regressions do not establish installed-host or Geneva professional acceptance."
+  },
+  "compact_review_controls_release_binding_20261102": {
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "previous_catalogue_fingerprint": "d98026af04f8103ff6d7fd16dc4149c36a33d763a72c6f858025de55faa2a828",
+    "scope": "Source binding for compact native review controls and reopening the retained bank panel without recalculation. Existing jurisdiction judgments and assessment rows are unchanged; no installed-host or Geneva professional acceptance is claimed.",
+    "version": "0.1.535"
   }
 }

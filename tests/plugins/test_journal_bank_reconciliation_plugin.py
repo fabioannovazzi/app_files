@@ -1516,6 +1516,7 @@ def _call_mcp_server(
     *,
     server_path: Path = MCP_SERVER_PATH,
     env: dict[str, str] | None = None,
+    timeout_seconds: float = 10,
 ) -> list[dict[str, object]]:
     node = shutil.which("node")
     if node is None:
@@ -1528,7 +1529,7 @@ def _call_mcp_server(
         capture_output=True,
         text=True,
         check=True,
-        timeout=10,
+        timeout=timeout_seconds,
         env=env,
     )
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
@@ -10941,7 +10942,16 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         resource["uri"] for resource in responses[4]["result"]["resources"]
     }
     assert "ui://widget/journal-bank-review.html" in resource_uris
-    widget_html = responses[5]["result"]["contents"][0]["text"]
+    assert (
+        render_result["_meta"]["private_review_payload"]["requested_display_mode"]
+        == "fullscreen"
+    )
+    resource = responses[5]["result"]["contents"][0]
+    assert resource["_meta"]["openai/ui"] == {
+        "preferredDisplayMode": "fullscreen",
+        "availableDisplayModes": ["inline", "fullscreen"],
+    }
+    widget_html = resource["text"]
     assert "Journal-Bank Review" in widget_html
     assert "toolResponseMetadata" in widget_html
     assert "private_review_payload" in widget_html

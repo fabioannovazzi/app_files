@@ -34,7 +34,7 @@
     {
       "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
       "repository_path": "plugins/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
-      "sha256": "5d6de269a62c1fa5806fcbea3d767bde6253bb7cc2c19243da2aff6af013c425"
+      "sha256": "4f47545054aa727b4f869b2577c9ed7bcaa409ea30591a978be1e1be1062ca7d"
     },
     {
       "path": "modules/journal-bank-reconciliation/assets/review-workbench-adapter.json",
@@ -129,7 +129,7 @@
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "197bd13e688912ab4384526e8e5e681bb18a030e7fc1afc0e41ff7f569049507"
+      "sha256": "7aaa721a61122579b6a7252109a9d214e0ab33d52958812e1dd1ec54776b6bda"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
@@ -224,7 +224,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "eb35979aca128b00c17d4d6e378d173c5e384aa17ec17008a33e902ee96736e5"
+      "sha256": "28dfc50cb0ad1ce93bb1ac108c7efc8ddfd0e60dce6a7b05ffad6acd630fbded"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

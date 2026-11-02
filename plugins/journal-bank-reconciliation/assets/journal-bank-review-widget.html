@@ -1111,6 +1111,22 @@
   background: var(--soft-strong);
   border-color: var(--border-strong);
 }
+/* Review controls keep their label width at every panel breakpoint. */
+:root :is(.action-buttons, .tabs, .state-filters, .decision-grid) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+}
+:root :is(.action-buttons, .tabs, .state-filters, .decision-grid) > button {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
+  justify-content: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
 :root :is(button.primary, .button.primary) {
   background: var(--accent);
   border-color: var(--accent);
@@ -1156,7 +1172,7 @@
           <h1 id="app-title">Journal-Bank Review</h1>
           <p class="subtitle" id="subtitle">Loading payload...</p>
         </div>
-        <div class="top-actions">
+        <div class="top-actions"><button type="button" id="open-bank-panel" class="secondary"></button>
           <span class="pill" id="status-pill">MCP widget</span>
           <span class="pill" id="decision-pill">0 reviewed</span>
         </div>
@@ -1204,6 +1220,81 @@
     </div>
   </main>
   <script>
+"use strict";
+// Embedded in the legal/tax widgets; source and origin checks protect review writes.
+(() => {
+  const pending = new Map(), listeners = new Set();
+  let sequence = 0, initialized = false, origin = null, hostContext = {};
+  const framed = Boolean(window.parent && window.parent !== window);
+  function request(method, params, timeout = 15000) {
+    return new Promise((resolve, reject) => {
+      const id = `review-ui-${++sequence}`;
+      const timer = setTimeout(() => {
+        pending.delete(id);
+        reject(new Error(`Review host did not respond to ${method}.`));
+      }, timeout);
+      pending.set(id, { resolve, reject, timer });
+      window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, origin || "*");
+    });
+  }
+  window.addEventListener("message", (event) => {
+    if (!framed || event.source !== window.parent || (origin && event.origin !== origin)) return;
+    const message = event.data;
+    if (!message || message.jsonrpc !== "2.0") return;
+    const entry = pending.get(message.id);
+    if (entry) {
+      // Pin the actual parent after our initialization response, before any case data.
+      origin = event.origin;
+      clearTimeout(entry.timer);
+      pending.delete(message.id);
+      if (message.error) entry.reject(new Error(message.error.message || "Review host request failed."));
+      else entry.resolve(message.result);
+      return;
+    }
+    if (origin && message.method === "ui/notifications/host-context-changed") {
+      hostContext = { ...hostContext, ...message.params };
+    }
+    if (origin && message.method === "ui/notifications/tool-result") {
+      for (const listener of listeners) listener(message.params);
+    }
+  });
+  const ready = framed ? request("ui/initialize", {
+    protocolVersion: "2026-01-26",
+    appInfo: { name: "Vera bank reconciliation review", version: "1.0.0" },
+    appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] },
+  }, 15000).then((result) => {
+    hostContext = result.hostContext || {};
+    initialized = true;
+    window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, origin);
+    window.dispatchEvent(new Event("mparanza:review-host-ready"));
+    return true;
+  }).catch(() => false) : Promise.resolve(false);
+  window.mparanzaReviewHost = {
+    canCallTools: () => initialized || typeof window.openai?.callTool === "function",
+    async requestDisplayMode(mode) {
+      if (await ready) {
+        if (!hostContext.availableDisplayModes?.includes(mode)) {
+          return { mode: hostContext.displayMode || "inline" };
+        }
+        const result = await request("ui/request-display-mode", { mode });
+        hostContext.displayMode = result.mode;
+        return result;
+      }
+      if (typeof window.openai?.requestDisplayMode === "function") {
+        return window.openai.requestDisplayMode({ mode });
+      }
+      return { mode: window.openai?.displayMode || "inline" };
+    },
+    async callTool(name, args) {
+      if (await ready) return request("tools/call", { name, arguments: args });
+      if (typeof window.openai?.callTool === "function") return window.openai.callTool(name, args);
+      throw new Error("Review host is unavailable. Keep decisions pending or export them for fallback review.");
+    },
+    onToolResult: (listener) => listeners.add(listener),
+  };
+})();
+
+
     const CONFIG = {"schemaVersion":"1.0","plugin":"journal-bank-reconciliation","title":"Journal-Bank Review","reviewTitle":"Journal To Bank Match Review","queueTitle":"Matches","detailTitle":"Journal Vs Bank","detailMode":"match-ledger","detailHelp":"Compare journal entry and bank statement evidence at the same grain.","detailGroups":[{"title":"Journal Entry","variant":"ledger","fields":["journal_date","journal_amount","journal_description","entry","entry_date","account","counterparty","amount"],"empty":"No journal fields."},{"title":"Bank Statement","variant":"ledger","fields":["bank_date","bank_amount","bank_description","bank_line","statement_date","counterparty","amount","reference"],"empty":"No bank fields."},{"title":"Match Result","variant":"finding","fields":["status","stage","shared_references","amount_delta","date_diff_days","review_note","match_basis","requested_document","reason","review_notes"],"empty":"No match result."}],"panels":["Journal entry","Bank statement","Match result"],"localized":{"es":{"title":"Revisi\u00f3n diario-banco","reviewTitle":"Revisi\u00f3n de conciliaci\u00f3n diario-banco","queueTitle":"Coincidencias","detailTitle":"Diario y banco","detailHelp":"Compare el asiento y el movimiento bancario con el mismo nivel de detalle.","search":"Buscar l\u00ednea bancaria, asiento, cuenta, coincidencia, excepci\u00f3n"},"it":{"title":"Revisione giornale-banca","reviewTitle":"Revisione match giornale-banca","queueTitle":"Match","detailTitle":"Giornale e banca","detailHelp":"Confronta scrittura e movimento banca allo stesso livello di dettaglio.","search":"Cerca riga banca, scrittura, conto, match, eccezione"},"fr":{"title":"Revue journal-banque","reviewTitle":"Revue rapprochement journal-banque","queueTitle":"Matches","detailTitle":"Journal et banque","detailHelp":"Comparez l'ecriture et la ligne bancaire au meme niveau de detail.","search":"Chercher ligne banque, ecriture, compte, match, exception"},"de":{"title":"Journal-Bank Review","reviewTitle":"Journal-Bank-Abstimmung pruefen","queueTitle":"Matches","detailTitle":"Journal und Bank","detailHelp":"Buchung und Kontoauszugszeile auf gleicher Ebene vergleichen.","search":"Bankzeile, Buchung, Konto, Match, Ausnahme suchen"}},"saveTool":"save_journal_bank_decisions","applyTool":"apply_journal_bank_decisions","widgetType":"journal_bank_review","demo":{"review_type":"journal_bank_reconciliation_review","items":[{"id":"bank-match-1","item_type":"matched_pair","title":"Payment 1001 - ACME","source_path":"journal.xlsx","output_path":"journal_bank_reconciliation.xlsx","allowed_actions":["accept","edit","mark_unclear","skip"],"recommended_action":"accept","data":{"entry":"1001","bank_line":"statement row 18","amount":"123.45","status":"matched","counterparty":"ACME","bank_transaction_id":"bank:18","target_artifact":"reconciliation_matches.csv","target_id_field":"bank_transaction_id","target_record_id":"bank:18","target_field":"review_note","edit_hint":"Editing this matched pair updates review_note in reconciliation_matches.csv for bank:18."},"evidence":[{"kind":"journal_vs_bank","match_basis":"amount/date/reference"}]},{"id":"bank-unmatched-1","item_type":"unmatched_bank","title":"2025-01-05 | 9.99 | FEE9","source_path":"bank.xlsx; row 3","output_path":"unmatched_bank.csv","allowed_actions":["accept","edit","mark_unclear","request_more_documents","skip"],"recommended_action":"request_more_documents","data":{"bank_line":"statement row 3","statement_date":"2025-01-05","amount":"9.99","reference":"FEE9","status":"unmatched","requested_document":"Journal or ledger support for bank transaction FEE9","reason":"Bank transaction has no deterministic journal match."},"evidence":[{"kind":"missing_reconciliation_evidence","side":"bank","requested_document":"Journal or ledger support for bank transaction FEE9","reason":"Bank transaction has no deterministic journal match.","status":"needs_evidence"}]}]},"injectLocalServer":false};
     const ACTION_LABELS = {
       accept: "Accept",
@@ -1515,7 +1606,7 @@
       node.innerHTML = cells.join("");
     }
     function canPersistThroughBridge() {
-      return Boolean(state.payload.decision_policy?.can_persist) && typeof window.openai?.callTool === "function";
+      return Boolean(state.payload.decision_policy?.can_persist) && window.mparanzaReviewHost.canCallTools();
     }
     function recoveryLine(label, value) {
       if (!value) return "";
@@ -2191,12 +2282,12 @@
     }
     async function saveCurrentDecisions() {
       const saveTool = state.payload.decision_policy?.save_tool || CONFIG.saveTool;
-      if (typeof window.openai?.callTool !== "function") {
+      if (!window.mparanzaReviewHost.canCallTools()) {
         await copyDecisionJson();
         setRecoveryIssue("fallback", uiText("fallbackActive", "JSON fallback active"), uiText("fallbackBody", "Copy or download ui_decisions.json. Use the MCP or local-server review surface to persist and apply decisions."), saveTool);
         return { ok: true, copied: true, message: uiText("toolCopied", "Tool bridge unavailable. JSON copied.") };
       }
-      const result = parseToolResult(await window.openai.callTool(saveTool, saveToolArgs()));
+      const result = parseToolResult(await window.mparanzaReviewHost.callTool(saveTool, saveToolArgs()));
       if (!result?.ok) throw new Error(result?.error || uiText("saveFailed", "Decision save failed."));
       if (result.ui_decisions) state.payload.ui_decisions = result.ui_decisions;
       return result;
@@ -2218,7 +2309,7 @@
     async function handleApplyDecisions() {
       const decisions = collectDecisionInputs();
       try { validateDecisionInputs(decisions); } catch (error) { setSaveStatus(error.message || String(error), "error"); return; }
-      if (typeof window.openai?.callTool !== "function") {
+      if (!window.mparanzaReviewHost.canCallTools()) {
         try {
           await copyDecisionJson();
           setRecoveryIssue("fallback", uiText("applyFailedTitle", "Apply did not persist"), uiText("applyRequiresMcp", "Apply requires the MCP or local-server review surface."), state.payload.decision_policy?.apply_tool || CONFIG.applyTool);
@@ -2233,7 +2324,7 @@
       try {
         await saveCurrentDecisions();
         const applyTool = state.payload.decision_policy?.apply_tool || CONFIG.applyTool;
-        const result = parseToolResult(await window.openai.callTool(applyTool, applyToolArgs()));
+        const result = parseToolResult(await window.mparanzaReviewHost.callTool(applyTool, applyToolArgs()));
         if (!result?.ok) throw new Error(result?.error || uiText("applyFailed", "Decision apply failed."));
         if (result.final_artifacts) state.payload.final_artifacts = result.final_artifacts;
         if (result.applied_decisions) state.payload.applied_decisions = result.applied_decisions;
@@ -2280,7 +2371,18 @@
       const button = document.getElementById(id);
       if (button) button.textContent = text;
     }
+    const openPanel = document.getElementById("open-bank-panel");
+    const openPanelLabels = {it:"Apri pannello", en:"Open panel", fr:"Ouvrir le panneau", de:"Panel öffnen", es:"Abrir panel"};
+    const inlineLabels = {it:"Il pannello rimane nella chat.", en:"The review remains in the chat.", fr:"La revue reste dans la discussion.", de:"Die Prüfung bleibt im Chat.", es:"La revisión permanece en el chat."};
+    openPanel.addEventListener("click", async () => {
+      try {
+        const result = await window.mparanzaReviewHost.requestDisplayMode("fullscreen");
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+        if (result.mode !== "fullscreen") setSaveStatus(inlineLabels[activeLanguage()], "");
+      } catch (error) { setSaveStatus(error.message, "error"); }
+    });
     function renderChrome() {
+      openPanel.textContent = openPanelLabels[activeLanguage()];
       const lang = activeLanguage();
       const title = workflowText("title", CONFIG.title);
       document.documentElement.lang = lang;
@@ -2318,15 +2420,29 @@
     document.getElementById("apply-decisions").addEventListener("click", handleApplyDecisions);
     document.getElementById("copy-decisions").addEventListener("click", () => copyDecisionJson().then(() => setSaveStatus(uiText("jsonCopied", "JSON copied."), "ok")).catch((error) => setSaveStatus(error.message || String(error), "error")));
     document.getElementById("download-decisions").addEventListener("click", downloadDecisionJson);
-    window.addEventListener("message", (event) => {
-      if (event?.data?.method !== "ui/notifications/tool-result") return;
-      const nextPayload = pickPayload(event.data.params);
-      if (!nextPayload || (nextPayload.widget_type !== CONFIG.widgetType && !nextPayload.review_payload)) return;
+    window.mparanzaReviewHost.onToolResult((result) => {
+      if (result?.isError) return;
+      const nextPayload = privatePayloadFromMetadata(result) || pickPayload(result);
+      if (!nextPayload?.review_payload || nextPayload.widget_type !== CONFIG.widgetType) return;
       state.payload = nextPayload;
+      requestPresentation(nextPayload);
       loadInitialDecisions();
       render();
     });
+    window.addEventListener("mparanza:review-host-ready", render);
+    let presentationRequested = false;
+    function requestPresentation(payload) {
+      const mode = payload?.requested_display_mode;
+      if (presentationRequested || !["inline", "fullscreen"].includes(mode)) return;
+      presentationRequested = true;
+      window.mparanzaReviewHost.requestDisplayMode(mode).then((result) => {
+        document.documentElement.dataset.reviewDisplayMode = result.mode;
+      }).catch((error) => {
+        console.warn("Review display mode request failed.", error);
+      });
+    }
     state.payload = toolOutput();
+    requestPresentation(state.payload);
     loadInitialDecisions();
     render();
   </script>

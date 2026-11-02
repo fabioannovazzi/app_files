@@ -670,7 +670,10 @@ When the local MCP server is available, prefer the OpenAI-style review handoff:
    opaque four-hour review reference.
 3. Call `render_journal_bank_review` with only that reference. The server sends
    the complete payload to `ui://widget/journal-bank-review.html` through
-   component-only metadata, not model-visible structured content.
+   component-only metadata. The normal render requests the expanded Codex
+   panel. If the host keeps the review inline, “Apri pannello” reopens the same
+   review. From “Lavori dello studio”, select the same archived run and choose
+   “Apri lavoro” to reach its saved review after leaving the conversation.
 4. Start from the index and call `get_journal_bank_case_context` for no more
    than 25 specifically selected cases at a time. The deterministic
    post-mapping projection removes unmapped and empty fields, source locators,
