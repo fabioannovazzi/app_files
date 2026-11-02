@@ -1516,6 +1516,7 @@ def _call_mcp_server(
     *,
     server_path: Path = MCP_SERVER_PATH,
     env: dict[str, str] | None = None,
+    timeout_seconds: float = 10,
 ) -> list[dict[str, object]]:
     node = shutil.which("node")
     if node is None:
@@ -1528,7 +1529,7 @@ def _call_mcp_server(
         capture_output=True,
         text=True,
         check=True,
-        timeout=10,
+        timeout=timeout_seconds,
         env=env,
     )
     return [json.loads(line) for line in completed.stdout.splitlines() if line.strip()]
