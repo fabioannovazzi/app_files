@@ -180,8 +180,12 @@
       "sha256": "16c6ae9bb4bca8747e4a36a0839c9fe1f2fdc1bcc9908fe75f9cc8554e1817eb"
     },
     {
+      "path": "scripts/opinion_validation.py",
+      "sha256": "e7e9f15050ec6a8be0ae7edc07f65975a7746fae008b0fd742de6720185af845"
+    },
+    {
       "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
-      "sha256": "0716e466260fcdbb8691b612dbe5a2faa7a7ae996f735ab43bf4e092c9c768d0"
+      "sha256": "d86d8422bc12ef1311d58f4d20f2bc51974a3b974ba9c8cc7349af1336ce38f4"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -878,5 +882,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a95a7b14b193cdfcbb9bb6db7313b40f96ecff89f776385516dec75c5f1cc1d5"
+  "canonical_course_sha256": "4444c0f15af1932d75172773b06fd83c51777069924ccd60457265fb87f41f79"
 }

@@ -76,7 +76,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "93a395c2511a077ff57997665747080bb00cebbfd7e3475973acb05307c459c3"
+    "source_fingerprint": "8bf74f009a707b9b3e26e86ec69f928b5916f79e1e7de55caeaa895b7614fb38"
   },
   "service_ids": [
     "managed-python-runtime",
@@ -112,6 +112,7 @@
     }
   },
   "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md"
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/skills/vera/references/opinion-delivery.md"
   ]
 }

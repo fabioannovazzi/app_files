@@ -241,7 +241,7 @@
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "f2a6d863f932760edfc41ade6368bc6c313dd18e1e45dfd3c62e5e29bacf2b11"
+    "source_fingerprint": "a4a5da8a6082c072bf28454abf7c586fb328f93843402e606426ab7925e26a8f"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
@@ -257,7 +257,9 @@
     "plugins/vera/skills/legal-tax-answer-review/SKILL.md",
     "plugins/vera/scripts/research-sources.cjs",
     "plugins/vera/skills/vera/references/legal-tax-model-policy.md",
-    "plugins/vera/skills/legal-tax-answer-planner/SKILL.md"
+    "plugins/vera/skills/legal-tax-answer-planner/SKILL.md",
+    "plugins/vera/skills/vera/references/opinion-delivery.md",
+    "plugins/vera/scripts/opinion_validation.py"
   ],
   "public_explanations": {
     "deep-research-validator": {

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "plugins/vera",
-  "version": "0.1.541",
-  "captured_at": "2026-11-02T20:29:39.402579+00:00",
-  "catalogue_fingerprint": "a77c07a611a94b5ee4bcc6e7a9678d84b26a3150bd0e853f1e7bd791990dd1a7",
-  "manifest_sha256": "b4de3ad41650a890740fd95a94a9f0ebe9f35e7e540b3be3ed34b70120ba9b0d",
+  "version": "0.1.544",
+  "captured_at": "2026-11-02T22:12:31.922823+00:00",
+  "catalogue_fingerprint": "4e4d2837dd792556448df47d9274ca4d4019e9dce013f44df1d11b91353e3e3b",
+  "manifest_sha256": "c12f5dff52fed92ebde42a73308aef60c56a415990300084550b7b573dbddb1b",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -14,7 +14,7 @@
     {
       "function_id": "adversarial-opinion",
       "skill_path": "skills/adversarial-opinion/SKILL.md",
-      "sha256": "00dfd05e337a550c5071562584f650f9f95f4c7c010270ffe03a4b14ea0075c1"
+      "sha256": "4e896626006787863d6fc86659dded9a10816d4f53b667eebecc67e0dde57727"
     },
     {
       "function_id": "agenzia-acquisition",
@@ -99,7 +99,7 @@
     {
       "function_id": "deep-research",
       "skill_path": "skills/deep-research/SKILL.md",
-      "sha256": "1d08943dbe71512fa79e2d7f6693016e6b33c4ee197472a02cbe6c03ca6e1e38"
+      "sha256": "33d49c2a8f655e0d9a8148d84f3fa22a7cb9d5d01a140ebd8831bfa003657a09"
     },
     {
       "function_id": "email-cliente",
@@ -154,12 +154,12 @@
     {
       "function_id": "legal-tax-answer-planner",
       "skill_path": "skills/legal-tax-answer-planner/SKILL.md",
-      "sha256": "1ca26a43e25ce364ad973c389fae6c0d00ae62b5f70dbf4b991c96373b076a3a"
+      "sha256": "68d98a54c5a06be304893f5d79af31b89ef4041aad04c649da48d70083d50be6"
     },
     {
       "function_id": "legal-tax-answer-review",
       "skill_path": "skills/legal-tax-answer-review/SKILL.md",
-      "sha256": "48f63914ab884f3e28c0199f8a1649707b9acfa354e75730f4a611f720d8a6be"
+      "sha256": "ce25c80404510adc5da0a7afe3a0cd61cceb8a3b89c9fb0367082a8f43344687"
     },
     {
       "function_id": "lipe",
@@ -219,7 +219,7 @@
     {
       "function_id": "quesito-legale-fiscale",
       "skill_path": "skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "c5aedeba1bc961928fe6206c44d3c34ae0f87414caa9658bbf87491e362e8ac9"
+      "sha256": "87d8b4907d157315331a4c803436640692afefaca9df716d8063bbecdd26de79"
     },
     {
       "function_id": "rating-legalita",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "5c464d718dd68b617a4ae350849d68965011f4024ee02ff6f27b6453da24ddd5"
+      "sha256": "304d8fdd018e34300d4331c129064c2ebaca28de93295d95385e36e68305ac84"
     },
     {
       "function_id": "vouching",
