@@ -57,12 +57,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m pip install pytest pytest-cov playwright reportlab beautifulsoup4 pypdf -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/client-file-preparation/requirements.txt -r plugins/report-builder/requirements.txt
+      - run: python -m pip install pytest pytest-cov playwright reportlab beautifulsoup4 pypdf -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/client-file-preparation/requirements.txt -r plugins/report-builder/requirements.txt -r plugins/registro-imprese-sari/requirements.txt -r plugins/previdenza-inps/requirements.txt
       - run: python -m playwright install --with-deps chromium
       - name: Verify that exactly one review opens and only relevant controls are visible
         env:
           VERA_REVIEW_SCREENSHOTS: /tmp/vera-review-screenshots
-        run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

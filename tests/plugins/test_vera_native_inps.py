@@ -174,7 +174,7 @@ def test_inps_actual_named_public_application_preserves_memo_and_review_ceiling(
         program(inps_run)
         + f"const selectedAction={json.dumps(action)};\n"
         + """
-const fields={reviewer:'Fictional professional reviewer',decisions:{[identity.item_id]:{action:selectedAction,reviewer_note:'Actual fictional choice for this evidence',edit_value:selectedAction==='edit'?'Fictional revision requested; not yet applied':'',requested_documents:selectedAction==='request_more_documents'?'Readable original evidence':''}}};
+const fields={reviewer:'Fictional professional reviewer',decisions:{[identity.item_id]:{action:selectedAction,reviewer_note:'Actual fictional choice for this evidence',edit_value:'Fictional revision requested; not yet applied',requested_documents:'Readable original evidence'}}};
 const saved=payload(call('vera_workspace_inps_draft_save',{...authority(page),fields}));
 const args={...authority(page),expected_draft_revision:saved.draft_revision,fields,confirmed:true,idempotency_key:'fictional-inps-apply'};
 const first=payload(call('vera_workspace_inps_commit',args));
@@ -189,6 +189,10 @@ const result={first,retry,changed};
     final = json.loads((inps_run[2] / "final_artifacts.json").read_bytes())
     assert stored["reviewer"] == "Fictional professional reviewer"
     assert stored["decisions"][0]["action"] == action
+    assert bool(stored["decisions"][0].get("edit_value")) == (action == "edit")
+    assert bool(stored["decisions"][0].get("requested_documents")) == (
+        action == "request_more_documents"
+    )
     assert result["first"]["public_application"]["persisted"] is True
     assert result["retry"] == result["first"]
     assert result["changed"]["isError"] is True

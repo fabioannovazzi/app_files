@@ -207,11 +207,11 @@ def choices(value: dict) -> dict:
                 "item_id": identity,
                 "action": row["action"],
                 "reviewer_note": row["reviewer_note"],
-                "edit_value": row["edit_value"],
+                "edit_value": row["edit_value"] if row["action"] == "edit" else "",
                 "requested_documents": [
                     line
                     for line in row["requested_documents"].splitlines()
-                    if line.strip()
+                    if line.strip() and row["action"] == "request_more_documents"
                 ],
             }
             for identity, row in value["decisions"].items()
