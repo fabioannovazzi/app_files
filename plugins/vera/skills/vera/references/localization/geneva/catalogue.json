@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.532",
-  "captured_at": "2026-11-01T22:14:04.055460+00:00",
-  "catalogue_fingerprint": "d98026af04f8103ff6d7fd16dc4149c36a33d763a72c6f858025de55faa2a828",
-  "manifest_sha256": "9d05b8e1b5b03a42b833ab98fc1019c9c76e926cdb0f457dfa72278bfed5817b",
+  "version": "0.1.535",
+  "captured_at": "2026-11-02T17:24:19.120983+00:00",
+  "catalogue_fingerprint": "f5920a2a4d7b063d18987e890651cf48c8ba0a71167a21fd76292b64353f68a5",
+  "manifest_sha256": "3d65ceb3528171c78c766508696a693e158018438216daa14e9f9fad43a55126",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -139,7 +139,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "eb35979aca128b00c17d4d6e378d173c5e384aa17ec17008a33e902ee96736e5"
+      "sha256": "28dfc50cb0ad1ce93bb1ac108c7efc8ddfd0e60dce6a7b05ffad6acd630fbded"
     },
     {
       "function_id": "journal-sampling",
