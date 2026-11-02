@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "db430dd3bb7bd13aa77df3ecc4ae26da023cdcf101033d23a9aef482b9e579a7",
+      "sha256": "1e4ce811159479b39cf66f17f9e6179eb876cc7b73a1f8276740643dfba83253",
       "languages": [
         "it",
         "en",
@@ -33,7 +33,7 @@
     },
     "advisory-case-director": {
       "path": "advisory-case-director/course.json",
-      "sha256": "d6a75d6fd843fdccb6f67fc487ec42b859079652990879fc83b9dcff43894508",
+      "sha256": "428f032fe0d974d06fddf5b36d41bc11eecc43e4ce44d31b05cca97006383e67",
       "languages": [
         "it",
         "en",
@@ -62,7 +62,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "4a2187c44ea4de7c88197033c73b9dd655fc647ba662460c53f4bc8e40e508b1",
+      "sha256": "d9ab0f2026caf228c3b96c3aee952d24dfa353121757061e9c28952be4402432",
       "languages": [
         "it",
         "en",
@@ -91,7 +91,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "3bb84661f499ae678d46474ecdc85721075a8ce2e75eccf3162546a8ab81a989",
+      "sha256": "867a5d923b71a25eca53b496979d53d560e2881ad5bae386bff64fb08c191e93",
       "languages": [
         "it",
         "en",
@@ -120,7 +120,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "f77ebb28f1b12166511882af7475e16bad0e23daa0469f9fbe3a32441675a587",
+      "sha256": "1be072629412cf6442e76e34af2e6fb08fda9c29626f2b1e0c4907920d354318",
       "languages": [
         "it",
         "en"
@@ -140,7 +140,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "d885c7136bda76c9db5ddedd922bbb9b057864e2d14a4150df6d71ade798e755",
+      "sha256": "1d98f0316e82e8f8180ff0b76be2b44a4bdc667eadc5c1a828efbbc21e5af62d",
       "languages": [
         "it",
         "en",
@@ -169,7 +169,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "8ac3154315201b08359da78392ccd92ed0aee30ae432e0df094b29c7af6a759d",
+      "sha256": "6a1695f2d49c6f95df72ad37ebd7b1962659982e9ccfbd136828ca2f0b91a5f5",
       "languages": [
         "it",
         "en",

@@ -30,7 +30,7 @@
     {
       "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
       "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "56bc957882fd994a3b9916ab71ab830fcc9ed057343aad9d73c6084e7c4037bb"
+      "sha256": "c98f9004b3516e4ecb981b2052b6e22bcaf3639f89db90a99defb7f004a4346a"
     },
     {
       "path": "modules/deep-research-validator/assets/icon.svg",
@@ -205,7 +205,7 @@
     {
       "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
       "repository_path": "plugins/prompt-optimizer/assets/legal-tax-model.html",
-      "sha256": "57afa8c6ac1b7fdd21801d51952dbf8147d5970db1a97714cb200731cea09737"
+      "sha256": "d027342967c1a77786d18fdb525deb80006e073f0724a09d2ae9423545e1c1c4"
     },
     {
       "path": "modules/prompt-optimizer/scripts/model-policy.cjs",

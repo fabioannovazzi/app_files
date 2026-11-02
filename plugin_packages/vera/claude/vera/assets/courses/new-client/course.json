@@ -28,7 +28,7 @@
   "sources": [
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "389d1228d7efcc17ef8176be047a31b4599f329792f93fd9bdb58588a065987b"
+      "sha256": "7a5bf651a6a9995d9fc495f3b4689e288fbac584aac839c7ada047e5fc951840"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -160,7 +160,7 @@
     },
     {
       "path": "modules/new-client/assets/new-client-review-widget.html",
-      "sha256": "28dc20dc77d73ff41b22f6988fa06798c33f6649ff0a2e671c95853eace6905b"
+      "sha256": "9a542b8f0882b86889cad73ea51319a38157f2b34c881760d256594b71dcdef9"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",
@@ -701,5 +701,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d346db1269af544863ef0a7b4084b8b1d02682a8147ea1db38484d3aae4cd519"
+  "canonical_course_sha256": "4b585b439a514d447b8166f8bd1c18261ea4034cae64e49dd80fcc589a207527"
 }

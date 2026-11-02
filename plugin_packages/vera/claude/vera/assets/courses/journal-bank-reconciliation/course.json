@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
-      "sha256": "da5c4c94f94ddad6e361827efcc4490192463f087935770faab568a721086fa7"
+      "sha256": "90cdd846e5278137b6161002d13956d9958be566a0ac5a6376ec82fa35cc53d5"
     },
     {
       "path": "modules/journal-bank-reconciliation/assets/review-workbench-adapter.json",
@@ -184,7 +184,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "93a7fa3e1860dae94b2531c30fbae293921ebff30f3519a32540a24b80e46767"
+      "sha256": "94cf37c790c4e7f8834e86eaab6fe757fa017f845549442c1bee8fa8daf7eb40"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -617,5 +617,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2b1b9c53783f80550dea67f39ffab78f6e6c7ca3fa39aa595221df88edbd8ce6"
+  "canonical_course_sha256": "ff857345eeb5eb306b803c2081c13acfd10ec3224f5c053a33f61829885bf411"
 }

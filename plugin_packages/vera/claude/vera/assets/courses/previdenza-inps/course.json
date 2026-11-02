@@ -33,7 +33,7 @@
     },
     {
       "path": "modules/previdenza-inps/assets/previdenza-inps-review-widget.html",
-      "sha256": "85b77a085e20a08d349a602bae0972860284c6e525d2aec71ef586f5c5e0a18c"
+      "sha256": "f0af7ea8561544c96e3121414232258fb03f789596d273556967b87a86c89d31"
     },
     {
       "path": "modules/previdenza-inps/references/inps-access-channels.md",
@@ -782,5 +782,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "32547b0c216dba47c6aab287de5f64c7e7196f6f14b875b13e958d55f8cc329a"
+  "canonical_course_sha256": "a8abc5e4acfc1c1bb71ae5f60913bd6887d995e9cec3dfce27d714281da8a94c"
 }

@@ -10941,7 +10941,16 @@ def test_journal_bank_mcp_server_validates_renders_and_applies_review_payload(
         resource["uri"] for resource in responses[4]["result"]["resources"]
     }
     assert "ui://widget/journal-bank-review.html" in resource_uris
-    widget_html = responses[5]["result"]["contents"][0]["text"]
+    assert (
+        render_result["_meta"]["private_review_payload"]["requested_display_mode"]
+        == "fullscreen"
+    )
+    resource = responses[5]["result"]["contents"][0]
+    assert resource["_meta"]["openai/ui"] == {
+        "preferredDisplayMode": "fullscreen",
+        "availableDisplayModes": ["inline", "fullscreen"],
+    }
+    widget_html = resource["text"]
     assert "Journal-Bank Review" in widget_html
     assert "toolResponseMetadata" in widget_html
     assert "private_review_payload" in widget_html

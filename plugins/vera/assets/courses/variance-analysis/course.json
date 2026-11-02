@@ -34,7 +34,7 @@
     {
       "path": "modules/variance-analysis/assets/variance-analysis-review-widget.html",
       "repository_path": "plugins/variance-analysis/assets/variance-analysis-review-widget.html",
-      "sha256": "210dc5eb7e8afc2f7d359bc701eb11b60569c675e2fcd4d843f5520bb301a32f"
+      "sha256": "eb7825daa20383739484dba14d8e210663ff1a1992cbaf83964332040461ec61"
     },
     {
       "path": "modules/variance-analysis/references/legacy_inventory.json",

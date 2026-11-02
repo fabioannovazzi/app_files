@@ -29,7 +29,7 @@
   "sources": [
     {
       "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "9606843ed5bd991bdc84fe3e24f3b2a2fba6f885fcc12816232ff158d1ea3495"
+      "sha256": "b8293a845997a4151098ef1d13610bc35238ce742cb252a9bacb340f81ed44c9"
     },
     {
       "path": "modules/deep-research-validator/assets/icon.svg",
@@ -169,7 +169,7 @@
     },
     {
       "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
-      "sha256": "57afa8c6ac1b7fdd21801d51952dbf8147d5970db1a97714cb200731cea09737"
+      "sha256": "d027342967c1a77786d18fdb525deb80006e073f0724a09d2ae9423545e1c1c4"
     },
     {
       "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
@@ -878,5 +878,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a66554fc235c1d5af52bf576fec3e1c6cff060c846b7fd6e2f2250508d3209d0"
+  "canonical_course_sha256": "a95a7b14b193cdfcbb9bb6db7313b40f96ecff89f776385516dec75c5f1cc1d5"
 }
