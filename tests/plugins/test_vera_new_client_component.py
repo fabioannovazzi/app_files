@@ -351,7 +351,7 @@ def test_vera_declares_new_client_component_skill_and_mcp_route() -> None:
     assert "modules/client-file-preparation" in wrapper_text
     assert "skills/new-client/SKILL.md" in wrapper_text
     assert "skills/client-file-preparation/SKILL.md" in wrapper_text
-    assert "validate_client_file_preparation_review" in wrapper_text
+    assert "vera_open_review" in wrapper_text
     assert not (VERA_ROOT / "skills" / "client-file-preparation").exists()
 
 
@@ -382,6 +382,19 @@ def test_vera_zip_expected_entries_embed_new_client_component() -> None:
         "assets/client-file-preparation-review-widget.html",
     ):
         assert engine_prefix + relative_path in entries
+
+    catalogue = json.loads(entries["vera-codex-plugin/plugins/vera/mcp-catalog.json"])
+    advertised = {
+        tool["name"] for service in catalogue["services"] for tool in service["tools"]
+    }
+    assert {
+        "validate_client_file_preparation_review",
+        "validate_new_client_review",
+        "vera_open_review",
+    } <= advertised
+    assert advertised.isdisjoint(
+        {"render_client_file_preparation_review", "render_new_client_review"}
+    )
 
 
 def test_packaged_vera_runs_new_client_through_dispatcher(
