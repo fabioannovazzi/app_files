@@ -230,6 +230,9 @@ Claude reasons about meaning and priorities; `vera_studio_work_*` tools retain
 state. The connected calendar plugin owns the external calendar. Never substitute
 chat memory for the register, or manual copying for an available connector.
 
+For **Lavori dello studio**, open the Studio Archive directory with
+`vera_workspace_open` and no arguments. For the agenda, use the register below.
+
 When the host supplies `vera_studio_work_panel_open` and renders its MCP app,
 offer the optional native register for paged commitments, meetings, calendar
 receipts and history. It uses the same owner-local SQLite register, not a client

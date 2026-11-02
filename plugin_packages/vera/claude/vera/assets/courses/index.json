@@ -770,7 +770,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "1fec2d81c773cc12c3ef8f8d574738e8a85afb02a7589a19dacb33235577e586",
+      "sha256": "34d3395c469dc582bf4bf81291a2c86a9d772ec499b62fa6f46e1b3f99f8f8fe",
       "languages": [
         "it",
         "en",
@@ -795,7 +795,7 @@
         "de": "Eine Verpflichtung speichern, ändern, in einem neuen Chat wiederfinden und Besprechungsnotizen in Folgeaufgaben überführen.",
         "es": "Aprender a guardar un compromiso, modificarlo, recuperarlo en otra conversación y convertir notas de reunión en tareas posteriores."
       },
-      "source_sha256": "cb644bd52f577c8088eee7ca76c7fb313c8f71d42bfe8ab0b1cf58fa2e9bd02f"
+      "source_sha256": "1082eb0f824c1c6f6005bccadda8a0e63c02a148a19e225cc44ec8e220debbf3"
     },
     "patent-box-review": {
       "path": "patent-box-review/course.json",

@@ -19,7 +19,7 @@ function definition(action,description,properties,required,model=false) {
     _meta:{ui:{visibility:model?["app","model"]:["app"],...(action==="open"?{resourceUri:URI}:{})}}};
 }
 const TOOLS = [
-  definition("open","Open the optional owner-local studio work panel. Register content stays in app metadata; calendar execution remains in the connected host workflow.",{},[],true),
+  {...definition("open","Open the studio agenda for appointments, meetings and commitments. For “Lavori dello studio” (the directory of saved client work), use vera_workspace_open instead. Calendar execution stays in the connected host workflow.",{},[],true),title:"Agenda dello studio"},
   definition("page","Read a stable page or exact incomplete form in the owner-local register.",{collection:{enum:["items","operations","meetings","history"]},offset:revision,form:string,day:string,expected_scope:string},[]),
   definition("draft_save","Retain literal incomplete fields, without creating a commitment or restoring confirmation.",{...identity,fields:{type:"object"}},[...Object.keys(identity),"fields"]),
   definition("draft_clear","Discard only the exact private draft; retain all authoritative commitments, meetings and calendar receipts.",identity,Object.keys(identity)),

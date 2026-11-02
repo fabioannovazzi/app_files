@@ -125,6 +125,10 @@ continuing the useful in-chat work.
 
 ## Reviewing saved work
 
+When the user asks for **Lavori dello studio**, open the Studio Archive
+directory with `vera_workspace_open` and no arguments. The agenda is for
+appointments and commitments; it does not list saved client work.
+
 Deliver the result in this chat with its ordinary files. Use a panel only for a
 review that needs interaction or when the user asks to open it. In Codex call
 `vera_open_review` with the exact Archive client, engagement and run identifiers
