@@ -102,7 +102,6 @@ def test_bank_failed_save_keeps_preparation_visible_without_navigation():
     ("action", "expected"),
     [
         ("refresh", {"client_id": CLIENT, "engagement_id": ENGAGEMENT, "offset": 30}),
-        ("Clienti e incarichi", {}),
         ("← Clienti", {}),
         ("← Incarichi del cliente", {"client_id": CLIENT}),
     ],
@@ -113,3 +112,5 @@ def test_directory_refresh_preserves_scope_and_explicit_back_changes_it(
     result = navigate(action)
 
     assert result["calls"] == [{"name": "vera_workspace_open", "arguments": expected}]
+    assert result["buttons"].count("← Clienti") == 1
+    assert "Clienti e incarichi" not in result["buttons"]

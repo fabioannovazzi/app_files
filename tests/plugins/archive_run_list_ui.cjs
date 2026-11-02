@@ -1,13 +1,17 @@
 "use strict";
 // Exercise the real workspace asset with synthetic DOM/host transport only.
-const fs = require("node:fs"), vm = require("node:vm");
+const fs = require("node:fs"), path = require("node:path"), vm = require("node:vm");
+const reviewRoutes = require(path.join(path.dirname(process.argv[2]), "review-routes.json"));
 class Element {
   constructor(tag) {
     this.tagName = tag.toUpperCase(); this.children = []; this.textContent = "";
-    this.attributes = {}; this.listeners = {}; this.className = "";
-    this.classList = { toggle() {} };
+    this.attributes = {}; this.listeners = {}; this.className = ""; this.dataset = {};
+    this.classList = { toggle() {}, add() {} };
   }
-  append(...items) { this.children.push(...items); }
+  append(...items) {
+    for (const item of items) item.parentElement = this;
+    this.children.push(...items);
+  }
   insertBefore(item, before) { this.children.splice(this.children.indexOf(before), 0, item); }
   replaceChildren(...items) { this.children = items; }
   setAttribute(key, value) { this.attributes[key] = value; }
@@ -29,6 +33,7 @@ const listeners = {}, parent = { postMessage(message) {
     else if (name === "vera_workspace_bank_draft_read") workspace = { draft: null };
     else if (name === "vera_workspace_bank_draft_save") workspace = { draft_revision: "saved-draft" };
     else if (name === "vera_workspace_bank_draft_clear") workspace = {};
+    else if (reviewMode && name === "vera_workspace_review_route") workspace = {kind:"review_route", workflow:fixture.review.workflow, view:reviewRoutes[fixture.review.workflow], work_ref:fixture.review.work_ref};
     else if (reviewMode && name === "vera_workspace_view") workspace = {...fixture.review, selection: fixture.review.items.find(row => row.id === message.params.arguments.item_id) || null};
     else if (reviewMode && name === "vera_workspace_draft_read") workspace = {draft:null};
     else if (reviewMode && ["vera_workspace_save", "vera_workspace_apply"].includes(name)) workspace = {saved:true};
@@ -40,7 +45,7 @@ const listeners = {}, parent = { postMessage(message) {
   queueMicrotask(() => listeners.message({ source: parent, data: { jsonrpc: "2.0", id: message.id, result } }));
 } };
 const window = { parent, addEventListener: (name, callback) => { listeners[name] = callback; } };
-const factories = {};
+const factories = {VeraReviewRoutes: reviewRoutes};
 for (const name of ["VeraOpenItemsIntake", "VeraBrowser", "VeraFusion", "VeraRating", "VeraTransformation", "VeraWebsite", "VeraPracticeReviews", "VeraCommunication", "VeraPatentBox", "VeraBandiContributions"]) {
   factories[name] = { create: () => ({ dispose() {}, async flush() {}, active: name === "VeraBandiContributions" ? false : () => false }) };
 }
@@ -62,8 +67,6 @@ const collect = element => [element, ...element.children.flatMap(collect)];
       await target.listeners.click();
     };
     await click("Apri lavoro →");
-    const row = collect(elements.app).find(el => el.className === "finding");
-    await row.listeners.click();
     if (fixture.action) {
       const check = collect(elements.app).find(el => el.type === "checkbox");
       check.checked = true;
@@ -73,7 +76,7 @@ const collect = element => [element, ...element.children.flatMap(collect)];
     process.stdout.write(JSON.stringify({calls, status:elements.status.textContent,
       text:nodes.map(el=>el.textContent || "").join(" "),
       fields: nodes.filter(el=>el.tagName === "LABEL" && el.className === "field").map(el=>({label:el.children[0].textContent,value:el.children[1].value})),
-      selected:nodes.filter(el=>el.className === "finding" && el.attributes["aria-pressed"] === "true").length,
+      selectedTitle:nodes.find(el=>el.tagName === "H2" && el.parentElement?.id === "detail")?.textContent,
     }));
   } else if (navigationMode) {
     await new Promise(resolve => setImmediate(resolve));
@@ -89,7 +92,11 @@ const collect = element => [element, ...element.children.flatMap(collect)];
     }
     if (fixture.action === "refresh") await elements.refresh.listeners.click();
     else await click(fixture.action);
-    process.stdout.write(JSON.stringify({ calls, status: elements.status.textContent, text: collect(elements.app).map(element => element.textContent || "").join(" ") }));
+    const nodes = collect(elements.app);
+    process.stdout.write(JSON.stringify({ calls, status: elements.status.textContent,
+      text: nodes.map(element => element.textContent || "").join(" "),
+      buttons: nodes.filter(element => element.tagName === "BUTTON").map(element => element.textContent),
+    }));
   } else if (importMode) {
     await new Promise(resolve => setImmediate(resolve));
     const open = collect(elements.app).find(element => element.tagName === "BUTTON" && element.textContent === "Importa documenti");

@@ -233,7 +233,13 @@ def render_review(
         "title": "Commissione €5",
         "status": "needs_review",
         "allowed_actions": ["accept", "request_more_documents"],
-        "data": {"bank_amount": -5, "journal_amount": None, "amount_delta": 5},
+        "data": {
+            "description": "Commissione",
+            "bank_amount": -5,
+            "currency": "EUR",
+            "journal_amount": None,
+            "amount_delta": 5,
+        },
     }
     fixture = {
         "action": action,
@@ -302,12 +308,13 @@ def render_review(
 def test_saved_decision_reopens_with_italian_groups_and_requested_documents() -> None:
     result = render_review(action="Salva decisione")
 
-    assert "Decisione salvata · Evidenza mancante" in result["text"]
-    assert "Scrittura contabile" in result["text"]
+    assert "Decisione salvata · Richiedi documenti" in result["text"]
+    assert "Scrittura contabile" not in result["text"]
+    assert "Nessuna scrittura corrispondente nel giornale fornito." in result["text"]
     assert "Movimento bancario" in result["text"]
     assert "Esito del confronto" in result["text"]
     assert "Journal Entry" not in result["text"]
-    assert result["selected"] == 1
+    assert result["selectedTitle"] == "Commissione · -5,00 EUR"
     assert {"label": "Documenti richiesti", "value": "Supporto commissione"} in result[
         "fields"
     ]
@@ -352,12 +359,12 @@ def test_apply_reports_persisted_effects_without_assuming_regeneration(
     result = render_review(action="Applica revisione", applied=applied)
 
     assert expected in result["status"]
-    assert result["selected"] == 1
+    assert result["selectedTitle"] == "Commissione · -5,00 EUR"
 
 
 def test_failed_save_does_not_report_success_or_reload_selection() -> None:
     result = render_review(action="Salva decisione", fail_save=True)
 
     assert result["status"] == "Draft write failed"
-    assert result["selected"] == 1
+    assert result["selectedTitle"] == "Commissione · -5,00 EUR"
     assert result["calls"][-1]["name"] == "vera_workspace_save"
