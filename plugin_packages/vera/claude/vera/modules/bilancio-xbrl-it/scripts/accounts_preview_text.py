@@ -71,6 +71,9 @@ _ITALIAN = {
     "An effective-dated disclosure rule pack has not been activated": "Non è stato attivato il pacchetto delle informazioni richieste valido per l’esercizio",
     "The prior filed XBRL is not attached for comparative and opening checks": "Il precedente XBRL depositato non è allegato per i controlli comparativi e sui saldi iniziali",
     "The debit/credit convention is not confirmed": "La convenzione Dare/Avere non è confermata",
+    "The statutory form is not confirmed": "La forma del bilancio non è confermata",
+    "The selected-form official taxonomy mapping index is missing": "Manca la mappatura alla tassonomia ufficiale per la forma di bilancio scelta",
+    "A review preview is required": "Prepara l’anteprima per il riesame",
     "Statements have not been computed": "I prospetti non sono stati calcolati",
     "A trial balance is required": "È necessaria una situazione contabile",
     "Upload or enter source-backed schedule data": "Fornisci i dati del prospetto con i relativi riferimenti alle fonti",
@@ -213,6 +216,9 @@ def preview_check_message(
         return "Mancano i prospetti richiesti: " + ", ".join(
             _SCHEDULES.get(subject, subject) for subject in subjects
         )
+    unmapped = re.fullmatch(r"(\d+) accounts are not mapped or excluded", message)
+    if unmapped and language == "it":
+        return f"Conti ancora da associare a una voce o da escludere: {unmapped[1]}"
     count = re.fullmatch(r"(\d+) annual negative confirmations are missing", message)
     if count:
         return (

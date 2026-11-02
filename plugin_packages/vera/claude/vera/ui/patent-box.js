@@ -164,8 +164,14 @@ globalThis.VeraPatentBox = Object.freeze({create(api) {
     api.leaveDraft();const generation=api.enter();
     const page=await call("vera_workspace_patent_box_setup",{work_ref:workRef,operation});if(!api.isCurrent(generation))return;
     const {nav,main}=api.shell();nav.append(button("← Lavori dello studio",api.openWorks));
-    for(const [value,label] of Object.entries(labels))nav.append(button(label,()=>open(workRef,value)));
-    if(authorPanel)nav.append(button("Preparazione con Vera",async()=>{await flush();dispose();await authorPanel.open(workRef);}));
+    const steps=node("details",undefined,"supporting-details"),choices=node("div",undefined,"actions");
+    steps.append(node("summary","Passaggi del dossier"),choices);nav.append(steps);
+    for(const [value,label] of Object.entries(labels)){
+      const action=button(label,()=>open(workRef,value));
+      if(value===operation)action.setAttribute("aria-current","page");
+      choices.append(action);
+    }
+    if(authorPanel)choices.append(button("Preparazione con Vera",async()=>{await flush();dispose();await authorPanel.open(workRef);}));
     main.append(node("p","Patent Box","eyebrow"),node("h1",labels[operation]),node("p",page.label,"intro"));
     main.append(node("p","Preparazione in sviluppo. Il calcolo reale richiede fonti e regole riesaminate e una decisione firmata con mandato dello studio. I documenti prodotti restano bozze da rivedere.","notice"));
     const local={page,fields:{...defaults(operation,page),...structuredClone(page.fields)},stamp:page.draft_revision,saved:JSON.stringify(page.fields),editable:page.can_write&&!page.draft_stale};context=local;api.setDirty(false);

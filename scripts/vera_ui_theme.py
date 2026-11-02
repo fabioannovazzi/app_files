@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import base64
 import hashlib
 import json
 import re
@@ -10,6 +11,7 @@ from pathlib import Path
 __all__ = [
     "THEME_PATH",
     "theme_css",
+    "vera_identity_theme",
     "theme_html",
     "theme_package_resources",
     "theme_course_page",
@@ -20,6 +22,16 @@ START = (
     "/* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */"
 )
 END = "/* VERA_SHARED_THEME_END */"
+
+
+VERA_UI = THEME_PATH.parents[2] / "vera/ui"
+
+
+def vera_identity_theme() -> str:
+    """Apply Vera's product tokens after the shared layout and control rules."""
+    return THEME_PATH.read_text(encoding="utf-8") + (
+        VERA_UI / "identity.css"
+    ).read_text(encoding="utf-8")
 
 
 def theme_css(css: str, *, theme: str | None = None) -> str:
@@ -51,7 +63,9 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
         "modules/bilancio-xbrl-it/ui/workspace.css",
         "modules/treasury-forecast/assets/review.css",
     }
-    if prefix.rstrip("/").split("/")[-1] == "vera":
+    vera = prefix.rstrip("/").split("/")[-1] == "vera"
+    if vera:
+        theme = vera_identity_theme()
         css_resources.update(
             {
                 "vendor/modules/courseware/assets/course.css",
@@ -70,6 +84,14 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
         if not name.startswith(prefix):
             continue
         relative = name.removeprefix(prefix)
+        # Saved specialist cases verify their producer's files byte for byte.
+        # Only Agenzia serves a component UI directly in the Vera MCP catalog.
+        if (
+            vera
+            and relative.startswith("modules/")
+            and relative != "modules/browser-automation/ui/agenzia.css"
+        ):
+            continue
         is_widget = (
             relative.startswith("modules/")
             and "/assets/" in relative
@@ -82,9 +104,14 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
             ).encode()
         elif relative in html_resources or is_widget:
             original_resources[relative] = entries[name]
-            entries[name] = theme_html(
-                entries[name].decode("utf-8"), theme=theme
-            ).encode()
+            html = entries[name].decode("utf-8")
+            if vera and relative == "vendor/modules/courseware/assets/chat.html":
+                html = (VERA_UI / "course-chat.html").read_text(encoding="utf-8")
+                bold = base64.b64encode(
+                    (VERA_UI / "InstrumentSans-SemiBold.ttf").read_bytes()
+                )
+                html = html.replace("__FONT_BOLD__", bold.decode("ascii"))
+            entries[name] = theme_html(html, theme=theme).encode()
     # Lessons pin their UI sources. Bind the exact themed bytes while retaining
     # their reviewed source hashes; never accept a stale source-course binding.
     index_path = prefix + "assets/courses/index.json"

@@ -93,7 +93,30 @@ globalThis.VeraBandiContributions = Object.freeze({create(api) {
       field(main,local,"task","Contributo richiesto",[["","Scegli il task"],...page.tasks.map(task=>[task,taskLabels[task]||task])]);
       field(main,local,"subject_ids","Identificativi esatti del perimetro, uno per riga");
       field(main,local,"model_session_ref","Riferimento dichiarato della sessione separata");
-      field(main,local,"raw_source_ids","Originali da autorizzare, identificativi esatti uno per riga");
+      const originals=node("fieldset");
+      originals.append(node("legend","Originali da includere nella richiesta"));
+      for(const source of page.sources){
+        const label=node("label",undefined,"check"),pick=node("input");
+        pick.type="checkbox";pick.checked=local.fields.raw_source_ids.includes(source.source_id);pick.disabled=!local.editable;
+        pick.addEventListener("change",()=>{
+          local.fields.raw_source_ids=pick.checked?[...local.fields.raw_source_ids,source.source_id]:local.fields.raw_source_ids.filter(id=>id!==source.source_id);
+          changed(local);
+        });
+        const caption=page.sources.some(other=>other!==source&&other.title===source.title)
+          ? source.title+" · "+source.source_id : source.title||source.source_id;
+        label.append(pick,node("span",caption));originals.append(label);
+      }
+      for(const id of local.fields.raw_source_ids.filter(id=>!page.sources.some(source=>source.source_id===id))){
+        const label=node("label",undefined,"check"),pick=node("input");
+        pick.type="checkbox";pick.checked=true;pick.disabled=!local.editable;
+        pick.addEventListener("change",()=>{
+          local.fields.raw_source_ids=pick.checked?[...local.fields.raw_source_ids,id]:local.fields.raw_source_ids.filter(value=>value!==id);
+          changed(local);
+        });
+        label.append(pick,node("span","Fonte non più disponibile: "+id));originals.append(label);
+      }
+      if(!page.sources.length)originals.append(node("p","Nessun originale registrato nel dossier.","caption"));
+      main.append(originals);
       main.append(node("p","Il tipo dichiarato della fonte limita l’accesso ai dati previsto dal task; non prova autorità, pertinenza o correttezza. La selezione resta una scelta del professionista.","caption"));
       const sources=node("details"); sources.append(node("summary","Fonti registrate e identificativi"),showJson(page.sources)); main.append(sources);
       local.confirm=confirmation(main,"Confermo il task e questa selezione esatta sul dossier corrente");

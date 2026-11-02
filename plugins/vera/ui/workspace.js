@@ -47,12 +47,34 @@
   Object.assign(labels,{recipe:"Confronto",mappings:"Periodi, misure e dimensioni",options:"Scelte del confronto",accounting_review:"Controlli dichiarati",accounting_readiness:"Controlli del motore",declared_controls:"Controlli e decisioni dichiarati",professional_review:"Revisione professionale",root_cause_review:"Revisione della sequenza",source_tie_out:"Quadratura delle fonti",favorable_adverse_convention:"Convenzione favorevole/sfavorevole",materiality:"Materialità",baseline_source_total:"Totale fonte di riferimento",comparison_source_total:"Totale fonte confrontata",baseline_calculated_total:"Totale calcolato di riferimento",comparison_calculated_total:"Totale calcolato confrontato",tolerance:"Tolleranza dichiarata",component_bridge:"Quadratura dei contributi",max_abs_reconciliation_delta:"Residuo massimo assoluto",accounting_status:"Esito contabile",client_report_status:"Stato del rapporto",unresolved_items:"Questioni aperte",selected_alternative:"Sequenza scelta",alternative_result:"Sequenza",decision_basis:"Motivazione della decisione",other_residual:"Residuo Other",period_column:"Colonna periodo o scenario",baseline_period:"Periodo o scenario di riferimento",comparison_period:"Periodo o scenario confrontato",amount_column:"Colonna importi",units_column:"Colonna quantità",dimensions:"Dimensioni",calculation_grain:"Dettaglio di calcolo",comparison_basis:"Base del confronto",period_comparison_mode:"Tipo di confronto tra periodi"});
   names["rating-legalita"] = "Rating di legalità";
   const technicalKeys = new Set(["id", "event_id", "issue_id", "source_ref", "document_id", "content_sha256", "record_sha256", "proposal_sha256", "target_artifact", "target_id_field", "target_record_id", "target_field", "rule_id", "model_context", "context_sha256", "review_ticket", "field_ref", "source_text_sha256", "source_sha256", "group_ref", "duplicate_key"]);
+  const intakeFields = {
+    category:"Categoria", years:"Anni", notes:"Note", readable:"Documento leggibile",
+    structured_field_count:"Campi estratti", fiscal_extraction_disposition:"Esito dell’estrazione fiscale"
+  };
+  Object.assign(labels, intakeFields);
+  const sourceCaption = value => String(value).replace(/(?:^|(?<=\s))imports\/input_[a-f0-9]+\//g, "");
   const itemId = item => item.issue_id || item.id || item.event_id;
   const internalField = key => technicalKeys.has(key) ||
     ["run_id","client_id","engagement_id","work_ref","idempotency_key","schema_version","execution_trace"].includes(key) ||
     key.endsWith("_sha256");
+  function workTitle(label, workflow) {
+    const generated = !label || /^run_[a-f0-9]{24}$/i.test(label) || label.toLowerCase() === workflow.replaceAll("-", " ");
+    return generated ? (names[workflow] || "Revisione") : label;
+  }
   function title(item) {
     const data = item.data || {};
+    if (state?.workflow === "open-item-reconciliation" && item.item_type === "unresolved_item" && data.document_no) {
+      const balance=data.balance??data.amount;
+      const amount=balance!=null&&balance!==""?[String(balance).replace(".",","),data.currency].filter(Boolean).join(" "):"";
+      return [data.document_no,amount,"Da riconciliare"].filter(Boolean).join(" · ");
+    }
+    if (state?.workflow === "journal-sampling" && item.item_type === "sampling_control" &&
+        Number.isInteger(data.sample_size) && Number.isInteger(data.population_size_after_filters)) {
+      if (data.sampling_status === "no_eligible_rows") return "Nessuna scrittura idonea al campionamento";
+      const method = {systematic:"sistematico",random:"casuale",monetary_unit:"per unità monetarie"}[data.method] || data.method;
+      const excluded = data.zero_value_rows_excluded ? ` · Righe a zero escluse: ${data.zero_value_rows_excluded}` : "";
+      return `Campione ${method}: ${data.sample_size} su ${data.population_size_after_filters}${excluded}`;
+    }
     if (state?.workflow === "journal-bank-reconciliation" &&
         ["unmatched_bank", "unmatched_journal", "matched_pair"].includes(item.item_type)) {
       const description = data.description || data.bank_description || data.journal_description;
@@ -62,7 +84,7 @@
       const reference = data.reference || data.shared_references;
       return [description || reference || "Movimento", [money, data.currency].filter(Boolean).join(" ")].filter(Boolean).join(" · ");
     }
-    return item.title || item.description || item.message || "Elemento da esaminare";
+    return sourceCaption(item.title || item.description || item.display_message || item.message || "Elemento da esaminare");
   }
   function decisionNotes(parent, select, record, changed, noteLabel) {
     const rows = [
@@ -763,7 +785,7 @@
   function groupSourcePicker(parent,label,identity,inputs,choose){
     const details=node("details"),summary=node("summary",identity?(inputs.find(row=>row.id===identity)?.title||identity):label),search=node("input"),options=node("fieldset");
     search.type="search";search.placeholder="Cerca nome o impronta";search.setAttribute("aria-label",label);options.append(node("legend",label));details.append(summary,search,options);parent.append(details);
-    function draw(){options.replaceChildren(node("legend",label));const q=search.value.toLocaleLowerCase(),rows=inputs.filter(row=>(row.title+" "+row.sha256).toLocaleLowerCase().includes(q));for(const row of rows.slice(0,30)){const pick=button(`${row.title} · ${row.sha256.slice(0,12)}`,async()=>{details.open=false;summary.textContent=row.title;await choose(row.id);});pick.setAttribute("aria-label",`${label}: ${row.title}`);options.append(pick);}if(rows.length>30)options.append(node("p",`${rows.length} fonti corrispondono. Affina la ricerca per scegliere fra tutte.`,"caption"));if(!rows.length)options.append(node("p","Nessuna fonte corrisponde.","caption"));}
+    function draw(){options.replaceChildren(node("legend",label));const q=search.value.toLocaleLowerCase(),rows=inputs.filter(row=>(row.title+" "+row.sha256).toLocaleLowerCase().includes(q));for(const row of rows.slice(0,30)){const duplicate=inputs.some(other=>other.id!==row.id&&other.title===row.title);const caption=duplicate?`${row.title} · impronta ${row.sha256.slice(0,12)}`:row.title;const pick=button(caption,async()=>{details.open=false;summary.textContent=row.title;await choose(row.id);});pick.setAttribute("aria-label",`${label}: ${caption}`);options.append(pick);}if(rows.length>30)options.append(node("p",`${rows.length} fonti corrispondono. Affina la ricerca per scegliere fra tutte.`,"caption"));if(!rows.length)options.append(node("p","Nessuna fonte corrisponde.","caption"));}
     search.addEventListener("input",draw);draw();return details;
   }
   async function openSourceGroup(workRef,canonicalId="",offset=0,recovery=false,carried){
@@ -795,7 +817,7 @@
     state=null;salesWork=null;bankWork=null;lipeWork=null;amlWork=null;amlDraftContext=null;closureContext=null;invoiceContext=null;passiveContext=null;query="";
     const {nav,main}=shell();main.append(node("p","Controllo fatture passive","eyebrow"),node("h1","Fonti, gruppi e riesame"));
     nav.append(button("← Lavori dello studio",()=>loadCatalogue()));
-    main.append(node("p",`Runtime: ${page.runtime==="cowork-haiku"?"Cowork · Haiku":page.qualified?"Codex · "+page.qualified.worker_model:"Codex · selezione del worker da riesaminare"}. Il controllo legge le fatture e le scritture già registrate; non modifica il gestionale.`,"caption"));
+    main.append(node("p","Confronta le fatture con le scritture registrate. Il gestionale non viene modificato.","caption"));
     if(page.operation){
       const states={accepted:"Avvio ricevuto",running:"Lavorazione",completed:"Screening completato",failed:"Gruppi falliti: job riprendibile",awaiting_semantic_review:"Risposta Cowork da acquisire",uncertain:"Esito da verificare nel percorso specialistico"};
       main.append(node("h2",states[page.operation.status]||page.operation.status),node("p",page.operation_live?"Il supervisore è attivo. I gruppi e le ricevute restano nel job.":page.interrupted?"L’attività del supervisore non è confermata. Verifica i processi, le ricevute e gli output prima di riprendere; questo pannello non riavvia il job.":"Stato riletto dalla ricevuta del produttore.","notice"));
@@ -848,9 +870,11 @@
     }
     const pages=node("div",undefined,"pagination");
     for(const [caption,next,disabled]of [["Fonti precedenti",Math.max(0,offset-30),!offset],["Fonti successive",offset+30,!page.has_more]]){const b=button(caption,async()=>{await flushPassive();const saved=structuredClone(context.fields);passiveContext=null;dirty=false;await openPassive(workRef,next,true,saved);});b.disabled=disabled;pages.append(b);}main.append(pages);
-    for(const [key,caption]of [["ledger_sheet","Scheda del file contabile (vuota: prima scheda)"],["chunk_size","Fatture per gruppo"],["concurrency","Worker contemporanei"],["max_retries","Tentativi aggiuntivi per gruppo"],["reasoning_effort","Sforzo del worker Codex (Cowork: low)"],["amount_tolerance","Tolleranza degli importi (decimale con punto)"]]){
-      const label=node("label",undefined,"field"),input=node("input");input.value=context.fields.controls[key]||"";input.addEventListener("input",()=>{context.fields.controls[key]=input.value;changed();});label.append(node("span",caption),input);main.append(label);
+    const processing = supportingDetails("Impostazioni di elaborazione");
+    for(const [key,caption]of [["ledger_sheet","Scheda del file contabile (vuota: prima scheda)"],["chunk_size","Fatture per gruppo"],["concurrency","Gruppi elaborati in parallelo"],["max_retries","Tentativi aggiuntivi per gruppo"],["reasoning_effort","Livello di analisi"],["amount_tolerance","Tolleranza degli importi (decimale con punto)"]]){
+      const label=node("label",undefined,"field"),input=node("input");input.value=context.fields.controls[key]||"";input.addEventListener("input",()=>{context.fields.controls[key]=input.value;changed();});label.append(node("span",caption),input);(["ledger_sheet","amount_tolerance"].includes(key)?main:processing).append(label);
     }
+    main.append(processing);
     for(const [key,caption]of [["operator_ref","Operatore che ha riesaminato il perimetro"],["decision_basis","Ambito, ipotesi e motivo della mappatura e dei controlli"]]){
       const label=node("label",undefined,"field"),input=node(key==="decision_basis"?"textarea":"input");input.value=context.fields[key]||"";input.addEventListener("input",()=>{context.fields[key]=input.value;changed();});label.append(node("span",caption),input);main.append(label);
     }
@@ -958,7 +982,7 @@
         area.append(button("Prepara anteprima",async()=>{if(!check.checked)throw new Error("Conferma la preparazione della proposta.");submission ||= {work_ref:workRef,revision:page.revision,review_ticket:page.review_ticket,candidate_ref:page.candidate.id,human_reviewed:true,idempotency_key:crypto.randomUUID()};const saved=await call("vera_workspace_invoice_prepare",submission);await openWork(workRef,0,undefined,undefined,saved.source_ref);},"primary"));}
       main.append(area);
     }
-    for(const item of page.items){const row=node("section",undefined,"work-row"),text=node("div");text.append(node("h2",`Fattura ${item.title}`),node("p",item.exported ? "XML esportato per l’operatore" : item.status === "blocked" ? "Dati da completare o correggere" : "In attesa di revisione professionale","caption"));row.append(text,button("Consulta questa versione",()=>openWork(workRef,0,undefined,undefined,item.id)));technical(row,{versione:item.id});main.append(row);}
+    for(const item of page.items){const row=node("section",undefined,"work-row"),text=node("div");text.append(node("h2",`Fattura ${item.title}`),node("p",item.exported ? "XML esportato per l’operatore" : item.status === "blocked" ? "Dati da completare o correggere" : "In attesa di revisione professionale","caption"));row.append(text,button("Consulta questa versione",()=>openWork(workRef,0,undefined,undefined,item.id)));main.append(row);}
     if(!page.total&&!page.candidate)main.append(node("p","Non ci sono proposte preparate. Riprendi il run nella chat per leggere le fonti e redigere la proposta con Vera.","empty"));
     const pages=node("div",undefined,"pagination"),previous=button("Versioni precedenti",()=>openInvoice(workRef,Math.max(0,offset-30))),next=button("Versioni successive",()=>openInvoice(workRef,offset+30));previous.disabled=!offset;next.disabled=!page.has_more;pages.append(previous,node("span",`${page.total} versioni conservate`),next);main.append(pages,button("Riprendi Fatture XML nella chat",()=>resumeWorkInChat(main,{work_ref:workRef})));
     say("Scegli la proposta esatta; l’apertura non approva i dati.");
@@ -1072,7 +1096,7 @@
     leaveDraft();const generation=++epoch,page=await call("vera_workspace_cnc_history_outputs",identity);if(generation!==epoch)return;state=null;
     const {nav,main}=shell();nav.append(button("← Revisione CNC",()=>openCncHistoryVersion({work_ref:identity.work_ref,source_ref:identity.source_ref})));
     main.append(node("p","Composizione negoziata","eyebrow"),node("h1",`Output della revisione ${page.case_revision}`),node("p","Memo e snapshot sono i file ordinari conservati dal produttore, verificati byte per byte. Sono mostrati integralmente in sola lettura; nessun invio, firma o nuova approvazione.","notice"));
-    for(const file of page.files){const section=node("section",undefined,"finding");section.append(node("h2",file.media_type==="text/markdown"?"Memo CNC completo":"Snapshot CNC completo"));if(!file.available)section.append(node("p","Memo ordinario mancante: conserva lo snapshot e riprendi il recupero dello specialista. Nessun file è stato rigenerato.","notice"));else{const detail=node("details");detail.open=file.media_type==="text/markdown";detail.append(node("summary",`Leggi ${file.name}`),cncLiteral(file.content));section.append(detail);}const location=cncText(section,`Percorso del file ${file.name}`,file.path);location.readOnly=true;technical(section,{file:file.name,sha256:file.sha256});main.append(section);}
+    for(const file of page.files){const section=node("section",undefined,"finding");section.append(node("h2",file.media_type==="text/markdown"?"Memo CNC completo":"Snapshot CNC completo"));if(!file.available)section.append(node("p","Memo ordinario mancante: conserva lo snapshot e riprendi il recupero dello specialista. Nessun file è stato rigenerato.","notice"));else{const detail=node("details");detail.open=file.media_type==="text/markdown";detail.append(node("summary",`Leggi ${file.name}`),cncLiteral(file.content));section.append(detail);}const location=cncText(section,`Percorso del file ${file.name}`,file.path);location.readOnly=true;main.append(section);}
     say("File ordinari della revisione consultati; nessuna scrittura eseguita.");
   }
   const esgKinds={case:"Perimetro",evidence:"Evidenza",source:"Fonte",decision:"Decisione",artifact:"Bozza parziale"};
@@ -1138,13 +1162,24 @@
     }).catch(error=>{context.error=error;say(error.message,true);});return bandiTask;
   }
   async function flushBandi(){clearTimeout(bandiTimer);await persistBandi();if(bandiContext?.error)throw bandiContext.error;}
+  Object.assign(labels,{
+    reference_date:"Data di riferimento",client_reference:"Riferimento cliente",application:"Domanda",
+    applicant:"Richiedente",project:"Progetto",professional_question:"Quesito da esaminare",
+    requirements:"Requisiti",source_register:"Fonti registrate",sources:"Fonti",
+    beneficiary:"Beneficiario",source_type:"Tipo di fonte",notes:"Note"
+  });
+  const bandiDocumentTitles={
+    "case_intake.json":"Dati della domanda","source_register.json":"Fonti del bando",
+    "application_workbench.json":"Requisiti e documenti","intelligence_register.json":"Contributi alla domanda",
+    "review_log.json":"Decisioni di riesame","run_state.json":"Stato del dossier"
+  };
   async function openBandi(workRef,scope="dossier"){
     leaveDraft();const generation=++epoch;let page=await call("vera_workspace_bandi_setup",{work_ref:workRef,scope});
     if(page.setup_status==="empty_run"&&scope!=="initialization")page=await call("vera_workspace_bandi_setup",{work_ref:workRef,scope:"initialization"});
     if(generation!==epoch)return;
     state=null;const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
     main.append(node("p","Bandi e agevolazioni","eyebrow"),node("h1",page.setup_status==="empty_run"?"Apri il dossier del bando":"Dossier del bando"));
-    main.append(node("p","Questo pannello conserva bozze vuote, decisioni sul perimetro, controlli meccanici e rapporto. Fonti, requisiti, fatti, valutazioni e conferme delle singole righe si preparano nel flusso specialistico.","notice"));
+    main.append(node("p","Esamina il dossier e scegli quali richieste e documenti includere. Puoi consultare le fonti e le decisioni già registrate per ciascun requisito.","notice"));
     main.append(node("p","Le letture rimangono nel pannello: nessuna domanda o documento viene inviato al modello da queste azioni. Il radar privato dello studio e le contribuzioni in sessioni separate richiedono ancora il flusso specialistico.","caption"));
     if(page.recovery_required)main.append(node("p","Un’operazione non è conclusa con evidenza certa. Verifica il fascicolo nel flusso ordinario prima di altre scritture o della chiusura.","notice"));
     const context={workRef,page,fields:structuredClone(page.fields),stamp:page.draft_revision,saved:JSON.stringify(page.fields),editable:page.can_write&&!page.draft_stale};bandiContext=context;
@@ -1162,7 +1197,7 @@
       main.append(node("h2",page.scope==="initialization"?"Parametri iniziali":`Riesame: ${scopeLabels[page.scope]}`));
       const fieldLabels=page.scope==="initialization"?{reference_date:"Data di riferimento (AAAA-MM-GG)",client_reference:"Riferimento opaco cliente (lettere, numeri, punto, trattino)",language:"Lingua del dossier (es. it)"}:{reviewer_id:"Identificativo dichiarato del revisore",reviewer_role:"Ruolo dichiarato del revisore",notes:"Note sul perimetro"};
       if(page.scope!=="initialization"){
-        main.append(node("p","Accettare questo perimetro registra l’evento con i byte correnti. Le conferme delle singole righe rimangono quelle già presenti; non vengono aggiunte da questo pulsante. Identificativo e ruolo sono dichiarati e non autenticati.","notice"));
+        main.append(node("p","La decisione riguarda il perimetro di questa versione del dossier. I singoli requisiti restano da riesaminare separatamente.","notice"));
         const label=node("label",undefined,"field"),select=node("select");select.setAttribute("aria-label","Decisione sul perimetro Bandi");for(const [value,text] of [["","Scegli una decisione"],["accepted","Accetta il perimetro"],["returned","Restituisci per integrazione"]]){const option=node("option",text);option.value=value;select.append(option);}select.value=context.fields.decision;select.disabled=!context.editable;label.append(node("span","Decisione sul perimetro"),select);main.append(label);select.addEventListener("change",()=>{context.fields.decision=select.value;changed();});
       }
       for(const [key,labelText] of Object.entries(fieldLabels)){
@@ -1173,13 +1208,13 @@
     }
     if(page.setup_status!=="empty_run"){
       main.append(node("h2","Documenti correnti"));
-      for(const file of page.files){const details=node("details"),summary=node("summary",file.name);details.append(summary);main.append(details);summary.addEventListener("click",async event=>{if(details.dataset.loaded)return;event.preventDefault();await run(async()=>{const artifact=await call("vera_workspace_bandi_read",{work_ref:workRef,scope:page.scope,revision:page.revision,source_ref:page.source_ref,file_name:file.name});details.append(node("pre",artifact.content,"source-excerpt"));details.dataset.loaded="true";details.open=true;});});}
+      for(const file of page.files){const details=node("details"),summary=node("summary",bandiDocumentTitles[file.name]||file.name);details.append(summary);main.append(details);summary.addEventListener("click",async event=>{if(details.dataset.loaded)return;event.preventDefault();await run(async()=>{const artifact=await call("vera_workspace_bandi_read",{work_ref:workRef,scope:page.scope,revision:page.revision,source_ref:page.source_ref,file_name:file.name});details.append(file.name.endsWith(".json")?crFields(JSON.parse(artifact.content),true):node("p",artifact.content,"source-excerpt"));details.dataset.loaded="true";details.open=true;});});}
       main.append(node("h2","Controlli meccanici e rapporto"),node("p",page.audit?(page.audit_current?`Validazione corrente: ${page.audit.status}`:`Validazione precedente: ${page.audit.status}; fascicolo cambiato, ripeti il controllo`):"Nessuna validazione conservata.","notice"));
       if(page.audit)main.append(crFields(page.audit));
       const operationArgs=()=>({work_ref:workRef,scope:page.scope,revision:page.revision,source_ref:page.source_ref,review_ticket:page.review_ticket,idempotency_key:crypto.randomUUID()});
       const validate=button("Esegui controlli meccanici",async()=>{await call("vera_workspace_bandi_validate",operationArgs());bandiContext=null;dirty=false;await openBandi(workRef,page.scope);say("Audit meccanico conservato con tutti gli esiti, compresi gli errori.");}),pack=button("Crea rapporto HTML e pacchetto",async()=>{await call("vera_workspace_bandi_package",operationArgs());bandiContext=null;dirty=false;await openBandi(workRef,page.scope);say("Rapporto e manifest conservati. Esito professionale e deposito restano distinti.");});validate.disabled=!page.can_write;pack.disabled=!page.can_write||!page.audit_current||page.audit?.status!=="passed";main.append(validate,pack);
       if(page.manifest){main.append(node("p",page.package_current?"Il rapporto corrisponde ai documenti e all’audit correnti.":"Il rapporto conservato appartiene a una versione precedente. Ripeti validazione e pacchetto per la versione corrente.","notice"));main.append(button("Leggi rapporto HTML conservato",async()=>{const artifact=await call("vera_workspace_bandi_read",{work_ref:workRef,scope:page.scope,revision:page.revision,source_ref:page.source_ref,file_name:"review_dossier.html"});const frame=node("iframe",undefined,"bandi-report");frame.setAttribute("sandbox","");frame.setAttribute("title","Rapporto pubblico Bandi per revisione professionale");frame.srcdoc=artifact.content;main.append(frame,node("p",artifact.path,"caption"));}));}
-      main.append(node("p","Il pacchetto resta un elaborato per revisione professionale: ready_to_file=false. Deposito, firma e chiusura dell’esecuzione sono passi distinti.","caption"));
+      main.append(node("p","Il pacchetto serve al riesame professionale. Firma e deposito della domanda restano da eseguire.","caption"));
     }
     say(page.can_write?"Dossier e perimetro letti dal fascicolo corrente.":"Consultazione del dossier; le scritture sono disabilitate.");
   }
@@ -1444,7 +1479,7 @@
   }
   async function openInpsOutputs(workRef,revision){
     leaveDraft();const page=await call("vera_workspace_inps_outputs",{work_ref:workRef,revision}),{nav,main}=shell();state=null;nav.append(button("← Revisione INPS",()=>openInps(workRef)));main.append(node("h1","Memo e output INPS ordinari"));
-    for(const file of page.files){const section=node("section");if(file.status==="missing"){section.append(node("h2",file.name),node("p","File dichiarato ma non presente. Nessuna rigenerazione eseguita.","notice"));main.append(section);continue;}section.append(node("h2",file.name),node("p",file.byte_count+" byte","caption"));if(file.content!==undefined){const details=node("details");details.append(node("summary","Leggi contenuto completo"),node("pre",file.content,"source-excerpt"));section.append(details);}if(host.hostCapabilities?.experimental?.["openai/files"])section.append(button("Apri file originale",()=>request("openai/files/open",{path:file.path})));else{const input=node("input");input.readOnly=true;input.value=file.path;input.setAttribute("aria-label","Percorso di "+file.name);section.append(input);}technical(section,{sha256:file.sha256});main.append(section);}say("Output ordinari nei byte correnti, senza rigenerazione o invio.");
+    for(const file of page.files){const section=node("section");if(file.status==="missing"){section.append(node("h2",file.name),node("p","File dichiarato ma non presente. Nessuna rigenerazione eseguita.","notice"));main.append(section);continue;}section.append(node("h2",file.name),node("p",file.byte_count+" byte","caption"));if(file.content!==undefined){const details=node("details");details.append(node("summary","Leggi contenuto completo"),node("pre",file.content,"source-excerpt"));section.append(details);}if(host.hostCapabilities?.experimental?.["openai/files"])section.append(button("Apri file originale",()=>request("openai/files/open",{path:file.path})));else{const input=node("input");input.readOnly=true;input.value=file.path;input.setAttribute("aria-label","Percorso di "+file.name);section.append(input);}main.append(section);}say("Output ordinari nei byte correnti, senza rigenerazione o invio.");
   }
   async function openEsgIntake(workRef) {
     leaveDraft();const generation=++epoch,page=await call("vera_workspace_esg_author_setup",{work_ref:workRef});if(generation!==epoch)return;state=null;
@@ -1453,7 +1488,7 @@
     const context={workRef,page,fields:structuredClone(page.fields),saved:JSON.stringify(page.fields),decision:false};esgDraftContext=context;
     esgField(main,context,"question","Lavoro da preparare con Vera",true);esgSelect(main,context,"command","Operazione richiesta",page.commands.map(x=>[x,esgCommands[x]]));
     main.append(node("h2","Originali autorizzati"));
-    for(const source of page.sources){const label=node("label",undefined,"choice"),input=node("input");input.type="checkbox";input.checked=context.fields.input_ids.includes(source.input_id);input.disabled=!page.can_write;input.setAttribute("aria-label","Autorizza "+source.name);label.append(input,node("span",source.name));main.append(label);technical(main,{fonte:source.input_id,sha256:source.sha256});input.addEventListener("change",()=>{context.fields.input_ids=input.checked?[...context.fields.input_ids,source.input_id]:context.fields.input_ids.filter(x=>x!==source.input_id);esgChanged(context);});}
+    for(const source of page.sources){const label=node("label",undefined,"choice"),input=node("input");input.type="checkbox";input.checked=context.fields.input_ids.includes(source.input_id);input.disabled=!page.can_write;input.setAttribute("aria-label","Autorizza "+source.name);label.append(input,node("span",source.name));main.append(label);input.addEventListener("change",()=>{context.fields.input_ids=input.checked?[...context.fields.input_ids,source.input_id]:context.fields.input_ids.filter(x=>x!==source.input_id);esgChanged(context);});}
     if(!page.sources.length)main.append(node("p","Questo run non contiene originali registrati. Importa i documenti nell’incarico e prepara un run che li includa.","empty"));
     if(page.commands.includes("start_case"))esgSelect(main,context,"previous_run_id","Fascicolo precedente di questo incarico, facoltativo",page.previous_runs.map(x=>[x.run_id,(x.label||x.run_id)+" · "+(statusLabels[x.status]||x.status)]));
     main.append(button("Conserva campi incompleti",flushEsgDraft));context.confirm=esgConfirmation(main,"Autorizzo questa domanda, operazione e selezione di fonti");
@@ -1473,7 +1508,7 @@
     if(page.preview){main.append(node("h2","Contenuto integrale proposto"),scissioneFields(page.preview.object.record));const detail=node("details");detail.append(node("summary","Richiesta completa e anteprima del produttore"),node("pre",JSON.stringify({request:page.proposal,preview:page.preview},null,2),"source-excerpt"));main.append(detail);
       const confirm=esgConfirmation(main,"Ho riesaminato questa versione completa e ne confermo la registrazione");let submission;const publish=button("Registra questa proposta nel fascicolo",async()=>{if(!confirm.checked)throw new Error("Riesamina e conferma questa versione completa.");submission||={...exact,revision:page.revision,source_ref:page.source_ref,item_id:page.case_ref,review_ticket:page.review_ticket,confirmed:true,idempotency_key:crypto.randomUUID()};const result=await call("vera_workspace_esg_author_publish",submission);await openEsgRecord({work_ref:identity.work_ref,source_ref:result.reference.sha256});},"primary");publish.disabled=!page.can_write||page.obsolete||page.status!=="open";main.append(publish,node("p","La registrazione conserva la richiesta, il record pubblico e la ricevuta. Una bozza resta parziale; la decisione professionale richiede un passaggio distinto.","caption"));}
     if(page.status==="open"){const cancelConfirm=esgConfirmation(main,"Annulla questa domanda conservando le proposte già preparate");let cancellation;const cancel=button("Annulla domanda ESG",async()=>{if(!cancelConfirm.checked)throw new Error("Conferma l’annullamento di questa domanda.");cancellation||={...exact,revision:page.revision,source_ref:page.source_ref,...(page.case_ref?{item_id:page.case_ref}:{}),review_ticket:page.review_ticket,confirmed:true,idempotency_key:crypto.randomUUID()};await call("vera_workspace_esg_author_cancel",cancellation);await openEsgIntake(identity.work_ref);});cancel.disabled=!page.can_write;main.append(cancel);}
-    if(page.conservation)technical(main,{ricevuta:page.conservation});
+
     say(page.obsolete&&page.status==="open"?"Domanda obsoleta: consulta o annulla; autorizza di nuovo per altro lavoro.":page.status==="open"?"Domanda autorizzata. Preparazione e registrazione restano da riesaminare.":"Domanda "+(page.status==="cancelled"?"annullata":"registrata")+"; contenuti conservati consultabili.");
   }
   async function openEsgDecision(workRef,offset=0) {
@@ -1500,7 +1535,7 @@
     if(page.setup_status==="case_required")main.append(node("p","Il fascicolo non è ancora aperto. Autorizza la domanda e le fonti, poi riesamina il perimetro preparato con Vera.","empty"));
     else {
       main.append(button("Registra una decisione professionale",()=>openEsgDecision(workRef)));
-      technical(main,{fascicolo:page.case_id,revisione:page.case_revision,stato_run:page.run_status,impronta:page.state_sha256});
+
       for(const row of page.rows){const section=node("section",undefined,"work-row"),text=node("div");text.append(node("h2",`${esgKinds[row.kind]||row.kind} · ${row.id}`),node("p",`Versione ${row.version} · ${row.current?"Corrente":"Obsoleta o con dipendenze cambiate"} · ${row.dependency_count} dipendenze`,"caption"));section.append(text,button("Consulta questa versione",()=>openEsgRecord({work_ref:workRef,source_ref:row.source_ref})));main.append(section);}
       const pages=node("div",undefined,"pagination"),prev=button("Pagina precedente",()=>openEsg(workRef,Math.max(0,offset-30))),next=button("Pagina successiva",()=>openEsg(workRef,offset+30));prev.disabled=offset===0;next.disabled=!page.has_more;pages.append(prev,node("span",`${page.total} versioni conservate`,"caption"),next);main.append(pages);
     }
@@ -1510,13 +1545,13 @@
     leaveDraft();const generation=++epoch,page=await call("vera_workspace_esg_read",identity);if(generation!==epoch)return;const {nav,main}=shell();state=null;
     nav.append(button("← Versioni ESG",()=>openEsg(identity.work_ref)));
     main.append(node("p","Fascicolo ESG parziale","eyebrow"),node("h1",`${esgKinds[page.reference.kind]||page.reference.kind} · ${page.reference.id} · versione ${page.reference.version}`),node("p",page.current?"Questa versione e le sue dipendenze sono correnti. Il controllo dei riferimenti non attesta sufficienza professionale o conformità.":"Questa versione è obsoleta o usa dipendenze cambiate. Non presentare la sua decisione o bozza come corrente.","notice"));
-    technical(main,{riferimento:page.reference,stato_run:page.run_status});
+
     main.append(node("h2","Contenuto della versione"),scissioneFields(page.record));
     const complete=node("details");complete.append(node("summary","Versione completa e riferimenti esatti"),node("pre",JSON.stringify(page.version_record,null,2),"source-excerpt"));main.append(complete);
     const exact={...identity,revision:page.revision};
     const discussion=`Discuti questa versione ESG nella chat corrente. Leggi vera_workspace_esg_context con ${JSON.stringify(exact)} e la skill completa esg-reporting-assurance. Usa il record completo e le versioni esatte delle dipendenze; non attribuire una lettura degli originali se non li hai letti. Distingui evidenza, interpretazione, riferimenti non qualificati, identità dichiarata e decisione professionale effettiva. Se la versione è obsoleta, spiega quali dipendenze richiedono riesame. Il servizio è una base parziale, non rendicontazione ESG completa o assurance. Non approvare, firmare, inviare o chiudere il run. Registra nel rapporto sui dati al modello soltanto letture effettivamente eseguite.`;
     main.append(button("Discuti questa versione con Vera",async()=>{if(host.hostCapabilities?.message?.text){const result=await request("ui/message",{role:"user",content:[{type:"text",text:discussion}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta: verifica prima di riprovare.");say("Richiesta ricevuta dalla chat; la lettura e il lavoro restano da verificare.");}else{const copy=node("textarea",undefined,"request");copy.readOnly=true;copy.value=discussion;copy.setAttribute("aria-label","Richiesta sulla versione ESG da copiare nella chat corrente");main.append(copy);copy.focus();copy.select();}}));
-    if(page.reference.kind==="artifact")main.append(button("Apri gli originali della bozza parziale",async()=>{const output=await call("vera_workspace_esg_outputs",exact);for(const file of output.files){const section=node("section");section.className="outputs";section.append(node("h2",file.media_type==="text/markdown"?"Originale Markdown della bozza":"Originale JSON della bozza"),node("pre",file.content,"source-excerpt"));technical(section,{file:file.name,percorso:file.path,sha256:file.sha256});main.append(section);}say("File ordinari verificati; lo stato corrente della bozza resta quello delle dipendenze.");}));
+    if(page.reference.kind==="artifact")main.append(button("Apri gli originali della bozza parziale",async()=>{const output=await call("vera_workspace_esg_outputs",exact);for(const file of output.files){const section=node("section");section.className="outputs";section.append(node("h2",file.media_type==="text/markdown"?"Originale Markdown della bozza":"Originale JSON della bozza"),node("pre",file.content,"source-excerpt"));main.append(section);}say("File ordinari verificati; lo stato corrente della bozza resta quello delle dipendenze.");}));
     say("Versione completa e dipendenze conservate; nessuna approvazione aggiunta.");
   }
   async function openCnc(workRef,offset=0) {
@@ -1571,21 +1606,21 @@
     if (generation !== epoch) return;
     state = null; salesWork = null; bankWork = null; lipeWork = null; amlWork = {workRef, workflow}; amlDraftContext = null; query = "";
     const {nav, main} = shell(); nav.append(button("← Clienti e incarichi", loadCatalogue));
-    main.append(node("p", names[workflow], "eyebrow"), node("h1", page.label), node("p", "Scegli il record da consultare. Ogni record conserva la proposta e, quando presente, il riesame attribuito al professionista. Una revisione successiva non sostituisce le precedenti.", "sub"));
+    main.append(node("p", names[workflow], "eyebrow"), node("h1", workTitle(page.label, workflow)), node("p", "Scegli la proposta da esaminare. Puoi consultare il riesame del professionista e le versioni precedenti.", "sub"));
     for (const item of page.items) {
       const row = node("section", undefined, "work-row");
       const summary = node("div"); summary.append(node("h2", statusLabels[item.status] || item.status), node("p", `Situazione al ${item.as_of}`));
       if (workflow === "scissione-guidata" && item.current) summary.append(node("p", "Versione corrente indicata dal fascicolo", "caption"));
       if (item.reviewed_at) summary.append(node("p", `Riesame del ${item.reviewed_at} · ${item.reviewer_ref}`, "caption"));
-      row.append(summary, button("Consulta questo record", () => openWork(workRef, 0, undefined, undefined, item.id)));
-      technical(row, {record:item.id}); main.append(row);
+      row.append(summary, button("Consulta la proposta", () => openWork(workRef, 0, undefined, undefined, item.id)));
+      main.append(row);
     }
     if (!page.total) main.append(node("p", "Non ci sono record conservati. Prepara una nuova valutazione scegliendo la domanda e le fonti da analizzare nella chat.", "empty"));
     if(["aml-review","adeguati-assetti","scissione-guidata"].includes(workflow))main.append(button(workflow==="scissione-guidata"?"Prepara o correggi il dossier":workflow==="adeguati-assetti"?"Nuova valutazione degli assetti":"Nuova proposta antiriciclaggio",()=>openAmlAuthor(workRef,0,undefined,workflow)));
     const controls = node("div", undefined, "pagination"), previous = button("Record precedenti", () => openAml(workRef, Math.max(0, offset - 30), workflow)), next = button("Record successivi", () => openAml(workRef, offset + 30, workflow));
     previous.disabled = !offset; next.disabled = !page.has_more; controls.append(previous, node("span", `${page.total} record conservati`), next); main.append(controls);
     main.append(button(`Riprendi ${names[workflow]} nella chat`, () => resumeWorkInChat(main, {work_ref:workRef})));
-    say("Scegli il record esatto da leggere; il pannello non sceglie una decisione più recente.");
+    say("Scegli la versione della proposta da esaminare.");
   }
   const recordTool = (view, suffix) => `vera_workspace_${view.workflow === "invoice-xml" ? "invoice" : view.workflow === "scissione-guidata" ? "scissione" : view.workflow === "adeguati-assetti" ? "assetti" : "aml"}_${suffix}`;
   async function persistAmlAuthor() {
@@ -1650,7 +1685,7 @@
     const {nav, main} = shell();
     main.append(node("p", names[current.workflow], "eyebrow"), node("h1", "Riesame della proposta"), node("p", `${current.data.jurisdiction} · Situazione al ${current.data.as_of}`, "sub"));
     main.append(node("p", current.kind === "assetti" ? "Registra la conclusione e un esito per ogni rilievo. Il nuovo record conserva osservazioni, proporzionalità, azioni proposte e analisi. La decisione non registra adozione aziendale, funzionamento dei controlli o certificazione di adeguatezza. Il revisore è un’attribuzione, non una firma autenticata; il run resta da completare." : "Registra la conclusione e un esito per ogni rilievo. Il nuovo record conserva integralmente la proposta; le questioni aperte restano tali. Il nome del revisore è un’attribuzione, non una firma autenticata. Questo passaggio non invia comunicazioni o SOS e non completa il run.", "notice"));
-    technical(main, {record:current.data.selection.source_ref, proposta:current.data.proposal_sha256});
+
     if (!current.data.can_decide || stored.interrupted) {
       nav.append(button("← Torna al record", () => openWork(current.work_ref, 0, undefined, current.revision, current.data.selection.source_ref)));
       main.append(node("p", stored.interrupted ? `Una registrazione interrotta richiede verifica nel percorso ${names[current.workflow]}. Non ripetere l’operazione dal pannello.` : "Questo run non consente la registrazione del riesame.", "notice")); return;
@@ -1701,7 +1736,7 @@
         section.append(node("h3", finding.observation), readFields(Object.fromEntries(Object.entries(finding).filter(([key]) => key !== "id"))));
         const label = node("label", undefined, "field"), input = node("textarea"); input.maxLength = 4000; input.required = true; input.value = page.dispositions[finding.id];
         input.addEventListener("input", () => {context.dispositions[finding.id] = input.value; modified();});
-        label.append(node("span", "Esito del rilievo"), input); section.append(label); technical(section, {rilievo:finding.id}); area.append(section);
+        label.append(node("span", "Esito del rilievo"), input); section.append(label);  area.append(section);
       }
       if (!page.total) area.append(node("p", current.kind === "assetti" ? "La proposta non contiene rilievi. Questo dato non attesta adeguatezza o funzionamento dei controlli." : "La proposta non contiene rilievi. Questo dato non attesta la conformità antiriciclaggio.", "caption"));
       const controls = node("div", undefined, "pagination");
@@ -1814,7 +1849,7 @@
     if (generation !== epoch) return;
     state=null; bankWork=null; lipeWork=null; amlWork=null; salesWork=workRef; query="";
     const {nav,main}=shell(); nav.append(button("← Clienti e incarichi",loadCatalogue));
-    main.append(node("p","Piano vendite","eyebrow"),node("h1",setup.label),node("p","Scegli il caso con mappature e ipotesi già riviste e il CSV degli Actual registrati. La fonte deve coincidere con l’impronta confermata nel caso.","sub"));
+    main.append(node("p","Piano vendite","eyebrow"),node("h1",workTitle(setup.label,"sales-plan")),node("p","Seleziona il caso con le ipotesi già riesaminate e il CSV delle vendite consuntive utilizzato per prepararlo.","sub"));
     main.append(button("Prepara o riprendi le ipotesi",()=>openSalesAuthor(workRef)),button("Consulta fonti registrate",()=>openSalesSources(workRef)));
     main.append(node("p","Il calcolo conserva tutte le righe osservate e le revisioni precedenti. Controlli superati e conferma delle ipotesi non approvano professionalmente il Plan. Il pannello permette di preparare e correggere le ipotesi su CSV registrati. Nuovi formati di input e approvazione professionale proseguono nel flusso Piano vendite. Ogni revisione offre una consultazione mirata delle righe dello scenario.","notice"));
     if(setup.status==="recovery_required") main.append(node("p","Ci sono output senza ricevuta nativa o una richiesta interrotta. Verifica il run nel flusso Piano vendite prima di calcolare ancora.","notice"));
@@ -1822,16 +1857,19 @@
     let selectedCase=salesPick.caseId,selectedActual=salesPick.actualId,inspected,submission;
     const details=node("section"),confirmParent=node("div"),confirm=confirmation(confirmParent,"Ho verificato mappature, periodi e tutte le ipotesi mostrate; autorizzo questo calcolo, senza approvare il Plan.");
     const invalidate=()=>{inspected=null;submission=null;confirm.checked=false;details.replaceChildren();};
+    const selectionNote=node("p",undefined,"caption");
+    const describeSelection=()=>{selectionNote.textContent=`Caso: ${salesPick.caseTitle||"da scegliere"} · Vendite consuntive: ${salesPick.actualTitle||"da scegliere"}`;};
+    describeSelection();
     for(const [kind,labelText] of [[".json","Caso già rivisto"],[".csv","Actual registrati"]]){
       const choices=node("fieldset");choices.append(node("legend",labelText));
       for(const item of setup.items.filter(row=>row.kind===kind)){
         const label=node("label",undefined,"check"),radio=node("input");radio.type="radio";radio.name="sales-"+kind;radio.checked=item.id===(kind===".json"?selectedCase:selectedActual);
-        radio.addEventListener("change",()=>{if(kind===".json"){selectedCase=item.id;salesPick.caseId=item.id;salesPick.caseTitle=item.title;}else{selectedActual=item.id;salesPick.actualId=item.id;salesPick.actualTitle=item.title;}invalidate();});
+        radio.addEventListener("change",()=>{if(kind===".json"){selectedCase=item.id;salesPick.caseId=item.id;salesPick.caseTitle=item.title;}else{selectedActual=item.id;salesPick.actualId=item.id;salesPick.actualTitle=item.title;}describeSelection();invalidate();});
         label.append(radio,node("span",item.title));choices.append(label);
       } main.append(choices);
     }
     if(setup.has_more||offset){const pages=node("div",undefined,"pagination");const previous=button("Documenti precedenti",()=>openSales(workRef,Math.max(0,offset-30))),next=button("Documenti successivi",()=>openSales(workRef,offset+30));previous.disabled=!offset;next.disabled=!setup.has_more;pages.append(previous,next);main.append(pages);}
-    main.append(node("p",`Caso scelto: ${salesPick.caseTitle||"da scegliere"} · Actual scelti: ${salesPick.actualTitle||"da scegliere"}`,"caption"),button("Esamina mappature e ipotesi",async()=>{
+    main.append(selectionNote,button("Esamina mappature e ipotesi",async()=>{
       if(!selectedCase||!selectedActual)throw new Error("Scegli il caso e gli Actual registrati.");
       const chosen={work_ref:workRef,revision:setup.revision,case_input_id:selectedCase,actual_input_id:selectedActual};
       const preview=await call("vera_workspace_sales_plan_inspect",chosen);
@@ -1848,7 +1886,7 @@
       await openWork(workRef,0,undefined,undefined,result.source_ref);
       say("Revisione conservata. Esamina riconciliazione e scarti prima dell’approvazione professionale.");
     },"primary");calculate.disabled=!setup.can_write;main.append(calculate,node("h2","Revisioni conservate"));
-    for(const item of setup.generations){const row=node("section",undefined,"work-row");row.append(node("p",item.status==="passed"?"Controlli superati · da approvare":"Controlli non superati"),button("Consulta questa revisione",()=>openWork(workRef,0,undefined,undefined,item.source_ref)));technical(row,{revisione:item.source_ref});main.append(row);}
+    for(const item of setup.generations){const row=node("section",undefined,"work-row");row.append(node("p",item.status==="passed"?"Controlli superati · da approvare":"Controlli non superati"),button("Consulta questa revisione",()=>openWork(workRef,0,undefined,undefined,item.source_ref)));main.append(row);}
     main.append(button("Riprendi Piano vendite nella chat",()=>resumeWorkInChat(main,{work_ref:workRef})));
   }
   async function openSalesSources(workRef) {
@@ -1956,7 +1994,7 @@
     control(source,"Scopo del Piano",context.fields.purpose,value=>context.fields.purpose=value);
     let previewEpoch=0;
     const drawPreview=async(offset=0)=>{if(!context.fields.actual_input_id)return;const token=++previewEpoch;const page=await call("vera_workspace_sales_plan_source",{work_ref:workRef,revision:setup.revision,actual_input_id:context.fields.actual_input_id,offset});if(token!==previewEpoch||salesAuthorContext!==context)return;context.headers=page.headers;preview.replaceChildren(node("h3","Righe originali da verificare"),node("p",`${page.total} righe nella fonte · pagina di ${page.rows.length} righe. L’anteprima non attesta completezza o correttezza contabile.`,"caption"));renderPreparedArtifact(preview,{columns:page.headers,rows:page.rows});const pages=node("div",undefined,"pagination"),prev=button("Righe precedenti",()=>drawPreview(Math.max(0,offset-20))),next=button("Righe successive",()=>drawPreview(offset+20));prev.disabled=!offset;next.disabled=!page.has_more;pages.append(prev,next);preview.append(pages);drawMapping();drawAssumptions();};
-    const drawSources=async(offset=0)=>{const page=offset?await call("vera_workspace_sales_plan_setup",{work_ref:workRef,offset}):setup;if(page.revision!==setup.revision)throw new Error("Le fonti sono cambiate: riapri il Plan.");sourceChoices.replaceChildren();control(sourceChoices,"Actual registrati",context.fields.actual_input_id,value=>{context.fields.actual_input_id=value;delete context.fields.seed_case_input_id;context.headers=[];preview.replaceChildren();drawMapping();if(value)run(()=>drawPreview());},page.items.filter(item=>item.kind===".csv").map(item=>[item.id,item.title]));if(page.has_more||offset){const prev=button("Fonti precedenti",()=>drawSources(Math.max(0,offset-30))),next=button("Fonti successive",()=>drawSources(offset+30));prev.disabled=!offset;next.disabled=!page.has_more;sourceChoices.append(prev,next);}if(context.fields.actual_input_id)technical(sourceChoices,{fonte_scelta:context.fields.actual_input_id});};
+    const drawSources=async(offset=0)=>{const page=offset?await call("vera_workspace_sales_plan_setup",{work_ref:workRef,offset}):setup;if(page.revision!==setup.revision)throw new Error("Le fonti sono cambiate: riapri il Plan.");sourceChoices.replaceChildren();control(sourceChoices,"Actual registrati",context.fields.actual_input_id,value=>{context.fields.actual_input_id=value;delete context.fields.seed_case_input_id;context.headers=[];preview.replaceChildren();drawMapping();if(value)run(()=>drawPreview());},page.items.filter(item=>item.kind===".csv").map(item=>[item.id,item.title]));if(page.has_more||offset){const prev=button("Fonti precedenti",()=>drawSources(Math.max(0,offset-30))),next=button("Fonti successive",()=>drawSources(offset+30));prev.disabled=!offset;next.disabled=!page.has_more;sourceChoices.append(prev,next);}};
     const metricLabels={source_row_id:"Identificativo univoco della riga",period:"Periodo mensile",transaction_currency:"Valuta di transazione",gross_sales_local:"Vendite lorde in valuta di transazione",fx_rate_to_reporting:"Cambio verso la valuta di rendicontazione",units:"Quantità (facoltativa)",discount_local:"Sconti (facoltativi)",cogs_local:"Costo del venduto (facoltativo)"};
     function drawMapping(){mapping.replaceChildren(node("h2","2. Mappature e scelte di calcolo"));control(mapping,"Valuta di rendicontazione",context.fields.reporting_currency,v=>context.fields.reporting_currency=v);control(mapping,"Unità degli importi nel riepilogo",context.fields.unit,v=>context.fields.unit=v);for(const metric of [...context.contract.required_metrics,...context.contract.optional_metrics])control(mapping,metricLabels[metric]||metric,context.fields.metric_columns[metric],v=>{if(v)context.fields.metric_columns[metric]=v;else delete context.fields.metric_columns[metric];},context.headers||[]);
       const dimensions=node("fieldset");dimensions.append(node("legend","Dimensioni commerciali dichiarate"));for(const name of context.headers||[]){const label=node("label",undefined,"check"),check=node("input");check.type="checkbox";check.disabled=!editable;check.checked=context.fields.dimension_columns.includes(name);check.addEventListener("change",()=>{context.fields.dimension_columns=check.checked?[...context.fields.dimension_columns,name]:context.fields.dimension_columns.filter(v=>v!==name);salesEdit(context);drawAssumptions();});label.append(check,node("span",name));dimensions.append(label);}mapping.append(dimensions,node("p","Ogni colonna deve essere mappata come misura o dimensione secondo il contratto supportato. Colonne omesse, ambigue o in un ordine non supportato richiedono la preparazione della fonte; il pannello non le interpreta o riordina.","caption"));
@@ -2080,7 +2118,7 @@
     if (generation !== epoch) return;
     state = null; salesWork = null; bankWork = null; amlWork = null; lipeWork = workRef; query = "";
     const {nav, main} = shell(); nav.append(button("← Clienti e incarichi", loadCatalogue));
-    main.append(node("p", "LIPE", "eyebrow"), node("h1", prepared.label), node("p", "Scegli il JSON del caso già rivisto fra i documenti registrati. L’estensione del file non prova che sia un caso LIPE valido. Il motore conserva anche i risultati bloccati.", "sub"));
+    main.append(node("p", "LIPE", "eyebrow"), node("h1", workTitle(prepared.label,"lipe")), node("p", "Scegli il caso LIPE già riesaminato fra i documenti registrati per calcolare i righi del quadro VP.", "sub"));
     main.append(node("p", "Questo passaggio esegue il calcolo. Classificazioni, completezza dei registri, correzioni del caso, catalogo, approvazione firmata ed export XML si verificano nel flusso LIPE.", "notice"));
     if (prepared.status === "recovery_required") main.append(node("p", "Ci sono output senza ricevuta nativa o un calcolo interrotto. Riprendi il run nel flusso LIPE per verificarli prima di eseguire nuovamente.", "notice"));
     let chosen, calculation;
@@ -2110,7 +2148,7 @@
     for (const item of prepared.generations) {
       const section = node("section", undefined, "work-row");
       section.append(node("p", statusLabels[item.status] || item.status), button("Consulta questa revisione", () => openWork(workRef, 0, undefined, undefined, item.source_ref)));
-      technical(section, {revisione:item.source_ref, caso:item.case_input_id}); main.append(section);
+       main.append(section);
     }
     main.append(button("Riprendi LIPE nella chat", () => resumeWorkInChat(main, {work_ref:workRef})));
     say("Scegli esplicitamente il caso da calcolare o la revisione da consultare.");
@@ -2133,13 +2171,14 @@
       "commentary_receipt.json":"Ricevuta del rapporto",
     }[name] || name;
   }
-  function crFields(value) {
+  function crFields(value, professionalOnly=false) {
     const dl=node("dl");
     for(const [key,item] of Object.entries(value||{})){
+      if(professionalOnly && (internalField(key)||["plugin","sha256","schema","schema_version","provider","model","prompt_template_version"].includes(key)))continue;
       dl.append(node("dt",labels[key]||key.replaceAll("_"," ")));const dd=node("dd");
       if(item===null)dd.append(node("span","Non disponibile"));
       else if(typeof item!=="object")dd.append(node("span",String(item)));
-      else{const details=node("details"),body=node("div"),values=Array.isArray(item)?item:[item];let offset=0;details.append(node("summary",Array.isArray(item)?`${item.length} elementi`:"Dettagli"),body);const draw=()=>{body.replaceChildren();for(const row of values.slice(offset,offset+20))body.append(row&&typeof row==="object"?crFields(row):node("p",row===null?"Non disponibile":String(row)));if(values.length>20){const pages=node("div",undefined,"pagination"),previous=button("Voci precedenti",()=>{offset=Math.max(0,offset-20);draw();}),next=button("Voci successive",()=>{offset+=20;draw();});previous.disabled=!offset;next.disabled=offset+20>=values.length;pages.append(previous,node("span",`${offset+1}–${Math.min(offset+20,values.length)} di ${values.length}`),next);body.append(pages);}};details.addEventListener("toggle",()=>{if(details.open)draw();});dd.append(details);}
+      else{const details=node("details"),body=node("div"),values=Array.isArray(item)?item:[item];let offset=0;details.append(node("summary",Array.isArray(item)?`${item.length} elementi`:"Dettagli"),body);const draw=()=>{body.replaceChildren();for(const row of values.slice(offset,offset+20))body.append(row&&typeof row==="object"?crFields(row,professionalOnly):node("p",row===null?"Non disponibile":String(row)));if(values.length>20){const pages=node("div",undefined,"pagination"),previous=button("Voci precedenti",()=>{offset=Math.max(0,offset-20);draw();}),next=button("Voci successive",()=>{offset+=20;draw();});previous.disabled=!offset;next.disabled=offset+20>=values.length;pages.append(previous,node("span",`${offset+1}–${Math.min(offset+20,values.length)} di ${values.length}`),next);body.append(pages);}};details.addEventListener("toggle",()=>{if(details.open)draw();});dd.append(details);}
       dl.append(dd);
     }
     return dl;
@@ -2221,7 +2260,7 @@
     state=null;crWork=null;crPage=null;financialWork=workRef;financialPage=()=>openFinancial(workRef);
     const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
     nav.append(button("Prepara o modifica un caso",()=>openFinancialAuthor(workRef)));
-    main.append(node("p","Analisi finanziaria","eyebrow"),node("h1","Caso riesaminato e fonti"),node("p","Scegli una ricetta e il caso già riesaminato. Abbina ciascuna fonte dichiarata ai documenti registrati. Il motore verifica i contratti ed esegue i calcoli; significato contabile, completezza e conclusioni restano da riesaminare.","notice"));
+    main.append(node("p","Analisi finanziaria","eyebrow"),node("h1","Caso riesaminato e fonti"),node("p","Scegli il tipo di analisi e il caso da esaminare. Abbina le fonti ai documenti registrati, poi verifica le quadrature e le conclusioni.","notice"));
     if(setup.recovery_required)main.append(node("p","Un’esecuzione interrotta o output alterati richiedono verifica prima di nuove scritture o della chiusura del run.","notice"));
     const context=financialChoices(setup,workRef),makeSelect=(title,choices,value,changed)=>{const label=node("label",title,"field"),select=node("select");select.setAttribute("aria-label",title);for(const [id,text] of [["","Da scegliere"],...choices]){const option=node("option",text);option.value=id;option.selected=id===value;select.append(option);}select.disabled=!setup.can_write;select.addEventListener("change",()=>{changed(select.value);changeFinancial(context);});label.append(select);main.append(label);return select;};
     makeSelect("Ricetta finanziaria",Object.keys(setup.packs).map(id=>[id,financialRecipes[id]||id]),context.fields.pack_id,value=>{context.fields.pack_id=value;context.fields.source_bindings={};});
@@ -2236,7 +2275,7 @@
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_financial_setup",{work_ref:workRef}),selected=await call("vera_workspace_financial_case",{work_ref:workRef,pack_id:setup.draft.pack_id,case_input_id:setup.draft.case_input_id});if(generation!==epoch)return;
     state=null;financialWork=workRef;financialPage=()=>openFinancialCase(workRef);const {nav,main}=shell();nav.append(button("← Ricetta e caso",()=>openFinancial(workRef)));
     const context=financialChoices(setup,workRef);if(selected.reviewed_source_bindings&&JSON.stringify(context.fields.source_bindings)!==JSON.stringify(selected.reviewed_source_bindings)){context.fields.source_bindings=structuredClone(selected.reviewed_source_bindings);changeFinancial(context);}main.append(node("p","Analisi finanziaria","eyebrow"),node("h1",financialRecipes[selected.pack_id]||selected.pack_id),node("h2","Contratto completo del caso"),crFields(selected.case_content),node("h2","Abbinamenti delle fonti dichiarate"),node("p","Gli abbinamenti sono scelte esplicite. Il nome del file non determina il ruolo della fonte. La ricetta verifica i contenuti e gli hash dichiarati; non modifica il caso né crea un riesame.","notice"));
-    for(const source of selected.sources){const section=node("section",undefined,"work-row"),label=node("label",`Fonte per ${source.source_id}`,"field"),select=node("select");select.setAttribute("aria-label",`Fonte per ${source.source_id}`);for(const row of [{id:"",title:"Da abbinare"},...setup.inputs]){const option=node("option",row.title);option.value=row.id;option.selected=row.id===context.fields.source_bindings[source.source_id];select.append(option);}select.disabled=!setup.can_write||Boolean(selected.reviewed_source_bindings);select.addEventListener("change",()=>{Object.defineProperty(context.fields.source_bindings,source.source_id,{value:select.value,writable:true,enumerable:true,configurable:true});changeFinancial(context);});label.append(select);section.append(label);technical(section,{percorso_dichiarato:source.locator});main.append(section);}
+    for(const source of selected.sources){const section=node("section",undefined,"work-row"),label=node("label",`Fonte per ${source.source_id}`,"field"),select=node("select");select.setAttribute("aria-label",`Fonte per ${source.source_id}`);for(const row of [{id:"",title:"Da abbinare"},...setup.inputs]){const option=node("option",row.title);option.value=row.id;option.selected=row.id===context.fields.source_bindings[source.source_id];select.append(option);}select.disabled=!setup.can_write||Boolean(selected.reviewed_source_bindings);select.addEventListener("change",()=>{Object.defineProperty(context.fields.source_bindings,source.source_id,{value:select.value,writable:true,enumerable:true,configurable:true});changeFinancial(context);});label.append(select);section.append(label);if(source.locator)section.append(node("p",sourceCaption(source.locator),"caption"));main.append(section);}
     main.append(button("Conserva abbinamenti in bozza",flushFinancialDraft));financialRecovery(main,()=>openFinancialCase(workRef));
     const confirmed=confirmation(main,"Confermo questo caso riesaminato e gli abbinamenti delle fonti per eseguire la ricetta. Il calcolo non approva le conclusioni professionali e non completa il run.");let submitted;
     const execute=button("Esegui ricetta e conserva tutti gli output",async()=>{await flushFinancialDraft();if(!confirmed.checked)throw new Error("Conferma caso e fonti per l’esecuzione.");if(selected.sources.some(row=>!context.fields.source_bindings[row.source_id]))throw new Error("Abbina ogni fonte dichiarata.");submitted||={work_ref:workRef,pack_id:selected.pack_id,case_input_id:selected.case_input_id,item_id:selected.selection.id,revision:selected.revision,review_ticket:selected.review_ticket,source_bindings:structuredClone(context.fields.source_bindings),human_reviewed:true,confirmed:true,idempotency_key:crypto.randomUUID()};const result=await call("vera_workspace_financial_execute",submitted);await openFinancialVersion(workRef,result.source_ref);},"primary");execute.disabled=!setup.can_write;main.append(execute);say("Caso originale completo. Il calcolo richiede una nuova conferma.");
@@ -2252,7 +2291,7 @@
       if(page.total>30){const offset=page.offset||0,selector=value=>page.rows?`rows-${value}`:"json:"+JSON.stringify({path:page.path,offset:value}),previous=button("Voci precedenti",()=>openFinancialVersion(workRef,sourceRef,itemId,selector(Math.max(0,offset-30)),artifactOffset)),next=button("Voci successive",()=>openFinancialVersion(workRef,sourceRef,itemId,selector(offset+30),artifactOffset));previous.disabled=!offset;next.disabled=!page.has_more;main.append(previous,next);}
       main.append(button("Discuti questo risultato nella chat",async()=>{const text=`Leggi vera_workspace_financial_explain con ${JSON.stringify({work_ref:workRef,source_ref:sourceRef,item_id:itemId,revision:current.revision,...(memberRef?{member_ref:memberRef}:{})})}. Discuta soltanto la selezione preparata esatta, senza aprire le popolazioni originali né dichiarare approvazione o source tie-out. Segui financial-analysis; le fonti originali specifiche richiedono il percorso model_use del modulo.`;if(host.hostCapabilities?.message?.text){const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta.");}else{const copy=node("textarea",undefined,"request");copy.readOnly=true;copy.value=text;copy.setAttribute("aria-label","Richiesta Analisi finanziaria da copiare nella chat corrente");main.append(copy);copy.focus();copy.select();}}));
     }
-    technical(main,{revisione:sourceRef});say("Versione esatta conservata. Il run resta da riesaminare e chiudere separatamente.");
+    say("Versione esatta conservata. Il run resta da riesaminare e chiudere separatamente.");
   }
   function renderPreparedArtifactValue(page) {
     if(page.rows)return readFields({righe:page.rows});
@@ -2283,7 +2322,7 @@
     if(page.selectors_text)main.append(node("h2","Riferimenti annotati"),node("pre",page.selectors_text));
     if(page.page.available){main.append(node("p",page.page.complete_file?"Testo UTF-8 completo di questo file.":`Pagina di testo UTF-8 dal carattere ${offset}. Le pagine non corrispondono a righe o record e possono dividerli.`,"caption"),node("pre",page.page.text,"source-text"));const previous=button("Testo precedente",()=>openFinancialSourceRequest(workRef,grantRef,Math.max(0,offset-page.page.page_size))),next=button("Testo successivo",()=>openFinancialSourceRequest(workRef,grantRef,offset+page.page.page_size));previous.disabled=!offset;next.disabled=!page.page.has_more;main.append(previous,next);}else main.append(node("p","Il file non è leggibile come testo UTF-8 nel pannello. La richiesta in chat fornisce il percorso di questa copia al lettore di file del workflow. Nessuna conversione o OCR è stata eseguita.","notice"));
     main.append(button("Discuti questa fonte nella chat",async()=>{const text=`Leggi vera_workspace_financial_source_context con ${JSON.stringify({work_ref:workRef,grant_ref:grantRef,revision:page.revision,offset})}. Segui financial-analysis e rispondi alla domanda registrata. È autorizzata soltanto questa fonte completa; i selettori sono annotazioni, non filtri. Non aprire altre fonti originali e non inferire completezza, approvazione o source tie-out. Se necessario usa soltanto il percorso del file restituito dal servizio con il lettore del runtime selezionato.`;if(host.hostCapabilities?.message?.text){const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta.");}else{const copy=node("textarea",undefined,"request");copy.readOnly=true;copy.value=text;copy.setAttribute("aria-label","Richiesta sulla fonte finanziaria da copiare nella chat corrente");main.append(copy);copy.focus();copy.select();}}));
-    technical(main,{richiesta:grantRef,versione_calcolo:page.parent_ref,ricevuta_pubblica:page.public_receipt});say("Richiesta conservata. La lettura nel pannello non dimostra la lettura del modello.");
+    say("Richiesta conservata. La lettura nel pannello non dimostra la lettura del modello.");
   }
   async function openFinancialAuthor(workRef,offset=0,carried) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_financial_author_setup",{work_ref:workRef});if(generation!==epoch)return;
@@ -2324,7 +2363,7 @@
     }else if(!page.proposals.length)main.append(node("p","Nessuna proposta conservata. Chiedi la preparazione nella chat e riapri questo mandato dopo che la proposta è stata registrata.","caption"));
     if(page.status!=="cancelled")main.append(button(caseRef?"Discuti questa proposta nella chat":"Prepara il caso nella chat",async()=>{const text=`Prepara o correggi il caso Financial Analysis per questo mandato nella chat corrente. Leggi vera_workspace_financial_author_context con ${JSON.stringify({...identity,revision:page.revision})} e la skill completa financial-analysis nel method_path restituito. Leggi completamente soltanto gli originali scelti con i lettori mantenuti del runtime; l’inventario non dimostra lettura. Non inferire ruoli o mapping dai nomi. Definisci con il professionista perimetro, periodi, valuta, mapping, relazioni, tolleranze, rettifiche e decisioni irrisolte. Usa i builder e i contratti pubblici invariati; non generare codice di calcolo, dati sintetici, approvazioni o source tie-out. Per FDD usa pending_constructor: i campi proposti non dichiarano un riesame, e decisions contiene soltanto decision_ref e basis; la conferma nominativa applicherà il riesame effettivo tramite build_fdd_case. Restituisci un caso contabile completo o il costruttore FDD completo e source_bindings per ogni slot dichiarato, usando soltanto input_id del mandato. Conserva una nuova proposta con vera_workspace_financial_author_stage, work_ref, grant_ref, revision corrente, idempotency_key e proposal={case:caso_completo,source_bindings:abbinamenti_esatti,note:limiti_e_decisioni_da_riesaminare}. Se il mandato è già riesaminato, usa il pannello per un nuovo mandato prima di modificare. Non eseguire, chiudere o inviare il lavoro. Il professionista riesaminerà separatamente la proposta. Nel rapporto sui dati al modello registra soltanto le fonti effettivamente lette.`;if(host.hostCapabilities?.message?.text){const result=await request("ui/message",{role:"user",content:[{type:"text",text}]});if(result?.isError)throw new Error("La chat non ha confermato la richiesta.");}else{const copy=node("textarea",undefined,"request");copy.readOnly=true;copy.value=text;copy.setAttribute("aria-label","Richiesta di preparazione finanziaria da copiare nella chat corrente");main.append(copy);copy.focus();copy.select();}}));
     if(page.can_write){const confirmed=confirmation(main,"Annulla soltanto questo mandato. Le proposte e le ricevute conservate resteranno nel run.");main.append(button("Annulla mandato di preparazione",async()=>{if(!confirmed.checked)throw new Error("Conferma l’annullamento di questo mandato.");const fresh=await call("vera_workspace_financial_author_read",identity);await call("vera_workspace_financial_author_cancel",{work_ref:workRef,grant_ref:grantRef,source_ref:grantRef,...(fresh.selection?{item_id:fresh.selection.id}:{}),revision:fresh.revision,review_ticket:fresh.review_ticket,confirmed:true,idempotency_key:crypto.randomUUID()});await openFinancialAuthorGrant(workRef,grantRef,caseRef);}));}
-    technical(main,{mandato:grantRef,proposta:caseRef||null});say("Proposta, riesame del caso, esecuzione e approvazione delle conclusioni restano azioni distinte.");
+    say("Proposta, riesame del caso, esecuzione e approvazione delle conclusioni restano azioni distinte.");
   }
   async function openCr(workRef, offset) {
     leaveDraft();const generation=++epoch;
@@ -2335,7 +2374,7 @@
     if(generation!==epoch)return;
     state=null;bankWork=null;lipeWork=null;amlWork=null;salesWork=null;crWork=workRef;crPage=()=>openCr(workRef,offset);
     const {nav,main}=shell();nav.append(button("← Clienti e incarichi",loadCatalogue));
-    main.append(node("p","Centrale dei Rischi","eyebrow"),node("h1",prepared.label),node("p","Seleziona un PDF digitale ufficiale oppure esportazioni tabellari da verificare. Il motore conserva provenienza e popolazioni distinte; i PDF scansionati richiedono il documento digitale originale.","sub"));
+    main.append(node("p","Centrale dei Rischi","eyebrow"),node("h1",workTitle(prepared.label,"centrale-rischi-review")),node("p","Seleziona un PDF digitale ufficiale oppure esportazioni tabellari da verificare. Il motore conserva provenienza e popolazioni distinte; i PDF scansionati richiedono il documento digitale originale.","sub"));
     if(!prepared.can_write)main.append(node("p",prepared.status==="recovery_required"?"Un’esecuzione interrotta o output senza ricevuta richiedono verifica nel flusso Centrale Rischi.":"Questo run può essere consultato; le scritture richiedono un run in esecuzione e il ruolo di revisore.","notice"));
     crLocalContext=draft;const chosen=new Set(draft.fields.input_ids),count=node("p",undefined,"caption"),showCount=()=>{count.textContent=`${chosen.size} fonti nella bozza, anche nelle altre pagine. La conferma dell’ispezione deve essere rinnovata.`;},sources=node("fieldset");sources.append(node("legend","Fonti registrate"));
     for(const row of prepared.items){const label=node("label",undefined,"check"),input=node("input");input.type="checkbox";input.checked=chosen.has(row.id);input.disabled=!prepared.can_write;input.addEventListener("change",()=>{input.checked?chosen.add(row.id):chosen.delete(row.id);draft.fields.input_ids=[...chosen];showCount();changeCrLocal(draft);});label.append(input,node("span",row.title));sources.append(label);}showCount();main.append(sources,count);
@@ -2345,7 +2384,7 @@
     let submission;
     const inspect=button("Ispeziona le fonti",async()=>{if(!chosen.size||!confirmed.checked)throw new Error("Scegli le fonti e conferma l’ispezione.");submission||={work_ref:workRef,revision:prepared.revision,review_ticket:prepared.review_ticket,input_ids:[...chosen],human_reviewed:true,confirmed:true,idempotency_key:crypto.randomUUID()};const result=await call("vera_workspace_cr_inspect",submission);await openCrVersion(workRef,result.source_ref);},"primary");inspect.disabled=!prepared.can_write;main.append(inspect);
     main.append(node("h2","Revisioni conservate"));
-    for(const row of prepared.versions){const section=node("section",undefined,"work-row");section.append(node("p",{inspection:"Ispezione · mappatura da rivedere",analysis:"Calcolo · "+(statusLabels[row.status]||row.status),report:"Rapporto · bozza da rivedere"}[row.phase]),button("Consulta questa revisione",()=>openCrVersion(workRef,row.source_ref)));technical(section,{revisione:row.source_ref});main.append(section);}
+    for(const row of prepared.versions){const section=node("section",undefined,"work-row");section.append(node("p",{inspection:"Ispezione · mappatura da rivedere",analysis:"Calcolo · "+(statusLabels[row.status]||row.status),report:"Rapporto · bozza da rivedere"}[row.phase]),button("Consulta questa revisione",()=>openCrVersion(workRef,row.source_ref)));main.append(section);}
     const pages=node("div",undefined,"pagination"),previous=button("Pagina precedente",()=>openCr(workRef,Math.max(0,offset-30))),next=button("Pagina successiva",()=>openCr(workRef,offset+30));previous.disabled=!offset;next.disabled=offset+30>=Math.max(prepared.total,prepared.versions_total);pages.append(previous,next);main.append(pages);
     say("Scegli le fonti o una revisione esatta.");
   }
@@ -2367,7 +2406,7 @@
         frame.srcdoc='<!doctype html><meta http-equiv="Content-Security-Policy" content="default-src \'none\'; style-src \'unsafe-inline\'; img-src data:; base-uri \'none\'; form-action \'none\'">'+preview.content;
         main.append(frame,node("p","Rapporto integrale del motore pubblico. Script, collegamenti a risorse esterne e comandi interattivi sono disabilitati nell’anteprima.","caption"));
       }else main.append(node("pre",preview.content));
-      technical(main,{file:current.selection.id,sha256:preview.sha256});
+
     }
     if(current.selection?.prepared_context){const page=current.selection.prepared_context;main.append(node("h2",crArtifactTitle(current.selection.title)));if(page.kind==="value")main.append(crFields({valore:page.value}));else{for(const row of page.entries){const section=node("section",undefined,"work-row");section.append(node("h3",row.name));if(row.display==="complete_value")section.append(crFields({valore:row.value}));section.append(button("Apri questa voce",()=>openCrVersion(workRef,sourceRef,itemId,row.source_ref)));main.append(section);}const selector=offset=>"json:"+JSON.stringify({path:page.path,offset}),pages=node("div",undefined,"pagination"),previous=button("Voci precedenti",()=>openCrVersion(workRef,sourceRef,itemId,selector(Math.max(0,page.offset-30)))),next=button("Voci successive",()=>openCrVersion(workRef,sourceRef,itemId,selector(page.offset+30)));previous.disabled=!page.offset;next.disabled=!page.has_more;pages.append(previous,node("span",`${page.total} voci`),next);main.append(pages);}if(page.path.length)main.append(button("← Sezione precedente",()=>openCrVersion(workRef,sourceRef,itemId,"json:"+JSON.stringify({path:page.path.slice(0,-1),offset:0}))));}
     if(current.data.phase==="inspection"&&!itemId)main.append(button("Consulta tutte le righe e i valori",()=>openCrSource(workRef,sourceRef)));
@@ -2424,7 +2463,7 @@
         crDraftRecovery(main,()=>openCrSource(workRef,sourceRef,selector));
         main.append(button("Discuti questa pagina nella chat",async()=>{if(!question.value.trim())throw new Error("Scrivi la domanda sulla pagina selezionata.");const grant=await call("vera_workspace_cr_grant",{work_ref:workRef,source_ref:sourceRef,item_id:current.selection.id,source_selector:selector,revision:current.revision,review_ticket:current.review_ticket,question:question.value,confirmed:true,human_reviewed:true,idempotency_key:crypto.randomUUID()});await crRequestModel(main,workRef,grant.grant_ref,grant.kind);}));
       }
-      technical(main,{tabella:page.table_id,sha256:page.source_sha256});
+
     }
     const pages=node("div",undefined,"pagination"),previous=button("Pagina fonte precedente",()=>openCrSource(workRef,sourceRef,{...selector,offset:Math.max(0,page.offset-30)})),next=button("Pagina fonte successiva",()=>openCrSource(workRef,sourceRef,{...selector,offset:page.offset+30}));previous.disabled=!page.offset;next.disabled=!page.has_more;pages.append(previous,node("span",`${page.total} ${page.kind==="tables"?"tabelle":page.kind==="values"?"valori distinti":"righe"}`),next);main.append(pages);
     say("Fonte della revisione selezionata: pagina completa, nessuna mappatura approvata.");
@@ -2461,13 +2500,13 @@
     state=null;crWork=workRef;crPage=()=>openCrHistory(workRef,grantRef,offset);
     const {nav,main}=shell();nav.append(button("← Domande conservate",()=>openCrProposals(workRef,history.source_ref)),button("Proposta corrente",()=>openCrProposal(workRef,grantRef)));
     main.append(node("p","Centrale dei Rischi","eyebrow"),node("h1","Proposte conservate"),node("p","Ogni voce riapre il contenuto completo del mandato originale. L’ordine segue l’identificativo, senza dedurre una data di creazione. La consultazione non sostituisce la proposta corrente né ripristina un’approvazione.","notice"));
-    for(const row of history.rows){const section=node("section",undefined,"work-row");section.append(node("p",row.is_current?"Proposta corrente":"Proposta precedente"),button("Consulta proposta conservata",()=>openCrProposal(workRef,grantRef,row.proposal_sha256)));technical(section,{sha256:row.proposal_sha256});main.append(section);}
+    for(const row of history.rows){const section=node("section",undefined,"work-row");section.append(node("p",row.is_current?"Proposta corrente":"Proposta precedente"),button("Consulta proposta conservata",()=>openCrProposal(workRef,grantRef,row.proposal_sha256)));main.append(section);}
     const pages=node("div",undefined,"pagination"),previous=button("Proposte precedenti",()=>openCrHistory(workRef,grantRef,Math.max(0,offset-30))),next=button("Proposte successive",()=>openCrHistory(workRef,grantRef,offset+30));previous.disabled=!offset;next.disabled=!history.has_more;pages.append(previous,node("span",`${history.total} proposte`),next);main.append(pages);say("Cronologia del mandato esatto; nessuna nuova autorizzazione al modello.");
   }
   async function openCrProposal(workRef,grantRef,proposalSha) {
     leaveDraft();const generation=++epoch;const proposal=await call("vera_workspace_cr_proposal_read",{work_ref:workRef,grant_ref:grantRef,...(proposalSha?{proposal_sha256:proposalSha}:{})});if(generation!==epoch)return;crWork=workRef;crPage=()=>openCrProposal(workRef,grantRef,proposalSha);const sourceRef=proposal.data.selection.source_ref,{nav,main}=shell();nav.append(button("← Revisione",()=>openCrVersion(workRef,sourceRef)),button("Proposte conservate",()=>openCrHistory(workRef,grantRef)));main.append(node("h1",proposal.kind==="recipe"?"Proposta di mappatura":"Commento proposto"),crFields(proposal.proposal));
     if(proposal.history_selected){
-      main.append(node("p",proposal.is_current?"Questa voce conserva gli stessi contenuti della proposta corrente. Apri la proposta corrente per un nuovo riesame.":"Proposta precedente: sola consultazione. Il riesame del calcolo non viene ripristinato.","notice"));technical(main,{sha256:proposal.proposal_sha256});
+      main.append(node("p",proposal.is_current?"Questa voce conserva gli stessi contenuti della proposta corrente. Apri la proposta corrente per un nuovo riesame.":"Proposta precedente: sola consultazione. Il riesame del calcolo non viene ripristinato.","notice"));
       if(proposal.kind==="recipe"){
         const restore=button("Usa come nuova bozza",async()=>{
           const verified=await call("vera_workspace_cr_proposal_read",{work_ref:workRef,grant_ref:grantRef,proposal_sha256:proposalSha});
@@ -2593,7 +2632,7 @@
       bankDraftContext = null; dirty = false; await returnToWorks();
       say("Bozza conservata. Recuperala quando riapri questo lavoro.");
     }));
-    main.append(node("p", "Giornale e banca", "eyebrow"), node("h1", initial.label), node("p", "Scegli le fonti, verifica la mappatura delle colonne e il perimetro, poi esegui la riconciliazione. Gli esiti richiedono la revisione del professionista.", "sub"));
+    main.append(node("p", "Giornale e banca", "eyebrow"), node("h1", workTitle(initial.label,"journal-bank-reconciliation")), node("p", "Scegli le fonti, verifica la mappatura delle colonne e il perimetro, poi esegui la riconciliazione. Gli esiti richiedono la revisione del professionista.", "sub"));
     if (initial.status === "recovery_required") { main.append(node("p", "Un’operazione interrotta o risultati esistenti richiedono verifica nel percorso della funzione. Le fonti e gli output sono conservati.", "notice")); return; }
     if (initial.status === "reconciled") { main.append(button("Apri risultati da rivedere", () => openWork(workRef))); return; }
     if (recovered && (recovered.revision !== initial.revision || recovered.draft_revision !== stored.draft?.draft_revision)) throw new Error("La bozza è cambiata. Riapri il lavoro prima di recuperarla.");
@@ -2678,7 +2717,7 @@
       const selected = await exactPage(page.offset, id), metadata = { ...selected.selection }; delete metadata.source_file; delete metadata.id;
       draft.selected_item_id = id;
       fileArea.replaceChildren(node("h3", selected.selection.source_file.split("/").at(-1)), readFields(metadata));
-      technical(fileArea, { documento: selected.selection.source_file, selezione: id });
+
       const file = proposal[selected.selection.side][selected.selection.source_file], form = node("section"); form.append(node("h3", "Mappatura da verificare"));
       const raw = draft.files[id] || (draft.files[id] = { mapping: {}, options: {} });
       for (const key of Object.keys(file.mapping)) edit(form, labels[key] || key.replaceAll("_", " "), file.mapping, key, raw.mapping, id + ":mapping");
@@ -2768,7 +2807,7 @@
     }else if(!page.proposals.length)main.append(node("p","Nessuna proposta conservata. Porta il mandato nella chat e riaprilo quando sarà stata registrata una proposta completa.","caption"));
     if(page.status==="open")main.append(button(caseRef?"Discuti questa proposta nella chat":"Prepara il caso nella chat",()=>requestCurrentDiscussion(main,`Prepara o correggi il caso completo di Valutazione d’impresa per questo mandato. Leggi vera_workspace_valuation_author_context con ${JSON.stringify({...identity,revision:page.revision})}, la skill completa business-valuation, il contratto e lo schema restituiti. Leggi completamente soltanto gli originali autorizzati e il caso precedente esplicito usando lettori mantenuti. Non inferire significati economici dai nomi. Definisci con il professionista mandato, finalità, destinatari, importi, ipotesi, metodi, normalizzazioni, sensibilità e limiti; preserva le incertezze. Prepara l’intero caso pubblico e source_bindings={id_fonte:input_id_del_mandato}. Non creare o modificare attestazioni umane: conserva i record e le review originali del caso precedente; il motore pubblico verifica le dipendenze correnti. Registra una nuova proposta con vera_workspace_valuation_author_stage, work_ref, grant_ref, revision corrente, idempotency_key e proposal={case:caso_completo,source_bindings:abbinamenti_esatti,note:limiti_da_riscontrare}. Gli stati proposti non costituiscono riscontro umano. Non calcolare, completare, firmare o inviare il lavoro. Il professionista riscontra separatamente il caso completo, poi lo conserva in un nuovo run e autorizza il calcolo. Registra nel rapporto sui dati al modello soltanto ciò che il modello ha effettivamente letto.`)));
     if(page.can_write){const confirmed=confirmation(main,"Annulla questo mandato conservando proposte e ricevute. La chat perderà l’autorizzazione a modificarlo.");main.append(button("Annulla mandato di preparazione",async()=>{if(!confirmed.checked)throw new Error("Conferma l’annullamento del mandato.");const fresh=await call("vera_workspace_valuation_author_read",identity);await call("vera_workspace_valuation_author_cancel",{...identity,source_ref:grantRef,...(fresh.selection?{item_id:fresh.selection.id}:{}),revision:fresh.revision,review_ticket:fresh.review_ticket,confirmed:true,idempotency_key:crypto.randomUUID()});await openValuationAuthorGrant(workRef,grantRef,caseRef);}));}
-    main.append(button("Rileggi proposte conservate",()=>openValuationAuthorGrant(workRef,grantRef,caseRef)));technical(main,{mandato:grantRef,proposta:caseRef||null});say("Proposta, riscontro nominativo, calcolo e decisioni sulle carte sono passaggi separati.");
+    main.append(button("Rileggi proposte conservate",()=>openValuationAuthorGrant(workRef,grantRef,caseRef)));say("Proposta, riscontro nominativo, calcolo e decisioni sulle carte sono passaggi separati.");
   }
   async function openVarianceAuthor(workRef,offset=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_variance_author_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
@@ -2828,7 +2867,7 @@
     state=null;financialWork=workRef;financialPage=()=>openManagementAuthorGrant(workRef,grantRef,caseRef);const {nav,main}=shell();nav.append(button("← Domanda e fonti",()=>openManagementAuthor(workRef)));
     main.append(node("p","Controllo di gestione","eyebrow"),node("h1",caseRef?"Caso completo proposto":"Domanda e fonti autorizzate"),node("p",page.mandate.fields.question),node("p",`${page.mandate.sources.length} fonti e casi espressamente autorizzati. Il mandato non attesta una lettura effettiva del modello. Ruoli delle fonti, classificazioni e metodi restano da riscontrare; i campioni dell’ispezione non coprono la popolazione completa.`,"notice"));
     for(const [index,row]of page.proposals.entries())nav.append(button(`Proposta ${index+1}`,()=>openManagementAuthorGrant(workRef,grantRef,row.case_ref)));
-    if(caseRef){main.append(node("h2",page.mandate.fields.mode==="costing"?"Costi, metodi, driver e scenari proposti":"Mappature, periodi e controlli dichiarati"),crFields(page.case),node("h2","Limiti e questioni aperte"),node("p",page.note));technical(main,page.validation);
+    if(caseRef){main.append(node("h2",page.mandate.fields.mode==="costing"?"Costi, metodi, driver e scenari proposti":"Mappature, periodi e controlli dichiarati"),crFields(page.case),node("h2","Limiti e questioni aperte"),node("p",page.note));if(page.validation)main.append(node("h3","Esito dei controlli"),readFields(page.validation));
       if(page.prior_case){const prior=node("details");prior.append(node("summary","Caso precedente e riscontri conservati"),crFields(page.prior_case));main.append(prior);}
       if(page.registration)main.append(node("h2","Riscontro nominativo conservato"),crFields(page.registration.fields),button("Apri nuovo run per il calcolo separato",()=>openManagementSuccessor(page.registration)),button("Prepara una correzione nel nuovo run",()=>openManagementAuthor(page.registration.work_ref)));
       if(page.can_write){const context={workRef,managementAuthorReviewIdentity:identity,page,stamp:page.draft_revision,fields:structuredClone(page.review_draft),saved:JSON.stringify(page.review_draft)};financialContext=context;
@@ -2976,7 +3015,7 @@
   async function openValuation(workRef,offset=0,sourceRef,collection="methods",start=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_valuation_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
     state=null;const {nav,main}=shell();financialWork=workRef;financialPage=()=>openValuation(workRef,offset,sourceRef,collection,start);
-    nav.append(button("← Clienti e incarichi",loadCatalogue));main.append(node("p","Valutazione d’impresa","eyebrow"),node("h1",sourceRef?"Carte di valutazione conservate":"Caso e carte di valutazione"),node("p","Il motore pubblico calcola i metodi dichiarati e conserva rapporti, formule, fonti e questioni aperte. Scelta dei metodi, rettifiche, mandato e conclusione restano da riesaminare. Calcolare non firma la valutazione e non completa il run.","notice"));
+    nav.append(button("← Clienti e incarichi",loadCatalogue));main.append(node("p","Valutazione d’impresa","eyebrow"),node("h1",sourceRef?"Carte di valutazione conservate":"Caso e carte di valutazione"),node("p","Consulta i valori ottenuti con ciascun metodo, le formule e le fonti. Riesamina la scelta dei metodi, le rettifiche e le questioni aperte prima di firmare la valutazione.","notice"));
     if(setup.status==="recovery_required"){main.append(node("p","Un’esportazione è incerta o priva di ricevuta. Riprendi il recupero nel percorso specialistico senza adottare il risultato o ripetere il calcolo.","notice"));return;}
     nav.append(button("Prepara o correggi un caso",()=>openValuationAuthor(workRef)));
     for(const version of setup.versions)nav.append(button(version.entity_name+" · "+(statusLabels[version.status]||version.status),()=>openValuation(workRef,0,version.source_ref)));
@@ -3075,7 +3114,7 @@
   async function openBusinessPlan(workRef, offset=0) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_business_plan_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
     planningAuthorWork=null;state=null;bankWork=null;lipeWork=null;amlWork=null;salesWork=null;businessPlanWork=workRef;
-    const {nav,main}=shell();nav.append(button("← Tutti i lavori",()=>loadCatalogue()));main.append(node("p","Business plan","eyebrow"),node("h1",setup.label));
+    const {nav,main}=shell();nav.append(button("← Tutti i lavori",()=>loadCatalogue()));main.append(node("p","Business plan","eyebrow"),node("h1",workTitle(setup.label,"business-planning")));
     if(setup.status==="recovery_required"){main.append(node("p","La precedente lavorazione richiede recupero nel percorso Business Planning. Fonti e output conservati non vengono adottati come un rapporto verificato.","notice"));return;}
     main.append(node("p","Il rapporto riunisce valutazioni, calcoli e questioni da riesaminare.","notice"));
     const area=node("section");main.append(area);
@@ -3098,7 +3137,7 @@
         const details = node("details"); details.append(node("summary", Array.isArray(item) ? `${item.length} elementi` : "Dettagli"));
         if (depth < maxDepth) for (const row of Array.isArray(item) ? item.slice(0, limit) : [item]) details.append(typeof row === "object" ? readFields(row, depth + 1, limit, maxDepth) : node("p", String(row)));
         dd.append(details);
-      } else dd.textContent = statusLabels[item] || String(item);
+      } else dd.textContent = typeof item === "boolean" ? (item ? "Sì" : "No") : statusLabels[item] || String(item);
       dl.append(dd);
     }
     return dl;
@@ -3108,9 +3147,6 @@
     section.append(node("summary", label));
     return section;
   }
-  function technical(parent, value) {
-    const details = node("details", undefined, "technical"); details.append(node("summary", "Dettagli tecnici"), node("p", JSON.stringify(value))); parent.append(details);
-  }
   function pagination(parent) {
     if (!state.offset && !state.has_more) return;
     const group = node("div", undefined, "pagination");
@@ -3118,12 +3154,17 @@
     const next = button("Successivi", () => openWork(state.work_ref, state.offset + 30)); next.disabled = !state.has_more;
     group.append(previous, node("span", state.total ? `${state.offset + 1}–${Math.min(state.offset + 30, state.total)} di ${state.total}` : "0 elementi"), next); parent.append(group);
   }
+  const reviewNarrow = window.matchMedia("(max-width: 900px)");
+  reviewNarrow.addEventListener("change", () => {
+    const chooser = document.querySelector(".queue-picker");
+    if (chooser) chooser.open = !reviewNarrow.matches;
+  });
   function renderWork() {
     const {nav, main} = shell();
     nav.append(button("← Lavori dello studio", refreshCatalogue), button("File del lavoro", showOutputs));
     if (state.view === "ARCHIVE_EXECUTION") nav.append(button("Revisione del piano", () => openReview(state.work_ref)));
     if (state.workflow === "archive-organization") nav.append(button("Esecuzione del piano", () => openWork(state.work_ref, 0, undefined, undefined, undefined, "ARCHIVE_EXECUTION")));
-    const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", /^run_[a-f0-9]{24}$/i.test(state.label) ? (names[state.workflow] || "Revisione") : state.label));
+    const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", workTitle(state.label,state.workflow)));
     main.append(header);
     if (state.workflow === "client-file-preparation") {
       const views = node("nav", undefined, "actions"); views.setAttribute("aria-label", "Viste della revisione documenti");
@@ -3176,9 +3217,10 @@
     if (state.items.length > 1) search(queue, "Cerca nella pagina corrente", rows);
     else query = "";
     queue.append(list); pagination(queue);
-    if (state.total > 1 && window.matchMedia("(max-width: 900px)").matches && state.selection) {
+    if (state.total > 1 && state.selection) {
       const chooser = supportingDetails("Scegli un elemento (" + state.total + ")");
       chooser.classList.add("queue-picker");
+      chooser.open = !reviewNarrow.matches;
       chooser.append(queue); split.append(chooser);
     } else if (state.total > 1) split.append(queue);
     else split.classList.add("single-item");
@@ -3190,7 +3232,7 @@
         const b = button("", () => {
           if (selected && itemId(selected) === itemId(item)) {
             const chooser = queue.closest("details");
-            if (chooser) chooser.open = false;
+            if (chooser && reviewNarrow.matches) chooser.open = false;
             return;
           }
           return openWork(state.work_ref, state.offset, itemId(item), state.revision);
@@ -3230,7 +3272,7 @@
     }[selected.item_type];
     if (finding || selected.data?.reason) parent.append(node("p", finding || selected.data.reason, "finding-reason"));
     if (state.kind === "workbench") {
-      const evidenceGroups = supportingDetails(selected.source_path ? "Fonte · " + selected.source_path.replace(/; (?:row|fila) (\d+)$/i, ", riga $1") : "Verifica le fonti");
+      const evidenceGroups = supportingDetails(selected.source_path ? "Fonte · " + sourceCaption(selected.source_path).replace(/; (?:row|fila) (\d+)$/i, ", riga $1").replace(/; page (\d+)(?=, riga |$)/i,", pagina $1") : "Verifica le fonti");
       for (const group of state.data.adapter.detailGroups || []) {
         const values = Object.fromEntries(group.fields.filter(key => key in (selected.data || {})).map(key => [key, selected.data[key]]));
         const concordatoGroups = { "Procedure and Documents": "Procedura e documenti", "Creditor Treatment": "Trattamento dei creditori", "Feasibility and Issues": "Fattibilità e rilievi" };
@@ -3243,12 +3285,12 @@
       }
       if (state.workflow === "client-file-preparation") {
         const {invoices, ...record} = selected.data || {};
+        for (const key of ["relative_path","extension","size_bytes","modified_iso","sha256","text_path","category_basis","category_status","extraction_method"]) delete record[key];
         parent.append(node("h3", "Dati conservati dall’estrazione"), readFields(record,0,10000,20));
-        technical(parent, record);
         if (Array.isArray(invoices)) {
           parent.append(node("p", "Il parser segnala un possibile duplicato per gli stessi dati formali. Confronta ciascun corpo e registra la tua decisione; nessuna fattura viene cancellata o contabilizzata.", "caption"));
           const comparison = node("div", undefined, "xml-comparison");
-          for (const invoice of invoices) { const card = node("article", undefined, "evidence-group"); card.append(node("h3", invoice.file_name + " · " + invoice.body_index), readFields(invoice,0,10000,20)); technical(card,invoice); comparison.append(card); }
+          for (const invoice of invoices) { const card = node("article", undefined, "evidence-group"); card.append(node("h3", invoice.file_name + " · " + invoice.body_index), readFields(invoice,0,10000,20)); comparison.append(card); }
           parent.append(comparison);
         }
         if (selected.item_type === "extracted_fiscal_field") parent.append(node("p", "Il valore e la copertura provengono dall’estrazione. Una decisione di revisione non corregge automaticamente il valore: usa il modulo di correzione, quando disponibile, per rigenerare una run separata.", "caption"));
@@ -3268,12 +3310,12 @@
       renderPreparedArtifact(vp, {columns:["Rigo", "Euro"], rows:Object.entries(selected.data.rows).sort(([a],[b])=>parseInt(a.slice(2),10)-parseInt(b.slice(2),10)).map(([key,value])=>({Rigo:key.toUpperCase().replace("_DEBIT", " a debito").replace("_CREDIT", " a credito"), Euro:value ?? "Non compilato"}))});
       parent.append(vp);
       parent.append(readFields({payment_status:selected.data.payment_status, evidence:selected.data.evidence}));
-      technical(parent, {xml_period:selected.data.xml_period, vp13_method:selected.data.vp13_method});
+      parent.append(readFields({periodo:selected.data.xml_period,metodo_acconto:selected.data.vp13_method}));
     }
     else if(state.kind === "invoice") {
       const kinds={source:"Valore letto dalla fonte",confirmed:"Valore dichiarato come confermato",calculated:"Valore calcolato nella proposta"};
       const {value,basis,kind,uncertain,operands,...rest}=selected.data;
-      parent.append(scissioneFields({...rest,...(selected.group === "fields" ? {valore_proposto:value,motivazione:basis??null,origine_del_valore:kinds[kind]||kind||"Non indicata",incertezza_dichiarata:uncertain,campi_del_calcolo:operands||[]} : {}),evidence:selected.evidence}));technical(parent,{campo:selected.key});
+      parent.append(scissioneFields({...rest,...(selected.group === "fields" ? {valore_proposto:value,motivazione:basis??null,origine_del_valore:kinds[kind]||kind||"Non indicata",incertezza_dichiarata:uncertain,campi_del_calcolo:operands||[]} : {}),evidence:selected.evidence}));
     }
     else if (state.kind === "sales") {
       if(selected.group === "scenario_summary.csv") {
@@ -3473,8 +3515,9 @@
     }
     choice.addEventListener("change", () => { fields.action = choice.value; showActionFields(); changed(); });
     if (state.workflow === "open-item-reconciliation") {
-      parent.append(node("p", "Per applicare una revisione con assurance, inserisci il riferimento di controllo della versione precedente conservato separatamente dal run. Il motore verifica che corrisponda; non viene ricavato dai file da modificare.", "caption"));
-      input(parent, "Riferimento di controllo conservato separatamente", "expected_predecessor_checkpoint");
+      const versionProof=supportingDetails("Verifica della versione per applicare la revisione");
+      versionProof.append(node("p","Usa il riferimento conservato separatamente per verificare la versione di partenza. Puoi salvare una decisione senza applicarla.", "caption"));
+      input(versionProof,"Riferimento di controllo conservato separatamente","expected_predecessor_checkpoint");parent.append(versionProof);
     }
     const check = confirmation(parent, "Ho verificato questo elemento e le sue fonti. Confermo la decisione scelta.");
     const decision = () => {
@@ -3499,17 +3542,18 @@
     parent.append(actions); showActionFields();
     if (state.workflow === "archive-organization") parent.append(node("p", "La compilazione applica le decisioni al piano e non sposta i file. Rivedi tutte le destinazioni prima della conferma separata in «Esecuzione del piano».", "notice"));
     if (state.workflow === "new-client") parent.append(node("p", "Applica aggiorna solo la revisione del dossier. Una modifica materiale resta una proposta e richiede un nuovo run; non riscrive i fatti né elimina i controlli mancanti.", "notice"));
-    if (state.workflow === "client-file-preparation") parent.append(node("p", "Le modifiche a memo ed email sostituiscono il testo completo della bozza attraverso il motore. Applica conserva l'originale, riesegue i controlli previsti e sigilla gli output aggiornati. Le decisioni mancanti restano da rivedere; l'email non viene inviata.", "notice"));
-    if (state.workflow === "report-builder") parent.append(node("p", "Salva conserva la proposta senza cambiare il report. Applica rigenera Markdown e Word attraverso il motore; le misure numeriche ancora da qualificare restano pendenti. I riferimenti di integrità restituiti dal motore sono conservati fuori dagli output e verificati nelle revisioni successive.", "notice"));
+    if (state.workflow === "client-file-preparation") parent.append(node("p", "Applica conserva l’originale e genera la bozza aggiornata. Le modifiche al memo o all’email sostituiscono tutto il testo. L’email resta una bozza.", "notice"));
+    if (state.workflow === "report-builder") parent.append(node("p", "Salva conserva la proposta. Applica aggiorna le versioni Word e Markdown del report. Le misure ancora da verificare restano aperte.", "notice"));
     if (state.workflow === "concordato-plan-review") parent.append(node("p", "Salva conserva le decisioni proposte. Applica registra la revisione senza correggere i fatti confermati né chiudere i rilievi. Le modifiche alle relazioni vincolate alle fonti producono una revisione separata. L'applicazione delle modifiche al memo è sospesa: il riepilogo Word aggiornato non supera ancora il replay del motore.", "notice"));
     if (state.workflow === "open-item-reconciliation") {
       parent.append(node("p", "Applica conserva la revisione e la versione precedente. Rigenera riestrae le stesse fonti, riusa titolo e testo originali e verifica il nuovo fascicolo. I controlli mancanti restano impedimenti; Studio Archive richiede una chiusura separata.", "notice"));
       if (state.data.regeneration_available) {
         const regenerateLabel = node("label", undefined, "field"), regenerateCheckpoint = node("input");
         regenerateCheckpoint.type = "text"; regenerateCheckpoint.maxLength = 64;
-        regenerateLabel.append(node("span", "Riferimento della versione precedente per la rigenerazione"), regenerateCheckpoint); parent.append(regenerateLabel);
-        const regenerateCheck = confirmation(parent, "Confermo la rigenerazione del fascicolo con le decisioni già applicate e le impostazioni originali della relazione.");
-        parent.append(button("Rigenera fascicolo e verifica", () => {
+        const regeneration=supportingDetails("Rigenera il fascicolo dalle fonti");
+        regenerateLabel.append(node("span", "Riferimento della versione precedente per la rigenerazione"), regenerateCheckpoint); regeneration.append(regenerateLabel);parent.append(regeneration);
+        const regenerateCheck = confirmation(regeneration, "Confermo la rigenerazione del fascicolo con le decisioni già applicate e le impostazioni originali della relazione.");
+        regeneration.append(button("Rigenera fascicolo e verifica", () => {
           if (dirty) throw new Error("Applica o scarta le modifiche prima di rigenerare.");
           const checkpoint = regenerateCheckpoint.value.trim();
           if (!/^[a-f0-9]{64}$/.test(checkpoint || "")) throw new Error("Inserisci il riferimento della versione precedente conservato separatamente.");
@@ -3614,7 +3658,7 @@
   });
   bandiAuthorPanel = globalThis.VeraBandiContributions.create({
     node, button, call, say, shell, leaveDraft, confirmation:esgConfirmation,
-    showJson(value){return node("pre",JSON.stringify(value,null,2),"source-excerpt");}, openDossier:openBandi,
+    showJson(value){return crFields(value,true);}, openDossier:openBandi,
     setDirty(value){dirty=value;}, enter(){state=null;return ++epoch;},
     isCurrent(generation){return generation===epoch;}
   });
@@ -3647,6 +3691,6 @@
     host = await request("ui/initialize", { protocolVersion: "2026-01-26", appInfo: { name: "Vera workspace", version: "1.0.0" }, appCapabilities: { availableDisplayModes: ["fullscreen"] } });
     document.getElementById("refresh").disabled = false;
     window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized" }, "*");
-    say("Connessione pronta. Apertura dei lavori autorizzati…");
+
   });
 })();

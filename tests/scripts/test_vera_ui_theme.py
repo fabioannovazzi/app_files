@@ -35,7 +35,8 @@ def test_central_theme_edit_reaches_workspace_and_specialist_review(
         sync_vera_ui_theme.ROOT
         / "plugins/check-entries/assets/check-entries-review-widget.html"
     )
-    assert resources[workspace].endswith(new_theme + vera_ui_theme.END + "\n")
+    assert new_theme in resources[workspace]
+    assert '--font-ui: "Instrument Sans"' in resources[workspace]
     assert new_theme in resources[vouching]
     assert resources[vouching].count(vera_ui_theme.START) == 1
 
@@ -81,7 +82,10 @@ def test_host_packaging_themes_product_ui_and_preserves_reports(
 
     vera_ui_theme.theme_package_resources(entries, prefix)
 
-    assert entries[prefix + "ui/theme.css"] == theme.encode()
+    identity = (vera_ui_theme.VERA_UI / "identity.css").read_bytes()
+    expected = theme.encode() + (identity if product == "vera" else b"")
+    assert entries[prefix + "ui/theme.css"] == expected
+    assert (identity in entries[prefix + "ui/workspace.css"]) == (product == "vera")
     assert theme.encode() in entries[prefix + "ui/workspace.css"]
     assert (
         theme.encode()
@@ -90,7 +94,12 @@ def test_host_packaging_themes_product_ui_and_preserves_reports(
     themed_widget = entries[
         prefix + "modules/check-entries/assets/check-entries-review-widget.html"
     ]
-    assert theme.encode() in themed_widget
+    if product == "vera":
+        # This dormant component widget is part of the signed sampling/review
+        # implementation. Its saved receipt must survive product styling.
+        assert themed_widget == widget
+    else:
+        assert theme.encode() in themed_widget
     assert themed_widget.endswith(b"<script>window.review = 1;</script>")
     assert entries["package/plugins/other/ui/workspace.css"] == b"unrelated CSS"
     assert (

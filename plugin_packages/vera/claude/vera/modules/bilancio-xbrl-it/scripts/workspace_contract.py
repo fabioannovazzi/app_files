@@ -6,6 +6,7 @@ import hashlib
 import json
 from typing import Any, Mapping
 
+from accounts_preview_text import preview_check_message
 from intelligence_contract import build_intelligence_packet
 from review_views import build_review_view
 
@@ -63,6 +64,12 @@ def build_workspace_snapshot(
                 ]
             review["records"] = _page(rows, offset, limit)
             review["area_id"] = source_ref
+    if view == "ISSUES_PANEL":
+        page = review["issues"]
+        page["items"] = [
+            {**issue, "display_message": preview_check_message(issue, case, "it")}
+            for issue in page["items"]
+        ]
     result = {
         "case_id": case["case_id"],
         "revision_id": case["revision_id"],
@@ -144,7 +151,10 @@ def build_workspace_snapshot(
         }
         encoded = json.dumps(explanation, sort_keys=True, ensure_ascii=False).encode()
         result["selection"] = {
-            "issue": issue,
+            "issue": {
+                **issue,
+                "display_message": preview_check_message(issue, case, "it"),
+            },
             "evidence": evidence,
             "model_context": explanation,
             "context_sha256": hashlib.sha256(encoded).hexdigest(),

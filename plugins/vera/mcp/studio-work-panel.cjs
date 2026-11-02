@@ -84,7 +84,8 @@ function resource() {
     .replace("/*__CSS__*/",fs.readFileSync(path.join(dir,"workspace.css"),"utf8")+"\n"+fs.readFileSync(path.join(dir,"studio-work.css"),"utf8"))
     .replace("/*__SELECT_JS__*/",fs.readFileSync(path.join(dir,"custom_select.js"),"utf8"))
     .replace("/*__JS__*/",fs.readFileSync(path.join(dir,"studio-work.js"),"utf8"))
-    .replace("__FONT__",fs.readFileSync(path.join(dir,"InstrumentSans-Regular.ttf")).toString("base64"));
+    .replace("__FONT__",fs.readFileSync(path.join(dir,"InstrumentSans-Regular.ttf")).toString("base64"))
+    .replace("__FONT_BOLD__",fs.readFileSync(path.join(dir,"InstrumentSans-SemiBold.ttf")).toString("base64"));
   return {contents:[{uri:URI,mimeType:MIME,text:html,_meta:{ui:{prefersBorder:false,csp:{connectDomains:[],resourceDomains:[]}},"openai/ui":{preferredDisplayMode:"fullscreen",availableDisplayModes:["fullscreen"]}}}]};
 }
 module.exports={TOOLS,URI,MIME,PREFIX,call,resource};

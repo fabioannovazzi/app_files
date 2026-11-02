@@ -122,8 +122,8 @@ const ui=fixture(source);ui.page.data.state.records.finding.F1={statement:'<synt
 """
     )
     assert (
-        result["items"] == 79
-    )  # 73 alternatives, five contract fields and one blocker.
+        result["items"] == 74
+    )  # 73 alternatives and one blocker.
     assert "Rilievo proposto" in result["terms"]
     assert "Motivazione" in result["terms"]
     assert "alternative-72" in result["text"]

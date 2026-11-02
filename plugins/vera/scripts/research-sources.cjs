@@ -27,7 +27,8 @@ function resource() {
     .replace("/*__CSS__*/",fs.readFileSync(path.join(dir,"workspace.css"),"utf8")+"\n"+fs.readFileSync(path.join(dir,"research-sources.css"),"utf8"))
     .replace("/*__SELECT_JS__*/",fs.readFileSync(path.join(dir,"custom_select.js"),"utf8"))
     .replace("/*__JS__*/",fs.readFileSync(path.join(dir,"research-sources.js"),"utf8"))
-    .replaceAll("__FONT__",fs.readFileSync(path.join(dir,"InstrumentSans-Regular.ttf")).toString("base64"));
+    .replaceAll("__FONT__",fs.readFileSync(path.join(dir,"InstrumentSans-Regular.ttf")).toString("base64"))
+    .replaceAll("__FONT_BOLD__",fs.readFileSync(path.join(dir,"InstrumentSans-SemiBold.ttf")).toString("base64"));
   return {contents:[{uri:URI,mimeType:MIME,text:html,_meta:{ui:{csp:{connectDomains:[],resourceDomains:[]}}}}]};
 }
 function handle(request) {

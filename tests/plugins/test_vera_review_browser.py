@@ -194,6 +194,11 @@ def test_chat_and_archive_show_same_saved_bank_editor_in_browser(
         chat.get_by_role("option", name="Da chiarire", exact=True).click()
         note = chat.get_by_label("Nota del revisore")
         note.fill("Please verify this fee")
+        page.set_viewport_size({"width": 950, "height": 900})
+        expect(chat.locator(".queue-picker .queue")).to_be_visible()
+        page.set_viewport_size({"width": 390, "height": 900})
+        expect(chat.locator(".queue-picker .queue")).to_be_hidden()
+        expect(note).to_have_value("Please verify this fee")
         page.evaluate(
             """(route) => document.querySelector("iframe").contentWindow.postMessage({
             jsonrpc:"2.0",method:"ui/notifications/tool-result",params:{_meta:{workspace:route}}

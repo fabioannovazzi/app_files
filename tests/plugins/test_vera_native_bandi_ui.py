@@ -115,3 +115,25 @@ process.stdout.write(JSON.stringify({disabled:ui.button('Autorizza questo contri
     assert [row["name"] for row in result["calls"]] == [
         "vera_workspace_bandi_author_setup"
     ]
+
+
+def test_named_source_selection_preserves_exact_id_without_authorizing_access():
+    result = browser(
+        """
+const sourceRow={source_id:'SRC-17',title:'Avviso regionale',source_type:'call',sha256:'f'.repeat(64)};
+const ui=fixture(source,{sources:[sourceRow]});await ui.panel.open('fictional-work');
+const label=ui.all().find(e=>e.tagName==='LABEL'&&e.children.some(child=>child.text==='Avviso regionale'));
+const pick=label.children.find(child=>child.type==='checkbox');const initiallySelected=pick.checked;
+ui.all().filter(e=>e.type==='checkbox'&&e!==pick).forEach(e=>e.checked=true);
+pick.checked=true;pick.dispatch('change');await ui.panel.flush();
+process.stdout.write(JSON.stringify({initiallySelected,selected:ui.page.fields.raw_source_ids,
+confirmations:ui.all().filter(e=>e.type==='checkbox'&&e!==pick).map(e=>e.checked),
+requested:ui.calls.some(call=>call.name==='vera_workspace_bandi_author_request')}));
+"""
+    )
+    assert result == {
+        "initiallySelected": False,
+        "selected": ["SRC-17"],
+        "confirmations": [False, False],
+        "requested": False,
+    }

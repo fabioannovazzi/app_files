@@ -43,7 +43,7 @@ def test_author_ui_explicit_question_authorization_is_not_model_execution():
 def test_author_ui_changed_selected_source_withdraws_model_confirmation():
     result = events(
         FIXTURE
-        + "const ui=authorFixture();ui.page.data.sources=[{source_ref:'fictional-source',name:'Synthetic.txt',sha256:'a'.repeat(64)}];await ui.panel.openAuthor('fictional-transform');ui.field(consent).checked=true;const selected=ui.field('Synthetic.txt · fictional-source');selected.checked=true;selected.dispatch('change');await ui.panel.flush();process.stdout.write(JSON.stringify({fields:ui.page.fields,confirmed:ui.field(consent).checked,calls:ui.calls}));"
+        + "const ui=authorFixture();ui.page.data.sources=[{source_ref:'fictional-source',name:'Synthetic.txt',sha256:'a'.repeat(64)}];await ui.panel.openAuthor('fictional-transform');ui.field(consent).checked=true;const selected=ui.field('Synthetic.txt');selected.checked=true;selected.dispatch('change');await ui.panel.flush();process.stdout.write(JSON.stringify({fields:ui.page.fields,confirmed:ui.field(consent).checked,calls:ui.calls}));"
     )
     assert result["fields"]["source_refs"] == ["fictional-source"]
     assert result["confirmed"] is False

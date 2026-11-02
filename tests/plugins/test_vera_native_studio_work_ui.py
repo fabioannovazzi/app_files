@@ -50,7 +50,7 @@ process.stdout.write(JSON.stringify({draft:ui.drafts.capture,confirm:ui.confirm(
     assert result["dirty"] is False
     assert not any(call["name"].endswith("_submit") for call in result["calls"])
     assert "Quali dati arrivano al modello" in result["text"]
-    assert "Nessuna data viene ricavata" in result["text"]
+    assert "Scegli il fuso orario e il calendario" in result["text"]
 
 
 def test_studio_panel_dependency_choices_include_all_pages_without_id_entry():

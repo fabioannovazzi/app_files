@@ -4,6 +4,19 @@ globalThis.VeraTransformation = Object.freeze({create(api){
   const {node,button,call,say,confirmation}=api;let context,timer,queue=Promise.resolve();const urls=new Set();
   // Static interface translations only; source values and wire contracts stay literal.
   const copy={
+  "Qualificazione sintetica dichiarata": ["Declared synthetic qualification", "Qualification synthétique déclarée", "Erklärte synthetische Einordnung", "Calificación sintética declarada"],
+  "Valore normale": ["Normal value", "Valeur normale", "Normalwert", "Valor normal"],
+  "Distribuzione": ["Distribution", "Distribution", "Ausschüttung", "Distribución"],
+  "Saldo iniziale": ["Opening balance", "Solde initial", "Anfangsbestand", "Saldo inicial"],
+  "Quote, una per riga": ["Shares, one per line", "Parts, une par ligne", "Anteile, einer je Zeile", "Cuotas, una por línea"],
+  "Capitale": ["Capital", "Capital", "Kapital", "Capital"],
+  "Passività": ["Liabilities", "Passif", "Verbindlichkeiten", "Pasivos"],
+  "Differenza di valore": ["Value difference", "Écart de valeur", "Wertdifferenz", "Diferencia de valor"],
+  "Saldo della riserva": ["Reserve balance", "Solde de la réserve", "Rücklagensaldo", "Saldo de la reserva"],
+  "Riparto con quota di lavoro": ["Allocation with a work share", "Répartition avec part de travail", "Verteilung mit Arbeitsanteil", "Reparto con cuota de trabajo"],
+  "Riparto del capitale": ["Capital allocation", "Répartition du capital", "Kapitalverteilung", "Reparto del capital"],
+  "Copertura del capitale": ["Capital coverage", "Couverture du capital", "Kapitaldeckung", "Cobertura del capital"],
+  "Metodo di calcolo": ["Calculation method", "Méthode de calcul", "Berechnungsmethode", "Método de cálculo"],
   "Scegli il passaggio": [
     "Choose a step",
     "Choisir une étape",
@@ -1509,7 +1522,7 @@ globalThis.VeraTransformation = Object.freeze({create(api){
   function dispose(){clearTimeout(timer);context=null;for(const url of urls)URL.revokeObjectURL(url);urls.clear();}
   async function persist(){const local=context;if(!local?.editable)return queue;const fields=structuredClone(local.fields),serialized=JSON.stringify(fields);queue=queue.then(async()=>{if(local.saved===serialized)return;const result=await call(local.author?"vera_workspace_transformation_author_draft_save":local.initial?"vera_workspace_transformation_initial_draft_save":"vera_workspace_transformation_draft_save",{...scope(local.page),review_ticket:local.page.review_ticket,expected_draft_revision:local.stamp,fields});local.stamp=result.draft_revision;local.saved=serialized;local.error=null;if(context===local&&JSON.stringify(local.fields)===serialized)api.setDirty(false);say(t("Proposta incompleta conservata. Nessuna decisione registrata."));}).catch(error=>{local.error=error;api.setDirty(true);say(t("Campi non conservati: ")+error.message,true);});return queue;}
   async function flush(){clearTimeout(timer);await persist();if(context?.error)throw context.error;}
-  function input(parent,local,label,key,options){const wrap=node("label",undefined,"field"),control=node(options?"select":"textarea");control.setAttribute("aria-label",label);if(options)for(const [value,text]of options){const option=node("option",Object.hasOwn(recordLabels,text)?t(recordLabels[text]):t(text));option.value=value;control.append(option);}control.value=local.fields[key];control.maxLength=key==="record_json"?1000000:4000;control.disabled=!local.editable;control.addEventListener(options?"change":"input",()=>{local.fields[key]=control.value;local.confirm.checked=false;local.execution=null;api.setDirty(true);clearTimeout(timer);timer=setTimeout(persist,450);if(key==="operation"||key==="record_json")local.renderSources?.();});wrap.append(node("span",label),control);parent.append(wrap);return control;}
+  function input(parent,local,label,key,options){const wrap=node("label",undefined,"field"),control=node(options?"select":"textarea");control.setAttribute("aria-label",label);if(options)for(const [value,text]of options){const option=node("option",Object.hasOwn(recordLabels,text)?t(recordLabels[text]):t(text));option.value=value;control.append(option);}control.value=local.fields[key];control.maxLength=key==="record_json"?1000000:4000;control.disabled=!local.editable;control.addEventListener(options?"change":"input",()=>{local.fields[key]=control.value;local.confirm.checked=false;local.execution=null;api.setDirty(true);clearTimeout(timer);timer=setTimeout(persist,450);if(key==="operation"||key==="record_kind"||key==="record_json")local.renderSources?.();});wrap.append(node("span",label),control);parent.append(wrap);if(local.fieldRows)local.fieldRows[key]=wrap;return control;}
   // Fixed contract labels preserve literal values; they make no legal inference.
   const recordLabels={id:"Identificativo",case:"Caso",owner:"Responsabile dichiarato",purpose:"Scopo dichiarato",jurisdiction:"Giurisdizione",initial_form:"Forma iniziale",final_form:"Forma finale",initial_tax_regime:"Regime fiscale iniziale",final_tax_regime:"Regime fiscale finale",initial_commerciality:"Commercialità iniziale",final_commerciality:"Commercialità finale",proposed_date:"Data proposta",actual_date:"Data effettiva",title:"Titolo",status:"Stato conservato",dependencies:"Dipendenze",blockers:"Elementi bloccanti",calculations:"Calcoli",proposal_digest:"Impronta della proposta",next_step:"Passaggio successivo",statement:"Rilievo proposto",category:"Categoria dichiarata",rationale:"Motivazione",alternatives:"Alternative considerate",confidence:"Confidenza dichiarata",name:"Nome",capital_share:"Quota di capitale",vote_share:"Quota di voto",profit_share:"Quota di utili",work_share:"Quota di lavoro",consent:"Consenso documentato",debt:"Debito",origin_date:"Data di origine",guarantee:"Garanzia",receipt:"Ricevuta",receipt_date:"Data della ricevuta",release_assessment:"Valutazione della liberazione",opposition_assessment:"Valutazione dell’opposizione",amount:"Importo",origin:"Origine dichiarata",year:"Anno",regime:"Regime dichiarato",restrictions:"Vincoli",balance_sheet:"Bilancio di riferimento",uses:"Utilizzi",prior_taxation:"Tassazione precedente",description:"Descrizione",book_value:"Valore contabile",estimated_value:"Valore stimato",tax_value:"Valore fiscale",business_destination:"Destinazione aziendale",accounting_decision:"Decisione contabile",tax_decision:"Decisione fiscale",source_version:"Versione della fonte",trigger:"Evento iniziale",method:"Metodo dichiarato",extensions:"Proroghe",territory:"Territorio",approved_date:"Data approvata",question:"Domanda aperta",source_needed:"Fonte necessaria",blocks:"Passaggi bloccati",closure_criterion:"Criterio di chiusura",resolution:"Risoluzione",url:"Indirizzo della fonte",article:"Articolo",publication_date:"Data di pubblicazione",effective_from:"Efficacia dal",applicability_from:"Applicabilità dal",applicability_until:"Applicabilità fino al",transitional_conditions:"Condizioni transitorie",retrieved_at:"Data di acquisizione",verification_status:"Stato della verifica",source_ref:"Riferimento della fonte",sha256:"Impronta del file",local_path:"Percorso conservato",locator:"Localizzatore nella fonte",evidence:"Evidenze",finding:"Rilievi proposti",participant:"Partecipanti",creditor:"Creditori",reserve:"Riserve",asset:"Attività",deadline:"Termini dichiarati",issue:"Questioni aperte",source:"Fonti",calculation:"Calcoli",records:"Record conservati",branches:"Rami",decisions:"Decisioni separate",events:"Cronologia",revision:"Revisione",schema_version:"Versione del contratto",synthetic_only:"Solo dati sintetici",workflow:"Funzione",branch_id:"Identificativo del ramo",decision:"Decisione conservata",reason:"Motivo dichiarato",reviewer:"Revisore dichiarato",actor:"Operatore dichiarato",at:"Data della registrazione",action:"Passaggio conservato",directory:"Cartella del dossier",current:"Versione corrente"};
   function readable(main,value,title){
@@ -1526,14 +1539,99 @@ globalThis.VeraTransformation = Object.freeze({create(api){
       parent.append(node("p",item===null?t("Non indicato"):item===""?t("Testo vuoto"):typeof item==="boolean"?(item?t("Vero · true"):t("Falso · false")):String(item),"source-excerpt"));
     };walk(detail,value);
   }
+  const calculationLabels={
+    operation:"Metodo di calcolo",capital_coverage:"Copertura del capitale",allocation:"Riparto del capitale",
+    work_allocation:"Riparto con quota di lavoro",reserve_balance:"Saldo della riserva",qualified_gain:"Differenza di valore",
+    assets:"Attività",liabilities:"Passività",capital:"Capitale",shares:"Quote, una per riga",work_share:"Quota di lavoro",
+    opening:"Saldo iniziale",distribution:"Distribuzione",normal_value:"Valore normale",tax_basis:"Valore fiscale",
+    qualification:"Qualificazione sintetica dichiarata"
+  };
+  function proposalEditor(parent,local,raw) {
+    const {operation,record_kind:kind}=local.fields;
+    if(operation==="import_evidence") {
+      return !sourceEditor(parent,local,raw);
+    }
+    parent.replaceChildren();
+    const state=local.page.data.state;
+    let keys;
+    if(operation==="branch") keys=["title","owner","next_step","dependencies"];
+    else if(operation==="update_case") keys=Object.keys(state.case).filter(key=>!["id","owner","jurisdiction"].includes(key));
+    else if(operation==="put" && local.page.data.record_contract[kind]) keys=["id",...local.page.data.record_contract[kind],"dependencies"];
+    else return false;
+    let draft={};
+    if(local.fields.record_json.trim()) {
+      try { draft=JSON.parse(local.fields.record_json); } catch { return true; }
+      if(!draft||typeof draft!=="object"||Array.isArray(draft)||Object.keys(draft).some(key=>!keys.includes(key)))return true;
+    }
+    const save=(key,value)=>{
+      if(operation!=="update_case")for(const required of keys)if(!(required in draft))draft[required]=["dependencies","alternatives"].includes(required)?[]:null;
+      draft[key]=value;
+      raw.value=local.fields.record_json=JSON.stringify(draft);
+      local.confirm.checked=false;local.execution=null;api.setDirty(true);
+      clearTimeout(timer);timer=setTimeout(persist,450);
+    };
+    const methods={
+      capital_coverage:["assets","liabilities","capital"],
+      allocation:["capital","shares"],work_allocation:["capital","shares","work_share"],
+      reserve_balance:["opening","distribution"],qualified_gain:["normal_value","tax_basis","qualification"]
+    };
+    const appendField=(key,value,list,apply)=>{
+      const label=t(recordLabels[key]||calculationLabels[key]||key);
+      const field=node("label",undefined,"field"),control=node("textarea");
+      control.setAttribute("aria-label",label);control.disabled=!local.editable;control.maxLength=100000;
+      control.value=list?(value||[]).join("\n"):value??"";
+      control.addEventListener("input",()=>apply(list?control.value.split(/\r?\n/).filter(Boolean):control.value||null));
+      field.append(node("span",label),control);parent.append(field);
+    };
+    for(const key of keys) {
+      const value=draft[key];
+      if(kind==="calculation" && key==="operation") {
+        const wrap=node("label",undefined,"field"), select=node("select");
+        const caption=t(calculationLabels.operation);
+        select.setAttribute("aria-label",caption);select.disabled=!local.editable;
+        for(const [id,text] of [["",t("Scegli il tipo")],...Object.keys(methods).map(id=>[id,t(calculationLabels[id])])]){
+          const option=node("option",text);option.value=id;select.append(option);
+        }
+        if(value&&!Object.hasOwn(methods,value))return true;
+        select.value=value||"";
+        select.addEventListener("change",()=>{save("operation",select.value);local.renderSources();});
+        wrap.append(node("span",caption),select);parent.append(wrap);continue;
+      }
+      if(kind==="calculation" && key==="args"){
+        const fields=methods[draft.operation]||[];
+        const args=value??{};
+        if(typeof args!=="object"||Array.isArray(args))return true;
+        // Preserve previous arguments when switching methods. Only the selected
+        // method consumes the fields shown here.
+        for(const arg of fields){
+          if(args[arg]!==undefined && args[arg]!==null && typeof args[arg]!=="string" &&
+            !(arg==="shares" && Array.isArray(args[arg]) && args[arg].every(part=>typeof part==="string")))return true;
+          appendField(arg,args[arg],arg==="shares",next=>save("args",{...draft.args,[arg]:next}));
+        }
+        continue;
+      }
+      if(value && typeof value==="object" && (!Array.isArray(value)||value.some(part=>typeof part!=="string"))) {
+        // A structured value from an earlier draft must stay editable without
+        // flattening it into a string and changing its professional meaning.
+        return true;
+      }
+      const list=Array.isArray(value)||["alternatives","dependencies"].includes(key);
+      appendField(key,value,list,next=>save(key,next));
+    }
+    return false;
+  }
+  function sourceLabel(source, sources) {
+    return sources.some(other=>other!==source&&other.name===source.name)
+      ? source.name+" · "+source.source_ref : source.name;
+  }
   function sourceEditor(parent,local,raw){
     parent.replaceChildren();if(local.fields.operation!=="import_evidence")return;
     parent.append(node("h3",t("Fonte sintetica da importare")),node("p",t("Scegli soltanto uno dei file collegati dall’host a questo prototipo. Indica identificativo, origine e localizzatore senza dedurli dal nome del file. I campi incompleti restano nella stessa bozza; la conferma e l’importazione sono passaggi separati."),"caption"));
     let record={id:"",source_ref:"",origin:"",locator:""};
     if(local.fields.record_json.trim()){
-      try{record=JSON.parse(local.fields.record_json);}catch{parent.append(node("p",t("La proposta completa non è ancora leggibile. Conservala o correggila prima di usare i campi della fonte; nessun testo viene sostituito."),"notice"));return;}
+      try{record=JSON.parse(local.fields.record_json);}catch{parent.append(node("p",t("La proposta completa non è ancora leggibile. Conservala o correggila prima di usare i campi della fonte; nessun testo viene sostituito."),"notice"));return false;}
       if(record===null||Array.isArray(record)||typeof record!=="object"||Object.keys(record).sort().join("|")!=="id|locator|origin|source_ref"||Object.values(record).some(value=>typeof value!=="string")){
-        parent.append(node("p",t("La proposta contiene campi diversi dall’importazione di una fonte. Confronta la proposta completa prima di modificarla; nessun campo viene scartato."),"notice"));return;
+        parent.append(node("p",t("La proposta contiene campi diversi dall’importazione di una fonte. Confronta la proposta completa prima di modificarla; nessun campo viene scartato."),"notice"));return false;
       }
     }
     const sources=local.page.data.sources;
@@ -1541,7 +1639,7 @@ globalThis.VeraTransformation = Object.freeze({create(api){
     for(const [key,label]of [["id",t("Identificativo dell’evidenza")],["source_ref",t("Fonte sintetica collegata")],["origin",t("Origine dichiarata della fonte")],["locator",t("Localizzatore nella fonte")]]){
       const wrap=node("label",undefined,"field"),control=node(key==="source_ref"?"select":"textarea");control.setAttribute("aria-label",label);control.maxLength=4000;control.disabled=!local.editable;
       if(key==="source_ref"){
-        const options=[["",t("Scegli una fonte collegata")],...sources.map(source=>[source.source_ref,source.name+" · "+source.source_ref])];
+        const options=[["",t("Scegli una fonte collegata")],...sources.map(source=>[source.source_ref,sourceLabel(source,sources)])];
         if(record.source_ref&&!sources.some(source=>source.source_ref===record.source_ref))options.push([record.source_ref,t("Riferimento non più collegato · ")+record.source_ref]);
         for(const [value,text]of options){const option=node("option",text);option.value=value;control.append(option);}
       }
@@ -1550,6 +1648,7 @@ globalThis.VeraTransformation = Object.freeze({create(api){
       });wrap.append(node("span",label),control);parent.append(wrap);
     }
     readable(parent,sources,t("File collegati · nomi, riferimenti e impronte completi"));
+    return true;
   }
   function privacy(main){main.append(node("h2",t("Quali dati arrivano al modello")),node("p",t("I campi privati e la sola consultazione del pannello non inviano automaticamente fonti al modello. Una domanda sintetica confermata autorizza il modello della sessione a leggere l’intero stato corrente del caso e soltanto gli originali esplicitamente selezionati, con percorsi e impronte. Le route di contesto e proposta sono visibili al modello; il consenso alla domanda scade dopo un’ora e non approva proposte o trattamenti. Nel workflow specialistico il modello può leggere documenti sintetici scelti, attributi, fonti, ipotesi, calcoli, decisioni e dossier. L’operatore dichiara i dati sintetici: Vera non rileva dati personali né li anonimizza. Il codice conserva versioni, esegue aritmetica esatta e verifica proposte su una copia isolata; non chiama servizi di modelli esterni. Si applica l’account Codex o Cowork scelto dall’utente; la sessione non è esclusivamente locale. La richiesta preparata, la proposta privata e il dossier non sono ricevute del contesto effettivo del provider."),"caption"));}
   async function catalogue(){await flush();api.leaveDraft();const generation=api.enter(),page=await call("vera_workspace_transformation_catalogue",{});if(!api.isCurrent(generation))return;const {nav,main}=api.shell();prepare(nav,main);nav.append(button(t("← Clienti e incarichi"),api.openWorks));main.append(node("p",t("Vera · prototipo sintetico"),"eyebrow"),node("h1",t("Trasformazione societaria")),node("p",t("Prepara e riesamina soltanto casi sintetici. Il prototipo non supporta mandati reali, termini legali, efficacia giuridica o invii."),"intro"));for(const work of page.works){const row=node("section",undefined,"output");row.append(node("h2",work.case_id),node("p",work.objective),node("p",t("Revisione ")+work.case_revision),button(work.initialization?t("Prepara questo prototipo"):t("Riprendi questo prototipo"),()=>work.initialization?openInitial(work.work_ref):open(work.work_ref)));main.append(row);}if(!page.configured)main.append(node("p",t("Nessun prototipo collegato. Per un caso sintetico richiesto, inizializza la cartella con trasformazione nella chat; l’host collega soltanto il caso sintetico esatto. Nessun fascicolo cliente viene creato."),"notice"));privacy(main);}
@@ -1572,7 +1671,7 @@ globalThis.VeraTransformation = Object.freeze({create(api){
     if(page.draft_stale){readable(main,local.fields,t("Domanda precedente da confrontare"));const discard=confirmation(main,t("Scarto soltanto la domanda privata precedente")),clear=button(t("Scarta domanda privata"),async()=>{if(!discard.checked)throw new Error(t("Conferma lo scarto della sola domanda privata."));await call("vera_workspace_transformation_author_draft_clear",{...scope(page),review_ticket:page.review_ticket,expected_draft_revision:local.stamp,confirmed:true});api.setDirty(false);await openAuthor(workRef);});discard.disabled=clear.disabled=!page.can_write;main.append(clear);}
     input(main,local,t("Domanda sulla dimostrazione sintetica"),"question");input(main,local,t("Proposta richiesta alla chat"),"operation",[["",t("Scegli il tipo di preparazione")],...operations.filter(([value])=>["update_case","put","branch","import_evidence"].includes(value))]);
     main.append(node("h2",t("Originali sintetici scelti")),node("p",t("Nessun file è selezionato per impostazione predefinita. Il nome e l’impronta non ne attestano pertinenza o contenuto. Puoi porre una domanda sul caso conservato anche senza originali aggiuntivi."),"caption"));
-    for(const source of page.data.sources){const check=confirmation(main,source.name+" · "+source.source_ref);check.checked=local.fields.source_refs.includes(source.source_ref);check.disabled=!local.editable;main.append(node("p",source.sha256,"source-excerpt"));check.addEventListener("change",()=>{local.fields.source_refs=check.checked?[...local.fields.source_refs,source.source_ref]:local.fields.source_refs.filter(ref=>ref!==source.source_ref);local.confirm.checked=false;local.execution=null;api.setDirty(true);clearTimeout(timer);timer=setTimeout(persist,450);});}
+    for(const source of page.data.sources){const check=confirmation(main,sourceLabel(source,page.data.sources));check.checked=local.fields.source_refs.includes(source.source_ref);check.disabled=!local.editable;check.addEventListener("change",()=>{local.fields.source_refs=check.checked?[...local.fields.source_refs,source.source_ref]:local.fields.source_refs.filter(ref=>ref!==source.source_ref);local.confirm.checked=false;local.execution=null;api.setDirty(true);clearTimeout(timer);timer=setTimeout(persist,450);});}
     local.confirm=confirmation(main,t("Autorizzo la chat a leggere il caso corrente completo e gli originali sintetici scelti, soltanto per una proposta da riesaminare"));local.confirm.disabled=!local.editable;
     const save=button(t("Conserva domanda incompleta"),flush),request=button(t("Autorizza questa domanda e le fonti scelte"),async()=>{await flush();if(!local.confirm.checked||!local.fields.question.trim()||!local.fields.operation)throw new Error(t("Indica domanda e preparazione, poi conferma il contesto sintetico scelto."));local.execution||={...scope(page),review_ticket:page.review_ticket,expected_draft_revision:local.stamp,fields:structuredClone(local.fields),confirmed:true,synthetic_only:true,idempotency_key:crypto.randomUUID()};const result=await call("vera_workspace_transformation_author_request",local.execution);api.setDirty(false);await openMandate(workRef,result.grant_ref);},"primary");save.disabled=request.disabled=!local.editable;main.append(save,request);
     main.append(node("h2",t("Domande conservate")));for(const mandate of page.mandates)main.append(button(mandate.question+" · "+mandate.status+(mandate.expired?t(" · scaduta"):""),()=>openMandate(workRef,mandate.grant_ref)));privacy(main);
@@ -1592,11 +1691,48 @@ globalThis.VeraTransformation = Object.freeze({create(api){
     const withdraw=confirmation(main,t("Ritiro soltanto questa autorizzazione del modello; conservo caso, campi e proposte")),cancel=button(t("Ritira autorizzazione della domanda"),async()=>{if(!withdraw.checked)throw new Error(t("Conferma il ritiro della sola domanda."));await call("vera_workspace_transformation_author_cancel",{...scope(page),review_ticket:page.review_ticket,grant_ref:grantRef,expected_stage_revision:page.stage_revision,confirmed:true});await openMandate(workRef,grantRef,stageRef);});withdraw.disabled=cancel.disabled=!page.can_cancel;main.append(cancel);privacy(main);
   }
   async function artifact(page,item,row){const value=await call("vera_workspace_transformation_artifact",{...scope(page),artifact_ref:item.name}),bytes=Uint8Array.from(atob(value.base64),c=>c.charCodeAt(0)),url=URL.createObjectURL(new Blob([bytes],{type:value.mime_type}));urls.add(url);const link=node("a",t("Scarica ")+value.name);link.href=url;link.download=value.name;row.append(link);link.click();}
-  async function open(workRef){await flush();api.leaveDraft();const generation=api.enter(),page=await call("vera_workspace_transformation_setup",{work_ref:workRef});if(!api.isCurrent(generation))return;const {nav,main}=api.shell();prepare(nav,main);nav.append(button(t("← Prototipi sintetici"),catalogue),button(t("← Clienti e incarichi"),api.openWorks));const local={page,fields:structuredClone(page.fields),stamp:page.draft_revision,saved:JSON.stringify(page.fields),editable:page.can_write&&!page.draft_stale&&!page.pending_operations.length};context=local;api.setDirty(false);main.append(node("p",t("Caso sintetico · ")+page.data.state.case.id,"eyebrow"),node("h1",t("Preparazione e riesame")),node("p",page.data.state.case.purpose,"intro"),node("p",t("Soltanto preparazione sintetica. Una decisione attribuita all’operatore non è una firma autenticata o una validazione professionale."),"notice"));main.append(button(t("Domanda e fonti per una proposta della chat"),()=>openAuthor(workRef)));readable(main,page.data.state.case,t("Attributi del caso · valori ignoti conservati"));readable(main,page.data.state.branches,t("Rami, dipendenze, blocchi, calcoli e impronte da riesaminare"));readable(main,page.data.state.records,t("Tutti i record e le evidenze conservate"));readable(main,page.data.state.decisions,t("Decisioni separate e cronologia"));readable(main,page.data.record_contract,t("Campi del contratto pubblico per ogni tipo di record"));readable(main,page.data.sources,t("Fonti sintetiche collegate · usa source_ref per l’importazione"));readable(main,page.data.exports,t("Dossier versionati verificati con il produttore"));
-    for(const item of page.data.artifacts){const row=node("section",undefined,"output");row.append(node("strong",item.name),button(t("Scarica questo file"),()=>artifact(page,item,row)));main.append(row);}
+  async function open(workRef){await flush();api.leaveDraft();const generation=api.enter(),page=await call("vera_workspace_transformation_setup",{work_ref:workRef});if(!api.isCurrent(generation))return;const {nav,main}=api.shell();prepare(nav,main);nav.append(button(t("← Prototipi sintetici"),catalogue),button(t("← Clienti e incarichi"),api.openWorks));const local={page,fields:structuredClone(page.fields),stamp:page.draft_revision,saved:JSON.stringify(page.fields),editable:page.can_write&&!page.draft_stale&&!page.pending_operations.length};context=local;api.setDirty(false);main.append(node("p",t("Caso sintetico · ")+page.data.state.case.id,"eyebrow"),node("h1",t("Preparazione e riesame")),node("p",page.data.state.case.purpose,"intro"),node("p",t("Soltanto preparazione sintetica. Una decisione attribuita all’operatore non è una firma autenticata o una validazione professionale."),"notice"));main.append(button(t("Domanda e fonti per una proposta della chat"),()=>openAuthor(workRef)));readable(main,page.data.state.case,t("Attributi del caso · valori ignoti conservati"));readable(main,page.data.state.branches,t("Rami, dipendenze, blocchi, calcoli e impronte da riesaminare"));readable(main,page.data.state.records,t("Tutti i record e le evidenze conservate"));readable(main,page.data.state.decisions,t("Decisioni separate e cronologia"));readable(main,page.data.sources,t("Fonti"));readable(main,page.data.exports,t("Dossier versionati verificati con il produttore"));
+    for(const item of page.data.artifacts){
+      const row=node("section",undefined,"output");
+      const evidence=Object.values(page.data.state.records.evidence||{}).find(entry=>entry.local_path===item.name);
+      const original=page.data.sources.find(source=>source.sha256===item.sha256);
+      const caption=item.kind==="synthetic_evidence"?(original?.name||evidence?.origin||t("Evidenze")):item.name;
+      row.append(node("strong",caption),button(t("Scarica questo file"),()=>artifact(page,item,row)));main.append(row);}
     if(page.pending_operations.length)main.append(node("p",t("Una scrittura precedente richiede recupero nel workflow specialistico. Conserva i record e non ripetere automaticamente il passaggio."),"notice"));
     if(page.draft_stale){readable(main,local.fields,t("Campi precedenti da confrontare"));const confirm=confirmation(main,t("Scarto soltanto questi campi privati dopo il confronto con il caso corrente")),clear=button(t("Scarta campi privati"),async()=>{if(!confirm.checked)throw new Error(t("Conferma lo scarto dei soli campi privati."));await call("vera_workspace_transformation_draft_clear",{...scope(page),review_ticket:page.review_ticket,expected_draft_revision:local.stamp,confirmed:true});api.setDirty(false);await open(workRef);});confirm.disabled=clear.disabled=!page.can_write;main.append(clear);}
-    else{main.append(node("p",t("Conservare una proposta, sottoporla al riesame e registrare una decisione sono passaggi distinti. L’importazione accetta id, source_ref, origin e locator; un ramo richiede title, owner, next_step e dependencies. I record usano i campi completi del contratto pubblico visibile sopra."),"caption"));input(main,local,t("Passaggio sintetico"),"operation",operations);input(main,local,t("Operatore o revisore del passaggio"),"actor");input(main,local,t("Tipo di record"),"record_kind",[["",t("Scegli il tipo")],...Object.keys(page.data.record_contract).map(x=>[x,x])]);const raw=input(main,local,t("Proposta JSON completa · nessuna decisione implicita"),"record_json"),sources=node("section",undefined,"transformation-sources");main.append(sources);local.renderSources=()=>sourceEditor(sources,local,raw);local.renderSources();input(main,local,t("Identificativo del ramo"),"branch_id");input(main,local,t("Impronta esatta della proposta sottoposta"),"proposal_digest");input(main,local,t("Decisione sintetica separata"),"decision",[["",t("Da decidere")],["approve",t("Approva la sola preparazione sintetica")],["request_changes",t("Richiedi modifiche")]]);input(main,local,t("Motivo della decisione"),"reason");local.confirm=confirmation(main,t("Confermo questo passaggio sul caso sintetico corrente; nessun mandato reale o azione esterna"));local.confirm.disabled=!local.editable;const save=button(t("Conserva campi incompleti"),flush),execute=button(t("Esegui e conserva il passaggio sintetico"),async()=>{await flush();if(!local.confirm.checked)throw new Error(t("Riesamina e conferma il passaggio sintetico corrente."));local.execution=local.execution||{...scope(page),review_ticket:page.review_ticket,expected_draft_revision:local.stamp,fields:structuredClone(local.fields),confirmed:true,idempotency_key:crypto.randomUUID()};await call("vera_workspace_transformation_execute",local.execution);api.setDirty(false);await open(workRef);say(t("Passaggio conservato dal prototipo. Nessuna validazione professionale o azione esterna."));},"primary");save.disabled=execute.disabled=!local.editable;main.append(save,execute);}
+    else{local.fieldRows={};input(main,local,t("Passaggio sintetico"),"operation",operations);input(main,local,t("Operatore o revisore del passaggio"),"actor");input(main,local,t("Tipo di record"),"record_kind",[["",t("Scegli il tipo")],...Object.keys(page.data.record_contract).map(x=>[x,x])]);const raw=input(main,local,t("Proposta JSON completa · nessuna decisione implicita"),"record_json"),sources=node("section",undefined,"transformation-sources");main.append(sources);input(main,local,t("Identificativo del ramo"),"branch_id");input(main,local,t("Impronta esatta della proposta sottoposta"),"proposal_digest");input(main,local,t("Decisione sintetica separata"),"decision",[["",t("Da decidere")],["approve",t("Approva la sola preparazione sintetica")],["request_changes",t("Richiedi modifiche")]]);input(main,local,t("Motivo della decisione"),"reason");
+      const branchChoice=node("label",undefined,"field"), branches=node("select");
+      const branchLabel=t("Identificativo del ramo");
+      branches.setAttribute("aria-label",branchLabel);branches.disabled=!local.editable;
+      branchChoice.append(node("span",t("Rami")),branches);
+      main.append(branchChoice);
+      branches.addEventListener("change",()=>{
+        const id=branches.value,branch=page.data.state.branches[id];
+        local.fields.branch_id=id;local.fields.proposal_digest=local.fields.operation==="review"?branch?.submitted_digest||"":"";
+        local.confirm.checked=false;local.execution=null;api.setDirty(true);clearTimeout(timer);timer=setTimeout(persist,450);local.renderSources();
+      });
+      local.renderSources=()=>{
+        const op=local.fields.operation,rows=local.fieldRows;
+        rows.actor.hidden=!op||op==="export";
+        rows.record_kind.hidden=op!=="put";
+        rows.record_json.hidden=!["update_case","put","branch","import_evidence"].includes(op);
+        rows.branch_id.hidden=op!=="branch";
+        branchChoice.hidden=!["submit","review"].includes(op);
+        if(!branchChoice.hidden){
+          branches.replaceChildren();
+          const choice=(id,text)=>{const option=node("option",text);option.value=id;branches.append(option);};
+          choice("",t("Scegli il tipo"));
+          const available=Object.entries(page.data.state.branches).filter(([,branch])=>op!=="review"||branch.submitted_digest);
+          for(const [id,branch] of available)choice(id,branch.title||id);
+          if(local.fields.branch_id&&!available.some(([id])=>id===local.fields.branch_id))choice(local.fields.branch_id,local.fields.branch_id);
+          branches.value=local.fields.branch_id;
+        }
+        for(const key of ["proposal_digest","decision","reason"])rows[key].hidden=op!=="review";
+        if(op==="review")rows.proposal_digest.hidden=true;
+        rows.record_json.hidden=!proposalEditor(sources,local,raw);
+      };
+      local.renderSources();
+      local.confirm=confirmation(main,t("Confermo questo passaggio sul caso sintetico corrente; nessun mandato reale o azione esterna"));local.confirm.disabled=!local.editable;const save=button(t("Conserva campi incompleti"),flush),execute=button(t("Esegui e conserva il passaggio sintetico"),async()=>{await flush();if(!local.confirm.checked)throw new Error(t("Riesamina e conferma il passaggio sintetico corrente."));local.execution=local.execution||{...scope(page),review_ticket:page.review_ticket,expected_draft_revision:local.stamp,fields:structuredClone(local.fields),confirmed:true,idempotency_key:crypto.randomUUID()};await call("vera_workspace_transformation_execute",local.execution);api.setDirty(false);await open(workRef);say(t("Passaggio conservato dal prototipo. Nessuna validazione professionale o azione esterna."));},"primary");save.disabled=execute.disabled=!local.editable;main.append(save,execute);}
     privacy(main);
   }
   return Object.freeze({open,openInitial,openAuthor,openMandate,catalogue,flush,dispose,active:()=>Boolean(context),refresh,setLanguage,language:()=>language});
