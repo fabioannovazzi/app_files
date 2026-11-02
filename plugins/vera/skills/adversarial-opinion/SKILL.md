@@ -1,7 +1,11 @@
 ---
 name: adversarial-opinion
-description: Develop and review the strongest evidence-bound opposing case when Vera is asked for an opinion on a concrete legal, tax or compliance position or explicitly for an opposing opinion. Informational research alone does not activate it; respect an instruction to omit it.
+description: Develop and review the strongest evidence-bound opposing case when Vera is asked for an opinion on a concrete legal, tax or compliance position or explicitly for an opposing opinion. Informational research alone does not activate it; respect an instruction to omit it. Before fresh research, show the question and planned sources in chat before opening authorities.
 ---
+
+Before reading any authority for new research, send the question and planned
+sources in a visible chat message. A local document supplied as evidence is
+also a source. Read `../vera/references/opinion-delivery.md` for the complete sequence.
 
 <!-- VERA_WORK_CONTINUITY_BEGIN -->
 ## Work continuity
@@ -78,6 +82,8 @@ confirmation, plugin UI or model API credentials.
 
 Read `../vera/references/opinion-delivery.md` before the shared method below.
 Its Vera delivery policy replaces all shared panel and review-queue handoffs.
+For opinions use Vera’s `scripts/opinion_validation.py` to package the reviewed
+text and run its final `verify` command on the actual opinion before delivery.
 
 Read `../vera/references/research-subscriptions.md` before source investigation.
 Use relevant currently authorised subscription evidence in the same opposing

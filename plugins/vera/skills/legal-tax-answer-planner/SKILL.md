@@ -1,7 +1,11 @@
 ---
 name: legal-tax-answer-planner
-description: Use automatically before Vera answers any accepted substantive legal, tax, or compliance question or prepares source-backed professional drafting that needs an answer contract and generation instructions for the shared agentic research method in the current host. The user never needs to request prompt optimization. Do not use this skill as a substitute for a missing operational return, declaration, filing, or form workflow.
+description: Use automatically before Vera answers any accepted substantive legal, tax, or compliance question or prepares source-backed professional drafting that needs an answer contract and generation instructions for the shared agentic research method in the current host. The user never needs to request prompt optimization. Do not use this skill as a substitute for a missing operational return, declaration, filing, or form workflow. Before fresh research, show the question and planned sources in chat before opening authorities.
 ---
+
+Before reading any authority for new research, send the question and planned
+sources in a visible chat message. A local document supplied as evidence is
+also a source. Read `../vera/references/opinion-delivery.md` for the complete sequence.
 
 <!-- VERA_WORK_CONTINUITY_BEGIN -->
 ## Work continuity
@@ -50,6 +54,9 @@ confirmation, plugin UI or model API credentials.
 In Vera, use the [saved review routing](../vera/references/review-routing.md) for all professional review handoffs, including when following a standalone module below. Deliver this answer preparation in chat and documents; no review editor is needed.
 
 # Plan The Answer
+
+Read `../vera/references/opinion-delivery.md`. Send the question and planned
+sources in chat before research starts, even when no clarification is needed.
 
 Read `../vera/references/research-subscriptions.md` and the saved optional source
 choices before preparing the brief. Include relevant enabled subscriptions in

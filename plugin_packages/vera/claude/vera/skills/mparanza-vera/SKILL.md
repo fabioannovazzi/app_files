@@ -1,6 +1,6 @@
 ---
 name: mparanza-vera
-description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
+description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. For opinions, show the question and planned sources in chat before opening an authority. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 ## Written lessons
 
@@ -177,6 +177,17 @@ usage, signed receipts, technical recovery and 1–5-star feedback through the
 invoking product's incident service and rating form remain available. Follow the
 primary task's workflow-usage contract and product identity. Tutorials retain
 their no-reporting boundary.
+
+## Starting a tax or legal opinion
+
+Before opening a supplied authority (including a local attachment), searching,
+or looking up a source, send the user a short progress message in the current chat.
+State the question you will answer and name the authorities or supplied documents
+you plan to consult. Do this even for a short, self-contained or standalone case.
+You can use the request and a directory listing to identify the documents.
+Keep authority contents out of tool calls that load workflow instructions.
+Continue immediately when the question is clear. Follow
+`references/opinion-delivery.md` through final delivery.
 
 <!-- VERA_WORK_CONTINUITY_BEGIN -->
 ## Work continuity

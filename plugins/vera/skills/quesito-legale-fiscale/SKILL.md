@@ -1,7 +1,11 @@
 ---
 name: quesito-legale-fiscale
-description: Use when Vera receives a substantive legal, tax, or compliance question, analysis request, or source-backed professional drafting request and must take it through one complete question-to-reviewed-answer journey. Do not use for returns, declarations, filings, or forms whose correctness requires a dedicated operational workflow.
+description: Use when Vera receives a substantive legal, tax, or compliance question, analysis request, or source-backed professional drafting request and must take it through one complete question-to-reviewed-answer journey. Do not use for returns, declarations, filings, or forms whose correctness requires a dedicated operational workflow. Before fresh research, show the question and planned sources in chat before opening authorities.
 ---
+
+Before reading any authority for new research, send the question and planned
+sources in a visible chat message. A local document supplied as evidence is
+also a source. Read `../vera/references/opinion-delivery.md` for the complete sequence.
 
 <!-- VERA_WORK_CONTINUITY_BEGIN -->
 ## Work continuity
@@ -74,6 +78,10 @@ confirmation, plugin UI or model API credentials.
 This is Vera's user-facing journey from a substantive legal, tax or
 compliance question to a reviewed answer. Select it automatically for the
 requested complete answer; the user need not choose internal stages.
+
+Read `../vera/references/opinion-delivery.md` first. It owns the visible
+pre-research message and the citations in the final Vera opinion. Package and
+verify the issued opinion with Vera’s `scripts/opinion_validation.py`.
 
 Read `../vera/references/research-subscriptions.md` before preparation. Consult
 the same optional saved choices; enabled subscriptions contribute evidence in

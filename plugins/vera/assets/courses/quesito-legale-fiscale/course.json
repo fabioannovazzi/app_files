@@ -218,9 +218,14 @@
       "sha256": "16c6ae9bb4bca8747e4a36a0839c9fe1f2fdc1bcc9908fe75f9cc8554e1817eb"
     },
     {
+      "path": "scripts/opinion_validation.py",
+      "repository_path": "plugins/vera/scripts/opinion_validation.py",
+      "sha256": "e7e9f15050ec6a8be0ae7edc07f65975a7746fae008b0fd742de6720185af845"
+    },
+    {
       "path": "skills/quesito-legale-fiscale/SKILL.md",
       "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
-      "sha256": "c5aedeba1bc961928fe6206c44d3c34ae0f87414caa9658bbf87491e362e8ac9"
+      "sha256": "87d8b4907d157315331a4c803436640692afefaca9df716d8063bbecdd26de79"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

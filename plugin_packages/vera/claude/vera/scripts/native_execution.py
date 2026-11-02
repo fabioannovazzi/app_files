@@ -69,7 +69,16 @@ def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     component_root = root / "modules" / component
     if not component_root.exists():
         component_root = root.parent / component
-    script_root = resolve_helper_root(root, component_root, Path(script))
+    # The two spellings belong to one Vera writer. The component still owns
+    # dependency selection, while the product owns opinion delivery policy.
+    if component == "deep-research-validator" and script in {
+        "scripts/package_validation.py",
+        "scripts/opinion_validation.py",
+    }:
+        script = "scripts/opinion_validation.py"
+        script_root = root
+    else:
+        script_root = resolve_helper_root(root, component_root, Path(script))
     helper = script_root / script
     if helper.is_symlink() or not helper.resolve().is_relative_to(
         script_root.resolve()
@@ -110,6 +119,24 @@ def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
 
 
 def _arguments(spec: dict[str, Any]) -> list[str]:
+    if (
+        spec["component"] == "deep-research-validator"
+        and spec["script"] == "scripts/opinion_validation.py"
+    ):
+        dependencies = spec.get("requirements") or ["requirements.txt"]
+        return [
+            *[
+                part
+                for name in dependencies
+                for part in (
+                    "--requirements",
+                    f"modules/deep-research-validator/{name}",
+                )
+            ],
+            "run",
+            spec["script"],
+            *spec["arguments"],
+        ]
     return [
         "--module",
         spec["component"],
@@ -527,7 +554,9 @@ def serve() -> None:
             "Use for dependency checks and the specialist's managed Python commands; "
             "the service owns persistent diagnostics outside the chat shell. "
             "For checks use script scripts/check_dependencies.py. Pass only the "
-            "helper's arguments, with absolute client paths. Retain one job UUID "
+            "helper's arguments, with absolute client paths. For a Vera opinion, "
+            "run scripts/opinion_validation.py with component deep-research-validator "
+            "to package the answer and verify its visible citations. Retain one job UUID "
             "per command and the workflow's task UUID. Poll status with that job UUID; "
             "repeating run with identical arguments never runs the command twice. "
             "On a user stop request, cancel that exact job and verify its terminal state. "
