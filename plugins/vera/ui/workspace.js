@@ -61,7 +61,30 @@
     const generated = !label || /^run_[a-f0-9]{24}$/i.test(label) || label.toLowerCase() === workflow.replaceAll("-", " ");
     return generated ? (names[workflow] || "Revisione") : label;
   }
+  const reviewTitles = {
+    "open-item-reconciliation": {codex_review_completed: "Riesame delle partite completato"},
+    "concordato-plan-review": {
+      document_perimeter_status: "Completezza dei documenti",
+      creditor_population_status: "Completezza dell’elenco creditori",
+      review_question_coverage: "Quesiti di revisione esaminati",
+      sources_and_uses_balance: "Equilibrio tra fonti e impieghi",
+      liquidity_bridge: "Raccordo dei flussi di liquidità",
+      open_material_issues: "Questioni rilevanti ancora aperte",
+    },
+  };
   function title(item) {
+    if (state?.workflow === "report-builder") {
+      const sections = {overview:"Sintesi",income_statement:"Conto economico",balance_sheet:"Stato patrimoniale",cash_flow:"Rendiconto finanziario",debt:"Debito",investments:"Investimenti",taxes:"Tributi",notes:"Note",budget:"Budget"};
+      const section = item.title?.match(/^Missing section mapping: (.+)$/);
+      if (section) return "Collega la tabella · " + (sections[section[1]] || section[1]);
+      if (item.title?.startsWith("Narrative pending: ")) return "Completa il commento · " + item.title.slice("Narrative pending: ".length);
+      if (item.title?.startsWith("Numeric measure review pending: ")) {
+        const name = item.title.slice("Numeric measure review pending: ".length);
+        return "Verifica gli importi · " + (sections[name] || name);
+      }
+    }
+    const caption = reviewTitles[state?.workflow]?.[item.title];
+    if (typeof caption === "string") return caption;
     const data = item.data || {};
     if (state?.workflow === "open-item-reconciliation" && item.item_type === "unresolved_item" && data.document_no) {
       const balance=data.balance??data.amount;
@@ -3228,6 +3251,7 @@
     function rows() {
       list.replaceChildren(); const selected = state.selection?.issue || state.selection;
       const matches = state.items.filter(item => JSON.stringify(item).toLowerCase().includes(query.toLowerCase()));
+      const files = supportingDetails("Documenti e file di supporto");
       for (const item of matches) {
         const b = button("", () => {
           if (selected && itemId(selected) === itemId(item)) {
@@ -3241,8 +3265,13 @@
         b.setAttribute("aria-pressed", String(Boolean(selected) && itemId(selected) === itemId(item)));
         const saved = state.workflow === "journal-bank-reconciliation" && state.data.ui_decisions?.decisions?.find(row => row.item_id === itemId(item));
         const badge = saved ? `Decisione salvata · ${statusLabels[saved.status] || actionLabels[saved.action] || saved.action}` : statusLabels[item.review_status || item.status || item.data?.status] || "Da esaminare";
-        b.append(node("strong", title(item)), node("small", badge)); list.append(b);
+        b.append(node("strong", title(item)), node("small", badge));
+        if (item.item_type?.endsWith("_artifact")) {
+          files.append(b);
+          if (query || b.getAttribute("aria-pressed") === "true") files.open = true;
+        } else list.append(b);
       }
+      if (files.childElementCount > 1) list.append(files);
       if (!matches.length) list.append(node("p", "Nessun elemento in questa pagina corrisponde alla ricerca.", "empty"));
     }
     if (!state.total) {
