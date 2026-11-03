@@ -37,7 +37,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "bfe2c79383af209165f6a2321580a1bb60319776361c595dd38ef0b85d50d674",
+  "course_sha256": "62047c90850e7bd69e72d1d75c03156f3682e0b33dcaa5f71875f6916e7f9854",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -857,8 +857,8 @@
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
-  "reviewer": "Codex /root — bounded native transport and lesson review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
     "reviewer": "Codex bounded teaching-material and source integration review",
@@ -1102,5 +1102,23 @@
     "judgment": "Reviewed all five localized changed lesson steps and privacy repetitions plus their construction chapter. They now open versioned local Markdown, preserve original answers and predecessor ancestry, and accurately say that returning selected files to chat exposes those data to the chosen host model. The browser form/export instruction and its obsolete transport statement are removed. Questions, fictional facts, professional review/adoption gates, cases, financial lab, pacing and next actions remain unchanged.",
     "evidence_document": "docs/releases/2026-11-03-native-ui-lesson-transport-review.json",
     "fresh_native_ci_required": true
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root — bounded native transport and lesson review",
+    "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+    "course_sha256": "bfe2c79383af209165f6a2321580a1bb60319776361c595dd38ef0b85d50d674"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "bfe2c79383af209165f6a2321580a1bb60319776361c595dd38ef0b85d50d674",
+    "current_course_sha256": "62047c90850e7bd69e72d1d75c03156f3682e0b33dcaa5f71875f6916e7f9854",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

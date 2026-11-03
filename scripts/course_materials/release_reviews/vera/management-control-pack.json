@@ -84,7 +84,7 @@
     "source_review": "Reviewed the additive costing route, its exact arithmetic, archive-bound source checks and separate renderer. Existing reporting dispatch is unchanged unless analysis_kind is costing. This source refresh does not turn the monthly reporting lesson into a costing lesson.",
     "limits": "Preserves historical editorial and artifact evidence. Current regression execution is required; no fresh learner, voice, installed-host or professional acceptance is claimed."
   },
-  "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
+  "course_sha256": "4e34114f6c8cdcf9686c07859aae99e45c166a1c702200564f52902b8e1afb81",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.133138+00:00",
@@ -347,8 +347,8 @@
     "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
-  "reviewer": "Codex /root — bounded native transport and lesson review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "scissione_integration_refresh_20260930": {
     "previous_course_sha256": "fa7b9dc873bb8fa5f66925ae485c3f7ec2374e1631355a638d4a707789e55922",
@@ -617,5 +617,23 @@
     "judgment": "Complete authored course payload excluding source inventory is identical to the reviewed main baseline. The removed localhost editor is replaced by the existing native workspace; ordinary report files, receipts, calculations, review requirements and requested exercises remain unchanged. Management report preview preserves exact receipt verification and is app-only; actual Desktop iframe/month-control acceptance remains separate.",
     "evidence_document": "docs/releases/2026-11-03-native-ui-lesson-transport-review.json",
     "fresh_native_ci_required": true
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root — bounded native transport and lesson review",
+    "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+    "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
+    "current_course_sha256": "4e34114f6c8cdcf9686c07859aae99e45c166a1c702200564f52902b8e1afb81",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

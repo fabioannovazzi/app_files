@@ -63,7 +63,7 @@
     "verified_at": "2026-09-27T21:29:32.281284+00:00",
     "workflow": "attribute-reporting"
   },
-  "course_sha256": "5215ee5026c97195b129b7e3c683636f5981d9f68316aa29383b32a7bf7ea231",
+  "course_sha256": "3267650600406fe532b81019b5e08d356a05c2e502af396e50d5efec5506eec6",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -543,8 +543,8 @@
     "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
   },
   "review_scope": "Reviewed five localized first-use lessons and actual demo/practice reports. Independent agent reviewed every exact rendered report and claim ledger, then the native browser QA and finalizer completed all ten reports. Automated regression separately tests native construction and refuses final semantic acceptance when independent review is missing. No learner participation or live retailer-data acquisition is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-  "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
-  "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "runtime8_dependency_binding_20261006": {
     "current_course_sha256": "f5ee481a0853bb72a9f9272d6d2cba2bae73075fe2ef937054ee332258148d7a",
     "previous_course_sha256": "f9e9a06b038f3dd0559eccd07a48e56226f5427e50e704056cee3b5d24cd341a",
@@ -650,5 +650,23 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex editorial review; independent report review by attribute_course_independent_review",
+    "reviewed_at": "2026-09-23T11:44:31.208927+00:00",
+    "course_sha256": "5215ee5026c97195b129b7e3c683636f5981d9f68316aa29383b32a7bf7ea231"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "5215ee5026c97195b129b7e3c683636f5981d9f68316aa29383b32a7bf7ea231",
+    "current_course_sha256": "3267650600406fe532b81019b5e08d356a05c2e502af396e50d5efec5506eec6",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

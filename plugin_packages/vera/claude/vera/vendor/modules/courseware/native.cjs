@@ -54,7 +54,7 @@ function server(root) {
     const html = fs.readFileSync(path.join(assets, "chat.html"), "utf8")
       .replace("/*__JS__*/", fs.readFileSync(path.join(assets, "chat.js"), "utf8"))
       .replace("__FONT__", fs.readFileSync(path.join(assets, "InstrumentSans-Regular.ttf")).toString("base64"));
-    return { contents: [{ uri: URI, mimeType: "text/html;profile=mcp-app", text: html, _meta: { ui: { csp: { connectDomains: [], resourceDomains: [] } } } }] };
+    return { contents: [{ uri: URI, mimeType: "text/html;profile=mcp-app", text: html, _meta: { ui: { csp: { connectDomains: [], resourceDomains: [] } }, "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["inline", "fullscreen"] } } }] };
   }
   function dispatch(message) {
     const params = message.params || {};

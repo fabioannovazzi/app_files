@@ -123,7 +123,7 @@
     },
     "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
   },
-  "course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f",
+  "course_sha256": "ee63de3460815ac4e834beef2603f9eadbf4c94dd18839c61869242bb6fe1f94",
   "dated_calculation_review": {
     "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
     "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
@@ -1045,8 +1045,8 @@
     "privacy_review": "New capital, income, owner-transaction, terminal equity and accounting-basis records stay within existing selected engagement/model-context boundaries. No new external recipient or request. Five public descriptions now name residual income; the shared Research Video page content is unchanged."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-10-14T08:00:57.880787+00:00",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "schema_validation_review": {
     "scope": "Reviewed the bundled Draft 2020-12 schema and local runtime integration. Case shape is checked before nested-source discovery; selected method payloads are checked within partial-workpaper boundaries. No external schema retrieval or professional acceptance is introduced. Read both freshly executed annual lesson reports: unchanged 750000 and 583333.33 EUR equity indications, pending review, development-only purpose coverage and 18 artifacts each. Report renderer and document layout are unchanged from the previous visual review.",
@@ -1296,5 +1296,23 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root - Deal Redux source compatibility review",
+    "reviewed_at": "2026-10-14T08:00:57.880787+00:00",
+    "course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f",
+    "current_course_sha256": "ee63de3460815ac4e834beef2603f9eadbf4c94dd18839c61869242bb6fe1f94",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

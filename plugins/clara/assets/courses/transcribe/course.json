@@ -270,7 +270,7 @@
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+      "sha256": "0be0755190f0bb76128768dd29db0da943c1a26595a630be7e4716df0e3d7a45"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -330,7 +330,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
+      "sha256": "ef092de84e872c9a4ab554ed681eab25cedc16893578e241fe0aa2ac3146a8f4"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
