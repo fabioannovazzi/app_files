@@ -49,7 +49,6 @@ PLUGIN_IMPLEMENTATION_PATHS = (
     ".mcp.json",
     "assets/icon.svg",
     "assets/studio-docx-format.schema.json",
-    "assets/report-builder-review-widget.html",
     "assets/review-workbench-adapter.json",
     "mcp/server.cjs",
     "scripts/apply_review_edits.py",

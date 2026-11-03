@@ -375,6 +375,7 @@ def test_every_registered_local_service_uses_a_verified_launcher(configuration):
     config = json.loads((ROOT / "plugins/vera" / configuration).read_text())
     launchers = {
         "./scripts/on_demand_mcp.cjs",
+        "${PLUGIN_ROOT}/scripts/on_demand_mcp.cjs",
         "./scripts/native_execution_mcp.cjs",
         "./scripts/run_component_mcp.cjs",
         "./scripts/run_service_mcp.cjs",

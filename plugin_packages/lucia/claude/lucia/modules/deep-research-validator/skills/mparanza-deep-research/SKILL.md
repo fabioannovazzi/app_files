@@ -323,16 +323,7 @@ After a reviewable checkpoint or when the user asks to inspect the work, run:
 python scripts/research_record.py review-ui --output-dir <client-run-output> --client-engagement <client_engagement_path>
 ```
 
-This projects the saved issues, cycles, faithful source captures, available
-reviewed original and opposing opinions, assessment and comparison into the
-same native answer-review widget. It displays the model's declared status;
-it does not certify closure or legal quality. Validate the hash-bound local
-review reference, then call `render_deep_research_review` as documented in
-`../mparanza-legal-tax-answer-review/SKILL.md`. Pass the returned token to save/apply.
-Use the MCP Apps bridge on compatible hosts; retain the local/chat fallback
-when rendering is unavailable. Simple questions do not need this workbench.
-UI excerpts are labelled and bounded for display; read the original artifacts
-for substantive review. Display limits never limit research or prove coverage.
+Review the saved issues, cycles, source captures, original and opposing opinions, assessment and comparison in chat and their retained documents. Validate the hash-bound local review reference and preserve the existing save/apply contract. This workflow has no native review route; do not launch another widget. Declared status and display limits do not certify closure, coverage or legal quality. Read the original artifacts for substantive review.
 For a completed run, use its stored bound review read-only; do not rewrite the
 completed run just to prepare a screen. Use read-only files/chat when no
 compatible saved UI snapshot exists.

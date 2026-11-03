@@ -20,11 +20,12 @@ class Element {
 const elements = { app: new Element("main"), status: new Element("p"), refresh: new Element("button") };
 const document = { getElementById: key => elements[key], createElement: tag => new Element(tag) };
 const fixture = JSON.parse(fs.readFileSync(0, "utf8")), importMode = process.argv[3] === "import", navigationMode = process.argv[3] === "navigation", reviewMode = process.argv[3] === "review";
+const recoveryMode = process.argv[3] === "recovery";
 const calls = [];
 const listeners = {}, parent = { postMessage(message) {
-  if ((!importMode && !navigationMode && !reviewMode) || !message.id) return;
+  if ((!importMode && !navigationMode && !reviewMode && !recoveryMode) || !message.id) return;
   let result = message.method === "ui/initialize" ? {} : { _meta: { workspace: fixture.import_setup } };
-  if ((navigationMode || reviewMode) && message.method === "tools/call") {
+  if ((navigationMode || reviewMode || recoveryMode) && message.method === "tools/call") {
     calls.push(message.params);
     const name = message.params.name;
     let workspace;
@@ -44,7 +45,7 @@ const listeners = {}, parent = { postMessage(message) {
   }
   queueMicrotask(() => listeners.message({ source: parent, data: { jsonrpc: "2.0", id: message.id, result } }));
 } };
-const window = { parent, addEventListener: (name, callback) => { listeners[name] = callback; } };
+const window = { matchMedia: () => ({matches:false,addEventListener(){}}), parent, addEventListener: (name, callback) => { listeners[name] = callback; } };
 const factories = {VeraReviewRoutes: reviewRoutes};
 for (const name of ["VeraOpenItemsIntake", "VeraBrowser", "VeraFusion", "VeraRating", "VeraTransformation", "VeraWebsite", "VeraPracticeReviews", "VeraCommunication", "VeraPatentBox", "VeraBandiContributions"]) {
   factories[name] = { create: () => ({ dispose() {}, async flush() {}, active: name === "VeraBandiContributions" ? false : () => false }) };
@@ -55,11 +56,17 @@ vm.runInNewContext(fs.readFileSync(process.argv[2], "utf8"), {
 }, { filename: process.argv[2] });
 const catalogue = importMode || navigationMode || reviewMode ? fixture.catalogue : fixture;
 listeners.message({ source: parent, data: {
-  jsonrpc: "2.0", method: "ui/notifications/tool-result", params: { _meta: { workspace: catalogue } },
+  jsonrpc: "2.0", method: "ui/notifications/tool-result", params: { _meta: { workspace: recoveryMode ? {error: fixture.error} : catalogue } },
 } });
 const collect = element => [element, ...element.children.flatMap(collect)];
 (async () => {
-  if (reviewMode) {
+  if (recoveryMode) {
+    await new Promise(resolve => setImmediate(resolve));
+    const before = {status:elements.status.textContent, buttons:collect(elements.app).filter(el=>el.tagName === "BUTTON").map(el=>el.textContent)};
+    const recovery = collect(elements.app).find(el=>el.tagName === "BUTTON" && el.textContent === "Torna ai lavori autorizzati");
+    await recovery.listeners.click();
+    process.stdout.write(JSON.stringify({before,calls,status:elements.status.textContent,text:collect(elements.app).map(el=>el.textContent).join(" ")}));
+  } else if (reviewMode) {
     await new Promise(resolve => setImmediate(resolve));
     const click = async text => {
       const target = collect(elements.app).find(el => el.tagName === "BUTTON" && el.textContent === text);

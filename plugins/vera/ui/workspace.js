@@ -131,6 +131,17 @@
   const node = (tag, text, cls) => { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (cls) el.className = cls; return el; };
   const button = (text, action, cls = "", flushLocal = true) => { const el = node("button", text, cls); el.type = "button"; el.addEventListener("click", () => run(action, flushLocal)); return el; };
   const say = (text, error = false) => { status.textContent = text; status.classList.toggle("error", error); };
+  let recoveryButton;
+  function showOpenError(error) {
+    const message = error.message || String(error);
+    say(message.includes("Run is not authorised in this workspace")
+      ? "Questo lavoro non è disponibile nella connessione corrente. Torna ai lavori autorizzati per riaprirlo."
+      : message, true);
+    if (!recoveryButton) {
+      recoveryButton = button("Torna ai lavori autorizzati", () => loadCatalogue());
+      root.append(recoveryButton);
+    }
+  }
   function request(method, params) {
     const id = ++requestId;
     return new Promise((resolve, reject) => {
@@ -147,7 +158,7 @@
   async function run(action, flushLocal = true) {
     if (busy) return;
     busy = true; root.setAttribute("aria-busy", "true");
-    try { if(flushLocal){await openItemsIntakePanel?.flush();await browserPanel?.flush();await fusionPanel?.flush();await ratingPanel?.flush();await transformationPanel?.flush();await websitePanel?.flush();await communicationPanel?.flush();await patentBoxPanel?.flush();await bandiAuthorPanel?.flush();await flushBandi();await flushCrLocal();await flushFinancialDraft();await flushEsgDraft();await flushInpsDraft();await flushSariDraft();await flushSariAuthor();await flushSariReview();await flushSariFollowup();} await action(); } catch (error) { say(error.message, true); }
+    try { if(flushLocal){await openItemsIntakePanel?.flush();await browserPanel?.flush();await fusionPanel?.flush();await ratingPanel?.flush();await transformationPanel?.flush();await websitePanel?.flush();await communicationPanel?.flush();await patentBoxPanel?.flush();await bandiAuthorPanel?.flush();await flushBandi();await flushCrLocal();await flushFinancialDraft();await flushEsgDraft();await flushInpsDraft();await flushSariDraft();await flushSariAuthor();await flushSariReview();await flushSariFollowup();} await action(); } catch (error) { if(error.message.includes("Run is not authorised in this workspace"))showOpenError(error);else say(error.message, true); }
     finally { busy = false; root.setAttribute("aria-busy", "false"); }
   }
   function scope() {
@@ -251,6 +262,7 @@
     clearTimeout(sourceGroupTimer); sourceGroupContext = null;
     clearTimeout(humanTimer); humanContext = null;
     clearTimeout(passiveTimer); passiveContext = null;
+    recoveryButton = null;
     root.replaceChildren(); const wrapper = node("div", undefined, "shell"), rail = node("aside", undefined, "rail");
     rail.append(node("p", "Studio Archive", "eyebrow"), node("h2", "Lavori dello studio"));
     const nav = node("nav"); nav.setAttribute("aria-label", "Navigazione dei lavori"); rail.append(nav);
@@ -2942,7 +2954,15 @@
     if(page.calculation_status==="blocked")main.append(node("p","I controlli impediscono la finalizzazione. Discuti le evidenze e prepara un caso corretto in un nuovo run.","notice"));
     if(caseRef){
       main.append(node("h2","Commento completo proposto"),crFields(page.commentary));
-      if(page.conservation){main.append(node("h2","Riscontro nominativo conservato"),crFields(page.conservation.review));for(const file of page.files){const article=node("article",undefined,"planning-record");article.append(node("h3",file.name));passiveFile(article,file);main.append(article);}}
+      if(page.conservation){
+        if(page.status==="accepted")main.append(button("Anteprima interattiva del rapporto",async()=>{
+          const preview=await call("vera_workspace_management_commentary_preview",{...identity,revision:page.revision});
+          const frame=node("iframe");frame.title="Rapporto gestionale · bozza da riesaminare";
+          frame.setAttribute("sandbox","allow-scripts");frame.referrerPolicy="no-referrer";
+          frame.style.width="100%";frame.style.height="80vh";frame.srcdoc=preview.html;
+          main.append(frame);
+        }));
+        main.append(node("h2","Riscontro nominativo conservato"),crFields(page.conservation.review));for(const file of page.files){const article=node("article",undefined,"planning-record");article.append(node("h3",file.name));passiveFile(article,file);main.append(article);}}
       if(page.can_write){
         const context={workRef:exact.work_ref,managementCommentaryIdentity:identity,page,stamp:page.draft_revision,fields:structuredClone(page.draft),saved:JSON.stringify(page.draft)};financialContext=context;
         const label=node("label","Decisione sul commento completo","field"),choice=node("select");choice.setAttribute("aria-label","Decisione sul commento gestionale");for(const [value,title]of [["","Da indicare"],["accepted","Contenuto riscontrato con i limiti dichiarati"],["changes_requested","Richiedo correzioni al commento"],["rejected","Rifiuto il commento"]]){const option=node("option",title);option.value=value;choice.append(option);}choice.value=context.fields.decision;choice.addEventListener("change",()=>{context.fields.decision=choice.value;changeFinancial(context);});label.append(choice);main.append(label);
@@ -3698,13 +3718,13 @@
     if (pending.has(message.id)) { const p = pending.get(message.id); pending.delete(message.id); clearTimeout(p.timer); message.error ? p.reject(new Error(message.error.message)) : p.resolve(message.result); return; }
     if (message.method === "ui/notifications/tool-result") {
       const result = message.params?._meta?.workspace;
-      if (result?.error) { say(result.error, true); root.setAttribute("aria-busy", "false"); }
+      if (result?.error) { showOpenError(new Error(result.error)); root.setAttribute("aria-busy", "false"); }
       else if (result?.kind === "review_route") {
         if (notifiedReview === result.work_ref) return;
         notifiedReview = result.work_ref;
         showReviewRoute(result).catch(error => {
           notifiedReview = null;
-          say(error.message, true);
+          showOpenError(error);
         }).finally(() => root.setAttribute("aria-busy", "false"));
       }
       else if (result?.works && !catalogue) { catalogue = result; renderCatalogue(); say("Scegli un lavoro collegato a Studio Archive."); root.setAttribute("aria-busy", "false"); }

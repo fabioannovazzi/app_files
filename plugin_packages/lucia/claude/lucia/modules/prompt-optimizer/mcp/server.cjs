@@ -333,40 +333,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: modelPolicy.URI,
-      name: "legal_tax_model_check",
-      title: "Legal/tax model selection",
-      description: "Required model, observed identity and explicit user confirmation before preparation.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(modelPolicy.URI),
-    },
-    {
-      uri: WIDGET_URI,
-      name: "prompt_optimizer_review_widget",
-      title: "Prompt Optimizer review widget",
-      description:
-        "Renders Prompt Optimizer review-session payloads with searchable validation checks and generated artifacts.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri === modelPolicy.URI) {
-    return fs.readFileSync(path.join(PLUGIN_ROOT, "assets", "legal-tax-model.html"), "utf8");
-  }
-  if (uri !== WIDGET_URI) {
-  throw new Error(`unknown Prompt Optimizer widget resource: ${uri}`);
-  }
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "prompt-optimizer-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

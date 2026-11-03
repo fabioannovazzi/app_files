@@ -35,10 +35,8 @@ CSS_SURFACES = (
     "plugins/vera/ui/research-sources.css",
     "plugins/browser-automation/ui/agenzia.css",
     "plugins/bilancio-xbrl-it/ui/workspace.css",
-    "plugins/treasury-forecast/assets/review.css",
 )
 HTML_SURFACES = (
-    "plugins/adeguati-assetti/assets/construction-intake.html",
     "plugins/prompt-optimizer/assets/legal-tax-model.html",
     "plugins/lucia/assets/playbook-editor.html",
     "plugins/apertura-pratica/assets/apertura-pratica-review.html",

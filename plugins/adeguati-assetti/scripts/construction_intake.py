@@ -2,14 +2,11 @@
 
 from __future__ import annotations
 
-import base64
-import html
 import json
-from pathlib import Path
 
 from construction_core import digest, fields, require, text
 
-__all__ = ["import_intake", "parse_markdown", "render_form", "render_markdown"]
+__all__ = ["import_intake", "parse_markdown", "render_intake", "render_markdown"]
 
 INTAKE_SCHEMA = "vera.assetti_intake.v1"
 PREFIX = "# Scheda di visita per Vera\n\n```assetti-intake-json\n"
@@ -178,8 +175,8 @@ def import_intake(
     }
 
 
-def render_form(state: dict, *, questions: list[dict] | None = None) -> str:
-    """Emit a standalone page; no remote assets, storage, microphone or network."""
+def render_intake(state: dict, *, questions: list[dict] | None = None) -> str:
+    """Prepare the existing versioned Markdown intake for chat and document review."""
     sessions = list(state.get("intake_sessions", {}).values())
     saved = sessions[-1]["payload"] if sessions else None
     if (
@@ -254,46 +251,35 @@ def render_form(state: dict, *, questions: list[dict] | None = None) -> str:
             }
             for row in initial["answers"]
         ]
-    config = {
-        "schema_version": INTAKE_SCHEMA,
-        "practice_id": state["case_id"],
-        "client_id": state["client_id"],
-        "engagement_id": state["engagement_id"],
-        "questionnaire_version": state["catalog"]["methodology_version"],
-        "entity_name": state["entity_name"],
-        "questions": questions,
-        "saved_intake": saved,
-        "initial_intake": initial,
-        "resume_summary": state["cursor"].get("summary", ""),
-        "next_step": state["cursor"].get("next_step", ""),
-    }
-    template = (
-        Path(__file__).resolve().parents[1] / "assets/construction-intake.html"
-    ).read_text(encoding="utf-8")
-    encoded = (
-        json.dumps(config, ensure_ascii=False)
-        .replace("<", "\\u003c")
-        .replace(">", "\\u003e")
-        .replace("&", "\\u0026")
-    )
-    module = Path(__file__).resolve().parents[1]
-    candidates = [
-        module / "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
-        module.parent.parent
-        / "vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
-        module.parent
-        / "_shared/vendor/modules/courseware/assets/InstrumentSans-Regular.ttf",
-    ]
-    font = next((p for p in candidates if p.is_file()), None)
-    font_face = (
-        "@font-face{font-family:'Instrument Sans';font-style:normal;font-weight:100 900;src:url(data:font/ttf;base64,"
-        + base64.b64encode(font.read_bytes()).decode()
-        + ") format('truetype');}"
-        if font
-        else ""
-    )
-    return (
-        template.replace("__CASE_TITLE__", html.escape(state["entity_name"]))
-        .replace("__CONFIG_JSON__", encoded)
-        .replace("__FONT_FACE__", font_face)
-    )
+    if initial is None:
+        initial = {
+            "schema_version": INTAKE_SCHEMA,
+            "practice_id": state["case_id"],
+            "client_id": state["client_id"],
+            "engagement_id": state["engagement_id"],
+            "session_id": "",
+            "date": "",
+            "declared_author": "",
+            "questionnaire_version": state["catalog"]["methodology_version"],
+            "revision": 1,
+            "mode": "text",
+            "parent_sha256": None,
+            "position": 0,
+            "answers": [
+                {
+                    "question_id": q["id"],
+                    "question": q["question"],
+                    "criterion_ids": q["criterion_ids"],
+                    "original": "",
+                    "status": "unknown",
+                    "notes": "",
+                    "attachment_refs": [],
+                }
+                for q in questions
+            ],
+        }
+    if saved:
+        initial["revision"] = saved["revision"] + 1
+        initial["parent_sha256"] = digest(saved)
+    initial["mode"] = "text"
+    return render_markdown(initial)

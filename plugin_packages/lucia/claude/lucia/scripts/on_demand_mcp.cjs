@@ -118,6 +118,17 @@ function main(root = path.resolve(__dirname, "..")) {
         pending.client = client;
         pending.workerId = workerId;
       } });
+      if (product === "vera" && message.method === "resources/read") {
+        for (const resource of reply.result?.contents || []) {
+          if (resource.mimeType !== "text/html;profile=mcp-app") continue;
+          resource._meta ??= {};
+          resource._meta["openai/ui"] = {
+            ...resource._meta["openai/ui"],
+            preferredDisplayMode: "fullscreen",
+            availableDisplayModes: ["fullscreen"],
+          };
+        }
+      }
       output({ ...reply, id });
     } catch (error) { failure(id, -32000, error.message); }
     finally { active.delete(id); }

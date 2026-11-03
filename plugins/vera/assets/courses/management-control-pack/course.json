@@ -119,6 +119,11 @@
       "sha256": "4a5d5cf9d2cc3a5ce231d8a5e5ced7b531be20577b318044680d630044b003d3"
     },
     {
+      "path": "modules/management-control-pack/scripts/report_preview.py",
+      "repository_path": "plugins/management-control-pack/scripts/report_preview.py",
+      "sha256": "fbe325749fe1377222d571666b90e5c40cdf3bf66d111b68bea46b3384518cf7"
+    },
+    {
       "path": "modules/management-control-pack/scripts/run_costing.py",
       "repository_path": "plugins/management-control-pack/scripts/run_costing.py",
       "sha256": "d41bd9be497e090d2fc8e057e44d79f115fcce17e610d3d54e76a6fec75ae303"
@@ -201,7 +206,7 @@
     {
       "path": "skills/management-control-pack/SKILL.md",
       "repository_path": "plugins/vera/skills/management-control-pack/SKILL.md",
-      "sha256": "e8ec641dc1b02ba232ae5dc8c2298bf383ebf4c744f9788de5f6e1232bf4f289"
+      "sha256": "6e7a4e42e90e74c13c4632400027f3a12e4e094df57a1e8e9dd296166e5cdae3"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",
@@ -241,12 +246,12 @@
     {
       "path": "vendor/modules/courseware/assets/chat.html",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+      "sha256": "088eb25cfc122b963365394c7953af78df624265a86c9d56a862a46f58ba27cc"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -301,12 +306,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+      "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
     },
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
+      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

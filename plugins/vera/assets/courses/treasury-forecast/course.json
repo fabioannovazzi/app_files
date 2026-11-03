@@ -23,39 +23,14 @@
   },
   "sources": [
     {
-      "path": "modules/treasury-forecast/assets/custom_select.js",
-      "repository_path": "plugins/treasury-forecast/assets/custom_select.js",
-      "sha256": "bf6197a3a4bb2f20560350e8ceb78314c7cb12cea515e5ad5d9433833753aed4"
-    },
-    {
       "path": "modules/treasury-forecast/assets/icon.svg",
       "repository_path": "plugins/treasury-forecast/assets/icon.svg",
       "sha256": "dfcc3789bce9c6930c699c5a880fa2be68a9f7d874fa364a0397ffc194f55d51"
     },
     {
-      "path": "modules/treasury-forecast/assets/instrument-sans-400.ttf",
-      "repository_path": "plugins/treasury-forecast/assets/instrument-sans-400.ttf",
-      "sha256": "01689ad055025ff1891607b077513c9389f73360d471dcffa036e326af179b00"
-    },
-    {
       "path": "modules/treasury-forecast/assets/local-review-contract.json",
       "repository_path": "plugins/treasury-forecast/assets/local-review-contract.json",
-      "sha256": "f4e689db652987988a3af4f24cd4cb63b138d5a946f8435786af36982dcbfa66"
-    },
-    {
-      "path": "modules/treasury-forecast/assets/review.css",
-      "repository_path": "plugins/treasury-forecast/assets/review.css",
-      "sha256": "a6de4a7538a67ca38a8861c6934d2d6555c046fc74348c245d7289a817716462"
-    },
-    {
-      "path": "modules/treasury-forecast/assets/review.html",
-      "repository_path": "plugins/treasury-forecast/assets/review.html",
-      "sha256": "e5185d6a11d6c6bc79441d5e41fdf075e8ffb5e632ea602c0919784c7f3f54ad"
-    },
-    {
-      "path": "modules/treasury-forecast/assets/review.js",
-      "repository_path": "plugins/treasury-forecast/assets/review.js",
-      "sha256": "faa7b9dd5914e72936641bb34952abfeb1a64da4009a40c89f800110de2f6935"
+      "sha256": "373b9aadb369dbb51c1932e3649b9b968a641ebb609743884173c31166a8f36a"
     },
     {
       "path": "modules/treasury-forecast/references/input-contract.md",
@@ -75,7 +50,7 @@
     {
       "path": "modules/treasury-forecast/scripts/run_treasury.py",
       "repository_path": "plugins/treasury-forecast/scripts/run_treasury.py",
-      "sha256": "63e9cbea88b289a6c469b8e7bb84f12be5685fc4d3cf81b50402766a27f3ab5c"
+      "sha256": "53d69e4c4b8414bef0c58cb852c1d6ac28100cd65a0233437773bcbf8f704063"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_core.py",
@@ -93,11 +68,6 @@
       "sha256": "7583af8b8ecfa3653dad21cd122a53d3da4541eda4c932919a7f598057844ec8"
     },
     {
-      "path": "modules/treasury-forecast/scripts/treasury_server.py",
-      "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
-      "sha256": "dd1c2dc5be546e269ccfdbfa918fefdf8d92a0d53529df1e3c038530e7fe53b5"
-    },
-    {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_session.py",
       "sha256": "920a3880697042ce97c9293eb04cdc406a25f1fbcf0c839cf74178942107c98d"
@@ -105,7 +75,7 @@
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
       "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
-      "sha256": "69ddc12f096a2b4ccb111b2ccf8fa98f12aac5040f0dee5fa408172c1154334b"
+      "sha256": "54563e8eae0eaa189766c68a7f52f7d5c551a14101644748dc0e11c361ee8552"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/references/geneva.md",
@@ -210,12 +180,12 @@
     {
       "path": "vendor/modules/courseware/assets/chat.html",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+      "sha256": "088eb25cfc122b963365394c7953af78df624265a86c9d56a862a46f58ba27cc"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -270,12 +240,12 @@
     {
       "path": "vendor/modules/courseware/library.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
-      "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+      "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
     },
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
+      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

@@ -27,7 +27,7 @@
   "security_controls": [
     {
       "id": "exact-owner-routing",
-      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply.",
+      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply. The public entry uses the host-provided plugin root placeholder rather than a caller-relative script path; host packaging maps that placeholder without adding filesystem authority. Vera may normalize app display metadata, leaving professional payloads and service authority unchanged.",
       "implemented_by": [
         "scripts/on_demand_mcp.cjs",
         "mcp-services.json"
@@ -60,9 +60,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-10-29",
+    "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "20d27b6033db201fa91ac1f265e63592e7742ddf09aaea87a97e7b793a58ac61"
+    "source_fingerprint": "3c43c01b328a7110982618699621efcc9a50f385eb405846d45743d3da23cc00"
   }
 }

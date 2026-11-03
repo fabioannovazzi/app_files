@@ -108,7 +108,7 @@ function handleRpc(message) {
   if(message.method==="tools/list")return ok({tools:TOOLS});
   if(message.method==="resources/list")return ok({resources:[{uri:URI,name:"Acquisizione Agenzia",mimeType:MIME}]});
   if(message.method==="resources/templates/list")return ok({resourceTemplates:[]});
-  if(message.method==="resources/read"&&params.uri===URI)return ok({contents:[{uri:URI,mimeType:MIME,text:resource(),_meta:{ui:{prefersBorder:false,csp:{connectDomains:[],resourceDomains:[]}}}}]});
+  if(message.method==="resources/read"&&params.uri===URI)return ok({contents:[{uri:URI,mimeType:MIME,text:resource(),_meta:{ui:{prefersBorder:false,csp:{connectDomains:[],resourceDomains:[]}},"openai/ui":{preferredDisplayMode:"fullscreen",availableDisplayModes:["inline","fullscreen"]}}}]});
   if(message.method==="tools/call"){
     try{return ok(callTool(params.name,params.arguments||{}));}
     catch(error){const code=/^[a-z0-9-]+$/.test(error.message)?error.message:"acquisition-operation-failed";return ok({isError:true,content:[{type:"text",text:code}]});}

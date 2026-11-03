@@ -45,7 +45,7 @@ Do not infer evidence quality from file names, words such as “sì”, or answe
 counted as complete. “Non lo so”, “Da verificare” and unasked questions stay unknown.
 Preserve conflicting answers and ask for an example from the disputed period.
 
-For offline collection, `form` writes a standalone HTML page. Use
+For offline collection, `form` writes a versioned Markdown questionnaire. Use
 `form --questions <model-authored-json>` for a short contextual question set;
 each question has `id`, `question` and `criterion_ids`. The catalog is a library,
 not mandatory intake. The page embeds its font and uses no remote assets,
@@ -62,7 +62,7 @@ start a different practice. A corrected transcript can be an attributed answer
 with mode `reviewed_transcript`; keep the original audio/transcript as separate
 receipted evidence, with uncertain speakers and passages explicitly unresolved.
 
-Audio capture is not built into this offline page or native helper. Do not start
+Audio capture is not built into this questionnaire or native helper. Do not start
 recording or upload. If the user chooses voice, verify the actual host/Clara
 capture capability, authentication, consent and data destination before using
 that separate route. Without those, offer text or the offline form. Do not claim

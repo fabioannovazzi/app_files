@@ -1,11 +1,9 @@
 {
   "schema_version": 1,
-  "transport": "loopback_http",
-  "entrypoint": "scripts/run_treasury.py",
-  "server": "scripts/treasury_server.py",
+  "transport": "native_mcp_app",
+  "entrypoint": "vera_open_review",
   "persistence": "scripts/treasury_session.py",
-  "review_asset": "assets/review.html",
   "state_artifact": "treasury_session.json",
-  "reason": "Treasury dates must recalculate exact daily cash and create a new immutable forecast version. The local server uses the same source-bound session engine as the CLI.",
-  "validation": "tests/plugins/test_treasury_delivery.py covers HTTP writes, state reopening, stale-source rejection and artifact readback."
+  "reason": "The native Treasury editor uses the same source-bound persistent session and exact-version decisions.",
+  "validation": "Native workspace treasury tests cover review, reopening, source changes and retained artifacts."
 }

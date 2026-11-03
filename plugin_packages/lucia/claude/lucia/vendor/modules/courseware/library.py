@@ -20,7 +20,7 @@ import tempfile
 from http.client import HTTPException
 from pathlib import Path
 from typing import Any
-from urllib.error import URLError
+from urllib.error import HTTPError, URLError
 from urllib.parse import quote, unquote, urlsplit
 from urllib.request import HTTPRedirectHandler, build_opener
 
@@ -185,11 +185,30 @@ def _download_attachment(url: str, target: Path, expected: str) -> None:
                     "Downloaded lesson attachment failed its SHA-256 check"
                 )
             temporary.replace(target)
-    except (OSError, URLError, HTTPException) as exc:
+    except HTTPError as exc:
         raise CourseError(
-            "Lesson files come from mparanza.com. Check the network connection; "
+            f"Lesson download from mparanza.com failed: HTTP {exc.code} "
+            f"for {Path(urlsplit(url).path).name}. Retry the same course folder; "
+            "if it persists, report this HTTP status."
+        ) from exc
+    except URLError as exc:
+        reason = exc.reason
+        raise CourseError(
+            "Lesson download from mparanza.com failed: "
+            f"{type(reason).__name__}: {reason}. Check the host's network access; "
             "in Cowork, allow mparanza.com under Settings → Capabilities "
-            "(network egress), then retry."
+            "(network egress), then retry the same course folder."
+        ) from exc
+    except OSError as exc:
+        raise CourseError(
+            "Lesson file transfer or local save failed: "
+            f"{type(exc).__name__}: {exc.strerror or str(exc)}. "
+            "Check the reported connection or filesystem error before retrying."
+        ) from exc
+    except HTTPException as exc:
+        raise CourseError(
+            f"Lesson server response failed: {type(exc).__name__}: {exc}. "
+            "Retry the same course folder."
         ) from exc
     finally:
         if temporary is not None:
@@ -681,6 +700,42 @@ class CourseLibrary:
         ):
             raise CourseError("Use a fresh course directory; preserve existing work")
         verify_course_access([destination])
+        # Publish only after previews, instructions and provenance all succeed.
+        # A missing renderer dependency must not strand downloaded course files.
+        with tempfile.TemporaryDirectory(
+            prefix=".course-render-", dir=destination.parent
+        ) as pending:
+            staged = Path(pending) / "kit"
+            staged.mkdir()
+            try:
+                receipt = self._render_prepared(
+                    course, workflow, language, staged, destination
+                )
+            except ImportError as exc:
+                raise CourseError(
+                    f"Course rendering dependency unavailable: {exc.name}. "
+                    "Use the product's managed Python runtime and retry "
+                    "the same course folder."
+                ) from exc
+            # rmdir refuses concurrent/user-created content. The subsequent rename
+            # publishes the whole kit, on the same filesystem, on Windows too.
+            destination.rmdir()
+            try:
+                staged.rename(destination)
+            except OSError:
+                destination.mkdir(exist_ok=True)
+                raise
+        return receipt
+
+    def _render_prepared(
+        self,
+        course: dict[str, Any],
+        workflow: str,
+        language: str,
+        destination: Path,
+        published: Path,
+    ) -> dict[str, Any]:
+        """Build privately; saved handoffs refer to the final published folder."""
         source_dir = (self.assets / self.index["courses"][workflow]["path"]).parent
         # Complete all network work before exposing any prepared lesson files.
         # A blocked download leaves an empty destination that can be retried.
@@ -803,10 +858,10 @@ class CourseLibrary:
             "skill": str(self.root / "skills" / ("mparanza-" + workflow) / "SKILL.md"),
             "request": copy["request"],
             "source_files": [
-                str(destination / f["path"]) for f in files if f["role"] == "source"
+                str(published / f["path"]) for f in files if f["role"] == "source"
             ],
             "practice_files": [
-                str(destination / f["path"]) for f in files if f["role"] == "practice"
+                str(published / f["path"]) for f in files if f["role"] == "practice"
             ],
             "execution": course["execution"],
             "steps": copy["steps"],
@@ -829,11 +884,11 @@ class CourseLibrary:
             "prepared_material_only": True,
             "execution_receipt": False,
             "understanding_confirmed": False,
-            "course": str(destination / "course.html"),
-            "execution_request": str(destination / "execution-request.json"),
+            "course": str(published / "course.html"),
+            "execution_request": str(published / "execution-request.json"),
             "source_files": execution["source_files"],
             "practice_files": execution["practice_files"],
-            "teacher": str(destination / "teacher.md"),
+            "teacher": str(published / "teacher.md"),
             "sources": course["sources"],
             "prepared_artifacts": [
                 {

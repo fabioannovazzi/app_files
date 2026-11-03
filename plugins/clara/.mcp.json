@@ -3,10 +3,10 @@
     "clara": {
       "title": "Clara",
       "description": "Clara tools. Each specialist starts only when one of its tools is used.",
-      "cwd": ".",
+      "cwd": "${PLUGIN_ROOT}",
       "command": "node",
       "args": [
-        "./scripts/on_demand_mcp.cjs"
+        "${PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"
       ]
     }
   }

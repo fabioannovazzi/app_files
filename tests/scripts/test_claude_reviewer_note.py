@@ -70,13 +70,6 @@ def test_packaged_reviewer_note_names_existing_token_files(product: str) -> None
     [
         ("lucia", "apertura-pratica", "apertura-pratica-review-widget.html"),
         ("lucia", "apertura-pratica", "apertura-pratica-review.html"),
-        ("vera", "archive-organization", "archive-organization-review-widget.html"),
-        ("vera", "new-client", "new-client-review-widget.html"),
-        (
-            "vera",
-            "open-item-reconciliation",
-            "open-item-reconciliation-review-widget.html",
-        ),
     ],
 )
 def test_cowork_archive_contains_readable_offline_review_assets(
@@ -91,6 +84,17 @@ def test_cowork_archive_contains_readable_offline_review_assets(
     assert max(map(len, html.splitlines())) <= 2000
     assert "@font-face" not in html
     assert "data:font/" not in html
+
+
+def test_vera_cowork_retires_editors_and_retains_native_review_shells() -> None:
+    from scripts.vera_ui_retirement import APP_HTML, RETIRED_HTML
+
+    root = Path(__file__).resolve().parents[2]
+    with ZipFile(root / "plugin_packages/vera/vera-claude-plugin.zip") as archive:
+        names = set(archive.namelist())
+        assert not RETIRED_HTML.intersection(names)
+        assert {name for name in names if name.endswith(".html")} == APP_HTML
+        assert "modules/open-item-reconciliation/scripts/review_server.py" in names
 
 
 def test_reviewer_note_rejects_undescribed_remote_server() -> None:

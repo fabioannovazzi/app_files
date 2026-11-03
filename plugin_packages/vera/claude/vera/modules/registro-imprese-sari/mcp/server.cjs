@@ -315,26 +315,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "registro_imprese_sari_review_widget",
-      title: "Revisione Registro Imprese e SARI",
-      description: "Superficie interattiva per la revisione professionale della pratica.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetMeta(),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown widget resource: ${uri}`);
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "registro-imprese-sari-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function requireText(value, field, maxLength = MAX_TEXT_LENGTH) {
   if (typeof value !== "string" || !value.trim()) {

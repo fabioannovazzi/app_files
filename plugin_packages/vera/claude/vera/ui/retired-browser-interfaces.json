@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "removed_paths": [
+    "modules/archive-organization/assets/archive-organization-review-widget.html",
+    "modules/bilancio-xbrl-it/ui/workspace.css",
+    "modules/bilancio-xbrl-it/ui/workspace.html",
+    "modules/bilancio-xbrl-it/ui/workspace.js",
+    "modules/check-entries/assets/check-entries-review-widget.html",
+    "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+    "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
+    "modules/deep-research-validator/assets/deep-research-review-widget.html",
+    "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
+    "modules/journal-sampling/assets/journal-sampling-review-widget.html",
+    "modules/management-control-pack/scripts/preview_report.py",
+    "modules/new-client/assets/new-client-review-widget.html",
+    "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
+    "modules/previdenza-inps/assets/previdenza-inps-review-widget.html",
+    "modules/prompt-optimizer/assets/legal-tax-model.html",
+    "modules/prompt-optimizer/assets/prompt-optimizer-review-widget.html",
+    "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
+    "modules/report-builder/assets/report-builder-review-widget.html",
+    "modules/variance-analysis/assets/variance-analysis-review-widget.html",
+    "ui/course-chat.html"
+  ],
+  "review_engine_only": "Python payload and decision engines retained without browser/HTTP launchers"
+}

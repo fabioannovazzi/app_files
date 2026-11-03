@@ -71,7 +71,6 @@ class NativeStudioWork:
             "ui/studio-work.js",
             "ui/studio-work.html",
             "ui/studio-work.css",
-            "ui/workspace.css",
             "ui/custom_select.js",
             "ui/InstrumentSans-Regular.ttf",
             "ui/InstrumentSans-SemiBold.ttf",

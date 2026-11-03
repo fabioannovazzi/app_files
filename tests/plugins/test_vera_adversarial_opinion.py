@@ -614,7 +614,7 @@ def test_packaged_shared_opinion_reopens_completed_run(
 def test_lucia_and_vera_package_the_identical_opinion_component(
     archive_suffix: str,
 ) -> None:
-    """Sharing means identical helper and method bytes, including Cowork projection."""
+    """Opinion helpers and methods stay identical across product UI projections."""
 
     def component(product: str) -> dict[str, bytes]:
         with ZipFile(
@@ -623,13 +623,34 @@ def test_lucia_and_vera_package_the_identical_opinion_component(
             return {
                 name.split("modules/deep-research-validator/", 1)[1]: archive.read(name)
                 for name in archive.namelist()
-                if "modules/deep-research-validator/" in name
+                if "modules/deep-research-validator/" in name and not name.endswith("/")
             }
 
     vera = component("vera")
     lucia = component("lucia")
 
-    assert vera == lucia
+    if archive_suffix == "claude-plugin":
+        assert vera == lucia
+    else:
+        # Lucia retains its independent editor; Vera routes review through its
+        # native workspace. Only these transport files may differ.
+        widget = "assets/deep-research-review-widget.html"
+        transport = {
+            "mcp/server.cjs",
+            "scripts/review_server.py",
+            "skills/deep-research/SKILL.md",
+            "skills/legal-tax-answer-review/SKILL.md",
+        }
+        assert set(lucia) - set(vera) == {widget}
+        assert not set(vera) - set(lucia)
+        assert {name for name in vera if vera[name] != lucia[name]} == transport
+        assert {name: data for name, data in vera.items() if name not in transport} == {
+            name: data
+            for name, data in lucia.items()
+            if name not in transport | {widget}
+        }
+        assert b"serve_forever" not in vera["scripts/review_server.py"]
+        assert b"vera_open_review" in vera["skills/legal-tax-answer-review/SKILL.md"]
     assert "scripts/adversarial_opinion.py" in lucia
     prefix = "mparanza-" if archive_suffix == "claude-plugin" else ""
     assert f"skills/{prefix}adversarial-opinion/SKILL.md" in lucia

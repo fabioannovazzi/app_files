@@ -1355,7 +1355,7 @@ def test_projected_vera_upload_keeps_legal_tax_model_helper(tmp_path: Path) -> N
             target.write_bytes(content)
     root = tmp_path / prefix
     assert (root / "scripts/model_policy.py").is_file()
-    assert (root / "assets/legal-tax-model.html").is_file()
+    assert not (root / "assets/legal-tax-model.html").exists()
     tools = _projected_review_tools(_bundled_node_or_skip(), root / "mcp/server.cjs")
     assert {"check_legal_tax_model", "confirm_legal_tax_model"} <= tools
 

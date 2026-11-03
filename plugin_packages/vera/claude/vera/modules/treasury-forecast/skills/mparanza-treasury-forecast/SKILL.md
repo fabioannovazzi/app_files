@@ -190,7 +190,7 @@ and version persistence. The model owns semantic review of supplied assumptions.
 Reserve extra approval for external, destructive, approval-sensitive or material
 steps; normal local preparation and recalculation proceed within the request.
 Professional acceptance is a material decision on the exact displayed proposal.
-The local server stores treasury_session.json and final_artifacts.json; the
+The native review engine stores treasury_session.json and final_artifacts.json; the
 session's immutable forecast versions contain the actual decisions it consumes.
 
 ## Eligibility and intake
@@ -257,15 +257,14 @@ workflow. An available later downloader can supply the same extracted XML files.
 
 ```bash
 python scripts/run_treasury.py prepare --client-engagement <portable-context> --manifest <run-inputs/manifest.json>
-python scripts/run_treasury.py serve --client-engagement <portable-context>
 ```
 
-Open the printed loopback review URL. The page must let the professional save
-dates and their basis, recalculate, reopen and accept the displayed forecast.
+Open the exact saved work with `vera_open_review`. Use the native Treasury
+editor to inspect dates, basis and the displayed forecast.
 Do not ask merely whether to show the normal review. Missing dates keep the
 forecast incomplete; source and reconciliation failures cannot be waived.
 
-When a browser server is unavailable, collect the same decisions in chat and
+For an explicit decision collected in chat,
 write a local review request in the output directory:
 
 ```bash
@@ -321,4 +320,4 @@ is no automatic anonymization or local-only guarantee.
 
 Declare every physical output including retained versions with `finalize_studio_client_workflow`, and
 complete the archive run only after the exact output inventory is reviewed.
-Stop the review server before finalizing a run. A later update uses a new run.
+A later update uses a new run.

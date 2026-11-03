@@ -1118,6 +1118,7 @@ def project_claude_manifest(
 
 
 def _project_plugin_path(value: str) -> str:
+    value = value.replace("${PLUGIN_ROOT}", "${CLAUDE_PLUGIN_ROOT}")
     if value == ".":
         return "${CLAUDE_PLUGIN_ROOT}"
     if value.startswith("./"):
@@ -1703,6 +1704,18 @@ def _project_journal_sampling_cowork_skill(text: str) -> str:
 
 
 def _project_client_file_preparation_cowork_skill(text: str) -> str:
+    if "Native MCP owns validation and decision persistence." in text:
+        if text.count("If the native MCP review is unavailable,") != 1:
+            raise ValueError("Client file preparation native fallback is missing")
+        return text.replace(
+            "Native MCP owns validation and decision persistence.",
+            "When callable, native MCP provides validation and decision persistence.",
+            1,
+        ).replace(
+            "If the native MCP review is unavailable,",
+            "In Cowork, if the optional native MCP review is unavailable,",
+            1,
+        )
     text = text.replace(
         "The\n   MCP server owns validation, HTML widget rendering, and decision "
         "persistence;",
@@ -1745,6 +1758,19 @@ def _project_client_file_preparation_cowork_skill(text: str) -> str:
 
 def _project_new_client_cowork_skill(text: str) -> str:
     text = text.replace("`plugins/new-client`", "`modules/new-client`")
+    if "If the native MCP review is unavailable," in text:
+        if (
+            text.count(
+                "A conversational approval is not an applied professional review."
+            )
+            != 1
+        ):
+            raise ValueError("New Client native pending-review safeguard is missing")
+        return text.replace(
+            "If the native MCP review is unavailable,",
+            "In Cowork, if the optional native MCP review is unavailable,",
+            1,
+        )
     return _sub_required(
         text,
         r"(?ms)^If the host MCP tools are unavailable, start the packaged local "

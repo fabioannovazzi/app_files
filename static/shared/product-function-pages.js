@@ -2962,6 +2962,7 @@ window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
   "publicExampleHref": "../courses/vera/agenzia-acquisition/it/course.html",
   "copy": {
     "it": {
+      "detailSections": [{"id": "acube", "label": "A-Cube", "title": "Collega un servizio", "intro": "La verifica locale trova gli strumenti. La lettura delle fatture verifica l’accesso al servizio. In sandbox su Mac abbiamo salvato cinque XML di acquisto e cinque di vendita. Per clienti reali servono attivazione, autorizzazioni e condizioni economiche di A-Cube; lo scarico in produzione resta da verificare.", "evidence": {"href": "../vera-integrazioni/services/index.html?lang=it", "label": "Collega un servizio →"}}],
       "name": "Acquisizione Agenzia delle Entrate",
       "summary": "Acquisisce fatture, corrispettivi e dati trimestrali dei bolli per i clienti delegati selezionati. Conserva originali e riepiloghi locali, segnala le parti incomplete e riprende verificando i file già acquisiti.",
       "useWhen": "Per recuperare documenti da Fatture e Corrispettivi per uno o più clienti e prepararli al controllo o all’importazione nel gestionale.",
@@ -2980,6 +2981,7 @@ window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
       "modelDataStatus": "relevant"
     },
     "en": {
+      "detailSections": [{"id": "acube", "label": "A-Cube", "title": "Connect a service", "intro": "Local discovery checks the tools. An invoice lookup tests provider access. On a Mac, the sandbox run archived five purchase and five sales XMLs. Live clients need A-Cube activation, authorization and commercial terms. Production retrieval remains unverified.", "evidence": {"href": "../vera-integrazioni/services/index.html?lang=en", "label": "Connect a service →"}}],
       "name": "Agenzia delle Entrate acquisition",
       "summary": "Acquires invoices, cash-receipt submissions and quarterly stamp-duty evidence for selected delegated clients. Keeps originals and summaries locally, identifies incomplete work and verifies retained files before resuming.",
       "useWhen": "To retrieve documents from Italy’s Fatture e Corrispettivi portal for one or more clients before review or import into accounting software.",
@@ -2998,6 +3000,7 @@ window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
       "modelDataStatus": "relevant"
     },
     "fr": {
+      "detailSections": [{"id": "acube", "label": "A-Cube", "title": "Connecter un service", "intro": "La détection locale vérifie les outils. Une lecture vérifie l’accès au service. Sur Mac, la sandbox a fourni cinq XML d’achat et cinq de vente archivés. La production nécessite activation, autorisation et tarification A-Cube. Le téléchargement en production reste à vérifier.", "evidence": {"href": "../vera-integrazioni/services/index.html?lang=fr", "label": "Connecter un service →"}}],
       "name": "Acquisition Agenzia delle Entrate",
       "summary": "Récupère les factures, les transmissions de recettes et les données trimestrielles du droit de timbre des clients mandatés sélectionnés. Conserve les originaux localement, signale les travaux incomplets et vérifie les fichiers avant une reprise.",
       "useWhen": "Pour récupérer des documents du portail italien Fatture e Corrispettivi avant leur contrôle ou leur importation dans le logiciel comptable.",
@@ -3016,6 +3019,7 @@ window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
       "modelDataStatus": "relevant"
     },
     "de": {
+      "detailSections": [{"id": "acube", "label": "A-Cube", "title": "Einen Dienst verbinden", "intro": "Die lokale Prüfung findet die Werkzeuge. Ein Lesezugriff prüft den Dienstzugang. Auf dem Mac wurden fünf Einkaufs- und fünf Verkaufsrechnungen als XML archiviert. Produktivbetrieb erfordert Freischaltung, Berechtigung und A-Cubes Konditionen. Ein Produktivabruf wurde noch nicht getestet.", "evidence": {"href": "../vera-integrazioni/services/index.html?lang=de", "label": "Einen Dienst verbinden →"}}],
       "name": "Agenzia delle Entrate: Daten abrufen",
       "summary": "Ruft Rechnungen, Kassenmeldungen und vierteljährliche Stempelsteuerdaten ausgewählter bevollmächtigter Mandanten ab. Bewahrt Originale lokal auf, kennzeichnet unvollständige Arbeit und prüft vorhandene Dateien vor der Wiederaufnahme.",
       "useWhen": "Um Dokumente aus dem italienischen Portal Fatture e Corrispettivi für Prüfung oder Import in die Buchhaltung abzurufen.",
@@ -3034,6 +3038,7 @@ window.MPARANZA_FUNCTION_PAGES["agenzia-acquisition"] = {
       "modelDataStatus": "relevant"
     },
     "es": {
+      "detailSections": [{"id": "acube", "label": "A-Cube", "title": "Conectar un servicio", "intro": "La detección local comprueba las herramientas. Una consulta verifica el acceso al proveedor. En Mac se archivaron cinco XML de compras y cinco de ventas de la sandbox. En producción se requieren activación, autorizaciones y tarifas de A-Cube. La descarga en producción sigue sin verificarse.", "evidence": {"href": "../vera-integrazioni/services/index.html?lang=es", "label": "Conectar un servicio →"}}],
       "name": "Adquisición Agenzia delle Entrate",
       "summary": "Obtiene facturas, envíos de cobros y datos trimestrales del impuesto de timbre para los clientes autorizados seleccionados. Conserva originales localmente, señala trabajo incompleto y verifica archivos antes de reanudar.",
       "useWhen": "Para recuperar documentos del portal italiano Fatture e Corrispettivi antes de revisarlos o importarlos al programa contable.",

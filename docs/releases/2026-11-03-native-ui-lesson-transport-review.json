@@ -1,0 +1,265 @@
+{
+  "schema": "mparanza.native_ui_lesson_transport_review.v1",
+  "reviewer": "Codex /root — bounded native transport and lesson review",
+  "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+  "baseline_commit": "661163090fae04047266bb0f4eca2c107eb9ef51",
+  "native_tests": {
+    "junit_sha256": "cfb6866cb3aa3463d571b463511e643a4035176a542540af2371808c43765345",
+    "tests": 26,
+    "failures": 0
+  },
+  "limits": "Review of authored transport instructions, source deltas and actual synthetic native artifacts. No learner, voice, professional, current Desktop iframe or Marketplace acceptance is claimed. All unrelated editorial and historical reviews remain retained. Final CI must execute these exact compiled course hashes.",
+  "kits": [
+    {
+      "product": "vera",
+      "workflow": "adeguati-assetti",
+      "course_sha256": "bfe2c79383af209165f6a2321580a1bb60319776361c595dd38ef0b85d50d674",
+      "changed_top_level_fields": [
+        "locales",
+        "sources",
+        "files"
+      ],
+      "judgment": "Reviewed all five localized changed lesson steps and privacy repetitions plus their construction chapter. They now open versioned local Markdown, preserve original answers and predecessor ancestry, and accurately say that returning selected files to chat exposes those data to the chosen host model. The browser form/export instruction and its obsolete transport statement are removed. Questions, fictional facts, professional review/adoption gates, cases, financial lab, pacing and next actions remain unchanged.",
+      "artifacts": [
+        {
+          "language": "it",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "visita-31a1861edc82f77ca9a0ad1da9670f4505f6ded5b27f40908a58063c7683784b.md",
+              "sha256": "31a1861edc82f77ca9a0ad1da9670f4505f6ded5b27f40908a58063c7683784b"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "8d3cb957ea7a3eb8c1253a2d384da5b2806dd5e693d46c099315faa4a5a62699"
+            }
+          ]
+        },
+        {
+          "language": "it",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "visita-00eaa7a19b3e395562f93d5e542166a105e1f23cfc5004cec47d2f58fbe33e00.md",
+              "sha256": "00eaa7a19b3e395562f93d5e542166a105e1f23cfc5004cec47d2f58fbe33e00"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "8d3cb957ea7a3eb8c1253a2d384da5b2806dd5e693d46c099315faa4a5a62699"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "visita-3238416b23cdb84610d916e3dd4ce71e9cbbbb6d86fe39843846f35820b1278d.md",
+              "sha256": "3238416b23cdb84610d916e3dd4ce71e9cbbbb6d86fe39843846f35820b1278d"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "744cdbd12050aa6f3801135b17119769aa65848e4356a6818e04f7b9529a697c"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "visita-3600e3162970f0ffb1f2edcaeda9f9164f6481125ac73f92b40b1619bb6ed1fa.md",
+              "sha256": "3600e3162970f0ffb1f2edcaeda9f9164f6481125ac73f92b40b1619bb6ed1fa"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "744cdbd12050aa6f3801135b17119769aa65848e4356a6818e04f7b9529a697c"
+            }
+          ]
+        },
+        {
+          "language": "fr",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "visita-9c996e9469719cb9692382f1ba0b27dd30c6642561a98bd573755a2a19bbd3ac.md",
+              "sha256": "9c996e9469719cb9692382f1ba0b27dd30c6642561a98bd573755a2a19bbd3ac"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "a6fb1ab0517422498db4222aa0a2a459987c673c58f71f37686464c95e8789e5"
+            }
+          ]
+        },
+        {
+          "language": "fr",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "visita-4cf1884f6520291f46ee37793a76bdfc8493a77539a9d9f5a94f0d8d64681cef.md",
+              "sha256": "4cf1884f6520291f46ee37793a76bdfc8493a77539a9d9f5a94f0d8d64681cef"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "a6fb1ab0517422498db4222aa0a2a459987c673c58f71f37686464c95e8789e5"
+            }
+          ]
+        },
+        {
+          "language": "de",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "visita-692ae8965430f5c58e2cbff2f0ee87442ab55bd1fe9b522a6d7e187e16397eb4.md",
+              "sha256": "692ae8965430f5c58e2cbff2f0ee87442ab55bd1fe9b522a6d7e187e16397eb4"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "32c28b9787c095072d6394a7eb39eef7a7afd501276c619824d86333a56606f6"
+            }
+          ]
+        },
+        {
+          "language": "de",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "visita-f9acac448c8d757e6c7bfe083623cde16bb2ae543dd7b69db517f0360da0d460.md",
+              "sha256": "f9acac448c8d757e6c7bfe083623cde16bb2ae543dd7b69db517f0360da0d460"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "e3ac344575b0ff4eed6698a281023874dd9f6d9004c2c499a22a85135c101b0f"
+            }
+          ]
+        },
+        {
+          "language": "es",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "visita-ddc34d7992c6b4c293d1677e1310772c5eca5a2801679e2b49b6e03cc1356b32.md",
+              "sha256": "ddc34d7992c6b4c293d1677e1310772c5eca5a2801679e2b49b6e03cc1356b32"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "acec1e2e978d81724fb09e44eb24b0ccf87fd8a8b2868d26627dc1bbd82a26fe"
+            }
+          ]
+        },
+        {
+          "language": "es",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "visita-7de1f73d267284651c86ff8ebcbb26e501a624a6f74a27b4c7d4031d9843eebb.md",
+              "sha256": "7de1f73d267284651c86ff8ebcbb26e501a624a6f74a27b4c7d4031d9843eebb"
+            },
+            {
+              "name": "manuale.md",
+              "sha256": "bba519b3e350ea3bd983d0ffa356119818946ae656ff4b4927df3c8810c0a977"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "treasury-forecast",
+      "course_sha256": "0da028e38f0beb5a31128eb83ff0c0221a57627b42be63f3850ce463b760a7b4",
+      "changed_top_level_fields": [
+        "sources"
+      ],
+      "judgment": "Complete authored course payload excluding source inventory is identical to the reviewed main baseline. The removed localhost editor is replaced by the existing native workspace; ordinary report files, receipts, calculations, review requirements and requested exercises remain unchanged. Management report preview preserves exact receipt verification and is app-only; actual Desktop iframe/month-control acceptance remains separate.",
+      "artifacts": [
+        {
+          "language": "it",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "report.md",
+              "sha256": "2f720f5ea25d34d185e8a1ae62c614dd12f23aea364736167c68dce7e2f9b8b9"
+            }
+          ]
+        },
+        {
+          "language": "it",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "report.md",
+              "sha256": "4d4b37dfdcaeb13ff5d91c3b0ea541e1883d0cae86c131d298023a5d16b00b1e"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "management-control-pack",
+      "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
+      "changed_top_level_fields": [
+        "sources"
+      ],
+      "judgment": "Complete authored course payload excluding source inventory is identical to the reviewed main baseline. The removed localhost editor is replaced by the existing native workspace; ordinary report files, receipts, calculations, review requirements and requested exercises remain unchanged. Management report preview preserves exact receipt verification and is app-only; actual Desktop iframe/month-control acceptance remains separate.",
+      "artifacts": [
+        {
+          "language": "it",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+            },
+            {
+              "name": "management_control_dashboard_reviewed.html",
+              "sha256": "5a6f747207c67a0ef727be92b2b99799caef7c89beaeadb90f8cc99e075ebb91"
+            }
+          ]
+        },
+        {
+          "language": "it",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+            },
+            {
+              "name": "management_control_dashboard_reviewed.html",
+              "sha256": "5a6f747207c67a0ef727be92b2b99799caef7c89beaeadb90f8cc99e075ebb91"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "phase": "demo",
+          "files": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "4a1067cf1a21597e1639fa0d9479d5538ea2bad546d3c3f416bd9dcac06a7c57"
+            },
+            {
+              "name": "management_control_dashboard_reviewed.html",
+              "sha256": "c7be9de3b2047b29162ce0e7b7765dd4df6c90610fe13b461ee27182c5015309"
+            }
+          ]
+        },
+        {
+          "language": "en",
+          "phase": "practice",
+          "files": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "cff49767525b5f7bf0071cffab8bc530d904a5267790a70c3f689b01d1054250"
+            },
+            {
+              "name": "management_control_dashboard_reviewed.html",
+              "sha256": "12df1f1e70bf3d18808a97a47c1cd0433f06eaf6f093317ba2a21c8dc60ea5f1"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

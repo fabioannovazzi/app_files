@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.build_claude_plugin_zip import project_claude_mcp
 from scripts.build_product_mcp_catalog import add_product_mcp_catalog
 
 __all__: list[str] = []
@@ -383,3 +384,30 @@ def test_cold_service_initialization_can_exceed_ten_seconds(installation):
 
     assert response["result"]["structuredContent"]["name"] == "alpha"
     assert (installation.parent / "starts").read_text().count("alpha:") == 1
+
+
+def test_app_entry_initializes_outside_plugin_directory(
+    installation: Path, tmp_path: Path
+):
+    product = json.loads((installation / "mcp-catalog.json").read_text())["product"]
+    content = (ROOT / "plugins" / product / ".mcp.json").read_bytes()
+    config = json.loads(content)["mcpServers"][product]
+    assert config["cwd"] == "${PLUGIN_ROOT}"
+    assert config["args"] == ["${PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"]
+    node = shutil.which(config["command"])
+    assert node is not None
+    result = subprocess.run(
+        [node, config["args"][0].replace("${PLUGIN_ROOT}", str(installation))],
+        cwd=tmp_path,
+        input=json.dumps(
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}
+        )
+        + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    assert json.loads(result.stdout)["result"]["serverInfo"]["name"] == product
+    cowork = json.loads(project_claude_mcp(content))["mcpServers"][product]
+    assert cowork["args"] == ["${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"]

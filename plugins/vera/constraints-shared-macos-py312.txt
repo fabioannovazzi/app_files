@@ -27,7 +27,8 @@ colorcet==3.2.1
 colorlog==6.12.0
 contourpy==1.3.3
 crc32c==2.9
-cryptography==50.0.1
+cryptography==48.0.1 ; sys_platform == "darwin" and platform_machine == "x86_64"
+cryptography==50.0.1 ; sys_platform != "darwin" or platform_machine != "x86_64"
 cssselect==1.5.0
 cssutils==2.15.0
 cycler==0.12.1

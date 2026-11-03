@@ -126,6 +126,13 @@
     "scope": "Adds bank-side text-PDF source-reference recovery, independent bank controls and separate incident histories. Preserves all existing Geneva dispositions. Synthetic bank fixtures do not establish acceptance on Swiss or customer statements.",
     "source_version": "0.1.426"
   },
+  "bank_preparation_reporting_binding_20261101": {
+    "changed_entrypoints": [],
+    "current_catalogue_fingerprint": "743542caeefba461e4587e2762a269b37eee7e80f9325f81f45018e4b9389b4a",
+    "prior_catalogue_fingerprint": "8921a57c78627ba97d2b63a6b11a96c16e41e0048f221b5886b88a65b0f057cc",
+    "scope": "Only the canonical product manifest/version binding changes; all 55 function IDs and skill entrypoint hashes are identical. Existing Geneva dispositions and acceptance limits are preserved. Local preparation now distinguishes automatic privacy reports from prior accounting outputs; source regressions do not establish installed-host or Geneva professional acceptance.",
+    "version": "0.1.530"
+  },
   "baseline": {
     "publication_status": "Marketplace publication excluded by user",
     "repository_base_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
@@ -155,11 +162,17 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "60b9979bd5fbecf5f9a27fd5454056b0174392327714f119f8d8d1ed8139859d",
+  "catalogue_fingerprint": "26b1fd98097a4bff50db307c02b894b388c06ffa3b617a2bff3c535ad0b220ab",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
     "source_version": "0.1.286"
+  },
+  "clara_lucia_neutral_ui_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
+    "reviewed_at": "2026-10-29",
+    "scope": "Canonical manifest patch version and shared workflow presentation metadata only. All55 exact skill entrypoint IDs and bytes match the preceding release; all jurisdiction assessment rows are unchanged. No new Geneva, installed-host or professional acceptance is asserted.",
+    "version": "0.1.524"
   },
   "claude_directory_review_release_binding": {
     "date": "2026-10-17",
@@ -167,6 +180,11 @@
     "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
     "scope": "Canonical version binding refreshed; all 55 skill entrypoint hashes match the recorded snapshot. Existing jurisdiction judgments are retained. Reviewer notes and local helper environment filtering add no jurisdiction or host acceptance claim. Main PR #849 is integrated with its release evidence retained; skill hashes remain unchanged.",
     "version": "0.1.403"
+  },
+  "claude_listing_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
+    "scope": "Manifest version and Claude listing metadata only. Exact skill entrypoint bytes are unchanged; existing jurisdiction judgments retained.",
+    "version": "0.1.522"
   },
   "claude_skill_namespace_release_binding": {
     "date": "2026-10-14",
@@ -204,6 +222,14 @@
     "previous_catalogue_fingerprint": "40236e69b0f5b0b865ce44d57ea8a86f15b13b2f8a5ecd7fd31fdf51ec2588b3",
     "scope": "Combine the accepted reconciliation and verified runtime repairs with the on-demand transport from main. All 55 Vera skill entrypoint bytes and prior jurisdiction judgments are unchanged; no new jurisdiction acceptance is claimed.",
     "version": "0.1.509"
+  },
+  "compact_review_controls_release_binding_20261102": {
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "previous_catalogue_fingerprint": "d98026af04f8103ff6d7fd16dc4149c36a33d763a72c6f858025de55faa2a828",
+    "scope": "Source binding for compact native review controls and reopening the retained bank panel without recalculation. Existing jurisdiction judgments and assessment rows are unchanged; no installed-host or Geneva professional acceptance is claimed.",
+    "version": "0.1.535"
   },
   "connected_studio_knowledge_fusione_integration": {
     "integrated_main": "5b1cc09afc599862d87a609648303073187b587e",
@@ -264,6 +290,11 @@
     "review": "Reviewed the optional host-connected studio knowledge consultation contract and its professional entrypoint gates. No function IDs, Geneva dispositions, jurisdiction qualification, calculations or professional acceptance limits change. Studio knowledge supplies cited task context only and cannot replace current primary legal verification. Studios independently invoke their own skills. Neither a repository nor Microsoft 365 is required. Source/package checks do not establish Nicola-host connector acceptance.",
     "reviewed_at": "2026-10-02",
     "version": "0.1.328"
+  },
+  "consolidated_ui_release_binding_20261103": {
+    "previous_catalogue_fingerprint": "40515ba9efda011ec284451997786308164adc9dd85ab5eee6fb7f1ed6cd8a66",
+    "reviewed_at": "2026-11-03",
+    "scope": "Canonical manifest/version binding only. All 55 function entrypoint identities and hashes are unchanged. Existing Geneva judgments and jurisdiction limitations are preserved."
   },
   "copied_mapping_metadata_release_binding_20261020": {
     "scope": "Release binding only. Component sealer recomputes copied monetary-candidate metadata; no jurisdiction disposition or professional acceptance is changed.",
@@ -374,6 +405,11 @@
     "previous_catalogue_fingerprint": "d2b3245cc089aa848c9d6b5b18ab7f513d0522766214b79761d55aa891248a50",
     "scope": "All 55 wrapper entrypoints and jurisdiction dispositions remain unchanged. The Journal-Bank component separates draft worker preparation from operational review clearance and directs fresh material replay through its managed entrypoints. No additional Swiss professional or installed-host acceptance is claimed.",
     "version": "0.1.447"
+  },
+  "durable_sampling_replay_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "2a6b07b3befe15f9ed99fc65ba9fadbfeb567d13f829b0d97d3b862c92ecfad4",
+    "scope": "Canonical version refresh to 0.1.527; all skill entrypoint IDs and bytes are unchanged. The shared runtime preserves indexed sampling code for historical read-only replay, and the underlying Vouching component places agent evidence review before comparison. Existing Geneva dispositions and acceptance limits are preserved; these source regressions do not establish Swiss professional or fresh installed-host acceptance.",
+    "version": "0.1.527"
   },
   "esg_combined_binding_20260930": {
     "scope": "Preserves every recorded assessment, including unresolved ESG, CNC, merger and synthetic transformation scopes; assetti construction is not qualified for CH-GE.",
@@ -554,6 +590,11 @@
     "scope": "Mechanical manifest/version binding refresh for the manual function-trial legend and reviewed teaching-source evidence. All function IDs and skill-entrypoint hashes match the 0.1.401 snapshot. Existing Geneva dispositions and limits are unchanged; no new jurisdiction, host, learner or professional acceptance is claimed.",
     "version": "0.1.402"
   },
+  "mcp_historical_path_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",
+    "scope": "Version-only catalogue refresh; all skill entrypoints are unchanged. MCP historical replay lookup now supports version-named host caches. Existing Geneva dispositions and acceptance limits remain unchanged; no installed-host or professional acceptance is claimed.",
+    "version": "0.1.528"
+  },
   "mcp_preservation_release_binding_20261025": {
     "previous_catalogue_fingerprint": "619be48d26e483354001b7caab3786bcd088cc8cfa68fb3f61441c65a99fad77",
     "scope": "Manifest version refresh only. All 55 skill entrypoint identities and bytes are unchanged from the recorded 0.1.490 catalogue. Existing jurisdiction assessments and acceptance limits are retained.",
@@ -647,11 +688,29 @@
     "scope": "Integrates pending Archive intake and reporting repairs with native Cowork and Antigravity bounded worker handoffs. Existing jurisdiction dispositions remain unchanged. Component probes and regressions do not resume or establish campaign acceptance.",
     "version": "0.1.472"
   },
+  "native_ui_retirement_release_binding_20261103": {
+    "previous_catalogue_fingerprint": "b54f894c50c1525378637fcce3fe29e6a6f7684e4df3c3defed2203fca4af3f8",
+    "scope": "Existing native review routes replace redundant browser transports. Management report preview moves into MCP and construction intake becomes versioned Markdown. No jurisdiction disposition, professional conclusion or Geneva capability is added; installed acceptance remains separate.",
+    "version": "0.1.554"
+  },
   "observed_vouching_release_binding_20261028": {
     "previous_catalogue_fingerprint": "912b740feb503631b9d85c7fa51f62b1985553649bdedb395304b4de1b7a816b",
     "reviewed_at": "2026-10-28",
     "scope": "The canonical product manifest advances to 0.1.521. Exact product skill entrypoint identities and bytes are unchanged from the 0.1.520 snapshot; underlying Vouching evidence handling is changed and regression-tested separately. Existing Geneva dispositions and professional acceptance limits are retained. No new Swiss client, jurisdiction, installed-session or professional acceptance is asserted.",
     "version": "0.1.521"
+  },
+  "opinion_evidence_release_binding_20261102": {
+    "changed_entrypoints": [
+      "adversarial-opinion",
+      "deep-research",
+      "legal-tax-answer-planner",
+      "legal-tax-answer-review",
+      "quesito-legale-fiscale",
+      "vera"
+    ],
+    "previous_catalogue_fingerprint": "a77c07a611a94b5ee4bcc6e7a9678d84b26a3150bd0e853f1e7bd791990dd1a7",
+    "scope": "Visible question and planned authorities before research, and claim-bound citations in delivered opinions. Catalogue coverage only; jurisdiction assessments and professional acceptance are unchanged.",
+    "version": "0.1.544"
   },
   "opinion_panel_removal_release_binding": {
     "changed_entrypoints": [
@@ -1963,6 +2022,12 @@
     "scope": "Manifest-only catalogue identity refresh; all skill entrypoint bytes and existing professional/jurisdiction findings are unchanged. Shared dependency locks and the scatter export legend correction establish no new Geneva capability.",
     "version": "0.1.437"
   },
+  "shared_ui_theme_release_binding_20261029": {
+    "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
+    "reviewed_at": "2026-10-29",
+    "scope": "Shared offline workflow CSS only. Exact skill entrypoints and existing jurisdiction judgments are unchanged. No new jurisdiction, installed-session or professional acceptance is asserted.",
+    "version": "0.1.523"
+  },
   "source_binding_update": {
     "date": "2026-10-14",
     "fresh_geneva_acceptance": false,
@@ -2253,6 +2318,12 @@
     "scope": "The general Vera entrypoint now identifies ordinary bounded semantic review through the existing authenticated worker as part of the requested task, retaining host controls. Shared reconciliation sources add exact-reference arithmetic drafts from declared payments with missing bank evidence explicit. Function IDs, professional purposes, jurisdiction dispositions and existing acceptance limits are unchanged. This release binding does not establish Geneva professional acceptance.",
     "version": "0.1.516"
   },
+  "test04_historical_replay_release_binding_20261029": {
+    "date": "2026-10-29",
+    "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
+    "scope": "Canonical manifest refresh for the historical read-only sampling replay and separate post-closure delivery measurement. All 55 skill entrypoints are byte-identical to the recorded catalogue. Existing jurisdiction judgments and professional acceptance limits are unchanged; source and synthetic checks do not establish Geneva or installed-host acceptance.",
+    "version": "0.1.525"
+  },
   "testing_status_release_binding": {
     "date": "2026-10-17",
     "previous_catalogue_fingerprint": "20c3266ee7159ace336b5a39ef500420ffcf4d0813ba0ec6c180de6943f5b0d4",
@@ -2302,6 +2373,34 @@
   "unicode_pdf_main_integration_20261018": {
     "scope": "All55 current-main skill entrypoint hashes and assessment rows retained. Updated product manifest binding only; no new Swiss professional or host acceptance.",
     "version": "0.1.416"
+  },
+  "unified_review_release_binding_20261102": {
+    "changed_entrypoints": [
+      "archive-organization",
+      "concordato-plan-review",
+      "financial-report-builder",
+      "journal-bank-reconciliation",
+      "journal-sampling",
+      "legal-tax-answer-planner",
+      "new-client",
+      "open-item-reconciliation",
+      "organizzazione-lavoro",
+      "previdenza-inps",
+      "registro-imprese-sari",
+      "treasury-forecast",
+      "variance-analysis",
+      "vera",
+      "vouching"
+    ],
+    "previous_catalogue_fingerprint": "f5920a2a4d7b063d18987e890651cf48c8ba0a71167a21fd76292b64353f68a5",
+    "scope": "Saved or chat-only review routing and the distinction between the Studio Archive directory and the agenda. All function IDs, Geneva assessments and jurisdiction limits are retained. No new professional qualification is asserted.",
+    "version": "0.1.540"
+  },
+  "unified_review_theme_release_binding_20261102": {
+    "changed_entrypoints": [],
+    "previous_catalogue_fingerprint": "719b6337ff0da2bf046e16928011835acabf1ca7bf7a4951f14389abbd35bfa3",
+    "scope": "The repository workspace stylesheet now matches the already packaged and verified stylesheet. No skill entrypoint or Geneva assessment changed.",
+    "version": "0.1.541"
   },
   "valuation_cnc_integration": {
     "reviewed_at": "2026-09-29T23:44:22.110465+00:00",
@@ -2425,94 +2524,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "claude_listing_release_binding_20261029": {
-    "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
-    "version": "0.1.522",
-    "scope": "Manifest version and Claude listing metadata only. Exact skill entrypoint bytes are unchanged; existing jurisdiction judgments retained."
-  },
-  "shared_ui_theme_release_binding_20261029": {
-    "version": "0.1.523",
-    "reviewed_at": "2026-10-29",
-    "previous_catalogue_fingerprint": "bcf6660d72baf31f2c81fc77425b580b28cb2a9778c457dbb8fa67aefb4bae06",
-    "scope": "Shared offline workflow CSS only. Exact skill entrypoints and existing jurisdiction judgments are unchanged. No new jurisdiction, installed-session or professional acceptance is asserted."
-  },
-  "test04_historical_replay_release_binding_20261029": {
-    "date": "2026-10-29",
-    "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
-    "scope": "Canonical manifest refresh for the historical read-only sampling replay and separate post-closure delivery measurement. All 55 skill entrypoints are byte-identical to the recorded catalogue. Existing jurisdiction judgments and professional acceptance limits are unchanged; source and synthetic checks do not establish Geneva or installed-host acceptance.",
-    "version": "0.1.525"
-  },
-  "clara_lucia_neutral_ui_release_binding_20261029": {
-    "version": "0.1.524",
-    "reviewed_at": "2026-10-29",
-    "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
-    "scope": "Canonical manifest patch version and shared workflow presentation metadata only. All55 exact skill entrypoint IDs and bytes match the preceding release; all jurisdiction assessment rows are unchanged. No new Geneva, installed-host or professional acceptance is asserted."
-  },
-  "durable_sampling_replay_release_binding_20261029": {
-    "previous_catalogue_fingerprint": "2a6b07b3befe15f9ed99fc65ba9fadbfeb567d13f829b0d97d3b862c92ecfad4",
-    "scope": "Canonical version refresh to 0.1.527; all skill entrypoint IDs and bytes are unchanged. The shared runtime preserves indexed sampling code for historical read-only replay, and the underlying Vouching component places agent evidence review before comparison. Existing Geneva dispositions and acceptance limits are preserved; these source regressions do not establish Swiss professional or fresh installed-host acceptance.",
-    "version": "0.1.527"
-  },
-  "mcp_historical_path_release_binding_20261029": {
-    "version": "0.1.528",
-    "previous_catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",
-    "scope": "Version-only catalogue refresh; all skill entrypoints are unchanged. MCP historical replay lookup now supports version-named host caches. Existing Geneva dispositions and acceptance limits remain unchanged; no installed-host or professional acceptance is claimed."
-  },
-  "bank_preparation_reporting_binding_20261101": {
-    "version": "0.1.530",
-    "prior_catalogue_fingerprint": "8921a57c78627ba97d2b63a6b11a96c16e41e0048f221b5886b88a65b0f057cc",
-    "current_catalogue_fingerprint": "743542caeefba461e4587e2762a269b37eee7e80f9325f81f45018e4b9389b4a",
-    "changed_entrypoints": [],
-    "scope": "Only the canonical product manifest/version binding changes; all 55 function IDs and skill entrypoint hashes are identical. Existing Geneva dispositions and acceptance limits are preserved. Local preparation now distinguishes automatic privacy reports from prior accounting outputs; source regressions do not establish installed-host or Geneva professional acceptance."
-  },
-  "compact_review_controls_release_binding_20261102": {
-    "changed_entrypoints": [
-      "journal-bank-reconciliation"
-    ],
-    "previous_catalogue_fingerprint": "d98026af04f8103ff6d7fd16dc4149c36a33d763a72c6f858025de55faa2a828",
-    "scope": "Source binding for compact native review controls and reopening the retained bank panel without recalculation. Existing jurisdiction judgments and assessment rows are unchanged; no installed-host or Geneva professional acceptance is claimed.",
-    "version": "0.1.535"
-  },
-  "unified_review_release_binding_20261102": {
-    "version": "0.1.540",
-    "previous_catalogue_fingerprint": "f5920a2a4d7b063d18987e890651cf48c8ba0a71167a21fd76292b64353f68a5",
-    "changed_entrypoints": [
-      "archive-organization",
-      "concordato-plan-review",
-      "financial-report-builder",
-      "journal-bank-reconciliation",
-      "journal-sampling",
-      "legal-tax-answer-planner",
-      "new-client",
-      "open-item-reconciliation",
-      "organizzazione-lavoro",
-      "previdenza-inps",
-      "registro-imprese-sari",
-      "treasury-forecast",
-      "variance-analysis",
-      "vera",
-      "vouching"
-    ],
-    "scope": "Saved or chat-only review routing and the distinction between the Studio Archive directory and the agenda. All function IDs, Geneva assessments and jurisdiction limits are retained. No new professional qualification is asserted."
-  },
-  "unified_review_theme_release_binding_20261102": {
-    "version": "0.1.541",
-    "previous_catalogue_fingerprint": "719b6337ff0da2bf046e16928011835acabf1ca7bf7a4951f14389abbd35bfa3",
-    "changed_entrypoints": [],
-    "scope": "The repository workspace stylesheet now matches the already packaged and verified stylesheet. No skill entrypoint or Geneva assessment changed."
-  },
-  "opinion_evidence_release_binding_20261102": {
-    "version": "0.1.544",
-    "previous_catalogue_fingerprint": "a77c07a611a94b5ee4bcc6e7a9678d84b26a3150bd0e853f1e7bd791990dd1a7",
-    "changed_entrypoints": [
-      "adversarial-opinion",
-      "deep-research",
-      "legal-tax-answer-planner",
-      "legal-tax-answer-review",
-      "quesito-legale-fiscale",
-      "vera"
-    ],
-    "scope": "Visible question and planned authorities before research, and claim-bound citations in delivered opinions. Catalogue coverage only; jurisdiction assessments and professional acceptance are unchanged."
   }
 }

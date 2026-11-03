@@ -1,366 +1,461 @@
 {
+  "archive_boundary_extension_source_review_20261027": {
+    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
+    "course_sha256": "5a11623b2fb9a2d0b54e204dc508971cb30d97343174f9189c7e1aa293415129",
+    "previous_course_sha256": "7c9aa2c03776e4435cc5bc76580ab4b203ab057ce82de543d12fb2bac9a3c860",
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex /root",
+    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
+  },
+  "archive_boundary_source_review_20261027": {
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "course_sha256": "7c9aa2c03776e4435cc5bc76580ab4b203ab057ce82de543d12fb2bac9a3c860",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused.",
+    "previous_course_sha256": "a032919ace30a569bae347e8cde009ea0be5d27d1ef431cf44b9347d4cf80b66",
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
+  },
+  "archive_concurrency_source_binding_review_20261017": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "906fdb911d428eafdd6bc14bbfc2e0ee28178c09",
+    "changed_sources": [
+      {
+        "current_sha256": "5de0bbb8d69e4519a189e158cfce743878cd487eb7b2d4392868e4aaf9767037",
+        "path": "modules/studio-archive/scripts/archive_core.py",
+        "previous_sha256": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55",
+        "repository_path": "plugins/studio-archive/scripts/archive_core.py"
+      },
+      {
+        "current_sha256": "f5ca3c7295c3dcb78f211cb7fe7bb399a73db5888a77a876a2a969af00e4a58a",
+        "path": "modules/studio-archive/scripts/archive_preferences.py",
+        "previous_sha256": "a3bba1a9dd32607c26afdb7fd02fac8fb6f8094524bb3d4d60f15d8958008b28",
+        "repository_path": "plugins/studio-archive/scripts/archive_preferences.py"
+      },
+      {
+        "current_sha256": "5776776e5fad8df0e7c6277a183cea50e276d2e6e2d13df1e17696131ba49490",
+        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+        "previous_sha256": "4423da8b6b2c66312745f47046bcb8726248a85ba747f2e31809001994978a53",
+        "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md"
+      }
+    ],
+    "current_course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
+    "execution_requirement": "Full final-head teaching CI must execute the exact current course digests and pass verify_release.py before merge.",
+    "integrated_commit": "6ef0cd0a2674aecac5c861b42a7012e19660f770",
+    "limitations": "Historical editorial and artifact reviews retain their original scope. This is source compatibility review, not new visual, learner, professional or installed-host acceptance and not a function-rating upgrade.",
+    "previous_course_sha256": "33216e006a9b6b36575d9afe3c2c3b845cde55841c1a871f458e6ce08d4d8c21",
+    "reviewed_at": "2026-10-17T14:13:09.616847+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "Inspected complete Archive core, identity-lock and workflow-instruction diffs merged in PR #850. Client-directory operations synchronize portable identities from live directory metadata independently of the content index. Indexed search/source-opening freshness checks remain separate. Shared identity writes use the existing OS lock with a bounded ten-second contention wait; expiry never removes the lock, changes the client or changes the archive root. Session selection remains separate. No model call, hosted recipient or new external data path is added. All authored lesson fields except source bindings match the exact previously reviewed course."
+  },
+  "archive_error_capture_source_review": {
+    "baseline_commit": "90e5d155e8ad4f1734c21f591e584e1b24b12fb8",
+    "content_review": "Compared every compiled field except sources: all localized content, input definitions, demo/practice requests, checkpoints and pacing are identical. Preserve the existing editorial judgments and historical artifact reviews. This is a source compatibility binding, not a new independent editorial or learner review.",
+    "current_course_sha256": "972557b4346d0383ce19a1e3a1ed9d63c7d5ade0a270141dd990082e95564f4c",
+    "limits": "No new installed-host, live learner, voice, visual or professional acceptance is asserted.",
+    "local_junit_sha256": "24b6da63f95a940d07ea10c01a22e6979a1a0e8da7925464b6daad3df0fbbedc",
+    "native_evidence": "GitHub run39014478919 job117343617766 at122df52d1 passed1710 native teaching tests with3 skips. Its later metadata gate rejected these stale course digests; the whole job was not green. A fresh local run of the20 affected localized demo/practice checks passed with actual JUnit properties for the current course digests. Final CI must still execute and verify the full native suite.",
+    "previous_course_sha256": "cc0eabce2055d07353b5fcf1e2c9245c213069f057f1f1d2e2b4e4da6a3bc0d5",
+    "reviewed_at": "2026-10-17T08:28:35.944335+00:00",
+    "reviewer": "Codex /root - bounded Archive error-capture source review",
+    "source_changes": [
+      {
+        "after": "caf83eb965861dd50b680228c81bcb3ee949ff1586e342fab07332aae94669e3",
+        "before": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a",
+        "path": "modules/studio-archive/scripts/studio_archive.py"
+      }
+    ],
+    "source_review": "The CLI logs the active handled Archive/OS/value/SQLite exception before its existing JSON error and exit1, and logs its unsupported-runtime guard. Success output, archive selection, source files, ledger formats, professional gates and lesson workflows are unchanged. Source-bound technical reporting and local traceback review are verified separately."
+  },
+  "archive_input_verification_main_integration": {
+    "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
+    "scope": "Compared complete course payload against the merged main release. Only sources differ; authored lessons, all five languages and existing editorial/artifact judgments are preserved. This refresh records source compatibility, not new learner or professional acceptance. Final CI must execute and bind the current course hashes."
+  },
+  "archive_input_verification_source_review": {
+    "baseline_commit": "2ac3787368ff68a4592311245a2c0e66d27909b0",
+    "changed_sources": [
+      {
+        "after": "39a2e9fd500bac5090ee8e5a32bba3ceba07fc61dd1b5795b958db58678a6916",
+        "before": "76af2b1545894a4de14d8e2eafa686292a09d1385750401ab998648a035bdebb",
+        "path": "modules/studio-archive/scripts/archive_core.py"
+      },
+      {
+        "after": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f",
+        "before": null,
+        "path": "modules/studio-archive/scripts/input_verification.py"
+      },
+      {
+        "after": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488",
+        "before": "58e80630ead93644796c075862a5235f343935650e963f4c368a907aa0dca4d0",
+        "path": "modules/studio-archive/scripts/studio_archive.py"
+      },
+      {
+        "after": "e851697b113899a1da8f674e62074785d7294dacfb0198a08f66e9b20591bd85",
+        "before": "aaf3cc522c1d31a0b5c718d2e8ca934cc9641f39f082580158bc0c7c5bc4fae9",
+        "path": "modules/studio-archive/skills/studio-archive/SKILL.md"
+      },
+      {
+        "after": "52e3da59ec7c56b34f48a1a8e21672bbd6540503c8c7e2ecc1b5cdf5b3f137b8",
+        "before": null,
+        "path": "modules/studio-archive/skills/studio-archive/references/input-verification.md"
+      },
+      {
+        "after": "67f4fd8675e68a0d4c2acebaf9cfbdd040a0c4fae42a3266b12de72ad25c0939",
+        "before": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48",
+        "path": "skills/studio-archive/SKILL.md"
+      }
+    ],
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except the source inventory is identical, including all five localized lesson texts, input definitions, requests, checkpoints, demo, practice and timing. Existing editorial judgments and historical artifact hashes are preserved.",
+    "current_course_sha256": "7a5cc92caa0f77c8c3dbd543bfc1342d31f8aaca93fc0694d9a39e8752dbbe10",
+    "execution_evidence": "GitHub Actions run 39129516593, teaching-kits job 117681627582, commit c927186ddd3575816fb923b23b6f39bb03189673: the native teaching stage passed 1710 tests with 3 skips and 90.54% coverage. The later editorial freshness check failed; this run is not represented as green. Fresh final CI must bind all required demo and practice cases to the current course hashes.",
+    "limits": "This is a source compatibility refresh of unchanged teaching content, not a new independent editorial review. Historical output reviews remain historical. No new learner, voice, native visual, professional or installed-host acceptance is claimed.",
+    "local_native_evidence": "Twenty fresh local demo/practice executions passed across both workflows and all five languages. The maintained release validator matched every required demo/practice identity and current course SHA-256 against their actual JUnit properties. Existing editorial judgments and historical artifact reviews remain preserved; final full CI is still required.",
+    "previous_course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
+    "reviewed_at": "2026-10-18T13:49:42.008164+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "Reviewed the additive Archive verification module, the guarded public wrapper, CLI dispatch and skill guidance. They use the maintained receipt reader to check complete selected file bytes and optional earlier receipt seals without modifying the client archive. Existing local-search and studio-document-format routes retain their prior behavior. Their native teaching fixtures remain isolated and do not invoke a replacement client or acceptance run."
+  },
   "archive_profile_bootstrap_source_review": {
-    "reviewed_at": "2026-10-08T13:18:37.418383+00:00",
     "baseline_commit": "1964929f790964c4bc9796c2cae2851e1f0a646d",
+    "reviewed_at": "2026-10-08T13:18:37.418383+00:00",
     "scope": "Compared complete compiled course: all fields except source inventory are identical. Archive bootstrap now securely persists approval already present in existing session config before private identity migration. Explicit lesson state remains isolated without a selected profile; source archives and ledger formats are unchanged. Preserved prior editorial and artifact reviews; fresh native CI required. No new installed-host or learner acceptance claimed."
   },
+  "auxiliary_display_source_binding_review_20261103": {
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "current_course_sha256": "882df68138db3ffa18e12e7cb4eebfbcc182da7623e201d97fc6bca061deca88",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop.",
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "previous_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
   "browser_preview_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-17",
+    "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
+    "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed.",
+    "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
     "previous_course_sha256": "7e113e8b9393a52c9159b19685608f821ba197ca1a4d0cca130eab2381ce8094",
     "previous_source_commit": "19399a8c",
+    "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
+    "reviewed_at": "2026-09-17",
+    "reviewer": "Codex /root",
     "source_changes": [
       {
-        "path": "vendor/modules/courseware/library.py",
+        "after": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74",
         "before": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24",
-        "after": "22c5ea8d39a6ffa376c63f12bd31e3282b435a913e8027ee44c4261a5e704a74"
+        "path": "vendor/modules/courseware/library.py"
       },
       {
-        "path": "vendor/modules/courseware/preview.py",
+        "after": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3",
         "before": null,
-        "after": "36ff10a3d93772a927765c395eb19c5073664c1447b0b267cf9bd9455c4ad6f3"
+        "path": "vendor/modules/courseware/preview.py"
       }
     ],
-    "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
-    "source_review": "Reviewed the shared CLI serve dispatch and loopback helper. Listing, loading and rendering retain their original implementation. Browser preview serves the complete rendered kit on an OS-selected loopback port and rejects resolved paths outside the kit and directory lists. Teaching instructions now require a browser target, preserve relative assets and distinguish queued/opened actions from learner-confirmed visibility.",
-    "native_evidence": "GitHub Actions run 35208501248, job 105160051302, commit 8a86a6fe: the native teaching phase passed 824 tests with 90 explicitly skipped cases and 89.96% courseware coverage. The later compiler/review phase rejected the stale editorial digest; the run is not represented as green. The next full CI run must independently validate every required demo/practice identity and current digest.",
-    "render_evidence": "Italian Vera fatture-xml-check rendered through the new CLI and inspected in the Codex in-app browser. Original material and the port-8769 lesson server were untouched.",
-    "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed."
+    "source_review": "Reviewed the shared CLI serve dispatch and loopback helper. Listing, loading and rendering retain their original implementation. Browser preview serves the complete rendered kit on an OS-selected loopback port and rejects resolved paths outside the kit and directory lists. Teaching instructions now require a browser target, preserve relative assets and distinguish queued/opened actions from learner-confirmed visibility."
   },
   "cnc_integration_freshness": {
-    "reviewer": "Codex /root - bounded source freshness review",
-    "reviewed_at": "2026-09-29T22:10:29.059436+00:00",
     "comparison_commit": "d728392e712b82049b9fc8f196aa44df51cbbaed",
+    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except sources is identical, including authored locales, fictional inputs, checkpoints, practice and pacing. Original editorial explanations and inspected artifact hashes are preserved.",
+    "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
+    "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes.",
     "previous_course_sha256": "bdca4646ff1d61d972baa545be56aa0af24e8e39f50565f7636152c19e6aeed7",
+    "reviewed_at": "2026-09-29T22:10:29.059436+00:00",
+    "reviewer": "Codex /root - bounded source freshness review",
     "source_changes": [
       {
-        "path": "modules/studio-archive/scripts/client_ledger.py",
+        "after": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e",
         "before": "96a8bc37a6632edb3d345cd78d86b6d3a78c615f741ead702d489ae5a4e040f4",
-        "after": "cebe03cf64d188cbab8be95ce083227663cfc3b6f41a802fa7f88c63f449bf9e"
+        "path": "modules/studio-archive/scripts/client_ledger.py"
       },
       {
-        "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294",
         "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+        "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py"
       },
       {
-        "path": "vendor/modules/vera_assurance/contracts.py",
+        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294",
         "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "c4c791eab77b3077554dbbc40d90247a347b62b832bb7fdbdc21f73dbe679294"
+        "path": "vendor/modules/vera_assurance/contracts.py"
       }
     ],
-    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except sources is identical, including authored locales, fictional inputs, checkpoints, practice and pacing. Original editorial explanations and inspected artifact hashes are preserved.",
-    "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes.",
-    "execution_evidence": "GitHub run 36633858670, job 109629617115 at 7ef49b804: 1171 native teaching tests passed, three skipped; one stale public-catalogue count assertion failed and has been corrected separately. This is not a green whole-run claim. Ten additional CNC native demo/practice cases pass locally.",
-    "limits": "Historical artifact reviews remain historical. No new independent editorial, live learner, voice, installed-host or professional acceptance is claimed. The release gate must validate current native demo/practice identities against these exact course hashes."
+    "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes."
   },
   "codex_course_qa_20260927": {
-    "scope": "Italian Codex native local search, full raw source-open evidence, answer, actual clickable input sources, same-index practice update, save/reopen.",
-    "fix": "Disambiguated repeated source basenames; exact recorded-input Markdown citations open escaped local reading pages. Incomplete initial model answer replaced after native source check.",
     "evidence": "Local codex-course-18.md; demo4 and practice8 verified hashes. Current sources clicked and preserved original demo reopened.",
-    "limits": "Other languages, native voice hardware, physical window layout and real learner understanding unverified; no install/deploy/publish."
+    "fix": "Disambiguated repeated source basenames; exact recorded-input Markdown citations open escaped local reading pages. Incomplete initial model answer replaced after native source check.",
+    "limits": "Other languages, native voice hardware, physical window layout and real learner understanding unverified; no install/deploy/publish.",
+    "scope": "Italian Codex native local search, full raw source-open evidence, answer, actual clickable input sources, same-index practice update, save/reopen."
   },
   "combined_geneva_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-28T08:57:49.121265+00:00",
-    "previous_course_sha256": "42621a7d76f13718823819c0cae9b9b0979405d9b5f64cdc1995c6f34f9a6092",
+    "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
     "integrated_main_commit": "655c5a7ea",
-    "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
-    "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source.",
-    "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment."
+    "native_execution_requirement": "The combined candidate must pass the unchanged required native demo/practice checks and dedicated Geneva regressions before deployment.",
+    "previous_course_sha256": "42621a7d76f13718823819c0cae9b9b0979405d9b5f64cdc1995c6f34f9a6092",
+    "reviewed_at": "2026-09-28T08:57:49.121265+00:00",
+    "reviewer": "Codex /root",
+    "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source."
   },
-  "committed_source_integration_20261008": {
-    "reviewer": "Codex /root - bounded committed-source integration review",
-    "reviewed_at": "2026-10-08T12:29:00.208313+00:00",
-    "source_review": "Annual OIC comparison is an additive explicit-cell file route; the existing net-debt exercise and ordinary FDD engine contract are unchanged. The maintained source selector adds declared requirements and wrapper references. Studio Archive now restores approved roots in a new isolated session and offers a separate selected-source standalone context for specifically supported one-off workflows; the course still uses explicit synthetic client preparation and actual Archive receipts. Bank receipt sealing and optional local-only data reports preserve their committed controls. Compare complete authored course/fixture/locale/timing objects against all three committed parents, preserving prior editorial judgments and historical artifact reviews. Fresh CI must verify current native demo/practice identities and digests. No new learner, visual, professional or installed-host acceptance is claimed.",
+  "combined_windows_archive_integration_20261018": {
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "0e36339042d1c162a6679cf5aff7309c6f4ac1880794f76c5d3c9dfd515ac2cc",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
     "parents": [
       {
-        "label": "main",
-        "commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-        "course_sha256": "72be0d6f37056e1959a663eac75c85ef6cb051c972d16e386a8da4ff8c468416",
-        "authored_content_identical": true
+        "authored_content_unchanged": true,
+        "commit": "82df4c1d3e2195ce7d3dcb765dd521a5e142c99d",
+        "course_sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297",
+        "label": "windows_bilancio"
       },
       {
-        "label": "bank",
-        "commit": "f70d90d90abb9e87bf58fd2d8895d6dce05a51b2",
-        "course_sha256": "f8ab30988eacfe23e71d01f1cdc0a4f2c03fef698c1bbc4b9ba0b1e00c9895cb",
-        "authored_content_identical": true
-      },
-      {
-        "label": "archive",
-        "commit": "0bb963db370b3b73093e807c836cb1b15d7d8deb",
-        "course_sha256": "75b25a0f2f81661f0ba51b5d05b45422b905364f284a24f34dc33ba623e6f632",
-        "authored_content_identical": true
+        "authored_content_unchanged": true,
+        "commit": "4370e78cf321b8c99b3251cff666499a2f15c8a4",
+        "course_sha256": "eb515f52323e0252a029065739572af203e167acade8452cb5c9ab1ede553224",
+        "label": "archive_unicode"
       }
     ],
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex exact source and retained-course comparison",
+    "source_review": "Combined Windows file/process controls, Bilancio locking, Archive encoding and per-run invalid-record isolation. Strict POSIX no-follow flags remain required. Guidance explicitly distinguishes incomplete inventory from a valid selected activity and prohibits changing or replacing blocked records. Complete non-source course objects match both parents; both prior review histories and historical artifact judgments are retained."
+  },
+  "committed_source_integration_20261008": {
+    "parents": [
+      {
+        "authored_content_identical": true,
+        "commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
+        "course_sha256": "72be0d6f37056e1959a663eac75c85ef6cb051c972d16e386a8da4ff8c468416",
+        "label": "main"
+      },
+      {
+        "authored_content_identical": true,
+        "commit": "f70d90d90abb9e87bf58fd2d8895d6dce05a51b2",
+        "course_sha256": "f8ab30988eacfe23e71d01f1cdc0a4f2c03fef698c1bbc4b9ba0b1e00c9895cb",
+        "label": "bank"
+      },
+      {
+        "authored_content_identical": true,
+        "commit": "0bb963db370b3b73093e807c836cb1b15d7d8deb",
+        "course_sha256": "75b25a0f2f81661f0ba51b5d05b45422b905364f284a24f34dc33ba623e6f632",
+        "label": "archive"
+      }
+    ],
+    "reviewed_at": "2026-10-08T12:29:00.208313+00:00",
+    "reviewer": "Codex /root - bounded committed-source integration review",
     "source_changes": [
       {
         "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
         "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
         "sha256": "643d02b33c08f529c98bc7d3f565c55c4eeda0ee246cfc48405b4306fb759ccd"
       }
-    ]
+    ],
+    "source_review": "Annual OIC comparison is an additive explicit-cell file route; the existing net-debt exercise and ordinary FDD engine contract are unchanged. The maintained source selector adds declared requirements and wrapper references. Studio Archive now restores approved roots in a new isolated session and offers a separate selected-source standalone context for specifically supported one-off workflows; the course still uses explicit synthetic client preparation and actual Archive receipts. Bank receipt sealing and optional local-only data reports preserve their committed controls. Compare complete authored course/fixture/locale/timing objects against all three committed parents, preserving prior editorial judgments and historical artifact reviews. Fresh CI must verify current native demo/practice identities and digests. No new learner, visual, professional or installed-host acceptance is claimed."
   },
   "connected_studio_knowledge_source_binding_20261002": {
-    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
-    "reviewed_at": "2026-10-01T22:12:56.017026+00:00",
     "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
-    "previous_course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
-    "current_course_sha256": "77afd7bf8e6b3757b9786bc0cf9f156a8e90fd0109dca09847f59c77ad3f7e57",
-    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
     "changed_sources": [
       "skills/studio-archive/SKILL.md",
       "skills/vera/references/connected-studio-knowledge.md"
     ],
-    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "current_course_sha256": "77afd7bf8e6b3757b9786bc0cf9f156a8e90fd0109dca09847f59c77ad3f7e57",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate.",
+    "previous_course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
+    "reviewed_at": "2026-10-01T22:12:56.017026+00:00",
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository."
   },
-  "course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
+  "consolidated_ui_runtime_source_binding_20261103": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "a934093872c622aab4aa9545903b8b24aedae0704087f4ae3039f09428d2710c",
+    "limits": "No new installed-host, learner, visual, voice or professional acceptance is asserted.",
+    "previous_course_sha256": "882df68138db3ffa18e12e7cb4eebfbcc182da7623e201d97fc6bca061deca88",
+    "reviewed_at": "2026-11-03",
+    "reviewer": "Codex /root - source compatibility review",
+    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities."
+  },
+  "course_sha256": "a934093872c622aab4aa9545903b8b24aedae0704087f4ae3039f09428d2710c",
+  "course_startup_source_binding_review_20261103": {
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved.",
+    "previous_course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
+    "reviewed_ancestor_commit": "b609c92912acafe868041ef302f8ae66d3297d08",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/vera/skills/vera/references/model-data-report-contract.md"
+    ],
+    "current_course_sha256": "cc1915de4571028e2c7f08371ca4cafd80bfe59df3aa23444206e796e21b86fb",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
+    "reviewed_at": "2026-10-18T18:09:58.498297+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
+  },
+  "deploy_final_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
+    "previous_course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "46f0a17b16a0c40ab6d49df09a0e179f05cee289",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "a032919ace30a569bae347e8cde009ea0be5d27d1ef431cf44b9347d4cf80b66",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "0e36339042d1c162a6679cf5aff7309c6f4ac1880794f76c5d3c9dfd515ac2cc",
+    "recorded_at": "2026-10-25T18:12:53.787785+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
   "esg_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source review",
-    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
     "baseline_commit": "5f4c3324b9efe209e9e6f99a3a38d7ac002df81a",
-    "previous_course_sha256": "7cc8bb3d4155302ad3a1935305bb38ebcdea0968324a48cc90f5bf059a8312dd",
-    "current_course_sha256": "d1768a6c57346ecf08556dce891efbfebc710c9f7fa748b81250fa3bccd00892",
     "content_review": "Complete JSON equality except top-level source bindings. Existing inputs, requests, locale content, checkpoints, practice and timing remain unchanged.",
-    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged.",
+    "current_course_sha256": "d1768a6c57346ecf08556dce891efbfebc710c9f7fa748b81250fa3bccd00892",
+    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json",
     "limits": "This records source compatibility review only. Prior editorial and artifact evidence remain historical; it does not claim new visual review, learner acceptance, professional acceptance or current native execution.",
-    "detail": "docs/releases/2026-09-30-vera-esg-course-source-review.json"
+    "previous_course_sha256": "7cc8bb3d4155302ad3a1935305bb38ebcdea0968324a48cc90f5bf059a8312dd",
+    "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
+    "reviewer": "Codex /root - bounded source review",
+    "source_review": "Reviewed the two additive shared changes: ESG joins the client workflow registry; ESG is excluded from prepared lessons because only its developer demo exists. Existing workflows and lesson availability are unchanged."
   },
   "freshness_review": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T07:45:34.146194+00:00",
-    "previous_course_sha256": "75ac60a9c021835d3de838707acbd59558ce717f17bf8be449cd96ad26825304",
-    "source_snapshot": "/private/tmp/archive-teaching-release-01/test_archive_teaching_kit_runs8/kit/course-provenance.json",
-    "source_changes": [
-      {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json",
-        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
-        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee"
-      },
-      {
-        "path": "plugins/_shared/vendor/modules/reporting_table.py",
-        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
-        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e"
-      }
-    ],
     "content_review": "Reconstructing the accepted course with its preserved source list matches its exact prior SHA-256. The localized lesson content, fictional file definitions, checkpoints and practice are unchanged. I reviewed the shared footer diff: French and German wording now uses the same formal address as the lesson. I also reviewed the reporting-table diff: it changes fixed translated labels and number punctuation, not values, signs or scales. No other pinned Python or JavaScript execution source in this kit references reporting_table. The original artifact reviews and their stated limitations are retained; this is not a new independent or learner review.",
     "execution_review": "Every supported locale and both phases have successful native test cases with the current canonical course fingerprint. The evidence collection retains actual case outputs from runs 39, 40, 41 and 43 and resolves every prior failure; it is not presented as a new test run or remote CI status.",
     "native_evidence_sha256": "6a4e927ef855847e187cdc114aad0d8fa0eadbda11d23c19390bba9b076994ed",
-    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "previous_course_sha256": "75ac60a9c021835d3de838707acbd59558ce717f17bf8be449cd96ad26825304",
     "prior_artifact_reviews_preserved": true,
+    "reviewed_at": "2026-09-15T07:45:34.146194+00:00",
+    "reviewer": "Codex /root",
+    "source_changes": [
+      {
+        "after": "352f22cdcba99e08af999c5c9bdac76c6b532de8df6f2fa305da3e4371eb2aee",
+        "before": "2b5dd452c61988d4372f8580fc19fdc64705395c838d0dbeb06d501624184f04",
+        "path": "plugins/_shared/vendor/modules/courseware/assets/languages.json"
+      },
+      {
+        "after": "99b687b83f4ce62fb2a33c875cf5740edb0854e9a7b094f1c314b1b6198adc1e",
+        "before": "5c5c3bda83e126764df6870c4ede1b3f9f4336eafa0292d770854d8aa423aee7",
+        "path": "plugins/_shared/vendor/modules/reporting_table.py"
+      }
+    ],
+    "source_comparison_sha256": "87cd680022b6deaf50271eb8c680d2772399587bfcf0b26ed550c6b90d727098",
+    "source_snapshot": "/private/tmp/archive-teaching-release-01/test_archive_teaching_kit_runs8/kit/course-provenance.json",
     "voice_or_learner_completion_claimed": false
   },
   "geneva_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
+    "content_review": "Compared the complete course object with the exact previously reviewed baseline. All authored locale content, input definitions, requests, checkpoints, practice, timing and other non-source fields are unchanged. Only source bindings differ. Original editorial judgments and historical artifact reviews are retained.",
+    "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed.",
+    "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
     "previous_course_sha256": "3ff4cf7685e58dba1440bfcbe9f1dade217121409f0da625d6ccb9a899dad126",
     "previous_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
-    "content_review": "Compared the complete course object with the exact previously reviewed baseline. All authored locale content, input definitions, requests, checkpoints, practice, timing and other non-source fields are unchanged. Only source bindings differ. Original editorial judgments and historical artifact reviews are retained.",
-    "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json.",
-    "native_evidence": "GitHub Actions run 36393675234, job 108834959892, commit 989e523529fccd09a60a8ed29dc63d87b863d21e: native teaching stage passed 998 tests with 3 explicit skips and 89.73% courseware coverage. New Client, Geneva adapters and annual-account stages also passed. The later editorial-fingerprint check failed; this is not a claim that the full run passed. Fresh CI must independently validate all required demo/practice identities and current course hashes.",
-    "limits": "This is a bounded release-source refresh, not a new independent editorial, visual, professional or learner review. Earlier artifact hashes remain historical evidence. No Geneva lesson acceptance, real-client acceptance or installed-runtime update is claimed."
+    "reviewed_at": "2026-09-28T08:17:18.379368+00:00",
+    "reviewer": "Codex /root",
+    "source_review": "The common-core Geneva release adds explicit jurisdiction and source handling, French/CHF presentation where applicable, and the source-bound adapters described in docs/releases/2026-09-28-vera-geneva.md. This course retains its existing professional purpose and sample jurisdiction; adding Geneva capability does not relabel an Italian exercise as Swiss. Exact changed bindings are recorded by kit in docs/releases/2026-09-28-vera-geneva-course-review.json."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
+    "reviewed_at": "2026-10-14T08:00:57.869523+00:00",
+    "reviewer": "Codex /root - Deal Redux source compatibility review"
   },
   "integration_refresh": {
-    "reviewer": "Codex /root",
     "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
   },
   "interim_release_refresh": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-15T09:39:25.486273+00:00",
+    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
+    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed.",
+    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
     "previous_course_sha256": "9d09c3773104a2455712c0ae247094a891eab60a257971ee0d5762d4cec23a1f",
     "previous_source_commit": "312b51de",
+    "reviewed_at": "2026-09-15T09:39:25.486273+00:00",
+    "reviewer": "Codex /root",
     "source_changes": [
       {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css",
+        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa",
         "before": null,
-        "after": "1d3097a5f8b2011b1cae5f1916cfc698260bc1ebc1c7e59b3ec91271aa2ee7aa"
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-course.css"
       },
       {
-        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json",
+        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5",
         "before": null,
-        "after": "bd4a3481deeedf806b1eb1bfe91099a6d7796726bc19eb50eef8dc71692b67e5"
+        "path": "plugins/_shared/vendor/modules/courseware/assets/legacy-languages.json"
       },
       {
-        "path": "plugins/_shared/vendor/modules/courseware/legacy.py",
+        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f",
         "before": null,
-        "after": "819f645e9c76ce938d31055d1c91b953721fe31755408a171d94c9f4cc39fb3f"
+        "path": "plugins/_shared/vendor/modules/courseware/legacy.py"
       },
       {
-        "path": "plugins/_shared/vendor/modules/courseware/library.py",
+        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24",
         "before": "40aa584df67391ed31dd2699a53911b96651a6e7df3bee11da49302c39fc9272",
-        "after": "720ae808a7843dbcdc8b1778d3eeb32444e69fb273a735016544b09edd135f24"
+        "path": "plugins/_shared/vendor/modules/courseware/library.py"
       },
       {
-        "path": "plugins/vera/scripts/model_data_report.py",
+        "after": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c",
         "before": "6fa2e2270f1ce48b4435681c7c67b073f09bf451cea256c61df13daa5faf98c4",
-        "after": "54fcde02508b195250c5a4c58758e10f796a63a32448115de64fccbce8b4022c"
+        "path": "plugins/vera/scripts/model_data_report.py"
       },
       {
-        "path": "plugins/vera/skills/studio-archive/SKILL.md",
+        "after": "306a444e741de64feb191115c4192b519833d200e0f5c4ffa3afbb7647f5dc76",
         "before": "3a75ff7bdb875bfc7e37a60aa8bbf33a7b96f1dddbba5d8c074b87a74a7009db",
-        "after": "306a444e741de64feb191115c4192b519833d200e0f5c4ffa3afbb7647f5dc76"
+        "path": "plugins/vera/skills/studio-archive/SKILL.md"
       },
       {
-        "path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
+        "after": "5f197764fb302393d549f49b16d6ce7301291356208f31ac1f9affcc9216c03c",
         "before": "2df60735c2926dd06da32c5cab5df244c10702cf23c7fb0a929b230ce4121937",
-        "after": "5f197764fb302393d549f49b16d6ce7301291356208f31ac1f9affcc9216c03c"
+        "path": "plugins/vera/skills/vera/references/model-data-report-contract.md"
       }
     ],
-    "content_review": "Compared the complete course object against the preserved reviewed commit: every authored locale, input, exercise, checkpoint and lesson duration is unchanged. Only installed source bindings changed. Original named editorial and artifact reviews remain preserved below; this is a bounded release refresh, not a new independent review.",
-    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced.",
-    "native_evidence": "teaching-mixed-native-50.xml: 366 passed and 32 explicitly deferred replacement cases skipped. Every demo and practice required by this kit has a successful case with this exact current course hash. Native checks verify current generated artifacts and review-state preservation.",
-    "limits": "Earlier inspected artifact hashes remain historical output-review evidence. No new visual, native-voice, paired-window learner or professional acceptance is claimed."
+    "source_review": "Integrated published main through 07689c38: optional onboarding does not block ordinary work; current Clara case, evidence, deck and delivery contracts are preserved; the current bank PDF-table adapter retains reviewed source mappings. Mixed-format changes add the original legacy renderer and prepared-file fingerprints. Reviewed local display and handoff differences against the prior source; no new lesson or professional approval is introduced."
   },
   "journal_bank_receipts_source_update_review": "docs/releases/2026-10-08-journal-bank-receipts-course-review.json",
   "journal_pdf_source_binding_review_20261009": {
-    "reviewed_at": "2026-10-09T17:33:15.689022+00:00",
-    "reviewer": "Codex source-bound PDF workflow review",
-    "previous_course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
-    "current_course_sha256": "0faa322d8fc29953e3c51f4e2dad7c64692c3b188f8c1229eadc3c585c3a131e",
     "changed_fields": [
       "revision",
       "sources"
     ],
+    "current_course_sha256": "0faa322d8fc29953e3c51f4e2dad7c64692c3b188f8c1229eadc3c585c3a131e",
+    "previous_course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
+    "reviewed_at": "2026-10-09T17:33:15.689022+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification.",
     "unchanged_materials": [
       "All localized lesson text",
       "Input bytes and execution contracts",
       "Editorial and artifact review history"
-    ],
-    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+    ]
   },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
-        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
-        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
-        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
-        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
-        "language_and_pacing": "Language it. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-it]",
-        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
-        "reviewed_artifacts": [
-          {
-            "name": "answer.md",
-            "sha256": "071b222a217c0dac01a2b3e134c848f4864e730e13ecc6fdb998dd655dcf9487"
-          },
-          {
-            "name": "search_evidence.json",
-            "sha256": "f268180babb77b1d8876adfeca723907ea2497086a2b7bff247c4cb58ed0ae0f"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-it]",
-        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
-        "reviewed_artifacts": [
-          {
-            "name": "answer.md",
-            "sha256": "f22e67273cda080b5dfa95f29d71b9518a191b287e5a76717cce4e1541e87d86"
-          },
-          {
-            "name": "search_evidence.json",
-            "sha256": "740cb5e9fb74b8a22e8d086aad199cba97160def5471f219697f2f40ade5fd28"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
-        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
-        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
-        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
-        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
-        "language_and_pacing": "Language en. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-en]",
-        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
-        "reviewed_artifacts": [
-          {
-            "name": "answer.md",
-            "sha256": "ee5ad966748f609eddcb193b6e19a0742810eeba53440085fe8eb55809cfdfd3"
-          },
-          {
-            "name": "search_evidence.json",
-            "sha256": "aeee8ab14a154b09ac0f4d1f5eb337bd8ca3e66c5aa50a9fb09eaa6cfb78fe9e"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-en]",
-        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
-        "reviewed_artifacts": [
-          {
-            "name": "answer.md",
-            "sha256": "b483be2db37ee66315eb603f838512bf4ab901a96372116d5b9434be219d6282"
-          },
-          {
-            "name": "search_evidence.json",
-            "sha256": "aababcf8e77be25ea441c7603e650f1556316a946fd5530a45048685528bbbbd"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
-        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
-        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
-        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
-        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
-        "language_and_pacing": "Language fr. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-fr]",
-        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
-        "reviewed_artifacts": [
-          {
-            "name": "answer.md",
-            "sha256": "af901a46052f98b056b6c64b321abc3ce6b5ac19b783883a765a721af59901bb"
-          },
-          {
-            "name": "search_evidence.json",
-            "sha256": "469106aede6232cb284095376ec51f5e64e5817868eb146576b2e02a3d768694"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-fr]",
-        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
-        "reviewed_artifacts": [
-          {
-            "name": "answer.md",
-            "sha256": "ecde34dff3e42399e1892881ade7ee3f95128430bb2d2499d5cb9f4479b9ded5"
-          },
-          {
-            "name": "search_evidence.json",
-            "sha256": "a99b8791cd30106b123d6f641ebeac61d357ba37a2b3882c140d1d13e600422b"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
-        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
-        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
-        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
-        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
-        "language_and_pacing": "Language de. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-de]",
         "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
         "reviewed_artifacts": [
           {
@@ -371,10 +466,18 @@
             "name": "search_evidence.json",
             "sha256": "90efa01121496e097ee4da95afe99a7df43ff104e8dcb98d9fbce29600708b29"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "language_and_pacing": "Language de. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path."
       },
       "practice": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-de]",
         "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
         "reviewed_artifacts": [
           {
@@ -385,21 +488,52 @@
             "name": "search_evidence.json",
             "sha256": "5eecb7a39468e6d650626e680178a386c088e58fe4334dad2873f1a2ebd6138f"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "ee5ad966748f609eddcb193b6e19a0742810eeba53440085fe8eb55809cfdfd3"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "aeee8ab14a154b09ac0f4d1f5eb337bd8ca3e66c5aa50a9fb09eaa6cfb78fe9e"
+          }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "language_and_pacing": "Language en. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path."
+      },
+      "practice": {
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "b483be2db37ee66315eb603f838512bf4ab901a96372116d5b9434be219d6282"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "aababcf8e77be25ea441c7603e650f1556316a946fd5530a45048685528bbbbd"
+          }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-en]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path.",
-        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
-        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
-        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
-        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
-        "language_and_pacing": "Language es. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-es]",
         "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
         "reviewed_artifacts": [
           {
@@ -410,10 +544,18 @@
             "name": "search_evidence.json",
             "sha256": "281554e2a9d754440cd84564fccb001e14780c36c5ac319d70e7e8a3323c4a85"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "language_and_pacing": "Language es. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path."
       },
       "practice": {
-        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-es]",
         "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
         "reviewed_artifacts": [
           {
@@ -424,622 +566,521 @@
             "name": "search_evidence.json",
             "sha256": "9a3762c59f98cf207d7327e9b9ad68303da4ff66b122d8e43579515ec3f2fd9d"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "af901a46052f98b056b6c64b321abc3ce6b5ac19b783883a765a721af59901bb"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "469106aede6232cb284095376ec51f5e64e5817868eb146576b2e02a3d768694"
+          }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-fr]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "language_and_pacing": "Language fr. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path."
+      },
+      "practice": {
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "ecde34dff3e42399e1892881ade7ee3f95128430bb2d2499d5cb9f4479b9ded5"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "a99b8791cd30106b123d6f641ebeac61d357ba37a2b3882c140d1d13e600422b"
+          }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-fr]"
+      },
+      "verdict": "accepted"
+    },
+    "it": {
+      "demo": {
+        "result_review": "The actual current search returns one Ciclo Arco agreement, opens and verifies it, and supports the localized answer about monthly inspection, written reports, calendar 2026 and the named contact. Delta is absent from the answer and selected evidence.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "071b222a217c0dac01a2b3e134c848f4864e730e13ecc6fdb998dd655dcf9487"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "f268180babb77b1d8876adfeca723907ea2497086a2b7bff247c4cb58ed0ae0f"
+          }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Read all ten final answer captures. Each starts with service, stated period and contact, cites the native returned source locator, quotes the relevant extracted passages and provides working local source links. The final section states scope, index refresh time, reading limitations and how to repeat. It describes document content without claiming service performance, archive completeness or legal validity. Technical index and search records remain supporting evidence.",
+        "execution_and_checkpoints": "The actual teaching adapter stages only the prepared client-folder tree and creates a separate private index/session. Current archive code configures, refreshes, searches the exact Ciclo Arco scope and re-verifies every source before use. Search and opened-source records show no reading issues in that scope. The learner identifies the client before searching and locates a stated fact in an opened source at delivery.",
+        "inputs_and_request": "Read each localized agreement, separate Delta agreement and practice update. Ciclo Arco has monthly equipment inspections and written visit reports, further repairs require a separate proposal, the original stated period is calendar 2026 and Elena Esempio is the contact. Delta has a different quarterly agreement with an earlier end date. A later fictional note extends Ciclo Arco service to 30 June 2027. All input files identify themselves as fictional.",
+        "language_and_pacing": "Language it. The full outline, source documents, answer narrative and excerpts are in this language; native technical source locators retain their standard labels. Six planned stages total 390 seconds. The short request, one initial document and one update keep the explanation and practice focused. Native voice delivery, human timing and comprehension have not been measured.",
+        "practice_and_repeat": "Practice adds the update to the same teaching archive, refreshes and opens both documents. The new answer distinguishes the original 31 December 2026 date from the extension to 30 June 2027, retaining services and contact. The original agreement and kit sources are unchanged. The first answer and its source records are byte-preserved and linked from the updated answer. The learner explains why a refresh is needed after new documents arrive.",
+        "purpose_and_first_use": "The plain lesson title teaches finding a client document and answering a concrete question from it. The learner sees the folder structure, selects Ciclo Arco, asks which maintenance service was agreed and until when, opens a citation, then repeats after adding a document. The outline explains when to use and how to repeat the complete local-search path."
+      },
+      "practice": {
+        "result_review": "The same archive adds the prepared update, refreshes and returns both Ciclo Arco documents. The source-backed answer describes the 30 June 2027 extension and preserves the original reference and first answer. All linked files resolve and original kit bytes remain unchanged.",
+        "reviewed_artifacts": [
+          {
+            "name": "answer.md",
+            "sha256": "f22e67273cda080b5dfa95f29d71b9518a191b287e5a76717cce4e1541e87d86"
+          },
+          {
+            "name": "search_evidence.json",
+            "sha256": "740cb5e9fb74b8a22e8d086aad199cba97160def5471f219697f2f40ade5fd28"
+          }
+        ],
+        "test_case": "tests.plugins.test_vera_local_onboarding::test_archive_teaching_kit_runs_scoped_search_and_refresh_in_isolated_copy[practice-it]"
+      },
+      "verdict": "accepted"
     }
   },
   "lipe_source_binding_20261002": {
-    "reviewer": "Codex /root - bounded LIPE source compatibility review",
-    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
     "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
-    "previous_course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
-    "current_course_sha256": "60ba57549c508ac9c8a4d88ea0657f138ca7310dc02a10f629e3974707f153f8",
-    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "60ba57549c508ac9c8a4d88ea0657f138ca7310dc02a10f629e3974707f153f8",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass.",
+    "previous_course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement."
+  },
+  "main_release_source_compatibility_20261028": {
+    "authored_content_comparison": "The complete course differs only in sources. All authored lessons, locales, inputs, checkpoints and execution contracts are unchanged. The current compiled course is identical to the release base on main.",
+    "current_course_sha256": "22df3fc742721d889c2f9b39b0a3924e5b94556291b41f75d14469e984ad0d95",
+    "execution_evidence": "PR 928 head 19f1aa563e68826d9d1629be207c058db113de5b, Teaching kits run 40708933998: 1717 passed and 3 skipped; the subsequent editorial gate failed on these stale source bindings. Matching native execution and the unmodified editorial gate must pass again for the final release.",
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This is source compatibility review only, not new visual, learner, professional or installed-host acceptance.",
+    "previous_course_sha256": "3882911178b274d8d702a11891b794d426cbc7de2e687e404c42d32983617418",
+    "reviewed_at": "2026-10-28",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "scope": "Read-only source and mapping preflight before reconciliation imports, with an explicit check-sources command. No archive writes are introduced by preflight.",
+    "source_baseline": "33b414876 -> b261044555252fc869343404d08c8d2e1c22fe66"
   },
   "native_archive_lifecycle_source_review_20261006": {
+    "current_course_sha256": "674deef5d93f4bbb0d4970fb3e49949d7bdd0b17fe4c4186cbdaf70cd237fc49",
+    "fresh_exact_digest_teaching": "pending",
+    "previous_course_sha256": "8aa648220200598fbda734195dc8bf878a8b1d1e8e9316382f0ea075f2c2c918",
     "reviewer": "Codex /root",
     "scope": "Only the optional native wrapper source binding changes. Every authored course field, localized narrative, input and expected output is byte-equivalent in compiled JSON fields. Existing editorial judgments and historical acceptance remain unchanged.",
-    "previous_course_sha256": "8aa648220200598fbda734195dc8bf878a8b1d1e8e9316382f0ea075f2c2c918",
-    "current_course_sha256": "674deef5d93f4bbb0d4970fb3e49949d7bdd0b17fe4c4186cbdaf70cd237fc49",
-    "source_review": "The app-only native panel now creates a durable engagement, selects exact imported receipts, prepares an idempotent run and separately starts its lifecycle through unchanged Studio Archive APIs. No specialist engine execution, source qualification, professional approval, artifact finalization, customer/learner or installed-host acceptance is inferred. Imports, upstream artifact handoffs and later lifecycle remain specialist-led. Cowork retains maintained persistent engine/file routes.",
-    "fresh_exact_digest_teaching": "pending"
+    "source_review": "The app-only native panel now creates a durable engagement, selects exact imported receipts, prepares an idempotent run and separately starts its lifecycle through unchanged Studio Archive APIs. No specialist engine execution, source qualification, professional approval, artifact finalization, customer/learner or installed-host acceptance is inferred. Imports, upstream artifact handoffs and later lifecycle remain specialist-led. Cowork retains maintained persistent engine/file routes."
   },
   "native_main_integration_observation_20261009": {
-    "recorded_at": "2026-10-09T05:12:43.751634+00:00",
-    "status": "historical_review_union_current_release_unqualified",
     "current_course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
-    "retained_current_main_review_record_sha256": "3094525df119500b9f0f7afcdf0d83fb3108048631728bd7c8da34858f5078e4",
-    "retained_candidate_review_record_sha256": "a77fd17341c689cb1c9e7a96d520127f90a7b428e7609c2a0860b6bfee1f1202",
+    "current_release_acceptance_renewed": false,
+    "different_historical_fields": {
+      "course_sha256": {
+        "candidate_value": "e9185975cfb299853494961e5adc845df17266dc2d8ef3833e866d676334e271",
+        "current_main_value": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95"
+      },
+      "review_scope": {
+        "candidate_value": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+        "current_main_value": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance."
+      }
+    },
+    "localized_editorial_and_artifact_reviews_unchanged": true,
+    "recorded_at": "2026-10-09T05:12:43.751634+00:00",
     "retained_candidate_only_fields": [
       "native_archive_lifecycle_source_review_20261006",
       "native_output_closure_source_review_20261007",
       "native_workspace_source_binding_20261006"
     ],
-    "different_historical_fields": {
-      "review_scope": {
-        "candidate_value": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-        "current_main_value": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance."
-      },
-      "course_sha256": {
-        "candidate_value": "e9185975cfb299853494961e5adc845df17266dc2d8ef3833e866d676334e271",
-        "current_main_value": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95"
-      }
-    },
-    "localized_editorial_and_artifact_reviews_unchanged": true,
-    "current_release_acceptance_renewed": false,
-    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance."
+    "retained_candidate_review_record_sha256": "a77fd17341c689cb1c9e7a96d520127f90a7b428e7609c2a0860b6bfee1f1202",
+    "retained_current_main_review_record_sha256": "3094525df119500b9f0f7afcdf0d83fb3108048631728bd7c8da34858f5078e4",
+    "review_scope": "Preserve both source-review histories and their actual original course pins. Current lesson content matches the candidate reviewed baseline and the two histories have identical locale reviews. Compiler, source hashes and render success do not renew editorial/native output acceptance. Existing current-main reviewer/date/scope/language/artifact fields remain unchanged. The retained course_sha256 is not rewritten to claim current-candidate acceptance.",
+    "status": "historical_review_union_current_release_unqualified"
   },
   "native_output_closure_source_review_20261007": {
-    "reviewed_at": "2026-10-07",
-    "reviewer": "Codex /root - source compatibility review",
-    "previous_course_sha256": "674deef5d93f4bbb0d4970fb3e49949d7bdd0b17fe4c4186cbdaf70cd237fc49",
-    "current_course_sha256": "e9185975cfb299853494961e5adc845df17266dc2d8ef3833e866d676334e271",
+    "authored_content": "Multilingual lessons, examples, requests, expected outputs and timing are unchanged JSON values. The optional native closure addition does not change local search/intake teaching.",
     "changed_sources": [
       "skills/studio-archive/SKILL.md"
     ],
-    "authored_content": "Multilingual lessons, examples, requests, expected outputs and timing are unchanged JSON values. The optional native closure addition does not change local search/intake teaching.",
-    "source_review": "Inspected complete maintained Archive finalization/completion and model-data report contracts. Native explicit purposes/audiences/types declare every physical output; report validation is local and never invents absence of model use. Run sealing/completion are separate from professional case decisions, filing and delivery. Private drafts/intents, CAS and concurrent producer limits preserve authoritative outputs. Cowork specialist persistent CLI remains available without native tools. No engine or teaching content is changed.",
-    "execution_requirement": "Re-run current localized Archive search/refresh cases, course/catalog validation and fresh host package/privacy checks. Source/headless and extracted packages do not establish installed-host, learner, professional or customer acceptance."
+    "current_course_sha256": "e9185975cfb299853494961e5adc845df17266dc2d8ef3833e866d676334e271",
+    "execution_requirement": "Re-run current localized Archive search/refresh cases, course/catalog validation and fresh host package/privacy checks. Source/headless and extracted packages do not establish installed-host, learner, professional or customer acceptance.",
+    "previous_course_sha256": "674deef5d93f4bbb0d4970fb3e49949d7bdd0b17fe4c4186cbdaf70cd237fc49",
+    "reviewed_at": "2026-10-07",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Inspected complete maintained Archive finalization/completion and model-data report contracts. Native explicit purposes/audiences/types declare every physical output; report validation is local and never invents absence of model use. Run sealing/completion are separate from professional case decisions, filing and delivery. Private drafts/intents, CAS and concurrent producer limits preserve authoritative outputs. Cowork specialist persistent CLI remains available without native tools. No engine or teaching content is changed."
   },
   "native_workspace_source_binding_20261006": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-06T20:22:34.949108+00:00",
-    "previous_course_sha256": "4cc94fb383d4891d29de543e43ad35685024b55f4dbac2000893ef53ae47c99a",
-    "current_course_sha256": "8aa648220200598fbda734195dc8bf878a8b1d1e8e9316382f0ea075f2c2c918",
     "authored_content_unchanged": true,
     "changed_sources": [
       "skills/studio-archive/SKILL.md"
     ],
-    "scope": "Canonical current Bilancio workflow identity and optional owned Studio Archive native directory/setup/refresh. Engines, source qualification and authored teaching text are unchanged. Native intake/case connection, Treasury rename recovery, exact-digest teaching execution and installed native/Cowork acceptance remain pending.",
+    "current_course_sha256": "8aa648220200598fbda734195dc8bf878a8b1d1e8e9316382f0ea075f2c2c918",
     "previous_binding_review": {
-      "reviewer": "Codex /root",
-      "reviewed_at": "2026-10-06T18:17:44.961639+00:00",
-      "source_review": "The inspected Bilancio service additions provide authorised bounded read projections and explicit existing-service review writes; existing lesson engine commands and calculations are unchanged. Studio Archive adds optional native saved-run routing with an explicit fallback to its existing file-based route. Authored locales, supplied inputs, pacing and expected outputs are byte-equivalent outside source inventory.",
       "evidence": "docs/releases/2026-10-06-native-workspace-course-source-review.json",
-      "execution_requirement": "Fresh execution against this exact course digest remains mandatory before release; historical editorial and artifact reviews are retained without claiming new learner or installed-host acceptance."
-    }
+      "execution_requirement": "Fresh execution against this exact course digest remains mandatory before release; historical editorial and artifact reviews are retained without claiming new learner or installed-host acceptance.",
+      "reviewed_at": "2026-10-06T18:17:44.961639+00:00",
+      "reviewer": "Codex /root",
+      "source_review": "The inspected Bilancio service additions provide authorised bounded read projections and explicit existing-service review writes; existing lesson engine commands and calculations are unchanged. Studio Archive adds optional native saved-run routing with an explicit fallback to its existing file-based route. Authored locales, supplied inputs, pacing and expected outputs are byte-equivalent outside source inventory."
+    },
+    "previous_course_sha256": "4cc94fb383d4891d29de543e43ad35685024b55f4dbac2000893ef53ae47c99a",
+    "reviewed_at": "2026-10-06T20:22:34.949108+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Canonical current Bilancio workflow identity and optional owned Studio Archive native directory/setup/refresh. Engines, source qualification and authored teaching text are unchanged. Native intake/case connection, Treasury rename recovery, exact-digest teaching execution and installed native/Cowork acceptance remain pending."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "312237d064a050ae3b7ecbe13c0129a01787ece9cebfda65635ae2de6310b0bf",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "previous_course_sha256": "22df3fc742721d889c2f9b39b0a3924e5b94556291b41f75d14469e984ad0d95",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes."
   },
   "patent_box_source_refresh_20260930": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
     "baseline_commit": "bcda5096b53af83584f73b645a0d9e78b29de104",
-    "previous_course_sha256": "d1768a6c57346ecf08556dce891efbfebc710c9f7fa748b81250fa3bccd00892",
-    "current_course_sha256": "a4256330f2d9ac36379c3a01105007c720312ad50be169d22201a99df7df6cfb",
     "content_review": "The complete compiled course object is identical to the previously reviewed main baseline except for source bindings. All authored locales, fictional inputs, requests, checkpoints, outputs, practice and pacing are unchanged. Original editorial judgments and artifact reviews are preserved.",
-    "source_review": "The only changed source adds patent-box-review to VERA_CLIENT_WORKFLOW_IDS. An AST comparison confirms all other shared contract statements are identical. Existing workflow IDs and their behavior are unchanged.",
-    "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
+    "current_course_sha256": "a4256330f2d9ac36379c3a01105007c720312ad50be169d22201a99df7df6cfb",
+    "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json",
     "limits": "Source compatibility review only; no new independent editorial, visual, learner, installed-host or professional acceptance. Earlier reviewed artifacts remain historical evidence.",
-    "detail": "docs/releases/2026-09-30-patent-box-course-source-review.json"
+    "native_execution_evidence": "GitHub Actions run 36703497570, job 109848196461, source 437abcd61eca512a4da8c591386ffdbd0895bec7: the native teaching batch passed 1183 tests, with three explicit skips and 92.10% courseware coverage. The later stale editorial-digest gate failed; this is not a green whole-run claim. Fresh CI must validate every required demo/practice identity against the current digest.",
+    "previous_course_sha256": "d1768a6c57346ecf08556dce891efbfebc710c9f7fa748b81250fa3bccd00892",
+    "reviewed_at": "2026-09-30T11:04:31.688736+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "The only changed source adds patent-box-review to VERA_CLIENT_WORKFLOW_IDS. An AST comparison confirms all other shared contract statements are identical. Existing workflow IDs and their behavior are unchanged."
   },
   "pdf_first_run_source_binding_20261012": {
-    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
-    "previous_course_sha256": "0faa322d8fc29953e3c51f4e2dad7c64692c3b188f8c1229eadc3c585c3a131e",
     "current_course_sha256": "01f8075fc41ff95073f8cabf6cafbc5834492536e185f45bb26be9113f1c52c5",
-    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
-    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
-    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope.",
+    "previous_course_sha256": "0faa322d8fc29953e3c51f4e2dad7c64692c3b188f8c1229eadc3c585c3a131e",
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "7348dfabc590c041a998a0b298cddb16a4a16f9dd07e73ecae9141ed17b6a76e",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
+    "fresh_matching_junit_required": true,
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
+    "parent_course_sha256": {
+      "HEAD": "7348dfabc590c041a998a0b298cddb16a4a16f9dd07e73ecae9141ed17b6a76e",
+      "origin/main": "cc1915de4571028e2c7f08371ca4cafd80bfe59df3aa23444206e796e21b86fb"
+    },
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "cb44c19810e02c35555b61a262d242fe684870fc8729770e0557a668ec81bc3a",
-    "current_course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
       "vendor/modules/courseware/policy.py",
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "dc0a6c46b55851a67bb6a074dd50202fb1f5055349aa88506064e2bb232b1ab1",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "cb44c19810e02c35555b61a262d242fe684870fc8729770e0557a668ec81bc3a",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
   "release_freshness_20260928": {
-    "reviewer": "Codex /root - bounded release freshness review",
-    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
-    "previous_course_sha256": "3ff4cf7685e58dba1440bfcbe9f1dade217121409f0da625d6ccb9a899dad126",
-    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
     "changed_compiled_fields": [
       "sources"
     ],
+    "comparison_source_commit": "960f504a7f6bda0ecd54066d5fbad6e7d4705e56",
     "content_review": "Compared the complete compiled course against the release base: authored locales, fictional input definitions, checkpoints, practice and duration are unchanged. Only bindings to the repaired runtime sources differ.",
-    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced.",
     "italian_course_qa_record": "/private/tmp/teaching-acceptance-20260926/codex-course-18.md",
     "italian_course_qa_sha256": "5cf953e2701a255ba78b98c386615f1c4a513cc4e99c7d7a7c1fe7179cadaac6",
+    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest.",
     "native_execution_evidence": {
       "commit": "2431fbd29",
-      "run": 36392851481,
       "job": 108832365397,
+      "later_failure": "Editorial digest freshness; this run is not represented as fully green.",
       "passed": 1152,
-      "skipped": 3,
       "phase": "Verify teaching-kit languages, real executions and native packages",
-      "later_failure": "Editorial digest freshness; this run is not represented as fully green."
+      "run": 36392851481,
+      "skipped": 3
     },
-    "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
+    "previous_course_sha256": "3ff4cf7685e58dba1440bfcbe9f1dade217121409f0da625d6ccb9a899dad126",
+    "reviewed_at": "2026-09-28T08:12:16.785219+00:00",
+    "reviewer": "Codex /root - bounded release freshness review",
+    "source_review": "The paired teacher/working lesson setup, passive source/result rendering, saved review and reopening repairs were exercised course by course in the Italian Codex QA pass. The final release additionally aligns generated review assets, preserves Lucia saved-review behavior in its source template, and uses declared defusedxml readers. No hosted recipient or Marketplace publication is introduced."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "fba92af5b5124e0794c54e9a234dc8e56b1944d8a838983944a6a43a62574b49",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "ba3aa2e57a55363ea9ee332b673c5049bb63cd69dbe44c00b03fd39159fa5f89",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-10-14T08:00:57.869523+00:00",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "scissione_integration_refresh_20260930": {
-    "previous_course_sha256": "5ac44b76362207f5b3e39752d99959eb2b67480e722be4b4c845cf6606387a78",
-    "new_course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
     "changed_sources": [
       "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
     ],
+    "new_course_sha256": "cba83c4da30dd21b68343e14e12881eb598c501c92d6fbbb5f55fcd115a0315e",
+    "previous_course_sha256": "5ac44b76362207f5b3e39752d99959eb2b67480e722be4b4c845cf6606387a78",
     "review": "Every authored lesson field and input record matches current main. The sole shared source change adds scissione-guidata to the supported workflow IDs; existing workflow behavior is unchanged. Original reviewers, dates, judgments and output hashes are preserved. Fresh native teaching executions are required in CI; no new professional or learner acceptance is claimed."
   },
   "source_binding_review_20261009": {
-    "reviewer": "Codex bounded teaching-material and source integration review",
-    "reviewed_at": "2026-10-09T13:18:34.159838+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex: five-language local archive lesson and delivered answer review",
-      "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
-      "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
-      "course_sha256": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95"
-    },
     "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
     "current_course_sha256": "48f52ed759b0ec739b856e2d4a71e5c7ded3425f59714f65c36265f147cee642",
+    "current_execution_evidence": {
+      "final_gate_requires_fresh_matching_junit": true,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "job": 113818653311,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "native_teaching_suite_passed": 1642,
+      "run": 37930167083,
+      "skipped": 3,
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed"
+    },
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "new_native_output_visual_review": false,
+    "previous_review_identity": {
+      "course_sha256": "08111df731ef54aff9619cab5d4368e42d991289fdb8ad7971e5c61cfe82ce95",
+      "review_scope": "Prepared material and native local document-search review. Read all five complete outlines, all fifteen fictional input documents and all ten final answer captures. Nineteen checks pass, including ten distinct phase/language exercises through the real staging, archive configuration, refresh, exact-scope search and source opening functions. Semantic answers are authored regression fixtures outside the shipped kits and do not replace live host reasoning. Native voice, GUI presentation, actual elapsed lesson time and learner comprehension remain unverified. Gmail, WhatsApp, Drive and the separate engagement lifecycle are not exercised by this local-search lesson. The 0.1.295 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. The 0.1.296 integration refresh changes only the course source inventory; teaching content matches a reviewed parent. No new learner or professional acceptance is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate. Vera 0.1.347 bounded source-inventory refresh: the only changed course field is sources; all authored content, inputs, expectations and locale reviews match the reviewed main baseline. The Archive change adds derived navigation after engagement writes and recovery; local-search and document-format lesson behavior is unchanged. Their current native exercises passed in CI on commit 16671ffb0. This records source-currentness review, not new visual, learner or professional acceptance.",
+      "reviewed_at": "2026-09-14T21:43:59.684693+00:00",
+      "reviewer": "Codex: five-language local archive lesson and delivered answer review"
+    },
+    "reviewed_at": "2026-10-09T13:18:34.159838+00:00",
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
     "unchanged_materials": [
       "all lesson locales and editorial text",
       "input specifications and hashes",
       "demo and practice execution contracts",
       "language and grouping contracts"
+    ]
+  },
+  "source_binding_review_20261017": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "c75a5f7f46a6c8846b6a92b8d9dd2cf5c2f409f1",
+    "changed_sources": [
+      {
+        "current_sha256": "4423da8b6b2c66312745f47046bcb8726248a85ba747f2e31809001994978a53",
+        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
+        "previous_sha256": "643d02b33c08f529c98bc7d3f565c55c4eeda0ee246cfc48405b4306fb759ccd",
+        "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md"
+      },
+      {
+        "current_sha256": "e95fb2f59c7e3d18de7171126d870090b4baa490d5e1551b7a6ca9c281f771d2",
+        "path": "skills/studio-archive/SKILL.md",
+        "previous_sha256": "dd7e2f80997622e229da68d2bd9d2da38c2fb982293c8a7a877108a8f6b61745",
+        "repository_path": "plugins/vera/skills/studio-archive/SKILL.md"
+      }
     ],
-    "changed_fields": [
-      "revision",
-      "sources"
-    ],
-    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
-    "current_execution_evidence": {
-      "run": 37930167083,
-      "job": 113818653311,
-      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
-      "native_teaching_suite_passed": 1642,
-      "skipped": 3,
-      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
-      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
-      "final_gate_requires_fresh_matching_junit": true
-    },
-    "new_native_output_visual_review": false,
-    "installed_host_acceptance": false,
-    "learner_or_professional_acceptance": false,
-    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
+    "current_course_sha256": "33216e006a9b6b36575d9afe3c2c3b845cde55841c1a871f458e6ce08d4d8c21",
+    "execution_requirement": "The complete native teaching CI suite must execute the current course digests and pass verify_release.py on the final PR head before merge.",
+    "limitations": "Preserves historical localized editorial and artifact reviews with their original scope. This source-compatibility review does not attest new rendered-output review, live model inference, learner participation, installed-host acceptance, professional approval, or a function-rating upgrade.",
+    "local_validation": "58 focused model-policy, Archive follow-up and release-review contract tests passed. Current lesson execution and final-head CI are separate evidence gates.",
+    "previous_course_sha256": "972557b4346d0383ce19a1e3a1ed9d63c7d5ade0a270141dd990082e95564f4c",
+    "reviewed_at": "2026-10-17T13:53:01.580339+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "Inspected both changed Archive skill sources against the exact previously reviewed course. The new instructions preserve document-only engagement continuations as explicitly derived support notes through the existing controlled importer, followed by engagement re-listing and controlled-copy readback. They distinguish working copies from saved engagement evidence, retain old versions and retry deduplication, and prohibit invented archive runs or bypassing specialist finalization. The authored local-search lesson content, fictional inputs, locales, expected deliverables and existing artifact-review judgments are unchanged."
   },
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
   "studio_archive_adoption_source_binding_20261008": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
     "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-    "previous_course_sha256": "72be0d6f37056e1959a663eac75c85ef6cb051c972d16e386a8da4ff8c468416",
-    "current_course_sha256": "75b25a0f2f81661f0ba51b5d05b45422b905364f284a24f34dc33ba623e6f632",
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
-    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
-    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+    "current_course_sha256": "75b25a0f2f81661f0ba51b5d05b45422b905364f284a24f34dc33ba623e6f632",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed.",
+    "previous_course_sha256": "72be0d6f37056e1959a663eac75c85ef6cb051c972d16e386a8da4ff8c468416",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json"
+  },
+  "studio_archive_runtime_source_review": {
+    "baseline_commit": "4093d142f0305519f51055784495048b4e1e312e",
+    "content_review": "All compiled fields except sources are identical, including all five localized lesson contents, inputs, demo/practice requests and pacing. Existing editorial judgments and historical artifact reviews are retained; this is a source compatibility binding, not a new learner or professional approval.",
+    "limits": "No new independent editorial judgment, learner completion, voice acceptance or professional approval is asserted.",
+    "native_evidence": "GitHub run 38760188504 job 116509106637 at 7bf1a395: 1674 native teaching tests passed, three skipped, and 20 execution tests for withdrawn courses failed. This is not a green whole-run claim. Those retired-course tests are now conditional; fresh CI must independently validate each retained native demo/practice identity and current course digest.",
+    "previous_course_sha256": "fba92af5b5124e0794c54e9a234dc8e56b1944d8a838983944a6a43a62574b49",
+    "reviewed_at": "2026-10-15T16:10:23.845335+00:00",
+    "reviewer": "Codex /root - archive runtime source compatibility review",
+    "source_changes": [
+      {
+        "after": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55",
+        "before": "012cabe9dde4f66f3ebda6215eb76a7de4912abdec58fb7f189473320d774c9c",
+        "path": "modules/studio-archive/scripts/archive_core.py"
+      },
+      {
+        "after": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a",
+        "before": "eabd25d050c726a55d8975fa626ac8ceab265788bbb891fdc516488a19a34089",
+        "path": "modules/studio-archive/scripts/studio_archive.py"
+      }
+    ],
+    "source_review": "The archive CLI enforces CPython 3.12 before imports and metadata reads use lstat. The product MCP launcher selects the managed runtime. File identity, scope separation, immutable inputs and receipt formats are retained. Actual Cowork refresh and same-engagement imports succeeded with the original input bytes."
   },
   "tax_litigation_fixes_source_review_20261013": {
+    "authored_content_unchanged": true,
     "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
-    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
-      "course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788"
-    },
-    "previous_course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
-    "current_course_sha256": "3e1b24adb4e5cf56be5485dd1fa7771e6750dc348f859267ce0f21f8abc24fdf",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
-    "fresh_matching_junit_required": true
+    "current_course_sha256": "3e1b24adb4e5cf56be5485dd1fa7771e6750dc348f859267ce0f21f8abc24fdf",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
+    "previous_review_identity": {
+      "course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review"
+    },
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json"
   },
   "tax_litigation_source_binding_review_20261013": {
-    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex bounded teaching-material and source integration review",
-      "reviewed_at": "2026-10-09T13:18:34.159838+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
-      "course_sha256": "01f8075fc41ff95073f8cabf6cafbc5834492536e185f45bb26be9113f1c52c5"
-    },
+    "authored_content_unchanged": true,
     "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
-    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
-    "previous_course_sha256": "01f8075fc41ff95073f8cabf6cafbc5834492536e185f45bb26be9113f1c52c5",
-    "current_course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "current_course_sha256": "6139351bf464f1a7d7c6e061bb3d67d5f7781ab65b0ae0fca9af24bbc777e788",
     "fresh_matching_junit_required": true,
-    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
     "learner_or_professional_acceptance": false,
-    "installed_host_acceptance": false
+    "new_native_output_visual_review": false,
+    "previous_course_sha256": "01f8075fc41ff95073f8cabf6cafbc5834492536e185f45bb26be9113f1c52c5",
+    "previous_review_identity": {
+      "course_sha256": "01f8075fc41ff95073f8cabf6cafbc5834492536e185f45bb26be9113f1c52c5",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+      "reviewed_at": "2026-10-09T13:18:34.159838+00:00",
+      "reviewer": "Codex bounded teaching-material and source integration review"
+    },
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json"
+  },
+  "test04_historical_replay_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "current_course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
+    "previous_course_sha256": "312237d064a050ae3b7ecbe13c0129a01787ece9cebfda65635ae2de6310b0bf",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential source review",
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
+  },
+  "unicode_pdf_parent_integration_20261018": {
+    "current_course_sha256": "eb515f52323e0252a029065739572af203e167acade8452cb5c9ab1ede553224",
+    "previous_course_sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
+    "scope": "Exact full authored course comparison against integrated parent5f356f1a2 confirms only reviewed Archive CLI source SHA differs. All original course, localized judgments and artifact reviews retained. Fresh exact-digest native CI required; no professional or installed-host acceptance."
   },
   "valuation_cnc_integration": {
+    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253",
     "reviewed_at": "2026-09-29T23:43:34.624585+00:00",
-    "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately.",
-    "integrated_main": "8f662195f00bac3b605ac73077e1a0bd31d30253"
+    "scope": "Lesson content unchanged from HEAD, MERGE_HEAD outside the source inventory. Reviewed additive workflow-ID registration and Studio Archive immutable snapshot functions. Prior editorial/artifact acceptance and professional limits retained; native CNC and valuation execution is verified separately."
   },
   "valuation_integration_review": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
     "previous_course_sha256": "bdca4646ff1d61d972baa545be56aa0af24e8e39f50565f7636152c19e6aeed7",
+    "reviewed_at": "2026-09-29T17:43:56.264741+00:00",
+    "reviewer": "Codex /root",
     "scope": "Compared every lesson field and input record with origin/main: identical outside source fingerprints. Inspected the sole shared dependency change: adding business-valuation to VERA_CLIENT_WORKFLOW_IDS. No existing workflow semantics, lesson text or input bytes changed. Preserve prior editorial and artifact reviews; fresh native executions remain required in CI.",
     "source_changes": [
       {
-        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1",
         "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
       },
       {
-        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1",
         "before": "877ffb5684dd8c08d672d6ecfde9f5536dc64bd6850729ce7fc81d7cd972e624",
-        "after": "291b0c14d84c2498581ba6e8da92ecbb948df5abfa329bcab9d24ef0924da9a1"
+        "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py"
       }
     ]
   },
-  "workflow": "studio-archive",
-  "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "4dcdd2df546e823f74adfa3f7e48f4cc2df9a6a6399a074a125300f7dbe22ffa",
-    "current_course_sha256": "ba3aa2e57a55363ea9ee332b673c5049bb63cd69dbe44c00b03fd39159fa5f89",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
-    "fresh_matching_junit_required": true,
-    "installed_host_acceptance": false,
-    "new_visual_or_learner_acceptance": false
-  },
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "ba3aa2e57a55363ea9ee332b673c5049bb63cd69dbe44c00b03fd39159fa5f89",
-    "current_course_sha256": "fba92af5b5124e0794c54e9a234dc8e56b1944d8a838983944a6a43a62574b49",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
-  },
-  "studio_archive_runtime_source_review": {
-    "reviewer": "Codex /root - archive runtime source compatibility review",
-    "reviewed_at": "2026-10-15T16:10:23.845335+00:00",
-    "baseline_commit": "4093d142f0305519f51055784495048b4e1e312e",
-    "previous_course_sha256": "fba92af5b5124e0794c54e9a234dc8e56b1944d8a838983944a6a43a62574b49",
-    "source_changes": [
-      {
-        "path": "modules/studio-archive/scripts/archive_core.py",
-        "before": "012cabe9dde4f66f3ebda6215eb76a7de4912abdec58fb7f189473320d774c9c",
-        "after": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55"
-      },
-      {
-        "path": "modules/studio-archive/scripts/studio_archive.py",
-        "before": "eabd25d050c726a55d8975fa626ac8ceab265788bbb891fdc516488a19a34089",
-        "after": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a"
-      }
-    ],
-    "content_review": "All compiled fields except sources are identical, including all five localized lesson contents, inputs, demo/practice requests and pacing. Existing editorial judgments and historical artifact reviews are retained; this is a source compatibility binding, not a new learner or professional approval.",
-    "source_review": "The archive CLI enforces CPython 3.12 before imports and metadata reads use lstat. The product MCP launcher selects the managed runtime. File identity, scope separation, immutable inputs and receipt formats are retained. Actual Cowork refresh and same-engagement imports succeeded with the original input bytes.",
-    "native_evidence": "GitHub run 38760188504 job 116509106637 at 7bf1a395: 1674 native teaching tests passed, three skipped, and 20 execution tests for withdrawn courses failed. This is not a green whole-run claim. Those retired-course tests are now conditional; fresh CI must independently validate each retained native demo/practice identity and current course digest.",
-    "limits": "No new independent editorial judgment, learner completion, voice acceptance or professional approval is asserted."
-  },
-  "archive_error_capture_source_review": {
-    "reviewer": "Codex /root - bounded Archive error-capture source review",
-    "reviewed_at": "2026-10-17T08:28:35.944335+00:00",
-    "baseline_commit": "90e5d155e8ad4f1734c21f591e584e1b24b12fb8",
-    "previous_course_sha256": "cc0eabce2055d07353b5fcf1e2c9245c213069f057f1f1d2e2b4e4da6a3bc0d5",
-    "current_course_sha256": "972557b4346d0383ce19a1e3a1ed9d63c7d5ade0a270141dd990082e95564f4c",
-    "source_changes": [
-      {
-        "path": "modules/studio-archive/scripts/studio_archive.py",
-        "before": "d17cd1abe39e1a6eed4cd946b759bac2f0ad243fb950c1bf4a66ea69f6d4e53a",
-        "after": "caf83eb965861dd50b680228c81bcb3ee949ff1586e342fab07332aae94669e3"
-      }
-    ],
-    "content_review": "Compared every compiled field except sources: all localized content, input definitions, demo/practice requests, checkpoints and pacing are identical. Preserve the existing editorial judgments and historical artifact reviews. This is a source compatibility binding, not a new independent editorial or learner review.",
-    "source_review": "The CLI logs the active handled Archive/OS/value/SQLite exception before its existing JSON error and exit1, and logs its unsupported-runtime guard. Success output, archive selection, source files, ledger formats, professional gates and lesson workflows are unchanged. Source-bound technical reporting and local traceback review are verified separately.",
-    "native_evidence": "GitHub run39014478919 job117343617766 at122df52d1 passed1710 native teaching tests with3 skips. Its later metadata gate rejected these stale course digests; the whole job was not green. A fresh local run of the20 affected localized demo/practice checks passed with actual JUnit properties for the current course digests. Final CI must still execute and verify the full native suite.",
-    "local_junit_sha256": "24b6da63f95a940d07ea10c01a22e6979a1a0e8da7925464b6daad3df0fbbedc",
-    "limits": "No new installed-host, live learner, voice, visual or professional acceptance is asserted."
-  },
-  "source_binding_review_20261017": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-17T13:53:01.580339+00:00",
-    "baseline_commit": "c75a5f7f46a6c8846b6a92b8d9dd2cf5c2f409f1",
-    "previous_course_sha256": "972557b4346d0383ce19a1e3a1ed9d63c7d5ade0a270141dd990082e95564f4c",
-    "current_course_sha256": "33216e006a9b6b36575d9afe3c2c3b845cde55841c1a871f458e6ce08d4d8c21",
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      {
-        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
-        "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-        "previous_sha256": "643d02b33c08f529c98bc7d3f565c55c4eeda0ee246cfc48405b4306fb759ccd",
-        "current_sha256": "4423da8b6b2c66312745f47046bcb8726248a85ba747f2e31809001994978a53"
-      },
-      {
-        "path": "skills/studio-archive/SKILL.md",
-        "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-        "previous_sha256": "dd7e2f80997622e229da68d2bd9d2da38c2fb982293c8a7a877108a8f6b61745",
-        "current_sha256": "e95fb2f59c7e3d18de7171126d870090b4baa490d5e1551b7a6ca9c281f771d2"
-      }
-    ],
-    "source_review": "Inspected both changed Archive skill sources against the exact previously reviewed course. The new instructions preserve document-only engagement continuations as explicitly derived support notes through the existing controlled importer, followed by engagement re-listing and controlled-copy readback. They distinguish working copies from saved engagement evidence, retain old versions and retry deduplication, and prohibit invented archive runs or bypassing specialist finalization. The authored local-search lesson content, fictional inputs, locales, expected deliverables and existing artifact-review judgments are unchanged.",
-    "local_validation": "58 focused model-policy, Archive follow-up and release-review contract tests passed. Current lesson execution and final-head CI are separate evidence gates.",
-    "execution_requirement": "The complete native teaching CI suite must execute the current course digests and pass verify_release.py on the final PR head before merge.",
-    "limitations": "Preserves historical localized editorial and artifact reviews with their original scope. This source-compatibility review does not attest new rendered-output review, live model inference, learner participation, installed-host acceptance, professional approval, or a function-rating upgrade."
-  },
-  "archive_concurrency_source_binding_review_20261017": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-17T14:13:09.616847+00:00",
-    "baseline_commit": "906fdb911d428eafdd6bc14bbfc2e0ee28178c09",
-    "integrated_commit": "6ef0cd0a2674aecac5c861b42a7012e19660f770",
-    "previous_course_sha256": "33216e006a9b6b36575d9afe3c2c3b845cde55841c1a871f458e6ce08d4d8c21",
-    "current_course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      {
-        "path": "modules/studio-archive/scripts/archive_core.py",
-        "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-        "previous_sha256": "886eaca111be852970f3ff701592af744108ad601c9443368683b1eddcbcfe55",
-        "current_sha256": "5de0bbb8d69e4519a189e158cfce743878cd487eb7b2d4392868e4aaf9767037"
-      },
-      {
-        "path": "modules/studio-archive/scripts/archive_preferences.py",
-        "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-        "previous_sha256": "a3bba1a9dd32607c26afdb7fd02fac8fb6f8094524bb3d4d60f15d8958008b28",
-        "current_sha256": "f5ca3c7295c3dcb78f211cb7fe7bb399a73db5888a77a876a2a969af00e4a58a"
-      },
-      {
-        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
-        "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-        "previous_sha256": "4423da8b6b2c66312745f47046bcb8726248a85ba747f2e31809001994978a53",
-        "current_sha256": "5776776e5fad8df0e7c6277a183cea50e276d2e6e2d13df1e17696131ba49490"
-      }
-    ],
-    "source_review": "Inspected complete Archive core, identity-lock and workflow-instruction diffs merged in PR #850. Client-directory operations synchronize portable identities from live directory metadata independently of the content index. Indexed search/source-opening freshness checks remain separate. Shared identity writes use the existing OS lock with a bounded ten-second contention wait; expiry never removes the lock, changes the client or changes the archive root. Session selection remains separate. No model call, hosted recipient or new external data path is added. All authored lesson fields except source bindings match the exact previously reviewed course.",
-    "execution_requirement": "Full final-head teaching CI must execute the exact current course digests and pass verify_release.py before merge.",
-    "limitations": "Historical editorial and artifact reviews retain their original scope. This is source compatibility review, not new visual, learner, professional or installed-host acceptance and not a function-rating upgrade."
-  },
-  "deploy_final_source_compatibility_20261018": {
-    "reviewer": "Codex /root - bounded complete-course comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "61cb4323f56777e73232c11c6b5819b2c6a1be8e5831a3214476d6348bd5ca89",
-    "current_course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
-  },
-  "archive_input_verification_source_review": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-18T13:49:42.008164+00:00",
-    "baseline_commit": "2ac3787368ff68a4592311245a2c0e66d27909b0",
-    "previous_course_sha256": "65292f97295418be569ca5a73b2a231887b23c0f70d4d4701fecf03af9d5c7a0",
-    "current_course_sha256": "7a5cc92caa0f77c8c3dbd543bfc1342d31f8aaca93fc0694d9a39e8752dbbe10",
-    "changed_sources": [
-      {
-        "path": "modules/studio-archive/scripts/archive_core.py",
-        "before": "76af2b1545894a4de14d8e2eafa686292a09d1385750401ab998648a035bdebb",
-        "after": "39a2e9fd500bac5090ee8e5a32bba3ceba07fc61dd1b5795b958db58678a6916"
-      },
-      {
-        "path": "modules/studio-archive/scripts/input_verification.py",
-        "before": null,
-        "after": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
-      },
-      {
-        "path": "modules/studio-archive/scripts/studio_archive.py",
-        "before": "58e80630ead93644796c075862a5235f343935650e963f4c368a907aa0dca4d0",
-        "after": "3aead5a72768b0f6abfc84d1c185dcdfed91304528af8cd91c572d7dd0b47488"
-      },
-      {
-        "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
-        "before": "aaf3cc522c1d31a0b5c718d2e8ca934cc9641f39f082580158bc0c7c5bc4fae9",
-        "after": "e851697b113899a1da8f674e62074785d7294dacfb0198a08f66e9b20591bd85"
-      },
-      {
-        "path": "modules/studio-archive/skills/studio-archive/references/input-verification.md",
-        "before": null,
-        "after": "52e3da59ec7c56b34f48a1a8e21672bbd6540503c8c7e2ecc1b5cdf5b3f137b8"
-      },
-      {
-        "path": "skills/studio-archive/SKILL.md",
-        "before": "86fb69413e766e2ee96810a36c836788cd834d940182ccad6b8b68dd24cc5e48",
-        "after": "67f4fd8675e68a0d4c2acebaf9cfbdd040a0c4fae42a3266b12de72ad25c0939"
-      }
-    ],
-    "content_review": "Compared the complete compiled course with the reviewed main baseline. Every field except the source inventory is identical, including all five localized lesson texts, input definitions, requests, checkpoints, demo, practice and timing. Existing editorial judgments and historical artifact hashes are preserved.",
-    "source_review": "Reviewed the additive Archive verification module, the guarded public wrapper, CLI dispatch and skill guidance. They use the maintained receipt reader to check complete selected file bytes and optional earlier receipt seals without modifying the client archive. Existing local-search and studio-document-format routes retain their prior behavior. Their native teaching fixtures remain isolated and do not invoke a replacement client or acceptance run.",
-    "execution_evidence": "GitHub Actions run 39129516593, teaching-kits job 117681627582, commit c927186ddd3575816fb923b23b6f39bb03189673: the native teaching stage passed 1710 tests with 3 skips and 90.54% coverage. The later editorial freshness check failed; this run is not represented as green. Fresh final CI must bind all required demo and practice cases to the current course hashes.",
-    "limits": "This is a source compatibility refresh of unchanged teaching content, not a new independent editorial review. Historical output reviews remain historical. No new learner, voice, native visual, professional or installed-host acceptance is claimed.",
-    "local_native_evidence": "Twenty fresh local demo/practice executions passed across both workflows and all five languages. The maintained release validator matched every required demo/practice identity and current course SHA-256 against their actual JUnit properties. Existing editorial judgments and historical artifact reviews remain preserved; final full CI is still required."
-  },
-  "archive_input_verification_main_integration": {
-    "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
-    "scope": "Compared complete course payload against the merged main release. Only sources differ; authored lessons, all five languages and existing editorial/artifact judgments are preserved. This refresh records source compatibility, not new learner or professional acceptance. Final CI must execute and bind the current course hashes."
-  },
-  "pdf_recovery_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact retained-course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
-    "previous_course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
-    "current_course_sha256": "7348dfabc590c041a998a0b298cddb16a4a16f9dd07e73ecae9141ed17b6a76e",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.498297+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "c8192258c814f9f90d7645fc94abb43c6a2fbef857ea728d07f31ac8e894bb7b",
-    "current_course_sha256": "cc1915de4571028e2c7f08371ca4cafd80bfe59df3aa23444206e796e21b86fb",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      "plugins/vera/skills/vera/references/model-data-report-contract.md"
-    ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
-  },
-  "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
-    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
-    "parent_course_sha256": {
-      "HEAD": "7348dfabc590c041a998a0b298cddb16a4a16f9dd07e73ecae9141ed17b6a76e",
-      "origin/main": "cc1915de4571028e2c7f08371ca4cafd80bfe59df3aa23444206e796e21b86fb"
-    },
-    "current_course_sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
-  },
   "windows_archive_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "9361a54e9",
-    "previous_course_sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
-    "current_course_sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297",
-    "changed_fields": [
-      "sources"
-    ],
     "authored_content_unchanged": true,
-    "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest.",
+    "baseline_commit": "9361a54e9",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297",
     "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "unicode_pdf_parent_integration_20261018": {
+    "native_ui_qualified": false,
     "previous_course_sha256": "bf1d1f6945dfcc23844c11837a6ef2a3345e89f401f73f43ee71c3aea34c6a2c",
-    "current_course_sha256": "eb515f52323e0252a029065739572af203e167acade8452cb5c9ab1ede553224",
-    "scope": "Exact full authored course comparison against integrated parent5f356f1a2 confirms only reviewed Archive CLI source SHA differs. All original course, localized judgments and artifact reviews retained. Fresh exact-digest native CI required; no professional or installed-host acceptance."
-  },
-  "combined_windows_archive_integration_20261018": {
-    "reviewer": "Codex exact source and retained-course comparison",
     "reviewed_at": "2026-10-18",
-    "parents": [
-      {
-        "label": "windows_bilancio",
-        "commit": "82df4c1d3e2195ce7d3dcb765dd521a5e142c99d",
-        "course_sha256": "c3cc7debcc9eb7a9c7013f88cbad0f53c611f3996dfebd91055ac70e529c9297",
-        "authored_content_unchanged": true
-      },
-      {
-        "label": "archive_unicode",
-        "commit": "4370e78cf321b8c99b3251cff666499a2f15c8a4",
-        "course_sha256": "eb515f52323e0252a029065739572af203e167acade8452cb5c9ab1ede553224",
-        "authored_content_unchanged": true
-      }
-    ],
-    "current_course_sha256": "0e36339042d1c162a6679cf5aff7309c6f4ac1880794f76c5d3c9dfd515ac2cc",
-    "changed_fields": [
-      "sources"
-    ],
-    "source_review": "Combined Windows file/process controls, Bilancio locking, Archive encoding and per-run invalid-record isolation. Strict POSIX no-follow flags remain required. Guidance explicitly distinguishes incomplete inventory from a valid selected activity and prohibits changing or replacing blocked records. Complete non-source course objects match both parents; both prior review histories and historical artifact judgments are retained.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.787785+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "46f0a17b16a0c40ab6d49df09a0e179f05cee289",
-    "previous_course_sha256": "0e36339042d1c162a6679cf5aff7309c6f4ac1880794f76c5d3c9dfd515ac2cc",
-    "current_course_sha256": "a032919ace30a569bae347e8cde009ea0be5d27d1ef431cf44b9347d4cf80b66",
-    "changed_fields": [
-      "sources"
-    ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  },
-  "archive_boundary_source_review_20261027": {
-    "reviewed_at": "2026-10-27",
-    "reviewer": "Codex agent",
-    "previous_course_sha256": "a032919ace30a569bae347e8cde009ea0be5d27d1ef431cf44b9347d4cf80b66",
-    "course_sha256": "7c9aa2c03776e4435cc5bc76580ab4b203ab057ce82de543d12fb2bac9a3c860",
-    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
-    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
-    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
-  },
-  "archive_boundary_extension_source_review_20261027": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-27",
-    "previous_course_sha256": "7c9aa2c03776e4435cc5bc76580ab4b203ab057ce82de543d12fb2bac9a3c860",
-    "course_sha256": "5a11623b2fb9a2d0b54e204dc508971cb30d97343174f9189c7e1aa293415129",
-    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
-    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
+    "reviewer": "Codex source inspection and exact course comparison",
+    "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest."
   },
   "work_continuity_source_binding_20261027": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "authored_content_unchanged": true,
     "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
-    "previous_course_sha256": "5a11623b2fb9a2d0b54e204dc508971cb30d97343174f9189c7e1aa293415129",
-    "current_course_sha256": "3882911178b274d8d702a11891b794d426cbc7de2e687e404c42d32983617418",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
     "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
-    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
-    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "current_course_sha256": "3882911178b274d8d702a11891b794d426cbc7de2e687e404c42d32983617418",
     "fresh_matching_junit_required": true,
-    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "previous_course_sha256": "5a11623b2fb9a2d0b54e204dc508971cb30d97343174f9189c7e1aa293415129",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "main_release_source_compatibility_20261028": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-28",
-    "previous_course_sha256": "3882911178b274d8d702a11891b794d426cbc7de2e687e404c42d32983617418",
-    "current_course_sha256": "22df3fc742721d889c2f9b39b0a3924e5b94556291b41f75d14469e984ad0d95",
-    "source_baseline": "33b414876 -> b261044555252fc869343404d08c8d2e1c22fe66",
-    "scope": "Read-only source and mapping preflight before reconciliation imports, with an explicit check-sources command. No archive writes are introduced by preflight.",
-    "authored_content_comparison": "The complete course differs only in sources. All authored lessons, locales, inputs, checkpoints and execution contracts are unchanged. The current compiled course is identical to the release base on main.",
-    "execution_evidence": "PR 928 head 19f1aa563e68826d9d1629be207c058db113de5b, Teaching kits run 40708933998: 1717 passed and 3 skipped; the subsequent editorial gate failed on these stale source bindings. Matching native execution and the unmodified editorial gate must pass again for the final release.",
-    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This is source compatibility review only, not new visual, learner, professional or installed-host acceptance."
-  },
-  "neutral_workflow_theme_source_review_20261029": {
-    "reviewer": "Codex /root - differential engineering and course-content review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
-    "previous_course_sha256": "22df3fc742721d889c2f9b39b0a3924e5b94556291b41f75d14469e984ad0d95",
-    "current_course_sha256": "312237d064a050ae3b7ecbe13c0129a01787ece9cebfda65635ae2de6310b0bf",
+  "workflow": "studio-archive",
+  "workflow_ui_source_compatibility_review_20261014": {
     "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
+    "current_course_sha256": "ba3aa2e57a55363ea9ee332b673c5049bb63cd69dbe44c00b03fd39159fa5f89",
     "fresh_matching_junit_required": true,
-    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
-  },
-  "test04_historical_replay_source_review_20261029": {
-    "reviewer": "Codex /root - differential source review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
-    "previous_course_sha256": "312237d064a050ae3b7ecbe13c0129a01787ece9cebfda65635ae2de6310b0bf",
-    "current_course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
-    "authored_content_unchanged": true,
-    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
+    "installed_host_acceptance": false,
+    "new_visual_or_learner_acceptance": false,
+    "previous_course_sha256": "4dcdd2df546e823f74adfa3f7e48f4cc2df9a6a6399a074a125300f7dbe22ffa",
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
   }
 }

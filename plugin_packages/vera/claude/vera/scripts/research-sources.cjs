@@ -29,7 +29,7 @@ function resource() {
     .replace("/*__JS__*/",fs.readFileSync(path.join(dir,"research-sources.js"),"utf8"))
     .replaceAll("__FONT__",fs.readFileSync(path.join(dir,"InstrumentSans-Regular.ttf")).toString("base64"))
     .replaceAll("__FONT_BOLD__",fs.readFileSync(path.join(dir,"InstrumentSans-SemiBold.ttf")).toString("base64"));
-  return {contents:[{uri:URI,mimeType:MIME,text:html,_meta:{ui:{csp:{connectDomains:[],resourceDomains:[]}}}}]};
+  return {contents:[{uri:URI,mimeType:MIME,text:html,_meta:{ui:{csp:{connectDomains:[],resourceDomains:[]}},"openai/ui":{preferredDisplayMode:"fullscreen",availableDisplayModes:["inline","fullscreen"]}}}]};
 }
 function handle(request) {
   if(request.method.startsWith("notifications/"))return null;

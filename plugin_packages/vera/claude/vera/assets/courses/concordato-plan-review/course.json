@@ -28,10 +28,6 @@
   },
   "sources": [
     {
-      "path": "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
-      "sha256": "8c787ebc249d2c40abdc7668df4ea31f46bb7e62af8496df8e60393d85480129"
-    },
-    {
       "path": "modules/concordato-plan-review/assets/icon.svg",
       "sha256": "0fc9391144bc35cfde2c9258a9901c32b0b1474a4c60968b3a7a02315f08b510"
     },
@@ -77,7 +73,7 @@
     },
     {
       "path": "modules/concordato-plan-review/scripts/implementation_bootstrap.py",
-      "sha256": "57489cf773a1815a47821b4d5cfaa955b94bc0be3b395456e20f1c07e7d07eb8"
+      "sha256": "f45f285c069cc9e4edd7799b26b704f945c792280a2a340183cfb6d62e915456"
     },
     {
       "path": "modules/concordato-plan-review/scripts/output_closure.py",
@@ -618,5 +614,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a1389ae69ce608ba02dee3e5d4acd9e5e5e4a33ef7b211e93c067b0a846ae98a"
+  "canonical_course_sha256": "d26dfc777779443824015f498e6af599f2068b4efe8c584c802a57a83e08b811"
 }

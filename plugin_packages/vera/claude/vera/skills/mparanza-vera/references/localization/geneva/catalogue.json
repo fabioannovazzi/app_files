@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-ui-consistency/plugins/vera",
-  "version": "0.1.551",
-  "captured_at": "2026-11-03T10:04:52.780931+00:00",
-  "catalogue_fingerprint": "60b9979bd5fbecf5f9a27fd5454056b0174392327714f119f8d8d1ed8139859d",
-  "manifest_sha256": "7d1ec2abf7adb2b022313cd497c2da134b7ad88b2d4d8dd5795c084a5b96b2a5",
+  "version": "0.1.558",
+  "captured_at": "2026-11-03T22:19:17.425029+00:00",
+  "catalogue_fingerprint": "26b1fd98097a4bff50db307c02b894b388c06ffa3b617a2bff3c535ad0b220ab",
+  "manifest_sha256": "5cc8382a0508a116319ae0b09d18dc3b040f7ce22285d21e18a7142d8a8c5d65",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -169,7 +169,7 @@
     {
       "function_id": "management-control-pack",
       "skill_path": "skills/management-control-pack/SKILL.md",
-      "sha256": "e8ec641dc1b02ba232ae5dc8c2298bf383ebf4c744f9788de5f6e1232bf4f289"
+      "sha256": "6e7a4e42e90e74c13c4632400027f3a12e4e094df57a1e8e9dd296166e5cdae3"
     },
     {
       "function_id": "new-client",

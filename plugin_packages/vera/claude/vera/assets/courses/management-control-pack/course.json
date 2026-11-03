@@ -96,8 +96,8 @@
       "sha256": "81b222612685768843dc76d914b59b0df2a58dbe0abbf41185ccd550cbabbbb1"
     },
     {
-      "path": "modules/management-control-pack/scripts/preview_report.py",
-      "sha256": "4a5d5cf9d2cc3a5ce231d8a5e5ced7b531be20577b318044680d630044b003d3"
+      "path": "modules/management-control-pack/scripts/report_preview.py",
+      "sha256": "fbe325749fe1377222d571666b90e5c40cdf3bf66d111b68bea46b3384518cf7"
     },
     {
       "path": "modules/management-control-pack/scripts/run_costing.py",
@@ -109,7 +109,7 @@
     },
     {
       "path": "modules/management-control-pack/skills/mparanza-management-control-pack/SKILL.md",
-      "sha256": "85299b760f2f5c068f582a872fe53cb5da84036a1836086b84dd6b4b6aac5ff1"
+      "sha256": "4083d74b0694852ec34cdac24bacab70767876e4c3fb086b557f1e550d84808d"
     },
     {
       "path": "modules/management-control-pack/skills/mparanza-management-control-pack/references/sites-delivery.md",
@@ -165,7 +165,7 @@
     },
     {
       "path": "skills/mparanza-management-control-pack/SKILL.md",
-      "sha256": "401d9823227d17d5d3235aa0232ab337e12319cabec48875fbf444d019342b42"
+      "sha256": "ae440c6072c2882c845d58ca7c4524a7a976faaa656966737687a3e16998cf84"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -447,5 +447,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4a9805f787bad402b86c195be51f7f87d90b86296012bb96fe113f7992959bb1"
+  "canonical_course_sha256": "7db2df5f17fe14ea00971ad69906c62438ee7280d772627f6a2bdf980884688f"
 }

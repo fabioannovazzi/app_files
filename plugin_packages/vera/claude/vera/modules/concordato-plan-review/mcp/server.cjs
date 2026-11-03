@@ -13,7 +13,6 @@ const CONCORDATO_PLUGIN_IMPLEMENTATION_PATHS = [
   ".codex-plugin/plugin.json",
   ".app.json",
   ".mcp.json",
-  "assets/concordato-plan-review-widget.html",
   "assets/icon.svg",
   "assets/review-workbench-adapter.json",
   "mcp/server.cjs",
@@ -398,27 +397,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "concordato_plan_review_widget",
-      title: "Concordato Preventivo review widget",
-      description:
-        "Renders Concordato Preventivo payloads with searchable procedure, creditor, issue, evidence, check, and appendix rows.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown Concordato Preventivo review widget resource: ${uri}`);
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "concordato-plan-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

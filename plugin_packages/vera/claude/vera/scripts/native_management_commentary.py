@@ -228,6 +228,28 @@ def dispatch(
                 ],
             }
         )
+    if action == "preview":
+        if args["revision"] != current["revision"] or audit["recovery_required"]:
+            raise ValueError("Reopen the current exact management report")
+        row = candidate(current, args)
+        conservation = row.get("conservation")
+        if not conservation or row["status"] != "accepted":
+            raise ValueError("No retained report exists for this commentary")
+        report = (
+            current["output"]
+            / conservation["output_ref"]
+            / "management_control_dashboard_reviewed.html"
+        )
+        result = public(
+            root,
+            {
+                "operation": "preview",
+                "pack": str(current["folder"] / "management_control_pack.json"),
+                "context": loaded["context_path"],
+                "report": str(report),
+            },
+        )
+        return {**common, **result}
     if action == "read":
         row = candidate(current, args)
         _, saved, stamp = draft(current, row, api)

@@ -21,6 +21,7 @@ on:
       - 'tests/plugins/test_prepared_course*.py'
       - 'tests/plugins/test_mixed_course_release.py'
       - 'tests/plugins/test_remote_course_files.py'
+      - 'tests/plugins/test_course_startup_recovery.py'
       - 'tests/plugins/test_vera_local_onboarding.py'
       - 'tests/plugins/test_vera_get_started.py'
       - 'tests/plugins/test_optional_onboarding.py'
@@ -41,6 +42,7 @@ on:
       - 'tests/plugins/test_prepared_course*.py'
       - 'tests/plugins/test_mixed_course_release.py'
       - 'tests/plugins/test_remote_course_files.py'
+      - 'tests/plugins/test_course_startup_recovery.py'
       - 'tests/plugins/test_vera_local_onboarding.py'
       - 'tests/plugins/test_vera_get_started.py'
       - 'tests/plugins/test_optional_onboarding.py'
@@ -175,7 +177,7 @@ jobs:
       - name: Verify teaching-kit languages, real executions and native packages
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_remote_course_files.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
+          tests/plugins/test_teaching_release_review.py tests/plugins/test_teaching_execution_evidence.py tests/plugins/test_prepared_courses.py tests/plugins/test_course_chat_buttons.py tests/plugins/test_course_preview.py tests/plugins/test_mixed_course_release.py tests/plugins/test_prepared_course_packages.py tests/plugins/test_teaching_package_projection.py tests/plugins/test_remote_course_files.py tests/plugins/test_course_startup_recovery.py tests/plugins/test_teaching_kit_execution.py tests/plugins/test_teaching_kit_advisory_execution.py tests/plugins/test_teaching_kit_transcript_execution.py tests/plugins/test_teaching_kit_website_execution.py tests/plugins/test_teaching_presentation_execution.py tests/plugins/test_teaching_inps_execution.py
           tests/plugins/test_teaching_workbook_dimensions.py tests/plugins/test_teaching_concordato_execution.py tests/plugins/test_teaching_question_execution.py tests/plugins/test_teaching_registro_execution.py tests/plugins/test_teaching_bilancio_execution.py
           tests/plugins/test_teaching_attribute_execution.py
           tests/plugins/test_teaching_agenzia_execution.py
@@ -207,8 +209,8 @@ jobs:
           --junitxml=${{ runner.temp }}/teaching-native.xml -o junit_family=legacy
       - name: Check course runtime and compiler
         run: |
-          python -m black --check tests/plugins/test_teaching_patent_box_execution.py
-          python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py
+          python -m black --check tests/plugins/test_teaching_patent_box_execution.py tests/plugins/test_course_startup_recovery.py
+          python -m isort --check-only tests/plugins/test_teaching_patent_box_execution.py tests/plugins/test_course_startup_recovery.py
           python -m mypy --follow-imports=skip tests/plugins/test_teaching_patent_box_execution.py
           python -m bandit -q -ll tests/plugins/test_teaching_patent_box_execution.py
           python scripts/course_materials/build_catalog.py --check
