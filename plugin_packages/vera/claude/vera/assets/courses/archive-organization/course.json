@@ -65,7 +65,7 @@
     },
     {
       "path": "modules/archive-organization/skills/mparanza-archive-organization/SKILL.md",
-      "sha256": "ff47c6d6095283dfe25c64ed37ee242f130df4c2d40bf9210c316149ac97ed85"
+      "sha256": "8de3ec1dbc09ecd27a982995d00e6c3985ab85482dadc4502754f822f6b5c471"
     },
     {
       "path": "modules/archive-organization/skills/mparanza-archive-organization/agents/openai.yaml",
@@ -702,5 +702,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a597ea2a8fd3fa56486585ccbd06475835d13d047de2086cd2ca2365cee590c8"
+  "canonical_course_sha256": "34f05e583fa0ed610e584b300322aeddabb40cd7a128a85d328fb403250917de"
 }

@@ -638,6 +638,7 @@ def test_lucia_and_vera_package_the_identical_opinion_component(
         transport = {
             "mcp/server.cjs",
             "scripts/review_server.py",
+            "skills/deep-research/SKILL.md",
             "skills/legal-tax-answer-review/SKILL.md",
         }
         assert set(lucia) - set(vera) == {widget}

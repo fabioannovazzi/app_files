@@ -304,12 +304,11 @@ ZIPs during a customer run.
    client must accept, reject, edit, mark unclear, or skip each proposed
    change. Save decisions persistently. Editing means supplying a normalized
    client-relative destination path.
-   - Call `validate_archive_organization_review` before
-     `render_archive_organization_review`. Validation binds the stored payload
+   - Call `validate_archive_organization_review` and open the exact saved work with `vera_open_review`. Validation binds the stored payload
      to a random, hash-checked reference that expires after four hours. A
      supplied-plan review without a Studio Archive run receives an in-memory
      review-only reference and cannot persist or execute decisions.
-   - Pass only that `review_reference` to render, save, and apply calls; do not
+   - Pass only that `review_reference` to save and apply calls; do not
      resend the full review payload or absolute context path in later phases.
    - Use `save_archive_organization_decisions` to persist review actions in
      `ui_decisions.json`.

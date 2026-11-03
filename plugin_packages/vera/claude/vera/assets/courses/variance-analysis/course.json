@@ -108,7 +108,7 @@
     },
     {
       "path": "modules/variance-analysis/skills/mparanza-variance-analysis/SKILL.md",
-      "sha256": "e7c7a68da71bb49ec0ad9b280d5b26e8510140a73520f947f64d9b542a4b9783"
+      "sha256": "abc57227deb4cf4053bf16b2b16ed7b7b95a18bc06c88d8b7322b8a26256645b"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/__init__.py",
@@ -901,5 +901,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b4e2975ba1192cc1dcb841a14f1116b85f6944a50d4faf81ed4792d326b85427"
+  "canonical_course_sha256": "2f728ce144d9e76bb590638214441a1b84b6cda82fbbb8fe35829e81fa9e6bcd"
 }

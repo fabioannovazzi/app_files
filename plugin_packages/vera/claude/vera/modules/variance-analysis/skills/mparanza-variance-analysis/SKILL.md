@@ -429,8 +429,7 @@ explicit chat decisions through its tools:
    intake/decision/final-artifact objects. For a managed Vera run, include the
    current absolute `client_engagement` context path.
 3. Retain the returned expiring `persistence_token` for the subsequent save and
-   apply calls in the same MCP server process. Render the metadata inspector
-   with `render_variance_analysis_review` only when the user needs technical trace details.
+   apply calls in the same MCP server process. Open the exact saved work with `vera_open_review` when interactive review is needed.
 4. Use `save_variance_analysis_decisions` to persist reviewer actions to
    `ui_decisions.json`, then `apply_variance_analysis_decisions` to write
    `applied_decisions.json` and update `final_artifacts.json` status. Include

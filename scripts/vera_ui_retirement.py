@@ -236,9 +236,145 @@ def retire_browser_interfaces(entries: dict[str, bytes], prefix: str) -> None:
             )
             entries[name] = text.encode()
     for name in list(entries):
-        if not name.startswith(prefix + "modules/") or not name.endswith("/SKILL.md"):
+        if not name.startswith(prefix + "modules/") or not name.endswith(".md"):
             continue
         text = entries[name].decode()
+        rel = name.removeprefix(prefix)
+        native_docs = (
+            "Apri la revisione del lavoro esatto con `vera_open_review`. "
+            "Conserva validazione, save/apply e rigenerazione degli artefatti nel "
+            "contratto esistente. Se la revisione MCP non è disponibile, esamina "
+            "i documenti in chat e lascia le decisioni in attesa: un'approvazione "
+            "in conversazione non è una revisione applicata.\n\n"
+        )
+        document_sections = {
+            "modules/client-file-preparation/references/workflow-reference.md": (
+                ("## MCP Review Handoff", "## Integrity And Review Contract"),
+            ),
+            "modules/client-file-preparation/README.md": (
+                ("Il widget usa", "Per arrivare allo stato finale"),
+            ),
+            "modules/new-client/README.md": (
+                (
+                    "Se i tool MCP del client non sono disponibili",
+                    "## Fonti e template",
+                ),
+            ),
+            "modules/open-item-reconciliation/README.md": (
+                ("## Review browser locale e UI MCP", "I descrittori di avvio"),
+                (
+                    "La sequenza `validate_open_item_reconciliation_review`",
+                    "## Diagnostica run",
+                ),
+            ),
+        }
+        for start_marker, end_marker in document_sections.get(rel, ()):
+            start = text.find(start_marker)
+            end = text.find(end_marker, start)
+            if start < 0 or end < 0:
+                raise ValueError("Native review documentation boundary is missing")
+            heading = start_marker + "\n\n" if start_marker.startswith("## ") else ""
+            text = text[:start] + heading + native_docs + text[end:]
+        if not name.endswith("/SKILL.md"):
+            # Component READMEs list the retired render tools as well as CLIs.
+            text = re.sub(
+                r"^.*`?render_[a-z_]+_review`?.*(?:\n[ \t]+[^\n]+)*",
+                "Open the exact saved work with `vera_open_review`.",
+                text,
+                flags=re.M,
+            )
+            entries[name] = text.encode()
+            continue
+        text = text.replace(
+            "before\n     `render_archive_organization_review`.",
+            "and open the exact saved work with `vera_open_review`.",
+        ).replace("to render, save, and apply calls", "to save and apply calls")
+        text = text.replace(
+            "If\nvalidation passes, call `render_check_entries_review` with only that reference;\n"
+            "the server sends the complete payload to the widget through component-only\n"
+            "metadata, not model-visible structured content.",
+            "Open the exact saved work with `vera_open_review`; do not pass the component "
+            "validation reference to that opener.",
+        )
+        text = text.replace(
+            "Pass only that reference to\n`render_open_item_reconciliation_review`; "
+            "the server sends the complete payload to\nthe widget through component-only "
+            "metadata, not model-visible structured\ncontent.",
+            "Open the exact saved work with `vera_open_review`; do not pass the component "
+            "validation reference to that opener.",
+        )
+        text = text.replace(
+            "Render the metadata inspector\n   with `render_variance_analysis_review` "
+            "only when the user needs technical trace details.",
+            "Open the exact saved work with `vera_open_review` when interactive review is needed.",
+        )
+        text = text.replace(
+            "then call `render_client_file_preparation_review` once validation succeeds.",
+            "then open the exact saved work with `vera_open_review`.",
+        ).replace("render_client_file_preparation_review\n", "vera_open_review\n")
+        if "/modules/deep-research-validator/" in "/" + name:
+            start = text.find("This projects the saved issues, cycles,")
+            if start >= 0:
+                end = text.find("For a completed run,", start)
+                if end < 0:
+                    raise ValueError("Deep research completed-run safeguard is missing")
+                text = (
+                    text[:start]
+                    + "Review the saved issues, cycles, source captures, original and opposing "
+                    "opinions, assessment and comparison in chat and their retained documents. "
+                    "Validate the hash-bound local review reference and preserve the existing "
+                    "save/apply contract. This workflow has no native review route; do not launch "
+                    "another widget. Declared status and display limits do not certify closure, "
+                    "coverage or legal quality. Read the original artifacts for substantive review.\n"
+                    + text[end:]
+                )
+        # Replace only numbered render steps; the following substantive review,
+        # validation, persistence and professional safeguards remain intact.
+        text = re.sub(
+            r"^(\d+)\. [^\n]*`render_[a-z_]+_review`[^\n]*\n(?: {3}[^\n]*\n)*",
+            r"\1. Open the exact saved work with `vera_open_review`; do not pass component validation fields to this opener.\n",
+            text,
+            flags=re.M,
+        )
+        # These two skills describe browser recovery outside their UI section.
+        # Retain the no-write-back safeguard when that retired transport is absent.
+        if "/modules/client-file-preparation/" in "/" + name:
+            text = re.sub(
+                r"   MCP server owns validation, HTML widget rendering, and decision persistence;"
+                r".*?A final-ready review must record a stable",
+                "   Native MCP owns validation and decision persistence. If it is unavailable,\n"
+                "   leave decisions pending and review Markdown in chat. A final-ready review "
+                "must record a stable",
+                text,
+                flags=re.S,
+            )
+        for component, start_marker, end_marker in (
+            (
+                "client-file-preparation",
+                "If the host MCP tools are unavailable, do not replace write-back",
+                "6. Inspect nearby source files",
+            ),
+            (
+                "new-client",
+                "If the host MCP tools are unavailable, start the packaged local workbench",
+                "## Expected artifacts",
+            ),
+        ):
+            if f"/modules/{component}/" not in "/" + name:
+                continue
+            start = text.find(start_marker)
+            if start >= 0:
+                end = text.find(end_marker, start)
+                if end < 0:
+                    raise ValueError("Native fallback safeguard boundary is missing")
+                text = (
+                    text[:start]
+                    + "If the native MCP review is unavailable, review the Markdown artifacts "
+                    "in chat and leave decisions pending. A conversational approval is not "
+                    "an applied professional review. Resume the exact saved work with "
+                    "`vera_open_review` when the native service is available.\n\n"
+                    + text[end:]
+                )
         if "/modules/management-control-pack/" in "/" + name:
             start = text.find(
                 "Open the final interactive HTML in Codex through the bound local preview:"

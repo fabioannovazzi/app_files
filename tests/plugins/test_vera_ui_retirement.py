@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import re
 from pathlib import Path
 
 from scripts.vera_ui_retirement import retire_browser_interfaces
@@ -67,6 +68,46 @@ def test_product_cleanup_does_not_remove_independent_plugin_editors():
     assert entries["vera/ui/workspace.html"] == b"Vera native app"
 
 
+def test_native_client_skills_preserve_pending_review_without_browser_fallback():
+    entries = {
+        f"modules/{component}/skills/{component}/SKILL.md": (
+            ROOT / f"plugins/{component}/skills/{component}/SKILL.md"
+        ).read_bytes()
+        for component in ("new-client", "client-file-preparation")
+    }
+    for component, document in (
+        ("new-client", "README.md"),
+        ("client-file-preparation", "README.md"),
+        ("client-file-preparation", "references/workflow-reference.md"),
+        ("open-item-reconciliation", "README.md"),
+    ):
+        entries[f"modules/{component}/{document}"] = (
+            ROOT / f"plugins/{component}/{document}"
+        ).read_bytes()
+    retire_browser_interfaces(entries, "")
+    for name, content in entries.items():
+        if not name.endswith(".md"):
+            continue
+        assert b"python scripts/review_server.py" not in content
+        assert b"python -I -B scripts/review_server.py" not in content
+        assert b"serve_review_workbench.py" not in content
+        assert b"vera_open_review" in content
+        if name.endswith("/SKILL.md"):
+            assert b"leave decisions pending" in content
+            assert (
+                b"conversational approval is not an applied professional review"
+                in content
+            )
+    assert (
+        b"I descrittori di avvio"
+        in entries["modules/open-item-reconciliation/README.md"]
+    )
+    assert (
+        b"## MCP Review Handoff"
+        in entries["modules/client-file-preparation/references/workflow-reference.md"]
+    )
+
+
 def test_retirement_preserves_newer_managed_python_sources_on_older_build_hosts(
     monkeypatch,
 ):
@@ -90,6 +131,60 @@ def test_retirement_preserves_newer_managed_python_sources_on_older_build_hosts(
         entries["modules/management-control-pack/scripts/management_control_core.py"]
         == runtime_source
     )
+
+
+def test_projected_component_instructions_do_not_call_retired_render_tools():
+    components = (
+        "archive-organization",
+        "check-entries",
+        "client-file-preparation",
+        "concordato-plan-review",
+        "deep-research-validator",
+        "journal-bank-reconciliation",
+        "journal-sampling",
+        "new-client",
+        "open-item-reconciliation",
+        "previdenza-inps",
+        "registro-imprese-sari",
+        "report-builder",
+        "variance-analysis",
+    )
+    entries = {
+        f"modules/{component}/{path.relative_to(ROOT / 'plugins' / component)}": path.read_bytes()
+        for component in components
+        for path in (ROOT / "plugins" / component).rglob("*.md")
+    }
+    retire_browser_interfaces(entries, "")
+    for name, content in entries.items():
+        if name.endswith(("/SKILL.md", "/README.md")):
+            assert not re.search(rb"render_[a-z_]+_review", content), name
+    deep = entries["modules/deep-research-validator/skills/deep-research/SKILL.md"]
+    assert b"This workflow has no native review route" in deep
+    assert b"For a completed run," in deep
+
+
+def test_cowork_projects_native_fallback_without_reintroducing_browser_servers():
+    from scripts.build_claude_plugin_zip import (
+        _project_client_file_preparation_cowork_skill,
+        _project_new_client_cowork_skill,
+    )
+
+    entries = {
+        f"modules/{component}/skills/{component}/SKILL.md": (
+            ROOT / f"plugins/{component}/skills/{component}/SKILL.md"
+        ).read_bytes()
+        for component in ("new-client", "client-file-preparation")
+    }
+    retire_browser_interfaces(entries, "")
+    for component, project in (
+        ("new-client", _project_new_client_cowork_skill),
+        ("client-file-preparation", _project_client_file_preparation_cowork_skill),
+    ):
+        text = entries[f"modules/{component}/skills/{component}/SKILL.md"].decode()
+        cowork = project(text)
+        assert "optional native MCP review is unavailable" in cowork
+        assert "leave decisions pending" in cowork
+        assert "scripts/review_server.py" not in cowork
 
 
 def test_native_workspace_still_embeds_the_bilancio_area_renderer():
