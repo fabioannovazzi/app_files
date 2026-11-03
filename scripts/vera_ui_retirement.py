@@ -143,6 +143,18 @@ def retire_browser_interfaces(entries: dict[str, bytes], prefix: str) -> None:
             or rel == "scripts/serve_review_workbench.py"
         ):
             entries[name] = _review_engine(entries[name])
+    # The canonical registry also serves sibling products. Advertise only the
+    # entrypoints retained in this Vera projection.
+    registry_name = prefix + "skills/vera/references/workflow-registry.json"
+    if registry_name in entries:
+        registry = json.loads(entries[registry_name])
+        for component in registry["components"]:
+            component["python_entrypoints"] = [
+                path for path in component["python_entrypoints"] if path not in removed
+            ]
+        entries[registry_name] = (
+            json.dumps(registry, ensure_ascii=False, indent=2) + "\n"
+        ).encode()
     # Retired widget files were implementation inputs only while they existed.
     # Remove those exact receipt rows, retaining every engine/security input.
     retired_assets = {

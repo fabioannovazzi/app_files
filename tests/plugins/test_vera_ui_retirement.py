@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import ast
+import json
 import re
 from pathlib import Path
 
@@ -22,6 +23,19 @@ def test_embedded_review_engines_survive_without_http_or_html_launchers():
         "modules/archive-organization/assets/archive-organization-review-widget.html": b"retired editor",
         "modules/bilancio-xbrl-it/ui/workspace.html": b"retired duplicate",
         "modules/treasury-forecast/assets/review.html": b"retired editor",
+        "modules/management-control-pack/scripts/preview_report.py": b"retired launcher",
+        "skills/vera/references/workflow-registry.json": json.dumps(
+            {
+                "components": [
+                    {
+                        "python_entrypoints": [
+                            "modules/management-control-pack/scripts/preview_report.py",
+                            "modules/management-control-pack/scripts/run_pack.py",
+                        ]
+                    }
+                ]
+            }
+        ).encode(),
         "ui/workspace.html": b"native app",
         "vendor/modules/courseware/assets/chat.html": b"native course app",
         "outside/normal-report.md": b"deliverable",
@@ -51,6 +65,10 @@ def test_embedded_review_engines_survive_without_http_or_html_launchers():
         node.name for node in specialized.body if isinstance(node, ast.FunctionDef)
     }
     assert entries["outside/normal-report.md"] == b"deliverable"
+    registry = json.loads(entries["skills/vera/references/workflow-registry.json"])
+    assert registry["components"][0]["python_entrypoints"] == [
+        "modules/management-control-pack/scripts/run_pack.py"
+    ]
 
 
 def test_product_cleanup_does_not_remove_independent_plugin_editors():

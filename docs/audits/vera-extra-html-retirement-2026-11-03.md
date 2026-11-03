@@ -33,3 +33,9 @@ The packaging transform is deliberately scoped to Vera. Independently distribute
 ## Retained limits
 
 The transactional local installer selected one enabled Vera 0.1.554 from an indexed, content-addressed source. Deployment and Desktop acceptance are recorded separately in the operational audit. Existing user data, historical reports and decisions were not modified. Source/package tests do not establish visible Desktop acceptance, professional approval, actual model delivery or Marketplace publication.
+
+## Final canonical registry correction
+
+The current-head managed-runtime CI check found that the canonical workflow registry omitted the retained management `preview_report.py` script, used independently by Clara. Regenerating the registry adds that canonical entry. Vera's distribution then removes the exact retired launcher entry from its projected registry, retaining `run_pack.py` and all other available engines. The bounded regression verifies that retired launchers cannot remain advertised. This changes metadata only; native UI code, model payloads, external boundaries, professional decisions and the 58 teaching kits are unchanged. The inspected Vera workstream and native-workspace fingerprints are refreshed for this metadata correction; this is not proof of provider delivery or professional acceptance.
+
+All 40 initial UI surfaces now have actual Codex Desktop DOM evidence in the retained audit project, including the three auxiliary panels that initially did not open. Research and Agenzia Refresh operations succeeded; no subscription connection, portal acquisition or course worker was started. Raster capture remains unavailable, and the documented Variance viewer-button presentation issue remains separate from backend role enforcement.
