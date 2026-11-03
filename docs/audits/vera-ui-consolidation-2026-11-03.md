@@ -122,3 +122,13 @@ three host formats rebuilt successfully for Vera 0.1.559, Clara 0.1.372 and Luci
 `57acbebf4dc6c808631941cba6b8873be1b4c077ccd6a08b7d6841f5fad31f46`.
 The final CI artifacts, deployment and fresh Desktop connection remain separate
 verification gates.
+
+Two later CI failures concerned test harnesses rather than missing shipped
+assets: the research-subscription fixture extracted only the regular font, and
+the dated reconnect harness joined the literal `${PLUGIN_ROOT}` to its cache
+path. Include the already shipped semibold font and model the host's documented
+plugin-root expansion. The full affected opinion group then passed locally:
+510 passed, 2 skipped, 85.72% coverage. The dated reinstall/upgrade/reconnect
+regression also passed against the exact CI archive. These corrections change
+no product files or package identity; Vera remains 0.1.559 with identity
+`57acbebf4dc6c808631941cba6b8873be1b4c077ccd6a08b7d6841f5fad31f46`.

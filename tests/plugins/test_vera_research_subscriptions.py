@@ -357,6 +357,7 @@ def test_shipped_archives_execute_the_subscription_cli_and_render_the_panel(
         "ui/custom_select.js",
         "ui/workspace.css",
         "ui/InstrumentSans-Regular.ttf",
+        "ui/InstrumentSans-SemiBold.ttf",
     ]
     with ZipFile(ROOT / archive) as package:
         matches = [n for n in package.namelist() if n.endswith(suffix)]

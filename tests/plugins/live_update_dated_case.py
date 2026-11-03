@@ -205,13 +205,17 @@ class MCP:
         configuration = json.loads((root / ".mcp.json").read_text())["mcpServers"][
             "vera"
         ]
+        # Model the host's documented plugin-root expansion before launching.
+        arguments = [
+            value.replace("${PLUGIN_ROOT}", str(root))
+            for value in configuration["args"]
+        ]
+        working_directory = root / configuration.get("cwd", ".").replace(
+            "${PLUGIN_ROOT}", str(root)
+        )
         self.process = subprocess.Popen(
-            [
-                configuration["command"],
-                str(root / configuration["args"][0]),
-                *configuration["args"][1:],
-            ],
-            cwd=root,
+            [configuration["command"], *arguments],
+            cwd=working_directory,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
