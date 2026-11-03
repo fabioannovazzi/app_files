@@ -56,4 +56,5 @@ def test_vera_zip_expected_entries_embed_registro_imprese_sari_component() -> No
     assert prefix + "schemas/case_intake.schema.json" in entries
     assert prefix + "schemas/practice_plan.schema.json" in entries
     assert prefix + "mcp/server.cjs" in entries
-    assert prefix + "assets/registro-imprese-sari-review-widget.html" in entries
+    assert prefix + "assets/registro-imprese-sari-review-widget.html" not in entries
+    assert "vera-codex-plugin/plugins/vera/ui/workspace.html" in entries
