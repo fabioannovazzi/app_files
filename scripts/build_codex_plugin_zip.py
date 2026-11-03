@@ -1344,6 +1344,9 @@ def source_zip_entries(
 
             theme_package_resources(entries, f"{root}/plugins/{plugin_dir.name}/")
         if plugin_dir.name == "vera":
+            from scripts.vera_ui_retirement import retire_browser_interfaces
+
+            retire_browser_interfaces(entries, f"{root}/plugins/vera/")
             named_browser_skill_cards(entries, f"{root}/plugins/vera/")
             if project_vera_privacy:
                 projection = _project_vera_codex_privacy(

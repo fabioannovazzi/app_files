@@ -28,10 +28,6 @@
   },
   "sources": [
     {
-      "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "b8293a845997a4151098ef1d13610bc35238ce742cb252a9bacb340f81ed44c9"
-    },
-    {
       "path": "modules/deep-research-validator/assets/icon.svg",
       "sha256": "073aa85b571ca655a9a0aa4297fa975fe8a41b4d52cf3c14f7d4a6dfb9e11f1e"
     },
@@ -166,10 +162,6 @@
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/serialization.py",
       "sha256": "ac29b40b0f044acf00e234f6b3dd20cbda8f69bce3a63b15bb80e4db092652c3"
-    },
-    {
-      "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
-      "sha256": "d027342967c1a77786d18fdb525deb80006e073f0724a09d2ae9423545e1c1c4"
     },
     {
       "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
@@ -882,5 +874,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "47cbde8c20dff5aff98d2e2517bed64a1bc9485320e07bf69ababbba288569a1"
+  "canonical_course_sha256": "bad135f49e8ee58bcddc2e32b403842bc4c84e24f10d6ce28283408756d1cbdb"
 }

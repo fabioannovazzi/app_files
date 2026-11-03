@@ -1062,23 +1062,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "previdenza_inps_review_widget",
-      title: "Previdenza INPS review",
-      description: "Interactive evidence and decision review for a local previdenza INPS case run.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetMeta(),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error("unknown widget resource");
-  return fs.readFileSync(path.join(PLUGIN_ROOT, "assets", "previdenza-inps-review-widget.html"), "utf8");
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function requireText(value, field) {
   if (typeof value !== "string" || value.trim() === "") {

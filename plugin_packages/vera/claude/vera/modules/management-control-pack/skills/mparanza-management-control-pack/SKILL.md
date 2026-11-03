@@ -377,19 +377,7 @@ source completeness, business causation, or approval.
   `management_control_dashboard_reviewed.html`, and
   `commentary_receipt.json`.
 
-Open the final interactive HTML in Claude through the bound local preview:
-
-```bash
-python scripts/preview_report.py --client-engagement <context.json> --report <run-output>/pack/final/management_control_dashboard_reviewed.html
-```
-
-Keep that process running and open its exact printed HTTP URL with a browser
-panel, not a file/source editor. The preview serves only the receipt-verified
-report on loopback, permits only the bundled month-switching script, and makes
-no external requests. It also reopens completed archive runs read-only. Verify
-the cumulative and monthly controls in the actual browser. Preserve the HTML
-and workbook links as downloadable artifacts; the passive teaching reader is
-useful for reading them but does not run interactive controls.
+Open the exact work with `vera_open_review`, then Commento e rapporto and Anteprima interattiva del rapporto. The app verifies the original report receipt and renders its month controls in an isolated frame. Keep the normal HTML and workbook exports. No localhost preview process is shipped in Vera.
 
 Visually inspect the final HTML. Open the generated XLSX in Excel when the
 current runtime can operate it and check sheet names, number formats, frozen

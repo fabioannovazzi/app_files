@@ -4,36 +4,21 @@
 from __future__ import annotations
 
 import argparse
-import ipaddress
 import json
 import logging
 import os
 import re
 import secrets
 import shutil
-import socket
 import subprocess
 import sys
-import webbrowser
 from dataclasses import dataclass
-from http import HTTPStatus
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from local_helper_environment import local_helper_environment  # noqa: E402
 
-__all__ = [
-    "LocalReviewWorkbench",
-    "build_session_payload",
-    "call_review_tool",
-    "create_review_http_server",
-    "main",
-    "render_review_html",
-    "serve_review",
-]
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_ITEMS = 3000
@@ -245,60 +230,16 @@ def _with_vera_customer_context(
     return {**args, "client_engagement": context_path}
 
 
-def _validate_loopback_host(host: str) -> str:
-    normalized = host.strip()
-    if normalized.lower() == "localhost":
-        return normalized
-    try:
-        address = ipaddress.ip_address(normalized)
-    except ValueError as exc:
-        raise ValueError(
-            "review server host must be localhost or a loopback IP"
-        ) from exc
-    if not address.is_loopback:
-        raise ValueError("review server host must be localhost or a loopback IP")
-    return normalized
 
 
-def _review_url(host: str, port: int) -> str:
-    try:
-        address = ipaddress.ip_address(host)
-    except ValueError:
-        return f"http://{host}:{port}/review"
-    if address.version == 6:
-        return f"http://[{host}]:{port}/review"
-    return f"http://{host}:{port}/review"
 
 
-def _server_class(host: str) -> type[ThreadingHTTPServer]:
-    try:
-        address = ipaddress.ip_address(host)
-    except ValueError:
-        return ThreadingHTTPServer
-    if address.version != 6:
-        return ThreadingHTTPServer
-
-    class IPv6ThreadingHTTPServer(ThreadingHTTPServer):
-        address_family = socket.AF_INET6
-
-    return IPv6ThreadingHTTPServer
 
 
 def _adapter(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     return _read_json_object(workbench.adapter_path, required=True)
 
 
-def _widget_path(workbench: LocalReviewWorkbench) -> Path:
-    html_files = sorted(
-        path
-        for path in (workbench.plugin_dir / "assets").glob("*.html")
-        if path.is_file()
-    )
-    if len(html_files) != 1:
-        raise ValueError(
-            f"expected exactly one review widget HTML asset for {workbench.plugin}"
-        )
-    return html_files[0]
 
 
 def _validate_review_payload(
@@ -570,117 +511,10 @@ def build_session_payload(workbench: LocalReviewWorkbench) -> dict[str, Any]:
     return sanitized
 
 
-def _script_json(value: Any) -> str:
-    """Encode JSON for an executable script without allowing tag termination."""
-
-    return (
-        json.dumps(value, ensure_ascii=False, default=str)
-        .replace("&", "\\u0026")
-        .replace("<", "\\u003c")
-        .replace(">", "\\u003e")
-        .replace("\u2028", "\\u2028")
-        .replace("\u2029", "\\u2029")
-    )
 
 
-def _bridge_html(workbench: LocalReviewWorkbench, session_token: str) -> str:
-    payload_json = _script_json(
-        build_session_payload(workbench),
-    )
-    plugin_json = _script_json(workbench.plugin)
-    token_json = _script_json(session_token)
-    return f"""<script>
-    (function () {{
-      const serverPayload = {payload_json};
-      const pluginName = {plugin_json};
-      const reviewToken = {token_json};
-      const stateKey = `${{pluginName}}:${{serverPayload.review_payload?.run_id || "run"}}`;
-      if (serverPayload.local_review_read_only) {{
-        document.addEventListener("DOMContentLoaded", () => {{
-          const messages = {{
-            it: "Risultato archiviato: sola lettura. Le decisioni si salvano prima di finalizzare l’esecuzione. Per ulteriori modifiche avvia una nuova esecuzione.",
-            en: "Archived result: read only. Save review decisions before finalizing the run. Start a new run for further changes.",
-            fr: "Résultat archivé : lecture seule. Enregistrez les décisions avant de finaliser l’exécution. Lancez une nouvelle exécution pour toute modification.",
-            de: "Archiviertes Ergebnis: schreibgeschützt. Prüfentscheidungen vor Abschluss speichern. Für Änderungen einen neuen Lauf starten.",
-            es: "Resultado archivado: solo lectura. Guarde las decisiones antes de finalizar la ejecución. Inicie una nueva ejecución para realizar cambios."
-          }};
-          const language = String(serverPayload.run_intake?.language || serverPayload.review_payload?.language || "en").slice(0,2);
-          const notice = document.createElement("p");
-          notice.id = "local-read-only-notice";
-          notice.setAttribute("role", "status");
-          notice.style.cssText = "padding:16px 24px;margin:0;background:#fff4d6;color:#493900";
-          notice.textContent = messages[language] || messages.en;
-          document.body.prepend(notice);
-          const protect = () => {{
-            for (const id of ["save-decisions", "apply-decisions", "use-recommended"]) {{
-              const button = document.getElementById(id);
-              if (button && !button.disabled) button.disabled = true;
-            }}
-          }};
-          protect();
-          new MutationObserver(protect).observe(document.body, {{subtree:true, childList:true, attributes:true, attributeFilter:["disabled"]}});
-        }}, {{once:true}});
-      }}
-      function readState() {{
-        try {{ return JSON.parse(window.sessionStorage.getItem(stateKey) || "null"); }}
-        catch {{ return null; }}
-      }}
-      window.localReviewDownloadOutput = async (path) => {{
-        const response = await fetch("/api/download-output", {{
-          method: "POST",
-          headers: {{"Content-Type": "application/json", "{REVIEW_TOKEN_HEADER}": reviewToken}},
-          body: JSON.stringify({{path}}),
-        }});
-        if (!response.ok) {{ const error = await response.json(); throw new Error(error.error || "Output unavailable"); }}
-        const url = URL.createObjectURL(await response.blob());
-        const link = document.createElement("a");
-        link.href = url; link.download = path.split(/[\\/]/).pop() || "output";
-        link.click(); setTimeout(() => URL.revokeObjectURL(url), 60000);
-      }};
-      window.openai = {{
-        toolOutput: serverPayload,
-        widgetState: readState(),
-        setWidgetState(value) {{
-          try {{ window.sessionStorage.setItem(stateKey, JSON.stringify(value || null)); }}
-          catch {{ }}
-        }},
-        async callTool(name, args) {{
-          const response = await fetch("/api/call-tool", {{
-            method: "POST",
-            headers: {{
-              "Content-Type": "application/json",
-              "{REVIEW_TOKEN_HEADER}": reviewToken,
-            }},
-            body: JSON.stringify({{ name, args: args || {{}} }}),
-          }});
-          const result = await response.json();
-          if (!response.ok || result.ok === false) {{
-            throw new Error(result.error || `Local review server call failed: ${{name}}`);
-          }}
-          if (result.ui_decisions) serverPayload.ui_decisions = result.ui_decisions;
-          if (result.final_artifacts) serverPayload.final_artifacts = result.final_artifacts;
-          if (result.applied_decisions) serverPayload.applied_decisions = result.applied_decisions;
-          return result;
-        }},
-      }};
-    }}());
-</script>
-  """
 
 
-def render_review_html(
-    workbench: LocalReviewWorkbench,
-    *,
-    session_token: str | None = None,
-) -> str:
-    """Render the generated widget with a local ``window.openai`` bridge."""
-
-    html = _widget_path(workbench).read_text(encoding="utf-8")
-    needle = "  <script>\n    const CONFIG = "
-    if needle not in html:
-        raise ValueError("review widget script insertion point not found")
-    token = session_token or secrets.token_urlsafe(32)
-    return html.replace(needle, _bridge_html(workbench, token) + needle, 1)
 
 
 def _server_tool_args(
@@ -880,259 +714,3 @@ def call_review_tool(
     if not isinstance(sanitized, dict):
         raise ValueError("sanitized plugin tool result must remain an object")
     return sanitized
-
-
-def create_review_http_server(
-    workbench: LocalReviewWorkbench,
-    *,
-    host: str = "127.0.0.1",
-    port: int = 0,
-) -> tuple[ThreadingHTTPServer, str]:
-    """Return a configured local review server and its review URL."""
-
-    build_session_payload(workbench)
-    safe_host = _validate_loopback_host(host)
-    session_token = secrets.token_urlsafe(32)
-    httpd = _server_class(safe_host)(
-        (safe_host, port),
-        _handler(workbench, session_token=session_token),
-    )
-    actual_port = httpd.server_address[1]
-    return httpd, _review_url(safe_host, actual_port)
-
-
-def _review_output_path(workbench: LocalReviewWorkbench, requested: str) -> Path:
-    """Allow downloads only for declared regular output files within this run."""
-    session = _raw_session_payload(workbench)
-    records = session.get("final_artifacts", {}).get("outputs", [])
-    declared = [record.get("path") for record in records if isinstance(record, dict)]
-    declared += [item.get("output_path") for item in session["review_payload"]["items"]]
-    root = workbench.output_dir.resolve()
-    for raw in declared:
-        if not isinstance(raw, str) or not raw:
-            continue
-        candidate = Path(raw)
-        candidate = candidate if candidate.is_absolute() else root / candidate
-        try:
-            relative = candidate.relative_to(root)
-        except ValueError:
-            continue
-        if requested not in {raw, relative.as_posix()}:
-            continue
-        if ".." in relative.parts or any(
-            parent.is_symlink() for parent in (candidate, *candidate.parents)
-        ):
-            raise ValueError(
-                "Output links and paths outside the run are not downloadable"
-            )
-        if not candidate.is_file():
-            raise ValueError("Declared output is not available")
-        if candidate.stat().st_size > 50_000_000:
-            raise ValueError("Open outputs larger than 50 MB from the run folder")
-        return candidate
-    raise ValueError("Output is not declared in this run")
-
-
-def _handler(
-    workbench: LocalReviewWorkbench,
-    *,
-    session_token: str,
-) -> type[BaseHTTPRequestHandler]:
-    class ReviewWorkbenchHandler(BaseHTTPRequestHandler):
-        server_version = "LocalReviewWorkbench/1.0"
-
-        def log_message(self, format_string: str, *args: object) -> None:
-            LOGGER.info("%s - %s", self.client_address[0], format_string % args)
-
-        def _json_response(
-            self,
-            payload: dict[str, Any],
-            *,
-            status: HTTPStatus = HTTPStatus.OK,
-        ) -> None:
-            body = json.dumps(payload, ensure_ascii=False, default=str).encode("utf-8")
-            self.send_response(status.value)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
-            self.end_headers()
-            self.wfile.write(body)
-
-        def _html_response(self, html: str) -> None:
-            body = html.encode("utf-8")
-            self.send_response(HTTPStatus.OK.value)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
-            self.end_headers()
-            self.wfile.write(body)
-
-        def do_GET(self) -> None:
-            route = urlparse(self.path).path
-            try:
-                if route in {"/", "/review", "/review_ui.html"}:
-                    self._html_response(
-                        render_review_html(
-                            workbench,
-                            session_token=session_token,
-                        )
-                    )
-                    return
-                if route == "/api/session":
-                    self._json_response(build_session_payload(workbench))
-                    return
-                if route == "/api/health":
-                    session = build_session_payload(workbench)
-                    self._json_response(
-                        {
-                            "ok": True,
-                            "plugin": workbench.plugin,
-                            "run_id": session["review_payload"]["run_id"],
-                        }
-                    )
-                    return
-                self.send_error(HTTPStatus.NOT_FOUND.value, "Not found")
-            except (OSError, TypeError, ValueError) as exc:
-                self._json_response(
-                    {"ok": False, "error": str(exc)},
-                    status=HTTPStatus.INTERNAL_SERVER_ERROR,
-                )
-
-        def do_POST(self) -> None:
-            route = urlparse(self.path).path
-            if route not in {"/api/call-tool", "/api/download-output"}:
-                self.send_error(HTTPStatus.NOT_FOUND.value, "Not found")
-                return
-            try:
-                supplied_token = self.headers.get(REVIEW_TOKEN_HEADER, "")
-                if not secrets.compare_digest(supplied_token, session_token):
-                    self._json_response(
-                        {"ok": False, "error": "invalid local review session token"},
-                        status=HTTPStatus.FORBIDDEN,
-                    )
-                    return
-                content_type = self.headers.get("Content-Type", "")
-                media_type = content_type.partition(";")[0].strip().lower()
-                if media_type != "application/json":
-                    self._json_response(
-                        {
-                            "ok": False,
-                            "error": "Content-Type must be application/json",
-                        },
-                        status=HTTPStatus.UNSUPPORTED_MEDIA_TYPE,
-                    )
-                    return
-                length = int(self.headers.get("Content-Length", "0"))
-                if length < 0:
-                    raise ValueError("request body length must be non-negative")
-                if length > MAX_POST_BYTES:
-                    raise ValueError(f"request body exceeds {MAX_POST_BYTES} bytes")
-                payload = json.loads(self.rfile.read(length).decode("utf-8"))
-                if not isinstance(payload, dict):
-                    raise ValueError("request body must be a JSON object")
-                if route == "/api/download-output":
-                    output = _review_output_path(
-                        workbench, str(payload.get("path", ""))
-                    )
-                    with output.open("rb") as stream:
-                        body = stream.read(50_000_001)
-                    if len(body) > 50_000_000:
-                        raise ValueError("Output exceeds the download size limit")
-                    self.send_response(HTTPStatus.OK.value)
-                    self.send_header("Content-Type", "application/octet-stream")
-                    self.send_header("Content-Length", str(len(body)))
-                    self.send_header("Cache-Control", "no-store")
-                    self.send_header("X-Content-Type-Options", "nosniff")
-                    self.send_header("Content-Security-Policy", "sandbox")
-                    self.end_headers()
-                    self.wfile.write(body)
-                    return
-                name = payload.get("name")
-                args = (
-                    payload.get("args") if isinstance(payload.get("args"), dict) else {}
-                )
-                self._json_response(call_review_tool(workbench, str(name or ""), args))
-            except json.JSONDecodeError as exc:
-                self._json_response(
-                    {"ok": False, "error": f"invalid JSON request: {exc}"},
-                    status=HTTPStatus.BAD_REQUEST,
-                )
-            except (OSError, subprocess.SubprocessError, TypeError, ValueError) as exc:
-                self._json_response(
-                    {"ok": False, "error": str(exc)},
-                    status=HTTPStatus.BAD_REQUEST,
-                )
-
-    return ReviewWorkbenchHandler
-
-
-def serve_review(
-    workbench: LocalReviewWorkbench,
-    *,
-    host: str = "127.0.0.1",
-    port: int = 0,
-    open_browser: bool = True,
-) -> None:
-    """Serve the review UI on localhost and optionally open a browser."""
-
-    httpd, url = create_review_http_server(workbench, host=host, port=port)
-    LOGGER.info("%s review server: %s", workbench.plugin, url)
-    LOGGER.info("Output folder: %s", workbench.output_dir)
-    if open_browser:
-        webbrowser.open(url)
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        LOGGER.info("Stopping %s review server", workbench.plugin)
-    finally:
-        httpd.server_close()
-
-
-def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Open a generated plugin review workbench in a local browser and "
-            "persist decisions into the run output folder."
-        )
-    )
-    parser.add_argument("output_dir", help="Run output folder with review_payload.json")
-    parser.add_argument(
-        "--plugin", help="Plugin name under the repository plugins folder"
-    )
-    parser.add_argument("--plugin-dir", help="Explicit plugin directory")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=0)
-    parser.add_argument(
-        "--no-open",
-        action="store_true",
-        help="Start the server without opening the browser automatically.",
-    )
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
-    args = _parser().parse_args(argv)
-    try:
-        workbench = LocalReviewWorkbench(
-            plugin_dir=_plugin_dir_from_args(args.plugin, args.plugin_dir),
-            output_dir=_output_dir(args.output_dir),
-        )
-        if (workbench.plugin_dir.parent.parent / "ui/review-routes.json").is_file():
-            LOGGER.info("Apri la revisione da Lavori dello studio nella chat di Vera.")
-            return 0
-        _validate_vera_customer_run(workbench, read_only=True)
-        serve_review(
-            workbench,
-            host=args.host,
-            port=args.port,
-            open_browser=not args.no_open,
-        )
-    except (OSError, TypeError, ValueError) as exc:
-        LOGGER.error("%s", exc)
-        return 2
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())

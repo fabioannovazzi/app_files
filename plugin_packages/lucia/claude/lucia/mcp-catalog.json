@@ -1190,27 +1190,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/deep-research-review.html",
-          "name": "deep_research_review_widget",
-          "title": "Answer-validation review widget",
-          "description": "Renders answer-validation review-session payloads with searchable claims, separate reasoning and judgment findings, source limits, audit checks, and artifacts.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/deep-research-review.html"
-            },
-            "openai/widgetDescription": "Interactive answer-validation surface separating source support, reasoning, professional judgment, source limits, audit checks, and package artifacts.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -3032,46 +3012,7 @@
           }
         }
       ],
-      "resources": [
-        {
-          "uri": "ui://widget/legal-tax-model.html",
-          "name": "legal_tax_model_check",
-          "title": "Legal/tax model selection",
-          "description": "Required model, observed identity and explicit user confirmation before preparation.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/legal-tax-model.html"
-            },
-            "openai/widgetDescription": "Interactive Prompt Optimizer review surface for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        },
-        {
-          "uri": "ui://widget/prompt-optimizer-review.html",
-          "name": "prompt_optimizer_review_widget",
-          "title": "Prompt Optimizer review widget",
-          "description": "Renders Prompt Optimizer review-session payloads with searchable validation checks and generated artifacts.",
-          "mimeType": "text/html;profile=mcp-app",
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/prompt-optimizer-review.html"
-            },
-            "openai/widgetDescription": "Interactive Prompt Optimizer review surface for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
-            "openai/widgetPrefersBorder": false,
-            "openai/widgetCSP": {
-              "connect_domains": [],
-              "resource_domains": []
-            },
-            "openai/widgetDomain": "https://chatgpt.com"
-          }
-        }
-      ],
+      "resources": [],
       "resourceTemplates": [],
       "prompts": []
     },

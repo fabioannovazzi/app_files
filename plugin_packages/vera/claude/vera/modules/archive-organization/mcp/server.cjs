@@ -197,34 +197,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "archive_organization_review_widget",
-      title: "Archive organization review widget",
-      description:
-        "Reviews source paths, proposed destinations, duplicate evidence, anomalies, confidence, and collaborator actions.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: {
-        ui: { resourceUri: WIDGET_URI },
-        "openai/widgetDescription":
-          "Interactive review of a dry-run client-folder organization plan. Saving or applying decisions never performs filesystem moves.",
-        "openai/widgetPrefersBorder": false,
-        "openai/widgetCSP": { connect_domains: [], resource_domains: [] },
-        "openai/widgetDomain": "https://chatgpt.com",
-      },
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown widget resource: ${uri}`);
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "archive-organization-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function requireString(value, label, maximum = 4096) {
   if (typeof value !== "string" || !value.trim() || value.length > maximum) {

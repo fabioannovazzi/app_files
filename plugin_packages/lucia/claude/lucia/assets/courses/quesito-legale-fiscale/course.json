@@ -28,10 +28,6 @@
   },
   "sources": [
     {
-      "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "b8293a845997a4151098ef1d13610bc35238ce742cb252a9bacb340f81ed44c9"
-    },
-    {
       "path": "modules/deep-research-validator/assets/icon.svg",
       "sha256": "073aa85b571ca655a9a0aa4297fa975fe8a41b4d52cf3c14f7d4a6dfb9e11f1e"
     },

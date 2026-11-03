@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-course-startup-source/plugins/vera",
-  "version": "0.1.553",
-  "captured_at": "2026-11-03T11:39:50.056566+00:00",
-  "catalogue_fingerprint": "b54f894c50c1525378637fcce3fe29e6a6f7684e4df3c3defed2203fca4af3f8",
-  "manifest_sha256": "2c371cf87bdc46d35eecfcee2dbcf8768df211e9f40745f6933e90ced1585f49",
+  "root": "/private/tmp/vera-native-only-release/plugins/vera",
+  "version": "0.1.554",
+  "captured_at": "2026-11-03T13:21:11.913728+00:00",
+  "catalogue_fingerprint": "40515ba9efda011ec284451997786308164adc9dd85ab5eee6fb7f1ed6cd8a66",
+  "manifest_sha256": "954d13ae41fbb3d760bccbe36631c68e4d88c4622437d14546564d118c815838",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -169,7 +169,7 @@
     {
       "function_id": "management-control-pack",
       "skill_path": "skills/management-control-pack/SKILL.md",
-      "sha256": "e8ec641dc1b02ba232ae5dc8c2298bf383ebf4c744f9788de5f6e1232bf4f289"
+      "sha256": "6e7a4e42e90e74c13c4632400027f3a12e4e094df57a1e8e9dd296166e5cdae3"
     },
     {
       "function_id": "new-client",

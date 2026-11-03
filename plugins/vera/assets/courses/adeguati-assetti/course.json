@@ -28,11 +28,6 @@
   },
   "sources": [
     {
-      "path": "modules/adeguati-assetti/assets/construction-intake.html",
-      "repository_path": "plugins/adeguati-assetti/assets/construction-intake.html",
-      "sha256": "7e7946c5651db0bc23a718f0902ec63d0fc1f2ce984ff71efe046c0b8e2abf64"
-    },
-    {
       "path": "modules/adeguati-assetti/assets/icon.svg",
       "repository_path": "plugins/adeguati-assetti/assets/icon.svg",
       "sha256": "d215fd17d4913d8f3fe5a4bf4d492f78ee46fa65408d0ec878b3fec32db8a004"
@@ -55,7 +50,7 @@
     {
       "path": "modules/adeguati-assetti/references/construction-workflow.md",
       "repository_path": "plugins/adeguati-assetti/references/construction-workflow.md",
-      "sha256": "756b9d3688265e71a660ab2fb7f075218ec0847e53bf5092f1e70d105d7a48f6"
+      "sha256": "4f4ad156ebfb05474a65fa90d5ed44bbf33bfed20bac9997acaf6f7cc3e042b3"
     },
     {
       "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
@@ -80,7 +75,7 @@
     {
       "path": "modules/adeguati-assetti/scripts/assetti_construction.py",
       "repository_path": "plugins/adeguati-assetti/scripts/assetti_construction.py",
-      "sha256": "d87ba3cc406b3455e6689388fa6c02e445d6b121c2cf222ca715487792067d2e"
+      "sha256": "8216c007fd9ed8cbfcce170efd477ac5f8d2aeff3d2701bab31071639d3d6379"
     },
     {
       "path": "modules/adeguati-assetti/scripts/assetti_review.py",
@@ -110,7 +105,7 @@
     {
       "path": "modules/adeguati-assetti/scripts/construction_intake.py",
       "repository_path": "plugins/adeguati-assetti/scripts/construction_intake.py",
-      "sha256": "cbee5c6d57da936bec28c1776772f324de89e989edb21fcec4d4df4d156a3a5c"
+      "sha256": "0f9191645ceef381e0c1903605be05f7c4f6e278fb7f631a1a7f0632557c91d5"
     },
     {
       "path": "modules/adeguati-assetti/scripts/construction_store.py",

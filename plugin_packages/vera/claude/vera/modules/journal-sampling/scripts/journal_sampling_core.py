@@ -198,10 +198,6 @@ IMPLEMENTATION_PLUGIN_FILES = (
     ("mcp/server.cjs", "implementation.journal_sampling_mcp"),
     ("assets/icon.svg", "implementation.journal_sampling_icon"),
     (
-        "assets/journal-sampling-review-widget.html",
-        "implementation.journal_sampling_widget",
-    ),
-    (
         "assets/review-workbench-adapter.json",
         "implementation.journal_sampling_widget_adapter",
     ),
@@ -767,18 +763,6 @@ def _validate_implementation_configuration() -> None:
         or adapter.get("widgetType") != "journal_sampling_review"
     ):
         raise ValueError("Journal Sampling review adapter contract is stale.")
-    embedded_adapter = (
-        "const CONFIG = "
-        + json.dumps(adapter, ensure_ascii=True, separators=(",", ":"))
-        + ";"
-    )
-    widget = (
-        _COMPONENT_ROOT / "assets" / "journal-sampling-review-widget.html"
-    ).read_text(encoding="utf-8")
-    if widget.count(embedded_adapter) != 1:
-        raise ValueError(
-            "Journal Sampling widget does not embed the exact review adapter."
-        )
 
 
 def _implementation_receipts() -> list[dict[str, Any]]:

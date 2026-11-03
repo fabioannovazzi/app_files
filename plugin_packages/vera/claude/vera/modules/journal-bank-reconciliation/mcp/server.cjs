@@ -39,11 +39,6 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "assets/icon.svg",
   ],
   [
-    "implementation.plugin.assets.journal_bank_review_widget_html",
-    "implementation",
-    "assets/journal-bank-review-widget.html",
-  ],
-  [
     "implementation.plugin.assets.review_workbench_adapter_json",
     "implementation",
     "assets/review-workbench-adapter.json",
@@ -530,29 +525,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "journal_bank_review_widget",
-      title: "Journal-Bank review widget",
-      description:
-        "Renders Journal-Bank review-session payloads with searchable matched and unmatched rows.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) {
-  throw new Error(`unknown Journal-Bank widget resource: ${uri}`);
-  }
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "journal-bank-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

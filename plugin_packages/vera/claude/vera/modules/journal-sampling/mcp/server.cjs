@@ -20,7 +20,6 @@ const JOURNAL_SAMPLING_PLUGIN_IMPLEMENTATION_PATHS = [
   "scripts/run_sample.py",
   "mcp/server.cjs",
   "assets/icon.svg",
-  "assets/journal-sampling-review-widget.html",
   "assets/review-workbench-adapter.json",
   ".app.json",
   ".mcp.json",
@@ -252,21 +251,7 @@ function validateJournalImplementationConfiguration() {
   ) {
     throw new Error("Journal Sampling review adapter contract is stale.");
   }
-  const widget = readJournalImplementationText(
-    "assets/journal-sampling-review-widget.html",
-  );
-  const matches = Array.from(
-    widget.matchAll(/^[ \t]*const CONFIG = (\{.*\});[ \t]*$/gm),
-  );
-  if (
-    matches.length !== 1 ||
-    journalReviewStableJson(JSON.parse(matches[0][1])) !==
-      journalReviewStableJson(REVIEW_ADAPTER)
-  ) {
-    throw new Error(
-      "Journal Sampling widget does not embed the exact review adapter.",
-    );
-  }
+
 }
 
 validateJournalImplementationConfiguration();
@@ -512,28 +497,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "journal_sampling_review_widget",
-      title: "Journal Sampling review widget",
-      description:
-        "Renders Journal Sampling review-session payloads with searchable sampled entries and audit details.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) {
-  throw new Error(`unknown Journal Sampling widget resource: ${uri}`);
-  }
-  return readJournalImplementationText(
-    "assets/journal-sampling-review-widget.html",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

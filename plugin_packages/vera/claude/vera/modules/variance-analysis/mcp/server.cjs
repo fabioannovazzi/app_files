@@ -298,29 +298,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "variance_analysis_review_widget",
-      title: "Variance Analysis review widget",
-      description:
-        "Renders Variance Analysis review-session payloads with searchable driver rows, chart artifacts, contexts, and follow-up requests.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) {
-    throw new Error(`unknown Variance Analysis widget resource: ${uri}`);
-  }
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "variance-analysis-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

@@ -9,7 +9,6 @@ const readline = require("node:readline");
 
 const PLUGIN_ROOT = path.resolve(__dirname, "..");
 const IMPLEMENTATION_CONTRACT = [
-  ["plugin", "assets/open-item-reconciliation-review-widget.html"],
   ["plugin", "assets/icon.svg"],
   ["plugin", "assets/review-workbench-adapter.json"],
   ["plugin", "mcp/server.cjs"],
@@ -663,28 +662,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "open_item_reconciliation_review_widget",
-      title: "Open-item Reconciliation review widget",
-      description: WIDGET_DESCRIPTION,
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) {
-  throw new Error(`unknown Open-item Reconciliation widget resource: ${uri}`);
-  }
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "open-item-reconciliation-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

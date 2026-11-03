@@ -31,10 +31,6 @@
       "sha256": "b0d8e14b9b0087908ac190c8e626838c43f2f81f84b4dbe542c0ce2a19c0b912"
     },
     {
-      "path": "modules/variance-analysis/assets/variance-analysis-review-widget.html",
-      "sha256": "eb7825daa20383739484dba14d8e210663ff1a1992cbaf83964332040461ec61"
-    },
-    {
       "path": "modules/variance-analysis/references/legacy_inventory.json",
       "sha256": "40245a5dabf9448d8221662f3e20710bda51925b263b7f365e0faaa680a8d2f1"
     },
@@ -905,5 +901,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9cfb21f2d88430e3ebb3eba277413ba7aacf479fd231aab658fb12815b69d15d"
+  "canonical_course_sha256": "b4e2975ba1192cc1dcb841a14f1116b85f6944a50d4faf81ed4792d326b85427"
 }

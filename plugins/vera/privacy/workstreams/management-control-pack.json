@@ -154,15 +154,15 @@
       "control": "The preparation helper rebuilds the pack from the hashed inventory and reviewed recipe, requires exact equality with the supplied pack and matching audience, rejects blocked or unsupported reports and requires a new output directory. The HTML is rendered from those checked values. This checks declared audience equality, not the suitability of the audience for private content."
     },
     {
-      "id": "receipt-bound-loopback-preview",
-      "control": "The read-only preview requires a valid current or completed management-control archive context and the exact native commentary receipt and report hash. It serves only pinned report bytes at an unguessable loopback route, revalidates on each request, and exposes no directory or write endpoint. Content Security Policy permits only the bundled report script by exact SHA-256 and blocks external resources, forms and framing."
+      "id": "receipt-bound-native-preview",
+      "control": "The app-only preview requires the exact actor-bound calculation/commentary revision and revalidates the original native commentary receipt and report hash. Completed runs remain read-only. HTML stays in app metadata, in an opaque iframe sandbox with scripts only; CSP permits only the producer's pinned month-switching script and blocks external resources, forms and base URLs. There is no HTTP listener or browser launch."
     }
   ],
   "review": {
-    "reviewed_at": "2026-10-27",
+    "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "41d867e083ad11e3dded8d2236a8834b846259e0ea60ef19ee60ca72965975db"
+    "source_fingerprint": "147685e8a4eac81d72f6269262d989a02a3b042b3f86e9518c4e06b2a134ef42"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md"

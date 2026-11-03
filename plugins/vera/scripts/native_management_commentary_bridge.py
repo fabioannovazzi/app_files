@@ -23,7 +23,13 @@ def main() -> None:
     import management_control_core as core
 
     pack = core.load_json(Path(request["pack"]))
-    if request["operation"] == "validate":
+    if request["operation"] == "preview":
+        from report_preview import preview_document
+
+        result = {
+            "html": preview_document(Path(request["context"]), Path(request["report"]))
+        }
+    elif request["operation"] == "validate":
         checked = core.finalize_commentary(pack, request["commentary"])
         result = {
             "metric_references_checked": True,

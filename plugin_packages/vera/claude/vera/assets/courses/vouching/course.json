@@ -28,10 +28,6 @@
   },
   "sources": [
     {
-      "path": "modules/check-entries/assets/check-entries-review-widget.html",
-      "sha256": "84e01079d848b3792ec1c7b74a1e8763809cff5abe458bb280370d225f9dbb90"
-    },
-    {
       "path": "modules/check-entries/assets/icon.svg",
       "sha256": "be0e2ac5a79667a820d4a1bc9a4c1bd2a9c05bdc449de73d71074106f58b96f2"
     },
@@ -57,11 +53,11 @@
     },
     {
       "path": "modules/check-entries/scripts/check_entries_core.py",
-      "sha256": "82d09f5bb2fdc015e4226d87ec19bc5ba3d34cb4d748344317970bd5eebac54e"
+      "sha256": "14715da9f5bb765d8be26c5d7c8ef6e4b487b240dc7e57b648c95554c1181bdc"
     },
     {
       "path": "modules/check-entries/scripts/implementation_bootstrap.py",
-      "sha256": "2703a48cf95c6c998b6a353edb91522993858c581e0460afd8e3126aab300a22"
+      "sha256": "1b2436c9c9d2b94e00b2a9b8582df9c1b682459d2629707b01d4c57d3688f83f"
     },
     {
       "path": "modules/check-entries/scripts/implementation_contract.py",
@@ -658,5 +654,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "30ab0a14d6194f089b75752e6cf99a6e730cf72096c576d3ae779d52ed9d9e21"
+  "canonical_course_sha256": "aa4bd02d5dc54c6f6b3344a5b4bfea48d70144c80ab98304d5d2debece9c9fe8"
 }

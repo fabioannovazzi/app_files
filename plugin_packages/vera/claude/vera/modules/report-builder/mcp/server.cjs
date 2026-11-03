@@ -15,7 +15,6 @@ const REPORT_BUILDER_PLUGIN_IMPLEMENTATION_PATHS = [
   ".mcp.json",
   "assets/icon.svg",
   "assets/studio-docx-format.schema.json",
-  "assets/report-builder-review-widget.html",
   "assets/review-workbench-adapter.json",
   "mcp/server.cjs",
   "scripts/apply_review_edits.py",
@@ -338,29 +337,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "report_builder_review_widget",
-      title: "Build Report review widget",
-      description:
-        "Renders Build Report review-session payloads with searchable sections, table evidence, issues, and generated artifacts.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) {
-  throw new Error(`unknown Build Report widget resource: ${uri}`);
-  }
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "report-builder-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

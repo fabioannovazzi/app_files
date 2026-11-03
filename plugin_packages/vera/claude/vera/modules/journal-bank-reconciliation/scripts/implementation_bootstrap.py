@@ -33,7 +33,6 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", ".app.json"),
     ("plugin", ".mcp.json"),
     ("plugin", "assets/icon.svg"),
-    ("plugin", "assets/journal-bank-review-widget.html"),
     ("plugin", "assets/review-workbench-adapter.json"),
     ("plugin", "mcp/server.cjs"),
     ("plugin", "scripts/apply_review_edits.py"),

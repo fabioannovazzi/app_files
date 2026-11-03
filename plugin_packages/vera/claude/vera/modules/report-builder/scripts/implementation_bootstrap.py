@@ -35,7 +35,6 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", ".mcp.json"),
     ("plugin", "assets/icon.svg"),
     ("plugin", "assets/studio-docx-format.schema.json"),
-    ("plugin", "assets/report-builder-review-widget.html"),
     ("plugin", "assets/review-workbench-adapter.json"),
     ("plugin", "mcp/server.cjs"),
     ("plugin", "scripts/apply_review_edits.py"),

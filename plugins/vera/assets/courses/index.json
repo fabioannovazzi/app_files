@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "b95d889cf87c5059f121c64396399897f129b37ebe53dc53c08cbd64d68e1e4a",
+      "sha256": "5cfd3dbb05564a69d4f428114b1fb97fe37df2ef54a3e06e8cb3a4132166704e",
       "languages": [
         "it",
         "en",
@@ -666,7 +666,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "f81873e824a849e23a826b9486b3f31a49550ded15e9c0bc60e8a02c7978e6f7",
+      "sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
       "languages": [
         "it",
         "en"
@@ -1077,7 +1077,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",
+      "sha256": "0da028e38f0beb5a31128eb83ff0c0221a57627b42be63f3850ce463b760a7b4",
       "languages": [
         "it"
       ],

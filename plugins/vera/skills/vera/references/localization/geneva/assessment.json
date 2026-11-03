@@ -155,7 +155,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "b54f894c50c1525378637fcce3fe29e6a6f7684e4df3c3defed2203fca4af3f8",
+  "catalogue_fingerprint": "40515ba9efda011ec284451997786308164adc9dd85ab5eee6fb7f1ed6cd8a66",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2514,5 +2514,10 @@
       "vera"
     ],
     "scope": "Visible question and planned authorities before research, and claim-bound citations in delivered opinions. Catalogue coverage only; jurisdiction assessments and professional acceptance are unchanged."
+  },
+  "native_ui_retirement_release_binding_20261103": {
+    "version": "0.1.554",
+    "previous_catalogue_fingerprint": "b54f894c50c1525378637fcce3fe29e6a6f7684e4df3c3defed2203fca4af3f8",
+    "scope": "Existing native review routes replace redundant browser transports. Management report preview moves into MCP and construction intake becomes versioned Markdown. No jurisdiction disposition, professional conclusion or Geneva capability is added; installed acceptance remains separate."
   }
 }

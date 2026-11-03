@@ -499,14 +499,14 @@ subdirectory on regeneration. Preserve the demo while running the April update.
 ## Management-control results
 
 The management-control dashboard has live month selectors. After native
-`finalize_pack.py`, use that module's `scripts/preview_report.py` with the exact
-client context and reviewed dashboard path. Open the printed HTTP URL in the
-working chat and verify the cumulative view and one month. Do not pass this
+`finalize_pack.py`, open the native MCP report preview for the exact
+saved work and reviewed dashboard. In Commento e rapporto choose Anteprima
+interattiva del rapporto and verify the cumulative view and one month. Do not pass this
 interactive HTML to the passive course result reader, which deliberately rejects
 active documents. Use a document result view for the workbook and Markdown
 report and keep the dashboard in its native preview. Record all displayed files
 and retain the normal complete archive inventory. A completed run can be reopened
-read-only with the same native preview command.
+read-only in the same native MCP preview.
 
 ## Concordato revision practice
 

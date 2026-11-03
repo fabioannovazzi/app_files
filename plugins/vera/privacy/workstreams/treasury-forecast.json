@@ -78,9 +78,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-10-29",
+    "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "dc9808b87da248c5cd9d4597f196e2168711be64f937b112f3cc6a59a4f854f5"
+    "source_fingerprint": "004918ca631df38f5aead1a64b59cb7791dcb6f853a9b7ea6a86e16e5d0e4ec3"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -98,8 +98,8 @@
       "control": "Source hashes, prepared-input digest, record digest and the pinned artifact inventory are checked on review. Stale writes and concurrent review writes fail; accepted versions cannot be edited in that session."
     },
     {
-      "id": "loopback-review",
-      "control": "The review server binds 127.0.0.1, requires an ephemeral token for case API data and exact same-origin headers for writes, serves only declared static assets, and revalidates the archive before every case API request."
+      "id": "native-review",
+      "control": "The native MCP App opens an exact actor-bound saved work. Source and record digests are revalidated before review; writes retain exact version and reviewer authority. No loopback HTTP review server is shipped."
     },
     {
       "id": "untrusted-rendering",

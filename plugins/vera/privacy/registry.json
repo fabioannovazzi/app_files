@@ -1462,6 +1462,46 @@
       "paths": {
         "privacy/services/managed-python-runtime.json": [
           "skills/studio-archive/references/cowork-runtime.md"
+        ],
+        "privacy/workstreams/open-item-reconciliation.json": [
+          "assets/open-item-reconciliation-review-widget.html"
+        ],
+        "privacy/workstreams/archive-organization.json": [
+          "assets/archive-organization-review-widget.html"
+        ],
+        "privacy/workstreams/client-file-preparation.json": [
+          "assets/client-file-preparation-review-widget.html"
+        ],
+        "privacy/workstreams/new-client.json": [
+          "assets/new-client-review-widget.html"
+        ],
+        "privacy/workstreams/journal-sampling.json": [
+          "assets/journal-sampling-review-widget.html"
+        ],
+        "privacy/workstreams/check-entries.json": [
+          "assets/check-entries-review-widget.html"
+        ],
+        "privacy/workstreams/journal-bank-reconciliation.json": [
+          "assets/journal-bank-review-widget.html"
+        ],
+        "privacy/workstreams/report-builder.json": [
+          "assets/report-builder-review-widget.html"
+        ],
+        "privacy/workstreams/concordato-plan-review.json": [
+          "assets/concordato-plan-review-widget.html"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html"
+        ],
+        "privacy/workstreams/previdenza-inps.json": [
+          "assets/previdenza-inps-review-widget.html"
+        ],
+        "privacy/workstreams/registro-imprese-sari.json": [
+          "assets/registro-imprese-sari-review-widget.html"
         ]
       }
     },
@@ -1488,6 +1528,46 @@
         "privacy/services/run-receipt-stamping.json": [
           "hooks/cowork-hooks.json",
           "hooks/hooks.json"
+        ],
+        "privacy/workstreams/open-item-reconciliation.json": [
+          "assets/open-item-reconciliation-review-widget.html"
+        ],
+        "privacy/workstreams/archive-organization.json": [
+          "assets/archive-organization-review-widget.html"
+        ],
+        "privacy/workstreams/client-file-preparation.json": [
+          "assets/client-file-preparation-review-widget.html"
+        ],
+        "privacy/workstreams/new-client.json": [
+          "assets/new-client-review-widget.html"
+        ],
+        "privacy/workstreams/journal-sampling.json": [
+          "assets/journal-sampling-review-widget.html"
+        ],
+        "privacy/workstreams/check-entries.json": [
+          "assets/check-entries-review-widget.html"
+        ],
+        "privacy/workstreams/journal-bank-reconciliation.json": [
+          "assets/journal-bank-review-widget.html"
+        ],
+        "privacy/workstreams/report-builder.json": [
+          "assets/report-builder-review-widget.html"
+        ],
+        "privacy/workstreams/concordato-plan-review.json": [
+          "assets/concordato-plan-review-widget.html"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html"
+        ],
+        "privacy/workstreams/previdenza-inps.json": [
+          "assets/previdenza-inps-review-widget.html"
+        ],
+        "privacy/workstreams/registro-imprese-sari.json": [
+          "assets/registro-imprese-sari-review-widget.html"
         ]
       }
     },
@@ -1516,7 +1596,8 @@
         ],
         "privacy/workstreams/archive-organization.json": [
           ".mcp.json",
-          "README.md"
+          "README.md",
+          "assets/archive-organization-review-widget.html"
         ],
         "privacy/workstreams/browser-automation.json": [
           "README.md"
@@ -1529,6 +1610,43 @@
         "privacy/workstreams/studio-archive.json": [
           ".mcp.json",
           "README.md"
+        ],
+        "privacy/workstreams/open-item-reconciliation.json": [
+          "assets/open-item-reconciliation-review-widget.html"
+        ],
+        "privacy/workstreams/client-file-preparation.json": [
+          "assets/client-file-preparation-review-widget.html"
+        ],
+        "privacy/workstreams/new-client.json": [
+          "assets/new-client-review-widget.html"
+        ],
+        "privacy/workstreams/journal-sampling.json": [
+          "assets/journal-sampling-review-widget.html"
+        ],
+        "privacy/workstreams/check-entries.json": [
+          "assets/check-entries-review-widget.html"
+        ],
+        "privacy/workstreams/journal-bank-reconciliation.json": [
+          "assets/journal-bank-review-widget.html"
+        ],
+        "privacy/workstreams/report-builder.json": [
+          "assets/report-builder-review-widget.html"
+        ],
+        "privacy/workstreams/concordato-plan-review.json": [
+          "assets/concordato-plan-review-widget.html"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html"
+        ],
+        "privacy/workstreams/previdenza-inps.json": [
+          "assets/previdenza-inps-review-widget.html"
+        ],
+        "privacy/workstreams/registro-imprese-sari.json": [
+          "assets/registro-imprese-sari-review-widget.html"
         ]
       }
     },
@@ -1560,6 +1678,46 @@
         ],
         "privacy/services/on-demand-mcp.json": [
           ".mcp.json"
+        ],
+        "privacy/workstreams/open-item-reconciliation.json": [
+          "assets/open-item-reconciliation-review-widget.html"
+        ],
+        "privacy/workstreams/archive-organization.json": [
+          "assets/archive-organization-review-widget.html"
+        ],
+        "privacy/workstreams/client-file-preparation.json": [
+          "assets/client-file-preparation-review-widget.html"
+        ],
+        "privacy/workstreams/new-client.json": [
+          "assets/new-client-review-widget.html"
+        ],
+        "privacy/workstreams/journal-sampling.json": [
+          "assets/journal-sampling-review-widget.html"
+        ],
+        "privacy/workstreams/check-entries.json": [
+          "assets/check-entries-review-widget.html"
+        ],
+        "privacy/workstreams/journal-bank-reconciliation.json": [
+          "assets/journal-bank-review-widget.html"
+        ],
+        "privacy/workstreams/report-builder.json": [
+          "assets/report-builder-review-widget.html"
+        ],
+        "privacy/workstreams/concordato-plan-review.json": [
+          "assets/concordato-plan-review-widget.html"
+        ],
+        "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html"
+        ],
+        "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html"
+        ],
+        "privacy/workstreams/previdenza-inps.json": [
+          "assets/previdenza-inps-review-widget.html"
+        ],
+        "privacy/workstreams/registro-imprese-sari.json": [
+          "assets/registro-imprese-sari-review-widget.html"
         ]
       }
     }

@@ -15,7 +15,7 @@ from pathlib import Path
 from construction_adapters import budget_rows
 from construction_core import create_case, digest, require
 from construction_exports import export_manual, save_snapshot, write_once
-from construction_intake import render_form
+from construction_intake import render_intake
 from construction_store import CaseStore
 
 __all__ = ["main"]
@@ -211,9 +211,9 @@ def main(argv: list[str] | None = None) -> int:
             if args.questions
             else None
         )
-        rendered = render_form(state, questions=questions)
+        rendered = render_intake(state, questions=questions)
         form_hash = hashlib.sha256(rendered.encode()).hexdigest()
-        write_once(output / f"visita-{form_hash}.html", rendered)
+        write_once(output / f"visita-{form_hash}.md", rendered)
     elif args.command == "manual":
         export_manual(state, args.manual_id, output)
     elif args.command == "budget":

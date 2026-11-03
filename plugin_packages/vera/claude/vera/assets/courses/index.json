@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "8b6047caf5ad173c2cfea16a5931388e13a6230f2c0c155f73c11577af4e2197",
+      "sha256": "ee5a968ab88c052e286bb44c016833bd1b6cef4a65e3544bc7bdc1612d0b38c9",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
         "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       },
-      "source_sha256": "b95d889cf87c5059f121c64396399897f129b37ebe53dc53c08cbd64d68e1e4a"
+      "source_sha256": "5cfd3dbb05564a69d4f428114b1fb97fe37df2ef54a3e06e8cb3a4132166704e"
     },
     "agenzia-acquisition": {
       "path": "agenzia-acquisition/course.json",
@@ -79,7 +79,7 @@
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "b495f04a60c4712cb8e1e50fb5dc73e0eb54f56ba95f540da5f809dcbd21b1ec",
+      "sha256": "dfc85ee49ee506af2e52e8d681cdce5af0d83c7853447486ddcecfc26b91d72c",
       "languages": [
         "it",
         "en",
@@ -108,7 +108,7 @@
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "b6ba49e62b79e696c06d8abca7de90db5200887af4e6a23dc32d7e72f1b5e291",
+      "sha256": "30eee07acc32bda277642fce05467b4d2db96e392c415b88b2ed7052fb7796a1",
       "languages": [
         "it",
         "en",
@@ -327,7 +327,7 @@
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "770b2fbda53a7e14961976a6f9741bda0dd08c41df468a6e1fb50b8d2b9d22b9",
+      "sha256": "b78475923783464c7d051fb814366a21daa5b1767fb411cb66b42a1111dfe98b",
       "languages": [
         "it",
         "en",
@@ -385,7 +385,7 @@
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "bb20abb2148d41d2d49f94b9f51e1a2bc71ec48f527ce1765dd5f82e226d2864",
+      "sha256": "c75421c23f6274a49ea4b9486a845b112fa918270c34463b2ae52beb34612764",
       "languages": [
         "it",
         "en",
@@ -414,7 +414,7 @@
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "b46d8b0142da560232a68e9bde1dcac1cee52e63f02f60091cc3b6d337a1ed73",
+      "sha256": "256c311351a73fea40673f655fcd9f529825254bc7da8a542f175cc3846a0460",
       "languages": [
         "it",
         "en",
@@ -472,7 +472,7 @@
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "871d9a08ab92d96d6f5cc84c6a435992eba4f964dffd443a640b5a1a2dc95e5f",
+      "sha256": "f6588f670bc00e99cde29eb27da2d033f2325b8720cbf67b2f0f26fecf29f4cc",
       "languages": [
         "it",
         "en",
@@ -530,7 +530,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "7d03bfa2c3e7c86bb2aecc5fd7bff74ebd79d09f6b19c3ea01af3880aae3da46",
+      "sha256": "5d0128c53913ba744c946f3b3ce2402a44569465d4408d2c8399154e9b62d8d8",
       "languages": [
         "it",
         "en",
@@ -617,7 +617,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "a852b0da1f89b8b8096361171e91f29ef278206c58f28c24af978853e0b55028",
+      "sha256": "c2390c42fecc344dddfcfcd17b459713846cae1b98484c7b0d530a11846ff1ab",
       "languages": [
         "it",
         "en",
@@ -646,7 +646,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "6cbcc98a571272651d69e452a659280954c2e89336f1599b047e7fb5fa6f7ddf",
+      "sha256": "4d747d0a81e8764be2e1b229b6c0653b0710bebc6afc632b5983605f6e56e1bd",
       "languages": [
         "it",
         "en",
@@ -692,7 +692,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "99215f35200757184f43f3c8e673a0ee2e6a38cdb5af64f5539ef7fd052ac6cc",
+      "sha256": "408717e51627571b7d8fbbb4f0c4f23b975b43185e7ca19fc5a04c1f2d4ad242",
       "languages": [
         "it",
         "en"
@@ -708,11 +708,11 @@
         "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
         "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review."
       },
-      "source_sha256": "f81873e824a849e23a826b9486b3f31a49550ded15e9c0bc60e8a02c7978e6f7"
+      "source_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1"
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "3e8c712979eead5aa2ce88aa0711c046d1f96d81d0db1718850b8402ace72804",
+      "sha256": "6628964895e59d7be2d4d091e9ff02eac4ce1871dc0ee6643630d1695fc263a4",
       "languages": [
         "it",
         "en",
@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "85eb164455396acc26acf926bd8e1865611f01e967c6a7816c849a2d6f665bbb",
+      "sha256": "9f8c58a12fdfdd937a0d1c8fb5f38d139bbc6c75407af81129892f38677e935e",
       "languages": [
         "it",
         "en",
@@ -857,7 +857,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "b2078372df2817f4300c461da9f692bac41e18efd0ac4c5afc63a05092430437",
+      "sha256": "2b7f0a8b9349c27cb95343c8481a5dd88b727245302d29bd6609edfa2609b513",
       "languages": [
         "it",
         "en",
@@ -915,7 +915,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "d97e82d84f3e5778625ab308424e8167b77adc4b926f0dd6ff4543c2aadf044e",
+      "sha256": "4bd07cccc88732041247f131b5b8a76e2d869201f3e27b0f556a2e1c8478a593",
       "languages": [
         "it",
         "en",
@@ -944,7 +944,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "b50470bb64b21937d1843711cd7dd4132d70d6c66ceefcd2f3d0d1cd1351028a",
+      "sha256": "0c1498b3ac94910cb79d211fb990ae247c035ba160d4c2edde0fcb2e3dbcd5ab",
       "languages": [
         "it",
         "en",
@@ -1060,7 +1060,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "e2bd55e7acc28575bc06ec9c44f292018d441bb8234d903eb8722e8553d20e68",
+      "sha256": "1075f059dcaaddb16b2c2924256d60b9935bdd6a126c942ec5f205b73c3c829c",
       "languages": [
         "it",
         "en",
@@ -1118,7 +1118,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "416505b15ebe9cc0d8d0290324023a30b168ab93d9e2cf6553cabf2e18d18801",
+      "sha256": "977006fcb3de48a9593d7162e2029a31f37d6349e7b5270672adace0fc67b80f",
       "languages": [
         "it"
       ],
@@ -1131,11 +1131,11 @@
       "goals": {
         "it": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane."
       },
-      "source_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6"
+      "source_sha256": "0da028e38f0beb5a31128eb83ff0c0221a57627b42be63f3850ce463b760a7b4"
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "365ca862bb1b2c8a271d5edba3e7e4f9a85be964f1a5e6ca75ed72c538a58e68",
+      "sha256": "27f87ac4a62bbd6103b2cacceb6dde4bdeb664e83dd246322a311c0615e143fc",
       "languages": [
         "it",
         "en",
@@ -1164,7 +1164,7 @@
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "3361ab40100757c447f615eb3b44cf0621c4e21cc5531e0dde695f0112734668",
+      "sha256": "d09ada38c65d0f9de58b5a3437a8d1e49f305a60c360b27cddbe50e3af3709ba",
       "languages": [
         "it",
         "en",

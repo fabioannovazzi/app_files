@@ -119,6 +119,11 @@
       "sha256": "4a5d5cf9d2cc3a5ce231d8a5e5ced7b531be20577b318044680d630044b003d3"
     },
     {
+      "path": "modules/management-control-pack/scripts/report_preview.py",
+      "repository_path": "plugins/management-control-pack/scripts/report_preview.py",
+      "sha256": "fbe325749fe1377222d571666b90e5c40cdf3bf66d111b68bea46b3384518cf7"
+    },
+    {
       "path": "modules/management-control-pack/scripts/run_costing.py",
       "repository_path": "plugins/management-control-pack/scripts/run_costing.py",
       "sha256": "d41bd9be497e090d2fc8e057e44d79f115fcce17e610d3d54e76a6fec75ae303"
@@ -201,7 +206,7 @@
     {
       "path": "skills/management-control-pack/SKILL.md",
       "repository_path": "plugins/vera/skills/management-control-pack/SKILL.md",
-      "sha256": "e8ec641dc1b02ba232ae5dc8c2298bf383ebf4c744f9788de5f6e1232bf4f289"
+      "sha256": "6e7a4e42e90e74c13c4632400027f3a12e4e094df57a1e8e9dd296166e5cdae3"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

@@ -63,14 +63,12 @@ def main(argv: list[str] | None = None) -> int:
         "prepare", help="Import the fixed tables and create a reviewable draft"
     )
     prepare.add_argument("--manifest", type=Path, required=True)
-    for name in ("review", "serve", "context", "scenario"):
+    for name in ("review", "context", "scenario"):
         command = sub.add_parser(name)
         if name in {"review", "scenario"}:
             command.add_argument("--request", type=Path, required=True)
         if name == "context":
             command.add_argument("--event-id", action="append", default=[])
-        if name == "serve":
-            command.add_argument("--port", type=int, default=0)
     for name, command in sub.choices.items():
         if name != "templates":
             command.add_argument("--client-engagement", type=Path, required=True)
@@ -105,17 +103,6 @@ def main(argv: list[str] | None = None) -> int:
             state, record = current_record(output)
             source_paths = current_source_paths(output, state)
             validate_context(args.client_engagement, source_paths)
-            if args.command == "serve":
-                from treasury_server import serve
-
-                serve(
-                    output,
-                    validate=lambda: validate_context(
-                        args.client_engagement, source_paths
-                    ),
-                    port=args.port,
-                )
-                return 0
             if args.command == "review":
                 request = read_json(args.request)
                 record = review_session(
