@@ -90,9 +90,9 @@
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-10-29",
+    "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "25144d21e926178d038b134bb02139768fe976d86ba265c88b151bc15286edf4"
+    "source_fingerprint": "365b2bcdf1015f22519832b860710c0a433b20912753e033d8f461624228a60f"
   },
   "runtime_profiles": [
     "openai-codex"
@@ -192,6 +192,22 @@
         "repository:plugins/_shared/vendor/modules/courseware/execution.py"
       ],
       "on_violation": "Preserve the source and any partial destination; report unavailable or changed bytes without claiming completed recovery or course completion."
+    },
+    {
+      "id": "transactional-course-preparation",
+      "control": "Prepared v2 kits are built in a temporary sibling directory. Only a complete kit with reading pages, original hash-verified inputs, instructions and provenance is renamed into the empty selected destination. Preparation failures remove staging and preserve existing user content; handoffs refer to final paths. HTTP failures retain their status, connection failures their underlying reason and local save errors their filesystem cause. No additional file selection, model call or hosted recipient is introduced.",
+      "implemented_by": [
+        "repository:plugins/_shared/vendor/modules/courseware/library.py"
+      ],
+      "on_violation": "Leave the selected course destination empty and retry the same preparation; never overwrite existing user work or mark a lesson executed."
+    },
+    {
+      "id": "managed-course-rendering",
+      "control": "The local course CLI routes render and results through the existing verified managed Python launcher before preparing content. List, show and file-access preflight remain standard-library operations. The managed child does not relaunch itself. Existing managed-runtime integrity checks, host approvals and technical incident handling apply; only the original local CLI arguments are passed, with no profile or learner answers added.",
+      "implemented_by": [
+        "scripts/local_courses.py"
+      ],
+      "on_violation": "Propagate the managed launcher failure without falling back to the system interpreter or preparing partial teaching files."
     }
   ],
   "service_id": "local-onboarding"

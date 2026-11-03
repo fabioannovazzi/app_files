@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -25,7 +27,27 @@ from local_onboarding import eligible_workflows
 
 def main(argv: list[str] | None = None) -> int:
     """Use exactly the workflow membership enforced by the teaching runtime."""
-    return _main(PLUGIN_ROOT, eligible_workflows(), argv)
+    arguments = list(sys.argv[1:] if argv is None else argv)
+    if (
+        arguments
+        and arguments[0] in {"render", "results"}
+        and os.environ.get("MPARANZA_MANAGED_RUNTIME_VERIFY") != "1"
+    ):
+        # Listing/setup stay stdlib-only. Rendering uses the normal verified
+        # launcher, which provisions declared dependencies and preserves host
+        # permission failures instead of falling back to the system Python.
+        return subprocess.run(
+            [
+                sys.executable,
+                str(PLUGIN_ROOT / "scripts/managed_python_runtime.py"),
+                "run",
+                "scripts/local_courses.py",
+                *arguments,
+            ],
+            cwd=PLUGIN_ROOT,
+            check=False,
+        ).returncode
+    return _main(PLUGIN_ROOT, eligible_workflows(), arguments)
 
 
 if __name__ == "__main__":
