@@ -27,10 +27,6 @@
   },
   "sources": [
     {
-      "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "7a5bf651a6a9995d9fc495f3b4689e288fbac584aac839c7ada047e5fc951840"
-    },
-    {
       "path": "modules/client-file-preparation/assets/icon.svg",
       "sha256": "b4f798ec673400c5145bda9fb5cb282fff745455a56845e42feb1738d1013219"
     },
@@ -100,7 +96,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-client-file-preparation/SKILL.md",
-      "sha256": "614846ee566179f73ae52831f2690e6298f389cdc03df0e44e242379c28249d0"
+      "sha256": "ae1c503c935b9be3f9a7634a34a9543374db3071ce499d75a9bbe542c750d9c3"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -157,10 +153,6 @@
     {
       "path": "modules/new-client/assets/icon.svg",
       "sha256": "dc04f539bfb2f40bb739fd2bec31909c42efe188c11d967b6753190a1ffc78f5"
-    },
-    {
-      "path": "modules/new-client/assets/new-client-review-widget.html",
-      "sha256": "9a542b8f0882b86889cad73ea51319a38157f2b34c881760d256594b71dcdef9"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",
@@ -701,5 +693,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "09e60ff4475854c46a04f40c8e3d07c3130702cf5794cdf49ab33256832ef184"
+  "canonical_course_sha256": "37c9220de9f26a871720dbb42df2b1d13d2ddcc90645f9c54a7582c4ca493466"
 }

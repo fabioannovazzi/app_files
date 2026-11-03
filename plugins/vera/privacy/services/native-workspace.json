@@ -898,6 +898,16 @@
         "ui/workspace.js"
       ],
       "on_violation": "Reject an unknown, ambiguous or unauthorised work and leave the saved work unchanged."
+    },
+    {
+      "id": "receipt-bound-management-app-preview",
+      "control": "Only the explicitly selected exact-version conserved report is read, after receipt/hash validation. HTML stays in app metadata and renders in an opaque script-only sandbox with a pinned-script CSP. No HTTP listener, external resource, form, base URL or model transfer is added.",
+      "implemented_by": [
+        "scripts/native_management_commentary.py",
+        "scripts/native_management_commentary_bridge.py",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject missing, changed or stale reports without changing the saved work."
     }
   ],
   "governed_paths": [
@@ -1118,14 +1128,15 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "03ef5a5839db4ffddfabee8b9ec495df8a5db3b664bdf91b9e2a725f34c89c4c",
-    "reviewed_at": "2026-10-29"
+    "source_fingerprint": "9f3821a3996837358c49165f298d21dca44a8ef121c93d6d086d249303889f94",
+    "reviewed_at": "2026-11-03"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",
     "plugins/bilancio-xbrl-it/ui/area-review.js",
     "plugins/vera/ui/review-routes.json",
-    "scripts/build_product_mcp_catalog.cjs"
+    "scripts/build_product_mcp_catalog.cjs",
+    "scripts/vera_ui_retirement.py"
   ],
   "runtime_profiles": [
     "openai-codex"

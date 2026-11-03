@@ -30,7 +30,6 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", ".codex-plugin/plugin.json"),
     ("plugin", ".app.json"),
     ("plugin", ".mcp.json"),
-    ("plugin", "assets/concordato-plan-review-widget.html"),
     ("plugin", "assets/icon.svg"),
     ("plugin", "assets/review-workbench-adapter.json"),
     ("plugin", "mcp/server.cjs"),

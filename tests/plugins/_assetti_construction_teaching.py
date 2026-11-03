@@ -239,12 +239,21 @@ def execute_construction(
         )
     )
     cli("form", "--questions", questions)
-    form = next(Path(run["output_dir"]).glob("visita-*.html"))
-    html = form.read_text()
-    assert "connect-src 'none'" in html and "localStorage" not in html
-    config = json.loads(
-        html.split('id="configuration">', 1)[1].split("</script>", 1)[0]
+    form = next(Path(run["output_dir"]).glob("visita-*.md"))
+    draft = json.loads(
+        form.read_text().split("```assetti-intake-json\n", 1)[1].split("\n```", 1)[0]
     )
+    config = {
+        **draft,
+        "questions": [
+            {
+                "id": q["question_id"],
+                "question": q["question"],
+                "criterion_ids": q["criterion_ids"],
+            }
+            for q in draft["answers"]
+        ],
+    }
     intake = {
         **{
             key: config[key]
@@ -259,7 +268,7 @@ def execute_construction(
         "session_id": "synthetic-intake",
         "revision": 1,
         "parent_sha256": None,
-        "mode": "html",
+        "mode": "text",
         "position": 0,
         "answers": [
             {

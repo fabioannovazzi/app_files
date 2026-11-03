@@ -183,11 +183,6 @@ JOURNAL_SAMPLING_IMPLEMENTATION_SPECS = (
     ),
     (
         "implementation",
-        "assets/journal-sampling-review-widget.html",
-        "implementation.journal_sampling_widget",
-    ),
-    (
-        "implementation",
         "assets/review-workbench-adapter.json",
         "implementation.journal_sampling_widget_adapter",
     ),

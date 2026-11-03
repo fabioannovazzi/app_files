@@ -28,11 +28,6 @@
   },
   "sources": [
     {
-      "path": "modules/adeguati-assetti/assets/construction-intake.html",
-      "repository_path": "plugins/adeguati-assetti/assets/construction-intake.html",
-      "sha256": "7e7946c5651db0bc23a718f0902ec63d0fc1f2ce984ff71efe046c0b8e2abf64"
-    },
-    {
       "path": "modules/adeguati-assetti/assets/icon.svg",
       "repository_path": "plugins/adeguati-assetti/assets/icon.svg",
       "sha256": "d215fd17d4913d8f3fe5a4bf4d492f78ee46fa65408d0ec878b3fec32db8a004"
@@ -55,7 +50,7 @@
     {
       "path": "modules/adeguati-assetti/references/construction-workflow.md",
       "repository_path": "plugins/adeguati-assetti/references/construction-workflow.md",
-      "sha256": "756b9d3688265e71a660ab2fb7f075218ec0847e53bf5092f1e70d105d7a48f6"
+      "sha256": "4f4ad156ebfb05474a65fa90d5ed44bbf33bfed20bac9997acaf6f7cc3e042b3"
     },
     {
       "path": "modules/adeguati-assetti/references/intelligent-assessment.md",
@@ -80,7 +75,7 @@
     {
       "path": "modules/adeguati-assetti/scripts/assetti_construction.py",
       "repository_path": "plugins/adeguati-assetti/scripts/assetti_construction.py",
-      "sha256": "d87ba3cc406b3455e6689388fa6c02e445d6b121c2cf222ca715487792067d2e"
+      "sha256": "8216c007fd9ed8cbfcce170efd477ac5f8d2aeff3d2701bab31071639d3d6379"
     },
     {
       "path": "modules/adeguati-assetti/scripts/assetti_review.py",
@@ -110,7 +105,7 @@
     {
       "path": "modules/adeguati-assetti/scripts/construction_intake.py",
       "repository_path": "plugins/adeguati-assetti/scripts/construction_intake.py",
-      "sha256": "cbee5c6d57da936bec28c1776772f324de89e989edb21fcec4d4df4d156a3a5c"
+      "sha256": "0f9191645ceef381e0c1903605be05f7c4f6e278fb7f631a1a7f0632557c91d5"
     },
     {
       "path": "modules/adeguati-assetti/scripts/construction_store.py",
@@ -230,7 +225,7 @@
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "15d35c56bcb6bb1ae2ea3031e5703be6296a16dc7dce31b9800a838766a875b8"
+      "sha256": "0be0755190f0bb76128768dd29db0da943c1a26595a630be7e4716df0e3d7a45"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -290,7 +285,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "a34698a9c099bf81cf154ec1bafc3ab626860460f454a9f3400cf2d09ceae5b1"
+      "sha256": "ef092de84e872c9a4ab554ed681eab25cedc16893578e241fe0aa2ac3146a8f4"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -811,7 +806,7 @@
     },
     {
       "path": "files/input/construction-it.md",
-      "sha256": "904679bc5775846440362dc148df9859aa2bfcd01e86b8cc5ffe77d7fd1e94aa",
+      "sha256": "6aee62774a2a5c9baf397c954cdd1a5cc3683cfcf47d2ae8e5ad8bce438e3e00",
       "languages": [
         "it"
       ],
@@ -827,7 +822,7 @@
     },
     {
       "path": "files/practice/construction-it.md",
-      "sha256": "904679bc5775846440362dc148df9859aa2bfcd01e86b8cc5ffe77d7fd1e94aa",
+      "sha256": "6aee62774a2a5c9baf397c954cdd1a5cc3683cfcf47d2ae8e5ad8bce438e3e00",
       "languages": [
         "it"
       ],
@@ -851,7 +846,7 @@
     },
     {
       "path": "files/input/construction-en.md",
-      "sha256": "ef169241523edfbbb98d0c461941420fe3915f32734bf80b143e410d5bc2d4ab",
+      "sha256": "f7c7e5ba410047611de9ceb44110e389dec7a3467bd9a1a284a34d0d278be70a",
       "languages": [
         "en"
       ],
@@ -867,7 +862,7 @@
     },
     {
       "path": "files/practice/construction-en.md",
-      "sha256": "ef169241523edfbbb98d0c461941420fe3915f32734bf80b143e410d5bc2d4ab",
+      "sha256": "f7c7e5ba410047611de9ceb44110e389dec7a3467bd9a1a284a34d0d278be70a",
       "languages": [
         "en"
       ],
@@ -891,7 +886,7 @@
     },
     {
       "path": "files/input/construction-fr.md",
-      "sha256": "b2560a09537d0cace301dfc733654272480c5d5816eb92e131164b8622306b68",
+      "sha256": "52a9c5683442ff77d562629e7f28b65b69b70e7cdb5aa99c1012f85eb3ddfc85",
       "languages": [
         "fr"
       ],
@@ -907,7 +902,7 @@
     },
     {
       "path": "files/practice/construction-fr.md",
-      "sha256": "b2560a09537d0cace301dfc733654272480c5d5816eb92e131164b8622306b68",
+      "sha256": "52a9c5683442ff77d562629e7f28b65b69b70e7cdb5aa99c1012f85eb3ddfc85",
       "languages": [
         "fr"
       ],
@@ -931,7 +926,7 @@
     },
     {
       "path": "files/input/construction-de.md",
-      "sha256": "9d435aca6b13e1473aac6cf557f73e0922334316751a7c9fb7224c00a876d828",
+      "sha256": "76ff1af6c9b47f4aaa003b0bb0e1525b7d7dff9535aa406b2e02e2451bc76b8f",
       "languages": [
         "de"
       ],
@@ -947,7 +942,7 @@
     },
     {
       "path": "files/practice/construction-de.md",
-      "sha256": "9d435aca6b13e1473aac6cf557f73e0922334316751a7c9fb7224c00a876d828",
+      "sha256": "76ff1af6c9b47f4aaa003b0bb0e1525b7d7dff9535aa406b2e02e2451bc76b8f",
       "languages": [
         "de"
       ],
@@ -971,7 +966,7 @@
     },
     {
       "path": "files/input/construction-es.md",
-      "sha256": "72881bf01b6edf306e56bf870e7660f4b3d2e2b1a382432e6608c2ddcc1ab459",
+      "sha256": "c567bfd52039736b386da4652e34106b4629c6fd1e5813250e5aa4581c0e4bec",
       "languages": [
         "es"
       ],
@@ -987,7 +982,7 @@
     },
     {
       "path": "files/practice/construction-es.md",
-      "sha256": "72881bf01b6edf306e56bf870e7660f4b3d2e2b1a382432e6608c2ddcc1ab459",
+      "sha256": "c567bfd52039736b386da4652e34106b4629c6fd1e5813250e5aa4581c0e4bec",
       "languages": [
         "es"
       ],
@@ -1068,7 +1063,7 @@
       "request": "Vera, valuta gli assetti di Officina Arco usando questi documenti. Poi aiutami a costruire un controllo proporzionato per la chiusura mensile nello stesso dossier, mantenendo ignoti, proposte, revisioni, adozione e prove di funzionamento distinti.",
       "steps": [
         "Nel thread di lavoro esegui la valutazione corrente, apri il memo e collega un rilievo alla fonte e all’azione. Avvia la costruzione nello stesso incarico; conserva il record di valutazione senza convertirne la consegna in un’approvazione.",
-        "Segui construction-it.md: visita guidata con una domanda contestuale per volta; conserva risposta originale, autore, data e sintesi separata. Apri il modulo HTML offline, esporta Markdown prima di chiudere e reimporta gli originali con ricevuta. Riprendi dallo stesso punto; allegati mancanti e risposte ignote restano visibili.",
+        "Segui construction-it.md: visita guidata con una domanda contestuale per volta; conserva risposta originale, autore, data e sintesi separata. Apri il Markdown versionato della visita, conserva le risposte originali e reimporta il file con ricevuta. Riprendi dallo stesso punto; allegati mancanti e risposte ignote restano visibili.",
         "Qualifica le evidenze e mostra base, eventuale scelta professionale motivata e obiettivo. Collega evidenza → rischio/rilievo → controllo → azione. Progetta un controllo e un registro, poi compila e apri il manuale Word/PDF/Markdown e i CSV. Prosegui con riesame, adozione, cicli e laboratorio finanziario in sessioni distinte, senza inventare approvazioni."
       ],
       "deliverables": [
@@ -1083,7 +1078,7 @@
       ],
       "practice": "In una prova distinta conserva il risultato iniziale, aggiungi update-it.md e construction-update-it.md nello stesso dossier e riesamina al 30 aprile. Riprendi lo snapshot e le fonti importate; verifica le scadenze effettive, rivedi ogni azione, modifica il controllo e confronta il vecchio manuale da riesaminare con la nuova bozza. Chiedi al partecipante una richiesta e una decisione reali: non simularne la partecipazione.",
       "success": "Sai ripetere valutazione, visita e progettazione; seguire fonti e versioni; distinguere revisione, adozione ed esecuzione; spiegare perché un dato mancante, un export e un KPI non certificano gli assetti.",
-      "repeat": "Riparti da impresa, finalità, perimetro ed evidenze effettive. Usa lo stesso dossier e nuove versioni senza riscrivere la storia. Per un’impresa reale servono giudizio professionale, decisioni aziendali e un pilota operativo supervisionato. Quali dati arrivano al modello: conversazione, originali restituiti, fonti selezionate, manuali, decisioni e collegamenti finanziari possono essere letti dal modello dell’account del servizio scelto, senza anonimizzazione automatica. Il modulo offline non trasmette dati e non registra audio; restituire il Markdown porta quei dati nel contesto del modello. Profilo e progressi didattici restano locali, senza invio di feedback o ricevute didattiche al server."
+      "repeat": "Riparti da impresa, finalità, perimetro ed evidenze effettive. Usa lo stesso dossier e nuove versioni senza riscrivere la storia. Per un’impresa reale servono giudizio professionale, decisioni aziendali e un pilota operativo supervisionato. Quali dati arrivano al modello: conversazione, originali restituiti, fonti selezionate, manuali, decisioni e collegamenti finanziari possono essere letti dal modello dell’account del servizio scelto, senza anonimizzazione automatica. Il Markdown è un file locale; restituirlo nella chat porta quei dati nel contesto del modello. La visita non registra audio. Profilo e progressi didattici restano locali, senza invio di feedback o ricevute didattiche al server."
     },
     "en": {
       "title": "Assess and construct company arrangements with Vera",
@@ -1094,7 +1089,7 @@
       "request": "Vera, assess Officina Arco’s arrangements using these files. Then help me construct a proportionate monthly-close control in the same engagement, keeping unknowns, proposals, reviews, adoption and operating evidence distinct.",
       "steps": [
         "Run the current assessment in the working chat, open its memo and trace a finding to its source and action. Start construction in the same engagement; retain the assessment record without converting delivery into approval.",
-        "Follow construction-en.md: ask one contextual question at a time; preserve original answer, speaker, date and a separate summary. Open the offline HTML form, export Markdown before closing and import receipted originals. Resume the same practice; missing attachments and unknown answers remain visible.",
+        "Follow construction-en.md: ask one contextual question at a time; preserve original answer, speaker, date and a separate summary. Open the versioned visit Markdown, preserve original answers and import the file with its receipt. Resume the same practice; missing attachments and unknown answers remain visible.",
         "Qualify evidence and compare base, any reasoned professional override and target. Trace evidence → risk/finding → control → action. Design one control and register, then compile and open Word/PDF/Markdown and CSV outputs. Continue review, adoption, cycles and the financial lab in separate sessions without inventing approvals."
       ],
       "deliverables": [
@@ -1109,7 +1104,7 @@
       ],
       "practice": "In a distinct exercise preserve the initial output, add update-en.md and construction-update-en.md to the same engagement and reassess at 30 April. Resume the imported snapshot and sources; check actual deadlines, review every action, change the control and compare the old manual needing review with a new draft. Ask for the learner’s actual request and decision; never simulate participation.",
       "success": "You can repeat assessment, discovery and design; trace sources and versions; distinguish review, adoption and execution; explain why missing data, an export and a KPI do not certify arrangements.",
-      "repeat": "Start from entity, purpose, scope and actual evidence. Reuse the engagement with new versions and preserve history. Real work requires professional judgment, company decisions and a supervised operating pilot. What data reaches the model: conversation, returned originals, selected evidence, manuals, decisions and financial links may be read by the selected host account’s model, without automatic anonymization. The offline form sends nothing and captures no audio; returning Markdown brings it into model context. Teaching profile and progress stay local, without server feedback or teaching receipts."
+      "repeat": "Start from entity, purpose, scope and actual evidence. Reuse the engagement with new versions and preserve history. Real work requires professional judgment, company decisions and a supervised operating pilot. What data reaches the model: conversation, returned originals, selected evidence, manuals, decisions and financial links may be read by the selected host account’s model, without automatic anonymization. Markdown is a local file; returning it in chat brings its data into model context. The visit records no audio. Teaching profile and progress stay local, without server feedback or teaching receipts."
     },
     "fr": {
       "title": "Évaluer et construire les dispositifs de l’entreprise avec Vera",
@@ -1120,7 +1115,7 @@
       "request": "Vera, évalue les dispositifs d’Officina Arco avec ces fichiers, puis aide-moi à construire un contrôle proportionné de clôture mensuelle dans le même dossier. Distingue inconnues, propositions, revues, adoption et preuves de fonctionnement.",
       "steps": [
         "Exécutez l’évaluation actuelle dans la conversation de travail ; ouvrez le mémo et reliez un constat à sa source et à son action. Commencez la construction dans la même mission ; la livraison de l’évaluation ne vaut pas approbation.",
-        "Suivez construction-fr.md : une question contextuelle à la fois ; réponse originale, auteur, date et synthèse séparée. Ouvrez le formulaire HTML hors ligne, exportez en Markdown avant de fermer puis importez les originaux avec reçu. Reprenez la même visite ; pièces manquantes et réponses inconnues restent visibles.",
+        "Suivez construction-fr.md : une question contextuelle à la fois ; réponse originale, auteur, date et synthèse séparée. Ouvrez le Markdown versionné de la visite, conservez les réponses originales et importez le fichier avec reçu. Reprenez la même visite ; pièces manquantes et réponses inconnues restent visibles.",
         "Qualifiez les preuves et comparez base, éventuelle dérogation professionnelle motivée et cible. Reliez preuve → risque/constat → contrôle → action. Concevez un contrôle et un registre ; compilez et ouvrez Word/PDF/Markdown et CSV. Poursuivez revue, adoption, cycles et atelier financier en sessions séparées, sans inventer d’approbation."
       ],
       "deliverables": [
@@ -1135,7 +1130,7 @@
       ],
       "practice": "Conservez le premier résultat ; ajoutez update-fr.md et construction-update-fr.md au même dossier et réévaluez au 30 avril dans un exercice distinct. Reprenez instantané et sources importés ; vérifiez les échéances réelles, revoyez chaque action, modifiez le contrôle et comparez ancien manuel à revoir et nouveau projet. Demandez la requête et la décision réelles du participant ; ne simulez pas sa participation.",
       "success": "Vous savez répéter évaluation, visite et conception ; suivre sources et versions ; distinguer revue, adoption et exécution ; expliquer pourquoi donnée manquante, export et indicateur ne certifient pas les dispositifs.",
-      "repeat": "Partez de l’entreprise, de l’objectif, du périmètre et des preuves réelles. Conservez dossier et historique avec de nouvelles versions. Le travail réel exige jugement professionnel, décisions d’entreprise et pilote supervisé. Quelles données parviennent au modèle : conversation, originaux restitués, preuves sélectionnées, manuels, décisions et liens financiers peuvent être lus par le modèle du compte du service choisi, sans anonymisation automatique. Le formulaire hors ligne ne transmet rien et ne capte pas d’audio ; restituer le Markdown le place dans le contexte du modèle. Profil et progression pédagogiques restent locaux, sans retour ni reçu pédagogique au serveur."
+      "repeat": "Partez de l’entreprise, de l’objectif, du périmètre et des preuves réelles. Conservez dossier et historique avec de nouvelles versions. Le travail réel exige jugement professionnel, décisions d’entreprise et pilote supervisé. Quelles données parviennent au modèle : conversation, originaux restitués, preuves sélectionnées, manuels, décisions et liens financiers peuvent être lus par le modèle du compte du service choisi, sans anonymisation automatique. Le Markdown est un fichier local ; le restituer dans la conversation place ses données dans le contexte du modèle. La visite ne capte pas d’audio. Profil et progression pédagogiques restent locaux, sans retour ni reçu pédagogique au serveur."
     },
     "de": {
       "title": "Unternehmensstrukturen mit Vera beurteilen und aufbauen",
@@ -1146,7 +1141,7 @@
       "request": "Vera, beurteile Officina Arcos Strukturen anhand dieser Dateien. Hilf mir danach, im selben Mandat eine angemessene Monatsabschlusskontrolle aufzubauen. Halte Unbekanntes, Vorschläge, Prüfungen, Einführung und Betriebsnachweise getrennt.",
       "steps": [
         "Führen Sie die aktuelle Beurteilung im Arbeitschat aus, öffnen Sie das Memo und verfolgen Sie einen Befund zu Quelle und Maßnahme. Beginnen Sie den Aufbau im selben Mandat; die Lieferung der Beurteilung ist keine Genehmigung.",
-        "Folgen Sie construction-de.md: jeweils eine kontextbezogene Frage, Originalantwort, Sprecher, Datum und getrennte Zusammenfassung. Öffnen Sie das Offline-HTML-Formular, exportieren Sie vor dem Schließen Markdown und importieren Sie die Originale mit Beleg. Setzen Sie denselben Vorgang fort; fehlende Anlagen und unbekannte Antworten bleiben sichtbar.",
+        "Folgen Sie construction-de.md: jeweils eine kontextbezogene Frage, Originalantwort, Sprecher, Datum und getrennte Zusammenfassung. Öffnen Sie die versionierte Markdown-Datei des Besuchs, erhalten Sie die Originalantworten und importieren Sie die Datei mit Beleg. Setzen Sie denselben Vorgang fort; fehlende Anlagen und unbekannte Antworten bleiben sichtbar.",
         "Qualifizieren Sie Nachweise und vergleichen Sie Basis, gegebenenfalls begründete fachliche Abweichung und Ziel. Verknüpfen Sie Nachweis → Risiko/Befund → Kontrolle → Maßnahme. Entwerfen Sie eine Kontrolle und ein Register; erstellen und öffnen Sie Word/PDF/Markdown und CSV. Prüfung, Einführung, Zyklen und Finanzübung folgen in getrennten Sitzungen ohne erfundene Genehmigungen."
       ],
       "deliverables": [
@@ -1161,7 +1156,7 @@
       ],
       "practice": "Bewahren Sie das erste Ergebnis auf; ergänzen Sie update-de.md und construction-update-de.md im selben Mandat und beurteilen Sie zum 30. April in einer eigenen Übung neu. Setzen Sie mit importiertem Snapshot und Quellen fort, prüfen Sie tatsächliche Fristen und jede Maßnahme, ändern Sie die Kontrolle und vergleichen Sie altes prüfbedürftiges Handbuch mit neuem Entwurf. Fragen Sie nach dem tatsächlichen Auftrag und der Entscheidung des Teilnehmenden; simulieren Sie keine Teilnahme.",
       "success": "Sie können Beurteilung, Interview und Entwurf wiederholen, Quellen und Versionen verfolgen, Prüfung, Einführung und Ausführung trennen sowie erklären, warum fehlende Daten, Export und Kennzahl keine Zertifizierung ergeben.",
-      "repeat": "Beginnen Sie mit Unternehmen, Zweck, Umfang und tatsächlichen Nachweisen. Erhalten Sie Mandat und Historie mit neuen Versionen. Reale Arbeit erfordert fachliches Urteil, Unternehmensentscheidungen und einen beaufsichtigten Betriebspiloten. Welche Daten das Modell erreichen: Gespräch, zurückgegebene Originale, ausgewählte Nachweise, Handbücher, Entscheidungen und Finanzverknüpfungen können vom Modell des gewählten Host-Kontos gelesen werden, ohne automatische Anonymisierung. Das Offline-Formular sendet nichts und nimmt kein Audio auf; zurückgegebenes Markdown gelangt in den Modellkontext. Lernprofil und Fortschritt bleiben lokal, ohne Feedback oder Lernbelege an den Server."
+      "repeat": "Beginnen Sie mit Unternehmen, Zweck, Umfang und tatsächlichen Nachweisen. Erhalten Sie Mandat und Historie mit neuen Versionen. Reale Arbeit erfordert fachliches Urteil, Unternehmensentscheidungen und einen beaufsichtigten Betriebspiloten. Welche Daten das Modell erreichen: Gespräch, zurückgegebene Originale, ausgewählte Nachweise, Handbücher, Entscheidungen und Finanzverknüpfungen können vom Modell des gewählten Host-Kontos gelesen werden, ohne automatische Anonymisierung. Markdown ist eine lokale Datei; ihre Rückgabe im Chat bringt die Daten in den Modellkontext. Der Besuch zeichnet kein Audio auf. Lernprofil und Fortschritt bleiben lokal, ohne Feedback oder Lernbelege an den Server."
     },
     "es": {
       "title": "Evaluar y construir la organización empresarial con Vera",
@@ -1172,7 +1167,7 @@
       "request": "Vera, evalúa la organización de Officina Arco con estos archivos. Después ayúdame a construir un control proporcionado del cierre mensual en el mismo expediente, distinguiendo desconocidos, propuestas, revisiones, adopción y pruebas de funcionamiento.",
       "steps": [
         "Ejecute la evaluación actual en la conversación de trabajo; abra el memo y conecte un hallazgo con su fuente y acción. Inicie la construcción en el mismo encargo; entregar la evaluación no equivale a aprobarla.",
-        "Siga construction-es.md: una pregunta contextual cada vez; respuesta original, autor, fecha y síntesis separada. Abra el formulario HTML sin conexión, exporte Markdown antes de cerrar e importe originales con recibo. Reanude la misma visita; adjuntos ausentes y respuestas desconocidas permanecen visibles.",
+        "Siga construction-es.md: una pregunta contextual cada vez; respuesta original, autor, fecha y síntesis separada. Abra el Markdown versionado de la visita, conserve las respuestas originales e importe el archivo con recibo. Reanude la misma visita; adjuntos ausentes y respuestas desconocidas permanecen visibles.",
         "Califique las pruebas y compare base, eventual modificación profesional motivada y objetivo. Conecte prueba → riesgo/hallazgo → control → acción. Diseñe un control y registro; compile y abra Word/PDF/Markdown y CSV. Continúe revisión, adopción, ciclos y taller financiero en sesiones separadas sin inventar aprobaciones."
       ],
       "deliverables": [
@@ -1187,7 +1182,7 @@
       ],
       "practice": "Conserve el primer resultado, añada update-es.md y construction-update-es.md al mismo expediente y reevalúe al 30 de abril en una prueba distinta. Reanude instantánea y fuentes importadas; compruebe plazos reales, revise cada acción, cambie el control y compare el manual anterior pendiente de revisión con el nuevo borrador. Pida la solicitud y decisión reales del participante; no simule su participación.",
       "success": "Puede repetir evaluación, entrevista y diseño; seguir fuentes y versiones; distinguir revisión, adopción y ejecución; explicar por qué dato ausente, export e indicador no certifican la organización.",
-      "repeat": "Parta de empresa, finalidad, alcance y pruebas reales. Mantenga expediente e historial mediante nuevas versiones. El trabajo real requiere juicio profesional, decisiones empresariales y piloto supervisado. Qué datos llegan al modelo: conversación, originales devueltos, pruebas seleccionadas, manuales, decisiones y vínculos financieros pueden ser leídos por el modelo de la cuenta del servicio elegido, sin anonimización automática. El formulario sin conexión no transmite nada ni graba audio; devolver Markdown incorpora sus datos al contexto del modelo. Perfil y progreso didácticos permanecen locales, sin feedback ni recibos didácticos al servidor."
+      "repeat": "Parta de empresa, finalidad, alcance y pruebas reales. Mantenga expediente e historial mediante nuevas versiones. El trabajo real requiere juicio profesional, decisiones empresariales y piloto supervisado. Qué datos llegan al modelo: conversación, originales devueltos, pruebas seleccionadas, manuales, decisiones y vínculos financieros pueden ser leídos por el modelo de la cuenta del servicio elegido, sin anonimización automática. Markdown es un archivo local; devolverlo en la conversación incorpora sus datos al contexto del modelo. La visita no graba audio. Perfil y progreso didácticos permanecen locales, sin feedback ni recibos didácticos al servidor."
     }
   }
 }

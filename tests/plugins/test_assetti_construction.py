@@ -26,7 +26,7 @@ from construction_core import (
     validate_catalog,
 )
 from construction_exports import export_manual, save_snapshot
-from construction_intake import parse_markdown, render_form, render_markdown
+from construction_intake import parse_markdown, render_intake, render_markdown
 from construction_store import CaseStore, RevisionConflict
 
 AT = "2026-09-29T12:00:00+00:00"
@@ -686,7 +686,7 @@ def test_intake_identity_and_method_conflicts_are_rejected(field, bad) -> None:
         imported(case(), payload)
 
 
-def test_html_embeds_case_as_data_and_has_no_remote_resources() -> None:
+def test_intake_is_markdown_without_executable_browser_resources() -> None:
     state = create_case(
         client_id="a",
         engagement_id="b",
@@ -696,18 +696,21 @@ def test_html_embeds_case_as_data_and_has_no_remote_resources() -> None:
         actor="Tester",
         at=AT,
     )
-    rendered = render_form(state)
-    assert "&lt;/script&gt;&lt;img src=x&gt;" in rendered
-    assert "connect-src 'none'" in rendered
-    assert "https://" not in rendered
-    assert "getUserMedia" not in rendered
-    assert "localStorage" not in rendered
+    rendered = render_intake(state)
+    assert rendered.startswith("# Scheda di visita per Vera")
+    payload = json.loads(
+        rendered.split("```assetti-intake-json\n", 1)[1].split("\n```", 1)[0]
+    )
+    assert payload["mode"] == "text"
+    assert payload["declared_author"] == ""
+    assert payload["answers"][0]["status"] == "unknown"
+    assert "<script" not in rendered
 
 
 def test_followup_form_keeps_original_answers_and_adds_unknown_questions() -> None:
     state = imported(case(), intake())
 
-    rendered = render_form(
+    rendered = render_intake(
         state,
         questions=[
             {
@@ -718,23 +721,18 @@ def test_followup_form_keeps_original_answers_and_adds_unknown_questions() -> No
         ],
     )
 
-    config = json.loads(
-        rendered.split('id="configuration">', 1)[1].split("</script>", 1)[0]
-    )
-    assert config["saved_intake"] == intake()
-    assert config["initial_intake"]["answers"][0] == intake()["answers"][0]
-    assert config["initial_intake"]["answers"][1]["status"] == "unknown"
-    assert (
-        config["initial_intake"]["answers"][1]["question"]
-        == "Who reviewed the last budget?"
-    )
+    payload = parse_markdown(rendered)
+    assert payload["mode"] == "text"
+    assert payload["answers"][0] == intake()["answers"][0]
+    assert payload["answers"][1]["status"] == "unknown"
+    assert payload["answers"][1]["question"] == "Who reviewed the last budget?"
 
 
 def test_followup_cannot_change_the_question_under_an_existing_answer() -> None:
     state = imported(case(), intake())
 
     with pytest.raises(ValueError, match="new ID"):
-        render_form(
+        render_intake(
             state,
             questions=[
                 {
@@ -759,7 +757,7 @@ def test_followup_cannot_change_the_question_under_an_existing_answer() -> None:
 )
 def test_form_rejects_empty_duplicate_or_unbound_questions(questions) -> None:
     with pytest.raises(ValueError):
-        render_form(case(), questions=questions)
+        render_intake(case(), questions=questions)
 
 
 def test_export_formats_bind_same_manual_and_keep_editable_register_fields(
@@ -851,7 +849,7 @@ def test_cli_opens_form_inside_real_archive_run(vera_workflow_workspace) -> None
     assert opened.returncode == 0, opened.stderr
     form = subprocess.run([*base, "form"], capture_output=True, text=True, timeout=30)
     assert form.returncode == 0, form.stderr
-    assert len(list(workspace["output_dir"].glob("visita-*.html"))) == 1
+    assert len(list(workspace["output_dir"].glob("visita-*.md"))) == 1
     assert len(list(workspace["output_dir"].glob("assetti-construction-*.json"))) == 1
 
 

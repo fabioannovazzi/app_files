@@ -66,13 +66,6 @@ function call(tool, args, bridge) {
   return { content: [{ type: "text", text: JSON.stringify(summary) }], structuredContent: summary, _meta: { workspace: payload } };
 }
 
-function readResource() {
-  const assets = path.join(ROOT, "ui");
-  const html = fs.readFileSync(path.join(assets, "workspace.html"), "utf8")
-    .replace("/*__CSS__*/", fs.readFileSync(path.join(assets, "workspace.css"), "utf8"))
-    .replace("/*__JS__*/", ["explanation-message.js", "area-review.js", "workspace.js"].map(name => fs.readFileSync(path.join(assets, name), "utf8")).join("\n"))
-    .replace("__FONT__", fs.readFileSync(path.join(assets, "InstrumentSans-Regular.ttf")).toString("base64"));
-  return { contents: [{ uri: URI, mimeType: MIME, text: html, _meta: { ui: { prefersBorder: false, csp: { connectDomains: [], resourceDomains: [] } }, "openai/ui": { preferredDisplayMode: "fullscreen", availableDisplayModes: ["inline", "fullscreen"] } } }] };
-}
+function readResource() { throw new Error("Use vera_open_review for the saved work"); }
 
 module.exports = { TOOLS, URI, MIME, call, readResource };

@@ -27,7 +27,6 @@ __all__ = [
 ]
 
 IMPLEMENTATION_CONTRACT = (
-    ("plugin", "assets/open-item-reconciliation-review-widget.html"),
     ("plugin", "assets/icon.svg"),
     ("plugin", "assets/review-workbench-adapter.json"),
     ("plugin", "mcp/server.cjs"),

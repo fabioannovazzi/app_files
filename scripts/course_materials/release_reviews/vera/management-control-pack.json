@@ -84,7 +84,7 @@
     "source_review": "Reviewed the additive costing route, its exact arithmetic, archive-bound source checks and separate renderer. Existing reporting dispatch is unchanged unless analysis_kind is costing. This source refresh does not turn the monthly reporting lesson into a costing lesson.",
     "limits": "Preserves historical editorial and artifact evidence. Current regression execution is required; no fresh learner, voice, installed-host or professional acceptance is claimed."
   },
-  "course_sha256": "f81873e824a849e23a826b9486b3f31a49550ded15e9c0bc60e8a02c7978e6f7",
+  "course_sha256": "4e34114f6c8cdcf9686c07859aae99e45c166a1c702200564f52902b8e1afb81",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.133138+00:00",
@@ -142,30 +142,56 @@
       "editorial": {
         "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
         "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month. Native transport update reviewed 3 November 2026: the localhost editor is retired; native review and the unchanged delivered report files remain the supported route. Historical HTTP/browser statements above describe earlier evidence only.",
         "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
         "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
         "language_and_pacing": "The it lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
       },
       "demo": {
         "test_case": "tests.plugins.test_teaching_management_execution::test_management_kit_delivers_commentary_and_retains_previous_period[demo-it]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "result_review": "Inspected current synthetic native output text, exact files and transport boundaries after the UI retirement. The normal report remains a draft with its original source/calculation/review limits and immutable preceding versions. Removing the localhost launcher does not approve, send or finalize it. Native checks passed for this exact compiled course. No current real Desktop visual or learner acceptance is claimed.",
         "reviewed_artifacts": [
           {
             "name": "management_control_report.md",
             "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+          },
+          {
+            "name": "management_control_dashboard_reviewed.html",
+            "sha256": "5a6f747207c67a0ef727be92b2b99799caef7c89beaeadb90f8cc99e075ebb91"
           }
-        ]
+        ],
+        "previous_artifact_review_20261103": {
+          "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+          "reviewed_artifacts": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+            }
+          ]
+        }
       },
       "practice": {
         "test_case": "tests.plugins.test_teaching_management_execution::test_management_kit_delivers_commentary_and_retains_previous_period[practice-it]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "result_review": "Inspected current synthetic native output text, exact files and transport boundaries after the UI retirement. The normal report remains a draft with its original source/calculation/review limits and immutable preceding versions. Removing the localhost launcher does not approve, send or finalize it. Native checks passed for this exact compiled course. No current real Desktop visual or learner acceptance is claimed.",
         "reviewed_artifacts": [
           {
             "name": "management_control_report.md",
-            "sha256": "0a540457b751a74efd6bdbc196e7d5c9c25954765255839ed69c5d992f3a0762"
+            "sha256": "972a62621229598fb78467e2a17d8e00fe1af597e9ae3749605cdecf03cd39d9"
+          },
+          {
+            "name": "management_control_dashboard_reviewed.html",
+            "sha256": "5a6f747207c67a0ef727be92b2b99799caef7c89beaeadb90f8cc99e075ebb91"
           }
-        ]
+        ],
+        "previous_artifact_review_20261103": {
+          "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+          "reviewed_artifacts": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "0a540457b751a74efd6bdbc196e7d5c9c25954765255839ed69c5d992f3a0762"
+            }
+          ]
+        }
       }
     },
     "en": {
@@ -173,30 +199,56 @@
       "editorial": {
         "purpose_and_first_use": "The ordinary first-use task is a monthly actual-versus-budget report: supply a workbook, confirm its meaning, run the comparison, read the output and request the next month. The lesson does not substitute an isolated variance detail for learning the workflow.",
         "inputs_and_request": "Fictional Arco files contain GL and Budget sheets, declared sign convention, comparable months and control totals. The localized request asks for operating performance and category detail. No finished report is shipped as an input.",
-        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month.",
+        "execution_and_checkpoints": "The native workflow inspects sources, applies the reviewed accounting mapping, calculates results and generates the dashboard, workbook and report with authored explanatory commentary. Checkpoints ask the learner to confirm period and sheets, then trace a result to a category and month. Native transport update reviewed 3 November 2026: the localhost editor is retired; native review and the unchanged delivered report files remain the supported route. Historical HTTP/browser statements above describe earlier evidence only.",
         "deliverable_and_next_action": "The report separates calculation, questions and limitations. January-February EBITDA is EUR 53000 against EUR 47000; a positive cumulative result does not conceal February being EUR 6000 below budget. Missing accounting categories, forecast and ancillary exports are explicit. The learner can choose a concrete question for the monthly meeting without accepting an invented commercial cause.",
         "practice_and_repeat": "The supplied March workbook produces a separate update through March while retaining the preceding outputs. The updated EBITDA is EUR 85000 against EUR 77000; March adds EUR 2000 favourable variance and does not resolve the February question. Repeat instructions explain which actuals, budget, period and purpose to provide.",
         "language_and_pacing": "The en lesson and generated explanation use localized first-use instructions and descriptive titles. The outline totals 390 seconds; execution, review and questions can extend the session. Codex teacher/working chats and the separately projected written Cowork lesson are preserved."
       },
       "demo": {
         "test_case": "tests.plugins.test_teaching_management_execution::test_management_kit_delivers_commentary_and_retains_previous_period[demo-en]",
-        "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "result_review": "Inspected current synthetic native output text, exact files and transport boundaries after the UI retirement. The normal report remains a draft with its original source/calculation/review limits and immutable preceding versions. Removing the localhost launcher does not approve, send or finalize it. Native checks passed for this exact compiled course. No current real Desktop visual or learner acceptance is claimed.",
         "reviewed_artifacts": [
           {
             "name": "management_control_report.md",
             "sha256": "4a1067cf1a21597e1639fa0d9479d5538ea2bad546d3c3f416bd9dcac06a7c57"
+          },
+          {
+            "name": "management_control_dashboard_reviewed.html",
+            "sha256": "c7be9de3b2047b29162ce0e7b7765dd4df6c90610fe13b461ee27182c5015309"
           }
-        ]
+        ],
+        "previous_artifact_review_20261103": {
+          "result_review": "The native demo reconciles EUR 53000 actual EBITDA to EUR 47000 budget and correctly distinguishes January and February. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+          "reviewed_artifacts": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "4a1067cf1a21597e1639fa0d9479d5538ea2bad546d3c3f416bd9dcac06a7c57"
+            }
+          ]
+        }
       },
       "practice": {
         "test_case": "tests.plugins.test_teaching_management_execution::test_management_kit_delivers_commentary_and_retains_previous_period[practice-en]",
-        "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+        "result_review": "Inspected current synthetic native output text, exact files and transport boundaries after the UI retirement. The normal report remains a draft with its original source/calculation/review limits and immutable preceding versions. Removing the localhost launcher does not approve, send or finalize it. Native checks passed for this exact compiled course. No current real Desktop visual or learner acceptance is claimed.",
         "reviewed_artifacts": [
           {
             "name": "management_control_report.md",
             "sha256": "cff49767525b5f7bf0071cffab8bc530d904a5267790a70c3f689b01d1054250"
+          },
+          {
+            "name": "management_control_dashboard_reviewed.html",
+            "sha256": "12df1f1e70bf3d18808a97a47c1cd0433f06eaf6f093317ba2a21c8dc60ea5f1"
           }
-        ]
+        ],
+        "previous_artifact_review_20261103": {
+          "result_review": "The native March update reconciles EUR 85000 actual EBITDA to EUR 77000 budget, explains the additional EUR 2000 favourable variance and preserves the preceding report. The localized commentary agrees with the calculated tables, asks for evidence of causes and identifies partial category coverage. The report remains a draft for professional review.",
+          "reviewed_artifacts": [
+            {
+              "name": "management_control_report.md",
+              "sha256": "cff49767525b5f7bf0071cffab8bc530d904a5267790a70c3f689b01d1054250"
+            }
+          ]
+        }
       }
     }
   },
@@ -295,8 +347,8 @@
     "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-10-14T08:00:57.853939+00:00",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "scissione_integration_refresh_20260930": {
     "previous_course_sha256": "fa7b9dc873bb8fa5f66925ae485c3f7ec2374e1631355a638d4a707789e55922",
@@ -552,5 +604,36 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "native_ui_transport_review_20261103": {
+    "reviewer": "Codex /root — bounded native transport and lesson review",
+    "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+    "previous_review": {
+      "reviewer": "Codex /root - Deal Redux source compatibility review",
+      "reviewed_at": "2026-10-14T08:00:57.853939+00:00",
+      "course_sha256": "f81873e824a849e23a826b9486b3f31a49550ded15e9c0bc60e8a02c7978e6f7"
+    },
+    "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
+    "judgment": "Complete authored course payload excluding source inventory is identical to the reviewed main baseline. The removed localhost editor is replaced by the existing native workspace; ordinary report files, receipts, calculations, review requirements and requested exercises remain unchanged. Management report preview preserves exact receipt verification and is app-only; actual Desktop iframe/month-control acceptance remains separate.",
+    "evidence_document": "docs/releases/2026-11-03-native-ui-lesson-transport-review.json",
+    "fresh_native_ci_required": true
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root — bounded native transport and lesson review",
+    "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+    "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
+    "current_course_sha256": "4e34114f6c8cdcf9686c07859aae99e45c166a1c702200564f52902b8e1afb81",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

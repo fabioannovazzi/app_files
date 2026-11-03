@@ -3,13 +3,11 @@
 from __future__ import annotations
 
 import csv
-import http.client
 import io
 import json
 import shutil
 import subprocess
 import sys
-import threading
 from pathlib import Path
 
 import pytest
@@ -23,7 +21,6 @@ import treasury_session as treasury_session_module
 from treasury_core import TreasuryError, build_forecast
 from treasury_inputs import HEADERS, load_inputs, read_json, safe_path, write_templates
 from treasury_report import write_artifacts
-from treasury_server import make_server
 from treasury_session import (
     create_session,
     current_record,
@@ -361,50 +358,6 @@ def test_delivery_exposes_weekly_cash_and_readable_date_assumptions(tmp_path):
     workbook.close()
 
 
-def test_http_review_requires_token_origin_and_recalculates(tmp_path):
-    output, record, _ = session(tmp_path)
-    server, token = make_server(output, lambda: None)
-    worker = threading.Thread(target=server.serve_forever, daemon=True)
-    worker.start()
-    connection = http.client.HTTPConnection("127.0.0.1", server.server_port, timeout=5)
-    try:
-        connection.request("GET", "/api/state")
-        response = connection.getresponse()
-        assert response.status == 403
-        response.read()
-        body = json.dumps(
-            {
-                "record_sha256": record["record_sha256"],
-                "decisions": {
-                    "item:C101": {
-                        "expected_date": "2026-10-02",
-                        "basis": "Reviewed customer date",
-                    }
-                },
-            }
-        )
-        headers = {"X-Treasury-Token": token, "Content-Type": "application/json"}
-        connection.request("POST", "/api/review", body, headers)
-        response = connection.getresponse()
-        assert response.status == 403
-        response.read()
-        headers["Origin"] = f"http://127.0.0.1:{server.server_port}"
-        connection.request("POST", "/api/review", body, headers)
-        response = connection.getresponse()
-        assert response.status == 200
-        response.read()
-        assert current_record(output)[1]["minimum_daily_cash"] == "-35000.00"
-        connection.request("POST", "/api/review", "[]", headers)
-        response = connection.getresponse()
-        assert response.status == 409
-        response.read()
-    finally:
-        connection.close()
-        server.shutdown()
-        server.server_close()
-        worker.join(timeout=5)
-
-
 def archived_case(tmp_path: Path) -> dict:
     ledger = _load_customer_ledger()
     client = tmp_path / "Studio client"
@@ -670,56 +623,11 @@ def test_report_writes_explained_update_and_incomplete_status(tmp_path):
     workbook.close()
 
 
-def test_http_assets_state_download_and_saved_alternative(tmp_path):
-    output, record, _ = session(tmp_path)
-    server, token = make_server(output, lambda: None)
-    worker = threading.Thread(target=server.serve_forever, daemon=True)
-    worker.start()
-    connection = http.client.HTTPConnection("127.0.0.1", server.server_port, timeout=5)
-    headers = {
-        "X-Treasury-Token": token,
-        "Origin": f"http://127.0.0.1:{server.server_port}",
-    }
-    try:
-        for route in (
-            "/",
-            "/review.js",
-            "/review.css",
-            "/api/state",
-            "/api/workbook",
-            "/api/report",
-        ):
-            connection.request("GET", route, headers=headers)
-            response = connection.getresponse()
-            assert response.status == 200
-            content = response.read()
-            assert content
-            if route == "/api/state":
-                payload = json.loads(content)
-                assert payload["weekly"] == record["weekly"]
-                assert payload["daily"] == record["daily"]
-                assert payload["record_sha256"] == record["record_sha256"]
-        connection.request("GET", "/api/state?offset=-1", headers=headers)
-        response = connection.getresponse()
-        assert response.status == 409
-        response.read()
-        connection.request(
-            "POST",
-            "/api/scenario",
-            json.dumps(
-                {
-                    "record_sha256": record["record_sha256"],
-                    "dates": {"item:C101": "2026-10-02"},
-                }
-            ),
-            headers,
-        )
-        response = connection.getresponse()
-        assert response.status == 200
-        response.read()
-        assert len(list(output.glob("scenario-*.json"))) == 1
-    finally:
-        connection.close()
-        server.shutdown()
-        server.server_close()
-        worker.join(timeout=5)
+def test_retired_browser_command_is_not_an_execution_path():
+    result = subprocess.run(
+        [sys.executable, str(SCRIPTS / "run_treasury.py"), "serve"],
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode != 0
+    assert "invalid choice" in result.stderr

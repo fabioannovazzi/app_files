@@ -23,7 +23,7 @@
     ],
     "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
   },
-  "course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
+  "course_sha256": "4aa8952cd22f326b5c87c5896a4d77a7dd6d4f7892fa49ae4f34423e273dfd67",
   "integration_refresh": {
     "reviewer": "Codex /root",
     "date": "2026-10-02",
@@ -448,8 +448,8 @@
     "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-10-14T08:00:57.877182+00:00",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
     "reviewer": "Codex bounded teaching-material and source integration review",
@@ -675,5 +675,23 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root - Deal Redux source compatibility review",
+    "reviewed_at": "2026-10-14T08:00:57.877182+00:00",
+    "course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
+    "current_course_sha256": "4aa8952cd22f326b5c87c5896a4d77a7dd6d4f7892fa49ae4f34423e273dfd67",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

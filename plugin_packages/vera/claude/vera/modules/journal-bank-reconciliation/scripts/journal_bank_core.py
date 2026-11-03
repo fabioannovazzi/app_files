@@ -213,11 +213,6 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "assets/icon.svg",
     ),
     (
-        "implementation.plugin.assets.journal_bank_review_widget_html",
-        "implementation",
-        "assets/journal-bank-review-widget.html",
-    ),
-    (
         "implementation.plugin.assets.review_workbench_adapter_json",
         "implementation",
         "assets/review-workbench-adapter.json",

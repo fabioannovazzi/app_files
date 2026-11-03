@@ -28,6 +28,7 @@ function projectVeraReview(service, config, routes) {
   service.resources = service.resources.filter(row => !unwanted(row.uri));
   service.resourceTemplates = (service.resourceTemplates || []).filter(row => !unwanted(row.uriTemplate));
   service.tools = service.tools.filter(tool => {
+    if (isComponent && tool.name === "xbrl_workspace_open") return false;
     if (isComponent && tool.name.startsWith("validate_") && /render_|before rendering|prima della visualizzazione/i.test(tool.description)) {
       tool.description = "Validate the existing component review using its declared inputs." +
         (routes[component] ? " Open the saved work with vera_open_review only if interactive review is needed." : " Deliver the result in chat.");

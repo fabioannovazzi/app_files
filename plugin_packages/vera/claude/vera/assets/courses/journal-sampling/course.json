@@ -31,10 +31,6 @@
       "sha256": "5d326ae58e0cf649cf21f071b2ea482c14d1a43318808ebab4219e4fd60091b9"
     },
     {
-      "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
-      "sha256": "168a9600d3061cb0cae8ccece87c5a437d5d56c518b6c500d067cd1fecb1389b"
-    },
-    {
       "path": "modules/journal-sampling/assets/review-workbench-adapter.json",
       "sha256": "21e8c9a626cbf2d7ad859951adb2a9f65cd3ca77528aeb6ed88f00fe043ad382"
     },
@@ -56,7 +52,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/implementation_bootstrap.py",
-      "sha256": "3dd54ff84b52819be6de33bdc070b9e111541567aa364db796ae0243dc462a35"
+      "sha256": "1dc522624f3297b8e62a5104b7ca26e6d749f67e580a5edf6f0b80ab545c5ae6"
     },
     {
       "path": "modules/journal-sampling/scripts/inspect_journal.py",
@@ -64,7 +60,7 @@
     },
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "18af2804ac488718aebaee557453e65f8cfcdd3138ce1c54ab1f81d09e49770f"
+      "sha256": "d27fdc9067f51909f1c57a14a7283cf2310d91ed11bb4aa44b6067f5b8d775c4"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -569,5 +565,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "70e11fcd1ceb9394f3234da00415f043146717bfc2fa8e7c4fd9d8af38b01073"
+  "canonical_course_sha256": "644ca90a6eaa560afbbe5e5e56a386f55b1681a1deecbe435ca41536eb54488f"
 }

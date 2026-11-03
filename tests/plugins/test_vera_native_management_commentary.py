@@ -428,3 +428,25 @@ const result={first:payload(call('vera_workspace_management_commentary_read',cho
     )
     assert len(result["versions"]) == 2
     assert result["implicit"]["isError"] is True
+
+
+def test_management_report_preview_is_app_private_exact_and_readonly(management_run):
+    result = rpc_program(
+        os.environ.copy(),
+        proposed(management_run)
+        + conserved()
+        + """
+const previewExact={...chosen,revision:retained.revision};
+const previewCall=call('vera_workspace_management_commentary_preview',previewExact);
+if(previewCall.isError)throw new Error(previewCall.content[0].text);
+const preview=payload(previewCall);
+const stale=call('vera_workspace_management_commentary_preview',{...previewExact,revision:'stale'});
+const result={html:preview.html,model:previewCall.content,stale};
+""",
+    )
+    assert result["html"].startswith('<meta http-equiv="Content-Security-Policy"')
+    assert "default-src 'none'" in result["html"]
+    assert "script-src 'sha256-" in result["html"]
+    assert "<html" in result["html"]
+    assert all("<html" not in item.get("text", "") for item in result["model"])
+    assert result["stale"]["isError"] is True

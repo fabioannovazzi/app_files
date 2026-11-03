@@ -222,6 +222,7 @@ CLIENT_WORKFLOW_CLI_ALLOWLIST = (
     ("variance-analysis", "inspect_column_values.py"),
     ("variance-analysis", "model_use.py"),
     ("management-control-pack", "check_dependencies.py"),
+    # Shared source retained for Clara; Vera excludes this loopback preview CLI.
     ("management-control-pack", "preview_report.py"),
     ("centrale-rischi-review", "check_dependencies.py"),
     ("centrale-rischi-review", "evaluate_pdf_corpus.py"),

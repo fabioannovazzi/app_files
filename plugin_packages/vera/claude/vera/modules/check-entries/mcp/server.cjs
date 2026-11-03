@@ -14,7 +14,6 @@ const CHECK_ENTRIES_PLUGIN_IMPLEMENTATION_PATHS = [
   ".app.json",
   ".codex-plugin/plugin.json",
   ".mcp.json",
-  "assets/check-entries-review-widget.html",
   "assets/icon.svg",
   "assets/review-workbench-adapter.json",
   "mcp/server.cjs",
@@ -764,27 +763,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "check_entries_review_widget",
-      title: "Vouching review widget",
-      description:
-        "Renders Vouching review-session payloads with searchable rows and evidence details.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetResourceMeta(WIDGET_URI),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown Vouching widget resource: ${uri}`);
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "check-entries-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function payloadBytes(payload) {
   return Buffer.byteLength(JSON.stringify(payload), "utf8");

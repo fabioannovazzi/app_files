@@ -2880,7 +2880,15 @@
     if(page.calculation_status==="blocked")main.append(node("p","I controlli impediscono la finalizzazione. Discuti le evidenze e prepara un caso corretto in un nuovo run.","notice"));
     if(caseRef){
       main.append(node("h2","Commento completo proposto"),crFields(page.commentary));
-      if(page.conservation){main.append(node("h2","Riscontro nominativo conservato"),crFields(page.conservation.review));for(const file of page.files){const article=node("article",undefined,"planning-record");article.append(node("h3",file.name));passiveFile(article,file);main.append(article);}}
+      if(page.conservation){
+        if(page.status==="accepted")main.append(button("Anteprima interattiva del rapporto",async()=>{
+          const preview=await call("vera_workspace_management_commentary_preview",{...identity,revision:page.revision});
+          const frame=node("iframe");frame.title="Rapporto gestionale · bozza da riesaminare";
+          frame.setAttribute("sandbox","allow-scripts");frame.referrerPolicy="no-referrer";
+          frame.style.width="100%";frame.style.height="80vh";frame.srcdoc=preview.html;
+          main.append(frame);
+        }));
+        main.append(node("h2","Riscontro nominativo conservato"),crFields(page.conservation.review));for(const file of page.files){const article=node("article",undefined,"planning-record");article.append(node("h3",file.name));passiveFile(article,file);main.append(article);}}
       if(page.can_write){
         const context={workRef:exact.work_ref,managementCommentaryIdentity:identity,page,stamp:page.draft_revision,fields:structuredClone(page.draft),saved:JSON.stringify(page.draft)};financialContext=context;
         const label=node("label","Decisione sul commento completo","field"),choice=node("select");choice.setAttribute("aria-label","Decisione sul commento gestionale");for(const [value,title]of [["","Da indicare"],["accepted","Contenuto riscontrato con i limiti dichiarati"],["changes_requested","Richiedo correzioni al commento"],["rejected","Rifiuto il commento"]]){const option=node("option",title);option.value=value;choice.append(option);}choice.value=context.fields.decision;choice.addEventListener("change",()=>{context.fields.decision=choice.value;changeFinancial(context);});label.append(choice);main.append(label);

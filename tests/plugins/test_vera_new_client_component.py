@@ -370,7 +370,6 @@ def test_vera_zip_expected_entries_embed_new_client_component() -> None:
         "schemas/new_client_input.schema.json",
         "references/source-registry.json",
         "mcp/server.cjs",
-        "assets/new-client-review-widget.html",
     ):
         assert prefix + relative_path in entries
 
@@ -379,9 +378,15 @@ def test_vera_zip_expected_entries_embed_new_client_component() -> None:
         "skills/client-file-preparation/SKILL.md",
         "scripts/build_file_preparation_outputs.py",
         "mcp/server.cjs",
-        "assets/client-file-preparation-review-widget.html",
     ):
         assert engine_prefix + relative_path in entries
+
+    assert prefix + "assets/new-client-review-widget.html" not in entries
+    assert (
+        engine_prefix + "assets/client-file-preparation-review-widget.html"
+        not in entries
+    )
+    assert "vera-codex-plugin/plugins/vera/ui/workspace.html" in entries
 
     catalogue = json.loads(entries["vera-codex-plugin/plugins/vera/mcp-catalog.json"])
     advertised = {

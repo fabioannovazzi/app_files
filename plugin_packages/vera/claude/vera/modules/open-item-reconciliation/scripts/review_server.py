@@ -80,19 +80,14 @@ if _SCRIPTS_DIR not in _bootstrap_sys.path:
 
 import argparse
 import hashlib
-import ipaddress
 import json
 import logging
 import re
 import shutil
 import tempfile
-import webbrowser
 from datetime import datetime, timezone
-from http import HTTPStatus
-from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlparse
 
 from review_session import completed_review_handoff, register_review_projections
 
@@ -126,14 +121,6 @@ from vera_assurance import (
     load_client_workflow_context_for_output,
 )
 
-__all__ = [
-    "apply_decisions",
-    "build_session_payload",
-    "main",
-    "render_review_html",
-    "save_decisions",
-    "serve_review",
-]
 
 SCHEMA_VERSION = "1.0"
 PLUGIN_NAME = "open-item-reconciliation"
@@ -171,23 +158,6 @@ REQUIRED_REVIEW_ITEM_TYPES = {
 LOGGER = logging.getLogger(__name__)
 
 
-def _validate_loopback_host(host: str) -> str:
-    """Enforce the fixed local-only security boundary before socket binding."""
-
-    normalized = host.strip()
-    if normalized.lower() == "localhost":
-        return "127.0.0.1"
-    try:
-        address = ipaddress.ip_address(normalized)
-    except ValueError as exc:
-        raise ValueError(
-            "review server host must be localhost or an IPv4 loopback address"
-        ) from exc
-    if not address.is_loopback or address.version != 4:
-        raise ValueError(
-            "review server host must be localhost or an IPv4 loopback address"
-        )
-    return normalized
 
 
 def _utc_now() -> str:
@@ -1449,64 +1419,8 @@ def apply_decisions(
     return result
 
 
-def _widget_html(output_dir: Path) -> str:
-    widget_path = (
-        Path(__file__).resolve().parents[1]
-        / "assets"
-        / "open-item-reconciliation-review-widget.html"
-    )
-    html = widget_path.read_text(encoding="utf-8")
-    payload_json = json.dumps(
-        build_session_payload(output_dir, for_display=True),
-        ensure_ascii=False,
-        default=str,
-    )
-    bridge = f"""<script>
-    (function () {{
-      const serverPayload = {payload_json};
-      const stateKey = `open-item-reconciliation:${{serverPayload.review_payload?.run_id || "run"}}`;
-      function readState() {{
-        try {{ return JSON.parse(window.sessionStorage.getItem(stateKey) || "null"); }}
-        catch {{ return null; }}
-      }}
-      window.openai = {{
-        toolOutput: serverPayload,
-        widgetState: readState(),
-        setWidgetState(value) {{
-          try {{ window.sessionStorage.setItem(stateKey, JSON.stringify(value || null)); }}
-          catch {{ }}
-        }},
-        async callTool(name, args) {{
-          const response = await fetch("/api/call-tool", {{
-            method: "POST",
-            headers: {{ "Content-Type": "application/json" }},
-            body: JSON.stringify({{ name, args: args || {{}} }}),
-          }});
-          const result = await response.json();
-          if (!response.ok || result.ok === false) {{
-            throw new Error(result.error || `Local review server call failed: ${{name}}`);
-          }}
-          if (result.ui_decisions) serverPayload.ui_decisions = result.ui_decisions;
-          if (result.final_artifacts) serverPayload.final_artifacts = result.final_artifacts;
-          if (result.applied_decisions) serverPayload.applied_decisions = result.applied_decisions;
-          return result;
-        }},
-      }};
-    }}());
-</script>
-  """
-    needle = "  <script>\n    const CONFIG = "
-    if needle not in html:
-        raise ValueError(
-            "open-item reconciliation widget script insertion point not found"
-        )
-    return html.replace(needle, bridge + needle, 1)
 
 
-def render_review_html(output_dir: str | Path) -> str:
-    """Render the browser review page HTML with the local persistence bridge."""
-
-    return _widget_html(_output_dir(output_dir))
 
 
 def _tool_result(output_dir: Path, payload: dict[str, Any]) -> dict[str, Any]:
@@ -1530,158 +1444,3 @@ def _tool_result(output_dir: Path, payload: dict[str, Any]) -> dict[str, Any]:
     if name == TOOL_APPLY:
         return apply_decisions(output_dir, args)
     raise ValueError(f"unknown Open-item Reconciliation widget tool: {name}")
-
-
-def _handler(output_dir: Path) -> type[BaseHTTPRequestHandler]:
-    class ReviewServerHandler(BaseHTTPRequestHandler):
-        server_version = "AuditReconciliationReviewServer/1.0"
-
-        def log_message(self, format_string: str, *args: object) -> None:
-            LOGGER.info("%s - %s", self.client_address[0], format_string % args)
-
-        def _json_response(
-            self,
-            payload: dict[str, Any],
-            *,
-            status: HTTPStatus = HTTPStatus.OK,
-        ) -> None:
-            body = json.dumps(payload, ensure_ascii=False, default=str).encode("utf-8")
-            self.send_response(status.value)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
-            self.end_headers()
-            self.wfile.write(body)
-
-        def _html_response(self, html: str) -> None:
-            body = html.encode("utf-8")
-            self.send_response(HTTPStatus.OK.value)
-            self.send_header("Content-Type", "text/html; charset=utf-8")
-            self.send_header("Content-Length", str(len(body)))
-            self.send_header("Cache-Control", "no-store")
-            self.end_headers()
-            self.wfile.write(body)
-
-        def do_GET(self) -> None:
-            route = urlparse(self.path).path
-            try:
-                if route in {"/", "/review", "/review_ui.html"}:
-                    self._html_response(_widget_html(output_dir))
-                    return
-                if route == "/api/session":
-                    self._json_response(
-                        build_session_payload(output_dir, for_display=True)
-                    )
-                    return
-                if route == "/api/health":
-                    session = build_session_payload(output_dir, for_display=True)
-                    self._json_response(
-                        {
-                            "ok": True,
-                            "plugin": PLUGIN_NAME,
-                            "run_id": session["review_payload"]["run_id"],
-                            "output_dir": output_dir.as_posix(),
-                        }
-                    )
-                    return
-                self.send_error(HTTPStatus.NOT_FOUND.value, "Not found")
-            except (OSError, TypeError, ValueError) as exc:
-                self._json_response(
-                    {"ok": False, "error": str(exc)},
-                    status=HTTPStatus.INTERNAL_SERVER_ERROR,
-                )
-
-        def do_POST(self) -> None:
-            route = urlparse(self.path).path
-            if route != "/api/call-tool":
-                self.send_error(HTTPStatus.NOT_FOUND.value, "Not found")
-                return
-            try:
-                length = int(self.headers.get("Content-Length", "0"))
-                payload = json.loads(self.rfile.read(length).decode("utf-8"))
-                if not isinstance(payload, dict):
-                    raise ValueError("request body must be a JSON object")
-                self._json_response(_tool_result(output_dir, payload))
-            except json.JSONDecodeError as exc:
-                self._json_response(
-                    {"ok": False, "error": f"invalid JSON request: {exc}"},
-                    status=HTTPStatus.BAD_REQUEST,
-                )
-            except (OSError, TypeError, ValueError) as exc:
-                self._json_response(
-                    {"ok": False, "error": str(exc)},
-                    status=HTTPStatus.BAD_REQUEST,
-                )
-
-    return ReviewServerHandler
-
-
-def serve_review(
-    output_dir: str | Path,
-    *,
-    host: str = "127.0.0.1",
-    port: int = 0,
-    open_browser: bool = True,
-) -> None:
-    """Serve the review UI on localhost and optionally open the system browser."""
-
-    if (Path(__file__).resolve().parents[3] / "ui/review-routes.json").is_file():
-        LOGGER.info("Apri la revisione delle partite da Lavori dello studio in Vera.")
-        return
-    directory = _output_dir(output_dir)
-    safe_host = _validate_loopback_host(host)
-    _readable_client_context(directory)
-    build_session_payload(directory, for_display=True)
-    httpd = ThreadingHTTPServer((safe_host, port), _handler(directory))
-    actual_port = httpd.server_address[1]
-    url = f"http://{safe_host}:{actual_port}/review"
-    LOGGER.info("Open-item Reconciliation review server: %s", url)
-    LOGGER.info("Output folder: %s", directory)
-    if open_browser:
-        webbrowser.open(url)
-    try:
-        httpd.serve_forever()
-    except KeyboardInterrupt:
-        LOGGER.info("Stopping Open-item Reconciliation review server")
-    finally:
-        httpd.server_close()
-
-
-def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(
-        description=(
-            "Open the Open-item Reconciliation review UI in a local browser and "
-            "persist decisions into the run output folder."
-        )
-    )
-    parser.add_argument("output_dir", help="Run output folder with review_payload.json")
-    parser.add_argument("--host", default="127.0.0.1")
-    parser.add_argument("--port", type=int, default=0)
-    parser.add_argument(
-        "--no-open",
-        action="store_true",
-        help="Start the server without opening the browser automatically.",
-    )
-    return parser
-
-
-def main(argv: list[str] | None = None) -> int:
-    logging.basicConfig(level=logging.INFO, format="%(message)s")
-    args = _parser().parse_args(argv)
-    try:
-        serve_review(
-            args.output_dir,
-            host=args.host,
-            port=args.port,
-            open_browser=not args.no_open,
-        )
-    except (OSError, ValueError) as exc:
-        LOGGER.error("%s", exc)
-        return 1
-    return 0
-
-
-if __name__ == "__main__":
-    from vera_assurance.contracts import run_recorded_cli
-
-    raise SystemExit(run_recorded_cli(main, Path(__file__)))

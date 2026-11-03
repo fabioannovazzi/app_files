@@ -684,26 +684,9 @@ function toolDefinitions() {
   ];
 }
 
-function resources() {
-  return [
-    {
-      uri: WIDGET_URI,
-      name: "new_client_review_widget",
-      title: "New Client professional setup review",
-      description: "Interactive professional review of a new-client case.",
-      mimeType: WIDGET_MIME_TYPE,
-      _meta: widgetMeta(),
-    },
-  ];
-}
+function resources() { return []; }
 
-function resourceText(uri) {
-  if (uri !== WIDGET_URI) throw new Error(`unknown widget resource: ${uri}`);
-  return fs.readFileSync(
-    path.join(PLUGIN_ROOT, "assets", "new-client-review-widget.html"),
-    "utf8",
-  );
-}
+function resourceText(uri) { throw new Error("Use vera_open_review for the saved work"); }
 
 function requireText(value, field, maxLength = MAX_TEXT_LENGTH) {
   if (typeof value !== "string" || value.trim() === "") {

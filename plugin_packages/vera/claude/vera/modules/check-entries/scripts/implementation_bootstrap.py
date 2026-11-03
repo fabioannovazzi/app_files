@@ -33,7 +33,6 @@ IMPLEMENTATION_CONTRACT = (
     ("implementation", ".app.json"),
     ("implementation", ".codex-plugin/plugin.json"),
     ("implementation", ".mcp.json"),
-    ("implementation", "assets/check-entries-review-widget.html"),
     ("implementation", "assets/icon.svg"),
     ("implementation", "assets/review-workbench-adapter.json"),
     ("implementation", "mcp/server.cjs"),

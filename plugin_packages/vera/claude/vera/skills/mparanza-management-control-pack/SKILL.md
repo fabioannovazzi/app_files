@@ -299,7 +299,7 @@ remains unapplied pending the repository operating-rule exception; do not claim
 this native lifecycle qualified until the repair is applied and retested.
 Preserve the complete specialist file path while integration remains incomplete.
 
-Open the normal HTML through `preview_report.py` as described by the component;
-interactive panel opening is pending. Preserve earlier versions, full workbook,
+Open the receipt-verified interactive report through the native MCP panel's
+Anteprima interattiva del rapporto. Preserve earlier versions, full workbook,
 HTML and receipts. Signing, delivery and Archive completion remain separate.
 Missing native tools do not block file work.

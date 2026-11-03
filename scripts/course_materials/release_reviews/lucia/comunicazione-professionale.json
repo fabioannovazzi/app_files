@@ -2,9 +2,9 @@
   "schema": "mparanza.teaching_release_review.v1",
   "product": "lucia",
   "workflow": "comunicazione-professionale",
-  "course_sha256": "5c1397ddfdcd9fcbeefdfe6ea73ccc5cc2f38a2b2b26a7ea53492d0cf78d8c12",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
-  "reviewed_at": "2026-10-14T08:00:57.893223+00:00",
+  "course_sha256": "7e277a1b4a2c34c054dd920adf45d08d2601d7e74504d4f321bb6c3606496e20",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "languages": {
     "it": {
@@ -626,5 +626,23 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root - Deal Redux source compatibility review",
+    "reviewed_at": "2026-10-14T08:00:57.893223+00:00",
+    "course_sha256": "5c1397ddfdcd9fcbeefdfe6ea73ccc5cc2f38a2b2b26a7ea53492d0cf78d8c12"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "5c1397ddfdcd9fcbeefdfe6ea73ccc5cc2f38a2b2b26a7ea53492d0cf78d8c12",
+    "current_course_sha256": "7e277a1b4a2c34c054dd920adf45d08d2601d7e74504d4f321bb6c3606496e20",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

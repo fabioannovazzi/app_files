@@ -32,10 +32,6 @@
       "sha256": "418d8d1c873df068b91b484e9f7b80a873d89f78ebe8361e48d892bf6f0e9665"
     },
     {
-      "path": "modules/previdenza-inps/assets/previdenza-inps-review-widget.html",
-      "sha256": "f0af7ea8561544c96e3121414232258fb03f789596d273556967b87a86c89d31"
-    },
-    {
       "path": "modules/previdenza-inps/references/inps-access-channels.md",
       "sha256": "890a59124d980016512b65116ef1b7fb19cfc2cee02b95f6ae5fa40c0aa1dfb0"
     },
@@ -782,5 +778,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "f64207099ee69591448fbe5841e29e4cbc542ec7dc6b33c95117326dcbccb092"
+  "canonical_course_sha256": "78f264d6798e300ac85dd2e97cd7bf890995eb47ffcb909b62da52fc57926dfe"
 }

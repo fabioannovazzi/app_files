@@ -37,7 +37,6 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/run_sample.py"),
     ("plugin", "mcp/server.cjs"),
     ("plugin", "assets/icon.svg"),
-    ("plugin", "assets/journal-sampling-review-widget.html"),
     ("plugin", "assets/review-workbench-adapter.json"),
     ("plugin", ".app.json"),
     ("plugin", ".mcp.json"),

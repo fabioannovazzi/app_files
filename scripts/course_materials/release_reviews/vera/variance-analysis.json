@@ -121,7 +121,7 @@
     "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository."
   },
-  "course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484",
+  "course_sha256": "6d242cc2344f87f24cceea727417bf69a0aae5b1038639d5e046085a4412e019",
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -937,8 +937,8 @@
     "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-10-14T08:00:57.889369+00:00",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "root_helper_capture_source_refresh": {
     "previous_course_sha256": "ca3e9440c94eaa8ceabc7cdfff9182676a4920a780e64a9a90aa3c916ece9f38",
     "reviewed_at": "2026-10-15",
@@ -1182,5 +1182,23 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "reviewer": "Codex /root - Deal Redux source compatibility review",
+    "reviewed_at": "2026-10-14T08:00:57.889369+00:00",
+    "course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484"
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "previous_course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484",
+    "current_course_sha256": "6d242cc2344f87f24cceea727417bf69a0aae5b1038639d5e046085a4412e019",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

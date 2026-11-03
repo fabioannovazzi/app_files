@@ -329,11 +329,11 @@ For a beta user's first run, guide the work in this order:
    actions before revising final outputs.
 8. When the `newClientFilePreparation` MCP tools are available, use the OpenAI-style
    handoff: call `validate_client_file_preparation_review` with the full review payload,
-   then call `render_client_file_preparation_review` once validation succeeds. When
+   then open the exact saved work with `vera_open_review`. When
    decisions are collected, call `save_client_file_preparation_decisions` and
-   `apply_client_file_preparation_decisions` before treating the review as applied. When callable, the
-   MCP server may provide validation, HTML widget rendering, and decision persistence;
-   the Python scripts only produce the structured payload. If host MCP is unavailable and the local review server is callable, that server may be used as an optional persistent review enhancement. Otherwise continue through Markdown and files, keep unrecorded decisions pending, and deliver the useful file-based artifacts. A final-ready review must record a stable
+   `apply_client_file_preparation_decisions` before treating the review as applied. The
+   When callable, native MCP provides validation and decision persistence. If it is unavailable,
+   leave decisions pending and review Markdown in chat. A final-ready review must record a stable
    professional or account reference. A real professional name is allowed; do
    not put credentials, session material, or raw local paths in that field. A
    skipped or incomplete review does not make the package final-ready.
@@ -435,7 +435,7 @@ applied_decisions.json (after application)
 
 ```text
 validate_client_file_preparation_review
-render_client_file_preparation_review
+vera_open_review
 ```
 
 Use `model_handoff.json` for model reasoning. Pass the complete
@@ -446,7 +446,7 @@ new HTML page for this review surface. When decisions are collected, use
 `apply_client_file_preparation_decisions` to write `applied_decisions.json` and update
 `final_artifacts.json`.
 
-If host MCP is unavailable and the local review server is callable, it may optionally persist the same save/apply decisions. Otherwise review through Markdown and files, keep unrecorded decisions pending, and state that they have not been applied.
+In Cowork, if the optional native MCP review is unavailable, review the Markdown artifacts in chat and leave decisions pending. A conversational approval is not an applied professional review. Resume the exact saved work with `vera_open_review` when the native service is available.
 
 6. Inspect nearby source files when useful and readable. Do not claim to have read the content of binary PDFs unless a text extraction step has actually succeeded.
 7. Draft the short Vera synthesis file before review:
