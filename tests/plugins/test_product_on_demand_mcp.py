@@ -188,6 +188,22 @@ def test_panel_and_prompt_access_start_only_their_owner(
     assert (installation.parent / "starts").read_text().startswith("beta:")
 
 
+def test_panel_display_policy_preserves_component_metadata(session, installation):
+    product = json.loads((installation / ".codex-plugin/plugin.json").read_text())[
+        "name"
+    ]
+    meta = session.call("resources/read", {"uri": "ui://beta"})["result"]["contents"][
+        0
+    ]["_meta"]
+
+    assert meta["ui"] == {"prefersBorder": False}
+    expected = {
+        "preferredDisplayMode": "fullscreen",
+        "availableDisplayModes": ["fullscreen"],
+    }
+    assert meta.get("openai/ui") == (expected if product == "vera" else None)
+
+
 def test_unknown_tool_does_not_start_a_service(session, installation):
     reply = session.call("tools/call", {"name": "not_a_tool"})
 

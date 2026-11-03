@@ -47,9 +47,11 @@ globalThis.VeraStudioWork = Object.freeze({create(api) {
   function shell(page){const parent=main();parent.replaceChildren();const nav=node("nav",undefined,"studio-work-nav");nav.setAttribute("aria-label","Registro del lavoro");parent.append(node("p","Vera · Registro dello studio","eyebrow"),node("h1","Organizzazione del lavoro"),node("p","Consulta impegni, riunioni e ricevute; conserva nuove attività e aggiornamenti locali. Per disponibilità, spostamenti o esiti incerti del calendario continua con Vera nella chat.","intro"),nav);
     for(const [collection,title] of Object.entries(collections)){
       if(!page.counts[collection] && collection!==page.collection)continue;
-      const tab=button(title,()=>open({collection}));tab.setAttribute("aria-pressed",String(collection===page.collection));nav.append(tab);
+      const tab=button(title,()=>open({collection}));tab.setAttribute("aria-pressed",String(!page.form&&collection===page.collection));nav.append(tab);
     }
-    nav.append(button("Nuovo impegno",()=>open({form:"capture"})),button("Registra riunione",()=>open({form:"meeting"})));
+    for(const [form,title] of [["capture","Nuovo impegno"],["meeting","Registra riunione"]]){
+      const tab=button(title,()=>open({form}));tab.setAttribute("aria-pressed",String(form===page.form));nav.append(tab);
+    }
     parent.append(node("p",page.settings.timezone?"Fuso configurato: "+page.settings.timezone+" · data di consultazione "+page.day:"Scegli il fuso orario e il calendario da usare per gli impegni.","caption"),button("Preferenze e calendario con Vera",()=>chat(parent,"Segui organizzazione-lavoro: leggi vera_studio_work_settings, chiarisci soltanto le preferenze mancanti con me e usa i calendari realmente collegati. Non creare eventi o automazioni per questa sola richiesta.")));
     parent.append(button("Lavori in Studio Archive",()=>chat(parent,"Apri vera_workspace_open per scegliere il cliente, l’incarico e il lavoro registrati in Studio Archive. Il registro degli impegni dello studio non completa né sostituisce gli incarichi specialistici.")));return parent;
   }

@@ -32,6 +32,16 @@ def events(body):
     return json.loads(result.stdout)
 
 
+def test_opening_new_item_selects_its_navigation_button():
+    result = events(
+        """
+const ui=fixture(source);await ui.panel.open({form:'capture'});
+process.stdout.write(JSON.stringify(ui.all().filter(e=>e.attributes['aria-pressed']==='true').map(e=>e.text)));
+"""
+    )
+    assert result == ["Nuovo impegno"]
+
+
 def test_studio_panel_partial_fields_reopen_without_confirmation_or_schedule():
     result = events(
         """
