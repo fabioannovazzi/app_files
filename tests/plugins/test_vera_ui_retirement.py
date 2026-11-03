@@ -67,6 +67,31 @@ def test_product_cleanup_does_not_remove_independent_plugin_editors():
     assert entries["vera/ui/workspace.html"] == b"Vera native app"
 
 
+def test_retirement_preserves_newer_managed_python_sources_on_older_build_hosts(
+    monkeypatch,
+):
+    parse = ast.parse
+    runtime_source = b'result = f"{metric["value"]:,.0f}"\n'
+
+    def legacy_parse(source, **kwargs):
+        # Reproduce the pre-3.12 rejection observed in the completed CI job.
+        if source == runtime_source.decode():
+            raise SyntaxError("f-string requires the managed Python runtime")
+        return parse(source, **kwargs)
+
+    monkeypatch.setattr(ast, "parse", legacy_parse)
+    entries = {
+        "modules/management-control-pack/scripts/management_control_core.py": runtime_source,
+        "modules/archive-organization/assets/archive-organization-review-widget.html": b"retired editor",
+        "ui/workspace.html": b"native app",
+    }
+    retire_browser_interfaces(entries, "")
+    assert (
+        entries["modules/management-control-pack/scripts/management_control_core.py"]
+        == runtime_source
+    )
+
+
 def test_native_workspace_still_embeds_the_bilancio_area_renderer():
     source = (ROOT / "plugins/vera/mcp/workspace.cjs").read_text()
     assert "bilancio-xbrl-it/ui/area-review.js" in source

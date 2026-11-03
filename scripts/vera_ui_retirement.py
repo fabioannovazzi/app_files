@@ -153,6 +153,11 @@ def retire_browser_interfaces(entries: dict[str, bytes], prefix: str) -> None:
             continue
         if name.endswith(".py"):
             text = entries[name].decode()
+            # Build hosts may predate the managed Python runtime. Parse only
+            # the reviewed receipt declarations that actually need rewriting;
+            # unrelated runtime modules can use newer Python syntax.
+            if not any(path in text for path in retired_assets):
+                continue
             tree = ast.parse(text)
             cuts = set()
             for item in ast.walk(tree):
