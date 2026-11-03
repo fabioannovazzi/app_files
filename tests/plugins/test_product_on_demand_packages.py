@@ -148,3 +148,29 @@ def test_every_vera_opinion_entry_keeps_delivery_policy_in_package(host):
         text = entries[matches[0]].decode()
         assert "/references/opinion-delivery.md" in text
         assert "replaces all shared panel and review-queue handoffs" in text
+
+    # The preparations must reach the visible chat policy on every host,
+    # including when users enter research directly.
+    assert "before the first\nsubstantive source lookup" in policy
+    assert "question I’ll answer" in policy and "sources\nI’ll consult" in policy
+    for name in ("quesito-legale-fiscale", "legal-tax-answer-planner"):
+        paths = [
+            path
+            for path in entries
+            if path.startswith("skills/") and path.endswith(f"{name}/SKILL.md")
+        ]
+        assert len(paths) == 1
+        assert "/references/opinion-delivery.md" in entries[paths[0]].decode()
+    root = [
+        path
+        for path in entries
+        if path in {"skills/vera/SKILL.md", "skills/mparanza-vera/SKILL.md"}
+    ]
+    assert len(root) == 1
+    root_text = entries[root[0]].decode()
+    assert (
+        "Before opening a supplied authority"
+        in root_text.partition("## Work continuity")[0]
+    )
+    assert "scripts/opinion_validation.py" in entries
+    assert "verify <review-directory>" in policy

@@ -160,7 +160,7 @@
     "reviewed_at": "2026-10-29",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "8236358d7a847745d5e18692e1786824766bc01375f99af2775fa9ce7feb0467"
+    "source_fingerprint": "d89394bbab38f0f2888e0ad35c0549da90f618f8d69f07cb626e0bfcad17940f"
   },
   "governed_repository_paths": [
     "plugins/deep-research-validator/skills/legal-tax-answer-review/references/adversarial-scope.md",
@@ -175,7 +175,8 @@
     "plugins/vera/skills/legal-tax-answer-planner/SKILL.md",
     "plugins/vera/scripts/research-sources.cjs",
     "plugins/vera/skills/vera/references/legal-tax-model-policy.md",
-    "plugins/vera/skills/legal-tax-answer-review/SKILL.md"
+    "plugins/vera/skills/legal-tax-answer-review/SKILL.md",
+    "plugins/vera/skills/vera/references/opinion-delivery.md"
   ],
   "public_explanations": {
     "prompt-optimizer": {

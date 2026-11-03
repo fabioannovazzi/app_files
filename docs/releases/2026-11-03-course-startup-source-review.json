@@ -1,0 +1,2303 @@
+{
+  "schema": "mparanza.course_source_review.v1",
+  "reviewer": "Codex /root - bounded source compatibility review",
+  "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+  "baseline_main_commit": "ea5a102b34dc6bdda10bf235bf4a8524ca3d0094",
+  "reviewed_source_commit": "af8201c7cf8f25f7cf53fd710dda84b48aeb977e",
+  "scope": "Compared every complete compiled course against the exact committed ancestor whose bytes match its existing accepted editorial digest. Every authored field except source inventory is identical. Main already contained inherited source binding drift before this correction. Existing editorial and historical artifact judgments remain retained, with original reviewers and dates.",
+  "source_compatibility_judgment": "The same bound inputs, natural requests, checkpoints, phase identities and expected output contracts remain applicable: current native demo and practice assertions passed for the exact current course hashes. The task delta was inspected directly: v2 preparation builds in a sibling temporary directory and publishes only a complete kit into an empty destination, keeps final handoff paths, preserves user files and exposes specific download causes. Vera render/results delegate to the existing verified managed runtime. Inherited UI compactness, review reopening, privacy-reporting and workflow updates were already committed to main; their current execution regressions passed, but this record does not claim a new independent implementation, visual or professional audit of those changes.",
+  "native_execution_evidence": {
+    "run_id": 41630711072,
+    "job_id": 125907902203,
+    "tests": 1737,
+    "explicit_skips": 3,
+    "failures": 0,
+    "errors": 0,
+    "junit_sha256": "badb77bf5c8805d26884c4d0bdde01d463fe4a9f05155ba351b52e6c2d03ac1c",
+    "later_gate": "stale editorial course digest",
+    "final_head_fresh_ci_required": true
+  },
+  "limits": "Source compatibility judgment and current native assertions do not establish user understanding, native voice acceptance, fresh visual inspection or professional approval. Historical output artifact reviews remain historical. No release gate is disabled.",
+  "kits": [
+    {
+      "product": "vera",
+      "workflow": "adeguati-assetti",
+      "path": "plugins/vera/assets/courses/adeguati-assetti/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/adeguati-assetti.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "726b85fb9b66bae8e40e1d732cc02e06fe4a3cfbdf8b0582454bf4382980dc2f",
+      "current_course_sha256": "b95d889cf87c5059f121c64396399897f129b37ebe53dc53c08cbd64d68e1e4a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/adeguati-assetti/assets/construction-intake.html",
+            "repository_path": "plugins/adeguati-assetti/assets/construction-intake.html",
+            "sha256": "41ddaf83843e7b93cafef898a5e787ee115765f4901ba808133415e46f796d70"
+          },
+          "after": {
+            "path": "modules/adeguati-assetti/assets/construction-intake.html",
+            "repository_path": "plugins/adeguati-assetti/assets/construction-intake.html",
+            "sha256": "7e7946c5651db0bc23a718f0902ec63d0fc1f2ce984ff71efe046c0b8e2abf64"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "agenzia-acquisition",
+      "path": "plugins/vera/assets/courses/agenzia-acquisition/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/agenzia-acquisition.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "f5fc1317faba2a01ceeead5d5b46b3973d97dbbadb038e261ad24ad9329a6502",
+      "current_course_sha256": "4b4d94045715f9d3de80c287eaa1deb8f542d9c3df3d24ab12be96c7746ea514",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "aml-review",
+      "path": "plugins/vera/assets/courses/aml-review/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/aml-review.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "28d95cc8dbf47371ef6808555e2baac0d72d8c9ca1656221904e05135217c48e",
+      "current_course_sha256": "7f9459ae04b55f779b0778ca291ad85653905b68d7d237688bd85f61da3388e3",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "archive-organization",
+      "path": "plugins/vera/assets/courses/archive-organization/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/archive-organization.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "41ae104bd1d906d996bb5e9c6ad8b5981a7a31f6213e00048731971c0798e4bc",
+      "current_course_sha256": "da8c817ad3baf71d2c6dbed1589acc2c39b24aaefc577ffabd4b29b9e7a1e711",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/archive-organization/assets/archive-organization-review-widget.html",
+            "repository_path": "plugins/archive-organization/assets/archive-organization-review-widget.html",
+            "sha256": "664a44710271dbd927b70324fdcc5e3eb2294ffe84b18ee5deaf23ecda41f1d3"
+          },
+          "after": {
+            "path": "modules/archive-organization/assets/archive-organization-review-widget.html",
+            "repository_path": "plugins/archive-organization/assets/archive-organization-review-widget.html",
+            "sha256": "02b0f542af47ca8a5fc02583163e5330838a7464ed90273a494583b7ad71fa26"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
+            "repository_path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
+            "sha256": "415e112448701e0fdff272df940eff29f4426b2b569e5df438c92adae571d840"
+          },
+          "after": {
+            "path": "modules/archive-organization/skills/archive-organization/SKILL.md",
+            "repository_path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
+            "sha256": "6f223b9bf4713f47121262724bdf243af302b3c74ddf26e197750f341f9bf8a8"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/archive-organization/SKILL.md",
+            "repository_path": "plugins/vera/skills/archive-organization/SKILL.md",
+            "sha256": "68c6ab2b873e9c265ef52ae8adb17a63a4f35063d3b324edacdaa1278be9d918"
+          },
+          "after": {
+            "path": "skills/archive-organization/SKILL.md",
+            "repository_path": "plugins/vera/skills/archive-organization/SKILL.md",
+            "sha256": "59e7f5c89762425873eeb46b66d910bf02c75f88a6dc0d45a98193b637e4a0b3"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "avviso-intake",
+      "path": "plugins/vera/assets/courses/avviso-intake/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/avviso-intake.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "803eb262a0f32c4458d2e85a16826b3b3090a1ce5f1c3a2d6c6bd2c0dacafe64",
+      "current_course_sha256": "2ea2ed8b29ba8f002146e193eeee2a7d66b60b784f5dd273f9008096cadbae28",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "1d98bf76a87dc61d6a4efead99a11e910df70dd5f2e4144c4e94af9c1f094b55"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "4d7b3ec93bc8e94adc07db944a8333fcc44721e9066bff4281b39e64efaece20"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "bandi-agevolazioni",
+      "path": "plugins/vera/assets/courses/bandi-agevolazioni/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/bandi-agevolazioni.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "521f8e367a686d79921fce50b1793a8adacadf5b74e9dd2a6bf9870170766fc5",
+      "current_course_sha256": "51944f11ce6aac39a03c7c8078ee3a6577792051e77fa9f765d8aca16df5a7ef",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "bilancio-oic",
+      "path": "plugins/vera/assets/courses/bilancio-oic/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/bilancio-oic.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "d118054e9c2a74fe790216635aa058a8ed088ffb157b9596684e5c954ac809ad",
+      "current_course_sha256": "2a87b99d8481f246fdca4c32f692ed7a5b79a347140be14095d12983e90e4d1c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "browser-automation",
+      "path": "plugins/vera/assets/courses/browser-automation/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/browser-automation.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "91c7b37e8cad44ee24480d2f7c61d348275350b55edeeba5c7cbb127fa780484",
+      "current_course_sha256": "ad59f87bc05ebea2bdc536681f38a79a8f9ff97ddc8d47fbb60a60a3f96e7ca0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "business-planning",
+      "path": "plugins/vera/assets/courses/business-planning/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/business-planning.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "488bc133f77319b6a3d4170a2c51e5778a3b866fd24df1b24009b04226b8f87f",
+      "current_course_sha256": "cb1e5fb6315fec7c7100fceacfeb183280f7f84dec3c8feb2a67775e8f51c1c9",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "business-valuation",
+      "path": "plugins/vera/assets/courses/business-valuation/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/business-valuation.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "149afe2538168ffeebf6dcbcc6af1bb6a2b218e87b7caa848782a3f8d59ed5a8",
+      "current_course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "centrale-rischi-review",
+      "path": "plugins/vera/assets/courses/centrale-rischi-review/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/centrale-rischi-review.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "e9372bfde420b7dc8f8aa9b16b00d65c2a62201e88d043f41673fe7fc4a3b78a",
+      "current_course_sha256": "78e2b0e6732268a5144bb26b5489e46b01fff4392c66cbf6db8d43741322deef",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "composizione-negoziata",
+      "path": "plugins/vera/assets/courses/composizione-negoziata/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/composizione-negoziata.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "dd7fa4dbfdd46758e01898ea614d425790f3166d449c1f2ebc8ad4b7383d7f57",
+      "current_course_sha256": "f9c0383ed915944bce2b02fdb86e3b6de6086a93f2bf5476b5f011799846f7c1",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_cli.py",
+            "repository_path": "plugins/vera/scripts/archive_cli.py",
+            "sha256": "e96d672fd62106622063a78f47c416ec35fa74bf16f6cdaa3ac7d4c49c4664f7"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_emit.py",
+            "repository_path": "plugins/vera/scripts/archive_emit.py",
+            "sha256": "e6af4a0b8ac814638f85541cd18d9841760ca7f0410e8039256b92521c72416a"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_projection.py",
+            "repository_path": "plugins/vera/scripts/archive_projection.py",
+            "sha256": "96dfa605cce28df808400ab76dab98cd3c27d7ae7fd71c343ea56dd8f7b3027c"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_report_legacy.py",
+            "repository_path": "plugins/vera/scripts/archive_report_legacy.py",
+            "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_report_measurements.py",
+            "repository_path": "plugins/vera/scripts/archive_report_measurements.py",
+            "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_report_receipt.py",
+            "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
+            "sha256": "d4b7cdad03bf1745632cd96087bbf352b89633d442d9ba32f606a85f1cd5662c"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_report_seal.py",
+            "repository_path": "plugins/vera/scripts/archive_report_seal.py",
+            "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_report_store.py",
+            "repository_path": "plugins/vera/scripts/archive_report_store.py",
+            "sha256": "71b343484ce0dad7b426449c0d3038cb324dbd8ea3d45b44658e9e7e51fcdff5"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_reporting.py",
+            "repository_path": "plugins/vera/scripts/archive_reporting.py",
+            "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/archive_reporting_failure.py",
+            "repository_path": "plugins/vera/scripts/archive_reporting_failure.py",
+            "sha256": "3705b3118295be6c25f125560baf1db7312c4c83e5d41cdff6f3cb661c893f5f"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/diagnostic_context.py",
+            "repository_path": "plugins/vera/scripts/diagnostic_context.py",
+            "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/model_data_report.py",
+            "repository_path": "plugins/vera/scripts/model_data_report.py",
+            "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/native_bank_preparation.py",
+            "repository_path": "plugins/vera/scripts/native_bank_preparation.py",
+            "sha256": "ce181f4622e0561f29ec8e745678bbc39cbb43af62bde9094111c43b213ca3b8"
+          },
+          "after": {
+            "path": "scripts/native_bank_preparation.py",
+            "repository_path": "plugins/vera/scripts/native_bank_preparation.py",
+            "sha256": "0446693596c9264017e5842bf6c2f0517d5ee3e8acc547e4ed745c908c1d6894"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/notarized_run_receipt.py",
+            "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+            "sha256": "7b32e58c31df7fdbe875407f370e709a14ec4a2d7456b9f75d0eea91c8ccb89b"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/operational_incidents.py",
+            "repository_path": "plugins/vera/scripts/operational_incidents.py",
+            "sha256": "6b45c5f15cfe8cd554afd89239548b409d2e2a3b373dfb95838782157c450459"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/selective_reporting.py",
+            "repository_path": "plugins/vera/scripts/selective_reporting.py",
+            "sha256": "3c99afa7d416625bd94d1dc0aab41ea354df662f0362098f3b431a57fecba8ba"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/verified_execution.py",
+            "repository_path": "plugins/vera/scripts/verified_execution.py",
+            "sha256": "98073794343e69078b76fb57465fce6999dd3a0d38879bd967110e3702571db4"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/workflow_usage.py",
+            "repository_path": "plugins/vera/scripts/workflow_usage.py",
+            "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "comunicazione-professionale",
+      "path": "plugins/vera/assets/courses/comunicazione-professionale/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/comunicazione-professionale.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "3067a8fa7f74e11ee20d30e16ad4b003374a544593195c324ace872abdcb8281",
+      "current_course_sha256": "67ef69886ef92ac66ddd051f0c6f68bf5b1385aceb5ec6287de2848518bea975",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "concordato-plan-review",
+      "path": "plugins/vera/assets/courses/concordato-plan-review/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/concordato-plan-review.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "69434f00a0caf88de84b82d2b6bb7de52d6f1fb2d395f5527c18fa0d7a46b18c",
+      "current_course_sha256": "cbea0460602c6f75b548ad591e0bdb2497b236c698cb22cb25f64ecb2b961e49",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
+            "repository_path": "plugins/concordato-plan-review/assets/concordato-plan-review-widget.html",
+            "sha256": "e7e10bd4e29e498814606d57c305bf0ae60422e4105b60f769942a9bf092c332"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/assets/concordato-plan-review-widget.html",
+            "repository_path": "plugins/concordato-plan-review/assets/concordato-plan-review-widget.html",
+            "sha256": "87e40a514592fd41020f470efdea77987bb0b7c1e13612e9f9ca44e922836f0f"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+            "repository_path": "plugins/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+            "sha256": "803fd414c949d58ac52edf3846e0be3a9e9dea3ccd2c8390c1b0e3ce4b7599c0"
+          },
+          "after": {
+            "path": "modules/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+            "repository_path": "plugins/concordato-plan-review/skills/concordato-plan-review/SKILL.md",
+            "sha256": "7ce4d19fecf2e3d81d0be2f5f5eb6c7a9633e9487df6e479fbb172efae5ab3f8"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/concordato-plan-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
+            "sha256": "71af0914796c35b33685ecbf32aaac311ecd3bce14109c33d18af8c036abb82f"
+          },
+          "after": {
+            "path": "skills/concordato-plan-review/SKILL.md",
+            "repository_path": "plugins/vera/skills/concordato-plan-review/SKILL.md",
+            "sha256": "2293312eb596a2042b7979eb8875ef06ae0a5d38708fb11e6bb1d3b3963624e9"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "contenzioso-tributario",
+      "path": "plugins/vera/assets/courses/contenzioso-tributario/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/contenzioso-tributario.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "2519a3300eac208b1338e3a7e8f689650a79ca96527680400be8527aa7700ceb",
+      "current_course_sha256": "8d10440b801057c790edf7335d82c8cb0200ee076fa0afaf2ab825acc3b9c3ce",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "dati-fiscali-strutturati",
+      "path": "plugins/vera/assets/courses/dati-fiscali-strutturati/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/dati-fiscali-strutturati.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "ae40def04764caeb671ee3af7b8a01a710560ebb6b20dd94b9fd0f8eb0cb09ee",
+      "current_course_sha256": "99a34ea26f34c105cd2d3bbe3e09f12655446d29f02791c5b6563fd8359ce282",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "1d98bf76a87dc61d6a4efead99a11e910df70dd5f2e4144c4e94af9c1f094b55"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "4d7b3ec93bc8e94adc07db944a8333fcc44721e9066bff4281b39e64efaece20"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "email-cliente",
+      "path": "plugins/vera/assets/courses/email-cliente/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/email-cliente.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "eea0bf46b0188fc158cf402c118d12812236679f8037e1797db3ffc8ca16ebf0",
+      "current_course_sha256": "30534091c51174dc99142d03e719bb5f2dc82ae4a7e19e694e5cb41eeddcd110",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "1d98bf76a87dc61d6a4efead99a11e910df70dd5f2e4144c4e94af9c1f094b55"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "4d7b3ec93bc8e94adc07db944a8333fcc44721e9066bff4281b39e64efaece20"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "esg-reporting-assurance",
+      "path": "plugins/vera/assets/courses/esg-reporting-assurance/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/esg-reporting-assurance.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "0f53e00dac82dd09d836ffe2f37b9feecce674183db5ab26ddcbec382e2fc57f",
+      "current_course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "fatture-xml-check",
+      "path": "plugins/vera/assets/courses/fatture-xml-check/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/fatture-xml-check.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "a0e2d84ff8baf1488cf02c998834136896943819ca3ff5d59685f65aa2b092fd",
+      "current_course_sha256": "0f0886d3b234d98e2791a56c5c3780b66f91cbfa6d7a46a169b9f4ca3b5c63b5",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "1d98bf76a87dc61d6a4efead99a11e910df70dd5f2e4144c4e94af9c1f094b55"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "4d7b3ec93bc8e94adc07db944a8333fcc44721e9066bff4281b39e64efaece20"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "financial-analysis",
+      "path": "plugins/vera/assets/courses/financial-analysis/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/financial-analysis.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "58ad9125db4a33e1f911a082b77a7bcfe3f3f44f719787c982ee0901e588b7a2",
+      "current_course_sha256": "dafea8be1824d1c2a86e9e4b35a2bdb8b55c88bf07d9797c29da45bee1e1df2d",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "financial-report-builder",
+      "path": "plugins/vera/assets/courses/financial-report-builder/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/financial-report-builder.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "2d0bedda5b176aab240a90bf1010b2568ecedd16cdbfc8c84175e4f06efb4c13",
+      "current_course_sha256": "16a53e01bc86e54ccb9643978e0813a01cc0bafcc26255d8129eb395d6fb6b8b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/report-builder/assets/report-builder-review-widget.html",
+            "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
+            "sha256": "e2562c0a9d9b266c9910d16cbd20b7ec853039e822b2b5e2db1af485ab55a891"
+          },
+          "after": {
+            "path": "modules/report-builder/assets/report-builder-review-widget.html",
+            "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
+            "sha256": "ecd197c20a686d875c395fe0895557d3b95f27625ef7909476f5710b7a7dd5cf"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
+            "sha256": "d4d95bc079316c15730e694a61708339d851e4aa89af2ddba4b441e25d826d59"
+          },
+          "after": {
+            "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
+            "sha256": "ef62f548ca628bb0135284ea65bb2db14ad210f489aa0ff14c348c2f3dffa717"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
+            "sha256": "97514f7a5aeaf4cbc9b132e3194616803615bcb8dd9e555700693a87ca31cc57"
+          },
+          "after": {
+            "path": "skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/vera/skills/financial-report-builder/SKILL.md",
+            "sha256": "8d63dbffa8e973e8ac0374bfff9da4c586340237b25457c249685f465a27669f"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "fusione-guidata",
+      "path": "plugins/vera/assets/courses/fusione-guidata/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/fusione-guidata.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "0f8925c7a3e4243dccc76a28782b5aa5daaddc139fde977fb8bcbfb9dab69663",
+      "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "invoice-xml",
+      "path": "plugins/vera/assets/courses/invoice-xml/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/invoice-xml.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "d1de5f1b732138a3f6b1d879b361a105e4e6a94ca20157ad802d13f283e1b69b",
+      "current_course_sha256": "c8765a5ac4681c51618e07e81ec5159ade85f0e322b4af20ef121e5f16d4f214",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "journal-bank-reconciliation",
+      "path": "plugins/vera/assets/courses/journal-bank-reconciliation/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/journal-bank-reconciliation.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "0fc33a169d00a46973263ecffd391e1abf10a37f4c70fce442bfe9ab6effb6ef",
+      "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
+            "repository_path": "plugins/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
+            "sha256": "5d6de269a62c1fa5806fcbea3d767bde6253bb7cc2c19243da2aff6af013c425"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
+            "repository_path": "plugins/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
+            "sha256": "4f47545054aa727b4f869b2577c9ed7bcaa409ea30591a978be1e1be1062ca7d"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/apply_review_edits.py",
+            "sha256": "245c31b32038b7db5e047dedf6e7a6a66652ca9cf0c975ac03cfce01b56f6e74"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/apply_review_edits.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/apply_review_edits.py",
+            "sha256": "632b6e4aed5bbe36a4234e45641a5150bbe86ba4a75ce2cd1db12f7f0a8319ac"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "sha256": "7e3008ddc652c73ab01b063d2973f1b822af58900da7649d2ebe0e257ec28e76"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
+            "sha256": "89042e84c702cef273117eb6aaceb249531f647ff2b4503f396ae25783403b18"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/review_session.py",
+            "sha256": "04694d2c79be871adbb7704c4baea1763d2d2f12916f813f11757398d764aa28"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/review_session.py",
+            "sha256": "83af12f72119a1d0a65dc0d6a71de212fe698942885aed3167a96c2d3d23b0df"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
+            "sha256": "3bfeeccce78f11b8dbd6cba3009c48f7834769de9f70428953f4145ee79378d5"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
+            "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
+            "sha256": "4240ec779396f591571a3ed574324d21fd94bdfe04d297632ac75f8e0e8b4b4d"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "197bd13e688912ab4384526e8e5e681bb18a030e7fc1afc0e41ff7f569049507"
+          },
+          "after": {
+            "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "a269afc6c7e6474a22560a84320916e85d49943d5c17db92e6e211740bee3f92"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "eb35979aca128b00c17d4d6e378d173c5e384aa17ec17008a33e902ee96736e5"
+          },
+          "after": {
+            "path": "skills/journal-bank-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
+            "sha256": "58c5b2509c1a9d14c7a339b7b6fb92112d1ad544f1f5e7a7d7ac71fd7712f143"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "journal-sampling",
+      "path": "plugins/vera/assets/courses/journal-sampling/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/journal-sampling.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "297da78df20612f2761584796e53ec46e9d8f3dd3a8dc74c9a1fd52cb408e58c",
+      "current_course_sha256": "99f6a5e4fd510780a6c81c0a7d6cbd6848a7b69a2cdd79013825b34fb99e263c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
+            "repository_path": "plugins/journal-sampling/assets/journal-sampling-review-widget.html",
+            "sha256": "1c4af517a512b7474ff3d8f5cc1ef1f64290071f0f70cdc336c4578f608472e2"
+          },
+          "after": {
+            "path": "modules/journal-sampling/assets/journal-sampling-review-widget.html",
+            "repository_path": "plugins/journal-sampling/assets/journal-sampling-review-widget.html",
+            "sha256": "822ee1bf49919918817647803926456a8b944051692d0d9f1cb969d8b5b56b7b"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
+            "sha256": "8eaa7d82b8b34f0f235210ea848a8a830d42c8f41fbda1b7978c00028d634f57"
+          },
+          "after": {
+            "path": "modules/journal-sampling/skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/journal-sampling/skills/journal-sampling/SKILL.md",
+            "sha256": "ba03235d3db6f9c93804620442bdc9cceeba906a2bf244d3edbaea30fe07a055"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+            "sha256": "a006d17c75bb16c0eb060684849d6c696dfaa20a8b24c3a683abcd5a5dd65683"
+          },
+          "after": {
+            "path": "skills/journal-sampling/SKILL.md",
+            "repository_path": "plugins/vera/skills/journal-sampling/SKILL.md",
+            "sha256": "fe2ade5b9b6e3cdc6a5904cdb9a8bc3dc0886ff0a0576333b3e9294136013170"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "lipe",
+      "path": "plugins/vera/assets/courses/lipe/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/lipe.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "79bf7ffca2a31f86a01d9c2f776a1d950950587c2e0b6c704f93aa3d3d73cb9f",
+      "current_course_sha256": "5f49fdebc53f42ea426e2a0cab885b4182106a9b385534abd06bc3189fc83bab",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "management-control-pack",
+      "path": "plugins/vera/assets/courses/management-control-pack/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/management-control-pack.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "288bb9ffa14b4a0d6c99e0700e98bf18fadaccac27d978d1096181725b262580",
+      "current_course_sha256": "f81873e824a849e23a826b9486b3f31a49550ded15e9c0bc60e8a02c7978e6f7",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "new-client",
+      "path": "plugins/vera/assets/courses/new-client/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/new-client.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "d569a2fd27002197b028212f51b3bda1f2b6943c1b721a80086a8327ff063194",
+      "current_course_sha256": "973867fcaffe0b6ded7186a31a55de07d50d34a342f90db25f3d795710f43aea",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "1d98bf76a87dc61d6a4efead99a11e910df70dd5f2e4144c4e94af9c1f094b55"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
+            "sha256": "4d7b3ec93bc8e94adc07db944a8333fcc44721e9066bff4281b39e64efaece20"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/client-file-preparation/skills/client-file-preparation/SKILL.md",
+            "repository_path": "plugins/client-file-preparation/skills/client-file-preparation/SKILL.md",
+            "sha256": "00b69742577995070896e7262df2d9a02bfc555842ef8422a39b90f989a51bed"
+          },
+          "after": {
+            "path": "modules/client-file-preparation/skills/client-file-preparation/SKILL.md",
+            "repository_path": "plugins/client-file-preparation/skills/client-file-preparation/SKILL.md",
+            "sha256": "41ec7a85426e9b1da8e48d01d6ef3f6751355748709a0fd3b9f0e12742d9451b"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/new-client/assets/new-client-review-widget.html",
+            "repository_path": "plugins/new-client/assets/new-client-review-widget.html",
+            "sha256": "9f704d96bd694faa7cb0f211908173b4a6d8b729fe3cf432f86c94a15d7a3671"
+          },
+          "after": {
+            "path": "modules/new-client/assets/new-client-review-widget.html",
+            "repository_path": "plugins/new-client/assets/new-client-review-widget.html",
+            "sha256": "48ddbe9a11d586c014ba2b64da20c7e5be59394ea8c0cc1f4396be3db26dd427"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/new-client/skills/new-client/SKILL.md",
+            "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
+            "sha256": "edad472f0955bb90ba5033edac68479122b6edc2688ff15fd4e711f7a7b2a10a"
+          },
+          "after": {
+            "path": "modules/new-client/skills/new-client/SKILL.md",
+            "repository_path": "plugins/new-client/skills/new-client/SKILL.md",
+            "sha256": "32aa627569affd4475fad0a691d07539ea8624edfb9a0c14889bdb8a6d28055f"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/new-client/SKILL.md",
+            "repository_path": "plugins/vera/skills/new-client/SKILL.md",
+            "sha256": "e7ddcc67928d8c9c6da4ca267aeb5e7e86cdc1b8900b62cb7aa9d5c53520381d"
+          },
+          "after": {
+            "path": "skills/new-client/SKILL.md",
+            "repository_path": "plugins/vera/skills/new-client/SKILL.md",
+            "sha256": "da8f93738d06809534afac4075ad285e3912b47903b7a194dd7f1665385c3886"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "open-item-reconciliation",
+      "path": "plugins/vera/assets/courses/open-item-reconciliation/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/open-item-reconciliation.json",
+      "reviewed_ancestor_commit": "b609c92912acafe868041ef302f8ae66d3297d08",
+      "previous_course_sha256": "c3cb331032cee102201510feb6dbd54866eb8c3c6c9a177c30394e768104eeca",
+      "current_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
+            "repository_path": "plugins/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
+            "sha256": "9024996a01747e35611cc002c149945d08febdcee833705ceeffcea366c68ec2"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
+            "repository_path": "plugins/open-item-reconciliation/assets/open-item-reconciliation-review-widget.html",
+            "sha256": "0e00891ef4704c9d841c6af9e11869bc0c4be15b0fb01be866bacda741a00999"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
+            "sha256": "ed80f1f497bae4168d15520fa92bb337f82738a1748e470baad690698786ff2d"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/raw_input_runner.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/raw_input_runner.py",
+            "sha256": "28ae0eb64df06d502203c2d110a7f1491d59ce8ce92d751a5f80b14fdd8f4e7d"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/reconciliation_workflow.py",
+            "sha256": "0db8b1aa827c5047be2e8113692d89581f4d530c53b1d77bc150ea5c788f959c"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/reconciliation_workflow.py",
+            "sha256": "7799829872483e24169d4940a0262aad26051e51645f917739090f3ea22ef1a1"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
+            "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/review_session.source",
+            "sha256": "29504ad81ad2ebf46f6d380d8c34c68ede1269d35ea34ed7806671c05a94992e"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/retained_sources/review_session.source",
+            "repository_path": "plugins/open-item-reconciliation/scripts/retained_sources/review_session.source",
+            "sha256": "2abc7fb7752f6a3dc66f2c94cbf0710ab14a3287ce28f3b3ab6982c6f895709a"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/scripts/review_server.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/review_server.py",
+            "sha256": "3a53e40e08ddf9630b0e2914444fd40044678b6e042007e3d5f5b00003dcb0c3"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/scripts/review_server.py",
+            "repository_path": "plugins/open-item-reconciliation/scripts/review_server.py",
+            "sha256": "4d4d256b03b9528c6854b78a49673023da915deac921de2fd6263574dbba1506"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "ddf74226609e086230905afe2fb8be6e5a2a835031a6ea8166366ef7045fe5c8"
+          },
+          "after": {
+            "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "4334e6b50f030f7ade4de7956da1869b5e7f9a4c824a277a7cfaedff8fbc2bb0"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "7d19121a3641c675bb6f39f78d61950987882bb68517808a1eb6af8d35c3b034"
+          },
+          "after": {
+            "path": "skills/open-item-reconciliation/SKILL.md",
+            "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
+            "sha256": "2b18680e8f7e431e230a37b7a7fa3c3f133d79234dea83ba771e9908117097ce"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "organizzazione-lavoro",
+      "path": "plugins/vera/assets/courses/organizzazione-lavoro/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/organizzazione-lavoro.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "cb644bd52f577c8088eee7ca76c7fb313c8f71d42bfe8ab0b1cf58fa2e9bd02f",
+      "current_course_sha256": "f04e34ccfca11ac692f92d4745a906c9c362c4172bf73a90c75ebeef31ac0bbb",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "skills/organizzazione-lavoro/SKILL.md",
+            "repository_path": "plugins/vera/skills/organizzazione-lavoro/SKILL.md",
+            "sha256": "ea19b5d26800552d3c770176fb14db8cc52e340bb183ba28b4167efff09b8ee5"
+          },
+          "after": {
+            "path": "skills/organizzazione-lavoro/SKILL.md",
+            "repository_path": "plugins/vera/skills/organizzazione-lavoro/SKILL.md",
+            "sha256": "59db05b4b658108834132fc8b38e8eec2636ba5945d68460fc0ff37d706a9524"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "patent-box-review",
+      "path": "plugins/vera/assets/courses/patent-box-review/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/patent-box-review.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "663df89cd5fc464ad86fde7bdd12c79d288dcb91380627ae409c55c774c44cf5",
+      "current_course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "presenza-digitale-studio",
+      "path": "plugins/vera/assets/courses/presenza-digitale-studio/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/presenza-digitale-studio.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "32a0b4523d1c335e7e7c3e5c51857aabb34d3044a42ef036ffba4fdf086dd573",
+      "current_course_sha256": "e6716b900ef78bff10bb9d1bb5c48a2d779aec83c6fb6a2f5c47d14ccbe5dd54",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "previdenza-inps",
+      "path": "plugins/vera/assets/courses/previdenza-inps/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/previdenza-inps.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "053aa41b1bfab66eb1f4a968352e1fb08b0a6473b07203ef4cc289db9fd04400",
+      "current_course_sha256": "f6771f12a9d271ce09c95fc1c20f47a21a3e81f0c04cc7ca56a3fb8f3a1ca33b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/previdenza-inps/assets/previdenza-inps-review-widget.html",
+            "repository_path": "plugins/previdenza-inps/assets/previdenza-inps-review-widget.html",
+            "sha256": "c0718fff72a083b6e088688a1dc01fe7a9f905f9724e05fa8c9e61bd22b09eff"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/assets/previdenza-inps-review-widget.html",
+            "repository_path": "plugins/previdenza-inps/assets/previdenza-inps-review-widget.html",
+            "sha256": "fcfcfb4faacb0a2c7a1e0d65ae6c4eb0f9c0fbc5c9475f42a92b0d56fbfd1b1d"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "sha256": "3f282d9293c7f0a3164028b5a4e1f176d7e4ba72219e8af96437b0f11f2f3d95"
+          },
+          "after": {
+            "path": "modules/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/previdenza-inps/skills/previdenza-inps/SKILL.md",
+            "sha256": "fae5e6b726312ecdfa0db5d8bca0ef4fea00444f47bbf12145665726e38c66fe"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
+            "sha256": "ec54d36b46d9fdc24691160426655daf027309600ed4bd4fdbadb48b5797a603"
+          },
+          "after": {
+            "path": "skills/previdenza-inps/SKILL.md",
+            "repository_path": "plugins/vera/skills/previdenza-inps/SKILL.md",
+            "sha256": "cc89f02b5c0bea20189b67373d895a54800ce53754977d1f45f4a202eeabe1ce"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "purchase-invoice-review",
+      "path": "plugins/vera/assets/courses/purchase-invoice-review/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/purchase-invoice-review.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "7eb1017ad88e9480396eac8ec22fdaffe5fd6b5fc5f1bbb9be82d233d8a1e864",
+      "current_course_sha256": "d6e3a5060412866ed08b2fd5b373cf2ad4eae392b31b22344e1859ce198be97a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "quesito-legale-fiscale",
+      "path": "plugins/vera/assets/courses/quesito-legale-fiscale/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/quesito-legale-fiscale.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "9e40a3f66be8e2f7f20078dc89209e9416b6c8bcb1c686645e28ee7045451a0c",
+      "current_course_sha256": "b86d95c99b9ce03daf516d1a9a366f8c223e08b5d95ac26c8e5b5010e8284af3",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
+            "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
+            "sha256": "56bc957882fd994a3b9916ab71ab830fcc9ed057343aad9d73c6084e7c4037bb"
+          },
+          "after": {
+            "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
+            "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
+            "sha256": "c98f9004b3516e4ecb981b2052b6e22bcaf3639f89db90a99defb7f004a4346a"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
+            "repository_path": "plugins/prompt-optimizer/assets/legal-tax-model.html",
+            "sha256": "57afa8c6ac1b7fdd21801d51952dbf8147d5970db1a97714cb200731cea09737"
+          },
+          "after": {
+            "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
+            "repository_path": "plugins/prompt-optimizer/assets/legal-tax-model.html",
+            "sha256": "d027342967c1a77786d18fdb525deb80006e073f0724a09d2ae9423545e1c1c4"
+          }
+        },
+        {
+          "before": null,
+          "after": {
+            "path": "scripts/opinion_validation.py",
+            "repository_path": "plugins/vera/scripts/opinion_validation.py",
+            "sha256": "e7e9f15050ec6a8be0ae7edc07f65975a7746fae008b0fd742de6720185af845"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/quesito-legale-fiscale/SKILL.md",
+            "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
+            "sha256": "c5aedeba1bc961928fe6206c44d3c34ae0f87414caa9658bbf87491e362e8ac9"
+          },
+          "after": {
+            "path": "skills/quesito-legale-fiscale/SKILL.md",
+            "repository_path": "plugins/vera/skills/quesito-legale-fiscale/SKILL.md",
+            "sha256": "87d8b4907d157315331a4c803436640692afefaca9df716d8063bbecdd26de79"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "registro-imprese-sari",
+      "path": "plugins/vera/assets/courses/registro-imprese-sari/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/registro-imprese-sari.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "7009e99278cf242a2e902cb143bf51b70e3adfe1b964fc77cc3c8915cd0f7b2a",
+      "current_course_sha256": "2a97743abec332598904968fe4f0911667895a81a7b0f71fa10b84f5126fc284",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
+            "repository_path": "plugins/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
+            "sha256": "758cdf7054ea0c41adc998010513b305229664fb7ce0418906b6054c00ff312c"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
+            "repository_path": "plugins/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
+            "sha256": "119bc7171871c5ba20a4d62e81f3e4ac4305d2603b0363b85e56b3bf1247c985"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "73b45bd918b1d46179507e3dae675afba41ef19acac2813aca9ce41603337a0e"
+          },
+          "after": {
+            "path": "modules/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/registro-imprese-sari/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "36e503f9686fc279c8e6b66f889b7b600e592addf34f7e4d0f2bb967cdda0c25"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/vera/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "9a2b0820200d974ee7f768271c389ea4a58b69fe76f7091790a5044bb5f2b419"
+          },
+          "after": {
+            "path": "skills/registro-imprese-sari/SKILL.md",
+            "repository_path": "plugins/vera/skills/registro-imprese-sari/SKILL.md",
+            "sha256": "4d4b4538730587228924d69b5a54e1d6b56c313239df11cb9c853b85597a5526"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "sales-plan",
+      "path": "plugins/vera/assets/courses/sales-plan/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/sales-plan.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "2ecc9e6ff6da23af6caf96f1cb2dfa5049474c8d71000f6df27e2dbc23c5d9d5",
+      "current_course_sha256": "e7a11e61a95d97fa0b84f920e691dd283298dc70b4d6066b9a7de3a92cd92f2e",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "scissione-guidata",
+      "path": "plugins/vera/assets/courses/scissione-guidata/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/scissione-guidata.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "67fc928ef9bf6964454ea5d52808595b56d2e7d2a192a50dfc6ec4b53a646a54",
+      "current_course_sha256": "743b8be9f6b06378514c2a7bf6e40700584a1a0c6d5b1d9a92e18ac1b6df15b6",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "studio-archive",
+      "path": "plugins/vera/assets/courses/studio-archive/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/studio-archive.json",
+      "reviewed_ancestor_commit": "b609c92912acafe868041ef302f8ae66d3297d08",
+      "previous_course_sha256": "c86473e787fc565a0fc1f05b0cbe27f657cd059cc565a02007294948a8229f82",
+      "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "studio-document-format",
+      "path": "plugins/vera/assets/courses/studio-document-format/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/studio-document-format.json",
+      "reviewed_ancestor_commit": "b609c92912acafe868041ef302f8ae66d3297d08",
+      "previous_course_sha256": "577c292cf1a348cfe82d383e1bf2cd1c6b4dbba73b5bc790c58aaac8ce5dc8a3",
+      "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/report-builder/assets/report-builder-review-widget.html",
+            "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
+            "sha256": "e2562c0a9d9b266c9910d16cbd20b7ec853039e822b2b5e2db1af485ab55a891"
+          },
+          "after": {
+            "path": "modules/report-builder/assets/report-builder-review-widget.html",
+            "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
+            "sha256": "ecd197c20a686d875c395fe0895557d3b95f27625ef7909476f5710b7a7dd5cf"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
+            "sha256": "d4d95bc079316c15730e694a61708339d851e4aa89af2ddba4b441e25d826d59"
+          },
+          "after": {
+            "path": "modules/report-builder/skills/financial-report-builder/SKILL.md",
+            "repository_path": "plugins/report-builder/skills/financial-report-builder/SKILL.md",
+            "sha256": "ef62f548ca628bb0135284ea65bb2db14ad210f489aa0ff14c348c2f3dffa717"
+          }
+        },
+        {
+          "before": {
+            "path": "scripts/local_courses.py",
+            "repository_path": "plugins/vera/scripts/local_courses.py",
+            "sha256": "03418b1f246cc7ab3cdc7043edd2dd9cd622ebeba3d6a3e2381aaf552ca5d7b3"
+          },
+          "after": {
+            "path": "scripts/local_courses.py",
+            "repository_path": "plugins/vera/scripts/local_courses.py",
+            "sha256": "eb40ea38fdff4b970221d68b250467c774c08d6b5f1e3b6087bb3a9e1efea039"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "trasformazione",
+      "path": "plugins/vera/assets/courses/trasformazione/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/trasformazione.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "a7614b60d83b9426a7e2a1ed75e1d73e145e3d84f44c4ccfd33d5dba1c5a53a6",
+      "current_course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "treasury-forecast",
+      "path": "plugins/vera/assets/courses/treasury-forecast/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/treasury-forecast.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "7c7145df0e66dfdac4528c3fa6b331deb662ffc9b34b89f546362e2d757dfdc5",
+      "current_course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/treasury-forecast/assets/review.css",
+            "repository_path": "plugins/treasury-forecast/assets/review.css",
+            "sha256": "502d415d5e80f488677259510076e2f9e3ee3bcb937f2213125fde4292e9c57d"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/assets/review.css",
+            "repository_path": "plugins/treasury-forecast/assets/review.css",
+            "sha256": "a6de4a7538a67ca38a8861c6934d2d6555c046fc74348c245d7289a817716462"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/treasury-forecast/scripts/treasury_server.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
+            "sha256": "20d5d6820a90f8679ccc11c563b4420a1822769c426378a11b529988c8e4581f"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/scripts/treasury_server.py",
+            "repository_path": "plugins/treasury-forecast/scripts/treasury_server.py",
+            "sha256": "dd1c2dc5be546e269ccfdbfa918fefdf8d92a0d53529df1e3c038530e7fe53b5"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "sha256": "aedcbd186d331328aee4af95b66c5591601ebeea9877d953bfadb1b607c17da3"
+          },
+          "after": {
+            "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/treasury-forecast/skills/treasury-forecast/SKILL.md",
+            "sha256": "69ddc12f096a2b4ccb111b2ccf8fa98f12aac5040f0dee5fa408172c1154334b"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
+            "sha256": "07dfafaf28a775e4f23ff819114604781c49a8752c93598bdbe72442929072a7"
+          },
+          "after": {
+            "path": "skills/treasury-forecast/SKILL.md",
+            "repository_path": "plugins/vera/skills/treasury-forecast/SKILL.md",
+            "sha256": "a3d87e9b039890387989555dd351a0a87027e2fb11b0dd681fb691b1fa5c9f6f"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "variance-analysis",
+      "path": "plugins/vera/assets/courses/variance-analysis/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/variance-analysis.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "4317cbb532917a6206e5e16808b2ad142515e52061107b367d81ce600a528028",
+      "current_course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/variance-analysis/assets/variance-analysis-review-widget.html",
+            "repository_path": "plugins/variance-analysis/assets/variance-analysis-review-widget.html",
+            "sha256": "210dc5eb7e8afc2f7d359bc701eb11b60569c675e2fcd4d843f5520bb301a32f"
+          },
+          "after": {
+            "path": "modules/variance-analysis/assets/variance-analysis-review-widget.html",
+            "repository_path": "plugins/variance-analysis/assets/variance-analysis-review-widget.html",
+            "sha256": "eb7825daa20383739484dba14d8e210663ff1a1992cbaf83964332040461ec61"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/variance-analysis/SKILL.md",
+            "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
+            "sha256": "e401c2ef07d3e4b441d4b0174442946bae120d2d53a8777223a9ca38dbf29c24"
+          },
+          "after": {
+            "path": "skills/variance-analysis/SKILL.md",
+            "repository_path": "plugins/vera/skills/variance-analysis/SKILL.md",
+            "sha256": "956a513593b44d4228096bad2bff6374a82ea7d170168fe0502282bb6613619b"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "vera",
+      "workflow": "vouching",
+      "path": "plugins/vera/assets/courses/vouching/course.json",
+      "review_path": "scripts/course_materials/release_reviews/vera/vouching.json",
+      "reviewed_ancestor_commit": "37c9429c8d99e48a326971627827cdc1ccedb2eb",
+      "previous_course_sha256": "80acb7c5013c27fedeb5adc4e888df34cb4660e82c2c47a2ab600f4da85e8f8f",
+      "current_course_sha256": "b79ad15cba1e927c20eebcb4e8982d6f62970707f1ae1c19b35d06d360917290",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/check-entries/assets/check-entries-review-widget.html",
+            "repository_path": "plugins/check-entries/assets/check-entries-review-widget.html",
+            "sha256": "59cbce8ea8faafcd22299fbe4d57ef4c7a633ca8373d3b58fb1577e6d70150a4"
+          },
+          "after": {
+            "path": "modules/check-entries/assets/check-entries-review-widget.html",
+            "repository_path": "plugins/check-entries/assets/check-entries-review-widget.html",
+            "sha256": "b7daff9aebcd837a913847b7d56f7e272091704172c665fda2b2ea71cd44b413"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/check-entries/skills/vouching/SKILL.md",
+            "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
+            "sha256": "4fbd947882c545b7dbc40c49f71cd232b01017b7007923536911def17724c354"
+          },
+          "after": {
+            "path": "modules/check-entries/skills/vouching/SKILL.md",
+            "repository_path": "plugins/check-entries/skills/vouching/SKILL.md",
+            "sha256": "c9b0d1f97c6236a8e7297c47747bc39f4c4fcb0e556c855c3fa2dd92c06d48fa"
+          }
+        },
+        {
+          "before": {
+            "path": "skills/vouching/SKILL.md",
+            "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+            "sha256": "1c9cd925a5aafd2f5e97052f628026e77512ae574bbe866cfec3607472fe4104"
+          },
+          "after": {
+            "path": "skills/vouching/SKILL.md",
+            "repository_path": "plugins/vera/skills/vouching/SKILL.md",
+            "sha256": "90f93a63ccef4449ff92c06163d5acba9c1ddadf43e356f6a548294c27a5875f"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "advisory-brief-planner",
+      "path": "plugins/clara/assets/courses/advisory-brief-planner/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/advisory-brief-planner.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "b12e48833c7f18185d7217180454376938dbcaab3aa049edab3e46ae3c60e0f8",
+      "current_course_sha256": "c7632fa4b9aa3700a39a89778539dfabd4e7794e6f1c418b2a25eddb88d6d774",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "advisory-case-director",
+      "path": "plugins/clara/assets/courses/advisory-case-director/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/advisory-case-director.json",
+      "reviewed_ancestor_commit": "19805fdda611ad625c8c69e07593be78de1cd23e",
+      "previous_course_sha256": "31f0d7deb5add80dcd10be6515b91f312cbf8c9de5941a9dff9f2b2e3ac14984",
+      "current_course_sha256": "e17fa58fad19bfed908c2046d308ab9373fa4a2f80bc97939fa74f832266e2f1",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "advisory-deliverable-validator",
+      "path": "plugins/clara/assets/courses/advisory-deliverable-validator/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/advisory-deliverable-validator.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "2220b8ae96b9f6bcfeac2f2f47698ffca393ac2891f9c493e10ae7c35fdd96a8",
+      "current_course_sha256": "84b44e81c5032688c4e2ecd2280a2175df088f1ee095aaf730c06945cd6e93fd",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "attribute-reporting",
+      "path": "plugins/clara/assets/courses/attribute-reporting/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/attribute-reporting.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "a2014d1fe3cd343b3fdf8e7d259804ff9cad09613076e9cb3095b5606f2a55b0",
+      "current_course_sha256": "5215ee5026c97195b129b7e3c683636f5981d9f68316aa29383b32a7bf7ea231",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "business-planning",
+      "path": "plugins/clara/assets/courses/business-planning/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/business-planning.json",
+      "reviewed_ancestor_commit": "19805fdda611ad625c8c69e07593be78de1cd23e",
+      "previous_course_sha256": "a221db796a1065d326f3d30fcda83fe195245fba180a0fb4f861b0dd2fb33883",
+      "current_course_sha256": "48e7c7227e442d48df8bc8725f57b9883b1ac6514ae57b014c7bd240f895908f",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "deck-correction",
+      "path": "plugins/clara/assets/courses/deck-correction/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/deck-correction.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "b05942de7b5c3d29c800064686252a51e1cfc131977789833ae8c91fda0c51ed",
+      "current_course_sha256": "e73259cad5eef4b20cced03f0f74a72ea58d3516ec171493b0c82ad30e019fd0",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "html-deck",
+      "path": "plugins/clara/assets/courses/html-deck/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/html-deck.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "81afe9dd4f825203744777fa86a1f48f14ed14f31ed047700d54e56e151f6eff",
+      "current_course_sha256": "fcad0b2f4123dd82b2c9db415c7e44a69753ebac7be5c6d9caf4c9a0e818416e",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "reporting-engine",
+      "path": "plugins/clara/assets/courses/reporting-engine/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/reporting-engine.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "b8a2e700d63523c910018ef76d1379e782284348be4977e1ecd61ea558140795",
+      "current_course_sha256": "66a004e46b78c16dc7e2308f1fabc91a235064289c61053448354d469568dba1",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "clara",
+      "workflow": "transcribe",
+      "path": "plugins/clara/assets/courses/transcribe/course.json",
+      "review_path": "scripts/course_materials/release_reviews/clara/transcribe.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "09277f365018dbe2fb3fba17049ac3e218becb0f8d40f2894e7235809e4f012c",
+      "current_course_sha256": "e8d57796bd3b475c4a03f7206b7bbb426601cb8dccd716649ea58e7857a3efb2",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "lucia",
+      "workflow": "apertura-pratica",
+      "path": "plugins/lucia/assets/courses/apertura-pratica/course.json",
+      "review_path": "scripts/course_materials/release_reviews/lucia/apertura-pratica.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "c557b708e739e16d0e1ec3cfae5ec4f91d4abf1d39ea994fb7061535a96ed5fa",
+      "current_course_sha256": "1a36de6eab0fc5fcc531976f4ab7c2b049d98103191b0ee61a694767beb7546d",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
+            "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
+            "sha256": "c4d724e5fd6c60228965cff667769e399875d371a204274803745f42f0e86c85"
+          },
+          "after": {
+            "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
+            "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
+            "sha256": "fe5cd72b2602db1c5b6705b8043ddf98e0e028c44443dbf52e6dd0f8e080dc03"
+          }
+        },
+        {
+          "before": {
+            "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
+            "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
+            "sha256": "c2722ed576b1740324d6ac5628729aed6e173247cc224677ebbd14fe2a070eb4"
+          },
+          "after": {
+            "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
+            "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
+            "sha256": "b629a748b02665c2bef3ddfe80c8ff2c4d1609a256e000ee2132f102fe6b9032"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "lucia",
+      "workflow": "comunicazione-professionale",
+      "path": "plugins/lucia/assets/courses/comunicazione-professionale/course.json",
+      "review_path": "scripts/course_materials/release_reviews/lucia/comunicazione-professionale.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "f0192545bd0b5ee866a2dee6e4270ed5eb5c517749eab8d6b3d21f092824c3e4",
+      "current_course_sha256": "5c1397ddfdcd9fcbeefdfe6ea73ccc5cc2f38a2b2b26a7ea53492d0cf78d8c12",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "lucia",
+      "workflow": "contenzioso-tributario",
+      "path": "plugins/lucia/assets/courses/contenzioso-tributario/course.json",
+      "review_path": "scripts/course_materials/release_reviews/lucia/contenzioso-tributario.json",
+      "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+      "previous_course_sha256": "825c62380603bf780d34e59f900941309c2f86ec6bab15ecd53fdf09d5d02b9d",
+      "current_course_sha256": "40701607f2c662f1731c37b590a180c3c063e32e9296ab9bb59e53b07bd5ba1a",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "lucia",
+      "workflow": "presenza-digitale-studio",
+      "path": "plugins/lucia/assets/courses/presenza-digitale-studio/course.json",
+      "review_path": "scripts/course_materials/release_reviews/lucia/presenza-digitale-studio.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "40b83941cebd081ac1f60bf943eb1dbed3744905c45cbd747ed1e95e959198a8",
+      "current_course_sha256": "72d109461b7ff5413e2927f03db92dc000d3caca2437f79ae3704340ad7117f8",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    },
+    {
+      "product": "lucia",
+      "workflow": "quesito-legale-fiscale",
+      "path": "plugins/lucia/assets/courses/quesito-legale-fiscale/course.json",
+      "review_path": "scripts/course_materials/release_reviews/lucia/quesito-legale-fiscale.json",
+      "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+      "previous_course_sha256": "3231491c07a9b4fbe17a969bc2608f1ba6dbfb5d19cfdb5e1c7ecfe2d2857bc0",
+      "current_course_sha256": "6f9aa081be53b5bc71d68835cc667530c533ea836ed90428f740e6020577c29d",
+      "authored_content_unchanged": true,
+      "source_changes": [
+        {
+          "before": {
+            "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
+            "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
+            "sha256": "56bc957882fd994a3b9916ab71ab830fcc9ed057343aad9d73c6084e7c4037bb"
+          },
+          "after": {
+            "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
+            "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
+            "sha256": "c98f9004b3516e4ecb981b2052b6e22bcaf3639f89db90a99defb7f004a4346a"
+          }
+        },
+        {
+          "before": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "d0c441ef1b2949ba22ce2373f8dc133040d97987e96e0e32205dd76e10a362ac"
+          },
+          "after": {
+            "path": "vendor/modules/courseware/library.py",
+            "repository_path": "plugins/_shared/vendor/modules/courseware/library.py",
+            "sha256": "e8bacc16c16fbb8a060ec14979c665973f083a38d4cfe3f5edcdb3c8d4947917"
+          }
+        }
+      ]
+    }
+  ]
+}

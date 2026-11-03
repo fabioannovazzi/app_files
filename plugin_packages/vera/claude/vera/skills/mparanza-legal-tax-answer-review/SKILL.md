@@ -1,6 +1,6 @@
 ---
 name: mparanza-legal-tax-answer-review
-description: Use automatically before Vera delivers any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated. Do not use this skill to imply operational completeness for a return, declaration, filing, or form that lacks a dedicated workflow.
+description: Use automatically before Vera delivers any generated or supplied legal, tax, or compliance answer—including a research report, memo, or one-page letter—against its answer contract and available sources, with source support, reasoning, and professional judgment separated. Do not use this skill to imply operational completeness for a return, declaration, filing, or form that lacks a dedicated workflow. Before fresh research, show the question and planned sources in chat before opening authorities.
 ---
 
 ## Operational incident continuity
@@ -186,6 +186,10 @@ invoking product's incident service and rating form remain available. Follow the
 primary task's workflow-usage contract and product identity. Tutorials retain
 their no-reporting boundary.
 
+Before reading any authority for new research, send the question and planned
+sources in a visible chat message. A local document supplied as evidence is
+also a source. Read `../mparanza-vera/references/opinion-delivery.md` for the complete sequence.
+
 <!-- VERA_WORK_CONTINUITY_BEGIN -->
 ## Work continuity
 
@@ -220,6 +224,8 @@ confirmation, plugin UI or model API credentials.
 
 Read `../mparanza-vera/references/opinion-delivery.md` before the shared method below.
 Its Vera delivery policy replaces all shared panel and review-queue handoffs.
+For opinions use Vera’s `scripts/opinion_validation.py` to package the reviewed
+text and run its final `verify` command on the actual opinion before delivery.
 
 For subscription evidence, read `../mparanza-vera/references/research-subscriptions.md`.
 Review the actual retained passages and their recorded access/retention limits;

@@ -105,7 +105,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "80acb7c5013c27fedeb5adc4e888df34cb4660e82c2c47a2ab600f4da85e8f8f",
+  "course_sha256": "b79ad15cba1e927c20eebcb4e8982d6f62970707f1ae1c19b35d06d360917290",
   "discovery_source_refresh": {
     "reviewed_by": "Codex /root",
     "reviewed_at": "2026-10-01T11:44:13.225501+00:00",
@@ -1019,5 +1019,16 @@
     "previous_course_sha256": "fbaddae97809b437156da915f696d688c02cac6d984389095fe37130eb9fa46d",
     "source_review": "Reviewed cache-path historical runtime discovery and local-only runtime-root environment propagation. Exact implementation index and receipt validation retained. No new model fields or recipient.",
     "content_review": "Complete course JSON unchanged except sources; original language judgments preserved. No new learner or installed-host acceptance claimed. Current CI must validate native execution."
+  },
+  "course_startup_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewed_ancestor_commit": "37c9429c8d99e48a326971627827cdc1ccedb2eb",
+    "previous_course_sha256": "80acb7c5013c27fedeb5adc4e888df34cb4660e82c2c47a2ab600f4da85e8f8f",
+    "current_course_sha256": "b79ad15cba1e927c20eebcb4e8982d6f62970707f1ae1c19b35d06d360917290",
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
   }
 }

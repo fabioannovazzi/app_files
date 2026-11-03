@@ -846,3 +846,36 @@ def test_packaged_tool_catalog_retains_standard_semantic_processing_boundary(ins
     assert "unresolved financial rows" in tool["description"]
     assert tool["annotations"]["openWorldHint"] is True
     assert service["initialize"]["instructions"] == tool["description"]
+
+
+@pytest.mark.parametrize(
+    "requested_script",
+    ["scripts/package_validation.py", "scripts/opinion_validation.py"],
+)
+def test_native_opinion_execution_uses_veras_citation_check_for_both_writer_names(
+    installed, tmp_path, requested_script
+):
+    component = installed / "modules/deep-research-validator"
+    (component / "scripts").mkdir(parents=True)
+    (component / "requirements.txt").write_text("")
+    (component / "scripts/package_validation.py").write_text(
+        "raise SystemExit('Standalone writer selected')"
+    )
+    (installed / "components.json").write_text(
+        json.dumps({"plugins": ["deep-research-validator"]})
+    )
+    (installed / "scripts/opinion_validation.py").write_text(
+        "import json,sys\nassert sys.argv[1:] == ['verify', 'synthetic-opinion']\n"
+        "sys.stdout.write(json.dumps({'checked':'Vera opinion'})+'\\n')\n"
+    )
+    write_index(installed)
+    args = request(
+        tmp_path,
+        component="deep-research-validator",
+        script=requested_script,
+        arguments=["verify", "synthetic-opinion"],
+    )
+    with native(installed, tmp_path) as call:
+        result = call(args)
+    assert output(result)[0]["returncode"] == 0
+    assert json.loads(output(result)[1]["stdout"]) == {"checked": "Vera opinion"}

@@ -155,7 +155,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "a77c07a611a94b5ee4bcc6e7a9678d84b26a3150bd0e853f1e7bd791990dd1a7",
+  "catalogue_fingerprint": "b54f894c50c1525378637fcce3fe29e6a6f7684e4df3c3defed2203fca4af3f8",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2501,5 +2501,18 @@
     "previous_catalogue_fingerprint": "719b6337ff0da2bf046e16928011835acabf1ca7bf7a4951f14389abbd35bfa3",
     "changed_entrypoints": [],
     "scope": "The repository workspace stylesheet now matches the already packaged and verified stylesheet. No skill entrypoint or Geneva assessment changed."
+  },
+  "opinion_evidence_release_binding_20261102": {
+    "version": "0.1.544",
+    "previous_catalogue_fingerprint": "a77c07a611a94b5ee4bcc6e7a9678d84b26a3150bd0e853f1e7bd791990dd1a7",
+    "changed_entrypoints": [
+      "adversarial-opinion",
+      "deep-research",
+      "legal-tax-answer-planner",
+      "legal-tax-answer-review",
+      "quesito-legale-fiscale",
+      "vera"
+    ],
+    "scope": "Visible question and planned authorities before research, and claim-bound citations in delivered opinions. Catalogue coverage only; jurisdiction assessments and professional acceptance are unchanged."
   }
 }

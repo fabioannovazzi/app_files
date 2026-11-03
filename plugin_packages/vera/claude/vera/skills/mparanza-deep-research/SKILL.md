@@ -1,6 +1,6 @@
 ---
 name: mparanza-deep-research
-description: Execute Vera's prepared legal, tax or compliance research with repeated source investigation, continuous validation and adversarial challenge. Use the shared method also used by Lucia, then complete final answer review. Direct invocation enters quesito-legale-fiscale first.
+description: Execute Vera's prepared legal, tax or compliance research with repeated source investigation, continuous validation and adversarial challenge. Use the shared method also used by Lucia, then complete final answer review. Direct invocation enters quesito-legale-fiscale first. Before fresh research, show the question and planned sources in chat before opening authorities.
 ---
 
 ## Operational incident continuity
@@ -186,6 +186,10 @@ invoking product's incident service and rating form remain available. Follow the
 primary task's workflow-usage contract and product identity. Tutorials retain
 their no-reporting boundary.
 
+Before reading any authority for new research, send the question and planned
+sources in a visible chat message. A local document supplied as evidence is
+also a source. Read `../mparanza-vera/references/opinion-delivery.md` for the complete sequence.
+
 <!-- VERA_WORK_CONTINUITY_BEGIN -->
 ## Work continuity
 
@@ -243,6 +247,9 @@ confirmation, plugin UI or model API credentials.
 
 Read `../mparanza-vera/references/opinion-delivery.md` before the shared method below.
 Its Vera delivery policy replaces all shared panel and review-queue handoffs.
+
+Before the first source lookup, ensure the question and planned sources have
+actually been sent in the current chat as required by the delivery policy.
 
 Read `../mparanza-vera/references/research-subscriptions.md` and the current saved source
 choices. Use relevant authorised subscriptions through actual callable browser
