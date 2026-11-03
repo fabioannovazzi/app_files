@@ -39,7 +39,9 @@ def main() -> dict[str, str]:
     elif environment != "production":
         raise ImportIssue("archive_import_failed")
     sys.path[:0] = [
-        str(ROOT / "plugins" / p / "scripts")
+        str(
+            Path(os.environ.get("VERA_ACUBE_MODULES", ROOT / "plugins")) / p / "scripts"
+        )
         for p in ("studio-archive", "browser-automation")
     ]
     from ade_acquisition.artifacts import MAX_BYTES, inspect_invoice

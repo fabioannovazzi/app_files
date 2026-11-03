@@ -1,8 +1,9 @@
-import { execFile, spawn } from 'node:child_process';
+import { spawn } from 'node:child_process';
 import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { promisify } from 'node:util';
+import { parseArgs } from 'node:util';
+import { readVaultLogin, VaultLoginError } from '../vera-1password/login.mjs';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StdioClientTransport } from '@modelcontextprotocol/sdk/client/stdio.js';
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
@@ -22,18 +23,12 @@ class PublicError extends Error {}
 
 // Secret material is confined to these processes. Neither raw provider errors nor
 // op/Archive stderr are forwarded through the public MCP surface.
-async function credentials(environment) {
-  if (process.env.ACUBE_EMAIL && process.env.ACUBE_PASSWORD) {
+async function credentials(environment, binding) {
+  if (!binding && process.env.ACUBE_EMAIL && process.env.ACUBE_PASSWORD) {
     return { email: process.env.ACUBE_EMAIL, password: process.env.ACUBE_PASSWORD };
   }
-  try {
-    const { stdout } = await promisify(execFile)('op', ['item', 'get', `A-Cube ${environment}`,
-      '--vault', 'Vera', '--fields', 'username,password', '--reveal', '--format', 'json'], { timeout: 20000 });
-    const fields = JSON.parse(stdout);
-    const value = id => fields.find(field => field.id === id)?.value;
-    if (value('username') && value('password')) return { email: value('username'), password: value('password') };
-  } catch { /* Missing or locked vault. Do not forward command output. */ }
-  throw new PublicError(`Configure the A-Cube ${environment} login in the Vera vault (1Password CLI), or supply ACUBE_EMAIL and ACUBE_PASSWORD through the host's secret environment.`);
+  const login = await readVaultLogin(binding ?? {vault: 'Vera', item: `A-Cube ${environment}`});
+  return {email: login.username, password: login.password};
 }
 
 function checkedWindow(args) {
@@ -65,10 +60,11 @@ async function callUpstream(client, name, args) {
   return content.text;
 }
 
-function archiveXml(args, xml, environment) {
-  const python = process.env.VERA_ACUBE_PYTHON || join(here, '../../.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
+function archiveXml(args, xml, environment, runtime) {
+  const python = runtime.python || process.env.VERA_ACUBE_PYTHON || join(here, '../../.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
   return new Promise((resolve, reject) => {
     const env = { ...process.env };
+    if (runtime.veraRoot) env.VERA_ACUBE_MODULES = join(runtime.veraRoot, 'modules');
     if (environment === 'sandbox') env.VERA_STUDIO_ARCHIVE_SESSION_ID = archiveSession;
     delete env.ACUBE_PASSWORD; delete env.ACUBE_EMAIL;
     const worker = spawn(python, [join(here, 'archive_invoice.py'), args.fiscal_id, args.direction,
@@ -91,11 +87,11 @@ function archiveXml(args, xml, environment) {
   });
 }
 
-export function makeServer(environment, { upstreamNodeArgs = [] } = {}) {
+export function makeServer(environment, { upstreamNodeArgs = [], binding, runtime = {} } = {}) {
   const server = new McpServer({ name: 'vera-acube', version: '0.1.0' });
   let active;
   function session() {
-    active ??= credentials(environment).then(async login => ({
+    active ??= credentials(environment, binding).then(async login => ({
       mcp: await openUpstream(environment, login, upstreamNodeArgs),
       sandboxApi: environment === 'sandbox' ? new AcubeClient({ ...login, environment }) : undefined,
     })).catch(error => { active = undefined; throw error; });
@@ -107,7 +103,7 @@ export function makeServer(environment, { upstreamNodeArgs = [] } = {}) {
         const value = await run(args);
         return { content: [{ type: 'text', text: JSON.stringify({ environment, ...value }) }] };
       } catch (error) {
-        return { isError: true, content: [{ type: 'text', text: error instanceof PublicError ? error.message : 'A-Cube connection or response failed. Check the account and retry reads. Verify a download request before resubmitting.' }] };
+        return { isError: true, content: [{ type: 'text', text: (error instanceof PublicError || error instanceof VaultLoginError) ? error.message : 'A-Cube connection or response failed. Check the account and retry reads. Verify a download request before resubmitting.' }] };
       }
     });
   }
@@ -149,14 +145,19 @@ export function makeServer(environment, { upstreamNodeArgs = [] } = {}) {
     { fiscal_id: fiscalId, direction, uuid, engagement_id: z.string().min(1).max(100) }, async args => {
       const { mcp } = await session();
       const xml = await callUpstream(mcp, 'get_invoice', { uuid: args.uuid, format: 'xml' });
-      return archiveXml(args, xml, environment);
+      return archiveXml(args, xml, environment, runtime);
     });
   server.server.onclose = () => { active?.then(s => s.mcp.close()).catch(() => {}); };
   return server;
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const args = process.argv.slice(2);
-  if (args.length > 1 || (args.length && !['--sandbox', '--production'].includes(args[0]))) process.exit(2);
-  await makeServer(args[0] === '--production' ? 'production' : 'sandbox').connect(new StdioServerTransport());
+  const { values } = parseArgs({options: {
+    sandbox: {type: 'boolean'}, production: {type: 'boolean'}, vault: {type: 'string'}, item: {type: 'string'},
+    'vera-root': {type: 'string'}, python: {type: 'string'},
+  }});
+  if ((values.sandbox && values.production) || !!values.vault !== !!values.item) process.exit(2);
+  const binding = values.vault ? {vault: values.vault, item: values.item} : undefined;
+  const runtime = {veraRoot: values['vera-root'], python: values.python};
+  await makeServer(values.production ? 'production' : 'sandbox', {binding, runtime}).connect(new StdioServerTransport());
 }

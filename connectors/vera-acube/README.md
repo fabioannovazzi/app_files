@@ -2,7 +2,19 @@
 
 A separate, optional Codex MCP connection for a studio using A-Cube. It starts the published [Cipay MCP server](https://github.com/nick-preda/mcp-server-acube) locally over stdio. Vera exposes four tools for invoice retrieval. The connector starts in sandbox mode by default. The ordinary Agenzia browser worker remains available independently.
 
-## Connect on a development workstation
+## Install with an existing Vera
+
+Download the separate `vera-connect-service.zip` from Vera Integrations. Extract the `vera-connect-service` directory into the Codex user skills directory (on this installation, `~/.codex/skills`). Open a fresh chat and ask Vera to connect A-Cube. The optional `vera-1password.zip` supplies independent guidance for browser Autofill and local connector authentication. You can install either skill on its own.
+
+From the installed service skill directory, run its setup helper with the **currently enabled** Vera plugin directory, its prepared Python executable, and the vault and Login item selected by the studio:
+
+```sh
+python setup_acube.py --vera-root PATH_TO_VERA --python PATH_TO_VERA_PYTHON --vault STUDIO_VAULT --item SANDBOX_LOGIN
+```
+
+The helper checks the Archive modules, installs the locked connector dependencies at setup, and registers a sandbox MCP. Only the item reference is saved in the explicit vault configuration. The registration does not grant access to a taxpayer. Verify the remote login with a scoped read; local tool discovery does not demonstrate provider authentication. For a separately approved live setup use `--environment production` and the production login. To disconnect, remove the relevant named registration.
+
+## Source checkout only
 
 From a checkout with Vera's configured Python environment (`.venv`), Node 20+ and pnpm:
 
@@ -17,7 +29,7 @@ In a fresh Codex chat, ask **“Controlla la connessione MCP A-Cube di Vera.”*
 
 ## Connect an A-Cube account
 
-Create an A-Cube sandbox account and configure a test company (Business Registry Configuration). In the `Vera` 1Password vault, save a Login item named `A-Cube sandbox`, with the provider email in **username** and its password in **password**. Enable desktop integration for the [1Password CLI](https://developer.1password.com/docs/cli/app-integration/) and make `op` available in the MCP host's PATH. The first provider tool call reads only those fields locally. The browser extension alone cannot supply a background process with these values. A secret manager may instead inject `ACUBE_EMAIL` and `ACUBE_PASSWORD` into the connector process. Keep both out of chat, command arguments and repository files.
+Create an A-Cube sandbox account and configure a test company (Business Registry Configuration). Select a vault and Login item (the default is `A-Cube sandbox` in `Vera`), with the provider email in **username** and its password in **password**. Enable desktop integration for the [1Password CLI](https://developer.1password.com/docs/cli/app-integration/) and make `op` available in the MCP host's PATH. The first provider tool call reads only those fields locally. The browser extension alone cannot supply a background process with these values. A secret manager may instead inject `ACUBE_EMAIL` and `ACUBE_PASSWORD` into the connector process. Keep both out of chat, command arguments and repository files.
 
 For an authorized production account, register a separate connection with `--production` and a separate `A-Cube production` vault item. The production one-time request can incur provider charges. The server mode is fixed at startup.
 
@@ -28,7 +40,7 @@ For an authorized production account, register a separate connection with `--pro
 3. `list_invoice_references` takes the same client and dates, plus `incoming` or `outgoing`. It checks the selected party and invoice date before returning UUIDs. Continue with `next_page` until it is null. The list is a snapshot of available matching invoices, not a receipt for a particular job.
 4. `archive_invoice_xml` takes a listed UUID, fiscal ID, direction and exact open Archive engagement ID. The worker retrieves the XML through `get_invoice`, verifies the selected party in the FatturaPA header, resolves the registered Archive client by tax ID, then uses Vera's ordinary document importer. Identical content reuses its receipt. The result contains a local path, input ID and SHA-256. The artifact is the UTF-8 XML representation supplied by A-Cube. This route does not retrieve the signed P7M envelope.
 
-Production uses the local Studio Archive configuration. Sandbox uses a **separate** Archive configuration at `~/.vera-acube/sandbox` (`VERA_ACUBE_SANDBOX_HOME` overrides the location). Before the first sandbox import, configure a dedicated synthetic Archive root, client and engagement. For example, from the repository root:
+Production uses the local Studio Archive configuration. Sandbox uses a **separate** Archive configuration at `~/.vera-acube/sandbox` (`VERA_ACUBE_SANDBOX_HOME` overrides the location). Before the first sandbox import, configure a dedicated synthetic Archive root, client and engagement. With packaged Vera use its prepared Python and `modules/studio-archive/scripts/studio_archive.py` under its installed root. The following paths are for a source checkout:
 
 ```sh
 source .venv/bin/activate
@@ -51,4 +63,4 @@ Tool arguments contain the fiscal ID, dates, direction and selected document/eng
 
 ## Verification
 
-Run `node --test connectors/vera-acube/test/connection.test.mjs` from the repository root after installing dependencies. The test starts the actual upstream package, checks its tools, and exercises request, listing and Archive import with synthetic provider responses. It does not log into A-Cube.
+In the source checkout, run `node --test connectors/vera-acube/test/*.test.mjs` from the repository root after installing dependencies. The test starts the actual upstream package, checks its tools, and exercises request, listing and Archive import with synthetic provider responses. It does not log into A-Cube.
