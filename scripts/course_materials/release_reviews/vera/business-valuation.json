@@ -123,7 +123,7 @@
     },
     "privacy_amendment": "After integrating main PR #728, the Italian lesson distinguishes native model context from local arithmetic/rendering and Mparanza receipt metadata. Codex local tutorial stamping is excluded; outside that boundary the Vera report builder may request the automatic four-field receipt. Cowork does not inherit that Codex-only exclusion merely from a tutorial name. Documents, reports and calculations are not sent to the receipt service. This is source review, not live-provider or installed Cowork acceptance."
   },
-  "course_sha256": "149afe2538168ffeebf6dcbcc6af1bb6a2b218e87b7caa848782a3f8d59ed5a8",
+  "course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f",
   "dated_calculation_review": {
     "scope": "Reviewed the optional dated DCF source and formula contract. The Italian first-use lesson still uses annual flows; both freshly executed native demo/practice reports preserve the expected 750000 / 583333.33 EUR equity indications, development-only purpose coverage and pending review. Inspected all five pages of the final forward/mid-period DOCX, including the Italian timing labels and displayed factors. No PIV approval, human case acceptance, installed-host or live learner acceptance is implied.",
     "tests": "103 valuation tests pass at 92.66% coverage, including both fresh native teaching phases, dated numerical cases, invalid timing, annual plan relabelling rejection and curve sensitivity boundaries.",
@@ -1285,5 +1285,16 @@
     "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
     "fresh_matching_junit_required": true,
     "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
+  },
+  "course_startup_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+    "previous_course_sha256": "149afe2538168ffeebf6dcbcc6af1bb6a2b218e87b7caa848782a3f8d59ed5a8",
+    "current_course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f",
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
   }
 }

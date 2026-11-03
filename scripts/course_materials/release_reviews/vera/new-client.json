@@ -103,7 +103,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "d569a2fd27002197b028212f51b3bda1f2b6943c1b721a80086a8327ff063194",
+  "course_sha256": "973867fcaffe0b6ded7186a31a55de07d50d34a342f90db25f3d795710f43aea",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -855,5 +855,16 @@
       "base_course_sha256": "c64c2d37a1fe9192143049d7220370e7550d35de6006d6f41049c8d59c96b9f3",
       "authored_content_unchanged": true
     }
+  },
+  "course_startup_source_binding_review_20261103": {
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+    "previous_course_sha256": "d569a2fd27002197b028212f51b3bda1f2b6943c1b721a80086a8327ff063194",
+    "current_course_sha256": "973867fcaffe0b6ded7186a31a55de07d50d34a342f90db25f3d795710f43aea",
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
   }
 }
