@@ -4,7 +4,7 @@ Status: source repair and release preparation; installed-host acceptance is pend
 
 The release combines the retained UI branch with production `c7448d4c0`, preserving
 its native-only editor retirement, private report preview and privacy controls.
-Vera advances to 0.1.558, Clara to 0.1.372 and Lucia to 0.1.198.
+Vera advances to 0.1.559, Clara to 0.1.372 and Lucia to 0.1.198.
 
 ## Observed Desktop failures
 
@@ -103,3 +103,22 @@ by the process-level launch regression. Both focused launcher checks then passed
 The consolidated change is reviewed in repository PR #945. CI results and final
 deployment evidence must be attached to its final tested head, not inferred from
 this local build or the candidate installation.
+
+## Corrected course display handshake
+
+CI for the first consolidated candidate caught a regression introduced during
+consolidation: copying the course branding edit also dropped the deployed
+fullscreen capability declaration. All failed archive builds stopped at the same
+packaged course-resource check. Restore the existing inline/fullscreen handshake
+and assert the actual emitted initialization message in the course UI behavior
+harness. The corrected Vera candidate uses 0.1.559, leaving the earlier installed
+0.1.558 candidate identifiable. That earlier installation is not final acceptance.
+The correction restores the deployed display contract and adds no data boundary.
+
+The corrected 0.1.559 candidate passes all 42 course-chat behavior tests and the
+exact finished Codex-package resource check used by the archive CI gate. All
+three host formats rebuilt successfully for Vera 0.1.559, Clara 0.1.372 and Lucia
+0.1.198. The corrected locally installed Vera package identity is
+`57acbebf4dc6c808631941cba6b8873be1b4c077ccd6a08b7d6841f5fad31f46`.
+The final CI artifacts, deployment and fresh Desktop connection remain separate
+verification gates.

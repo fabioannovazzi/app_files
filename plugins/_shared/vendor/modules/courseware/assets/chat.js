@@ -59,7 +59,7 @@ if (typeof document !== "undefined") (() => {
     } catch (error) { status.textContent = error.message; status.className = "error"; }
     finally { busy = false; render(); }
   });
-  request("ui/initialize", { protocolVersion: "2026-01-26", appInfo: { name: "Course chats", version: "1.0.0" }, appCapabilities: {} }).then(result => {
+  request("ui/initialize", { protocolVersion: "2026-01-26", appInfo: { name: "Course chats", version: "1.0.0" }, appCapabilities: { availableDisplayModes: ["inline", "fullscreen"] } }).then(result => {
     host = result; render(); window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized" }, "*");
   }).catch(error => { status.textContent = error.message; status.className = "error"; });
 })();

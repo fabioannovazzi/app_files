@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "26b1fd98097a4bff50db307c02b894b388c06ffa3b617a2bff3c535ad0b220ab",
+  "catalogue_fingerprint": "14b1090e8b8e5d2719a4bacea0e6b9f17b1676c2c60672cf02a70ddfd4dd4e59",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -315,6 +315,11 @@
     "previous_catalogue_fingerprint": "4d52bce2789444f1f76f392d7a4c97dacd9c08bc955d19600de214292ca13522",
     "scope": "Only the canonical product version changed in the catalogue identity. Every skill entrypoint hash and all existing jurisdiction judgments are unchanged. Public course-file deduplication preserves attachment bytes and establishes no new Geneva professional acceptance.",
     "version": "0.1.493"
+  },
+  "course_display_correction_binding_20261103": {
+    "previous_catalogue_fingerprint": "26b1fd98097a4bff50db307c02b894b388c06ffa3b617a2bff3c535ad0b220ab",
+    "reviewed_at": "2026-11-03",
+    "scope": "Vera 0.1.559 manifest binding. All 55 skill entrypoint hashes and existing jurisdiction judgments remain unchanged. Restore the already deployed course fullscreen handshake after the candidate consolidation regression."
   },
   "course_entry_release_binding": {
     "change": "Remove redundant catalogue jump link and refresh release identity; skill entrypoints and Geneva dispositions unchanged.",

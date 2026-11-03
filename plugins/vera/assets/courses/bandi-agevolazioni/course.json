@@ -315,7 +315,7 @@
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "088eb25cfc122b963365394c7953af78df624265a86c9d56a862a46f58ba27cc"
+      "sha256": "b76aa6e2ec27eb98ab12e1f85da933a2de432e915f1cbf96c28c5feab4490098"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",

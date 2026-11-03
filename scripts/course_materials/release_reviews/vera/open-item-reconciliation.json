@@ -127,14 +127,14 @@
     "changed_fields": [
       "sources"
     ],
-    "current_course_sha256": "460d49373b051cea2886d0a836c69b47364e8f5c42ca4af89da1ff2989c89dcf",
+    "current_course_sha256": "9b20a7f0db9ddad254990fb579fc6733f48f746db85050f8d9af28858535a9da",
     "limits": "No new installed-host, learner, visual, voice or professional acceptance is asserted.",
     "previous_course_sha256": "076ca3b9d993347a717b4e68ec9452fa589b49fd65f23a386174962bcba4530a",
     "reviewed_at": "2026-11-03",
     "reviewer": "Codex /root - source compatibility review",
-    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities."
+    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "460d49373b051cea2886d0a836c69b47364e8f5c42ca4af89da1ff2989c89dcf",
+  "course_sha256": "9b20a7f0db9ddad254990fb579fc6733f48f746db85050f8d9af28858535a9da",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
