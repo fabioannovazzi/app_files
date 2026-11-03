@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "14b1090e8b8e5d2719a4bacea0e6b9f17b1676c2c60672cf02a70ddfd4dd4e59",
+  "catalogue_fingerprint": "b97cb0ba4f0d537bdc704facff0546e2c4daf60bbdc71d952dab2a665bade21b",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -549,6 +549,11 @@
     "prior_catalogue_fingerprint": "f7aaac4208ac52b3ab5efff001a5372f35cb66b29df4f02c77fd5934c9806396",
     "scope": "Reviewed registration-style PDF intake and existing professional/source qualification boundaries. Existing Geneva relevance dispositions remain unchanged. The adapter still needs reviewed coordinates and full registration closure; no legal adaptation, actual Geneva-client or installed-host acceptance is claimed.",
     "version": "0.1.358"
+  },
+  "legacy_host_launcher_binding_20261104": {
+    "manifest_sha256": "dcdda372351dd7468f91021974ab4ed3b415b9d652e5049696dc719715b0e50c",
+    "previous_manifest_sha256": "9e63bfe47c31cab35038b584ee37032c18fa6c5e1b01bb7c15c499c111881227",
+    "scope": "Version-only manifest update to Vera 0.1.560. All 55 skill catalogue entries are identical; retain jurisdiction judgments."
   },
   "legal_tax_model_selection_binding": {
     "changed_entrypoints": [

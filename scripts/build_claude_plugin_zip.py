@@ -1118,7 +1118,6 @@ def project_claude_manifest(
 
 
 def _project_plugin_path(value: str) -> str:
-    value = value.replace("${PLUGIN_ROOT}", "${CLAUDE_PLUGIN_ROOT}")
     if value == ".":
         return "${CLAUDE_PLUGIN_ROOT}"
     if value.startswith("./"):

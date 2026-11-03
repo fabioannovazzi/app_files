@@ -3,10 +3,10 @@
     "lucia": {
       "title": "Lucia",
       "description": "Lucia tools. Each specialist starts only when one of its tools is used.",
-      "cwd": "${PLUGIN_ROOT}",
+      "cwd": ".",
       "command": "node",
       "args": [
-        "${PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"
+        "./scripts/on_demand_mcp.cjs"
       ]
     }
   }

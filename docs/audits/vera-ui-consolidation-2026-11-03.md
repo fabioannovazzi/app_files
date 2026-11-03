@@ -4,7 +4,7 @@ Status: source repair and release preparation; installed-host acceptance is pend
 
 The release combines the retained UI branch with production `c7448d4c0`, preserving
 its native-only editor retirement, private report preview and privacy controls.
-Vera advances to 0.1.559, Clara to 0.1.372 and Lucia to 0.1.198.
+Vera advances to 0.1.560, Clara to 0.1.372 and Lucia to 0.1.198.
 
 ## Observed Desktop failures
 
@@ -32,12 +32,13 @@ connection's authorized directory. The existing backend authorization and dirty
 local draft guards remain mandatory; recovery never guesses another run, widens
 access, edits the binding file or retries a professional write.
 
-Product MCP entries use the documented `${PLUGIN_ROOT}` paths. A relative entry
-was observed to initialize from the plugin directory and fail from an unrelated
-working directory. Regression tests initialize an integrity-sealed synthetic
-installation outside its directory. Cowork projection maps the root placeholder
-to its existing `${CLAUDE_PLUGIN_ROOT}` form. This is a launch-path correction;
-Desktop's central app route still requires installed-host retesting.
+Legacy Codex MCP entries use `cwd: "."` and the relative on-demand launcher.
+The host resolves that cwd against the installed plugin. Portable Codex and
+Cowork builders retain their supported root projections. Process regressions
+initialize integrity-sealed synthetic installations from that resolved cwd.
+The final section documents the actual CLI check that invalidated the earlier
+portable-placeholder assumption. Desktop's central app route still requires
+installed-host retesting.
 
 The consolidated UI retains responsive queues, grouped supporting evidence,
 readable source selections, Italian Bilancio issue captions, structured synthetic
@@ -132,3 +133,25 @@ plugin-root expansion. The full affected opinion group then passed locally:
 regression also passed against the exact CI archive. These corrections change
 no product files or package identity; Vera remains 0.1.559 with identity
 `57acbebf4dc6c808631941cba6b8873be1b4c077ccd6a08b7d6841f5fad31f46`.
+
+## Actual legacy host launcher correction
+
+The installed Codex CLI contradicted the assumed portable-root expansion:
+`codex mcp get vera --json` retained `${PLUGIN_ROOT}` literally in argv and
+appended it to the installation directory for cwd. The preceding dated-fixture
+expansion therefore modeled an unsupported legacy-host behavior and did not
+prove compatibility. Restore the deployed legacy `.mcp.json` relative launcher
+and cwd for all three products. Portable `mcp.json` and Cowork retain their
+respective builder projections. Vera advances to 0.1.560. The launch regression
+now uses the host-resolved plugin cwd. Actual CLI resolution and Desktop
+acceptance are separate release gates.
+
+The locally installed 0.1.560 candidate has package identity
+`27a84a5266557574dc54fd5108dc2f18231d4e99c0c294264fb22d64fd412e1c`.
+The actual Codex CLI resolves argv to `./scripts/on_demand_mcp.cjs` and cwd to
+the 0.1.560 installation directory. Launching exactly that resolved command
+returns serverInfo Vera 0.1.560 and tools/resources/prompts capabilities.
+All 63 transport tests pass with 92.31% builder coverage; 42 course-chat tests,
+the finished-package UI resource gate, and the dated reinstall/upgrade/reconnect
+scenario pass. Retained Desktop panel 17 still shows the previous flat Patent
+Box navigation, so this is not new Desktop UI acceptance.

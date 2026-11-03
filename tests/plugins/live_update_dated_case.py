@@ -205,14 +205,9 @@ class MCP:
         configuration = json.loads((root / ".mcp.json").read_text())["mcpServers"][
             "vera"
         ]
-        # Model the host's documented plugin-root expansion before launching.
-        arguments = [
-            value.replace("${PLUGIN_ROOT}", str(root))
-            for value in configuration["args"]
-        ]
-        working_directory = root / configuration.get("cwd", ".").replace(
-            "${PLUGIN_ROOT}", str(root)
-        )
+        # Legacy Codex resolves the configured cwd against the installed plugin.
+        arguments = configuration["args"]
+        working_directory = root / configuration.get("cwd", ".")
         self.process = subprocess.Popen(
             [configuration["command"], *arguments],
             cwd=working_directory,
