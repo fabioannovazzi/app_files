@@ -51,7 +51,7 @@ test('sandbox simulation, scoped references, Archive receipt, exact retry, wrong
   Object.assign(process.env,{ACUBE_EMAIL:'test@example.invalid',ACUBE_PASSWORD:'test-password', ACUBE_ENVIRONMENT:'sandbox', VERA_ACUBE_SANDBOX_HOME:home});
   t.after(() => { for (const key of ['ACUBE_EMAIL','ACUBE_PASSWORD','ACUBE_ENVIRONMENT','VERA_ACUBE_SANDBOX_HOME']) { if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key]; } });
   const archive = (...args) => JSON.parse(execFileSync(join(repo,'.venv/bin/python'), [join(repo,'plugins/studio-archive/scripts/studio_archive.py'), ...args],
-    { env: {...process.env, VERA_STUDIO_ARCHIVE_STATE_DIR:join(home,'state'),VERA_STUDIO_ARCHIVE_PROFILE_DIR:join(home,'profile')},encoding:'utf8' }));
+    { env: {...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID:'separate-archive-setup-session', VERA_STUDIO_ARCHIVE_STATE_DIR:join(home,'state'),VERA_STUDIO_ARCHIVE_PROFILE_DIR:join(home,'profile')},encoding:'utf8' }));
   archive('configure','--archive-root',root);
   const clientId = archive('create-client','--legal-name','Synthetic MCP studio','--tax-identifier',sample.fiscal_id).client.client_id;
   const engagement = archive('create-engagement','--client-id',clientId,'--engagement-label','Synthetic October').engagement.engagement_id;

@@ -1,4 +1,5 @@
 import { execFile, spawn } from 'node:child_process';
+import { randomUUID } from 'node:crypto';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
@@ -10,6 +11,7 @@ import { AcubeClient } from 'mcp-server-acube/dist/client.js';
 import { z } from 'zod';
 
 const here = dirname(fileURLToPath(import.meta.url));
+const archiveSession = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.env.CODEX_THREAD_ID || randomUUID();
 const upstreamPath = fileURLToPath(import.meta.resolve('mcp-server-acube'));
 const requiredTools = ['download_invoices_once', 'list_invoices', 'get_invoice'];
 const fiscalId = z.string().regex(/^(?:\d{11}|[A-Z0-9]{16})$/);
@@ -67,6 +69,7 @@ function archiveXml(args, xml, environment) {
   const python = process.env.VERA_ACUBE_PYTHON || join(here, '../../.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
   return new Promise((resolve, reject) => {
     const env = { ...process.env };
+    if (environment === 'sandbox') env.VERA_STUDIO_ARCHIVE_SESSION_ID = archiveSession;
     delete env.ACUBE_PASSWORD; delete env.ACUBE_EMAIL;
     const worker = spawn(python, [join(here, 'archive_invoice.py'), args.fiscal_id, args.direction,
       args.uuid, args.engagement_id, environment], { env, stdio: ['pipe', 'pipe', 'ignore'] });

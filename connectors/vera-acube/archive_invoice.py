@@ -6,6 +6,7 @@ import json
 import os
 import re
 import sys
+from hashlib import sha256
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import UUID
@@ -29,7 +30,11 @@ def main() -> dict[str, str]:
         # Synthetic invoices have a separate Archive configuration and profile.
         defaults = Path.home() / ".vera-acube" / "sandbox"
         sandbox = Path(os.environ.get("VERA_ACUBE_SANDBOX_HOME", defaults))
-        os.environ["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(sandbox / "state")
+        # Restore the approved sandbox root from its profile. Each MCP session
+        # gets its own Archive configuration lease, separate from the setup CLI.
+        session = os.environ["VERA_STUDIO_ARCHIVE_SESSION_ID"]
+        scope = sha256(session.encode()).hexdigest()[:32]
+        os.environ["VERA_STUDIO_ARCHIVE_STATE_DIR"] = str(sandbox / "sessions" / scope)
         os.environ["VERA_STUDIO_ARCHIVE_PROFILE_DIR"] = str(sandbox / "profile")
     elif environment != "production":
         raise ImportIssue("archive_import_failed")
