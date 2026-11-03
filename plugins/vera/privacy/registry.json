@@ -1436,6 +1436,28 @@
             "de",
             "es"
           ]
+        },
+        {
+          "page_id": "vera-onepassword",
+          "path": "static/shared/vera-integrazioni/onepassword/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        },
+        {
+          "page_id": "vera-external-services",
+          "path": "static/shared/vera-integrazioni/services/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
         }
       ]
     }
