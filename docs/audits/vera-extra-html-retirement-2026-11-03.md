@@ -21,7 +21,7 @@ The packaging transform is deliberately scoped to Vera. Independently distribute
 ## Evidence and validation
 
 - Intake, Treasury delivery, management pack and retirement tests pass (160 cases); the native management commentary and Treasury preparation group passes another 47 cases.
-- Native management commentary, new app-private report preview, native Treasury preparation, delivery/reporting and retirement regressions pass.
+- Native management commentary, new app-private report preview, native Treasury preparation, delivery/reporting and retirement regressions pass. Another 26 current native lesson checks and 36 release-review gate regressions pass. Construction lesson instructions and shipped inputs now use versioned Markdown in all five languages. The three affected course reviews bind current synthetic outputs; the retained historical reviews remain separate. See `docs/releases/2026-11-03-native-ui-lesson-transport-review.json`.
 - The actual 0.1.554 Codex ZIP contains exactly five HTML shells. Its generated catalog advertises exactly five registered MCP app resources.
 - The projected Open-items, Journal/bank, Journal Sampling, Check Entries and Report Builder Python engines import successfully. MCP catalog generation also exercises their JavaScript initialization and exact implementation-tree checks.
 - New report preview rejects stale revisions. Its HTML is app-only metadata, absent from the model-visible response. Original report receipt/hash checks remain mandatory. This is service/test evidence; actual Desktop rendering and month-control interaction of the newly ported preview remain unverified.

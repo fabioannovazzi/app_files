@@ -98,7 +98,7 @@
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
     "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
   },
-  "course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",
+  "course_sha256": "0da028e38f0beb5a31128eb83ff0c0221a57627b42be63f3850ce463b760a7b4",
   "esg_source_refresh_20260930": {
     "reviewer": "Codex /root - bounded source review",
     "reviewed_at": "2026-09-30T09:04:20.309596+00:00",
@@ -208,74 +208,92 @@
       "editorial": {
         "purpose_and_first_use": "The plain Italian lesson teaches providing cash balances and expected flows, confirming scope, reviewing dates and their basis, reading daily and weekly cash and reopening the preserved result. The delayed receipt is a practice step after this first-use sequence, not the whole lesson.",
         "inputs_and_request": "The fictional Officina Arco case starts on 31 March with 25,000 EUR, two receivables of 18,000 and 12,000, one 9,000 payable, 14,000 payroll and 2,500 rent. The six CSV roles are explained; bank movements, allocations and adjustments are intentionally empty for this first forecast. The request specifies the company, EUR and 31 May horizon without making the learner author technical configuration.",
-        "execution_and_checkpoints": "Actual native preparation and review commands import the bound sources, persist date assumptions from the fictional case and preserve immutable earlier versions. The checkpoints cover which source holds actual cash, where an expected receipt date and its basis appear, and which week should be inspected. CLI review and the local HTTP contract are exercised; browser interaction with the lesson page was not visually verified because URL policy blocked access.",
+        "execution_and_checkpoints": "Actual native preparation and review commands import the bound sources, persist date assumptions from the fictional case and preserve immutable earlier versions. The checkpoints cover which source holds actual cash, where an expected receipt date and its basis appear, and which week should be inspected. CLI review and the local HTTP contract are exercised; browser interaction with the lesson page was not visually verified because URL policy blocked access. Native transport update reviewed 3 November 2026: the localhost editor is retired; native review and the unchanged delivered report files remain the supported route. Historical HTTP/browser statements above describe earlier evidence only.",
         "deliverable_and_next_action": "The native Italian workbook shows a draft status, supplied coverage, fitted descriptions and assumptions, signed flows and weekly cash. Eight rendered views were inspected. Native report source now contains real weekly HTML tables and localized status rather than duplicated raw Markdown; no browser visual acceptance is claimed. The delivery card links the exact current report, workbook and explanation. Forecast review remains None and no payment or professional acceptance occurs.",
         "practice_and_repeat": "The native scenario moves only the Aurora receipt from 10 to 20 April. The ordinary Codex delivery note reads the actual scenario and compares four dates with the unchanged baseline. It explains that this alternative is a separate hypothetical JSON calculation and that original report/workbook still describe the original forecast. The lesson then explains inputs needed to repeat and the additional movement/settlement evidence needed for later updates.",
         "language_and_pacing": "This workflow supports Italian; the complete lesson and primary workbook/report labels are Italian. Canonical JSON and CSV field names stay stable for traceability. Six stages total 390 seconds, with processing and questions allowed to extend elapsed time. User comprehension and native voice performance remain separate acceptance steps."
       },
       "demo": {
         "test_case": "tests.plugins.test_teaching_kit_execution::test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance[demo]",
-        "result_review": "The baseline forecast starts and reaches a minimum at 25,000 EUR, closes at 29,500 EUR on 31 May and preserves the initial prepared version after recording three fictional date assumptions. All five event amounts, dates and bases remain traceable; calculation is complete within the declared coverage, with draft_for_review status and no professional review.",
+        "result_review": "Inspected current synthetic native output text, exact files and transport boundaries after the UI retirement. The normal report remains a draft with its original source/calculation/review limits and immutable preceding versions. Removing the localhost launcher does not approve, send or finalize it. Native checks passed for this exact compiled course. No current real Desktop visual or learner acceptance is claimed.",
         "reviewed_artifacts": [
           {
-            "name": "report.html",
-            "sha256": "52af35c9dfe2095f64574375d4edbf4145500af63ed0a91a85d3ccc4ca5d9cf0"
-          },
-          {
             "name": "report.md",
-            "sha256": "c33559f37119a3aa194f87f83658b8c0ba69effa93a60ac2835e629f56e26d61"
-          },
-          {
-            "name": "tesoreria.xlsx",
-            "sha256": "5f620eef432cd5facb23d89115f44347c9367c96e42917871d78faf5bd6b018e"
-          },
-          {
-            "name": "forecast.json",
-            "sha256": "f3fcfb5ef49cdbc0e26b2d7eee3127aac599556ad7b54dc581d35f04e4d9688a"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "b9fd0ac30dbe1ef2576555d6112b3fec33d2ec52434391453d086bcc18b75ae2"
-          },
-          {
-            "name": "artifact_card.md",
-            "sha256": "4b120985f4d389a94f36aa28d1926bfa96f176b4e1c4e77e2b663a54e2e8403a"
+            "sha256": "2f720f5ea25d34d185e8a1ae62c614dd12f23aea364736167c68dce7e2f9b8b9"
           }
-        ]
+        ],
+        "previous_artifact_review_20261103": {
+          "result_review": "The baseline forecast starts and reaches a minimum at 25,000 EUR, closes at 29,500 EUR on 31 May and preserves the initial prepared version after recording three fictional date assumptions. All five event amounts, dates and bases remain traceable; calculation is complete within the declared coverage, with draft_for_review status and no professional review.",
+          "reviewed_artifacts": [
+            {
+              "name": "report.html",
+              "sha256": "52af35c9dfe2095f64574375d4edbf4145500af63ed0a91a85d3ccc4ca5d9cf0"
+            },
+            {
+              "name": "report.md",
+              "sha256": "c33559f37119a3aa194f87f83658b8c0ba69effa93a60ac2835e629f56e26d61"
+            },
+            {
+              "name": "tesoreria.xlsx",
+              "sha256": "5f620eef432cd5facb23d89115f44347c9367c96e42917871d78faf5bd6b018e"
+            },
+            {
+              "name": "forecast.json",
+              "sha256": "f3fcfb5ef49cdbc0e26b2d7eee3127aac599556ad7b54dc581d35f04e4d9688a"
+            },
+            {
+              "name": "codex_run_review.md",
+              "sha256": "b9fd0ac30dbe1ef2576555d6112b3fec33d2ec52434391453d086bcc18b75ae2"
+            },
+            {
+              "name": "artifact_card.md",
+              "sha256": "4b120985f4d389a94f36aa28d1926bfa96f176b4e1c4e77e2b663a54e2e8403a"
+            }
+          ]
+        }
       },
       "practice": {
         "test_case": "tests.plugins.test_teaching_kit_execution::test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance[practice]",
-        "result_review": "The native hypothetical alternative lowers cash to 16,000 EUR on 15 April, versus 34,000 in the unchanged baseline. Cash is 34,000 in both from the 20 April receipt and both end at 29,500 on 31 May. The delivery note reports the correct four-date comparison and explicitly distinguishes the alternative JSON from the preserved baseline report and workbook. The original forecast bytes and final-artifact pointers are unchanged; no professional acceptance is simulated.",
+        "result_review": "Inspected current synthetic native output text, exact files and transport boundaries after the UI retirement. The normal report remains a draft with its original source/calculation/review limits and immutable preceding versions. Removing the localhost launcher does not approve, send or finalize it. Native checks passed for this exact compiled course. No current real Desktop visual or learner acceptance is claimed.",
         "reviewed_artifacts": [
           {
-            "name": "report.html",
-            "sha256": "fea0a0733c83a384ce52d5090882f2e557669eaa4bb694b00dd575be19208197"
-          },
-          {
             "name": "report.md",
-            "sha256": "b076cf40aae83427e6d7f9d1f8a8a4e2dde79f7e65f30be4e7f3f577a43fd8ff"
-          },
-          {
-            "name": "tesoreria.xlsx",
-            "sha256": "5f620eef432cd5facb23d89115f44347c9367c96e42917871d78faf5bd6b018e"
-          },
-          {
-            "name": "forecast.json",
-            "sha256": "2816cbe3f49932af5022c91120fce56661d01e43a29730f77eb511cf105353ae"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "4ad3bc27e4e51a11b91e8e5f6dcfd947120f8044d8b1b9fe99a051be41d327ba"
-          },
-          {
-            "name": "artifact_card.md",
-            "sha256": "a537f0162f8a1f96562ce7df262bda9770fd2ce7126f0feb35f45a41dd7c23b1"
-          },
-          {
-            "name": "scenario-f8a8ee311075816583e8c7ec91505037433f65e73db5e7b0ae432f45f9f71e6b.json",
-            "sha256": "aeac723540290c864dc1fd8e46e8aa4a94584bdf399ebf1513d97f6e4e20d26a"
+            "sha256": "4d4b37dfdcaeb13ff5d91c3b0ea541e1883d0cae86c131d298023a5d16b00b1e"
           }
-        ]
+        ],
+        "previous_artifact_review_20261103": {
+          "result_review": "The native hypothetical alternative lowers cash to 16,000 EUR on 15 April, versus 34,000 in the unchanged baseline. Cash is 34,000 in both from the 20 April receipt and both end at 29,500 on 31 May. The delivery note reports the correct four-date comparison and explicitly distinguishes the alternative JSON from the preserved baseline report and workbook. The original forecast bytes and final-artifact pointers are unchanged; no professional acceptance is simulated.",
+          "reviewed_artifacts": [
+            {
+              "name": "report.html",
+              "sha256": "fea0a0733c83a384ce52d5090882f2e557669eaa4bb694b00dd575be19208197"
+            },
+            {
+              "name": "report.md",
+              "sha256": "b076cf40aae83427e6d7f9d1f8a8a4e2dde79f7e65f30be4e7f3f577a43fd8ff"
+            },
+            {
+              "name": "tesoreria.xlsx",
+              "sha256": "5f620eef432cd5facb23d89115f44347c9367c96e42917871d78faf5bd6b018e"
+            },
+            {
+              "name": "forecast.json",
+              "sha256": "2816cbe3f49932af5022c91120fce56661d01e43a29730f77eb511cf105353ae"
+            },
+            {
+              "name": "codex_run_review.md",
+              "sha256": "4ad3bc27e4e51a11b91e8e5f6dcfd947120f8044d8b1b9fe99a051be41d327ba"
+            },
+            {
+              "name": "artifact_card.md",
+              "sha256": "a537f0162f8a1f96562ce7df262bda9770fd2ce7126f0feb35f45a41dd7c23b1"
+            },
+            {
+              "name": "scenario-f8a8ee311075816583e8c7ec91505037433f65e73db5e7b0ae432f45f9f71e6b.json",
+              "sha256": "aeac723540290c864dc1fd8e46e8aa4a94584bdf399ebf1513d97f6e4e20d26a"
+            }
+          ]
+        }
       }
     }
   },
@@ -396,8 +414,8 @@
     "limits": "Prior editorial explanations and reviewed output hashes remain historical evidence. The 45 Italian simulated learner journeys are not 205 live language journeys; native voice hardware, physical window arrangement, human comprehension and professional approval are unverified. A new CI run must still validate every required demo/practice identity against the current digest."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-10-14T08:00:57.863795+00:00",
-  "reviewer": "Codex /root - Deal Redux source compatibility review",
+  "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+  "reviewer": "Codex /root — bounded native transport and lesson review",
   "schema": "mparanza.teaching_release_review.v1",
   "scissione_integration_refresh_20260930": {
     "previous_course_sha256": "9196fa4875eef9a7e881248af4d8a08148419f53af469e1379b1aaa017f201d7",
@@ -659,5 +677,18 @@
     "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
     "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
     "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
+  },
+  "native_ui_transport_review_20261103": {
+    "reviewer": "Codex /root — bounded native transport and lesson review",
+    "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
+    "previous_review": {
+      "reviewer": "Codex /root - Deal Redux source compatibility review",
+      "reviewed_at": "2026-10-14T08:00:57.863795+00:00",
+      "course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6"
+    },
+    "course_sha256": "0da028e38f0beb5a31128eb83ff0c0221a57627b42be63f3850ce463b760a7b4",
+    "judgment": "Complete authored course payload excluding source inventory is identical to the reviewed main baseline. The removed localhost editor is replaced by the existing native workspace; ordinary report files, receipts, calculations, review requirements and requested exercises remain unchanged. Management report preview preserves exact receipt verification and is app-only; actual Desktop iframe/month-control acceptance remains separate.",
+    "evidence_document": "docs/releases/2026-11-03-native-ui-lesson-transport-review.json",
+    "fresh_native_ci_required": true
   }
 }
