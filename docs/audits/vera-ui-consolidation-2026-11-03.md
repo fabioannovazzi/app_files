@@ -94,3 +94,12 @@ with package identity
 The installer reports that active-chat acceptance requires a fresh chat; this
 installation is not recorded as a successful central-app reopen. Exact final
 CI artifact installation and public release verification are still required.
+
+All three Codex, Cowork and Antigravity product builds completed with aligned
+versions. The runtime selection reached 80.40% coverage with 319 passing tests;
+one legacy test still allowed only the relative entry spelling. Its allowlist
+now also accepts the exact plugin-root on-demand launcher, independently exercised
+by the process-level launch regression. Both focused launcher checks then passed.
+The consolidated change is reviewed in repository PR #945. CI results and final
+deployment evidence must be attached to its final tested head, not inferred from
+this local build or the candidate installation.
