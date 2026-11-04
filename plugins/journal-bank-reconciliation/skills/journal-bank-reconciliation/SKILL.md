@@ -27,7 +27,7 @@ journal/ledger sources into its managed inputs, then call
 run folder; cross-engagement inputs and arbitrary outputs are rejected.
 
 Start the prepared run before inspection. After the last output write, call
-`finalize_studio_client_workflow` and declare every physical file with a stable
+`finalize_studio_client_workflow` with just the three run identity fields to list the actual output paths. Use the returned paths for the declarations; a review route in the installed package is not a run output. Call the same tool again and declare every listed file with a stable
 artifact ID, relative path, concrete purpose, audience, and media type. Review
 the closed declaration, then call `complete_studio_client_workflow`; record
 `failed` or explicitly cancel an abandoned run instead of treating a partial

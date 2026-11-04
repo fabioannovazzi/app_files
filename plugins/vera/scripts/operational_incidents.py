@@ -959,6 +959,8 @@ def _expand_success(
     """Bind saved execution evidence to its reported episodes before delivery."""
     targets = set(item["payload"]["report_ids"])
     receipts = [row for row in state["receipts"] if row["report_id"] in targets]
+    if not receipts:
+        return False
     if status is None:
         status = _post("status", {"credentials": state["credentials"]})
     outcomes = []
@@ -1071,20 +1073,31 @@ def _flush(state: dict[str, Any]) -> None:
             )
     deadline = time.monotonic() + 16
     delivered = 0
+    deferred = set()
     while state["outbox"] and delivered < 3 and time.monotonic() < deadline:
+        # Originals establish the server records that supplements and readiness
+        # notices depend on. Preserve the occurrence order among originals.
+        eligible = [
+            item
+            for item in state["outbox"]
+            if id(item) not in deferred
+            and _in_scope(item)
+            and _delivery_allowed(state, item)
+        ]
+        if not eligible:
+            break
         item = next(
             (
-                item
-                for item in state["outbox"]
-                if _in_scope(item) and _delivery_allowed(state, item)
+                entry
+                for entry in eligible
+                if entry["operation"] == "report"
+                and not entry["payload"]["report"].get("evidence_for_report_id")
             ),
-            None,
+            eligible[0],
         )
-        if item is None:
-            break
         if item["operation"] == "observed-success":
             if not _expand_success(state, item):
-                break
+                deferred.add(id(item))
             continue
         identifier_field = {
             "report": "report_id",
@@ -1107,6 +1120,11 @@ def _flush(state: dict[str, Any]) -> None:
         except urllib.error.HTTPError as error:
             if _native_rejection(state, key, error, can_correct):
                 continue
+            if error.code in {403, 404, 409, 422} and item["operation"] == "report":
+                # The original owner or a missing parent can make this exact
+                # envelope undeliverable. Retain it for retry with its same UUID.
+                deferred.add(id(item))
+                continue
             if error.code != 409 or item["operation"] not in {"outcome", "progress"}:
                 raise
             # Keep rejected evidence locally; an obsolete revision must not block
@@ -1115,6 +1133,13 @@ def _flush(state: dict[str, Any]) -> None:
             state["outbox"].remove(item)
             _write(state)
             continue
+        if identifier_field and (
+            reply.get(identifier_field)
+            != item["payload"][item["operation"]][identifier_field]
+        ):
+            raise ValueError(
+                "Delivery receipt does not match the attempted outbox entry"
+            )
         if reply.get("evidence_for_report_id"):
             _accept_recovery_evidence(state, reply)
         else:

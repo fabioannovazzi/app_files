@@ -286,7 +286,10 @@ def _parser() -> argparse.ArgumentParser:
     finalize_workflow.add_argument("--client-id", required=True)
     finalize_workflow.add_argument("--engagement-id", required=True)
     finalize_workflow.add_argument("--run-id", required=True)
-    finalize_workflow.add_argument("--artifacts-json", required=True)
+    finalize_workflow.add_argument(
+        "--artifacts-json",
+        help="Omit to list this run’s physical output paths before declaring them.",
+    )
     finalize_workflow.add_argument("--expected-declaration-sha256")
 
     close_engagement = subparsers.add_parser("close-engagement")
@@ -522,8 +525,12 @@ def main(argv: list[str] | None = None) -> int:
                 args.client_id, args.engagement_id, args.run_id
             )
         elif args.command == "finalize-workflow":
-            artifact_payload = json.loads(args.artifacts_json)
-            if not isinstance(artifact_payload, list):
+            artifact_payload = None
+            if args.artifacts_json is not None:
+                artifact_payload = json.loads(args.artifacts_json)
+            if args.artifacts_json is not None and not isinstance(
+                artifact_payload, list
+            ):
                 raise ArchiveError("artifacts-json must contain a JSON array.")
             result = finalize_studio_client_workflow(
                 args.client_id,
