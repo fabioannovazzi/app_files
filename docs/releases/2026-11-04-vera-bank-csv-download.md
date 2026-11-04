@@ -65,6 +65,12 @@ Coverage review and actual bank acceptance remain distinct from byte retention.
   commit's built archives before checking them. A regression executes that CI
   preparation with fresh/hidden files and a stale checkout file; all ten archive
   prerequisite tests passed. Generated directories are not added to Git.
+- The same six-file gap then appeared in `vera-packaged-mcp`, another artifact
+  consumer. The shared archive producer now uploads the generated Cowork trees
+  including hidden metadata alongside ZIPs. A regression exercises the upload
+  patterns with newly generated helper/skill files and hidden manifests for all
+  three products. This fixes the common artifact boundary rather than adding
+  generated files to Git. Eleven prerequisite tests passed locally.
 - Coverage initially selected the file as a module and collected no data.
   Correcting the coverage configuration measured the same helper at 81.71%; no
   production behavior was changed for that harness issue.

@@ -86,6 +86,42 @@ def test_alignment_restores_new_and_hidden_files_without_stale_checkout_files(tm
         )
 
 
+def test_shared_build_artifact_includes_untracked_cowork_files_and_hidden_metadata(
+    tmp_path,
+):
+    workflow = yaml.safe_load(
+        (ROOT / ".github/workflows/build-product-archives.yml").read_text()
+    )
+    upload = next(
+        step["with"]
+        for step in workflow["jobs"]["build"]["steps"]
+        if step.get("uses") == "actions/upload-artifact@v4"
+    )
+    required = set()
+    for product in ("vera", "clara", "lucia"):
+        package = tmp_path / "plugin_packages" / product
+        for relative in (
+            f"{product}-claude-plugin.zip",
+            f"claude/{product}/scripts/new-helper.py",
+            f"claude/{product}/skills/new/SKILL.md",
+            f"claude/{product}/.claude-plugin/plugin.json",
+        ):
+            path = package / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text("new build output absent from checkout")
+            required.add(path)
+
+    included = {
+        path
+        for pattern in upload["path"].splitlines()
+        for path in tmp_path.glob(pattern)
+        if path.is_file()
+    }
+
+    assert required <= included
+    assert upload["include-hidden-files"] is True
+
+
 @pytest.mark.parametrize(
     ("workflow", "job"),
     [
