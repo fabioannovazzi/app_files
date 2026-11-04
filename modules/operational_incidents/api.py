@@ -44,6 +44,7 @@ from modules.run_receipts.api import (
 from modules.run_receipts.signing import get_run_receipt_signer
 from modules.run_receipts.store import get_run_receipt_store
 from modules.workflow_usage.contracts import WorkflowEvent, event_schema
+from modules.workflow_usage.courses import Completion
 from modules.workflow_usage.products import Product
 from modules.workflow_usage.repository import WorkflowConflict
 from modules.workflow_usage.testing import public_status
@@ -69,6 +70,13 @@ class ConnectionEnvelope(BaseModel):
     event: WorkflowEvent | None = None
     run_id: UUID | None = None
     receipt_request: RunReceiptStampRequest | None = None
+
+
+class CourseEnvelope(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    credentials: Credentials
+    completion: Completion
+    client_status: ReporterStatus | None = None
 
 
 class Envelope(BaseModel):
@@ -143,6 +151,9 @@ def _dispatch(
             "credentials": generated.model_dump(mode="json"),
             "next_report_id": str(uuid4()),
         }
+    if operation == "course-completed":
+        course = CourseEnvelope.model_validate(arguments)
+        return store.record_course(course.credentials, course.completion)
     envelope = Envelope.model_validate(arguments)
     if operation == "register":
         registered = store.register(
@@ -647,6 +658,14 @@ class WorkflowFeedback(BaseModel):
     event_id: UUID
     stars: int = Field(ge=1, le=5, strict=True)
     comment: str | None = Field(default=None, max_length=2000)
+
+
+@router.get("/api/vera/course-status")
+def vera_course_status(
+    store: IncidentStore = Depends(get_incident_store),
+) -> JSONResponse:
+    """Publish course IDs and aggregate levels only."""
+    return JSONResponse({"courses": store.course_levels()}, headers=_NO_CACHE)
 
 
 @router.get("/api/{product}/testing-status")
