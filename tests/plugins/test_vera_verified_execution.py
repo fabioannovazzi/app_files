@@ -120,18 +120,28 @@ def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_deliver
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Native Win32 filesystem paths")
 @pytest.mark.parametrize("prefixed_runtime", [False, True])
+@pytest.mark.parametrize(
+    "relative",
+    [
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/references/website-quality-standard.md",
+        "modules/journal-bank-reconciliation/vendor/modules/vera_assurance/review_output_transaction.cjs",
+    ],
+)
 def test_shared_snapshot_reads_reported_file_beyond_legacy_windows_path_limit(
-    tmp_path, monkeypatch, prefixed_runtime
+    tmp_path, monkeypatch, prefixed_runtime, relative
 ):
     recovery = load_recovery()
     root = installation(tmp_path)
-    relative = (
-        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
-        "references/website-quality-standard.md"
+    shutil.copytree(
+        root / "vendor", root / "modules/journal-bank-reconciliation/vendor"
     )
     target = root / relative
-    target.parent.mkdir(parents=True)
-    target.write_bytes(b"synthetic package reference")
+    target.parent.mkdir(parents=True, exist_ok=True)
+    expected = (
+        ROOT
+        / "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs"
+    ).read_bytes()
+    target.write_bytes(expected)
     write_index(root)
     # An AppContainer-style parent plus the 64-character package digest makes
     # the final pathname exceed MAX_PATH even when its staging name fits.
@@ -158,7 +168,7 @@ def test_shared_snapshot_reads_reported_file_beyond_legacy_windows_path_limit(
     try:
         assert len(str(runtime / "code" / prepared.name / relative)) >= 260
         assert str(prepared).startswith("\\\\?\\")
-        assert (prepared / relative).read_bytes() == b"synthetic package reference"
+        assert (prepared / relative).read_bytes() == expected
         assert (prepared / relative).stat().st_nlink == 1
     finally:
         recovery.release_execution_root(prepared)

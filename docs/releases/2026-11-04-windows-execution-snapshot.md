@@ -19,6 +19,24 @@ error number; whether this change restores the customer's installation and
 original reconciliation. The screenshot's matching time and workflow do not
 independently establish machine ownership. No customer files were accessed.
 
+The subsequently supplied error also names `review_output_transaction.cjs` and
+a separate file-access service failure to locate Python. Source inspection found
+that the Archive MCP resolver ignored the existing shared managed interpreter,
+used POSIX-only virtual-environment paths, and returned `python3` without testing
+whether it could execute. Two real MCP file-access regressions with a working
+Python but no `python3` alias fail with `ENOENT` against the original server and
+pass against the repair: one uses the existing managed environment with empty
+PATH, and one uses an available `python` launcher. No client or engagement is
+created by these selected-file checks.
+
+Archive now checks the configured interpreter, the same existing managed runtime
+used by native execution, platform-correct environment paths and available
+launchers. A fixed isolated standard-library probe establishes executable
+capability; it downloads nothing, reads no selected document and sends nothing
+to a model or network. A missing/broken alias cannot hide a working interpreter.
+The probe deadline bounds only interpreter discovery, not professional work.
+If none can execute, the caller retains its actual spawn-error/reporting path.
+
 The shared verifier now uses Win32 extended paths for its private code store and
 temporary execution copies. It retains the same storage location, exact inventory,
 digest checks, link checks, kernel leases and collection rules. It changes no
@@ -32,7 +50,8 @@ message/values, locals and document contents. Capture completeness does not mean
 that the cause is diagnosed or the operation recovered. Existing reporting failure
 fallback remains visible. Privacy service descriptions record these exact fields.
 
-The native Windows regression uses the reported package-relative reference path,
+The native Windows regression uses both reported package-relative filenames,
+including the reconciliation module's vendored `review_output_transaction.cjs`,
 a long runtime parent, both ordinary and already extended configuration paths,
 and a simulated legacy Win32 path limit even on CI images with long paths enabled.
 It checks successful verification/read and collection of the complete snapshot.
@@ -48,6 +67,8 @@ Validation preparation encountered these recoverable blocks:
 | Course implementation hashes | Prepared kits referenced the previous verifier bytes. Regenerated the kits and refreshed affected onboarding/prepared-course reviews. Lesson content and professional acceptance were not inferred from hash refreshes. |
 | Package tests started before archive generation finished | The premature run had 20 missing-archive failures and 79.23% coverage. It is not a product result; package verification must be repeated after all archives exist. |
 | Incorrect initial coverage selector | A filesystem filename was supplied as a coverage module selector, producing no data. Use the repository's `tests/plugin_runtime.coveragerc` instead. |
+| Partial vendored regression fixture | Adding only the reported CJS file made the component validator correctly require its companion PDF vendor. Fixed the test to copy the complete existing vendor tree; production validation was preserved. |
+| Invalid negative-test tool arguments | The initial no-interpreter test supplied a run ID to an input-verification tool that does not accept it. Used the supported checkpoint operation with all three retained IDs; the test then verified the original spawn error and separate reporting gap. |
 
 Local source checks passed with 112 tests, two native Windows cases skipped on
 macOS, and Black, Isort, Mypy and Bandit checks. The final managed-runtime suite
@@ -58,3 +79,10 @@ No reconciliation or its run-level privacy report was produced in this repair.
 The original pipeline outcome remains failed/unexecuted; its incomplete diagnostic
 capture and lack of recovery remain explicit. No Marketplace action is authorized
 by this repair.
+
+After the additional failure was specified, the expanded local source suite
+passed 268 tests with four native Windows path cases skipped on macOS. Obsolete
+CI runs for the first candidate were cancelled, retaining their evidence, so a
+fresh candidate must pass all CI including four native snapshot cases and both
+actual file-access interpreter routes. The first candidate's two Windows path
+passes alone do not validate this expanded release.
