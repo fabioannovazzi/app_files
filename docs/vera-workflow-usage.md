@@ -98,8 +98,9 @@ Every visible row starts at `untried`. Explicit aliases connect the Bilancio,
 vouching, passive-invoice and financial-report rows to their actual primary
 pipeline IDs. Standalone opposing opinions and the Italian local-authority report preset have
 separate primary IDs, so unrelated legal work or ordinary reports cannot promote
-those icons. Studio Archive stays outside the pipeline counter. Impara con Vera has
-no aggregate icon. Vera's course catalogue and localized course pages use
+those icons. Studio Archive stays outside the pipeline counter and its overview
+link has no circle. The separate archive-organization workflow keeps its indicator.
+Impara con Vera has no aggregate icon. Vera's course catalogue and localized course pages use
 `GET /api/vera/course-status`, independently of these pipeline events. A new
 Codex lesson finish or Cowork written finish submits only its catalogue ID,
 random completion ID and completion time using the existing installation

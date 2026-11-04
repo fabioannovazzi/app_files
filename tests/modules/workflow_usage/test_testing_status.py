@@ -470,10 +470,15 @@ def test_page_resets_every_icon_and_maps_package_aliases_to_primary_pipelines():
     )
     indicators = page.select('.function-test-indicator[role="img"]')
 
-    assert not page.select("[data-vera-teaching] .function-test-indicator")
-    assert len(indicators) == len(
-        page.select("a.module-row:not([data-vera-teaching]) h4")
-    )
+    without_indicators = {
+        row["href"]
+        for row in page.select("a.module-row:has(h4)")
+        if not row.select_one(".function-test-indicator")
+    }
+    assert without_indicators == {
+        "../learn-with-vera/index.html",
+        "../studio-archive/index.html",
+    }
     assert {node["data-test-status"] for node in indicators} == {"untried"}
     assert {node["aria-label"] for node in indicators} == {
         "Da provare su casi concreti"
@@ -506,12 +511,10 @@ def test_page_resets_every_icon_and_maps_package_aliases_to_primary_pipelines():
         node["data-testing-pipeline"] for node in page.select("[data-testing-pipeline]")
     }
     assert mapped <= pipeline_catalog().keys()
-    unmapped = {
-        node.find_parent("a")["href"]
-        for node in indicators
-        if not node.has_attr("data-testing-pipeline")
-    }
-    assert unmapped == {"../studio-archive/index.html"}
+    assert all(node.has_attr("data-testing-pipeline") for node in indicators)
+    assert page.select_one(
+        '[data-vera-workflow="archive-organization"] [data-testing-pipeline="archive-organization"]'
+    )
     assert {"adversarial-opinion", "report-enti-locali"} <= mapped
     assert "studio-archive" not in mapped
     assert page.select_one('script[src="../vera-testing-status.js"]') is not None
