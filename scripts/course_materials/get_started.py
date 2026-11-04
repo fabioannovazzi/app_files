@@ -6,7 +6,7 @@ import html
 import json
 from pathlib import Path
 
-from course_start import add_course_start
+from course_start import add_course_start, course_indicator
 
 __all__ = ["render_introduction"]
 
@@ -67,7 +67,7 @@ def render_introduction(root: Path, destination: Path) -> str:
     return (
         '<section id="inizia-con-vera" aria-labelledby="inizia-con-vera-title">'
         '<h2 id="inizia-con-vera-title"><a href="vera/get-started/it/course.html">'
-        "Inizia a usare Vera</a></h2>"
+        f"Inizia a usare Vera</a>{course_indicator('get-started')}</h2>"
         '<p class="lead">Prova un lavoro con file fittizi già preparati: '
         "impara cosa chiedere, quali file fornire, come leggere il risultato e come modificarlo.</p>"
         "<p>Ti proponiamo 3–4 funzioni utili per il tuo lavoro e ne proviamo una sola. "

@@ -586,6 +586,9 @@ class Store:
                         data.get("understanding"),
                         "user understanding and remaining questions",
                     )
+                    from course_completion import completion
+
+                    lesson["public_completion"] = completion(lesson["workflow_id"])
                     lesson["status"] = "complete"
                     lesson.pop("worker_token", None)
                     if all(item["status"] == "complete" for item in state["lessons"]):
@@ -743,6 +746,16 @@ def main(argv: list[str] | None = None) -> int:
                     "Mutations require --revision from status and --input JSON"
                 )
             result = store.change(args.command, args.revision, _read(args.input))
+        if args.command in {"status", "finish"}:
+            events = [
+                lesson["public_completion"]
+                for lesson in result.get("lessons", [])
+                if lesson["status"] == "complete" and "public_completion" in lesson
+            ]
+            if events:
+                from course_completion import report
+
+                result["course_reporting"] = report(events)
         sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
     except CourseAccessError as exc:

@@ -98,6 +98,14 @@ Every visible row starts at `untried`. Explicit aliases connect the Bilancio,
 vouching, passive-invoice and financial-report rows to their actual primary
 pipeline IDs. Standalone opposing opinions and the Italian local-authority report preset have
 separate primary IDs, so unrelated legal work or ordinary reports cannot promote
-those icons. All professional function rows are mapped. Studio Archive and
-learning remain infrastructure, outside this process counter; their icons stay
-`untried`. A nested helper invocation does not manufacture a new user run.
+those icons. Studio Archive stays outside the pipeline counter and its overview
+link has no circle. The separate archive-organization workflow keeps its indicator.
+Impara con Vera has no aggregate icon. Vera's course catalogue and localized course pages use
+`GET /api/vera/course-status`, independently of these pipeline events. A new
+Codex lesson finish or Cowork written finish submits only its catalogue ID,
+random completion ID and completion time using the existing installation
+identity. Local checkpoints and queued reports survive retries. Language
+editions share a course ID. The introductory course counts only as
+`get-started`, even when it uses another course's files. A completed course
+without a classified computer has its own indicator. No historical completion
+is inferred from a guide download or a professional workflow run.

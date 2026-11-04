@@ -173,7 +173,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "8f1bd800302ff7444ded2ee35e22ef1e0e3a3dd88a9476611779bdd95170c990",
+  "catalogue_fingerprint": "3a96c982c083e63817c27a19f0ebc7956d4a1433026a396e39b8ea5bccabc8a1",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2460,11 +2460,11 @@
     "scope": "Only the product manifest/version changed in this snapshot; all 55 skill entrypoint hashes and function IDs are unchanged. Preserve all prior Geneva dispositions and limits. Windows file/process portability and isolation of invalid archive runs do not establish new jurisdiction or original-client acceptance.",
     "version": "0.1.417"
   },
-  "windows_bank_main_integration_release_binding_20261104": {
-    "integrated_main": "6ddb10c44043bd4d40e28ce893e22659daa9be7b",
-    "previous_catalogue_fingerprint": "7d9875bf9c4be3035103e80f9e1042a26d01173fce42ab997ad158f0827800dd",
-    "scope": "Skill IDs and exact entrypoint bytes match integrated main, including its bank-download scope. Existing jurisdiction judgments are retained; this refresh binds only the canonical release manifest.",
-    "version": "0.1.571"
+  "windows_course_main_integration_release_binding_20261104": {
+    "integrated_main": "2c3669d45a85e9fab4cf96200fdc202c99c6819c",
+    "previous_catalogue_fingerprint": "91aca5cc9a3667dcb09f8ebd6ac00202167b177c273e3f4cdaae4d23d5a9650a",
+    "scope": "Skill IDs and exact entrypoint bytes match integrated main, retaining its bank-download and course-completion scope. Existing jurisdiction judgments are retained; this refresh binds only the canonical release manifest.",
+    "version": "0.1.572"
   },
   "windows_lock_pdf_main_integration_20261018": {
     "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted.",

@@ -148,3 +148,26 @@ rebuilt as 0.1.571, above main and every inspected open candidate; Clara and Luc
 retain 0.1.380 and 0.1.206 because their source did not change in this integration.
 No release check or product integrity rule was weakened. Final package checks and
 fresh current-head CI remain required.
+
+The bank-main candidate `ece61a1fd` passed its native Windows eight-plus-two
+regressions, 432 local package checks, and 108 CI checks before main advanced
+again through PR #949 to `2c3669d45` (Vera course-completion status, version
+0.1.569). Only this repair's two unfinished obsolete workflows were cancelled;
+neither a product failure nor customer recovery was inferred. This integration
+retains main's course-completion/onboarding implementation and its common course
+projection/catalogue changes. Generated and release-metadata conflicts are
+regenerated; the actual Windows verifier and Archive selector remain unchanged.
+The new candidate uses distinct cache identities Vera 0.1.572, Clara 0.1.381 and
+Lucia 0.1.207. Fresh current-head CI and artifacts are required again. The
+authorised customer email remains unsent until deployment and public ZIP
+verification; no inter-chat coordination message has been authorised or sent.
+
+This combined source passed 435 focused tests (eight native Windows cases
+skipped on macOS), including course completion, product scope, teaching, bank
+downloads, incident/native execution and both startup repairs. The runtime suite
+passed 326 tests with eight Windows skips and 81.91% coverage. All 12 host
+distributions rebuilt with local MCP startup checks at 0.1.572/0.1.381/0.1.207.
+Customer-machine recovery remains unverified.
+
+Final package/update/index checks passed 432 tests with two environment skips;
+all three Codex ZIP/source drift checks passed after the complete rebuild.

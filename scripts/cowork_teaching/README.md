@@ -39,8 +39,9 @@ for resumption; it must inspect those files again before treating work as comple
 Existing destinations are rejected, preserving a paused lesson.
 
 Claude processes chat and files through the user's Anthropic account. A connected
-folder is not an offline-processing or host-retention guarantee. No course data,
-answers or progress are sent to Mparanza. The skill forbids hosted feedback,
+folder is not an offline-processing or host-retention guarantee. Vera's separate finish command
+reports the catalogue ID, a random completion ID and the time through the
+existing installation identity. Lesson files, answers and notes stay local. The skill forbids hosted feedback,
 interviews and receipt stamping; Vera's existing directory marker also suppresses
 receipt transmission on direct helper retries. Public research required by an
 installed procedure retains that procedure's normal boundaries. Real client work

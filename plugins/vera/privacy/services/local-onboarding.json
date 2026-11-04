@@ -75,7 +75,8 @@
     "scripts/_desktop_teaching.py",
     "skills/learn-with-vera/references/chat-button.md",
     "scripts/check_for_update.py",
-    "scripts/change_requests.py"
+    "scripts/change_requests.py",
+    "scripts/course_completion.py"
   ],
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/courseware",
@@ -92,7 +93,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "89b18a32909b420cc82f1121a1671fa241881db91e8fb39358f185bdb19b1842"
+    "source_fingerprint": "bffd1612f998df2ea1117fed79b0a41fb052622ad751a6615d7f1ade82f29c11"
   },
   "runtime_profiles": [
     "openai-codex"
@@ -101,7 +102,7 @@
   "security_controls": [
     {
       "id": "local-state-only",
-      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved. The optional Get started with Vera introduction reuses a single supported course and its separate practice; a short resume note stays beside the lesson outputs. It does not reset or complete the separate multi-course programme or introduce a model API, hosted interview or feedback recipient. The Patent Box kit supplies fictional software evidence and separate demo/practice ledgers. Rendering writes no approval or calculated result; actual selected files run through the same tutorial ledger. Historical synthetic rules and synthetic review cannot authorize real-client calculations; learner participation and understanding remain unconfirmed by fixture runs.",
+      "control": "The stdlib helper retains a confirmed work/preferences summary, language, thread IDs, lesson evidence hashes and optional feedback only in the OS user local onboarding directory. It stores no audio and implements no network transport or hosted interview. The native OpenAI host sees the conversation and the local summaries/results it reads, under the ordinary OpenAI model-processing boundary. This also applies to local ChatGPT Work; the current register calls that OpenAI account boundary openai-codex, and does not certify cloud access to local files. Repeated teaching reads the same confirmed profile and saves each session separately, with a local example collection derived from those checkpoints. The profile is not copied into a hosted teaching service. A specifically requested first course can create its local session and native chat pair without a profile interview; the profile remains unset, and no introduction or understanding is marked complete. Existing introduction records are preserved. The optional Get started with Vera introduction reuses a single supported course and its separate practice; a short resume note stays beside the lesson outputs. It does not reset or complete the separate multi-course programme or introduce a model API, hosted interview or feedback recipient. The Patent Box kit supplies fictional software evidence and separate demo/practice ledgers. Rendering writes no approval or calculated result; actual selected files run through the same tutorial ledger. Historical synthetic rules and synthetic review cannot authorize real-client calculations; learner participation and understanding remain unconfirmed by fixture runs. On completion only, the separate course reporting helper sends the course ID, random completion ID and time with the existing installation identity. Notes, feedback, files and the local profile stay outside that request.",
       "implemented_by": [
         "scripts/local_onboarding.py",
         "skills/vera/references/local-onboarding.md",

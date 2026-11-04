@@ -33,6 +33,7 @@ The suggestions are next-course options, not a compulsory programme.
 Follow the parent teaching skill's host contract. In Codex use a repeatable
 single-course session (`local_teaching.py begin`) for the chosen real workflow;
 do not enroll this short introduction in the multi-course onboarding helper.
+Set `course_id` to `get-started` in the begin request and keep `workflow_id` set to the exercise. In Cowork add `--introduction` to prepare. Finish this introductory course only after its practice and recap. Its completion belongs to the introduction alone.
 Use the existing teacher/working pair. Explain their roles when opening them:
 questions and explanations here, execution and actual results in the working
 chat. Follow the normal voice controls and visibility checks.

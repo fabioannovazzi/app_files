@@ -1060,7 +1060,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "b819790ef1943aad901594082b070344c8742bae83cf6aa27477a0f33ffcc7f3",
+      "sha256": "9432f5e69e2f7443f993eae59cc162cba5d249d6f78ac7bcb73f52f775bb174b",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "274942bb7642543394ef5476e1b53bb73aa8d2734e95e68289658e5b46c8458e"
+      "source_sha256": "0eccc569605af7631766bbe87afc3ad5060c6a96d13c80803993e46806c1e15e"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",

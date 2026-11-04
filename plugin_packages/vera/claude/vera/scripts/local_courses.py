@@ -1,80 +1,59 @@
-"""Prepare written Cowork lessons from this installation's reviewed catalogue."""
+"""Vera's written lessons report completion separately from kit preparation."""
 
 from __future__ import annotations
 
 import argparse
+import io
 import json
 import sys
+from contextlib import redirect_stdout
 from pathlib import Path
+
+from course_completion import finish_written
+from written_course_materials import main as prepare_materials
 
 __all__ = ["main"]
 
-PLUGIN_ROOT = Path(__file__).resolve().parents[1]
-sys.path.insert(0, str(PLUGIN_ROOT / "vendor/modules"))
-from courseware.access import CourseAccessError, verify_course_access  # noqa: E402
-from courseware.library import CourseLibrary  # noqa: E402
-
-
-def _run() -> int:
-    """List or prepare a kit without executing a workflow or recording completion."""
-    parser = argparse.ArgumentParser(description=__doc__)
-    commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("list")
-    preflight = commands.add_parser("preflight")
-    preflight.add_argument("--output-dir", type=Path, required=True)
-    prepare = commands.add_parser("prepare")
-    prepare.add_argument("workflow")
-    prepare.add_argument("--language", required=True)
-    prepare.add_argument("--output-dir", type=Path, required=True)
-    args = parser.parse_args()
-    eligible = {
-        path.parent.name.removeprefix("mparanza-")
-        for path in (PLUGIN_ROOT / "skills").glob("*/SKILL.md")
-    }
-    library = CourseLibrary(PLUGIN_ROOT, eligible)
-    if args.command == "list":
-        print(json.dumps(library.catalog(), ensure_ascii=False, indent=2))
-        return 0
-    destination = args.output_dir.expanduser().absolute()
-    if destination.resolve().is_relative_to(PLUGIN_ROOT.resolve()):
-        raise ValueError("Choose a lesson folder outside the installed plugin")
-    if args.command == "preflight":
-        sys.stdout.write(json.dumps(verify_course_access([destination])) + "\n")
-        return 0
-    result = library.render(args.workflow, args.language, destination)
-    # Native session handoffs do not apply to a written single-conversation lesson.
-    (destination / "execution-request.json").unlink(missing_ok=True)
-    result.pop("execution_request", None)
-    result["mode"] = "cowork-written-single-conversation"
-    result["prepared_artifacts"] = [
-        item
-        for item in result["prepared_artifacts"]
-        if Path(item["path"]).name != "execution-request.json"
-    ]
-    (destination / "course-provenance.json").write_text(
-        json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
-    )
-    (destination / "lesson-progress.md").write_text(
-        f"# {library.product}: {args.workflow}\n\nLanguage: {args.language}\n\n"
-        "Status: prepared, not executed.\n\n"
-        "Demonstration: not started.\nPractice: not started.\n"
-        "Understanding: not confirmed.\n\n"
-        "Next step: inspect the fictional inputs and explain the requested result.\n",
-        encoding="utf-8",
-    )
-    # Suppresses tutorial receipt transport when a normal workflow helper is reused.
-    (destination / ".vera-onboarding-local-only").touch()
-    print(json.dumps(result, ensure_ascii=False, indent=2))
-    return 0
-
 
 def main() -> int:
-    """Return a structured blocker so the teacher can guide permission recovery."""
-    try:
-        return _run()
-    except CourseAccessError as exc:
-        sys.stdout.write(json.dumps(exc.as_dict()) + "\n")
-        return 2
+    """Delegate shared preparation and bind Vera's introductory or specialist course."""
+    if sys.argv[1:2] == ["finish"]:
+        parser = argparse.ArgumentParser(description="Finish the reviewed Vera lesson")
+        parser.add_argument("--output-dir", type=Path, required=True)
+        parser.add_argument("--demo-output", type=Path, required=True)
+        parser.add_argument("--practice-output", type=Path, required=True)
+        parser.add_argument("--confirmed-understanding", action="store_true")
+        args = parser.parse_args(sys.argv[2:])
+        try:
+            result = finish_written(
+                args.output_dir,
+                args.demo_output,
+                args.practice_output,
+                args.confirmed_understanding,
+            )
+        except (OSError, ValueError) as error:
+            parser.exit(2, str(error) + "\n")
+        sys.stdout.write(json.dumps(result) + "\n")
+        return 0
+    if sys.argv[1:2] == ["prepare"] and "--introduction" in sys.argv[2:]:
+        sys.argv.remove("--introduction")
+        output = io.StringIO()
+        with redirect_stdout(output):
+            code = prepare_materials()
+        if code:
+            sys.stdout.write(output.getvalue())
+            return code
+        result = json.loads(output.getvalue())
+        result["course_id"] = "get-started"
+        provenance = Path(result["course"]).with_name("course-provenance.json")
+        tmp = provenance.with_suffix(".tmp")
+        tmp.write_text(
+            json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+        )
+        tmp.replace(provenance)
+        sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
+        return 0
+    return prepare_materials()
 
 
 if __name__ == "__main__":

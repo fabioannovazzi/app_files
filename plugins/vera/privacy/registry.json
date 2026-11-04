@@ -1651,6 +1651,7 @@
         "privacy/workstreams/learn-with-vera.json": [
           "scripts/local_onboarding.py",
           "scripts/local_onboarding_case.py",
+          "scripts/local_teaching.py",
           "scripts/onboarding_session_start.py"
         ],
         "privacy/workstreams/studio-archive.json": [

@@ -1,0 +1,18 @@
+[data-vera-course], .course-key {
+  display: inline-block;
+  box-sizing: border-box;
+  width: .72rem;
+  height: .72rem;
+  margin-inline-start: .4rem;
+  border: 1px solid #145394;
+  border-radius: 50%;
+  vertical-align: .03em;
+  background: transparent;
+}
+[data-level="unknown"], [data-vera-course]:not([data-level]) { border-style: dashed; }
+[data-level="completed"] { background: radial-gradient(#145394 26%, transparent 30%); }
+[data-level="agent"] { background: conic-gradient(#145394 0 25%, transparent 25%); }
+[data-level="tried"] { background: linear-gradient(to right, #145394 50%, transparent 50%); }
+[data-level="repeated"] { background: #145394; }
+.course-legend { display: flex; flex-wrap: wrap; gap: .35rem 1.2rem; font-size: .9rem; }
+.course-legend span { white-space: normal; }

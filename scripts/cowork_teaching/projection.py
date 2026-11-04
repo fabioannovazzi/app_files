@@ -145,6 +145,18 @@ def add_written_teaching(
         .encode()
     )
     if product == "vera":
+        entries["scripts/written_course_materials.py"] = entries[
+            "scripts/local_courses.py"
+        ]
+        entries["scripts/local_courses.py"] = (
+            template / "vera_runtime.py"
+        ).read_bytes()
+        entries["scripts/course_completion.py"] = source["scripts/course_completion.py"]
+        skill_path = "skills/learn-with-vera/SKILL.md"
+        entries[skill_path] = entries[skill_path].replace(
+            b"Do not send lesson files, answers, progress or feedback to Mparanza.",
+            b"Keep lesson files, answers, notes and feedback local. Once you inspect both actual outputs and the learner confirms understanding, run scripts/local_courses.py finish --output-dir <lesson-directory> --demo-output <actual-demo> --practice-output <actual-practice> --confirmed-understanding. It reports only the completed course ID, random event ID and time using the existing reporting identity. Do not start a professional usage run for a tutorial exercise. If delivery is pending, keep the lesson complete and retry finish with the same files.",
+        )
         introduction = "skills/learn-with-vera/references/"
         for name in ("get-started.md", "get-started.json"):
             entries[introduction + name] = source[introduction + name]
