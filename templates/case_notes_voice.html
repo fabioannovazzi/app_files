@@ -5,13 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Clara Voice</title>
     <link rel="icon" type="image/png" href="https://mparanza.com/images/MPARANZA-FAVICON.png" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
     <style>
+      @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+      @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+
       :root {
         --ink: #17201b;
         --muted: #66736b;
@@ -377,6 +374,10 @@
   line-height: 1.5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+/* Hosts may pin their body font; keep the app content on its own typeface. */
+:root body > :not(script, style) {
+  font-family: var(--font-ui);
 }
 :root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
 :root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }

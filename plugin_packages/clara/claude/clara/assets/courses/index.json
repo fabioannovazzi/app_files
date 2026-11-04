@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "ab35efb26b7bfc7374c7b69445cd54bc43d851e158d6398fe8294f07e85fe39e",
+      "sha256": "47517a8bcefa27ff08e4ac3aa3c267a4ceae63168240d43be5cca01a1c1a3472",
       "languages": [
         "it",
         "en",
@@ -33,7 +33,7 @@
     },
     "advisory-case-director": {
       "path": "advisory-case-director/course.json",
-      "sha256": "3f6b0b879a75e945937a985a8551a3718e46a565677541633c5b6918f70aca9d",
+      "sha256": "c619c45237c378ce311f39296394f542f24e35768ac59f8cc0c035abefd4f26e",
       "languages": [
         "it",
         "en",
@@ -62,7 +62,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "f7dc047f753a060315495786061cda77883419814859169e0363d4b088ce3831",
+      "sha256": "ee0a70593a5568da4219e8bf01cc59664031215534e336409937ea7b77828cef",
       "languages": [
         "it",
         "en",
@@ -91,7 +91,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "fc77f5dd6715060801b8a9e9a9f17ad6b514f1c7e37ced45b36cc0644a693a2f",
+      "sha256": "9237ff276576e9d01e886382f42416c476caf15ac5cc973ab366ee2a144084c6",
       "languages": [
         "it",
         "en",
@@ -120,7 +120,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "a2ddff10b442463abaca104694a1d3b7c1c63ea74367c12c298ee3f5a792bc5f",
+      "sha256": "20d196d877cbe276369f06d8a510502ea920adc006c021bf646d91215e945160",
       "languages": [
         "it",
         "en"
@@ -140,7 +140,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "4f6ac75aa89340253ad1c51267c0d02821a620aadb8dda8c0d28c3d1db132929",
+      "sha256": "f20ad7b16b6d103c381e62af46ba0741a93c69480c0fcfb15494ca7c64996123",
       "languages": [
         "it",
         "en",
@@ -169,7 +169,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "c37983c09f3e66ccc23a7eeac1fcb2ae4882c9eebe52c3b743cc0321e154f891",
+      "sha256": "b2dd7e3a0a055f535d247c20f6c919a4d5f718d6031af369c68010ba7e6551e1",
       "languages": [
         "it",
         "en",
@@ -194,7 +194,7 @@
         "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
         "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
       },
-      "source_sha256": "79be050090e33e2f41c8fbc47578a0215c3479b040165ba7616502423c04ef6e"
+      "source_sha256": "ea968eac4bc2aa5bc280fb2c3b4059507e8ca6c86b165743436646a827e450a0"
     }
   }
 }

@@ -31,16 +31,19 @@ __all__ = ["CSS_SURFACES", "HTML_SURFACES", "expected_resources", "main"]
 ROOT = Path(__file__).resolve().parents[1]
 LOGGER = logging.getLogger(__name__)
 CSS_SURFACES = (
+    "static/shared/incident-recovery.css",
     "plugins/vera/ui/workspace.css",
     "plugins/vera/ui/research-sources.css",
     "plugins/browser-automation/ui/agenzia.css",
     "plugins/bilancio-xbrl-it/ui/workspace.css",
 )
 HTML_SURFACES = (
+    "plugins/clara/ui/report.html",
     "plugins/prompt-optimizer/assets/legal-tax-model.html",
     "plugins/lucia/assets/playbook-editor.html",
     "plugins/apertura-pratica/assets/apertura-pratica-review.html",
     "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
+    "templates/hosted_interview_output.html",
     "templates/hosted_interview.html",
     "templates/case_notes_voice.html",
     "templates/research_video_voice.html",

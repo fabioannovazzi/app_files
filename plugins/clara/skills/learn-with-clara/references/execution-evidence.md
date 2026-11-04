@@ -52,7 +52,7 @@ require the normal live explanation, participation and workflow review.
 ## Interactive budget reports
 
 For Reporting Engine's budget route, open the actual dashboard with its own
-`scripts/budget_report_preview.py --report <report>/management_control_dashboard.html`
+`clara_report_open` with the selected absolute dashboard path
 from the Reporting Engine component. Give the learner the returned browser link;
 do not ask them to run a command or read HTML source. Keep the native preview
 running while using month and cumulative controls. It needs the adjacent native

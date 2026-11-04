@@ -5,6 +5,12 @@
       "args": [
         "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
       ]
+    },
+    "claraReports": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/report_mcp.cjs"
+      ]
     }
   }
 }

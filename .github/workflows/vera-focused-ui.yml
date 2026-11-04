@@ -1,4 +1,4 @@
-name: Vera focused workflow UI
+name: Product workflow UI
 on:
   pull_request:
   push:
@@ -47,11 +47,24 @@ jobs:
           python -m isort --check-only scripts/vera_ui_retirement.py tests/plugins/test_vera_ui_retirement.py
           python -m mypy --follow-imports=skip --ignore-missing-imports scripts/vera_ui_retirement.py
           python -m bandit -q -ll scripts/vera_ui_retirement.py
+      - name: Verify Clara and Lucia native controls and retired inspectors
+        run: |
+          python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_product_native_app_protocol.py tests/plugins/test_lucia_playbook.py tests/plugins/test_lucia_matter_native.py tests/plugins/test_clara_budget_preview.py tests/plugins/test_lucia_review_engine_mcp.py tests/scripts/test_product_ui_retirement.py tests/scripts/test_install_local_vera.py --cov --cov-config=tests/product_native_ui.coveragerc --cov-report=term-missing --cov-fail-under=80 --junitxml=product-native-ui.xml
+          python -m black --check plugins/lucia/scripts/method_mcp.py plugins/lucia/scripts/matter_mcp.py plugins/clara/scripts/report_mcp.py scripts/product_ui_retirement.py scripts/install_local_vera.py tests/plugins/test_product_native_app_protocol.py tests/plugins/test_lucia_matter_native.py tests/plugins/test_clara_budget_preview.py tests/plugins/test_lucia_review_engine_mcp.py tests/scripts/test_product_ui_retirement.py tests/scripts/test_install_local_vera.py
+          python -m isort --check-only plugins/lucia/scripts/method_mcp.py plugins/lucia/scripts/matter_mcp.py plugins/clara/scripts/report_mcp.py scripts/product_ui_retirement.py scripts/install_local_vera.py tests/plugins/test_product_native_app_protocol.py tests/plugins/test_lucia_matter_native.py tests/plugins/test_clara_budget_preview.py tests/plugins/test_lucia_review_engine_mcp.py tests/scripts/test_product_ui_retirement.py tests/scripts/test_install_local_vera.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/lucia/scripts/method_mcp.py plugins/lucia/scripts/matter_mcp.py plugins/clara/scripts/report_mcp.py scripts/product_ui_retirement.py scripts/install_local_vera.py
+          python -m bandit -q -ll plugins/lucia/scripts/method_mcp.py plugins/lucia/scripts/matter_mcp.py plugins/clara/scripts/report_mcp.py scripts/product_ui_retirement.py scripts/install_local_vera.py
+          node --check plugins/lucia/scripts/method_mcp.cjs
+          node --check plugins/lucia/scripts/matter_mcp.cjs
+          node --check plugins/lucia/scripts/review_engine_mcp.cjs
+          node --check plugins/clara/scripts/report_mcp.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: vera-focused-ui-results
-          path: vera-focused-ui.xml
+          path: |
+            vera-focused-ui.xml
+            product-native-ui.xml
 
   one-review:
     runs-on: ubuntu-latest
@@ -69,7 +82,7 @@ jobs:
       - name: Verify that exactly one review opens and only relevant controls are visible
         env:
           VERA_REVIEW_SCREENSHOTS: /tmp/vera-review-screenshots
-        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py tests/plugins/test_clara_report_browser.py tests/plugins/test_lucia_method_browser.py tests/plugins/test_lucia_matter_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

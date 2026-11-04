@@ -108,9 +108,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "69f375cb71a3cab7d5b42f951cc6dddbb8685860b3fd715a552113f00d44f865"
+    "source_fingerprint": "ec872191761a99ca765644e236aeb9651cb073bcb13b66240a8c13478cce5ee0"
   },
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/desktop_teaching",

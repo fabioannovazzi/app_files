@@ -180,36 +180,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module set-o
 
 ## MCP Review UI
 
-Use MCP/HTML for the generated overlap source-data review. Do not build HTML for
-simple intake, item/set/period mapping, selected-set choice, or a 2-3 option
-business decision; those remain chat choices in Default mode and native
-Plan-mode choices when this conversation is in Plan mode and
-`request_user_input` is available.
-
-After the deterministic run writes `set_overlap/review_payload.json`, prefer
-the local MCP path when available:
-
-1. Read `set_overlap/run_intake.json`, `set_overlap/review_payload.json`,
-   `set_overlap/ui_decisions.json`, and `set_overlap/final_artifacts.json`.
-2. Call `validate_set_overlap_review` with the review payload and optional
-   handoff JSON objects before rendering.
-3. If validation succeeds, call `render_set_overlap_review` with the same
-   payload objects so Claude can show the local HTML widget
-   `ui://widget/set-overlap-review.html`.
-4. Use the widget to review selected sets, exact intersections, pairwise
-   overlaps, chart audits, `set_overlap_context.json`, CSV source tables, the
-   source-pack manifest, and generated chart artifacts.
-5. Use `save_set_overlap_decisions` to persist accepted/edited/rejected
-   decisions to `set_overlap/ui_decisions.json`, then
-   `apply_set_overlap_decisions` to write `applied_decisions.json` and update
-   `final_artifacts.json` status before treating the overlap package as
-   reviewed. If MCP decision tools are unavailable, use a fallback review file
-   in the output folder.
-
-If MCP rendering is unavailable, fall back to a markdown review summary from
-`review_payload.json`, `set_overlap_context.json`,
-`set_overlap_intersections.csv`, `set_overlap_pairs.csv`,
-`set_overlap_set_summary.csv`, and `set_overlap_audit.json`.
+Review the professional result in chat and its normal charts/reports. Preserve exact-version validation, explicit decisions, save/apply and regeneration requirements. No metadata inspector or standalone browser editor is shipped in this product.
 
 ## Failure Modes
 

@@ -15,6 +15,9 @@ from apertura_pratica_core import (
     _validate_decisions,
     load_json,
     prepare_review,
+)
+from apertura_pratica_core import read_pending_review as saved_review
+from apertura_pratica_core import (
     review_payload_hash,
     utc_now,
     write_json,
@@ -22,25 +25,6 @@ from apertura_pratica_core import (
 
 ASSET = Path(__file__).resolve().parents[1] / "assets" / "apertura-pratica-review.html"
 MAX_REQUEST_BYTES = 512 * 1024
-
-
-def saved_review(
-    run_dir: Path, review: dict[str, Any]
-) -> tuple[dict[str, Any] | None, str]:
-    """Restore only decisions bound to the current intake and review content."""
-    path = run_dir / "pending_review_decisions.json"
-    if not path.exists():
-        return None, "none"
-    try:
-        pending = load_json(path)
-        _validate_decisions(
-            pending,
-            intake=load_json(run_dir / "matter_intake.json"),
-            review_payload=review,
-        )
-    except ValidationError:
-        return None, "unavailable"
-    return pending, "current"
 
 
 class ReviewHandler(BaseHTTPRequestHandler):

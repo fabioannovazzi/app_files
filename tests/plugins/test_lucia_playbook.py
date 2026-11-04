@@ -15,8 +15,8 @@ from legal_playbook import (
     prepare_playbook,
     read_playbook_run,
     validate_playbook,
-    write_editor,
 )
+from method_mcp import MethodApp
 
 
 @pytest.fixture(autouse=True)
@@ -124,36 +124,33 @@ def test_invalid_or_executable_configuration_is_rejected(tmp_path, patch):
         validate_playbook(value)
 
 
-def test_editor_embeds_instruction_text_as_data_and_never_overwrites_an_existing_file(
-    tmp_path,
-):
+def test_native_method_only_returns_selected_text_to_the_app(tmp_path):
     path, value = instructions(tmp_path)
     value["firm_positions"] = '</script><script>alert("injected")</script>'
     path.write_text(json.dumps(value))
-    output = tmp_path / "editor.html"
-
-    write_editor(output, path)
-
-    html = output.read_text(encoding="utf-8")
-    assert '</script><script>alert("injected")' not in html
-    assert "\\u003c/script>" in html
+    app = MethodApp()
+    result = app.open({"directory": str(tmp_path), "filename": path.name})
+    assert value["firm_positions"] not in json.dumps(result["content"])
+    assert result["structuredContent"] == {"status": "ready"}
+    assert result["_meta"]["method"]["value"] == value
+    html = app.resource()["contents"][0]["text"]
+    assert value["firm_positions"] not in html
     assert "connect-src 'none'" in html
     assert "data:font/ttf;base64," in html
-    with pytest.raises(FileExistsError):
-        write_editor(output, path)
+    assert "URL.createObjectURL" not in html
 
 
 def test_oversized_configuration_is_not_loaded(tmp_path):
     path = tmp_path / "oversize.json"
     path.write_bytes(b" " * 1_000_001)
     with pytest.raises(ValueError, match="1 MB"):
-        write_editor(tmp_path / "editor.html", path)
+        MethodApp().open({"directory": str(tmp_path), "filename": path.name})
 
 
-def test_editor_cli_creates_a_working_standalone_file(tmp_path):
-    target = tmp_path / "studio.html"
-    assert playbook_main(["editor", "--out", str(target)]) == 0
-    assert "__PLAYBOOK_DATA__" not in target.read_text(encoding="utf-8")
+def test_standalone_editor_cli_is_retired(tmp_path):
+    with pytest.raises(SystemExit):
+        playbook_main(["editor", "--out", str(tmp_path / "studio.html")])
+    assert not (tmp_path / "studio.html").exists()
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
@@ -166,3 +163,100 @@ def test_editor_labels_cover_every_language_and_workflow(language):
     assert set(labels[language]) == set(labels["it"])
     assert len(labels[language]["workflows"]) == 5
     assert set(labels[language]["formats"]) == {"html", "xlsx", "docx"}
+
+
+def save_request(data, value, request_id="save-one"):
+    return {
+        "session": data["session"],
+        "revision": data["revision"],
+        "request_id": request_id,
+        "value": value,
+    }
+
+
+def test_native_save_preserves_old_version_reopens_and_retries_once(tmp_path):
+    path, value = instructions(tmp_path)
+    before = path.read_bytes()
+    app = MethodApp()
+    data = app.open({"directory": str(tmp_path), "filename": path.name})["_meta"][
+        "method"
+    ]
+    changed = {**value, "purpose": "Review the confidentiality period"}
+    request = save_request(data, changed)
+    saved = app.save(request)
+    assert saved == app.save(request)
+    assert path.read_bytes() == before
+    assert saved["_meta"]["method"]["value"]["version"] == 5
+    reopened = MethodApp().open(
+        {"directory": str(tmp_path), "filename": saved["_meta"]["method"]["filename"]}
+    )
+    assert reopened["_meta"]["method"]["value"]["purpose"] == changed["purpose"]
+    with pytest.raises(ValueError, match="richiesta"):
+        app.save({**request, "value": value})
+    with pytest.raises(ValueError, match="versione"):
+        app.save({**request, "request_id": "different-request"})
+    assert len(list(tmp_path.glob("studio-bianchi-v*.json"))) == 1
+
+
+def test_native_save_refuses_external_changes_and_file_collisions(tmp_path):
+    path, value = instructions(tmp_path)
+    app = MethodApp()
+    data = app.open({"directory": str(tmp_path), "filename": path.name})["_meta"][
+        "method"
+    ]
+    changed = {**value, "purpose": "new purpose"}
+    path.write_text(json.dumps(changed))
+    with pytest.raises(ValueError, match="cambiato"):
+        app.save(save_request(data, changed))
+    data = app.open({"directory": str(tmp_path), "filename": path.name})["_meta"][
+        "method"
+    ]
+    collision = tmp_path / "studio-bianchi-v5.json"
+    collision.write_text("another version")
+    with pytest.raises(FileExistsError):
+        app.save(save_request(data, {**changed, "purpose": "another purpose"}))
+    assert collision.read_text() == "another version"
+
+
+def test_native_method_folder_scope_is_not_supplied_by_form_values(tmp_path):
+    path, value = instructions(tmp_path)
+    app = MethodApp()
+    with pytest.raises(ValueError, match="cartella"):
+        app.open({"directory": str(tmp_path), "filename": "../elsewhere.json"})
+    link = tmp_path / "link.json"
+    link.symlink_to(path)
+    with pytest.raises(ValueError, match="cartella"):
+        app.open({"directory": str(tmp_path), "filename": link.name})
+    data = app.open({"directory": str(tmp_path), "filename": path.name})["_meta"][
+        "method"
+    ]
+    with pytest.raises(ValueError, match="Riapri"):
+        app.save(save_request({**data, "session": "unbound"}, value))
+    bad = {**value, "id": "../escape"}
+    with pytest.raises(ValueError):
+        app.save(save_request(data, bad))
+    source = app.import_value(
+        {"session": data["session"], "value": {**value, "id": "imported-method"}}
+    )["_meta"]["method"]
+    saved = app.save(save_request(source, source["value"]))
+    assert saved["_meta"]["method"]["filename"] == "imported-method-v4.json"
+    copy = {
+        **source["value"],
+        "id": "copy-method",
+        "version": 1,
+        "derived_from": {"id": "imported-method", "version": 4},
+    }
+    copied = app.save(save_request(saved["_meta"]["method"], copy, "copy"))
+    assert copied["_meta"]["method"]["value"]["derived_from"] == copy["derived_from"]
+    assert (tmp_path / "imported-method-v4.json").exists()
+
+
+def test_native_app_tools_use_bound_app_only_save_and_import():
+    app = MethodApp()
+    assert (
+        app.tools[0]["_meta"]["ui"]["resourceUri"] == "ui://lucia/firm-method-v1.html"
+    )
+    assert all(tool["_meta"]["ui"]["visibility"] == ["app"] for tool in app.tools[1:])
+    assert not any(
+        "directory" in tool["inputSchema"]["properties"] for tool in app.tools[1:]
+    )

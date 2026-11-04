@@ -1791,7 +1791,7 @@ def run_scatter_bubble(
             "run_intake_path": review_session.run_intake_path.name,
             "review_payload_path": review_session.review_payload_path.name,
             "ui_decisions_path": review_session.ui_decisions_path.name,
-            "review_html_path": review_session.review_html_path.name,
+            "review_note_path": review_session.review_note_path.name,
             "final_artifacts_path": review_session.final_artifacts_path.name,
             "review_item_count": review_session.review_item_count,
         }
@@ -1799,7 +1799,7 @@ def run_scatter_bubble(
             review_session.run_intake_path,
             review_session.review_payload_path,
             review_session.ui_decisions_path,
-            review_session.review_html_path,
+            review_session.review_note_path,
             review_session.final_artifacts_path,
         ):
             audit["outputs"][_relative_path(path, output_dir)] = "written"
@@ -1808,7 +1808,7 @@ def run_scatter_bubble(
             str(review_session.run_intake_path),
             str(review_session.review_payload_path),
             str(review_session.ui_decisions_path),
-            str(review_session.review_html_path),
+            str(review_session.review_note_path),
             str(review_session.final_artifacts_path),
         ]
         write_json(audit_path, audit)

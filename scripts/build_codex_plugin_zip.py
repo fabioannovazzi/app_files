@@ -1365,6 +1365,12 @@ def source_zip_entries(
                     raise ValueError(
                         "Unreviewed Vera source register: " + "; ".join(errors)
                     )
+        if plugin_dir.name in {"clara", "lucia"}:
+            from scripts.product_ui_retirement import retire_product_interfaces
+
+            retire_product_interfaces(
+                entries, f"{root}/plugins/{plugin_dir.name}/", plugin_dir.name
+            )
         if plugin_dir.name in {"clara", "lucia"} and project_vera_privacy:
             from project_product_privacy import project_privacy
 

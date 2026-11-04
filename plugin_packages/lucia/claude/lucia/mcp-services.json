@@ -9,8 +9,14 @@
     "luciaDeepResearchValidator": {
       "command": "node",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "${CLAUDE_PLUGIN_ROOT}/scripts/review_engine_mcp.cjs",
         "deep-research-validator"
+      ]
+    },
+    "luciaFirmMethod": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/method_mcp.cjs"
       ]
     },
     "luciaIncidentHost": {
@@ -19,10 +25,16 @@
         "${CLAUDE_PLUGIN_ROOT}/scripts/incident_host_mcp.cjs"
       ]
     },
+    "luciaMatterOpening": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/matter_mcp.cjs"
+      ]
+    },
     "luciaPromptOptimizer": {
       "command": "node",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
+        "${CLAUDE_PLUGIN_ROOT}/scripts/review_engine_mcp.cjs",
         "prompt-optimizer"
       ]
     },

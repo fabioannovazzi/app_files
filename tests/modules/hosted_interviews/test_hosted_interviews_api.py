@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import asyncio
 import json
+import subprocess
 import sys
 import time
 import types
@@ -275,8 +276,7 @@ def test_spanish_hosted_output_page_localizes_completed_interview(
     assert copy["campaign"] == "Campaña"
     assert copy["interviewee_role"] == "Rol de la persona entrevistada"
     assert copy["transcript_source"] == "Fuente de la transcripción"
-    assert copy["open_json_bundle"] == "Abrir paquete JSON"
-    assert copy["open_quality_review"] == "Abrir revisión de calidad"
+    assert copy["print_results"] == "Imprimir o guardar PDF"
     assert copy["quality_review"] == "Revisión de calidad"
     assert copy["key_findings"] == "Hallazgos principales"
     assert copy["dialog_transcript"] == "Transcripción del diálogo"
@@ -390,7 +390,7 @@ def test_spanish_public_interview_page_preserves_locale_for_expired_link(
     )
 
 
-def test_english_hosted_output_page_preserves_existing_copy(
+def test_english_hosted_output_page_labels_results_download(
     tmp_path: Path,
     monkeypatch,
 ) -> None:
@@ -404,12 +404,14 @@ def test_english_hosted_output_page_preserves_existing_copy(
     context = captured["context"]
     assert isinstance(context, dict)
     assert context["output_language"] == "en"
-    assert context["value_labels"] == {}
+    assert (
+        context["value_labels"]["transcript_source"]["post_call_interviewee_audio"]
+        == "Participant audio transcribed after the interview"
+    )
     copy = context["copy"]
     assert isinstance(copy, dict)
     assert copy["page_title"] == "Hosted interview output"
-    assert copy["open_json_bundle"] == "Open JSON bundle"
-    assert copy["open_quality_review"] == "Open quality review"
+    assert copy["print_results"] == "Print or save PDF"
     assert copy["not_completed_yet"] == "This interview has not been completed yet."
 
 
@@ -3179,3 +3181,41 @@ def test_incomplete_recording_preserves_live_transcript_without_provider_call(
         f"first missing audio chunk: {missing}"
         in result["interviewee_audio_transcription"]["message"]
     )
+
+
+def test_output_reader_hides_internal_counters_and_uses_local_fonts(
+    tmp_path, monkeypatch
+):
+    token, _record = _prepare_test_interview(tmp_path, monkeypatch, language="en")
+    captured = _capture_output_template(monkeypatch)
+    assert _client().get(f"/case-notes/interview/{token}/output").status_code == 200
+    context = captured["context"]
+    context["record"]["interview_campaign_id"] = "internal-campaign-not-for-readers"
+    context.update(audio_chunk_count=987654321, event_count=123456789)
+    context["completion"] = {"transcript_source": "post_call_interviewee_audio"}
+    context["review_error"] = {"error": "private-provider-error-must-not-render"}
+    # The API harness stubs Jinja. Render in a clean interpreter with real Jinja.
+    render = """import json,sys
+from jinja2 import Environment, FileSystemLoader
+context=json.load(sys.stdin)
+environment=Environment(loader=FileSystemLoader('templates'),autoescape=True)
+print(environment.get_template('hosted_interview_output.html').render(**context))
+"""
+    html = subprocess.run(
+        [sys.executable, "-c", render],
+        input=json.dumps(
+            {key: value for key, value in context.items() if key != "request"}
+        ),
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    assert "internal-campaign-not-for-readers" not in html
+    assert "987654321" not in html and "123456789" not in html
+    assert "Print or save PDF" in html
+    assert "private-provider-error-must-not-render" not in html
+    assert "post_call_interviewee_audio" not in html
+    assert "Participant audio transcribed after the interview" in html
+    assert "Open JSON bundle" not in html
+    assert "fonts.googleapis.com" not in html and "fonts.gstatic.com" not in html
+    assert "/static/shared/courses/InstrumentSans-Regular.ttf" in html

@@ -61,7 +61,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json is pending until Claude, MCP UI, or fallback review records decisions.",
         ],
         "next_actions": [
-            "Open scatter_bubble_review.html for the chart-first run UI.",
+            "Review the generated charts and report with Clara in this chat.",
             "Use scatter_bubble_context.json before interpreting chart pixels.",
             "Write codex_business_analysis.md or update the client report from reviewed source artifacts and caveats.",
         ],
@@ -105,7 +105,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json permanece pendiente hasta que Claude, la interfaz MCP o la revisión alternativa registren las decisiones.",
         ],
         "next_actions": [
-            "Abra scatter_bubble_review.html para revisar primero los gráficos de la ejecución.",
+            "Revise los gráficos y el informe con Clara en esta conversación.",
             "Utilice scatter_bubble_context.json antes de interpretar los píxeles de los gráficos.",
             "Redacte codex_business_analysis.md o actualice el informe del cliente a partir de los artefactos fuente revisados y las salvedades.",
         ],
@@ -138,7 +138,7 @@ class ReviewSessionResult:
     run_intake_path: Path
     review_payload_path: Path
     ui_decisions_path: Path
-    review_html_path: Path
+    review_note_path: Path
     final_artifacts_path: Path
     review_item_count: int
 
@@ -269,30 +269,10 @@ def _append_execution_trace(
     _write_json(run_intake_path, payload)
 
 
-def _write_standalone_review_html(output_dir: Path, payload: dict[str, Any]) -> Path:
-    """Write a run-specific HTML review page with the payload embedded."""
-
-    widget_path = (
-        Path(__file__).resolve().parents[1]
-        / "assets"
-        / ("scatter-bubble-review-widget.html")
-    )
-    html = widget_path.read_text(encoding="utf-8")
-    review_payload = payload.get("review_payload")
-    language = _normalize_language(
-        review_payload.get("language") if isinstance(review_payload, dict) else None
-    )
-    html = html.replace('<html lang="en">', f'<html lang="{language}">', 1)
-    payload_json = json.dumps(payload, ensure_ascii=False)
-    injection = (
-        "<script>" f"window.__SCATTER_BUBBLE_PAYLOAD__ = {payload_json};" "</script>"
-    )
-    if "</head>" in html:
-        html = html.replace("</head>", f"{injection}\n</head>", 1)
-    else:
-        html = f"{injection}\n{html}"
-    path = output_dir / "scatter_bubble_review.html"
-    path.write_text(html, encoding="utf-8")
+def _write_review_note(output_dir: Path, payload: dict[str, Any]) -> Path:
+    """Keep the normal chart/report handoff without a metadata inspector."""
+    path = output_dir / "scatter_bubble_review.md"
+    path.write_text("Review the generated charts and report with Clara. Discuss findings in chat; preserve explicit decisions and validation before finalizing.\n", encoding="utf-8")
     return path
 
 
@@ -666,7 +646,7 @@ def write_review_session_artifacts(
             "scatter_bubble_audit": "scatter_bubble_audit.json",
             "scatter_bubble_summary": "scatter_bubble_summary.md",
             "scatter_context": "scatter_bubble_context.json",
-            "review_html": "scatter_bubble_review.html",
+            "review_note": "scatter_bubble_review.md",
         },
         "allowed_actions": [
             "accept",
@@ -720,7 +700,7 @@ def write_review_session_artifacts(
     )
 
     run_intake_payload = _load_json(run_intake_path)
-    review_html_path = _write_standalone_review_html(
+    review_note_path = _write_review_note(
         output_dir,
         {
             "widget_type": "scatter_bubble_review",
@@ -773,7 +753,7 @@ def write_review_session_artifacts(
         run_intake_path=run_intake_path,
         review_payload_path=review_payload_path,
         ui_decisions_path=ui_decisions_path,
-        review_html_path=review_html_path,
+        review_note_path=review_note_path,
         final_artifacts_path=final_artifacts_path,
         review_item_count=len(items),
     )

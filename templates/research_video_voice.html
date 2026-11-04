@@ -6,6 +6,9 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Research Video narration | Mparanza</title>
   <style>
+      @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+      @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+
     :root { color-scheme: light; --navy: #071d49; --cyan: #00b0f0; --ink: #171816; --muted: #5d6470; --rule: #dce1e8; }
     * { box-sizing: border-box; }
     body { margin: 0; background: #fff; color: var(--ink); font-family: "Instrument Sans", Arial, sans-serif; }
@@ -104,6 +107,10 @@
   line-height: 1.5;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
+}
+/* Hosts may pin their body font; keep the app content on its own typeface. */
+:root body > :not(script, style) {
+  font-family: var(--font-ui);
 }
 :root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
 :root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }

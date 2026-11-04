@@ -60,3 +60,11 @@ readable local report through Lucia's `scripts/workflow_usage.py build-report`
 using this primary task ID; it obtains and links the signed receipt. Show the
 report with the delivered result. Report creation does not mean that the matter's
 professional analysis ran without a model.
+
+For the multi-item review, call `lucia_matter_open` with the explicitly selected
+absolute `run_dir`. Use its native local panel instead of launching
+`review_server.py` or a standalone HTML editor. Saving keeps pending decisions
+bound to the current intake and review; it does not apply them or accept the
+engagement. Preserve the component's separate confirmed apply and validation
+steps. If the panel is unavailable, review the normal documents in chat and
+leave the UI check pending.

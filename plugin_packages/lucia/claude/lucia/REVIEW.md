@@ -14,7 +14,9 @@ Privacy policy: https://mparanza.com/privacy.
 - `lucia`: Expose the packaged Lucia tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.
 - `luciaAssuranceRuntime`: Expose the limited local archive tools used by Lucia assurance.
 - `luciaDeepResearchValidator`: Review sourced legal answers and research evidence.
+- `luciaFirmMethod`: Native firm-method form; validates and saves immutable versions only in the explicitly selected studio directory. Form data stays app-only until selected for a model workflow.
 - `luciaIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
+- `luciaMatterOpening`: Native selected-matter review; restores and saves pending lawyer decisions against exact intake/review versions. Saving does not apply them or accept an engagement.
 - `luciaPromptOptimizer`: Review the legal answer plan.
 - `luciaStudioArchive`: Manage registered local client folders and engagement records.
 

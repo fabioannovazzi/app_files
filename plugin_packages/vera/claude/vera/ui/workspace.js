@@ -142,10 +142,10 @@
       root.append(recoveryButton);
     }
   }
-  function request(method, params) {
+  function request(method, params, timeoutMs) {
     const id = ++requestId;
     return new Promise((resolve, reject) => {
-      const timer = setTimeout(() => { pending.delete(id); reject(new Error(method === "ui/message" ? "La chat non ha confermato la ricezione. Controlla le chat aperte prima di riprovare." : "Il servizio non ha risposto. Riapri il lavoro per verificare lo stato salvato.")); }, method === "ui/message" ? 300000 : 120000);
+      const timer = setTimeout(() => { pending.delete(id); reject(new Error(method === "ui/message" ? "La chat non ha confermato la ricezione. Controlla le chat aperte prima di riprovare." : "Il servizio non ha risposto. Riapri il lavoro per verificare lo stato salvato.")); }, timeoutMs ?? (method === "ui/message" ? 300000 : 120000));
       pending.set(id, { resolve, reject, timer });
       window.parent.postMessage({ jsonrpc: "2.0", id, method, params }, "*");
     });
@@ -317,6 +317,13 @@
       if (catalogue.can_prepare) main.append(button("Importa documenti", () => renderImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Appunti del colloquio", () => renderNoteImport({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})), button("Prepara un lavoro", renderPreparation), button("Nuova domanda per il Business plan", () => renderPlanningAuthor({client_id:catalogue.client_id,engagement_id:catalogue.engagement_id})));
     }
     const list = node("div", undefined, "works");
+    list.addEventListener("click", event => {
+      if (!event.target.closest("button") || host.hostContext?.displayMode === "fullscreen") return;
+      // Selecting work opens its detailed view; no separate display-mode button.
+      request("ui/request-display-mode", { mode: "fullscreen" }, 3000).then(result => {
+        if (result?.mode) host.hostContext = { ...host.hostContext, displayMode: result.mode };
+      }).catch(() => { /* Hosts may keep the usable view inline. */ });
+    });
     const records = archive && catalogue.level !== "runs" ? (catalogue.clients || catalogue.engagements || []) : catalogue.works;
     if (records.length > 1) search(main, archive ? "Cerca nella pagina corrente" : "Cerca cliente, incarico o funzione", rows);
     else query = "";

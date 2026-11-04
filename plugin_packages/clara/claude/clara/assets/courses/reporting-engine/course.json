@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/reporting-engine/scripts/budget_report_preview.py",
-      "sha256": "204dc6e63c034948e85236d3f6ac9c47a4e5f738f368d0a587b52c2259243b49"
+      "sha256": "fa7668661b094590d62e39678f5dfa4cb39f07e355dcb8fbfd4ed095ef406a6e"
     },
     {
       "path": "modules/reporting-engine/scripts/check_compatibility.py",
@@ -207,6 +207,14 @@
       "sha256": "05f0d8e338742e9b04ba98f9e4af4ca336354aea7c40fc16579f177d2b10d4e2"
     },
     {
+      "path": "scripts/report_mcp.cjs",
+      "sha256": "d279a1d47130b5bd8cff393aa9772ff7b2958fdd419c423845a590e347aafd75"
+    },
+    {
+      "path": "scripts/report_mcp.py",
+      "sha256": "2f602685fdc76252f309a5e2da3b89d5b57a5480619d88963b3cc63b275a021a"
+    },
+    {
       "path": "scripts/selective_reporting.py",
       "sha256": "3c99afa7d416625bd94d1dc0aab41ea354df662f0362098f3b431a57fecba8ba"
     },
@@ -220,7 +228,11 @@
     },
     {
       "path": "skills/mparanza-reporting-engine/SKILL.md",
-      "sha256": "ec340168ecef698dd2b66603840f186eace8a39ac4a699d5660580687ba3a164"
+      "sha256": "4ebf0c13b8ebf96428d0fb5648838a27944e035dccc672896312bcb32fb83bd1"
+    },
+    {
+      "path": "ui/report.html",
+      "sha256": "12bc7b33c1ca80bf113fa14d0a0499d9d2b5db8fb65dd36de6d0964e538b0944"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -461,5 +473,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e9e76c60d2852fd92985efc997be624f88d9196f670252601bea7bb1664c8025"
+  "canonical_course_sha256": "cb6a2761378ed3b04a4001c12063b1d7da537c1835527e790d46057c4a076114"
 }

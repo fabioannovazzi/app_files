@@ -13,6 +13,7 @@ Privacy policy: https://mparanza.com/privacy.
 
 - `clara`: Expose the packaged Clara tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.
 - `claraIncidentHost`: Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.
+- `claraReports`: Read-only native budget report; checks its receipt and bundled script, sends full HTML only to the app, and makes no publication or external request.
 
 ## Lesson downloads
 Lesson data is fetched when the user starts or resumes a lesson, not installation.

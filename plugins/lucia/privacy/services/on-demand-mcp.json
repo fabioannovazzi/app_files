@@ -6,7 +6,12 @@
     ".mcp.json",
     "mcp-services.json",
     "scripts/on_demand_mcp.cjs",
-    "scripts/assurance_runtime_mcp.cjs"
+    "scripts/assurance_runtime_mcp.cjs",
+    "scripts/method_mcp.py",
+    "scripts/method_mcp.cjs",
+    "scripts/matter_mcp.py",
+    "scripts/matter_mcp.cjs",
+    "scripts/review_engine_mcp.cjs"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/on_demand_mcp.cjs",
@@ -15,7 +20,8 @@
     "scripts/build_product_mcp_catalog.py",
     "scripts/build_product_mcp_catalog.cjs",
     "scripts/build_codex_plugin_zip.py",
-    "scripts/build_claude_plugin_zip.py"
+    "scripts/build_claude_plugin_zip.py",
+    "scripts/product_ui_retirement.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -27,7 +33,7 @@
   "security_controls": [
     {
       "id": "exact-owner-routing",
-      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply. The legacy Codex entry resolves its relative launcher against the plugin working directory. Portable Codex and Cowork packaging project their respective supported root placeholders without adding filesystem authority. Vera may normalize app display metadata, leaving professional payloads and service authority unchanged.",
+      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply. The legacy Codex entry resolves its relative launcher against the plugin working directory. Portable Codex and Cowork packaging project their respective supported root placeholders without adding filesystem authority. Vera may normalize app display metadata, leaving professional payloads and service authority unchanged. Useful product workflow controls are owned by the registered native report, firm-method or matter-review apps. Redundant metadata renderers and resources are not advertised by Lucia’s review-engine adapter; validation, model-policy checks and explicit save/apply tools remain available. No retired renderer grants a second app route.",
       "implemented_by": [
         "scripts/on_demand_mcp.cjs",
         "mcp-services.json"
@@ -60,9 +66,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "954dc08eadf00c00c35177701fe912afda766842e45928cfed322067567f839e"
+    "source_fingerprint": "f0a02091d9788192eaaeef4612d31b12786a6f85e206f54384a1cb8fa6f728fa"
   }
 }

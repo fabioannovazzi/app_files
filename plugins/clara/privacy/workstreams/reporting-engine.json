@@ -29,7 +29,10 @@
     "scripts/bounded_process.py",
     "scripts/artifact_publication.py",
     "scripts/case_store.py",
-    "modules/reporting-engine/catalog"
+    "modules/reporting-engine/catalog",
+    "scripts/report_mcp.py",
+    "scripts/report_mcp.cjs",
+    "ui/report.html"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -65,7 +68,7 @@
       {
         "id": "budget-report-context",
         "purpose": "Prepare and interpret a reviewed Actual/Budget/Forecast report",
-        "content": "Source-role inspection includes filenames, columns/types and up to 10 preview rows per table. The model/professional authors mappings, audience and forecast assumptions. After local calculations, model_context.json includes all metric IDs and values, controls and coverage, source hashes, up to 60 calculated rows per section and 60 budget comparison rows with total counts. Raw export populations, original filenames and full pack JSON are excluded from this default post-calculation projection. Directly opening source files adds their read content to model context. The report contains all compiled views and optionally customer, supplier or service names. Clara reuses the management-control core through Reporting Engine with its ordinary project/output scope; it does not require Vera Studio Archive. No automatic redaction is applied.",
+        "content": "Source-role inspection includes filenames, columns/types and up to 10 preview rows per table. The model/professional authors mappings, audience and forecast assumptions. After local calculations, model_context.json includes all metric IDs and values, controls and coverage, source hashes, up to 60 calculated rows per section and 60 budget comparison rows with total counts. Raw export populations, original filenames and full pack JSON are excluded from this default post-calculation projection. Directly opening source files adds their read content to model context. The report contains all compiled views and optionally customer, supplier or service names. Clara reuses the management-control core through Reporting Engine with its ordinary project/output scope; it does not require Vera Studio Archive. No automatic redaction is applied. The native local report app verifies the explicitly selected dashboard against its execution receipt and exact bundled presentation script. Entire compiled HTML is sent to the app through app-only tool metadata; the model receives only ready/error status from the opener, not the report HTML. Period controls switch precomputed views in a sandboxed frame without same-origin permission. Refresh rejects changed reports or receipts and requires explicit reopening. No loopback preview server or automatic publication is used. Direct source/model-context reads and requested Sites publication retain their separate declared boundaries; unavailable native app support leaves visual review pending. The app applies its shared typography to the isolated verified preview without changing the saved report or its receipt.",
         "runtime_profiles": [
           "openai-codex",
           "anthropic-cowork",
@@ -232,10 +235,10 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "0cdabbca58ead39a8880d3b4f709002093065fd5dbd97dc4fd195f68f106e286"
+    "source_fingerprint": "514420895a712109f50aef4113f4702222b936ec497956950580d599b2163032"
   },
   "governed_repository_paths": [
     "plugins/management-control-pack/scripts",
@@ -245,6 +248,8 @@
     "plugins/distribution-analysis/scripts/distribution_core.py",
     "plugins/distribution-analysis/skills/distribution-analysis/SKILL.md",
     "plugins/distribution-analysis/.codex-plugin/plugin.json",
-    "plugins/management-control-pack/assets/management-report-copy.json"
+    "plugins/management-control-pack/assets/management-report-copy.json",
+    "scripts/vera_ui_theme.py",
+    "plugins/vera/ui/InstrumentSans-Regular.ttf"
   ]
 }

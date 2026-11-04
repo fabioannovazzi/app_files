@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from tests.plugins.test_live_plugin_runtime import package
+from tests.plugins.test_live_plugin_runtime import package, write_index
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -23,20 +23,24 @@ def installer():
     return module
 
 
-def distribution(tmp_path, version="1"):
+def distribution(tmp_path, version="1", product="vera"):
     root = tmp_path / f"distribution-{version}"
     (root / "plugins").mkdir(parents=True)
-    package(tmp_path, version).rename(root / "plugins/vera")
+    original = package(tmp_path, version)
+    manifest = original / ".codex-plugin/plugin.json"
+    manifest.write_text(json.dumps({"name": product, "version": version}))
+    write_index(original)
+    original.rename(root / f"plugins/{product}")
     catalog = root / ".agents/plugins/marketplace.json"
     catalog.parent.mkdir(parents=True)
     catalog.write_text(
         json.dumps(
             {
-                "name": "mp-vera",
+                "name": f"mp-{product}",
                 "plugins": [
                     {
-                        "name": "vera",
-                        "source": {"source": "local", "path": "./plugins/vera"},
+                        "name": product,
+                        "source": {"source": "local", "path": f"./plugins/{product}"},
                     }
                 ],
             }
@@ -46,7 +50,8 @@ def distribution(tmp_path, version="1"):
 
 
 class Host:
-    def __init__(self, source=None, fail=False, stale=False):
+    def __init__(self, source=None, fail=False, stale=False, product="vera"):
+        self.product = product
         self.source = source
         self.previous = source
         self.fail = fail
@@ -63,7 +68,7 @@ class Host:
                     if self.source is None
                     else [
                         {
-                            "name": "mp-vera",
+                            "name": f"mp-{self.product}",
                             "marketplaceSource": {
                                 "sourceType": "local",
                                 "source": str(self.source),
@@ -80,14 +85,16 @@ class Host:
             if self.fail and self.source != self.previous:
                 raise subprocess.CalledProcessError(1, "fixture install failure")
             self.version = json.loads(
-                (self.source / "plugins/vera/.codex-plugin/plugin.json").read_text()
+                (
+                    self.source / f"plugins/{self.product}/.codex-plugin/plugin.json"
+                ).read_text()
             )["version"]
         elif args == ["list"]:
             return {
                 "installed": [
                     {
-                        "name": "vera",
-                        "pluginId": "vera@mp-vera",
+                        "name": self.product,
+                        "pluginId": f"{self.product}@mp-{self.product}",
                         "enabled": True,
                         "installed": True,
                         "version": self.version,
@@ -97,18 +104,21 @@ class Host:
         return {"ok": True}
 
 
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 def test_install_stages_verified_source_before_switching_and_confirms_version(
-    tmp_path, monkeypatch
+    tmp_path, monkeypatch, product
 ):
     monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
     module = installer()
-    source = distribution(tmp_path)
-    host = Host()
-    result = module.install(source, tmp_path / "sources", "1", command=host)
+    source = distribution(tmp_path, product=product)
+    host = Host(product=product)
+    result = module.install(
+        source, tmp_path / "sources", "1", command=host, product=product
+    )
     assert host.source == Path(result["source"])
     assert host.source != source
     assert host.version == "1"
-    assert (host.source / "plugins/vera/execution-files.json").is_file()
+    assert (host.source / f"plugins/{product}/execution-files.json").is_file()
     assert result["active_chat_acceptance"] == "requires a fresh chat"
 
 

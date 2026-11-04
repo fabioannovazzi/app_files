@@ -27,6 +27,7 @@ __all__ = [
     "load_json",
     "prepare_review",
     "review_payload_hash",
+    "read_pending_review",
     "utc_now",
     "validate_run",
     "write_json",
@@ -1372,3 +1373,22 @@ def apply_decisions(
     write_json(root / "review_receipts.json", receipts)
     prepare_review(root)
     return receipts
+
+
+def read_pending_review(
+    run_dir: Path, review: dict[str, Any]
+) -> tuple[dict[str, Any] | None, str]:
+    """Restore only decisions bound to the current intake and review content."""
+    path = run_dir / "pending_review_decisions.json"
+    if not path.exists():
+        return None, "none"
+    try:
+        pending = load_json(path)
+        _validate_decisions(
+            pending,
+            intake=load_json(run_dir / "matter_intake.json"),
+            review_payload=review,
+        )
+    except ValidationError:
+        return None, "unavailable"
+    return pending, "current"

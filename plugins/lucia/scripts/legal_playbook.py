@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import base64
 import hashlib
 import json
 import logging
@@ -16,7 +15,6 @@ from legal_matter import initialize
 
 __all__ = [
     "validate_playbook",
-    "write_editor",
     "prepare_playbook",
     "read_playbook_run",
     "main",
@@ -58,39 +56,6 @@ def validate_playbook(value: Any) -> dict[str, Any]:
     if value["tracked_changes"] and "docx" not in value["outputs"]:
         raise ValueError("Tracked changes require a Word output.")
     return value
-
-
-def write_editor(target: Path, playbook: Path | None = None) -> Path:
-    """Build a self-contained file editor with no network or local server."""
-    value = validate_playbook(_load(playbook or ROOT / "assets/playbook-nda.json"))
-    font_candidates = (
-        ROOT
-        / "modules/comunicazione-professionale/assets/fonts/InstrumentSans-Regular.ttf",
-        ROOT.parent
-        / "comunicazione-professionale/assets/fonts/InstrumentSans-Regular.ttf",
-    )
-    font_path = next((path for path in font_candidates if path.is_file()), None)
-    if font_path is None:
-        raise ValueError(
-            "The packaged Instrument Sans font is missing; rebuild the plugin."
-        )
-    font = base64.b64encode(font_path.read_bytes()).decode("ascii")
-    labels = _load(ROOT / "scripts/legal_playbook_labels.json")
-    # Data is inert JSON; escape script terminators and never interpolate it as code.
-    inert = (
-        lambda data: json.dumps(data, ensure_ascii=False)
-        .replace("<", "\\u003c")
-        .replace("&", "\\u0026")
-    )
-    page = (ROOT / "assets/playbook-editor.html").read_text(encoding="utf-8")
-    page = (
-        page.replace("__FONT_DATA__", font)
-        .replace("__PLAYBOOK_DATA__", inert(value))
-        .replace("__LABEL_DATA__", inert(labels))
-    )
-    with target.open("x", encoding="utf-8") as handle:
-        handle.write(page)
-    return target
 
 
 def prepare_playbook(
@@ -171,19 +136,14 @@ def read_playbook_run(run_dir: Path) -> dict[str, Any]:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("editor", "prepare", "inspect"))
+    parser.add_argument("command", choices=("prepare", "inspect"))
     parser.add_argument("--playbook", type=Path)
-    parser.add_argument("--out", type=Path)
     parser.add_argument("--run-dir", type=Path)
     parser.add_argument("--files", type=Path, nargs="+")
     parser.add_argument("--template", type=Path)
     args = parser.parse_args(argv)
     try:
-        if args.command == "editor":
-            if args.out is None:
-                raise ValueError("Choose an editor output file.")
-            result = write_editor(args.out, args.playbook)
-        elif args.command == "prepare":
+        if args.command == "prepare":
             if args.playbook is None or args.run_dir is None or not args.files:
                 raise ValueError(
                     "Select the playbook, new run directory and evidence files."

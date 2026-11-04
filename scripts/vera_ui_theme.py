@@ -73,6 +73,7 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
             }
         )
     html_resources = {
+        "ui/report.html",
         "modules/adeguati-assetti/assets/construction-intake.html",
         "modules/prompt-optimizer/assets/legal-tax-model.html",
         "vendor/modules/courseware/assets/chat.html",
@@ -112,6 +113,11 @@ def theme_package_resources(entries: dict[str, bytes], prefix: str) -> None:
                 )
                 html = html.replace("__FONT_BOLD__", bold.decode("ascii"))
             entries[name] = theme_html(html, theme=theme).encode()
+            if relative == "ui/report.html":
+                font = base64.b64encode(
+                    (VERA_UI / "InstrumentSans-Regular.ttf").read_bytes()
+                ).decode("ascii")
+                entries[name] = entries[name].replace(b"__FONT__", font.encode())
     # Lessons pin their UI sources. Bind the exact themed bytes while retaining
     # their reviewed source hashes; never accept a stale source-course binding.
     index_path = prefix + "assets/courses/index.json"
