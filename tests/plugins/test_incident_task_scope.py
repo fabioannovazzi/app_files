@@ -147,3 +147,88 @@ def test_current_scope_retry_delivers_its_queue_and_keeps_older_entries(
     assert result["pending"][0]["latest_report_id"] == current["report"]["report_id"]
     assert len(store.queue()) == 1
     assert retained_state(module)["outbox"] == historical
+
+
+def test_status_delivers_original_past_orphaned_supplement_and_readiness_hint(
+    tmp_path, monkeypatch
+):
+    module, store, transport = client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module, "_post", lambda *_: (_ for _ in ()).throw(OSError("offline"))
+    )
+    original = module.report_failure(
+        "studio-archive", "finalize", "Outputs could not be sealed"
+    )["report"]
+    missing_parent = str(uuid4())
+    supplement = {
+        **original,
+        "report_id": str(uuid4()),
+        "evidence_for_report_id": missing_parent,
+    }
+    restricted = {**original, "report_id": str(uuid4())}
+    state = retained_state(module)
+    state["outbox"][:0] = [
+        {
+            "operation": "report",
+            "payload": {"report": restricted},
+            "delivery_mode": "local-only",
+        },
+        {
+            "operation": "report",
+            "payload": {"report": supplement},
+            "delivery_mode": "automatic",
+        },
+        {
+            "operation": "observed-success",
+            "delivery_mode": "automatic",
+            "payload": {"report_ids": [missing_parent], "workflow": "studio-archive"},
+        },
+    ]
+    module._write(state)
+
+    def online(operation, payload):
+        if operation == "report" and payload["report"] == supplement:
+            raise urllib.error.HTTPError("fixture", 404, "Original missing", None, None)
+        return transport(operation, payload)
+
+    monkeypatch.setattr(module, "_post", online)
+    module.native_request({"operation": "status"})
+
+    assert [r["report_id"] for r in store.queue()[0]["reports"]] == [
+        original["report_id"]
+    ]
+    saved = retained_state(module)
+    assert saved["receipts"][-1]["report_id"] == original["report_id"]
+    assert saved["outbox"] == state["outbox"][:3]
+
+
+def test_unacknowledged_original_does_not_prevent_next_original_delivery(
+    tmp_path, monkeypatch
+):
+    module, store, transport = client(tmp_path, monkeypatch)
+    monkeypatch.setattr(
+        module, "_post", lambda *_: (_ for _ in ()).throw(OSError("offline"))
+    )
+    first = module.report_failure(
+        "studio-archive", "prepare", "First retained failure"
+    )["report"]
+    second = module.report_failure(
+        "studio-archive", "finalize", "Second retained failure"
+    )["report"]
+
+    def post(operation, payload):
+        if operation == "report" and payload["report"] == first:
+            raise urllib.error.HTTPError(
+                "fixture", 409, "Conflicting evidence", None, None
+            )
+        return transport(operation, payload)
+
+    monkeypatch.setattr(module, "_post", post)
+    module.check_incidents(recover=False)
+
+    assert [r["report_id"] for r in store.queue()[0]["reports"]] == [
+        second["report_id"]
+    ]
+    saved = retained_state(module)
+    assert [entry["payload"]["report"] for entry in saved["outbox"]] == [first]
+    assert saved["receipts"][-1]["report_id"] == second["report_id"]

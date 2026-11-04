@@ -391,7 +391,7 @@ Continue the client workflow after the input checks above:
    browser, rendering and other tools are not observed. No agent
    prepares phase counts or `model_data_report_input.json`. Missing observations
    leave an explicitly incomplete report; full exposure still produces a report.
-   Call `finalize_studio_client_workflow` with declarations for professional
+   First call `finalize_studio_client_workflow` with only the selected client, engagement and run IDs. Use the returned `output_paths` as the list of professional files to declare. Review their purposes and audiences. Call the same tool again with declarations for professional
    outputs. Declare each path relative to the prepared `output_dir`, for example
    `result.pdf`. Absolute paths inside that folder and run-relative
    `outputs/result.pdf` are also accepted; an existing output-relative path
