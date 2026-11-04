@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "a2cd85adc723c4a0cef9d6be542aa65b654a8a322ffdb00408bd05d535948bd2",
+      "sha256": "9df18ef9abd38fde116a39f3885fcb09d0fbf30ff6febfe1a20b33857bd71441",
       "languages": [
         "it",
         "en",

@@ -286,7 +286,7 @@ file, confirm its product and course against the installed catalogue, and inspec
 the referenced files. Missing or changed outputs require rechecking, not a claim
 of completed work. Never reset another lesson or create an account-wide profile.
 
-Do not send lesson files, answers, progress or feedback to Mparanza. Do not call
+Keep lesson files, answers, notes and feedback local. Once you inspect both actual outputs and the learner confirms understanding, run scripts/local_courses.py finish --output-dir <lesson-directory> --demo-output <actual-demo> --practice-output <actual-practice> --confirmed-understanding. It reports only the completed course ID, random event ID and time using the existing reporting identity. Do not start a professional usage run for a tutorial exercise. If delivery is pending, keep the lesson complete and retry finish with the same files. Do not call
 change-request, hosted interview, hosted demonstration or receipt-stamping tools
 for a lesson. Stay within the prepared fictional case; real client work requires
 a separate explicit transition under the normal specialist workflow. Public

@@ -169,15 +169,28 @@ class TeachingStore(Store):
             return Path(lesson["real_work_evidence"])
         return self.sessions / _identifier(lesson["session_id"]) / "files"
 
+    def completions(self) -> list[dict[str, str]]:
+        """Reload committed completion signals, including after an interrupted finish."""
+        profile = self._profile()
+        return [
+            s["public_completion"]
+            for s in [*profile.get("lessons", []), *self._all(profile)]
+            if "public_completion" in s
+            and (s.get("phase") == "complete" or s.get("status") == "complete")
+        ]
+
     def begin(self, data: dict[str, Any] | None = None) -> dict[str, Any]:
         """Start a requested course without requiring the optional introduction."""
         data = data or {}
         workflow = data.get("workflow_id")
         if workflow not in eligible_workflows():
             raise OnboardingError("Choose a supported operational workflow")
+        course = data.get("course_id", workflow)
+        if course not in {workflow, "get-started"}:
+            raise OnboardingError("Select the course being taught")
         title = _text(data.get("title"), "title")
         goal = _text(data.get("goal"), "goal")
-        mode = data.get("mode", "show")
+        mode = "together" if course == "get-started" else data.get("mode", "show")
         if mode not in {"show", "together"}:
             raise OnboardingError("Teaching mode is show or together")
         # Validate the actual chat pair before creating first-use local state.
@@ -207,6 +220,7 @@ class TeachingStore(Store):
                 "revision": 1,
                 "phase": "active",
                 "workflow_id": workflow,
+                "course_id": course,
                 "title": title,
                 "goal": goal,
                 "mode": mode,
@@ -359,9 +373,20 @@ class TeachingStore(Store):
             elif action == "use-files":
                 self._select_real_work(state, data)
             elif action == "finish":
+                course = state.get("course_id")
+                if course is None:
+                    intro_note = (
+                        Path(state["directory"]) / "getting-started-progress.md"
+                    )
+                    course = (
+                        "get-started" if intro_note.is_file() else state["workflow_id"]
+                    )
+                guided_attempt = state.get("practice") or (
+                    course != "get-started" and state.get("application")
+                )
                 if not state.get("demo") or (
-                    state["mode"] == "together"
-                    and not (state.get("practice") or state.get("application"))
+                    (state["mode"] == "together" or course == "get-started")
+                    and not guided_attempt
                 ):
                     raise OnboardingError(
                         "Finish needs demonstration and the requested guided attempt"
@@ -379,6 +404,9 @@ class TeachingStore(Store):
                     data.get("understanding"),
                     "user understanding and professional checks",
                 )
+                from course_completion import completion
+
+                state["public_completion"] = completion(course)
                 state["phase"] = "complete"
                 state.pop("worker_token", None)
             elif action == "feedback":
@@ -574,6 +602,12 @@ def main(argv: list[str] | None = None) -> int:
             raise OnboardingError("Use the current --revision")
         else:
             result = store.change(args.command, args.revision, _read(args.input))
+        if args.command in {"status", "begin", "finish"} and (
+            events := store.completions()
+        ):
+            from course_completion import report
+
+            result["course_reporting"] = report(events)
         sys.stdout.write(json.dumps(result, indent=2) + "\n")
         return 0
     except CourseAccessError as exc:

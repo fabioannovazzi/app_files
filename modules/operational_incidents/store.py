@@ -40,6 +40,7 @@ from modules.pdp.postgres_compat import (
 )
 from modules.utilities.cache import get_cache_dir
 from modules.workflow_usage import computers as workflow_computers
+from modules.workflow_usage import courses
 from modules.workflow_usage import repository as workflow_repository
 from modules.workflow_usage import testing as workflow_testing
 from modules.workflow_usage.contracts import WorkflowEvent
@@ -67,6 +68,7 @@ class IncidentNotFound(ValueError):
 
 _SCHEMA = (
     "CREATE TABLE IF NOT EXISTS operational_installation_products (installation_id TEXT PRIMARY KEY, product TEXT NOT NULL)",
+    *courses.SCHEMA,
     *workflow_repository.SCHEMA,
     *workflow_testing.SCHEMA,
     "CREATE TABLE IF NOT EXISTS workflow_host_link_tickets (ticket_id TEXT PRIMARY KEY, key_hash TEXT NOT NULL, run_id TEXT NOT NULL, expires_at TEXT NOT NULL)",
@@ -236,6 +238,29 @@ class IncidentStore:
         actual = hashlib.sha256(credentials.installation_key.encode()).hexdigest()
         if row is None or not hmac.compare_digest(row["key_hash"], actual):
             raise IncidentNotFound("Installation capability is unavailable")
+
+    def record_course(
+        self, actor: Credentials, event: courses.Completion
+    ) -> dict[str, Any]:
+        """Authenticate a lesson completion separately from professional activity."""
+        with self._connection() as connection:
+            self._schema(connection)
+            self._authorize(connection, actor)
+            owner = str(actor.installation_id)
+            if self._installation_product(connection, owner) != "vera":
+                raise IncidentNotFound("A Vera reporting identity is required")
+            if not courses.record(connection, self._sql, owner, event):
+                raise IncidentConflict("Completion identity already used")
+        return {
+            "recorded": True,
+            **event.model_dump(mode="json"),
+            "installation_id": owner,
+        }
+
+    def course_levels(self) -> dict[str, str]:
+        with self._connection() as connection:
+            self._schema(connection)
+            return courses.levels(connection, self._sql)
 
     def archive_receipt_owner(self, actor: Credentials) -> str:
         """Authenticate the existing Vera userID and its retained machine binding."""

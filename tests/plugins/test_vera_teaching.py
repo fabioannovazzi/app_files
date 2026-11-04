@@ -101,6 +101,53 @@ def test_repeated_examples_keep_completed_onboarding_and_reload_latest_profile(
     assert len(store.status()["examples"]) == 5
 
 
+def test_intro_finish_records_only_intro_after_guided_practice(
+    teaching, tmp_path, monkeypatch
+):
+    module, store, _ = teaching
+    import course_completion
+
+    begin(store, course_id="get-started")
+    output(store)
+    with pytest.raises(ValueError, match="guided attempt"):
+        complete(store)
+    assert all(event["course_id"] != "get-started" for event in store.completions())
+    output(store, "practice")
+    finish_input = tmp_path / "finish.json"
+    finish_input.write_text(
+        json.dumps(
+            {"confirmed_by_user": True, "understanding": "Checked the practice result"}
+        )
+    )
+    sent = []
+    monkeypatch.setattr(
+        course_completion,
+        "report",
+        lambda events: sent.extend(events) or {"status": "delivered"},
+    )
+    state = store.status()["session"]
+    assert (
+        module.main(
+            [
+                "finish",
+                "--state-root",
+                str(store.root),
+                "--session",
+                state["session_id"],
+                "--revision",
+                str(state["revision"]),
+                "--input",
+                str(finish_input),
+            ]
+        )
+        == 0
+    )
+    signal = store.status()["session"]["public_completion"]
+    assert signal["course_id"] == "get-started"
+    assert signal in sent
+    assert set(signal) == {"event_id", "course_id", "completed_at"}
+
+
 def test_first_course_requires_native_pair_before_creating_state(teaching, tmp_path):
     module, _, profile = teaching
     other = module.TeachingStore(tmp_path / "first-use")

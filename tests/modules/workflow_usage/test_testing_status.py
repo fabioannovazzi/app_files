@@ -395,13 +395,85 @@ def test_public_endpoint_returns_only_levels_and_has_no_reset_route(setup):
     assert client.post("/api/vera/testing-status").status_code == 405
 
 
+def test_course_completions_and_professional_runs_advance_independently(setup):
+    store, agent, agent_owner = setup
+    app = FastAPI()
+    app.include_router(api.router)
+    app.dependency_overrides[api.get_incident_store] = lambda: store
+    client = TestClient(app)
+    professional = device()
+    first = register(store, professional)
+    second_install = register(store, professional)
+    third = register(store, device())
+    fourth = register(store, device())
+
+    def submit(owner, course="journal-sampling", event_id=None, **extra):
+        return client.post(
+            "/api/operational-incidents/course-completed",
+            json={
+                "credentials": owner.model_dump(mode="json"),
+                "completion": {
+                    "event_id": str(event_id or uuid4()),
+                    "course_id": course,
+                    "completed_at": AFTER,
+                    **extra,
+                },
+            },
+        )
+
+    def courses():
+        return client.get("/api/vera/course-status").json()["courses"]
+
+    record(store, first, pipeline="fatture-xml-check")
+    assert courses()["fatture-xml-check"] == "untried"
+    key = uuid4()
+    assert submit(agent_owner, event_id=key).status_code == 200
+    assert submit(agent_owner, event_id=key).status_code == 200
+    assert courses()["journal-sampling"] == "agent"
+    assert submit(first, event_id=key).status_code == 409
+    assert submit(first, private_notes="never transmit").status_code == 422
+    assert submit(first, course="unknown-course").status_code == 422
+    assert submit(first).status_code == 200
+    assert submit(second_install).status_code == 200
+    assert submit(third).status_code == 200
+    assert courses()["journal-sampling"] == "tried"
+    assert submit(fourth).status_code == 200
+    assert courses()["journal-sampling"] == "repeated"
+    assert (
+        client.get("/api/vera/testing-status").json()["pipelines"]["journal-sampling"]
+        == "untried"
+    )
+    assert submit(register(store), course="get-started").status_code == 200
+    assert courses()["get-started"] == "completed"
+    assert courses()["fatture-xml-check"] == "untried"
+
+
+def test_every_public_vera_course_and_language_uses_its_own_course_id():
+    directory = ROOT / "static/shared/courses"
+    catalogue = BeautifulSoup((directory / "index.html").read_text(), "html.parser")
+    ids = [icon["data-vera-course"] for icon in catalogue.select("[data-vera-course]")]
+    public = {page.parents[1].name for page in directory.glob("vera/*/*/course.html")}
+    assert len(ids) == len(public) and set(ids) == public
+    assert not catalogue.select("#clara [data-vera-course], #lucia [data-vera-course]")
+    for page in directory.glob("vera/*/*/course.html"):
+        html = BeautifulSoup(page.read_text(), "html.parser")
+        assert (
+            html.select_one("h1 [data-vera-course]")["data-vera-course"]
+            == page.parents[1].name
+        )
+        assert html.select_one('script[src="/static/shared/courses/course-status.js"]')
+
+
 def test_page_resets_every_icon_and_maps_package_aliases_to_primary_pipelines():
     page = BeautifulSoup(
         (ROOT / "static/shared/vera/index.html").read_text(), "html.parser"
     )
     indicators = page.select('.function-test-indicator[role="img"]')
 
-    assert len(indicators) == len(page.select("a.module-row h4"))
+    assert not page.select("[data-vera-teaching] .function-test-indicator")
+    assert len(indicators) == len(
+        page.select("a.module-row:not([data-vera-teaching]) h4")
+    )
     assert {node["data-test-status"] for node in indicators} == {"untried"}
     assert {node["aria-label"] for node in indicators} == {
         "Da provare su casi concreti"
@@ -439,7 +511,7 @@ def test_page_resets_every_icon_and_maps_package_aliases_to_primary_pipelines():
         for node in indicators
         if not node.has_attr("data-testing-pipeline")
     }
-    assert unmapped == {"../studio-archive/index.html", "../learn-with-vera/index.html"}
+    assert unmapped == {"../studio-archive/index.html"}
     assert {"adversarial-opinion", "report-enti-locali"} <= mapped
     assert "studio-archive" not in mapped
     assert page.select_one('script[src="../vera-testing-status.js"]') is not None
