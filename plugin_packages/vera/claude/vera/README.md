@@ -207,7 +207,7 @@ Every registered workstream has a versioned external-boundary record under
 boundary, additional external routes, and concrete controls. Client or case
 material read by the model may enter the selected runtime's model context.
 
-The `privacy-surface-review` workflow validates coverage and source
+The repository release check validates coverage and source
 fingerprints before release. It is a development control, not a GDPR
 certification, and it does not replace the professional's purpose-based data
 minimisation and legal assessment.

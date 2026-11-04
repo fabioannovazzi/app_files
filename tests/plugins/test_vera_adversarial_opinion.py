@@ -630,7 +630,17 @@ def test_lucia_and_vera_package_the_identical_opinion_component(
     lucia = component("lucia")
 
     if archive_suffix == "claude-plugin":
-        assert vera == lucia
+        assert vera == {
+            name: (
+                data.replace(
+                    b"When invoked through Vera, Clara or Lucia, task",
+                    b"When invoked through Vera, task",
+                )
+                if name.endswith("/SKILL.md")
+                else data
+            )
+            for name, data in lucia.items()
+        }
     else:
         # Lucia retains its independent editor; Vera routes review through its
         # native workspace. Only these transport files may differ.

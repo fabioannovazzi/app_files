@@ -172,7 +172,7 @@ destination.
 
 Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
-override this Cowork contract. When invoked through Vera, Clara or Lucia, task
+override this Cowork contract. When invoked through Vera, task
 usage, signed receipts, technical recovery and 1–5-star feedback through the
 invoking product's incident service and rating form remain available. Follow the
 primary task's workflow-usage contract and product identity. Tutorials retain
@@ -463,7 +463,6 @@ send/publish action only for that same scope, data and destination, and only
 when the host permits prior approval. Obtain any confirmation the host requires
 at action time. A new recipient, broader access or different data requires its
 own authorization; a workflow choice never overrides a denied tool action.
-
 
 ## Run-level model-data report
 

@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "b97cb0ba4f0d537bdc704facff0546e2c4daf60bbdc71d952dab2a665bade21b",
+  "catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1664,23 +1664,6 @@
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance."
     },
     {
-      "acceptance_example": "The recorded data path matches the implemented target workflow and distinguishes local storage from model-visible excerpts.",
-      "adaptation_layers": [
-        "change-specific technical review"
-      ],
-      "common_work": "Document actual model-context and external-data paths for a changed workflow or service.",
-      "disposition": "Use",
-      "function_id": "privacy-surface-review",
-      "geneva_application": "Review the actual data paths of proposed localization changes.",
-      "implementation": "Existing function retained with the recorded qualification limits.",
-      "implementation_status": "existing_or_unresolved_as_assessed",
-      "name": "Data-path review helper",
-      "required_change": "Reuse the current technical review. Changes to providers, identifiers or interfaces need fresh factual inspection; this helper does not certify compliance with Swiss privacy law.",
-      "role": "helper",
-      "sources": [],
-      "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance."
-    },
-    {
       "acceptance_example": "A reviewed population includes one unbooked invoice, one duplicate candidate and one amount mismatch; results preserve source identities and do not confuse payment data with complete invoice evidence.",
       "adaptation_layers": [
         "invoice input formats",
@@ -2005,15 +1988,6 @@
     "previous_catalogue_fingerprint": "cd5babddaeef2238b952a2b3b20ead365c67810830a8868c838507711b3869c2",
     "scope": "Canonical manifest/version binding refresh. All 55 skill entrypoint IDs and bytes, assessment rows and Geneva jurisdiction dispositions are preserved. Shared host discovery and bounded semantic reconciliation do not establish new Swiss client, installed-host or professional acceptance.",
     "version": "0.1.471"
-  },
-  "shared_privacy_release_binding_20261018": {
-    "changed_entrypoints": [
-      "privacy-surface-review"
-    ],
-    "date": "2026-10-18",
-    "previous_catalogue_fingerprint": "d88fdf323b18281debd89554c334171b609b93728192348c00afd0ad02418f37",
-    "scope": "Reviewed the shared developer privacy skill: registry coverage, host profiles, manifest-bound public explanations and actual-run report binding. The helper remains a technical source review; all existing Geneva function rows, dispositions, professional judgments and acceptance limits remain unchanged. This release does not qualify Swiss legal compliance or a Geneva client workflow.",
-    "version": "0.1.409"
   },
   "shared_product_reporting_release_binding": {
     "date": "2026-10-18",
@@ -2502,7 +2476,6 @@
       "posizioni-negoziali",
       "presenza-digitale-studio",
       "previdenza-inps",
-      "privacy-surface-review",
       "purchase-invoice-review",
       "quesito-legale-fiscale",
       "rating-legalita",

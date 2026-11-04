@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-ui-consistency/plugins/vera",
-  "version": "0.1.560",
-  "captured_at": "2026-11-03T23:40:15.227368+00:00",
-  "catalogue_fingerprint": "b97cb0ba4f0d537bdc704facff0546e2c4daf60bbdc71d952dab2a665bade21b",
-  "manifest_sha256": "dcdda372351dd7468f91021974ab4ed3b415b9d652e5049696dc719715b0e50c",
+  "root": "/private/tmp/vera-user-skill-cleanup/plugins/vera",
+  "version": "0.1.561",
+  "captured_at": "2026-11-04T08:57:23.574453+00:00",
+  "catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
+  "manifest_sha256": "ac221677bad715b0e6b6658c7e3ee29d8409241ad4e42774f5b4175f08df4fe6",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -207,11 +207,6 @@
       "sha256": "cc89f02b5c0bea20189b67373d895a54800ce53754977d1f45f4a202eeabe1ce"
     },
     {
-      "function_id": "privacy-surface-review",
-      "skill_path": "skills/privacy-surface-review/SKILL.md",
-      "sha256": "705fce66d6605af8c4d0b5316dce5b6645e3fd3b0205b4d5e70113545f5706ee"
-    },
-    {
       "function_id": "purchase-invoice-review",
       "skill_path": "skills/purchase-invoice-review/SKILL.md",
       "sha256": "d65c6d7e30571aedb47cb52d09b44f21c0453cb926ea586ad72f085fb0c3c09d"
@@ -274,7 +269,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "304d8fdd018e34300d4331c129064c2ebaca28de93295d95385e36e68305ac84"
+      "sha256": "fca910576662be77c38d7ff3210ac716a2121336b8b3bfb1b295846a2781e8e0"
     },
     {
       "function_id": "vouching",
