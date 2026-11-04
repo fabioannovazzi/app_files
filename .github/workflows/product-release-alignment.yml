@@ -34,6 +34,21 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Restore generated Cowork directories from this commit's archives
+        run: |
+          python - <<'PY'
+          import shutil
+          from pathlib import Path
+          from zipfile import ZipFile
+
+          for product in ("vera", "clara", "lucia"):
+              package = Path("plugin_packages") / product
+              directory = package / "claude" / product
+              if directory.exists():
+                  shutil.rmtree(directory)
+              with ZipFile(package / f"{product}-claude-plugin.zip") as archive:
+                  archive.extractall(directory)
+          PY
       - name: Install plugin build dependencies
         run: python -m pip install -r scripts/requirements-plugin-build.txt
       - run: python -m pip install pytest pytest-cov beautifulsoup4 pyyaml starlette httpx black==25.1.0 isort==6.0.1 mypy bandit uv==0.12.10

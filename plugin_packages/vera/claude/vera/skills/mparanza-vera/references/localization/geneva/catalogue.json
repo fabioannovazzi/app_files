@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/incident-archive-dependency-fixes/plugins/vera",
-  "version": "0.1.567",
-  "captured_at": "2026-11-04T17:04:55.092190+00:00",
-  "catalogue_fingerprint": "2decfe16d2aedaaa93354650cce4fbdec4268927d600131bbf8066a1ef0f41bf",
-  "manifest_sha256": "99a542893ebd8b0d956a19ee87c3098ed3004d0e7089fb4b3a0af3f2b25b8a63",
+  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
+  "version": "0.1.568",
+  "captured_at": "2026-11-04T20:53:03.830429+00:00",
+  "catalogue_fingerprint": "75fa538ecd01aedda89a3587ac8a281523c2d2b283b997d81ac091187832533a",
+  "manifest_sha256": "a7086f32cf06bf1bee232b834129b6a35686dab20cc39f4d9e76d95c2954c80f",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -40,6 +40,11 @@
       "function_id": "bandi-agevolazioni",
       "skill_path": "skills/bandi-agevolazioni/SKILL.md",
       "sha256": "f72c65d9f99ba5c76bf737dbfef38b243deb2e6aecf43cb9556945d8a1855d0c"
+    },
+    {
+      "function_id": "bank-csv-download",
+      "skill_path": "skills/bank-csv-download/SKILL.md",
+      "sha256": "4eca6f8badac97a34faedea65daa2eaf0fcc3d5812b712b3de17efe2dd38020c"
     },
     {
       "function_id": "bilancio-oic",
@@ -269,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "9dffbfff88a29088770e861a5823dad0391f0b75a8ddd00407bcef1be1dccb2d"
+      "sha256": "0b40752500497171fc3cbff796408de31afd1448e297859aa3fd494d22f1145a"
     },
     {
       "function_id": "vouching",
