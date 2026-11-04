@@ -164,3 +164,13 @@ manifest. It does not change Geneva jurisdiction selection, professional methods
 or existing dispositions, and establishes no new Swiss professional acceptance.
 The source and recovery evidence is recorded in
 `docs/audits/vera-work-continuity-2026-10-27.md`.
+
+## Bank CSV acquisition — 4 November 2026
+
+Vera 0.1.568 adds `bank-csv-download`: obtain original bank CSVs through the
+selected host model’s computer use and existing 1Password extension. The Geneva
+disposition is **Unresolved**: the inspected bank references target Italy and
+no authenticated bank export has been accepted. Confirm the actual portal,
+account/period coverage and CSV before asserting Swiss-bank support. All prior
+function dispositions are retained. The root route changes acquisition selection
+only; it does not establish a new jurisdiction or model/privacy acceptance.

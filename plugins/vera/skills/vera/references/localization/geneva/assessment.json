@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "ba2836e6cf980b4ea938ea4bfb39a945932d0e2458af36752626f711fe10cd9a",
+  "catalogue_fingerprint": "91aca5cc9a3667dcb09f8ebd6ac00202167b177c273e3f4cdaae4d23d5a9650a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1940,6 +1940,27 @@
         "qr"
       ],
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance."
+    },
+    {
+      "function_id": "bank-csv-download",
+      "name": "Bank CSV download through computer use",
+      "role": "function",
+      "common_work": "Obtain original account-movement CSVs for the selected account and period before accounting.",
+      "geneva_application": "The inspected source targets five Italian bank portals; use on a Geneva firm’s banking portals has not been established.",
+      "disposition": "Unresolved",
+      "adaptation_layers": [
+        "bank/portal procedure and operator access qualification"
+      ],
+      "required_change": "Inspect the actual selected portal and CSV output; do not infer Swiss-bank coverage from translated instructions or local byte-retention checks.",
+      "implementation": "Direct model-led computer use with existing 1Password Autofill and local original-file retention; no bank API service.",
+      "implementation_status": "source_and_synthetic_file_checks_only",
+      "verification": "Source and local file mechanics inspected. No authenticated Italian or Geneva bank acceptance.",
+      "acceptance_example": "An authorized operator downloads and checks the original CSV for their selected account and period on the actual target portal.",
+      "sources": [
+        "plugins/vera/skills/bank-csv-download/SKILL.md",
+        "plugins/vera/scripts/bank_csv_download.py",
+        "plugins/vera/skills/bank-csv-download/references/banks.md"
+      ]
     }
   ],
   "runtime_compatibility_release_binding": {
@@ -2507,6 +2528,17 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
+  },
+  "bank_csv_download_binding_20261104": {
+    "version": "0.1.568",
+    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
+    "added_entrypoints": [
+      "bank-csv-download"
+    ],
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "scope": "Register the direct computer-use bank download function as unresolved for Geneva. Preserve all existing function dispositions. The root router now selects this operation for acquisition; no Swiss portal or professional acceptance is established."
   },
   "incident_archive_release_binding_20261104": {
     "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
