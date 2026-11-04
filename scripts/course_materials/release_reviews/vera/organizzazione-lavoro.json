@@ -86,7 +86,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "d880e9d190f3df26d3aa68341413cc8faf31727f508c8ca9b30ab6d185b59fe6",
+  "course_sha256": "d36f2eb9913e12f8da2a5c8a90c8b2807b7cb342236fe0a17fb8eac773325f58",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "f04e34ccfca11ac692f92d4745a906c9c362c4172bf73a90c75ebeef31ac0bbb",
@@ -164,6 +164,11 @@
     "evidence": "docs/releases/2026-10-10-vera-host-use-marker.md",
     "prior_course_sha256": "c8787aa02e4e38d7b209da29ae1d8725bf86a83fe0ee06cbe80cb6669350ae74",
     "scope": "Only the reviewed integrity preflight source binding changed. Teaching text, inputs, execution contracts and historical editorial/output judgments remain unchanged; no fresh learner or installed-host acceptance is claimed."
+  },
+  "incident_archive_binding_20261104": {
+    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope.",
+    "current_course_sha256": "3915e6a2252113d74a51c8fd61909642b8c8591eb3a377d91ea5efa2427fde3f",
+    "prior_course_sha256": "d880e9d190f3df26d3aa68341413cc8faf31727f508c8ca9b30ab6d185b59fe6"
   },
   "incident_capture_source_refresh": {
     "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
@@ -627,6 +632,14 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
     "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head."
+  },
+  "windows_main_integration_source_review_20261104": {
+    "baseline_commit": "dcbd84fe9d96b11f85f2c9312c1647564062781d",
+    "current_course_sha256": "d36f2eb9913e12f8da2a5c8a90c8b2807b7cb342236fe0a17fb8eac773325f58",
+    "prior_course_sha256": "3915e6a2252113d74a51c8fd61909642b8c8591eb3a377d91ea5efa2427fde3f",
+    "reviewed_at": "2026-11-04T21:28:13.884876+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Complete course objects match the integrated main except source identities. Retain authored teaching text, inputs, localized editorial judgments and historical reviewed artifact hashes. Changes combine the already reviewed Windows snapshot/interpreter repair with main Archive/reporting/dependency fixes. Fresh native CI must execute this exact digest; no new learner, installed customer or professional acceptance is asserted."
   },
   "work_continuity_source_binding_20261027": {
     "authored_content_unchanged": true,

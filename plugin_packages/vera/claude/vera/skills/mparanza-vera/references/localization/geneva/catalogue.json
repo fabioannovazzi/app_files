@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-windows-snapshot/plugins/vera",
-  "version": "0.1.565",
-  "captured_at": "2026-11-04T16:26:57.257655+00:00",
-  "catalogue_fingerprint": "7510dd6ec72b008d73e27d78c6bbafdf435a4678c543ab013a3b5e2028d5c451",
-  "manifest_sha256": "62bb684799761eb90eff430c47e6bb303e161d3a12044cd5d08a31842447703e",
+  "root": "/private/tmp/incident-archive-dependency-fixes/plugins/vera",
+  "version": "0.1.570",
+  "captured_at": "2026-11-04T21:28:13.854794+00:00",
+  "catalogue_fingerprint": "a158d31a85ee633267b5664b97a3d23e7b338ba82d31382f4b924f63856f2c3f",
+  "manifest_sha256": "9937f0342f05b13e7d544b9210bad9a79579ccd8604ca3ca6f726aa5f11ad616",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -269,7 +269,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "fca910576662be77c38d7ff3210ac716a2121336b8b3bfb1b295846a2781e8e0"
+      "sha256": "9dffbfff88a29088770e861a5823dad0391f0b75a8ddd00407bcef1be1dccb2d"
     },
     {
       "function_id": "vouching",

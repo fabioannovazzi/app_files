@@ -879,3 +879,18 @@ def test_native_opinion_execution_uses_veras_citation_check_for_both_writer_name
         result = call(args)
     assert output(result)[0]["returncode"] == 0
     assert json.loads(output(result)[1]["stdout"]) == {"checked": "Vera opinion"}
+
+
+@pytest.mark.parametrize(
+    "selector", [["--module", "fixture-component"], ["--module=fixture-component"]]
+)
+def test_native_dependency_check_accepts_matching_cli_selector(
+    installed, tmp_path, selector
+):
+    counter = tmp_path / "counter"
+    args = request(tmp_path, arguments=[*selector, str(counter), *selector])
+    with native(installed, tmp_path) as call:
+        result = call(args)
+
+    assert output(result)[0]["state"] == "completed"
+    assert counter.read_text() == "run\n"

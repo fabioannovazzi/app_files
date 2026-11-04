@@ -177,10 +177,10 @@
     }
   ],
   "review": {
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "a7e3ea644d295980c074377f5e7f7c37102da1e53007fe36503be42b7a66328b"
+    "source_fingerprint": "8e88e4dd280935b257f406f6bd9fc2b4f01a980f6ed3ee3f98f93c24de03f225"
   },
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/vera_assurance/recovery.py"

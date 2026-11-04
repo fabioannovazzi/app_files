@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "7510dd6ec72b008d73e27d78c6bbafdf435a4678c543ab013a3b5e2028d5c451",
+  "catalogue_fingerprint": "a158d31a85ee633267b5664b97a3d23e7b338ba82d31382f4b924f63856f2c3f",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -504,6 +504,10 @@
     "date": "2026-10-15",
     "scope": "Canonical manifest/version refresh. All 55 recorded skill entrypoints are unchanged; only the shared technical incident conversation and recovery service changed. Preserve existing Geneva judgments and jurisdiction limits; no additional professional workflow or Geneva acceptance is claimed.",
     "version": "0.1.392"
+  },
+  "incident_archive_release_binding_20261104": {
+    "basis": "The Vera wrapper now distinguishes a native component check from the root CLI. The skill IDs, jurisdiction methods and existing assessment decisions are unchanged.",
+    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56"
   },
   "incident_pipeline_release_binding": {
     "date": "2026-10-13",
@@ -2428,6 +2432,11 @@
     "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted.",
     "version": "0.1.414"
   },
+  "windows_main_integration_release_binding_20261104": {
+    "previous_catalogue_fingerprint": "2decfe16d2aedaaa93354650cce4fbdec4268927d600131bbf8066a1ef0f41bf",
+    "scope": "Exact skill IDs and entrypoint bytes match integrated main. Existing jurisdiction judgments retained; this refresh binds the new canonical manifest only.",
+    "version": "0.1.570"
+  },
   "windows_reporting_main_integration_20261019": {
     "date": "2026-10-19",
     "integrated_main": "28623647c7a396f01aba14ea76abe52fbcc4db01",
@@ -2507,9 +2516,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "windows_snapshot_release_binding_20261104": {
-    "version": "0.1.565",
-    "scope": "Manifest version changed; exact skill entrypoint identities and bytes are unchanged. Existing jurisdiction judgments are retained. Runtime path handling and technical reporting do not establish installed Windows or Geneva professional acceptance."
   }
 }

@@ -91,3 +91,32 @@ CI runs for the first candidate were cancelled, retaining their evidence, so a
 fresh candidate must pass all CI including eight native snapshot cases and both
 actual file-access interpreter routes. The first candidate's two Windows path
 passes alone do not validate this expanded release.
+
+The complete `c5f034961` candidate subsequently passed all 103 CI checks,
+including eight native Windows snapshot cases and both real file-access routes.
+The accounting job first stopped at an official-taxonomy download timeout; its
+retry downloaded the checksum-verified package and passed. GitHub cancelled the
+unstarted final macOS helper job for hosted ARM runner capacity; that job passed
+on retry. Neither recovered infrastructure block was counted as a product pass.
+
+Before merge, main advanced to `dcbd84fe9` through PR #951 and deployed Vera
+0.1.567, Clara 0.1.379 and Lucia 0.1.205. This repair integrates those Archive,
+incident-outbox and native dependency changes without reverting them. Production
+source merged without conflicts; release metadata and generated packages require
+rebuilding. The combined candidate is Vera 0.1.570, Clara 0.1.380, Lucia 0.1.206
+and Studio Archive 0.1.72, above current main and all inspected open candidates.
+Reviewed privacy descriptions retain both the main outbox behavior and the
+Windows preparation fields. Course objects are identical to integrated main
+apart from source inventories; existing localized judgments remain historical,
+with fresh current-digest native CI required. Skill entrypoint bytes match main,
+so the localization refresh changes manifest binding only. The old candidate's
+ZIPs are not deployable for this combined source; fresh CI and exact new artifacts
+must pass before merge, deployment and the authorized customer email.
+
+Combined-source validation first ran inside the agent filesystem/process sandbox:
+323 focused tests passed, eight Windows cases skipped on macOS, and three native
+process tests failed. The macOS nested sandbox probe could not apply its profile;
+the two descendant-cancellation checks retained a running result. Repeating only
+those three tests outside the nested agent sandbox passed all three (5.75 s).
+No production or test assertion was weakened. Managed-runtime validation passed
+326 tests, with eight Windows skips and 81.91% coverage. Fresh CI remains required.

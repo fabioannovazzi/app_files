@@ -63,7 +63,8 @@
         "The technical_facts transport accepts at most 100 integer or boolean values and bounded technical identifier keys. Automatic collection reads only the producer-declared exception field; it does not inspect locals or serialize arbitrary string values. The existing host review path remains available for relevant technical context that cannot be captured by these measurements.",
         "Local native incident and workflow tools send ordinary HTTPS using the retained private installation owner. The plugin declares no remote MCP connection. When local execution is unavailable, the agent can operate the independently hosted recovery page using the host permitted browser controls. No browser capability or host approval is assumed. The browser authenticates with a Secure, HttpOnly, SameSite=Strict, host-only cookie. POST requests require the fixed same-origin Origin and custom header; no CORS is enabled. An expired or missing previously known capability does not silently create a new owner. Schema discovery exposes the product-bound operation contract without MCP discovery.",
         "Original local credentials can link or restore their owner over HTTPS. Only hashes of browser capabilities and internal single-use restore proofs are stored. Restoration preserves original record owners and links already authenticated browser history. Credentials are submitted in the request body, never a URL. The retired remote MCP transfer-code operation is unavailable. Lost or revoked credentials do not prove ownership and cannot be replaced by a new identity to claim old history.",
-        "Successful native status stores the exact pending-remedy snapshot locally for automatic managed retry progress, including an empty snapshot. A failed status retains the last known snapshot. Reading status does not execute remedies; original operation, input, report and revision checks still govern closure. No new external report fields or recipients are introduced."
+        "Successful native status stores the exact pending-remedy snapshot locally for automatic managed retry progress, including an empty snapshot. A failed status retains the last known snapshot. Reading status does not execute remedies; original operation, input, report and revision checks still govern closure. No new external report fields or recipients are introduced.",
+        "Scoped automatic retries deliver original reports in occurrence order before dependent diagnostics and recovery notices. An unacknowledged item remains private and pending for retry. Each original requires its own server receipt; restrictions on local-only evidence and unrelated task scopes still apply."
       ],
       "id": "automatic-technical-incident-loop",
       "purpose": "Diagnose observed execution/setup failures, return installation-specific remedies and receive actual recovery outcomes",
@@ -134,6 +135,6 @@
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "dfc0b6e2a2215da67a41527ce89d5d091c4f4e79d0cfd53e7fbcfae62f9c09e2"
+    "source_fingerprint": "f7d22c9411f922848a6ef91d2fdd9c0f50ea3f80517a58fd7d563de49f7f6dac"
   }
 }
