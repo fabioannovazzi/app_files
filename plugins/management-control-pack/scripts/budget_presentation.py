@@ -92,12 +92,8 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
         figure = render_reporting_table(
             row_header=label("Line item"),
             rows=rendered_rows[view],
-            baseline_label="PL · " + label("Budget"),
-            comparison_label=(
-                "FC · " + label("Forecast")
-                if scenario == "FC"
-                else "AC · " + label("AC")
-            ),
+            baseline_label=label("Budget"),
+            comparison_label=(label("Forecast") if scenario == "FC" else label("AC")),
             entity_label=str(pack["entity"]),
             comparison_caption=title,
             metric=label("Profit and loss") + " · " + pack["currency"],
@@ -117,7 +113,9 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
     )
     if "forecast" in grouped:
         note += (
-            label(" FC = actuals to cutoff + reviewed remaining-month estimates. ")
+            label(
+                " FC = actuals to cutoff + reviewed remaining-month estimates. "
+            ).replace("FC =", label("Forecast") + " =", 1)
             + section["forecast_basis"]
         )
     limitations = "".join(
@@ -130,5 +128,4 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
     if "forecast" in grouped:
         heading = label("Actual, budget and forecast")
     print_label = label("Print / PDF")
-    scenarios = "PL · AC · FC" if "forecast" in grouped else "PL · AC"
-    return f'<section class="budget-report"><style>{css}</style><p class="eyebrow">{scenarios}</p><h2>{heading}</h2><p>{escape(note)}</p><div class="budget-controls" hidden>{"".join(buttons)}<button type="button" data-budget-print>{print_label}</button></div>{"".join(figures)}<ul>{limitations}</ul><script>{script}</script></section>'
+    return f'<section class="budget-report"><style>{css}</style><h2>{heading}</h2><p>{escape(note)}</p><div class="budget-controls" hidden>{"".join(buttons)}<button type="button" data-budget-print>{print_label}</button></div>{"".join(figures)}<ul>{limitations}</ul><script>{script}</script></section>'

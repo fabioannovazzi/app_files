@@ -284,7 +284,7 @@
     {
       "path": "ui/report.html",
       "repository_path": "plugins/clara/ui/report.html",
-      "sha256": "45266918a9d072a4b6e1aa919f79ef1aa4833956a4d5cd36537ab519f11facfa"
+      "sha256": "9d79d7d7fd1758a1b1b13524737fcc93047123654a5e3fe8b303060ee9fe68cd"
     },
     {
       "path": "vendor/modules/__init__.py",

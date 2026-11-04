@@ -156,7 +156,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "0ca9e94d02419d2a5b1cef77c2f29d827dfcf04e23fa2dca3b13299b3dded439",
+  "course_sha256": "34d9421f6e8f35ff6aeb5fa0e4250ec7ae3bb8b7e2461641d2ccb5b1502b3fad",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "1a36de6eab0fc5fcc531976f4ab7c2b049d98103191b0ee61a694767beb7546d",
@@ -255,6 +255,12 @@
     "course_sha256": "1a36de6eab0fc5fcc531976f4ab7c2b049d98103191b0ee61a694767beb7546d",
     "reviewed_at": "2026-10-14T08:00:57.894710+00:00",
     "reviewer": "Codex /root - Deal Redux source compatibility review"
+  },
+  "historical_review_identity_before_native_ui_source_refresh_20261104": {
+    "course_sha256": "0ca9e94d02419d2a5b1cef77c2f29d827dfcf04e23fa2dca3b13299b3dded439",
+    "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
   "incident_reporting_source_binding_20261026": {
     "authored_content_unchanged": true,
@@ -697,6 +703,121 @@
     "scope": "Both matter-review HTML scripts are identical after normalizing VOCABULARY JSON formatting. Embedded fonts were removed in favor of system fallbacks and CSS formatting expanded. No new visual acceptance is claimed.",
     "source_baseline": "33b414876 -> b261044555252fc869343404d08c8d2e1c22fe66"
   },
+  "native_ui_source_compatibility_review_20261104": {
+    "baseline_commit": "90fee768e20d4e40c3f55509ffbfdedb05c92780",
+    "changed_sources": [
+      {
+        "after": {
+          "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
+          "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
+          "sha256": "bd48ce0380c86ed153fd93808e7baab9d5dc6ddca3c88957aa264a6c33532106"
+        },
+        "before": {
+          "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
+          "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
+          "sha256": "58bcd5539c1e441c1614ead99b4808cccd20f90b1e6e704b75e423dc7f355fa4"
+        },
+        "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html"
+      },
+      {
+        "after": {
+          "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
+          "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
+          "sha256": "ca63f3ce5e34276e9f2d428599246dfc3c63e65c62ecbeabe1e1845b80a3e134"
+        },
+        "before": {
+          "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
+          "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
+          "sha256": "c24a7b0d1470c1e864ee47773504727012e437ea0b9be75eca087ca41b4ba5f0"
+        },
+        "path": "modules/apertura-pratica/assets/apertura-pratica-review.html"
+      },
+      {
+        "after": {
+          "path": "modules/apertura-pratica/references/display-labels.json",
+          "repository_path": "plugins/apertura-pratica/references/display-labels.json",
+          "sha256": "80c46fa045f688325c64dfa3eefb018e018efc6f590702b9351a5d0b8e57317a"
+        },
+        "before": {
+          "path": "modules/apertura-pratica/references/display-labels.json",
+          "repository_path": "plugins/apertura-pratica/references/display-labels.json",
+          "sha256": "22e8344797b3c7ddc79195ad2fd1f1b78ed38ee0bec9c53ee17ad7956f975cce"
+        },
+        "path": "modules/apertura-pratica/references/display-labels.json"
+      },
+      {
+        "after": {
+          "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
+          "repository_path": "plugins/apertura-pratica/scripts/apertura_pratica_core.py",
+          "sha256": "c8154ba4ee146b7e5c6f53a816f75920752ee2a6859a9a8fb92d30e099f5259e"
+        },
+        "before": {
+          "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
+          "repository_path": "plugins/apertura-pratica/scripts/apertura_pratica_core.py",
+          "sha256": "313680fad95ede5d2cb8a2df35edaeeaf71bc5a5220048be31e5194db2263d3e"
+        },
+        "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py"
+      },
+      {
+        "after": {
+          "path": "modules/apertura-pratica/scripts/review_server.py",
+          "repository_path": "plugins/apertura-pratica/scripts/review_server.py",
+          "sha256": "4e923aaa77f1254bc84f2944259a75fe1881597f88aaac2b45a5fd980d68b17a"
+        },
+        "before": {
+          "path": "modules/apertura-pratica/scripts/review_server.py",
+          "repository_path": "plugins/apertura-pratica/scripts/review_server.py",
+          "sha256": "f27d6e0d4c4934272cd3e5c3034765aac1b390774637f626d79d24c736798a8d"
+        },
+        "path": "modules/apertura-pratica/scripts/review_server.py"
+      },
+      {
+        "after": {
+          "path": "scripts/matter_mcp.cjs",
+          "repository_path": "plugins/lucia/scripts/matter_mcp.cjs",
+          "sha256": "5183d4e700d82a71787c65a18a3517bf10f0855984948be629e73435beb53cb5"
+        },
+        "before": null,
+        "path": "scripts/matter_mcp.cjs"
+      },
+      {
+        "after": {
+          "path": "scripts/matter_mcp.py",
+          "repository_path": "plugins/lucia/scripts/matter_mcp.py",
+          "sha256": "46db246c53ac681a9c6c1ef0513c91b4db4386d99dbd987bf0ee9fc904caf177"
+        },
+        "before": null,
+        "path": "scripts/matter_mcp.py"
+      },
+      {
+        "after": {
+          "path": "skills/apertura-pratica/SKILL.md",
+          "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
+          "sha256": "c4c0ff53e52a6abd38af00c2bf4b4864cc32eecfcbefd642c678e8ad78d390b4"
+        },
+        "before": {
+          "path": "skills/apertura-pratica/SKILL.md",
+          "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
+          "sha256": "b825165e100f105e50ea67f41b89e9ec650eccd03ea90a43c5b3bc08dfa3c601"
+        },
+        "path": "skills/apertura-pratica/SKILL.md"
+      }
+    ],
+    "comparison": "The complete compiled course objects are identical apart from sources. Localized teaching text, inputs, demo/practice requests, checkpoints, expectations and timing retain the reviewed baseline values.",
+    "current_course_sha256": "34d9421f6e8f35ff6aeb5fa0e4250ec7ae3bb8b7e2461641d2ccb5b1502b3fad",
+    "historical_execution_evidence": {
+      "artifact_id": 13316727608,
+      "commit": "d9328a368ac6919e2ee564b62aca800c78c1675f",
+      "result": "1734 passed, 3 skipped, followed by a stale editorial-record failure. These executions apply only to their recorded digests; they are not relabelled as execution of changed course bindings.",
+      "run_id": 41814014657
+    },
+    "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
+    "previous_course_sha256": "0ca9e94d02419d2a5b1cef77c2f29d827dfcf04e23fa2dca3b13299b3dded439",
+    "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
+    "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+    "reviewer": "Codex /root - bounded native UI source compatibility review",
+    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; plain scenario names in budget tables; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
+  },
   "neutral_workflow_theme_source_review_20261029": {
     "authored_content_unchanged": true,
     "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
@@ -824,9 +945,9 @@
     "reviewer": "Codex - bounded source compatibility review",
     "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
   },
-  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+  "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
+  "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+  "reviewer": "Codex /root - bounded native UI source compatibility review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
   "studio_format_source_binding_20261001": {

@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/management-control-pack/assets/management-report-copy.json",
-      "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
+      "sha256": "7a410950c02f6269aef7bfef8583de4c88cbebce0eff4277445d8f8482081b80"
     },
     {
       "path": "modules/management-control-pack/references/costing.md",
@@ -49,7 +49,7 @@
     },
     {
       "path": "modules/management-control-pack/scripts/budget_presentation.py",
-      "sha256": "643f526d3c6980fcefee72d3919c652da0b1016d6a0c9bfabff6de4b3a713706"
+      "sha256": "749aae1488857b668b10ef0c7085d762d18d4bb189db0e2859806caa81924ab4"
     },
     {
       "path": "modules/management-control-pack/scripts/check_dependencies.py",
@@ -447,5 +447,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "958fa3d55a8fff40ad2c6ba055428f2bde2f7482ecb48d2b2046879d9ecbbcb7"
+  "canonical_course_sha256": "20e889e4387d755f673ae338daec4319c4e05f4d16a520dd985e764504068366"
 }

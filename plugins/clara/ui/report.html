@@ -200,6 +200,11 @@ function accept(result){
   const theme=css.match(/\/\* VERA_SHARED_THEME_START[\s\S]*?VERA_SHARED_THEME_END \*\//)?.[0] || '';
   const face=css.match(/@font-face\s*\{[^}]*\}/)?.[0] || '';
   const report=new DOMParser().parseFromString(data.html,'text/html');
+  // Normalize the verified report's presentation copy; original bytes stay intact.
+  for(const heading of report.querySelectorAll('.budget-report > p.eyebrow'))
+    if(/^PL\s*·\s*AC(?:\s*·\s*FC)?$/.test(heading.textContent.trim()))heading.remove();
+  for(const heading of report.querySelectorAll('.budget-report thead th'))
+    if(!heading.childElementCount)heading.textContent=heading.textContent.replace(/^(?:PL|AC|FC)\s*·\s*/, '');
   setLanguage(report.documentElement.lang || document.documentElement.lang);
   const style=report.createElement('style');
   // Printing remains available in the delivered report, outside the app sandbox.

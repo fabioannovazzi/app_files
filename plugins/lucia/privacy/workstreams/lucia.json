@@ -56,7 +56,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4785432d1a5ae6506bae8ff887633945a9f8eb55c8fb7b31d4fa4617ad99c469"
+    "source_fingerprint": "f83b57227de7de398e402aa0ea2cba0b0698ba6dd2e96b6dbcdbbc54946f74ed"
   },
   "service_ids": [
     "operational-incidents",

@@ -2828,3 +2828,29 @@ correctly rejected the old review digests. The 81 release-evidence regressions
 and compiler check pass locally. Fresh final-head demo/practice JUnit evidence
 for the current digests remains required; this is not new learner, visual,
 installed-host or professional acceptance.
+
+
+## Native UI source compatibility - 4 November 2026
+
+Twenty-one compiled course digests changed with the native UI consolidation and
+presentation fixes. Complete course objects were compared with reviewed main
+`90fee768e`: only `sources` bindings differ. Localized teaching text, selected
+inputs, demo/practice requests, checkpoints, expectations and timing remain
+identical. The bounded source review covers the shared font rule, removal of
+duplicate inspectors, receipt-bound native report reader, app-only matter review,
+plain budget scenario names, translated matter headings and readable management
+results. Calculations and professional authorization boundaries are unchanged.
+Existing localized editorial text and artifact hashes remain historical judgments.
+
+The native teaching suite at `d9328a368` passed 1,734 tests with three explicit
+skips (Actions run 41814014657, evidence artifact 13316727608), then failed at the
+stale editorial-record gate. Its JUnit is retained against its own course digests;
+it does not prove execution of newly changed bindings. Fresh CI and the unmodified
+release verifier must pass every current course digest before merge/deployment.
+
+Desktop inspection remains separate: the fresh Clara report's period control
+and Lucia method version saving were exercised; the matter facts and sources
+were inspected, but its save control timed out before persistence could be
+verified. The fresh Vera management view exposed technical metadata requiring
+content cleanup. No new live learner, voice, professional, complete Desktop
+or second-pass UI acceptance is claimed by this review.

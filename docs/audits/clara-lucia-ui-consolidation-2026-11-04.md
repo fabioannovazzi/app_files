@@ -1,7 +1,7 @@
 # Clara and Lucia UI consolidation — 4 November 2026
 
 Base: `90fee768e20d4e40c3f55509ffbfdedb05c92780`.
-Candidates: Vera 0.1.561, Clara 0.1.373, Lucia 0.1.199.
+Candidates: Vera 0.1.562, Clara 0.1.374, Lucia 0.1.201.
 These are implementation candidates, not Desktop acceptance or Marketplace publication.
 
 ## Individual dispositions
@@ -52,7 +52,11 @@ Vera's shared typography fix addresses an observed host `body` font override. Th
 - Source verification: 50 focused tests passed with 94.65% coverage; 20 browser checks passed at narrow and wide widths. Shared theme/typography: 122 passed; hosted output: 8 passed.
 - All package formats built and passed release consistency/startup checks. The six native app browser checks also passed through both Codex and Cowork packages and their MCP brokers (six checks per format).
 - CI caught an unnecessary eager Word/PDF dependency in the firm-method service. Imports now load only when document commands run; a startup regression verifies that opening the editor does not import document processors. Nine package document/reference checks passed after updating the retired editor expectation.
-- Exact CI artifacts, local installation and production deployment: pending.
-- Actual fresh Desktop inspection of every retained UI, and Vera's remaining individual cases: pending. The user sees an interactive inline Vera card; no expanded app tab is currently available to the inspection tool. No source or package check is counted as Desktop acceptance.
+- Earlier `d9328a368` packages were compared member-for-member with exact CI artifacts and installed as Vera 0.1.561 / Clara 0.1.373 / Lucia 0.1.199. That head had 115 successful checks; the teaching workflow ran 1,734 passing tests with three skips, then failed on stale editorial binding records. It was not merged or deployed.
+- Fresh Desktop inspection exercised Clara’s period selector and Lucia’s saved method version 2. Lucia’s matter facts and sources were read; its save click timed out before dispatch/persistence could be confirmed. No pending-decision file was created. Vera’s management detail exposed technical metadata. Further panel reads timed out; screenshots and repeated reopen loops are not used as substitutes for acceptance.
+- Confirmed presentation defects are included in the new candidates: plain budget scenario headers, display-only cleanup of verified older report headers, translated registered matter headings without changing stored payloads, simpler firm-method hints, and a readable management results/coverage/control view. Exact decimal strings and original saved files are preserved; technical receipts remain available on request. New source browser checks cover reporting/costing at 400 and 1080 pixels, read-only authority, complete bounded metric counts, exact values and unchanged output files.
+- Twenty-one compiled courses differ from their reviewed baseline only in source bindings. The bounded source review preserves historical localized editorial/output judgments. New current-digest execution must independently pass the unmodified teaching release verifier; older JUnit digests are not relabelled.
+- Exact CI artifacts, installation and production deployment for the new candidate versions: pending.
+- Actual fresh Desktop inspection of every retained UI, Vera’s remaining individual cases, and the complete second pass: pending. Expanded app tabs were available after restart, but inspection repeatedly stalled on later reads. No source/package check or reopened panel is counted as Desktop acceptance.
 - No Marketplace upload, submission or publication is authorized or performed.
-- Main remains clean during work; the temporary task branch/worktree is removed only after the tested change is integrated and deployed.
+- Other active task branches/worktrees are preserved; the temporary task branch/worktree is removed only after the tested change is integrated and deployed.

@@ -1120,8 +1120,11 @@ def test_budget_cost_display_and_all_views_use_existing_variance_renderer(tmp_pa
     assert 'data-budget-view="total"' in page
     assert "variance-pin-line" in page
     assert "variance-bar" in page
-    assert "PL · Budget" in page
-    assert "FC · Forecast" in page
+    assert "<th>Budget</th>" in page
+    assert "PL · " not in page
+    assert "AC · " not in page
+    assert "<th>Forecast</th>" in page
+    assert "FC · " not in page
     assert "fetch(" not in page
 
 

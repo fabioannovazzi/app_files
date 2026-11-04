@@ -692,7 +692,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "df3ab7c17b5e4b212ef428b72726adbdc6ff38338e980d6aa213e74e4461111c",
+      "sha256": "d364e6eeadf1a438ebf0adcfc8c3e49e4d773804ba6806ccd91c546c8b29ff4f",
       "languages": [
         "it",
         "en"
@@ -708,7 +708,7 @@
         "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
         "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review."
       },
-      "source_sha256": "1348634eb6eb4bc8d7e8a6e35fcbce14d8fceb7d330083d317b97a8bf626d7d7"
+      "source_sha256": "699203d2019a193eebd903bd3d6930a33ea9190aad7cae86e6de0e985ad0b00e"
     },
     "new-client": {
       "path": "new-client/course.json",

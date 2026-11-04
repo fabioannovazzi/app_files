@@ -195,7 +195,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "a2cd85adc723c4a0cef9d6be542aa65b654a8a322ffdb00408bd05d535948bd2",
+  "course_sha256": "f7bc91fb0a22d7805cf3b68db3e880c9ac6c8024bc094c985b9458a544c12c7d",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -252,6 +252,12 @@
     "course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
     "reviewed_at": "2026-10-14T08:00:57.884016+00:00",
     "reviewer": "Codex /root - Deal Redux source compatibility review"
+  },
+  "historical_review_identity_before_native_ui_source_refresh_20261104": {
+    "course_sha256": "a2cd85adc723c4a0cef9d6be542aa65b654a8a322ffdb00408bd05d535948bd2",
+    "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -618,6 +624,38 @@
     "scope": "Shared Archive source and mapping preflight before reconciliation imports. No changes to formatting lesson content or its native execution contract.",
     "source_baseline": "33b414876 -> b261044555252fc869343404d08c8d2e1c22fe66"
   },
+  "native_ui_source_compatibility_review_20261104": {
+    "baseline_commit": "90fee768e20d4e40c3f55509ffbfdedb05c92780",
+    "changed_sources": [
+      {
+        "after": {
+          "path": "modules/report-builder/assets/report-builder-review-widget.html",
+          "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
+          "sha256": "5c215900a5250c6297a7b959818522651f1a38780409bb103417d25f87fde5e0"
+        },
+        "before": {
+          "path": "modules/report-builder/assets/report-builder-review-widget.html",
+          "repository_path": "plugins/report-builder/assets/report-builder-review-widget.html",
+          "sha256": "666aacb7aa93689ffc527c1b467f742278961c15ed89b64d28051f524f6259f1"
+        },
+        "path": "modules/report-builder/assets/report-builder-review-widget.html"
+      }
+    ],
+    "comparison": "The complete compiled course objects are identical apart from sources. Localized teaching text, inputs, demo/practice requests, checkpoints, expectations and timing retain the reviewed baseline values.",
+    "current_course_sha256": "f7bc91fb0a22d7805cf3b68db3e880c9ac6c8024bc094c985b9458a544c12c7d",
+    "historical_execution_evidence": {
+      "artifact_id": 13316727608,
+      "commit": "d9328a368ac6919e2ee564b62aca800c78c1675f",
+      "result": "1734 passed, 3 skipped, followed by a stale editorial-record failure. These executions apply only to their recorded digests; they are not relabelled as execution of changed course bindings.",
+      "run_id": 41814014657
+    },
+    "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
+    "previous_course_sha256": "a2cd85adc723c4a0cef9d6be542aa65b654a8a322ffdb00408bd05d535948bd2",
+    "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
+    "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+    "reviewer": "Codex /root - bounded native UI source compatibility review",
+    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; plain scenario names in budget tables; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
+  },
   "neutral_workflow_theme_source_review_20261029": {
     "authored_content_unchanged": true,
     "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
@@ -715,9 +753,9 @@
     "previous_course_sha256": "880490e5208924c1146f34927502b59c3d33dd4d97501bf5c062901801057bb1",
     "scope": "Retain native-UI source and all authored lessons, inputs and existing acceptance limits. Legal/tax adds the optional subscription reference; document-format retains the existing onboarding method while excluding source settings from lessons. Fresh exact-digest native execution is required; no professional or installed-host acceptance inferred."
   },
-  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+  "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
+  "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+  "reviewer": "Codex /root - bounded native UI source compatibility review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
     "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",

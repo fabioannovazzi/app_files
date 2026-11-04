@@ -169,7 +169,7 @@
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "b2dd7e3a0a055f535d247c20f6c919a4d5f718d6031af369c68010ba7e6551e1",
+      "sha256": "e2cf72eb35d8cfd85c1b0c351289aa44fc0a35452260547dbde3b45180e19102",
       "languages": [
         "it",
         "en",
@@ -194,7 +194,7 @@
         "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
         "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
       },
-      "source_sha256": "ea968eac4bc2aa5bc280fb2c3b4059507e8ca6c86b165743436646a827e450a0"
+      "source_sha256": "f29f3d8221fd6d1a0c081753ae400b2f21d419e67e903d06a816c9abd7a074c3"
     }
   }
 }

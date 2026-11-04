@@ -190,7 +190,9 @@
     "previous_memo": "Previous-version memo",
     "run_directory": "Dossier folder",
     "restored": "Saved decisions restored. Review them before applying.",
-    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision."
+    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision.",
+    "Verify the client and assisted-party identity and role.": "Verify the client and assisted-party identity and role.",
+    "Search the complete approved client/matter register for every relevant party.": "Search the complete approved client/matter register for every relevant party."
   },
   "it": {
     "page_title": "Preparare una pratica",
@@ -383,7 +385,9 @@
     "previous_memo": "Memo della versione precedente",
     "run_directory": "Cartella del dossier",
     "restored": "Decisioni salvate ripristinate. Controllale prima di applicarle.",
-    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione."
+    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione.",
+    "Verify the client and assisted-party identity and role.": "Verificare identità e ruolo del cliente e degli altri soggetti assistiti.",
+    "Search the complete approved client/matter register for every relevant party.": "Cercare tutti i soggetti rilevanti nel registro completo dei clienti e delle pratiche approvato dallo studio."
   },
   "fr": {
     "page_title": "Préparer un dossier",
@@ -576,7 +580,9 @@
     "previous_memo": "Note de la version précédente",
     "run_directory": "Dossier de travail",
     "restored": "Décisions enregistrées restaurées. Vérifiez-les avant de les appliquer.",
-    "saved_unavailable": "Les décisions enregistrées ne peuvent pas être restaurées pour cette version. Revoyez les données avant de sauvegarder une nouvelle décision."
+    "saved_unavailable": "Les décisions enregistrées ne peuvent pas être restaurées pour cette version. Revoyez les données avant de sauvegarder une nouvelle décision.",
+    "Verify the client and assisted-party identity and role.": "Vérifier l’identité et le rôle du client et des autres personnes assistées.",
+    "Search the complete approved client/matter register for every relevant party.": "Rechercher toutes les parties pertinentes dans le registre complet des clients et dossiers approuvé par le cabinet."
   },
   "de": {
     "page_title": "Eine Angelegenheit vorbereiten",
@@ -769,7 +775,9 @@
     "previous_memo": "Vermerk der vorherigen Version",
     "run_directory": "Aktenordner",
     "restored": "Gespeicherte Entscheidungen wiederhergestellt. Vor dem Anwenden prüfen.",
-    "saved_unavailable": "Die gespeicherten Entscheidungen können für diese Version nicht wiederhergestellt werden. Prüfen Sie die Daten vor dem Speichern einer neuen Entscheidung."
+    "saved_unavailable": "Die gespeicherten Entscheidungen können für diese Version nicht wiederhergestellt werden. Prüfen Sie die Daten vor dem Speichern einer neuen Entscheidung.",
+    "Verify the client and assisted-party identity and role.": "Identität und Rolle des Mandanten und der weiteren vertretenen Personen prüfen.",
+    "Search the complete approved client/matter register for every relevant party.": "Alle relevanten Beteiligten im vollständigen, von der Kanzlei freigegebenen Mandanten- und Aktenregister suchen."
   },
   "es": {
     "page_title": "Preparar un expediente",
@@ -962,6 +970,8 @@
     "previous_memo": "Nota de la versión anterior",
     "run_directory": "Carpeta del expediente",
     "restored": "Decisiones guardadas recuperadas. Revísalas antes de aplicarlas.",
-    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versión. Revisa los datos antes de guardar una nueva decisión."
+    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versión. Revisa los datos antes de guardar una nueva decisión.",
+    "Verify the client and assisted-party identity and role.": "Verificar la identidad y el papel del cliente y de las demás personas asistidas.",
+    "Search the complete approved client/matter register for every relevant party.": "Buscar a todas las partes relevantes en el registro completo de clientes y asuntos aprobado por el despacho."
   }
 }

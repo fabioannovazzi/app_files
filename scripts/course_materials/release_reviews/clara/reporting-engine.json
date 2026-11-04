@@ -100,7 +100,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "79be050090e33e2f41c8fbc47578a0215c3479b040165ba7616502423c04ef6e",
+  "course_sha256": "f29f3d8221fd6d1a0c081753ae400b2f21d419e67e903d06a816c9abd7a074c3",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "66a004e46b78c16dc7e2308f1fabc91a235064289c61053448354d469568dba1",
@@ -183,6 +183,12 @@
     "course_sha256": "66a004e46b78c16dc7e2308f1fabc91a235064289c61053448354d469568dba1",
     "reviewed_at": "2026-09-23T11:51:00.788201+00:00",
     "reviewer": "Codex lesson and actual generated report review"
+  },
+  "historical_review_identity_before_native_ui_source_refresh_20261104": {
+    "course_sha256": "79be050090e33e2f41c8fbc47578a0215c3479b040165ba7616502423c04ef6e",
+    "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -346,6 +352,78 @@
       "verdict": "accepted"
     }
   },
+  "native_ui_source_compatibility_review_20261104": {
+    "baseline_commit": "90fee768e20d4e40c3f55509ffbfdedb05c92780",
+    "changed_sources": [
+      {
+        "after": {
+          "path": "modules/reporting-engine/scripts/budget_report_preview.py",
+          "repository_path": "plugins/clara/modules/reporting-engine/scripts/budget_report_preview.py",
+          "sha256": "fa7668661b094590d62e39678f5dfa4cb39f07e355dcb8fbfd4ed095ef406a6e"
+        },
+        "before": {
+          "path": "modules/reporting-engine/scripts/budget_report_preview.py",
+          "repository_path": "plugins/clara/modules/reporting-engine/scripts/budget_report_preview.py",
+          "sha256": "204dc6e63c034948e85236d3f6ac9c47a4e5f738f368d0a587b52c2259243b49"
+        },
+        "path": "modules/reporting-engine/scripts/budget_report_preview.py"
+      },
+      {
+        "after": {
+          "path": "scripts/report_mcp.cjs",
+          "repository_path": "plugins/clara/scripts/report_mcp.cjs",
+          "sha256": "d279a1d47130b5bd8cff393aa9772ff7b2958fdd419c423845a590e347aafd75"
+        },
+        "before": null,
+        "path": "scripts/report_mcp.cjs"
+      },
+      {
+        "after": {
+          "path": "scripts/report_mcp.py",
+          "repository_path": "plugins/clara/scripts/report_mcp.py",
+          "sha256": "2f602685fdc76252f309a5e2da3b89d5b57a5480619d88963b3cc63b275a021a"
+        },
+        "before": null,
+        "path": "scripts/report_mcp.py"
+      },
+      {
+        "after": {
+          "path": "skills/reporting-engine/SKILL.md",
+          "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
+          "sha256": "3aba7af89899eaea8d91857b58869d62dcf1c3c403cdabe491cbec6c766a9a43"
+        },
+        "before": {
+          "path": "skills/reporting-engine/SKILL.md",
+          "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
+          "sha256": "d0ec923229e5ce8c0e477521c962988cbd51937cb1c13be3e12c67bbd6b0cc8a"
+        },
+        "path": "skills/reporting-engine/SKILL.md"
+      },
+      {
+        "after": {
+          "path": "ui/report.html",
+          "repository_path": "plugins/clara/ui/report.html",
+          "sha256": "9d79d7d7fd1758a1b1b13524737fcc93047123654a5e3fe8b303060ee9fe68cd"
+        },
+        "before": null,
+        "path": "ui/report.html"
+      }
+    ],
+    "comparison": "The complete compiled course objects are identical apart from sources. Localized teaching text, inputs, demo/practice requests, checkpoints, expectations and timing retain the reviewed baseline values.",
+    "current_course_sha256": "f29f3d8221fd6d1a0c081753ae400b2f21d419e67e903d06a816c9abd7a074c3",
+    "historical_execution_evidence": {
+      "artifact_id": 13316727608,
+      "commit": "d9328a368ac6919e2ee564b62aca800c78c1675f",
+      "result": "1734 passed, 3 skipped, followed by a stale editorial-record failure. These executions apply only to their recorded digests; they are not relabelled as execution of changed course bindings.",
+      "run_id": 41814014657
+    },
+    "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
+    "previous_course_sha256": "79be050090e33e2f41c8fbc47578a0215c3479b040165ba7616502423c04ef6e",
+    "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
+    "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+    "reviewer": "Codex /root - bounded native UI source compatibility review",
+    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; plain scenario names in budget tables; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
+  },
   "neutral_workflow_theme_source_review_20261029": {
     "authored_content_unchanged": true,
     "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
@@ -460,9 +538,9 @@
     "reviewer": "Codex - bounded source compatibility review",
     "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
   },
-  "review_scope": "Reviewed localized lessons, prepared workbook meanings and generated demo/practice narratives and tables. Current native execution checks recalculate the workbook and retain the previous report. Authored commentary is replayed as a fixture, not represented as fresh model inference. The shared Italian dashboard was also inspected in Chrome and its February selector verified. No learner participation, professional approval, live voice or all-locale visual inspection is claimed. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
+  "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
+  "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+  "reviewer": "Codex /root - bounded native UI source compatibility review",
   "runtime8_dependency_binding_20261006": {
     "current_course_sha256": "55630418343a3c0a0e2254fdbba3d5e2a01d139b5feca423f88f1c5bb9319b5f",
     "previous_course_sha256": "e1fe7feda7459346e1ac7cf4c190944b2210cc64eaabcf0f8fbe7181ded4aa0c",

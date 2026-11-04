@@ -410,7 +410,9 @@ const VOCABULARY={
     "previous_memo": "Previous-version memo",
     "run_directory": "Dossier folder",
     "restored": "Saved decisions restored. Review them before applying.",
-    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision."
+    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision.",
+    "Verify the client and assisted-party identity and role.": "Verify the client and assisted-party identity and role.",
+    "Search the complete approved client/matter register for every relevant party.": "Search the complete approved client/matter register for every relevant party."
   },
   "it": {
     "page_title": "Preparare una pratica",
@@ -603,7 +605,9 @@ const VOCABULARY={
     "previous_memo": "Memo della versione precedente",
     "run_directory": "Cartella del dossier",
     "restored": "Decisioni salvate ripristinate. Controllale prima di applicarle.",
-    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione."
+    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione.",
+    "Verify the client and assisted-party identity and role.": "Verificare identit\u00e0 e ruolo del cliente e degli altri soggetti assistiti.",
+    "Search the complete approved client/matter register for every relevant party.": "Cercare tutti i soggetti rilevanti nel registro completo dei clienti e delle pratiche approvato dallo studio."
   },
   "fr": {
     "page_title": "Pr\u00e9parer un dossier",
@@ -796,7 +800,9 @@ const VOCABULARY={
     "previous_memo": "Note de la version pr\u00e9c\u00e9dente",
     "run_directory": "Dossier de travail",
     "restored": "D\u00e9cisions enregistr\u00e9es restaur\u00e9es. V\u00e9rifiez-les avant de les appliquer.",
-    "saved_unavailable": "Les d\u00e9cisions enregistr\u00e9es ne peuvent pas \u00eatre restaur\u00e9es pour cette version. Revoyez les donn\u00e9es avant de sauvegarder une nouvelle d\u00e9cision."
+    "saved_unavailable": "Les d\u00e9cisions enregistr\u00e9es ne peuvent pas \u00eatre restaur\u00e9es pour cette version. Revoyez les donn\u00e9es avant de sauvegarder une nouvelle d\u00e9cision.",
+    "Verify the client and assisted-party identity and role.": "V\u00e9rifier l\u2019identit\u00e9 et le r\u00f4le du client et des autres personnes assist\u00e9es.",
+    "Search the complete approved client/matter register for every relevant party.": "Rechercher toutes les parties pertinentes dans le registre complet des clients et dossiers approuv\u00e9 par le cabinet."
   },
   "de": {
     "page_title": "Eine Angelegenheit vorbereiten",
@@ -989,7 +995,9 @@ const VOCABULARY={
     "previous_memo": "Vermerk der vorherigen Version",
     "run_directory": "Aktenordner",
     "restored": "Gespeicherte Entscheidungen wiederhergestellt. Vor dem Anwenden pr\u00fcfen.",
-    "saved_unavailable": "Die gespeicherten Entscheidungen k\u00f6nnen f\u00fcr diese Version nicht wiederhergestellt werden. Pr\u00fcfen Sie die Daten vor dem Speichern einer neuen Entscheidung."
+    "saved_unavailable": "Die gespeicherten Entscheidungen k\u00f6nnen f\u00fcr diese Version nicht wiederhergestellt werden. Pr\u00fcfen Sie die Daten vor dem Speichern einer neuen Entscheidung.",
+    "Verify the client and assisted-party identity and role.": "Identit\u00e4t und Rolle des Mandanten und der weiteren vertretenen Personen pr\u00fcfen.",
+    "Search the complete approved client/matter register for every relevant party.": "Alle relevanten Beteiligten im vollst\u00e4ndigen, von der Kanzlei freigegebenen Mandanten- und Aktenregister suchen."
   },
   "es": {
     "page_title": "Preparar un expediente",
@@ -1182,7 +1190,9 @@ const VOCABULARY={
     "previous_memo": "Nota de la versi\u00f3n anterior",
     "run_directory": "Carpeta del expediente",
     "restored": "Decisiones guardadas recuperadas. Rev\u00edsalas antes de aplicarlas.",
-    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versi\u00f3n. Revisa los datos antes de guardar una nueva decisi\u00f3n."
+    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versi\u00f3n. Revisa los datos antes de guardar una nueva decisi\u00f3n.",
+    "Verify the client and assisted-party identity and role.": "Verificar la identidad y el papel del cliente y de las dem\u00e1s personas asistidas.",
+    "Search the complete approved client/matter register for every relevant party.": "Buscar a todas las partes relevantes en el registro completo de clientes y asuntos aprobado por el despacho."
   }
 };
 let EDITABLE=false,appSession,saveAttempt,busy=false,dirty=false;
@@ -1191,6 +1201,11 @@ let review=null,reviewHash='',language='en',evidenceNames={},partyNames={};
 const base=location.pathname.replace(/\/$/,'');
 const words=()=>VOCABULARY[language]||VOCABULARY.en;
 const t=key=>words()[key]||String(key).replace(/_/g,' ');
+function itemTitle(item){
+ const description=item.data?.description,translated=words()[description];
+ return translated&&typeof description==='string'&&item.title.endsWith(description)
+  ? item.title.slice(0,-description.length)+translated : item.title;
+}
 function caption(key){return words()[key]||String(key).replace(/_/g,' ');}
 function stateText(value){return words()[String(value)]||String(value);}
 const technicalFields=new Set(['party_id','scope_id','item_id','candidate_id','deadline_id']);
@@ -1227,7 +1242,7 @@ function render(value){
  const order=['matter_request','party_map','engagement','conflict_scope','conflict_candidate','deadline_posture','deadline_candidate','missing_item','confidentiality','aml_applicability','privacy_retention','folder_plan'];
  const index=type=>order.includes(type)?order.indexOf(type):order.length;
  const items=[...payload.items].sort((a,b)=>index(a.item_type)-index(b.item_type));
- document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(item.title)}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
+ document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(itemTitle(item))}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
  if(EDITABLE){
   const pending=value?.pending_review;const status=document.querySelector('#status');
   document.querySelector('#reviewer').value='';status.textContent='';status.className='';
