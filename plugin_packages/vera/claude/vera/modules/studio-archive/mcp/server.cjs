@@ -603,7 +603,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.finalizeWorkflow,
       title: "Finalize Vera workflow artifacts",
       description:
-        "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
+        "First omit artifacts to list the professional output paths actually present in this run. Use those paths to prepare explicit declarations, then submit them to mark the outputs ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
       inputSchema: objectSchema(
         {
           ...runIdentityProperties(),
@@ -633,7 +633,7 @@ function toolDefinitions() {
             ),
           },
         },
-        ["client_id", "engagement_id", "run_id", "artifacts"],
+        ["client_id", "engagement_id", "run_id"],
       ),
       annotations: annotations(false),
     },
@@ -1555,6 +1555,7 @@ function commandForTool(name, rawArgs) {
       }
       command.push("--expected-declaration-sha256", args.expected_declaration_sha256);
     }
+    if (args.artifacts === undefined && args.expected_declaration_sha256 === undefined) return command;
     if (
       !Array.isArray(args.artifacts) ||
       args.artifacts.length < 1 ||

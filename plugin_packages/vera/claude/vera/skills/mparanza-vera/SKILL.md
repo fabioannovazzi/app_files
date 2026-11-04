@@ -862,8 +862,10 @@ the installed procedure and inspect Vera's saved local setup with the host Node
 runtime. This lookup uses no Python and must not trigger Python provisioning.
 It requires no old conversation, CR number, tutorial or previous user prompt.
 
-Before Python helper scripts, run the module dependency check. From the Vera root, the
-delegating form is:
+Before Python helper scripts, run the module dependency check. With Claude's
+`vera_execute`, set `component` to the module, use `scripts/check_dependencies.py`,
+and leave `arguments` empty. Pass optional requirement files in `requirements`.
+For a shell invocation from the Vera root, the delegating form is:
 
 ```bash
 python scripts/check_dependencies.py --module <module>

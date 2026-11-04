@@ -22,7 +22,7 @@ const descriptions = {
   snapshot_studio_client_folder: "Hash a bounded client-folder view locally and return its complete projected inventory for the selected matter. Raw hashes and absolute paths stay local; documents are not copied or moved.",
   snapshot_studio_client_google_drive: "Read one exact bound Drive folder recursively and return its projected inventory. Storage IDs, versions, parents, capabilities and checksums stay in the local receipt.",
   read_studio_run_artifact: "Read selected data from a bound input or an output of this exact run. Offset and limit select physical data units; columns are zero-based indices.",
-  finalize_studio_client_workflow: "Declare this run’s professional outputs with purpose, audience and media type and mark them ready for review. Before completion, correct declaration metadata using the returned declaration_sha256. Preserve file identities, bytes and earlier receipts.",
+  finalize_studio_client_workflow: "Omit artifacts to list the selected run’s actual output paths. Declare those paths with purpose, audience and media type and mark them ready for review. Before completion, correct declaration metadata using the returned declaration_sha256. Preserve file identities, bytes and earlier receipts.",
   configure_studio_archive_client: "Bind confirmed legal names, full email addresses and tax identifiers to one exact archive scope in the private local registry. The registry stores no Gmail credentials, messages or attachments.",
 };
 
