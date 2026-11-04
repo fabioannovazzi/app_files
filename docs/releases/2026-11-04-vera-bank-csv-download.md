@@ -52,6 +52,12 @@ Coverage review and actual bank acceptance remain distinct from byte retention.
 
 ## Encountered build and test blocks
 
+- CI release alignment downloaded the new ZIPs but compared them with generated
+  Cowork directories left over from checkout, missing six newly generated bank
+  files. The alignment job now restores those directories from the exact same
+  commit's built archives before checking them. A regression executes that CI
+  preparation with fresh/hidden files and a stale checkout file; all ten archive
+  prerequisite tests passed. Generated directories are not added to Git.
 - Coverage initially selected the file as a module and collected no data.
   Correcting the coverage configuration measured the same helper at 81.71%; no
   production behavior was changed for that harness issue.

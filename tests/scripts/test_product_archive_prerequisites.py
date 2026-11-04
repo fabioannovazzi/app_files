@@ -5,6 +5,7 @@ from __future__ import annotations
 import importlib.util
 import subprocess
 from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 import yaml
@@ -50,6 +51,39 @@ def test_product_archives_are_ignored_and_not_tracked():
 
     assert tracked == ""
     assert ignored.returncode == 0
+
+
+def test_alignment_restores_new_and_hidden_files_without_stale_checkout_files(tmp_path):
+    workflow = yaml.safe_load(
+        (ROOT / ".github/workflows/product-release-alignment.yml").read_text()
+    )
+    steps = workflow["jobs"]["alignment"]["steps"]
+    restoration = next(
+        step
+        for step in steps
+        if step.get("name")
+        == "Restore generated Cowork directories from this commit's archives"
+    )
+    for product in ("vera", "clara", "lucia"):
+        package = tmp_path / "plugin_packages" / product
+        directory = package / "claude" / product
+        directory.mkdir(parents=True)
+        (directory / "removed-skill.md").write_text("stale checkout")
+        with ZipFile(package / f"{product}-claude-plugin.zip", "w") as archive:
+            archive.writestr(".claude-plugin/plugin.json", '{"version":"new"}')
+            archive.writestr("skills/new/SKILL.md", "new skill from built artifact")
+
+    subprocess.run(["bash", "-e", "-c", restoration["run"]], cwd=tmp_path, check=True)
+
+    for product in ("vera", "clara", "lucia"):
+        directory = tmp_path / "plugin_packages" / product / "claude" / product
+        assert not (directory / "removed-skill.md").exists()
+        assert (
+            directory / ".claude-plugin/plugin.json"
+        ).read_text() == '{"version":"new"}'
+        assert (directory / "skills/new/SKILL.md").read_text() == (
+            "new skill from built artifact"
+        )
 
 
 @pytest.mark.parametrize(
