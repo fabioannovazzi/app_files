@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "96f70b4fe61a3875f2d8b6be695a9abbf19a63ebd7d59434622278205d703adb",
+  "catalogue_fingerprint": "75fa538ecd01aedda89a3587ac8a281523c2d2b283b997d81ac091187832533a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2539,5 +2539,9 @@
       "vera"
     ],
     "scope": "Register the direct computer-use bank download function as unresolved for Geneva. Preserve all existing function dispositions. The root router now selects this operation for acquisition; no Swiss portal or professional acceptance is established."
+  },
+  "incident_archive_release_binding_20261104": {
+    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
+    "basis": "The Vera wrapper now distinguishes a native component check from the root CLI. The skill IDs, jurisdiction methods and existing assessment decisions are unchanged."
   }
 }

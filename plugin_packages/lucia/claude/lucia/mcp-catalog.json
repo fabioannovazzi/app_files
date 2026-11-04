@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.200",
+  "version": "0.1.205",
   "services": [
     {
       "name": "luciaDeepResearchValidator",
@@ -2391,7 +2391,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "lucia-studio-archive",
-          "version": "0.1.70"
+          "version": "0.1.71"
         },
         "capabilities": {
           "tools": {}
@@ -3361,7 +3361,7 @@
         {
           "name": "finalize_studio_client_workflow",
           "title": "Finalize Lucia workflow artifacts",
-          "description": "Declare this run’s professional outputs with purpose, audience and media type and mark them ready for review. Before completion, correct declaration metadata using the returned declaration_sha256. Preserve file identities, bytes and earlier receipts.",
+          "description": "Omit artifacts to list the selected run’s actual output paths. Declare those paths with purpose, audience and media type and mark them ready for review. Before completion, correct declaration metadata using the returned declaration_sha256. Preserve file identities, bytes and earlier receipts.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3433,8 +3433,7 @@
             "required": [
               "client_id",
               "engagement_id",
-              "run_id",
-              "artifacts"
+              "run_id"
             ],
             "additionalProperties": false
           },

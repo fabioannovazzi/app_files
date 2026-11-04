@@ -52,6 +52,15 @@ Coverage review and actual bank acceptance remain distinct from byte retention.
 
 ## Encountered build and test blocks
 
+- Main advanced to Vera 0.1.567 through PR #951 during CI. The combined 0.1.568
+  preserves its incident ordering, Archive declaration preview and dependency
+  argument corrections. The changed implementation files match main exactly;
+  the Vera router retains both its dependency guidance and the bank-download
+  route. The combined bank/archive/incident/prerequisite suite passed 82 tests.
+  Auto-review rejected a blanket conflict-selection command as risking main's
+  fixes. Source JSON was instead resolved explicitly, preserving main's service
+  descriptions and both localization bindings; generated artifacts were rebuilt
+  from combined sources. No override of that rejection was used.
 - A Windows rerun exposed intermittent rejection of an unchanged original:
   path stat and descriptor stat can report different ctime meanings on Windows
   ([CPython issue 157671](https://github.com/python/cpython/issues/157671)).

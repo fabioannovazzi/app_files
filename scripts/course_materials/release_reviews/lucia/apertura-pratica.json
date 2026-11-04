@@ -156,7 +156,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "0ca9e94d02419d2a5b1cef77c2f29d827dfcf04e23fa2dca3b13299b3dded439",
+  "course_sha256": "e2ce798e89e1678ea0e1fe10d1c867f0457ccde22f97271d576700fccd8ff81d",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "1a36de6eab0fc5fcc531976f4ab7c2b049d98103191b0ee61a694767beb7546d",
@@ -908,5 +908,10 @@
     "reviewer": "Codex /root - source compatibility review",
     "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "workflow": "apertura-pratica"
+  "workflow": "apertura-pratica",
+  "incident_archive_binding_20261104": {
+    "prior_course_sha256": "0ca9e94d02419d2a5b1cef77c2f29d827dfcf04e23fa2dca3b13299b3dded439",
+    "current_course_sha256": "e2ce798e89e1678ea0e1fe10d1c867f0457ccde22f97271d576700fccd8ff81d",
+    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope."
+  }
 }

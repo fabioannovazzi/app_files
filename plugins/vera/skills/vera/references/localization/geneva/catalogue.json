@@ -2,8 +2,8 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
   "version": "0.1.568",
-  "captured_at": "2026-11-04T18:23:56.376552+00:00",
-  "catalogue_fingerprint": "96f70b4fe61a3875f2d8b6be695a9abbf19a63ebd7d59434622278205d703adb",
+  "captured_at": "2026-11-04T20:53:03.830429+00:00",
+  "catalogue_fingerprint": "75fa538ecd01aedda89a3587ac8a281523c2d2b283b997d81ac091187832533a",
   "manifest_sha256": "a7086f32cf06bf1bee232b834129b6a35686dab20cc39f4d9e76d95c2954c80f",
   "entries": [
     {
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "eaebe9aa99a74f12f4d229230eabe5dd23ab9f70327cc88a02d41f4e16615009"
+      "sha256": "0b40752500497171fc3cbff796408de31afd1448e297859aa3fd494d22f1145a"
     },
     {
       "function_id": "vouching",

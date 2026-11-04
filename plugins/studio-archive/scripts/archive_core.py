@@ -4484,18 +4484,62 @@ def finalize_studio_client_workflow(
     client_id: str,
     engagement_id: str,
     run_id: str,
-    artifacts: Sequence[Mapping[str, Any]],
+    artifacts: Sequence[Mapping[str, Any]] | None = None,
     *,
     expected_declaration_sha256: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """Declare the purpose of every output and seal its exact bytes."""
+    """List the selected run's output paths, or seal its explicit declarations."""
 
     private_state = _state_dir(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
     try:
+        if artifacts is None:
+            if expected_declaration_sha256 is not None:
+                raise ArchiveError("A declaration correction requires artifacts.")
+            loaded = ledger.load_run(root, engagement_id, run_id)
+            if loaded["run"]["status"] not in {"running", "ready_for_review"}:
+                raise ArchiveError(
+                    "Output declarations require a running or review-ready run."
+                )
+            output = Path(loaded["output_dir"])
+            runtime = ledger._reporting_runtime()
+            automatic = {item["path"] for item in runtime.report_declarations(output)}
+            paths = [
+                file.relative_to(output).as_posix()
+                for file in ledger._output_files(output)
+            ]
+            result = {
+                "status": "declaration_preview",
+                "run_id": run_id,
+                "output_paths": [path for path in paths if path not in automatic],
+            }
+            if runtime.selective_reporting_enabled() and runtime.report_pipeline(
+                loaded["run"]["workflow_id"]
+            ):
+                from archive_reporting import record_send
+                from archive_reporting_failure import (
+                    REPORTING_ERRORS,
+                    reporting_failure,
+                )
+
+                try:
+                    record_send(
+                        Path(loaded["run_root"]),
+                        result,
+                        channel="archive_declaration_preview",
+                    )
+                except REPORTING_ERRORS as exc:
+                    result["reporting"] = reporting_failure(
+                        loaded["run"]["workflow_id"],
+                        {},
+                        exc,
+                        stage="declaration_preview",
+                        root=Path(loaded["run_root"]),
+                    )
+            return result
         loaded = ledger.finalize_run(
             root,
             engagement_id,

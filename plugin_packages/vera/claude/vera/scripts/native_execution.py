@@ -137,6 +137,19 @@ def _arguments(spec: dict[str, Any]) -> list[str]:
             spec["script"],
             *spec["arguments"],
         ]
+    arguments = spec["arguments"]
+    if spec["script"] == "scripts/check_dependencies.py":
+        # The CLI wrapper owns --module. The native caller may have copied
+        # that selector from the documented CLI invocation into helper argv.
+        arguments = list(arguments)
+        index = 0
+        while index < len(arguments) and arguments[index] != "--":
+            if arguments[index : index + 2] == ["--module", spec["component"]]:
+                del arguments[index : index + 2]
+            elif arguments[index] == "--module=" + spec["component"]:
+                del arguments[index]
+            else:
+                index += 1
     return [
         "--module",
         spec["component"],
@@ -147,7 +160,7 @@ def _arguments(spec: dict[str, Any]) -> list[str]:
         ],
         "run",
         spec["script"],
-        *spec["arguments"],
+        *arguments,
     ]
 
 
@@ -553,7 +566,9 @@ def serve() -> None:
             "Run a published Vera component helper through the installed service. "
             "Use for dependency checks and the specialist's managed Python commands; "
             "the service owns persistent diagnostics outside the chat shell. "
-            "For checks use script scripts/check_dependencies.py. Pass only the "
+            "For dependency checks set component and use scripts/check_dependencies.py "
+            "with empty arguments; use requirements for optional requirement files. "
+            "For other helpers pass only the "
             "helper's arguments, with absolute client paths. For a Vera opinion, "
             "run scripts/opinion_validation.py with component deep-research-validator "
             "to package the answer and verify its visible citations. Retain one job UUID "
