@@ -814,9 +814,9 @@
     "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
     "previous_course_sha256": "0ca9e94d02419d2a5b1cef77c2f29d827dfcf04e23fa2dca3b13299b3dded439",
     "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
-    "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+    "reviewed_at": "2026-11-04T15:06:19.582345+00:00",
     "reviewer": "Codex /root - bounded native UI source compatibility review",
-    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; plain scenario names in budget tables; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
+    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; display-only scenario names in the verified native budget preview; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
   },
   "neutral_workflow_theme_source_review_20261029": {
     "authored_content_unchanged": true,
@@ -946,7 +946,7 @@
     "source_review": "Compared complete course JSON with the exact historically reviewed digest. Only operational_incidents.py and workflow_usage.py source fingerprints changed. Inspected those diffs and reporting_product.py: startup instructions now resolve the actual installed product reference path by file presence, with the existing product identity and ambiguity checks. Course content, inputs, locales, execution contracts and teaching judgments are unchanged. This mismatch was already present at base f7344305fb37e9eb6df645fdd4067a9635ee9a12."
   },
   "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
-  "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+  "reviewed_at": "2026-11-04T15:06:19.582345+00:00",
   "reviewer": "Codex /root - bounded native UI source compatibility review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/clara-lucia-native-ui/plugins/vera",
-  "version": "0.1.562",
-  "captured_at": "2026-11-04T14:47:38.225094+00:00",
-  "catalogue_fingerprint": "c629ca4ce1108955399ffcfa6c486b9885a175bc8b152c34467545db1e917a02",
-  "manifest_sha256": "6f5a15787898d1110d77b4f6d1baab6ce30bf248ebf07f87fa3980175483c75c",
+  "version": "0.1.563",
+  "captured_at": "2026-11-04T15:06:17.129186+00:00",
+  "catalogue_fingerprint": "181884993d4ddc5e56d4d5f65b18c596369f7dea4eb35bf650aebf02597f87ce",
+  "manifest_sha256": "a35395aecfcc10b437a23b7f898984fb13f498b3b061d4cfa499cd20df920f51",
   "entries": [
     {
       "function_id": "adeguati-assetti",

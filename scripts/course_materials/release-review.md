@@ -2832,13 +2832,13 @@ installed-host or professional acceptance.
 
 ## Native UI source compatibility - 4 November 2026
 
-Twenty-one compiled course digests changed with the native UI consolidation and
+Twenty compiled course digests changed with the native UI consolidation and
 presentation fixes. Complete course objects were compared with reviewed main
 `90fee768e`: only `sources` bindings differ. Localized teaching text, selected
 inputs, demo/practice requests, checkpoints, expectations and timing remain
 identical. The bounded source review covers the shared font rule, removal of
 duplicate inspectors, receipt-bound native report reader, app-only matter review,
-plain budget scenario names, translated matter headings and readable management
+display-only budget scenario names, translated matter headings and readable management
 results. Calculations and professional authorization boundaries are unchanged.
 Existing localized editorial text and artifact hashes remain historical judgments.
 
@@ -2854,3 +2854,10 @@ were inspected, but its save control timed out before persistence could be
 verified. The fresh Vera management view exposed technical metadata requiring
 content cleanup. No new live learner, voice, professional, complete Desktop
 or second-pass UI acceptance is claimed by this review.
+
+The final wording cleanup lives in the receipt-verified native display. The shared
+budget producer and its copy dictionary are byte-identical to `d9328a368`; changing
+them would invalidate the exact implementation scope of a saved management run.
+No receipt check is weakened, historical run replaced or calculation repeated to
+accommodate a UI wording change. Final candidates are Vera 0.1.563, Clara 0.1.375
+and Lucia 0.1.202.

@@ -41,7 +41,7 @@
     {
       "path": "modules/management-control-pack/assets/management-report-copy.json",
       "repository_path": "plugins/management-control-pack/assets/management-report-copy.json",
-      "sha256": "7a410950c02f6269aef7bfef8583de4c88cbebce0eff4277445d8f8482081b80"
+      "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
     },
     {
       "path": "modules/management-control-pack/references/costing.md",
@@ -56,7 +56,7 @@
     {
       "path": "modules/management-control-pack/scripts/budget_presentation.py",
       "repository_path": "plugins/management-control-pack/scripts/budget_presentation.py",
-      "sha256": "749aae1488857b668b10ef0c7085d762d18d4bb189db0e2859806caa81924ab4"
+      "sha256": "643f526d3c6980fcefee72d3919c652da0b1016d6a0c9bfabff6de4b3a713706"
     },
     {
       "path": "modules/management-control-pack/scripts/check_dependencies.py",

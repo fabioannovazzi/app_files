@@ -917,9 +917,9 @@
     "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
     "previous_course_sha256": "69c57f26509934368aea3d0a0c709641e14a70e0b7318b3ee8fd2f3e96c215f8",
     "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
-    "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+    "reviewed_at": "2026-11-04T15:06:19.582345+00:00",
     "reviewer": "Codex /root - bounded native UI source compatibility review",
-    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; plain scenario names in budget tables; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
+    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; display-only scenario names in the verified native budget preview; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
   },
   "neutral_workflow_theme_source_review_20261029": {
     "authored_content_unchanged": true,
@@ -1050,7 +1050,7 @@
     "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
   "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
-  "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
+  "reviewed_at": "2026-11-04T15:06:19.582345+00:00",
   "reviewer": "Codex /root - bounded native UI source compatibility review",
   "root_helper_capture_source_refresh": {
     "previous_course_sha256": "ca3e9440c94eaa8ceabc7cdfff9182676a4920a780e64a9a90aa3c916ece9f38",

@@ -109,7 +109,7 @@
     "reviewer": "Codex /root",
     "source_review": "Reviewed the additive costing route, its exact arithmetic, archive-bound source checks and separate renderer. Existing reporting dispatch is unchanged unless analysis_kind is costing. This source refresh does not turn the monthly reporting lesson into a costing lesson."
   },
-  "course_sha256": "699203d2019a193eebd903bd3d6930a33ea9190aad7cae86e6de0e985ad0b00e",
+  "course_sha256": "1348634eb6eb4bc8d7e8a6e35fcbce14d8fceb7d330083d317b97a8bf626d7d7",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "f81873e824a849e23a826b9486b3f31a49550ded15e9c0bc60e8a02c7978e6f7",
@@ -184,12 +184,6 @@
     "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
     "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
     "reviewer": "Codex /root — bounded native transport and lesson review"
-  },
-  "historical_review_identity_before_native_ui_source_refresh_20261104": {
-    "course_sha256": "1348634eb6eb4bc8d7e8a6e35fcbce14d8fceb7d330083d317b97a8bf626d7d7",
-    "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
-    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -362,51 +356,6 @@
     "reviewer": "Codex /root - bounded LIPE source compatibility review",
     "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement."
   },
-  "native_ui_source_compatibility_review_20261104": {
-    "baseline_commit": "90fee768e20d4e40c3f55509ffbfdedb05c92780",
-    "changed_sources": [
-      {
-        "after": {
-          "path": "modules/management-control-pack/assets/management-report-copy.json",
-          "repository_path": "plugins/management-control-pack/assets/management-report-copy.json",
-          "sha256": "7a410950c02f6269aef7bfef8583de4c88cbebce0eff4277445d8f8482081b80"
-        },
-        "before": {
-          "path": "modules/management-control-pack/assets/management-report-copy.json",
-          "repository_path": "plugins/management-control-pack/assets/management-report-copy.json",
-          "sha256": "1214b0fd2646a5a13db85ccebf1ef233f0cb2cb1f8ce3daf28cb681f4244db94"
-        },
-        "path": "modules/management-control-pack/assets/management-report-copy.json"
-      },
-      {
-        "after": {
-          "path": "modules/management-control-pack/scripts/budget_presentation.py",
-          "repository_path": "plugins/management-control-pack/scripts/budget_presentation.py",
-          "sha256": "749aae1488857b668b10ef0c7085d762d18d4bb189db0e2859806caa81924ab4"
-        },
-        "before": {
-          "path": "modules/management-control-pack/scripts/budget_presentation.py",
-          "repository_path": "plugins/management-control-pack/scripts/budget_presentation.py",
-          "sha256": "643f526d3c6980fcefee72d3919c652da0b1016d6a0c9bfabff6de4b3a713706"
-        },
-        "path": "modules/management-control-pack/scripts/budget_presentation.py"
-      }
-    ],
-    "comparison": "The complete compiled course objects are identical apart from sources. Localized teaching text, inputs, demo/practice requests, checkpoints, expectations and timing retain the reviewed baseline values.",
-    "current_course_sha256": "699203d2019a193eebd903bd3d6930a33ea9190aad7cae86e6de0e985ad0b00e",
-    "historical_execution_evidence": {
-      "artifact_id": 13316727608,
-      "commit": "d9328a368ac6919e2ee564b62aca800c78c1675f",
-      "result": "1734 passed, 3 skipped, followed by a stale editorial-record failure. These executions apply only to their recorded digests; they are not relabelled as execution of changed course bindings.",
-      "run_id": 41814014657
-    },
-    "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
-    "previous_course_sha256": "1348634eb6eb4bc8d7e8a6e35fcbce14d8fceb7d330083d317b97a8bf626d7d7",
-    "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
-    "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
-    "reviewer": "Codex /root - bounded native UI source compatibility review",
-    "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; plain scenario names in budget tables; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
-  },
   "native_ui_transport_review_20261103": {
     "course_sha256": "2c692dd7ff9e47ecce94cc7a19820e6f7444dd00a6216039e6380b3782b769e1",
     "evidence_document": "docs/releases/2026-11-03-native-ui-lesson-transport-review.json",
@@ -536,9 +485,9 @@
     "reviewed_by": "Codex source and package review",
     "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
-  "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
-  "reviewed_at": "2026-11-04T14:49:26.832119+00:00",
-  "reviewer": "Codex /root - bounded native UI source compatibility review",
+  "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
+  "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+  "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "scissione_integration_refresh_20260930": {
     "changed_sources": [

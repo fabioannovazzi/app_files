@@ -1,7 +1,7 @@
 # Clara and Lucia UI consolidation — 4 November 2026
 
 Base: `90fee768e20d4e40c3f55509ffbfdedb05c92780`.
-Candidates: Vera 0.1.562, Clara 0.1.374, Lucia 0.1.201.
+Candidates: Vera 0.1.563, Clara 0.1.375, Lucia 0.1.202.
 These are implementation candidates, not Desktop acceptance or Marketplace publication.
 
 ## Individual dispositions
@@ -55,8 +55,17 @@ Vera's shared typography fix addresses an observed host `body` font override. Th
 - Earlier `d9328a368` packages were compared member-for-member with exact CI artifacts and installed as Vera 0.1.561 / Clara 0.1.373 / Lucia 0.1.199. That head had 115 successful checks; the teaching workflow ran 1,734 passing tests with three skips, then failed on stale editorial binding records. It was not merged or deployed.
 - Fresh Desktop inspection exercised Clara’s period selector and Lucia’s saved method version 2. Lucia’s matter facts and sources were read; its save click timed out before dispatch/persistence could be confirmed. No pending-decision file was created. Vera’s management detail exposed technical metadata. Further panel reads timed out; screenshots and repeated reopen loops are not used as substitutes for acceptance.
 - Confirmed presentation defects are included in the new candidates: plain budget scenario headers, display-only cleanup of verified older report headers, translated registered matter headings without changing stored payloads, simpler firm-method hints, and a readable management results/coverage/control view. Exact decimal strings and original saved files are preserved; technical receipts remain available on request. New source browser checks cover reporting/costing at 400 and 1080 pixels, read-only authority, complete bounded metric counts, exact values and unchanged output files.
-- Twenty-one compiled courses differ from their reviewed baseline only in source bindings. The bounded source review preserves historical localized editorial/output judgments. New current-digest execution must independently pass the unmodified teaching release verifier; older JUnit digests are not relabelled.
+- Twenty compiled courses differ from their reviewed baseline only in source bindings. The bounded source review preserves historical localized editorial/output judgments. New current-digest execution must independently pass the unmodified teaching release verifier; older JUnit digests are not relabelled.
 - Exact CI artifacts, installation and production deployment for the new candidate versions: pending.
 - Actual fresh Desktop inspection of every retained UI, Vera’s remaining individual cases, and the complete second pass: pending. Expanded app tabs were available after restart, but inspection repeatedly stalled on later reads. No source/package check or reopened panel is counted as Desktop acceptance.
 - No Marketplace upload, submission or publication is authorized or performed.
 - Other active task branches/worktrees are preserved; the temporary task branch/worktree is removed only after the tested change is integrated and deployed.
+
+A retained-run comparison identified that even a wording change in the shared
+budget producer changes its saved exact implementation scope. The final change
+therefore keeps that producer and its copy dictionary byte-identical to the
+previous candidate. Scenario abbreviation cleanup, localized forecast headings
+and the explanatory forecast prefix are display-only operations inside the
+receipt-verified native report frame. The original reports and receipts remain
+unchanged. Existing scope checks stay intact; no saved case is recalculated or
+replaced merely to display it.

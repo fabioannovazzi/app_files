@@ -25,7 +25,7 @@ def test_native_report_keeps_period_controls_and_rejects_stale_refresh(tmp_path,
     language = "it" if width == 400 else "en"
     report.write_text(
         """<!doctype html><html><body><h1>Budget sintetico</h1>
-    <section class="budget-report"><p class="eyebrow">PL · AC</p><table><thead><tr><th>PL · Budget</th><th>AC · Actual</th></tr></thead><tbody><tr><td>100</td><td>120</td></tr></tbody></table><div class="budget-controls" hidden>
+    <section class="budget-report"><p class="eyebrow">PL · AC</p><table><thead><tr><th>PL · Budget</th><th>AC · Actual</th><th>FC · Forecast</th></tr></thead><tbody><tr><td>100</td><td>120</td><td>130</td></tr></tbody></table><p>FC = actuals to cutoff + reviewed remaining-month estimates.</p><div class="budget-controls" hidden>
     <button data-budget-select="month">Mese</button><button data-budget-select="cumulative">Cumulato</button>
     <button data-budget-print>Stampa</button></div>
     <p data-budget-view="month">Marzo: 120 EUR</p><p data-budget-view="cumulative">Gennaio–marzo: 360 EUR</p>
@@ -173,6 +173,15 @@ def test_native_report_keeps_period_controls_and_rejects_stale_refresh(tmp_path,
                 content.get_by_role("columnheader", name="Actual", exact=True)
             ).to_be_visible()
             expect(content.get_by_text("PL · AC", exact=True)).to_have_count(0)
+            expect(
+                content.get_by_role(
+                    "columnheader",
+                    name="Previsionale" if language == "it" else "Forecast",
+                    exact=True,
+                )
+            ).to_be_visible()
+            expect(content.get_by_text("FC =", exact=False)).to_have_count(0)
+            assert "FC =" in report.read_text()
             assert "PL · Budget" in report.read_text()
             expect(content.locator("[data-budget-print]")).to_be_hidden()
             expect(content.get_by_text("Marzo: 120 EUR", exact=True)).to_be_visible()

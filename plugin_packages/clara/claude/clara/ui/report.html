@@ -203,8 +203,15 @@ function accept(result){
   // Normalize the verified report's presentation copy; original bytes stay intact.
   for(const heading of report.querySelectorAll('.budget-report > p.eyebrow'))
     if(/^PL\s*·\s*AC(?:\s*·\s*FC)?$/.test(heading.textContent.trim()))heading.remove();
+  const forecastNames={it:'Previsionale',en:'Forecast',fr:'Prévisionnel',de:'Prognose',es:'Previsión'};
+  const forecast=forecastNames[report.documentElement.lang] || 'Forecast';
   for(const heading of report.querySelectorAll('.budget-report thead th'))
-    if(!heading.childElementCount)heading.textContent=heading.textContent.replace(/^(?:PL|AC|FC)\s*·\s*/, '');
+    if(!heading.childElementCount){
+      heading.textContent=heading.textContent.replace(/^(?:PL|AC|FC)\s*·\s*/, '');
+      if(report.documentElement.lang==='it' && heading.textContent==='Forecast')heading.textContent=forecast;
+    }
+  for(const paragraph of report.querySelectorAll('.budget-report > p:not(.eyebrow)'))
+    if(!paragraph.childElementCount)paragraph.textContent=paragraph.textContent.replace(/\bFC =/g,forecast+' =');
   setLanguage(report.documentElement.lang || document.documentElement.lang);
   const style=report.createElement('style');
   // Printing remains available in the delivered report, outside the app sandbox.
