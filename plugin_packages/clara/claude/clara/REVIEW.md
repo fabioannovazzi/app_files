@@ -25,9 +25,8 @@ are moved to the lesson destination. The cap is 25 MiB per file. HTTPS, the exac
 mparanza.com host and the course path are checked, including every redirect.
 
 ## Local review tokens (flagged as "Uses a credential")
-This Cowork package has no `review_server.py` or `X-Mparanza-Review-Token` bridge. Its packaged analysis widgets do not use that header or `persistence_token`.
-The applicable local preview files are `modules/reporting-engine/scripts/budget_report_preview.py` and `modules/management-control-pack/scripts/preview_report.py`. Each creates a random URL path with `secrets.token_urlsafe(24)` at startup, serves it only on `127.0.0.1`, and loses the in-memory route when the server session ends. These are not user credentials, are not read from the user's environment or files, and are not sent to remote hosts by the preview servers.
-`.claude-plugin/plugin.json` contains plugin metadata, not these tokens or user credential values.
+The native report app in `scripts/report_mcp.py` creates `secrets.token_urlsafe(32)` session references bound to the explicitly selected report and its execution receipt. They are kept in memory and passed only through app-bound host tool calls; report HTML is app-only result metadata. These references are not user credentials and are not read from the user's environment or files. This app does not start a loopback HTTP preview server.
+`.claude-plugin/plugin.json` contains plugin metadata, not session references or user credential values.
 The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables.
 
 ## Runtime download/execution findings (RUNTIME_FETCH_EXEC)

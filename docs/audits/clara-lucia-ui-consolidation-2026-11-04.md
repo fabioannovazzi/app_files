@@ -41,6 +41,8 @@ New native tools expose the selected full report, method or review only through 
 
 Source tests separately cover durable reopening, immutable versions, copy/import lineage, exclusive file creation, stale source and pending-decision rejection, duplicate-request recovery, current receipts/scripts, sandboxed period controls and the MCP protocol. Browser tests exercise real resource bytes and local stdio servers at 400 and 1080 pixels. They are isolated browser checks, not Codex Desktop acceptance.
 
+The canonical matter asset builder now reproduces the native resource exactly from its own JavaScript source. Regeneration cannot restore the retired widget. The independent component browser template remains outside the Lucia package. Package/discovery assertions and local reviewer notes follow the retained engines and native apps.
+
 Selecting an existing Vera work item now requests its detailed fullscreen view after the user’s click; it does not add another mode button and keeps the view usable inline if the host declines. This avoids requiring the surrounding chat expansion control.
 
 Vera's shared typography fix addresses an observed host `body` font override. The app content owns its font without overriding the host body. No professional skill entrypoint changed; the localization snapshot refresh preserves the exact previous function IDs/hashes and jurisdiction judgments.

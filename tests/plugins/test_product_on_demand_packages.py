@@ -73,7 +73,7 @@ def test_product_package_preserves_tools_behind_one_shared_entry(product, host):
 
 @pytest.mark.parametrize("host", ["codex", "cowork"])
 @pytest.mark.parametrize("product", ["vera", "lucia"])
-def test_answer_panel_removed_only_from_vera_discovery(product, host):
+def test_retired_answer_inspectors_are_absent_and_engines_remain(product, host):
     entries = _package_entries(product, host)
     catalog = json.loads(entries["mcp-catalog.json"])
     tool_names = {
@@ -86,15 +86,13 @@ def test_answer_panel_removed_only_from_vera_discovery(product, host):
         "apply_deep_research_decisions",
     }
 
-    assert tool_names & panel_tools == (set() if product == "vera" else panel_tools)
-    assert ("ui://widget/deep-research-review.html" in json.dumps(catalog)) == (
-        product == "lucia"
+    assert tool_names & panel_tools == (
+        set() if product == "vera" else panel_tools - {"render_deep_research_review"}
     )
+    assert "ui://widget/deep-research-review.html" not in json.dumps(catalog)
     assert "validate_prompt_optimizer_review" in tool_names
-    assert ("render_prompt_optimizer_review" in tool_names) == (product == "lucia")
-    assert ("ui://widget/prompt-optimizer-review.html" in json.dumps(catalog)) == (
-        product == "lucia"
-    )
+    assert "render_prompt_optimizer_review" not in tool_names
+    assert "ui://widget/prompt-optimizer-review.html" not in json.dumps(catalog)
     assert entries["modules/deep-research-validator/scripts/package_validation.py"]
     assert entries["modules/deep-research-validator/scripts/research_record.py"]
     assert entries["modules/deep-research-validator/scripts/adversarial_opinion.py"]

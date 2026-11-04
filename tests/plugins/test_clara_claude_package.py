@@ -169,7 +169,11 @@ def test_clara_cowork_includes_reviewed_feedback_and_omits_other_host_paths(
         "${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"
     ]
     services = json.loads(clara_entries["mcp-services.json"])["mcpServers"]
-    assert set(services) == {"claraIncidentHost"}
+    assert set(services) == {"claraIncidentHost", "claraReports"}
+    assert services["claraReports"]["args"] == [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/report_mcp.cjs"
+    ]
+    assert "ui/report.html" in clara_entries
     assert services["claraIncidentHost"]["command"] == "node"
     assert "url" not in services["claraIncidentHost"]
     assert "scripts/incident_tool_schemas.json" in clara_entries

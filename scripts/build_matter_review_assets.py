@@ -1,4 +1,4 @@
-"""Build matching localized editable and read-only matter review pages."""
+"""Build the independent browser page and native MCP matter review resource."""
 
 from __future__ import annotations
 
@@ -24,12 +24,22 @@ def build() -> dict[Path, str]:
         "__LABELS__", json.dumps(vocabulary, ensure_ascii=True, indent=2)
     )
     template = theme_html(template)
+    native_script = (ROOT / "scripts/matter_native_review.js").read_text()
+    native_script = native_script.replace(
+        "__LABELS__", json.dumps(vocabulary, ensure_ascii=True, indent=2)
+    )
+    native = (
+        template.split("<script>", 1)[0]
+        + "<script>"
+        + native_script
+        + "</script></body></html>\n"
+    )
     return {
-        component / "assets" / name: template.replace("__EDITABLE__", editable)
-        for name, editable in (
-            ("apertura-pratica-review.html", "true"),
-            ("apertura-pratica-review-widget.html", "false"),
-        )
+        component
+        / "assets/apertura-pratica-review.html": template.replace(
+            "__EDITABLE__", "true"
+        ),
+        component / "assets/apertura-pratica-review-widget.html": native,
     }
 
 
