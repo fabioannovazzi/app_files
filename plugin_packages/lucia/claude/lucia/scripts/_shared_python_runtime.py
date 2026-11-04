@@ -21,7 +21,7 @@ RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 15
+POLICY_REVISION = 16
 SETUP_WAIT_SECONDS = 1800
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
@@ -451,6 +451,7 @@ def _install(
         "install",
         "--disable-pip-version-check",
         "--no-input",
+        "--only-binary=cryptography",
         "--require-hashes",
         "-r",
         str(lock),

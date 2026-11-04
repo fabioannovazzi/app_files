@@ -192,7 +192,16 @@ crc32c==2.9 \
     --hash=sha256:e79a247d2d2e574531b55a69deb2f9d48c36693ca4e95007252fab4c7c66d3b1 \
     --hash=sha256:fa0ebd0d365d8cb1cd202a053b5cb8ffa07c9ecc8c38728f116b97e116cc8ec5
     # via bce-python-sdk
-cryptography==50.0.1 \
+cryptography==48.0.1 ; platform_machine == 'x86_64' and sys_platform == 'darwin' \
+    --hash=sha256:266f4ee051abb2f725b74ef8072b521ce1feacf685a3364fa6a6b45548db791a \
+    --hash=sha256:3e4a1a3232eef2e6c732827d5722db29a0cc8b27af2a4d865b094cf954be9ca1 \
+    --hash=sha256:4fdc69f8e4316bcf0c8c8ec1f26f285d12e8142d88d96c876a59a03be3f6ae67
+    # via
+    #   google-auth
+    #   modelscope-hub
+    #   mparanza-shared-runtime
+    #   pdfminer-six
+cryptography==50.0.1 ; platform_machine != 'x86_64' or sys_platform != 'darwin' \
     --hash=sha256:01f41478cf33fc605a6a089cd56d28b45c6c0b45a1928b61797f2621a04bac71 \
     --hash=sha256:05ba322c4da95b262a212c345af888ef2c37c88c0509756ea00a0e6d68850f23 \
     --hash=sha256:2a93d05e34d5f67fba6f891fe85d929999baa7195e853923ea6d7576c9e68c5e \

@@ -1,11 +1,20 @@
 {
+  "auxiliary_display_source_binding_review_20261103": {
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "current_course_sha256": "a153c1f363c4833468b46f280bd71dc860febf54a4bf20182dccc54fe1de5be6",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop.",
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "previous_course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
   "committed_shared_contract_integration_20261008": {
-    "product": "vera",
-    "workflow": "patent-box-review",
-    "reviewer": "Codex /root - bounded shared-contract integration review",
-    "reviewed_at": "2026-10-08T12:40:14.430022+00:00",
-    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
     "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
     "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
     "parents": [
       {
@@ -21,318 +30,108 @@
         "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18"
       }
     ],
-    "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18"
+    "product": "vera",
+    "reviewed_at": "2026-10-08T12:40:14.430022+00:00",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "workflow": "patent-box-review"
   },
   "connected_studio_knowledge_source_binding_20261002": {
-    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
-    "reviewed_at": "2026-10-01T22:12:55.862641+00:00",
     "baseline_commit": "7d170c3e0cac01919a64590976cfcc7f5f9cd257",
-    "previous_course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b",
-    "current_course_sha256": "ab0a4589a0afa5124a5878f9285fc7e3cccbbf3d9d5d8fa8a859ab635d3096be",
-    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
     "changed_sources": [
       "skills/patent-box-review/SKILL.md",
       "skills/vera/references/connected-studio-knowledge.md"
     ],
-    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate."
+    "content_review": "Compared the complete compiled JSON against the reviewed main baseline: all authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged. Only source bindings differ. Existing named editorial judgments and historical output artifact reviews remain preserved; this is not a new independent editorial or learner review.",
+    "current_course_sha256": "ab0a4589a0afa5124a5878f9285fc7e3cccbbf3d9d5d8fa8a859ab635d3096be",
+    "execution_requirement": "Fresh CI must execute the existing localized demo and practice cases with this exact course digest before merge. The prior CI run passed the complete teaching execution stage; it does not replace the final fresh digest gate.",
+    "previous_course_sha256": "ec36cf2e3a4c34556e9d31e78d2da17eacf278568ed34434f6610bdef26ab67b",
+    "reviewed_at": "2026-10-01T22:12:55.862641+00:00",
+    "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
+    "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository."
   },
-  "course_sha256": "a153c1f363c4833468b46f280bd71dc860febf54a4bf20182dccc54fe1de5be6",
+  "consolidated_ui_runtime_source_binding_20261103": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "21dbee76fa15b8c0ed36e193d40df76e226196318850cf3c57faef79a6f6d9e1",
+    "limits": "No new installed-host, learner, visual, voice or professional acceptance is asserted.",
+    "previous_course_sha256": "a153c1f363c4833468b46f280bd71dc860febf54a4bf20182dccc54fe1de5be6",
+    "reviewed_at": "2026-11-03",
+    "reviewer": "Codex /root - source compatibility review",
+    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
+  },
+  "course_sha256": "21dbee76fa15b8c0ed36e193d40df76e226196318850cf3c57faef79a6f6d9e1",
+  "course_startup_source_binding_review_20261103": {
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "current_course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved.",
+    "previous_course_sha256": "663df89cd5fc464ad86fde7bdd12c79d288dcb91380627ae409c55c774c44cf5",
+    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/vera/skills/patent-box-review/SKILL.md"
+    ],
+    "current_course_sha256": "9ce9c313fa54ef5afb665709e8544cdf3904d5298407a15321d9582acabd73f4",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "0ec1c41416545e3da9255066ce8d02d0d0163693167ebaf718c7f05ffb605e93",
+    "reviewed_at": "2026-10-18T18:09:58.301635+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "bff166c5548dbac6edacd390cc1bd1020e73d27dc7d5c7ba9eb44683c8d25119",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "4add5b546aa64166f9ca723dd3f952b391b210b44e5c40570c14837de4a86db1",
+    "recorded_at": "2026-10-25T18:12:53.691460+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c",
+    "reviewed_at": "2026-10-14T08:00:57.882933+00:00",
+    "reviewer": "Codex /root - Deal Redux source compatibility review"
+  },
   "integration_refresh": {
-    "reviewer": "Codex /root",
     "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
   },
   "journal_pdf_source_binding_review_20261009": {
-    "reviewed_at": "2026-10-09T17:33:15.898090+00:00",
-    "reviewer": "Codex source-bound PDF workflow review",
-    "previous_course_sha256": "d3e5ce331d136c670ea9671e12dc6736127e446a7e5ac531683e9ce622fe7431",
-    "current_course_sha256": "62abe5242fa1a1f19af3b160b6e89e9b003a32a2d973c4b848a7bff93c16accf",
     "changed_fields": [
       "revision",
       "sources"
     ],
+    "current_course_sha256": "62abe5242fa1a1f19af3b160b6e89e9b003a32a2d973c4b848a7bff93c16accf",
+    "previous_course_sha256": "d3e5ce331d136c670ea9671e12dc6736127e446a7e5ac531683e9ce622fe7431",
+    "reviewed_at": "2026-10-09T17:33:15.898090+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification.",
     "unchanged_materials": [
       "All localized lesson text",
       "Input bytes and execution contracts",
       "Editorial and artifact review history"
-    ],
-    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+    ]
   },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
-        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
-        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
-        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
-        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
-        "language_and_pacing": "Complete authored it outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-it]",
-        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
-        "reviewed_artifacts": [
-          {
-            "name": "case_summary.md",
-            "sha256": "dd6ae926fb7dc33804758608e4ad834da775d958a063bcf38303d94ae3b3f612"
-          },
-          {
-            "name": "missing_documents.md",
-            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
-          },
-          {
-            "name": "control_matrix.csv",
-            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
-          },
-          {
-            "name": "cost_reconciliation.csv",
-            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
-          },
-          {
-            "name": "result.json",
-            "sha256": "a25ff05ace53b04a2efdfec5331eb291212631491f9b2a25c9f79aa7c4e769a3"
-          },
-          {
-            "name": "workpaper.md",
-            "sha256": "7c7b4b692e24c01e9803749da2e97d205bf24e54429fbb4941e3efa0dbc8590d"
-          },
-          {
-            "name": "fascicolo_A_B.docx",
-            "sha256": "ab924cc52b307efd771053ab7458385b000dd605725956e465680a51b0764f42"
-          },
-          {
-            "name": "fascicolo_A_B.pdf",
-            "sha256": "0d4f978c6e6e7e75265ec948bbe7f013a608dc1139da988bf1168d0acf76de6c"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-it]",
-        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
-        "reviewed_artifacts": [
-          {
-            "name": "case_summary.md",
-            "sha256": "dc58b16e876a96bf9bbf7d25339b3d2c7e53b6ee6683afe7e8a9235d646c7c36"
-          },
-          {
-            "name": "missing_documents.md",
-            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
-          },
-          {
-            "name": "control_matrix.csv",
-            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
-          },
-          {
-            "name": "cost_reconciliation.csv",
-            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
-          },
-          {
-            "name": "result.json",
-            "sha256": "473e4e42264ed61082d8d45428e8f2edb5693da10d4da232ef8f0219624d4d33"
-          },
-          {
-            "name": "workpaper.md",
-            "sha256": "a044eaaac5c1da29fd88bf459fd4f01d37d6867381fdc9984561ee3192a45e4f"
-          },
-          {
-            "name": "fascicolo_A_B.docx",
-            "sha256": "863ba4ac979950ef6e22dd8032d3c825cb451e7f63a7b18b9bc77685fcf4642f"
-          },
-          {
-            "name": "fascicolo_A_B.pdf",
-            "sha256": "4dd82f957dcf51a6825b442af0f99fe6f1288d6210b1d8dddb02566ef34eb8c7"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
-        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
-        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
-        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
-        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
-        "language_and_pacing": "Complete authored en outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-en]",
-        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
-        "reviewed_artifacts": [
-          {
-            "name": "case_summary.md",
-            "sha256": "6d6254422566f211191803abdafad2a145024d946c8fdcc394787e50744e4039"
-          },
-          {
-            "name": "missing_documents.md",
-            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
-          },
-          {
-            "name": "control_matrix.csv",
-            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
-          },
-          {
-            "name": "cost_reconciliation.csv",
-            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
-          },
-          {
-            "name": "result.json",
-            "sha256": "627d44f33f0f0b649a13f4f87a4aac38b3310cd471ec570222cde098dfcd5581"
-          },
-          {
-            "name": "workpaper.md",
-            "sha256": "81dcb709a6883df613293a64ce5c6d0f7034e963f46f91fbadb7f2e8fd75d9c8"
-          },
-          {
-            "name": "fascicolo_A_B.docx",
-            "sha256": "63613278059a9e975d5d68960037ce9ffa3cff6a72bc706f30350e4c9aff0f21"
-          },
-          {
-            "name": "fascicolo_A_B.pdf",
-            "sha256": "f94c31a2e30d822fc536cc389a9ddc547967f95467833a97aa2a1f9b1c7866af"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-en]",
-        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
-        "reviewed_artifacts": [
-          {
-            "name": "case_summary.md",
-            "sha256": "ab7934d723bf8db09afb0272be9e1dec4138225b782afb7fa8dfb3715b9f06a6"
-          },
-          {
-            "name": "missing_documents.md",
-            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
-          },
-          {
-            "name": "control_matrix.csv",
-            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
-          },
-          {
-            "name": "cost_reconciliation.csv",
-            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
-          },
-          {
-            "name": "result.json",
-            "sha256": "bd3713552adb999ff3a5222fb8f17b3016e4f783b583aef95f5567fffdec7393"
-          },
-          {
-            "name": "workpaper.md",
-            "sha256": "0e3a49251f6ddfdaaf6add6de2b0be0d49481d1b17c1f3f9e8839fb880ec4191"
-          },
-          {
-            "name": "fascicolo_A_B.docx",
-            "sha256": "7dde0eb8a6f617b0db699833fb60024ed1622c85c2fff0d47ae41178a9e8bdfe"
-          },
-          {
-            "name": "fascicolo_A_B.pdf",
-            "sha256": "890862d9e2349f273f4a1456cf8a7d0b660af81d1e7971fbc7f8b4d5fb16ec50"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
-        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
-        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
-        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
-        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
-        "language_and_pacing": "Complete authored fr outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-fr]",
-        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
-        "reviewed_artifacts": [
-          {
-            "name": "case_summary.md",
-            "sha256": "c41e471d343d31950fe02a49f09a894d8f675cdace3d14d30905d02eb445a61b"
-          },
-          {
-            "name": "missing_documents.md",
-            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
-          },
-          {
-            "name": "control_matrix.csv",
-            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
-          },
-          {
-            "name": "cost_reconciliation.csv",
-            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
-          },
-          {
-            "name": "result.json",
-            "sha256": "bcc817647567ff07008838032b1544d6a1d07e99c3ee4e1c153f043982234ad7"
-          },
-          {
-            "name": "workpaper.md",
-            "sha256": "91fec601607aee1bb2965efa15327413184a7b16e302efe20b3908abfa21241e"
-          },
-          {
-            "name": "fascicolo_A_B.docx",
-            "sha256": "0e82e69d2542807e15cd068a36024152db72e989fc21bd79dd2ede9646851157"
-          },
-          {
-            "name": "fascicolo_A_B.pdf",
-            "sha256": "3febfe1affd1c8d193bfdb7547cd916b084857d35df02e7a0275b89f9c6a0719"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-fr]",
-        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
-        "reviewed_artifacts": [
-          {
-            "name": "case_summary.md",
-            "sha256": "c75991f047d9653c526313e5d7dc4e6630ab6da14bcd5be301f3317621ac536c"
-          },
-          {
-            "name": "missing_documents.md",
-            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
-          },
-          {
-            "name": "control_matrix.csv",
-            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
-          },
-          {
-            "name": "cost_reconciliation.csv",
-            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
-          },
-          {
-            "name": "result.json",
-            "sha256": "0c6e4d3320d6c9cb8d8860eaa8c7f773e6a01446cdde88c562a4ea935be29fd7"
-          },
-          {
-            "name": "workpaper.md",
-            "sha256": "023f969adc7ad3ac2033f6cd80513ef77b45a4ab01c794259ecea69f239b4ce6"
-          },
-          {
-            "name": "fascicolo_A_B.docx",
-            "sha256": "b27182aef199a574767a422f82bc65cc0e2904bb4dd27be0294d793df26560fd"
-          },
-          {
-            "name": "fascicolo_A_B.pdf",
-            "sha256": "56e315d7e7b0d18d5751587a7a9ee945d5098da92ebb67196fcdd59ffef913a4"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
-        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
-        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
-        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
-        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
-        "language_and_pacing": "Complete authored de outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-de]",
         "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
         "reviewed_artifacts": [
           {
@@ -367,10 +166,18 @@
             "name": "fascicolo_A_B.pdf",
             "sha256": "b38f6f8b09fde0959c964ffb048596503771ad5c2bf894b75bd1eedf767cec2f"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "language_and_pacing": "Complete authored de outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-de]",
         "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
         "reviewed_artifacts": [
           {
@@ -405,21 +212,100 @@
             "name": "fascicolo_A_B.pdf",
             "sha256": "909f210eeb181c9a5339f2a88de208bfca83c6a641db37685e0fd2061b5d8528"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "6d6254422566f211191803abdafad2a145024d946c8fdcc394787e50744e4039"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "627d44f33f0f0b649a13f4f87a4aac38b3310cd471ec570222cde098dfcd5581"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "81dcb709a6883df613293a64ce5c6d0f7034e963f46f91fbadb7f2e8fd75d9c8"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "63613278059a9e975d5d68960037ce9ffa3cff6a72bc706f30350e4c9aff0f21"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "f94c31a2e30d822fc536cc389a9ddc547967f95467833a97aa2a1f9b1c7866af"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "language_and_pacing": "Complete authored en outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence."
+      },
+      "practice": {
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "ab7934d723bf8db09afb0272be9e1dec4138225b782afb7fa8dfb3715b9f06a6"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "bd3713552adb999ff3a5222fb8f17b3016e4f783b583aef95f5567fffdec7393"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "0e3a49251f6ddfdaaf6add6de2b0be0d49481d1b17c1f3f9e8839fb880ec4191"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "7dde0eb8a6f617b0db699833fb60024ed1622c85c2fff0d47ae41178a9e8bdfe"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "890862d9e2349f273f4a1456cf8a7d0b660af81d1e7971fbc7f8b4d5fb16ec50"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-en]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence.",
-        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
-        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
-        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
-        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
-        "language_and_pacing": "Complete authored es outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-es]",
         "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
         "reviewed_artifacts": [
           {
@@ -454,10 +340,18 @@
             "name": "fascicolo_A_B.pdf",
             "sha256": "d94ff72829c227e01db51bd8c315462b8702a809ad3a4a68f28dd0c3db72fca0"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "language_and_pacing": "Complete authored es outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-es]",
         "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
         "reviewed_artifacts": [
           {
@@ -492,294 +386,412 @@
             "name": "fascicolo_A_B.pdf",
             "sha256": "54b2adf708722fa0f545e0dd9735858f9e4ef2569341ad440f5596820108c264"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "c41e471d343d31950fe02a49f09a894d8f675cdace3d14d30905d02eb445a61b"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "bcc817647567ff07008838032b1544d6a1d07e99c3ee4e1c153f043982234ad7"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "91fec601607aee1bb2965efa15327413184a7b16e302efe20b3908abfa21241e"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "0e82e69d2542807e15cd068a36024152db72e989fc21bd79dd2ede9646851157"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "3febfe1affd1c8d193bfdb7547cd916b084857d35df02e7a0275b89f9c6a0719"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-fr]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "language_and_pacing": "Complete authored fr outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence."
+      },
+      "practice": {
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "c75991f047d9653c526313e5d7dc4e6630ab6da14bcd5be301f3317621ac536c"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "0c6e4d3320d6c9cb8d8860eaa8c7f773e6a01446cdde88c562a4ea935be29fd7"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "023f969adc7ad3ac2033f6cd80513ef77b45a4ab01c794259ecea69f239b4ce6"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "b27182aef199a574767a422f82bc65cc0e2904bb4dd27be0294d793df26560fd"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "56e315d7e7b0d18d5751587a7a9ee945d5098da92ebb67196fcdd59ffef913a4"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-fr]"
+      },
+      "verdict": "accepted"
+    },
+    "it": {
+      "demo": {
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. No suspended cost in the ordinary demonstration. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "dd6ae926fb7dc33804758608e4ad834da775d958a063bcf38303d94ae3b3f612"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "e15fe658ff94d75d3c216a939ad39d8583a19fbcafed3a5a717612facbc4dcd2"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "a3769f1680c3377351b7ed68d7c4e28030c700e1eb4c758393f03c8a16894cbf"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "c7a4f02f5dcf35801884239b11c3a0a85c7bd4ec05cf219dd3baa8a9fd9be19a"
+          },
+          {
+            "name": "result.json",
+            "sha256": "a25ff05ace53b04a2efdfec5331eb291212631491f9b2a25c9f79aa7c4e769a3"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "7c7b4b692e24c01e9803749da2e97d205bf24e54429fbb4941e3efa0dbc8590d"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "ab924cc52b307efd771053ab7458385b000dd605725956e465680a51b0764f42"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "0d4f978c6e6e7e75265ec948bbe7f013a608dc1139da988bf1168d0acf76de6c"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Open actual summary first, then cost reconciliation, controls and Word/PDF A/B dossier. The exercise reveals NOT_TESTED linkage, suspended bases and a document request. Additional deduction is distinguished from tax saving; open template paragraphs and unsigned status retain professional review boundaries.",
+        "execution_and_checkpoints": "Exact imported receipts produced inspected source rows, distinct income/IRAP candidate bases, full book-total reconciliation, detailed cost controls, readable proposal and synthetic calculation at historical date 2026-09-23. The lesson pauses for scope/mapping and actual proposal confirmation. Negative tests refuse pre-review calculation and existing-result overwrite; real calculation remains covered by unchanged authorization tests.",
+        "inputs_and_request": "Localized evidence note plus a closed ledger and unchanged synthetic source. The natural request asks for evidence, reconciliation and exact proposal confirmation. No reviewed mapping, case JSON, approval, output specimen or professional identity is shipped.",
+        "language_and_pacing": "Complete authored it outline, note and separate exercise reviewed for matching facts and ordinary first-use pacing. The six existing stages total 390 seconds; processing/questions may extend them. Italian engine headings/fields are disclosed rather than claiming translated fiscal outputs. No live duration or comprehension claim.",
+        "practice_and_repeat": "Fresh practice inputs add EUR 20000 personnel with no documented project/activity link and preserve demo bytes. Test results suspend only that component. Repetition identifies ordinary real sources and authorization rather than reusing synthetic rules, date or review. Rendering does not record demo/practice/understanding.",
+        "purpose_and_first_use": "Complete ordinary software first use, before any patent/design/premial path. The lesson labels the Italian controlled preview and all 32 professional UAT scenarios NOT_RUN; fictional declarations are distinct from corroborated client evidence."
+      },
+      "practice": {
+        "result_review": "Included bases EUR 100000 income and 80000 IRAP; ordinary maintenance excluded EUR 10000 each. Additional deduction EUR 110000/88000, tax_saving null and DRAFT_UNSIGNED. Missing GL.3 linkage remains NOT_TESTED: EUR 20000/16000 suspended; request records, no invented failure. Source totals and normalizations remain bound to selected originals. All output pages inspected; engine headings remain Italian. No real authorization or professional acceptance.",
+        "reviewed_artifacts": [
+          {
+            "name": "case_summary.md",
+            "sha256": "dc58b16e876a96bf9bbf7d25339b3d2c7e53b6ee6683afe7e8a9235d646c7c36"
+          },
+          {
+            "name": "missing_documents.md",
+            "sha256": "01aeec63a736e9afd1489ad7dd628f6fd6a4b089450c0895eaf6cc27726691da"
+          },
+          {
+            "name": "control_matrix.csv",
+            "sha256": "06c45e157acc73fbdb4a3563ada1e8f901c1001d7b759aa78676f63725428a72"
+          },
+          {
+            "name": "cost_reconciliation.csv",
+            "sha256": "d3c2bff77903d75b49434561cc880b027a0573172d3009adfbe2b5374558a301"
+          },
+          {
+            "name": "result.json",
+            "sha256": "473e4e42264ed61082d8d45428e8f2edb5693da10d4da232ef8f0219624d4d33"
+          },
+          {
+            "name": "workpaper.md",
+            "sha256": "a044eaaac5c1da29fd88bf459fd4f01d37d6867381fdc9984561ee3192a45e4f"
+          },
+          {
+            "name": "fascicolo_A_B.docx",
+            "sha256": "863ba4ac979950ef6e22dd8032d3c825cb451e7f63a7b18b9bc77685fcf4642f"
+          },
+          {
+            "name": "fascicolo_A_B.pdf",
+            "sha256": "4dd82f957dcf51a6825b442af0f99fe6f1288d6210b1d8dddb02566ef34eb8c7"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_patent_box_execution::test_patent_box_kit_executes_native_dossier[practice-it]"
+      },
+      "verdict": "accepted"
     }
   },
   "lipe_source_binding_20261002": {
-    "reviewer": "Codex /root - bounded LIPE source compatibility review",
-    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
     "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
-    "previous_course_sha256": "687fe777cd0ddca3173f9bd2f4674190940f8abe353adfd7518b8d1fb60254d9",
-    "current_course_sha256": "a6cd5cd9988efda4f9d5b838aa2a6d00a210bc55df3c3a65c21fd15d212da7ce",
-    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "a6cd5cd9988efda4f9d5b838aa2a6d00a210bc55df3c3a65c21fd15d212da7ce",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass.",
+    "previous_course_sha256": "687fe777cd0ddca3173f9bd2f4674190940f8abe353adfd7518b8d1fb60254d9",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "663df89cd5fc464ad86fde7bdd12c79d288dcb91380627ae409c55c774c44cf5",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "previous_course_sha256": "ebc0397fc71f36024ead78096709bd8011ca95003c62e6a029025b29fde89fd6",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes."
   },
   "pdf_first_run_source_binding_20261012": {
-    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
-    "previous_course_sha256": "62abe5242fa1a1f19af3b160b6e89e9b003a32a2d973c4b848a7bff93c16accf",
     "current_course_sha256": "1fdf91e301e1e3666a7e84bcf2bec59b922316ba6e330e13009988646642bc68",
-    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
-    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
-    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope.",
+    "previous_course_sha256": "62abe5242fa1a1f19af3b160b6e89e9b003a32a2d973c4b848a7bff93c16accf",
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "be4426d6a72d289ba597731275a139f5b77d516e43a5ba0b3da3b13d7601cd66",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "0ec1c41416545e3da9255066ce8d02d0d0163693167ebaf718c7f05ffb605e93",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "4add5b546aa64166f9ca723dd3f952b391b210b44e5c40570c14837de4a86db1",
+    "fresh_matching_junit_required": true,
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
+    "parent_course_sha256": {
+      "HEAD": "be4426d6a72d289ba597731275a139f5b77d516e43a5ba0b3da3b13d7601cd66",
+      "origin/main": "9ce9c313fa54ef5afb665709e8544cdf3904d5298407a15321d9582acabd73f4"
+    },
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "5ba2143b05d5f308308f729d9c3683063dddf065e201d3eff13efde1c1bfea38",
-    "current_course_sha256": "687fe777cd0ddca3173f9bd2f4674190940f8abe353adfd7518b8d1fb60254d9",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "modules/patent-box-review/vendor/modules/vera_assurance/contracts.py",
       "vendor/modules/courseware/policy.py",
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "687fe777cd0ddca3173f9bd2f4674190940f8abe353adfd7518b8d1fb60254d9",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "5ba2143b05d5f308308f729d9c3683063dddf065e201d3eff13efde1c1bfea38",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "eba81057817eab100db1a30be2ec4dd1022d119788fdcaf277b4ac79ba18240f",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "c51b3c823d3342d41b2bce21d92edde9406ee9255f7fd62f3c5f0279dad03f5f",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
   "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
-    "reviewer": "Codex bounded teaching-material and source integration review",
-    "reviewed_at": "2026-10-09T13:18:34.080392+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root: source, teaching and document engineering review",
-      "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
-      "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-      "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18"
-    },
     "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
     "current_course_sha256": "d3e5ce331d136c670ea9671e12dc6736127e446a7e5ac531683e9ce622fe7431",
+    "current_execution_evidence": {
+      "final_gate_requires_fresh_matching_junit": true,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "job": 113818653311,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "native_teaching_suite_passed": 1642,
+      "run": 37930167083,
+      "skipped": 3,
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed"
+    },
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "new_native_output_visual_review": false,
+    "previous_review_identity": {
+      "course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
+      "review_scope": "Read all five complete localized outlines and demo/practice source notes. Executed ten separate native Studio Archive to normalized ledger to proposal to synthetic decision to actual Word/PDF dossier and local finalization runs. Read summaries, missing-document lists, control matrices, reconciliations and calculated records; extracted both document formats. Visually inspected all fifty native PDF pages and fifty-five LibreOffice Word-rendered pages, plus browser-rendered lesson titles in every locale and Italian execution/results sections. No clipping or overlap observed; practice Word exports place the closing disclaimer on a separate final page, retained as an engine layout limitation. All generated A/B paragraphs remain explicitly open because no professional template/casebook approval is supplied. Automated semantic interpretations and confirmations are synthetic fixtures outside the shipped course, not live model execution or learner/professional approval. Test no-model reports describe those automated runs only; live teaching must report actual native model reading. Native voice, user participation, learner understanding, two visible windows, installation acceptance and professional UAT remain unverified. The compiler source-binding correction pins the actual patent_box engine, config and examples directories. Their execution bytes and the lesson text are unchanged; the final thirteen-case regression reran against this corrected course inventory. Reviewed artifact hashes retain the inspected authoring runs rather than claiming new visual review of later duplicate runs. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "reviewed_at": "2026-10-01T08:06:30.198517+00:00",
+      "reviewer": "Codex /root: source, teaching and document engineering review"
+    },
+    "reviewed_at": "2026-10-09T13:18:34.080392+00:00",
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
     "unchanged_materials": [
       "all lesson locales and editorial text",
       "input specifications and hashes",
       "demo and practice execution contracts",
       "language and grouping contracts"
-    ],
-    "changed_fields": [
-      "revision",
-      "sources"
-    ],
-    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
-    "current_execution_evidence": {
-      "run": 37930167083,
-      "job": 113818653311,
-      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
-      "native_teaching_suite_passed": 1642,
-      "skipped": 3,
-      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
-      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
-      "final_gate_requires_fresh_matching_junit": true
-    },
-    "new_native_output_visual_review": false,
-    "installed_host_acceptance": false,
-    "learner_or_professional_acceptance": false,
-    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
+    ]
   },
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
   "studio_archive_adoption_source_binding_20261008": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
     "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-    "previous_course_sha256": "51a7c3589a8643bc5209e2df8f515cfb5c5811895d024ab22e30684e9df2c29b",
-    "current_course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
-    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
-    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+    "current_course_sha256": "9a663104c6c0a1d50d5703d29795fd06d4d7b45f0babaec56a4dc50e9eea7d18",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed.",
+    "previous_course_sha256": "51a7c3589a8643bc5209e2df8f515cfb5c5811895d024ab22e30684e9df2c29b",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json"
   },
   "tax_litigation_fixes_source_review_20261013": {
+    "authored_content_unchanged": true,
     "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
-    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
-      "course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05"
-    },
-    "previous_course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
-    "current_course_sha256": "7f571c802644668ec6dd8f945dabad4b80851d90caecb64ae3a51f5ebcce34a1",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
-    "fresh_matching_junit_required": true
+    "current_course_sha256": "7f571c802644668ec6dd8f945dabad4b80851d90caecb64ae3a51f5ebcce34a1",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
+    "previous_review_identity": {
+      "course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review"
+    },
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json"
   },
   "tax_litigation_source_binding_review_20261013": {
-    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex bounded teaching-material and source integration review",
-      "reviewed_at": "2026-10-09T13:18:34.080392+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
-      "course_sha256": "1fdf91e301e1e3666a7e84bcf2bec59b922316ba6e330e13009988646642bc68"
-    },
+    "authored_content_unchanged": true,
     "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
-    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
-    "previous_course_sha256": "1fdf91e301e1e3666a7e84bcf2bec59b922316ba6e330e13009988646642bc68",
-    "current_course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "current_course_sha256": "1239ad80cd17c8f46c95418a1ae14ba623f98513fc78ef0f831417f863b32d05",
     "fresh_matching_junit_required": true,
-    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
     "learner_or_professional_acceptance": false,
-    "installed_host_acceptance": false
+    "new_native_output_visual_review": false,
+    "previous_course_sha256": "1fdf91e301e1e3666a7e84bcf2bec59b922316ba6e330e13009988646642bc68",
+    "previous_review_identity": {
+      "course_sha256": "1fdf91e301e1e3666a7e84bcf2bec59b922316ba6e330e13009988646642bc68",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+      "reviewed_at": "2026-10-09T13:18:34.080392+00:00",
+      "reviewer": "Codex bounded teaching-material and source integration review"
+    },
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json"
+  },
+  "work_continuity_source_binding_20261027": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "current_course_sha256": "ebc0397fc71f36024ead78096709bd8011ca95003c62e6a029025b29fde89fd6",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "previous_course_sha256": "bff166c5548dbac6edacd390cc1bd1020e73d27dc7d5c7ba9eb44683c8d25119",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
   "workflow": "patent-box-review",
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "30b0cbf52881cae89cf1ee8014aa26618d126e57c9fca8a64ed6cadf6ea3a80c",
-    "current_course_sha256": "c51b3c823d3342d41b2bce21d92edde9406ee9255f7fd62f3c5f0279dad03f5f",
+    "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
+    "current_course_sha256": "c51b3c823d3342d41b2bce21d92edde9406ee9255f7fd62f3c5f0279dad03f5f",
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false,
-    "new_visual_or_learner_acceptance": false
-  },
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "c51b3c823d3342d41b2bce21d92edde9406ee9255f7fd62f3c5f0279dad03f5f",
-    "current_course_sha256": "eba81057817eab100db1a30be2ec4dd1022d119788fdcaf277b4ac79ba18240f",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
+    "new_visual_or_learner_acceptance": false,
+    "previous_course_sha256": "30b0cbf52881cae89cf1ee8014aa26618d126e57c9fca8a64ed6cadf6ea3a80c",
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
   },
   "workflow_usage_source_binding_review_20261017": {
-    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
-    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "authored_content_unchanged": true,
     "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
-    "previous_course_sha256": "eba81057817eab100db1a30be2ec4dd1022d119788fdcaf277b4ac79ba18240f",
     "current_course_sha256": "0ec1c41416545e3da9255066ce8d02d0d0163693167ebaf718c7f05ffb605e93",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "eba81057817eab100db1a30be2ec4dd1022d119788fdcaf277b4ac79ba18240f",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
-    "fresh_matching_junit_required": true
-  },
-  "pdf_recovery_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact retained-course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
-    "previous_course_sha256": "0ec1c41416545e3da9255066ce8d02d0d0163693167ebaf718c7f05ffb605e93",
-    "current_course_sha256": "be4426d6a72d289ba597731275a139f5b77d516e43a5ba0b3da3b13d7601cd66",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.301635+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "0ec1c41416545e3da9255066ce8d02d0d0163693167ebaf718c7f05ffb605e93",
-    "current_course_sha256": "9ce9c313fa54ef5afb665709e8544cdf3904d5298407a15321d9582acabd73f4",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      "plugins/vera/skills/patent-box-review/SKILL.md"
-    ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
-  },
-  "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
-    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
-    "parent_course_sha256": {
-      "HEAD": "be4426d6a72d289ba597731275a139f5b77d516e43a5ba0b3da3b13d7601cd66",
-      "origin/main": "9ce9c313fa54ef5afb665709e8544cdf3904d5298407a15321d9582acabd73f4"
-    },
-    "current_course_sha256": "4add5b546aa64166f9ca723dd3f952b391b210b44e5c40570c14837de4a86db1",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
-  },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.691460+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
-    "previous_course_sha256": "4add5b546aa64166f9ca723dd3f952b391b210b44e5c40570c14837de4a86db1",
-    "current_course_sha256": "bff166c5548dbac6edacd390cc1bd1020e73d27dc7d5c7ba9eb44683c8d25119",
-    "changed_fields": [
-      "sources"
-    ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  },
-  "work_continuity_source_binding_20261027": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
-    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
-    "previous_course_sha256": "bff166c5548dbac6edacd390cc1bd1020e73d27dc7d5c7ba9eb44683c8d25119",
-    "current_course_sha256": "ebc0397fc71f36024ead78096709bd8011ca95003c62e6a029025b29fde89fd6",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
-    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
-    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
-  },
-  "neutral_workflow_theme_source_review_20261029": {
-    "reviewer": "Codex /root - differential engineering and course-content review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
-    "previous_course_sha256": "ebc0397fc71f36024ead78096709bd8011ca95003c62e6a029025b29fde89fd6",
-    "current_course_sha256": "663df89cd5fc464ad86fde7bdd12c79d288dcb91380627ae409c55c774c44cf5",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
-  },
-  "course_startup_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
-    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
-    "previous_course_sha256": "663df89cd5fc464ad86fde7bdd12c79d288dcb91380627ae409c55c774c44cf5",
-    "current_course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c",
-    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
-    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
-    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
-    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
-  },
-  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
-    "reviewer": "Codex /root - Deal Redux source compatibility review",
-    "reviewed_at": "2026-10-14T08:00:57.882933+00:00",
-    "course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c"
-  },
-  "auxiliary_display_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
-    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
-    "previous_course_sha256": "2d85fdbe59e5678299dfed0fcd95793a3b32dec1de470472e46daac4301da20c",
-    "current_course_sha256": "a153c1f363c4833468b46f280bd71dc860febf54a4bf20182dccc54fe1de5be6",
-    "changed_source_paths": [
-      "vendor/modules/courseware/assets/chat.js",
-      "vendor/modules/courseware/native.cjs"
-    ],
-    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
   }
 }

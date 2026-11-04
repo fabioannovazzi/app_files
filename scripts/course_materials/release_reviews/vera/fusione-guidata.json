@@ -1,11 +1,37 @@
 {
+  "archive_boundary_extension_source_review_20261027": {
+    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
+    "course_sha256": "0ec62c6d6b1336ebb62f17ee024db77d667ca6da9d9e4915529b1c7256126669",
+    "previous_course_sha256": "d41aad911979d85ccfee1df7821443d94833fd73e3408c49465ccd8cab701517",
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex /root",
+    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
+  },
+  "archive_boundary_source_review_20261027": {
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "course_sha256": "d41aad911979d85ccfee1df7821443d94833fd73e3408c49465ccd8cab701517",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused.",
+    "previous_course_sha256": "9509f6437cb3b52fee8ca93261ae5f23ccd27aad10d911bca8c91c373b8851ef",
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "current_course_sha256": "36ecc1df4a4a832bc88d5d8f627e78fa29649b83b6ff667f468786812a0722e6",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop.",
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "previous_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
   "committed_shared_contract_integration_20261008": {
-    "product": "vera",
-    "workflow": "fusione-guidata",
-    "reviewer": "Codex /root - bounded shared-contract integration review",
-    "reviewed_at": "2026-10-08T12:40:14.151724+00:00",
-    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
     "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7",
     "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
     "parents": [
       {
@@ -21,223 +47,120 @@
         "course_sha256": "340e40b07b734720aba610eb4e243c8d6078665bf03f55b56915e549972b92ea"
       }
     ],
-    "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7"
+    "product": "vera",
+    "reviewed_at": "2026-10-08T12:40:14.151724+00:00",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "workflow": "fusione-guidata"
   },
   "connected_knowledge_fusione_integration_20261002": {
-    "reviewer": "Codex - bounded connected knowledge and Fusione source integration review",
-    "reviewed_at": "2026-10-01T22:39:20.874424+00:00",
     "baseline_commit": "5b1cc09afc599862d87a609648303073187b587e",
-    "previous_course_sha256": "e6cb9f5ca427a7cd60675b916e6209e120cb22d542d39cbe9caefd32b24b5a48",
-    "current_course_sha256": "10f1f97b834bdaa95969f6a17dfeead064d32e91042f5b32269b1a6c635420a1",
-    "content_review": "Complete compiled JSON equality except source bindings: all authored localized content, input definitions, checkpoints, practice and timing remain unchanged. Preserves original named editorial judgments and historical artifact reviews; no new independent learner or professional acceptance is inferred.",
     "changed_sources": [
       "skills/fusione-guidata/SKILL.md",
       "skills/vera/references/connected-studio-knowledge.md"
     ],
-    "source_review": "Preserves main’s synthetic Italian Fusione P1 teaching expansion and task’s optional host-connected repository consultation gates. Synthetic lessons use their bound inputs and do not query private repositories. Specialist calculations and qualification limits are unchanged.",
-    "execution_requirement": "Fresh CI must execute the existing demo and practice cases bound to this exact compiled course digest before merge."
+    "content_review": "Complete compiled JSON equality except source bindings: all authored localized content, input definitions, checkpoints, practice and timing remain unchanged. Preserves original named editorial judgments and historical artifact reviews; no new independent learner or professional acceptance is inferred.",
+    "current_course_sha256": "10f1f97b834bdaa95969f6a17dfeead064d32e91042f5b32269b1a6c635420a1",
+    "execution_requirement": "Fresh CI must execute the existing demo and practice cases bound to this exact compiled course digest before merge.",
+    "previous_course_sha256": "e6cb9f5ca427a7cd60675b916e6209e120cb22d542d39cbe9caefd32b24b5a48",
+    "reviewed_at": "2026-10-01T22:39:20.874424+00:00",
+    "reviewer": "Codex - bounded connected knowledge and Fusione source integration review",
+    "source_review": "Preserves main’s synthetic Italian Fusione P1 teaching expansion and task’s optional host-connected repository consultation gates. Synthetic lessons use their bound inputs and do not query private repositories. Specialist calculations and qualification limits are unchanged."
   },
-  "course_sha256": "36ecc1df4a4a832bc88d5d8f627e78fa29649b83b6ff667f468786812a0722e6",
+  "consolidated_ui_runtime_source_binding_20261103": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "fec495b782a0fbacc2c976d9c1ae51e86dcf496069387ce779a6bc9c202d9e03",
+    "limits": "No new installed-host, learner, visual, voice or professional acceptance is asserted.",
+    "previous_course_sha256": "36ecc1df4a4a832bc88d5d8f627e78fa29649b83b6ff667f468786812a0722e6",
+    "reviewed_at": "2026-11-03",
+    "reviewer": "Codex /root - source compatibility review",
+    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
+  },
+  "course_sha256": "fec495b782a0fbacc2c976d9c1ae51e86dcf496069387ce779a6bc9c202d9e03",
+  "course_startup_source_binding_review_20261103": {
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved.",
+    "previous_course_sha256": "0f8925c7a3e4243dccc76a28782b5aa5daaddc139fde977fb8bcbfb9dab69663",
+    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/vera/skills/fusione-guidata/SKILL.md"
+    ],
+    "current_course_sha256": "2daf280971b9dc5b3366a40c3794368728582f3e931884f96ab1d25c085da4fc",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "62600de29208aeebad52840ea1fdcfc054db6d62d8fd016f9211c10637072990",
+    "reviewed_at": "2026-10-18T18:09:58.274367+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
+  },
+  "deploy_final_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "3ff88f8558874cbaedc8fedbada29ad2741e43686864fcac33c795231c9439ab",
+    "previous_course_sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex /root - bounded complete-course comparison",
+    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "be127b8c6627b3f9878a8a683e4076c8bf63b0f5",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "9509f6437cb3b52fee8ca93261ae5f23ccd27aad10d911bca8c91c373b8851ef",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "8a2338dff09d64c1b955b77e4200189111ddd6099c2559dc049719683f2bc99b",
+    "recorded_at": "2026-10-25T18:12:53.584180+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
+    "reviewed_at": "2026-10-14T08:00:57.874905+00:00",
+    "reviewer": "Codex /root - Deal Redux source compatibility review"
+  },
   "integration_refresh": {
-    "reviewer": "Codex /root",
     "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
   },
   "journal_bank_receipts_source_update_review": "docs/releases/2026-10-08-journal-bank-receipts-course-review.json",
   "journal_pdf_source_binding_review_20261009": {
-    "reviewed_at": "2026-10-09T17:33:15.775924+00:00",
-    "reviewer": "Codex source-bound PDF workflow review",
-    "previous_course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0",
-    "current_course_sha256": "30f5c624fbd8ad0da71e14306cae36d347c89f83da6960a655b9480eb9946790",
     "changed_fields": [
       "revision",
       "sources"
     ],
+    "current_course_sha256": "30f5c624fbd8ad0da71e14306cae36d347c89f83da6960a655b9480eb9946790",
+    "previous_course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0",
+    "reviewed_at": "2026-10-09T17:33:15.775924+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification.",
     "unchanged_materials": [
       "All localized lesson text",
       "Input bytes and execution contracts",
       "Editorial and artifact review history"
-    ],
-    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+    ]
   },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the it outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
-        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
-        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
-        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
-        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
-        "language_and_pacing": "Read the complete it guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-it]",
-        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
-        "reviewed_artifacts": [
-          {
-            "name": "p1-workpapers.md",
-            "sha256": "fe3e09b0b8097610a49be1196d0e8890ec52a698ae2d9a7d2b893aea00ac7f28"
-          },
-          {
-            "name": "p1-workpapers.html",
-            "sha256": "4dff4c905b22f53608b948f657084e2750431e059477cf73b55785744f3b07b6"
-          },
-          {
-            "name": "case-report.json",
-            "sha256": "79d5d88ae5ea15f443a936227f9785b9af2cbc2456e5fb99fc92c1ab4651ac03"
-          },
-          {
-            "name": "model_data_report.md",
-            "sha256": "e20a054d068b930e541dc22454fdd1a723512a0a3bd47e3c869129cde8b668df"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-it]",
-        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
-        "reviewed_artifacts": [
-          {
-            "name": "p1-workpapers.md",
-            "sha256": "f668692fd38a9c6d9148034b92207d2b6375e238725a341ea15523d8b6250d43"
-          },
-          {
-            "name": "p1-workpapers.html",
-            "sha256": "f84f6d6bca4b17bbcca070e7cee6d945414c3887f9d70341e3fbdd70e38ae4a1"
-          },
-          {
-            "name": "case-report.json",
-            "sha256": "4fd3d6290608c633acc1b9720a69111bf2bb6265a68d66dd720f71373a86e684"
-          },
-          {
-            "name": "model_data_report.md",
-            "sha256": "75d030ccfb38623c977b35733dc112edb8ba8f4231478e75fbaf552c09780d21"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the en outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
-        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
-        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
-        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
-        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
-        "language_and_pacing": "Read the complete en guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-en]",
-        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
-        "reviewed_artifacts": [
-          {
-            "name": "p1-workpapers.md",
-            "sha256": "0d7e3978d89697026652e31b203c87bdb99740392b6fee46907184322b4bbc82"
-          },
-          {
-            "name": "p1-workpapers.html",
-            "sha256": "1e9488acff56341cf3b50a9ee965b5a45e32a0a2a845bb79e21902f0100842cb"
-          },
-          {
-            "name": "case-report.json",
-            "sha256": "db0b3cd06380ab999e14cb17d9b4e1cc377bc6a7726929f691916a8b7b98ec19"
-          },
-          {
-            "name": "model_data_report.md",
-            "sha256": "7b3a56552d66cd4f2a004ed9cc4ab3e6fba84230e29ff94eb6c4477524c89c5a"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-en]",
-        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
-        "reviewed_artifacts": [
-          {
-            "name": "p1-workpapers.md",
-            "sha256": "84a8d1781b7cf926dcb4ab8a5de8b6fe68c7e8d22e06aa5fe003fff1957b848c"
-          },
-          {
-            "name": "p1-workpapers.html",
-            "sha256": "0daeec561b3871ab9deb9038d74a250826eb0bfb02282b86136740747d833272"
-          },
-          {
-            "name": "case-report.json",
-            "sha256": "c18a39c197e7c9c321bbd8b81efc23e8bd806cbb1c4bcda7ca476ce3ea4b3d1f"
-          },
-          {
-            "name": "model_data_report.md",
-            "sha256": "fe81953dba9ea29474ee98d03bd9855c4cb6ccb4b8ecd1a8ab34d2cc14cd3d7a"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the fr outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
-        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
-        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
-        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
-        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
-        "language_and_pacing": "Read the complete fr guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-fr]",
-        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
-        "reviewed_artifacts": [
-          {
-            "name": "p1-workpapers.md",
-            "sha256": "8020c2eec2500bbb3d67090c178fc89748f8cbd1345bd68ed4626b8ca320504e"
-          },
-          {
-            "name": "p1-workpapers.html",
-            "sha256": "5f993278302415fd0f1086641375da8e21968a1c6510f6b512cbfc5c8be208cd"
-          },
-          {
-            "name": "case-report.json",
-            "sha256": "f6c2bb3c0d958ee4b2d1d723ab774a62610a6bc0dd0bae47e3807db8c8495211"
-          },
-          {
-            "name": "model_data_report.md",
-            "sha256": "97d118f92a34df3c53d0e71aac9a8a60a08807ab59d93e118ef6d0eaa5f86bbb"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-fr]",
-        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
-        "reviewed_artifacts": [
-          {
-            "name": "p1-workpapers.md",
-            "sha256": "bebf22b0dbc84152dbc7ff35d2602f657b484498b931269763daa280409956e5"
-          },
-          {
-            "name": "p1-workpapers.html",
-            "sha256": "ce37af378cec3558778f610942da3eff36b7f565afa8ef391df7121850a88ae8"
-          },
-          {
-            "name": "case-report.json",
-            "sha256": "fce64bda5cc920ff9d060c633935a776f16a2cd598685da7c61d16657ebd46c5"
-          },
-          {
-            "name": "model_data_report.md",
-            "sha256": "cdd04299a568e74c2470b2c0f3624c46b62045385707ad4a16fc31e528f6018a"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the de outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
-        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
-        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
-        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
-        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
-        "language_and_pacing": "Read the complete de guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-de]",
         "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
         "reviewed_artifacts": [
           {
@@ -256,10 +179,18 @@
             "name": "model_data_report.md",
             "sha256": "d247a3e37c9aef41465b19830fb124d03b2e7de297a0b6bc35c717d85fbb0998"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "language_and_pacing": "Read the complete de guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "purpose_and_first_use": "Read the de outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-de]",
         "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
         "reviewed_artifacts": [
           {
@@ -278,21 +209,68 @@
             "name": "model_data_report.md",
             "sha256": "f9101c49719574aaef048284fd2cc8caa101e7416b4948e730f79325f2ca94e2"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "0d7e3978d89697026652e31b203c87bdb99740392b6fee46907184322b4bbc82"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "1e9488acff56341cf3b50a9ee965b5a45e32a0a2a845bb79e21902f0100842cb"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "db0b3cd06380ab999e14cb17d9b4e1cc377bc6a7726929f691916a8b7b98ec19"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "7b3a56552d66cd4f2a004ed9cc4ab3e6fba84230e29ff94eb6c4477524c89c5a"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "language_and_pacing": "Read the complete en guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "purpose_and_first_use": "Read the en outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit."
+      },
+      "practice": {
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "84a8d1781b7cf926dcb4ab8a5de8b6fe68c7e8d22e06aa5fe003fff1957b848c"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "0daeec561b3871ab9deb9038d74a250826eb0bfb02282b86136740747d833272"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "c18a39c197e7c9c321bbd8b81efc23e8bd806cbb1c4bcda7ca476ce3ea4b3d1f"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "fe81953dba9ea29474ee98d03bd9855c4cb6ccb4b8ecd1a8ab34d2cc14cd3d7a"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-en]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the es outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit.",
-        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
-        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
-        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
-        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
-        "language_and_pacing": "Read the complete es guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-es]",
         "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
         "reviewed_artifacts": [
           {
@@ -311,10 +289,18 @@
             "name": "model_data_report.md",
             "sha256": "0aaf6b962e4948b2f4226ca53e58f38af388c3fbc08d239613f0b07c121e82ef"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "language_and_pacing": "Read the complete es guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "purpose_and_first_use": "Read the es outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit."
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-es]",
         "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
         "reviewed_artifacts": [
           {
@@ -333,334 +319,360 @@
             "name": "model_data_report.md",
             "sha256": "e19da59fdc5501ff4a50d3db792627f04401d95e42d65244bf174972b58b3d31"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "8020c2eec2500bbb3d67090c178fc89748f8cbd1345bd68ed4626b8ca320504e"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "5f993278302415fd0f1086641375da8e21968a1c6510f6b512cbfc5c8be208cd"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "f6c2bb3c0d958ee4b2d1d723ab774a62610a6bc0dd0bae47e3807db8c8495211"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "97d118f92a34df3c53d0e71aac9a8a60a08807ab59d93e118ef6d0eaa5f86bbb"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-fr]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "language_and_pacing": "Read the complete fr guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "purpose_and_first_use": "Read the fr outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit."
+      },
+      "practice": {
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "bebf22b0dbc84152dbc7ff35d2602f657b484498b931269763daa280409956e5"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "ce37af378cec3558778f610942da3eff36b7f565afa8ef391df7121850a88ae8"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "fce64bda5cc920ff9d060c633935a776f16a2cd598685da7c61d16657ebd46c5"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "cdd04299a568e74c2470b2c0f3624c46b62045385707ad4a16fc31e528f6018a"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-fr]"
+      },
+      "verdict": "accepted"
+    },
+    "it": {
+      "demo": {
+        "result_review": "Independent incorporation produces exact 2/1 ratio, 40,000 new shares, 2/5 target-holder fraction and -110,000 proposed exchange reserve. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "fe3e09b0b8097610a49be1196d0e8890ec52a698ae2d9a7d2b893aea00ac7f28"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "4dff4c905b22f53608b948f657084e2750431e059477cf73b55785744f3b07b6"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "79d5d88ae5ea15f443a936227f9785b9af2cbc2456e5fb99fc92c1ab4651ac03"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "e20a054d068b930e541dc22454fdd1a723512a0a3bd47e3c869129cde8b668df"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected before/after HTML, Markdown, JSON and readable model-data reports. Demo: exact ratio 2/1, 40,000 new shares and Bruno 2/5. Wholly owned: no new shares, cancellation difference 180,000 and book 680,000 versus tax 500,000. Both opening and journal residuals are initially zero. Creditor boundary 2 December is unevidenced; annual-account calendar-month boundary is 30 September. No signature, filing or posting occurs.",
+        "execution_and_checkpoints": "Read all six execution steps and three checkpoints. The shipped facts are imported through genuine Studio Archive APIs before P1 workpapers. Calendar inputs retain separate Beta anchors and exact rule references. The test fixture supplies expressly synthetic confirmations and gap-bearing prose; live decisions belong to the learner/professional.",
+        "inputs_and_request": "Readable localized note plus exact machine-input facts for both companies; selected clients, engagements, receipts and locators must be verified. Supplied economic values and proposed accounting allocations are hypotheses to discuss, not valuations or approvals produced by the kit.",
+        "language_and_pacing": "Read the complete it guidance and linked note. Both JSON packs use native field names; localized teaching does not translate machine formats or broaden jurisdiction. The standard 390-second outline is explanation and short practice pacing only; full work, questions and decisions can require longer sessions. No voice or understanding evidence is asserted.",
+        "practice_and_repeat": "Practice selects a distinct ownership and accounting branch. The separate -200,100 balance is imported into Beta, makes dependent bridge/dossier stale and preserves prior approval history and independent calendar. Recomputed opening and journal residuals are -100, with target imbalance retained; no invented correction or renewed approval. Earlier export bytes remain unchanged and durable reopen recovers revision 2.",
+        "purpose_and_first_use": "Read the it outline: ordinary incorporation demo, direct wholly owned practice and changed-input review. P1 exclusions and synthetic-only acceptance are explicit."
+      },
+      "practice": {
+        "result_review": "Direct wholly owned incorporation produces zero new shares, 180,000 cancellation difference, unchanged acquirer holdings and distinct book/tax values. Initial opening and journal residuals are zero. Changed Beta balance preserves historical approvals, leaves calendar independent, reopens dependent work and retains the -100 imbalance in the revised bridge. Gap-bearing dossier prose and confirmations are test-authored synthetic material, not a professional endorsement.",
+        "reviewed_artifacts": [
+          {
+            "name": "p1-workpapers.md",
+            "sha256": "f668692fd38a9c6d9148034b92207d2b6375e238725a341ea15523d8b6250d43"
+          },
+          {
+            "name": "p1-workpapers.html",
+            "sha256": "f84f6d6bca4b17bbcca070e7cee6d945414c3887f9d70341e3fbdd70e38ae4a1"
+          },
+          {
+            "name": "case-report.json",
+            "sha256": "4fd3d6290608c633acc1b9720a69111bf2bb6265a68d66dd720f71373a86e684"
+          },
+          {
+            "name": "model_data_report.md",
+            "sha256": "75d030ccfb38623c977b35733dc112edb8ba8f4231478e75fbaf552c09780d21"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_fusione_execution::test_fusione_kit_executes_both_branches_and_reopens_changes[practice-it]"
+      },
+      "verdict": "accepted"
     }
   },
   "lipe_source_binding_20261002": {
-    "reviewer": "Codex /root - bounded LIPE source compatibility review",
-    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
     "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
-    "previous_course_sha256": "a782108a162c354e6d47291ae88b17863e5c5c7951762f922f75734a8b98884b",
-    "current_course_sha256": "ad66f2dd8e955ebe3f305c2ab59cb2dda7e7c193862916db2f0450f53cb3a2e3",
-    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "ad66f2dd8e955ebe3f305c2ab59cb2dda7e7c193862916db2f0450f53cb3a2e3",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass.",
+    "previous_course_sha256": "a782108a162c354e6d47291ae88b17863e5c5c7951762f922f75734a8b98884b",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "0f8925c7a3e4243dccc76a28782b5aa5daaddc139fde977fb8bcbfb9dab69663",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "previous_course_sha256": "550d341013b9a29eacb4c3877fa0f77c5f677bfd224f63d39ac147adcfc2c649",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes."
   },
   "pdf_first_run_source_binding_20261012": {
-    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
-    "previous_course_sha256": "30f5c624fbd8ad0da71e14306cae36d347c89f83da6960a655b9480eb9946790",
     "current_course_sha256": "188fea9a6839f43f63ec1bf0097e094527a941587ae2b95ecbdf479fdfb5d0c5",
-    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
-    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
-    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope.",
+    "previous_course_sha256": "30f5c624fbd8ad0da71e14306cae36d347c89f83da6960a655b9480eb9946790",
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "45d3939af7ef40d4f254c32a731042b950eead4e23cf313dccd81d5f1513de7d",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "62600de29208aeebad52840ea1fdcfc054db6d62d8fd016f9211c10637072990",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "5cc514919f8f007e4fb2b465e3016c5dcba6686c5f852468d3454b543c40acd0",
+    "fresh_matching_junit_required": true,
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
+    "parent_course_sha256": {
+      "HEAD": "45d3939af7ef40d4f254c32a731042b950eead4e23cf313dccd81d5f1513de7d",
+      "origin/main": "2daf280971b9dc5b3366a40c3794368728582f3e931884f96ab1d25c085da4fc"
+    },
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "08da36581c28ee8898391cd8aabc8b71aeec326c98ee3af2d9434ac1f8f4d0eb",
-    "current_course_sha256": "a782108a162c354e6d47291ae88b17863e5c5c7951762f922f75734a8b98884b",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "vendor/modules/courseware/policy.py",
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "a782108a162c354e6d47291ae88b17863e5c5c7951762f922f75734a8b98884b",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "08da36581c28ee8898391cd8aabc8b71aeec326c98ee3af2d9434ac1f8f4d0eb",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "7e62ed3fb230cf0fc6e902a6a79b9ccd1000dd611d84947222698eaf936af00e",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "920ccc466ee5030388763db9b91b6f1489de74c15b418b0c441007a110a2e7ae",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
   "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
-    "reviewer": "Codex bounded teaching-material and source integration review",
-    "reviewed_at": "2026-10-09T13:18:33.980041+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - source, native execution and artifact review",
-      "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
-      "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-      "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7"
-    },
     "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "changed_fields": [
+      "revision",
+      "sources"
+    ],
     "current_course_sha256": "75314299b333bdcc38ccbbc7f5ba9c9c9cb092c1d60436e88928593da51ccec0",
+    "current_execution_evidence": {
+      "final_gate_requires_fresh_matching_junit": true,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "job": 113818653311,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "native_teaching_suite_passed": 1642,
+      "run": 37930167083,
+      "skipped": 3,
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed"
+    },
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "new_native_output_visual_review": false,
+    "previous_review_identity": {
+      "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7",
+      "review_scope": "Read the five complete outlines and source notes, both fictional data packs and changed balance. Executed and inspected ten native source-tree cases driven by the shipped facts and calendar conventions. Alpha/Beta receipts, exact allocations, draft journals, separate fiscal values, source-bound calendars, pending event receipts and immutable histories were inspected. Test narrative and reviewer confirmations are explicitly synthetic fixtures; no live voice, learner comprehension, installed-host acceptance or professional validation on a real client is claimed. Native workpaper headings and structural fields retain the P1 language contract; localized lesson guidance does not promise a fully localized helper report. Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "reviewed_at": "2026-10-01T08:04:10.681899+00:00",
+      "reviewer": "Codex /root - source, native execution and artifact review"
+    },
+    "reviewed_at": "2026-10-09T13:18:33.980041+00:00",
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
     "unchanged_materials": [
       "all lesson locales and editorial text",
       "input specifications and hashes",
       "demo and practice execution contracts",
       "language and grouping contracts"
-    ],
-    "changed_fields": [
-      "revision",
-      "sources"
-    ],
-    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
-    "current_execution_evidence": {
-      "run": 37930167083,
-      "job": 113818653311,
-      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
-      "native_teaching_suite_passed": 1642,
-      "skipped": 3,
-      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
-      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
-      "final_gate_requires_fresh_matching_junit": true
-    },
-    "new_native_output_visual_review": false,
-    "installed_host_acceptance": false,
-    "learner_or_professional_acceptance": false,
-    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
+    ]
   },
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
   "studio_archive_adoption_source_binding_20261008": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
     "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-    "previous_course_sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0",
-    "current_course_sha256": "340e40b07b734720aba610eb4e243c8d6078665bf03f55b56915e549972b92ea",
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
-    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
-    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+    "current_course_sha256": "340e40b07b734720aba610eb4e243c8d6078665bf03f55b56915e549972b92ea",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed.",
+    "previous_course_sha256": "86621eeb4f9b55450d22892726e19512695c947297afb26fb10871994a4dcde0",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json"
   },
   "tax_litigation_fixes_source_review_20261013": {
+    "authored_content_unchanged": true,
     "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
-    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
-      "course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7"
-    },
-    "previous_course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
-    "current_course_sha256": "a472dd7bdaa0f1e54185d492c2da2dec84b09f151ce813561f791a19c775f40b",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
-    "fresh_matching_junit_required": true
+    "current_course_sha256": "a472dd7bdaa0f1e54185d492c2da2dec84b09f151ce813561f791a19c775f40b",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
+    "previous_review_identity": {
+      "course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review"
+    },
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json"
   },
   "tax_litigation_source_binding_review_20261013": {
-    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex bounded teaching-material and source integration review",
-      "reviewed_at": "2026-10-09T13:18:33.980041+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
-      "course_sha256": "188fea9a6839f43f63ec1bf0097e094527a941587ae2b95ecbdf479fdfb5d0c5"
-    },
+    "authored_content_unchanged": true,
     "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
-    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
-    "previous_course_sha256": "188fea9a6839f43f63ec1bf0097e094527a941587ae2b95ecbdf479fdfb5d0c5",
-    "current_course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "current_course_sha256": "0cf847a3ccf1a8287d8da1253f281d094413b1963810cc5c449dfa8410c2b1c7",
     "fresh_matching_junit_required": true,
-    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
     "learner_or_professional_acceptance": false,
-    "installed_host_acceptance": false
+    "new_native_output_visual_review": false,
+    "previous_course_sha256": "188fea9a6839f43f63ec1bf0097e094527a941587ae2b95ecbdf479fdfb5d0c5",
+    "previous_review_identity": {
+      "course_sha256": "188fea9a6839f43f63ec1bf0097e094527a941587ae2b95ecbdf479fdfb5d0c5",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+      "reviewed_at": "2026-10-09T13:18:33.980041+00:00",
+      "reviewer": "Codex bounded teaching-material and source integration review"
+    },
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json"
+  },
+  "windows_archive_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "9361a54e9",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "8a2338dff09d64c1b955b77e4200189111ddd6099c2559dc049719683f2bc99b",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "5cc514919f8f007e4fb2b465e3016c5dcba6686c5f852468d3454b543c40acd0",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex source inspection and exact course comparison",
+    "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest."
+  },
+  "work_continuity_source_binding_20261027": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "current_course_sha256": "550d341013b9a29eacb4c3877fa0f77c5f677bfd224f63d39ac147adcfc2c649",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "previous_course_sha256": "0ec62c6d6b1336ebb62f17ee024db77d667ca6da9d9e4915529b1c7256126669",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
   "workflow": "fusione-guidata",
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "563b9f1c05b185d62ce3ad9d1c5821567709e38b882215a04259feab9a05f7c7",
-    "current_course_sha256": "920ccc466ee5030388763db9b91b6f1489de74c15b418b0c441007a110a2e7ae",
+    "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
+    "current_course_sha256": "920ccc466ee5030388763db9b91b6f1489de74c15b418b0c441007a110a2e7ae",
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false,
-    "new_visual_or_learner_acceptance": false
-  },
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "920ccc466ee5030388763db9b91b6f1489de74c15b418b0c441007a110a2e7ae",
-    "current_course_sha256": "7e62ed3fb230cf0fc6e902a6a79b9ccd1000dd611d84947222698eaf936af00e",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
+    "new_visual_or_learner_acceptance": false,
+    "previous_course_sha256": "563b9f1c05b185d62ce3ad9d1c5821567709e38b882215a04259feab9a05f7c7",
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
   },
   "workflow_usage_source_binding_review_20261017": {
-    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
-    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "authored_content_unchanged": true,
     "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
-    "previous_course_sha256": "7e62ed3fb230cf0fc6e902a6a79b9ccd1000dd611d84947222698eaf936af00e",
     "current_course_sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "7e62ed3fb230cf0fc6e902a6a79b9ccd1000dd611d84947222698eaf936af00e",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
-    "fresh_matching_junit_required": true
-  },
-  "deploy_final_source_compatibility_20261018": {
-    "reviewer": "Codex /root - bounded complete-course comparison",
-    "reviewed_at": "2026-10-18",
-    "previous_course_sha256": "0b49b39edb5db1bd60a10a7fa94e31fd2d6bc3a8a900b757177bbd2e1ec3fead",
-    "current_course_sha256": "3ff88f8558874cbaedc8fedbada29ad2741e43686864fcac33c795231c9439ab",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "scope": "Complete authored lesson JSON is identical to the retained tested candidate; only source fingerprints changed. Preserves all previous editorial and historical artifact reviews. Integrated main usage/device registration is unchanged from main; tested workflow logic is preserved. Open-item import ordering was normalized without changing imported names or statements. No new learner, visual-host or professional acceptance claimed; current native teaching CI remains required."
-  },
-  "pdf_recovery_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact retained-course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
-    "previous_course_sha256": "62600de29208aeebad52840ea1fdcfc054db6d62d8fd016f9211c10637072990",
-    "current_course_sha256": "45d3939af7ef40d4f254c32a731042b950eead4e23cf313dccd81d5f1513de7d",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.274367+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "62600de29208aeebad52840ea1fdcfc054db6d62d8fd016f9211c10637072990",
-    "current_course_sha256": "2daf280971b9dc5b3366a40c3794368728582f3e931884f96ab1d25c085da4fc",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      "plugins/vera/skills/fusione-guidata/SKILL.md"
-    ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
-  },
-  "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
-    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
-    "parent_course_sha256": {
-      "HEAD": "45d3939af7ef40d4f254c32a731042b950eead4e23cf313dccd81d5f1513de7d",
-      "origin/main": "2daf280971b9dc5b3366a40c3794368728582f3e931884f96ab1d25c085da4fc"
-    },
-    "current_course_sha256": "5cc514919f8f007e4fb2b465e3016c5dcba6686c5f852468d3454b543c40acd0",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
-  },
-  "windows_archive_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "9361a54e9",
-    "previous_course_sha256": "5cc514919f8f007e4fb2b465e3016c5dcba6686c5f852468d3454b543c40acd0",
-    "current_course_sha256": "8a2338dff09d64c1b955b77e4200189111ddd6099c2559dc049719683f2bc99b",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.584180+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "be127b8c6627b3f9878a8a683e4076c8bf63b0f5",
-    "previous_course_sha256": "8a2338dff09d64c1b955b77e4200189111ddd6099c2559dc049719683f2bc99b",
-    "current_course_sha256": "9509f6437cb3b52fee8ca93261ae5f23ccd27aad10d911bca8c91c373b8851ef",
-    "changed_fields": [
-      "sources"
-    ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  },
-  "archive_boundary_source_review_20261027": {
-    "reviewed_at": "2026-10-27",
-    "reviewer": "Codex agent",
-    "previous_course_sha256": "9509f6437cb3b52fee8ca93261ae5f23ccd27aad10d911bca8c91c373b8851ef",
-    "course_sha256": "d41aad911979d85ccfee1df7821443d94833fd73e3408c49465ccd8cab701517",
-    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
-    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
-    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
-  },
-  "archive_boundary_extension_source_review_20261027": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-27",
-    "previous_course_sha256": "d41aad911979d85ccfee1df7821443d94833fd73e3408c49465ccd8cab701517",
-    "course_sha256": "0ec62c6d6b1336ebb62f17ee024db77d667ca6da9d9e4915529b1c7256126669",
-    "content_review": "Complete course JSON excluding source fingerprints is unchanged. Existing learner/editorial evidence is preserved; no new learner or installed-plugin acceptance is asserted.",
-    "source_review": "Reviewed Archive-owned recipe and adapter writes and selected-run read-only report verification. Changes to source instructions and component functions add no model semantic classifier or accounting calculation change."
-  },
-  "work_continuity_source_binding_20261027": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
-    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
-    "previous_course_sha256": "0ec62c6d6b1336ebb62f17ee024db77d667ca6da9d9e4915529b1c7256126669",
-    "current_course_sha256": "550d341013b9a29eacb4c3877fa0f77c5f677bfd224f63d39ac147adcfc2c649",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
-    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
-    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
-  },
-  "neutral_workflow_theme_source_review_20261029": {
-    "reviewer": "Codex /root - differential engineering and course-content review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
-    "previous_course_sha256": "550d341013b9a29eacb4c3877fa0f77c5f677bfd224f63d39ac147adcfc2c649",
-    "current_course_sha256": "0f8925c7a3e4243dccc76a28782b5aa5daaddc139fde977fb8bcbfb9dab69663",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
-  },
-  "course_startup_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
-    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
-    "previous_course_sha256": "0f8925c7a3e4243dccc76a28782b5aa5daaddc139fde977fb8bcbfb9dab69663",
-    "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
-    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
-    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
-    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
-    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
-  },
-  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
-    "reviewer": "Codex /root - Deal Redux source compatibility review",
-    "reviewed_at": "2026-10-14T08:00:57.874905+00:00",
-    "course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f"
-  },
-  "auxiliary_display_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
-    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
-    "previous_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
-    "current_course_sha256": "36ecc1df4a4a832bc88d5d8f627e78fa29649b83b6ff667f468786812a0722e6",
-    "changed_source_paths": [
-      "vendor/modules/courseware/assets/chat.js",
-      "vendor/modules/courseware/native.cjs"
-    ],
-    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
   }
 }

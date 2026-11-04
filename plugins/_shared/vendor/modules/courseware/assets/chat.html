@@ -1,3 +1,11 @@
 <!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
-@font-face{font-family:Instrument Sans;src:url(data:font/ttf;base64,__FONT__) format('truetype')}*{box-sizing:border-box}body{margin:0;padding:28px;background:#fff;color:#182331;font:16px/1.5 'Instrument Sans',sans-serif}main{max-width:620px;margin:auto}p{margin:12px 0}h1{font-size:26px;font-weight:600;margin:8px 0 16px}.product{color:#002060;font-size:14px}button{font:inherit;background:#002060;color:white;border:1px solid #002060;padding:11px 18px;border-radius:5px;margin-top:12px;cursor:pointer}button:disabled{opacity:.5;cursor:default}button:focus-visible{outline:3px solid #00a6d2;outline-offset:3px}.detail{font-size:14px;color:#526172;border-top:1px solid #dce3e9;padding-top:16px;overflow-wrap:anywhere}#status{font-size:14px}#status.error{color:#a12222}@media(max-width:420px){body{padding:18px}}
-</style></head><body><main><p class="product" id="product"></p><h1 id="title">Chat del corso</h1><p id="description">Connessione al corso…</p><button type="button" id="launch" disabled>Apri la chat di lavoro</button><p id="status" role="status" aria-live="polite"></p><p class="detail" id="detail"></p></main><script>/*__JS__*/</script></body></html>
+@font-face{font-family:"Instrument Sans";src:url(data:font/ttf;base64,__FONT__) format("truetype");font-weight:400}
+@font-face{font-family:"Instrument Sans";src:url(data:font/ttf;base64,__FONT_BOLD__) format("truetype");font-weight:600 800}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper,#fff);font:16px/1.5 "Instrument Sans",sans-serif}
+header{padding:14px clamp(18px,3vw,40px);border-bottom:1px solid var(--line,#ddd)}
+main{max-width:46rem;padding:var(--space-xl,2rem) clamp(18px,3vw,40px)}
+p{margin:12px 0}h1{margin:0 0 16px}button{font:inherit;cursor:pointer}button:disabled{opacity:.6;cursor:default}
+.detail{font-size:.875rem;color:var(--muted,#596671);border-top:1px solid var(--line,#ddd);padding-top:16px;overflow-wrap:anywhere}#status:empty{display:none}
+
+</style></head><body><header><span class="brand" id="product"></span></header><main><h1 id="title">Chat del corso</h1><p id="description">Connessione al corso…</p><button type="button" class="primary" id="launch" disabled>Apri la chat di lavoro</button><p id="status" role="status" aria-live="polite"></p><p class="detail" id="detail"></p></main><script>/*__JS__*/</script></body></html>

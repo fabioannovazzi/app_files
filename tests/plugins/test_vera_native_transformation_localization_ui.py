@@ -47,7 +47,7 @@ process.stdout.write(JSON.stringify({language:ui.panel.language(),lang:ui.tree()
     assert result["fields"]["operation"] == "put"
     assert result["fields"]["record_json"] == ' { "statement": "Nome" } '
     assert result["checked"] == 0
-    assert result["items"] == 79
+    assert result["items"] == 74
     assert "Domanda autorizzata" in result["text"]
     assert "00019.00" in result["text"]
     assert "FICTIONAL-72" in result["text"]
@@ -81,12 +81,12 @@ def test_language_switch_preserves_question_and_source_refs_without_model_grant(
         + """
 const ui=authorFixture();ui.page.data.sources=[{source_ref:'fictional-selected',name:'Nome',sha256:'a'.repeat(64)}];
 await ui.panel.openAuthor('fictional-transform');const question=ui.field('Domanda sulla dimostrazione sintetica');question.value='  Domanda autorizzata  ';question.dispatch('input');
-const operation=ui.field('Proposta richiesta alla chat');operation.value='import_evidence';operation.dispatch('change');const selected=ui.field('Nome · fictional-selected');selected.checked=true;selected.dispatch('change');ui.field(consent).checked=true;
+const operation=ui.field('Proposta richiesta alla chat');operation.value='import_evidence';operation.dispatch('change');const selected=ui.field('Nome');selected.checked=true;selected.dispatch('change');ui.field(consent).checked=true;
 """
         + f"await ui.panel.setLanguage({json.dumps(language)});"
         + """
 const nodes=root=>[root,...root.children.flatMap(nodes)];const inputs=nodes(ui.tree()).filter(n=>n.tagName==='INPUT');
-process.stdout.write(JSON.stringify({fields:ui.page.fields,selected:ui.field('Nome · fictional-selected').checked,confirmed:inputs.filter(n=>n.checked).length,footer:ui.tree().children.at(-2).text,calls:ui.calls,text:ui.text()}));
+process.stdout.write(JSON.stringify({fields:ui.page.fields,selected:ui.field('Nome').checked,confirmed:inputs.filter(n=>n.checked).length,footer:ui.tree().children.at(-2).text,calls:ui.calls,text:ui.text()}));
 """
     )
     assert result["fields"] == {
@@ -98,7 +98,7 @@ process.stdout.write(JSON.stringify({fields:ui.page.fields,selected:ui.field('No
     assert result["confirmed"] == 1  # Selected source only, never model authorization.
     assert result["footer"] == footer
     assert "Nome" in result["text"]
-    assert "a" * 64 in result["text"]
+    assert "a" * 64 not in result["text"]
     assert not any(c["name"].endswith("_request") for c in result["calls"])
 
 

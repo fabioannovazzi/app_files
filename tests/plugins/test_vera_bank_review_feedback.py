@@ -368,3 +368,48 @@ def test_failed_save_does_not_report_success_or_reload_selection() -> None:
     assert result["status"] == "Draft write failed"
     assert result["selectedTitle"] == "Commissione · -5,00 EUR"
     assert result["calls"][-1]["name"] == "vera_workspace_save"
+
+
+@pytest.mark.parametrize(
+    "message",
+    [
+        "PermissionError: Run is not authorised in this workspace",
+        "The saved connection is unavailable",
+    ],
+)
+def test_failed_saved_card_can_return_to_authorized_directory(message: str) -> None:
+    node = shutil.which("node")
+    assert node is not None
+    fixture = {
+        "error": message,
+        "catalogue": {
+            "works": [
+                {
+                    "work_ref": "authorized-work",
+                    "label": "Authorized synthetic work",
+                    "workflow": "journal-bank-reconciliation",
+                }
+            ]
+        },
+    }
+    completed = subprocess.run(
+        [
+            node,
+            str(ROOT / "tests/plugins/archive_run_list_ui.cjs"),
+            str(ROOT / "plugins/vera/ui/workspace.js"),
+            "recovery",
+        ],
+        input=json.dumps(fixture),
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=20,
+    )
+    result = json.loads(completed.stdout)
+    assert result["before"]["buttons"] == ["Torna ai lavori autorizzati"]
+    assert result["calls"] == [{"name": "vera_workspace_open", "arguments": {}}]
+    assert "Authorized synthetic work" in result["text"]
+    assert result["status"] == "Scegli un lavoro collegato a Studio Archive."
+    if "PermissionError" in message:
+        assert "PermissionError" not in result["before"]["status"]
+        assert "connessione corrente" in result["before"]["status"]

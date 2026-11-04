@@ -19,7 +19,8 @@
     "modules/prompt-optimizer/assets/prompt-optimizer-review-widget.html",
     "modules/registro-imprese-sari/assets/registro-imprese-sari-review-widget.html",
     "modules/report-builder/assets/report-builder-review-widget.html",
-    "modules/variance-analysis/assets/variance-analysis-review-widget.html"
+    "modules/variance-analysis/assets/variance-analysis-review-widget.html",
+    "ui/course-chat.html"
   ],
   "review_engine_only": "Python payload and decision engines retained without browser/HTTP launchers"
 }

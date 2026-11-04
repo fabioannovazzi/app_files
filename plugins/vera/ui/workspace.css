@@ -1,4 +1,5 @@
-@font-face{font-family:Instrument Sans;src:url(data:font/ttf;base64,__FONT__) format('truetype');font-weight:100 900;font-display:swap}
+@font-face{font-family:Instrument Sans;src:url(data:font/ttf;base64,__FONT__) format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Instrument Sans;src:url(data:font/ttf;base64,__FONT_BOLD__) format('truetype');font-weight:600 800;font-display:swap}
 :root{font-family:Instrument Sans,sans-serif;color:var(--ink);background:#fff;font-synthesis:none;--navy:var(--accent);--blue:var(--accent);--line:var(--border);--muted:var(--muted)}
 *{box-sizing:border-box}body{margin:0}button,input,textarea{font:inherit}button{padding:9px 13px;min-height:40px;border:1px solid var(--line);background:#fff;color:var(--navy);cursor:pointer}button:hover{border-color:var(--blue);background:var(--soft)}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--blue);outline-offset:3px}.primary{background:var(--navy);border-color:var(--navy);color:#fff}.primary:hover{background:var(--accent-strong);color:#fff}
 .top{display:flex;align-items:center;gap:20px;padding:14px clamp(18px,3vw,40px);border-bottom:1px solid var(--line)}.brand{font-size:32px;font-weight:700;letter-spacing:-2px;color:var(--navy)}.brand span{color:var(--blue)}.top>button{margin-left:auto}#status{margin:0;padding:12px clamp(18px,3vw,40px);max-width:1100px;color:var(--muted);font-size:14px;min-height:44px}#status.error{color:var(--danger)}h1{font-size:clamp(25px,3vw,37px);line-height:1.15;letter-spacing:-.8px;margin:10px 0 16px}h2{font-size:22px;line-height:1.25;margin:10px 0 18px}h3{font-size:17px;margin:25px 0 12px}p{line-height:1.5}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--blue);margin:0}.sub,.caption,small{color:var(--muted)}.caption{font-size:13px;max-width:65ch}.shell{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:70vh}.rail{padding:24px 18px;border-right:1px solid var(--line)}.rail nav{display:grid;gap:8px;margin-top:22px}.rail button{text-align:left;border-color:transparent}.rail button[aria-current=page]{border-color:var(--line);color:var(--blue)}.main{padding:25px clamp(18px,3vw,40px);min-width:0}.main>header{max-width:1000px}.works{max-width:1000px}.work-row{display:flex;gap:20px;align-items:center;justify-content:space-between;border-top:1px solid var(--line);padding:20px 0}.work-row h2{font-size:21px;margin:0 0 7px}.work-row p{margin:4px 0}.search{display:grid;gap:7px;max-width:470px;font-size:14px;margin:18px 0}.search input{width:100%;padding:10px 12px;border:1px solid var(--line)}.split{display:grid;grid-template-columns:minmax(220px,.8fr) minmax(340px,1.5fr);gap:26px;margin-top:20px}.queue{min-width:0}.finding{display:block;text-align:left;width:100%;margin-bottom:8px;padding:14px 12px}.finding strong,.finding small{display:block;margin-top:5px}.finding[aria-pressed=true]{border-color:var(--blue)}.detail{min-width:0;border-left:1px solid var(--line);padding-left:25px}.empty{color:var(--muted);padding:22px 0;max-width:65ch}.notice{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:12px 0;color:var(--muted);max-width:80ch}.pagination,.actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0}.pagination{font-size:13px}.facts{display:flex;gap:25px;flex-wrap:wrap;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;max-width:950px}.facts span{display:block;font-size:13px;color:var(--muted)}.facts strong{display:block;font-size:23px;margin-top:5px}dl{display:grid;grid-template-columns:minmax(100px,.7fr) minmax(0,1.4fr);gap:7px 15px;font-size:14px}dt{color:var(--muted)}dd{margin:0;overflow-wrap:anywhere}details{font-size:13px;line-height:1.5;margin:13px 0}summary{cursor:pointer;color:var(--muted)}label.field{display:grid;gap:7px;max-width:600px;margin:15px 0;font-size:14px}textarea{width:100%;min-height:85px;resize:vertical;padding:10px;border:1px solid var(--line)}input[type=date],input[type=text]{padding:9px 12px;border:1px solid var(--line);max-width:100%}.check{display:flex;align-items:flex-start;gap:8px;font-size:14px;max-width:65ch;margin:20px 0}.choice{display:flex;gap:8px;margin:10px 0;font-size:14px}.draft{border-top:1px solid var(--line);padding-top:15px}.outputs{max-width:900px}.output{display:flex;align-items:center;justify-content:space-between;gap:15px;border-top:1px solid var(--line);padding:14px 0}.technical{font-size:12px;overflow-wrap:anywhere}.request{display:block;width:100%;min-height:140px}.evidence-group{border-top:1px solid var(--line);margin-top:16px;padding-top:8px}
@@ -93,8 +94,12 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
 #status:empty { display: none; }
 .text-action { border: 0; padding-inline: 0; text-decoration: underline; text-underline-offset: .2em; }
 .queue-picker { border-bottom: 1px solid var(--line); }
+@media (min-width:901px) { .queue-picker { border:0; } .queue-picker > summary { display:none; } }
 
 @media (max-width: 900px) { .shell { align-content: start; } }
+
+/* Document names and fiscal references can exceed the width of a review panel. */
+.detail :is(h2,h3,dt,dd,summary), .queue-picker { overflow-wrap: anywhere; min-width: 0; }
 
 /* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
 /* Canonical Vera workflow theme. Derived from the Vouching review surface.
@@ -109,12 +114,12 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
   --soft-strong: #f3f4f2;
   --ink: #1f2421;
   --text: #3f4541;
-  --muted: #727972;
+  --muted: #596671;
   --border: #e8eae7;
   --border-strong: #d8dcd7;
-  --accent: #35463f;
-  --accent-strong: #202a26;
-  --accent-soft: #f3f6f4;
+  --accent: #194b70;
+  --accent-strong: #123650;
+  --accent-soft: #eff5f9;
   --danger: #7b4b44;
   --danger-bg: #fbf7f6;
   --warning: #6f6247;
@@ -124,7 +129,7 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
   --info: #52646e;
   --info-bg: #f7fafb;
   --radius: 8px;
-  --font-ui: "Aptos", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-ui: "Instrument Sans", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-size-ui: 1rem;
   --font-size-control: 0.875rem;
   --font-size-title: 1.25rem;
@@ -252,4 +257,19 @@ select{font:inherit}.custom-select{position:relative;min-width:0;max-width:600px
 :root :is(.severity, .status--warning) { color: var(--warning); }
 :root .severity.blocker { color: var(--danger); }
 :root .severity.info { color: var(--info); }
+/* Vera workflow identity, shared by all five local MCP resources. */
+:root {
+  --muted: #596671;
+  --accent: #194b70;
+  --accent-strong: #123650;
+  --accent-soft: #eff5f9;
+  --font-ui: "Instrument Sans", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+#status:empty { display: none; }
+nav[aria-label="Revisione del bilancio per area"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block: var(--space-md);
+}
 /* VERA_SHARED_THEME_END */

@@ -205,13 +205,12 @@ class MCP:
         configuration = json.loads((root / ".mcp.json").read_text())["mcpServers"][
             "vera"
         ]
+        # Legacy Codex resolves the configured cwd against the installed plugin.
+        arguments = configuration["args"]
+        working_directory = root / configuration.get("cwd", ".")
         self.process = subprocess.Popen(
-            [
-                configuration["command"],
-                str(root / configuration["args"][0]),
-                *configuration["args"][1:],
-            ],
-            cwd=root,
+            [configuration["command"], *arguments],
+            cwd=working_directory,
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,

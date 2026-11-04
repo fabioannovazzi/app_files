@@ -474,7 +474,7 @@ def requirement_lines(path):
 
 def constrained_version(path: Path, package: str, machine: str) -> list[str]:
     """Return versions selected by one platform-specific constraints file."""
-    environment = {"platform_machine": machine}
+    environment = {"platform_machine": machine, "sys_platform": "darwin"}
     matches = []
     for raw in path.read_text().splitlines():
         line = raw.split("#", 1)[0].strip()
@@ -489,17 +489,21 @@ def constrained_version(path: Path, package: str, machine: str) -> list[str]:
 
 
 @pytest.mark.parametrize(
-    ("machine", "expected_numba", "expected_llvmlite"),
+    ("machine", "expected_cryptography", "expected_numba", "expected_llvmlite"),
     [
-        ("x86_64", ["==0.62.1"], ["==0.45.1"]),
-        ("arm64", ["==0.67.0"], ["==0.49.0"]),
+        ("x86_64", ["==48.0.1"], ["==0.62.1"], ["==0.45.1"]),
+        ("arm64", ["==50.0.1"], ["==0.67.0"], ["==0.49.0"]),
     ],
 )
-def test_macos_constraints_select_wheel_backed_numba_pair(
-    machine, expected_numba, expected_llvmlite
+def test_macos_constraints_select_wheel_backed_dependencies(
+    machine, expected_cryptography, expected_numba, expected_llvmlite
 ):
     constraints = ROOT / "plugins/clara/constraints-shared-macos-py312.txt"
 
+    assert (
+        constrained_version(constraints, "cryptography", machine)
+        == expected_cryptography
+    )
     assert constrained_version(constraints, "numba", machine) == expected_numba
     assert constrained_version(constraints, "llvmlite", machine) == expected_llvmlite
 

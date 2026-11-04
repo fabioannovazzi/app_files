@@ -22,7 +22,7 @@ input.on("line", line => {
   if (m.method === "resources/list") { reply(m.id, { resources: [{ uri: `ui://${name}`, name, mimeType: "text/html;profile=mcp-app" }] }); return; }
   if (m.method === "resources/templates/list") { reply(m.id, { resourceTemplates: [] }); return; }
   if (m.method === "prompts/list") { reply(m.id, { prompts: [{ name: `prompt_${name}` }] }); return; }
-  if (m.method === "resources/read") { reply(m.id, { contents: [{ uri: m.params.uri, text: `<html>${name}</html>` }] }); return; }
+  if (m.method === "resources/read") { reply(m.id, { contents: [{ uri: m.params.uri, mimeType: "text/html;profile=mcp-app", _meta: { ui: { prefersBorder: false } }, text: `<html>${name}</html>` }] }); return; }
   if (m.method === "prompts/get") { reply(m.id, { messages: [{ role: "user", content: { type: "text", text: name } }] }); return; }
   if (m.method === "notifications/cancelled") { const t = waiting.get(m.params.requestId); if (t) { clearTimeout(t); waiting.delete(m.params.requestId); send({ id: m.params.requestId, error: { code: -32800, message: "cancelled" } }); } return; }
   if (m.method !== "tools/call") return;

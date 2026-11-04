@@ -29,7 +29,7 @@
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
       "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "4d7b3ec93bc8e94adc07db944a8333fcc44721e9066bff4281b39e64efaece20"
+      "sha256": "652799fbefeb7ced7c8348f209ccc99ab5071d829a3817f5e0a1148bc9d63edf"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -229,12 +229,12 @@
     {
       "path": "vendor/modules/courseware/assets/chat.html",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "0be0755190f0bb76128768dd29db0da943c1a26595a630be7e4716df0e3d7a45"
+      "sha256": "b76aa6e2ec27eb98ab12e1f85da933a2de432e915f1cbf96c28c5feab4490098"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -294,7 +294,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "ef092de84e872c9a4ab554ed681eab25cedc16893578e241fe0aa2ac3146a8f4"
+      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

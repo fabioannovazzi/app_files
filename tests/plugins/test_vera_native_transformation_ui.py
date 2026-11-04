@@ -97,3 +97,51 @@ def test_transformation_ui_missing_binding_uses_synthetic_specialist_setup():
     assert [r["name"] for r in result["calls"]] == [
         "vera_workspace_transformation_catalogue"
     ]
+
+
+def test_transformation_branch_fields_save_literal_values_and_withdraw_confirmation():
+    result = events(
+        """
+const ui=fixture(source);await ui.panel.open('fictional-transform');
+const choose=ui.field('Passaggio sintetico');choose.value='branch';choose.dispatch('change');
+ui.field(confirm).checked=true;
+const title=ui.field('Titolo');title.value='  Ramo alternativo  ';title.dispatch('input');
+const deps=ui.field('Dipendenze');deps.value='finding:F1\\nevidence:E1';deps.dispatch('input');
+await ui.panel.flush();await ui.panel.refresh();
+process.stdout.write(JSON.stringify({draft:JSON.parse(ui.page.fields.record_json),title:ui.field('Titolo').value,
+confirmed:ui.field(confirm).checked,executed:ui.calls.some(call=>call.name.endsWith('_execute'))}));
+"""
+    )
+    assert result["draft"] == {
+        "title": "  Ramo alternativo  ",
+        "owner": None,
+        "next_step": None,
+        "dependencies": ["finding:F1", "evidence:E1"],
+    }
+    assert result["title"] == "  Ramo alternativo  "
+    assert result["confirmed"] is False
+    assert result["executed"] is False
+
+
+def test_calculation_fields_keep_exact_decimal_strings_in_saved_proposal():
+    result = events(
+        """
+const ui=fixture(source);ui.page.data.record_contract.calculation=['operation','args'];
+await ui.panel.open('fictional-transform');
+const set=(name,value,event)=>{const f=ui.field(name);f.value=value;f.dispatch(event);};
+set('Passaggio sintetico','put','change');set('Tipo di record','calculation','change');
+set('Metodo di calcolo','capital_coverage','change');
+set('Attività','00019.50','input');set('Passività','1.25','input');set('Capitale','10','input');
+await ui.panel.flush();await ui.panel.refresh();
+process.stdout.write(JSON.stringify({value:ui.field('Attività').value,proposal:JSON.parse(ui.page.fields.record_json),
+confirmed:ui.field(confirm).checked,executed:ui.calls.some(call=>call.name.endsWith('_execute'))}));
+"""
+    )
+    assert result["value"] == "00019.50"
+    assert result["proposal"]["args"] == {
+        "assets": "00019.50",
+        "liabilities": "1.25",
+        "capital": "10",
+    }
+    assert result["confirmed"] is False
+    assert result["executed"] is False

@@ -1,0 +1,15 @@
+/* Vera workflow identity, shared by all five local MCP resources. */
+:root {
+  --muted: #596671;
+  --accent: #194b70;
+  --accent-strong: #123650;
+  --accent-soft: #eff5f9;
+  --font-ui: "Instrument Sans", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+#status:empty { display: none; }
+nav[aria-label="Revisione del bilancio per area"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-block: var(--space-md);
+}

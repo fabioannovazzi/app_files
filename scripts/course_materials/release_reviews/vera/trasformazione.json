@@ -1,4 +1,13 @@
 {
+  "archive_boundary_source_review_20261027": {
+    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
+    "course_sha256": "f224859140a880d4e6f682d190e8813248eb1be62f72ffacd6226fcc59f737f4",
+    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused.",
+    "previous_course_sha256": "daa7ae2deedea2073b3e373864f95e6caee396bd86f165fc7132a4faa9f713e9",
+    "reviewed_at": "2026-10-27",
+    "reviewer": "Codex agent",
+    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
+  },
   "archive_release_shared_runtime_compatibility_20261018": {
     "authored_content_unchanged": true,
     "changed_fields": [
@@ -26,6 +35,19 @@
     "reviewed_at": "2026-10-15T13:14:28.475181+00:00",
     "reviewer": "Codex /root - bounded incident-client source review",
     "source_review": "Inspected the exact operational_incidents.py diff: reporter protocol changes from 2 to 3, and startup guidance routes the host AI through typed technical requests, revision-linked replies, active status checks and verified original-task retry. No course execution or professional calculation logic changes."
+  },
+  "auxiliary_display_source_binding_review_20261103": {
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "current_course_sha256": "f5f03c5fd377bab7ded4a9aac6ff0b85978567862647e2ca40786325fc7f91e9",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop.",
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "previous_course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
   "cached_readiness_source_binding_20261013": "Source-only binding after cached readiness reconciliation. Existing course content, dates, editorial judgments and artifact reviews are preserved. Fresh execution remains required by CI.",
   "committed_shared_contract_integration_20261008": {
@@ -66,7 +88,30 @@
     "reviewer": "Codex - bounded connected studio knowledge source compatibility review",
     "source_review": "The inspected changes add the optional connected-studio-knowledge reference and professional entrypoint consultation gate; specialist calculation and jurisdiction requirements remain intact. Synthetic lessons use their bound materials and do not query a private studio repository."
   },
-  "course_sha256": "f5f03c5fd377bab7ded4a9aac6ff0b85978567862647e2ca40786325fc7f91e9",
+  "consolidated_ui_runtime_source_binding_20261103": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "d1999545cb420bc716452fe163d626899543d6711e61e2565e58ff69902395d7",
+    "limits": "No new installed-host, learner, visual, voice or professional acceptance is asserted.",
+    "previous_course_sha256": "f5f03c5fd377bab7ded4a9aac6ff0b85978567862647e2ca40786325fc7f91e9",
+    "reviewed_at": "2026-11-03",
+    "reviewer": "Codex /root - source compatibility review",
+    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
+  },
+  "course_sha256": "d1999545cb420bc716452fe163d626899543d6711e61e2565e58ff69902395d7",
+  "course_startup_source_binding_review_20261103": {
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "current_course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved.",
+    "previous_course_sha256": "a7614b60d83b9426a7e2a1ed75e1d73e145e3d84f44c4ccfd33d5dba1c5a53a6",
+    "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
   "cowork_reporting_source_refresh_20261018": {
     "authored_content_unchanged": true,
     "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
@@ -109,8 +154,24 @@
     "recorded_at": "2026-10-25T18:12:53.812103+00:00",
     "recorder": "Codex - mechanical source inventory comparison"
   },
+  "durable_sampling_replay_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "997c69d0f49368a81ecc81acf932b660d40c6647",
+    "current_course_sha256": "a7614b60d83b9426a7e2a1ed75e1d73e145e3d84f44c4ccfd33d5dba1c5a53a6",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial identities, dates and artifact reviews remain historical. New CI on these course digests is required; no new learner, installed-host or professional acceptance claimed.",
+    "previous_course_sha256": "bb2548afd0fe2c3a00a8db29d83b9dbf0711b49f3c3443bba0acf25207c8432a",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential source review",
+    "source_review": "Compared complete compiled course objects: only source bindings change. Runtime collection now preserves index-verified Journal Sampling module bytes for read-only historical replay outside executable-release GC; source and code tampering remain rejected. Vouching instructions place agent-reviewed row/document/direction bindings before comparison. No course text, exercise, input, checkpoint or professional conclusion changes."
+  },
   "filesystem_identity_source_binding_20261026": {
     "scope": "Complete authored course content is unchanged. Reviewed shared runtime source renews stale filesystem metadata only after full byte verification and stable current directory identity. Existing editorial, learner and professional judgments remain unchanged; this is not new installed-host acceptance."
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
+    "reviewed_at": "2026-10-14T08:00:57.873649+00:00",
+    "reviewer": "Codex /root - Deal Redux source compatibility review"
   },
   "host_marker_source_binding_review_20261010": {
     "current_course_sha256": "b37f5d86d6167ecccdbe4365e05b43b7bd6fcc7b414a3b954b0bcdde08d2438e",
@@ -515,6 +576,20 @@
     "reviewer": "Codex /root",
     "scope": "Compared every authored field and input definition: unchanged outside source bindings. Reviewed the incident helper change: persistent native host proof, native broker observations separated from guest versions, and best-effort identity linking without blocking original reports. No professional algorithm, lesson content or artifact review changed. Historical editorial/output judgments are retained; fresh native teaching CI remains required."
   },
+  "neutral_workflow_theme_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "d92c0422308c8402400479481b682eb9d589733bee0627673426037ee347a05c",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "previous_course_sha256": "b0cf544db2070d7044d7db4cbf5fef11c3d578d5cfab019cefa55e9b145554d3",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes."
+  },
   "pdf_first_run_source_binding_20261012": {
     "current_course_sha256": "aaee95af9ec136ff97faff81373048b76b524a755228601b1deb53cd0ff53559",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
@@ -698,6 +773,15 @@
     "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
     "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json"
   },
+  "test04_historical_replay_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
+    "current_course_sha256": "bb2548afd0fe2c3a00a8db29d83b9dbf0711b49f3c3443bba0acf25207c8432a",
+    "previous_course_sha256": "d92c0422308c8402400479481b682eb9d589733bee0627673426037ee347a05c",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential source review",
+    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
+  },
   "usage_computer_binding_20261017": {
     "authored_content_unchanged": true,
     "baseline_commit": "54da75ab0110a6f8ab32bd24952fbdd874cfe2fe",
@@ -710,6 +794,22 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "Inspected the exact operational_incidents.py change: workflow_transport now attaches the existing native host proof and observed app to its existing register request when available. Missing native proof leaves delivery available and linkage unknown. Workflow event bytes, helper execution, source files, professional output and incident recovery are unchanged. All authored lesson fields are byte-equivalent as JSON outside the source inventory.",
     "validation": "76 focused usage/receipt tests and 298 incident/native-host regressions passed. Full native lesson CI remains required at the final PR head."
+  },
+  "work_continuity_source_binding_20261027": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "current_course_sha256": "b0cf544db2070d7044d7db4cbf5fef11c3d578d5cfab019cefa55e9b145554d3",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "previous_course_sha256": "f224859140a880d4e6f682d190e8813248eb1be62f72ffacd6226fcc59f737f4",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
   "workflow": "trasformazione",
   "workflow_ui_source_compatibility_review_20261014": {
@@ -734,93 +834,5 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
-  },
-  "archive_boundary_source_review_20261027": {
-    "reviewed_at": "2026-10-27",
-    "reviewer": "Codex agent",
-    "previous_course_sha256": "daa7ae2deedea2073b3e373864f95e6caee396bd86f165fc7132a4faa9f713e9",
-    "course_sha256": "f224859140a880d4e6f682d190e8813248eb1be62f72ffacd6226fcc59f737f4",
-    "content_review": "Complete compiled course JSON excluding sources equals the current main baseline; lesson text, fixtures, timing, checkpoints and prior artifact reviews are unchanged.",
-    "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts.",
-    "limits": "Focused development regressions only; no new learner, installed-chat or professional acceptance. The thirteen-pipeline campaign remains paused."
-  },
-  "work_continuity_source_binding_20261027": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
-    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
-    "previous_course_sha256": "f224859140a880d4e6f682d190e8813248eb1be62f72ffacd6226fcc59f737f4",
-    "current_course_sha256": "b0cf544db2070d7044d7db4cbf5fef11c3d578d5cfab019cefa55e9b145554d3",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
-    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
-    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
-  },
-  "neutral_workflow_theme_source_review_20261029": {
-    "reviewer": "Codex /root - differential engineering and course-content review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
-    "previous_course_sha256": "b0cf544db2070d7044d7db4cbf5fef11c3d578d5cfab019cefa55e9b145554d3",
-    "current_course_sha256": "d92c0422308c8402400479481b682eb9d589733bee0627673426037ee347a05c",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
-  },
-  "test04_historical_replay_source_review_20261029": {
-    "reviewer": "Codex /root - differential source review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "15b92738c5dd29fd4d96cfb8ad7e532a1bac14dd",
-    "previous_course_sha256": "d92c0422308c8402400479481b682eb9d589733bee0627673426037ee347a05c",
-    "current_course_sha256": "bb2548afd0fe2c3a00a8db29d83b9dbf0711b49f3c3443bba0acf25207c8432a",
-    "authored_content_unchanged": true,
-    "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
-  },
-  "durable_sampling_replay_source_review_20261029": {
-    "reviewer": "Codex /root - differential source review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "997c69d0f49368a81ecc81acf932b660d40c6647",
-    "previous_course_sha256": "bb2548afd0fe2c3a00a8db29d83b9dbf0711b49f3c3443bba0acf25207c8432a",
-    "current_course_sha256": "a7614b60d83b9426a7e2a1ed75e1d73e145e3d84f44c4ccfd33d5dba1c5a53a6",
-    "authored_content_unchanged": true,
-    "source_review": "Compared complete compiled course objects: only source bindings change. Runtime collection now preserves index-verified Journal Sampling module bytes for read-only historical replay outside executable-release GC; source and code tampering remain rejected. Vouching instructions place agent-reviewed row/document/direction bindings before comparison. No course text, exercise, input, checkpoint or professional conclusion changes.",
-    "fresh_matching_junit_required": true,
-    "limits": "Prior editorial identities, dates and artifact reviews remain historical. New CI on these course digests is required; no new learner, installed-host or professional acceptance claimed."
-  },
-  "course_startup_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
-    "reviewed_ancestor_commit": "75f63098cbc8383a4f925a5feccaa7be082fd51f",
-    "previous_course_sha256": "a7614b60d83b9426a7e2a1ed75e1d73e145e3d84f44c4ccfd33d5dba1c5a53a6",
-    "current_course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
-    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
-    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
-    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
-    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
-  },
-  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
-    "reviewer": "Codex /root - Deal Redux source compatibility review",
-    "reviewed_at": "2026-10-14T08:00:57.873649+00:00",
-    "course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b"
-  },
-  "auxiliary_display_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
-    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
-    "previous_course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
-    "current_course_sha256": "f5f03c5fd377bab7ded4a9aac6ff0b85978567862647e2ca40786325fc7f91e9",
-    "changed_source_paths": [
-      "vendor/modules/courseware/assets/chat.js",
-      "vendor/modules/courseware/native.cjs"
-    ],
-    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
   }
 }

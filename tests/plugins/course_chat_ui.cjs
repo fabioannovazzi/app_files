@@ -6,7 +6,10 @@ async function exercise(action, supported, cancelled) {
   const nodes = new Map();
   const node = id => { if (!nodes.has(id)) nodes.set(id, { addEventListener(type, fn) { this[type] = fn; } }); return nodes.get(id); };
   let listener; const sent=[]; const parent={postMessage(message) {
-    if (message.method === "ui/initialize") queueMicrotask(() => listener({source:parent,data:{jsonrpc:"2.0",id:message.id,result:{hostCapabilities:{experimental:supported ? {"openai/message":{}}:{}}}}}));
+    if (message.method === "ui/initialize") {
+      assert.ok(message.params.appCapabilities.availableDisplayModes.includes("fullscreen"), "Course UI must support the Desktop app display mode");
+      queueMicrotask(() => listener({source:parent,data:{jsonrpc:"2.0",id:message.id,result:{hostCapabilities:{experimental:supported ? {"openai/message":{}}:{}}}}}));
+    }
     if (message.method === "ui/message") { sent.push(message.params); queueMicrotask(() => listener({source:parent,data:{jsonrpc:"2.0",id:message.id,result:{isError:cancelled}}})); }
   }};
   const context = {document:{getElementById:node,documentElement:{}},window:{parent,addEventListener(type,fn){listener=fn;}},setTimeout(){return 1;},clearTimeout(){},queueMicrotask};

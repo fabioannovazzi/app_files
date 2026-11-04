@@ -30,7 +30,7 @@
     {
       "path": "modules/deep-research-validator/assets/deep-research-review-widget.html",
       "repository_path": "plugins/deep-research-validator/assets/deep-research-review-widget.html",
-      "sha256": "c98f9004b3516e4ecb981b2052b6e22bcaf3639f89db90a99defb7f004a4346a"
+      "sha256": "c959c5e3cfebb8690b0831d8b1023b48357d03be3568ae8f97290974e9dd9f4e"
     },
     {
       "path": "modules/deep-research-validator/assets/icon.svg",
@@ -205,7 +205,7 @@
     {
       "path": "modules/prompt-optimizer/assets/legal-tax-model.html",
       "repository_path": "plugins/prompt-optimizer/assets/legal-tax-model.html",
-      "sha256": "d027342967c1a77786d18fdb525deb80006e073f0724a09d2ae9423545e1c1c4"
+      "sha256": "2170da8a576e7170af3f01271b166692a3b57024b68c8ff08cd95be832e25fb2"
     },
     {
       "path": "modules/prompt-optimizer/scripts/model-policy.cjs",
@@ -275,12 +275,12 @@
     {
       "path": "vendor/modules/courseware/assets/chat.html",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "0be0755190f0bb76128768dd29db0da943c1a26595a630be7e4716df0e3d7a45"
+      "sha256": "b76aa6e2ec27eb98ab12e1f85da933a2de432e915f1cbf96c28c5feab4490098"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -340,7 +340,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "ef092de84e872c9a4ab554ed681eab25cedc16893578e241fe0aa2ac3146a8f4"
+      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

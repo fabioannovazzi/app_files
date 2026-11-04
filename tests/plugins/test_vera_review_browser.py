@@ -18,6 +18,7 @@ from tests.plugins.test_vera_native_workspace import (
     ROOT,
     archived_review_binding,
     configure,
+    sampling_workspace,  # noqa: F401
 )
 
 __all__: list[str] = []
@@ -194,6 +195,11 @@ def test_chat_and_archive_show_same_saved_bank_editor_in_browser(
         chat.get_by_role("option", name="Da chiarire", exact=True).click()
         note = chat.get_by_label("Nota del revisore")
         note.fill("Please verify this fee")
+        page.set_viewport_size({"width": 950, "height": 900})
+        expect(chat.locator(".queue-picker .queue")).to_be_visible()
+        page.set_viewport_size({"width": 390, "height": 900})
+        expect(chat.locator(".queue-picker .queue")).to_be_hidden()
+        expect(note).to_have_value("Please verify this fee")
         page.evaluate(
             """(route) => document.querySelector("iframe").contentWindow.postMessage({
             jsonrpc:"2.0",method:"ui/notifications/tool-result",params:{_meta:{workspace:route}}
@@ -403,3 +409,21 @@ def test_each_registered_work_opens_only_its_own_reader(tmp_path):
                     )
                 expect(status).to_have_text("End of route probe")
         browser.close()
+
+
+def test_sample_review_keeps_supporting_files_available_on_demand(
+    sampling_workspace,
+):
+    _, binding, *_ = sampling_workspace
+    with review_host(dict(os.environ)) as (page, mount, _):
+        page.set_viewport_size({"width": 950, "height": 900})
+        panel = mount("vera_open_review", {"work_ref": binding["work_ref"]})
+        file_button = panel.get_by_role(
+            "button", name="Sampling audit JSON", exact=False, include_hidden=True
+        )
+        expect(
+            panel.get_by_role("heading", name="Campione sistematico: 2 su 3")
+        ).to_be_visible()
+        expect(file_button).to_be_hidden()
+        panel.get_by_text("Documenti e file di supporto", exact=True).click()
+        expect(file_button).to_be_visible()

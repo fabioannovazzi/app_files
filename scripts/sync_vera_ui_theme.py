@@ -14,10 +14,17 @@ if __package__:
         theme_course_page,
         theme_css,
         theme_html,
+        vera_identity_theme,
     )
 else:
     import generate_non_plotting_review_widgets as widgets
-    from vera_ui_theme import THEME_PATH, theme_course_page, theme_css, theme_html
+    from vera_ui_theme import (
+        THEME_PATH,
+        theme_course_page,
+        theme_css,
+        theme_html,
+        vera_identity_theme,
+    )
 
 __all__ = ["CSS_SURFACES", "HTML_SURFACES", "expected_resources", "main"]
 
@@ -53,7 +60,13 @@ def expected_resources() -> dict[Path, str]:
     resources = {}
     for name in CSS_SURFACES:
         path = ROOT / name
-        resources[path] = theme_css(path.read_text(encoding="utf-8"))
+        theme = (
+            vera_identity_theme()
+            if name.startswith("plugins/vera/")
+            or name == "plugins/browser-automation/ui/agenzia.css"
+            else None
+        )
+        resources[path] = theme_css(path.read_text(encoding="utf-8"), theme=theme)
     for name in HTML_SURFACES:
         path = ROOT / name
         resources[path] = theme_html(path.read_text(encoding="utf-8"))

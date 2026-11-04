@@ -26,7 +26,7 @@
   "security_controls": [
     {
       "id": "exact-owner-routing",
-      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply.",
+      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply. The legacy Codex entry resolves its relative launcher against the plugin working directory. Portable Codex and Cowork packaging project their respective supported root placeholders without adding filesystem authority. Vera may normalize app display metadata, leaving professional payloads and service authority unchanged.",
       "implemented_by": [
         "scripts/on_demand_mcp.cjs",
         "mcp-services.json"
@@ -59,9 +59,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-10-29",
+    "reviewed_at": "2026-11-03",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "913e83654239404ff99c4d9fd98a7753f91f730125601e4e618f1d1e9e8a6db3"
+    "source_fingerprint": "84cbac0d2074051ff4135682356a9798fd082dd4f9a87d60e5d2ff394b3bb5b7"
   }
 }

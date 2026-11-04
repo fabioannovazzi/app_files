@@ -31,7 +31,7 @@ if (typeof document !== "undefined") (() => {
     if (!data) return;
     const copy = copyFor(data);
     document.documentElement.lang = data.language || "it";
-    document.getElementById("product").textContent = data.product[0].toUpperCase()+data.product.slice(1);
+    document.getElementById("product").textContent = data.product.toLowerCase()+".";
     document.getElementById("title").textContent = data.title;
     document.getElementById("description").textContent = copy.description;
     button.textContent = data.action === "new" ? copy.open : copy.resume;

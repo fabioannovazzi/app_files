@@ -32,6 +32,16 @@ def events(body):
     return json.loads(result.stdout)
 
 
+def test_opening_new_item_selects_its_navigation_button():
+    result = events(
+        """
+const ui=fixture(source);await ui.panel.open({form:'capture'});
+process.stdout.write(JSON.stringify(ui.all().filter(e=>e.attributes['aria-pressed']==='true').map(e=>e.text)));
+"""
+    )
+    assert result == ["Nuovo impegno"]
+
+
 def test_studio_panel_partial_fields_reopen_without_confirmation_or_schedule():
     result = events(
         """
@@ -50,7 +60,7 @@ process.stdout.write(JSON.stringify({draft:ui.drafts.capture,confirm:ui.confirm(
     assert result["dirty"] is False
     assert not any(call["name"].endswith("_submit") for call in result["calls"])
     assert "Quali dati arrivano al modello" in result["text"]
-    assert "Nessuna data viene ricavata" in result["text"]
+    assert "Scegli il fuso orario e il calendario" in result["text"]
 
 
 def test_studio_panel_dependency_choices_include_all_pages_without_id_entry():

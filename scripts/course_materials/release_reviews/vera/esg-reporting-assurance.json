@@ -1,11 +1,20 @@
 {
+  "auxiliary_display_source_binding_review_20261103": {
+    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
+    "changed_source_paths": [
+      "vendor/modules/courseware/assets/chat.js",
+      "vendor/modules/courseware/native.cjs"
+    ],
+    "current_course_sha256": "4aa8952cd22f326b5c87c5896a4d77a7dd6d4f7892fa49ae4f34423e273dfd67",
+    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop.",
+    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
+    "previous_course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
+    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
+    "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
   "committed_shared_contract_integration_20261008": {
-    "product": "vera",
-    "workflow": "esg-reporting-assurance",
-    "reviewer": "Codex /root - bounded shared-contract integration review",
-    "reviewed_at": "2026-10-08T12:40:14.090604+00:00",
-    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
     "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
+    "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6",
     "limits": "Preserves prior named editorial and artifact judgments; does not attest new learner participation, professional acceptance or installed native host behavior. Current CI must execute exact demo/practice identities against current course bytes.",
     "parents": [
       {
@@ -21,256 +30,94 @@
         "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
       }
     ],
-    "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
+    "product": "vera",
+    "reviewed_at": "2026-10-08T12:40:14.090604+00:00",
+    "reviewer": "Codex /root - bounded shared-contract integration review",
+    "source_change": "Shared assurance contracts add a separately allowlisted standalone task context; ordinary registered client contexts and this lesson content remain unchanged. Other source changes were reviewed in the included bank and Archive commits.",
+    "workflow": "esg-reporting-assurance"
   },
-  "course_sha256": "4aa8952cd22f326b5c87c5896a4d77a7dd6d4f7892fa49ae4f34423e273dfd67",
+  "consolidated_ui_runtime_source_binding_20261103": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "35a170b0e9dc18cfab2b20877f1c3113c7ff759dd81ece731d246cc888b69c2b",
+    "limits": "No new installed-host, learner, visual, voice or professional acceptance is asserted.",
+    "previous_course_sha256": "4aa8952cd22f326b5c87c5896a4d77a7dd6d4f7892fa49ae4f34423e273dfd67",
+    "reviewed_at": "2026-11-03",
+    "reviewer": "Codex /root - source compatibility review",
+    "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
+  },
+  "course_sha256": "35a170b0e9dc18cfab2b20877f1c3113c7ff759dd81ece731d246cc888b69c2b",
+  "course_startup_source_binding_review_20261103": {
+    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
+    "current_course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
+    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
+    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
+    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved.",
+    "previous_course_sha256": "0f53e00dac82dd09d836ffe2f37b9feecce674183db5ab26ddcbec382e2fc57f",
+    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
+    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  },
+  "cowork_reporting_source_refresh_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_sources": [
+      "plugins/vera/skills/esg-reporting-assurance/SKILL.md"
+    ],
+    "current_course_sha256": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f",
+    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance.",
+    "previous_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40",
+    "reviewed_at": "2026-10-18T18:09:58.232512+00:00",
+    "reviewer": "Codex /root - bounded reporting source compatibility review",
+    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
+    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash."
+  },
+  "desktop_source_inventory_binding_20261025": {
+    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
+    "current_course_sha256": "fde7b28b48367bbe2b9131bb41f4288d30a4a89cb41f235cc4dc0574db2c72de",
+    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest.",
+    "previous_course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
+    "recorded_at": "2026-10-25T18:12:53.534824+00:00",
+    "recorder": "Codex - mechanical source inventory comparison"
+  },
+  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
+    "course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
+    "reviewed_at": "2026-10-14T08:00:57.877182+00:00",
+    "reviewer": "Codex /root - Deal Redux source compatibility review"
+  },
   "integration_refresh": {
-    "reviewer": "Codex /root",
     "date": "2026-10-02",
-    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained."
+    "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",
+    "reviewer": "Codex /root"
   },
   "journal_pdf_source_binding_review_20261009": {
-    "reviewed_at": "2026-10-09T17:33:15.812364+00:00",
-    "reviewer": "Codex source-bound PDF workflow review",
-    "previous_course_sha256": "4caeee38298dc977707112aa02c018d4aafec9262683a8787bd194bafd70150d",
-    "current_course_sha256": "aac0f280e51a14a923074f50a625217f1ea0abd307f3abc9dbeceba5a48e05db",
     "changed_fields": [
       "revision",
       "sources"
     ],
+    "current_course_sha256": "aac0f280e51a14a923074f50a625217f1ea0abd307f3abc9dbeceba5a48e05db",
+    "previous_course_sha256": "4caeee38298dc977707112aa02c018d4aafec9262683a8787bd194bafd70150d",
+    "reviewed_at": "2026-10-09T17:33:15.812364+00:00",
+    "reviewer": "Codex source-bound PDF workflow review",
+    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification.",
     "unchanged_materials": [
       "All localized lesson text",
       "Input bytes and execution contracts",
       "Editorial and artifact review history"
-    ],
-    "scope": "Source inventory only: reviewed registration PDF adapter, page-cache release and worker diagnostics. Complete authored lesson content is identical to the prior main baseline. Prior output and editorial judgments remain historical; no renewed visual, installed-host, learner or Nicola-file acceptance is claimed. Fresh source-bound execution is required by CI teaching release verification."
+    ]
   },
   "languages": {
-    "it": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Seguire evidenze e decisioni di un fascicolo ESG",
-        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
-        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
-        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
-        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
-        "language_and_pacing": "All outline fields and brief read in it. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-it]",
-        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
-        "reviewed_artifacts": [
-          {
-            "name": "esg_state.json",
-            "sha256": "495f7acfff471a54501e80c05bf0d2a5fa7500d56c57fa0b7cd55e2488912381"
-          },
-          {
-            "name": "esg-draft-935ec8942801a2083610d7e8122de23ea4ac5ac62dc7e13d42868686519e8714.md",
-            "sha256": "32d7145e91791df75f53fc5101f882683070423c034f2e61616bd4bee5ca48dd"
-          },
-          {
-            "name": "esg-draft-eb6c0e3991ce01a7bc70fd1c269377e3cf03ab1ab648ddfd271a712bb375014e.md",
-            "sha256": "c2151618bb19e93f9f966b81f41779a1238c746beff26219b4fa7f106c1464b4"
-          },
-          {
-            "name": "esg-draft-935ec8942801a2083610d7e8122de23ea4ac5ac62dc7e13d42868686519e8714.json",
-            "sha256": "040c04534699092d2bceb1d98dc7d7a504514af40fb59117479bea2578dfb752"
-          },
-          {
-            "name": "esg-draft-eb6c0e3991ce01a7bc70fd1c269377e3cf03ab1ab648ddfd271a712bb375014e.json",
-            "sha256": "34b9c983215f02d45d96431806ce2c7dd195fed5e35727778faff3f10d4a17b3"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "290e6feab441379ca37a3056fa33fed9538437c9d1bc9aa70b0f741b2ce1a9ac"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-it]",
-        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
-        "reviewed_artifacts": [
-          {
-            "name": "esg_state.json",
-            "sha256": "1fddcbf7f592247ad3c2a9c0c9975b9c2a8e17d043890a8357f6865e92a37122"
-          },
-          {
-            "name": "esg-draft-511a0f03f6e94a49dfc0450c3046ccea0b87f3bccaf44b117f6b56968db01994.md",
-            "sha256": "d0799a709e6710507e24398e5bd4b76a0e61181de682cfb5c3c959dd31deb964"
-          },
-          {
-            "name": "esg-draft-e291c4eba2f74d24659da5960167a9987ff722d8760ecc79de9e5c59b18b1723.md",
-            "sha256": "7908f2f364e5f0035668e2bb8339433629adaf7daee87605b9d510a1c23b6764"
-          },
-          {
-            "name": "esg-draft-511a0f03f6e94a49dfc0450c3046ccea0b87f3bccaf44b117f6b56968db01994.json",
-            "sha256": "be01b9d82bb5cec3c7b109ee4f8a8f47180ff8ee45a8bb21f9563572ff7dfecd"
-          },
-          {
-            "name": "esg-draft-e291c4eba2f74d24659da5960167a9987ff722d8760ecc79de9e5c59b18b1723.json",
-            "sha256": "e9daa2fb79cbf2fb1acaca377294fab4510bb2788c2e25cf0c412121e196b768"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "290e6feab441379ca37a3056fa33fed9538437c9d1bc9aa70b0f741b2ce1a9ac"
-          }
-        ]
-      }
-    },
-    "en": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Track evidence and decisions in an ESG case",
-        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
-        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
-        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
-        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
-        "language_and_pacing": "All outline fields and brief read in en. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-en]",
-        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
-        "reviewed_artifacts": [
-          {
-            "name": "esg_state.json",
-            "sha256": "5bf3455076f901c485a5ed91d78444a5de56638957f3790fb274e703d0cdcbc4"
-          },
-          {
-            "name": "esg-draft-ca4c629e06e667249e2757fa752b57de69f3ee4f0fa7f8324088f3c67bdeedce.md",
-            "sha256": "a2eac677faf2706649b85680329e9f57c3af9045d9f83c658a22cc81baa4cdba"
-          },
-          {
-            "name": "esg-draft-f99828c036b9358d55892e92f9c2444ccfa5bb2921c17b0805c00ece37bcdd11.md",
-            "sha256": "81a5d371ab1d1406e3a7d040bf7640204f3d3dc3ed47dbaa803678fefd3cc878"
-          },
-          {
-            "name": "esg-draft-ca4c629e06e667249e2757fa752b57de69f3ee4f0fa7f8324088f3c67bdeedce.json",
-            "sha256": "ba8073ccfeab9b52a3998c4127d76cefc047af92f2d26872807b8b9d2c094385"
-          },
-          {
-            "name": "esg-draft-f99828c036b9358d55892e92f9c2444ccfa5bb2921c17b0805c00ece37bcdd11.json",
-            "sha256": "d8e52a5ac872b0036db14bb4d994e6fd6a547342018d9a6e0db1e23d81fe9b22"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "c9a235cfff55adb88088c25e6e721dfd01241bbfbfa95e8ba407671bbb006017"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-en]",
-        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
-        "reviewed_artifacts": [
-          {
-            "name": "esg_state.json",
-            "sha256": "e44ed5c9352297a5f4db32f11fdd2f41ca638e4a1626a2d777989a073cfaa192"
-          },
-          {
-            "name": "esg-draft-6006d514479ff19f6d734ffc1e9d15f3f2e8b0bb77c19dcdb28f9da8e18d1051.md",
-            "sha256": "515586cc6d8f3551e12547a11f7374ea3598d92fae3b5886de0e9375c5a9d6e0"
-          },
-          {
-            "name": "esg-draft-bdde421798b25c92c6ffa94595bc6cfd7dfb363a9d48e92e9f004dfda35b8139.md",
-            "sha256": "73bd88826369367537229dcde6d661a82009f5eba4b7364d6ee350dd5c8240c6"
-          },
-          {
-            "name": "esg-draft-6006d514479ff19f6d734ffc1e9d15f3f2e8b0bb77c19dcdb28f9da8e18d1051.json",
-            "sha256": "c2805198a6d5310e7c035602efec014244bb1fd2efa8d66ea342f0f8306e145d"
-          },
-          {
-            "name": "esg-draft-bdde421798b25c92c6ffa94595bc6cfd7dfb363a9d48e92e9f004dfda35b8139.json",
-            "sha256": "e40c588c2fbec49d23ca71d486d91142be42d1851eb0f670a2dcc677cf22d52e"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "c9a235cfff55adb88088c25e6e721dfd01241bbfbfa95e8ba407671bbb006017"
-          }
-        ]
-      }
-    },
-    "fr": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Suivre les preuves et décisions d’un dossier ESG",
-        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
-        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
-        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
-        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
-        "language_and_pacing": "All outline fields and brief read in fr. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
-      },
-      "demo": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-fr]",
-        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
-        "reviewed_artifacts": [
-          {
-            "name": "esg_state.json",
-            "sha256": "b8e7d3c2e802c1d9ff909aa2bd92af647133f59bb62661b8d0734c728e955ed3"
-          },
-          {
-            "name": "esg-draft-49d9861de2d4be0adc8bd4711e4382205b2a585987293d9a15acdc9bcda2ac32.md",
-            "sha256": "c89a943895ca1f0bf30572a878f7d816dc29272d1be8cf9291b34621dafcdb60"
-          },
-          {
-            "name": "esg-draft-d22f0cbfe4298c5daee0ba56af8dd55001bc09ed078ba0b544bbecfbad2bb284.md",
-            "sha256": "8566a2037fb902dd440d96159cb1a98c6f6b30d99d186bf4c22bfabe38ec9a91"
-          },
-          {
-            "name": "esg-draft-49d9861de2d4be0adc8bd4711e4382205b2a585987293d9a15acdc9bcda2ac32.json",
-            "sha256": "3fadf957976961bd0f9bb1d2d45cbbb758f3f6bb76430586f61b2ace083748a2"
-          },
-          {
-            "name": "esg-draft-d22f0cbfe4298c5daee0ba56af8dd55001bc09ed078ba0b544bbecfbad2bb284.json",
-            "sha256": "4d0ab0f2a593c855a27b68b9168eb5d928c37b4ab418ea308cd2d634df276774"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "5b566562f4fe6c59fb01deb5162a07fe3e7ba375645b15d839d774f88844ace9"
-          }
-        ]
-      },
-      "practice": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-fr]",
-        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
-        "reviewed_artifacts": [
-          {
-            "name": "esg_state.json",
-            "sha256": "83054bb6c7b8178b70095db74e3e9a301f02db412b52e4e6480f49c347c37f84"
-          },
-          {
-            "name": "esg-draft-280a6df1e311554aaafe1f195a849ff3b2284e3304f2e2a5bc8bcb2584ee11cf.md",
-            "sha256": "551bd2efe113c1a64ba4875c37363163b5e2954e047d1c72783f249fba9a83c9"
-          },
-          {
-            "name": "esg-draft-cb8ef39334e1fb4d244878620ccfc9e0629326a1e6dd0a2c01ae66310119aa6b.md",
-            "sha256": "126ffa7f9475549a1589152cbeca133298690bcfc2a89d2e5c902746962d3d65"
-          },
-          {
-            "name": "esg-draft-280a6df1e311554aaafe1f195a849ff3b2284e3304f2e2a5bc8bcb2584ee11cf.json",
-            "sha256": "2f381d59e8be6ffcee3ed844ee995b5f68f8b489dc9ed7f2451221992dc901ee"
-          },
-          {
-            "name": "esg-draft-cb8ef39334e1fb4d244878620ccfc9e0629326a1e6dd0a2c01ae66310119aa6b.json",
-            "sha256": "c2b499c3eafdb08eb192716e27512d79f73963bdd5b264bae5f3d3ae40df7b1f"
-          },
-          {
-            "name": "codex_run_review.md",
-            "sha256": "5b566562f4fe6c59fb01deb5162a07fe3e7ba375645b15d839d774f88844ace9"
-          }
-        ]
-      }
-    },
     "de": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Belege und Entscheidungen einer ESG-Akte verfolgen",
-        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
-        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
-        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
-        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
-        "language_and_pacing": "All outline fields and brief read in de. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-de]",
         "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
         "reviewed_artifacts": [
           {
@@ -297,10 +144,18 @@
             "name": "codex_run_review.md",
             "sha256": "49bd0613d892f9ab005417eac4580ca3aa010812941cb8a6f233c8b1ba9324f1"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-de]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "language_and_pacing": "All outline fields and brief read in de. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Belege und Entscheidungen einer ESG-Akte verfolgen"
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-de]",
         "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
         "reviewed_artifacts": [
           {
@@ -327,21 +182,84 @@
             "name": "codex_run_review.md",
             "sha256": "49bd0613d892f9ab005417eac4580ca3aa010812941cb8a6f233c8b1ba9324f1"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-de]"
+      },
+      "verdict": "accepted"
+    },
+    "en": {
+      "demo": {
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "5bf3455076f901c485a5ed91d78444a5de56638957f3790fb274e703d0cdcbc4"
+          },
+          {
+            "name": "esg-draft-ca4c629e06e667249e2757fa752b57de69f3ee4f0fa7f8324088f3c67bdeedce.md",
+            "sha256": "a2eac677faf2706649b85680329e9f57c3af9045d9f83c658a22cc81baa4cdba"
+          },
+          {
+            "name": "esg-draft-f99828c036b9358d55892e92f9c2444ccfa5bb2921c17b0805c00ece37bcdd11.md",
+            "sha256": "81a5d371ab1d1406e3a7d040bf7640204f3d3dc3ed47dbaa803678fefd3cc878"
+          },
+          {
+            "name": "esg-draft-ca4c629e06e667249e2757fa752b57de69f3ee4f0fa7f8324088f3c67bdeedce.json",
+            "sha256": "ba8073ccfeab9b52a3998c4127d76cefc047af92f2d26872807b8b9d2c094385"
+          },
+          {
+            "name": "esg-draft-f99828c036b9358d55892e92f9c2444ccfa5bb2921c17b0805c00ece37bcdd11.json",
+            "sha256": "d8e52a5ac872b0036db14bb4d994e6fd6a547342018d9a6e0db1e23d81fe9b22"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c9a235cfff55adb88088c25e6e721dfd01241bbfbfa95e8ba407671bbb006017"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-en]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "language_and_pacing": "All outline fields and brief read in en. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Track evidence and decisions in an ESG case"
+      },
+      "practice": {
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "e44ed5c9352297a5f4db32f11fdd2f41ca638e4a1626a2d777989a073cfaa192"
+          },
+          {
+            "name": "esg-draft-6006d514479ff19f6d734ffc1e9d15f3f2e8b0bb77c19dcdb28f9da8e18d1051.md",
+            "sha256": "515586cc6d8f3551e12547a11f7374ea3598d92fae3b5886de0e9375c5a9d6e0"
+          },
+          {
+            "name": "esg-draft-bdde421798b25c92c6ffa94595bc6cfd7dfb363a9d48e92e9f004dfda35b8139.md",
+            "sha256": "73bd88826369367537229dcde6d661a82009f5eba4b7364d6ee350dd5c8240c6"
+          },
+          {
+            "name": "esg-draft-6006d514479ff19f6d734ffc1e9d15f3f2e8b0bb77c19dcdb28f9da8e18d1051.json",
+            "sha256": "c2805198a6d5310e7c035602efec014244bb1fd2efa8d66ea342f0f8306e145d"
+          },
+          {
+            "name": "esg-draft-bdde421798b25c92c6ffa94595bc6cfd7dfb363a9d48e92e9f004dfda35b8139.json",
+            "sha256": "e40c588c2fbec49d23ca71d486d91142be42d1851eb0f670a2dcc677cf22d52e"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "c9a235cfff55adb88088c25e6e721dfd01241bbfbfa95e8ba407671bbb006017"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-en]"
+      },
+      "verdict": "accepted"
     },
     "es": {
-      "verdict": "accepted",
-      "editorial": {
-        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Seguir pruebas y decisiones de un expediente ESG",
-        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
-        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
-        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
-        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
-        "language_and_pacing": "All outline fields and brief read in es. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged."
-      },
       "demo": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-es]",
         "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
         "reviewed_artifacts": [
           {
@@ -368,10 +286,18 @@
             "name": "codex_run_review.md",
             "sha256": "69e094adc00b9a24977703b614f9a3c6478c49431d45440ac87677797c19f155"
           }
-        ]
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-es]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "language_and_pacing": "All outline fields and brief read in es. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Seguir pruebas y decisiones de un expediente ESG"
       },
       "practice": {
-        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-es]",
         "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
         "reviewed_artifacts": [
           {
@@ -398,300 +324,386 @@
             "name": "codex_run_review.md",
             "sha256": "69e094adc00b9a24977703b614f9a3c6478c49431d45440ac87677797c19f155"
           }
-        ]
-      }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-es]"
+      },
+      "verdict": "accepted"
+    },
+    "fr": {
+      "demo": {
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "b8e7d3c2e802c1d9ff909aa2bd92af647133f59bb62661b8d0734c728e955ed3"
+          },
+          {
+            "name": "esg-draft-49d9861de2d4be0adc8bd4711e4382205b2a585987293d9a15acdc9bcda2ac32.md",
+            "sha256": "c89a943895ca1f0bf30572a878f7d816dc29272d1be8cf9291b34621dafcdb60"
+          },
+          {
+            "name": "esg-draft-d22f0cbfe4298c5daee0ba56af8dd55001bc09ed078ba0b544bbecfbad2bb284.md",
+            "sha256": "8566a2037fb902dd440d96159cb1a98c6f6b30d99d186bf4c22bfabe38ec9a91"
+          },
+          {
+            "name": "esg-draft-49d9861de2d4be0adc8bd4711e4382205b2a585987293d9a15acdc9bcda2ac32.json",
+            "sha256": "3fadf957976961bd0f9bb1d2d45cbbb758f3f6bb76430586f61b2ace083748a2"
+          },
+          {
+            "name": "esg-draft-d22f0cbfe4298c5daee0ba56af8dd55001bc09ed078ba0b544bbecfbad2bb284.json",
+            "sha256": "4d0ab0f2a593c855a27b68b9168eb5d928c37b4ab418ea308cd2d634df276774"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5b566562f4fe6c59fb01deb5162a07fe3e7ba375645b15d839d774f88844ace9"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-fr]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "language_and_pacing": "All outline fields and brief read in fr. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Suivre les preuves et décisions d’un dossier ESG"
+      },
+      "practice": {
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "83054bb6c7b8178b70095db74e3e9a301f02db412b52e4e6480f49c347c37f84"
+          },
+          {
+            "name": "esg-draft-280a6df1e311554aaafe1f195a849ff3b2284e3304f2e2a5bc8bcb2584ee11cf.md",
+            "sha256": "551bd2efe113c1a64ba4875c37363163b5e2954e047d1c72783f249fba9a83c9"
+          },
+          {
+            "name": "esg-draft-cb8ef39334e1fb4d244878620ccfc9e0629326a1e6dd0a2c01ae66310119aa6b.md",
+            "sha256": "126ffa7f9475549a1589152cbeca133298690bcfc2a89d2e5c902746962d3d65"
+          },
+          {
+            "name": "esg-draft-280a6df1e311554aaafe1f195a849ff3b2284e3304f2e2a5bc8bcb2584ee11cf.json",
+            "sha256": "2f381d59e8be6ffcee3ed844ee995b5f68f8b489dc9ed7f2451221992dc901ee"
+          },
+          {
+            "name": "esg-draft-cb8ef39334e1fb4d244878620ccfc9e0629326a1e6dd0a2c01ae66310119aa6b.json",
+            "sha256": "c2b499c3eafdb08eb192716e27512d79f73963bdd5b264bae5f3d3ae40df7b1f"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "5b566562f4fe6c59fb01deb5162a07fe3e7ba375645b15d839d774f88844ace9"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-fr]"
+      },
+      "verdict": "accepted"
+    },
+    "it": {
+      "demo": {
+        "result_review": "Inspected the actual demo output: values 0 then 15 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "495f7acfff471a54501e80c05bf0d2a5fa7500d56c57fa0b7cd55e2488912381"
+          },
+          {
+            "name": "esg-draft-935ec8942801a2083610d7e8122de23ea4ac5ac62dc7e13d42868686519e8714.md",
+            "sha256": "32d7145e91791df75f53fc5101f882683070423c034f2e61616bd4bee5ca48dd"
+          },
+          {
+            "name": "esg-draft-eb6c0e3991ce01a7bc70fd1c269377e3cf03ab1ab648ddfd271a712bb375014e.md",
+            "sha256": "c2151618bb19e93f9f966b81f41779a1238c746beff26219b4fa7f106c1464b4"
+          },
+          {
+            "name": "esg-draft-935ec8942801a2083610d7e8122de23ea4ac5ac62dc7e13d42868686519e8714.json",
+            "sha256": "040c04534699092d2bceb1d98dc7d7a504514af40fb59117479bea2578dfb752"
+          },
+          {
+            "name": "esg-draft-eb6c0e3991ce01a7bc70fd1c269377e3cf03ab1ab648ddfd271a712bb375014e.json",
+            "sha256": "34b9c983215f02d45d96431806ce2c7dd195fed5e35727778faff3f10d4a17b3"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "290e6feab441379ca37a3056fa33fed9538437c9d1bc9aa70b0f741b2ce1a9ac"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[demo-it]"
+      },
+      "editorial": {
+        "deliverable_and_next_action": "Inspected actual Markdown/JSON drafts and versioned state. Memo body states the declared value, missing/non-applicable scope and absence of compliance or assurance conclusion. The fixed English partial-draft notice and technical keys are retained. Both old and new evidence and stale decision/draft remain inspectable. New partial draft does not renew old approval.",
+        "execution_and_checkpoints": "Two separate attempts use the current Archive and ESG helpers. The first preserves its finalized state; the second run imports a distinct update in the same engagement and carries exact historical inputs. Checkpoints occur before a decision and after the correction. Operator decisions in tests are simulations and never a learner response.",
+        "inputs_and_request": "Inspected localized fictional brief and exact three-row CSV: row 1 observed, row 2 missing prior year, row 3 declared excluded site. The note supplies a fictional scope reason; a blank alone cannot establish non-applicability. The correction is reserved for a successor, not silently treated as initial input. No approved mapping or output is shipped.",
+        "language_and_pacing": "All outline fields and brief read in it. Six existing stages total 390 seconds; full processing and practice can extend this target. No measured learner duration or understanding is claimed. Technical keys/English native warning are not translated into false new workflow behavior. Reviewed the authored full-scope Cowork projection: written single-conversation lesson, no Codex/voice/working-chat setup. Fictional briefs contain host-neutral scope; facts, locators and numeric checks are unchanged.",
+        "practice_and_repeat": "Separate Laboratorio Quarzo practice uses 8 then 12 kWh, preserving the 0 then 15 demo. It asks the learner to request the case and identify review needs with less guidance. Repeat instructions select client, engagement and bounded CSV/text sources and require source/interpretation review.",
+        "purpose_and_first_use": "Read the complete localized outline: it leads with a traceable ESG evidence case and partial draft, and states the foundation limits before use. Seguire evidenze e decisioni di un fascicolo ESG"
+      },
+      "practice": {
+        "result_review": "Inspected the actual practice output: values 8 then 12 kWh, distinct null statuses and source locators. Energy v1 and its simulated operator decision/memo are stale in the successor; v2 and unrelated missing/excluded evidence stay current. Prior output bytes are unchanged. Current draft cites v2 without obsolete approval. Both runs complete only their mechanical artifact/model-read declarations (automated test read no model); professional review and learner participation remain pending.",
+        "reviewed_artifacts": [
+          {
+            "name": "esg_state.json",
+            "sha256": "1fddcbf7f592247ad3c2a9c0c9975b9c2a8e17d043890a8357f6865e92a37122"
+          },
+          {
+            "name": "esg-draft-511a0f03f6e94a49dfc0450c3046ccea0b87f3bccaf44b117f6b56968db01994.md",
+            "sha256": "d0799a709e6710507e24398e5bd4b76a0e61181de682cfb5c3c959dd31deb964"
+          },
+          {
+            "name": "esg-draft-e291c4eba2f74d24659da5960167a9987ff722d8760ecc79de9e5c59b18b1723.md",
+            "sha256": "7908f2f364e5f0035668e2bb8339433629adaf7daee87605b9d510a1c23b6764"
+          },
+          {
+            "name": "esg-draft-511a0f03f6e94a49dfc0450c3046ccea0b87f3bccaf44b117f6b56968db01994.json",
+            "sha256": "be01b9d82bb5cec3c7b109ee4f8a8f47180ff8ee45a8bb21f9563572ff7dfecd"
+          },
+          {
+            "name": "esg-draft-e291c4eba2f74d24659da5960167a9987ff722d8760ecc79de9e5c59b18b1723.json",
+            "sha256": "e9daa2fb79cbf2fb1acaca377294fab4510bb2788c2e25cf0c412121e196b768"
+          },
+          {
+            "name": "codex_run_review.md",
+            "sha256": "290e6feab441379ca37a3056fa33fed9538437c9d1bc9aa70b0f741b2ce1a9ac"
+          }
+        ],
+        "test_case": "tests.plugins.test_teaching_esg_execution::test_esg_kit_preserves_sources_and_invalidates_dependent_work[practice-it]"
+      },
+      "verdict": "accepted"
     }
   },
   "limits": "Source/material editorial review and synthetic helper execution only. Not independent professional ESG review, live model/learner execution, native voice/windows, installed runtime acceptance, publication or deployment. The current native output has a fixed English partial-foundation notice and technical keys; the ordinary memo body is localized.",
   "lipe_source_binding_20261002": {
-    "reviewer": "Codex /root - bounded LIPE source compatibility review",
-    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
     "baseline_commit": "bebefc9b5f187bbcc5619a1b603363581ec68158",
-    "previous_course_sha256": "8e025b043b8ef04ee02d79461108502adaa200a1a38fef1a32c0d5889bb6f613",
-    "current_course_sha256": "378318d213a4cac753a1caa27897ce25e771be3597be1025e15fda0f3e2b207b",
-    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass."
+    "content_review": "Compared the complete compiled course JSON against the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are retained. This is not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "378318d213a4cac753a1caa27897ce25e771be3597be1025e15fda0f3e2b207b",
+    "execution_requirement": "Fresh CI must execute each existing localized demo and practice with the current course digest and pass verify_release.py before merge. The native teaching execution stage passed on d261bca6c5cafe4bac227b8a3a467ccdfdeb96d1; the later stale editorial binding failure did not establish a fresh final-head release pass.",
+    "previous_course_sha256": "8e025b043b8ef04ee02d79461108502adaa200a1a38fef1a32c0d5889bb6f613",
+    "reviewed_at": "2026-10-02T20:25:14.425278+00:00",
+    "reviewer": "Codex /root - bounded LIPE source compatibility review",
+    "source_review": "Inspected the complete shared contracts.py diff and verified exact old/new hashes for every changed copy: the sole edit adds lipe to VERA_CLIENT_WORKFLOW_IDS. Existing workflow identifiers, case identity checks and run transitions are unchanged. No existing lesson receives a new calculation, legal judgment, model request or output requirement."
+  },
+  "neutral_workflow_theme_source_review_20261029": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "0f53e00dac82dd09d836ffe2f37b9feecce674183db5ab26ddcbec382e2fc57f",
+    "fresh_matching_junit_required": true,
+    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance.",
+    "previous_course_sha256": "bf7cf0092c414e29081d2150e9fe2e97c8962afd25f52b2c99ce78ddbfa346ad",
+    "reviewed_at": "2026-10-29",
+    "reviewer": "Codex /root - differential engineering and course-content review",
+    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes."
   },
   "pdf_first_run_source_binding_20261012": {
-    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
-    "previous_course_sha256": "aac0f280e51a14a923074f50a625217f1ea0abd307f3abc9dbeceba5a48e05db",
     "current_course_sha256": "e09c60c776aee399ff042d7c58c6254774ae147f11bb89f0b4cbfb9a91531a40",
-    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
-    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure.",
     "evidence": "Final repair commit native teaching execution step passed before the editorial binding check; local packaged PDF pipeline and source regressions passed. Fresh CI must verify execution against these exact current course hashes.",
-    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope."
+    "limits": "This source-only binding review does not claim new visual, learner, installed-host or professional acceptance. Existing review descriptions and output receipts retain their historical scope.",
+    "previous_course_sha256": "aac0f280e51a14a923074f50a625217f1ea0abd307f3abc9dbeceba5a48e05db",
+    "reviewed_at": "2026-10-12T09:07:16.006899+00:00",
+    "scope": "Bounded source integration review: authored lesson content, localized prompts, fixtures, acceptance judgments and historical output artifact receipts are unchanged; only sources bindings changed.",
+    "source_changes": "Vera dependency checker re-enters the base interpreter when required; PDF geometry is persisted as decimal text; reviewed mapping contracts are exposed; run recipe containment is checked before output writes; reviewed currency reaches PDF postings; first-run instructions specify runtime, session identity, in-run recipe and finalization disclosure."
+  },
+  "pdf_recovery_source_compatibility_20261018": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "a9cab34d23fb2e2af823a035e49e973619d0042aec81bd2f7acd96413450a4c3",
+    "fresh_matching_junit_required": true,
+    "native_ui_qualified": false,
+    "previous_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex source inspection and exact retained-course comparison",
+    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required."
+  },
+  "pdf_reporting_release_integration_20261018": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
+    "fresh_matching_junit_required": true,
+    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
+    "limits": "No new visual, learner, installed-host or professional acceptance is asserted.",
+    "parent_course_sha256": {
+      "HEAD": "a9cab34d23fb2e2af823a035e49e973619d0042aec81bd2f7acd96413450a4c3",
+      "origin/main": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f"
+    },
+    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
+    "reviewed_at": "2026-10-18",
+    "reviewer": "Codex - exact two-parent source compatibility comparison",
+    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
   "practice_value_correction_20261004": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-10-04T13:01:24.052767+00:00",
-    "previous_course_sha256": "0bad34d70e45fe8d588a9bb4d22996256b15b975945b1872fd16f1be4b6a4891",
     "current_course_sha256": "c14f8971ba21d79371418fa8dc8809e0d477a5d6564bf8ad6b48073aed71e10d",
+    "previous_course_sha256": "0bad34d70e45fe8d588a9bb4d22996256b15b975945b1872fd16f1be4b6a4891",
+    "reviewed_at": "2026-10-04T13:01:24.052767+00:00",
+    "reviewer": "Codex /root",
     "scope": "Inspected all five localized practice briefs and energy.csv. Corrected only the first-cell instruction from zero to 8 kWh to match the supplied practice row. Demonstration remains 0 to 15; practice remains 8 to 12. Execution, scope and approvals are unchanged. Existing historical artifact reviews are preserved as historical evidence. Existing ESG execution and prepared-course tests passed after regeneration; actual learner execution remains blocked at host folder access."
   },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
-    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
-    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
-    "previous_course_sha256": "d65ba8ec262ad3a8d8da282d3fcdc0ef37786bf7d0678febbcc2b89bab776635",
-    "current_course_sha256": "8e025b043b8ef04ee02d79461108502adaa200a1a38fef1a32c0d5889bb6f613",
-    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
     "changed_sources": [
       "vendor/modules/courseware/policy.py",
       "vendor/modules/vera_assurance/contracts.py"
     ],
-    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement.",
-    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate."
+    "content_review": "Compared the complete compiled JSON with the reviewed main baseline. All authored locale narratives, inputs, requests, checkpoints, practice and timing are unchanged; only source SHA-256 bindings differ. Existing named editorial judgments and historical output artifact reviews are preserved. This is a bounded source compatibility review, not a new editorial, visual, professional or learner acceptance review.",
+    "current_course_sha256": "8e025b043b8ef04ee02d79461108502adaa200a1a38fef1a32c0d5889bb6f613",
+    "execution_requirement": "Fresh CI must execute every existing localized demo and practice with the exact current course digest and pass verify_release.py before merge. The native teaching stage on commit 960248724ea74dffc5a7dca359cce0cf790bc4f3 passed, but does not replace the final-head CI gate.",
+    "previous_course_sha256": "d65ba8ec262ad3a8d8da282d3fcdc0ef37786bf7d0678febbcc2b89bab776635",
+    "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
+    "reviewer": "Codex - bounded Rating di legalita source compatibility review",
+    "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "remote_package_freshness_review": {
+    "authored_content_and_attachment_definitions_unchanged": true,
+    "current_course_sha256": "8e1b09dc3c1d768f0da345d56dbe5ad209c2275bec92c8411f9231ca1e059b29",
+    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
+    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets.",
+    "previous_course_sha256": "56c16ea886c541274ade615cf51d16e1bc254ff54aa0a7b64974b4afbc16562b",
+    "reviewed_at": "2026-10-14",
+    "reviewed_by": "Codex source and package review",
+    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval."
   },
   "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
   "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
   "reviewer": "Codex /root - bounded auxiliary display source-binding review",
   "schema": "mparanza.teaching_release_review.v1",
   "source_binding_review_20261009": {
-    "reviewer": "Codex bounded teaching-material and source integration review",
-    "reviewed_at": "2026-10-09T13:18:33.946775+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root",
-      "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
-      "review_scope": " Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
-      "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6"
-    },
     "accepted_material_baseline": "8df0157d52b1e322f9f85fdb77376b39e17db446",
+    "changed_fields": [
+      "sources"
+    ],
     "current_course_sha256": "4caeee38298dc977707112aa02c018d4aafec9262683a8787bd194bafd70150d",
+    "current_execution_evidence": {
+      "final_gate_requires_fresh_matching_junit": true,
+      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
+      "job": 113818653311,
+      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
+      "native_teaching_suite_passed": 1642,
+      "run": 37930167083,
+      "skipped": 3,
+      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed"
+    },
+    "installed_host_acceptance": false,
+    "learner_or_professional_acceptance": false,
+    "new_native_output_visual_review": false,
+    "previous_review_identity": {
+      "course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6",
+      "review_scope": " Native course-chat runtime review: unchanged authored lesson text, inputs, expectations and editorial judgments; new UI handoff validated by 39 focused tests. Host-native acceptance remains separate.",
+      "reviewed_at": "2026-10-01T17:54:24.948053+00:00",
+      "reviewer": "Codex /root"
+    },
+    "reviewed_at": "2026-10-09T13:18:33.946775+00:00",
+    "reviewer": "Codex bounded teaching-material and source integration review",
+    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
     "unchanged_materials": [
       "all lesson locales and editorial text",
       "input specifications and hashes",
       "demo and practice execution contracts",
       "language and grouping contracts"
-    ],
-    "changed_fields": [
-      "sources"
-    ],
-    "source_review_basis": "Native source integration and the owner-approved canonical repair were reviewed separately. Current real workflow regression assertions ran before their recorded native checks. Lesson content is byte-equivalent at the JSON-field level to the accepted main baseline; reviewed input bindings and output contracts are unchanged. Existing per-locale output artifacts and editorial history are retained, with no new visual or host acceptance claim.",
-    "current_execution_evidence": {
-      "run": 37930167083,
-      "job": 113818653311,
-      "head": "89004da63fc3d6d6a5feffde2484143c203634a1",
-      "native_teaching_suite_passed": 1642,
-      "skipped": 3,
-      "log": "/private/tmp/native-deploy-final-teaching-failure-20261009.log",
-      "whole_job_outcome": "failed at stale editorial course pin after execution suite passed",
-      "final_gate_requires_fresh_matching_junit": true
-    },
-    "new_native_output_visual_review": false,
-    "installed_host_acceptance": false,
-    "learner_or_professional_acceptance": false,
-    "scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance."
+    ]
   },
   "source_update_review": "docs/releases/2026-10-03-course-file-access-review.json",
   "studio_archive_adoption_source_binding_20261008": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
     "baseline_commit": "c324cb0cbc1d1965676c53e0c2c6dd11905a5393",
-    "previous_course_sha256": "c14f8971ba21d79371418fa8dc8809e0d477a5d6564bf8ad6b48073aed71e10d",
-    "current_course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6",
     "content_review": "The complete compiled course object matches the reviewed main baseline except for source bindings. All authored locales, input records, requests, checkpoints, deliverables, practice and pacing are unchanged. Original editorial judgments and historical artifact hashes remain preserved.",
-    "source_review": "docs/studio_archive/course-source-compatibility-review.json",
-    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed."
+    "current_course_sha256": "fc8414b712e60749d3ed7a205de67fb505ecedcbd25313f6b2823384b0a528e6",
+    "execution_requirement": "Fresh CI must pass every existing localized demo/practice identity with the exact current digest and the release verifier before merge. The prior native stage passed 1642 tests with 90.43% courseware coverage; its later stale-review failure was not a green whole-run result. No new learner, visual, professional or installed-host acceptance is claimed.",
+    "previous_course_sha256": "c14f8971ba21d79371418fa8dc8809e0d477a5d6564bf8ad6b48073aed71e10d",
+    "reviewed_at": "2026-10-08T12:39:27.596925+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/studio_archive/course-source-compatibility-review.json"
   },
   "synthetic_output_directory": "outputs/vera-esg-course/native",
   "tax_litigation_fixes_source_review_20261013": {
+    "authored_content_unchanged": true,
     "baseline_commit": "3fbd29e58ad50c7e6db571ba45c6e604fea7eed2",
-    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
-      "course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642"
-    },
-    "previous_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
-    "current_course_sha256": "25016a450b872c55553e2ee2e05edf79339b5a19b75cf168e97a13f73ecf29e1",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json",
-    "fresh_matching_junit_required": true
+    "current_course_sha256": "25016a450b872c55553e2ee2e05edf79339b5a19b75cf168e97a13f73ecf29e1",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
+    "previous_review_identity": {
+      "course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed source additions; fresh execution against the exact current course digest remains required. Original localized editorial and output artifact reviews retain their historical scope. No new visual, learner, professional or installed-host acceptance is claimed.",
+      "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+      "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review"
+    },
+    "reviewed_at": "2026-10-13T21:38:57.946661+00:00",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-fixes-source-review.json"
   },
   "tax_litigation_source_binding_review_20261013": {
-    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
-    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
-    "previous_review_identity": {
-      "reviewer": "Codex bounded teaching-material and source integration review",
-      "reviewed_at": "2026-10-09T13:18:33.946775+00:00",
-      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
-      "course_sha256": "e09c60c776aee399ff042d7c58c6254774ae147f11bb89f0b4cbfb9a91531a40"
-    },
+    "authored_content_unchanged": true,
     "baseline_commit": "589aad7a9d400aaef2498a1a0c772af3cb4637a9",
-    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
-    "previous_course_sha256": "e09c60c776aee399ff042d7c58c6254774ae147f11bb89f0b4cbfb9a91531a40",
-    "current_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json",
+    "current_course_sha256": "5c8d03d5664ee6d510dc01c1773f97cceb535d39c0da6136ac691ba305928642",
     "fresh_matching_junit_required": true,
-    "new_native_output_visual_review": false,
+    "installed_host_acceptance": false,
     "learner_or_professional_acceptance": false,
-    "installed_host_acceptance": false
+    "new_native_output_visual_review": false,
+    "previous_course_sha256": "e09c60c776aee399ff042d7c58c6254774ae147f11bb89f0b4cbfb9a91531a40",
+    "previous_review_identity": {
+      "course_sha256": "e09c60c776aee399ff042d7c58c6254774ae147f11bb89f0b4cbfb9a91531a40",
+      "review_scope": "Carry unchanged accepted teaching materials forward to reviewed current source bindings; current source qualification is distinct from fresh visual, host, learner and professional acceptance.",
+      "reviewed_at": "2026-10-09T13:18:33.946775+00:00",
+      "reviewer": "Codex bounded teaching-material and source integration review"
+    },
+    "reviewed_at": "2026-10-13T12:04:04.269091+00:00",
+    "reviewed_source_commit": "ff753a8583961a88c3071b4f9d72223687e221e4",
+    "reviewer": "Codex /root - bounded shared tax-litigation source compatibility review",
+    "source_review": "docs/releases/2026-10-13-tax-litigation-course-source-review.json"
+  },
+  "work_continuity_source_binding_20261027": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
+    "changed_fields": [
+      "sources"
+    ],
+    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
+    "current_course_sha256": "bf7cf0092c414e29081d2150e9fe2e97c8962afd25f52b2c99ce78ddbfa346ad",
+    "fresh_matching_junit_required": true,
+    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance.",
+    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
+    "previous_course_sha256": "fde7b28b48367bbe2b9131bb41f4288d30a4a89cb41f235cc4dc0574db2c72de",
+    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
   "workflow": "esg-reporting-assurance",
   "workflow_ui_source_compatibility_review_20261014": {
-    "previous_course_sha256": "29831887b5b855732550a44dfc9dac97a1517e6a37dbb94ac6d430859508cee6",
-    "current_course_sha256": "56c16ea886c541274ade615cf51d16e1bc254ff54aa0a7b64974b4afbc16562b",
+    "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json",
+    "current_course_sha256": "56c16ea886c541274ade615cf51d16e1bc254ff54aa0a7b64974b4afbc16562b",
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false,
-    "new_visual_or_learner_acceptance": false
-  },
-  "remote_package_freshness_review": {
-    "reviewed_at": "2026-10-14",
-    "reviewed_by": "Codex source and package review",
-    "previous_course_sha256": "56c16ea886c541274ade615cf51d16e1bc254ff54aa0a7b64974b4afbc16562b",
-    "current_course_sha256": "8e1b09dc3c1d768f0da345d56dbe5ad209c2275bec92c8411f9231ca1e059b29",
-    "authored_content_and_attachment_definitions_unchanged": true,
-    "scope": "Source fingerprints refreshed for the shared on-demand course-data loader. Full authored course content, locales, timings, attachment hashes and workflow execution contracts are unchanged. Existing editorial judgments and reviewed artifact records are retained; this does not claim new human understanding or professional approval.",
-    "native_junit_sha256": "cd30b01112bfed6e8afdb23199c8c258438b7e0c921ee431ca00905923065f79",
-    "package_tests": "tests/plugins/test_remote_course_files.py and tests/plugins/test_cowork_teaching.py verify source and remote materialization, exact original input bytes, selected languages, hash failures, size limits, host restrictions, retry and immutable assets."
+    "new_visual_or_learner_acceptance": false,
+    "previous_course_sha256": "29831887b5b855732550a44dfc9dac97a1517e6a37dbb94ac6d430859508cee6",
+    "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
   },
   "workflow_usage_source_binding_review_20261017": {
-    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
-    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "authored_content_unchanged": true,
     "baseline_commit": "6048ffff4f98a94854888598871c4ab23c595813",
-    "previous_course_sha256": "8e1b09dc3c1d768f0da345d56dbe5ad209c2275bec92c8411f9231ca1e059b29",
     "current_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40",
-    "authored_content_unchanged": true,
-    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json",
+    "fresh_matching_junit_required": true,
+    "previous_course_sha256": "8e1b09dc3c1d768f0da345d56dbe5ad209c2275bec92c8411f9231ca1e059b29",
+    "reviewed_at": "2026-10-17T17:31:14.919382+00:00",
+    "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
-    "fresh_matching_junit_required": true
-  },
-  "pdf_recovery_source_compatibility_20261018": {
-    "reviewer": "Codex source inspection and exact retained-course comparison",
-    "reviewed_at": "2026-10-18",
-    "baseline_commit": "f7344305fb37e9eb6df645fdd4067a9635ee9a12",
-    "previous_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40",
-    "current_course_sha256": "a9cab34d23fb2e2af823a035e49e973619d0042aec81bd2f7acd96413450a4c3",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Added opt-in character-grid journal PDF parsing and bounded host-agent recovery. Exact retained course content, inputs, locales, execution contracts and teaching judgments are unchanged. Legacy parsing has differential regression coverage; all existing mapping, complete-population, implementation and professional-review gates remain. Historical editorial and artifact evidence is retained; fresh matching native execution is independently required.",
-    "fresh_matching_junit_required": true,
-    "native_ui_qualified": false
-  },
-  "cowork_reporting_source_refresh_20261018": {
-    "reviewer": "Codex /root - bounded reporting source compatibility review",
-    "reviewed_at": "2026-10-18T18:09:58.232512+00:00",
-    "baseline_commit": "cf3e966fb813a0d366448f8b5b685d1f6c654def",
-    "previous_course_sha256": "0a862e015cf3fe72637645a0adf6bdaef085489dad8fe94d27e8d36bb1b2ae40",
-    "current_course_sha256": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "changed_sources": [
-      "plugins/vera/skills/esg-reporting-assurance/SKILL.md"
-    ],
-    "source_review": "Compared every authored field with the exact previously reviewed green baseline. Changes are reporting reference-path resolution, native host discovery/linkage guidance and chat-only model-data report instructions. No professional algorithm or authored lesson/input changed. Existing editorial judgments and inspected artifact hashes remain historical and unchanged.",
-    "validation": "530 incident, usage, receipt and native tests passed; 96 privacy/reference/icon checks passed. Current CI must still validate every native demo/practice identity against this exact compiled course hash.",
-    "limits": "This metadata refresh is not new learner, installed-host, rendered-output or professional acceptance."
-  },
-  "pdf_reporting_release_integration_20261018": {
-    "reviewer": "Codex - exact two-parent source compatibility comparison",
-    "reviewed_at": "2026-10-18",
-    "integrated_main": "e217a2c7aab6cc3fad21d921ef1264125e8233c6",
-    "previous_pdf_candidate": "a9aa09142fb01b22e834d751c2a68c13204e6714",
-    "parent_course_sha256": {
-      "HEAD": "a9cab34d23fb2e2af823a035e49e973619d0042aec81bd2f7acd96413450a4c3",
-      "origin/main": "f7d591fe7e98f4825f956a5b2787c5280d03e25213f08a3cdd4108fd6d15cf6f"
-    },
-    "current_course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new visual, learner, installed-host or professional acceptance is asserted."
-  },
-  "desktop_source_inventory_binding_20261025": {
-    "recorded_at": "2026-10-25T18:12:53.534824+00:00",
-    "recorder": "Codex - mechanical source inventory comparison",
-    "baseline_commit": "9361a54e934e3bdeb437df81550b75ae5b0eb5be",
-    "previous_course_sha256": "534216e3606a1a31c355aff0b15b14f90b53b36356964becde3f53199e160ed6",
-    "current_course_sha256": "fde7b28b48367bbe2b9131bb41f4288d30a4a89cb41f235cc4dc0574db2c72de",
-    "changed_fields": [
-      "sources"
-    ],
-    "comparison": "The complete compiled lesson excluding its source inventory is identical to the exact historical snapshot whose SHA256 is recorded by the existing review. All localized lesson text, inputs, checkpoints, execution contracts and historical editorial/output judgments are preserved.",
-    "limits": "This is a source-inventory rebinding, not a new editorial, learner or professional acceptance. The release gate still requires fresh native demo and practice executions bound to the current course digest."
-  },
-  "work_continuity_source_binding_20261027": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-10-27T19:35:04.564248+00:00",
-    "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
-    "previous_course_sha256": "fde7b28b48367bbe2b9131bb41f4288d30a4a89cb41f235cc4dc0574db2c72de",
-    "current_course_sha256": "bf7cf0092c414e29081d2150e9fe2e97c8962afd25f52b2c99ce78ddbfa346ad",
-    "changed_fields": [
-      "sources"
-    ],
-    "authored_content_unchanged": true,
-    "comparison": "The exact prior course digest matches the existing review. Every compiled course field except sources is unchanged, including all localized lesson text, inputs, checkpoints, execution contracts and learner handoffs.",
-    "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair.",
-    "native_evidence": "Teaching CI on a609dcf7f passed 1711 tests with three skips and 84.81% courseware coverage; its release checker stopped at stale review digests. Fresh final-head demo/practice evidence bound to the current course digests remains required.",
-    "fresh_matching_junit_required": true,
-    "limits": "Prior editorial judgments, reviewer identities, dates, artifact hashes and verdicts remain historical and unchanged. This records source compatibility, not new visual, learner, installed-host or professional acceptance."
-  },
-  "neutral_workflow_theme_source_review_20261029": {
-    "reviewer": "Codex /root - differential engineering and course-content review",
-    "reviewed_at": "2026-10-29",
-    "baseline_commit": "e4fff2517bce87e64a4704f2ad99def88c4719e1",
-    "previous_course_sha256": "bf7cf0092c414e29081d2150e9fe2e97c8962afd25f52b2c99ce78ddbfa346ad",
-    "current_course_sha256": "0f53e00dac82dd09d836ffe2f37b9feecce674183db5ab26ddcbec382e2fc57f",
-    "authored_content_unchanged": true,
-    "changed_fields": [
-      "sources"
-    ],
-    "source_review": "Canonical neutral CSS projection and lesson-only offline stylesheet delivery. Existing source declarations retain their identities; the only added source is courseware/theme.py. Local lesson shells receive the theme, while Clara/Lucia report CSS, input/output artifacts, lesson text, professional methods, languages and execution contracts remain unchanged. No payload, upload, persistence or authorization changes.",
-    "fresh_matching_junit_required": true,
-    "limits": "Historical editorial judgments, artifact reviews, reviewer names and dates are retained. This is not new learner, installed-chat, microphone or professional acceptance."
-  },
-  "course_startup_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded source compatibility review",
-    "reviewed_at": "2026-11-03T13:01:38.784248+00:00",
-    "reviewed_ancestor_commit": "986d5a59f8ac83a3a4cd481c1cbb1f8307c65d36",
-    "previous_course_sha256": "0f53e00dac82dd09d836ffe2f37b9feecce674183db5ab26ddcbec382e2fc57f",
-    "current_course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
-    "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
-    "judgment": "Retain the original named editorial and historical artifact judgments. Current native demo/practice assertions passed against the exact current course digest. The reviewed preparation fix preserves final handoff paths and input/output contracts while making failed v2 preparation retryable. Inherited source changes are recorded separately from this task; this is not a new independent audit of those implementations.",
-    "evidence": "docs/releases/2026-11-03-course-startup-source-review.json",
-    "limits": "No new learner participation, visual artifact inspection, voice quality, installed-host interaction or professional approval is attested. Original editorial/result review text, author, date and artifact hashes are preserved."
-  },
-  "historical_review_identity_before_auxiliary_display_refresh_20261103": {
-    "reviewer": "Codex /root - Deal Redux source compatibility review",
-    "reviewed_at": "2026-10-14T08:00:57.877182+00:00",
-    "course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8"
-  },
-  "auxiliary_display_source_binding_review_20261103": {
-    "reviewer": "Codex /root - bounded auxiliary display source-binding review",
-    "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
-    "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
-    "previous_course_sha256": "f9d91d202b5268e73cd6f36a6d29fd33ef47344dd436a6c35ea310ad5cf5b7e8",
-    "current_course_sha256": "4aa8952cd22f326b5c87c5896a4d77a7dd6d4f7892fa49ae4f34423e273dfd67",
-    "changed_source_paths": [
-      "vendor/modules/courseware/assets/chat.js",
-      "vendor/modules/courseware/native.cjs"
-    ],
-    "judgment": "Inspected the shared native course resource and chat handshake changes: fullscreen is preferred and declared, while inline fallback, private payloads, explicit invitation/claim and separate working-chat creation remain unchanged. Compared complete compiled kits: only these two source bindings differ. All localized lesson text, input identities and bytes, demo/practice requests, checkpoints, expectations and timing remain identical. Existing editorial and output-artifact judgments are retained as historical judgments over the unchanged materials; no new independent editorial, learner, voice or professional acceptance is claimed.",
-    "execution_requirement": "Fresh CI must execute the existing localized demo/practice cases against this exact current compiled course digest before merge. This source review does not assert that the three auxiliary panels have opened in Desktop."
+    "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
   }
 }

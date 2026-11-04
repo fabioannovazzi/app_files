@@ -29,12 +29,12 @@
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
-      "sha256": "fe5cd72b2602db1c5b6705b8043ddf98e0e028c44443dbf52e6dd0f8e080dc03"
+      "sha256": "58bcd5539c1e441c1614ead99b4808cccd20f90b1e6e704b75e423dc7f355fa4"
     },
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
-      "sha256": "b629a748b02665c2bef3ddfe80c8ff2c4d1609a256e000ee2132f102fe6b9032"
+      "sha256": "c24a7b0d1470c1e864ee47773504727012e437ea0b9be75eca087ca41b4ba5f0"
     },
     {
       "path": "modules/apertura-pratica/assets/icon.svg",
@@ -254,12 +254,12 @@
     {
       "path": "vendor/modules/courseware/assets/chat.html",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.html",
-      "sha256": "9428f27dfc9cc761bf1b8dbb6c9e0f94c91b23d75682e58771f255963fccf961"
+      "sha256": "34b93c1cda61edf9218fd72516592bdcb5df8487f348ab48bb74a978f4c661b2"
     },
     {
       "path": "vendor/modules/courseware/assets/chat.js",
       "repository_path": "plugins/_shared/vendor/modules/courseware/assets/chat.js",
-      "sha256": "0be0755190f0bb76128768dd29db0da943c1a26595a630be7e4716df0e3d7a45"
+      "sha256": "b76aa6e2ec27eb98ab12e1f85da933a2de432e915f1cbf96c28c5feab4490098"
     },
     {
       "path": "vendor/modules/courseware/assets/course.css",
@@ -319,7 +319,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "ef092de84e872c9a4ab554ed681eab25cedc16893578e241fe0aa2ac3146a8f4"
+      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
     },
     {
       "path": "vendor/modules/courseware/policy.py",

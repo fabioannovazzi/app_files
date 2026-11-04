@@ -37,16 +37,18 @@ def lock_reader():
 
 
 @pytest.mark.parametrize(
-    "platform,machine",
+    "platform,machine,expected_cryptography",
     [
-        ("linux", "x86_64"),
-        ("linux", "aarch64"),
-        ("darwin", "arm64"),
-        ("darwin", "x86_64"),
-        ("win32", "AMD64"),
+        ("linux", "x86_64", "50.0.1"),
+        ("linux", "aarch64", "50.0.1"),
+        ("darwin", "arm64", "50.0.1"),
+        ("darwin", "x86_64", "48.0.1"),
+        ("win32", "AMD64", "50.0.1"),
     ],
 )
-def test_every_platform_has_complete_compatible_core_and_ocr_pins(platform, machine):
+def test_every_platform_has_complete_compatible_core_and_ocr_pins(
+    platform, machine, expected_cryptography
+):
     environment = {
         "sys_platform": platform,
         "platform_machine": machine,
@@ -60,6 +62,7 @@ def test_every_platform_has_complete_compatible_core_and_ocr_pins(platform, mach
     core = reader.locked_versions(root / "requirements-shared-core.lock", environment)
     ocr = reader.locked_versions(root / "requirements-shared-ocr.lock", environment)
     assert core.items() <= ocr.items()
+    assert core["cryptography"] == expected_cryptography
     assert core["numpy"] == "2.2.6"
     assert core["plotly"] == "7.0.0"
     for feature, resolved in (("core", core), ("ocr", ocr)):
@@ -101,6 +104,7 @@ def test_inventory_drift_requires_repair_and_install_uses_hash_lock(tmp_path):
     api._resolved_dependencies = lambda _: [{"name": "numpy", "version": "999"}]
     assert not shared.ready(selection, path, api, runner)
     install = next(call for call in calls if "install" in call)
+    assert "--only-binary=cryptography" in install
     assert "--require-hashes" in install
     assert install[-1].endswith("requirements-shared-core.lock")
 

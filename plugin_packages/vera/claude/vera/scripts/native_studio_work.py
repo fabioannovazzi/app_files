@@ -73,6 +73,7 @@ class NativeStudioWork:
             "ui/studio-work.css",
             "ui/custom_select.js",
             "ui/InstrumentSans-Regular.ttf",
+            "ui/InstrumentSans-SemiBold.ttf",
         ):
             digest.update(name.encode())
             digest.update(hashlib.sha256((root / name).read_bytes()).digest())

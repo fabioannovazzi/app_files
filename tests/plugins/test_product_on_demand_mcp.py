@@ -13,6 +13,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.build_claude_plugin_zip import project_claude_mcp
 from scripts.build_product_mcp_catalog import add_product_mcp_catalog
 
 __all__: list[str] = []
@@ -186,6 +187,22 @@ def test_panel_and_prompt_access_start_only_their_owner(
 
     assert response["result"][key]
     assert (installation.parent / "starts").read_text().startswith("beta:")
+
+
+def test_panel_display_policy_preserves_component_metadata(session, installation):
+    product = json.loads((installation / ".codex-plugin/plugin.json").read_text())[
+        "name"
+    ]
+    meta = session.call("resources/read", {"uri": "ui://beta"})["result"]["contents"][
+        0
+    ]["_meta"]
+
+    assert meta["ui"] == {"prefersBorder": False}
+    expected = {
+        "preferredDisplayMode": "fullscreen",
+        "availableDisplayModes": ["fullscreen"],
+    }
+    assert meta.get("openai/ui") == (expected if product == "vera" else None)
 
 
 def test_unknown_tool_does_not_start_a_service(session, installation):
@@ -367,3 +384,30 @@ def test_cold_service_initialization_can_exceed_ten_seconds(installation):
 
     assert response["result"]["structuredContent"]["name"] == "alpha"
     assert (installation.parent / "starts").read_text().count("alpha:") == 1
+
+
+def test_app_entry_initializes_from_host_resolved_plugin_directory(
+    installation: Path, tmp_path: Path
+):
+    product = json.loads((installation / "mcp-catalog.json").read_text())["product"]
+    content = (ROOT / "plugins" / product / ".mcp.json").read_bytes()
+    config = json.loads(content)["mcpServers"][product]
+    assert config["cwd"] == "."
+    assert config["args"] == ["./scripts/on_demand_mcp.cjs"]
+    node = shutil.which(config["command"])
+    assert node is not None
+    result = subprocess.run(
+        [node, *config["args"]],
+        cwd=installation / config["cwd"],
+        input=json.dumps(
+            {"jsonrpc": "2.0", "id": 1, "method": "initialize", "params": {}}
+        )
+        + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+        timeout=20,
+    )
+    assert json.loads(result.stdout)["result"]["serverInfo"]["name"] == product
+    cowork = json.loads(project_claude_mcp(content))["mcpServers"][product]
+    assert cowork["args"] == ["${CLAUDE_PLUGIN_ROOT}/scripts/on_demand_mcp.cjs"]

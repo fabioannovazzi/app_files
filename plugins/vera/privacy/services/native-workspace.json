@@ -908,6 +908,15 @@
         "ui/workspace.js"
       ],
       "on_violation": "Reject missing, changed or stale reports without changing the saved work."
+    },
+    {
+      "id": "failed-reopen-recovery",
+      "control": "A refused saved-card reopen offers an explicit return to the current connection’s authorized directory. The directory reuses unchanged server-side actor/tenant bindings; no missing work reference is guessed, substituted or authorized by the UI. Unsaved local changes retain the existing navigation guard.",
+      "implemented_by": [
+        "ui/workspace.js",
+        "scripts/native_workspace.py"
+      ],
+      "on_violation": "Keep the backend denial; return only currently authorized directory entries."
     }
   ],
   "governed_paths": [
@@ -1128,7 +1137,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "9f3821a3996837358c49165f298d21dca44a8ef121c93d6d086d249303889f94",
+    "source_fingerprint": "ff0271dab0b8f32aa08daaf1e8377fe5437d21f7b7d5ff4e9bf83e57a300c100",
     "reviewed_at": "2026-11-03"
   },
   "governed_repository_paths": [
