@@ -120,3 +120,31 @@ the two descendant-cancellation checks retained a running result. Repeating only
 those three tests outside the nested agent sandbox passed all three (5.75 s).
 No production or test assertion was weakened. Managed-runtime validation passed
 326 tests, with eight Windows skips and 81.91% coverage. Fresh CI remains required.
+
+The next candidate `2578c5cbd` again passed the eight native Windows snapshot
+cases and both real MCP file-access routes. While its remaining CI was running,
+PR #952 advanced main to `6ddb10c44`, adding direct bank CSV downloads in Vera
+0.1.568. This repair also integrates that source, package-builder update,
+localization assessment and privacy/workflow declarations. Its 212 conflicts
+were confined to generated artifacts and release metadata; the Windows verifier,
+Archive interpreter fix and earlier incident/native fixes remain unchanged.
+Only this repair's five unfinished obsolete workflows were cancelled; completed
+evidence remains historical. No unrelated branch/run was cancelled. The combined
+release stays at 0.1.570/0.1.380/0.1.206, above the inspected open candidates,
+and requires fresh package checks and CI. Existing authored course objects still
+match main exactly apart from source inventories; no course review changed in
+this integration. Old candidate ZIPs remain ineligible for deployment.
+
+The bank-main integration passed 350 focused source tests with eight Windows
+skips on macOS, including all native process checks and the preserved bank CSV
+workflow. Its runtime suite passed 326 tests with eight Windows skips and
+81.91% coverage. All 12 distributions rebuilt with local MCP startup checks.
+These are combined-source checks, not customer-machine acceptance.
+
+The first combined package run passed 431 tests but failed its release-version
+check: newly integrated bank code reused the earlier 0.1.570 candidate identity.
+That check prevents Codex from reusing same-version cached code. Vera is therefore
+rebuilt as 0.1.571, above main and every inspected open candidate; Clara and Lucia
+retain 0.1.380 and 0.1.206 because their source did not change in this integration.
+No release check or product integrity rule was weakened. Final package checks and
+fresh current-head CI remain required.

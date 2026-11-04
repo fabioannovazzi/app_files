@@ -117,6 +117,17 @@
     "scope": "Manifest version advanced; all 46 skill entrypoint hashes are unchanged. Existing Geneva dispositions and jurisdiction limits are retained. The Italian Adeguati assetti teaching expansion does not establish Geneva construction acceptance.",
     "source_version": "0.1.311"
   },
+  "bank_csv_download_binding_20261104": {
+    "added_entrypoints": [
+      "bank-csv-download"
+    ],
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
+    "scope": "Register the direct computer-use bank download function as unresolved for Geneva. Preserve all existing function dispositions. The root router now selects this operation for acquisition; no Swiss portal or professional acceptance is established.",
+    "version": "0.1.568"
+  },
   "bank_pdf_recovery_source_review": {
     "changed_entrypoints": [
       "journal-bank-reconciliation"
@@ -162,7 +173,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "a158d31a85ee633267b5664b97a3d23e7b338ba82d31382f4b924f63856f2c3f",
+  "catalogue_fingerprint": "8f1bd800302ff7444ded2ee35e22ef1e0e3a3dd88a9476611779bdd95170c990",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -1944,6 +1955,27 @@
         "qr"
       ],
       "verification": "Repository source inspected; synthetic/regression evidence recorded in the release validation. No real Geneva client acceptance."
+    },
+    {
+      "acceptance_example": "An authorized operator downloads and checks the original CSV for their selected account and period on the actual target portal.",
+      "adaptation_layers": [
+        "bank/portal procedure and operator access qualification"
+      ],
+      "common_work": "Obtain original account-movement CSVs for the selected account and period before accounting.",
+      "disposition": "Unresolved",
+      "function_id": "bank-csv-download",
+      "geneva_application": "The inspected source targets five Italian bank portals; use on a Geneva firm’s banking portals has not been established.",
+      "implementation": "Direct model-led computer use with existing 1Password Autofill and local original-file retention; no bank API service.",
+      "implementation_status": "source_and_synthetic_file_checks_only",
+      "name": "Bank CSV download through computer use",
+      "required_change": "Inspect the actual selected portal and CSV output; do not infer Swiss-bank coverage from translated instructions or local byte-retention checks.",
+      "role": "function",
+      "sources": [
+        "plugins/vera/skills/bank-csv-download/SKILL.md",
+        "plugins/vera/scripts/bank_csv_download.py",
+        "plugins/vera/skills/bank-csv-download/references/banks.md"
+      ],
+      "verification": "Source and local file mechanics inspected. No authenticated Italian or Geneva bank acceptance."
     }
   ],
   "runtime_compatibility_release_binding": {
@@ -2428,14 +2460,15 @@
     "scope": "Only the product manifest/version changed in this snapshot; all 55 skill entrypoint hashes and function IDs are unchanged. Preserve all prior Geneva dispositions and limits. Windows file/process portability and isolation of invalid archive runs do not establish new jurisdiction or original-client acceptance.",
     "version": "0.1.417"
   },
+  "windows_bank_main_integration_release_binding_20261104": {
+    "integrated_main": "6ddb10c44043bd4d40e28ce893e22659daa9be7b",
+    "previous_catalogue_fingerprint": "7d9875bf9c4be3035103e80f9e1042a26d01173fce42ab997ad158f0827800dd",
+    "scope": "Skill IDs and exact entrypoint bytes match integrated main, including its bank-download scope. Existing jurisdiction judgments are retained; this refresh binds only the canonical release manifest.",
+    "version": "0.1.571"
+  },
   "windows_lock_pdf_main_integration_20261018": {
     "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted.",
     "version": "0.1.414"
-  },
-  "windows_main_integration_release_binding_20261104": {
-    "previous_catalogue_fingerprint": "2decfe16d2aedaaa93354650cce4fbdec4268927d600131bbf8066a1ef0f41bf",
-    "scope": "Exact skill IDs and entrypoint bytes match integrated main. Existing jurisdiction judgments retained; this refresh binds the new canonical manifest only.",
-    "version": "0.1.570"
   },
   "windows_reporting_main_integration_20261019": {
     "date": "2026-10-19",
