@@ -35,6 +35,7 @@ def scoped_store(request, monkeypatch, tmp_path):
     shutil.copytree(source / ".codex-plugin", installed / ".codex-plugin")
     state = tmp_path / "profile"
     if product == "vera":
+        monkeypatch.syspath_prepend(str(source / "scripts"))
         module = load("local_onboarding")
         monkeypatch.setattr(
             module, "__file__", str(installed / "scripts/local_onboarding.py")
