@@ -11,6 +11,7 @@ import atexit
 import hashlib
 import json
 import logging
+import ntpath
 import os
 import re
 import runpy
@@ -463,6 +464,27 @@ def _validate_module(root: Path, module: str | None) -> None:
         raise ValueError(f"Module integrity check failed: {result.stderr.strip()}")
 
 
+def _windows_extended_path(value: str) -> str:
+    """Use Win32 extended paths without requiring a machine policy change."""
+    # Lexical normalization preserves the existing junction/symlink checks.
+    value = ntpath.normpath(value)
+    if value.startswith("\\\\?\\"):
+        return value
+    if value.startswith("\\\\"):
+        return "\\\\?\\UNC\\" + value[2:]
+    return "\\\\?\\" + value
+
+
+def _execution_path(path: Path) -> Path:
+    """Keep complete package paths accessible after staging-to-digest rename."""
+    absolute = path.absolute()
+    return (
+        Path(_windows_extended_path(str(absolute)))
+        if sys.platform == "win32"
+        else absolute
+    )
+
+
 def prepare_execution_root(
     root: Path, module: str | None, *, snapshot: bool = False, shared: bool = False
 ) -> Path:
@@ -528,9 +550,11 @@ def prepare_execution_root(
 
     # mkdtemp creates a fresh private directory. Never mutate the installed tree
     # or an alias, never reuse an unverified cache, never copy client material.
-    private = Path(
-        tempfile.mkdtemp(
-            prefix="vera-verified-", dir=Path(tempfile.gettempdir()).resolve()
+    private = _execution_path(
+        Path(
+            tempfile.mkdtemp(
+                prefix="vera-verified-", dir=Path(tempfile.gettempdir()).resolve()
+            )
         )
     )
     try:
@@ -566,7 +590,7 @@ def _code_store() -> Path:
         )
     else:
         base = Path.home() / ".local/share/mparanza/runtime"
-    directory = (base / "code").absolute()
+    directory = _execution_path(base / "code")
     directory.mkdir(mode=0o700, parents=True, exist_ok=True)
     _real_ancestors(directory)
     info = directory.stat()
@@ -995,6 +1019,33 @@ def report_preparation_failure(
             raise ValueError("Incident reporting index changed during verification")
         detail = "Installed product failed its installation preparation check."
         complete = technical_code is not None
+        frames = []
+        trace = error.__traceback__
+        while trace is not None:
+            # Only this independently byte-verified module's source coordinates;
+            # never exception values, host paths, locals or client filenames.
+            if (
+                Path(trace.tb_frame.f_code.co_filename).absolute()
+                == Path(__file__).absolute()
+            ):
+                frames.append(
+                    {
+                        "file": "scripts/verified_execution.py",
+                        "function": trace.tb_frame.f_code.co_name,
+                        "line": trace.tb_lineno,
+                    }
+                )
+            trace = trace.tb_next
+        frames = frames[-100:]  # The incident schema accepts at most 100 frames.
+        facts = {}
+        if isinstance(error, OSError):
+            winerror = getattr(error, "winerror", None)
+            if isinstance(winerror, int):
+                facts["winerror"] = winerror
+            if error.filename is not None:
+                facts["failed_path_characters"] = len(str(error.filename))
+        if frames:
+            complete = True
         if technical_code is not None:
             detail = f"Product could not start the published helper: {technical_type or type(error).__name__}."
         if isinstance(error, InstallationContentMismatch):
@@ -1047,11 +1098,17 @@ def report_preparation_failure(
                                 "stage": stage,
                                 "error_type": technical_type or type(error).__name__,
                                 "error_code": technical_code
-                                or "reporting.preflight-evidence-missing",
+                                or (
+                                    "execution.preparation-exception"
+                                    if frames
+                                    else "reporting.preflight-evidence-missing"
+                                ),
                                 "message": detail,
                                 "exit_code": 1,
                                 "errno": getattr(error, "errno", None),
                                 "evidence_source": "runtime-exception",
+                                "technical_frames": frames,
+                                "technical_facts": facts,
                             }
                         ],
                     }

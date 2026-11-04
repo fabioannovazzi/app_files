@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
+  "catalogue_fingerprint": "7510dd6ec72b008d73e27d78c6bbafdf435a4678c543ab013a3b5e2028d5c451",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2507,5 +2507,9 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
+  },
+  "windows_snapshot_release_binding_20261104": {
+    "version": "0.1.565",
+    "scope": "Manifest version changed; exact skill entrypoint identities and bytes are unchanged. Existing jurisdiction judgments are retained. Runtime path handling and technical reporting do not establish installed Windows or Geneva professional acceptance."
   }
 }

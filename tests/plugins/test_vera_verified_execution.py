@@ -76,6 +76,96 @@ def test_clean_installation_keeps_original_root(tmp_path):
     assert prepared == root
 
 
+@pytest.mark.parametrize("reporter_succeeds", [True, False])
+def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_delivery(
+    tmp_path, monkeypatch, caplog, reporter_succeeds
+):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    (root / "scripts").mkdir()
+    for name in (
+        "verified_execution.py",
+        "operational_incidents.py",
+        "reporting_product.py",
+    ):
+        shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
+    write_index(root)
+    private_path = str(tmp_path / "private-personal-name" / "missing.md")
+    error = FileNotFoundError(2, "private exception text", private_path)
+    error.winerror = 3
+    submitted = []
+
+    def reporting_process(command, **options):
+        submitted.append(json.loads(options["input"]))
+        return subprocess.CompletedProcess(
+            command,
+            0 if reporter_succeeds else 1,
+            json.dumps({"reporting": "delivered"}),
+            "",
+        )
+
+    monkeypatch.setattr(recovery.subprocess, "run", reporting_process)
+
+    recovery.report_preparation_failure(root, "journal-bank-reconciliation", error)
+
+    assert len(submitted) == 1
+    assert submitted[0]["technical_diagnostics"][0]["technical_facts"] == {
+        "winerror": 3,
+        "failed_path_characters": len(private_path),
+    }
+    assert private_path not in json.dumps(submitted)
+    assert "private exception text" not in json.dumps(submitted)
+    assert ("VERA_BROWSER_INCIDENT_REQUIRED" in caplog.text) is (not reporter_succeeds)
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Native Win32 filesystem paths")
+@pytest.mark.parametrize("prefixed_runtime", [False, True])
+def test_shared_snapshot_reads_reported_file_beyond_legacy_windows_path_limit(
+    tmp_path, monkeypatch, prefixed_runtime
+):
+    recovery = load_recovery()
+    root = installation(tmp_path)
+    relative = (
+        "modules/presenza-digitale-studio/skills/presenza-digitale-studio/"
+        "references/website-quality-standard.md"
+    )
+    target = root / relative
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"synthetic package reference")
+    write_index(root)
+    # An AppContainer-style parent plus the 64-character package digest makes
+    # the final pathname exceed MAX_PATH even when its staging name fits.
+    padding = max(1, 125 - len(str(tmp_path)) - len("\\AC\\mpr") - 1)
+    runtime = tmp_path / ("x" * padding) / "AC/mpr"
+    configured = "\\\\?\\" + str(runtime) if prefixed_runtime else str(runtime)
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", configured)
+    original_lstat = Path.lstat
+
+    def legacy_lstat(path, *args, **kwargs):
+        # Exercise a host without the optional long-path machine policy even
+        # when the CI image itself has that policy enabled.
+        if len(str(path)) >= 260 and not str(path).startswith("\\\\?\\"):
+            raise FileNotFoundError(2, "Win32 MAX_PATH", str(path))
+        return original_lstat(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "lstat", legacy_lstat)
+    assert len(str(runtime / "code/.staging-12345678" / relative)) < 260
+
+    prepared = recovery.prepare_execution_root(
+        root, "journal-bank-reconciliation", shared=True
+    )
+
+    try:
+        assert len(str(runtime / "code" / prepared.name / relative)) >= 260
+        assert str(prepared).startswith("\\\\?\\")
+        assert (prepared / relative).read_bytes() == b"synthetic package reference"
+        assert (prepared / relative).stat().st_nlink == 1
+    finally:
+        recovery.release_execution_root(prepared)
+        recovery.collect_execution_store(keep_idle=0)
+    assert not prepared.exists()
+
+
 def test_collection_keeps_replay_source_when_archive_storage_is_unavailable(
     tmp_path, monkeypatch, caplog
 ):

@@ -10,6 +10,24 @@ permissions:
   contents: read
 
 jobs:
+  windows-snapshot-paths:
+    name: Windows runtime snapshot long paths
+    runs-on: windows-latest
+    timeout-minutes: 5
+    env:
+      PYTHONDONTWRITEBYTECODE: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install pytest
+      - name: Read and collect a verified snapshot beyond MAX_PATH
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_vera_verified_execution.py
+          -k legacy_windows_path_limit
+
   product-archives:
     uses: ./.github/workflows/build-product-archives.yml
 
