@@ -33,14 +33,16 @@ that module's `skills/mparanza-studio-archive/SKILL.md` completely and follow it
 Treat the resolved module root as the plugin working directory for every
 command. Do not paraphrase, shorten, fork, or replace the component workflow.
 
-Use `lucia` for the shared MCP tools. Its host configuration
-also enables Lucia's `apertura-pratica` lifecycle. The component's `Vera/`
-ledger paths and private state names remain the shared storage contract.
+Use the plain Studio Archive tools under `lucia`. Prepare only the workflows
+declared in Lucia’s `components.json`: `prompt-optimizer`,
+`deep-research-validator`, and `apertura-pratica`. The shared component guide
+also describes other products: use its client, engagement, file, search,
+snapshot, and run lifecycle instructions for Lucia. Journal sampling, invoice
+checks, and verification of Vera’s selective reporting receipts are outside
+Lucia’s Archive. Preserve the literal shared `Vera/` ledger paths.
 
-When the host has no registered MCP tools, use the component's documented
-`scripts/studio_archive.py` CLI with `LUCIA_ASSURANCE_HOST=1` in that command's
-environment. This enables the same Lucia workflow list, including
-`apertura-pratica`. Keep the same client, engagement, imported inputs and
-prepare/start/finalize/complete sequence; the agent runs these commands.
+For CLI fallback, use Lucia’s `scripts/lucia_studio_archive.py` at the product
+root with the same arguments as the component guide. It applies Lucia’s workflow
+list and retains the same client, engagement, receipts and lifecycle.
 
 Lucia's public experience and deliverables are in Italian.

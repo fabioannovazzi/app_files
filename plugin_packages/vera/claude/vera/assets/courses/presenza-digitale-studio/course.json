@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "fb785b3a6f5a266f9e39c67a7855d4db72d9fd985b560884bda2ed5caf1626a5"
+      "sha256": "585949ea29f77dd5014209cd404495e55352d194b33a87601b32223b96f9fba8"
     },
     {
       "path": "modules/presenza-digitale-studio/skills/mparanza-presenza-digitale-studio/agents/openai.yaml",
@@ -133,7 +133,7 @@
     },
     {
       "path": "skills/mparanza-presenza-digitale-studio/SKILL.md",
-      "sha256": "a94a9a3d962eb6f032bafbcceaf7736266087beca62e406866749cc933d817b6"
+      "sha256": "02b174e286d4a98d2d428dd652a804348188789b5e45b2ca918b9fe2a3088145"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

@@ -425,7 +425,10 @@ def test_audit_instructions_direct_skills_share_current_contract_and_component_n
     vera_entries,
 ):
     builder = load_builder()
-    expected = builder.COWORK_EXECUTION_CONTRACT.strip()
+    expected = builder.COWORK_EXECUTION_CONTRACT.strip().replace(
+        "When invoked through Vera, Clara or Lucia, task",
+        "When invoked through Vera, task",
+    )
     for path, content in vera_entries.items():
         if path.endswith("/SKILL.md") and not path.startswith(
             "skills/mparanza-privacy-surface-review/"
@@ -673,7 +676,7 @@ def test_root_anthropic_manifest_and_local_mcp_are_discoverable(
     assert (
         "modules/previdenza-inps/scripts/capture_portal_snapshot.py" not in vera_entries
     )
-    assert "skills/mparanza-privacy-surface-review/SKILL.md" in vera_entries
+    assert not any("privacy-surface-review/" in path for path in vera_entries)
     assert not any(name.startswith("evals/") for name in vera_entries)
     communication_eval_prefix = "modules/comunicazione-professionale/evals/"
     assert {
@@ -1021,9 +1024,8 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "Do not use WhatsApp" in content, name
         assert "live INPS browser capture" in content, name
         assert "hosted suggestion or voice" in content, name
-        assert (
-            "When invoked through Vera, Clara or Lucia, task usage, signed receipts"
-            in (" ".join(content.split()))
+        assert "When invoked through Vera, task usage, signed receipts" in (
+            " ".join(content.split())
         ), name
         assert "primary task's workflow-usage contract and product identity" in (
             " ".join(content.split())

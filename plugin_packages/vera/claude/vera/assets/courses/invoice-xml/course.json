@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/invoice-xml/skills/mparanza-invoice-xml/SKILL.md",
-      "sha256": "72fde12de2be923c53897e97f8191e9f7c9b621da2a3822228697057dde17ac9"
+      "sha256": "bdc4aac1915d964d70ff827cae7d87e7e439bdabf90c9ae402f21df9907318fe"
     },
     {
       "path": "modules/invoice-xml/vendor/modules/__init__.py",
@@ -129,7 +129,7 @@
     },
     {
       "path": "skills/mparanza-invoice-xml/SKILL.md",
-      "sha256": "b6f902b29c379c38e15959683ba2719d5c70c0c0bc5f05e5c941b719790985ae"
+      "sha256": "66c969a90df47321fcca4017effeee7e50233a6d14043e39bd99a0bb38aff55a"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

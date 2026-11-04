@@ -12,37 +12,36 @@ from zipfile import ZipFile
 
 import pytest
 
+from tests.plugins.test_product_on_demand_mcp import Session
+
 ROOT = Path(__file__).resolve().parents[2]
 __all__: list[str] = []
 
 
-@pytest.fixture(params=["cowork_mcp", "codex_cli"])
-def archive_runtime(tmp_path: Path, request):
-    """Exercise the registered Cowork and unregistered Codex package routes."""
+@pytest.fixture(params=["cowork_mcp", "codex_mcp", "codex_cli"])
+def archive_runtime(tmp_path: Path, request, monkeypatch):
+    """Exercise the supported Archive entry points from extracted host packages."""
     cli = request.param == "codex_cli"
-    filename = "lucia-plugin.zip" if cli else "lucia-claude-plugin.zip"
+    cowork = request.param == "cowork_mcp"
+    filename = "lucia-claude-plugin.zip" if cowork else "lucia-plugin.zip"
     extracted = tmp_path / "package"
     with ZipFile(ROOT / "plugin_packages/lucia" / filename) as archive:
         archive.extractall(extracted)
-    plugin = extracted / "lucia-codex-plugin/plugins/lucia" if cli else extracted
-    node = shutil.which("node")
-    server = (
-        {}
-        if cli
-        else json.loads((plugin / "mcp-services.json").read_text())["mcpServers"][
-            "luciaStudioArchive"
-        ]
-    )
-    environment = {
-        **os.environ,
-        **server.get("env", {}),
-        "LUCIA_ASSURANCE_HOST": "1",
+    plugin = extracted if cowork else extracted / "lucia-codex-plugin/plugins/lucia"
+    settings = {
         "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "state"),
         "VERA_STUDIO_ARCHIVE_SESSION_ID": str(tmp_path),
         "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
         "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incident-state"),
         "MPARANZA_INCIDENT_DELIVERY": "local-only",
     }
+    environment = {**os.environ, **settings}
+    if not cli:
+        assert shutil.which("node"), "Node.js is required for packaged MCP tests"
+        for key, value in settings.items():
+            monkeypatch.setenv(key, value)
+        session = Session(plugin)
+        request.addfinalizer(session.close)
     transcript = []
 
     def call(name: str, arguments: dict) -> dict:
@@ -54,16 +53,20 @@ def archive_runtime(tmp_path: Path, request):
                 "import_studio_client_document": "import-document",
                 "prepare_studio_client_workflow": "prepare-workflow",
                 "start_studio_client_workflow": "start-workflow",
+                "finalize_studio_client_workflow": "finalize-workflow",
+                "complete_studio_client_workflow": "complete-workflow",
             }
             command = [
                 sys.executable,
-                str(plugin / "modules/studio-archive/scripts/studio_archive.py"),
+                str(plugin / "scripts/lucia_studio_archive.py"),
                 commands[name],
             ]
             for key, value in arguments.items():
                 if key == "input_ids":
                     for identifier in value:
                         command.extend(["--input-id", identifier])
+                elif key == "artifacts":
+                    command.extend(["--artifacts-json", json.dumps(value)])
                 else:
                     command.extend(["--" + key.replace("_", "-"), str(value)])
             result = subprocess.run(
@@ -82,31 +85,8 @@ def archive_runtime(tmp_path: Path, request):
                 json.dumps(transcript, indent=2)
             )
             return payload
-        assert node, "Node.js is required for the Cowork MCP regression"
-        request = {
-            "jsonrpc": "2.0",
-            "id": 1,
-            "method": "tools/call",
-            "params": {"name": name, "arguments": arguments},
-        }
-        result = subprocess.run(
-            [
-                node,
-                *[
-                    arg.replace("${CLAUDE_PLUGIN_ROOT}", str(plugin))
-                    for arg in server["args"]
-                ],
-            ],
-            input=json.dumps(request) + "\n",
-            text=True,
-            capture_output=True,
-            cwd=tmp_path,
-            env=environment,
-            timeout=30,
-            check=False,
-        )
-        assert result.returncode == 0, result.stderr
-        response = json.loads(result.stdout)
+        request = {"name": name, "arguments": arguments}
+        response = session.call("tools/call", request, timeout=60)
         transcript.append({"request": request, "response": response})
         (tmp_path / "mcp-transcript.json").write_text(json.dumps(transcript, indent=2))
         assert "error" not in response, response
@@ -243,3 +223,110 @@ def test_packaged_matter_opening_starts_in_real_archive_run(archive_runtime) -> 
     )
     assert result.returncode == 0, result.stderr
     assert (output / "matter_intake.json").is_file()
+    run = {
+        "client_id": client_id,
+        "engagement_id": engagement_id,
+        "run_id": prepared["run"]["run_id"],
+    }
+    # Declare the real outputs of the initialized matter; no invented report or receipt.
+    artifacts = [
+        {
+            "artifact_id": f"matter.file{index}",
+            "path": f"matter-opening/{file.relative_to(output).as_posix()}",
+            "purpose": "Synthetic matter-opening record",
+            "audience": "review",
+            "media_type": (
+                "application/json" if file.suffix == ".json" else "text/plain"
+            ),
+        }
+        for index, file in enumerate(sorted(output.rglob("*")))
+        if file.is_file()
+    ]
+    sealed = call("finalize_studio_client_workflow", {**run, "artifacts": artifacts})
+    assert sealed["run"]["status"] == "ready_for_review"
+    completed = call("complete_studio_client_workflow", run)
+    assert completed["run"]["status"] == "completed"
+
+
+def test_packaged_archive_prepares_answer_review_for_the_selected_matter(
+    archive_runtime,
+):
+    _, call, _, engagement_id, imported, _ = archive_runtime
+    result = call(
+        "prepare_studio_client_workflow",
+        {
+            "engagement_id": engagement_id,
+            "workflow_id": "deep-research-validator",
+            "input_ids": [imported["input_id"]],
+        },
+    )
+    assert result["run"]["workflow_id"] == "deep-research-validator"
+    assert result["client_engagement"]["engagement_id"] == engagement_id
+
+
+@pytest.mark.parametrize("product_zip", ["lucia-plugin.zip", "lucia-claude-plugin.zip"])
+def test_packaged_mcp_rejects_accounting_before_creating_any_run(
+    tmp_path, monkeypatch, product_zip
+):
+    with ZipFile(ROOT / "plugin_packages/lucia" / product_zip) as archive:
+        archive.extractall(tmp_path / "package")
+    root = next((tmp_path / "package").rglob("scripts/on_demand_mcp.cjs")).parent.parent
+    state = tmp_path / "state"
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(state))
+    session = Session(root)
+    try:
+        names = {t["name"] for t in session.call("tools/list")["result"]["tools"]}
+        excluded = {
+            "start_check_entries_from_sample",
+            "verify_studio_run_report",
+            "lucia_assurance_prepare_studio_client_workflow",
+        }
+        assert names.isdisjoint(excluded)
+        for name in excluded:
+            reply = session.call("tools/call", {"name": name, "arguments": {}})
+            assert reply["error"]["message"].startswith(
+                "Unknown lucia method or target"
+            )
+        reply = session.call(
+            "tools/call",
+            {
+                "name": "prepare_studio_client_workflow",
+                "arguments": {
+                    "engagement_id": "eng_" + "1" * 24,
+                    "workflow_id": "lipe",
+                    "input_ids": ["sample"],
+                },
+            },
+        )
+        assert reply["error"]["message"] == "Workflow not available in Lucia."
+        assert not state.exists()
+    finally:
+        session.close()
+
+
+@pytest.mark.parametrize(
+    "command",
+    [
+        ["start-check-entries-from-sample"],
+        ["verify-run-report"],
+        ["prepare-workflow", "--engagement-id", "synthetic", "--workflow-id=lipe"],
+    ],
+)
+def test_lucia_archive_cli_refuses_unavailable_commands_before_access(
+    tmp_path, command
+):
+    state = tmp_path / "state"
+    result = subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins/lucia/scripts/lucia_studio_archive.py"),
+            *command,
+        ],
+        env={**os.environ, "VERA_STUDIO_ARCHIVE_STATE_DIR": str(state)},
+        text=True,
+        capture_output=True,
+        check=False,
+    )
+    assert result.returncode == 2
+    assert "invalid choice" in result.stderr
+    assert not state.exists()

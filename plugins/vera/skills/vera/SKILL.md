@@ -363,21 +363,6 @@ when the host permits prior approval. Obtain any confirmation the host requires
 at action time. A new recipient, broader access or different data requires its
 own authorization; a workflow choice never overrides a denied tool action.
 
-When adding or materially changing a workstream, use
-`../privacy-surface-review/SKILL.md` to review the actual model-context boundary,
-update its manifest, and refresh the source fingerprint. Before packaging Vera,
-run:
-
-```bash
-python skills/privacy-surface-review/scripts/validate_privacy_surfaces.py
-```
-
-The validator enforces coverage, structure, boundary consistency, and
-freshness. GDPR data minimisation remains a purpose-based professional and
-legal judgment; the validator does not implement it as automatic redaction or a
-minimum-context classifier. It does not certify GDPR compliance or verify the
-deployment's actual account settings.
-
 ## Run-level model-data report
 
 Follow `references/selective-reporting.md`. Each execution of its 13 pipelines
