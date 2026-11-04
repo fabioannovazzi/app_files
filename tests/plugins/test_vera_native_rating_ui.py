@@ -9,7 +9,7 @@ from tests.plugins.test_vera_native_workspace import NODE, ROOT
 
 __all__ = []
 
-CONFIRM = "Ho controllato il dossier completo e confermo il render sul caso e sul predecessore selezionati"
+CONFIRM = "Ho controllato il dossier completo e confermo la generazione sul caso e sul dossier precedente selezionati"
 
 
 def events(body: str) -> dict:

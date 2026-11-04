@@ -67,6 +67,13 @@ def test_saved_management_shows_values_coverage_and_controls_without_mutating_fi
             "context_receipt_verified",
             "model_context.json",
             "metric_id",
+            "Net cash movement",
+            "Top customer revenue share",
+            "Top five customer revenue share",
+            "Service gross margin",
+            "receivables",
+            "payables",
+            "sales_lines",
         ):
             assert technical not in visible
         expect(

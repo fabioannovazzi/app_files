@@ -29,7 +29,7 @@ function valueHtml(value,key){
  if(key==='searched_party_ids'||key==='party_ids')return esc(partyNames[value]||value);
  if(typeof value==='boolean')return esc(t(String(value)));
  if(codedFields.has(key))return esc(stateText(value));
- if(['basis','handling_notes','search_method','description'].includes(key))return esc(words()[String(value)]||value);
+ if(['basis','handling_notes','search_method','description','assessment_basis','purpose'].includes(key))return esc(words()[String(value)]||value);
  return esc(value);
 }
 function render(value){

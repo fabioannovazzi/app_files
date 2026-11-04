@@ -1,7 +1,7 @@
 # Clara and Lucia UI consolidation — 4 November 2026
 
 Base: `90fee768e20d4e40c3f55509ffbfdedb05c92780`.
-Candidates: Vera 0.1.564, Clara 0.1.377, Lucia 0.1.203.
+Candidates: Vera 0.1.565, Clara 0.1.378, Lucia 0.1.204.
 These are implementation candidates, not Desktop acceptance or Marketplace publication.
 
 ## Individual dispositions
@@ -87,3 +87,56 @@ unchanged. The four retained hosted templates were rendered individually at 400
 and 1080 pixels with fictional context and local assets: Instrument Sans, no page
 overflow and no browser errors. No recording, upload or interview was started.
 These eight source-browser views are not Codex Desktop capture or service acceptance.
+
+
+## Expanded Desktop pass and final display fixes
+
+The audit chat was hidden in Desktop. Bringing this same chat into view through
+Codex's navigation tool restored 571px panels; no repeated close/reopen request,
+new chat, authorization change or screenshot capture was needed. The actual
+running audit packages were Vera 0.1.563, Clara 0.1.375 and Lucia 0.1.202.
+
+All 28 bound client-work pages were individually opened in Desktop, plus the
+seven specialist pages (Bilancio, Bandi, Patent Box, merger, transformation,
+website and communication), the three auxiliary panels, the work directory,
+agenda, browser automation and practice/document-format views. These are 42
+Vera entry surfaces. Clara's budget and course panels and Lucia's method, matter
+and course panels were also individually read. These 47 interactive surfaces
+are a different count from the 47 classified Clara/Lucia source surfaces above,
+which include removed editors, generated-document templates and hosted pages.
+
+Clara's February control changed the visible comparison to February values;
+Budget/Consuntivo labels replaced PL/AC. Lucia restored the exact pending
+return decision and synthetic note without applying them or accepting the
+engagement. Every Lucia intake section was expanded, exposing remaining owned
+English defaults. Bilancio's six review tabs opened individually: this incomplete
+fixture has no area plan/catalogue rows, so populated financial-statement output
+is not inferred. Agenda history, new commitment and meeting forms were read;
+no appointment, meeting, calendar event or message was submitted.
+
+Observed fixes for candidates Vera 0.1.565 and Lucia 0.1.204:
+
+- Translate the twelve additional registered intake default explanations and
+  folder purposes in all five supported languages. Unknown authored text stays
+  verbatim. Original intake/review/pending-decision bytes and hashes are intact.
+- Translate the remaining owned cash, customer-concentration and service-margin
+  labels and source roles in management results. Saved calculations, the shared
+  budget producer and the bounded payload remain untouched.
+- Use the source basename, not the archive's opaque storage path, as Registro
+  Imprese headings. Source IDs, original file paths and excerpt retrieval stay
+  intact. Add an explanatory empty state for an unprepared read-only invoice
+  comparison instead of leaving only the heading and introduction.
+- Replace visible Italian implementation terms in the inspected specialist
+  panels with ordinary professional wording. Privacy descriptions retain the
+  same recipients, app-only/model distinction, original-reading limits,
+  account/retention limits and separate external-action boundaries.
+- Clarify agenda time-zone labels and translate known history action names.
+
+This source review covers display substitutions and the empty-state addition.
+No workflow authority, backend receipt, provider call, semantic/legal decision,
+model-context scope, persistence rule or host permission has changed. Refreshing
+source fingerprints records these reviewed bytes; it is not fresh professional,
+learner, external-service or installed-host acceptance. Final-package Desktop
+rechecks and exact-head CI/deployment are separate remaining gates.
+
+Clara is bumped to 0.1.378 because its onboarding source-review binding changes with the compiled source catalogue, even though its native report and course UI code are unchanged.

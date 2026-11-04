@@ -19,6 +19,7 @@ def test_matter_native_resource_restores_saved_decisions(tmp_path, width):
     from tests.plugins.test_lucia_matter_native import prepared
 
     root = prepared(tmp_path)
+    original_sources = {p: p.read_bytes() for p in root.glob("*.json")}
     package = os.environ.get("LUCIA_REVIEW_PACKAGE_ROOT")
     server = (
         Path(package) / "scripts/on_demand_mcp.cjs"
@@ -120,6 +121,17 @@ def test_matter_native_resource_restores_saved_decisions(tmp_path, width):
             app = mount({"run_dir": str(root)})
             expect(app.locator(".review-item").first).to_be_visible()
             expect(app.locator("#toolbar")).to_be_visible()
+            for summary in app.locator(".review-item > summary").all():
+                if summary.locator("..").get_attribute("open") is None:
+                    summary.click()
+            visible = app.locator("main").inner_text()
+            assert "Il controllo dei conflitti non è stato completato." in visible
+            assert "Documenti iniziali e decisioni sulla richiesta" in visible
+            assert (
+                "Confirm scope, exclusions, authority and engagement status."
+                not in visible
+            )
+            assert "Opening evidence and intake decisions" not in visible
             app.locator("#reviewer").fill("Revisore sintetico")
             item = app.locator(".review-item").first
             item.get_by_role("combobox", name="Decisione", exact=True).select_option(
@@ -148,6 +160,10 @@ def test_matter_native_resource_restores_saved_decisions(tmp_path, width):
                 )
             ).to_have_value("Richiedere chiarimenti. Non accettare l’incarico.")
             assert saved.read_bytes() == before
+            assert all(
+                path.read_bytes() == content
+                for path, content in original_sources.items()
+            )
             assert not errors and not downloads
             browser.close()
         finally:

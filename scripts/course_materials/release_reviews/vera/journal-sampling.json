@@ -647,7 +647,7 @@
     "next_gate": "The unmodified release verifier must receive fresh CI execution with every current course digest before merge/deployment. Actual Desktop first and second passes remain separate.",
     "previous_course_sha256": "f2ab6c84a7bef3eb437e17b54c6587add6fa458489bef208206ef1e3633cedf3",
     "retained_judgments": "Localized editorial text and reviewed-artifact names/hashes below are preserved as historical judgments. This is incremental source/presentation review, not a new independent editorial, live learner or professional acceptance.",
-    "reviewed_at": "2026-11-04T15:22:58.054827+00:00",
+    "reviewed_at": "2026-11-04T18:43:44.154056+00:00",
     "reviewer": "Codex /root - bounded native UI source compatibility review",
     "source_review": "Reviewed shared app typography and removal of duplicate inspectors; receipt-bound native report and matter editors; display-only scenario names in the verified native budget preview; translated registered matter headings; and the read-only management results projection. Calculations, source selection, saved receipt verification, professional decisions and authorization boundaries remain unchanged. Known source tests exercise value preservation, stale receipt rejection and payload immutability."
   },
@@ -814,7 +814,7 @@
     "skipped": 0
   },
   "review_scope": "Incremental source compatibility and presentation review over unchanged teaching materials. Historical localized editorial and output judgments are retained. Fresh current-digest execution is a mandatory separate release gate; no live learner or professional acceptance is claimed.",
-  "reviewed_at": "2026-11-04T15:22:58.054827+00:00",
+  "reviewed_at": "2026-11-04T18:43:44.154056+00:00",
   "reviewer": "Codex /root - bounded native UI source compatibility review",
   "runtime8_dependency_binding_20261006": {
     "current_course_sha256": "83aa2768e5ae701168a7e4328fb4973ca4d9355316d906c18e8167c2dac8c9e0",

@@ -162,7 +162,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "84921b94d4db895892bb22b7bba168b2cbd2ad79482dbd573bfb12dd7f5ae42d",
+  "catalogue_fingerprint": "7510dd6ec72b008d73e27d78c6bbafdf435a4678c543ab013a3b5e2028d5c451",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2522,5 +2522,10 @@
     "version": "0.1.564",
     "base": "acb88b4c5c05e5cb715b1789415df6b09664d171",
     "scope": "Retain main’s exclusion of the developer privacy-review skill from user packages and its authored jurisdiction judgments. Native app presentation changes add no professional function or jurisdiction acceptance."
+  },
+  "native_ui_expanded_desktop_copy_20261104": {
+    "previous_catalogue_fingerprint": "84921b94d4db895892bb22b7bba168b2cbd2ad79482dbd573bfb12dd7f5ae42d",
+    "scope": "Manifest version binding only; all 54 public skill entries byte-identical. Preserve existing jurisdiction judgments. Desktop copy audit is not new Swiss professional acceptance.",
+    "source_review": "docs/audits/clara-lucia-ui-consolidation-2026-11-04.md"
   }
 }

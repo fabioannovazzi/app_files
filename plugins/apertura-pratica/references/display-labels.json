@@ -192,7 +192,19 @@
     "restored": "Saved decisions restored. Review them before applying.",
     "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision.",
     "Verify the client and assisted-party identity and role.": "Verify the client and assisted-party identity and role.",
-    "Search the complete approved client/matter register for every relevant party.": "Search the complete approved client/matter register for every relevant party."
+    "Search the complete approved client/matter register for every relevant party.": "Search the complete approved client/matter register for every relevant party.",
+    "Placeholder created at intake; verify identity and role.": "Placeholder created at intake; verify identity and role.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confirm scope, exclusions, authority and engagement status.",
+    "Define the requested legal work.": "Define the requested legal work.",
+    "Conflict review has not been completed.": "Conflict review has not been completed.",
+    "No approved client/matter register has been searched.": "No approved client/matter register has been searched.",
+    "Identify and professionally confirm or reject every possible deadline.": "Identify and professionally confirm or reject every possible deadline.",
+    "Opening evidence and intake decisions": "Opening evidence and intake decisions",
+    "Engagement scope, terms and approvals": "Engagement scope, terms and approvals",
+    "Matter evidence received or acquired": "Matter evidence received or acquired",
+    "Research plans, authorities and validation": "Research plans, authorities and validation",
+    "Draft and reviewed work product": "Draft and reviewed work product",
+    "Matter correspondence": "Matter correspondence"
   },
   "it": {
     "page_title": "Preparare una pratica",
@@ -387,7 +399,19 @@
     "restored": "Decisioni salvate ripristinate. Controllale prima di applicarle.",
     "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione.",
     "Verify the client and assisted-party identity and role.": "Verificare identità e ruolo del cliente e degli altri soggetti assistiti.",
-    "Search the complete approved client/matter register for every relevant party.": "Cercare tutti i soggetti rilevanti nel registro completo dei clienti e delle pratiche approvato dallo studio."
+    "Search the complete approved client/matter register for every relevant party.": "Cercare tutti i soggetti rilevanti nel registro completo dei clienti e delle pratiche approvato dallo studio.",
+    "Placeholder created at intake; verify identity and role.": "Soggetto indicato alla prima raccolta; verificarne identità e ruolo.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confermare perimetro, esclusioni, poteri e stato dell’incarico.",
+    "Define the requested legal work.": "Definire il lavoro legale richiesto.",
+    "Conflict review has not been completed.": "Il controllo dei conflitti non è stato completato.",
+    "No approved client/matter register has been searched.": "Non è stato consultato un registro clienti e pratiche approvato dallo studio.",
+    "Identify and professionally confirm or reject every possible deadline.": "Individuare ogni possibile scadenza e confermarla o escluderla dopo il riesame professionale.",
+    "Opening evidence and intake decisions": "Documenti iniziali e decisioni sulla richiesta",
+    "Engagement scope, terms and approvals": "Perimetro, condizioni e approvazioni dell’incarico",
+    "Matter evidence received or acquired": "Documenti della pratica ricevuti o acquisiti",
+    "Research plans, authorities and validation": "Piani di ricerca, fonti e verifiche",
+    "Draft and reviewed work product": "Bozze ed elaborati riesaminati",
+    "Matter correspondence": "Corrispondenza della pratica"
   },
   "fr": {
     "page_title": "Préparer un dossier",
@@ -582,7 +606,19 @@
     "restored": "Décisions enregistrées restaurées. Vérifiez-les avant de les appliquer.",
     "saved_unavailable": "Les décisions enregistrées ne peuvent pas être restaurées pour cette version. Revoyez les données avant de sauvegarder une nouvelle décision.",
     "Verify the client and assisted-party identity and role.": "Vérifier l’identité et le rôle du client et des autres personnes assistées.",
-    "Search the complete approved client/matter register for every relevant party.": "Rechercher toutes les parties pertinentes dans le registre complet des clients et dossiers approuvé par le cabinet."
+    "Search the complete approved client/matter register for every relevant party.": "Rechercher toutes les parties pertinentes dans le registre complet des clients et dossiers approuvé par le cabinet.",
+    "Placeholder created at intake; verify identity and role.": "Partie indiquée à la réception ; vérifier son identité et son rôle.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confirmer le périmètre, les exclusions, les pouvoirs et l’état du mandat.",
+    "Define the requested legal work.": "Définir le travail juridique demandé.",
+    "Conflict review has not been completed.": "Le contrôle des conflits n’est pas terminé.",
+    "No approved client/matter register has been searched.": "Aucun registre de clients et dossiers approuvé n’a été consulté.",
+    "Identify and professionally confirm or reject every possible deadline.": "Identifier chaque échéance possible et la confirmer ou l’écarter après examen professionnel.",
+    "Opening evidence and intake decisions": "Documents initiaux et décisions sur la demande",
+    "Engagement scope, terms and approvals": "Périmètre, conditions et approbations du mandat",
+    "Matter evidence received or acquired": "Documents du dossier reçus ou recueillis",
+    "Research plans, authorities and validation": "Plans de recherche, sources et vérifications",
+    "Draft and reviewed work product": "Projets et documents révisés",
+    "Matter correspondence": "Correspondance du dossier"
   },
   "de": {
     "page_title": "Eine Angelegenheit vorbereiten",
@@ -777,7 +813,19 @@
     "restored": "Gespeicherte Entscheidungen wiederhergestellt. Vor dem Anwenden prüfen.",
     "saved_unavailable": "Die gespeicherten Entscheidungen können für diese Version nicht wiederhergestellt werden. Prüfen Sie die Daten vor dem Speichern einer neuen Entscheidung.",
     "Verify the client and assisted-party identity and role.": "Identität und Rolle des Mandanten und der weiteren vertretenen Personen prüfen.",
-    "Search the complete approved client/matter register for every relevant party.": "Alle relevanten Beteiligten im vollständigen, von der Kanzlei freigegebenen Mandanten- und Aktenregister suchen."
+    "Search the complete approved client/matter register for every relevant party.": "Alle relevanten Beteiligten im vollständigen, von der Kanzlei freigegebenen Mandanten- und Aktenregister suchen.",
+    "Placeholder created at intake; verify identity and role.": "Bei der Aufnahme angegebene Partei; Identität und Rolle prüfen.",
+    "Confirm scope, exclusions, authority and engagement status.": "Umfang, Ausschlüsse, Befugnisse und Mandatsstatus bestätigen.",
+    "Define the requested legal work.": "Die angefragte rechtliche Arbeit festlegen.",
+    "Conflict review has not been completed.": "Die Konfliktprüfung ist nicht abgeschlossen.",
+    "No approved client/matter register has been searched.": "Es wurde kein freigegebenes Mandanten- und Aktenregister durchsucht.",
+    "Identify and professionally confirm or reject every possible deadline.": "Jede mögliche Frist ermitteln und nach fachlicher Prüfung bestätigen oder verwerfen.",
+    "Opening evidence and intake decisions": "Erste Unterlagen und Aufnahmeentscheidungen",
+    "Engagement scope, terms and approvals": "Umfang, Bedingungen und Freigaben des Mandats",
+    "Matter evidence received or acquired": "Erhaltene oder beschaffte Aktenunterlagen",
+    "Research plans, authorities and validation": "Recherchepläne, Quellen und Prüfungen",
+    "Draft and reviewed work product": "Entwürfe und geprüfte Arbeitsergebnisse",
+    "Matter correspondence": "Schriftverkehr zur Akte"
   },
   "es": {
     "page_title": "Preparar un expediente",
@@ -972,6 +1020,18 @@
     "restored": "Decisiones guardadas recuperadas. Revísalas antes de aplicarlas.",
     "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versión. Revisa los datos antes de guardar una nueva decisión.",
     "Verify the client and assisted-party identity and role.": "Verificar la identidad y el papel del cliente y de las demás personas asistidas.",
-    "Search the complete approved client/matter register for every relevant party.": "Buscar a todas las partes relevantes en el registro completo de clientes y asuntos aprobado por el despacho."
+    "Search the complete approved client/matter register for every relevant party.": "Buscar a todas las partes relevantes en el registro completo de clientes y asuntos aprobado por el despacho.",
+    "Placeholder created at intake; verify identity and role.": "Parte indicada en la recepción; verificar su identidad y función.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confirmar alcance, exclusiones, facultades y estado del encargo.",
+    "Define the requested legal work.": "Definir el trabajo jurídico solicitado.",
+    "Conflict review has not been completed.": "La revisión de conflictos no se ha completado.",
+    "No approved client/matter register has been searched.": "No se ha consultado un registro de clientes y asuntos aprobado.",
+    "Identify and professionally confirm or reject every possible deadline.": "Identificar cada posible plazo y confirmarlo o descartarlo tras la revisión profesional.",
+    "Opening evidence and intake decisions": "Documentos iniciales y decisiones sobre la solicitud",
+    "Engagement scope, terms and approvals": "Alcance, condiciones y aprobaciones del encargo",
+    "Matter evidence received or acquired": "Documentos del asunto recibidos u obtenidos",
+    "Research plans, authorities and validation": "Planes de investigación, fuentes y comprobaciones",
+    "Draft and reviewed work product": "Borradores y documentos revisados",
+    "Matter correspondence": "Correspondencia del asunto"
   }
 }
