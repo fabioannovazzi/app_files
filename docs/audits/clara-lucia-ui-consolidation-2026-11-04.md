@@ -47,8 +47,9 @@ Vera's shared typography fix addresses an observed host `body` font override. Th
 
 ## Release and acceptance gates
 
-- Source verification: 49 focused tests passed with 94.65% coverage; 20 browser checks passed at narrow and wide widths. Shared theme/typography: 122 passed; hosted output: 8 passed.
+- Source verification: 50 focused tests passed with 94.65% coverage; 20 browser checks passed at narrow and wide widths. Shared theme/typography: 122 passed; hosted output: 8 passed.
 - All package formats built and passed release consistency/startup checks. The six native app browser checks also passed through both Codex and Cowork packages and their MCP brokers (six checks per format).
+- CI caught an unnecessary eager Word/PDF dependency in the firm-method service. Imports now load only when document commands run; a startup regression verifies that opening the editor does not import document processors. Nine package document/reference checks passed after updating the retired editor expectation.
 - Exact CI artifacts, local installation and production deployment: pending.
 - Actual fresh Desktop inspection of every retained UI, and Vera's remaining individual cases: pending. The user sees an interactive inline Vera card; no expanded app tab is currently available to the inspection tool. No source or package check is counted as Desktop acceptance.
 - No Marketplace upload, submission or publication is authorized or performed.

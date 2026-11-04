@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import socket
+import subprocess
 import sys
 from pathlib import Path
 
@@ -21,6 +22,8 @@ from method_mcp import MethodApp
 
 @pytest.fixture(autouse=True)
 def no_network(monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/lucia/scripts"))
+
     def refuse(*args, **kwargs):
         raise AssertionError("The firm editor must not connect to a server")
 
@@ -260,3 +263,20 @@ def test_native_app_tools_use_bound_app_only_save_and_import():
     assert not any(
         "directory" in tool["inputSchema"]["properties"] for tool in app.tools[1:]
     )
+
+
+def test_method_editor_does_not_load_document_processing_dependencies():
+    """Opening a saved method needs only its schema, not Word/PDF processors."""
+    completed = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import sys; sys.path.insert(0, sys.argv[1]); import method_mcp; assert 'legal_documents' not in sys.modules; assert 'legal_matter' not in sys.modules",
+            str(ROOT / "plugins/lucia/scripts"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+    assert completed.returncode == 0, completed.stderr

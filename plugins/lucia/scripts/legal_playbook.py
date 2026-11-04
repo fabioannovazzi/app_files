@@ -10,8 +10,6 @@ from pathlib import Path
 from typing import Any
 
 from jsonschema import Draft202012Validator
-from legal_documents import prepare, read_pack
-from legal_matter import initialize
 
 __all__ = [
     "validate_playbook",
@@ -62,6 +60,9 @@ def prepare_playbook(
     run_dir: Path, playbook_path: Path, files: list[Path], template: Path | None = None
 ) -> Path:
     """Use the selected columns/instructions and snapshot their exact version."""
+    from legal_documents import prepare
+    from legal_matter import initialize
+
     value = validate_playbook(_load(playbook_path))
     if value["workflow"] == "redazione-da-modello" and template is None:
         raise ValueError(
@@ -112,6 +113,8 @@ def prepare_playbook(
 
 def read_playbook_run(run_dir: Path) -> dict[str, Any]:
     """Recreate the model handoff from the integrity-checked selected snapshot."""
+    from legal_documents import read_pack
+
     pack = read_pack(run_dir)
     if "playbook" not in pack:
         raise ValueError("This run has no selected firm workflow.")
