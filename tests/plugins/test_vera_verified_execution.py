@@ -120,6 +120,7 @@ def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_deliver
 
 @pytest.mark.skipif(sys.platform != "win32", reason="Native Win32 filesystem paths")
 @pytest.mark.parametrize("prefixed_runtime", [False, True])
+@pytest.mark.parametrize("long_installation", [False, True])
 @pytest.mark.parametrize(
     "relative",
     [
@@ -128,7 +129,7 @@ def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_deliver
     ],
 )
 def test_shared_snapshot_reads_reported_file_beyond_legacy_windows_path_limit(
-    tmp_path, monkeypatch, prefixed_runtime, relative
+    tmp_path, monkeypatch, prefixed_runtime, long_installation, relative
 ):
     recovery = load_recovery()
     root = installation(tmp_path)
@@ -143,6 +144,13 @@ def test_shared_snapshot_reads_reported_file_beyond_legacy_windows_path_limit(
     ).read_bytes()
     target.write_bytes(expected)
     write_index(root)
+    if long_installation:
+        padding = max(1, 180 - len(str(tmp_path)) - len("\\long-installed") - 1)
+        installed = tmp_path / ("i" * padding) / "long-installed"
+        # Prepare the fixture through a supported namespace, then pass the
+        # ordinary installed path to the public verifier under legacy policy.
+        shutil.copytree(root, Path("\\\\?\\" + str(installed)))
+        root = installed
     # An AppContainer-style parent plus the 64-character package digest makes
     # the final pathname exceed MAX_PATH even when its staging name fits.
     padding = max(1, 125 - len(str(tmp_path)) - len("\\AC\\mpr") - 1)

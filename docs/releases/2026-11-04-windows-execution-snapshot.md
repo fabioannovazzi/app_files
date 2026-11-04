@@ -37,8 +37,9 @@ to a model or network. A missing/broken alias cannot hide a working interpreter.
 The probe deadline bounds only interpreter discovery, not professional work.
 If none can execute, the caller retains its actual spawn-error/reporting path.
 
-The shared verifier now uses Win32 extended paths for its private code store and
-temporary execution copies. It retains the same storage location, exact inventory,
+The shared verifier now uses Win32 extended paths when reading the installed
+package as well as for its private code store and temporary execution copies.
+Clean, uncopied roots retain their original return path. It retains the same storage location, exact inventory,
 digest checks, link checks, kernel leases and collection rules. It changes no
 machine policy or permissions. Path normalization is a mechanical filesystem
 operation; it makes no semantic decision about professional inputs.
@@ -52,7 +53,8 @@ fallback remains visible. Privacy service descriptions record these exact fields
 
 The native Windows regression uses both reported package-relative filenames,
 including the reconciliation module's vendored `review_output_transaction.cjs`,
-a long runtime parent, both ordinary and already extended configuration paths,
+a long runtime parent, short and long installed-package roots, both ordinary
+and already extended configuration paths,
 and a simulated legacy Win32 path limit even on CI images with long paths enabled.
 It checks successful verification/read and collection of the complete snapshot.
 An independent Windows CI job runs this regression without waiting for package
@@ -81,8 +83,11 @@ capture and lack of recovery remain explicit. No Marketplace action is authorize
 by this repair.
 
 After the additional failure was specified, the expanded local source suite
-passed 268 tests with four native Windows path cases skipped on macOS. Obsolete
+passed 268 tests with four native Windows path cases skipped on macOS. A subsequent
+extension applies the same namespace handling to the original installation,
+retaining the return-path behavior of clean uncopied roots; its local verifier,
+reporting and Archive suite passed 260 tests with eight native Windows skips. Obsolete
 CI runs for the first candidate were cancelled, retaining their evidence, so a
-fresh candidate must pass all CI including four native snapshot cases and both
+fresh candidate must pass all CI including eight native snapshot cases and both
 actual file-access interpreter routes. The first candidate's two Windows path
 passes alone do not validate this expanded release.

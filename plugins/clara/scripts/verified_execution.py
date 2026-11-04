@@ -495,10 +495,11 @@ def prepare_execution_root(
     """
 
     snapshot = snapshot or shared
-    product = product_name(root)
+    product = product_name(_execution_path(root))
     if product == "vera" and module not in ASSURED_MODULES and not snapshot:
         return root
-    root = root.absolute()
+    original_root = root.absolute()
+    root = _execution_path(original_root)
     # Repository component sources use sibling roots, not installed modules.
     if (
         not (root / "modules").exists()
@@ -506,7 +507,7 @@ def prepare_execution_root(
         and (root.parent.parent / ".git").exists()
         and (module is None or (root.parent / module).is_dir())
     ):
-        return root
+        return original_root
     _real_ancestors(root)
     observed, directories = _inventory(root)
     if MANIFEST not in observed:
@@ -544,7 +545,7 @@ def prepare_execution_root(
         return _shared_execution_root(contents, manifest_bytes, module)
     if not hardlinks and not snapshot:
         _validate_module(root, module)
-        return root
+        return original_root
 
     recover_abandoned_execution_roots()
 
