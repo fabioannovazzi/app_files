@@ -168,8 +168,10 @@ def _retain(source: Path, target: Path) -> tuple[str, int | None, str | None]:
     if (
         _signature(source) != before
         or after.st_size != size
-        or after.st_mtime_ns != before[4]
-        or after.st_ctime_ns != before[5]
+        # Windows path stat and descriptor stat can use different ctime meanings.
+        # Compare each API with itself while still checking path identity above.
+        or after.st_mtime_ns != identity.st_mtime_ns
+        or after.st_ctime_ns != identity.st_ctime_ns
     ):
         # Keep the partial evidence private, but never label it a retained original.
         target.rename(target.with_name("unverified-download.bin"))

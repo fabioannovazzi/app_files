@@ -37,7 +37,7 @@ Coverage review and actual bank acceptance remain distinct from byte retention.
 - Clara/Lucia packages were rebuilt with their existing canonical source
   versions because the shared builder's Vera routing map participates in their
   reviewed build declarations. Their runtime workflows were not extended.
-- 22 local file-mechanics tests passed, with 81.71% coverage of the helper.
+- 24 local file-mechanics tests passed, with 82.93% coverage of the helper.
   The focused routing/package suite passed 25 tests including those mechanics.
 - Privacy contracts, workflow-registry, helper and update-notification checks
   passed 100 tests with two platform/cache-dependent skips.
@@ -52,6 +52,13 @@ Coverage review and actual bank acceptance remain distinct from byte retention.
 
 ## Encountered build and test blocks
 
+- A Windows rerun exposed intermittent rejection of an unchanged original:
+  path stat and descriptor stat can report different ctime meanings on Windows
+  ([CPython issue 157671](https://github.com/python/cpython/issues/157671)).
+  Descriptor timestamps are now compared with their initial descriptor values;
+  path identity/timestamps are still checked against the initial path snapshot.
+  Regressions accept differing API baselines and reject descriptor changes.
+  All 24 mechanics tests pass locally; current Windows/macOS CI remains required.
 - CI release alignment downloaded the new ZIPs but compared them with generated
   Cowork directories left over from checkout, missing six newly generated bank
   files. The alignment job now restores those directories from the exact same

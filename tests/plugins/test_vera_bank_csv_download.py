@@ -232,6 +232,40 @@ def test_collect_detects_growth_during_stability_window(pilot, tmp_path, monkeyp
     assert not list(run.rglob("original.*"))
 
 
+@pytest.mark.parametrize("descriptor_changes", [False, True])
+def test_collect_compares_descriptor_timestamps_with_descriptor_observations(
+    pilot, tmp_path, monkeypatch, descriptor_changes
+):
+    downloads, run = prepare(pilot, tmp_path)
+    (downloads / "movements.csv").write_bytes(b"completed")
+    fstat = os.fstat
+    calls = 0
+
+    def descriptor_stat(fd):
+        nonlocal calls
+        calls += 1
+        observed = fstat(fd)
+        return SimpleNamespace(
+            st_mode=observed.st_mode,
+            st_dev=observed.st_dev,
+            st_ino=observed.st_ino,
+            st_size=observed.st_size,
+            st_mtime_ns=observed.st_mtime_ns,
+            st_ctime_ns=observed.st_ctime_ns
+            + 1_000_000
+            + (calls if descriptor_changes else 0),
+        )
+
+    monkeypatch.setattr(pilot.os, "fstat", descriptor_stat)
+
+    result = pilot.collect(run)
+
+    assert result["status"] == (
+        "file_changed" if descriptor_changes else "original_retained"
+    )
+    assert bool(list(run.rglob("original.csv"))) is not descriptor_changes
+
+
 def test_collect_persists_report_when_download_disappears(pilot, tmp_path, monkeypatch):
     downloads, run = prepare(pilot, tmp_path)
     source = downloads / "movements.csv"
