@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Clara Voice</title>
+    <title>Clara · {{ "Registrazioni e trascrizioni" if language | default("it") == "it" else "Recordings and transcripts" }}</title>
     <link rel="icon" type="image/png" href="https://mparanza.com/images/MPARANZA-FAVICON.png" />
     <style>
       @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
@@ -468,10 +468,10 @@
   >
     <main>
       <header>
-        <p class="eyebrow">Registrazione caso</p>
-        <h1>Clara Voice Capture</h1>
+        <p class="eyebrow">Clara · {{ "Appunti del caso" if language | default("it") == "it" else "Case notes" }}</p>
+        <h1>{{ "Registra e trascrivi" if language | default("it") == "it" else "Record and transcribe" }}</h1>
         <div class="meta">
-          <span>{{ participant_email or "local development" }}</span>
+          {% if participant_email %}<span>{{ participant_email }}</span>{% endif %}
         </div>
       </header>
 
@@ -493,11 +493,11 @@
           النص ضمن خطة ChatGPT الحالية وبيئة عمل Codex لدى المكتب لإسناد
           المتحدثين ومراجعته. <a href="/data-handling?lang=en" target="_blank" rel="noopener noreferrer">اقرأ كيفية معالجة البيانات باللغة الإنجليزية</a>.
         {% else %}
-          Clara Voice Capture è un servizio hosted da Mparanza. Mparanza e OpenAI
-          trattano l'audio e il contesto compatto del progetto collegato alla sessione
+          Questo servizio di registrazione e trascrizione è gestito da Mparanza. Mparanza e OpenAI
+          trattano l'audio e la breve descrizione del progetto collegato alla sessione
           per creare la trascrizione. Il video dello schermo resta nel browser e non
-          viene caricato a Mparanza. I file audio e di lavoro hosted vengono cancellati
-          prima della restituzione del bundle completo. Dopo il download, Codex può
+          viene caricato a Mparanza. I file audio e di lavoro conservati dal servizio vengono cancellati
+          prima della restituzione del pacchetto completo. Dopo il download, Codex può
           leggere la trascrizione tramite il piano ChatGPT esistente e l'ambiente di
           lavoro Codex dello studio per attribuire i parlanti e rivederla. <a href="/data-handling?lang=it" target="_blank" rel="noopener noreferrer">Scopri come vengono gestiti i dati</a>.
         {% endif %}
@@ -505,13 +505,12 @@
 
       {% if not session_ready %}
         <section class="control">
-          <h2>Sessione non avviata</h2>
+          <h2>{{ "Registrazione non avviata" if language | default("it") == "it" else "Recording not started" }}</h2>
           <p>
-            Avvia questa registrazione dal plugin Clara. Questa pagina non
-            apre una sessione vocale senza un token valido.
+            {{ "Apri da Clara il collegamento preparato per questa registrazione." if language | default("it") == "it" else "Open the recording link prepared by Clara." }}
           </p>
           {% if token_error %}
-            <p>{{ token_error }}</p>
+            <p>{{ "Il collegamento non è disponibile. Riparti da Clara per recuperarne uno valido." if language | default("it") == "it" else "This recording link is unavailable. Return to Clara to obtain a valid link." }}</p>
           {% endif %}
         </section>
       {% endif %}
@@ -525,25 +524,25 @@
         <option value="ar"{% if language == "ar" %} selected{% endif %}>Arabic</option>
       </select>
 
-      <section class="capture-workspace" aria-label="Capture input">
-        <div class="capture-panel" aria-label="Live capture">
-          <h2>Live capture</h2>
+      <section class="capture-workspace" aria-label="{{ "Registrazione o file audio" if language | default("it") == "it" else "Recording or audio file" }}">
+        <div class="capture-panel" aria-label="{{ "Registrazione" if language | default("it") == "it" else "Recording" }}">
+          <h2>{{ "Registrazione" if language | default("it") == "it" else "Recording" }}</h2>
           <div class="stack">
-            <button id="connect">Start live capture</button>
-            <button id="stop" class="secondary" disabled>Stop & download</button>
+            <button id="connect">{{ "Avvia registrazione" if language | default("it") == "it" else "Start recording" }}</button>
+            <button id="stop" class="secondary" disabled>{{ "Ferma e scarica" if language | default("it") == "it" else "Stop and download" }}</button>
           </div>
           <div id="screenPreviewPanel" class="screen-preview is-hidden" aria-hidden="true">
             <video id="screenPreview" muted autoplay playsinline></video>
-            <span id="screenPreviewStatus" class="screen-preview-status">No screen selected</span>
+            <span id="screenPreviewStatus" class="screen-preview-status">{{ "Nessuno schermo selezionato" if language | default("it") == "it" else "No screen selected" }}</span>
           </div>
         </div>
 
         <section
           class="upload{% if not session_ready %} is-disabled{% endif %}"
-          aria-label="Audio file transcription"
+          aria-label="{{ "Trascrizione di un file audio" if language | default("it") == "it" else "Audio file transcription" }}"
           aria-disabled="{{ 'false' if session_ready else 'true' }}"
         >
-          <h2>Audio file</h2>
+          <h2>{{ "File audio" if language | default("it") == "it" else "Audio file" }}</h2>
           <label>File
             <span class="file-picker">
               <input
@@ -553,20 +552,20 @@
                 aria-describedby="audioFileName"
                 {% if not session_ready %}disabled{% endif %}
               />
-              <span class="file-action">Select audio</span>
-              <span id="audioFileName" class="file-name">No file selected</span>
+              <span class="file-action">{{ "Scegli audio" if language | default("it") == "it" else "Choose audio" }}</span>
+              <span id="audioFileName" class="file-name">{{ "Nessun file scelto" if language | default("it") == "it" else "No file chosen" }}</span>
             </span>
           </label>
-          <button id="uploadAudio" disabled>Transcribe file</button>
+          <button id="uploadAudio" disabled>{{ "Trascrivi il file" if language | default("it") == "it" else "Transcribe file" }}</button>
         </section>
       </section>
 
-      <section class="source-details" aria-label="Call metadata">
-        <h2>Call metadata</h2>
-        <label class="wide">Short title
+      <section class="source-details" aria-label="{{ "Dettagli della registrazione" if language | default("it") == "it" else "Recording details" }}">
+        <h2>{{ "Dettagli della registrazione" if language | default("it") == "it" else "Recording details" }}</h2>
+        <label class="wide">{{ "Titolo breve" if language | default("it") == "it" else "Short title" }}
           <input id="sourceTitle" autocomplete="off" required dir="auto" />
         </label>
-        <label class="wide">Speakers / participants
+        <label class="wide">{{ "Persone che parlano" if language | default("it") == "it" else "People speaking" }}
           <input
             id="sourceParticipants"
             autocomplete="off"
@@ -574,42 +573,42 @@
             required
           />
         </label>
-        <label class="full">Attribution notes
+        <label class="full">{{ "Note per riconoscere le persone" if language | default("it") == "it" else "Notes to help identify speakers" }}
           <textarea id="sourceNotes" dir="auto"></textarea>
         </label>
       </section>
 
-      <div id="status" class="status">Idle.</div>
-      <section class="monitor" aria-label="Capture status">
+      <div id="status" class="status">{{ "Registrazione non avviata." if language | default("it") == "it" else "Recording not started." }}</div>
+      <section class="monitor" aria-label="{{ "Stato della registrazione" if language | default("it") == "it" else "Recording status" }}">
         <div class="metric">
-          <span>Capture</span>
-          <strong id="monitorMode">Idle</strong>
+          <span>{{ "Registrazione" if language | default("it") == "it" else "Recording" }}</span>
+          <strong id="monitorMode">{{ "Non avviata" if language | default("it") == "it" else "Not started" }}</strong>
         </div>
         <div class="metric">
-          <span>Connection</span>
-          <strong id="monitorConnection">Not started</strong>
+          <span>{{ "Collegamento" if language | default("it") == "it" else "Connection" }}</span>
+          <strong id="monitorConnection">{{ "Non avviato" if language | default("it") == "it" else "Not started" }}</strong>
         </div>
         <div class="metric">
           <span>Audio</span>
-          <strong id="monitorMicrophone">Not requested</strong>
+          <strong id="monitorMicrophone">{{ "Non richiesto" if language | default("it") == "it" else "Not requested" }}</strong>
         </div>
         <div class="metric">
-          <span>Last capture</span>
-          <strong id="monitorTranscript">None yet</strong>
+          <span>{{ "Ultima trascrizione" if language | default("it") == "it" else "Last transcription" }}</span>
+          <strong id="monitorTranscript">{{ "Non ancora disponibile" if language | default("it") == "it" else "None yet" }}</strong>
         </div>
         <div class="metric">
-          <span id="monitorCapturedLabel">Captured</span>
-          <strong id="monitorCaptured">0 words</strong>
+          <span id="monitorCapturedLabel">{{ "Trascritto" if language | default("it") == "it" else "Transcribed" }}</span>
+          <strong id="monitorCaptured">{{ "0 parole" if language | default("it") == "it" else "0 words" }}</strong>
         </div>
       </section>
 
       <section class="panels is-hidden" id="transcriptPanels" aria-hidden="true">
         <div class="panel">
-          <h2>Transcript</h2>
+          <h2>{{ "Trascrizione" if language | default("it") == "it" else "Transcript" }}</h2>
           <textarea id="userTranscript" dir="auto" spellcheck="false"></textarea>
         </div>
       </section>
     </main>
-    <script src="/static/js/case-notes-voice.js?v=voice-retention-20260715-v1" defer></script>
+    <script src="/static/js/case-notes-voice.js?v=voice-ui-20261104-v2" defer></script>
   </body>
 </html>

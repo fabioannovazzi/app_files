@@ -111,12 +111,37 @@
   const transcriptionModel = document.body.dataset.transcriptionModel || "";
   const realtimeTranscriptionModel =
     document.body.dataset.realtimeTranscriptionModel || "";
+  function uiText(value) {
+    const text = String(value ?? "");
+    const italian = {
+      "Stop & download": "Ferma e scarica", "Download bundle": "Scarica registrazione",
+      "Transcription": "Trascrizione", "File job": "Trascrizione file",
+      "Complete": "Completata", "Uploaded file": "File caricato",
+      "Progress": "Avanzamento", "Captured": "Trascritto", "words": "parole",
+      "Unavailable": "Non disponibile", "Not requested": "Non richiesto",
+      "Not started": "Non avviato", "No file selected": "Nessun file scelto",
+      "No screen selected": "Nessuno schermo selezionato",
+      "Screen preview unavailable": "Anteprima dello schermo non disponibile",
+      "Waiting for screen preview": "In attesa dell’anteprima dello schermo",
+      "Screen preview waiting for playback": "L’anteprima dello schermo si sta avviando",
+      "Screen captured: no visible content detected": "Schermo acquisito: nessun contenuto visibile rilevato",
+      "Screen captured: static": "Schermo acquisito: immagine ferma",
+      "Screen captured": "Schermo acquisito", "Running": "In corso",
+      "Preparing audio": "Preparazione dell’audio", "Splitting audio": "Preparazione delle parti audio",
+      "Repairing transcription": "Recupero della trascrizione", "Starting": "Avvio",
+      "Finalizing": "Preparazione del risultato", "queued": "In attesa",
+      "running": "In corso", "done": "Completata", "failed": "Non completata",
+      "ZIP bundle downloaded. Import it from the Clara plugin.": "File della registrazione scaricati. Torna in Clara per importarli."
+    };
+    const plain = {"File job":"File transcription", "Download bundle":"Download recording files", "Captured":"Transcribed", "ZIP bundle downloaded. Import it from the Clara plugin.":"Recording files downloaded. Return to Clara to import them."};
+    return (document.body.dataset.language === "it" ? italian[text] : plain[text]) || text;
+  }
   if (stopButton) {
-    stopButton.textContent = "Stop & download";
+    stopButton.textContent = uiText("Stop & download");
   }
 
   function setStatus(message) {
-    statusEl.textContent = message;
+    statusEl.textContent = uiText(message);
   }
 
   function uploadProgressText(payload) {
@@ -127,7 +152,7 @@
     const totalChunks = Number(payload?.total_chunks);
     if (Number.isFinite(totalChunks) && totalChunks > 0) {
       const completedChunks = Number(payload?.completed_chunks || 0);
-      return `${Math.max(0, completedChunks)} / ${totalChunks} chunks`;
+      return `${Math.max(0, completedChunks)} / ${totalChunks} ${document.body.dataset.language === "it" ? "parti del file" : "file parts"}`;
     }
     return "Running";
   }
@@ -142,9 +167,9 @@
       Number.isFinite(totalChunks) &&
       totalChunks > 0
     ) {
-      return `${label} (${currentChunk}/${totalChunks})`;
+      return `${uiText(label)} (${currentChunk}/${totalChunks})`;
     }
-    return label;
+    return uiText(label);
   }
 
   function uploadStatusMessage(payload, fallback) {
@@ -160,16 +185,16 @@
     activeUploadJobStatus = payload || {};
     if (monitorConnection) {
       monitorConnection.textContent =
-        activeUploadJobStatus.status === "done" ? "Complete" : "File job";
+        uiText(activeUploadJobStatus.status === "done" ? "Complete" : "File job");
     }
     if (monitorMicrophone) {
-      monitorMicrophone.textContent = "Uploaded file";
+      monitorMicrophone.textContent = uiText("Uploaded file");
     }
     if (monitorTranscript) {
       monitorTranscript.textContent = uploadPhaseText(activeUploadJobStatus);
     }
     if (monitorCapturedLabel) {
-      monitorCapturedLabel.textContent = "Progress";
+      monitorCapturedLabel.textContent = uiText("Progress");
     }
     if (monitorCaptured) {
       monitorCaptured.textContent = uploadProgressText(activeUploadJobStatus);
@@ -178,30 +203,30 @@
 
   function setMonitor({ connection, microphone, transcript } = {}) {
     if (monitorMode) {
-      monitorMode.textContent = "Transcription";
+      monitorMode.textContent = uiText("Transcription");
     }
     if (connection && monitorConnection) {
-      monitorConnection.textContent = connection;
+      monitorConnection.textContent = uiText(connection);
     }
     if (microphone && monitorMicrophone) {
-      monitorMicrophone.textContent = microphone;
+      monitorMicrophone.textContent = uiText(microphone);
     }
     if (transcript && monitorTranscript) {
-      monitorTranscript.textContent = transcript;
+      monitorTranscript.textContent = uiText(transcript);
     }
     if (activeUploadJobStatus) {
       setUploadMonitor(activeUploadJobStatus);
       return;
     }
     if (monitorCapturedLabel) {
-      monitorCapturedLabel.textContent = "Captured";
+      monitorCapturedLabel.textContent = uiText("Captured");
     }
     if (monitorCaptured) {
       const wordCount = userTranscript.value.split(/\s+/).filter(Boolean).length;
       const elapsed = secondsSinceCaptureStart();
       monitorCaptured.textContent = elapsed
-        ? `${wordCount} words / ${elapsed}s`
-        : `${wordCount} words`;
+        ? `${wordCount} ${uiText("words")} / ${elapsed}s`
+        : `${wordCount} ${uiText("words")}`;
     }
   }
 
@@ -229,7 +254,7 @@
 
   function updateAudioFileName() {
     const file = audioFileInput?.files?.[0];
-    audioFileName.textContent = file ? file.name : "No file selected";
+    audioFileName.textContent = file ? file.name : uiText("No file selected");
     updateUploadButtonState();
   }
 
@@ -384,7 +409,7 @@
     captureAudioMetadata = {};
     liveAudioChunks.length = 0;
     liveVideoChunks.length = 0;
-    stopButton.textContent = "Stop & download";
+    stopButton.textContent = uiText("Stop & download");
     captureTelemetry.audioSamples = 0;
     captureTelemetry.activeAudioSamples = 0;
     captureTelemetry.peakRms = 0;
@@ -685,7 +710,7 @@
 
   function setScreenPreviewStatus(message) {
     if (screenPreviewStatus) {
-      screenPreviewStatus.textContent = message;
+      screenPreviewStatus.textContent = uiText(message);
     }
   }
 
@@ -1939,7 +1964,7 @@
 
   function prepareBundleDownloadButton() {
     bundleDownloadReady = hasDownloadableBundle();
-    stopButton.textContent = "Download bundle";
+    stopButton.textContent = uiText("Download bundle");
     stopButton.disabled = !bundleDownloadReady;
   }
 

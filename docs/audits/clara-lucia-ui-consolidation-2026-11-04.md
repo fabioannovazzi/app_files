@@ -1,7 +1,7 @@
 # Clara and Lucia UI consolidation — 4 November 2026
 
 Base: `90fee768e20d4e40c3f55509ffbfdedb05c92780`.
-Candidates: Vera 0.1.564, Clara 0.1.376, Lucia 0.1.203.
+Candidates: Vera 0.1.564, Clara 0.1.377, Lucia 0.1.203.
 These are implementation candidates, not Desktop acceptance or Marketplace publication.
 
 ## Individual dispositions
@@ -76,3 +76,14 @@ three registered workflows. The native report/method/matter apps remain separate
 owners; the retired metadata renderers remain absent. Main’s 54 public Vera
 function identities and jurisdiction judgments are preserved. Generated package
 and privacy conflicts are rebuilt from the combined source.
+
+The retained recording/transcription and narration-upload pages also received an
+individual content pass. User-facing link errors no longer print raw token
+diagnostics; recording details replace “Call metadata”, and narration instructions
+refer to the approved request and downloaded audio rather than JSON/hash internals.
+The Italian recording view keeps its labels after JavaScript initialization.
+Actors, selected data, deletion boundaries, validation and media processing are
+unchanged. The four retained hosted templates were rendered individually at 400
+and 1080 pixels with fictional context and local assets: Instrument Sans, no page
+overflow and no browser errors. No recording, upload or interview was started.
+These eight source-browser views are not Codex Desktop capture or service acceptance.

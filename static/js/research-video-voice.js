@@ -32,7 +32,7 @@
     setStatus("");
     const file = fileInput.files?.[0];
     if (!file) {
-      summary.textContent = "Choose the approved request JSON created by Clara.";
+      summary.textContent = "Choose the approved narration request created by Clara.";
       return;
     }
     try {
@@ -80,7 +80,7 @@
       link.click();
       link.remove();
       URL.revokeObjectURL(href);
-      setStatus("Narration downloaded. Return to Clara to validate and render it.");
+      setStatus("Narration downloaded. Return to Clara to check the audio and assemble the video.");
     } catch (error) {
       setStatus(error instanceof Error ? error.message : "Narration generation failed.", true);
     } finally {

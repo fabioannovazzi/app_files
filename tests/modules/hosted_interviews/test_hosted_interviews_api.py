@@ -752,7 +752,7 @@ def test_public_page_is_simple_and_does_not_show_transcript(
 @pytest.mark.parametrize(
     ("language", "expected_notice"),
     [
-        ("it", "Questa intervista è un servizio hosted da Mparanza."),
+        ("it", "Questa intervista si svolge sul servizio Mparanza."),
         ("en", "This interview is a Mparanza-hosted service."),
         ("fr", "Cet entretien est un service hébergé par Mparanza."),
         ("de", "Dieses Interview ist ein von Mparanza gehosteter Dienst."),

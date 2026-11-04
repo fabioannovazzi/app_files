@@ -100,10 +100,12 @@ def test_voice_capture_discloses_hosted_processing_and_retention() -> None:
     page = (ROOT / "templates" / "case_notes_voice.html").read_text(encoding="utf-8")
     normalized_page = " ".join(page.split())
 
-    assert "Clara Voice Capture è un servizio hosted da Mparanza." in page
+    assert (
+        "Questo servizio di registrazione e trascrizione è gestito da Mparanza." in page
+    )
     assert "Mparanza e OpenAI" in page
     assert "Il video dello schermo resta nel browser" in page
-    assert "I file audio e di lavoro hosted vengono cancellati" in page
+    assert "I file audio e di lavoro conservati dal servizio vengono cancellati" in page
     assert "piano ChatGPT esistente e l'ambiente di" in page
     assert "lavoro Codex dello studio" in page
     assert "/data-handling?lang=it" in page
@@ -121,9 +123,10 @@ def test_audio_upload_controls_are_inactive_without_plugin_launch() -> None:
     assert 'class="upload{% if not session_ready %} is-disabled{% endif %}"' in page
     assert "aria-disabled=\"{{ 'false' if session_ready else 'true' }}\"" in page
     assert page.count("{% if not session_ready %}disabled{% endif %}") == 1
-    assert '<button id="uploadAudio" disabled>Transcribe file</button>' in page
-    assert 'aria-label="Capture input"' in page
-    assert 'aria-label="Audio file transcription"' in page
+    assert '<button id="uploadAudio" disabled>' in page
+    assert "Transcribe file" in page
+    assert "Recording or audio file" in page
+    assert "Audio file transcription" in page
     assert "audioFileInput.disabled = true;" in script
     assert "uploadKindSelect" not in script
     assert "languageSelect.disabled = true;" in script
@@ -149,7 +152,7 @@ def test_voice_source_identity_metadata_resets_between_captures() -> None:
     )
 
     assert "Source details" not in page
-    assert 'aria-label="Call metadata"' in page
+    assert "Recording details" in page
     assert 'id="sourceTitle" autocomplete="off" required' in page
     assert 'id="sourceParticipants"' in page
     assert 'id="sourceType"' not in page
@@ -2846,17 +2849,17 @@ def test_transcription_capture_uses_capture_monitor_without_model_panel() -> Non
         encoding="utf-8"
     )
 
-    assert 'aria-label="Capture status"' in page
-    assert "Clara Voice Capture" in page
+    assert "Recording status" in page
+    assert "Record and transcribe" in page
     assert "Registra una trascrizione live" not in page
     assert (
         "In modalita solo ascolto Clara cattura l'audio senza intervenire." not in page
     )
     assert "Parla del caso in modo naturale" not in page
     assert 'id="transcriptPanels" aria-hidden="true"' in page
-    assert "<h2>Transcript</h2>" in page
-    assert "Last capture" in page
-    assert "Last transcript" not in page
+    assert "Trascrizione" in page and "Transcript" in page
+    assert "Last transcription" in page
+    assert "Last capture" not in page
     assert "Consultant transcript" not in page
     assert "<h2>Clara replies</h2>" not in page
     assert "Voice model transcript" not in page
@@ -2882,11 +2885,11 @@ def test_transcription_capture_uses_capture_monitor_without_model_panel() -> Non
     assert 'id="uploadKind"' not in page
     assert "Recording type" not in page
     assert "listen_only" not in page
-    assert "Call metadata" in page
+    assert "Recording details" in page
     assert 'id="sourceTitle"' in page
     assert 'id="sourceParticipants"' in page
     assert 'id="sourceNotes"' in page
-    assert "Speakers / participants" in page
+    assert "People speaking" in page
     assert 'id="sourceRole"' not in page
     assert "Role / function" not in page
     assert 'id="sourceInterviewer"' not in page
@@ -2894,7 +2897,7 @@ def test_transcription_capture_uses_capture_monitor_without_model_panel() -> Non
     assert 'id="sourceDate"' not in page
     assert "Confidentiality" not in page
     assert "sourceConfidentiality" not in page
-    capture_block = page.split('aria-label="Capture input"', 1)[1].split(
+    capture_block = page.split('class="capture-workspace"', 1)[1].split(
         'id="status"', 1
     )[0]
     assert 'id="uploadKind"' not in capture_block
@@ -2902,9 +2905,9 @@ def test_transcription_capture_uses_capture_monitor_without_model_panel() -> Non
     assert 'id="mode"' not in capture_block
     assert "Live mode" not in capture_block
     assert 'id="audioSource"' not in capture_block
-    assert "Start live capture" in capture_block
+    assert "Start recording" in capture_block
     assert "Transcribe file" in capture_block
-    assert "case-notes-voice.js?v=voice-retention-20260715-v1" in page
+    assert "case-notes-voice.js?v=voice-ui-20261104-v2" in page
     assert "listen_only" not in script
     assert 'transcriptPanels?.classList.add("is-hidden")' in script
     assert 'transcriptPanels?.setAttribute("aria-hidden", "true")' in script
@@ -2964,12 +2967,12 @@ def test_transcription_capture_uses_capture_monitor_without_model_panel() -> Non
     assert "chooseCompletedTranscript" not in script
     assert "transcriptDeltaPreferredEvents" not in script
     assert "wordCount" in script
-    assert "words / ${elapsed}s" in script
+    assert '${wordCount} ${uiText("words")} / ${elapsed}s' in script
     assert "activeUploadJobStatus" in script
     assert "setUploadMonitor" in script
     assert "uploadProgressText" in script
-    assert 'monitorCapturedLabel.textContent = "Progress"' in script
-    assert 'monitorCapturedLabel.textContent = "Captured"' in script
+    assert 'monitorCapturedLabel.textContent = uiText("Progress")' in script
+    assert 'monitorCapturedLabel.textContent = uiText("Captured")' in script
     assert "0 words" in page
     assert "0 segments / 0 chars" not in page
     start_capture_block = script.split("function startCaptureStatus()", 1)[1].split(
@@ -2995,9 +2998,9 @@ def test_transcription_capture_uses_capture_monitor_without_model_panel() -> Non
     assert "/case-notes/api/voice/live-chunk" not in script
     assert "liveChunkMs" not in script
     assert "transcribeLiveChunk" not in script
-    assert "Stop & download" in page
+    assert "Stop and download" in page
     assert "Stopped. ZIP bundle downloaded." in script
-    assert 'stopButton.textContent = "Download bundle"' in script
+    assert 'stopButton.textContent = uiText("Download bundle")' in script
     assert "bundleDownloadReady" in script
     assert "URL.revokeObjectURL(url)" in script
     assert "60000" in script
