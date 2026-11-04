@@ -1,0 +1,5 @@
+[run]
+include = */plugins/vera/scripts/bank_csv_download.py
+
+[report]
+include = */plugins/vera/scripts/bank_csv_download.py

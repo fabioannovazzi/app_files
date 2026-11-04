@@ -22,6 +22,16 @@ limitations, and professional-review steps visible. Vera does not replace the
 commercialista: decisions, approval, and responsibility remain with the
 qualified professional.
 
+## Bank CSV download
+
+Ask Vera to download bank CSVs in the ordinary conversation. The included
+`bank-csv-download` skill uses computer use in the operator's browser and the
+1Password extension with the selected host model. The operator unlocks the
+vault and completes MFA. Vera retains original files and checks account/period
+coverage; no separate project or package is needed. Intesa Sanpaolo, UniCredit,
+BNL, Sella and BCC RelaxBanking are initial targets, with authenticated bank
+acceptance still outstanding. This acquisition does not post accounting entries.
+
 ## LIPE
 
 `lipe` reconciles VAT-register evidence and produces VP review drafts. It is a

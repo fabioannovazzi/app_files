@@ -72,7 +72,7 @@ The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowli
 Fonts are typography data; none of these references executes a font as code.
 
 ## Package size
-The package contains 53 top-level workflow/router skills and their
+The package contains 54 top-level workflow/router skills and their
 supporting methods, helpers and document/widget assets. This accounts for its
 size; a scanner timeout does not establish that validation completed.
 

@@ -1,6 +1,6 @@
 ---
 name: mparanza-vera
-description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. For opinions, show the question and planned sources in chat before opening an authority. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
+description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, download bank CSVs through computer use and 1Password, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. For opinions, show the question and planned sources in chat before opening an authority. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 ## Written lessons
 
@@ -353,11 +353,25 @@ step also applies when server stamping is pending and in local tutorials.
 Follow the tutorial's local-only receipt boundary. Details and later retrieval
 are in `references/model-data-report-contract.md`.
 
+## Bank CSV acquisition
+
+For “scarica i CSV della banca”, downloading bank movements or obtaining bank
+exports before updating accounting, read `../mparanza-bank-csv-download/SKILL.md` first.
+This direct computer-use route uses the current operator's browser and the
+1Password extension, with their chosen model. No separate project, package,
+API subscription, recorded browser capability or teaching loop is required.
+Ask the current operator only for missing bank/portal, client/account and dates.
+The operator unlocks 1Password and completes MFA; Vera does not read secrets.
+Verify files and actual account/period coverage. Initial bank targets are not
+evidence of authenticated acceptance. Reconciliation of supplied bank files
+still belongs to `journal-bank-reconciliation` or `open-item-reconciliation`.
+
 ## Invocation and scope contract
 
 A request to teach Vera a real browser procedure, develop it, retest a correction,
 or use that procedure for professional work routes to
-`../mparanza-browser-automation/SKILL.md`. Distinguish this from a tutorial that teaches the
+`../mparanza-browser-automation/SKILL.md`. Bank CSV acquisition uses the dedicated route
+above, including first use on a bank. Distinguish this from a tutorial that teaches the
 user how to use Vera. The professional browser lifecycle needs no tutorial,
 onboarding profile, old conversation, or user-supplied technical identifier.
 

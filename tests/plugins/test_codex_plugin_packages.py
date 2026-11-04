@@ -1564,6 +1564,41 @@ def test_accounting_bundle_contains_only_vera_and_its_modules() -> None:
         assert not any(f"/plugins/{module_name}/" in name for name in standard_entries)
 
 
+@pytest.mark.parametrize("surface", ["codex", "chatgpt"])
+def test_vera_bank_csv_download_has_its_route_and_helpers_inside_package(
+    surface: str, tmp_path: Path
+) -> None:
+    builder = load_builder()
+    vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
+    entries = (
+        builder.chatgpt_upload_entries(vera)
+        if surface == "chatgpt"
+        else builder.expected_zip_entries(vera)
+    )
+    prefix = "" if surface == "chatgpt" else "vera-codex-plugin/plugins/vera/"
+    target = "skills/bank-csv-download/SKILL.md"
+
+    assert prefix + target in entries
+    assert prefix + "skills/bank-csv-download/references/banks.md" in entries
+    helper = entries[prefix + "scripts/bank_csv_download.py"]
+    assert helper == (ROOT / "plugins/vera/scripts/bank_csv_download.py").read_bytes()
+    registry = json.loads(entries[prefix + "privacy/registry.json"])
+    assert registry["workstreams"]["bank-csv-download"]["skills"] == [
+        "bank-csv-download"
+    ]
+    installed_helper = tmp_path / "bank_csv_download.py"
+    installed_helper.write_bytes(helper)
+    result = subprocess.run(
+        [sys.executable, str(installed_helper), "--help"],
+        check=True,
+        capture_output=True,
+        text=True,
+        cwd=tmp_path,
+    )
+    assert "start" in result.stdout
+    assert "collect" in result.stdout
+
+
 def test_vera_bundle_contains_browser_discovery_capabilities() -> None:
     builder = load_builder()
     vera = {bundle.name: bundle for bundle in builder.load_bundles()}["vera"]
@@ -3157,6 +3192,14 @@ def test_plugin_skills_preserve_output_policy_and_specialist_routing() -> None:
                 assert "short and long" in normalized_skill_text
                 assert "user's explicit adoption" in normalized_skill_text
                 assert "financial report builder" in normalized_skill_text
+                continue
+            if (
+                plugin_root.name == "vera"
+                and skill_file.parent.name == "bank-csv-download"
+            ):
+                # This native operation owns its helper instead of wrapping a module.
+                assert (plugin_root / "scripts/bank_csv_download.py").is_file()
+                assert (skill_file.parent / "references/banks.md").is_file()
                 continue
             if plugin_root.name in {"lucia", "vera"} and (
                 skill_file.parent.name != plugin_root.name
