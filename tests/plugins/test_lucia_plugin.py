@@ -4,7 +4,6 @@ import importlib.util
 import json
 import os
 import re
-import shutil
 import subprocess
 import sys
 from html.parser import HTMLParser
@@ -95,7 +94,6 @@ WEBSITE_SKILLS = (
     | DOCUMENT_WORKFLOWS
     | {"learn-with-lucia", "deep-research", "studio-archive", "revisione-word"}
 )
-PRIVATE_LIFECYCLE_WORKFLOWS = SHARED_ASSURANCE_WORKFLOWS | LUCIA_NATIVE_WORKFLOWS
 
 
 def _json(path: Path) -> dict[str, object]:
@@ -121,19 +119,6 @@ def _component_entries(
         for name in archive.namelist()
         if name.startswith(prefix) and not name.endswith("/")
     }
-
-
-def _node_executable() -> str | None:
-    """Return an available Node runtime for the MCP smoke test."""
-
-    system_node = shutil.which("node")
-    if system_node:
-        return system_node
-    bundled = (
-        Path.home()
-        / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
-    )
-    return str(bundled) if bundled.is_file() else None
 
 
 def _javascript_string_values(source: str, key: str) -> list[str]:
@@ -369,77 +354,27 @@ def test_lucia_and_vera_package_the_same_assurance_component_bytes(
         )
 
     assert vera_entries
-    assert lucia_entries == vera_entries
-
-
-def test_lucia_private_runtime_exposes_no_archive_or_communication_tools() -> None:
-    node = _node_executable()
-    if node is None:
-        pytest.skip("Node is unavailable for the MCP smoke test")
-    requests = "\n".join(
-        (
-            json.dumps(
-                {
-                    "jsonrpc": "2.0",
-                    "id": 1,
-                    "method": "initialize",
-                    "params": {"protocolVersion": "2024-11-05"},
-                }
-            ),
-            json.dumps({"jsonrpc": "2.0", "id": 2, "method": "tools/list"}),
-            json.dumps(
-                {
-                    "jsonrpc": "2.0",
-                    "id": 3,
-                    "method": "tools/call",
-                    "params": {
-                        "name": "lucia_assurance_search_studio_archive",
-                        "arguments": {"query": "x", "scope_id": "all"},
-                    },
-                }
-            ),
-        )
-    )
-
-    completed = subprocess.run(
-        [node, str(LUCIA_ROOT / "scripts" / "assurance_runtime_mcp.cjs")],
-        cwd=LUCIA_ROOT,
-        input=f"{requests}\n",
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-    responses = {
-        payload["id"]: payload
-        for line in completed.stdout.splitlines()
-        for payload in [json.loads(line)]
-        if "id" in payload
-    }
-    listed_tools = responses[2]["result"]["tools"]
-    listed_names = {tool["name"] for tool in listed_tools}
-    prepare_tool = next(
-        tool
-        for tool in listed_tools
-        if tool["name"] == "lucia_assurance_prepare_studio_client_workflow"
-    )
-
-    assert completed.returncode == 0, completed.stderr
-    assert responses[1]["result"]["serverInfo"]["name"] == ("lucia-assurance-runtime")
-    assert responses[3]["error"]["message"] == "Tool not available in Lucia."
-    assert all(name.startswith("lucia_assurance_") for name in listed_names)
+    handoffs = {
+        "deep-research-validator": {
+            "mcp/server.cjs",
+            "skills/deep-research/SKILL.md",
+            "skills/legal-tax-answer-review/SKILL.md",
+        },
+        "prompt-optimizer": {
+            "mcp/server.cjs",
+            "skills/legal-tax-answer-planner/SKILL.md",
+        },
+        "studio-archive": set(),
+    }[component]
+    # The owners expose different native handoffs; their professional engines,
+    # policies, schemas and every other component byte must stay identical.
+    assert set(lucia_entries) == set(vera_entries)
     assert {
-        "lucia_assurance_search_studio_archive",
-        "lucia_assurance_open_studio_archive_source",
-        "lucia_assurance_plan_studio_archive_gmail_search",
-        "lucia_assurance_match_studio_archive_email",
-        "lucia_assurance_bind_studio_client_google_drive",
-        "lucia_assurance_snapshot_studio_client_google_drive",
-        "lucia_assurance_open_studio_google_drive_source",
-    }.isdisjoint(listed_names)
-    assert set(prepare_tool["inputSchema"]["properties"]["workflow_id"]["enum"]) == (
-        PRIVATE_LIFECYCLE_WORKFLOWS
-    )
+        name for name in vera_entries if vera_entries[name] != lucia_entries[name]
+    } == handoffs
+    assert {
+        name: data for name, data in vera_entries.items() if name not in handoffs
+    } == {name: data for name, data in lucia_entries.items() if name not in handoffs}
 
 
 @pytest.mark.parametrize(
@@ -604,7 +539,19 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
                 if name.startswith(prefix) and not name.endswith("/")
             }
             assert lucia_entries
-            assert lucia_entries == vera_entries
+            # Vera names only its own product in the injected execution contract.
+            expected = {
+                name: (
+                    data.replace(
+                        b"When invoked through Vera, task",
+                        b"When invoked through Vera, Clara or Lucia, task",
+                    )
+                    if name.endswith("/SKILL.md")
+                    else data
+                )
+                for name, data in vera_entries.items()
+            }
+            assert lucia_entries == expected
 
         for workflow in LAWYER_PROFILED_WORKFLOWS:
             assert any(name.startswith(f"modules/{workflow}/") for name in lucia_names)
@@ -887,44 +834,3 @@ def test_lucia_marketplace_long_description_matches_manifest() -> None:
     assert "senza server o API modello separate" in approved
     assert len(approved.split("\n\n")) == 5
     assert len(approved.split()) <= 250
-
-
-def test_private_runtime_routes_prefixed_tool_to_unchanged_archive_api(tmp_path):
-    node = _node_executable()
-    if node is None:
-        pytest.skip("Node is unavailable for the MCP smoke test")
-    scripts = tmp_path / "scripts"
-    scripts.mkdir()
-    wrapper = scripts / "assurance_runtime_mcp.cjs"
-    wrapper.write_bytes((LUCIA_ROOT / "scripts/assurance_runtime_mcp.cjs").read_bytes())
-    server = tmp_path / "modules/studio-archive/mcp/server.cjs"
-    server.parent.mkdir(parents=True)
-    server.write_text(
-        'const lines = require("node:readline").createInterface({ input: process.stdin });\n'
-        'lines.on("line", line => { const m = JSON.parse(line); '
-        'process.stdout.write(JSON.stringify({jsonrpc:"2.0", id:m.id, result:m.params}) + "\\n"); });\n'
-    )
-    request = {
-        "jsonrpc": "2.0",
-        "id": 1,
-        "method": "tools/call",
-        "params": {
-            "name": "lucia_assurance_studio_archive_status",
-            "arguments": {"session": "synthetic"},
-        },
-    }
-
-    completed = subprocess.run(
-        [node, str(wrapper)],
-        input=json.dumps(request) + "\n",
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=30,
-    )
-
-    assert completed.returncode == 0, completed.stderr
-    assert json.loads(completed.stdout)["result"] == {
-        "name": "studio_archive_status",
-        "arguments": {"session": "synthetic"},
-    }

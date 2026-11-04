@@ -24,7 +24,6 @@
   "veraNativeWorkspace": "Expose local client workspaces, source selection and review tools.",
   "veraSalesPlan": "Describe the Actual-to-Plan workflow and its artifacts.",
   "veraStudioArchive": "Manage registered local client folders and engagement records.",
-  "luciaAssuranceRuntime": "Expose the limited local archive tools used by Lucia assurance.",
   "luciaDeepResearchValidator": "Review sourced legal answers and research evidence.",
   "luciaPromptOptimizer": "Review the legal answer plan.",
   "luciaStudioArchive": "Manage registered local client folders and engagement records.",

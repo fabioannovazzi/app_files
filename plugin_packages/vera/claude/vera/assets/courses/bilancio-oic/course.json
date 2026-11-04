@@ -118,7 +118,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/check_review_invariants.py",
-      "sha256": "04c0d67fc1aca34316d8483599d2ebd53a2ab37021822cfd0115dae0c3683dc8"
+      "sha256": "84a6e2bbc71ca8c6c4e45454aeb9d6cd717462abf8cc30d6b952dccc3f1391d2"
     },
     {
       "path": "modules/bilancio-xbrl-it/scripts/client_history.py",
@@ -230,7 +230,7 @@
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "340cd6915fd3950d7ba460a16016c9a2476fa755f2e0e489e3e230c32fb6feec"
+      "sha256": "1cdf95ed3a50f74b76dbcbc679cbccad79e63b0312401215c64daca217379105"
     },
     {
       "path": "modules/bilancio-xbrl-it/skills/mparanza-bilancio-oic/agents/openai.yaml",
@@ -358,7 +358,7 @@
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
-      "sha256": "f34012373017f8b9a35b417883ea08e64ed43f508040751c435d74a8b1d3d760"
+      "sha256": "64bac6dcc46db05f0b5a60bbb555fcbb8be058bad88142e6a73c6aa224922e44"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

@@ -104,7 +104,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "39c61c64b39dfb549ff2d936b8d40fc22406190566fa4618ef2befea39027e1d"
+      "sha256": "3bc36113474e18da32034e6442cfddeaeabd6c11de5f425305f29cf287329d00"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -180,7 +180,7 @@
     },
     {
       "path": "skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "650d49fede03640db1976db5afcb925a0864861a94174b38f5fca9a4fd9e2b7d"
+      "sha256": "f2546a27d40bee66e7c78b438c3aab083f9878bf2c9a3b849c40c16be79c342c"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

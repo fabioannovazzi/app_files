@@ -1,639 +1,8 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.202",
+  "version": "0.1.203",
   "services": [
-    {
-      "name": "luciaAssuranceRuntime",
-      "initialize": {
-        "protocolVersion": "2024-11-05",
-        "serverInfo": {
-          "name": "lucia-assurance-runtime",
-          "version": "0.1.70"
-        },
-        "capabilities": {
-          "tools": {}
-        },
-        "instructions": "Private lifecycle tools use the lucia_assurance_ prefix for Lucia's registered assurance and matter-opening workflows. Do not use it for archive search, email, messaging, or unrelated workflows."
-      },
-      "tools": [
-        {
-          "name": "lucia_assurance_studio_archive_status",
-          "title": "Check Lucia Studio Archive status",
-          "description": "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching. A fresh session can revalidate the approved private-profile root and save isolated session configuration; no client is created.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_list_studio_archive_clients",
-          "title": "List Studio Archive clients",
-          "description": "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local. Healthy clients remain usable when directory_complete or identity_registry_complete is false; report the returned issues. An incomplete directory does not prove a client is absent and must not trigger duplicate registration.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_get_studio_client_folder",
-          "title": "Get one Studio Archive client folder",
-          "description": "Return a digest-bound folder record for one stable registered client. Other Lucia workflows use this record to reject cross-client inputs and namespace engagement runs.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$",
-                "description": "Stable client_id returned by Studio Archive."
-              }
-            },
-            "required": [
-              "client_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_create_studio_archive_client",
-          "title": "Create a Studio Archive destination",
-          "description": "Create the user's selected archive destination and generate its internal stable ID. Use general_workspace for a general label such as Vari without registering that label as a legal identity. Reuse an established destination. Check supplied inputs before starting dependent work. Folder creation does not start professional client onboarding.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "legal_name": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 160,
-                "description": "Confirmed destination label; for a general workspace this can be Vari, without claiming a legal name."
-              },
-              "general_workspace": {
-                "type": "boolean",
-                "description": "The user selected a general archive destination rather than a named client. No legal, email or tax identity is required."
-              },
-              "email_addresses": {
-                "type": "array",
-                "maxItems": 20,
-                "items": {
-                  "type": "string",
-                  "minLength": 3,
-                  "maxLength": 254
-                },
-                "description": "Optional confirmed full email or PEC addresses."
-              },
-              "tax_identifiers": {
-                "type": "array",
-                "maxItems": 20,
-                "items": {
-                  "type": "string",
-                  "minLength": 5,
-                  "maxLength": 32
-                },
-                "description": "Optional confirmed codice fiscale or partita IVA values."
-              }
-            },
-            "required": [
-              "legal_name"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": false,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_import_studio_client_document",
-          "title": "Import a document into one client engagement",
-          "description": "Copy one authorized source, journal, or support file from this computer into the selected engagement with an immutable byte receipt. Check file access with check_studio_import_sources before creating any client or engagement for file-based work. If import fails, disclose and reuse the returned client_id and engagement_id; never create duplicates to retry. For a user-authorized document-only continuation, save the clearly identified Lucia-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "source_path": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 4096,
-                "description": "Absolute path to the selected source/journal/support file, including a derived follow-up prepared under the user's authority to continue this engagement."
-              },
-              "expected_sha256": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$",
-                "description": "Original attachment SHA-256 when importing a transferred file. Rechecked during copying so an altered transfer cannot be registered."
-              },
-              "role": {
-                "type": "string",
-                "enum": [
-                  "journal",
-                  "source",
-                  "support"
-                ]
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$",
-                "description": "Exact engagement selected or created before this separate import action."
-              }
-            },
-            "required": [
-              "client_id",
-              "source_path",
-              "role",
-              "engagement_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": false,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_create_studio_client_engagement",
-          "title": "Create a Studio Archive client engagement",
-          "description": "Create one durable engagement and managed input folder for an exact registered client without assuming a document type. Generate one idempotency_key for this intended engagement and retain it before calling; reuse it after any timeout, lost response or interrupted save to recover the same engagement. The professional never supplies this key. Check access to selected supplied inputs before creation; documentless work needs no file check.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_label": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 160
-              },
-              "idempotency_key": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200,
-                "description": "Software-managed request key. Generate once per intentionally new engagement and reuse unchanged on every retry."
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_label"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": false,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_list_studio_client_engagements",
-          "title": "List one client's Studio engagements",
-          "description": "List durable engagements, imported receipts (including saved derived support notes), persisted runs and available output paths. Resume from these records without chat history. An engagement can have follow-up notes without a workflow run. Verify a new document-only continuation's import receipt here before reporting that it is saved.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              }
-            },
-            "required": [
-              "client_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_prepare_studio_client_workflow",
-          "title": "Prepare a client-bound Lucia workflow run",
-          "description": "Prepare or replay one exact customer-folder run bound to selected immutable input receipts and upstream artifacts. A repeated request is idempotent; new_run must be explicit.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "workflow_id": {
-                "type": "string",
-                "enum": [
-                  "prompt-optimizer",
-                  "deep-research-validator",
-                  "apertura-pratica"
-                ]
-              },
-              "input_ids": {
-                "type": "array",
-                "maxItems": 10000,
-                "items": {
-                  "type": "string",
-                  "pattern": "^input_[0-9a-f]{24}$"
-                },
-                "description": "Exact imported input IDs selected for this run."
-              },
-              "upstream_artifacts": {
-                "type": "array",
-                "maxItems": 10000,
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "run_id": {
-                      "type": "string",
-                      "pattern": "^run_[0-9a-f]{24}$"
-                    },
-                    "artifact_id": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 120
-                    },
-                    "role": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 80
-                    }
-                  },
-                  "required": [
-                    "run_id",
-                    "artifact_id",
-                    "role"
-                  ],
-                  "additionalProperties": false
-                },
-                "description": "Exact completed same-engagement artifact references."
-              },
-              "label": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 160
-              },
-              "purpose": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 500
-              },
-              "idempotency_key": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              },
-              "new_run": {
-                "type": "boolean",
-                "description": "True only when the user explicitly requests a separate run. Reuse the same idempotency_key for safe retries and choose a new key for another distinct run."
-              }
-            },
-            "required": [
-              "engagement_id",
-              "workflow_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_start_studio_client_workflow",
-          "title": "Start a Lucia workflow run",
-          "description": "Move one exact prepared or failed run to running after its input receipts still validate.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "run_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_fail_studio_client_workflow",
-          "title": "Record a Lucia workflow failure",
-          "description": "Retain a failed run and record a bounded reason instead of treating its output folder as available.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              },
-              "reason": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 1000
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "run_id",
-              "reason"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_cancel_studio_client_workflow",
-          "title": "Cancel a Lucia workflow run",
-          "description": "Explicitly cancel one abandoned non-terminal run without deleting it.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "run_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_finalize_studio_client_workflow",
-          "title": "Finalize Lucia workflow artifacts",
-          "description": "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Lucia userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              },
-              "expected_declaration_sha256": {
-                "type": "string",
-                "pattern": "^[0-9a-f]{64}$",
-                "description": "Returned declaration_sha256 for a correction to purpose, audience or media type before completion. Prevents overwriting another review; the agent retains this value without an additional human approval."
-              },
-              "artifacts": {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": 20000,
-                "items": {
-                  "type": "object",
-                  "properties": {
-                    "artifact_id": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 120
-                    },
-                    "path": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 4096,
-                      "description": "File path relative to this run's output_dir (for example result.pdf). Absolute paths inside output_dir and run-relative outputs/result.pdf are also accepted. An existing output-relative path takes precedence. The saved manifest always uses output-relative paths."
-                    },
-                    "purpose": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 500
-                    },
-                    "audience": {
-                      "type": "string",
-                      "enum": [
-                        "internal",
-                        "review",
-                        "deliverable"
-                      ]
-                    },
-                    "media_type": {
-                      "type": "string",
-                      "minLength": 1,
-                      "maxLength": 160
-                    }
-                  },
-                  "required": [
-                    "artifact_id",
-                    "path",
-                    "purpose",
-                    "audience",
-                    "media_type"
-                  ],
-                  "additionalProperties": false
-                }
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "run_id",
-              "artifacts"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_complete_studio_client_workflow",
-          "title": "Complete a Lucia workflow run",
-          "description": "Mark a review-ready run completed only while every declared artifact still matches its receipt.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "run_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_recover_studio_client_ledger",
-          "title": "Recover Lucia customer-folder ledger",
-          "description": "Recover private client pointers from portable customer manifests and inspect engagement, input, and run records independently. Preserve damaged aliases and records; return healthy work alongside explicit issues and completeness flags. An incomplete inventory is not an empty archive.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {},
-            "required": [],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_report_studio_client_retention",
-          "title": "Review Lucia retention candidates",
-          "description": "Build a non-destructive size, age, and lifecycle report. This tool never deletes customer files.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "older_than_days": {
-                "type": "integer",
-                "minimum": 0,
-                "maximum": 365000
-              }
-            },
-            "required": [
-              "client_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "lucia_assurance_configure_studio_archive",
-          "title": "Configure Lucia Studio Archive",
-          "description": "Set one absolute shared archive folder for this user. This writes only a private local configuration and discovers exact top-level search scopes.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "archive_root": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 4096,
-                "description": "Absolute path to the shared or synced studio archive folder."
-              }
-            },
-            "required": [
-              "archive_root"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        }
-      ],
-      "resources": [],
-      "resourceTemplates": [],
-      "prompts": []
-    },
     {
       "name": "luciaDeepResearchValidator",
       "initialize": {
@@ -3033,13 +2402,13 @@
       "initialize": {
         "protocolVersion": "2024-11-05",
         "serverInfo": {
-          "name": "vera-studio-archive",
+          "name": "lucia-studio-archive",
           "version": "0.1.70"
         },
         "capabilities": {
           "tools": {}
         },
-        "instructions": "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Archive Organization uses the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing."
+        "instructions": "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Inspect client folders using the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing."
       },
       "tools": [
         {
@@ -3117,7 +2486,7 @@
         },
         {
           "name": "studio_archive_status",
-          "title": "Check Vera Studio Archive status",
+          "title": "Check Lucia Studio Archive status",
           "description": "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching. A fresh session can revalidate the approved private-profile root and save isolated session configuration; no client is created.",
           "inputSchema": {
             "type": "object",
@@ -3186,7 +2555,7 @@
         {
           "name": "get_studio_client_folder",
           "title": "Get one Studio Archive client folder",
-          "description": "Return a digest-bound folder record for one stable registered client. Other Vera workflows use this record to reject cross-client inputs and namespace engagement runs.",
+          "description": "Return the registered client folder and identity used to bind matters and prevent cross-client imports.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3302,7 +2671,7 @@
         {
           "name": "import_studio_client_document",
           "title": "Import a document into one client engagement",
-          "description": "Copy one authorized source, journal, or support file from this computer into the selected engagement with an immutable byte receipt. Check file access with check_studio_import_sources before creating any client or engagement for file-based work. If import fails, disclose and reuse the returned client_id and engagement_id; never create duplicates to retry. For a user-authorized document-only continuation, save the clearly identified Vera-derived follow-up with role support; a chat-workspace copy alone is not saved engagement progress. Reuse established client/copy authority, then re-list the engagement and read back the controlled copy before reporting a successful save.",
+          "description": "Import an authorized source or support file into the selected matter with an immutable receipt. Check source access before creating records. After an import failure reuse the returned client and engagement IDs. For a saved follow-up use the support role and verify the controlled copy before reporting success.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3353,7 +2722,7 @@
         {
           "name": "copy_studio_client_source_folder",
           "title": "Copy an authorized delivery folder into client working files",
-          "description": "After explicit user authorization for this exact client, engagement and external source folder, copy its ordinary files and subfolders into a new readable delivery folder outside Vera/. Use this for a supplied tree that Archive Organization must inspect. Preserve originals, relative paths and duplicate copies. Never overwrite, merge with an existing delivery, assign document meaning or apply an organization plan. Exact retries verify the retained receipt and bytes; interrupted copies block snapshots until recovered by the same request. The default destination name is the selected folder name; ask for a new delivery name only when it conflicts.",
+          "description": "Copy an authorized source tree to a new delivery folder outside the managed ledger. Preserve originals, relative paths and duplicate copies. Retries verify the retained receipt and bytes; an interrupted copy must be recovered before taking a snapshot.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3398,7 +2767,7 @@
         {
           "name": "snapshot_studio_client_folder",
           "title": "Snapshot one Studio Archive client folder",
-          "description": "After selecting one registered client and open engagement, hash a bounded client-folder view locally and return its complete projected Archive Organization inventory. Raw hashes and absolute paths stay local; client documents are not copied or moved.",
+          "description": "Hash a bounded client-folder view locally and return its complete projected inventory for the selected matter. Raw hashes and absolute paths stay local; documents are not copied or moved.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3474,7 +2843,7 @@
         {
           "name": "snapshot_studio_client_google_drive",
           "title": "Snapshot one bound Google Drive client folder",
-          "description": "Recursively read one exact bound My Drive or Shared Drive folder and return its complete projected Archive Organization inventory. Stable IDs, versions, parents, capabilities, and checksums stay in the local receipt.",
+          "description": "Read one exact bound Drive folder recursively and return its projected inventory. Storage IDs, versions, parents, capabilities and checksums stay in the local receipt.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3703,7 +3072,7 @@
         },
         {
           "name": "prepare_studio_client_workflow",
-          "title": "Prepare a client-bound Vera workflow run",
+          "title": "Prepare a client-bound Lucia workflow run",
           "description": "Prepare or replay one exact customer-folder run bound to selected immutable input receipts and upstream artifacts. A repeated request is idempotent; new_run must be explicit.",
           "inputSchema": {
             "type": "object",
@@ -3715,44 +3084,8 @@
               "workflow_id": {
                 "type": "string",
                 "enum": [
-                  "agenzia-acquisition",
-                  "fatture-xml-check",
-                  "report-enti-locali",
-                  "posizioni-negoziali",
-                  "contenzioso-tributario",
-                  "lipe",
-                  "rating-legalita",
-                  "scissione-guidata",
-                  "esg-reporting-assurance",
-                  "treasury-forecast",
-                  "aml-review",
-                  "adeguati-assetti",
-                  "open-item-reconciliation",
-                  "archive-organization",
-                  "client-file-preparation",
-                  "new-client",
-                  "journal-sampling",
-                  "check-entries",
-                  "journal-bank-reconciliation",
-                  "passive-invoice-audit",
-                  "invoice-xml",
-                  "sales-plan",
-                  "business-planning",
-                  "business-valuation",
-                  "variance-analysis",
-                  "management-control-pack",
-                  "centrale-rischi-review",
-                  "financial-analysis",
-                  "report-builder",
-                  "concordato-plan-review",
-                  "composizione-negoziata",
                   "prompt-optimizer",
                   "deep-research-validator",
-                  "previdenza-inps",
-                  "registro-imprese-sari",
-                  "bandi-agevolazioni",
-                  "patent-box-review",
-                  "bilancio-xbrl-it",
                   "apertura-pratica"
                 ]
               },
@@ -3829,40 +3162,6 @@
           }
         },
         {
-          "name": "verify_studio_run_report",
-          "title": "Verify a saved Archive report receipt",
-          "description": "Verify the exact saved terminal report for this client, engagement and run against its machine identity and server receipt. Uses the service's network access; no shell command is needed. Returns verified, unavailable, not_requested for saved local-only reports, or not_applicable. Does not rerun calculations, regenerate reports, stamp receipts or change the run. Report unavailable verification separately from the pipeline outcome.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "run_id"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": true
-          }
-        },
-        {
           "name": "write_studio_run_artifact",
           "title": "Save authored text in one Archive run",
           "description": "Save agent-authored JSON, Markdown or other text inside outputs/authored of this exact running run. No shell write is needed. Same name and bytes replay safely; changed content requires a new filename. Does not execute a helper, finalize, approve, or establish source lineage. Check success before any dependent operation.",
@@ -3909,7 +3208,7 @@
         {
           "name": "read_studio_run_artifact",
           "title": "Read data from an active Archive run",
-          "description": "Read a bound input or generated data file for one exact active reporting run. Offset and limit select physical data units; columns are zero-based indices. Vera records the exact selection before returning it. Use for initial inspection and later reads in the 13 reporting pipelines.",
+          "description": "Read selected data from a bound input or an output of this exact run. Offset and limit select physical data units; columns are zero-based indices.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -3965,7 +3264,7 @@
         },
         {
           "name": "start_studio_client_workflow",
-          "title": "Start a Vera workflow run",
+          "title": "Start a Lucia workflow run",
           "description": "Move one exact prepared or failed run to running after its input receipts still validate.",
           "inputSchema": {
             "type": "object",
@@ -3998,71 +3297,8 @@
           }
         },
         {
-          "name": "start_check_entries_from_sample",
-          "title": "Start Check Entries from a completed sample",
-          "description": "Resolve and validate the complete internal Journal Sampling handoff, then prepare and start Check Entries against the selected support batch. The caller selects the sampling run and support inputs; no internal filenames or artifact IDs are required.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "client_id": {
-                "type": "string",
-                "pattern": "^client_[0-9a-f]{24}$"
-              },
-              "engagement_id": {
-                "type": "string",
-                "pattern": "^eng_[0-9a-f]{24}$"
-              },
-              "sample_run_id": {
-                "type": "string",
-                "pattern": "^run_[0-9a-f]{24}$"
-              },
-              "support_input_ids": {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": 10000,
-                "uniqueItems": true,
-                "items": {
-                  "type": "string",
-                  "pattern": "^input_[0-9a-f]{24}$"
-                }
-              },
-              "label": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 160
-              },
-              "purpose": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 500
-              },
-              "idempotency_key": {
-                "type": "string",
-                "minLength": 1,
-                "maxLength": 200
-              },
-              "new_run": {
-                "type": "boolean"
-              }
-            },
-            "required": [
-              "client_id",
-              "engagement_id",
-              "sample_run_id",
-              "support_input_ids"
-            ],
-            "additionalProperties": false
-          },
-          "annotations": {
-            "readOnlyHint": false,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
           "name": "fail_studio_client_workflow",
-          "title": "Record a Vera workflow failure",
+          "title": "Record a Lucia workflow failure",
           "description": "Retain a failed run and record a bounded reason instead of treating its output folder as available.",
           "inputSchema": {
             "type": "object",
@@ -4102,7 +3338,7 @@
         },
         {
           "name": "cancel_studio_client_workflow",
-          "title": "Cancel a Vera workflow run",
+          "title": "Cancel a Lucia workflow run",
           "description": "Explicitly cancel one abandoned non-terminal run without deleting it.",
           "inputSchema": {
             "type": "object",
@@ -4136,8 +3372,8 @@
         },
         {
           "name": "finalize_studio_client_workflow",
-          "title": "Finalize Vera workflow artifacts",
-          "description": "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
+          "title": "Finalize Lucia workflow artifacts",
+          "description": "Declare this run’s professional outputs with purpose, audience and media type and mark them ready for review. Before completion, correct declaration metadata using the returned declaration_sha256. Preserve file identities, bytes and earlier receipts.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -4223,7 +3459,7 @@
         },
         {
           "name": "complete_studio_client_workflow",
-          "title": "Complete a Vera workflow run",
+          "title": "Complete a Lucia workflow run",
           "description": "Mark a review-ready run completed only while every declared artifact still matches its receipt.",
           "inputSchema": {
             "type": "object",
@@ -4286,7 +3522,7 @@
         },
         {
           "name": "recover_studio_client_ledger",
-          "title": "Recover Vera customer-folder ledger",
+          "title": "Recover Lucia customer-folder ledger",
           "description": "Recover private client pointers from portable customer manifests and inspect engagement, input, and run records independently. Preserve damaged aliases and records; return healthy work alongside explicit issues and completeness flags. An incomplete inventory is not an empty archive.",
           "inputSchema": {
             "type": "object",
@@ -4303,7 +3539,7 @@
         },
         {
           "name": "report_studio_client_retention",
-          "title": "Review Vera retention candidates",
+          "title": "Review Lucia retention candidates",
           "description": "Build a non-destructive size, age, and lifecycle report. This tool never deletes customer files.",
           "inputSchema": {
             "type": "object",
@@ -4332,7 +3568,7 @@
         },
         {
           "name": "setup_studio_archive",
-          "title": "Set up Vera Studio Archive",
+          "title": "Set up Lucia Studio Archive",
           "description": "Open the operating system's native folder chooser, diagnose the selected shared archive folder, and save this user's private local configuration. Use this guided action before asking the user to type an absolute path.",
           "inputSchema": {
             "type": "object",
@@ -4375,7 +3611,7 @@
         },
         {
           "name": "configure_studio_archive",
-          "title": "Configure Vera Studio Archive",
+          "title": "Configure Lucia Studio Archive",
           "description": "Set one absolute shared archive folder for this user. This writes only a private local configuration and discovers exact top-level search scopes.",
           "inputSchema": {
             "type": "object",
@@ -4401,7 +3637,7 @@
         },
         {
           "name": "refresh_studio_archive",
-          "title": "Refresh Vera Studio Archive",
+          "title": "Refresh Lucia Studio Archive",
           "description": "Hash every supported source, incrementally update this user's private local full-text index, adopt top-level scope changes, and report skipped or partially extracted documents. Source files are read but never modified. OCR is local-only and never downloads model weights.",
           "inputSchema": {
             "type": "object",
@@ -4438,7 +3674,7 @@
         },
         {
           "name": "search_studio_archive",
-          "title": "Search Vera Studio Archive",
+          "title": "Search Lucia Studio Archive",
           "description": "Search one exact configured scope. Use scope_id='all' only when the user explicitly requests a studio-wide search. Results are candidates and must be opened before citation.",
           "inputSchema": {
             "type": "object",
@@ -4508,7 +3744,7 @@
         {
           "name": "configure_studio_archive_client",
           "title": "Register one existing Studio Archive client",
-          "description": "Assign a stable client ID and bind confirmed legal names, full email addresses, and tax identifiers to one exact existing archive scope in the private local registry. Vera stores no Gmail credentials, messages, or attachments.",
+          "description": "Bind confirmed legal names, full email addresses and tax identifiers to one exact archive scope in the private local registry. The registry stores no Gmail credentials, messages or attachments.",
           "inputSchema": {
             "type": "object",
             "properties": {

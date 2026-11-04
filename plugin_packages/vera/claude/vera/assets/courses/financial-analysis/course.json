@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/financial-analysis/skills/mparanza-financial-analysis/SKILL.md",
-      "sha256": "e4e4351938e88a36618387c5c01c917b3514479fd153c1f9fa99d2d0c3fb258b"
+      "sha256": "a995f0b4e0fe6ee4a557a0109ec88a09633e7ac8815712dde487fdaf4ab9e71e"
     },
     {
       "path": "modules/financial-analysis/vendor/modules/__init__.py",
@@ -161,7 +161,7 @@
     },
     {
       "path": "skills/mparanza-financial-analysis/SKILL.md",
-      "sha256": "9b51b671d4213abfea7dc9563fc5f6e84c5c09aeb91cfad8dc9302a78ba712e4"
+      "sha256": "d9d1e8116e871bda369f34927999e23a5f29349331b073f8e7684bf33c8fd71a"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

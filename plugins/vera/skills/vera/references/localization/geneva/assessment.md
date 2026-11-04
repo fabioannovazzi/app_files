@@ -2,7 +2,7 @@
 
 Updated 2026-10-17 (catalogue integration only; prior professional assessment retained). Target: CH-GE; example user: a generalist fiduciary serving SMEs. French output and CHF are explicit case settings, not selectors of governing law.
 
-The current inventory covers all 55 skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
+The current inventory covers all 54 user skill entrypoints, including internal helpers and development prototypes. All prior professional judgments are retained; catalogue coverage does not establish target-country acceptance.
 
 The 0.1.395 catalogue refresh records the manifest and Italian Bilancio OIC area-review entrypoint change. The Italian extension does not qualify the new controls, catalogue or Excel review path for Swiss accounting. Existing Geneva dispositions and the qualified Swiss draft-adapter scope remain unchanged.
 
@@ -43,7 +43,6 @@ The release adds bounded adapters and instructions, not a blanket claim that eve
 | posizioni-negoziali | Unresolved | Shared Word evidence and French table mechanics; Geneva mandate, legal conclusions and live Word acceptance remain unqualified. |
 | presenza-digitale-studio | Use | Existing function retained with the recorded qualification limits. |
 | previdenza-inps | Adapt | Explicit Swiss institutional context for local contribution-evidence review; shared chronology/arithmetic pipeline and Geneva memo framing. INPS portal adapters remain Italy-specific. |
-| privacy-surface-review | Use | Existing function retained with the recorded qualification limits. |
 | purchase-invoice-review | Adapt | Reviewed Swiss document population adapter feeding the existing matching, arithmetic and semantic audit; exact source and extraction-review hashes checked. |
 | quesito-legale-fiscale | Use | Existing function retained with the recorded qualification limits. |
 | rating-legalita | Unresolved | First Italian AGCM application only. No Geneva adaptation or equivalent domestic mandate established; translated output does not establish Swiss applicability. |

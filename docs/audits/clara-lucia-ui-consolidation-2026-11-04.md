@@ -1,7 +1,7 @@
 # Clara and Lucia UI consolidation — 4 November 2026
 
 Base: `90fee768e20d4e40c3f55509ffbfdedb05c92780`.
-Candidates: Vera 0.1.563, Clara 0.1.375, Lucia 0.1.202.
+Candidates: Vera 0.1.564, Clara 0.1.376, Lucia 0.1.203.
 These are implementation candidates, not Desktop acceptance or Marketplace publication.
 
 ## Individual dispositions
@@ -69,3 +69,10 @@ and the explanatory forecast prefix are display-only operations inside the
 receipt-verified native report frame. The original reports and receipts remain
 unchanged. Existing scope checks stay intact; no saved case is recalculated or
 replaced merely to display it.
+
+The release integrates main `acb88b4c5` (PR946 and PR948), retaining Vera’s
+developer-skill exclusion and Lucia’s single Archive service restricted to its
+three registered workflows. The native report/method/matter apps remain separate
+owners; the retired metadata renderers remain absent. Main’s 54 public Vera
+function identities and jurisdiction judgments are preserved. Generated package
+and privacy conflicts are rebuilt from the combined source.

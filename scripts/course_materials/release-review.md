@@ -2859,5 +2859,5 @@ The final wording cleanup lives in the receipt-verified native display. The shar
 budget producer and its copy dictionary are byte-identical to `d9328a368`; changing
 them would invalidate the exact implementation scope of a saved management run.
 No receipt check is weakened, historical run replaced or calculation repeated to
-accommodate a UI wording change. Final candidates are Vera 0.1.563, Clara 0.1.375
-and Lucia 0.1.202.
+accommodate a UI wording change. Final candidates are Vera 0.1.564, Clara 0.1.376
+and Lucia 0.1.203.

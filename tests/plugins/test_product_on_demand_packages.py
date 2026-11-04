@@ -66,7 +66,33 @@ def test_product_package_preserves_tools_behind_one_shared_entry(product, host):
             tool["name"] for service in catalog["services"] for tool in service["tools"]
         ]
         assert "studio_archive_status" in tools
-        assert "lucia_assurance_studio_archive_status" in tools
+        assert "luciaAssuranceRuntime" not in services
+        assert not any(name.startswith("lucia_assurance_") for name in tools)
+        assert {
+            "start_check_entries_from_sample",
+            "verify_studio_run_report",
+        }.isdisjoint(tools)
+        archive = next(
+            service
+            for service in catalog["services"]
+            if service["name"] == "luciaStudioArchive"
+        )
+        by_name = {tool["name"]: tool for tool in archive["tools"]}
+        assert {
+            "search_studio_archive",
+            "open_studio_archive_organization_item",
+            "snapshot_studio_client_google_drive",
+            "finalize_studio_client_workflow",
+        } <= by_name.keys()
+        assert all(
+            "Vera" not in tool["title"] + tool["description"]
+            for tool in by_name.values()
+        )
+        assert set(
+            by_name["prepare_studio_client_workflow"]["inputSchema"]["properties"][
+                "workflow_id"
+            ]["enum"]
+        ) == {"prompt-optimizer", "deep-research-validator", "apertura-pratica"}
         assert len(tools) == len(set(tools))
         assert services["luciaStudioArchive"]["env"]["LUCIA_ASSURANCE_HOST"] == "1"
 

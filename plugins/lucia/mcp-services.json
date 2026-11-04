@@ -38,29 +38,10 @@
         "deep-research-validator"
       ]
     },
-    "luciaAssuranceRuntime": {
-      "title": "Lucia · Spazio di lavoro",
-      "description": "Infrastruttura privata per legare input e risultati dei percorsi Lucia a un incarico revisionabile.",
-      "icons": [
-        {
-          "src": "./assets/icon.svg",
-          "mimeType": "image/svg+xml",
-          "sizes": [
-            "24x24"
-          ]
-        }
-      ],
-      "cwd": ".",
-      "command": "node",
-      "args": [
-        "./scripts/assurance_runtime_mcp.cjs"
-      ]
-    },
     "luciaStudioArchive": {
       "command": "node",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
-        "studio-archive"
+        "${CLAUDE_PLUGIN_ROOT}/scripts/studio_archive_mcp.cjs"
       ],
       "env": {
         "LUCIA_ASSURANCE_HOST": "1"

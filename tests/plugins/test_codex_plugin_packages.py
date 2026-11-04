@@ -731,6 +731,9 @@ def test_chatgpt_upload_entries_put_each_plugin_manifest_at_zip_root(
         )
     )
     public_skill_names = set(instruction_config["skills"])
+    if plugin_name == "vera":
+        public_skill_names.remove("privacy-surface-review")
+        assert not any("skills/privacy-surface-review/" in name for name in entries)
     if plugin_name in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
         expected_card_bodies = {}
         for skill_name in public_skill_names:
@@ -883,6 +886,8 @@ def test_committed_chatgpt_upload_preserves_workflow_instructions(
         )
     )
     public_skill_names = set(instruction_config["skills"])
+    if plugin_name == "vera":
+        public_skill_names.remove("privacy-surface-review")
     if plugin_name in builder.SOURCE_PRESERVING_CHATGPT_PLUGINS:
         expected_bodies = {}
         for skill_name in public_skill_names:

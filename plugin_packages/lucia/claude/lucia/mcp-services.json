@@ -1,11 +1,5 @@
 {
   "mcpServers": {
-    "luciaAssuranceRuntime": {
-      "command": "node",
-      "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/assurance_runtime_mcp.cjs"
-      ]
-    },
     "luciaDeepResearchValidator": {
       "command": "node",
       "args": [
@@ -41,8 +35,7 @@
     "luciaStudioArchive": {
       "command": "node",
       "args": [
-        "${CLAUDE_PLUGIN_ROOT}/scripts/run_component_mcp.cjs",
-        "studio-archive"
+        "${CLAUDE_PLUGIN_ROOT}/scripts/studio_archive_mcp.cjs"
       ],
       "env": {
         "LUCIA_ASSURANCE_HOST": "1"

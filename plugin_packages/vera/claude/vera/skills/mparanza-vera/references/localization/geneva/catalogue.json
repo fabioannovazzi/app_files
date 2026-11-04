@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/clara-lucia-native-ui/plugins/vera",
-  "version": "0.1.563",
-  "captured_at": "2026-11-04T15:06:17.129186+00:00",
-  "catalogue_fingerprint": "181884993d4ddc5e56d4d5f65b18c596369f7dea4eb35bf650aebf02597f87ce",
-  "manifest_sha256": "a35395aecfcc10b437a23b7f898984fb13f498b3b061d4cfa499cd20df920f51",
+  "version": "0.1.564",
+  "captured_at": "2026-11-04T15:22:42.535813+00:00",
+  "catalogue_fingerprint": "84921b94d4db895892bb22b7bba168b2cbd2ad79482dbd573bfb12dd7f5ae42d",
+  "manifest_sha256": "02dae70039dcf3e0b6ceaa6f50bbc0349a47a4e75f919359b0b5365cd7b5ec34",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -207,11 +207,6 @@
       "sha256": "cc89f02b5c0bea20189b67373d895a54800ce53754977d1f45f4a202eeabe1ce"
     },
     {
-      "function_id": "privacy-surface-review",
-      "skill_path": "skills/privacy-surface-review/SKILL.md",
-      "sha256": "705fce66d6605af8c4d0b5316dce5b6645e3fd3b0205b4d5e70113545f5706ee"
-    },
-    {
       "function_id": "purchase-invoice-review",
       "skill_path": "skills/purchase-invoice-review/SKILL.md",
       "sha256": "d65c6d7e30571aedb47cb52d09b44f21c0453cb926ea586ad72f085fb0c3c09d"
@@ -274,7 +269,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "304d8fdd018e34300d4331c129064c2ebaca28de93295d95385e36e68305ac84"
+      "sha256": "fca910576662be77c38d7ff3210ac716a2121336b8b3bfb1b295846a2781e8e0"
     },
     {
       "function_id": "vouching",
