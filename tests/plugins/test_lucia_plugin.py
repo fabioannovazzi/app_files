@@ -604,7 +604,19 @@ def test_lucia_cowork_release_is_installable_and_reuses_vera_assurance() -> None
                 if name.startswith(prefix) and not name.endswith("/")
             }
             assert lucia_entries
-            assert lucia_entries == vera_entries
+            # Vera names only its own product in the injected execution contract.
+            expected = {
+                name: (
+                    data.replace(
+                        b"When invoked through Vera, task",
+                        b"When invoked through Vera, Clara or Lucia, task",
+                    )
+                    if name.endswith("/SKILL.md")
+                    else data
+                )
+                for name, data in vera_entries.items()
+            }
+            assert lucia_entries == expected
 
         for workflow in LAWYER_PROFILED_WORKFLOWS:
             assert any(name.startswith(f"modules/{workflow}/") for name in lucia_names)

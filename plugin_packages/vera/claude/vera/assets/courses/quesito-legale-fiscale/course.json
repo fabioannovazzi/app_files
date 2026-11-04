@@ -93,7 +93,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/SKILL.md",
-      "sha256": "c9feda8fbc394f6c649322390239ef175594e8f8eb16089a2d0226d7b866c69c"
+      "sha256": "da8fad528ed413ccdd1f1141f404dbcce5022f413d22d46781f556d4f8bc76b1"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-deep-research/references/evaluation.md",
@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/SKILL.md",
-      "sha256": "0ed357e4b458c0ef5fd254156f5ff7e22f25f6d6f42dabb48cdfb88fa53b470c"
+      "sha256": "1ebb5920a2ed677b43d400ee5530b1c9168660ef3ae58de7833301a5f871d2d4"
     },
     {
       "path": "modules/deep-research-validator/skills/mparanza-legal-tax-answer-review/references/adversarial-scope.md",
@@ -177,7 +177,7 @@
     },
     {
       "path": "skills/mparanza-quesito-legale-fiscale/SKILL.md",
-      "sha256": "d86d8422bc12ef1311d58f4d20f2bc51974a3b974ba9c8cc7349af1336ce38f4"
+      "sha256": "a118ff9e5c2e6a2b0f32c706dc7e10b9950991d8c202c1084f3a171c8abcdb02"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

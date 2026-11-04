@@ -96,7 +96,7 @@
     },
     {
       "path": "modules/client-file-preparation/skills/mparanza-fatture-xml-check/SKILL.md",
-      "sha256": "193f3b7d8fba73571be2c7e422a963e4b7154d057fed1472a663dee06daae222"
+      "sha256": "890d41a485c90bd5bd5b9859b1629ae9a092770e509e92ee04c969fcb4ab345e"
     },
     {
       "path": "modules/client-file-preparation/templates/email_documenti_mancanti.md",
@@ -152,7 +152,7 @@
     },
     {
       "path": "skills/mparanza-fatture-xml-check/SKILL.md",
-      "sha256": "905889cba31530e18d550d52cdb71736b60509a5d422a81b38e1d2d34cf70c7c"
+      "sha256": "4ededd6dd3667a905f9a398b3d59dadbb49323fda97c7ff672a8ae6335461de7"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

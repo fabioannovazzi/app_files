@@ -90,6 +90,7 @@ def build_registry(root: Path) -> dict[str, Any]:
         "vera_wrapper_skills": [
             path.relative_to(root / "plugins/vera").as_posix()
             for path in sorted((root / "plugins/vera/skills").glob("*/SKILL.md"))
+            if path.parent.name != "privacy-surface-review"
         ],
     }
 

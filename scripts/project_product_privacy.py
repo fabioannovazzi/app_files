@@ -83,6 +83,28 @@ def project_privacy(
                     parts[index + 1] = "mparanza-" + parts[index + 1]
         return "/".join(parts)
 
+    if product == "vera":
+        # The source reviewer remains part of the recorded evidence, but has
+        # no installed entrypoint or Marketplace card.
+        developer_skills = set(registry["developer_skills"])
+        for skill in developer_skills:
+            for directory in (skill, "mparanza-" + skill):
+                for path in list(local):
+                    if path.startswith(f"skills/{directory}/"):
+                        del local[path]
+                        del entries[prefix + path]
+        registry["developer_skills"] = []
+        schema_path = "privacy/registry.schema.json"
+        schema = json.loads(local[schema_path])
+        schema["properties"]["developer_skills"] = {"const": []}
+        local[schema_path] = contract.canonical_bytes(schema)
+        cards_path = "marketplace_skill_instructions.json"
+        if cards_path in local:
+            cards = json.loads(local[cards_path])
+            for skill in developer_skills:
+                cards["skills"].pop(skill, None)
+            local[cards_path] = contract.canonical_bytes(cards)
+
     if host == "anthropic-cowork":
         registry["developer_skills"] = [
             "mparanza-" + name for name in registry["developer_skills"]

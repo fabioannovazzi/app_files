@@ -36,6 +36,7 @@ def snapshot(root: Path) -> dict[str, Any]:
             "sha256": _digest(path),
         }
         for path in sorted((root / "skills").glob("*/SKILL.md"))
+        if path.parent.name != "privacy-surface-review"
     ]
     if not entries:
         raise ValueError("No Vera skill entrypoints found")

@@ -13,6 +13,29 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 
+@pytest.mark.parametrize(
+    "archive_path",
+    [
+        "plugin_packages/vera/vera-plugin.zip",
+        "plugin_packages/vera/vera-chatgpt-upload.zip",
+        "plugin_packages/vera/vera-claude-plugin.zip",
+        "static/shared/vera/downloads/vera-antigravity-plugin.zip",
+    ],
+)
+def test_vera_release_excludes_repository_only_skill(archive_path):
+    with ZipFile(ROOT / archive_path) as archive:
+        names = archive.namelist()
+        assert not any("privacy-surface-review/" in name for name in names)
+        (registry,) = (name for name in names if name.endswith("privacy/registry.json"))
+        assert json.loads(archive.read(registry))["developer_skills"] == []
+        for name in names:
+            if name.endswith("/SKILL.md"):
+                assert (
+                    b"When invoked through Vera, Clara or Lucia, task"
+                    not in archive.read(name)
+                ), name
+
+
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
 @pytest.mark.parametrize("host", ["codex", "chatgpt-upload", "claude"])
 def test_release_index_matches_every_final_host_projected_byte(host, product):

@@ -83,6 +83,19 @@ def _component_roots(entries: dict[str, bytes], path: str) -> tuple[str, ...]:
 
 def project_skill_names(entries: dict[str, bytes]) -> dict[str, bytes]:
     """Namespace owned skills; preserve workflow IDs and canonical provenance."""
+    manifest = json.loads(entries.get(".claude-plugin/plugin.json", b"{}"))
+    product = manifest.get("name")
+    if product == "vera":
+        entries = {
+            path: data
+            for path, data in entries.items()
+            if not path.startswith(
+                (
+                    "skills/privacy-surface-review/",
+                    "skills/mparanza-privacy-surface-review/",
+                )
+            )
+        }
     skills = _skills(entries)
     aliases = {
         name: name if name.startswith(PREFIX) else PREFIX + name
@@ -166,6 +179,14 @@ def project_skill_names(entries: dict[str, bytes]) -> dict[str, bytes]:
                         r"(?m)^- `" + re.escape(old) + r"`:", f"- `{new}`:", text
                     )
             if path in skills:
+                # Lucia embeds Vera-projected modules. Bind the invocation to
+                # the enclosing product before course digests are calculated.
+                shared = "When invoked through Vera, Clara or Lucia, task"
+                vera = "When invoked through Vera, task"
+                if product == "vera":
+                    text = text.replace(shared, vera)
+                elif product == "lucia" and path.startswith("modules/"):
+                    text = text.replace(vera, shared)
                 header, body = text.split("\n---\n", 1)
                 header = FRONTMATTER_NAME.sub(f"name: {aliases[skills[path]]}", header)
                 text = header + "\n---\n" + body

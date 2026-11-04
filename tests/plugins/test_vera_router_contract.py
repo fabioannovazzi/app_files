@@ -56,7 +56,8 @@ def test_vera_router_defines_supported_and_no_match_outcomes() -> None:
 def test_vera_workflow_catalog_covers_every_specialist_skill() -> None:
     skill_root = VERA_ROOT / "skills"
     expected_skills = {path.parent.name for path in skill_root.glob("*/SKILL.md")} - {
-        "vera"
+        "vera",
+        "privacy-surface-review",
     }
     catalog = _read_text(CATALOG_PATH)
 

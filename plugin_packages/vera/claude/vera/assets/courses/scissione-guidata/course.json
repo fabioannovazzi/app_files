@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/scissione-guidata/skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "06c375642ab2cd7746beb570e196968c78d0784182a473ce5a2a1487f98b7e27"
+      "sha256": "4d97ea6a94382a9767562afcd2f00f186cfb1e88665fe77aeb18e20481c74769"
     },
     {
       "path": "modules/scissione-guidata/vendor/modules/__init__.py",
@@ -105,7 +105,7 @@
     },
     {
       "path": "skills/mparanza-scissione-guidata/SKILL.md",
-      "sha256": "06a77bdb94ba116cbc14600ace82d5b5bb691132e353de8f7b3a9c007feb828c"
+      "sha256": "f452c595aff0d30ff412c8f4324a87d9c9228da6aa576b6a93b5015b49730c75"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
