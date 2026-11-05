@@ -5,6 +5,7 @@ from __future__ import annotations
 from decimal import Decimal, InvalidOperation
 from typing import cast
 
+from assetti_review import digest as review_digest
 from construction_core import _attestation, _put, digest, fields, refs, require, text
 
 __all__ = ["apply_typed_record", "budget_rows", "kpi_value", "validate_plan_binding"]
@@ -317,7 +318,7 @@ def apply_typed_record(state: dict, kind: str, p: dict, *, actor: str, at: str) 
         )
         require(
             legacy.get("record_sha256")
-            == digest({k: v for k, v in legacy.items() if k != "record_sha256"}),
+            == review_digest({k: v for k, v in legacy.items() if k != "record_sha256"}),
             "Historical review digest mismatch",
         )
         refs(p.get("evidence_refs"), state["evidence"], "legacy review evidence")

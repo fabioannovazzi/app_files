@@ -90,7 +90,7 @@
     {
       "path": "modules/adeguati-assetti/scripts/construction_adapters.py",
       "repository_path": "plugins/adeguati-assetti/scripts/construction_adapters.py",
-      "sha256": "4e81f4714c19755c1cddd3e46324499552e37563a21fb4f5d63b23d58b2b17e2"
+      "sha256": "aed7066fbec97d8195b04b2a8f191023d1dab27e2f0c05d8039ebc5562710570"
     },
     {
       "path": "modules/adeguati-assetti/scripts/construction_core.py",

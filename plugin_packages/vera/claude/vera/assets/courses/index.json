@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "e1bc653af72990d13045927118baa7282c1fe41d2208fe616fc97acdc2005468",
+      "sha256": "aef9aae24c47812238336c82dc32022f12a2e75e291dc69426b669a54537a61c",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
         "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       },
-      "source_sha256": "77aa6d126268cc1bd7651432de7e34bbea8d3677d25b3be6539368b1aecf3310"
+      "source_sha256": "9ab4ee6984d1115726ffbb71d7c66fce24e0bc67547934e05849b6b706253b66"
     },
     "agenzia-acquisition": {
       "path": "agenzia-acquisition/course.json",

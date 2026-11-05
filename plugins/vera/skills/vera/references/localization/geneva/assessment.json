@@ -167,7 +167,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
+  "catalogue_fingerprint": "f1e46da9fa609490ab069234ffd54f65d70da14897c0b745437e632eda975031",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2578,5 +2578,10 @@
   "native_ui_final_binding_20261105": {
     "previous_catalogue_fingerprint": "3a96c982c083e63817c27a19f0ebc7956d4a1433026a396e39b8ea5bccabc8a1",
     "scope": "Manifest binding only over main 383bb4f: all 55 public entry contents are unchanged. Preserve main bank-acquisition classification and prior jurisdiction judgments; no Swiss acceptance inferred."
+  },
+  "assetti_link_release_binding": {
+    "version": "0.1.576",
+    "previous_catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
+    "scope": "Manifest version refresh only; exact skill entries and existing jurisdiction judgments unchanged. Assessment linkage now uses producer digest. Includes merged course privacy-flow release."
   }
 }
