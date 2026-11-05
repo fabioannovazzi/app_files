@@ -1356,7 +1356,7 @@
     const selected=itemId?await call("vera_workspace_sari_read",{work_ref:workRef,revision:page.revision,source_ref:page.source_ref,item_id:itemId}):null;if(generation!==epoch)return;
     state=null;const {nav,main}=shell(),context={workRef,page,stamp:page.draft_revision,fields:structuredClone(page.fields),saved:page.draft_stale?null:JSON.stringify(page.fields)};
     nav.append(button("← Lavori dello studio",loadCatalogue));main.append(node("p","Registro Imprese e SARI","eyebrow"),node("h1",selected?String(selected.evidence.relative_path).split(/[\\/]/).at(-1):"Avvio del fascicolo e originali"));
-    main.append(node("p","Prepara le bozze iniziali e l’inventario dei documenti già scelti per questo run. Competenza territoriale, attività, fonti ufficiali e piano della pratica proseguono con Vera nella chat e restano da riesaminare professionalmente.","sub"));
+    main.append(node("p","Prepara le bozze iniziali e l’inventario dei documenti già scelti per questo lavoro. Competenza territoriale, attività, fonti ufficiali e piano della pratica proseguono con Vera nella chat e restano da riesaminare professionalmente.","sub"));
     main.append(button("Riprendi il caso nella chat",()=>resumeWorkInChat(main,{work_ref:workRef})));
     if(page.recovery_required)main.append(node("p","Una preparazione ha un esito incerto. Verifica i file nel percorso ordinario prima di riprovare o chiudere il run.","notice"));
     if(page.setup_status==="ordinary_continuation_required")main.append(node("p","Il run contiene già output. Riprendi il caso nel percorso ordinario; il pannello non li sostituisce.","notice"));
@@ -1449,6 +1449,13 @@
     say(page.recovery_required?"Recupero necessario prima di proseguire.":page.status==="registered"?"Bozza e fonti conservate; riesame professionale ancora necessario.":page.status==="cancelled"?"Domanda annullata; bozze e proposte conservate.":page.obsolete?"Autorizzazione obsoleta: riesamina il fascicolo.":!page.can_write?"Consultazione della proposta; questo ruolo o run non permette scritture.":"Proposta da preparare o riesaminare; conservazione da confermare.",page.recovery_required);
   }
   const inpsKinds={fact:"Fatto documentato",finding:"Rilievo",calculation:"Calcolo",missing_evidence:"Evidenza mancante",authority:"Fonte e argomentazione",audit_check:"Controllo del fascicolo",artifact:"Output"};
+  function inpsDisplayTitle(row) {
+    const title = row.data?.review_label || row.title;
+    if (row.item_type === "audit_check" && title === "Package validation audit") return "Controlli del fascicolo";
+    if (row.item_type !== "artifact") return title;
+    const labels = {"studio_memo.md":"Memo per lo studio", "studio_memo.docx":"Memo per lo studio · Word", "validation_audit.json":"Esito dei controlli", "review_handoff.md":"Indicazioni per il riesame"};
+    return labels[title?.replace(/^Artifact /, "")] || title;
+  }
   const inpsActions=[["","Da scegliere"],["accept","Accetto il riscontro"],["reject","Rifiuto il riscontro"],["edit","Richiedo una modifica"],["mark_unclear","Da chiarire"],["request_more_documents","Richiedo documenti"],["skip","Lascio in sospeso"]];
   const inpsStatuses={ready_for_professional_review:"Bozza pronta per revisione professionale",validation_fail:"Validazione non superata",blocked:"Bloccato",partial_review_applied:"Riesame parziale registrato",pending_review:"Riesame da completare"};
   function inpsAuthority(context){return {work_ref:context.workRef,revision:context.page.revision,review_ticket:context.page.review_ticket,expected_draft_revision:context.stamp};}
@@ -1484,7 +1491,7 @@
     leaveDraft();const generation=++epoch,page=await call("vera_workspace_inps_setup",{work_ref:workRef,offset});if(generation!==epoch)return;
     const selected=itemId?await call("vera_workspace_inps_read",{work_ref:workRef,revision:page.revision,source_ref:page.source_ref,item_id:itemId}):null;if(generation!==epoch)return;
     state=null;const {nav,main}=shell(),context={workRef,page,stamp:page.draft_revision,fields:structuredClone(page.draft),saved:JSON.stringify(page.draft)};
-    nav.append(button("← Lavori dello studio",loadCatalogue));main.append(node("p","Previdenza INPS","eyebrow"),node("h1",selected?(selected.item.data?.review_label || selected.item.title):"Evidenze e riesame del fascicolo"));
+    nav.append(button("← Lavori dello studio",loadCatalogue));main.append(node("p","Previdenza INPS","eyebrow"),node("h1",selected?inpsDisplayTitle(selected.item):"Evidenze e riesame del fascicolo"));
     if(!selected)main.append(node("p","Scegli un’evidenza per verificarne la fonte e registrare il tuo riscontro.","sub"));
     main.append(button("Riprendi preparazione o ricerca nella chat",()=>resumeWorkInChat(main,{work_ref:workRef})));
     if(page.setup_status==="preparation_required"){
@@ -1508,7 +1515,7 @@
       decisionNotes(main,select,record,()=>{context.fields.decisions[row.id]=record;inpsChanged(context);},"Motivazione del riscontro");
       main.append(button("← Elenco delle evidenze",()=>openInps(workRef,offset)));
     } else {
-      const list=node("section",undefined,"work-list");for(const row of page.rows){const section=node("section",undefined,"work-row");section.append(node("p",inpsKinds[row.item_type],"eyebrow"),node("h2",row.title),button("Consulta evidenza e riscontro",()=>openInps(workRef,offset,row.item_id)));list.append(section);}main.append(list);
+      const list=node("section",undefined,"work-list");for(const row of page.rows){const section=node("section",undefined,"work-row");section.append(node("p",inpsKinds[row.item_type],"eyebrow"),node("h2",inpsDisplayTitle(row)),button("Consulta evidenza e riscontro",()=>openInps(workRef,offset,row.item_id)));list.append(section);}main.append(list);
       const pages=node("div",undefined,"pagination"),previous=button("Elementi precedenti",()=>openInps(workRef,Math.max(0,offset-30))),next=button("Elementi successivi",()=>openInps(workRef,offset+30));previous.disabled=!offset;next.disabled=!page.has_more;pages.append(previous,node("span",page.total+" elementi"),next);main.append(pages);
     }
     inpsField(main,context,"Professionista che esprime questi riscontri","reviewer",context.fields,false);
@@ -1607,7 +1614,7 @@
     for(const item of page.rows){const section=node("section",undefined,"finding");section.append(node("h2",item.title),node("p",`${item.classification} · ${item.stale?"Da riesaminare: dipendenze cambiate":"Versione corrente, da valutare professionalmente"}`,"caption"),button("Consulta elemento",()=>openCncNode({work_ref:workRef,source_ref:page.source_ref,item_id:item.id})));main.append(section);}
     const paging=node("div",undefined,"pagination"),previous=button("Elementi precedenti",()=>openCnc(workRef,Math.max(0,offset-30))),next=button("Elementi successivi",()=>openCnc(workRef,offset+30));previous.disabled=!offset;next.disabled=!page.has_more;paging.append(previous,node("span",`${page.total?offset+1:0}–${Math.min(offset+30,page.total)} di ${page.total}`),next);main.append(paging);
     for(const grant of page.grants){const section=node("section",undefined,"prepared-member");section.append(node("p",grant.question),node("p",grant.status==="open"?"Domanda da preparare o conservare":grant.status==="cancelled"?"Domanda annullata; prove conservate":"Revisione conservata", "caption"),button("Consulta domanda CNC",()=>openCncGrant({work_ref:workRef,grant_ref:grant.grant_ref})));main.append(section);}
-    say("Versioni e dipendenze lette dal fascicolo. La chiusura del run non chiude la procedura legale.");
+    say("Versioni e dipendenze lette dal fascicolo. La chiusura del lavoro non chiude la procedura legale.");
   }
   async function openCncIntake(workRef) {
     leaveDraft();const generation=++epoch,page=await call("vera_workspace_cnc_author_setup",{work_ref:workRef});if(generation!==epoch)return;state=null;
@@ -2311,7 +2318,7 @@
     main.append(button("Consulta caso e abbina le fonti",async()=>{await flushFinancialDraft();if(!context.fields.pack_id||!context.fields.case_input_id)throw new Error("Scegli ricetta e caso registrato.");await openFinancialCase(workRef);}));
     main.append(node("h2","Calcoli conservati"));for(const row of setup.versions)main.append(button(`${financialRecipes[row.pack_id]||row.pack_id} · ${{passed:'controlli superati',failed:'controlli non superati',qualified:'con riserve'}[row.status]||row.status}`,()=>openFinancialVersion(workRef,row.source_ref)));
     if(setup.legacy_pack_available)main.append(button("Consulta pacchetto già preparato nel run",()=>{financialWork=null;financialPage=null;return openWork(workRef);}));
-    say("Scelte del run recuperate. Nessuna conferma o approvazione ripristinata.");
+    say("Scelte del lavoro recuperate. Nessuna conferma o approvazione ripristinata.");
   }
   async function openFinancialCase(workRef) {
     leaveDraft();const generation=++epoch,setup=await call("vera_workspace_financial_setup",{work_ref:workRef}),selected=await call("vera_workspace_financial_case",{work_ref:workRef,pack_id:setup.draft.pack_id,case_input_id:setup.draft.case_input_id});if(generation!==epoch)return;
@@ -3067,8 +3074,11 @@
     control("Confronto e controlli già preparati","recipe_input_id",setup.items.filter(row=>row.suffix===".json").map(row=>[row.id,row.name]));
     const label=node("label","Valuta riveduta","field"),currency=node("input");currency.setAttribute("aria-label","Valuta riveduta");currency.maxLength=3;currency.value=context.fields.currency;currency.disabled=!setup.can_prepare;currency.addEventListener("input",()=>{context.fields.currency=currency.value;preview.replaceChildren();changeFinancial(context);});label.append(currency);main.append(label);
     control("Lingua dei risultati","language",[["it","Italiano"],["en","English"],["fr","Français"],["de","Deutsch"],["es","Español"]]);
-    main.append(button("Conserva scelte in bozza",flushFinancialDraft),button("Consulta confronto e controlli",async()=>{await flushFinancialDraft();const current=await call("vera_workspace_variance_setup",{work_ref:workRef}),page=await call("vera_workspace_variance_case",{work_ref:workRef,revision:current.revision,fields:context.fields});checked.checked=false;preview.replaceChildren(node("h2","Confronto e controlli dichiarati"),crFields(page.recipe));}),preview);
-    confirmation.append(checked,node("span","Confermo tabella, confronto, controlli dichiarati, valuta e lingua per il calcolo. L’approvazione professionale resta separata."));main.append(confirmation,button("Calcola e conserva tutti i risultati",async()=>{await flushFinancialDraft();if(!checked.checked)throw new Error("Conferma le scelte prima del calcolo.");const current=await call("vera_workspace_variance_setup",{work_ref:workRef});await call("vera_workspace_variance_prepare",{work_ref:workRef,revision:current.revision,review_ticket:current.review_ticket,expected_draft_revision:context.stamp,fields:context.fields,confirmed:true,idempotency_key:crypto.randomUUID()});financialContext=null;dirty=false;await openVariance(workRef);}));
+    const saveChoices=button("Conserva scelte in bozza",flushFinancialDraft);saveChoices.disabled=!setup.can_prepare;
+    main.append(saveChoices,button("Consulta confronto e controlli",async()=>{await flushFinancialDraft();const current=await call("vera_workspace_variance_setup",{work_ref:workRef}),page=await call("vera_workspace_variance_case",{work_ref:workRef,revision:current.revision,fields:context.fields});checked.checked=false;updateCalculation();preview.replaceChildren(node("h2","Confronto e controlli dichiarati"),crFields(page.recipe));}),preview);
+    confirmation.append(checked,node("span","Confermo tabella, confronto, controlli dichiarati, valuta e lingua per il calcolo. L’approvazione professionale resta separata."));const calculate=button("Calcola e conserva tutti i risultati",async()=>{await flushFinancialDraft();if(!checked.checked)throw new Error("Conferma le scelte prima del calcolo.");const current=await call("vera_workspace_variance_setup",{work_ref:workRef});await call("vera_workspace_variance_prepare",{work_ref:workRef,revision:current.revision,review_ticket:current.review_ticket,expected_draft_revision:context.stamp,fields:context.fields,confirmed:true,idempotency_key:crypto.randomUUID()});financialContext=null;dirty=false;await openVariance(workRef);});
+    const updateCalculation=()=>{calculate.disabled=!setup.can_prepare||!checked.checked||!["source_input_id","recipe_input_id","currency","language"].every(key=>context.fields[key]?.trim());};
+    main.addEventListener("input",updateCalculation);main.addEventListener("change",updateCalculation);updateCalculation();main.append(confirmation,calculate);
     financialRecovery(main,()=>openVariance(workRef,offset));if(offset||setup.has_more){const previous=button("Documenti precedenti",()=>openVariance(workRef,Math.max(0,offset-30))),next=button("Documenti successivi",()=>openVariance(workRef,offset+30));previous.disabled=!offset;next.disabled=!setup.has_more;main.append(previous,next);}
   }
   const valuationCollections={mandate:"Incarico",mandate_assessment:"Riesame dell’incarico",purpose_coverage:"Finalità e copertura",methods:"Metodi e decisioni",calculations:"Calcoli e formule",sensitivity:"Sensibilità",normalizations:"Gruppi di normalizzazione",normalization_adjustments:"Singole rettifiche",statements:"Quadrature e movimenti",claims:"Affermazioni e valori",conclusion:"Conclusione proposta",plan_bridge:"Collegamento al Business plan",issues:"Questioni aperte",limitations:"Limiti",inputs:"Importi e ipotesi",sources:"Fonti e destinatari"};

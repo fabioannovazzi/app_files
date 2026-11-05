@@ -9,6 +9,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import venv
 from email.message import EmailMessage
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
@@ -744,6 +745,92 @@ def _mcp_request(
     return next(
         response for response in responses if response.get("id") == payload["id"]
     )
+
+
+@pytest.mark.parametrize("interpreter_route", ["managed", "path_python_only"])
+def test_file_access_uses_available_python_when_python3_is_not_on_path(
+    tmp_path: Path, interpreter_route: str
+) -> None:
+    runtime = tmp_path / "runtime"
+    venv.EnvBuilder(with_pip=False).create(runtime / "venv")
+    scripts = runtime / "venv" / ("Scripts" if os.name == "nt" else "bin")
+    # Retain a real executable environment, but expose no python3 PATH alias.
+    for alias in scripts.glob("python3*"):
+        alias.unlink()
+    source = tmp_path / "selected.csv"
+    source.write_text("date,amount\n2026-11-04,10\n", encoding="utf-8")
+    environment = os.environ.copy()
+    for key in ("VERA_STUDIO_ARCHIVE_PYTHON", "PYTHON", "VIRTUAL_ENV"):
+        environment.pop(key, None)
+    environment["MPARANZA_RUNTIME_ROOT"] = str(
+        runtime if interpreter_route == "managed" else tmp_path / "absent-runtime"
+    )
+    environment["PATH"] = "" if interpreter_route == "managed" else str(scripts)
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "check_studio_import_sources",
+            "arguments": {"source_paths": [str(source)]},
+        },
+    }
+
+    completed = subprocess.run(
+        [_node_executable(), str(MCP_SERVER_PATH), "--stdio"],
+        cwd=COMPONENT_ROOT,
+        env=environment,
+        input=json.dumps(request) + "\n",
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    )
+
+    response = json.loads(completed.stdout)
+    assert response["result"].get("isError") is not True, response
+    assert response["result"]["structuredContent"]["ready"] is True
+    assert source.read_text(encoding="utf-8") == "date,amount\n2026-11-04,10\n"
+
+
+def test_missing_python_returns_original_error_and_reporting_gap_without_crashing(
+    tmp_path: Path,
+) -> None:
+    environment = os.environ.copy()
+    for key in ("VERA_STUDIO_ARCHIVE_PYTHON", "PYTHON", "VIRTUAL_ENV"):
+        environment.pop(key, None)
+    environment["MPARANZA_RUNTIME_ROOT"] = str(tmp_path / "absent-runtime")
+    environment["PATH"] = ""
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "checkpoint_studio_client_workflow",
+            "arguments": {
+                "client_id": "client_" + "1" * 24,
+                "engagement_id": "eng_" + "2" * 24,
+                "run_id": "run_" + "3" * 24,
+            },
+        },
+    }
+
+    completed = subprocess.run(
+        [_node_executable(), str(MCP_SERVER_PATH), "--stdio"],
+        cwd=COMPONENT_ROOT,
+        env=environment,
+        input=json.dumps(request) + "\n",
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    )
+
+    response = json.loads(completed.stdout)["result"]
+    assert response["isError"] is True
+    assert response["structuredContent"]["error"]["code"] == "ENOENT"
+    assert response["_meta"]["reporting"]["status"] == "unavailable"
+    assert response["_meta"]["reporting"]["measurement_gap"] is True
 
 
 def _mcp_tool(

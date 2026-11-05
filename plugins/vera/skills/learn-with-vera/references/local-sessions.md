@@ -97,6 +97,12 @@ They do not cancel an already running host task. A changed input, missing file,
 changed result, wrong workflow/worker, stale revision or corrupt local state
 requires inspection and reconciliation; it is never a new professional profile.
 
+Only a saved finish reports the catalogue course ID, random completion ID and
+completion time to Mparanza using the existing reporting identity. The catalogue
+circle is separate from the professional workflow. A tutorial exercise must not
+start a professional usage run. A pending delivery leaves the
+lesson complete; checking teaching status retries with the same ID.
+
 Each session is saved at `<onboarding-root>/teaching/sessions/<id>/session.json`
 with `session.previous.json` retaining its prior checkpoint. Tutorial artifacts
 live under its `files/`. The library derives summaries from the session files.

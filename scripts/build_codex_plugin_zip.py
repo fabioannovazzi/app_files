@@ -173,6 +173,7 @@ CHATGPT_HIDDEN_COMPONENTS: dict[str, frozenset[str]] = {}
 CHATGPT_SKILL_CARDS_FILE = "marketplace_skill_instructions.json"
 VERA_CHATGPT_DEVELOPER_SKILLS = frozenset({"privacy-surface-review"})
 VERA_CHATGPT_ROUTER_TARGETS = {
+    "bank-csv-download": "skills/bank-csv-download/SKILL.md",
     "research-subscriptions": "skills/research-subscriptions/SKILL.md",
     "posizioni-negoziali": "skills/posizioni-negoziali/SKILL.md",
     "contenzioso-tributario": "skills/contenzioso-tributario/SKILL.md",

@@ -6,7 +6,21 @@ import html
 import json
 from pathlib import Path
 
-__all__ = ["add_course_start"]
+__all__ = ["add_course_start", "course_indicator", "status_assets"]
+
+
+def course_indicator(course: str) -> str:
+    return (
+        f'<span data-vera-course="{html.escape(course, quote=True)}" role="img"></span>'
+    )
+
+
+def status_assets(prefix: str) -> str:
+    return (
+        f'<link rel="stylesheet" href="{prefix}course-status.css">'
+        f'<script src="{prefix}course-status.js" defer></script>'
+    )
+
 
 COPY = {
     "it": {
@@ -134,6 +148,16 @@ def add_course_start(
         )
     section += "</section>"
     marker = "<aside class='paired'>"
+    if product == "vera":
+        document = (
+            document.replace(
+                "</h1>", course_indicator(workflow or "get-started") + "</h1>", 1
+            )
+            .replace(
+                "default-src 'none';", "default-src 'none'; connect-src 'self';", 1
+            )
+            .replace("</head>", status_assets("../../../") + "</head>", 1)
+        )
     if marker not in document:
         raise ValueError("Expected a lesson introduction before startup instructions")
     return (

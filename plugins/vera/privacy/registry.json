@@ -1460,6 +1460,30 @@
           ]
         }
       ]
+    },
+    "bank-csv-download": {
+      "source": "product",
+      "role": "workflow",
+      "skills": [
+        "bank-csv-download"
+      ],
+      "components": [],
+      "workflow_ids": [
+        "bank-csv-download"
+      ],
+      "public_pages": [
+        {
+          "page_id": "bank-csv-download",
+          "path": "static/shared/bank-csv-download/index.html",
+          "languages": [
+            "it",
+            "en",
+            "fr",
+            "de",
+            "es"
+          ]
+        }
+      ]
     }
   },
   "services": [
@@ -1627,6 +1651,7 @@
         "privacy/workstreams/learn-with-vera.json": [
           "scripts/local_onboarding.py",
           "scripts/local_onboarding_case.py",
+          "scripts/local_teaching.py",
           "scripts/onboarding_session_start.py"
         ],
         "privacy/workstreams/studio-archive.json": [

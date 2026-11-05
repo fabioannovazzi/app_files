@@ -26,8 +26,8 @@ from tests.plugins.test_vera_studio_archive_component import (
 )
 
 
-def result_case(core, case):
-    loaded = start(core, case)
+def result_case(core, case, workflow="variance-analysis"):
+    loaded = start(core, case, workflow)
     output = Path(loaded["output_dir"])
     (output / "result.txt").write_text("Professional result\n", encoding="utf-8")
     declaration = {
@@ -744,3 +744,56 @@ def test_direct_archive_cli_records_its_exact_error_once(archive_core, client_ca
     assert len(sends) == 1
     assert sends[0]["response_sha256"] == digest(payload)
     assert sends[0]["unmapped"] is True
+
+
+def test_finalize_previews_actual_nested_outputs_before_sealing(
+    archive_core, client_case
+):
+    from archive_report_store import RunStore, digest
+
+    loaded, output, declaration = result_case(
+        archive_core, client_case, "journal-bank-reconciliation"
+    )
+    nested = output / "schedules"
+    nested.mkdir()
+    (nested / "matches.csv").write_text("invoice,amount\n", encoding="utf-8")
+    ids = (client_case.client_id, client_case.engagement_id, loaded["run"]["run_id"])
+    args = dict(zip(("client_id", "engagement_id", "run_id"), ids))
+    reply = _mcp_tool(
+        "finalize_studio_client_workflow", args, state_dir=client_case.state_dir
+    )
+    assert not reply.get("isError"), reply
+    preview = reply["structuredContent"]
+    assert preview["status"] == "declaration_preview"
+    assert preview["output_paths"] == ["result.txt", "schedules/matches.csv"]
+    root = Path(loaded["run_root"])
+    assert not (root / "artifact_manifest.json").exists()
+    sends = [
+        event
+        for event in RunStore(root).events()
+        if event.get("channel") == "archive_declaration_preview"
+    ]
+    assert [event["response_sha256"] for event in sends] == [digest(preview)]
+    # Relative names may themselves carry client information. Do not claim
+    # known source-cell lineage for arbitrary names.
+    assert sends[0]["unmapped"] is True
+    nested_declaration = {
+        **declaration,
+        "artifact_id": "matches",
+        "path": preview["output_paths"][1],
+        "purpose": "Matched entries",
+        "media_type": "text/csv",
+    }
+
+    sealed_reply = _mcp_tool(
+        "finalize_studio_client_workflow",
+        {**args, "artifacts": [declaration, nested_declaration]},
+        state_dir=client_case.state_dir,
+    )
+
+    assert not sealed_reply.get("isError"), sealed_reply
+    sealed = sealed_reply["structuredContent"]
+    assert sealed["status"] == "ready_for_review"
+    assert {"result.txt", "schedules/matches.csv"} <= {
+        item["path"] for item in sealed["artifact_manifest"]["artifacts"]
+    }

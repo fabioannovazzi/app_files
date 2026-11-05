@@ -83,7 +83,7 @@ jobs:
       - name: Verify that exactly one review opens and only relevant controls are visible
         env:
           VERA_REVIEW_SCREENSHOTS: /tmp/vera-review-screenshots
-        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py tests/plugins/test_clara_report_browser.py tests/plugins/test_lucia_method_browser.py tests/plugins/test_lucia_matter_browser.py tests/plugins/test_vera_management_results_browser.py
+        run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py tests/plugins/test_clara_report_browser.py tests/plugins/test_lucia_method_browser.py tests/plugins/test_lucia_matter_browser.py tests/plugins/test_vera_management_results_browser.py tests/plugins/test_native_review_final_affordances_browser.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

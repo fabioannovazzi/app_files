@@ -140,3 +140,47 @@ learner, external-service or installed-host acceptance. Final-package Desktop
 rechecks and exact-head CI/deployment are separate remaining gates.
 
 Clara is bumped to 0.1.378 because its onboarding source-review binding changes with the compiled source catalogue, even though its native report and course UI code are unchanged.
+
+
+## Current-package Desktop inspection, 5 November
+
+All remaining 46 entry panels were individually read in the actual Codex MCP
+Apps surface, using Vera 0.1.565, Clara 0.1.378 and Lucia 0.1.204. Together with
+the corrected Lucia intake inspected on 4 November this covers all 47 entries.
+The inspection timeout was avoided by foregrounding this chat and using
+accessibility snapshots and ordinary controls after each host request completed.
+No font/computed-style probes, screenshot capture, repeated restart request,
+authorization changes, or alternate host-control route were used.
+
+The course invitations for all three products, the optional subscriptions panel
+and the acquisition plan were visibly present. No course worker was started,
+subscription connected, acquisition launched, appointment saved, filing sent,
+professional acceptance recorded or other external action performed. Prepared,
+empty and read-only fixtures demonstrate those selected views only.
+
+Two actual visible defects were found and corrected: known INPS output labels
+are now readable Italian document names, while authored fact labels remain
+verbatim; and variance preparation disables save/calculation for read-only
+users, requiring a complete choice and renewed confirmation before calculation.
+These are presentation/affordance changes. Backend authorization, immutable
+source identities, receipt checks, calculations, source/model boundaries and
+all saved professional decisions remain unchanged. Focused real-MCP browser
+regressions cover the two defects and preserve all original output bytes.
+
+Main 383bb4f was integrated, preserving its bank CSV acquisition workflow,
+course-completion reporting, Archive/dependency incident fixes and Windows
+snapshot/startup repair. The bank skill operates through the existing browser
+and chat and adds no duplicate native editor. Historical privacy and course
+reviews retain their original evidence scope; refreshed hashes require fresh
+exact-head release CI. Final packages, deployment and corrected-view Desktop
+verification are recorded as separate gates rather than inferred here.
+
+
+Both corrected views were re-opened in actual Desktop: INPS owned output names
+are readable and the read-only variance actions are disabled. Every shipped UI
+asset in candidates Vera 0.1.573, Clara 0.1.382 and Lucia 0.1.208 is byte-identical
+to the assets inspected in Desktop (including the explicitly recorded Vera audit
+asset refresh). All 12 finished-package MCP browser checks passed. The audit
+backend process for the last two Desktop views was still 0.1.565; final backend
+package tests, installation and production deployment retain separate evidence.
+All three products built successfully for Codex, Cowork and Antigravity.

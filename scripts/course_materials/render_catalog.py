@@ -10,7 +10,7 @@ import sys
 from pathlib import Path
 
 from build_catalog import ROOT, _eligible, build
-from course_start import add_course_start
+from course_start import add_course_start, course_indicator, status_assets
 from get_started import render_introduction
 from remote_files import withdrawn_public_lesson
 
@@ -47,7 +47,12 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         "OFL.txt",
     ):
         shutil.copyfile(assets / name, destination / name)
-    for name in ("course-start.css", "course-start.js"):
+    for name in (
+        "course-start.css",
+        "course-start.js",
+        "course-status.css",
+        "course-status.js",
+    ):
         shutil.copyfile(Path(__file__).parent / name, destination / name)
     from scripts.vera_ui_theme import THEME_PATH, theme_course_page
 
@@ -143,11 +148,30 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
                     f'<a href="{html.escape(target, quote=True)}" lang="{language}">{LANGUAGE_NAMES[language]}</a>'
                 )
             title = html.escape(entry["titles"][default_language])
+            if product == "vera":
+                title += course_indicator(workflow)
             goal = html.escape(entry["goals"][default_language])
             groups[entry["group"]].append(
                 f'<tr><td>{title}</td><td>{goal}</td><td>{" · ".join(links)}</td></tr>'
             )
         content = [f'<section id="{product}"><h2>{product.title()}</h2>']
+        if product == "vera":
+            content.append(
+                "<p>Il cerchio indica i completamenti registrati per ciascun corso, in tutte le lingue. Ogni computer conta una volta.</p>"
+                '<div class="course-legend">'
+                + "".join(
+                    f'<span><i class="course-key" data-level="{level}" aria-hidden="true"></i> {label}</span>'
+                    for level, label in (
+                        ("untried", "Nessuno registrato"),
+                        ("completed", "Completato, computer non classificato"),
+                        ("agent", "Computer di test"),
+                        ("tried", "1–2 computer di professionisti"),
+                        ("repeated", "3 o più computer di professionisti"),
+                        ("unknown", "Stato non disponibile"),
+                    )
+                )
+                + "</div>"
+            )
         for group, label in (
             ("workflow", "Flussi di lavoro"),
             ("supporting_task", "Operazioni di supporto al nuovo cliente"),
@@ -176,8 +200,10 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
     document = (
         '<!doctype html><html lang="it"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
-        "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'\">"
-        '<title>Lezioni per usare Vera, Clara e Lucia</title><link rel="stylesheet" href="course.css"></head><body>'
+        "<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'self'; connect-src 'self'; style-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'\">"
+        '<title>Lezioni per usare Vera, Clara e Lucia</title><link rel="stylesheet" href="course.css">'
+        + status_assets("")
+        + "</head><body>"
         '<header class="masthead"><b>Vera · Clara · Lucia</b><span>Materiali delle lezioni</span></header><main>'
         '<div class="hero"><h1>Lezioni per usare i flussi di lavoro</h1>'
         '<p class="lead">Per ogni funzione: i file da fornire, una richiesta di esempio, i passaggi, '

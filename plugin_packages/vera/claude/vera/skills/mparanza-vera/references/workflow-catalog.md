@@ -150,6 +150,16 @@ Ordinary work requires no paid database or connection setup.
   reconcile, review, validate, or export an individual Italian OIC civil-law
   annual financial statement; XBRL is an output, not the workflow identity.
 - `mparanza-agenzia-acquisition`: acquire Agenzia invoices, corrispettivi and quarterly stamp-duty evidence for selected delegated clients; review exceptions, resume verified originals and prepare an explicitly reviewed F24 working paper. Uses one local visible-Chrome worker with optional native panel; no payment or fiscal submission.
+`bank-csv-download` downloads original bank movement CSVs through the current
+  host's computer use and existing 1Password extension. The operator chooses
+  their model, bank/portal, client/account and period in their own conversation.
+  No separate package, project, API subscription or recorded capability is
+  required. Preserve originals and distinguish file retention from verified
+  account/period coverage. Bank acceptance remains to be established on real
+  authenticated portals; missing prior bank tests do not block an authorized
+  attempt. Read `../../mparanza-bank-csv-download/SKILL.md` before generic browser work.
+  This direct acquisition route has no authored teaching kit yet; a request to
+  download CSVs is ordinary work, not a tutorial.
 - `mparanza-browser-automation`: inspect, explain or edit a supplied sanitized developer pack or capability JSON, and run packaged local evidence/capability pipelines through the managed Python launcher. Live browser discovery, execution and replay validation are unavailable in this package. Do not operate authenticated websites or claim that local pipeline checks prove live validation.
 - `mparanza-vouching`: compare a qualified Journal Sampling population with
   FatturaPA XML or supporting PDFs using exact evidence bindings.

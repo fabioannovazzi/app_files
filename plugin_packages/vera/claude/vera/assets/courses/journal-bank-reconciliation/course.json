@@ -104,7 +104,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "3bc36113474e18da32034e6442cfddeaeabd6c11de5f425305f29cf287329d00"
+      "sha256": "ef9b2d99aa988ee35721f371bdb26a94218e8a5a8a132aa151e07adfae736cc8"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -613,5 +613,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "d56aed7141711262c38739e63ef98f881664ac90203ef440b8b9f7098128963d"
+  "canonical_course_sha256": "1af34858826195ed1a24c47e60ac818c3109adf3d7a0560d885fa412f92d666d"
 }

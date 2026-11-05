@@ -229,6 +229,47 @@ def test_missing_inventory_entry_reports_no_arbitrary_filename_or_contents(
     assert str(tmp_path) not in payload
 
 
+def test_preparation_os_error_reports_verified_frames_and_numeric_facts_without_paths(
+    tmp_path, monkeypatch
+):
+    root, _ = installed_copy(tmp_path)
+    store, _ = transport(tmp_path, monkeypatch)
+    module = entrypoint(root, "verified_execution.py", monkeypatch)
+    private_filename = str(tmp_path / "private-personal-name" / "missing-reference.md")
+
+    def missing_file(path):
+        error = FileNotFoundError(2, "private synthetic diagnostic", private_filename)
+        error.winerror = 3
+        raise error
+
+    monkeypatch.setattr(module, "_inventory", missing_file)
+
+    result = module.main(["--module", "journal-sampling"])
+
+    assert result == 1
+    report = store.queue()[0]["reports"][0]
+    diagnostic = report["diagnostics"][0]
+    assert report["capture_state"] == "complete"
+    assert diagnostic["error_code"] == "execution.preparation-exception"
+    assert diagnostic["errno"] == 2
+    assert diagnostic["technical_facts"] == {
+        "winerror": 3,
+        "failed_path_characters": len(private_filename),
+    }
+    assert {frame["function"] for frame in diagnostic["technical_frames"]} == {
+        "main",
+        "prepare_execution_root",
+    }
+    assert all(
+        frame["file"] == "scripts/verified_execution.py"
+        for frame in diagnostic["technical_frames"]
+    )
+    payload = json.dumps(report)
+    assert "private-personal-name" not in payload
+    assert "private synthetic diagnostic" not in payload
+    assert str(tmp_path) not in payload
+
+
 def test_execution_instructions_require_automatic_reporting_without_consent_gate():
     text = (
         ROOT / "plugins/vera/skills/vera/references/execution-recovery.md"

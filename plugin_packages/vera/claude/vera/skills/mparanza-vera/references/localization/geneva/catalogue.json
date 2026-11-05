@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/clara-lucia-native-ui/plugins/vera",
-  "version": "0.1.565",
-  "captured_at": "2026-11-04T18:41:17.903090+00:00",
-  "catalogue_fingerprint": "7510dd6ec72b008d73e27d78c6bbafdf435a4678c543ab013a3b5e2028d5c451",
-  "manifest_sha256": "62bb684799761eb90eff430c47e6bb303e161d3a12044cd5d08a31842447703e",
+  "version": "0.1.573",
+  "captured_at": "2026-11-05T07:12:48.161559+00:00",
+  "catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
+  "manifest_sha256": "8e839b3cfe061805e3fc27fd912a543a2c9356400b1017b99bb729d08ec7c18a",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -40,6 +40,11 @@
       "function_id": "bandi-agevolazioni",
       "skill_path": "skills/bandi-agevolazioni/SKILL.md",
       "sha256": "f72c65d9f99ba5c76bf737dbfef38b243deb2e6aecf43cb9556945d8a1855d0c"
+    },
+    {
+      "function_id": "bank-csv-download",
+      "skill_path": "skills/bank-csv-download/SKILL.md",
+      "sha256": "4eca6f8badac97a34faedea65daa2eaf0fcc3d5812b712b3de17efe2dd38020c"
     },
     {
       "function_id": "bilancio-oic",
@@ -269,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "fca910576662be77c38d7ff3210ac716a2121336b8b3bfb1b295846a2781e8e0"
+      "sha256": "0b40752500497171fc3cbff796408de31afd1448e297859aa3fd494d22f1145a"
     },
     {
       "function_id": "vouching",

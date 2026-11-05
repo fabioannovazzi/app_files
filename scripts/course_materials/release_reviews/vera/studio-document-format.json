@@ -195,7 +195,12 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "f7bc91fb0a22d7805cf3b68db3e880c9ac6c8024bc094c985b9458a544c12c7d",
+  "course_dependency_review_20261104": {
+    "current_course_sha256": "3c23a070203e80ba40c8492f26380b5ee6a2ecb30b3dad43cd70cdd764db59f8",
+    "previous_course_sha256": "274942bb7642543394ef5476e1b53bb73aa8d2734e95e68289658e5b46c8458e",
+    "review": "Only the source dependency list changed. The course text, exercises and localized materials match the current main release. All ten demo and practice execution tests passed across the five supported languages."
+  },
+  "course_sha256": "cccdbdf8c209b89146d57763cd65aef5f7a5f0f6ca63c13ae4676d9c8ac9e280",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -258,6 +263,18 @@
     "review_scope": "Reviewed source compatibility for unchanged authored lessons and exact inputs after additive negotiation routing, shared Archive registration and local helper packaging. Fresh native execution against each new course digest remains required. Historical locale/editorial/artifact judgments retain their scope; no new learner, visual, installed-host or professional acceptance claimed.",
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
+  "incident_archive_binding_20261104": {
+    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope.",
+    "current_course_sha256": "274942bb7642543394ef5476e1b53bb73aa8d2734e95e68289658e5b46c8458e",
+    "prior_course_sha256": "a2cd85adc723c4a0cef9d6be542aa65b654a8a322ffdb00408bd05d535948bd2"
+  },
+  "integrated_native_ui_source_binding_20261105": {
+    "base": "383bb4f2426411c83e95cf88af787644b11e9330",
+    "current_course_sha256": "cccdbdf8c209b89146d57763cd65aef5f7a5f0f6ca63c13ae4676d9c8ac9e280",
+    "previous_course_sha256": "0eccc569605af7631766bbe87afc3ad5060c6a96d13c80803993e46806c1e15e",
+    "reviewed_at": "2026-11-05T07:14:27.054128+00:00",
+    "scope": "Every compiled lesson field apart from source identities is identical to current main. Preserve main and branch historical editorial and artifact judgments. Source changes provide shared native UI, translated owned labels, receipt-bound native controls and read-only affordances. Main incident, Archive, Windows and course-completion changes are retained. No new live learner or professional acceptance claimed. Fresh exact-digest native teaching CI remains required."
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -895,6 +912,14 @@
     "reviewed_at": "2026-10-18",
     "reviewer": "Codex source inspection and exact course comparison",
     "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest."
+  },
+  "windows_course_main_integration_source_review_20261104": {
+    "baseline_commit": "2c3669d45a85e9fab4cf96200fdc202c99c6819c",
+    "current_course_sha256": "0eccc569605af7631766bbe87afc3ad5060c6a96d13c80803993e46806c1e15e",
+    "prior_course_sha256": "3c23a070203e80ba40c8492f26380b5ee6a2ecb30b3dad43cd70cdd764db59f8",
+    "reviewed_at": "2026-11-04T23:43:14.291503+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Complete compiled course objects equal integrated main except source inventories. Preserve authored/localized teaching text, input definitions and historical editorial/artifact judgments. Fresh native CI must execute this digest; source compatibility is not learner, customer or professional acceptance."
   },
   "work_continuity_source_binding_20261027": {
     "authored_content_unchanged": true,

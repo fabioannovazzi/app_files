@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const { randomUUID } = require("node:crypto");
 const archiveSessionId = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.env.CODEX_THREAD_ID || randomUUID();
 const path = require("node:path");
+const os = require("node:os");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 
@@ -603,7 +604,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.finalizeWorkflow,
       title: "Finalize Vera workflow artifacts",
       description:
-        "Finalize the professional outputs of one exact Archive run and mark them ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
+        "First omit artifacts to list the professional output paths actually present in this run. Use those paths to prepare explicit declarations, then submit them to mark the outputs ready for review. Every run of the 13 selected pipelines retains its local privacy report, with missing measurements explicit. The completed, failed or cancelled Archive write closes the report and registers its hash against the Vera userID. Declare professional outputs with purpose, audience and media type; Archive includes its report artifacts automatically. Before completion, correct declaration metadata by passing the returned declaration_sha256 as expected_declaration_sha256. File identities and bytes remain sealed; prior receipts remain available to existing handoffs.",
       inputSchema: objectSchema(
         {
           ...runIdentityProperties(),
@@ -633,7 +634,7 @@ function toolDefinitions() {
             ),
           },
         },
-        ["client_id", "engagement_id", "run_id", "artifacts"],
+        ["client_id", "engagement_id", "run_id"],
       ),
       annotations: annotations(false),
     },
@@ -921,21 +922,31 @@ function toolDefinitions() {
 }
 
 function pythonExecutable() {
+  const interpreter = process.platform === "win32" ? "Scripts/python.exe" : "bin/python";
+  const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
+    : path.join(os.homedir(), ".local/share/mparanza/runtime"));
   const candidates = [
     process.env.VERA_STUDIO_ARCHIVE_PYTHON,
+    path.join(runtimeRoot, "venv", interpreter),
     process.env.PYTHON,
     process.env.VIRTUAL_ENV
-      ? path.join(process.env.VIRTUAL_ENV, "bin", "python")
+      ? path.join(process.env.VIRTUAL_ENV, interpreter)
       : "",
-    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", "bin", "python"),
-    "python3",
-    "python",
+    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", interpreter),
+    ...(process.platform === "win32" ? ["python", "python3", "py"] : ["python3", "python"]),
   ].filter(Boolean);
-  for (const candidate of candidates) {
+  for (const candidate of new Set(candidates)) {
     if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
-    return candidate;
+    // Probe the actual interpreter, not the presence of a PATH alias. This
+    // avoids ENOENT/Store aliases hiding an already working managed Python.
+    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+      encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
+    });
+    if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
   }
-  return "python3";
+  // Preserve the caller's actual spawn-error/reporting path if none can run.
+  return process.platform === "win32" ? "python" : "python3";
 }
 
 function workerArguments(command) {
@@ -1555,6 +1566,7 @@ function commandForTool(name, rawArgs) {
       }
       command.push("--expected-declaration-sha256", args.expected_declaration_sha256);
     }
+    if (args.artifacts === undefined && args.expected_declaration_sha256 === undefined) return command;
     if (
       !Array.isArray(args.artifacts) ||
       args.artifacts.length < 1 ||

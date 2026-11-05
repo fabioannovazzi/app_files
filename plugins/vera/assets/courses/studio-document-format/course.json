@@ -495,7 +495,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "604490a419b5ff405fcf1f056e2d9a95d15e2333798cc5310fcf0ac2ff83247b"
+      "sha256": "41d9eba695257b582a0486324a6149de31138d4af3eadf54aaa348a67e8da9a8"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -560,7 +560,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "eb636ff7d78f797e917907c19b207163467a4f4fa15d559fa87daf1ae4e035e3"
+      "sha256": "a3a9ec199b5310329b0c40ecf61c41d57bef88ed299e7a02f2ff297d478c5253"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -678,6 +678,66 @@
       "sha256": "205ebcafba5262fb349e63f45781f932a24e3d12971382139c22ba8b1b102742"
     },
     {
+      "path": "scripts/archive_cli.py",
+      "repository_path": "plugins/vera/scripts/archive_cli.py",
+      "sha256": "e96d672fd62106622063a78f47c416ec35fa74bf16f6cdaa3ac7d4c49c4664f7"
+    },
+    {
+      "path": "scripts/archive_emit.py",
+      "repository_path": "plugins/vera/scripts/archive_emit.py",
+      "sha256": "e6af4a0b8ac814638f85541cd18d9841760ca7f0410e8039256b92521c72416a"
+    },
+    {
+      "path": "scripts/archive_projection.py",
+      "repository_path": "plugins/vera/scripts/archive_projection.py",
+      "sha256": "96dfa605cce28df808400ab76dab98cd3c27d7ae7fd71c343ea56dd8f7b3027c"
+    },
+    {
+      "path": "scripts/archive_report_legacy.py",
+      "repository_path": "plugins/vera/scripts/archive_report_legacy.py",
+      "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e"
+    },
+    {
+      "path": "scripts/archive_report_measurements.py",
+      "repository_path": "plugins/vera/scripts/archive_report_measurements.py",
+      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
+    },
+    {
+      "path": "scripts/archive_report_receipt.py",
+      "repository_path": "plugins/vera/scripts/archive_report_receipt.py",
+      "sha256": "d4b7cdad03bf1745632cd96087bbf352b89633d442d9ba32f606a85f1cd5662c"
+    },
+    {
+      "path": "scripts/archive_report_seal.py",
+      "repository_path": "plugins/vera/scripts/archive_report_seal.py",
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b"
+    },
+    {
+      "path": "scripts/archive_report_store.py",
+      "repository_path": "plugins/vera/scripts/archive_report_store.py",
+      "sha256": "71b343484ce0dad7b426449c0d3038cb324dbd8ea3d45b44658e9e7e51fcdff5"
+    },
+    {
+      "path": "scripts/archive_reporting.py",
+      "repository_path": "plugins/vera/scripts/archive_reporting.py",
+      "sha256": "8685fcef4d35e040746b5662354b33e6b14f3b3d4b768a50753500cb7301de25"
+    },
+    {
+      "path": "scripts/archive_reporting_failure.py",
+      "repository_path": "plugins/vera/scripts/archive_reporting_failure.py",
+      "sha256": "3705b3118295be6c25f125560baf1db7312c4c83e5d41cdff6f3cb661c893f5f"
+    },
+    {
+      "path": "scripts/course_completion.py",
+      "repository_path": "plugins/vera/scripts/course_completion.py",
+      "sha256": "0b3766dec28a52884deb523931fb7c8ca24bc5860490aa19e7281373617630b0"
+    },
+    {
+      "path": "scripts/diagnostic_context.py",
+      "repository_path": "plugins/vera/scripts/diagnostic_context.py",
+      "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
+    },
+    {
       "path": "scripts/local_courses.py",
       "repository_path": "plugins/vera/scripts/local_courses.py",
       "sha256": "eb40ea38fdff4b970221d68b250467c774c08d6b5f1e3b6087bb3a9e1efea039"
@@ -685,12 +745,42 @@
     {
       "path": "scripts/local_onboarding.py",
       "repository_path": "plugins/vera/scripts/local_onboarding.py",
-      "sha256": "8f0d37ed1be7637a8fe281cadfb793e6fa9f277f86f972406b489797c06f5688"
+      "sha256": "b2e5428bf3a2697f3cc5886f822efb77cdbb4db39ee3c2c8e617804441b0b8fb"
+    },
+    {
+      "path": "scripts/model_data_report.py",
+      "repository_path": "plugins/vera/scripts/model_data_report.py",
+      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
+    },
+    {
+      "path": "scripts/notarized_run_receipt.py",
+      "repository_path": "plugins/vera/scripts/notarized_run_receipt.py",
+      "sha256": "7b32e58c31df7fdbe875407f370e709a14ec4a2d7456b9f75d0eea91c8ccb89b"
+    },
+    {
+      "path": "scripts/operational_incidents.py",
+      "repository_path": "plugins/vera/scripts/operational_incidents.py",
+      "sha256": "132798f1fd83c607ee91bcac93364ac8dd9cb360b7f91f6300d8d4e24bb9105e"
+    },
+    {
+      "path": "scripts/selective_reporting.py",
+      "repository_path": "plugins/vera/scripts/selective_reporting.py",
+      "sha256": "3c99afa7d416625bd94d1dc0aab41ea354df662f0362098f3b431a57fecba8ba"
     },
     {
       "path": "scripts/studio_document_format.py",
       "repository_path": "plugins/vera/scripts/studio_document_format.py",
       "sha256": "6925c6bbc8b10708a4c4a7fd65593311f5ecbbaca22828654e3d7a3509cea8f6"
+    },
+    {
+      "path": "scripts/verified_execution.py",
+      "repository_path": "plugins/vera/scripts/verified_execution.py",
+      "sha256": "6d6bc49b6075af24e28f36356959b4263ea00c71cbb0b33ab2a6c4beb0c8e3f6"
+    },
+    {
+      "path": "scripts/workflow_usage.py",
+      "repository_path": "plugins/vera/scripts/workflow_usage.py",
+      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
     },
     {
       "path": "skills/studio-document-format/SKILL.md",

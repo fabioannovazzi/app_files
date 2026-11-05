@@ -129,7 +129,7 @@
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "a269afc6c7e6474a22560a84320916e85d49943d5c17db92e6e211740bee3f92"
+      "sha256": "83bbd93573cc80bfd4fba4cb84976ad9fac01f45bdd3baf2c09e258b8ffb2a92"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/references/geneva.md",
