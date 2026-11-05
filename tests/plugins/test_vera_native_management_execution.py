@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import importlib
 import json
+import os
 from pathlib import Path
 
 import pytest
@@ -77,7 +78,12 @@ def management_run(tmp_path, monkeypatch, request):
     configure(monkeypatch, tmp_path, [binding])
     api = workspace_module()
     service = importlib.import_module("native_management_execution")
-    root = api.module_root("management-control-pack")
+    package = os.environ.get("VERA_REVIEW_PACKAGE_ROOT")
+    root = (
+        Path(package) / "modules/management-control-pack"
+        if package
+        else api.module_root("management-control-pack")
+    )
 
     def call(action, args=None):
         return service.dispatch(

@@ -28,11 +28,7 @@
   "sources": [
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
-      "sha256": "58bcd5539c1e441c1614ead99b4808cccd20f90b1e6e704b75e423dc7f355fa4"
-    },
-    {
-      "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
-      "sha256": "c24a7b0d1470c1e864ee47773504727012e437ea0b9be75eca087ca41b4ba5f0"
+      "sha256": "6ca41a374850637e684fb1a3e17d0bfe0764e88f1e5aeb9d6cd2d0a41a06f205"
     },
     {
       "path": "modules/apertura-pratica/assets/icon.svg",
@@ -40,7 +36,7 @@
     },
     {
       "path": "modules/apertura-pratica/references/display-labels.json",
-      "sha256": "22e8344797b3c7ddc79195ad2fd1f1b78ed38ee0bec9c53ee17ad7956f975cce"
+      "sha256": "ddff2e0705a44574a597d0d6692931efb1bd182061fedc9c3733d2d09953509d"
     },
     {
       "path": "modules/apertura-pratica/references/source-registry.json",
@@ -64,7 +60,7 @@
     },
     {
       "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
-      "sha256": "5556386446c54b74e524f7c74cde2af2b9a6465dc8f025c86262d78c4176464f"
+      "sha256": "0b81d5b398ab18c853e7c231631b8a788240a6fb44cc842950946915f99e694a"
     },
     {
       "path": "modules/apertura-pratica/scripts/apertura_pratica_display.py",
@@ -87,16 +83,12 @@
       "sha256": "6010c6e679e9b979bcb90db57cdee86271e9c38731f6fee2e7714051f7895f02"
     },
     {
-      "path": "modules/apertura-pratica/scripts/review_server.py",
-      "sha256": "f27d6e0d4c4934272cd3e5c3034765aac1b390774637f626d79d24c736798a8d"
-    },
-    {
       "path": "modules/apertura-pratica/scripts/validate_run.py",
       "sha256": "0bc0b15ddbddd9902e39177797e8bbf6d428f0f5d736eca2e1b9bde068b83235"
     },
     {
       "path": "modules/apertura-pratica/skills/mparanza-apertura-pratica/SKILL.md",
-      "sha256": "5a06475675a0012d86008b3c7e63e48e8c247e50ac83e6af209e5340e25cbb39"
+      "sha256": "8012c7bd66b3d7e1e49b3a918535aad01295b675169e725d8553488d5d65b400"
     },
     {
       "path": "modules/apertura-pratica/skills/mparanza-apertura-pratica/agents/openai.yaml",
@@ -155,6 +147,14 @@
       "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
     },
     {
+      "path": "scripts/matter_mcp.cjs",
+      "sha256": "5183d4e700d82a71787c65a18a3517bf10f0855984948be629e73435beb53cb5"
+    },
+    {
+      "path": "scripts/matter_mcp.py",
+      "sha256": "46db246c53ac681a9c6c1ef0513c91b4db4386d99dbd987bf0ee9fc904caf177"
+    },
+    {
       "path": "scripts/model_data_report.py",
       "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
     },
@@ -180,7 +180,7 @@
     },
     {
       "path": "skills/mparanza-apertura-pratica/SKILL.md",
-      "sha256": "71c1dcd5f99e2e46d6a5edef57d1eeffc87cd419bf72f2e30baf975d1a378641"
+      "sha256": "2066c7608e0b7672eb21dbf0c45012e23174ece65905cbfa39a7570c550cb81e"
     },
     {
       "path": "vendor/modules/deal_redux/references/evidence-and-rounds.md",
@@ -577,5 +577,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a3e18cdf986911742613c7128ad41ce60a2e6b410a3f1e8c6242dafe91b3e3fd"
+  "canonical_course_sha256": "f2988f41505c3d84ea064939456a4af10db3592d6c36470e9e07c2dbdfc8365d"
 }

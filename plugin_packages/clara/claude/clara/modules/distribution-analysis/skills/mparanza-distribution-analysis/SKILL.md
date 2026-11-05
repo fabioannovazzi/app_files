@@ -183,23 +183,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module distr
 
 ## MCP Review Handoff
 
-After the deterministic run writes `distribution/review_payload.json`, prefer
-the local MCP widget when the `distributionWidgets` server is available:
-
-1. Read `distribution/run_intake.json`, `distribution/review_payload.json`,
-   `distribution/ui_decisions.json`, and `distribution/final_artifacts.json`.
-2. Call `validate_distribution_review` with the review payload and optional
-   intake/decision/final-artifact objects.
-3. If validation succeeds, call `render_distribution_review` with the same
-   payload so Claude can show the HTML review widget.
-4. Use `save_distribution_decisions` to persist reviewer actions to
-   `ui_decisions.json`, then `apply_distribution_decisions` to write
-   `applied_decisions.json` and update `final_artifacts.json` status.
-5. If MCP rendering is unavailable, fall back to a concise Markdown/chat review
-   based on `review_payload.json`; do not block the deterministic run.
-
-Use the UI handoff to review the generated chart/report package. Continue to
-write the client interpretation from structured source data and reviewed facts.
+Review the professional result in chat and its normal charts/reports. Preserve exact-version validation, explicit decisions, save/apply and regeneration requirements. No metadata inspector or standalone browser editor is shipped in this product.
 
 ## Recipe Rules
 

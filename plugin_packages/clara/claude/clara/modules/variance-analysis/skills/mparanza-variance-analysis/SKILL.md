@@ -290,36 +290,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module varia
 
 ## MCP Review Handoff
 
-After the deterministic run writes `variance/review_payload.json`, present a
-concise chat review with links to the actual charts, report, and workbook. Lead
-with the accounting conclusion, explain unresolved evidence, and ask for any
-material decisions in chat. Open the actual chart or report before discussing
-its contents. The current MCP widget is a metadata inspector: it does not
-preview charts or collect decisions, so do not send the user there to accept
-or edit the package.
-
-When the `varianceAnalysisWidgets` server is available, persist the user's
-explicit chat decisions through its tools:
-
-1. Read `variance/run_intake.json`, `variance/review_payload.json`,
-   `variance/ui_decisions.json`, and `variance/final_artifacts.json`.
-2. Call `validate_variance_analysis_review` once with the review payload and optional
-   intake/decision/final-artifact objects. For a managed Vera run, include the
-   current absolute `client_engagement` context path.
-3. Retain the returned expiring `persistence_token` for the subsequent save and
-   apply calls in the same MCP server process. Render the metadata inspector
-   with `render_variance_analysis_review` only when the user needs technical trace details.
-4. Use `save_variance_analysis_decisions` to persist reviewer actions to
-   `ui_decisions.json`, then `apply_variance_analysis_decisions` to write
-   `applied_decisions.json` and update `final_artifacts.json` status. Include
-   `client_engagement` for the initial managed validation. The token retains
-   that local binding for later calls in the same MCP server process.
-5. If MCP rendering is unavailable, fall back to a concise Markdown/chat review
-   based on `review_payload.json`; do not block the deterministic run.
-
-Use the linked chart/report files and explicit chat decisions for the review. Continue to
-write `codex_business_analysis.md` from the structured source pack and the
-reviewed facts.
+Review the professional result in chat and its normal charts/reports. Preserve exact-version validation, explicit decisions, save/apply and regeneration requirements. No metadata inspector or standalone browser editor is shipped in this product.
 
 ## Recipe Rules
 

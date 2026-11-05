@@ -17,6 +17,15 @@
       "args": [
         "./scripts/incident_host_mcp.cjs"
       ]
+    },
+    "claraReports": {
+      "title": "Clara · Budget e previsioni",
+      "description": "Apri il report interattivo verificato nel pannello locale.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/report_mcp.cjs"
+      ]
     }
   }
 }

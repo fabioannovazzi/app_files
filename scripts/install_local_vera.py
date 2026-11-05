@@ -1,4 +1,4 @@
-"""Stage and serialize a verified local Vera update through supported Codex commands.
+"""Stage and serialize a verified local product update through supported Codex commands.
 
 This updates only the selected local distribution. It does not publish anything.
 All cooperating installers must use this entrypoint; Codex's own UI/CLI does not
@@ -111,22 +111,25 @@ def install(
     expected_version: str,
     *,
     command: Callable = _codex,
+    product: str = "vera",
 ) -> dict[str, Any]:
     """Validate before replacing registration, verify selection, roll back failures."""
+    if product not in {"vera", "clara", "lucia"}:
+        raise ValueError("Unknown product")
     source = source.resolve()
     catalog = json.loads((source / ".agents/plugins/marketplace.json").read_text())
-    if catalog["name"] != "mp-vera" or len(catalog["plugins"]) != 1:
-        raise ValueError("Select the single-product mp-vera local distribution")
+    if catalog["name"] != f"mp-{product}" or len(catalog["plugins"]) != 1:
+        raise ValueError(f"Select the single-product mp-{product} local distribution")
     plugin = catalog["plugins"][0]
-    if plugin["name"] != "vera" or plugin["source"] != {
+    if plugin["name"] != product or plugin["source"] != {
         "source": "local",
-        "path": "./plugins/vera",
+        "path": f"./plugins/{product}",
     }:
-        raise ValueError("Local Vera source must be ./plugins/vera")
-    original = source / "plugins/vera"
+        raise ValueError(f"Local {product} source must be ./plugins/{product}")
+    original = source / f"plugins/{product}"
     metadata = json.loads((original / ".codex-plugin/plugin.json").read_text())
-    if metadata["name"] != "vera" or metadata["version"] != expected_version:
-        raise ValueError("The selected source is not the requested Vera version")
+    if metadata["name"] != product or metadata["version"] != expected_version:
+        raise ValueError(f"The selected source is not the requested {product} version")
     with execution_store_lock("install"):
         pinned = prepare_execution_root(original, None, shared=True)
         try:
@@ -149,7 +152,7 @@ def install(
                             }
                         )
                     )
-                    shutil.copytree(pinned, temporary / "plugins/vera")
+                    shutil.copytree(pinned, temporary / f"plugins/{product}")
                     target = temporary / ".agents/plugins/marketplace.json"
                     target.parent.mkdir(parents=True)
                     target.write_text(json.dumps(catalog, indent=2) + "\n")
@@ -163,10 +166,10 @@ def install(
             ):
                 raise ValueError("Staged local catalog changed")
             verified = prepare_execution_root(
-                staged / "plugins/vera", None, shared=True
+                staged / f"plugins/{product}", None, shared=True
             )
             release_execution_root(verified)
-            if execution_package_id(staged / "plugins/vera") != digest:
+            if execution_package_id(staged / f"plugins/{product}") != digest:
                 raise ValueError("Staged local package changed")
             previous = _source(command, catalog["name"])
             switched = previous != staged
@@ -179,22 +182,22 @@ def install(
                     raise ValueError(
                         "Codex selected another local source; installation was not started"
                     )
-                installed = command(["add", "vera@mp-vera"])
+                installed = command(["add", f"{product}@mp-{product}"])
                 current = command(["list"])["installed"]
                 enabled = [
                     entry
                     for entry in current
-                    if entry.get("name") == "vera"
+                    if entry.get("name") == product
                     and entry.get("enabled")
                     and entry.get("installed")
                 ]
                 if (
                     len(enabled) != 1
-                    or enabled[0].get("pluginId") != "vera@mp-vera"
+                    or enabled[0].get("pluginId") != f"{product}@mp-{product}"
                     or enabled[0].get("version") != expected_version
                 ):
                     raise ValueError(
-                        "Enabled Vera installation differs from the requested release"
+                        "Enabled product installation differs from the requested release"
                     )
                 if _source(command, catalog["name"]) != staged:
                     raise ValueError("Local source changed during installation")
@@ -206,7 +209,7 @@ def install(
                         command(["marketplace", "remove", catalog["name"]])
                     if previous is not None:
                         command(["marketplace", "add", str(previous)])
-                        command(["add", "vera@mp-vera"])
+                        command(["add", f"{product}@mp-{product}"])
                 raise
             _collect_sources(
                 destination, {staged} | ({previous} if previous is not None else set())
@@ -225,17 +228,20 @@ def install(
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "source", type=Path, help="Extracted vera-codex-plugin distribution"
+        "source", type=Path, help="Extracted single-product Codex plugin distribution"
     )
     parser.add_argument(
         "--destination",
         type=Path,
         required=True,
-        help="Stable directory reserved for managed local Vera sources",
+        help="Stable directory reserved for this product’s managed local sources",
     )
     parser.add_argument("--expected-version", required=True)
+    parser.add_argument("--product", choices=("vera", "clara", "lucia"), default="vera")
     args = parser.parse_args()
-    result = install(args.source, args.destination, args.expected_version)
+    result = install(
+        args.source, args.destination, args.expected_version, product=args.product
+    )
     sys.stdout.write(json.dumps(result, indent=2) + "\n")
     return 0
 

@@ -9,7 +9,7 @@ from tests.plugins.test_vera_native_workspace import NODE, ROOT
 
 __all__ = []
 
-CONFIRM = "Confermo questo passaggio sul sito e sui record correnti. Preparare un pacchetto o un collegamento non pubblica il sito"
+CONFIRM = "Confermo questo passaggio sul sito e sui dati correnti. Preparare un pacchetto o un collegamento non pubblica il sito"
 
 
 def events(body: str) -> dict:
@@ -76,7 +76,7 @@ const ui=fixture(source,{pending_operations:['uncertain-fictional-write']});awai
 """
     )
     assert result["disabled"] is True
-    assert "recupero nel workflow specialistico" in result["visible"]
+    assert "recupero nel percorso specialistico" in result["visible"]
     assert "Whole fictional site fact" in result["visible"]
     assert [row["name"] for row in result["calls"]] == ["vera_workspace_website_setup"]
 

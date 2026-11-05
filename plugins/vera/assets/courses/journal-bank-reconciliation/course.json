@@ -34,7 +34,7 @@
     {
       "path": "modules/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
       "repository_path": "plugins/journal-bank-reconciliation/assets/journal-bank-review-widget.html",
-      "sha256": "c05d26878b9e4b7d479863899603a9955ad31f3bf910631fc88c7699d93fce1f"
+      "sha256": "66fd8b5968e51eca20c987ffc5fa29919a44ce0a910c522b1b620f157e962ef4"
     },
     {
       "path": "modules/journal-bank-reconciliation/assets/review-workbench-adapter.json",

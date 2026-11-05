@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "product": "clara",
+  "removed_paths": [
+    "modules/distribution-analysis/assets/distribution-review-widget.html",
+    "modules/management-control-pack/scripts/preview_report.py",
+    "modules/mix-contribution-analysis/assets/mix-contribution-review-widget.html",
+    "modules/period-comparison/assets/period-comparison-review-widget.html",
+    "modules/scatter-bubble-analysis/assets/scatter-bubble-review-widget.html",
+    "modules/set-overlap-analysis/assets/set-overlap-review-widget.html",
+    "modules/variance-analysis/assets/variance-analysis-review-widget.html"
+  ],
+  "retained": "Output templates, calculations, validation and decision engines; useful controls use native app routes."
+}

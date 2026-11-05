@@ -73,7 +73,7 @@ def test_transformation_ui_uncertain_write_disables_repeat():
         "const ui=fixture(source,{pending_operations:['uncertain']});await ui.panel.open('fictional-transform');process.stdout.write(JSON.stringify({disabled:ui.button('Esegui e conserva il passaggio sintetico').disabled,visible:ui.text()}));"
     )
     assert result["disabled"] is True
-    assert "recupero nel workflow specialistico" in result["visible"]
+    assert "recupero nel percorso specialistico" in result["visible"]
     assert "Whole fictional finding" in result["visible"]
 
 

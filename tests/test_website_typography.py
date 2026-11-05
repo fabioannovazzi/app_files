@@ -23,7 +23,12 @@ INSTRUMENT_SANS_STYLESHEET = (
 def test_website_template_loads_instrument_sans(template_name: str) -> None:
     template = (ROOT / "templates" / template_name).read_text(encoding="utf-8")
 
-    assert INSTRUMENT_SANS_STYLESHEET in template
+    if template_name == "base.html":
+        assert INSTRUMENT_SANS_STYLESHEET in template
+    else:
+        assert "/static/shared/courses/InstrumentSans-Regular.ttf" in template
+        assert "https://fonts.googleapis.com" not in template
+        assert "https://fonts.gstatic.com" not in template
 
 
 def test_shared_app_css_applies_instrument_sans_to_native_controls() -> None:

@@ -29,12 +29,12 @@
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review-widget.html",
-      "sha256": "58bcd5539c1e441c1614ead99b4808cccd20f90b1e6e704b75e423dc7f355fa4"
+      "sha256": "6ca41a374850637e684fb1a3e17d0bfe0764e88f1e5aeb9d6cd2d0a41a06f205"
     },
     {
       "path": "modules/apertura-pratica/assets/apertura-pratica-review.html",
       "repository_path": "plugins/apertura-pratica/assets/apertura-pratica-review.html",
-      "sha256": "c24a7b0d1470c1e864ee47773504727012e437ea0b9be75eca087ca41b4ba5f0"
+      "sha256": "7099de6b3bfe3e198e924a73ce07d0d0a5eebb58a1e6cfcb6494b3ccbf9ccc5f"
     },
     {
       "path": "modules/apertura-pratica/assets/icon.svg",
@@ -44,7 +44,7 @@
     {
       "path": "modules/apertura-pratica/references/display-labels.json",
       "repository_path": "plugins/apertura-pratica/references/display-labels.json",
-      "sha256": "22e8344797b3c7ddc79195ad2fd1f1b78ed38ee0bec9c53ee17ad7956f975cce"
+      "sha256": "ddff2e0705a44574a597d0d6692931efb1bd182061fedc9c3733d2d09953509d"
     },
     {
       "path": "modules/apertura-pratica/references/source-registry.json",
@@ -74,7 +74,7 @@
     {
       "path": "modules/apertura-pratica/scripts/apertura_pratica_core.py",
       "repository_path": "plugins/apertura-pratica/scripts/apertura_pratica_core.py",
-      "sha256": "313680fad95ede5d2cb8a2df35edaeeaf71bc5a5220048be31e5194db2263d3e"
+      "sha256": "c8154ba4ee146b7e5c6f53a816f75920752ee2a6859a9a8fb92d30e099f5259e"
     },
     {
       "path": "modules/apertura-pratica/scripts/apertura_pratica_display.py",
@@ -104,7 +104,7 @@
     {
       "path": "modules/apertura-pratica/scripts/review_server.py",
       "repository_path": "plugins/apertura-pratica/scripts/review_server.py",
-      "sha256": "f27d6e0d4c4934272cd3e5c3034765aac1b390774637f626d79d24c736798a8d"
+      "sha256": "4e923aaa77f1254bc84f2944259a75fe1881597f88aaac2b45a5fd980d68b17a"
     },
     {
       "path": "modules/apertura-pratica/scripts/validate_run.py",
@@ -187,6 +187,16 @@
       "sha256": "60583a020186eb9baef9000f9974694d1ee9207d035742200a682f57591ad153"
     },
     {
+      "path": "scripts/matter_mcp.cjs",
+      "repository_path": "plugins/lucia/scripts/matter_mcp.cjs",
+      "sha256": "5183d4e700d82a71787c65a18a3517bf10f0855984948be629e73435beb53cb5"
+    },
+    {
+      "path": "scripts/matter_mcp.py",
+      "repository_path": "plugins/lucia/scripts/matter_mcp.py",
+      "sha256": "46db246c53ac681a9c6c1ef0513c91b4db4386d99dbd987bf0ee9fc904caf177"
+    },
+    {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/lucia/scripts/model_data_report.py",
       "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
@@ -219,7 +229,7 @@
     {
       "path": "skills/apertura-pratica/SKILL.md",
       "repository_path": "plugins/lucia/skills/apertura-pratica/SKILL.md",
-      "sha256": "b825165e100f105e50ea67f41b89e9ec650eccd03ea90a43c5b3bc08dfa3c601"
+      "sha256": "c4c0ff53e52a6abd38af00c2bf4b4864cc32eecfcbefd642c678e8ad78d390b4"
     },
     {
       "path": "vendor/modules/__init__.py",

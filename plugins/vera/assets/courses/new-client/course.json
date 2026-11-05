@@ -29,7 +29,7 @@
     {
       "path": "modules/client-file-preparation/assets/client-file-preparation-review-widget.html",
       "repository_path": "plugins/client-file-preparation/assets/client-file-preparation-review-widget.html",
-      "sha256": "652799fbefeb7ced7c8348f209ccc99ab5071d829a3817f5e0a1148bc9d63edf"
+      "sha256": "5b063478845e4b57d62f7a8dd433a083a1b26fddf3f799cf0f3b505d11df577b"
     },
     {
       "path": "modules/client-file-preparation/assets/icon.svg",
@@ -194,7 +194,7 @@
     {
       "path": "modules/new-client/assets/new-client-review-widget.html",
       "repository_path": "plugins/new-client/assets/new-client-review-widget.html",
-      "sha256": "dce79f4d5213548b6a9d7362493427b376b9859d7057be41e8dbdf1d83211453"
+      "sha256": "ea2db535f779914b6a261f5c75be26856608bec904e32dc80ad006fe7334a0ae"
     },
     {
       "path": "modules/new-client/assets/review-workbench-adapter.json",

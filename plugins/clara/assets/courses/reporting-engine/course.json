@@ -44,7 +44,7 @@
     {
       "path": "modules/reporting-engine/scripts/budget_report_preview.py",
       "repository_path": "plugins/clara/modules/reporting-engine/scripts/budget_report_preview.py",
-      "sha256": "204dc6e63c034948e85236d3f6ac9c47a4e5f738f368d0a587b52c2259243b49"
+      "sha256": "fa7668661b094590d62e39678f5dfa4cb39f07e355dcb8fbfd4ed095ef406a6e"
     },
     {
       "path": "modules/reporting-engine/scripts/check_compatibility.py",
@@ -252,6 +252,16 @@
       "sha256": "05f0d8e338742e9b04ba98f9e4af4ca336354aea7c40fc16579f177d2b10d4e2"
     },
     {
+      "path": "scripts/report_mcp.cjs",
+      "repository_path": "plugins/clara/scripts/report_mcp.cjs",
+      "sha256": "d279a1d47130b5bd8cff393aa9772ff7b2958fdd419c423845a590e347aafd75"
+    },
+    {
+      "path": "scripts/report_mcp.py",
+      "repository_path": "plugins/clara/scripts/report_mcp.py",
+      "sha256": "2f602685fdc76252f309a5e2da3b89d5b57a5480619d88963b3cc63b275a021a"
+    },
+    {
       "path": "scripts/selective_reporting.py",
       "repository_path": "plugins/clara/scripts/selective_reporting.py",
       "sha256": "3c99afa7d416625bd94d1dc0aab41ea354df662f0362098f3b431a57fecba8ba"
@@ -269,7 +279,12 @@
     {
       "path": "skills/reporting-engine/SKILL.md",
       "repository_path": "plugins/clara/skills/reporting-engine/SKILL.md",
-      "sha256": "d0ec923229e5ce8c0e477521c962988cbd51937cb1c13be3e12c67bbd6b0cc8a"
+      "sha256": "3aba7af89899eaea8d91857b58869d62dcf1c3c403cdabe491cbec6c766a9a43"
+    },
+    {
+      "path": "ui/report.html",
+      "repository_path": "plugins/clara/ui/report.html",
+      "sha256": "ca5413dce2df94d4004c47c18c3a9a37034ce2d71c55118c851814c8e65b451d"
     },
     {
       "path": "vendor/modules/__init__.py",

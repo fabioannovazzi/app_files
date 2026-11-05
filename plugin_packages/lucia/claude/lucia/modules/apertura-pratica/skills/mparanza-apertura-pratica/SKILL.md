@@ -96,15 +96,7 @@ facts produce explicit `partial` or `blocked` states.
    Legal/Tax Answer Review. When the package includes a separate substantive
    legal analysis, validate that analysis independently before attaching it.
 
-5. For a multi-item review, use the local workbench:
-
-   ```bash
-   python scripts/review_server.py <run-dir>
-   ```
-
-   The workbench persists `pending_review_decisions.json`. If it cannot run,
-   collect the same item decisions in chat and write a schema-equivalent JSON
-   file only after explicit user confirmation.
+5. Open the selected absolute run directory with `lucia_matter_open`. The native panel preserves pending decisions bound to the current intake. Saving does not apply decisions or accept the engagement. If unavailable, review the normal documents in chat and keep the UI check pending.
 
 6. Apply only decisions bound to the current intake:
 

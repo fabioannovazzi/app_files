@@ -28,9 +28,10 @@ Tutorials remain local-only and are excluded from task usage and ratings.
 # Istruzioni riutilizzabili dello studio
 
 Rendi modificabile il metodo dello studio senza chiedere all'avvocato di scrivere
-codice o JSON. L'editor è un file HTML autonomo: nessun server, neppure locale,
-nessuna API e nessuna connessione a Mike. Il modello della conversazione applica
-le istruzioni selezionate; il codice conserva la versione e prepara i campi.
+codice o JSON. Apri il pannello nativo «Istruzioni dello studio» con
+`lucia_method_open`. Il componente MCP locale salva versioni nella cartella scelta;
+non generare editor HTML autonomi o server di anteprima. Il modello applica le
+istruzioni quando la versione viene selezionata per un incarico.
 
 Il concetto di duplicare e personalizzare un procedimento è ispirato all'editor
 di [Mike](https://github.com/Open-Legal-Products/mike). Questo editor locale e il
@@ -45,16 +46,12 @@ separata dai fascicoli cliente e dalla directory del plugin. Non inserirvi dati 
 un cliente per comodità. Una configurazione già selezionata va aperta dal suo file;
 non sostituirla con l'esempio incorporato.
 
-```bash
-python scripts/legal_playbook.py editor --out /absolute/studio/istruzioni.html
-python scripts/legal_playbook.py editor --playbook /absolute/studio/nda-v2.json --out /absolute/studio/nda-editor.html
-```
-
-Usa solo il comando pertinente. Il primo parte da un esempio NDA dichiarato da
-adattare; non è una posizione già approvata dallo studio. Apri il file con la
-capacità dell'host consentita e verifica l'interfaccia. Se l'host blocca i file
-locali, consegna il file da aprire all'avvocato e dichiara la verifica UI ancora
-da fare; non introdurre un server per aggirare il limite.
+Chiama `lucia_method_open` con `directory` uguale al percorso assoluto della
+cartella dello studio già scelta. Per riaprire una versione usa anche `filename`,
+il nome del file in quella cartella. Senza `filename` viene caricato un esempio
+NDA dichiarato da adattare: non è una posizione approvata dallo studio. Verifica
+il pannello nel plugin; se l’host non lo rende disponibile, indica questa
+limitazione e prosegui nella chat senza creare un editor alternativo.
 
 L'avvocato modifica nome, obiettivo, tipo di lavoro, voci della tabella, domande,
 posizioni negoziali, fonti richieste, modello e formati. Ogni voce/domanda/requisito
@@ -62,10 +59,17 @@ ha una riga. Le posizioni ammettono testo e Markdown, mai codice eseguibile.
 Il campo modello è un nome o una descrizione: non apre file né autorizza accessi.
 
 "Crea una copia" mantiene la derivazione e assegna un nuovo identificativo.
-L'esportazione delle modifiche incrementa la versione dello stesso procedimento.
-"Apri un file salvato" rilegge una versione esportata. Le modifiche non esportate
-rimangono soltanto nella pagina; non confondere l'avvio di un download con un file
-verificato sul disco. Rileggi il file realmente scaricato prima dell'uso.
+"Salva le istruzioni" convalida i campi e conserva una nuova versione nella
+cartella scelta, senza sovrascrivere i file precedenti. "Apri un file salvato"
+carica istruzioni selezionate dall’avvocato nel medesimo ambito di salvataggio.
+Le modifiche non salvate restano nel pannello. Un salvataggio non confermato va
+ritentato senza cambiare i campi: la stessa richiesta non crea doppioni.
+Dopo il salvataggio, «Usa questa versione con Lucia» seleziona nella chat corrente
+il nome, la versione e il file effettivamente salvato. Leggi e convalida quel file
+prima di applicarlo ai soli documenti e alla pratica selezionati dall’avvocato.
+Le modifiche non salvate non possono essere selezionate. Se l’host non supporta
+il messaggio, riprendi dalla cartella scelta e identifica la versione esatta.
+Riapri la versione dopo una modifica esterna del file; non aggirare il controllo.
 
 ## Applicare le istruzioni a una pratica
 

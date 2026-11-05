@@ -62,8 +62,8 @@ def test_document_workflows_execute_from_each_complete_package(tmp_path, filenam
     source = tmp_path / "accordo.txt"
     source.write_text("Accordo fittizio. Durata: dodici mesi.\n", encoding="utf-8")
     run = tmp_path / "run"
-    editor = tmp_path / "editor.html"
-    _run_packaged_script(plugin, "legal_playbook.py", "editor", "--out", str(editor))
+    assert (plugin / "scripts/method_mcp.cjs").is_file()
+    assert "lucia_method_open" in (plugin / "scripts/method_mcp.py").read_text()
     _run_packaged_script(
         plugin,
         "legal_playbook.py",
@@ -111,7 +111,6 @@ def test_document_workflows_execute_from_each_complete_package(tmp_path, filenam
     _run_packaged_script(plugin, "legal_citations.py", "render", "--run-dir", str(run))
     _run_packaged_script(plugin, "legal_matter.py", "render", "--run-dir", str(run))
 
-    assert "__FONT_DATA__" not in editor.read_text(encoding="utf-8")
     assert (run / "proofreading.html").stat().st_size > 0
     assert (run / "citations.html").stat().st_size > 0
     assert (run / "matter.html").stat().st_size > 0

@@ -124,6 +124,24 @@ def _source_records(product: str, workflow: str) -> list[dict[str, str]]:
     root = ROOT / "plugins" / product
     skill = root / "skills" / workflow / "SKILL.md"
     paths = {skill}
+    native_apps = {
+        ("clara", "reporting-engine"): (
+            "scripts/report_mcp.py",
+            "scripts/report_mcp.cjs",
+            "ui/report.html",
+        ),
+        ("lucia", "metodo-studio"): (
+            "scripts/method_mcp.py",
+            "scripts/method_mcp.cjs",
+            "assets/playbook-editor.html",
+            "scripts/legal_playbook_labels.json",
+        ),
+        ("lucia", "apertura-pratica"): (
+            "scripts/matter_mcp.py",
+            "scripts/matter_mcp.cjs",
+        ),
+    }
+    paths.update(root / path for path in native_apps.get((product, workflow), ()))
     if product == "vera":
         paths.add(root / "skills/vera/references/connected-studio-knowledge.md")
         if workflow == "quesito-legale-fiscale":

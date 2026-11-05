@@ -75,7 +75,7 @@ globalThis.VeraPatentBox = Object.freeze({create(api) {
     const prefix=kind==="proposal"?"proposal_":"normalization_",candidates=Object.keys(local.page.files).filter(name=>name.startsWith(prefix)&&name.endsWith(".json")&&!name.includes("/"));
     let selected="";const wrapper=node("label",undefined,"field"),select=node("select");select.setAttribute("aria-label",kind==="proposal"?"Versione da usare per la modifica":"Normalizzazione da usare per la modifica");
     for(const name of ["",...candidates]){const option=node("option",name||"Scegli il record conservato");option.value=name;select.append(option);}select.disabled=!local.editable;select.addEventListener("change",()=>{selected=select.value;});wrapper.append(node("span","Parti da una versione conservata"),select);main.append(wrapper);
-    main.append(node("p","Il contenuto viene copiato soltanto nei tuoi campi incompleti. La versione precedente e le sue decisioni restano conservate. Le righe nuove o mancanti vanno preparate con il workflow specialistico; il pannello non inventa una struttura o una valutazione.","caption"));
+    main.append(node("p","Il contenuto viene copiato soltanto nei tuoi campi incompleti. La versione precedente e le sue decisioni restano conservate. Le righe nuove o mancanti vanno preparate con il percorso di lavoro specialistico; il pannello non inventa una struttura o una valutazione.","caption"));
     const load=button("Copia questa versione nei campi",async()=>{
       if(!selected)throw new Error("Scegli una versione esatta.");
       const retained=JSON.parse((await read(local.page,selected)).content);
@@ -194,7 +194,7 @@ globalThis.VeraPatentBox = Object.freeze({create(api) {
       },"primary");save.disabled=execute.disabled=!local.editable;main.append(save,execute);
     }
     await artifacts(main,page);
-    main.append(node("h2","Quali dati arrivano al modello"),node("p","Questi controlli leggono documenti ed elaborati del run selezionato e conservano campi e ricevute sul computer. Le route di esecuzione restano riservate all’app. Il separato mandato di Preparazione con Vera autorizza contesto, record e originali selezionati per la sessione del modello; le ricevute distinguono testo restituito e identità dei binari. Letture ulteriori dell’host e telemetria del provider richiedono evidenza distinta. I documenti, le celle, i fatti, i costi, le fonti e i testi effettivamente letti possono entrare nel contesto del modello, senza anonimizzazione automatica o promessa di trattamento esclusivamente locale.","caption"));
+    main.append(node("h2","Quali dati arrivano al modello"),node("p","Questi controlli leggono documenti ed elaborati del lavoro selezionato e conservano campi e ricevute sul computer. Le funzioni di esecuzione restano riservate all’app. Il separato mandato di Preparazione con Vera autorizza contesto, record e originali selezionati per la sessione del modello; le ricevute distinguono testo restituito e identità dei binari. Letture ulteriori dell’host e telemetria del provider richiedono evidenza distinta. I documenti, le celle, i fatti, i costi, le fonti e i testi effettivamente letti possono entrare nel contesto del modello, senza anonimizzazione automatica o promessa di trattamento esclusivamente locale.","caption"));
   }
   return Object.freeze({open,flush,dispose,refresh:async()=>{if(authorPanel?.active())return authorPanel.refresh();if(context){const {work_ref,operation}=context.page;await flush();await open(work_ref,operation);}},active:()=>Boolean(context)||Boolean(authorPanel?.active())});
 }});

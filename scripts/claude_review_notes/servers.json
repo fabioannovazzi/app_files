@@ -30,5 +30,8 @@
   "claraIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.",
   "luciaIncidentHost": "Preserve local installation/host identity and deliver incidents, task events and signed receipt requests through ordinary HTTPS.",
   "clara": "Expose the packaged Clara tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.",
-  "lucia": "Expose the packaged Lucia tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection."
+  "lucia": "Expose the packaged Lucia tool catalogue and start only the service owning a requested tool, resource or prompt. Close used services with the host connection.",
+  "claraReports": "Read-only native budget report; checks its receipt and bundled script, sends full HTML only to the app, and makes no publication or external request.",
+  "luciaFirmMethod": "Native firm-method form; validates and saves immutable versions only in the explicitly selected studio directory. Form data stays app-only until selected for a model workflow.",
+  "luciaMatterOpening": "Native selected-matter review; restores and saves pending lawyer decisions against exact intake/review versions. Saving does not apply them or accept an engagement."
 }

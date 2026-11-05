@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.207",
+  "version": "0.1.208",
   "services": [
     {
       "name": "luciaDeepResearchValidator",
@@ -13,16 +13,15 @@
         },
         "capabilities": {
           "tools": {},
-          "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_deep_research_review with the hash-bound local review reference before render_deep_research_review, then reuse the returned short-lived token. Prefer the MCP widget for answer-validation review handoff; use save_deep_research_decisions to persist reviewer actions to ui_decisions.json and apply_deep_research_decisions to write applied_decisions.json plus final_artifacts.json status when decisions are collected; fall back to Markdown/static review only when MCP is unavailable."
+        "instructions": "Review this Lucia workflow in chat and its professional documents. Preserve required model-policy checks and explicit professional decisions. Validation, saving and applying remain separate steps; do not launch a metadata inspector or browser editor."
       },
       "tools": [
         {
           "name": "validate_deep_research_review",
           "title": "Validate answer-review payload",
-          "description": "Validate a hash-bound local answer-review reference (or a legacy inline payload) before rendering. Call this first, then render_deep_research_review with the returned short-lived token.",
+          "description": "Validate the existing hash-bound local review. Review results in chat and their professional documents. Retain the returned reference for explicit save/apply operations; validation does not approve the work.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -114,122 +113,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_deep_research_review",
-          "title": "Render answer-validation review",
-          "description": "Render a validated answer review through its short-lived token as an MCP HTML widget for source support, reasoning, professional judgment, source limits, audit checks, and artifacts.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "client_engagement": {
-                "type": "string",
-                "description": "Current absolute path to the managed run context.json."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "review_reference": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "string",
-                    "enum": [
-                      "review_payload.json"
-                    ]
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_payload_sha256": {
-                    "type": "string",
-                    "pattern": "^[a-f0-9]{64}$"
-                  }
-                },
-                "required": [
-                  "path",
-                  "run_id",
-                  "review_payload_sha256"
-                ],
-                "additionalProperties": false
-              },
-              "persistence_token": {
-                "type": "string",
-                "description": "Opaque short-lived token returned by validation or rendering."
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/deep-research-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/deep-research-review.html",
-            "openai/outputTemplate": "ui://widget/deep-research-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering answer-validation review",
-            "openai/toolInvocation/invoked": "Rendered answer-validation review"
           },
           "annotations": {
             "readOnlyHint": true,
@@ -560,6 +443,149 @@
         }
       ],
       "resources": [],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
+      "name": "luciaFirmMethod",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {},
+          "resources": {}
+        },
+        "serverInfo": {
+          "name": "lucia-firm-method",
+          "version": "1.0.0"
+        }
+      },
+      "tools": [
+        {
+          "name": "lucia_method_open",
+          "title": "Istruzioni dello studio",
+          "description": "Open the native firm-method editor in the explicitly selected existing studio folder. Optional filename selects an existing saved version in that folder; omit only to create a declared NDA example to adapt. No client documents are opened. No save occurs until the user saves in the app.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "directory": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "filename": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            },
+            "required": [
+              "directory"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://lucia/firm-method-v1.html",
+              "visibility": [
+                "app",
+                "model"
+              ]
+            }
+          }
+        },
+        {
+          "name": "lucia_method_save",
+          "title": "Salva le istruzioni",
+          "description": "Save a new validated version in the app's selected folder, preserving existing files and rejecting stale or unknown sessions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "session": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "revision": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "request_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "value": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "session",
+              "revision",
+              "request_id",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        },
+        {
+          "name": "lucia_method_import",
+          "title": "Apri istruzioni salvate",
+          "description": "Load a user-selected instruction file into the same explicitly selected folder scope. Does not save or open any path from its content.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "session": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "value": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "session",
+              "value"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        }
+      ],
+      "resources": [
+        {
+          "uri": "ui://lucia/firm-method-v1.html",
+          "name": "Istruzioni dello studio",
+          "mimeType": "text/html;profile=mcp-app"
+        }
+      ],
       "resourceTemplates": [],
       "prompts": []
     },
@@ -1654,6 +1680,114 @@
       "prompts": []
     },
     {
+      "name": "luciaMatterOpening",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {},
+          "resources": {}
+        },
+        "serverInfo": {
+          "name": "lucia-matter-opening",
+          "version": "1.0.0"
+        }
+      },
+      "tools": [
+        {
+          "name": "lucia_matter_open",
+          "title": "Fascicolo nuova pratica",
+          "description": "Open a prepared matter-opening review in the explicitly selected absolute run directory. Full evidence stays app-only. Saving retains pending decisions; applying and professional acceptance remain separate explicit steps.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "run_dir": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            },
+            "required": [
+              "run_dir"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ],
+              "resourceUri": "ui://lucia/matter-opening-v1.html"
+            }
+          }
+        },
+        {
+          "name": "lucia_matter_save",
+          "title": "Salva il riesame",
+          "description": "Save the lawyer's explicit pending review against the current intake, review and pending-decision revisions. Never applies decisions or opens another matter.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "session": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "request_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "reviewer": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              },
+              "decisions": {
+                "type": "array",
+                "maxItems": 500,
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "required": [
+              "session",
+              "request_id",
+              "reviewer",
+              "decisions"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        }
+      ],
+      "resources": [
+        {
+          "uri": "ui://lucia/matter-opening-v1.html",
+          "name": "Fascicolo nuova pratica",
+          "mimeType": "text/html;profile=mcp-app"
+        }
+      ],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
       "name": "luciaPromptOptimizer",
       "initialize": {
         "protocolVersion": "2024-11-05",
@@ -1663,10 +1797,9 @@
         },
         "capabilities": {
           "tools": {},
-          "resources": {},
           "prompts": {}
         },
-        "instructions": "Use validate_prompt_optimizer_review with the hash-bound local review reference before render_prompt_optimizer_review, then reuse the returned short-lived token. Prefer the MCP widget for final Prompt Optimizer package review; use save_prompt_optimizer_decisions to persist review actions and apply_prompt_optimizer_decisions to write applied_decisions.json plus final_artifacts.json status; use available, permitted native question controls or chat for simple pre-draft intake decisions."
+        "instructions": "Review this Lucia workflow in chat and its professional documents. Preserve required model-policy checks and explicit professional decisions. Validation, saving and applying remain separate steps; do not launch a metadata inspector or browser editor."
       },
       "tools": [
         {
@@ -1776,14 +1909,10 @@
           },
           "_meta": {
             "ui": {
-              "resourceUri": "ui://widget/legal-tax-model.html",
               "visibility": [
                 "model"
               ]
-            },
-            "ui/resourceUri": "ui://widget/legal-tax-model.html",
-            "openai/outputTemplate": "ui://widget/legal-tax-model.html",
-            "openai/widgetAccessible": true
+            }
           }
         },
         {
@@ -1837,14 +1966,13 @@
                 "app",
                 "model"
               ]
-            },
-            "openai/widgetAccessible": true
+            }
           }
         },
         {
           "name": "validate_prompt_optimizer_review",
           "title": "Validate Prompt Optimizer review payload",
-          "description": "Validate a hash-bound local Prompt Optimizer review reference (or a legacy inline payload) before rendering. Call this first, then render_prompt_optimizer_review with the returned short-lived token.",
+          "description": "Validate the existing hash-bound local review. Review results in chat and their professional documents. Retain the returned reference for explicit save/apply operations; validation does not approve the work.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -1936,122 +2064,6 @@
             },
             "required": [],
             "additionalProperties": true
-          },
-          "annotations": {
-            "readOnlyHint": true,
-            "destructiveHint": false,
-            "idempotentHint": true,
-            "openWorldHint": false
-          }
-        },
-        {
-          "name": "render_prompt_optimizer_review",
-          "title": "Render Prompt Optimizer review",
-          "description": "Render a validated Prompt Optimizer review through its short-lived token as an MCP HTML widget for validation checks, optimized prompt artifacts, source-domain sidecars, and package files.",
-          "inputSchema": {
-            "type": "object",
-            "properties": {
-              "run_intake": {
-                "type": "object",
-                "description": "Optional run_intake.json object."
-              },
-              "client_engagement": {
-                "type": "string",
-                "description": "Current absolute path to the managed run context.json."
-              },
-              "review_payload": {
-                "type": "object",
-                "properties": {
-                  "schema_version": {
-                    "type": "string"
-                  },
-                  "plugin": {
-                    "type": "string"
-                  },
-                  "workflow": {
-                    "type": "string"
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_type": {
-                    "type": "string"
-                  },
-                  "items": {
-                    "type": "array",
-                    "items": {
-                      "type": "object"
-                    }
-                  },
-                  "item_count": {
-                    "type": "number"
-                  },
-                  "status": {
-                    "type": "string"
-                  }
-                },
-                "required": [
-                  "schema_version",
-                  "plugin",
-                  "workflow",
-                  "run_id",
-                  "items",
-                  "item_count"
-                ],
-                "additionalProperties": true
-              },
-              "review_reference": {
-                "type": "object",
-                "properties": {
-                  "path": {
-                    "type": "string",
-                    "enum": [
-                      "review_payload.json"
-                    ]
-                  },
-                  "run_id": {
-                    "type": "string"
-                  },
-                  "review_payload_sha256": {
-                    "type": "string",
-                    "pattern": "^[a-f0-9]{64}$"
-                  }
-                },
-                "required": [
-                  "path",
-                  "run_id",
-                  "review_payload_sha256"
-                ],
-                "additionalProperties": false
-              },
-              "persistence_token": {
-                "type": "string",
-                "description": "Opaque short-lived token returned by validation or rendering."
-              },
-              "ui_decisions": {
-                "type": "object",
-                "description": "Optional ui_decisions.json object."
-              },
-              "final_artifacts": {
-                "type": "object",
-                "description": "Optional final_artifacts.json object."
-              }
-            },
-            "required": [],
-            "additionalProperties": true
-          },
-          "_meta": {
-            "ui": {
-              "resourceUri": "ui://widget/prompt-optimizer-review.html",
-              "visibility": [
-                "model"
-              ]
-            },
-            "ui/resourceUri": "ui://widget/prompt-optimizer-review.html",
-            "openai/outputTemplate": "ui://widget/prompt-optimizer-review.html",
-            "openai/widgetAccessible": true,
-            "openai/toolInvocation/invoking": "Rendering Prompt Optimizer review",
-            "openai/toolInvocation/invoked": "Rendered Prompt Optimizer review"
           },
           "annotations": {
             "readOnlyHint": true,

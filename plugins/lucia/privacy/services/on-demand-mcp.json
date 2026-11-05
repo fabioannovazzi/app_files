@@ -8,7 +8,12 @@
     "scripts/on_demand_mcp.cjs",
     "scripts/studio_archive_mcp.cjs",
     "scripts/lucia_studio_archive.py",
-    "components.json"
+    "components.json",
+    "scripts/method_mcp.py",
+    "scripts/method_mcp.cjs",
+    "scripts/matter_mcp.py",
+    "scripts/matter_mcp.cjs",
+    "scripts/review_engine_mcp.cjs"
   ],
   "governed_repository_paths": [
     "plugins/vera/scripts/on_demand_mcp.cjs",
@@ -17,7 +22,8 @@
     "scripts/build_product_mcp_catalog.py",
     "scripts/build_product_mcp_catalog.cjs",
     "scripts/build_codex_plugin_zip.py",
-    "scripts/build_claude_plugin_zip.py"
+    "scripts/build_claude_plugin_zip.py",
+    "scripts/product_ui_retirement.py"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -29,7 +35,7 @@
   "security_controls": [
     {
       "id": "exact-owner-routing",
-      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply. The legacy Codex entry resolves its relative launcher against the plugin working directory. Portable Codex and Cowork packaging project their respective supported root placeholders without adding filesystem authority. Lucia exposes one Studio Archive service. Its MCP and CLI entries accept the three Archive workflows in components.json; accounting sample checks and Vera-only report receipt verification are excluded. The transport uses the same local Archive worker and adds no external recipient.",
+      "control": "Discovery returns only the catalogue generated from the exact packaged services. A named tool, prompt or resource request starts its registered local owner and forwards its JSON-RPC payload and response unchanged. The transport does not inspect intent, add case data, send network requests or replay failed calls. Existing service-specific model and external data boundaries still apply. The legacy Codex entry resolves its relative launcher against the plugin working directory. Portable Codex and Cowork packaging project their respective supported root placeholders without adding filesystem authority. Lucia exposes one Studio Archive service. Its MCP and CLI entries accept the three Archive workflows in components.json; accounting sample checks and Vera-only report receipt verification are excluded. The transport uses the same local Archive worker and adds no external recipient. Useful product workflow controls are owned by the registered native report, firm-method or matter-review apps. Redundant metadata renderers and resources are not advertised by Lucia’s review-engine adapter; validation, model-policy checks and explicit save/apply tools remain available. No retired renderer grants a second app route.",
       "implemented_by": [
         "scripts/on_demand_mcp.cjs",
         "mcp-services.json"
@@ -62,9 +68,9 @@
     }
   },
   "review": {
-    "reviewed_at": "2026-11-03",
+    "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "357bd524362e74817d64f4d1c468deb747a5eb025560b6ba4765dafc5f35d72c"
+    "source_fingerprint": "e2ce33cbccbe94ac89aca3d869f1c995c41ce414df1709901a8e54957f61f0c0"
   }
 }

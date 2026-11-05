@@ -64,7 +64,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json is pending until Claude, MCP UI, or fallback review records decisions.",
         ],
         "next_actions": [
-            "Render review_payload.json with the MCP widget when available.",
+            "Review the generated charts and report with Clara in this chat.",
             "Use the standard variance context before interpreting chart pixels.",
             "Write codex_business_analysis.md from reviewed source artifacts and caveats.",
         ],
@@ -111,7 +111,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json permanece pendiente hasta que Claude, la interfaz MCP o la revisión alternativa registren las decisiones.",
         ],
         "next_actions": [
-            "Cuando esté disponible, abra review_payload.json con el widget MCP.",
+            "Revise los gráficos y el informe con Clara en esta conversación.",
             "Utilice el contexto estándar de variaciones antes de interpretar los píxeles de los gráficos.",
             "Redacte codex_business_analysis.md a partir de los artefactos fuente revisados y las salvedades.",
         ],
@@ -156,7 +156,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json resta in sospeso finché Claude, l’interfaccia MCP o la revisione alternativa non registrano le decisioni.",
         ],
         "next_actions": [
-            "Aprire review_payload.json con il widget MCP quando disponibile.",
+            "Riesamina i grafici e il rapporto con Clara nella chat.",
             "Usare il contesto standard prima di interpretare i grafici.",
             "Redigere codex_business_analysis.md dagli artefatti sorgente e dalle riserve esaminate.",
         ],
@@ -192,7 +192,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json reste en attente jusqu’à l’enregistrement des décisions de revue.",
         ],
         "next_actions": [
-            "Ouvrir review_payload.json avec le widget MCP lorsqu’il est disponible.",
+            "Examinez les graphiques et le rapport avec Clara dans cette conversation.",
             "Utiliser le contexte standard avant d’interpréter les graphiques.",
             "Rédiger codex_business_analysis.md à partir des sources revues et des réserves.",
         ],
@@ -235,7 +235,7 @@ _REVIEW_COPY: dict[str, dict[str, Any]] = {
             "ui_decisions.json bleibt offen, bis Prüfentscheidungen gespeichert wurden.",
         ],
         "next_actions": [
-            "review_payload.json nach Verfügbarkeit im MCP-Widget öffnen.",
+            "Prüfen Sie die Diagramme und den Bericht mit Clara in diesem Chat.",
             "Vor der Diagramminterpretation den Standardkontext verwenden.",
             "codex_business_analysis.md aus geprüften Quellen und Vorbehalten erstellen.",
         ],

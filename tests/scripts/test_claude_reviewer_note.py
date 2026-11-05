@@ -45,8 +45,8 @@ def test_reviewer_note_lists_only_declared_servers_and_existing_fonts(
     assert 'Local review tokens (flagged as "Uses a credential")' in note
     assert "no inherited token or API-key variables" in note
     assert ("check-entries" in note) == (product == "vera")
-    assert ("`secrets.token_urlsafe(32)`" in note) == (product != "clara")
-    assert ("`secrets.token_urlsafe(24)`" in note) == (product == "clara")
+    assert "`secrets.token_urlsafe(32)`" in note
+    assert "`secrets.token_urlsafe(24)`" not in note
     assert ("may include it in model context" in note) == (product == "vera")
 
 
@@ -69,7 +69,6 @@ def test_packaged_reviewer_note_names_existing_token_files(product: str) -> None
     "product,component,asset",
     [
         ("lucia", "apertura-pratica", "apertura-pratica-review-widget.html"),
-        ("lucia", "apertura-pratica", "apertura-pratica-review.html"),
     ],
 )
 def test_cowork_archive_contains_readable_offline_review_assets(

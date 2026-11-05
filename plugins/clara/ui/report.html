@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; font-src data:; img-src data:; frame-src about:; connect-src 'none'; base-uri 'none'; form-action 'none'; object-src 'none'">
+<title>Clara · Budget e previsioni</title>
+<style>
+@font-face{font-family:'Instrument Sans';src:url(data:font/ttf;base64,__FONT__) format('truetype');font-weight:400 700;font-display:swap}
+*{box-sizing:border-box}body{margin:0}header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 20px;border-bottom:1px solid var(--border)}header p{margin:0}.brand{margin-right:12px}#status{padding:0 20px;color:var(--muted)}iframe{display:block;width:100%;height:calc(100vh - 100px);min-height:500px;border:0}[hidden]{display:none!important}
+
+/* VERA_SHARED_THEME_START — generated; edit plugins/_shared/ui/vera-theme.css */
+/* Canonical Vera workflow theme. Derived from the Vouching review surface.
+ * Run: python scripts/sync_vera_ui_theme.py after changing this file.
+ * Embedded at build time: no remote fonts, imports, or host CSS dependencies.
+ */
+:root {
+  color-scheme: light;
+  --paper: #ffffff;
+  --surface: #ffffff;
+  --soft: #fafafa;
+  --soft-strong: #f3f4f2;
+  --ink: #1f2421;
+  --text: #3f4541;
+  --muted: #596671;
+  --border: #e8eae7;
+  --border-strong: #d8dcd7;
+  --accent: #194b70;
+  --accent-strong: #123650;
+  --accent-soft: #eff5f9;
+  --danger: #7b4b44;
+  --danger-bg: #fbf7f6;
+  --warning: #6f6247;
+  --warning-bg: #fbfaf6;
+  --ok: #4b6759;
+  --ok-bg: #f7faf8;
+  --info: #52646e;
+  --info-bg: #f7fafb;
+  --radius: 8px;
+  --font-ui: "Instrument Sans", "SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-size-ui: 1rem;
+  --font-size-control: 0.875rem;
+  --font-size-title: 1.25rem;
+  --font-size-heading: 1.05rem;
+  --control-padding: 0.55rem 0.75rem;
+  --control-height: 2.5rem;
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1rem;
+  --space-xl: 1.5rem;
+  /* Compatibility aliases for existing layout-specific selectors. */
+  --navy: var(--accent);
+  --blue: var(--accent);
+  --cyan: var(--accent);
+  --line: var(--border);
+  --rule: var(--border);
+  --wash: var(--soft);
+  --bg: var(--paper);
+  --focus-border-color: var(--accent);
+  --focus-ring-color: var(--border-strong);
+  --mparanza-pill-font-family: var(--font-ui);
+  --white: var(--paper);
+  --line-strong: var(--border-strong);
+  --quiet: var(--muted);
+  --blue-wash: var(--accent-soft);
+  --green: var(--ok);
+  --green-wash: var(--ok-bg);
+  --amber: var(--warning);
+  --amber-wash: var(--warning-bg);
+  --red: var(--danger);
+  --red-wash: var(--danger-bg);
+  --focus: var(--accent);
+  --teal: var(--accent);
+  --teal-soft: var(--accent-soft);
+  --green-soft: var(--ok-bg);
+  --amber-soft: var(--warning-bg);
+  --red-soft: var(--danger-bg);
+  --sans: var(--font-ui);
+  --serif: var(--font-ui);
+}
+:root body {
+  background: var(--paper);
+  color: var(--text);
+  font-family: var(--font-ui);
+  font-size: var(--font-size-ui);
+  line-height: 1.5;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+/* Hosts may pin their body font; keep the app content on its own typeface. */
+:root body > :not(script, style) {
+  font-family: var(--font-ui);
+}
+:root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
+:root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }
+:root :is(h2, h3) { font-size: var(--font-size-heading); font-weight: 650; line-height: 1.3; letter-spacing: 0; }
+:root .brand { font-size: 1.25rem; font-weight: 650; letter-spacing: -0.04em; }
+:root :is(main, .main) > button { margin-inline-end: var(--space-sm); margin-block-end: var(--space-sm); }
+:root :is(a, summary, .eyebrow, .product) { color: var(--accent); }
+:root :is(button, input, textarea, select, .button) {
+  font-family: var(--font-ui);
+  font-size: var(--font-size-control);
+  line-height: 1.4;
+  letter-spacing: 0;
+  accent-color: var(--accent);
+}
+:root :is(button, .button, .custom-select__button) {
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  background: var(--surface);
+  background-image: none;
+  color: var(--text);
+  box-shadow: none;
+  padding: var(--control-padding);
+  min-height: var(--control-height);
+}
+:root :is(button, .button, .custom-select__button):hover:not(:disabled) {
+  background: var(--soft-strong);
+  border-color: var(--border-strong);
+}
+/* Review controls keep their label width at every panel breakpoint. */
+:root :is(.action-buttons, .tabs, .state-filters, .decision-grid) {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  gap: 0.4rem;
+  min-width: 0;
+}
+:root :is(.action-buttons, .tabs, .state-filters, .decision-grid) > button {
+  flex: 0 1 auto;
+  width: auto;
+  max-width: 100%;
+  justify-content: center;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+:root :is(button.primary, .button.primary) {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+:root :is(button.primary, .button.primary):hover:not(:disabled) {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--paper);
+}
+:root :is(button.secondary, .button.secondary, button.quiet) { background: var(--surface); color: var(--text); }
+:root :is(input:not([type=checkbox]):not([type=radio]):not([type=hidden]):not([type=range]), textarea, select) {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+  padding: var(--control-padding);
+}
+:root :is(button, input, textarea, select, a, summary):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  box-shadow: none;
+}
+:root :is(button[aria-current=page], button[aria-pressed=true], .custom-select__option.is-active) {
+  background: var(--accent-soft);
+  border-color: var(--border-strong);
+  color: var(--ink);
+}
+:root .custom-select__list { background: var(--surface); border-color: var(--border-strong); box-shadow: none; border-radius: var(--radius); }
+:root :is(.error, #error, #status.error, .negative) { color: var(--danger); }
+:root :is(.saved, .status--ok) { color: var(--ok); }
+:root :is(.severity, .status--warning) { color: var(--warning); }
+:root .severity.blocker { color: var(--danger); }
+:root .severity.info { color: var(--info); }
+/* VERA_SHARED_THEME_END */
+</style>
+</head>
+<body>
+<header><p><strong class="brand">Clara</strong> <span id="app-title">Budget e previsioni</span></p><button id="refresh" disabled>Aggiorna</button></header>
+<p id="status" role="status">Apri il report selezionato dalla chat di Clara.</p>
+<iframe id="report" title="Report budget e previsioni" sandbox="allow-scripts" referrerpolicy="no-referrer" hidden></iframe>
+<script>
+'use strict';
+const status=document.getElementById('status'),button=document.getElementById('refresh'),frame=document.getElementById('report');
+const translations={
+ it:{title:'Budget e previsioni',refresh:'Aggiorna',open:'Apri il report selezionato dalla chat di Clara.',ready:'Report in sola lettura · usa i controlli per cambiare periodo o vista.',unavailable:'Impossibile verificare questo report. Riapri il report corrente dalla chat.',unconfirmed:'Aggiornamento non confermato. Riprova.'},
+ en:{title:'Budget and forecasts',refresh:'Refresh',open:'Open the selected report from the Clara chat.',ready:'Read-only report · use the controls to change period or view.',unavailable:'This report could not be verified. Reopen the current report from the chat.',unconfirmed:'Refresh unconfirmed. Try again.'},
+ es:{title:'Presupuesto y previsiones',refresh:'Actualizar',open:'Abre el informe seleccionado desde el chat de Clara.',ready:'Informe de solo lectura · usa los controles para cambiar el periodo o la vista.',unavailable:'No se pudo verificar este informe. Abre el informe actual desde el chat.',unconfirmed:'Actualización sin confirmar. Inténtalo de nuevo.'},
+ fr:{title:'Budget et prévisions',refresh:'Actualiser',open:'Ouvrez le rapport sélectionné depuis la conversation avec Clara.',ready:'Rapport en lecture seule · utilisez les commandes pour changer la période ou la vue.',unavailable:'Ce rapport n’a pas pu être vérifié. Rouvrez le rapport actuel depuis la conversation.',unconfirmed:'Actualisation non confirmée. Réessayez.'},
+ de:{title:'Budget und Prognosen',refresh:'Aktualisieren',open:'Öffnen Sie den ausgewählten Bericht aus dem Clara-Chat.',ready:'Bericht nur zum Lesen · wechseln Sie Zeitraum oder Ansicht über die Schaltflächen.',unavailable:'Dieser Bericht konnte nicht geprüft werden. Öffnen Sie den aktuellen Bericht erneut aus dem Chat.',unconfirmed:'Aktualisierung unbestätigt. Versuchen Sie es erneut.'}
+};
+let copy=translations.it,session,busy=false,next=0;
+function setLanguage(language){copy=translations[(language||'en').split('-')[0]]||translations.en;document.documentElement.lang=(language||'en').split('-')[0];document.title='Clara · '+copy.title;document.getElementById('app-title').textContent=copy.title;button.textContent=copy.refresh;}
+
+const pending=new Map();
+function request(method,params){return new Promise((resolve,reject)=>{const id=++next;const timer=setTimeout(()=>{pending.delete(id);reject(new Error(copy.unconfirmed));},30000);pending.set(id,{resolve,reject,timer});parent.postMessage({jsonrpc:'2.0',id,method,params},'*');});}
+function accept(result){
+  if(result?.isError)throw new Error(copy.unavailable);
+  const data=result?._meta?.report;if(!data)throw new Error(copy.unavailable);
+  session=data.session;
+  // Style the verified preview without changing its saved, receipt-bound report.
+  const css=document.querySelector('style').textContent;
+  const theme=css.match(/\/\* VERA_SHARED_THEME_START[\s\S]*?VERA_SHARED_THEME_END \*\//)?.[0] || '';
+  const face=css.match(/@font-face\s*\{[^}]*\}/)?.[0] || '';
+  const report=new DOMParser().parseFromString(data.html,'text/html');
+  // Normalize the verified report's presentation copy; original bytes stay intact.
+  for(const heading of report.querySelectorAll('.budget-report > p.eyebrow'))
+    if(/^PL\s*·\s*AC(?:\s*·\s*FC)?$/.test(heading.textContent.trim()))heading.remove();
+  const forecastNames={it:'Previsionale',en:'Forecast',fr:'Prévisionnel',de:'Prognose',es:'Previsión'};
+  const forecast=forecastNames[report.documentElement.lang] || 'Forecast';
+  for(const heading of report.querySelectorAll('.budget-report thead th'))
+    if(!heading.childElementCount){
+      heading.textContent=heading.textContent.replace(/^(?:PL|AC|FC)\s*·\s*/, '');
+      if(report.documentElement.lang==='it' && heading.textContent==='Forecast')heading.textContent=forecast;
+    }
+  for(const paragraph of report.querySelectorAll('.budget-report > p:not(.eyebrow)'))
+    if(!paragraph.childElementCount)paragraph.textContent=paragraph.textContent.replace(/\bFC =/g,forecast+' =');
+  setLanguage(report.documentElement.lang || document.documentElement.lang);
+  const style=report.createElement('style');
+  // Printing remains available in the delivered report, outside the app sandbox.
+  style.textContent=face+'\n'+theme+'\n.budget-report [data-budget-print]{display:none}';report.head.append(style);
+  frame.srcdoc='<!doctype html>'+report.documentElement.outerHTML;
+  frame.hidden=false;button.disabled=false;
+  status.textContent=copy.ready;
+}
+addEventListener('message',event=>{
+  if(event.source!==parent || event.data?.jsonrpc!=='2.0')return;
+  const m=event.data,item=pending.get(m.id);
+  if(item){clearTimeout(item.timer);pending.delete(m.id);m.error?item.reject(new Error(m.error.message)):item.resolve(m.result);return;}
+  if(m.method==='ui/notifications/tool-result' && m.params?._meta?.report){try{accept(m.params);}catch(error){status.textContent=error.message;}}
+  if(m.method==='ui/resource-teardown')parent.postMessage({jsonrpc:'2.0',id:m.id,result:{}},'*');
+});
+button.addEventListener('click',async()=>{
+  if(busy || !session)return;busy=true;button.disabled=true;
+  const selected=session;
+  try{const result=await request('tools/call',{name:'clara_report_refresh',arguments:{session:selected}});if(session===selected)accept(result);}
+  catch(error){if(session===selected){status.textContent=copy.unavailable;frame.hidden=true;}}
+  finally{busy=false;button.disabled=false;}
+});
+request('ui/initialize',{protocolVersion:'2026-01-26',appInfo:{name:'Clara reports',version:'1.0.0'},appCapabilities:{availableDisplayModes:['inline','fullscreen']}})
+.then(result=>{setLanguage(result.hostContext?.locale);status.textContent=copy.open;parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized'},'*');}).catch(()=>{status.textContent=copy.open;});
+</script>
+</body>
+</html>

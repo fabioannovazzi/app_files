@@ -186,7 +186,11 @@ def test_browser_ui_language_changes_copy_but_preserves_actual_decision(
     assert "00019.00" in result["text"]
     assert "Original source label" in result["text"]
     assert "Original source reference" in result["text"]
-    assert "artifact_only" in result["text"]
+    if language == "it":
+        assert "elaborati da conservare soltanto come file" in result["text"]
+        assert "artifact_only" not in result["text"]
+    else:
+        assert "artifact_only" in result["text"]
     assert result["denied"] is True
     committed = next(c for c in result["calls"] if c["name"].endswith("_review_commit"))
     assert committed["args"]["fields"] == {

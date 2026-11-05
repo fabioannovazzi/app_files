@@ -642,16 +642,16 @@ def test_lucia_and_vera_package_the_identical_opinion_component(
             for name, data in lucia.items()
         }
     else:
-        # Lucia retains its independent editor; Vera routes review through its
-        # native workspace. Only these transport files may differ.
+        # Both products retire the inspector; product handoffs and MCP transport
+        # differ while the professional opinion engine remains identical.
         widget = "assets/deep-research-review-widget.html"
         transport = {
             "mcp/server.cjs",
-            "scripts/review_server.py",
             "skills/deep-research/SKILL.md",
             "skills/legal-tax-answer-review/SKILL.md",
         }
-        assert set(lucia) - set(vera) == {widget}
+        assert widget not in lucia and widget not in vera
+        assert set(lucia) == set(vera)
         assert not set(vera) - set(lucia)
         assert {name for name in vera if vera[name] != lucia[name]} == transport
         assert {name: data for name, data in vera.items() if name not in transport} == {

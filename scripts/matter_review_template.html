@@ -64,6 +64,11 @@ let review=null,reviewHash='',language='en',evidenceNames={},partyNames={};
 const base=location.pathname.replace(/\/$/,'');
 const words=()=>VOCABULARY[language]||VOCABULARY.en;
 const t=key=>words()[key]||String(key).replace(/_/g,' ');
+function itemTitle(item){
+ const description=item.data?.description,translated=words()[description];
+ return translated&&typeof description==='string'&&item.title.endsWith(description)
+  ? item.title.slice(0,-description.length)+translated : item.title;
+}
 function caption(key){return words()[key]||String(key).replace(/_/g,' ');}
 function stateText(value){return words()[String(value)]||String(value);}
 const technicalFields=new Set(['party_id','scope_id','item_id','candidate_id','deadline_id','reference','register_snapshot_reference']);
@@ -99,7 +104,7 @@ function render(value){
  const order=['matter_request','party_map','engagement','conflict_scope','conflict_candidate','deadline_posture','deadline_candidate','missing_item','confidentiality','aml_applicability','privacy_retention','folder_plan'];
  const index=type=>order.includes(type)?order.indexOf(type):order.length;
  const items=[...payload.items].sort((a,b)=>index(a.item_type)-index(b.item_type));
- document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(item.title)}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
+ document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(itemTitle(item))}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
  if(EDITABLE){
   const pending=value?.pending_review;const status=document.querySelector('#status');
   document.querySelector('#reviewer').value='';status.textContent='';status.className='';

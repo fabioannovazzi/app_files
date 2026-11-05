@@ -6,6 +6,9 @@
   <meta name="robots" content="noindex,nofollow">
   <title>Research Video narration | Mparanza</title>
   <style>
+      @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-Regular.ttf") format("truetype"); font-weight: 400; font-display: swap; }
+      @font-face { font-family: "Instrument Sans"; src: url("/static/shared/courses/InstrumentSans-SemiBold.ttf") format("truetype"); font-weight: 600; font-display: swap; }
+
     :root { color-scheme: light; --navy: #071d49; --cyan: #00b0f0; --ink: #171816; --muted: #5d6470; --rule: #dce1e8; }
     * { box-sizing: border-box; }
     body { margin: 0; background: #fff; color: var(--ink); font-family: "Instrument Sans", Arial, sans-serif; }
@@ -105,6 +108,10 @@
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
+/* Hosts may pin their body font; keep the app content on its own typeface. */
+:root body > :not(script, style) {
+  font-family: var(--font-ui);
+}
 :root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
 :root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }
 :root :is(h2, h3) { font-size: var(--font-size-heading); font-weight: 650; line-height: 1.3; letter-spacing: 0; }
@@ -190,25 +197,25 @@
     <header>
       <div class="eyebrow">Clara · Research Video</div>
       <h1>Generate the approved narration</h1>
-      <p class="lead">Upload the request created after you approved the exact narration and visual plan. Mparanza generates one audio file per scene and returns a ZIP for Clara to render locally.</p>
+      <p class="lead">Upload the request created after you approved the exact narration and visual plan. Mparanza generates one audio file per scene. Download the audio package and return to Clara to assemble the video on your computer.</p>
     </header>
 
     <section class="boundary" aria-label="Data handling">
-      <p><strong>Authentication is required.</strong> The service is currently available to every signed-in Mparanza account; no email allowlist is applied.</p>
-      <p>Only the approved narration, language, scene identifiers and approval hashes are sent to Mparanza and OpenAI. Images, research sources, source-basis notes and Vera files are not uploaded.</p>
-      <p>Mparanza builds the response in memory and does not write the request or generated audio to application storage. OpenAI processing remains governed by Mparanza’s provider arrangement. <a href="/data-handling?lang=en">Data handling details</a>.</p>
+      <p><strong>Authentication is required.</strong> Sign in with your Mparanza account to use this service.</p>
+      <p>Mparanza and OpenAI receive the approved narration, language, scene references and the details used to verify approval. Images and supporting research documents stay on your computer.</p>
+      <p>This service does not save the uploaded request or generated audio to its application storage. OpenAI processing remains governed by Mparanza’s provider arrangement. <a href="/data-handling?lang=en">Data handling details</a>.</p>
     </section>
 
     <form id="voiceForm">
-      <label for="requestFile">Approved Mparanza voice request</label>
+      <label for="requestFile">Approved narration request</label>
       <input id="requestFile" type="file" accept=".json,application/json" required>
-      <div id="requestSummary" class="summary" aria-live="polite">Choose the approved request JSON created by Clara.</div>
+      <div id="requestSummary" class="summary" aria-live="polite">Choose the approved narration request created by Clara.</div>
       <button id="generateButton" type="submit" disabled>Generate and download narration</button>
       <div id="status" class="status" role="status" aria-live="polite"></div>
     </form>
 
-    <footer>The downloaded ZIP remains a review artifact. Clara validates its hashes and media before rendering; the professional reviewer still checks pronunciation, pacing and every spoken claim.</footer>
+    <footer>Clara checks the downloaded audio package before assembling the video. Review pronunciation, pacing and every spoken claim before using the result.</footer>
   </main>
-  <script src="/static/js/research-video-voice.js"></script>
+  <script src="/static/js/research-video-voice.js?v=voice-ui-20261104-v2"></script>
 </body>
 </html>

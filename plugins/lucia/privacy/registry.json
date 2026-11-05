@@ -633,9 +633,12 @@
       "workstreams": [],
       "paths": {
         "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/studio-archive.json": [
@@ -649,9 +652,12 @@
       "workstreams": [],
       "paths": {
         "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/studio-archive.json": [
@@ -700,9 +706,12 @@
           ".mcp.json"
         ],
         "privacy/workstreams/deep-research-validator.json": [
+          "assets/deep-research-review-widget.html",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/prompt-optimizer.json": [
+          "assets/legal-tax-model.html",
+          "assets/prompt-optimizer-review-widget.html",
           "shared:vendor/modules/vera_assurance"
         ],
         "privacy/workstreams/studio-archive.json": [

@@ -169,26 +169,7 @@ client deliverable.
 
 ## MCP Review Handoff
 
-After the deterministic run writes `mix_contribution/review_payload.json`,
-prefer the local MCP widget when the `mixContributionWidgets` server is
-available:
-
-1. Read `mix_contribution/run_intake.json`,
-   `mix_contribution/review_payload.json`,
-   `mix_contribution/ui_decisions.json`, and
-   `mix_contribution/final_artifacts.json`.
-2. Call `validate_mix_contribution_review` with the review payload and optional
-   intake/decision/final-artifact objects.
-3. If validation succeeds, call `render_mix_contribution_review` with the same
-   payload so Claude can show the HTML review widget.
-4. Use `save_mix_contribution_decisions` to persist reviewer actions to
-   `ui_decisions.json`, then `apply_mix_contribution_decisions` to write
-   `applied_decisions.json` and update `final_artifacts.json` status.
-5. If MCP rendering is unavailable, fall back to a concise Markdown/chat review
-   based on `review_payload.json`; do not block the deterministic run.
-
-Use the UI handoff to review the generated chart/report package. Continue to
-write the client interpretation from structured source data and reviewed facts.
+Review the professional result in chat and its normal charts/reports. Preserve exact-version validation, explicit decisions, save/apply and regeneration requirements. No metadata inspector or standalone browser editor is shipped in this product.
 
 ## Recipe Rules
 

@@ -180,25 +180,7 @@ python3 "${CLAUDE_PLUGIN_ROOT}/scripts/managed_python_runtime.py" --module scatt
 
 ## MCP Review Handoff
 
-After the deterministic run writes `scatter_bubble/review_payload.json`, prefer
-the local MCP widget when the `scatterBubbleWidgets` server is available:
-
-1. Read `scatter_bubble/run_intake.json`,
-   `scatter_bubble/review_payload.json`,
-   `scatter_bubble/ui_decisions.json`, and
-   `scatter_bubble/final_artifacts.json`.
-2. Call `validate_scatter_bubble_review` with the review payload and optional
-   intake/decision/final-artifact objects.
-3. If validation succeeds, call `render_scatter_bubble_review` with the same
-   payload so Claude can show the HTML review widget.
-4. Use `save_scatter_bubble_decisions` to persist reviewer actions to
-   `ui_decisions.json`, then `apply_scatter_bubble_decisions` to write
-   `applied_decisions.json` and update `final_artifacts.json` status.
-5. If MCP rendering is unavailable, fall back to a concise Markdown/chat review
-   based on `review_payload.json`; do not block the deterministic run.
-
-Use the UI handoff to review the generated chart/report package. Continue to
-write the client interpretation from structured source data and reviewed facts.
+Review the professional result in chat and its normal charts/reports. Preserve exact-version validation, explicit decisions, save/apply and regeneration requirements. No metadata inspector or standalone browser editor is shipped in this product.
 
 ## Recipe Rules
 

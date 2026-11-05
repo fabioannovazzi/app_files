@@ -2,7 +2,7 @@
   "mcpServers": {
     "luciaPromptOptimizer": {
       "title": "Lucia · Imposta la risposta",
-      "description": "Convalida e rende revisionabile il piano prodotto dal Legal/Tax Answer Planner condiviso con Vera.",
+      "description": "Validazione e decisioni del percorso; i risultati professionali si riesaminano nella chat e nei documenti.",
       "icons": [
         {
           "src": "./assets/icon.svg",
@@ -15,13 +15,13 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./scripts/run_component_mcp.cjs",
+        "./scripts/review_engine_mcp.cjs",
         "prompt-optimizer"
       ]
     },
     "luciaDeepResearchValidator": {
       "title": "Lucia · Valida la risposta",
-      "description": "Convalida e rende revisionabile il controllo prodotto dal Legal/Tax Answer Review condiviso con Vera.",
+      "description": "Validazione e decisioni del percorso; i risultati professionali si riesaminano nella chat e nei documenti.",
       "icons": [
         {
           "src": "./assets/icon.svg",
@@ -34,7 +34,7 @@
       "cwd": ".",
       "command": "node",
       "args": [
-        "./scripts/run_component_mcp.cjs",
+        "./scripts/review_engine_mcp.cjs",
         "deep-research-validator"
       ]
     },
@@ -63,6 +63,24 @@
       "command": "node",
       "args": [
         "./scripts/incident_host_mcp.cjs"
+      ]
+    },
+    "luciaFirmMethod": {
+      "title": "Lucia · Istruzioni dello studio",
+      "description": "Crea, modifica e salva versioni delle istruzioni dello studio nel pannello locale.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/method_mcp.cjs"
+      ]
+    },
+    "luciaMatterOpening": {
+      "title": "Lucia · Fascicolo nuova pratica",
+      "description": "Riesame professionale della pratica selezionata con decisioni salvate e versioni verificate.",
+      "cwd": ".",
+      "command": "node",
+      "args": [
+        "./scripts/matter_mcp.cjs"
       ]
     }
   }

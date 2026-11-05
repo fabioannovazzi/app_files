@@ -138,8 +138,7 @@ HOSTED_INTERVIEW_OUTPUT_COPY = {
         "mic_transcript": "Mic transcript",
         "audio_chunks": "Audio chunks",
         "saved_events": "Saved events",
-        "open_json_bundle": "Open JSON bundle",
-        "open_quality_review": "Open quality review",
+        "print_results": "Print or save PDF",
         "quality_review": "Quality Review",
         "summary": "Summary",
         "overall_quality": "Overall quality",
@@ -153,7 +152,7 @@ HOSTED_INTERVIEW_OUTPUT_COPY = {
         "missed_opportunities": "Missed Opportunities",
         "uncertainties": "Uncertainties",
         "follow_up_questions": "Follow-Up Questions",
-        "pipeline_improvements": "Pipeline Improvements",
+        "pipeline_improvements": "Suggestions for future interviews",
         "do_not_change": "Do Not Change",
         "contradictions": "Contradictions",
         "quality_review_unavailable": "Quality review unavailable",
@@ -187,8 +186,7 @@ HOSTED_INTERVIEW_OUTPUT_COPY = {
         "mic_transcript": "Transcripción del micrófono",
         "audio_chunks": "Fragmentos de audio",
         "saved_events": "Eventos guardados",
-        "open_json_bundle": "Abrir paquete JSON",
-        "open_quality_review": "Abrir revisión de calidad",
+        "print_results": "Imprimir o guardar PDF",
         "quality_review": "Revisión de calidad",
         "summary": "Resumen",
         "overall_quality": "Calidad general",
@@ -217,6 +215,36 @@ HOSTED_INTERVIEW_OUTPUT_COPY = {
     },
 }
 HOSTED_INTERVIEW_OUTPUT_VALUE_LABELS = {
+    "en": {
+        "interview_status": {
+            "ready": "Ready",
+            "started": "In progress",
+            "completed": "Completed",
+            "failed_technical": "Technical problem",
+            "incomplete": "Incomplete",
+            "unusable": "Unusable",
+        },
+        "transcript_source": {
+            "realtime_live_asr": "Live transcription",
+            "post_call_interviewee_audio": "Participant audio transcribed after the interview",
+        },
+        "transcription_status": {
+            "queued": "Queued",
+            "unavailable": "Not available",
+            "disabled": "Not enabled",
+            "running": "In progress",
+            "error": "Could not complete",
+            "complete": "Complete",
+        },
+        "review_quality": {
+            "strong": "Strong",
+            "usable": "Usable",
+            "weak": "Weak",
+            "failed": "Failed",
+        },
+        "severity": {"high": "High", "medium": "Medium", "low": "Low"},
+        "speaker": {"Interviewer": "Interviewer", "Interviewee": "Participant"},
+    },
     "es": {
         "interview_status": {
             "ready": "Lista",

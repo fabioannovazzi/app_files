@@ -79,14 +79,29 @@ def test_matter_widget_shows_request_sources_and_escapes_case_text(language):
             }
         ],
     }
+    missing_description = "Verify the client and assisted-party identity and role."
+    payload["items"].append(
+        {
+            "id": "missing-identity",
+            "item_type": "missing_item",
+            "title": labels["missing_title"] + " · " + missing_description,
+            "status": "open",
+            "recommended_action": "return",
+            "allowed_actions": ["accept", "return", "reject"],
+            "evidence_ids": [],
+            "data": {"description": missing_description},
+        }
+    )
     program = r"""
 const vm=require('node:vm'),fs=require('node:fs');
 const input=JSON.parse(fs.readFileSync(0,'utf8'));
 const nodes={};
 const document={documentElement:{},querySelector:key=>(nodes[key]??={addEventListener(){}})};
-const context={document,location:{pathname:'/review'},window:{openai:{toolOutput:{review_payload:input.payload}},addEventListener(){}}};
+const listeners={},parent={postMessage(){}};
+const context={document,location:{pathname:'/review'},parent,setTimeout(){return 1},clearTimeout(){},window:{addEventListener(name,callback){listeners[name]=callback}}};
 vm.createContext(context);vm.runInContext(input.script,context);
-process.stdout.write(JSON.stringify({body:nodes['#items'].innerHTML,title:nodes['#title'].textContent,language:document.documentElement.lang,toolbarHidden:nodes['#toolbar'].hidden}));
+listeners.message({source:parent,data:{jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{review_payload:input.payload}}}});
+process.stdout.write(JSON.stringify({body:nodes['#items'].innerHTML,title:nodes['#title'].textContent,language:document.documentElement.lang,toolbarHidden:nodes['#toolbar'].hidden,payload:input.payload}));
 """
     node = shutil.which("node")
     assert node, "The supported Node runtime is required to exercise the real widget."
@@ -99,6 +114,10 @@ process.stdout.write(JSON.stringify({body:nodes['#items'].innerHTML,title:nodes[
         timeout=30,
     )
     actual = json.loads(result.stdout)
+    assert (
+        labels["missing_title"] + " · " + labels[missing_description] in actual["body"]
+    )
+    assert actual["payload"] == payload
     assert actual["language"] == language
     assert actual["title"] == labels["page_title"]
     assert actual["toolbarHidden"] is True

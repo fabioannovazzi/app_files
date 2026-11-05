@@ -1,0 +1,12 @@
+[run]
+source =
+    plugins/lucia/scripts
+    plugins/clara/scripts
+    scripts
+[report]
+show_missing = True
+include =
+    */plugins/lucia/scripts/method_mcp.py
+    */plugins/lucia/scripts/matter_mcp.py
+    */plugins/clara/scripts/report_mcp.py
+    */scripts/product_ui_retirement.py

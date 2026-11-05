@@ -354,7 +354,27 @@ def test_lucia_and_vera_package_the_same_assurance_component_bytes(
         )
 
     assert vera_entries
-    assert lucia_entries == vera_entries
+    handoffs = {
+        "deep-research-validator": {
+            "mcp/server.cjs",
+            "skills/deep-research/SKILL.md",
+            "skills/legal-tax-answer-review/SKILL.md",
+        },
+        "prompt-optimizer": {
+            "mcp/server.cjs",
+            "skills/legal-tax-answer-planner/SKILL.md",
+        },
+        "studio-archive": set(),
+    }[component]
+    # The owners expose different native handoffs; their professional engines,
+    # policies, schemas and every other component byte must stay identical.
+    assert set(lucia_entries) == set(vera_entries)
+    assert {
+        name for name in vera_entries if vera_entries[name] != lucia_entries[name]
+    } == handoffs
+    assert {
+        name: data for name, data in vera_entries.items() if name not in handoffs
+    } == {name: data for name, data in lucia_entries.items() if name not in handoffs}
 
 
 @pytest.mark.parametrize(

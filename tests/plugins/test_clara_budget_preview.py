@@ -5,9 +5,6 @@ from __future__ import annotations
 import hashlib
 import importlib.util
 import json
-import threading
-import urllib.error
-import urllib.request
 from pathlib import Path
 
 import pytest
@@ -67,6 +64,7 @@ def test_preview_rejects_changed_native_bytes(preview, tmp_path):
         "<script>fetch('https://example.com')</script>",
         '<img onerror="alert(1)">',
         '<iframe src="private.html"></iframe>',
+        '<a href="java\nscript:alert(1)">Untrusted link</a>',
     ],
 )
 def test_preview_rejects_active_content_even_with_matching_receipt(
@@ -77,31 +75,47 @@ def test_preview_rejects_active_content_even_with_matching_receipt(
         preview.report_bytes(report)
 
 
-def test_preview_serves_only_pinned_report(preview, tmp_path):
+def _app():
+    spec = importlib.util.spec_from_file_location(
+        "clara_report_app_test", ROOT / "plugins/clara/scripts/report_mcp.py"
+    )
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.ReportApp()
+
+
+def test_native_app_pins_report_and_receipt_and_keeps_content_app_only(
+    preview, tmp_path
+):
     report = _write_report(preview, tmp_path)
-    original = report.read_bytes()
-    server, url = preview.make_server(report)
-    thread = threading.Thread(target=server.serve_forever, daemon=True)
-    thread.start()
-    try:
-        with urllib.request.urlopen(url, timeout=3) as response:
-            assert response.read() == original
-            csp = response.headers["Content-Security-Policy"]
-            assert "script-src 'sha256-" in csp
-            assert "sandbox allow-scripts" in csp
-            assert "allow-same-origin" not in csp
-            assert "default-src 'none'" in csp
-        with pytest.raises(urllib.error.HTTPError) as error:
-            urllib.request.urlopen(
-                url.rsplit("/", 1)[0] + "/execution_receipt.json", timeout=3
-            )
-        assert error.value.code == 404
-        # Updating both the report and receipt cannot replace an open preview.
-        _write_report(preview, tmp_path, extra="<p>New revision</p>")
-        with pytest.raises(urllib.error.HTTPError) as error:
-            urllib.request.urlopen(url, timeout=3)
-        assert error.value.code == 409
-    finally:
-        server.shutdown()
-        server.server_close()
-        thread.join(timeout=3)
+    app = _app()
+    launch = app.open(str(report))
+    assert launch["structuredContent"] == {"status": "ready"}
+    assert "Fictional report" not in json.dumps(launch["content"])
+    assert str(tmp_path) not in json.dumps(launch["content"])
+    assert launch["_meta"]["report"]["html"] == report.read_text()
+    session = launch["_meta"]["report"]["session"]
+    assert app.refresh(session) == launch
+    _write_report(preview, tmp_path, extra="<p>New revision</p>")
+    with pytest.raises(ValueError, match="changed"):
+        app.refresh(session)
+    assert not hasattr(preview, "make_server")
+
+
+def test_native_app_refuses_unbound_sessions_and_other_files(preview, tmp_path):
+    report = _write_report(preview, tmp_path)
+    app = _app()
+    with pytest.raises(ValueError, match="Reopen"):
+        app.refresh("unbound")
+    with pytest.raises(ValueError, match="absolute"):
+        app.open(report.name)
+    other = tmp_path / "unrelated.html"
+    other.write_text("private unrelated content")
+    with pytest.raises(ValueError, match="Select the native"):
+        app.open(str(other))
+    html = app.resource()["contents"][0]["text"]
+    assert 'sandbox="allow-scripts"' in html
+    assert "allow-modals" not in html
+    assert "allow-same-origin" not in html
+    assert "connect-src 'none'" in html
+    assert "Fictional report" not in html

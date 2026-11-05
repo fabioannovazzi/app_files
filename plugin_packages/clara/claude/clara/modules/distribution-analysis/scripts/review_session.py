@@ -553,13 +553,13 @@ def write_review_session_artifacts(
             ),
             "next_actions": (
                 [
-                    "Renderice review_payload.json con el widget MCP cuando esté disponible.",
+                    "Revise los gráficos y el informe con Clara en esta conversación.",
                     "Consulte distribution_context.json antes de interpretar los píxeles de los gráficos.",
                     "Redacte codex_business_analysis.md o actualice el informe del cliente a partir de las fuentes revisadas y las advertencias.",
                 ]
                 if _is_spanish(language)
                 else [
-                    "Render review_payload.json with the MCP widget when available.",
+                    "Review the generated charts and report with Clara in this chat.",
                     "Use distribution_context.json before interpreting chart pixels.",
                     "Write codex_business_analysis.md or update the client report from reviewed source artifacts and caveats.",
                 ]

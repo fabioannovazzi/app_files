@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 from contextlib import contextmanager
 from pathlib import Path
@@ -14,18 +15,18 @@ from playwright.sync_api import expect, sync_playwright
 from tests.plugins import test_journal_bank_reconciliation_plugin as bank
 from tests.plugins.test_vera_native_inps import inps_run  # noqa: F401
 from tests.plugins.test_vera_native_sari_review import prepared_sari  # noqa: F401
+from tests.plugins.test_vera_native_workspace import sampling_workspace  # noqa: F401
 from tests.plugins.test_vera_native_workspace import (
     ROOT,
     archived_review_binding,
     configure,
-    sampling_workspace,  # noqa: F401
 )
 
 __all__: list[str] = []
 
 
 @contextmanager
-def review_host(env, *, empty=False):
+def review_host(env, *, empty=False, inline=False):
     """Serve the packaged resource over MCP in an isolated Chromium host."""
     package = os.environ.get("VERA_REVIEW_PACKAGE_ROOT")
     server = (
@@ -98,14 +99,16 @@ def review_host(env, *, empty=False):
             )
             page.goto("https://codex.test/")
             page.evaluate(
-                """() => {
+                """(displayMode) => {
               window.addEventListener('message', async event => {
                 const m=event.data, win=event.source;
-                if(m.method==='ui/initialize') win.postMessage({jsonrpc:'2.0',id:m.id,result:{hostContext:{displayMode:'fullscreen'}}},'*');
+                if(m.method==='ui/initialize') win.postMessage({jsonrpc:'2.0',id:m.id,result:{hostContext:{displayMode}}},'*');
                 if(m.method==='tools/call') win.postMessage({jsonrpc:'2.0',id:m.id,result:await window.mcpCall(m.params)},'*');
+                if(m.method==='ui/request-display-mode'){window.requestedDisplayMode=m.params.mode;win.postMessage({jsonrpc:'2.0',id:m.id,result:{mode:m.params.mode}},'*');}
                 if(m.method==='ui/notifications/initialized') window.ready=true;
               });
-            }"""
+            }""",
+                "inline" if inline else "fullscreen",
             )
 
             def mount(name, args):
@@ -411,6 +414,33 @@ def test_each_registered_work_opens_only_its_own_reader(tmp_path):
         browser.close()
 
 
+@pytest.mark.parametrize("width", [400, 1080])
+def test_host_body_font_preserves_the_workflow_typeface(tmp_path, monkeypatch, width):
+    env = {
+        **os.environ,
+        **configure(monkeypatch, tmp_path, []),
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
+    }
+    with review_host(env) as (page, mount, errors):
+        page.set_viewport_size({"width": width, "height": 900})
+        panel = mount("vera_workspace_open", {})
+        expect(panel.locator("main .sub")).to_be_visible()
+        # Codex sets this after mounting the app. App content must still use
+        # the shared typeface without replacing the host's body declaration.
+        page.frames[-1].add_style_tag(
+            content="html, body { font-family: system-ui !important; }"
+        )
+
+        expect(panel.locator("body")).to_have_css("font-family", "system-ui")
+        expect(panel.locator("main .sub")).to_have_css(
+            "font-family", re.compile("Instrument Sans")
+        )
+        expect(panel.locator("#status")).to_have_css(
+            "font-family", re.compile("Instrument Sans")
+        )
+        assert not errors
+
+
 def test_sample_review_keeps_supporting_files_available_on_demand(
     sampling_workspace,
 ):
@@ -427,3 +457,23 @@ def test_sample_review_keeps_supporting_files_available_on_demand(
         expect(file_button).to_be_hidden()
         panel.get_by_text("Documenti e file di supporto", exact=True).click()
         expect(file_button).to_be_visible()
+
+
+def test_selecting_a_work_opens_detail_without_an_outer_expand_control(
+    tmp_path, monkeypatch
+):
+    output, _, _, _, _ = bank._prepare_sealed_mcp_review_run(tmp_path, portable=True)
+    binding, _ = archived_review_binding(output, "journal-bank-reconciliation")
+    env = {**os.environ, **configure(monkeypatch, tmp_path, [binding])}
+    with review_host(env, inline=True) as (page, mount, errors):
+        app = mount("vera_workspace_open", {})
+        expect(
+            app.get_by_role("heading", name="Clienti e incarichi", exact=True)
+        ).to_be_visible()
+        assert page.evaluate("window.requestedDisplayMode ?? null") is None
+        app.get_by_role("button", name="Apri lavoro →", exact=True).click()
+        expect(
+            app.get_by_role("heading", name="Giornale e banca", exact=True)
+        ).to_be_visible()
+        assert page.evaluate("window.requestedDisplayMode") == "fullscreen"
+        assert not errors

@@ -131,6 +131,10 @@ h1{font-size:29px}
   font-synthesis: none;
   text-rendering: optimizeLegibility;
 }
+/* Hosts may pin their body font; keep the app content on its own typeface. */
+:root body > :not(script, style) {
+  font-family: var(--font-ui);
+}
 :root :is(h1, h2, h3, h4, .brand, .brand span) { color: var(--ink); font-family: var(--font-ui); }
 :root h1 { font-size: var(--font-size-title); font-weight: 650; line-height: 1.25; letter-spacing: 0; }
 :root :is(h2, h3) { font-size: var(--font-size-heading); font-weight: 650; line-height: 1.3; letter-spacing: 0; }
@@ -406,7 +410,21 @@ const VOCABULARY={
     "previous_memo": "Previous-version memo",
     "run_directory": "Dossier folder",
     "restored": "Saved decisions restored. Review them before applying.",
-    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision."
+    "saved_unavailable": "Saved decisions cannot be restored for this version. Review the data before saving a new decision.",
+    "Verify the client and assisted-party identity and role.": "Verify the client and assisted-party identity and role.",
+    "Search the complete approved client/matter register for every relevant party.": "Search the complete approved client/matter register for every relevant party.",
+    "Placeholder created at intake; verify identity and role.": "Placeholder created at intake; verify identity and role.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confirm scope, exclusions, authority and engagement status.",
+    "Define the requested legal work.": "Define the requested legal work.",
+    "Conflict review has not been completed.": "Conflict review has not been completed.",
+    "No approved client/matter register has been searched.": "No approved client/matter register has been searched.",
+    "Identify and professionally confirm or reject every possible deadline.": "Identify and professionally confirm or reject every possible deadline.",
+    "Opening evidence and intake decisions": "Opening evidence and intake decisions",
+    "Engagement scope, terms and approvals": "Engagement scope, terms and approvals",
+    "Matter evidence received or acquired": "Matter evidence received or acquired",
+    "Research plans, authorities and validation": "Research plans, authorities and validation",
+    "Draft and reviewed work product": "Draft and reviewed work product",
+    "Matter correspondence": "Matter correspondence"
   },
   "it": {
     "page_title": "Preparare una pratica",
@@ -599,7 +617,21 @@ const VOCABULARY={
     "previous_memo": "Memo della versione precedente",
     "run_directory": "Cartella del dossier",
     "restored": "Decisioni salvate ripristinate. Controllale prima di applicarle.",
-    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione."
+    "saved_unavailable": "Le decisioni salvate non possono essere ripristinate per questa versione. Rivedi i dati prima di salvare una nuova decisione.",
+    "Verify the client and assisted-party identity and role.": "Verificare identit\u00e0 e ruolo del cliente e degli altri soggetti assistiti.",
+    "Search the complete approved client/matter register for every relevant party.": "Cercare tutti i soggetti rilevanti nel registro completo dei clienti e delle pratiche approvato dallo studio.",
+    "Placeholder created at intake; verify identity and role.": "Soggetto indicato alla prima raccolta; verificarne identit\u00e0 e ruolo.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confermare perimetro, esclusioni, poteri e stato dell\u2019incarico.",
+    "Define the requested legal work.": "Definire il lavoro legale richiesto.",
+    "Conflict review has not been completed.": "Il controllo dei conflitti non \u00e8 stato completato.",
+    "No approved client/matter register has been searched.": "Non \u00e8 stato consultato un registro clienti e pratiche approvato dallo studio.",
+    "Identify and professionally confirm or reject every possible deadline.": "Individuare ogni possibile scadenza e confermarla o escluderla dopo il riesame professionale.",
+    "Opening evidence and intake decisions": "Documenti iniziali e decisioni sulla richiesta",
+    "Engagement scope, terms and approvals": "Perimetro, condizioni e approvazioni dell\u2019incarico",
+    "Matter evidence received or acquired": "Documenti della pratica ricevuti o acquisiti",
+    "Research plans, authorities and validation": "Piani di ricerca, fonti e verifiche",
+    "Draft and reviewed work product": "Bozze ed elaborati riesaminati",
+    "Matter correspondence": "Corrispondenza della pratica"
   },
   "fr": {
     "page_title": "Pr\u00e9parer un dossier",
@@ -792,7 +824,21 @@ const VOCABULARY={
     "previous_memo": "Note de la version pr\u00e9c\u00e9dente",
     "run_directory": "Dossier de travail",
     "restored": "D\u00e9cisions enregistr\u00e9es restaur\u00e9es. V\u00e9rifiez-les avant de les appliquer.",
-    "saved_unavailable": "Les d\u00e9cisions enregistr\u00e9es ne peuvent pas \u00eatre restaur\u00e9es pour cette version. Revoyez les donn\u00e9es avant de sauvegarder une nouvelle d\u00e9cision."
+    "saved_unavailable": "Les d\u00e9cisions enregistr\u00e9es ne peuvent pas \u00eatre restaur\u00e9es pour cette version. Revoyez les donn\u00e9es avant de sauvegarder une nouvelle d\u00e9cision.",
+    "Verify the client and assisted-party identity and role.": "V\u00e9rifier l\u2019identit\u00e9 et le r\u00f4le du client et des autres personnes assist\u00e9es.",
+    "Search the complete approved client/matter register for every relevant party.": "Rechercher toutes les parties pertinentes dans le registre complet des clients et dossiers approuv\u00e9 par le cabinet.",
+    "Placeholder created at intake; verify identity and role.": "Partie indiqu\u00e9e \u00e0 la r\u00e9ception ; v\u00e9rifier son identit\u00e9 et son r\u00f4le.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confirmer le p\u00e9rim\u00e8tre, les exclusions, les pouvoirs et l\u2019\u00e9tat du mandat.",
+    "Define the requested legal work.": "D\u00e9finir le travail juridique demand\u00e9.",
+    "Conflict review has not been completed.": "Le contr\u00f4le des conflits n\u2019est pas termin\u00e9.",
+    "No approved client/matter register has been searched.": "Aucun registre de clients et dossiers approuv\u00e9 n\u2019a \u00e9t\u00e9 consult\u00e9.",
+    "Identify and professionally confirm or reject every possible deadline.": "Identifier chaque \u00e9ch\u00e9ance possible et la confirmer ou l\u2019\u00e9carter apr\u00e8s examen professionnel.",
+    "Opening evidence and intake decisions": "Documents initiaux et d\u00e9cisions sur la demande",
+    "Engagement scope, terms and approvals": "P\u00e9rim\u00e8tre, conditions et approbations du mandat",
+    "Matter evidence received or acquired": "Documents du dossier re\u00e7us ou recueillis",
+    "Research plans, authorities and validation": "Plans de recherche, sources et v\u00e9rifications",
+    "Draft and reviewed work product": "Projets et documents r\u00e9vis\u00e9s",
+    "Matter correspondence": "Correspondance du dossier"
   },
   "de": {
     "page_title": "Eine Angelegenheit vorbereiten",
@@ -985,7 +1031,21 @@ const VOCABULARY={
     "previous_memo": "Vermerk der vorherigen Version",
     "run_directory": "Aktenordner",
     "restored": "Gespeicherte Entscheidungen wiederhergestellt. Vor dem Anwenden pr\u00fcfen.",
-    "saved_unavailable": "Die gespeicherten Entscheidungen k\u00f6nnen f\u00fcr diese Version nicht wiederhergestellt werden. Pr\u00fcfen Sie die Daten vor dem Speichern einer neuen Entscheidung."
+    "saved_unavailable": "Die gespeicherten Entscheidungen k\u00f6nnen f\u00fcr diese Version nicht wiederhergestellt werden. Pr\u00fcfen Sie die Daten vor dem Speichern einer neuen Entscheidung.",
+    "Verify the client and assisted-party identity and role.": "Identit\u00e4t und Rolle des Mandanten und der weiteren vertretenen Personen pr\u00fcfen.",
+    "Search the complete approved client/matter register for every relevant party.": "Alle relevanten Beteiligten im vollst\u00e4ndigen, von der Kanzlei freigegebenen Mandanten- und Aktenregister suchen.",
+    "Placeholder created at intake; verify identity and role.": "Bei der Aufnahme angegebene Partei; Identit\u00e4t und Rolle pr\u00fcfen.",
+    "Confirm scope, exclusions, authority and engagement status.": "Umfang, Ausschl\u00fcsse, Befugnisse und Mandatsstatus best\u00e4tigen.",
+    "Define the requested legal work.": "Die angefragte rechtliche Arbeit festlegen.",
+    "Conflict review has not been completed.": "Die Konfliktpr\u00fcfung ist nicht abgeschlossen.",
+    "No approved client/matter register has been searched.": "Es wurde kein freigegebenes Mandanten- und Aktenregister durchsucht.",
+    "Identify and professionally confirm or reject every possible deadline.": "Jede m\u00f6gliche Frist ermitteln und nach fachlicher Pr\u00fcfung best\u00e4tigen oder verwerfen.",
+    "Opening evidence and intake decisions": "Erste Unterlagen und Aufnahmeentscheidungen",
+    "Engagement scope, terms and approvals": "Umfang, Bedingungen und Freigaben des Mandats",
+    "Matter evidence received or acquired": "Erhaltene oder beschaffte Aktenunterlagen",
+    "Research plans, authorities and validation": "Recherchepl\u00e4ne, Quellen und Pr\u00fcfungen",
+    "Draft and reviewed work product": "Entw\u00fcrfe und gepr\u00fcfte Arbeitsergebnisse",
+    "Matter correspondence": "Schriftverkehr zur Akte"
   },
   "es": {
     "page_title": "Preparar un expediente",
@@ -1178,18 +1238,37 @@ const VOCABULARY={
     "previous_memo": "Nota de la versi\u00f3n anterior",
     "run_directory": "Carpeta del expediente",
     "restored": "Decisiones guardadas recuperadas. Rev\u00edsalas antes de aplicarlas.",
-    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versi\u00f3n. Revisa los datos antes de guardar una nueva decisi\u00f3n."
+    "saved_unavailable": "Las decisiones guardadas no pueden recuperarse para esta versi\u00f3n. Revisa los datos antes de guardar una nueva decisi\u00f3n.",
+    "Verify the client and assisted-party identity and role.": "Verificar la identidad y el papel del cliente y de las dem\u00e1s personas asistidas.",
+    "Search the complete approved client/matter register for every relevant party.": "Buscar a todas las partes relevantes en el registro completo de clientes y asuntos aprobado por el despacho.",
+    "Placeholder created at intake; verify identity and role.": "Parte indicada en la recepci\u00f3n; verificar su identidad y funci\u00f3n.",
+    "Confirm scope, exclusions, authority and engagement status.": "Confirmar alcance, exclusiones, facultades y estado del encargo.",
+    "Define the requested legal work.": "Definir el trabajo jur\u00eddico solicitado.",
+    "Conflict review has not been completed.": "La revisi\u00f3n de conflictos no se ha completado.",
+    "No approved client/matter register has been searched.": "No se ha consultado un registro de clientes y asuntos aprobado.",
+    "Identify and professionally confirm or reject every possible deadline.": "Identificar cada posible plazo y confirmarlo o descartarlo tras la revisi\u00f3n profesional.",
+    "Opening evidence and intake decisions": "Documentos iniciales y decisiones sobre la solicitud",
+    "Engagement scope, terms and approvals": "Alcance, condiciones y aprobaciones del encargo",
+    "Matter evidence received or acquired": "Documentos del asunto recibidos u obtenidos",
+    "Research plans, authorities and validation": "Planes de investigaci\u00f3n, fuentes y comprobaciones",
+    "Draft and reviewed work product": "Borradores y documentos revisados",
+    "Matter correspondence": "Correspondencia del asunto"
   }
 };
-const EDITABLE=false;
+let EDITABLE=false,appSession,saveAttempt,busy=false,dirty=false;
 const esc=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let review=null,reviewHash='',language='en',evidenceNames={},partyNames={};
 const base=location.pathname.replace(/\/$/,'');
 const words=()=>VOCABULARY[language]||VOCABULARY.en;
 const t=key=>words()[key]||String(key).replace(/_/g,' ');
+function itemTitle(item){
+ const description=item.data?.description,translated=words()[description];
+ return translated&&typeof description==='string'&&item.title.endsWith(description)
+  ? item.title.slice(0,-description.length)+translated : item.title;
+}
 function caption(key){return words()[key]||String(key).replace(/_/g,' ');}
 function stateText(value){return words()[String(value)]||String(value);}
-const technicalFields=new Set(['party_id','scope_id','item_id','candidate_id','deadline_id','reference','register_snapshot_reference']);
+const technicalFields=new Set(['party_id','scope_id','item_id','candidate_id','deadline_id']);
 const codedFields=new Set(['status','identity_status','relationship_status','party_type','roles','opening_mode','urgency','register_scope','authority_status','fee_terms_status','engagement_document_status','classification','external_disclosure_status','applicability','separate_assessment_status','notice_status','kind']);
 function valueHtml(value,key){
  if(value==null||value==='')return esc(t('missing'));
@@ -1199,16 +1278,17 @@ function valueHtml(value,key){
   const rank=field=>priority.includes(field)?priority.indexOf(field):priority.length;
   const entries=Object.entries(value).sort(([a],[b])=>rank(a)-rank(b)),regular=entries.filter(([field])=>!technicalFields.has(field)),technical=entries.filter(([field])=>technicalFields.has(field));
   const fields=rows=>`<dl class="facts">${rows.map(([field,entry])=>`<dt>${esc(caption(field))}</dt><dd>${valueHtml(entry,field)}</dd>`).join('')}</dl>`;
-  return fields(regular)+(technical.length?`<details class="technical"><summary>${esc(t('technical'))}</summary>${fields(technical)}</details>`:'');
+  return fields(regular);
  }
  if(key==='evidence_ids'||key==='source_evidence_ids')return esc(evidenceNames[value]||value);
  if(key==='searched_party_ids'||key==='party_ids')return esc(partyNames[value]||value);
  if(typeof value==='boolean')return esc(t(String(value)));
  if(codedFields.has(key))return esc(stateText(value));
- if(['basis','handling_notes','search_method','description'].includes(key))return esc(words()[String(value)]||value);
+ if(['basis','handling_notes','search_method','description','assessment_basis','purpose'].includes(key))return esc(words()[String(value)]||value);
  return esc(value);
 }
 function render(value){
+ dirty=false;appSession=value?.session;EDITABLE=!!appSession;
  const payload=value?.review_payload||value?.review||value;
  if(!payload||!Array.isArray(payload.items)){document.querySelector('#items').innerHTML=`<p>${esc(t('no_payload'))}</p>`;return;}
  review=payload;reviewHash=value?.review_payload_sha256||'';language=VOCABULARY[payload.language]?payload.language:'en';document.documentElement.lang=language;
@@ -1222,7 +1302,7 @@ function render(value){
  const order=['matter_request','party_map','engagement','conflict_scope','conflict_candidate','deadline_posture','deadline_candidate','missing_item','confidentiality','aml_applicability','privacy_retention','folder_plan'];
  const index=type=>order.includes(type)?order.indexOf(type):order.length;
  const items=[...payload.items].sort((a,b)=>index(a.item_type)-index(b.item_type));
- document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(item.title)}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
+ document.querySelector('#items').innerHTML=items.map((item,i)=>`<details class="review-item" data-id="${esc(item.id)}" ${i===0?'open':''}><summary><h2>${esc(itemTitle(item))}</h2><span class="state">${esc(stateText(item.status))}</span></summary><div class="content">${valueHtml(item.data||{},'')}${item.evidence_ids?.length?`<p class="evidence">${esc(t('sources'))}: ${item.evidence_ids.map(id=>esc(evidenceNames[id]||id)).join(' · ')}</p>`:''}${EDITABLE?`<div class="decision-controls"><label>${esc(t('decision'))}<select aria-label="${esc(t('decision'))}"><option value="">${esc(t('review_first'))}</option>${item.allowed_actions.map(action=>`<option value="${esc(action)}">${esc(stateText(action))}</option>`).join('')}</select><small class="notice">${esc(t('proposal'))}: ${esc(stateText(item.recommended_action))}</small></label><label>${esc(t('note'))}<textarea maxlength="5000"></textarea></label></div>`:''}</div></details>`).join('');
  if(EDITABLE){
   const pending=value?.pending_review;const status=document.querySelector('#status');
   document.querySelector('#reviewer').value='';status.textContent='';status.className='';
@@ -1241,12 +1321,40 @@ function render(value){
  }
  document.querySelector('#save').disabled=false;
 }
-async function load(){try{const response=await fetch(`${base}/api/review`,{cache:'no-store'});const value=await response.json();if(!response.ok)throw new Error(value.error);render(value);}catch(error){const status=document.querySelector('#status');status.className='bad';status.textContent=error.message;}}
+let nextRequest=0;
+const pendingRequests=new Map();
+function request(method,params){return new Promise((resolve,reject)=>{
+ const id=++nextRequest,timer=setTimeout(()=>{pendingRequests.delete(id);reject(new Error(t('saved_unavailable')));},30000);
+ pendingRequests.set(id,{resolve,reject,timer});parent.postMessage({jsonrpc:'2.0',id,method,params},'*');
+});}
+function accept(result){
+ if(result?.isError)throw new Error(result.content?.find(item=>item.type==='text')?.text || t('saved_unavailable'));
+ render(result?._meta?.matter || result?.structuredContent || result);
+}
 document.querySelector('#save').addEventListener('click',async()=>{
- const reviewer=document.querySelector('#reviewer').value.trim();const status=document.querySelector('#status');
+ if(busy || !appSession)return;
+ const reviewer=document.querySelector('#reviewer').value.trim(),status=document.querySelector('#status');
  if(!reviewer){status.className='bad';status.textContent=t('reviewer_required');return;}
  const decisions=[...document.querySelectorAll('.review-item')].map(item=>({item_id:item.dataset.id,action:item.querySelector('select').value,note:item.querySelector('textarea').value.trim()})).filter(item=>item.action);
- try{const response=await fetch(`${base}/api/decisions`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({reviewer,decisions,run_id:review.run_id,intake_sha256:review.intake_sha256,review_payload_sha256:reviewHash})});const value=await response.json();if(!response.ok)throw new Error(value.error);status.className='good';status.textContent=t('saved');}catch(error){status.className='bad';status.textContent=error.message;}
+ saveAttempt ||= {session:appSession,request_id:crypto.randomUUID(),reviewer,decisions};
+ busy=true;document.querySelectorAll('input,textarea,select,button').forEach(node=>node.disabled=true);
+ try{accept(await request('tools/call',{name:'lucia_matter_save',arguments:saveAttempt}));saveAttempt=null;status.className='good';status.textContent=t('saved');}
+ catch(error){status.className='bad';status.textContent=error.message;}
+ finally{busy=false;document.querySelectorAll('input,textarea,select,button').forEach(node=>node.disabled=false);}
 });
-if(EDITABLE){load();}else{document.querySelector('#toolbar').hidden=true;render(window.openai?.toolOutput||window.openai?.structuredContent);window.addEventListener('openai:set_globals',event=>render(event.detail?.globals?.toolOutput||event.detail?.globals?.structuredContent));}
+document.querySelector('#toolbar').hidden=true;
+document.querySelector('main').addEventListener('input',()=>{if(!busy){saveAttempt=null;dirty=true;}});
+window.addEventListener('message',event=>{
+ if(event.source!==parent || event.data?.jsonrpc!=='2.0')return;
+ const message=event.data,item=pendingRequests.get(message.id);
+ if(item){clearTimeout(item.timer);pendingRequests.delete(message.id);message.error?item.reject(new Error(message.error.message)):item.resolve(message.result);return;}
+ if(message.method==='ui/notifications/tool-result'){
+  if(busy || dirty)return;
+  try{accept(message.params);}catch(error){document.querySelector('#status').textContent=error.message;}
+ }
+ if(message.method==='ui/resource-teardown')parent.postMessage({jsonrpc:'2.0',id:message.id,result:{}},'*');
+});
+request('ui/initialize',{protocolVersion:'2026-01-26',appInfo:{name:'Lucia matter opening',version:'1.0.0'},appCapabilities:{availableDisplayModes:['inline','fullscreen']}})
+.then(()=>parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized'},'*'))
+.catch(()=>{document.querySelector('#status').textContent=t('no_payload');});
 </script></body></html>

@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.381",
+  "version": "0.1.382",
   "services": [
     {
       "name": "claraIncidentHost",
@@ -1090,6 +1090,93 @@
         }
       ],
       "resources": [],
+      "resourceTemplates": [],
+      "prompts": []
+    },
+    {
+      "name": "claraReports",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "tools": {},
+          "resources": {}
+        },
+        "serverInfo": {
+          "name": "clara-reports",
+          "version": "1.0.0"
+        }
+      },
+      "tools": [
+        {
+          "name": "clara_report_open",
+          "title": "Budget e previsioni",
+          "description": "Open the explicitly selected absolute native budget-dashboard path in the local app. Verifies the execution receipt and exact bundled script. Does not publish or expose sources or report data to the model.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "report": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            },
+            "required": [
+              "report"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ],
+              "resourceUri": "ui://clara/budget-report-v1.html"
+            }
+          }
+        },
+        {
+          "name": "clara_report_refresh",
+          "title": "Aggiorna il report",
+          "description": "Recheck the exact app-bound report and receipt, rejecting changes; no arbitrary path or new file can be selected.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "session": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 4000
+              }
+            },
+            "required": [
+              "session"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        }
+      ],
+      "resources": [
+        {
+          "uri": "ui://clara/budget-report-v1.html",
+          "name": "Budget e previsioni",
+          "mimeType": "text/html;profile=mcp-app"
+        }
+      ],
       "resourceTemplates": [],
       "prompts": []
     }
