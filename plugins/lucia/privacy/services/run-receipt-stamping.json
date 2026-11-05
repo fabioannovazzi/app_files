@@ -81,7 +81,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6cc8c5b2568f8545a54a3631199f2a3ca2ddec834df4a2c51be56b084ffa4c7e"
+    "source_fingerprint": "b857910b846a28b876657775e6d9782d389a4c9e33cdcfb4bf11fc645b81dd07"
   },
   "runtime_profiles": [
     "openai-codex",
