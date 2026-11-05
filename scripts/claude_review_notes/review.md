@@ -12,9 +12,9 @@ course manifest. Downloads are written to a temporary file; only verified bytes
 are moved to the lesson destination. The cap is 25 MiB per file. HTTPS, the exact
 mparanza.com host and the course path are checked, including every redirect.
 
-## Local review tokens (flagged as "Uses a credential")
+## {local_tokens_heading}
 {local_tokens}
-The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables.
+{installer_note}
 
 ## Runtime download/execution findings (RUNTIME_FETCH_EXEC)
 {runtime_fetch_exec}
