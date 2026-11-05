@@ -2276,3 +2276,50 @@ def test_restored_tax_litigation_course_is_in_release_manifest(product):
     assert (
         ROOT / f"plugins/{product}/skills/contenzioso-tributario/SKILL.md"
     ).is_file()
+
+
+@pytest.mark.parametrize(
+    "report_status", ["missing", "not_applicable", "unavailable", "incomplete"]
+)
+def test_course_delivers_results_without_privacy_approval_or_complete_report(
+    result_view_case, tmp_path, report_status
+):
+    """A reporting gap must not hide the lesson's verified deliverables."""
+    library, lesson = result_view_case
+    if report_status != "missing":
+        write_json(lesson / "model_data_reporting.json", {"status": report_status})
+    destination = tmp_path / "course-results"
+
+    library.results("variance-analysis", "it", lesson, "execution.json", destination)
+
+    assert (destination / "course.html").is_file()
+    assert (destination / "outputs/01-fatture_summary.csv").read_bytes() == (
+        lesson / "fatture_summary.csv"
+    ).read_bytes()
+    assert not (lesson / "model_data_report.json").exists()
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_course_reporting_precedence_reaches_router_teacher_and_shared_contract(
+    product,
+):
+    """Specialist reporting defaults cannot supersede the teaching route."""
+    base = ROOT / "plugins" / product / "skills"
+    router = (base / product / "SKILL.md").read_text()
+    teacher = (base / f"learn-with-{product}" / "SKILL.md").read_text()
+    contract = (base / product / "references/model-data-report-contract.md").read_text()
+    shared = (
+        ROOT
+        / "plugins/_shared/privacy-runtime/skills/privacy-surface-review"
+        / "references/model-data-report-contract.md"
+    ).read_text()
+
+    assert "It overrides all default report preparation," in router
+    assert "including specialist workflows invoked within them" in teacher
+    assert "separate professional run, outside the" in teacher
+    assert "not the actual data path" in teacher
+    assert "never a participant step" in contract
+    assert contract == shared
+    written = (ROOT / "scripts/cowork_teaching/SKILL.md").read_text()
+    assert "never a participant step" in written
+    assert "separate professional run, outside the" in written

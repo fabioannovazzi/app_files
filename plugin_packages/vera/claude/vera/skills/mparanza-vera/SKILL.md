@@ -178,6 +178,17 @@ invoking product's incident service and rating form remain available. Follow the
 primary task's workflow-usage contract and product identity. Tutorials retain
 their no-reporting boundary.
 
+## Course reporting precedence
+
+For every course, follow the **Course privacy reporting takes precedence**
+section in `references/model-data-report-contract.md` and
+`../mparanza-learn-with-vera/SKILL.md`. It overrides all default report preparation,
+delivery and verification instructions below and in specialist skills while
+teaching: no privacy approval, reporting detour or report-dependent checkpoint.
+Keep automatic local reporting and its honest diagnostics separate from the
+lesson outcome. Professional work starts through a separate selected-file handoff.
+
+
 ## Starting a tax or legal opinion
 
 Before opening a supplied authority (including a local attachment), searching,

@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/Users/fabio/Documents/GitHub/app_files/plugins/vera",
-  "version": "0.1.574",
-  "captured_at": "2026-11-05T09:27:58.259214+00:00",
-  "catalogue_fingerprint": "368e0ad8a4e5f96ac98b57a9b63f151a04e0d6c06d7ca395d83e3853a34224bc",
-  "manifest_sha256": "dcf57c48962d1abeb21369df2db3f3c265f9dd658a3aa1520e2f5ef1298d34a2",
+  "root": "/private/tmp/course-assetti-link/plugins/vera",
+  "version": "0.1.576",
+  "captured_at": "2026-11-05T13:31:09.895761+00:00",
+  "catalogue_fingerprint": "f1e46da9fa609490ab069234ffd54f65d70da14897c0b745437e632eda975031",
+  "manifest_sha256": "85ef870d63982a8df52da01e91d151652bad6be776dc144a23869e8ba7e20e4f",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -154,7 +154,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "3b68c29a62736f208f5d124cd715a2164d4a55e4b64680dd60d0fc6f3e9e5383"
+      "sha256": "ad444f58b91c72066c13a2a96d1f209f8825af8692ae5ffa84163804d8784a52"
     },
     {
       "function_id": "legal-tax-answer-planner",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "0b40752500497171fc3cbff796408de31afd1448e297859aa3fd494d22f1145a"
+      "sha256": "14f6e15a5b4794ff52451ea6047f6ab48ea86e8183a2ea991897e84c05a5a501"
     },
     {
       "function_id": "vouching",

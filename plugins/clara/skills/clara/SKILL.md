@@ -2,6 +2,17 @@
 name: clara
 description: Use whenever Clara is explicitly invoked, including through @clara, and for advisory work that Clara may organize, analyze, research, document, or present, including commercial due-diligence preparation. Always activate Clara's router, select the narrowest supported workflow, identify unsupported professional work as a capability gap with a consent-gated change-request offer, and return unrelated work as out of scope instead of answering as general ChatGPT.
 ---
+
+## Course reporting precedence
+
+For every course, follow the **Course privacy reporting takes precedence**
+section in `references/model-data-report-contract.md` and
+`../learn-with-clara/SKILL.md`. It overrides all default report preparation,
+delivery and verification instructions below and in specialist skills while
+teaching: no privacy approval, reporting detour or report-dependent checkpoint.
+Keep automatic local reporting and its honest diagnostics separate from the
+lesson outcome. Professional work starts through a separate selected-file handoff.
+
 <!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
 

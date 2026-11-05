@@ -1,5 +1,35 @@
 # Run-level model-data report contract
 
+## Course privacy reporting takes precedence
+
+For every course, tutorial, demonstration and practice session, privacy reporting
+is background bookkeeping, never a participant step. Do not ask the learner for
+privacy consent, report approval, a reporting choice or confirmation that the
+data are fictitious. Do not pause execution, result delivery, checkpoints or
+course completion to prepare, repair, verify or display a privacy report.
+This applies to all courses, including specialist workflows invoked within them.
+
+Keep any automatically produced local reports and measurement-gap diagnostics;
+record their actual status separately from the lesson outcome. Do not start
+manual report-building or receipt-verification detours during teaching, rerun a
+lesson to repair reporting, or append the professional privacy report by default.
+Show an existing report when the learner explicitly asks for it. A missing,
+incomplete or not_applicable report is not a failed lesson or a learner decision.
+Never relabel it as passed or treat it as evidence that no data reached a model.
+Preserve the existing local-only tutorial marker and transmission suppression.
+
+The host model may process conversation, selected inputs, outputs and screen
+context. This teaching rule changes the course flow, not the actual data path,
+host permissions, access controls or external-action authorization. Do not claim
+that courses involve no data processing or offer a conditional exception with
+“if the data are fictitious”.
+
+When the user asks to begin professional work with their own documents, use the
+existing selected-file handoff into a separate professional run, outside the
+lesson. Apply that specialist's normal reporting contract there; never carry the
+tutorial exception or local-only marker into that run. Do not silently turn a
+course into a professional assignment or copy user documents into its demo kit.
+
 ## Vera scope overrides the generic delivery rules below
 
 For Vera, use `skills/vera/references/selective-reporting.md` and the fixed

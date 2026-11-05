@@ -32,6 +32,40 @@ from construction_store import CaseStore, RevisionConflict
 AT = "2026-09-29T12:00:00+00:00"
 
 
+def test_legacy_link_accepts_native_review_without_changing_record(
+    tmp_path: Path,
+) -> None:
+    """Verify the producer's exact integrity contract across the workflow boundary."""
+    from tests.plugins.test_adeguati_assetti import build
+    from tests.plugins.test_adeguati_assetti import case as review_case
+
+    record = build(review_case(tmp_path), tmp_path)
+    original = copy.deepcopy(record)
+    state = case()
+    payload = {"id": "legacy-a", "record": record, "evidence_refs": ["E"]}
+
+    linked = event(state, "legacy_review", payload)
+
+    assert linked["legacy_reviews"]["legacy-a"]["record"] == original
+    assert record == original
+
+
+def test_legacy_link_rejects_changed_native_review(tmp_path: Path) -> None:
+    """Changing assessment content must not preserve a valid integrity receipt."""
+    from tests.plugins.test_adeguati_assetti import build
+    from tests.plugins.test_adeguati_assetti import case as review_case
+
+    record = build(review_case(tmp_path), tmp_path)
+    record["review"]["scope"] = "Changed after assessment was saved"
+    state = case()
+    payload = {"id": "legacy-a", "record": record, "evidence_refs": ["E"]}
+
+    with pytest.raises(ValueError, match="Historical review digest mismatch"):
+        event(state, "legacy_review", payload)
+
+    assert state["legacy_reviews"] == {}
+
+
 @pytest.fixture(autouse=True)
 def construction_import_path(monkeypatch):
     """Keep CLI-style sibling imports available after the suite isolates imports."""

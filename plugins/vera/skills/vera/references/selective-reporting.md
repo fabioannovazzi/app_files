@@ -1,5 +1,9 @@
 # Selective privacy reporting
 
+For every course, the course precedence section in `model-data-report-contract.md`
+overrides the default report-display and verification steps here. Automatic local
+collection remains intact; its status never blocks or adds a learner step.
+
 The fixed scope is the `model_data_reporting.pipelines` list in
 `usage/pipelines.json`, enforced by `scripts/selective_reporting.py`. It contains:
 
