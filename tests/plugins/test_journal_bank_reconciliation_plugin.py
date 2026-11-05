@@ -14185,3 +14185,81 @@ def test_omitted_execution_options_preserve_invalid_policy_failure_evidence(
     assert audit["matched_count"] == 0
     assert (output / "input_receipts.json").is_file()
     assert not (output / "material_value_ledger.json").exists()
+
+
+def test_teamsystem_partitario_headers_and_page_markers_emit_all_movements(
+    tmp_path: Path,
+) -> None:
+    """Preserve Francesco's printed headers, blank amount sides and page footers."""
+    core = load_core()
+    journal = tmp_path / "partitario.pdf"
+    header = [
+        "Data reg.",
+        "N.Reg.",
+        "Causale",
+        "D A R E",
+        "A V E R E",
+        "S A L D O",
+    ]
+    _write_pdf_table(
+        journal,
+        [
+            [
+                header,
+                ["01/09/26", "11", "INCASSO", "40.833,30", "", "80.237,50-"],
+                ["", "", "", "", "*** S E G U E", "***"],
+            ],
+            [
+                header,
+                ["02/09/26", "12", "PAGAMENTO", "", "346,61", "80.584,11-"],
+                ["", "", "T O T A L I", "40.833,30", "346,61", "80.584,11-"],
+            ],
+        ],
+        ruled=False,
+    )
+    bank = tmp_path / "bank.csv"
+    bank.write_text("Date,Amount,Description\n2026-09-01,40833.30,INCASSO\n")
+    output = tmp_path / "inspection"
+    core.inspect_inputs(bank, journal, output)
+    recipe = json.loads((output / "suggested_recipe.json").read_text())
+    receipts = json.loads((output / "input_receipts.json").read_text())["receipts"]
+    file_recipe = recipe["journal"]["files"][journal.name]
+    file_recipe.update(
+        date_convention="day_first",
+        excluded_monetary_columns=["N.Reg."],
+        non_movement_summary_labels=["T O T A L I"],
+    )
+    file_recipe["mapping"]["description"] = "Causale"
+    _attach_current_mapping_receipt(
+        core,
+        recipe,
+        receipts,
+        side="journal",
+        source_path=journal,
+        decision_id="decision.mapping.partitario",
+    )
+    source_ref = next(
+        r["artifact_id"]
+        for r in receipts
+        if r["artifact_id"].startswith("source.journal.")
+    )
+
+    diagnostic = core.inspect_mapping_review_source(
+        journal,
+        side="journal",
+        source_file=journal.name,
+        recipe=recipe,
+        source_artifact_ref=source_ref,
+    )
+
+    assert diagnostic["qualification_status"] == "qualified", diagnostic
+    assert diagnostic["page_count"] == 2
+    assert diagnostic["row_count"] == 2
+    assert [Decimal(row["amount_signed"]) for row in diagnostic["preview"]] == [
+        Decimal("40833.30"),
+        Decimal("-346.61"),
+    ]
+    assert diagnostic["row_disposition_counts"] == {
+        "emitted": 2,
+        "excluded_reviewed_summary": 1,
+    }

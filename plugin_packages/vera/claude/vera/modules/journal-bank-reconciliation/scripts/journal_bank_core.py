@@ -474,6 +474,8 @@ EXACT_HEADER_ALIASES: dict[str, frozenset[str]] = {
             "booking date",
             "transaction date",
             "data registrazione",
+            # Printed TeamSystem ledger headers retain punctuation/letter spacing.
+            "data reg.",
         }
     ),
     "amount": frozenset(
@@ -486,7 +488,9 @@ EXACT_HEADER_ALIASES: dict[str, frozenset[str]] = {
             "importo movimento",
         }
     ),
-    "debit": frozenset({"debit", "dare", "addebito", "soll", "importo dare"}),
+    "debit": frozenset(
+        {"debit", "dare", "addebito", "soll", "importo dare", "d a r e"}
+    ),
     "credit": frozenset(
         {
             "credit",
@@ -495,6 +499,7 @@ EXACT_HEADER_ALIASES: dict[str, frozenset[str]] = {
             "haben",
             "accredito",
             "importo avere",
+            "a v e r e",
         }
     ),
     "description": frozenset(
@@ -1506,6 +1511,9 @@ def _extract_pdf_positioned_table(page: Any) -> list[list[str]] | None:
             )
             cells[column_index].append(str(word["text"]))
         row = [" ".join(cell) for cell in cells]
+        # This exact print-continuation marker is pagination, never an amount.
+        if " ".join(" ".join(row).split()) == "*** S E G U E ***":
+            continue
         if sum(bool(value) for value in row) >= 2:
             body.append(row)
     if not body:
