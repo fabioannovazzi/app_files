@@ -152,7 +152,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "4e953a508cb1d8c1f2cb319816018a16823b9c438fac4015034f09a36661782d",
+  "course_sha256": "e8ff84eb6cfd1e3fbf7373dab4de79adbdcc3a694eceef6d73e9fa76c0dc64db",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e8d57796bd3b475c4a03f7206b7bbb426601cb8dccd716649ea58e7857a3efb2",
@@ -254,6 +254,11 @@
     "course_sha256": "e8d57796bd3b475c4a03f7206b7bbb426601cb8dccd716649ea58e7857a3efb2",
     "reviewed_at": "2026-09-29T13:36:23+00:00",
     "reviewer": "Codex: first-use outline, source and native transcript-output review"
+  },
+  "incident_archive_binding_20261104": {
+    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope.",
+    "current_course_sha256": "4e953a508cb1d8c1f2cb319816018a16823b9c438fac4015034f09a36661782d",
+    "prior_course_sha256": "921bc6e85aa553e95edb36ce2230798a2364863ecaf2058e57e13e02ac08b538"
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -814,6 +819,14 @@
     "reviewer": "Codex /root - differential source review",
     "scope": "Every authored course field equals the reviewed theme release. Only source hashes changed for historical upstream replay and separate measured artifact delivery after closure. Prior editorial and artifact reviews are retained. Native teaching CI remains required. No installed-host or learner acceptance is claimed."
   },
+  "windows_main_integration_source_review_20261104": {
+    "baseline_commit": "dcbd84fe9d96b11f85f2c9312c1647564062781d",
+    "current_course_sha256": "e8ff84eb6cfd1e3fbf7373dab4de79adbdcc3a694eceef6d73e9fa76c0dc64db",
+    "prior_course_sha256": "4e953a508cb1d8c1f2cb319816018a16823b9c438fac4015034f09a36661782d",
+    "reviewed_at": "2026-11-04T21:28:14.018263+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Complete course objects match the integrated main except source identities. Retain authored teaching text, inputs, localized editorial judgments and historical reviewed artifact hashes. Changes combine the already reviewed Windows snapshot/interpreter repair with main Archive/reporting/dependency fixes. Fresh native CI must execute this exact digest; no new learner, installed customer or professional acceptance is asserted."
+  },
   "work_continuity_source_binding_20261027": {
     "authored_content_unchanged": true,
     "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
@@ -830,10 +843,5 @@
     "reviewer": "Codex /root - source compatibility review",
     "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "workflow": "transcribe",
-  "incident_archive_binding_20261104": {
-    "prior_course_sha256": "921bc6e85aa553e95edb36ce2230798a2364863ecaf2058e57e13e02ac08b538",
-    "current_course_sha256": "4e953a508cb1d8c1f2cb319816018a16823b9c438fac4015034f09a36661782d",
-    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope."
-  }
+  "workflow": "transcribe"
 }

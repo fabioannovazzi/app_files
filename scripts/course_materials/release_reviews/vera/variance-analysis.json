@@ -155,7 +155,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "e38594be37a9b92c7d3f9bed572754e9463f48891e16e5635158ac98a0e949d5",
+  "course_sha256": "43f19965a94942c53fc5b58ae9adc6e3edbc4c92fbb31698727fcbcd6d97e8a4",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484",
@@ -287,6 +287,11 @@
     "evidence": "docs/releases/2026-10-10-vera-host-use-marker.md",
     "prior_course_sha256": "697bcadcea04c07d48b3fac818f98cc6818794277b88945f3a455497062178df",
     "scope": "Only the reviewed integrity preflight source binding changed. Teaching text, inputs, execution contracts and historical editorial/output judgments remain unchanged; no fresh learner or installed-host acceptance is claimed."
+  },
+  "incident_archive_binding_20261104": {
+    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope.",
+    "current_course_sha256": "e38594be37a9b92c7d3f9bed572754e9463f48891e16e5635158ac98a0e949d5",
+    "prior_course_sha256": "69c57f26509934368aea3d0a0c709641e14a70e0b7318b3ee8fd2f3e96c215f8"
   },
   "incident_capture_source_refresh": {
     "content_review": "Complete course comparison confirms every field except source bindings is unchanged: localized teaching, fictional inputs, checkpoints, practice, timing and execution definitions. Existing editorial and artifact reviews remain historical.",
@@ -1173,6 +1178,14 @@
       }
     ]
   },
+  "windows_main_integration_source_review_20261104": {
+    "baseline_commit": "dcbd84fe9d96b11f85f2c9312c1647564062781d",
+    "current_course_sha256": "43f19965a94942c53fc5b58ae9adc6e3edbc4c92fbb31698727fcbcd6d97e8a4",
+    "prior_course_sha256": "e38594be37a9b92c7d3f9bed572754e9463f48891e16e5635158ac98a0e949d5",
+    "reviewed_at": "2026-11-04T21:28:13.912493+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Complete course objects match the integrated main except source identities. Retain authored teaching text, inputs, localized editorial judgments and historical reviewed artifact hashes. Changes combine the already reviewed Windows snapshot/interpreter repair with main Archive/reporting/dependency fixes. Fresh native CI must execute this exact digest; no new learner, installed customer or professional acceptance is asserted."
+  },
   "work_continuity_source_binding_20261027": {
     "authored_content_unchanged": true,
     "baseline_commit": "ea8e5fe4a7567a083b009986ac6fb8269805ba13",
@@ -1212,10 +1225,5 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
-  },
-  "incident_archive_binding_20261104": {
-    "prior_course_sha256": "69c57f26509934368aea3d0a0c709641e14a70e0b7318b3ee8fd2f3e96c215f8",
-    "current_course_sha256": "e38594be37a9b92c7d3f9bed572754e9463f48891e16e5635158ac98a0e949d5",
-    "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope."
   }
 }

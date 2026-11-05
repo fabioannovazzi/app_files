@@ -5,6 +5,7 @@ const fs = require("node:fs");
 const { randomUUID } = require("node:crypto");
 const archiveSessionId = process.env.VERA_STUDIO_ARCHIVE_SESSION_ID || process.env.CODEX_THREAD_ID || randomUUID();
 const path = require("node:path");
+const os = require("node:os");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 
@@ -921,21 +922,31 @@ function toolDefinitions() {
 }
 
 function pythonExecutable() {
+  const interpreter = process.platform === "win32" ? "Scripts/python.exe" : "bin/python";
+  const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
+    : path.join(os.homedir(), ".local/share/mparanza/runtime"));
   const candidates = [
     process.env.VERA_STUDIO_ARCHIVE_PYTHON,
+    path.join(runtimeRoot, "venv", interpreter),
     process.env.PYTHON,
     process.env.VIRTUAL_ENV
-      ? path.join(process.env.VIRTUAL_ENV, "bin", "python")
+      ? path.join(process.env.VIRTUAL_ENV, interpreter)
       : "",
-    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", "bin", "python"),
-    "python3",
-    "python",
+    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", interpreter),
+    ...(process.platform === "win32" ? ["python", "python3", "py"] : ["python3", "python"]),
   ].filter(Boolean);
-  for (const candidate of candidates) {
+  for (const candidate of new Set(candidates)) {
     if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
-    return candidate;
+    // Probe the actual interpreter, not the presence of a PATH alias. This
+    // avoids ENOENT/Store aliases hiding an already working managed Python.
+    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+      encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
+    });
+    if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
   }
-  return "python3";
+  // Preserve the caller's actual spawn-error/reporting path if none can run.
+  return process.platform === "win32" ? "python" : "python3";
 }
 
 function workerArguments(command) {

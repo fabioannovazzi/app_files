@@ -200,7 +200,7 @@
     "previous_course_sha256": "274942bb7642543394ef5476e1b53bb73aa8d2734e95e68289658e5b46c8458e",
     "review": "Only the source dependency list changed. The course text, exercises and localized materials match the current main release. All ten demo and practice execution tests passed across the five supported languages."
   },
-  "course_sha256": "3c23a070203e80ba40c8492f26380b5ee6a2ecb30b3dad43cd70cdd764db59f8",
+  "course_sha256": "0eccc569605af7631766bbe87afc3ad5060c6a96d13c80803993e46806c1e15e",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -867,6 +867,14 @@
     "reviewed_at": "2026-10-18",
     "reviewer": "Codex source inspection and exact course comparison",
     "scope": "Local Archive invalid-run isolation, native Windows file boundaries and process lifecycle control. Every non-source field of the compiled course equals the reviewed baseline, including localized content, inputs, exercises, checkpoints and timing. Existing editorial judgments and historical artifact reviews remain unchanged. Windows process controls do not qualify semantic worker isolation. Fresh CI must independently match native demo/practice identities to this exact course digest."
+  },
+  "windows_course_main_integration_source_review_20261104": {
+    "baseline_commit": "2c3669d45a85e9fab4cf96200fdc202c99c6819c",
+    "current_course_sha256": "0eccc569605af7631766bbe87afc3ad5060c6a96d13c80803993e46806c1e15e",
+    "prior_course_sha256": "3c23a070203e80ba40c8492f26380b5ee6a2ecb30b3dad43cd70cdd764db59f8",
+    "reviewed_at": "2026-11-04T23:43:14.291503+00:00",
+    "reviewer": "Codex /root",
+    "scope": "Complete compiled course objects equal integrated main except source inventories. Preserve authored/localized teaching text, input definitions and historical editorial/artifact judgments. Fresh native CI must execute this digest; source compatibility is not learner, customer or professional acceptance."
   },
   "work_continuity_source_binding_20261027": {
     "authored_content_unchanged": true,
