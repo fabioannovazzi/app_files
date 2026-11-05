@@ -3,6 +3,17 @@ name: vera
 description: Use for commercialista and accounting-studio requests to answer fiscal or legal questions through the reviewed-report workflow, prepare bilanci OIC/XBRL and financial analysis, download bank CSVs through computer use and 1Password, or support auditing through bank and open-item reconciliations, journal sampling, invoice checks and accounting-export review, even when the user does not name Vera. For opinions, show the question and planned sources in chat before opening an authority. Also use whenever Vera or @vera is explicitly invoked and to reopen a Vera privacy report. Select the narrowest supported specialist; clarify an ambiguous outcome. Explicit invocation does not add unsupported services.
 ---
 
+## Course reporting precedence
+
+For every course, follow the **Course privacy reporting takes precedence**
+section in `references/model-data-report-contract.md` and
+`../learn-with-vera/SKILL.md`. It overrides all default report preparation,
+delivery and verification instructions below and in specialist skills while
+teaching: no privacy approval, reporting detour or report-dependent checkpoint.
+Keep automatic local reporting and its honest diagnostics separate from the
+lesson outcome. Professional work starts through a separate selected-file handoff.
+
+
 ## Starting a tax or legal opinion
 
 Before opening a supplied authority (including a local attachment), searching,

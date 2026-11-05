@@ -605,7 +605,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/model-data-report-contract.md",
       "repository_path": "plugins/vera/skills/vera/references/model-data-report-contract.md",
-      "sha256": "fa6f5f2ab059dc06b209d645cab7cbfb0b5af950e7d0274bed039fd431a522fa"
+      "sha256": "24a6f34082e24ac4affb0d5c585e9805620802097fae6005d99c8061b1cfe56a"
     },
     {
       "path": "modules/studio-archive/vendor/modules/model_data_report.py",

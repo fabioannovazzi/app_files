@@ -200,7 +200,7 @@
     "previous_course_sha256": "274942bb7642543394ef5476e1b53bb73aa8d2734e95e68289658e5b46c8458e",
     "review": "Only the source dependency list changed. The course text, exercises and localized materials match the current main release. All ten demo and practice execution tests passed across the five supported languages."
   },
-  "course_sha256": "cccdbdf8c209b89146d57763cd65aef5f7a5f0f6ca63c13ae4676d9c8ac9e280",
+  "course_sha256": "623aa3b004d50e91c78ccfd88b9d0497920ed78b8824a10f2ae47c3c3a037c78",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -960,5 +960,16 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "course_privacy_source_review_20261105": {
+    "reviewer": "Codex agent, bounded source review",
+    "reviewed_at": "2026-11-05",
+    "previous_course_sha256": "cccdbdf8c209b89146d57763cd65aef5f7a5f0f6ca63c13ae4676d9c8ac9e280",
+    "current_course_sha256": "623aa3b004d50e91c78ccfd88b9d0497920ed78b8824a10f2ae47c3c3a037c78",
+    "baseline_commit": "d7c18f2de90fc84db2f8bdbd9d00d9d200d8217c",
+    "authored_content_unchanged": true,
+    "scope": "Reviewed the shared report-contract teaching precedence. The complete authored course object outside sources matches its previously bound reviewed commit; only the contract source hash changes.",
+    "native_evidence": "GitHub Actions 42018198591 job 127219008965: native execution stage completed and produced teaching-native.xml bound to these exact course hashes; the subsequent editorial identity check failed. The same retained JUnit is verified locally after this bounded review.",
+    "limits": "Existing editorial and artifact judgments are retained as historical reviews of unchanged materials. No new learner, human editorial, installed-host or professional approval is asserted."
   }
 }

@@ -2,6 +2,17 @@
 name: lucia
 description: Use this when Lucia or @lucia is explicitly invoked, or when a lawyer or law firm asks for legal research, legal-document analysis, source verification, or reviewable legal work covered by any registered Lucia workflow. Select the narrowest workflow and apply the shared Legal/Tax Answer Planner and Legal/Tax Answer Review assurance stages when relevant. Do not use it for filing, signing, sending, publication, or professional judgment reserved to the lawyer.
 ---
+
+## Course reporting precedence
+
+For every course, follow the **Course privacy reporting takes precedence**
+section in `references/model-data-report-contract.md` and
+`../learn-with-lucia/SKILL.md`. It overrides all default report preparation,
+delivery and verification instructions below and in specialist skills while
+teaching: no privacy approval, reporting detour or report-dependent checkpoint.
+Keep automatic local reporting and its honest diagnostics separate from the
+lesson outcome. Professional work starts through a separate selected-file handoff.
+
 <!-- MPARANZA_REPORTING_BEGIN -->
 ## Task reporting and recovery
 
