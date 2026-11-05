@@ -1,4 +1,9 @@
 {
+  "francesco_parser_release_binding": {
+    "previous_catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
+    "scope": "Manifest version refresh only; skill entrypoint bytes and jurisdiction judgments unchanged. Parser repair has local component acceptance only.",
+    "version": "0.1.574"
+  },
   "actionable_diagnostics_release_binding": {
     "reviewed_at": "2026-10-22T07:00:50.365348+00:00",
     "scope": "Canonical version changed to 0.1.475. Exact skill entrypoint identities and contents are unchanged; existing jurisdiction judgments retained."
@@ -162,7 +167,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
+  "catalogue_fingerprint": "368e0ad8a4e5f96ac98b57a9b63f151a04e0d6c06d7ca395d83e3853a34224bc",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",

@@ -84,7 +84,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "89042e84c702cef273117eb6aaceb249531f647ff2b4503f396ae25783403b18"
+      "sha256": "353ddc67bc52d7695e1dc695333a123adbee4d7a6ca98f236f12ed0fc5ce7e2e"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/native_host_worker.py",
