@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/adeguati-assetti/scripts/construction_adapters.py",
-      "sha256": "4e81f4714c19755c1cddd3e46324499552e37563a21fb4f5d63b23d58b2b17e2"
+      "sha256": "aed7066fbec97d8195b04b2a8f191023d1dab27e2f0c05d8039ebc5562710570"
     },
     {
       "path": "modules/adeguati-assetti/scripts/construction_core.py",
@@ -987,5 +987,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bec8867f798e6a1aa9cd01169d4fbbb4c31a6d19233e9c287af70ee122b471f5"
+  "canonical_course_sha256": "3ce1814e23d36413f5d23b42d592f6b5bc4e5ebb1b963b97ef264be1c9ba5691"
 }
