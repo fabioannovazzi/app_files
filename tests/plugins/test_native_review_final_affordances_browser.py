@@ -13,6 +13,19 @@ from tests.plugins.test_vera_review_browser import review_host
 __all__: list[str] = []
 
 
+def _wait_for_review(app, heading, errors):
+    """Wait for the requested view; surface a backend refusal instead of hiding it."""
+    try:
+        expect(app.get_by_role("heading", name=heading, exact=True)).to_be_visible(
+            timeout=30000
+        )
+        expect(app.locator('#app[aria-busy="false"]')).to_be_visible(timeout=30000)
+    except AssertionError:
+        print("Rendered review:", app.locator("body").inner_text())
+        print("Browser errors:", errors)
+        raise
+
+
 def test_variance_viewer_cannot_offer_save_or_calculation(variance_run, monkeypatch):
     _, output, binding, _ = variance_run
     monkeypatch.setenv("VERA_WORKSPACE_ROLES", "VIEWER")
@@ -21,8 +34,7 @@ def test_variance_viewer_cannot_offer_save_or_calculation(variance_run, monkeypa
     }
     with review_host(dict(os.environ)) as (_, mount, errors):
         app = mount("vera_open_review", {"work_ref": binding["work_ref"]})
-        # The host handshake precedes the asynchronous tool-result render.
-        expect(app.locator('#app[aria-busy="false"]')).to_be_visible(timeout=30000)
+        _wait_for_review(app, "Fonti e confronto", errors)
         expect(
             app.get_by_role("button", name="Conserva scelte in bozza", exact=True)
         ).to_be_disabled()
@@ -44,8 +56,7 @@ def test_inps_owned_document_labels_preserve_authored_fact(inps_run):
     }
     with review_host(dict(os.environ)) as (_, mount, errors):
         app = mount("vera_open_review", {"work_ref": binding["work_ref"]})
-        # The host handshake precedes the asynchronous tool-result render.
-        expect(app.locator('#app[aria-busy="false"]')).to_be_visible(timeout=30000)
+        _wait_for_review(app, "Evidenze e riesame del fascicolo", errors)
         expect(
             app.get_by_role("heading", name="Memo per lo studio", exact=True)
         ).to_be_visible()
