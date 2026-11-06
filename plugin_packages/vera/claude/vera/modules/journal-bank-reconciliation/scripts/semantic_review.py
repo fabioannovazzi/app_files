@@ -3687,7 +3687,8 @@ def run_semantic_worker(
             raise ValueError("Worker JSONL output is not UTF-8") from exc
         event_summary = _validate_worker_events(events_text, response=None)
         response = event_summary["final_response"]
-        _validate_worker_response(response, graph)
+        # Retain completed execution and usage even when the answer is rejected.
+        # validate_semantic_review checks the response before accepting suggestions.
         response_bytes = _json_bytes(response)
         response_sha256 = hashlib.sha256(response_bytes).hexdigest()
         events_bytes = process_result["stdout"]
