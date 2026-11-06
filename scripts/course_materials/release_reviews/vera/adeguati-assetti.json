@@ -127,6 +127,19 @@
     "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
     "reviewer": "Codex /root — bounded native transport and lesson review"
   },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "f5e380b3dd7f372ae3f26b15cbfe58b83c6595d7",
+    "changed_source_paths": [
+      "plugins/adeguati-assetti/scripts/construction_adapters.py"
+    ],
+    "current_course_sha256": "9ab4ee6984d1115726ffbb71d7c66fce24e0bc67547934e05849b6b706253b66",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "77aa6d126268cc1bd7651432de7e34bbea8d3677d25b3be6539368b1aecf3310",
+    "reviewed_at": "2026-11-06T14:35:53.739623+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
+  },
   "integration_refresh": {
     "date": "2026-10-02",
     "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",

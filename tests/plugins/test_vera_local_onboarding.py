@@ -29,7 +29,9 @@ def load(name: str):
 
 
 @pytest.fixture
-def module(monkeypatch):
+def module(monkeypatch, tmp_path):
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(tmp_path / "archive-state"))
+    monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     monkeypatch.syspath_prepend(str(SCRIPTS))
     module = load("local_onboarding")
     monkeypatch.setitem(sys.modules, "local_onboarding", module)

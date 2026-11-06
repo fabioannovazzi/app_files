@@ -420,6 +420,21 @@
     "current_course_sha256": "476b734499354012a97abb5310711eb65235bf86d213995534241d51c29fe537",
     "prior_course_sha256": "9cee0747f1033bbe5e0288300699c38b22c40d280f350560141966000f5929ab"
   },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "98c60ced693361e57d5c3455e469cd84c8fcb30b",
+    "changed_source_paths": [
+      "plugins/studio-archive/requirements.txt",
+      "plugins/studio-archive/scripts/archive_core.py",
+      "plugins/vera/scripts/archive_report_measurements.py"
+    ],
+    "current_course_sha256": "9afa90ee8f99dddfcf9d318c5df5ab7f823d9de5554dd5b171f5a5b313dab2c0",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "24a263516a9d029ee9ff7c94e7fd846e98675556862b7afccec3e9811c1b6242",
+    "reviewed_at": "2026-11-06T14:35:53.745972+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
+  },
   "integration_refresh": {
     "date": "2026-10-02",
     "note": "Reconciled ESG teaching policy with current main; localized authoring, shipped input records, execution and pacing match the previously reviewed course exactly. Source fingerprints refreshed; previous output reviews retained.",

@@ -294,6 +294,21 @@
     "current_course_sha256": "a2f53484134c65af979a801eb043ac76b6b8bd5bbf53638cc228aaf01db18ec1",
     "prior_course_sha256": "9b20a7f0db9ddad254990fb579fc6733f48f746db85050f8d9af28858535a9da"
   },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "98c60ced693361e57d5c3455e469cd84c8fcb30b",
+    "changed_source_paths": [
+      "plugins/studio-archive/requirements.txt",
+      "plugins/studio-archive/scripts/archive_core.py",
+      "plugins/vera/scripts/archive_report_measurements.py"
+    ],
+    "current_course_sha256": "50f82d8cd327158c6d515b131622935de6bc0bea60d1b7578cfdb9883b4d4647",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "c8bf0d5ecbfdbbb9345d1a8a6f29d38cd119fb284cdf20a3dfe969cfcbb1a008",
+    "reviewed_at": "2026-11-06T14:35:53.742510+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
+  },
   "integrated_native_ui_source_binding_20261105": {
     "base": "383bb4f2426411c83e95cf88af787644b11e9330",
     "current_course_sha256": "a39b6c93a30b50f2e86bb3a773091725a0f0c0cc24e72b6f3eaab94351690390",

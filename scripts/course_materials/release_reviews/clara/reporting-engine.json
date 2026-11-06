@@ -215,6 +215,19 @@
     "current_course_sha256": "b1a1efc28bb7f00efeae868ce867f401f1dfb977b245d2f30db9aab121d6c79a",
     "prior_course_sha256": "79be050090e33e2f41c8fbc47578a0215c3479b040165ba7616502423c04ef6e"
   },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "ae15eb4ec7ab7652f97250a35e8217f22ef582be",
+    "changed_source_paths": [
+      "plugins/clara/scripts/archive_report_measurements.py"
+    ],
+    "current_course_sha256": "c61b7821d0f309c87e89e3f2ec56466329ba4cf4a5eceee1bd2a918445e6710f",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "f0b8c3bc1a5f4b67557aa816788f0503f9f7a7458cc1a4fead81e79c750457e4",
+    "reviewed_at": "2026-11-06T14:35:53.755409+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
+  },
   "integrated_native_ui_source_binding_20261105": {
     "base": "383bb4f2426411c83e95cf88af787644b11e9330",
     "current_course_sha256": "f0b8c3bc1a5f4b67557aa816788f0503f9f7a7458cc1a4fead81e79c750457e4",
