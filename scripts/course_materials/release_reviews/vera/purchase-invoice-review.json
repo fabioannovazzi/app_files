@@ -112,7 +112,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "b6af92d972c5b6222d6abfb826c3c02d62e7a866b4f8bdddd479bb3177d40439",
+  "course_sha256": "992d3fb8510ab944ea46e0c5a9f2861954fc7df67b7bd6ab1ec36047c6aa3cdc",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "d6e3a5060412866ed08b2fd5b373cf2ad4eae392b31b22344e1859ce198be97a",
@@ -819,5 +819,16 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "output_followup_20261106": {
+    "reviewer": "Codex /root - bounded output export source review",
+    "reviewed_at": "2026-11-06T17:06:12.894028+00:00",
+    "changed_fields": [
+      "sources"
+    ],
+    "lesson_inputs_and_text_unchanged": true,
+    "previous_course_sha256": "b6af92d972c5b6222d6abfb826c3c02d62e7a866b4f8bdddd479bb3177d40439",
+    "scope": "Export only: exception and orphan gross-amount cells become native numbers when exact within Excel precision; no matching, model packet, worker, source selection or professional conclusion changed.",
+    "limits": "Historical editorial/model judgments preserved. Source/renderer regressions are not learner, voice, fresh installed UI or professional acceptance. Final-head localized replay remains required."
   }
 }

@@ -622,7 +622,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "fd350c6a95a63a4cb62464ddb94c283d40f9871373a2579d1121c81a4f9926f9",
+      "sha256": "cd705bd21c6a873f65dc98c64dbd2c7daf6ea85002d05c77d8f905c77a54b4a7",
       "languages": [
         "it",
         "en",
@@ -853,7 +853,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "b6af92d972c5b6222d6abfb826c3c02d62e7a866b4f8bdddd479bb3177d40439",
+      "sha256": "992d3fb8510ab944ea46e0c5a9f2861954fc7df67b7bd6ab1ec36047c6aa3cdc",
       "languages": [
         "it",
         "en",
@@ -1077,7 +1077,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
+      "sha256": "a0a19387659c27e2491ea897f129051ea7a0e5e0ec72cfc9eae691f1a1874f07",
       "languages": [
         "it"
       ],
