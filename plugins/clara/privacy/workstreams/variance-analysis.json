@@ -64,7 +64,7 @@
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "fe14c9cd88b4e1186ac84585db8133cad4c101f37c33df1f91ed26fce01b12db"
+    "source_fingerprint": "687bde882a4d965e7b1fa53d4a841b5043d23efc9f59fc2753b3e38d05f51e9f"
   },
   "governed_repository_paths": [
     "plugins/clara/skills/reporting-engine/SKILL.md"
