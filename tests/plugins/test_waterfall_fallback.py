@@ -69,9 +69,13 @@ def test_small_multiples_fallback_preserves_amount_labels_and_uniform_font(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     import plotly.graph_objects as go
-    from PIL import ImageDraw
+    from PIL import ImageDraw, ImageFont
 
     waterfall = load_vendor_draw_waterfall()
+    # Exercise font-size propagation independently of fonts installed on the host.
+    monkeypatch.setattr(
+        waterfall, "_font", lambda size: ImageFont.load_default(size=size)
+    )
     figure = go.Figure(
         data=[
             go.Waterfall(
