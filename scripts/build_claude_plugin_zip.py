@@ -3641,6 +3641,16 @@ def _reviewer_note(product: str, entries: dict[str, bytes]) -> bytes:
         .read_text(encoding="utf-8")
         .format(
             product=product,
+            local_tokens_heading=(
+                "Uses a credential from the user's machine: the 4 findings"
+                if product == "lucia"
+                else 'Local review tokens (flagged as "Uses a credential")'
+            ),
+            installer_note=(
+                ""
+                if product == "lucia"
+                else "The Python installer (`scripts/_python_bootstrap.py`) gives `uv` only an allowlisted environment: host paths, locale, proxy and CA settings, with private `UV_PYTHON_*` / `UV_CACHE_DIR` overrides; no inherited token or API-key variables."
+            ),
             servers=server_text,
             fonts="\n".join(fonts),
             runtime_fetch_exec="\n".join(runtime_notes)

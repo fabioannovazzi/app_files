@@ -42,10 +42,12 @@ def test_reviewer_note_lists_only_declared_servers_and_existing_fonts(
     assert ("`luciaStudioArchive`" in note) == (product == "lucia")
     assert ("`mcp/workspace.cjs`" in note) == (product == "vera")
     assert "fabio@mparanza.com" in note
-    assert 'Local review tokens (flagged as "Uses a credential")' in note
-    assert "no inherited token or API-key variables" in note
+    assert ('Local review tokens (flagged as "Uses a credential")' in note) == (
+        product != "lucia"
+    )
+    assert "inherited token or API-key variables" in note
     assert ("check-entries" in note) == (product == "vera")
-    assert "`secrets.token_urlsafe(32)`" in note
+    assert ("`secrets.token_urlsafe(32)`" in note) == (product != "lucia")
     assert "`secrets.token_urlsafe(24)`" not in note
     assert ("may include it in model context" in note) == (product == "vera")
 
@@ -59,10 +61,35 @@ def test_packaged_reviewer_note_names_existing_token_files(product: str) -> None
         referenced_files = set(
             re.findall(r"`([^`\n]+/[^`\n]+\.(?:py|cjs|html|json))`", note)
         )
-        assert referenced_files <= set(archive.namelist())
+        local_state_files = {
+            "~/.mparanza/lucia/incidents/<host>/state.json",
+            "~/.mparanza/vera/host-identity/identity.json",
+        }
+        assert referenced_files - local_state_files <= set(archive.namelist())
     assert note == (directory / "claude" / product / "REVIEW.md").read_text()
     assert len(note.splitlines()) <= 80
-    assert 'Local review tokens (flagged as "Uses a credential")' in note
+    assert ('Local review tokens (flagged as "Uses a credential")' in note) == (
+        product != "lucia"
+    )
+
+
+def test_lucia_reviewer_note_answers_all_four_credential_findings_in_order() -> None:
+    note = _reviewer_note("lucia", {}).decode()
+
+    section = note.split(
+        "## Uses a credential from the user's machine: the 4 findings\n"
+    )[1].split("\n## ")[0]
+    assert len(section.splitlines()) < 25
+    assert re.findall(r"^\d\. \*\*`([^`]+)`\*\*", section, re.MULTILINE) == [
+        "scripts/_python_bootstrap.py",
+        "scripts/notarized_run_receipt.py",
+        "scripts/operational_incidents.py",
+        ".claude-plugin/plugin.json",
+    ]
+    assert "https://mparanza.com/api/lucia/run-receipts" in section
+    assert "https://mparanza.com/api/operational-incidents" in section
+    assert "reads no installation key or signing secret" in section
+    assert "may contain proxy authentication" in section
 
 
 @pytest.mark.parametrize(
