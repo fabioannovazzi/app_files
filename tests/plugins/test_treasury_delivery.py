@@ -353,7 +353,9 @@ def test_alternative_is_saved_without_mutating_baseline(tmp_path):
         == scenario
     )
     assert len(read_json(output / "final_artifacts.json")["scenarios"]) == 1
-    (output / delivery["report"]).write_text("Changed scenario report", encoding="utf-8")
+    (output / delivery["report"]).write_text(
+        "Changed scenario report", encoding="utf-8"
+    )
     with pytest.raises(TreasuryError, match="alternative.*changed"):
         save_scenario(
             output,
