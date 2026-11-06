@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/variance-analysis/scripts/legacy_plotting.py",
-      "sha256": "4c27f81a9510131d96c90b468bb7e783361fc24069713946375462144334879e"
+      "sha256": "2f64af9fc27ff5bcc1fd0cbc78dd48bec512be820119d147e4dbd744a2daa656"
     },
     {
       "path": "modules/variance-analysis/scripts/model_use.py",
@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/variance-analysis/scripts/root_cause_client_report.py",
-      "sha256": "3db6256998f4bba74cc649a8a9770cf1a0ec15e7c353f51fc59a281c2c61f6c5"
+      "sha256": "b3247c253b5185d82e4d9650a48fc7d9fea9754b56c69a338df5f57ebb3d89fc"
     },
     {
       "path": "modules/variance-analysis/scripts/run_variance.py",
@@ -196,7 +196,7 @@
     },
     {
       "path": "modules/variance-analysis/vendor/modules/charting/draw_waterfall.py",
-      "sha256": "788428cda0197ed61122f128993b308dba1ae9287362953f9b7d70f9437fbc7a"
+      "sha256": "e18f19ed0bb4c4795cda309b511ad022f44d5894c40beb88fd645bbb41fe3b4a"
     },
     {
       "path": "modules/variance-analysis/vendor/modules/charting/legacy_draw_waterfall.py",
@@ -901,5 +901,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fe0bd73a6c0e7268e80de69aa70614223566253786333e98112dae33bd5f03e3"
+  "canonical_course_sha256": "70213114eebe9f7b9c576d0a8368b510edd5045c610f81ed2d0dc2ea4cd3ebc6"
 }

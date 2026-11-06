@@ -503,7 +503,7 @@ def lifecycle_action(root: Path, tool: str, args: dict[str, Any]) -> dict[str, A
 
 
 def resolve_binding(root: Path, reference: str) -> dict[str, Any]:
-    """Recheck the configured folder and exact ledger identity on every operation."""
+    """Recheck the admitted exact run and its ledger identity on every operation."""
     match = WORK_REF.fullmatch(reference)
     if match is None:
         raise PermissionError("Unknown Studio Archive work reference")
@@ -514,7 +514,9 @@ def resolve_binding(root: Path, reference: str) -> dict[str, Any]:
         )
     )
     core = archive_module(root)
-    folder = client_root(core, client_id)
+    folder = core._selected_ledger_root(
+        client_id, engagement_id, state_dir=core._state_dir(None), run_id=run_id
+    )
     engagement = core.ledger.load_engagement_manifest(folder, engagement_id)
     if engagement["client_id"] != client_id:
         raise PermissionError("Engagement does not belong to the selected client")

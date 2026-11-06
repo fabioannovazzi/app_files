@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/previdenza-inps/scripts/case_core.py",
-      "sha256": "89b27943613fb49f569aa3a6ddb2ae3eb1abfc95369ecef4bc31a0096131b3af"
+      "sha256": "7a8046c53d55d18979a9f8f9780b73e33dd94cace102e6e8ce04e58019af3cef"
     },
     {
       "path": "modules/previdenza-inps/scripts/check_dependencies.py",
@@ -778,5 +778,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "192d4b5bce016eafe6200bd325e272ae2e78db39a6b59087637f4ffd85b7746f"
+  "canonical_course_sha256": "979d76722535353f70e28db2464afffe78782b73e6100aa572b4c7b7aa1a70d8"
 }

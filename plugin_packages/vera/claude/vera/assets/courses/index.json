@@ -559,7 +559,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "5ea709d77de47a5ac4592a6f0cb1b7ce30463540a4e7edcac71a469206061584",
+      "sha256": "f509f5a3fb305668a39ff619ff9fcbb0ff670fb14deef051c6c3c2c7a16735db",
       "languages": [
         "it",
         "en",
@@ -584,7 +584,7 @@
         "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
         "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
       },
-      "source_sha256": "690bcffd3a1a7ee145a911292a6a6dfca77de01b51e894c765978a2bd2d99d03"
+      "source_sha256": "9a519274f96f94d3865c986a3f960efb9767a6827c878361c61e21b519252c32"
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
@@ -617,7 +617,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "2c3627fc49d00952aeb4cf2459fb33380a22a67914ad0797427e147636d17702",
+      "sha256": "af7a07c55874c63c707ec5edf68d2b080175eb6e631e9dcca46a6d41c57dffaa",
       "languages": [
         "it",
         "en",
@@ -642,7 +642,7 @@
         "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
         "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       },
-      "source_sha256": "15754543283bf9d79ff28e060dfa06147f807600d6e19e2fac11a3ad0318fbe2"
+      "source_sha256": "ef7f439e1f760cc8f9f31f706ef1a944078d3de8bd0cba65223581e9078efa7e"
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "eae001a404da74d191945f277ca3614c191800c4c4a81eb5df84e0d8e5c8f1f9",
+      "sha256": "8c41a5a57f4343ebcb6f9cb483f890b0e102914f1fd58094b6ec208aef54003b",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "7087090390e81aa0635dd7f4f5de5be49ffb2f1f49c52cc2c98ba3f2859052b3"
+      "source_sha256": "984c27e06525b1afc0b3ee8200527558bc14bf86d80397c7b1916a2b61e5ece6"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
@@ -857,7 +857,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "59062097ceccbb57fd761d76f6b2b7b2a8476ab36c1f187b7dbf7a6aa6341c51",
+      "sha256": "092c428370727bec43798da556bcf12a9eb006ff1105836b598b3f268e061270",
       "languages": [
         "it",
         "en",
@@ -882,7 +882,7 @@
         "de": "Lernen Sie, eine sozialversicherungsrechtliche Frage und Unterlagen bereitzustellen, Belege zu prüfen und die erstellte Akte fachlich zu nutzen.",
         "es": "Aprender a aportar una pregunta de seguridad social y documentos, verificar evidencias y usar el expediente para revisión profesional."
       },
-      "source_sha256": "9ff9d1746ec21a696c2c72ed4f7d52db7f9c6de8f3684228299c5e7bf641f52e"
+      "source_sha256": "6625063b0bf1c3b138b5524ffe0f15822264eea00325131cbdb64c5165180372"
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
@@ -1031,7 +1031,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "500daeb0df0587c7c3c57dd8e09c0ae71b08f03c008a296fcb9d9509f16f5b9e",
+      "sha256": "b77b7cf6e597be31a42b541f5bcb5755593437993efed8ff1734fc9ffde68a7e",
       "languages": [
         "it",
         "en",
@@ -1056,11 +1056,11 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "f6e6148f07613b4097e97ca243d2fc2809883c831fa7b015b89af1fa9c80216a"
+      "source_sha256": "831c30a9f0c72a21151c48d62635a4586b823f68c2f321590020cd486a5ff46a"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "08c7f733ef8efbb27125c41bfcd006017ab0ac81beb27fdc9438feef00a26f37",
+      "sha256": "d15447b831123b7e851e7837560345264a0b8c19d49d22d7720afe02f5ba6a92",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "47d9a17bca9b851982449cb9cac8409f5fa78c2d693905bd2598e47ff4b31bd9"
+      "source_sha256": "8ed27ae42510620cc9deb77bbcf7596bbfc83f73f8572e8a7a9c9c3aa4a3a105"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
@@ -1118,7 +1118,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "0226ff1396c453fc26dc98df38aa30febe994cfcd981347d9ab39251593a6d8e",
+      "sha256": "3a603b57c432f9c439920510a7054ee5315d4e2495cbe9a94423dd3949c9589f",
       "languages": [
         "it"
       ],
@@ -1131,11 +1131,11 @@
       "goals": {
         "it": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane."
       },
-      "source_sha256": "a2c1f88ba214dcf695d58d3fe7d42f2c7c05dbc7b63ea3e5f33f34e484135e16"
+      "source_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8"
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "26d5a12fc793017fc18ff1b1581f63e969100f2e3762ccba33dac042cc6256c0",
+      "sha256": "ae3e5e9c96885bc611be031c12192e6ae5ac84eebf570332caea33042f6c09e0",
       "languages": [
         "it",
         "en",
@@ -1160,7 +1160,7 @@
         "de": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
         "es": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones."
       },
-      "source_sha256": "3213590929a101940a36506f54f31149548d0ae83c77b61c99d822037e0b2509"
+      "source_sha256": "61e29d0a50e1b6265c2835c8a57ba5dba5e4ddb778ae8a9f406a1aaab6805f9d"
     },
     "vouching": {
       "path": "vouching/course.json",
