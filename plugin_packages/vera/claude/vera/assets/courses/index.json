@@ -559,7 +559,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "da3e5a81c89a8e7971616a0525fd7b13ea54753daea6fbfac94256b7951608f4",
+      "sha256": "b55f8f092626dbff2bd9a1cfbcb14e4660cacb004c848e1b5cb4966ded783f99",
       "languages": [
         "it",
         "en",
@@ -584,7 +584,7 @@
         "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
         "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
       },
-      "source_sha256": "fec495b782a0fbacc2c976d9c1ae51e86dcf496069387ce779a6bc9c202d9e03"
+      "source_sha256": "b1bf488524d2f7d68ef078a17d1b8905b65287fdaa99a5bc1a60ec31f12fdb3a"
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
@@ -857,7 +857,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "9f3490b6e6a3a75fdd476497be9a37cbe8149be298df6357c118fb997135f502",
+      "sha256": "9709ee7d7656494c02380e727336ec58a2a4b9fe5ed672b6a978b78bea5e9bcc",
       "languages": [
         "it",
         "en",
@@ -882,7 +882,7 @@
         "de": "Lernen Sie, eine sozialversicherungsrechtliche Frage und Unterlagen bereitzustellen, Belege zu prüfen und die erstellte Akte fachlich zu nutzen.",
         "es": "Aprender a aportar una pregunta de seguridad social y documentos, verificar evidencias y usar el expediente para revisión profesional."
       },
-      "source_sha256": "45140077c9f5d6536f9c10bb328e4279be8fd5dfc4027b9913cf701c2e1bce43"
+      "source_sha256": "c7c698309e8e6c456f17df355c100c6ccf1db8e5b1ae0657f0d8db57a94d9f36"
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
@@ -1118,7 +1118,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "73577f98cd76319415937d6afc521a55cb0348047b3a430b5aef2284a5c161c8",
+      "sha256": "0edee743fc4fbc8a394739d2359e082bc8932a76fe47b4b353deef7ba58df6f5",
       "languages": [
         "it"
       ],
@@ -1131,7 +1131,7 @@
       "goals": {
         "it": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane."
       },
-      "source_sha256": "3c5dc3a143dac91317ebc9edd8900db69706a008fd4dd4cfe84873c33e95ae68"
+      "source_sha256": "6250605c3004dbb39b22826360e411232779d08c1fcd288786d2071da3011cf4"
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",

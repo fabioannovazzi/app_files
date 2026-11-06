@@ -18,7 +18,7 @@ __all__ = ["prepare_case", "run_p1_demo"]
 class Demo:
     """Keep synthetic source values, archive receipts and exact case references together."""
 
-    def __init__(self, root: Path, branch_name: str):
+    def __init__(self, root: Path, branch_name: str, planned_date: str = "2026-12-01"):
         root.mkdir(parents=True, exist_ok=False)
         self.root = root
         self.branch_name = branch_name
@@ -30,7 +30,7 @@ class Demo:
                 "operation_type": "fusione",
                 "objectives": "SYNTHETIC P1 acceptance case",
                 "jurisdictions": ["IT"],
-                "planned_date": "2026-12-01",
+                "planned_date": planned_date,
                 "actual_date": None,
             },
             synthetic=True,
@@ -146,9 +146,11 @@ class Demo:
         return reference(row)
 
 
-def prepare_case(root: Path, branch_name: str) -> Demo:
+def prepare_case(
+    root: Path, branch_name: str, *, planned_date: str = "2026-12-01"
+) -> Demo:
     """Execute both actual archive and case APIs, without network or client data."""
-    demo = Demo(root.resolve(), branch_name)
+    demo = Demo(root.resolve(), branch_name, planned_date)
     fact = demo.fact
     store = demo.store
     # A synthetic source exercises the approval mechanics; legal research is separately documented.

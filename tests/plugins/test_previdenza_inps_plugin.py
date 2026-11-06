@@ -834,6 +834,23 @@ def test_inventory_case_is_stable_and_detects_byte_identical_duplicates(
     assert documents[1]["duplicate_of"] == "DOC-001"
 
 
+def test_inventory_reads_selected_root_beneath_hidden_ancestor(tmp_path: Path) -> None:
+    case_core = _load_script("case_core")
+    input_dir = tmp_path / ".local" / "onboarding" / "input"
+    input_dir.mkdir(parents=True)
+    (input_dir / "position.txt").write_text("Periodo dichiarato: gennaio 2026.")
+    (input_dir / ".private.txt").write_text("Not selected for inventory.")
+    hidden = input_dir / ".cache"
+    hidden.mkdir()
+    (hidden / "cached.txt").write_text("Not selected for inventory.")
+
+    result = case_core.extract_case_documents(input_dir, tmp_path / "output")
+
+    assert [item["relative_path"] for item in result.inventory["documents"]] == [
+        "position.txt"
+    ]
+
+
 def test_output_guard_rejects_insecure_existing_directory_without_chmod(
     tmp_path: Path,
 ) -> None:

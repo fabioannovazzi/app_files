@@ -65,7 +65,7 @@
     {
       "path": "modules/treasury-forecast/scripts/treasury_report.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_report.py",
-      "sha256": "7583af8b8ecfa3653dad21cd122a53d3da4541eda4c932919a7f598057844ec8"
+      "sha256": "373250b1de491e3a781c8bd9835a7f1063ace8729cfb82b72b89ab32695ef7fc"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",

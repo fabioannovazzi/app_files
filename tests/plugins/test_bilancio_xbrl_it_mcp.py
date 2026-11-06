@@ -7,6 +7,8 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[2]
 PLUGIN_ROOT = ROOT / "plugins" / "bilancio-xbrl-it"
 SERVER = PLUGIN_ROOT / "mcp" / "server.cjs"
@@ -15,6 +17,58 @@ NODE = shutil.which("node") or str(
     Path.home()
     / ".cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node"
 )
+
+
+@pytest.mark.parametrize("override", [False, True])
+def test_mcp_selects_product_runtime_unless_interpreter_explicitly_supplied(
+    tmp_path: Path, override: bool
+) -> None:
+    product = tmp_path / "vera"
+    component = product / "modules" / "bilancio-xbrl-it"
+    shutil.copytree(PLUGIN_ROOT / "mcp", component / "mcp")
+    shutil.copytree(PLUGIN_ROOT / ".codex-plugin", component / ".codex-plugin")
+    scripts = component / "scripts"
+    scripts.mkdir()
+    (scripts / "service_bridge.py").write_text(
+        'import json,sys\njson.load(sys.stdin)\nprint(json.dumps({"route":"explicit"}))\n'
+    )
+    owner_scripts = product / "scripts"
+    owner_scripts.mkdir()
+    (owner_scripts / "managed_python_runtime.py").write_text(
+        "import json,sys\n"
+        "assert sys.argv[1:] == ['--module', 'bilancio-xbrl-it', 'run', 'scripts/service_bridge.py']\n"
+        "request=json.load(sys.stdin)\n"
+        "print(json.dumps({'route':'managed','tool':request['tool']}))\n"
+    )
+    environment = {
+        **os.environ,
+        "PATH": str(Path(sys.executable).parent)
+        + os.pathsep
+        + os.environ.get("PATH", ""),
+    }
+    environment.pop("VERA_XBRL_PYTHON", None)
+    if override:
+        environment["VERA_XBRL_PYTHON"] = sys.executable
+    result = subprocess.run(
+        [NODE, str(component / "mcp/server.cjs")],
+        input=json.dumps(
+            {
+                "jsonrpc": "2.0",
+                "id": 1,
+                "method": "tools/call",
+                "params": {"name": "xbrl_case_create", "arguments": {}},
+            }
+        )
+        + "\n",
+        text=True,
+        capture_output=True,
+        check=True,
+        env=environment,
+    )
+    response = json.loads(result.stdout)
+    assert response["result"]["structuredContent"]["route"] == (
+        "explicit" if override else "managed"
+    )
 
 
 def _run_server(messages: list[dict[str, object]], env: dict[str, str] | None = None):

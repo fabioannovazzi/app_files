@@ -12,6 +12,21 @@
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
+  "blocked_course_repair_review_20261106": {
+    "authored_inputs_changed": false,
+    "baseline_commit": "c918bee5f97c39691fa6fc355671c8eb915364f3",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "6250605c3004dbb39b22826360e411232779d08c1fcd288786d2071da3011cf4",
+    "lesson_text_unchanged": true,
+    "limits": "Retain historical named editorial and output judgments; this does not manufacture new learner, voice, native-panel, legal, professional or installed-host acceptance.",
+    "previous_reviewed_course_sha256": "3c5dc3a143dac91317ebc9edd8900db69706a008fd4dd4cfe84873c33e95ae68",
+    "reviewed_at": "2026-11-06T15:54:58.062978+00:00",
+    "reviewer": "Codex /root - bounded source and authored-input review",
+    "source_review": "Only Markdown/HTML/Excel flow presentation is sorted by expected date, with undatedflowslast and stable IDs for ties. Canonical record/event order, input selection and cash arithmetic unchanged; regression verifies exact record preservation.",
+    "validation": "Current source regressions passed. Fresh final-head teaching CI must bind the complete localized demo/practice matrix to this exact digest."
+  },
   "browser_preview_refresh": {
     "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed.",
@@ -123,7 +138,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "3c5dc3a143dac91317ebc9edd8900db69706a008fd4dd4cfe84873c33e95ae68",
+  "course_sha256": "6250605c3004dbb39b22826360e411232779d08c1fcd288786d2071da3011cf4",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",

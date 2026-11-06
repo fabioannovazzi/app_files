@@ -538,7 +538,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "fec495b782a0fbacc2c976d9c1ae51e86dcf496069387ce779a6bc9c202d9e03",
+      "sha256": "b1bf488524d2f7d68ef078a17d1b8905b65287fdaa99a5bc1a60ec31f12fdb3a",
       "languages": [
         "it",
         "en",
@@ -825,7 +825,7 @@
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "45140077c9f5d6536f9c10bb328e4279be8fd5dfc4027b9913cf701c2e1bce43",
+      "sha256": "c7c698309e8e6c456f17df355c100c6ccf1db8e5b1ae0657f0d8db57a94d9f36",
       "languages": [
         "it",
         "en",
@@ -1077,7 +1077,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "3c5dc3a143dac91317ebc9edd8900db69706a008fd4dd4cfe84873c33e95ae68",
+      "sha256": "6250605c3004dbb39b22826360e411232779d08c1fcd288786d2071da3011cf4",
       "languages": [
         "it"
       ],

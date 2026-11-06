@@ -8,11 +8,41 @@ import sys
 from pathlib import Path
 
 import pytest
+from openpyxl import load_workbook
 
 ROOT = Path(__file__).resolve().parents[2]
 SCRIPTS = ROOT / "plugins/treasury-forecast/scripts"
 sys.path.insert(0, str(SCRIPTS))
 import treasury_core as core
+import treasury_report as report
+
+
+def test_cash_events_are_presented_in_date_order_without_changing_record(tmp_path):
+    record = core.build_forecast(first())
+    before = copy.deepcopy(record)
+
+    report.write_artifacts(tmp_path / "forecast", record)
+
+    markdown = (tmp_path / "forecast/report.md").read_text()
+    html = (tmp_path / "forecast/report.html").read_text()
+    assert (
+        markdown.index("item:C101")
+        < markdown.index("item:S201")
+        < markdown.index("item:C102")
+    )
+    assert html.index("item:C101") < html.index("item:S201") < html.index("item:C102")
+    workbook = load_workbook(tmp_path / "forecast/tesoreria.xlsx", read_only=True)
+    try:
+        assert [row[0] for row in list(workbook["Flussi"].values)[1:]] == [
+            "item:C101",
+            "item:S201",
+            "item:C102",
+            "plan:PAYROLL-SEP",
+        ]
+    finally:
+        workbook.close()
+    assert record == before
+    assert json.loads((tmp_path / "forecast/forecast.json").read_text()) == before
 
 
 def item(key: str, amount: str, due: str, side: str = "receivable") -> dict:

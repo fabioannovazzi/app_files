@@ -2,6 +2,8 @@
 
 Documents entièrement fictifs. Démonstration : Alpha absorbe Beta indépendante, valeurs économiques fournies de 600 000 et 400 000 EUR. Exercice : Alpha absorbe Beta détenue directement à 100 %, participation comptable de 480 000 EUR et capitaux propres de Beta de 300 000 EUR.
 
+Date prévue de l’opération fictive : 1er décembre 2026, champ planned_date des JSON. Elle est distincte de la date des situations comptables (30 septembre 2026) et ne prouve ni l’exécution ni une échéance légale approuvée.
+
 Deux sociétés italiennes OIC, droits ordinaires homogènes, sans soulte. Hors cours : 90 %, fusion inversée, sociétés sœurs, MLBO, IFRS, transfrontalière, crise et création d’une société. Aucune validation professionnelle sur un client réel.
 
 Ouvrir dossier-fr.md et ordinary.json pour la démonstration ; wholly-owned.json pour l’exercice et update.json seulement lors du changement. Les JSON distinguent faits Alpha/Beta, comptes, associés, valeurs fiscales et hypothèses du calendrier. Aucun résultat ni accord préapprouvé.

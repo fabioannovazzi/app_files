@@ -29,6 +29,22 @@
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
+  "blocked_course_repair_review_20261106": {
+    "authored_inputs_changed": true,
+    "baseline_commit": "c918bee5f97c39691fa6fc355671c8eb915364f3",
+    "changed_fields": [
+      "sources",
+      "files"
+    ],
+    "current_course_sha256": "b1bf488524d2f7d68ef078a17d1b8905b65287fdaa99a5bc1a60ec31f12fdb3a",
+    "lesson_text_unchanged": true,
+    "limits": "Retain historical named editorial and output judgments; this does not manufacture new learner, voice, native-panel, legal, professional or installed-host acceptance.",
+    "previous_reviewed_course_sha256": "fec495b782a0fbacc2c976d9c1ae51e86dcf496069387ce779a6bc9c202d9e03",
+    "reviewed_at": "2026-11-06T15:54:58.039582+00:00",
+    "reviewer": "Codex /root - bounded source and authored-input review",
+    "source_review": "Both authored JSON inputs now provide planned_date2026-12-01, previously hidden in the synthetic demo constructor. Five localized source dossiers explicitly distinguish it from2026-09-30 accounting date and from executed acts/legal deadlines. Native replay consumes the supplied date, preserving the existing technical reference case. No professional confirmation manufactured.",
+    "validation": "Current source regressions passed. Fresh final-head teaching CI must bind the complete localized demo/practice matrix to this exact digest."
+  },
   "committed_shared_contract_integration_20261008": {
     "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
     "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7",
@@ -79,7 +95,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "fec495b782a0fbacc2c976d9c1ae51e86dcf496069387ce779a6bc9c202d9e03",
+  "course_sha256": "b1bf488524d2f7d68ef078a17d1b8905b65287fdaa99a5bc1a60ec31f12fdb3a",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",

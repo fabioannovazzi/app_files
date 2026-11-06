@@ -56,7 +56,7 @@
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_report.py",
-      "sha256": "7583af8b8ecfa3653dad21cd122a53d3da4541eda4c932919a7f598057844ec8"
+      "sha256": "373250b1de491e3a781c8bd9835a7f1063ace8729cfb82b72b89ab32695ef7fc"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
@@ -434,5 +434,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b0fafa79b799e419b0c54980fe4bdffde6ca8f08508a48c927229264e3bfda62"
+  "canonical_course_sha256": "3a4c8c1d04581d21b9ae74129b5b66762c0c362162286fa312f649d556561254"
 }

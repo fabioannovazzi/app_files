@@ -711,7 +711,9 @@ def _iter_input_files(input_dir: Path) -> Iterable[Path]:
             path
             for path in input_dir.rglob("*")
             if (path.is_file() or path.is_symlink())
-            and not any(part.startswith(".") for part in path.parts)
+            and not any(
+                part.startswith(".") for part in path.relative_to(input_dir).parts
+            )
         ),
         key=lambda path: path.relative_to(input_dir).as_posix().casefold(),
     )
