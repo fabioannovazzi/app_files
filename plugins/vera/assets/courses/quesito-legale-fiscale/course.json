@@ -85,7 +85,7 @@
     {
       "path": "modules/deep-research-validator/scripts/package_validation.py",
       "repository_path": "plugins/deep-research-validator/scripts/package_validation.py",
-      "sha256": "5698e1d9b753e24822ee6c7c251358e22c33b56bd6a452420cee273df7ba03d5"
+      "sha256": "4ab663967fd1e6d12b3e3e6f6aa6dbb4f905fb5d6fcc196dcf56d105e38f2461"
     },
     {
       "path": "modules/deep-research-validator/scripts/pipeline_review.py",
@@ -320,7 +320,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

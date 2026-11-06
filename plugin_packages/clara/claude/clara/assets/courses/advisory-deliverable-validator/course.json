@@ -180,7 +180,7 @@
     },
     {
       "path": "skills/mparanza-advisory-deliverable-validator/scripts/advisory_validation.py",
-      "sha256": "0dd40590d97c29a5e357cdeb6cd555c2ddace6a960882315f1cbb339c25003ab"
+      "sha256": "d32fc7f1c14710aa0346f549b1814ae6b6b18ce3340dbbe3e5eab20ff34ed1e4"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -597,5 +597,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "449242fa884a41223363c8091f4bcaffa7a36b3923e272b69e833a8a80763e49"
+  "canonical_course_sha256": "7ace77ef84fa1bea7f171f36984e1cf3462f115870fe28064ca2215c2a5ea43b"
 }

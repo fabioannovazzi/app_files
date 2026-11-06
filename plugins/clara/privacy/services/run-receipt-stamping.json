@@ -2,21 +2,8 @@
   "display_name": "Server-stamped run receipts",
   "external_boundaries": [
     {
-      "id": "automatic-server-stamped-run-receipt",
-      "kind": "hosted_service",
-      "destination": "Mparanza's fixed HTTPS Clara run-receipt endpoint and public verification page",
-      "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
-      "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Clara version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest. Clara and Lucia use receipt schema 2 with the explicit product as a fifth signed request field; legacy Vera schema 1 is preserved. The replacement transport preserves the same closed reporting payloads. Browser cookies and optional original local credentials authenticate only; they are not diagnostic fields. Browser status and acknowledgements enter the selected host model context when the agent reads the rendered response. The schema view returns field definitions, not stored user data. The browser fallback sends no professional documents or raw model-data report.",
-      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced.",
       "activation": "automatic_per_durable_run",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex",
-        "anthropic-cowork",
-        "openai-chatgpt",
-        "google-antigravity"
-      ],
+      "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Clara version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest. Clara and Lucia use receipt schema 2 with the explicit product as a fifth signed request field; legacy Vera schema 1 is preserved. The replacement transport preserves the same closed reporting payloads. Browser cookies and optional original local credentials authenticate only; they are not diagnostic fields. Browser status and acknowledgements enter the selected host model context when the agent reads the rendered response. The schema view returns field definitions, not stored user data. The browser fallback sends no professional documents or raw model-data report.",
       "controls": [
         "Vera report builds stamp by default. When the user prohibits external receipt transmission, --local-only writes the local JSON and readable report, returns not_requested/local_only, and skips receipt request construction and transport. It does not change host model processing. Do not retry stamping without a later explicit user request. Service failures leave completed work and the local report intact and return pending. The generic Studio Archive helper also disables server attestation.",
         "The client constructs a four-field allow-listed request, restricts production traffic to the fixed Mparanza HTTPS route, permits HTTP only on an explicit loopback port for testing, bounds responses, and rejects additional or mismatched response fields. The default transport rejects HTTP redirects before any redirected request and rejects endpoint URLs containing credentials.",
@@ -32,6 +19,19 @@
         "Ordinary operations recover only the exact selected client/engagement/run; unrelated pending report locks and server requests are not prerequisites. Explicit maintenance retains the bounded independent recovery queue. Failed or cancelled runs may close using sealed ownership and retained observation evidence even when original or execution input bytes are unavailable. Execution, completion and professional-artifact seals retain their full integrity checks. No new recipient, payload field or source-file transmission is introduced.",
         "Local native incident and workflow tools send ordinary HTTPS using the retained private installation owner. The plugin declares no remote MCP connection. When local execution is unavailable, the agent can operate the independently hosted recovery page using the host permitted browser controls. No browser capability or host approval is assumed. The browser authenticates with a Secure, HttpOnly, SameSite=Strict, host-only cookie. POST requests require the fixed same-origin Origin and custom header; no CORS is enabled. An expired or missing previously known capability does not silently create a new owner. Schema discovery exposes the product-bound operation contract without MCP discovery.",
         "Original local credentials can link or restore their owner over HTTPS. Only hashes of browser capabilities and internal single-use restore proofs are stored. Restoration preserves original record owners and links already authenticated browser history. Credentials are submitted in the request body, never a URL. The retired remote MCP transfer-code operation is unavailable. Lost or revoked credentials do not prove ownership and cannot be replaced by a new identity to claim old history."
+      ],
+      "destination": "Mparanza's fixed HTTPS Clara run-receipt endpoint and public verification page",
+      "id": "automatic-server-stamped-run-receipt",
+      "kind": "hosted_service",
+      "optional": false,
+      "purpose": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
+      "requires_confirmation": false,
+      "retention": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced.",
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "openai-chatgpt",
+        "google-antigravity"
       ]
     }
   ],
@@ -79,7 +79,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "029a5651740ce94b26f646c671e223a85487c08a77dd20bb29f722997d7633c4"
+    "source_fingerprint": "5017543efc6b58121b580071f8d27d09c688825ecc20a629bf55c3012a6b7697"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -90,8 +90,8 @@
   "schema_version": 2,
   "security_controls": [
     {
-      "id": "minimal-receipt-request-allow-list",
       "control": "Both client and server enforce the same closed receipt request schema, and the server's Pydantic model forbids every unregistered field.",
+      "id": "minimal-receipt-request-allow-list",
       "implemented_by": [
         "scripts/notarized_run_receipt.py",
         "repository:modules/run_receipts/api.py"
@@ -99,16 +99,16 @@
       "on_violation": "The request or response is rejected before a proof is accepted or written locally."
     },
     {
-      "id": "fixed-receipt-destination",
       "control": "The installed client accepts only the fixed Mparanza HTTPS receipt route, with an explicit loopback HTTP port allowed solely for local testing. Endpoint credentials are rejected, and the default stamping and verification transport refuses redirects rather than following another destination.",
+      "id": "fixed-receipt-destination",
       "implemented_by": [
         "scripts/notarized_run_receipt.py"
       ],
       "on_violation": "The client aborts before making a network request."
     },
     {
-      "id": "signed-idempotent-minimal-storage",
       "control": "The server generates the timestamp, signs the exact minimal record with Ed25519, persists no report or case fields, and treats reuse of a receipt UUID for a different digest or version as a conflict.",
+      "id": "signed-idempotent-minimal-storage",
       "implemented_by": [
         "repository:modules/run_receipts/signing.py",
         "repository:modules/run_receipts/store.py"
@@ -116,16 +116,16 @@
       "on_violation": "Missing keys make the service unavailable, invalid signatures are not returned as verified, and conflicting retries are rejected."
     },
     {
-      "id": "bounded-public-receipt-service",
       "control": "The public receipt API caps request bodies and per-source and global operation rates before stamping or verification.",
+      "id": "bounded-public-receipt-service",
       "implemented_by": [
         "repository:modules/run_receipts/api.py"
       ],
       "on_violation": "Oversized or excess requests receive an explicit 413 or 429 response without creating a receipt."
     },
     {
-      "id": "https-browser-reporting-continuity",
       "control": "Local native incident and workflow tools send ordinary HTTPS using the retained private installation owner. The plugin declares no remote MCP connection. When local execution is unavailable, the agent can operate the independently hosted recovery page using the host permitted browser controls. No browser capability or host approval is assumed. The browser authenticates with a Secure, HttpOnly, SameSite=Strict, host-only cookie. POST requests require the fixed same-origin Origin and custom header; no CORS is enabled. An expired or missing previously known capability does not silently create a new owner. Schema discovery exposes the product-bound operation contract without MCP discovery. Original local credentials can link or restore their owner over HTTPS. Only hashes of browser capabilities and internal single-use restore proofs are stored. Restoration preserves original record owners and links already authenticated browser history. Credentials are submitted in the request body, never a URL. The retired remote MCP transfer-code operation is unavailable. Lost or revoked credentials do not prove ownership and cannot be replaced by a new identity to claim old history.",
+      "id": "https-browser-reporting-continuity",
       "implemented_by": [
         "repository:modules/operational_incidents/recovery.py",
         "repository:modules/operational_incidents/api.py",
@@ -136,23 +136,7 @@
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
     }
   ],
-  "service_id": "run-receipt-stamping",
   "service_details": {
-    "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
-    "data_sent": [
-      {
-        "id": "automatic-server-stamped-run-receipt",
-        "when": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof",
-        "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Clara version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest. Clara and Lucia use receipt schema 2 with the explicit product as a fifth signed request field; legacy Vera schema 1 is preserved."
-      }
-    ],
-    "data_returned": [
-      {
-        "id": "acknowledged-evidence",
-        "when": "After exact service verification",
-        "content": "Matching product, installation and event/report receipts; current targeted remedy and original-task outcome; signed report proof or public status where applicable. Receipt transmission never includes the local report."
-      }
-    ],
     "access": {
       "arrangement": "Product-owned local installation capabilities or authenticated browser recovery sessions; retained history requires its original local capability or an authenticated browser session. Native physical-computer proof is separate and shared across products. Existing Vera credentials and v1 signatures retain their meaning.",
       "controls": [
@@ -169,9 +153,25 @@
         "Original local credentials can link or restore their owner over HTTPS. Only hashes of browser capabilities and internal single-use restore proofs are stored. Restoration preserves original record owners and links already authenticated browser history. Credentials are submitted in the request body, never a URL. The retired remote MCP transfer-code operation is unavailable. Lost or revoked credentials do not prove ownership and cannot be replaced by a new identity to claim old history."
       ]
     },
+    "data_returned": [
+      {
+        "content": "Matching product, installation and event/report receipts; current targeted remedy and original-task outcome; signed report proof or public status where applicable. Receipt transmission never includes the local report.",
+        "id": "acknowledged-evidence",
+        "when": "After exact service verification"
+      }
+    ],
+    "data_sent": [
+      {
+        "content": "Unless the user requests --local-only, each substantive run with a durable local report automatically sends exactly schema version, one random per-run receipt UUID, the Clara version when the request was first created, and the SHA-256 digest of the canonical local model-data report, plus ordinary connection metadata. The report itself, workflow and local run IDs, client or case data, professional purpose, phase labels, counts, filenames, file contents, source-document hashes, prompts, and model outputs are not sent. A later verification request sends the same opaque receipt UUID and report digest. Clara and Lucia use receipt schema 2 with the explicit product as a fifth signed request field; legacy Vera schema 1 is preserved.",
+        "id": "automatic-server-stamped-run-receipt",
+        "when": "Bind one local model-data report to a Mparanza server timestamp and Ed25519 signature, then let the studio or its customer verify the retained proof"
+      }
+    ],
     "retention": {
-      "status": "documented",
-      "statement": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced."
-    }
-  }
+      "statement": "Mparanza retains the opaque receipt UUID, server timestamp, Vera version, report digest, signature, signature key ID, and implicit receipt schema version as the proof record, without an automatic deletion period. The local HTML and JSON receipt remain in the studio's run output, or in a supplementary run receipts directory for a retry after output finalization, until the studio removes them. Administrative deletion of the server proof must be requested from Mparanza and makes later verification impossible. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced.",
+      "status": "documented"
+    },
+    "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks."
+  },
+  "service_id": "run-receipt-stamping"
 }

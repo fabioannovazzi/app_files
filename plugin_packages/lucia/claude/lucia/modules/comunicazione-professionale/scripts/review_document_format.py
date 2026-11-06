@@ -54,8 +54,11 @@ def prepare_format_review(
     settings_path: Path,
     samples: list[Path],
     base_profile_path: Path | None = None,
+    language: str = "it",
 ) -> Path:
     """Snapshot selected examples and a model-prepared proposal for user review."""
+    if language not in {"it", "en", "fr", "de", "es"}:
+        raise ValueError("Select a supported proposal language")
     root = workspace.expanduser().resolve()
     manifest = load_workspace(root)
     review_dir = run_dir_from_workspace(root, review_id)
@@ -151,6 +154,7 @@ def prepare_format_review(
         payload = {
             "schema_version": 1,
             "kind": "document_format_review",
+            "language": language,
             "workspace_id": manifest["workspace_id"],
             "studio_name": brand["studio_name"],
             "brand_profile": brand,
@@ -162,19 +166,35 @@ def prepare_format_review(
         }
         payload["review_digest"] = canonical_digest(payload)
         atomic_write_json(review_dir / "format_review.json", payload)
-        review_text = (
-            f"# Document format: {brand['studio_name']}\n\nReview digest: {payload['review_digest']}\n\n"
-            "These are proposed presentation settings. Fonts are requested, not embedded or downloaded; availability must be checked in the renderer. "
-            "Signature lines are plain text, not a digital signature. Samples are not copied into client reports.\n\n"
-            "Inspect a synthetic preview, including a long table and page break, before confirming. "
-            "The complete proposal below also shows the preserved communications settings.\n\n```json\n"
-            + json.dumps(
-                {"brand_profile": brand, "profile": profile},
-                ensure_ascii=False,
-                indent=2,
-            )
-            + "\n```\n"
-        )
+        wording = load_json(
+            PLUGIN_ROOT / "assets/studio-document-format/preview-copy.json"
+        )[language]
+        review_text = f"# {wording[7]}: {brand['studio_name']}\n\n{wording[8]}\n\n"
+        review_text += f"| {wording[9]} | {wording[10]} |\n| --- | --- |\n"
+
+        def display_settings(values: dict[str, Any], prefix: str = "") -> list[str]:
+            rows = []
+            for key, value in values.items():
+                title = prefix + wording[11].get(key, key.replace("_", " "))
+                if isinstance(value, dict):
+                    rows.extend(display_settings(value, title + " / "))
+                else:
+                    rendered = (
+                        ", ".join(map(str, value))
+                        if isinstance(value, list)
+                        else str(value)
+                    )
+                    if isinstance(value, bool):
+                        rendered = wording[12][str(value).lower()]
+                    elif key in {"number_format", "date_format"}:
+                        rendered = wording[12][str(value)]
+                    rows.append(
+                        f"| {title} | {rendered.replace('|', '/').replace(chr(10), ' ')} |"
+                    )
+            return rows
+
+        review_text += "\n".join(display_settings(settings))
+        review_text += f"\n\nDigest: `{payload['review_digest']}`\n"
         (review_dir / "format_review.md").write_text(review_text, encoding="utf-8")
         return review_dir
 

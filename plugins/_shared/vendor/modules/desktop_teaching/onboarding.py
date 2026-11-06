@@ -22,7 +22,12 @@ from pathlib import Path
 from typing import Any, Iterator
 
 from courseware.access import CourseAccessError, verify_course_access
-from courseware.execution import ExecutionError, collect_execution, verify_execution
+from courseware.execution import (
+    MAX_OUTPUT_ARTIFACTS,
+    ExecutionError,
+    collect_execution,
+    verify_execution,
+)
 from courseware.policy import local_unavailability, unavailable_local_workflows
 
 __all__ = ["OnboardingError", "Store", "default_root", "main"]
@@ -355,8 +360,14 @@ class Store:
 
     def _evidence(self, lesson: dict[str, Any], data: dict[str, Any]) -> dict[str, Any]:
         paths = data.get("artifacts")
-        if not isinstance(paths, list) or not paths or len(paths) > 30:
-            raise OnboardingError("Provide 1 to 30 real lesson artifact paths")
+        if (
+            not isinstance(paths, list)
+            or not paths
+            or len(paths) > MAX_OUTPUT_ARTIFACTS
+        ):
+            raise OnboardingError(
+                f"Provide 1 to {MAX_OUTPUT_ARTIFACTS} real lesson artifact paths"
+            )
         root = self.lesson_root(lesson).resolve()
         records = []
         for value in paths:

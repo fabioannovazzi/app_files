@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "41d9eba695257b582a0486324a6149de31138d4af3eadf54aaa348a67e8da9a8"
+      "sha256": "3fffcf8ad290ba9ce990985c1ea1627d14e603aaca611840f28272925b8eef55"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -340,7 +340,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

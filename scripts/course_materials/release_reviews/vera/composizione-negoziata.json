@@ -62,7 +62,26 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "6aa3f8c4cd3a91a928c9179e48235fc7df3a9108af544372f21b00533ddb8062",
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "scripts/archive_report_measurements.py",
+      "vendor/modules/courseware/execution.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "d20d899bbede32e4c392d93faac10509636cad1a320894c848a76b4ec0943aad",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "2578c5cbd905c2c2426c7227cb86c75dbcd5e129",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "6aa3f8c4cd3a91a928c9179e48235fc7df3a9108af544372f21b00533ddb8062",
+    "reviewed_at": "2026-11-06T16:34:18.305295+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "d20d899bbede32e4c392d93faac10509636cad1a320894c848a76b4ec0943aad",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "f9c0383ed915944bce2b02fdb86e3b6de6086a93f2bf5476b5f011799846f7c1",
@@ -112,6 +131,19 @@
     "basis": "The reviewed lesson, examples, execution requirements and localized content are unchanged. Only referenced source hashes changed for the incident, Archive and dependency-check repairs. Prior acceptance evidence retains its original scope.",
     "current_course_sha256": "2f80b645ef05cb7e216f798b408898ab69bff6d9aa8c6cfd83941c456343c4fd",
     "prior_course_sha256": "dfed636751c14ab79498c3f4b6f4204baae3530da9c650360f053cabd818a9e5"
+  },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "2578c5cbd905c2c2426c7227cb86c75dbcd5e129",
+    "changed_source_paths": [
+      "plugins/vera/scripts/archive_report_measurements.py"
+    ],
+    "current_course_sha256": "91b94b198bb838c747808aadcb331cdb8a68ee177fec055121431af26dc1cec7",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "6aa3f8c4cd3a91a928c9179e48235fc7df3a9108af544372f21b00533ddb8062",
+    "reviewed_at": "2026-11-06T14:35:53.736792+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
   },
   "integration_refresh": {
     "date": "2026-10-02",

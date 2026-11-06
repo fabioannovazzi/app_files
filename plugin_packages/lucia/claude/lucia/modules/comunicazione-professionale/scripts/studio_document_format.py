@@ -199,6 +199,7 @@ def prepare_review(
             settings_path=settings,
             samples=samples,
             base_profile_path=base_path,
+            language=language,
         )
     finally:
         if base_path is not None:
@@ -239,31 +240,28 @@ def create_previews(review: Path) -> Path:
                 else None
             ),
         )
+        wording = load_json(COMM / "assets/studio-document-format/preview-copy.json")[
+            payload.get("language", "it")
+        ]
         records = []
         for name, count in (("short", 4), ("long", 100)):
             document = Document()
-            document.add_heading("SYNTHETIC FORMAT PREVIEW", level=1)
-            document.add_paragraph(
-                "Fictional data. This demonstrates presentation only; it is not client work or an approved report."
-            )
+            document.add_heading(wording[0], level=1)
+            document.add_paragraph(wording[1])
             document.add_paragraph(
                 module.display_date("2026-09-30", profile["settings"])
             )
-            document.add_heading("Document and table review", level=2)
-            document.add_paragraph(
-                "Check the requested font, spacing, margins, studio header, footer, page numbers and logo. Check repeated table headings and rows on each page of the long example."
-            )
+            document.add_heading(wording[2], level=2)
+            document.add_paragraph(wording[3])
             table = document.add_table(rows=1, cols=2)
             caption = OxmlElement("w:tblCaption")
-            caption.set(qn("w:val"), "Reviewed numeric totals")
+            caption.set(qn("w:val"), wording[4])
             table._tbl.tblPr.append(caption)
-            table.rows[0].cells[0].text = "Fictional item"
+            table.rows[0].cells[0].text = wording[5]
             table.rows[0].cells[1].text = "EUR"
             for i in range(count):
                 cells = table.add_row().cells
-                cells[0].text = (
-                    f"Synthetic row {i + 1}: a longer description for checking wrapping without clipped text."
-                )
+                cells[0].text = wording[6].format(n=i + 1)
                 cells[1].text = module.display_number(
                     "1234.50" if i % 2 else "-234.50", profile["settings"]
                 )

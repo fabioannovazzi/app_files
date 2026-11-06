@@ -83,6 +83,11 @@
       "sha256": "4b9f57be78573553a69a5f9343ed7a5eca21994f0911d85c9d595c87aea011e5"
     },
     {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/preview-copy.json",
+      "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/preview-copy.json",
+      "sha256": "ce90dfcdc932ffd9b415d9b1306c2df3c046bb1ca596812d7512105ac38f75e4"
+    },
+    {
       "path": "modules/comunicazione-professionale/requirements.txt",
       "repository_path": "plugins/comunicazione-professionale/requirements.txt",
       "sha256": "21d6d3b5742482d9d57790df8cea6e1f00bff4742683b748916f5d1223b472f8"
@@ -245,12 +250,12 @@
     {
       "path": "modules/comunicazione-professionale/scripts/review_document_format.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/review_document_format.py",
-      "sha256": "7b0a6aff7147e56cc79df968455fbedc6c10e39eef609bccd77494f6a7f4052f"
+      "sha256": "45ab376f76bfdc00cf6b8b5bddd5fc57c307672923564dfebae73dcc0a5a2445"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/studio_document_format.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/studio_document_format.py",
-      "sha256": "f95ed026ce9d288b6e1a6d1a16606288428f3b126a9dfe284dd1b746d2cca826"
+      "sha256": "cf08e7a82facc65fad04ba2f48436503ca4b82a792698466c5beda7f5df8fc57"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/validate_run.py",
@@ -385,7 +390,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -475,7 +480,7 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+      "sha256": "065c7b3f8d3376d433fd74d4d0db8d316adb1e20720c1d88e7af7ecb85eecf61"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",

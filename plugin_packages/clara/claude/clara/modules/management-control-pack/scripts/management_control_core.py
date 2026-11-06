@@ -914,6 +914,9 @@ def _pnl_section(
         "status": "available",
         "rows": rows,
         "totals": {key: _decimal_text(value) for key, value in totals.items()},
+        "supplied_categories": sorted(
+            {key for values in monthly.values() for key in values}
+        ),
     }, _control(role, control_total, recipe)
 
 
@@ -1084,7 +1087,11 @@ def _budget_section(
         "forecast_basis": _text(
             recipe.get(
                 "forecast_basis",
-                "Reviewed remaining-month forecast export; assumptions require professional review.",
+                (
+                    "Reviewed remaining-month forecast export; assumptions require professional review."
+                    if any(row.get("scenario") == "FC" for row in comparisons)
+                    else "No full-period forecast calculated; no reviewed remaining-period forecast available."
+                ),
             ),
             label="forecast_basis",
             maximum=2400,
@@ -1504,6 +1511,13 @@ def build_management_pack(
 
     pnl, pnl_control = _pnl_section(recipe, table_map, metrics)
     sections["monthly_pnl"] = pnl
+    absent = sorted(set(CANONICAL_CATEGORIES) - set(pnl["supplied_categories"]))
+    if absent:
+        limitations.append(
+            "Categories not supplied (zero contributions used only for arithmetic, not confirmed zero balances): "
+            + ", ".join(absent)
+            + ". EBIT and net result describe supplied categories only."
+        )
     controls.append(pnl_control)
     coverage.append({"section": "monthly_pnl", "status": "available"})
 
@@ -1840,7 +1854,7 @@ def render_markdown(
 
         return render_costing_markdown(pack, commentary)
 
-    from budget_presentation import COSTS, LINES
+    from budget_presentation import COSTS, LINES, budget_labels
 
     language = pack.get("language", "en")
 
@@ -1906,7 +1920,7 @@ def render_markdown(
                 if key not in by_metric:
                     continue
                 row = dict(by_metric[key])
-                row["metric"] = label(key)
+                row["metric"] = budget_labels(pack)[key]
                 for field in ("baseline", "comparison", "variance"):
                     row[field] = str(Decimal(row[field]) * (-1 if key in COSTS else 1))
                 rows.append(row)
@@ -2288,6 +2302,8 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
         write_costing_excel(path, pack)
         return
 
+    from budget_presentation import budget_labels
+
     workbook = Workbook()
     summary = workbook.active
     language = pack.get("language", "en")
@@ -2374,7 +2390,10 @@ def write_excel(path: Path, pack: Mapping[str, Any]) -> None:
     _append_sheet(
         workbook,
         "Budget comparisons",
-        pack["sections"]["budget_variance"].get("comparison_rows", []),
+        [
+            dict(row, metric=budget_labels(pack)[row["metric"]])
+            for row in pack["sections"]["budget_variance"].get("comparison_rows", [])
+        ],
         (
             "view",
             "scenario",

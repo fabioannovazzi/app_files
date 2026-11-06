@@ -62,7 +62,26 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "77aa6d126268cc1bd7651432de7e34bbea8d3677d25b3be6539368b1aecf3310",
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/adeguati-assetti/scripts/construction_adapters.py",
+      "vendor/modules/courseware/execution.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "ac89952dd15bbb29f1273ec17fd2106d9c239beb8c2a8d9a9d14b7769f36ff49",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "f5e380b3dd7f372ae3f26b15cbfe58b83c6595d7",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "77aa6d126268cc1bd7651432de7e34bbea8d3677d25b3be6539368b1aecf3310",
+    "reviewed_at": "2026-11-06T16:34:18.133116+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "ac89952dd15bbb29f1273ec17fd2106d9c239beb8c2a8d9a9d14b7769f36ff49",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "b95d889cf87c5059f121c64396399897f129b37ebe53dc53c08cbd64d68e1e4a",
@@ -107,6 +126,19 @@
     "course_sha256": "bfe2c79383af209165f6a2321580a1bb60319776361c595dd38ef0b85d50d674",
     "reviewed_at": "2026-11-03T14:23:07.456365+00:00",
     "reviewer": "Codex /root — bounded native transport and lesson review"
+  },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "f5e380b3dd7f372ae3f26b15cbfe58b83c6595d7",
+    "changed_source_paths": [
+      "plugins/adeguati-assetti/scripts/construction_adapters.py"
+    ],
+    "current_course_sha256": "9ab4ee6984d1115726ffbb71d7c66fce24e0bc67547934e05849b6b706253b66",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "77aa6d126268cc1bd7651432de7e34bbea8d3677d25b3be6539368b1aecf3310",
+    "reviewed_at": "2026-11-06T14:35:53.739623+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
   },
   "integration_refresh": {
     "date": "2026-10-02",

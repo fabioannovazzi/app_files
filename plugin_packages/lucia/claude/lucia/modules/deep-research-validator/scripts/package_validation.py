@@ -1643,8 +1643,8 @@ def _write_docx_fallback(markdown_text: str, output_path: Path) -> bool:
         style.font.name = "Calibri"
         style.font.size = Pt(size)
         style.font.color.rgb = RGBColor(0, 0, 0)
-        style.paragraph_format.space_after = Pt(7)
-        style.paragraph_format.line_spacing = 1.08
+        style.paragraph_format.space_after = Pt(6)
+        style.paragraph_format.line_spacing = 1.05
         if name != "Normal":
             style.font.bold = True
             style.paragraph_format.space_before = Pt(10)
@@ -1700,6 +1700,7 @@ def _write_docx_fallback(markdown_text: str, output_path: Path) -> bool:
             )
             continue
         paragraph = document.add_paragraph()
+        paragraph.paragraph_format.keep_together = len(line.split()) <= 150
         previous = paragraph._p.getprevious()
         if previous is not None and previous.tag == qn("w:tbl"):
             paragraph.paragraph_format.space_before = Pt(7)

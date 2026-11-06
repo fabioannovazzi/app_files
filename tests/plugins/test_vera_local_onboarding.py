@@ -29,7 +29,9 @@ def load(name: str):
 
 
 @pytest.fixture
-def module(monkeypatch):
+def module(monkeypatch, tmp_path):
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(tmp_path / "archive-state"))
+    monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     monkeypatch.syspath_prepend(str(SCRIPTS))
     module = load("local_onboarding")
     monkeypatch.setitem(sys.modules, "local_onboarding", module)
@@ -1566,13 +1568,38 @@ def test_vouching_kit_runs_live_sample_handoff_and_current_checks(
         ledger.complete_run(Path(prepared["client_root"]), engagement, sample_run)
         # Reuse the configured in-process archive instance and its session lock.
         archive = sys.modules["vera_tutorial_archive"]
-        handoff = archive.start_check_entries_from_sample(
-            client,
-            engagement,
-            sample_run,
-            support_input_ids=prepared["support_input_ids"],
-            state_dir=Path(prepared["archive_state_dir"]),
+        archive_state = Path(prepared["archive_state_dir"])
+        client_root = Path(prepared["client_root"])
+        archive._remember_run_binding(
+            archive_state,
+            client_root,
+            ledger.load_run(client_root, engagement, sample_run),
         )
+        # A parallel chat can lose the tutorial's archive configuration. The
+        # exact retained sample must still resolve, without selecting a new root.
+        with monkeypatch.context() as lost_config:
+
+            def unavailable_client(*args, **kwargs):
+                raise archive.ArchiveError("Selected client identity unavailable")
+
+            lost_config.setattr(archive, "get_studio_client_folder", unavailable_client)
+            handoff = archive.start_check_entries_from_sample(
+                client,
+                engagement,
+                sample_run,
+                support_input_ids=prepared["support_input_ids"],
+                state_dir=archive_state,
+            )
+            assert handoff["work_binding"]["status"] == "retained"
+            assert (
+                archive._selected_ledger_root(
+                    client,
+                    engagement,
+                    state_dir=archive_state,
+                    run_id=handoff["run"]["run_id"],
+                )
+                == client_root
+            )
         check_context = handoff["client_engagement"]
         normalized = next(
             Path(item["path"])

@@ -78,6 +78,23 @@
     "limits": "No physical voice/window proof, professional acceptance or real learner completion. No install/deploy/publish.",
     "scope": "Italian Codex source reading, native worker demo and separate practice, date save/reopen, weekly/daily statement, native workbook and passive report readback."
   },
+  "combined_course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/treasury-forecast/scripts/treasury_report.py"
+    ],
+    "current_course_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "limits": "Historical editorial judgments and artifact hashes remain unchanged. Fusione retains the separately reviewed explicit fictional date from the blocked-course repair. This record is a source compatibility review, not new learner, installed-host or professional acceptance.",
+    "previous_course_sha256": "a2c1f88ba214dcf695d58d3fe7d42f2c7c05dbc7b63ea3e5f33f34e484135e16",
+    "reviewed_at": "2026-11-06T16:46:13.510014+00:00",
+    "reviewer": "Codex /root - combined course repair source compatibility",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
   "combined_geneva_release_refresh": {
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
@@ -138,7 +155,25 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "6250605c3004dbb39b22826360e411232779d08c1fcd288786d2071da3011cf4",
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "vendor/modules/courseware/execution.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "a2c1f88ba214dcf695d58d3fe7d42f2c7c05dbc7b63ea3e5f33f34e484135e16",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "f5e380b3dd7f372ae3f26b15cbfe58b83c6595d7",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "3c5dc3a143dac91317ebc9edd8900db69706a008fd4dd4cfe84873c33e95ae68",
+    "reviewed_at": "2026-11-06T16:34:18.786161+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",

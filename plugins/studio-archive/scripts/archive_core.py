@@ -103,6 +103,7 @@ __all__ = [
     "open_studio_google_drive_source",
     "plan_gmail_client_search",
     "prepare_studio_client_workflow",
+    "retain_studio_run_binding",
     "recover_studio_client_ledger",
     "refresh_archive",
     "report_studio_client_retention",
@@ -3627,7 +3628,9 @@ def start_check_entries_from_sample(
     """Prepare and start Check Entries from one exact sample and support batch."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=sample_run_id
+    )
     if isinstance(support_input_ids, (str, bytes)) or not support_input_ids:
         raise ArchiveError("Select at least one support input for Check Entries.")
     normalized_support_ids = list(support_input_ids)
@@ -3681,6 +3684,8 @@ def start_check_entries_from_sample(
             )
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Check Entries handoff could not start: {exc}") from exc
+    binding_status = _remember_run_binding(private_state, root, active)
+    recovery = _checkpoint_work(private_state, active)
     return {
         "status": active["run"]["status"],
         "preparation_status": prepared["status"],
@@ -3692,6 +3697,8 @@ def start_check_entries_from_sample(
         "input_manifest": active["input_manifest"],
         "client_engagement": active["context"],
         "client_engagement_path": active["context_path"],
+        "work_binding": binding_status,
+        "recovery": recovery,
     }
 
 
@@ -4222,6 +4229,20 @@ def restore_studio_client_workflow(
     }
 
 
+def retain_studio_run_binding(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, str]:
+    """Bind an already prepared portable run without changing archive selection."""
+    # Exact manifest identities and hashes are mechanical evidence of the run;
+    # later native operations revalidate them before using this private pointer.
+    loaded = ledger.load_run(client_root, engagement_id, run_id)
+    return _remember_run_binding(_state_dir(state_dir), client_root, loaded)
+
+
 def _remember_run_binding(
     state: Path, client_root: Path, loaded: Mapping[str, Any]
 ) -> dict[str, str]:
@@ -4239,6 +4260,7 @@ def _remember_run_binding(
         path = _run_binding_path(
             state, (run["client_id"], run["engagement_id"], run["run_id"])
         )
+        path.parent.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         _write_private_json(path, record)
     except (OSError, ValueError, ArchiveError) as exc:
