@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/mac-tutorial-archive/plugins/vera",
-  "version": "0.1.580",
-  "captured_at": "2026-11-06T16:32:12.862237+00:00",
-  "catalogue_fingerprint": "b94faa04b540a4a422bab967706f17568d03cceb492b1bee8c6ad28e35f52916",
-  "manifest_sha256": "ab4f9f1ac73803dcaa0aca4164eebc32c66636e00b1a37a6ca9bd3d7488027c0",
+  "root": "/private/tmp/vera-residual-batching/plugins/vera",
+  "version": "0.1.585",
+  "captured_at": "2026-11-06T16:37:06.758500+00:00",
+  "catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
+  "manifest_sha256": "5de7314060d716fff24251ad371979d9fa14efe5bc9dcc7bb232351a84100583",
   "entries": [
     {
       "function_id": "adeguati-assetti",

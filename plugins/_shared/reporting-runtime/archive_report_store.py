@@ -302,7 +302,45 @@ class RunStore:
                 if {
                     k: v for k, v in previous.items() if k not in {"path", "aliases"}
                 } != {k: v for k, v in source.items() if k not in {"path", "aliases"}}:
-                    raise ValueError("Registered reporting source bytes changed")
+                    measurement_fields = {
+                        "unit",
+                        "quantity",
+                        "columns",
+                        "cells",
+                        "measurement_error",
+                    }
+                    mutable = measurement_fields | {"path", "aliases"}
+                    state_row = connection.execute(
+                        "SELECT payload FROM state WHERE singleton=1"
+                    ).fetchone()
+                    state = json.loads(state_row["payload"]) if state_row else None
+                    # Only failed measurements can recover; identity and bytes
+                    # remain fixed, and sealed history is never rewritten.
+                    if not (
+                        previous["measurement_error"]
+                        and source["measurement_error"] is None
+                        and {k: v for k, v in previous.items() if k not in mutable}
+                        == {k: v for k, v in source.items() if k not in mutable}
+                        and state is not None
+                        and state["finished_at"] is None
+                        and not state["collection_closed"]
+                    ):
+                        raise ValueError("Registered reporting source bytes changed")
+                    recovery = {
+                        "kind": "source_measurement_recovered",
+                        "source_id": source["source_id"],
+                        "source_sha256": source["sha256"],
+                        "previous": {k: previous[k] for k in measurement_fields},
+                        "measured": {k: source[k] for k in measurement_fields},
+                    }
+                    connection.execute(
+                        "INSERT INTO events VALUES(?,?,?)",
+                        (
+                            "measurement-recovery:" + source["source_id"],
+                            now(),
+                            canonical(recovery).decode(),
+                        ),
+                    )
             connection.execute(
                 "INSERT INTO sources VALUES(?,?,?) ON CONFLICT(source_id) DO UPDATE SET path=excluded.path,payload=excluded.payload",
                 (source["source_id"], source["path"], encoded),
