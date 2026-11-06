@@ -120,7 +120,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "ffdc1af1b83571c707c868fbb4170d85c20a242a72361f651461d6a8fa691d08",
+  "course_sha256": "c02d2bf938a685e66f3d47f1b35affc3249c0c05b0c4bf334d5ac25535e9bf29",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "66a004e46b78c16dc7e2308f1fabc91a235064289c61053448354d469568dba1",
@@ -527,6 +527,20 @@
     "reviewer": "Codex - bounded Rating di legalita source compatibility review",
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "f0b8c3bc1a5f4b67557aa816788f0503f9f7a7458cc1a4fead81e79c750457e4",
+    "reviewed_baseline_course_sha256": "c61b7821d0f309c87e89e3f2ec56466329ba4cf4a5eceee1bd2a918445e6710f",
+    "current_course_sha256": "f94644ef2b619792cd2f339634347250f4bacc73fa850be5b274ce98c005122b",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
+  },
   "release_freshness_20260928": {
     "changed_compiled_fields": [
       "sources"
@@ -643,5 +657,10 @@
     "reviewer": "Codex /root - source compatibility review",
     "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "workflow": "reporting-engine"
+  "workflow": "reporting-engine",
+  "course_main965_source_binding_20261106": {
+    "previous_course_sha256": "ffdc1af1b83571c707c868fbb4170d85c20a242a72361f651461d6a8fa691d08",
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  }
 }

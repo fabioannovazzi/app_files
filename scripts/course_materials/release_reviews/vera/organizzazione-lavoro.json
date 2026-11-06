@@ -105,7 +105,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "eeba10026c2cc3ab829799389b3eb06d5edbf84c228d41b1c285a5c531743fb2",
+  "course_sha256": "e52359f1b76a46edde6c53243ef7a9e4d00e9140c128dea978bc5cd7f5193816",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "f04e34ccfca11ac692f92d4745a906c9c362c4172bf73a90c75ebeef31ac0bbb",
@@ -529,6 +529,20 @@
     "scope": "All authored lesson fields, locales, fictional inputs, checkpoints and execution definitions are unchanged. Source bindings incorporate shared product-bound reporting, verified helper execution and primary-task reporting instructions. Tutorials remain excluded from ordinary task reporting. Historical editorial and output-artifact judgments are preserved.",
     "source_review": "docs/releases/2026-10-18-product-reporting-source-review.json"
   },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "d36f2eb9913e12f8da2a5c8a90c8b2807b7cb342236fe0a17fb8eac773325f58",
+    "reviewed_baseline_course_sha256": "2fe22bdd9450e420ae96eb50dfff017873e9e367a390ef0b04bf023ab0867ae0",
+    "current_course_sha256": "44fb4d4136f2edabfe7a5f2dd38a7e196af51b1bf17b07c0a2a9968c933b01e4",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
+  },
   "remote_package_freshness_review": {
     "authored_content_and_attachment_definitions_unchanged": true,
     "current_course_sha256": "257de02891426367f9acfd0beb4d135bf07fe529fe37f3daf4917748e1228ad3",
@@ -712,5 +726,10 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "course_main965_source_binding_20261106": {
+    "previous_course_sha256": "eeba10026c2cc3ab829799389b3eb06d5edbf84c228d41b1c285a5c531743fb2",
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
   }
 }

@@ -1,42 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "workflow-usage",
   "display_name": "Pipeline usage, outcomes and user satisfaction",
-  "governed_paths": [
-    "scripts/workflow_usage.py",
-    "scripts/operational_incidents.py",
-    "scripts/model_data_report.py",
-    "scripts/notarized_run_receipt.py",
-    "skills/clara/references/workflow-usage.md",
-    "usage/pipelines.json",
-    "scripts/reporting_product.py",
-    "scripts/incident_host_mcp.cjs",
-    "scripts/technical_runner.py",
-    "scripts/incident_tool_schemas.json"
-  ],
-  "governed_repository_paths": [
-    "modules/workflow_usage",
-    "modules/operational_incidents/api.py",
-    "modules/operational_incidents/store.py",
-    "scripts/manage_workflow_usage.py",
-    "templates/vera_workflow_feedback.html",
-    "static/shared/vera/workflow-feedback.js",
-    "static/shared/vera/workflow-feedback.css",
-    "static/shared/vera-testing-status.js",
-    "static/shared/vera/index.html",
-    "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py",
-    "modules/operational_incidents/recovery.py",
-    "templates/incident_recovery.html",
-    "static/shared/incident-recovery.js",
-    "static/shared/incident-recovery.css"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork",
-    "openai-chatgpt",
-    "google-antigravity"
-  ],
   "external_boundaries": [
     {
       "runtime_profiles": [
@@ -114,6 +77,48 @@
       ]
     }
   ],
+  "governed_paths": [
+    "scripts/workflow_usage.py",
+    "scripts/operational_incidents.py",
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/clara/references/workflow-usage.md",
+    "usage/pipelines.json",
+    "scripts/reporting_product.py",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/technical_runner.py",
+    "scripts/incident_tool_schemas.json"
+  ],
+  "governed_repository_paths": [
+    "modules/workflow_usage",
+    "modules/operational_incidents/api.py",
+    "modules/operational_incidents/store.py",
+    "scripts/manage_workflow_usage.py",
+    "templates/vera_workflow_feedback.html",
+    "static/shared/vera/workflow-feedback.js",
+    "static/shared/vera/workflow-feedback.css",
+    "static/shared/vera-testing-status.js",
+    "static/shared/vera/index.html",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py",
+    "modules/operational_incidents/recovery.py",
+    "templates/incident_recovery.html",
+    "static/shared/incident-recovery.js",
+    "static/shared/incident-recovery.css"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "985c7624583205322493703fe266f9012b266428fde882f95938f555f58cda5f"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "owned-closed-schema-events",
@@ -174,12 +179,6 @@
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
     }
   ],
-  "review": {
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "42f98193312b6228f870ded366b8989fe8d75bdb5b837e3d4eaa8b428b2533e8"
-  },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
     "data_sent": [
@@ -226,5 +225,6 @@
       "status": "documented",
       "statement": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. Lifecycle events exclude client documents and professional output. Optional feedback stores only the comment deliberately supplied by the user; its contents are not automatically anonymized. Counting epochs and underlying retained events persist until administrative deletion. A reset preserves history and starts new public counts. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced."
     }
-  }
+  },
+  "service_id": "workflow-usage"
 }

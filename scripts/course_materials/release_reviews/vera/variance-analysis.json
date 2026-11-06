@@ -193,7 +193,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "8608132b05751a5989b9d56bb6c8670137dbf4d79c01731efebf0160783a7c48",
+  "course_sha256": "30c0b23529b949aeee2f2f1aa68bc0f72d4a76a40c4164e709be6d6cac6cce00",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484",
@@ -939,6 +939,16 @@
     "sandbox_loopback_test_retry_passed": true,
     "scope": "Shared Vera incident client/runtime now honors an explicit local-only incident-delivery policy while preserving queued evidence, default automatic behavior and original professional execution gates. Authored lessons and input attachments unchanged. This records source compatibility only; no new native, learner or professional acceptance."
   },
+  "month_panel_order_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06T17:59:18.763224+00:00",
+    "changed_fields": [
+      "sources"
+    ],
+    "lesson_text_and_inputs_unchanged": true,
+    "scope": "ISOYYYY-MMpanels now display chronologically, moving each complete trace with title/delta; canonical source/result frames unchanged. Exact18rowauthoredcourse reproducedJan/Mar/Feb beforefix;93componenttests pass; currentKaleido and declaredfallbackPNG visuallyreviewed. HistoricalclippedPNGwasstale,notcurrentdefect.",
+    "limits": "Source/rendered-artifact evidence only; no new installed-native UI, professional approval, causation or learner claim."
+  },
   "native_identity_source_refresh": {
     "changed_sources": [
       {
@@ -1078,6 +1088,20 @@
     "reviewed_at": "2026-10-02T11:14:49.321182+00:00",
     "reviewer": "Codex - bounded Rating di legalita source compatibility review",
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
+  },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "c2d49b89e12ab6c472bc0867d755804c8d7d7ea60d3552c374acca75ba7a83d8",
+    "reviewed_baseline_course_sha256": "9a7d7df5c2ff799c6641f8df0ad79152b90a8ce3cd65d128a478e54cacf77c00",
+    "current_course_sha256": "7f13e2cfa9d592026e2e99f0c33fcea3e83da2b5cc4e92fcc9327b5bf3a02980",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
   },
   "release_freshness_20260928": {
     "changed_compiled_fields": [
@@ -1322,14 +1346,9 @@
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
   },
-  "month_panel_order_review_20261106": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-11-06T17:59:18.763224+00:00",
-    "changed_fields": [
-      "sources"
-    ],
-    "lesson_text_and_inputs_unchanged": true,
-    "scope": "ISOYYYY-MMpanels now display chronologically, moving each complete trace with title/delta; canonical source/result frames unchanged. Exact18rowauthoredcourse reproducedJan/Mar/Feb beforefix;93componenttests pass; currentKaleido and declaredfallbackPNG visuallyreviewed. HistoricalclippedPNGwasstale,notcurrentdefect.",
-    "limits": "Source/rendered-artifact evidence only; no new installed-native UI, professional approval, causation or learner claim."
+  "course_main965_source_binding_20261106": {
+    "previous_course_sha256": "8608132b05751a5989b9d56bb6c8670137dbf4d79c01731efebf0160783a7c48",
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
   }
 }

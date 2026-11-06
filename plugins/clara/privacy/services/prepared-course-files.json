@@ -1,24 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "prepared-course-files",
   "display_name": "Prepared course-file downloads",
-  "governed_paths": [
-    "scripts/local_courses.py",
-    "assets/courses"
-  ],
-  "governed_repository_paths": [
-    "plugins/_shared/vendor/modules/courseware",
-    "scripts/course_materials/remote_files.py",
-    "scripts/course_materials/public_files.py",
-    "scripts/course_materials/build_public_catalog.py",
-    "modules/course_files.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork",
-    "openai-chatgpt",
-    "google-antigravity"
-  ],
   "external_boundaries": [
     {
       "id": "public-file-get",
@@ -41,6 +22,30 @@
       ]
     }
   ],
+  "governed_paths": [
+    "scripts/local_courses.py",
+    "assets/courses"
+  ],
+  "governed_repository_paths": [
+    "plugins/_shared/vendor/modules/courseware",
+    "scripts/course_materials/remote_files.py",
+    "scripts/course_materials/public_files.py",
+    "scripts/course_materials/build_public_catalog.py",
+    "modules/course_files.py"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "c8dd5ae296a03fc073933ea51cf942f2df0011f173dce6889f53a4ecdb64c4b3"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "fixed-host-and-byte-integrity",
@@ -78,10 +83,5 @@
       "statement": "Verified prepared files stay in the selected local lesson folder. Hosted access-log retention and other provider copies are outside this helper; no deletion schedule is enforced by the download."
     }
   },
-  "review": {
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "791a2f0776b06ec2cdb0798d73b050f5ca4f84c9b9af56de1cc9cc4ca806cabb"
-  }
+  "service_id": "prepared-course-files"
 }

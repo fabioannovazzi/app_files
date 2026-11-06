@@ -264,7 +264,7 @@
     "reviewer": "Codex /root - bounded report output source review",
     "source_review": "Inspected report-builder Markdown omission repair, compact-table pagination and continuous audit appendix; numeric review, source capture and integrity validation unchanged. The component version advances to0.1.47. Shared studio-format preview code calls the same renderer. Full compiled course comparison shows only source inventory changes; original editorial judgments and outputs remain historical. Fresh current-digest localized execution remains required."
   },
-  "course_sha256": "65e91516676a7b24642e9d01d50da64cb811636e51ba24fc0cb2b972b22d8470",
+  "course_sha256": "23316d98625bc64431773590ab7e8eec0c6400b8c5cfaadfc79c149938f502f2",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -354,6 +354,20 @@
     "previous_course_sha256": "0eccc569605af7631766bbe87afc3ad5060c6a96d13c80803993e46806c1e15e",
     "reviewed_at": "2026-11-05T07:14:27.054128+00:00",
     "scope": "Every compiled lesson field apart from source identities is identical to current main. Preserve main and branch historical editorial and artifact judgments. Source changes provide shared native UI, translated owned labels, receipt-bound native controls and read-only affordances. Main incident, Archive, Windows and course-completion changes are retained. No new live learner or professional acceptance claimed. Fresh exact-digest native teaching CI remains required."
+  },
+  "integrated_tutorial_archive_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "integrated_main_commit": "0a73afa8c213eeea728f296b7df6cd5d2a366871",
+    "previous_course_sha256": "4272434e9a5993403830c750801b2b0d992fa3a76f780a5a5d2e2c9c438ae47c",
+    "current_course_sha256": "733d1b73ff8a8af791a909631649cf94e9655dc1590dc535066af88fe2c82189",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Integrated the merged tutorial-to-Archive identity binding with same-byte measurement recovery, log reads and reconciliation evidence repairs. Compared every non-source course field with both previously reviewed heads. Historical editorial and output judgments are preserved; fresh native CI must bind to these exact combined source identities.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -830,6 +844,20 @@
     "reviewer": "Codex - bounded Rating di legalita source compatibility review",
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "623aa3b004d50e91c78ccfd88b9d0497920ed78b8824a10f2ae47c3c3a037c78",
+    "reviewed_baseline_course_sha256": "88f70dde4dd79cb32bf2c562681b21c9df7fdcb1afcbab162c7754b7a76a610e",
+    "current_course_sha256": "4272434e9a5993403830c750801b2b0d992fa3a76f780a5a5d2e2c9c438ae47c",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
+  },
   "remote_package_freshness_review": {
     "authored_content_and_attachment_definitions_unchanged": true,
     "current_course_sha256": "85f8c71a2bb30cb98184b41a02022e6c7fc825fefe30077eebc9e192320f96d9",
@@ -1039,5 +1067,10 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "course_main965_source_binding_20261106": {
+    "previous_course_sha256": "65e91516676a7b24642e9d01d50da64cb811636e51ba24fc0cb2b972b22d8470",
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
   }
 }

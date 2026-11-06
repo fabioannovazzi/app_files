@@ -484,6 +484,10 @@
     {
       "id": "retained-mutation-requests",
       "control": "Software-generated request keys distinguish an exact engagement creation or run preparation from intentionally separate work. Engagement creation stores a sealed local intent with client and engagement IDs, label, original creation time and request hashes before creating the folder. The raw creation key is not stored in that intent. Run requests retain their existing idempotency key and admitted manifest. A repeated exact request reuses the committed identity and current progress without rereading original intake receipts; a changed selection under the same key is rejected without overwriting work. The host model receives the retained identities/status and ordinarily knows its generated request key; no external request is added."
+    },
+    {
+      "id": "unchanged-source-measurement-recovery",
+      "control": "The local artifact reader retries a previously failed measurement against the same source SHA-256. An active run can replace only failed measurement fields, retaining the previous error and recovered counts in its local event ledger; source identity and bytes remain fixed. Reads after closure preserve the historical source record and sealed report, and create a separate local delivery receipt. No new source fields, model recipients or network destinations are added. UTF-8 execution logs use the existing bounded line reader, returning only the requested lines; files that cannot be decoded as UTF-8 remain rejected."
     }
   ],
   "workstream": "studio-archive",

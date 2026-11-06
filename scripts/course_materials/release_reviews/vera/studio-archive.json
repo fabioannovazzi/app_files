@@ -330,7 +330,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "831c30a9f0c72a21151c48d62635a4586b823f68c2f321590020cd486a5ff46a",
+  "course_sha256": "56aed7a36ad44d6d6a5d00ce928c2f616560456bc3e650a5d31a268f0674b815",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
@@ -451,6 +451,20 @@
     "previous_course_sha256": "24a263516a9d029ee9ff7c94e7fd846e98675556862b7afccec3e9811c1b6242",
     "reviewed_at": "2026-11-06T14:35:53.745972+00:00",
     "reviewer": "Codex /root - bounded source-binding compatibility review"
+  },
+  "integrated_tutorial_archive_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "integrated_main_commit": "0a73afa8c213eeea728f296b7df6cd5d2a366871",
+    "previous_course_sha256": "3e1069a1d8485ed3e4b2a623b824d3563e8ee39950f4d06b2146aeccacbc9268",
+    "current_course_sha256": "7a4d23fe76a860e3ce95278a5689a5393ebe2d44e518347a1ee1723e335cd9ac",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Integrated the merged tutorial-to-Archive identity binding with same-byte measurement recovery, log reads and reconciliation evidence repairs. Compared every non-source course field with both previously reviewed heads. Historical editorial and output judgments are preserved; fresh native CI must bind to these exact combined source identities.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -889,6 +903,20 @@
     "reviewer": "Codex - bounded Rating di legalita source compatibility review",
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "24a263516a9d029ee9ff7c94e7fd846e98675556862b7afccec3e9811c1b6242",
+    "reviewed_baseline_course_sha256": "9afa90ee8f99dddfcf9d318c5df5ab7f823d9de5554dd5b171f5a5b313dab2c0",
+    "current_course_sha256": "3e1069a1d8485ed3e4b2a623b824d3563e8ee39950f4d06b2146aeccacbc9268",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
+  },
   "release_freshness_20260928": {
     "changed_compiled_fields": [
       "sources"
@@ -1150,5 +1178,10 @@
     "new_visual_or_learner_acceptance": false,
     "previous_course_sha256": "4dcdd2df546e823f74adfa3f7e48f4cc2df9a6a6399a074a125300f7dbe22ffa",
     "source_review": "docs/releases/2026-10-14-vera-workflow-ui-source-review.json"
+  },
+  "course_main965_source_binding_20261106": {
+    "previous_course_sha256": "831c30a9f0c72a21151c48d62635a4586b823f68c2f321590020cd486a5ff46a",
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
   }
 }

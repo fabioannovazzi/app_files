@@ -1651,3 +1651,92 @@ def test_legacy_excel_read_retains_measured_row_and_column_selection(
     assert measured["cells"] == 4
     assert data["rows"] == [[125.0]]
     assert evidence["source_id"] == "legacy-bank"
+
+
+@pytest.mark.parametrize("closed", [False, True])
+def test_artifact_read_recovers_failed_measurement_of_unchanged_source(
+    archive_core, client_case, monkeypatch, closed
+):
+    import archive_reporting
+    from archive_report_store import RunStore
+
+    original_measure = archive_reporting.measure_source
+
+    def unavailable_measure(*args, **kwargs):
+        measured = original_measure(*args, **kwargs)
+        return {
+            **measured,
+            "unit": "files",
+            "quantity": 1,
+            "columns": None,
+            "cells": None,
+            "measurement_error": "ImportError",
+        }
+
+    with monkeypatch.context() as unavailable:
+        unavailable.setattr(archive_reporting, "measure_source", unavailable_measure)
+        loaded = start(archive_core, client_case)
+    store = RunStore(Path(loaded["run_root"]))
+    if closed:
+        finish(archive_core, client_case, loaded)
+    sources_before = store.sources()
+    source = next(item for item in sources_before if item["role"] == "input")
+    report = Path(loaded["output_dir"]) / "model_data_report.json"
+    before = report.read_bytes()
+
+    packet = archive_reporting.read_artifact(loaded, Path(source["path"]), limit=1)
+
+    assert len(packet["data"]["rows"]) == 1
+    assert packet.get("reporting", {}).get("status") != "unavailable"
+    if closed:
+        assert store.sources() == sources_before
+        assert report.read_bytes() == before
+        assert packet["reporting"]["scope"] == "artifact_delivery_after_closure"
+    else:
+        recovered = next(
+            item for item in store.sources() if item["source_id"] == source["source_id"]
+        )
+        assert recovered["sha256"] == source["sha256"]
+        assert recovered["measurement_error"] is None
+        assert any(
+            event["kind"] == "source_measurement_recovered" for event in store.events()
+        )
+
+
+def test_artifact_measurement_retry_rejects_changed_admitted_input(
+    archive_core, client_case, monkeypatch
+):
+    import archive_reporting
+
+    loaded = start(archive_core, client_case)
+    source = Path(loaded["context"]["input_bindings"][0]["path"])
+    source.write_text("Changed after admission")
+
+    with pytest.raises(ValueError, match="admitted bytes"):
+        archive_reporting.read_artifact(loaded, source)
+
+
+@pytest.mark.parametrize("filename", ["seal-review.log", "worker.LOG"])
+def test_archive_reads_selected_execution_log_lines(
+    archive_core, client_case, filename
+):
+    from archive_report_store import RunStore
+    from archive_reporting import read_artifact
+
+    loaded = start(archive_core, client_case)
+    path = Path(loaded["output_dir"]) / filename
+    path.write_text(
+        "Started\nA mapping column was rejected\nFinished\n", encoding="utf-8"
+    )
+
+    packet = read_artifact(loaded, path, offset=1, limit=1)
+
+    assert packet["data"]["rows"] == [["A mapping column was rejected"]]
+    source = next(
+        item
+        for item in RunStore(Path(loaded["run_root"])).sources()
+        if item["path"] == str(path)
+    )
+    assert source["unit"] == "lines"
+    assert source["quantity"] == 3
+    assert source["measurement_error"] is None

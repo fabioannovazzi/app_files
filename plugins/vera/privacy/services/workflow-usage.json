@@ -1,40 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "workflow-usage",
   "display_name": "Pipeline usage, outcomes and user satisfaction",
-  "governed_paths": [
-    "scripts/workflow_usage.py",
-    "scripts/operational_incidents.py",
-    "scripts/model_data_report.py",
-    "scripts/notarized_run_receipt.py",
-    "skills/vera/references/workflow-usage.md",
-    "usage/pipelines.json",
-    "scripts/reporting_product.py",
-    "scripts/incident_host_mcp.cjs",
-    "scripts/technical_runner.py",
-    "scripts/incident_tool_schemas.json"
-  ],
-  "governed_repository_paths": [
-    "modules/workflow_usage",
-    "modules/operational_incidents/api.py",
-    "modules/operational_incidents/store.py",
-    "scripts/manage_workflow_usage.py",
-    "templates/vera_workflow_feedback.html",
-    "static/shared/vera/workflow-feedback.js",
-    "static/shared/vera/workflow-feedback.css",
-    "static/shared/vera-testing-status.js",
-    "static/shared/vera/index.html",
-    "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py",
-    "modules/operational_incidents/recovery.py",
-    "templates/incident_recovery.html",
-    "static/shared/incident-recovery.js",
-    "static/shared/incident-recovery.css"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
   "external_boundaries": [
     {
       "controls": [
@@ -107,6 +72,46 @@
       ]
     }
   ],
+  "governed_paths": [
+    "scripts/workflow_usage.py",
+    "scripts/operational_incidents.py",
+    "scripts/model_data_report.py",
+    "scripts/notarized_run_receipt.py",
+    "skills/vera/references/workflow-usage.md",
+    "usage/pipelines.json",
+    "scripts/reporting_product.py",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/technical_runner.py",
+    "scripts/incident_tool_schemas.json"
+  ],
+  "governed_repository_paths": [
+    "modules/workflow_usage",
+    "modules/operational_incidents/api.py",
+    "modules/operational_incidents/store.py",
+    "scripts/manage_workflow_usage.py",
+    "templates/vera_workflow_feedback.html",
+    "static/shared/vera/workflow-feedback.js",
+    "static/shared/vera/workflow-feedback.css",
+    "static/shared/vera-testing-status.js",
+    "static/shared/vera/index.html",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py",
+    "modules/operational_incidents/recovery.py",
+    "templates/incident_recovery.html",
+    "static/shared/incident-recovery.js",
+    "static/shared/incident-recovery.css"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "3ce34c37ea98dee8d0cf984b1349050fb010064e6f7e3d7a9c602e548156c3e9"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "owned-closed-schema-events",
@@ -167,10 +172,5 @@
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
     }
   ],
-  "review": {
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "015fb30d6607ab6dae055c94c8f6f978f17583be9ea3af52062fa7a87ecf1a9f"
-  }
+  "service_id": "workflow-usage"
 }
