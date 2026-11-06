@@ -37,3 +37,11 @@ No new source fields, recipients or network destinations are introduced. Source-
 Course source inventories were regenerated. Every non-source course field was compared with current main and the independently reviewed Archive-repair candidate. Historical editorial/output judgments remain historical; final CI must supply fresh native executions bound to the updated source inventory. The Geneva function inventory retains exactly the same 55 skill entries; only its release-manifest binding changes.
 
 Candidate versions: Vera 0.1.585, Clara 0.1.388, Lucia 0.1.214 and journal-bank-reconciliation 0.1.84. Package/source parity, CI, merge/deployment and installed-session behavior are separate acceptance stages. No Marketplace publication is requested or performed.
+
+## Integration of the merged tutorial repair
+
+While this PR's CI was running without failures, main advanced to `0a73afa8c213eeea728f296b7df6cd5d2a366871` (PR #959). The integration preserves the exact source implementations of both repairs: this PR's four changed reporting/semantic files and main's `archive_core.py` and `local_onboarding_case.py`. Conflicts concerned generated artifacts, release identities, source fingerprints and historical course-review records. Both sets of review notes are retained.
+
+Only three course source inventories required a new combined binding: Open-item reconciliation, Studio Archive and Studio document format. Every non-source course field matches both reviewed heads. The regenerated course catalog initially made two privacy source fingerprints stale; refreshing those bounded source records and regenerating contracts resolved the check. No lesson content or professional acceptance claim was added.
+
+Combined Archive/recovery/tutorial regressions passed 137 tests at 88.71% coverage. All 80 selected semantic-review cases passed. The rebuilt combined packages and fresh CI head must be verified before merge; the earlier head's CI is historical evidence only.

@@ -991,5 +991,26 @@
     "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
     "fresh_matching_junit_required": true,
     "installed_host_acceptance": false
+  },
+  "incident_fix_source_binding_review_20261106": {
+    "baseline_commit": "d83255c602f5e2162d483fff550eb0d7f4591310",
+    "changed_source_paths": [
+      "plugins/journal-bank-reconciliation/scripts/worker_capabilities.py"
+    ],
+    "current_course_sha256": "321a14940c890c37886f76b1acc817c152cc22d542f45b257c82948d3605b120",
+    "execution_requirement": "Fresh CI must execute each existing localized demo/practice identity against this current compiled course digest before merge. The preceding CI passed its native course execution stage but failed the stale review fingerprint gate; final-head CI remains required.",
+    "judgment": "Compared complete compiled course bytes against the exact historically reviewed digest. Only the source inventory differs; authored localized lessons, inputs, checkpoints, requests, practice and timing are unchanged. Inspected the affected source diffs: native Archive run-binding retention and private directory creation, declared legacy XLS measurement support, producer-consistent historical review hashing, unavailable rather than zero missing-guarantee coverage, and portable worker pipe reads. These repairs preserve the course requests and do not introduce a learner decision or approval gate. Existing named editorial and output-artifact judgments are retained for the unchanged materials.",
+    "limits": "This bounded source review does not claim new learner participation, original incident recovery, installed Windows acceptance, or successful privacy reporting for the affected sealed Mac runs.",
+    "previous_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+    "reviewed_at": "2026-11-06T14:35:53.750160+00:00",
+    "reviewer": "Codex /root - bounded source-binding compatibility review"
+  },
+  "integrated_residual_batching_20261106": {
+    "baseline_commit": "9e01edf446ff3b13e6cc374b7c8a5b62196a4e28",
+    "current_course_sha256": "16c84d641941b4e0155d87d8de42c77e61ae5ced4959c2dfbc7e6fe7ae8f178c",
+    "judgment": "Compared complete compiled lesson to the reviewed Mac-fix baseline: only source bindings changed after integrating the independently reviewed residual-batching fix from PR 958. Lesson content, inputs, demo/practice requests and checkpoints are identical. Existing editorial and artifact judgments remain historical; final-head CI must execute the current course digest. No new learner or affected-host recovery is asserted.",
+    "previous_course_sha256": "321a14940c890c37886f76b1acc817c152cc22d542f45b257c82948d3605b120",
+    "reviewed_at": "2026-11-06",
+    "reviewer": "Codex /root"
   }
 }
