@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.388",
+  "version": "0.1.391",
   "services": [
     {
       "name": "claraIncidentHost",

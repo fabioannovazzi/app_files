@@ -1,0 +1,67 @@
+{
+  "edition": "marketplace",
+  "omissions": {
+    "paths": {
+      "privacy/services/operational-incidents.json": [
+        ".mcp.json",
+        "scripts/incident_host_mcp.cjs",
+        "scripts/incident_tool_schemas.json",
+        "scripts/onboarding_session_start.py"
+      ],
+      "privacy/services/run-receipt-stamping.json": [
+        "scripts/incident_host_mcp.cjs",
+        "scripts/incident_tool_schemas.json"
+      ],
+      "privacy/services/workflow-usage.json": [
+        "scripts/incident_host_mcp.cjs",
+        "scripts/incident_tool_schemas.json"
+      ],
+      "privacy/workstreams/clara.json": [
+        ".claude-plugin/plugin.json",
+        "README.md",
+        "agents/clara.md",
+        "hooks/cowork-hooks.json",
+        "hooks/hooks.json",
+        "skills/mparanza-clara/references/case-operations.md",
+        "skills/mparanza-clara/references/cowork-runtime.md"
+      ],
+      "privacy/workstreams/html-deck.json": [
+        "scripts/advisor_case_core.py",
+        "scripts/advisory_delivery.py",
+        "scripts/verify_advisory_html_delivery.py"
+      ]
+    },
+    "services": [
+      "hosted-interviews",
+      "hosted-voice",
+      "on-demand-mcp",
+      "plugin-feedback",
+      "plugin-update-check",
+      "prepared-course-files",
+      "research-video-voice",
+      "retail-data"
+    ],
+    "workstreams": [
+      "advisory-case-director",
+      "advisory-deliverable-validator",
+      "attribute-reporting",
+      "brand-fit",
+      "business-planning",
+      "deck-correction",
+      "distribution-analysis",
+      "funnel-analysis",
+      "hosted-interview",
+      "learn-with-clara",
+      "management-control-pack",
+      "mix-contribution-analysis",
+      "period-comparison",
+      "reporting-engine",
+      "research-video",
+      "scatter-bubble-analysis",
+      "set-overlap-analysis",
+      "statement-analysis",
+      "transcribe",
+      "variance-analysis"
+    ]
+  }
+}
