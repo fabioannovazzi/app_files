@@ -172,7 +172,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "5679356803c79a6813a3096e48407e981289ca7dbb010e03e0716e917f904f01",
+  "catalogue_fingerprint": "eff3381c946808626bba9a87ae3c014172ec2f584e9c967505d72c53cb38fb1a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2588,5 +2588,10 @@
     "version": "0.1.576",
     "previous_catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
     "scope": "Manifest version refresh only; exact skill entries and existing jurisdiction judgments unchanged. Assessment linkage now uses producer digest. Includes merged course privacy-flow release."
+  },
+  "grouped_reconciliation_release_binding": {
+    "version": "0.1.586",
+    "previous_catalogue_fingerprint": "5679356803c79a6813a3096e48407e981289ca7dbb010e03e0716e917f904f01",
+    "scope": "Manifest identity refresh only. All root skill entrypoint bytes and jurisdiction judgments unchanged. Grouped reconciliation and workbook changes have component acceptance; no new jurisdiction acceptance."
   }
 }

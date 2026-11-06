@@ -421,6 +421,28 @@ def test_complete_review_does_not_deliver_intermediate_workbook_after_host_denia
     assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
 
 
+def test_native_packet_byte_overflow_retains_full_context_without_a_false_final_workbook(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    reconciliation, output, calls = _environment(tmp_path, monkeypatch)
+    monkeypatch.setattr(sys.modules["semantic_review"], "MAX_PROMPT_BYTES", 1)
+
+    with pytest.raises(ValueError, match="Complete residual context exceeds"):
+        grouped.complete_grouped_review(reconciliation, output)
+
+    retained = json.loads(
+        (output / "grouped-attempts/attempt.0001/packet.json").read_text()
+    )
+    assert len(retained["bank_records"]) == 2
+    assert len(retained["journal_records"]) == 3
+    assert calls == []
+    assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
+    assert (
+        json.loads((output / "grouped_review_status.json").read_text())["status"]
+        == "incomplete"
+    )
+
+
 def test_normal_api_and_run_all_cli_use_the_same_final_review_process(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
