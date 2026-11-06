@@ -193,7 +193,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "61e29d0a50e1b6265c2835c8a57ba5dba5e4ddb778ae8a9f406a1aaab6805f9d",
+  "course_sha256": "8608132b05751a5989b9d56bb6c8670137dbf4d79c01731efebf0160783a7c48",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "807184bb08bbcb2b4ff2f15676ad0019cbee052e9cd63c28e9d12c4d3058c484",
@@ -1321,5 +1321,15 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "month_panel_order_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06T17:59:18.763224+00:00",
+    "changed_fields": [
+      "sources"
+    ],
+    "lesson_text_and_inputs_unchanged": true,
+    "scope": "ISOYYYY-MMpanels now display chronologically, moving each complete trace with title/delta; canonical source/result frames unchanged. Exact18rowauthoredcourse reproducedJan/Mar/Feb beforefix;93componenttests pass; currentKaleido and declaredfallbackPNG visuallyreviewed. HistoricalclippedPNGwasstale,notcurrentdefect.",
+    "limits": "Source/rendered-artifact evidence only; no new installed-native UI, professional approval, causation or learner claim."
   }
 }

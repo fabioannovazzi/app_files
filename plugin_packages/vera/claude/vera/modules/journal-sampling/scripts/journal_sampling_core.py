@@ -7345,6 +7345,42 @@ def _write_sample_xlsx(
             },
             row_heights={0: 36},
         )
+        # Canonical CSV/JSON monetary strings remain exact. Excel needs native
+        # numbers for calculations, except values exceeding its precision.
+        workbook = openpyxl.load_workbook(path)
+        try:
+            sheet = workbook.active
+            monetary = {
+                "debit",
+                "credit",
+                "amount_signed",
+                "amount_abs",
+                "reported_increment",
+            }
+            for column, name in enumerate(sample.columns, start=1):
+                if name not in monetary:
+                    continue
+                for row, value in enumerate(sample.get_column(name).to_list(), start=2):
+                    if value is None:
+                        continue
+                    exact = Decimal(str(value))
+                    numeric = float(exact)
+                    cell = sheet.cell(row, column)
+                    if (
+                        math.isfinite(numeric)
+                        and len(exact.normalize().as_tuple().digits) <= 15
+                        and Decimal(str(numeric)) == exact
+                    ):
+                        cell.value = numeric
+                        cell.number_format = "#,##0.00############"
+                    else:
+                        cell.comment = openpyxl.comments.Comment(
+                            "Valore esatto conservato come testo: supera la precisione numerica di Excel.",
+                            "Vera",
+                        )
+            workbook.save(path)
+        finally:
+            workbook.close()
     except (ImportError, ModuleNotFoundError, RuntimeError, ValueError) as exc:
         raise RuntimeError("Required sample XLSX generation failed.") from exc
 

@@ -530,7 +530,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "61d8ecaffc978d1c68d3d8de8d359d83702d6b290210c0d8a321e450e2548a02",
+      "sha256": "407b22f676995070a1c9cddbfda3b4bd4671bfa13e417d9ec6c70bca735f0269",
       "languages": [
         "it",
         "en",
@@ -555,7 +555,7 @@
         "de": "Lernen, wie aus Buchhaltungsaufstellungen ein lesbarer Bericht mit Tabellen, Kommentaren und prüfbaren Quellenverweisen entsteht.",
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       },
-      "source_sha256": "8d9e22fdac8f4a7dd17d9155c62e2627f399d7060d4f37b0e8848d9fb843222d"
+      "source_sha256": "3e6e8ccce2876943cd1af50344e859060d0e018fa18b08d02236d772f88e2265"
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
@@ -646,7 +646,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "3054461d1ebfb1e4e3a0a4b911b54a1cb62e39e6b044208961fe52bc41333b4d",
+      "sha256": "c1181cf06ad5c1c9ee27204c393d66590ac1f8040ebaa8112c4ee9eb902966d5",
       "languages": [
         "it",
         "en",
@@ -671,7 +671,7 @@
         "de": "Lernen, ein Journal bereitzustellen, seine Einlesung zu prüfen und ausgewählte Zeilen für die weitere Prüfung zu erhalten.",
         "es": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior."
       },
-      "source_sha256": "fd350c6a95a63a4cb62464ddb94c283d40f9871373a2579d1121c81a4f9926f9"
+      "source_sha256": "cd705bd21c6a873f65dc98c64dbd2c7daf6ea85002d05c77d8f905c77a54b4a7"
     },
     "lipe": {
       "path": "lipe/course.json",
@@ -886,7 +886,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "f66c03672702c6966b65fc9111c5ad4052fa272c6a3a1d5b6a317216fb376b16",
+      "sha256": "ab8c5af386501d490ff4f36c85548afe8e223ea9878553bbb5df411a3f82e4a9",
       "languages": [
         "it",
         "en",
@@ -911,7 +911,7 @@
         "de": "Lernen, Rechnungen mit vorhandenen Buchungen zu vergleichen und die Ausnahmeliste für die Prüfung zu nutzen.",
         "es": "Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos."
       },
-      "source_sha256": "b6af92d972c5b6222d6abfb826c3c02d62e7a866b4f8bdddd479bb3177d40439"
+      "source_sha256": "992d3fb8510ab944ea46e0c5a9f2861954fc7df67b7bd6ab1ec36047c6aa3cdc"
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
@@ -944,7 +944,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "c33aec99787cd835e0b2858d04ba9779cea6e443223f0cea53cb00de1a451e3d",
+      "sha256": "33acc06abbdd56b4002ab76b057d289d948997a2e7e5eb224f65f67c17d76b04",
       "languages": [
         "it",
         "en",
@@ -969,7 +969,7 @@
         "de": "Lernen, den Fall bereitzustellen, die Quellenprüfung zu verfolgen und Bearbeitungsplan und Unterlagenliste zu prüfen.",
         "es": "Aprender a proporcionar el caso, seguir la comprobación de fuentes y usar el plan del trámite y la lista de documentos para revisión."
       },
-      "source_sha256": "c5c21023a31cf1491a22e3b61bdf936c3b00511a23acd07c58564188d3d1c321"
+      "source_sha256": "8f7c1eaf320e266b393ae9f2768de46c5f5d9a53bbe875435c28827c57f768ba"
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
@@ -1060,7 +1060,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "d15447b831123b7e851e7837560345264a0b8c19d49d22d7720afe02f5ba6a92",
+      "sha256": "de728cb4ed7b3f01b0a6b1b60fb97bbe42f6184ba995165340aa564709313c0f",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "8ed27ae42510620cc9deb77bbcf7596bbfc83f73f8572e8a7a9c9c3aa4a3a105"
+      "source_sha256": "65e91516676a7b24642e9d01d50da64cb811636e51ba24fc0cb2b972b22d8470"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
@@ -1118,7 +1118,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "3a603b57c432f9c439920510a7054ee5315d4e2495cbe9a94423dd3949c9589f",
+      "sha256": "f34d7050fc47e84a06d432a5ed077fccbde0c080e1cdee9a33fc1e467d3ea56e",
       "languages": [
         "it"
       ],
@@ -1131,11 +1131,11 @@
       "goals": {
         "it": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane."
       },
-      "source_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8"
+      "source_sha256": "a0a19387659c27e2491ea897f129051ea7a0e5e0ec72cfc9eae691f1a1874f07"
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "ae3e5e9c96885bc611be031c12192e6ae5ac84eebf570332caea33042f6c09e0",
+      "sha256": "f8dcccbffe434d1490ce55b1d3c13bb82083813cb92a4074f17e655dc3c7ca0c",
       "languages": [
         "it",
         "en",
@@ -1160,7 +1160,7 @@
         "de": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
         "es": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones."
       },
-      "source_sha256": "61e29d0a50e1b6265c2835c8a57ba5dba5e4ddb778ae8a9f406a1aaab6805f9d"
+      "source_sha256": "8608132b05751a5989b9d56bb6c8670137dbf4d79c01731efebf0160783a7c48"
     },
     "vouching": {
       "path": "vouching/course.json",

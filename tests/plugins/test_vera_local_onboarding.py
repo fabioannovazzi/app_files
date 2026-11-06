@@ -1080,8 +1080,10 @@ def _run_organization_teaching_case(
     monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
     import archive_core
 
-    state_dir = tmp_path / "organization-index"
-    archive_core.configure_archive(case.parent, state_dir=state_dir)
+    # Use only the scope actually prepared by the adapter. Creating an index
+    # in the test used to conceal the missing teaching handoff.
+    state_dir = Path(run["archive_state_dir"])
+    assert Path(run["archive_root"]) == case.parent
     snapshot_id = context["input_bindings"][0]["binding_id"]
     inventory = archive_core.get_studio_archive_organization_inventory(
         context["client_id"], context["engagement_id"], snapshot_id, state_dir=state_dir

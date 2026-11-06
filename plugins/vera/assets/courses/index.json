@@ -510,7 +510,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "8d9e22fdac8f4a7dd17d9155c62e2627f399d7060d4f37b0e8848d9fb843222d",
+      "sha256": "3e6e8ccce2876943cd1af50344e859060d0e018fa18b08d02236d772f88e2265",
       "languages": [
         "it",
         "en",
@@ -622,7 +622,7 @@
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "fd350c6a95a63a4cb62464ddb94c283d40f9871373a2579d1121c81a4f9926f9",
+      "sha256": "cd705bd21c6a873f65dc98c64dbd2c7daf6ea85002d05c77d8f905c77a54b4a7",
       "languages": [
         "it",
         "en",
@@ -853,7 +853,7 @@
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "b6af92d972c5b6222d6abfb826c3c02d62e7a866b4f8bdddd479bb3177d40439",
+      "sha256": "992d3fb8510ab944ea46e0c5a9f2861954fc7df67b7bd6ab1ec36047c6aa3cdc",
       "languages": [
         "it",
         "en",
@@ -909,7 +909,7 @@
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "c5c21023a31cf1491a22e3b61bdf936c3b00511a23acd07c58564188d3d1c321",
+      "sha256": "8f7c1eaf320e266b393ae9f2768de46c5f5d9a53bbe875435c28827c57f768ba",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "8ed27ae42510620cc9deb77bbcf7596bbfc83f73f8572e8a7a9c9c3aa4a3a105",
+      "sha256": "65e91516676a7b24642e9d01d50da64cb811636e51ba24fc0cb2b972b22d8470",
       "languages": [
         "it",
         "en",
@@ -1077,7 +1077,7 @@
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
+      "sha256": "a0a19387659c27e2491ea897f129051ea7a0e5e0ec72cfc9eae691f1a1874f07",
       "languages": [
         "it"
       ],
@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "61e29d0a50e1b6265c2835c8a57ba5dba5e4ddb778ae8a9f406a1aaab6805f9d",
+      "sha256": "8608132b05751a5989b9d56bb6c8670137dbf4d79c01731efebf0160783a7c48",
       "languages": [
         "it",
         "en",

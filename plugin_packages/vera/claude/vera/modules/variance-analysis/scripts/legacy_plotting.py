@@ -168,6 +168,12 @@ def _apply_ibcs_title(
     )
     if dimension:
         audit["chart_dimension"] = dimension
+    panel_meta = dict(rendered.figure.layout.meta or {})
+    if chart_kind == "standard_small_multiples" and panel_meta.get(
+        "waterfall_panel_titles"
+    ):
+        audit["panel_titles"] = panel_meta["waterfall_panel_titles"]
+        audit["delta_percent_labels"] = panel_meta["waterfall_delta_percent_labels"]
     return replace(rendered, audit=audit)
 
 
@@ -206,6 +212,25 @@ def _normalize_standard_waterfall(figure: Any, *, small_multiples: bool) -> None
     rows, cols = int(grid["rows"]), int(grid["cols"])
     titles = meta["waterfall_panel_titles"]
     deltas = meta["waterfall_delta_percent_labels"]
+    if len(titles) > 1 and all(
+        isinstance(title, str) and re.fullmatch(r"[0-9]{4}-(?:0[1-9]|1[0-2])", title)
+        for title in titles
+    ):
+        # ISO month panels are a time sequence, not a ranking by variance.
+        # Move each complete trace together with its title and delta caption.
+        order = sorted(range(len(titles)), key=lambda index: titles[index])
+        reordered = [traces[index] for index in order]
+        iterator = iter(reordered)
+        figure.data = tuple(
+            next(iterator) if trace.type == "waterfall" else trace
+            for trace in figure.data
+        )
+        traces = reordered
+        titles = [titles[index] for index in order]
+        deltas = [deltas[index] for index in order]
+        meta["waterfall_panel_titles"] = titles
+        meta["waterfall_delta_percent_labels"] = deltas
+        figure.update_layout(meta=meta)
     annotations = []
     for index, trace in enumerate(traces):
         row, col = divmod(index, cols)

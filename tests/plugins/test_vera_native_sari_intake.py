@@ -289,9 +289,16 @@ def test_sari_existing_output_is_preserved_and_initialization_refuses(sari_run):
     assert (sari_run[2] / "run_intake.json").exists() is False
 
 
-def test_sari_changed_original_refuses_resume_and_native_open(sari_run):
+@pytest.mark.parametrize("checkpoint_available", [True, False])
+def test_sari_changed_execution_copy_recovers_only_from_admitted_checkpoint(
+    sari_run, checkpoint_available
+):
     source = next(Path(sari_run[0]["context"]["input_dir"]).rglob("*.txt"))
-    source.write_bytes(source.read_bytes() + b" changed registered source")
+    original = source.read_bytes()
+    changed = original + b" changed execution copy"
+    source.write_bytes(changed)
+    if not checkpoint_available:
+        (sari_run[2].parent / "work-recovery.json").unlink()
     result = rpc_program(
         os.environ.copy(),
         f"""
@@ -300,8 +307,19 @@ const result={{setup:call('vera_workspace_sari_setup',work),resume:call('vera_wo
 """,
     )
 
-    assert result["setup"]["isError"] is True
-    assert result["resume"]["isError"] is True
+    if checkpoint_available:
+        assert result["setup"].get("isError", False) is False
+        assert result["resume"].get("isError", False) is False
+        assert source.read_bytes() == original
+        evidence = list(
+            (sari_run[2].parent / "recovery-evidence").glob("*/changed-input")
+        )
+        assert len(evidence) == 1
+        assert evidence[0].read_bytes() == changed
+    else:
+        assert result["setup"]["isError"] is True
+        assert result["resume"]["isError"] is True
+        assert source.read_bytes() == changed
     assert list(sari_run[2].iterdir()) == []
 
 

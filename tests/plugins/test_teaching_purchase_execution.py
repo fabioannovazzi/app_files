@@ -30,6 +30,42 @@ def _load(name, filename, monkeypatch):
     return module
 
 
+def test_exception_workbook_money_is_numeric_and_large_values_stay_exact(
+    tmp_path, monkeypatch
+):
+    core = _load(
+        "purchase_numeric_export",
+        ROOT / "plugins/passive-invoice-audit/scripts/audit_core.py",
+        monkeypatch,
+    )
+    path = tmp_path / "exceptions.xlsx"
+    core._write_exception_workpaper(
+        path,
+        {"population": 2},
+        [
+            {"invoice": {"invoice_number": "00001", "gross_amount": "488.20"}},
+            {
+                "invoice": {
+                    "invoice_number": "00002",
+                    "gross_amount": "1234567890123456.78",
+                }
+            },
+        ],
+        [{"comparison_gross_amount": "732.10"}],
+    )
+    workbook = load_workbook(path)
+    try:
+        assert workbook["Exceptions"]["D2"].value == "00001"
+        assert workbook["Exceptions"]["F2"].value == 488.2
+        assert workbook["Exceptions"]["F2"].data_type == "n"
+        assert workbook["Ledger Orphans"]["F2"].value == 732.1
+        large = workbook["Exceptions"]["F3"]
+        assert large.value == "1234567890123456.78" and large.data_type == "s"
+        assert large.comment is not None
+    finally:
+        workbook.close()
+
+
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("phase,count", [("demo", 3), ("practice", 4)])
 @prepared_kit("vera/purchase-invoice-review")

@@ -209,7 +209,7 @@ def _checklist_markdown(
                     status(language, operation["confirmation_status"]),
                 ],
                 [
-                    translated(language, "Data effetto"),
+                    translated(language, "Data indicata per l’operazione"),
                     operation["effective_date"],
                     status(language, operation["confirmation_status"]),
                 ],
@@ -238,16 +238,22 @@ def _checklist_markdown(
             or source.get("chamber_title")
             or "—"
         )
-        source_date = (
-            source.get("updated_date")
-            or source.get("retrieved_at")
-            or source.get("registered_at")
-            or "—"
-        )
+        source_dates = [
+            f"{translated(language, 'Aggiornamento della fonte')}: "
+            f"{source.get('updated_date') or '—'}"
+        ]
+        for field, label in (
+            ("retrieved_at", "Consultazione della fonte"),
+            ("registered_at", "Registrazione nel fascicolo"),
+        ):
+            if source.get(field):
+                source_dates.append(f"{translated(language, label)}: {source[field]}")
         lines.extend(
             [
                 f"- [{title}]({url})" if url else f"- {title}",
-                f"  {translated(language, 'Territorio')}: {territory}; {translated(language, 'Data fonte/acquisizione')}: {source_date}. ID: {source['source_id']}.",
+                f"  {translated(language, 'Territorio')}: {territory}; "
+                + "; ".join(source_dates)
+                + f". ID: {source['source_id']}.",
                 "",
             ]
         )
@@ -265,14 +271,14 @@ def _checklist_markdown(
             )
             continue
         ordered = sorted(
-            items,
-            key=lambda item: (
-                item.get("sequence") is None,
-                item.get("sequence") or 0,
-                str(item.get("id") or ""),
+            enumerate(items),
+            key=lambda indexed: (
+                indexed[1].get("sequence") is None,
+                indexed[1].get("sequence") or 0,
+                indexed[0],
             ),
         )
-        for item in ordered:
+        for _, item in ordered:
             lines.extend(
                 [
                     f"### {item['title']}",

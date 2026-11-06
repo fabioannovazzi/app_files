@@ -173,7 +173,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
+  "course_sha256": "a0a19387659c27e2491ea897f129051ea7a0e5e0ec72cfc9eae691f1a1874f07",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",
@@ -770,5 +770,16 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "output_followup_20261106": {
+    "reviewer": "Codex /root - bounded output export source review",
+    "reviewed_at": "2026-11-06T17:06:12.916581+00:00",
+    "changed_fields": [
+      "sources"
+    ],
+    "lesson_inputs_and_text_unchanged": true,
+    "previous_course_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
+    "scope": "Scenario gets separate hash-keyed hypothetical exports and explicit final artifact links. Baseline forecasts and review decisions preserved; exported scenario rederived from baseline dates. No forecast acceptance.",
+    "limits": "Historical editorial/model judgments preserved. Source/renderer regressions are not learner, voice, fresh installed UI or professional acceptance. Final-head localized replay remains required."
   }
 }

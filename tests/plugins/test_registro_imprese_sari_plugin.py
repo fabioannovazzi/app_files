@@ -970,6 +970,61 @@ def test_registro_imprese_source_host_keeps_url_restrictions(url: str) -> None:
         core.validate_official_source_url(url)
 
 
+@pytest.mark.parametrize("explicit_sequence", [False, True])
+def test_checklist_respects_authored_step_order_without_sorting_by_id(
+    tmp_path: Path, explicit_sequence: bool
+) -> None:
+    output, audit = _prepare_case(tmp_path, package_case=False)
+    intake = _read_json(output / "case_intake_validated.json")
+    plan = _read_json(output / "practice_plan_validated.json")
+    sources = _read_json(output / "official_sources.json")
+    template = plan["dire_steps"][0]
+    first = {**template, "id": "STEP-VERIFY", "title": "Verificare documenti"}
+    second = {**template, "id": "STEP-DIRE", "title": "Predisporre pratica"}
+    if explicit_sequence:
+        first["sequence"], second["sequence"] = 1, 2
+        plan["dire_steps"] = [second, first]
+    else:
+        first.pop("sequence", None)
+        second.pop("sequence", None)
+        plan["dire_steps"] = [first, second]
+
+    markdown = _load_script("package_practice")._checklist_markdown(
+        intake, plan, sources, audit, language="it"
+    )
+
+    assert markdown.index("### Verificare documenti") < markdown.index(
+        "### Predisporre pratica"
+    )
+
+
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_checklist_keeps_source_update_access_and_registration_dates_distinct(
+    tmp_path: Path, language: str
+) -> None:
+    output, audit = _prepare_case(tmp_path, package_case=False, language=language)
+    sources = _read_json(output / "official_sources.json")
+    sources["sources"][0].update(
+        updated_date="2026-07-15",
+        retrieved_at="2026-07-16T09:00:00+02:00",
+        registered_at="2026-07-17T10:00:00+02:00",
+    )
+    markdown = _load_script("package_practice")._checklist_markdown(
+        _read_json(output / "case_intake_validated.json"),
+        _read_json(output / "practice_plan_validated.json"),
+        sources,
+        audit,
+        language=language,
+    )
+
+    assert "2026-07-15" in markdown
+    assert "2026-07-16T09:00:00+02:00" in markdown
+    assert "2026-07-17T10:00:00+02:00" in markdown
+    if language == "it":
+        assert "Data indicata per l’operazione" in markdown
+        assert "Data fonte/acquisizione" not in markdown
+
+
 def test_synthetic_case_validates_and_packages_only_for_professional_review(
     tmp_path: Path,
 ) -> None:

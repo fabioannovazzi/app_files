@@ -84,7 +84,7 @@
     {
       "path": "modules/variance-analysis/scripts/legacy_plotting.py",
       "repository_path": "plugins/variance-analysis/scripts/legacy_plotting.py",
-      "sha256": "2f64af9fc27ff5bcc1fd0cbc78dd48bec512be820119d147e4dbd744a2daa656"
+      "sha256": "3b376668b97a3ff7cb9770bc0cab3113210b4cb096b07c90a02b0ed1c34217b6"
     },
     {
       "path": "modules/variance-analysis/scripts/model_use.py",

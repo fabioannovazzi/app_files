@@ -56,11 +56,11 @@
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_report.py",
-      "sha256": "373250b1de491e3a781c8bd9835a7f1063ace8729cfb82b72b89ab32695ef7fc"
+      "sha256": "f78e574306b7f7b177c17dc44eed43e51409c80394b61c71a9b8fe8a1c884043"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
-      "sha256": "1ef2b1048bd7ad0678984d420f0c83e6d1c97dbd3010585003ac431af3b28cf5"
+      "sha256": "95e1be6e461bff513ad8c0080b0cf60a4b333f9daeaf78b54bcc2bf36cdde48e"
     },
     {
       "path": "modules/treasury-forecast/skills/mparanza-treasury-forecast/SKILL.md",
@@ -434,5 +434,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "38234ff908e1bedcc86f6cfe4ed5efb4aeacace5c4ab9766cdcddec5f1126753"
+  "canonical_course_sha256": "36e41c3c5946853b3692f9eb64caa231cae52bb2c803b2f5dcceb0411afb1ece"
 }

@@ -65,12 +65,12 @@
     {
       "path": "modules/treasury-forecast/scripts/treasury_report.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_report.py",
-      "sha256": "373250b1de491e3a781c8bd9835a7f1063ace8729cfb82b72b89ab32695ef7fc"
+      "sha256": "f78e574306b7f7b177c17dc44eed43e51409c80394b61c71a9b8fe8a1c884043"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_session.py",
-      "sha256": "920a3880697042ce97c9293eb04cdc406a25f1fbcf0c839cf74178942107c98d"
+      "sha256": "36f21748bf0f03e4bb3e7233c84ee3d47156dcdc4e6220a7b2315995f72f9508"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",

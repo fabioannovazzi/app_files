@@ -3422,6 +3422,79 @@ def test_course_waterfalls_show_full_euros_and_unclipped_current_labels(
     assert len(export.paths) == 1
 
 
+def test_iso_month_panels_stay_chronological_with_their_own_amounts(
+    tmp_path, monkeypatch
+):
+    import plotly.graph_objects as go
+
+    core = load_core()
+    import legacy_plotting
+
+    # Use the course's revenue and negative costs; a single net row per
+    # month concealed the legacy panel-order failure.
+    source = pl.read_csv(
+        ROOT
+        / "plugins/vera/assets/courses/variance-analysis/files/practice/january-march.csv"
+    )
+    recipe = {
+        "language": "it",
+        "mappings": {
+            "period_column": "Scenario",
+            "baseline_period": "PL",
+            "comparison_period": "AC",
+            "amount_column": "Amount",
+            "dimensions": ["Category", "Month"],
+            "calculation_grain": ["Category", "Month"],
+        },
+        "options": {
+            "currency": "EUR",
+            "waterfall_small_multiples": True,
+            "waterfall_small_multiples_dimension": "Month",
+        },
+    }
+    result = core.run_legacy_variance(source, recipe, ["Category", "Month"])
+    before = result.frame.clone()
+    captured = []
+
+    def capture(figure, *args, **kwargs):
+        captured.append(figure)
+        raise ValueError("Exercise the normal PNG fallback")
+
+    monkeypatch.setattr(go.Figure, "write_image", capture)
+    legacy_plotting.write_waterfall_png(
+        result.frame,
+        recipe,
+        tmp_path,
+        legacy_frame=result.legacy_frame,
+        render_standard=False,
+        render_small_multiples=True,
+    )
+    figure = captured[0]
+    assert figure.layout.meta["waterfall_panel_titles"] == [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+    ]
+    traces = [t for t in figure.data if t.type == "waterfall"]
+    assert [list(t.x) for t in traces] == [
+        [18000, 12000, 30000],
+        [29000, -6000, 23000],
+        [30000, 2000, 32000],
+    ]
+    positions = [
+        getattr(figure.layout, t.xaxis.replace("x", "xaxis", 1)).domain[0]
+        for t in traces
+    ]
+    assert positions == sorted(positions)
+    assert figure.layout.meta["waterfall_delta_percent_labels"] == [
+        "Δ67%",
+        "Δ-21%",
+        "Δ7%",
+    ]
+    assert result.frame.equals(before)
+    assert (tmp_path / "waterfall_small_multiples.png").is_file()
+
+
 @pytest.mark.parametrize(
     "amounts,parent,has_offsets",
     [
