@@ -172,7 +172,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "a332ce7fffc93eac602ad5623280d5d36140abfd7d5a05002a568fa61564d642",
+  "catalogue_fingerprint": "cfe41562138dcab71ed902fc48cd570bc5d0342787a026acbf990328f150e744",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2601,5 +2601,10 @@
   "course_report_followup_20261106": {
     "version": "0.1.587",
     "scope": "Version binding only: all55skill entrypoints and existing jurisdiction judgments remain unchanged. The report renderer presentation repair does not assert new Geneva professional qualification."
+  },
+  "course_numeric_test_release_binding_20261106": {
+    "version": "0.1.588",
+    "previous_catalogue_fingerprint": "a332ce7fffc93eac602ad5623280d5d36140abfd7d5a05002a568fa61564d642",
+    "scope": "Canonical version binding for shipped regression-test expectations; all skill entrypoint bytes and jurisdiction judgments unchanged."
   }
 }
