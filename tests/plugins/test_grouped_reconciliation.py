@@ -241,6 +241,10 @@ def _environment(
             raise OSError("host denied execution")
         directory = kwargs["output_dir"]
         p = json.loads((directory / "packet.json").read_text())
+        assert kwargs["source_records"] == [
+            {"record_id": record["transaction_id"], "fields": list(record)}
+            for record in [*p["bank_records"], *p["journal_records"]]
+        ]
         calls.append(p)
         if p["journal_records"]:
             groups = [
@@ -333,6 +337,10 @@ def test_complete_review_retains_rejected_call_tokens_then_exports_same_four_she
     assert book["Relazioni"]["D6"].value == -159.31
     assert book["Relazioni"]["E6"].value == -159.31
     assert book["Relazioni"]["F6"].value == 0
+    assert book["Relazioni"]["B6"].value == "B001"
+    assert book["Relazioni"]["C6"].value == "C001\nC002"
+    assert book["Banca"]["A6"].value == "B001"
+    assert book["Partitario"]["A6"].value == "C001"
     assert book["Sintesi"]["B15"].value == 2
     assert book["Banca"].max_row == 7
     assert book["Partitario"].max_row == 8
@@ -389,12 +397,16 @@ def test_complete_review_resumes_from_validated_decisions_without_another_model_
 ) -> None:
     reconciliation, output, calls = _environment(tmp_path, monkeypatch)
     first = grouped.complete_grouped_review(reconciliation, output)
+    original_duration = json.loads(first["result"].read_text())["elapsed_seconds"]
 
     second = grouped.complete_grouped_review(reconciliation, output)
 
     assert len(calls) == 1
     assert second["summary"] == first["summary"]
     assert second["model_tokens"] == first["model_tokens"]
+    assert (
+        json.loads(second["result"].read_text())["elapsed_seconds"] == original_duration
+    )
 
 
 def test_complete_review_does_not_deliver_intermediate_workbook_after_host_denial(

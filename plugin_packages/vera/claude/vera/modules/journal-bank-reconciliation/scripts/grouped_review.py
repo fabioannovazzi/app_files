@@ -635,7 +635,10 @@ def complete_grouped_review(
                 packet_sha256=packet["packet_sha256"],
                 worker_selection=selection,
                 codex_bin=codex_bin,
-                source_records=[*remaining_bank, *remaining_journal],
+                source_records=[
+                    {"record_id": row["transaction_id"], "fields": list(row)}
+                    for row in [*packet["bank_records"], *packet["journal_records"]]
+                ],
             )
             receipt = _read(Path(call["launch_receipt"]))
             usage = call.get("usage") or receipt.get("jsonl_observation", {}).get(
@@ -830,6 +833,10 @@ def complete_grouped_review(
         )
         candidate.replace(workbook)
     result["elapsed_seconds"] = time.time() - started
+    if reuse_workbook:
+        previous_result = _read(output / "grouped_reconciliation_result.json")
+        result["last_replay_elapsed_seconds"] = result["elapsed_seconds"]
+        result["elapsed_seconds"] = previous_result["elapsed_seconds"]
     _write(output / "grouped_reconciliation_result.json", result)
     _write(
         status_path,

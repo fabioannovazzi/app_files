@@ -39,6 +39,12 @@ def export_final_workbook(
     currency = summary["currency"]
     relations = result["relations"]
     evidence = source_evidence or {}
+    bank_labels = {
+        row["transaction_id"]: f"B{number:03d}" for number, row in enumerate(bank, 1)
+    }
+    journal_labels = {
+        row["transaction_id"]: f"C{number:03d}" for number, row in enumerate(journal, 1)
+    }
     bank_group = {row_id: group for group in relations for row_id in group["bank_ids"]}
     journal_group = {
         row_id: group for group in relations for row_id in group["journal_ids"]
@@ -128,12 +134,13 @@ def export_final_workbook(
                 "Metodo",
             ]
             sheet.write_row(4, 0, columns, header)
-            for column, width in enumerate((31, 13, 13, 68, 17, 25, 48, 70, 55, 18)):
+            for column, width in enumerate((12, 13, 13, 68, 17, 25, 48, 70, 55, 18)):
                 sheet.set_column(column, column, width)
             sheet.freeze_panes(5, 2)
             for index, row in enumerate(rows, 5):
                 group = mapping[row["transaction_id"]]
-                sheet.write_string(index, 0, str(row["transaction_id"]), text)
+                labels = bank_labels if name == "Banca" else journal_labels
+                sheet.write_string(index, 0, labels[row["transaction_id"]], text)
                 sheet.write_url(
                     index,
                     1,
@@ -202,7 +209,7 @@ def export_final_workbook(
             ],
             header,
         )
-        for column, width in enumerate((13, 35, 35, 18, 18, 18, 25, 40, 75, 70)):
+        for column, width in enumerate((13, 20, 22, 18, 18, 18, 25, 40, 75, 70)):
             sheet.set_column(column, column, width)
         sheet.freeze_panes(5, 1)
         bank_end = max(6, len(bank) + 5)
@@ -211,7 +218,10 @@ def export_final_workbook(
             excel_row = index + 1
             sheet.write_string(index, 0, group["id"], text)
             for column, key in ((1, "bank_ids"), (2, "journal_ids")):
-                sheet.write_string(index, column, "\n".join(group[key]), text)
+                labels = bank_labels if key == "bank_ids" else journal_labels
+                sheet.write_string(
+                    index, column, "\n".join(labels[i] for i in group[key]), text
+                )
             sheet.write_formula(
                 index,
                 3,

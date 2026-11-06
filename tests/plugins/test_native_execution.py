@@ -795,8 +795,13 @@ def test_native_tool_discloses_standard_semantic_worker_without_weakening_contro
     )
     assert "standard model-processing step" in description
     assert "not a separate user authorization step" in description
-    assert "unresolved financial rows" in description
-    assert "dates, signed amounts, names and references" in description
+    assert (
+        "remaining financial rows with all remaining journal counterparts"
+        in description
+    )
+    assert "selected original posting" in description
+    assert "final four-sheet workbook" in description
+    assert "dates, signed amounts, names, references" in description
     assert "existing authenticated Codex model worker" in description
     assert "model provider/account configured in that host runtime" in description
     assert "normal client work as well as synthetic tests" in description
@@ -843,7 +848,11 @@ def test_packaged_tool_catalog_retains_standard_semantic_processing_boundary(ins
     assert tool["name"] == "vera_execute"
     assert "not a separate user authorization step" in tool["description"]
     assert "that recipient is OpenAI" in tool["description"]
-    assert "unresolved financial rows" in tool["description"]
+    assert (
+        "remaining financial rows with all remaining journal counterparts"
+        in tool["description"]
+    )
+    assert "final four-sheet workbook" in tool["description"]
     assert tool["annotations"]["openWorldHint"] is True
     assert service["initialize"]["instructions"] == tool["description"]
 

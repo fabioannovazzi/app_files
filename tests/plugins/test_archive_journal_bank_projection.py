@@ -189,6 +189,14 @@ def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rer
     def worker(**kwargs):
         directory = kwargs["output_dir"]
         packet = json.loads((directory / "packet.json").read_text())
+        semantic._record_model_submission(
+            directory,
+            prompt=kwargs["prompt"],
+            output_schema=kwargs["output_schema"],
+            model="unit-test",
+            workflow_id="journal-bank-reconciliation",
+            source_records=kwargs["source_records"],
+        )
         response = {
             "packet_sha256": packet["packet_sha256"],
             "groups": [
@@ -232,6 +240,14 @@ def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rer
     assert result["summary"]["strict_match_count"] == 2
     assert result["summary"]["bank_rows_requiring_documents"] == 1
     assert result["workbook"].is_file()
+    from archive_reporting import snapshot_run
+
+    report = json.loads(Path(snapshot_run(loaded)["report_path"]).read_text())
+    bank_source = next(
+        source for source in report["sources"] if source["label"] == "bank.csv"
+    )
+    assert bank_source["sent_quantity"] == 1
+    assert bank_source["sent_cells"] == 4
 
 
 def test_calculation_audit_and_status_have_complete_input_lineage(reconciled_case):
