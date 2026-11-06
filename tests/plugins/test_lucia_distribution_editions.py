@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import io
 import json
 import sys
 from pathlib import Path
@@ -54,6 +55,26 @@ def test_marketplace_routes_and_reporting_do_not_call_absent_native_tools(market
     assert "../posizioni-negoziali/SKILL.md" not in instructions
     assert "scripts/workflow_usage.py build-report" in instructions
     assert "scripts/legal_documents.py" in instructions
+
+
+def test_marketplace_submission_describes_retained_workflows_and_contains_png(
+    marketplace,
+):
+    """Prevent omitted workflow prompts and an unusable listing icon in uploads."""
+    from PIL import Image
+
+    portable = json.loads(marketplace["plugin.json"])["extensions"]["com.openai"]
+    legacy = json.loads(marketplace[".codex-plugin/plugin.json"])
+    assert portable["review"] == legacy["extensions"]["com.openai"]["review"]
+    assert portable["publication"] == legacy["extensions"]["com.openai"]["publication"]
+    assert len(portable["review"]["prompts"]) == 5
+    assert "senza MCP" in portable["publication"]["release_notes"]
+    assert "questa risposta legale" not in " ".join(portable["review"]["prompts"])
+    icon = portable["interface"]["logo"].removeprefix("./")
+    assert portable["interface"]["composerIcon"].removeprefix("./") == icon
+    with Image.open(io.BytesIO(marketplace[icon])) as image:
+        assert image.format == "PNG"
+        assert image.size == (512, 512)
 
 
 def test_marketplace_keeps_current_document_engine_bytes(marketplace):

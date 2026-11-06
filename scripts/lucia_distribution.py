@@ -87,7 +87,7 @@ def marketplace_entries(package: Any, *, source_root: Path) -> dict[str, bytes]:
             or (parts[0] == "skills" and parts[1] in MARKETPLACE_WORKFLOWS)
             or parts[0] == "privacy"
             or name == "usage/pipelines.json"
-            or name == "assets/icon.svg"
+            or name in {"assets/icon.svg", "assets/icon.png"}
             or (len(parts) == 1 and name.startswith(("requirements", "constraints")))
         )
         if name == "skills/revisione-contratti/references/practice-workflow.md":
@@ -202,8 +202,12 @@ def marketplace_entries(package: Any, *, source_root: Path) -> dict[str, bytes]:
         + " Output HTML/Excel e proposte motivate con fonti e lacune. Word con revisioni richiede la capacità documentale dell’host. Non include ricerca legale, apertura pratica, Archive, corsi o pannelli nativi."
     )
     manifest["interface"]["capabilities"] = ["Read", "Write", "Analysis"]
+    manifest["interface"]["logo"] = "./assets/icon.png"
+    manifest["interface"]["composerIcon"] = "./assets/icon.png"
     entries[".codex-plugin/plugin.json"] = _json(manifest)
-    add_portable_upload_manifests(entries)
+    add_portable_upload_manifests(
+        entries, metadata=json.loads((edition / "submission.json").read_bytes())
+    )
     portable = json.loads(entries["plugin.json"])
     portable["extensions"]["com.openai"]["requires_local_executor"] = True
     entries["plugin.json"] = _json(portable)

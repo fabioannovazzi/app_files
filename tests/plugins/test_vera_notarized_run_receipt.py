@@ -41,6 +41,8 @@ class _Response:
 
 
 def _modules(monkeypatch: pytest.MonkeyPatch) -> tuple[Any, Any]:
+    # These tests inject an in-memory transport; select delivery mode per case.
+    monkeypatch.delenv("MPARANZA_INCIDENT_DELIVERY", raising=False)
     monkeypatch.syspath_prepend(str(SCRIPTS))
     sys.modules.pop("model_data_report", None)
     sys.modules.pop("notarized_run_receipt", None)
