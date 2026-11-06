@@ -137,6 +137,40 @@ def test_spanish_docx_output_record_uses_spanish_required_text(
     ]
 
 
+@pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+def test_markdown_discloses_missing_sections_when_unassigned_tables_hidden(
+    language: str,
+) -> None:
+    core = load_core()
+    recipe = {
+        "language": language,
+        "report_type": "management_report",
+        "render": {"include_unassigned_tables": False},
+    }
+    analysis = {
+        "sections": [
+            {
+                "section": "budget",
+                "title": core.section_title("budget", language),
+                "status": "unassigned",
+            },
+            {
+                "section": "taxes",
+                "title": core.section_title("taxes", language),
+                "status": "unassigned",
+            },
+        ],
+        "missing_sections": ["budget", "taxes"],
+    }
+
+    markdown = core.render_markdown(recipe, analysis)
+
+    assert f"## {core.docx_label('missing_sections', language)}" in markdown
+    assert f"- {core.section_title('budget', language)}" in markdown
+    assert f"- {core.section_title('taxes', language)}" in markdown
+    assert f"## {core.section_title('budget', language)}\n" not in markdown
+
+
 def test_render_markdown_localizes_all_spanish_wrapper_copy() -> None:
     core = load_core()
     recipe = {
@@ -1122,7 +1156,7 @@ def test_review_integrity_receipts_exact_transitive_implementation_set(
 
     # Assert
     assert integrity["schema_version"] == "report_builder.review_integrity.v4"
-    assert len(references) == 35
+    assert len(references) == 36
     assert [receipt["artifact_id"] for receipt in receipts] == references
     assert {
         "implementation.report_builder.scripts.report_builder_core.py",
