@@ -3492,6 +3492,13 @@ def render_markdown(recipe: dict[str, Any], analysis: dict[str, Any]) -> str:
             lines.extend(["", preview_table])
         lines.append("")
 
+    missing_sections = analysis.get("missing_sections") or []
+    if missing_sections:
+        lines.extend([f"## {docx_label('missing_sections', language)}", ""])
+        for missing in missing_sections:
+            lines.append(f"- {section_title(clean_text(missing), language)}")
+        lines.append("")
+
     return "\n".join(lines).rstrip() + "\n"
 
 
@@ -3638,6 +3645,25 @@ def add_key_value_table(document: Any, rows: Sequence[tuple[str, Any]]) -> None:
                     paragraph.paragraph_format.keep_with_next = True
 
 
+def paginate_data_table(table: Any) -> None:
+    """Keep compact evidence tables intact; repeat headers on longer tables."""
+
+    header = OxmlElement("w:tblHeader")
+    table.rows[0]._tr.get_or_add_trPr().append(header)
+    row_lengths = [sum(len(cell.text) for cell in row.cells) for row in table.rows]
+    compact = (
+        len(table.rows) <= 9
+        and max(row_lengths, default=0) <= 120
+        and sum(row_lengths) <= 600
+    )
+    for index, row in enumerate(table.rows):
+        for cell in row.cells:
+            for paragraph in cell.paragraphs:
+                paragraph.paragraph_format.keep_together = True
+                if compact and index < len(table.rows) - 1:
+                    paragraph.paragraph_format.keep_with_next = True
+
+
 def add_dataframe_table(
     document: Any,
     rows: Sequence[dict[str, str]],
@@ -3669,6 +3695,8 @@ def add_dataframe_table(
             set_cell_margins(cells[idx])
             for paragraph in cells[idx].paragraphs:
                 set_paragraph_font(paragraph, size=8)
+
+    paginate_data_table(table)
 
 
 def add_numeric_totals_table(
@@ -3714,6 +3742,8 @@ def add_numeric_totals_table(
             set_cell_margins(cell)
             for paragraph in cell.paragraphs:
                 set_paragraph_font(paragraph, size=8)
+
+    paginate_data_table(table)
 
 
 def write_report_docx(
@@ -3837,7 +3867,7 @@ def write_report_docx(
         signature = document.add_paragraph("\n".join(settings["signature_lines"]))
         signature.paragraph_format.keep_together = True
 
-    document.add_section(WD_SECTION.NEW_PAGE)
+    document.add_section(WD_SECTION.CONTINUOUS)
     document.add_heading(docx_label("audit_appendix", language), level=1)
     add_key_value_table(
         document,

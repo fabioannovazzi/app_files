@@ -530,7 +530,7 @@
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "61d8ecaffc978d1c68d3d8de8d359d83702d6b290210c0d8a321e450e2548a02",
+      "sha256": "407b22f676995070a1c9cddbfda3b4bd4671bfa13e417d9ec6c70bca735f0269",
       "languages": [
         "it",
         "en",
@@ -555,7 +555,7 @@
         "de": "Lernen, wie aus Buchhaltungsaufstellungen ein lesbarer Bericht mit Tabellen, Kommentaren und prüfbaren Quellenverweisen entsteht.",
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       },
-      "source_sha256": "8d9e22fdac8f4a7dd17d9155c62e2627f399d7060d4f37b0e8848d9fb843222d"
+      "source_sha256": "3e6e8ccce2876943cd1af50344e859060d0e018fa18b08d02236d772f88e2265"
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
@@ -1060,7 +1060,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "d15447b831123b7e851e7837560345264a0b8c19d49d22d7720afe02f5ba6a92",
+      "sha256": "de728cb4ed7b3f01b0a6b1b60fb97bbe42f6184ba995165340aa564709313c0f",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "8ed27ae42510620cc9deb77bbcf7596bbfc83f73f8572e8a7a9c9c3aa4a3a105"
+      "source_sha256": "65e91516676a7b24642e9d01d50da64cb811636e51ba24fc0cb2b972b22d8470"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
