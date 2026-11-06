@@ -273,12 +273,16 @@ def prepare_case(
         purpose="Local Vera onboarding tutorial; no Mparanza transmission",
     )
     started = ledger.start_run(case, engagement_id, run["run"]["run_id"])
+    binding = _archive().retain_studio_run_binding(
+        case, engagement_id, started["run"]["run_id"]
+    )
     result = {
         "tutorial": True,
         "local_only": True,
         "phase": phase,
         "workflow_id": workflow,
         "client_root": str(case),
+        "work_binding": binding,
         **started,
     }
     if workflow == "vouching":

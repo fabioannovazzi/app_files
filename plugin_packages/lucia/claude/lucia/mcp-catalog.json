@@ -2403,7 +2403,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "lucia-studio-archive",
-          "version": "0.1.73"
+          "version": "0.1.74"
         },
         "capabilities": {
           "tools": {}

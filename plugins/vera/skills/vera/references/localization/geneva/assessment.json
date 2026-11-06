@@ -1,9 +1,4 @@
 {
-  "residual_batching_release_binding": {
-    "version": "0.1.579",
-    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
-    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
-  },
   "francesco_parser_release_binding": {
     "previous_catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
     "scope": "Manifest version refresh only; skill entrypoint bytes and jurisdiction judgments unchanged. Parser repair has local component acceptance only.",
@@ -2593,5 +2588,10 @@
     "version": "0.1.582",
     "previous_catalogue_fingerprint": "9824369d8693766bb42d7ecc4cbb6c178e25b44ac7f2aa9a028267356e071740",
     "scope": "Manifest version refresh for pip setup isolation. Skill entrypoints and jurisdiction judgments unchanged."
+  },
+  "residual_batching_release_binding": {
+    "version": "0.1.579",
+    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
+    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
   }
 }
