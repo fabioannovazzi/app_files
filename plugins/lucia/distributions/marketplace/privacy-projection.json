@@ -1,0 +1,125 @@
+{
+  "edition": "marketplace",
+  "review_basis": "Agent inspected current document engines, local progress, CLI reporting and excluded native wrappers. Full source contracts remain historical declarations; installed fingerprints describe projected bytes, not host acceptance.",
+  "omissions": {
+    "paths": {
+      "privacy/services/operational-incidents.json": [
+        ".mcp.json",
+        "scripts/incident_host_mcp.cjs",
+        "scripts/incident_tool_schemas.json",
+        "scripts/onboarding_session_start.py"
+      ],
+      "privacy/services/run-receipt-stamping.json": [
+        "scripts/incident_host_mcp.cjs",
+        "scripts/incident_tool_schemas.json",
+        "skills/contenzioso-tributario",
+        "skills/posizioni-negoziali"
+      ],
+      "privacy/services/workflow-usage.json": [
+        "scripts/incident_host_mcp.cjs",
+        "scripts/incident_tool_schemas.json"
+      ],
+      "privacy/workstreams/confronto-documenti.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ],
+      "privacy/workstreams/controllo-documento.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ],
+      "privacy/workstreams/estrazione-clausole.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ],
+      "privacy/workstreams/lucia.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ],
+      "privacy/workstreams/redazione-da-modello.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ],
+      "privacy/workstreams/revisione-contratti.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ],
+      "privacy/workstreams/revisione-documentale.json": [
+        "scripts/legal_citations.py",
+        "scripts/legal_citations.schema.json",
+        "scripts/legal_citations_labels.json",
+        "scripts/legal_negotiation.py",
+        "scripts/legal_negotiation.schema.json",
+        "scripts/legal_negotiation_labels.json",
+        "scripts/legal_playbook.py",
+        "scripts/legal_playbook.schema.json",
+        "scripts/legal_playbook_labels.json"
+      ]
+    },
+    "services": [
+      "on-demand-mcp",
+      "prepared-course-files"
+    ],
+    "workstreams": [
+      "adversarial-opinion",
+      "apertura-pratica",
+      "comunicazione-professionale",
+      "contenzioso-civile",
+      "contenzioso-tributario",
+      "deep-research",
+      "deep-research-validator",
+      "lavoro",
+      "learn-with-lucia",
+      "metodo-studio",
+      "operazioni-ma",
+      "posizioni-negoziali",
+      "presenza-digitale-studio",
+      "prompt-optimizer",
+      "quesito-legale-fiscale",
+      "recupero-crediti",
+      "studio-archive",
+      "verifica-citazioni"
+    ]
+  }
+}

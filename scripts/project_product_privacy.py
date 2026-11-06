@@ -29,6 +29,7 @@ def project_privacy(
     prefix: str = "",
     host: str,
     source_root: Path = ROOT,
+    edition_policy: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Retain source declarations; derive installed hashes after all host transforms.
 
@@ -104,6 +105,17 @@ def project_privacy(
             for skill in developer_skills:
                 cards["skills"].pop(skill, None)
             local[cards_path] = contract.canonical_bytes(cards)
+
+    if edition_policy is not None:
+        if product != "lucia" or edition_policy["edition"] != "marketplace":
+            raise ValueError(
+                "Only the reviewed Lucia marketplace projection is supported"
+            )
+        registry["developer_skills"] = []
+        schema = json.loads(local["privacy/registry.schema.json"])
+        schema["properties"]["developer_skills"] = {"const": []}
+        local["privacy/registry.schema.json"] = contract.canonical_bytes(schema)
+        registry.setdefault("host_omissions", {})[host] = edition_policy["omissions"]
 
     if host == "anthropic-cowork":
         registry["developer_skills"] = [
@@ -352,7 +364,15 @@ def project_privacy(
             reviewed_omissions.get("workstreams", [])
         ) or projection["omitted_paths"] != reviewed_omissions.get("paths", {}):
             raise ValueError(
-                f"{product}/{host}: package omissions differ from the reviewed host contract"
+                f"{product}/{host}: package omissions differ from the reviewed host contract: "
+                + json.dumps(
+                    {
+                        "workstreams": sorted(projection["omitted_workstreams"]),
+                        "paths": projection["omitted_paths"],
+                        "services": excluded_services,
+                    },
+                    sort_keys=True,
+                )
             )
         local["privacy/package-projection.json"] = contract.canonical_bytes(projection)
         index = {
