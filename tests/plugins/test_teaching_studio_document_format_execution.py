@@ -36,6 +36,11 @@ def approve(review: Path) -> None:
     )[payload["language"]]
     assert Document(review / "preview-short.docx").paragraphs[0].text == wording[0]
     assert "```json" not in (review / "format_review.md").read_text()
+    supported = read(
+        ROOT / "plugins/report-builder/assets/studio-docx-format.schema.json"
+    )["properties"]
+    assert set(supported).issubset(wording[11])
+    assert "| True |" not in (review / "format_review.md").read_text()
     assert len(manifest["outputs"]) == 2
     assert Document(review / "preview-short.docx").paragraphs
     assert Document(review / "preview-long.docx").tables

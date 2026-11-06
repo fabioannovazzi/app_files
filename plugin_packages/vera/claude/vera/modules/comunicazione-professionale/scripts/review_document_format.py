@@ -184,6 +184,10 @@ def prepare_format_review(
                         if isinstance(value, list)
                         else str(value)
                     )
+                    if isinstance(value, bool):
+                        rendered = wording[12][str(value).lower()]
+                    elif key in {"number_format", "date_format"}:
+                        rendered = wording[12][str(value)]
                     rows.append(
                         f"| {title} | {rendered.replace('|', '/').replace(chr(10), ' ')} |"
                     )

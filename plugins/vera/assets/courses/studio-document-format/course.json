@@ -85,7 +85,7 @@
     {
       "path": "modules/comunicazione-professionale/assets/studio-document-format/preview-copy.json",
       "repository_path": "plugins/comunicazione-professionale/assets/studio-document-format/preview-copy.json",
-      "sha256": "a6c4e5666b9b3609c08cdedb82ea05c1a4e19fcf12c36de6bc5a9a46657e3b03"
+      "sha256": "ce90dfcdc932ffd9b415d9b1306c2df3c046bb1ca596812d7512105ac38f75e4"
     },
     {
       "path": "modules/comunicazione-professionale/requirements.txt",
@@ -250,7 +250,7 @@
     {
       "path": "modules/comunicazione-professionale/scripts/review_document_format.py",
       "repository_path": "plugins/comunicazione-professionale/scripts/review_document_format.py",
-      "sha256": "fa44c115741da896855973ed42ca05dce602cb1298e6a5029d8efb547a7b4c35"
+      "sha256": "45ab376f76bfdc00cf6b8b5bddd5fc57c307672923564dfebae73dcc0a5a2445"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/studio_document_format.py",
@@ -750,7 +750,7 @@
     {
       "path": "scripts/local_onboarding.py",
       "repository_path": "plugins/vera/scripts/local_onboarding.py",
-      "sha256": "b2e5428bf3a2697f3cc5886f822efb77cdbb4db39ee3c2c8e617804441b0b8fb"
+      "sha256": "ad870b4dbb2d343c6fa38be8b6abfceb6a9973e6e9d43670cf6178e2a364b802"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -885,7 +885,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

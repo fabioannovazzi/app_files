@@ -661,3 +661,64 @@ def test_first_onboarding_pause_retains_progress_and_revokes_worker(teaching, tm
     )
     assert len(resumed["lessons"]) == 3
     assert resumed["lessons"][0]["worker_token"] != paused["lessons"][0]["worker_token"]
+
+
+def test_valuation_checkpoint_records_all_57_outputs_without_completing_learner(
+    teaching,
+):
+    module, store, _ = teaching
+    begin(store, workflow_id="business-valuation")
+    directory = Path(store.status()["session"]["directory"])
+    outputs = [directory / f"valuation-output-{i:02d}.txt" for i in range(57)]
+    for i, path in enumerate(outputs):
+        path.write_text(f"Synthetic valuation output {i}\n")
+    receipt = execution_record(store, "demo", outputs[0], outputs=outputs)
+    result = update(
+        store,
+        "demo",
+        artifacts=[str(p) for p in outputs],
+        execution_record=receipt,
+        prompt="Review all valuation outputs",
+        review="Synthetic lifecycle regression; no learner approval",
+    )
+    assert len(result["demo"]["artifacts"]) == 57
+    assert result["phase"] == "active"
+    assert not result.get("understanding")
+    outputs[-1].write_text("Changed after review")
+    with pytest.raises(module.OnboardingError, match="changed|Changed"):
+        store._verify_phase(store.status()["session"], "demo")
+
+
+@pytest.mark.parametrize(
+    "defect", ["too_many", "missing_output", "duplicate", "bad_hash"]
+)
+def test_large_output_checkpoint_keeps_bounded_exact_evidence_checks(teaching, defect):
+    module, store, _ = teaching
+    begin(store, workflow_id="business-valuation")
+    directory = Path(store.status()["session"]["directory"])
+    outputs = [directory / f"valuation-output-{i:03d}.txt" for i in range(57)]
+    for i, path in enumerate(outputs):
+        path.write_text(f"Synthetic valuation output {i}\n")
+    receipt = execution_record(store, "demo", outputs[0], outputs=outputs)
+    artifacts = [str(p) for p in outputs]
+    if defect == "too_many":
+        artifacts = artifacts * 4  # Cardinality is rejected before any file reads.
+    elif defect == "missing_output":
+        artifacts.pop()
+    elif defect == "duplicate":
+        payload = json.loads(Path(receipt).read_text())
+        payload["outputs"].append(payload["outputs"][0])
+        Path(receipt).write_text(json.dumps(payload))
+        artifacts.append(artifacts[0])
+    else:
+        outputs[-1].write_text("Changed before registration")
+    with pytest.raises(module.OnboardingError):
+        update(
+            store,
+            "demo",
+            artifacts=artifacts,
+            execution_record=receipt,
+            prompt="Review all valuation outputs",
+            review="Synthetic regression",
+        )
+    assert not store.status()["session"].get("demo")

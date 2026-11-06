@@ -23,7 +23,32 @@
       "right": "Destro",
       "header_text": "Intestazione",
       "footer_text": "Piè di pagina",
-      "page_numbers": "Numeri di pagina"
+      "page_numbers": "Numeri di pagina",
+      "line_spacing_pt": "Interlinea (pt)",
+      "paragraph_after_pt": "Spazio dopo il paragrafo (pt)",
+      "paragraph_before_pt": "Spazio prima del paragrafo (pt)",
+      "heading_2_size_pt": "Titolo secondario (pt)",
+      "use_logo": "Usa il logo",
+      "logo_width_mm": "Larghezza logo (mm)",
+      "header_distance_mm": "Distanza intestazione (mm)",
+      "footer_distance_mm": "Distanza piè di pagina (mm)",
+      "table_font_size_pt": "Testo tabella (pt)",
+      "table_header_fill": "Sfondo intestazione tabella",
+      "table_header_color": "Testo intestazione tabella",
+      "table_alternate_fill": "Sfondo righe alternate",
+      "number_format": "Formato numeri",
+      "date_format": "Formato data",
+      "signature_lines": "Righe di firma"
+    },
+    {
+      "true": "Sì",
+      "false": "No",
+      "canonical": "1234.50",
+      "decimal_comma": "1.234,50",
+      "decimal_point": "1,234.50",
+      "iso": "2026-09-30",
+      "dmy": "30/09/2026",
+      "mdy": "09/30/2026"
     }
   ],
   "en": [
@@ -50,7 +75,32 @@
       "right": "Right",
       "header_text": "Header",
       "footer_text": "Footer",
-      "page_numbers": "Page numbers"
+      "page_numbers": "Page numbers",
+      "line_spacing_pt": "Line spacing (pt)",
+      "paragraph_after_pt": "Space after paragraph (pt)",
+      "paragraph_before_pt": "Space before paragraph (pt)",
+      "heading_2_size_pt": "Secondary heading (pt)",
+      "use_logo": "Use logo",
+      "logo_width_mm": "Logo width (mm)",
+      "header_distance_mm": "Header distance (mm)",
+      "footer_distance_mm": "Footer distance (mm)",
+      "table_font_size_pt": "Table text (pt)",
+      "table_header_fill": "Table heading background",
+      "table_header_color": "Table heading text color",
+      "table_alternate_fill": "Alternating row background",
+      "number_format": "Number format",
+      "date_format": "Date format",
+      "signature_lines": "Signature lines"
+    },
+    {
+      "true": "Yes",
+      "false": "No",
+      "canonical": "1234.50",
+      "decimal_comma": "1.234,50",
+      "decimal_point": "1,234.50",
+      "iso": "2026-09-30",
+      "dmy": "30/09/2026",
+      "mdy": "09/30/2026"
     }
   ],
   "fr": [
@@ -77,7 +127,32 @@
       "right": "Droite",
       "header_text": "En-tête",
       "footer_text": "Pied de page",
-      "page_numbers": "Numéros de page"
+      "page_numbers": "Numéros de page",
+      "line_spacing_pt": "Interligne (pt)",
+      "paragraph_after_pt": "Espace après paragraphe (pt)",
+      "paragraph_before_pt": "Espace avant paragraphe (pt)",
+      "heading_2_size_pt": "Titre secondaire (pt)",
+      "use_logo": "Utiliser le logo",
+      "logo_width_mm": "Largeur du logo (mm)",
+      "header_distance_mm": "Distance en-tête (mm)",
+      "footer_distance_mm": "Distance pied de page (mm)",
+      "table_font_size_pt": "Texte du tableau (pt)",
+      "table_header_fill": "Fond de l’en-tête du tableau",
+      "table_header_color": "Couleur du texte de l’en-tête",
+      "table_alternate_fill": "Fond des lignes alternées",
+      "number_format": "Format des nombres",
+      "date_format": "Format de date",
+      "signature_lines": "Lignes de signature"
+    },
+    {
+      "true": "Oui",
+      "false": "Non",
+      "canonical": "1234.50",
+      "decimal_comma": "1.234,50",
+      "decimal_point": "1,234.50",
+      "iso": "2026-09-30",
+      "dmy": "30/09/2026",
+      "mdy": "09/30/2026"
     }
   ],
   "de": [
@@ -104,7 +179,32 @@
       "right": "Rechts",
       "header_text": "Kopfzeile",
       "footer_text": "Fußzeile",
-      "page_numbers": "Seitenzahlen"
+      "page_numbers": "Seitenzahlen",
+      "line_spacing_pt": "Zeilenabstand (pt)",
+      "paragraph_after_pt": "Abstand nach Absatz (pt)",
+      "paragraph_before_pt": "Abstand vor Absatz (pt)",
+      "heading_2_size_pt": "Unterüberschrift (pt)",
+      "use_logo": "Logo verwenden",
+      "logo_width_mm": "Logobreite (mm)",
+      "header_distance_mm": "Kopfzeilenabstand (mm)",
+      "footer_distance_mm": "Fußzeilenabstand (mm)",
+      "table_font_size_pt": "Tabellentext (pt)",
+      "table_header_fill": "Hintergrund Tabellenkopf",
+      "table_header_color": "Textfarbe Tabellenkopf",
+      "table_alternate_fill": "Hintergrund alternierender Zeilen",
+      "number_format": "Zahlenformat",
+      "date_format": "Datumsformat",
+      "signature_lines": "Unterschriftenzeilen"
+    },
+    {
+      "true": "Ja",
+      "false": "Nein",
+      "canonical": "1234.50",
+      "decimal_comma": "1.234,50",
+      "decimal_point": "1,234.50",
+      "iso": "2026-09-30",
+      "dmy": "30/09/2026",
+      "mdy": "09/30/2026"
     }
   ],
   "es": [
@@ -131,7 +231,32 @@
       "right": "Derecho",
       "header_text": "Encabezado",
       "footer_text": "Pie",
-      "page_numbers": "Números de página"
+      "page_numbers": "Números de página",
+      "line_spacing_pt": "Interlineado (pt)",
+      "paragraph_after_pt": "Espacio después del párrafo (pt)",
+      "paragraph_before_pt": "Espacio antes del párrafo (pt)",
+      "heading_2_size_pt": "Título secundario (pt)",
+      "use_logo": "Usar logotipo",
+      "logo_width_mm": "Ancho del logotipo (mm)",
+      "header_distance_mm": "Distancia del encabezado (mm)",
+      "footer_distance_mm": "Distancia del pie (mm)",
+      "table_font_size_pt": "Texto de tabla (pt)",
+      "table_header_fill": "Fondo del encabezado de tabla",
+      "table_header_color": "Color del texto del encabezado",
+      "table_alternate_fill": "Fondo de filas alternas",
+      "number_format": "Formato de números",
+      "date_format": "Formato de fecha",
+      "signature_lines": "Líneas de firma"
+    },
+    {
+      "true": "Sí",
+      "false": "No",
+      "canonical": "1234.50",
+      "decimal_comma": "1.234,50",
+      "decimal_point": "1,234.50",
+      "iso": "2026-09-30",
+      "dmy": "30/09/2026",
+      "mdy": "09/30/2026"
     }
   ]
 }

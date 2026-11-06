@@ -22,3 +22,5 @@ The native original tutorial runtime still emits `pending reporting: LedgerError
 ## Privacy review
 
 The changed code renders local outputs, qualifies existing values, updates local state and verifies existing evidence. It adds no network destination, model provider, upload, source acquisition or model-context class. Existing workflow/service descriptions were checked against these changes; governed fingerprints, course digests and generated contracts were refreshed. The version-only localization catalogue refresh preserves unchanged skill entrypoints and existing jurisdiction judgments.
+
+The shared teaching evidence limit now accepts up to 200 output references (previously 30), matching a real 57-file valuation result. Input/native-record limits, the 1 MB receipt bound, path confinement, duplicate rejection, hashes and exact ordered output matching remain enforced. Five regression cases cover 57 files, overflow, omitted output, duplicate output and tampering. The actual retained valuation receipt and all 57 files pass both native evidence checks; its checkpoint was not mutated because another teaching session is active.
