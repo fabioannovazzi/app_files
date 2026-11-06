@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "9a7d7df5c2ff799c6641f8df0ad79152b90a8ce3cd65d128a478e54cacf77c00",
+      "sha256": "f3361c589a703b5b1d624c3bee65d9e1ba6bb0f6aa83669878c2440c2f475bb4",
       "languages": [
         "it",
         "en",

@@ -3347,3 +3347,123 @@ def test_date_parser_retains_calendar_dates_on_supported_polars(values):
     core = load_core()
     actual = pl.DataFrame({"date": values}).select(core.parsed_date_expression("date"))
     assert actual.get_column("date").to_list() == [date(2026, 1, 31), date(2026, 2, 28)]
+
+
+@pytest.mark.parametrize("small_multiples", [False, True])
+def test_course_waterfalls_show_full_euros_and_unclipped_current_labels(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, small_multiples: bool
+) -> None:
+    import plotly.graph_objects as go
+
+    core = load_core()
+    import legacy_plotting
+
+    frame = pl.DataFrame(
+        {
+            "Month": ["January", "January", "February", "February"],
+            "Scenario": ["PL", "AC", "PL", "AC"],
+            "Amount": [18000.0, 30000.0, 29000.0, 23000.0],
+        }
+    )
+    recipe = {
+        "language": "it",
+        "mappings": {
+            "period_column": "Scenario",
+            "baseline_period": "PL",
+            "comparison_period": "AC",
+            "amount_column": "Amount",
+            "dimensions": ["Month"],
+            "calculation_grain": ["Month"],
+        },
+        "options": {
+            "currency": "EUR",
+            "waterfall_small_multiples": True,
+            "waterfall_small_multiples_dimension": "Month",
+        },
+    }
+    result = core.run_legacy_variance(frame, recipe, ["Month"])
+    captured = []
+
+    def force_fallback(figure: go.Figure, *args: Any, **kwargs: Any) -> None:
+        captured.append(figure)
+        raise ValueError("Exercise the chart export fallback")
+
+    monkeypatch.setattr(go.Figure, "write_image", force_fallback)
+    export = legacy_plotting.write_waterfall_png(
+        result.frame,
+        recipe,
+        tmp_path,
+        legacy_frame=result.legacy_frame,
+        render_standard=not small_multiples,
+        render_small_multiples=small_multiples,
+    )
+
+    figure = captured[0]
+    traces = [trace for trace in figure.data if trace.type == "waterfall"]
+    expected = (
+        ["18,000", "+12,000", "30,000"]
+        if small_multiples
+        else ["47,000", "+6,000", "53,000"]
+    )
+    assert list(traces[0].text) == expected
+    assert figure.layout.height >= 450
+    assert figure.layout.paper_bgcolor == "white"
+    assert figure.layout.title.font.size == 14
+    assert all(trace.textfont.size == 14 for trace in traces)
+    assert all(annotation.font.size == 14 for annotation in figure.layout.annotations)
+    annotation_text = " ".join(str(a.text or "") for a in figure.layout.annotations)
+    assert "AC vs PY" not in annotation_text
+    assert "Mix" not in annotation_text
+    assert "AC vs PL" in figure.layout.title.text
+    if small_multiples:
+        assert list(figure.layout.yaxis.tickvals) == list(traces[0].y)
+        assert all(shape.yref != "paper" for shape in figure.layout.shapes)
+    assert all(Path(path).is_file() for path in export.paths)
+    assert len(export.paths) == 1
+
+
+@pytest.mark.parametrize(
+    "amounts,parent,has_offsets",
+    [
+        ([-7000.0, -1000.0], -8000.0, False),
+        ([7000.0, 1000.0], 8000.0, False),
+        ([7000.0, -1000.0], 6000.0, True),
+    ],
+)
+def test_client_report_describes_offsets_only_when_both_signs_exist(
+    tmp_path: Path, amounts: list[float], parent: float, has_offsets: bool
+) -> None:
+    report = load_root_cause_client_report()
+    pl.DataFrame({"Month": ["January"], "variance_amount": [parent]}).write_csv(
+        tmp_path / "root_cause_bridge_alt_1.csv"
+    )
+    pl.DataFrame({"Category": ["A", "B"], "variance_amount": amounts}).write_csv(
+        tmp_path / "root_cause_bridge_alt_1_drilldown_row_1.csv"
+    )
+    summary = [
+        {
+            "alternative_result": 1,
+            "selected_labels": "January",
+            "selected_amounts": str(parent),
+            "other_residual": "0",
+            "row_count": 1,
+            "selected_sequence_has_mixed_dimensions": True,
+            "selected_sequence_bridge_dimensions": "Month,Category",
+        }
+    ]
+
+    report.write_root_cause_client_report(
+        summary_rows=summary, recipe={"language": "it"}, output_dir=tmp_path
+    )
+
+    from docx import Document
+
+    document = Document(tmp_path / "root_cause_client_report.docx")
+    text = " ".join(
+        cell.text
+        for table in document.tables
+        for row in table.rows
+        for cell in row.cells
+    )
+    assert ("compensazioni fra contributi positivi e negativi" in text) is has_offsets
+    assert "Il contributo non dipende da un solo elemento" not in text

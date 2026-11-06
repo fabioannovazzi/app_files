@@ -127,8 +127,8 @@ def _apply_ibcs_title(
         # Outside delta labels need space beyond the last subplot's domain.
         margin["r"] = max(int(margin.get("r") or 0), 60)
     rendered.figure.update_layout(margin=margin)
-    if chart_kind == "standard_variance":
-        rendered.figure.layout.annotations = ()
+    if chart_kind in {"standard_variance", "standard_small_multiples"}:
+        _normalize_standard_waterfall(rendered.figure)
         font_size = 14
         meta = dict(rendered.figure.layout.meta or {})
         meta["waterfall_font_size"] = font_size
@@ -145,9 +145,8 @@ def _apply_ibcs_title(
         )
         rendered.figure.update_xaxes(tickfont_size=font_size, title_font_size=font_size)
         rendered.figure.update_yaxes(tickfont_size=font_size, title_font_size=font_size)
-        rendered.figure.update_traces(
-            textfont_size=font_size, selector={"type": "waterfall"}
-        )
+        rendered.figure.update_annotations(font_size=font_size)
+        rendered.figure.update_traces(textfont_size=font_size)
     audit = dict(rendered.audit)
     audit.update(
         {
@@ -168,6 +167,74 @@ def _apply_ibcs_title(
     if dimension:
         audit["chart_dimension"] = dimension
     return replace(rendered, audit=audit)
+
+
+def _normalize_standard_waterfall(figure: Any) -> None:
+    """Keep displayed amounts in source units and remove legacy title overlays."""
+
+    # Trace coordinates are the source amounts; legacy text silently divides
+    # them by thousands. Formatting coordinates keeps labels and EUR consistent.
+    traces = [trace for trace in figure.data if trace.type == "waterfall"]
+    for trace in traces:
+        values = trace.x if trace.orientation == "h" else trace.y
+        trace.text = [
+            (
+                f"{float(value):+,.2f}"
+                if measure == "relative"
+                else f"{float(value):,.2f}"
+            )
+            .rstrip("0")
+            .rstrip(".")
+            for value, measure in zip(values, trace.measure, strict=True)
+        ]
+    meta = dict(figure.layout.meta or {})
+    figure.update_layout(margin_l=140)
+    grid = meta.get("waterfall_small_multiples_grid")
+    if not grid:
+        # Retain the percent-column heading; only the legacy title is redundant.
+        figure.layout.annotations = tuple(
+            annotation
+            for annotation in figure.layout.annotations or ()
+            if annotation.text == "Δ%"
+        )
+        figure.update_layout(margin_r=75)
+        return
+
+    rows, cols = int(grid["rows"]), int(grid["cols"])
+    titles = meta["waterfall_panel_titles"]
+    deltas = meta["waterfall_delta_percent_labels"]
+    annotations = []
+    for index, trace in enumerate(traces):
+        row, col = divmod(index, cols)
+        x_domain = [col / cols + 0.025, (col + 1) / cols - 0.08]
+        y_domain = [1 - (row + 1) / rows + 0.12 / rows, 1 - row / rows - 0.08 / rows]
+        x_axis = getattr(figure.layout, trace.xaxis.replace("x", "xaxis", 1))
+        y_axis = getattr(figure.layout, trace.yaxis.replace("y", "yaxis", 1))
+        x_axis.domain = x_domain
+        y_axis.domain = y_domain
+        for text, y, anchor in (
+            (titles[index], y_domain[1], "bottom"),
+            (deltas[index], y_domain[0] - 0.025 / rows, "top"),
+        ):
+            annotations.append(
+                {
+                    "text": text,
+                    "x": sum(x_domain) / 2,
+                    "y": y,
+                    "xref": "paper",
+                    "yref": "paper",
+                    "xanchor": "center",
+                    "yanchor": anchor,
+                    "showarrow": False,
+                }
+            )
+    figure.layout.annotations = tuple(annotations)
+    # Legacy difference arrows use paper coordinates below the canvas. The
+    # replacement delta captions above already carry their information.
+    figure.layout.shapes = tuple(
+        shape for shape in figure.layout.shapes or () if shape.yref != "paper"
+    )
+    figure.update_layout(height=max(450, 125 + rows * 280), margin_b=45, margin_r=60)
 
 
 def _display_translations(recipe: dict[str, Any]) -> dict[str, str]:
@@ -277,7 +344,7 @@ def _localize_rendered_labels(rendered: Any, recipe: dict[str, Any]) -> Any:
             continue
         axis = getattr(rendered.figure.layout, axis_name, None)
         if axis is not None:
-            for attribute in ("ticktext", "categoryarray"):
+            for attribute in ("ticktext", "tickvals", "categoryarray"):
                 value = getattr(axis, attribute, None)
                 if value is not None:
                     setattr(
