@@ -2,12 +2,16 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
+import os
 import subprocess
+import sys
 import threading
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 from packaging.requirements import Requirement
@@ -184,3 +188,101 @@ def test_managed_helpers_cannot_inherit_pythonpath(tmp_path, monkeypatch, produc
     env = api.runtime_environment(tmp_path / "runtime")
     assert "PYTHONPATH" not in env
     assert env["PYTHONNOUSERSITE"] == "1"
+
+
+def _local_probe_wheel(directory: Path, version: str) -> Path:
+    """Build a tiny dependency fixture without a compiler, network or build tool."""
+    wheel = directory / f"recovery_probe-{version}-py3-none-any.whl"
+    metadata = f"recovery_probe-{version}.dist-info"
+    with ZipFile(wheel, "w") as archive:
+        archive.writestr("recovery_probe.py", f"VERSION = {version!r}\n")
+        archive.writestr(
+            f"{metadata}/METADATA",
+            f"Metadata-Version: 2.1\nName: recovery-probe\nVersion: {version}\n",
+        )
+        archive.writestr(
+            f"{metadata}/WHEEL",
+            "Wheel-Version: 1.0\nRoot-Is-Purelib: true\nTag: py3-none-any\n",
+        )
+        archive.writestr(f"{metadata}/RECORD", "")
+    return wheel
+
+
+@pytest.mark.parametrize("setting", ["dry-run", "target"])
+@pytest.mark.parametrize("source", ["environment", "configuration"])
+@pytest.mark.parametrize("fallback", [False, True])
+def test_shared_setup_repairs_drift_despite_ambient_pip_settings(
+    tmp_path, monkeypatch, setting, source, fallback
+):
+    shared, selection, api, _, _ = fixture_runtime(tmp_path)
+    spec = importlib.util.spec_from_file_location(
+        "pip_isolation_manager",
+        ROOT / "plugins/clara/scripts/_managed_python_runtime.py",
+    )
+    manager = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, spec.name, manager)
+    spec.loader.exec_module(manager)
+    path = tmp_path / "runtime/venv"
+    subprocess.run(
+        [sys.executable, "-m", "venv", "--without-pip", str(path)], check=True
+    )
+    old_wheel = _local_probe_wheel(tmp_path, "2.0")
+    locked_wheel = _local_probe_wheel(tmp_path, "1.0")
+    clean_env = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.upper().startswith("PIP_")
+    }
+    clean_env["PIP_CONFIG_FILE"] = os.devnull
+    subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "pip",
+            "--python",
+            str(api.runtime_python(path)),
+            "install",
+            "--no-index",
+            "--disable-pip-version-check",
+            str(old_wheel),
+        ],
+        env=clean_env,
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    lock = selection.plugin_root / "requirements-shared-core.lock"
+    lock.write_text(
+        f"--no-index\n--find-links {tmp_path}\nrecovery-probe==1.0 "
+        f"--hash=sha256:{hashlib.sha256(locked_wheel.read_bytes()).hexdigest()}\n"
+    )
+    redirected = tmp_path / "unrelated-target"
+    value = "true" if setting == "dry-run" else str(redirected)
+    if source == "environment":
+        monkeypatch.setenv("PIP_" + setting.upper().replace("-", "_"), value)
+    else:
+        config = tmp_path / "ambient-pip.ini"
+        config.write_text(f"[install]\n{setting} = {value}\n")
+        monkeypatch.setenv("PIP_CONFIG_FILE", str(config))
+    api._bootstrap_pip = manager._bootstrap_pip
+    api._resolved_dependencies = manager._resolved_dependencies
+    api._dependencies_ready = lambda *args, **kwargs: True
+
+    def run(command, **kwargs):
+        if fallback and "--python" in command:
+            return subprocess.CompletedProcess(command, 1, "", "No base pip")
+        if any("_locked_dependencies.py" in str(arg) for arg in command):
+            return subprocess.CompletedProcess(
+                command, 0, '{"recovery-probe":"1.0"}', ""
+            )
+        return subprocess.run(command, **kwargs)
+
+    ok, _, detail = shared.ensure(selection, path, api, run)
+
+    assert ok, detail
+    versions = {
+        item["name"]: item["version"] for item in manager._resolved_dependencies(path)
+    }
+    assert versions["recovery-probe"] == "1.0"
+    assert not redirected.exists()
+    assert (path / shared.RECEIPT).is_file()
