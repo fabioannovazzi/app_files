@@ -2178,7 +2178,9 @@ def test_audit_normalizes_every_mapped_amount_with_reviewed_convention(
     assert runner.calls == 0
     workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
     try:
-        assert workbook["Ledger Orphans"].cell(2, 6).value == "1234.56"
+        amount_cell = workbook["Ledger Orphans"].cell(2, 6)
+        assert amount_cell.data_type == "n"
+        assert amount_cell.value == pytest.approx(1234.56)
     finally:
         workbook.close()
 
@@ -2249,7 +2251,9 @@ def test_audit_preserves_explicit_zero_gross_in_comparison_and_workpaper(
     assert orphan["gross_amount_comparison_basis"] == "mapped_gross_amount"
     workbook = load_workbook(output / "exception_workpaper.xlsx", read_only=True)
     try:
-        assert workbook["Ledger Orphans"].cell(2, 6).value == "0.00"
+        amount_cell = workbook["Ledger Orphans"].cell(2, 6)
+        assert amount_cell.data_type == "n"
+        assert amount_cell.value == 0
     finally:
         workbook.close()
 
