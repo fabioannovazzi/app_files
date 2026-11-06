@@ -11029,7 +11029,7 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "run_semantic_resolution_pipeline" in skill_text
     assert "all remaining journal counterparts" in skill_text
     assert "Sintesi, Relazioni, Banca, Partitario" in skill_text
-    assert "before domain validation" in skill_text
+    assert "before response interpretation" in skill_text
     assert "same maintained grouped" in skill_text
     assert "Diagnostic row triage (not final completion)" in skill_text
     assert "it must not manufacture worker output" in skill_text

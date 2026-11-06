@@ -103,6 +103,7 @@ __all__ = [
     "open_studio_google_drive_source",
     "plan_gmail_client_search",
     "prepare_studio_client_workflow",
+    "retain_studio_run_binding",
     "recover_studio_client_ledger",
     "refresh_archive",
     "report_studio_client_retention",
@@ -4222,6 +4223,20 @@ def restore_studio_client_workflow(
     }
 
 
+def retain_studio_run_binding(
+    client_root: Path,
+    engagement_id: str,
+    run_id: str,
+    *,
+    state_dir: Path | None = None,
+) -> dict[str, str]:
+    """Bind an already prepared portable run without changing archive selection."""
+    # Exact manifest identities and hashes are mechanical evidence of the run;
+    # later native operations revalidate them before using this private pointer.
+    loaded = ledger.load_run(client_root, engagement_id, run_id)
+    return _remember_run_binding(_state_dir(state_dir), client_root, loaded)
+
+
 def _remember_run_binding(
     state: Path, client_root: Path, loaded: Mapping[str, Any]
 ) -> dict[str, str]:
@@ -4239,6 +4254,7 @@ def _remember_run_binding(
         path = _run_binding_path(
             state, (run["client_id"], run["engagement_id"], run["run_id"])
         )
+        path.parent.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
         _write_private_json(path, record)
     except (OSError, ValueError, ArchiveError) as exc:
