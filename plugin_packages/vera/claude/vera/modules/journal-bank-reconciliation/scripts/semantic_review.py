@@ -2299,7 +2299,11 @@ def _worker_prompt(graph: Mapping[str, Any]) -> str:
         "component exactly once and include exactly one decision for every bank row. "
         "Use suggest_match only for a listed neighboring journal row; all other "
         "verdicts require journal_transaction_id null. Keep rationales concise and "
-        "identify only fields that actually support the decision. Also return the "
+        "identify only populated fields that actually support the decision. For a "
+        "suggested match, cite fields on the bank row or the suggested journal row. "
+        "For abstentions, fields on eligible neighboring journal rows may explain "
+        "the ambiguity or contradiction; do not cite fields absent from those rows "
+        "and the bank row. Also return the "
         "strongest supported resolution_level, classification, and identified_counterparty "
         "when the packet supports them. Classification and attribution may use bank-side "
         "evidence even when no journal edge exists. Never return perfect_match; exact "
@@ -3744,7 +3748,8 @@ def run_semantic_worker(
             raise ValueError("Worker JSONL output is not UTF-8") from exc
         event_summary = _validate_worker_events(events_text, response=None)
         response = event_summary["final_response"]
-        _validate_worker_response(response, graph)
+        # Retain completed execution and usage even when the answer is rejected.
+        # validate_semantic_review checks the response before accepting suggestions.
         response_bytes = _json_bytes(response)
         response_sha256 = hashlib.sha256(response_bytes).hexdigest()
         events_bytes = process_result["stdout"]
@@ -4017,6 +4022,14 @@ def _validate_worker_response(
             evidence_records = [bank_records[bank_id]]
             if isinstance(journal_id, str):
                 evidence_records.append(journal_records[journal_id])
+            else:
+                # Abstaining compares eligible alternatives without selecting one.
+                # Edge membership is mechanical; the worker owns semantic judgment.
+                evidence_records.extend(
+                    journal_records[candidate_id]
+                    for candidate_bank, candidate_id in edges
+                    if candidate_bank == bank_id
+                )
             for evidence_field in evidence_fields:
                 if not any(
                     record.get(evidence_field) not in (None, "")

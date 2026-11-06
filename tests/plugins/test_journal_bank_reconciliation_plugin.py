@@ -1029,7 +1029,9 @@ def _prepare_two_match_run(tmp_path: Path) -> tuple[Any, Path]:
     return core, output_dir
 
 
-def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Path]:
+def _prepare_ambiguous_semantic_run(
+    tmp_path: Path, *, bank_references: tuple[str, str] = ("BANK-100", "BANK-200")
+) -> tuple[Any, Any, Path, Path]:
     core = load_core()
     semantic_review = load_semantic_review()
     case_dir = tmp_path / "case"
@@ -1054,7 +1056,7 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
                 "80.00",
                 "Payment Alpha",
                 "Alpha",
-                "BANK-100",
+                bank_references[0],
                 "UNMAPPED-BANK-A",
             ],
             [
@@ -1062,7 +1064,7 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
                 "80.00",
                 "Payment Beta",
                 "Beta",
-                "BANK-200",
+                bank_references[1],
                 "UNMAPPED-BANK-B",
             ],
         ],
@@ -1516,6 +1518,7 @@ def _call_mcp_server(
     *,
     server_path: Path = MCP_SERVER_PATH,
     env: dict[str, str] | None = None,
+    # Multi-operation receipt checks exceed ten seconds on a busy local host.
     timeout_seconds: float = 60,
 ) -> list[dict[str, object]]:
     node = shutil.which("node")
@@ -14589,3 +14592,107 @@ def test_native_worker_retains_protocol_cost_without_accepting_multiple_messages
     assert not (output / semantic.RESPONSE_NAME).exists()
     assert not (output / semantic.LAUNCH_RECEIPT_NAME).exists()
     assert not list(output.glob(".luna-worker-capsule.*"))
+
+
+@pytest.mark.parametrize("verdict", ["ambiguous", "no_match", "needs_evidence"])
+def test_semantic_abstention_can_cite_eligible_journal_only_evidence(tmp_path, verdict):
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(
+        tmp_path, bank_references=("", "")
+    )
+    semantic.prepare_semantic_review(reconciliation, output)
+    graph_path = output / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text())
+    response = _valid_semantic_response(graph)
+    for decision in response["component_reviews"][0]["decisions"]:
+        decision.update(
+            verdict=verdict,
+            journal_transaction_id=None,
+            evidence_fields=["reference"],
+            resolution_level="unresolved",
+            identified_counterparty=None,
+            rationale="Ledger references differ, and the bank has no reference to distinguish them.",
+            requested_evidence=["A bank payment reference"],
+        )
+    response_path, events_path = _write_semantic_worker_result(output, response)
+    before = _tree_snapshot(reconciliation)
+
+    result = semantic.validate_semantic_review(
+        reconciliation, output, graph_path, response_path, events_path
+    )
+
+    validated = json.loads(result["validated_suggestions"].read_text())
+    assert validated["component_reviews"] == response["component_reviews"]
+    assert _tree_snapshot(reconciliation) == before
+
+
+def test_semantic_abstention_rejects_field_absent_from_all_candidates(tmp_path):
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    semantic.prepare_semantic_review(reconciliation, output)
+    graph_path = output / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text())
+    response = _valid_semantic_response(graph)
+    decision = response["component_reviews"][0]["decisions"][0]
+    decision.update(
+        verdict="ambiguous",
+        journal_transaction_id=None,
+        evidence_fields=["movement_number"],
+        resolution_level="unresolved",
+        identified_counterparty=None,
+    )
+    response_path, events_path = _write_semantic_worker_result(output, response)
+
+    with pytest.raises(ValueError, match="evidence field is not populated"):
+        semantic.validate_semantic_review(
+            reconciliation, output, graph_path, response_path, events_path
+        )
+
+    assert not (output / "semantic_suggestions_validated.json").exists()
+
+
+def test_rejected_worker_response_retains_usage_without_accepting_suggestions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    _mock_semantic_worker_runtime(monkeypatch, semantic, tmp_path, {})
+    usage = {"input_tokens": 120, "output_tokens": 80}
+
+    def rejected_response(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        graph = json.loads((output / "residual_candidate_graph.json").read_text())
+        response = _valid_semantic_response(graph)
+        response["component_reviews"][0]["decisions"][0]["evidence_fields"] = [
+            "movement_number"
+        ]
+        events = [
+            {"type": "thread.started", "thread_id": "rejected_worker_test"},
+            {"type": "turn.started"},
+            {
+                "type": "item.completed",
+                "item": {
+                    "id": "answer",
+                    "type": "agent_message",
+                    "text": json.dumps(response),
+                },
+            },
+            {"type": "turn.completed", "usage": usage},
+        ]
+        return {
+            "return_code": 0,
+            "stdout": "".join(json.dumps(event) + "\n" for event in events).encode(),
+            "stderr": b"",
+            "duration_ms": 42,
+        }
+
+    monkeypatch.setattr(semantic, "_run_captured_process", rejected_response)
+    original = _tree_snapshot(reconciliation)
+
+    with pytest.raises(ValueError, match="Worker evidence field is not populated"):
+        semantic.run_row_triage_pipeline(reconciliation, output)
+
+    receipt = json.loads((output / "luna_launch_receipt.json").read_text())
+    assert receipt["jsonl_observation"]["usage"] == usage
+    assert receipt["process"]["duration_ms"] == 42
+    assert (output / "luna_response.json").is_file()
+    assert (output / "luna_events.jsonl").is_file()
+    assert not (output / semantic.VALIDATED_SUGGESTIONS_NAME).exists()
+    assert not (output / semantic.WORKER_RUN_NAME).exists()
+    assert _tree_snapshot(reconciliation) == original
