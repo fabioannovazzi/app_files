@@ -323,7 +323,7 @@ Use this path after a qualified deterministic run leaves unmatched bank movement
 Semantic review is a standard step of the requested reconciliation, including
 normal client work. Continue automatically with `semantic_review.py run-all`;
 do not ask for a second authorization, a model-transfer consent receipt or
-special wording in the user's request. On Codex, this sends one bounded packet
+special wording in the user's request. On Codex, this sends bounded packets
 of unresolved financial rows and compatible journal candidates to the existing
 authenticated Codex model worker (Luna), using the model provider/account
 configured in that host. Populated dates, signed amounts, names and references
@@ -357,8 +357,8 @@ replay; the semantic worker may reach at most `identifier_match`.
 
 The main reconciliation chat must keep its current model and remain the
 orchestrator and final review authority. Never change the model configuration
-of the current chat or create visible per-case chats. Use one bounded worker packet,
-not one call per candidate. The shared `worker_capabilities.py` selects a configured
+of the current chat or create visible per-case chats. Use bounded packets of whole
+independent candidate components, not one call per candidate. The shared `worker_capabilities.py` selects a configured
 low-cost model and effort from the current harness model catalog. Model names and
 cost preferences belong in `semantic_worker_policy.json`, not matching rules.
 Codex uses its capability-probed native capsule. Cowork and Antigravity dispatch
@@ -369,11 +369,14 @@ do not claim Codex filesystem isolation or provider model attestation.
 A catalog entry proves advertised availability, not matching quality or execution.
 
 1. Prefer `semantic_review.py run-all` against the completed `reconciliation`
-   directory and a sibling `semantic-review` directory. It runs a worker only
-   when the complete eligible residual fits one bounded packet. It never splits
-   a large residual into successive automatic model calls. If row, component,
-   graph, or prompt-size limits are exceeded, it launches no worker, preserves
-   every movement in the human-review queue, and records the deferral reason.
+   directory and a sibling `semantic-review` directory. It reviews successive
+   bounded packets automatically, with at most 25 independent components per
+   packet. Keep connected bank/journal candidates together. After each validated
+   packet, retain its generation and cumulative decisions, then prepare only
+   unreviewed bank rows and unused journal candidates. A denial or failed worker
+   stops the sequence; resumption retains completed work. A component that cannot
+   fit even one packet remains explicitly deferred while other components proceed.
+   The total number of components does not block the review.
 
 ```bash
 python scripts/semantic_review.py run-all <output-dir>/reconciliation \
@@ -390,9 +393,9 @@ preparation moves the validated worker files into an actual
 `semantic-review/history/generation.../` directory and leaves the current
 resolution artifacts at the top level. Read the returned worker and launch
 receipts through `read_studio_run_artifact`; do not reconstruct a generation
-name or assume those receipts remain at the top level. `batches=1` records the
-completed worker; terminal `worker_required=false` means no further packet is
-needed. A zero-batch result supplies no new worker-receipt paths. Continue using
+name or assume those receipts remain at the top level. `batches` records the completed packets; each has its own retained worker and
+launch receipts. Terminal `worker_required=false` means no further eligible packet
+is needed; inspect explicit deferrals before claiming complete coverage. A zero-batch result supplies no new worker-receipt paths. Continue using
 the current resolution funnel, review queue and operational payload.
 
 `--worker-selection <receipt.json>` replays an explicit retained selection.

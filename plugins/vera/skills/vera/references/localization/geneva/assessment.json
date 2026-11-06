@@ -2583,5 +2583,10 @@
     "version": "0.1.576",
     "previous_catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
     "scope": "Manifest version refresh only; exact skill entries and existing jurisdiction judgments unchanged. Assessment linkage now uses producer digest. Includes merged course privacy-flow release."
+  },
+  "residual_batching_release_binding": {
+    "version": "0.1.579",
+    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
+    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
   }
 }

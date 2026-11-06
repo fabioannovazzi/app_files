@@ -299,15 +299,16 @@ pair also has either a shared stable explicit reference or two actual dates
 inside the reviewed date window. Description and beneficiary similarity cannot
 create an edge.
 
-The graph groups eligible rows into deterministic connected components. The
-preparer admits the complete residual only when every component fits one packet
-inside the fixed bank-row, journal-row, edge, component-count, graph-byte, and
-prompt-byte limits. It does not select a partial packet or automatically chunk
-the remainder. A one-bank/one-journal component that should already have been
-resolved by deterministic singleton matching, any over-cap component, or an
-over-cap complete residual defers the entire model step. The preparer reports
-`worker_required: false`, records the reason, and preserves every bank movement
-in the human-review queue.
+The graph groups eligible rows into connected components and packs independent
+components into successive bounded requests, at most 25 per packet. It never
+splits a connected candidate group across requests. Bank-row, journal-row, edge,
+graph-byte and prompt-byte limits bound each request, not the complete review.
+Overflow remains pending for the next packet. An individually oversized component
+or an unexpected deterministic singleton remains explicitly deferred without
+blocking other fit components. Each validated packet updates cumulative reviewed
+bank IDs and used journal IDs before another packet is prepared. This prevents
+repeat review and cross-packet evidence reuse. Failure or host denial stops the
+sequence immediately; retained generations support resumption.
 
 Packet projection happens after source-column mapping. The worker receives
 only populated canonical fields for unresolved bank rows and their
@@ -358,8 +359,9 @@ reasoning effort, so worker metadata records both as requested rather than
 observed and validation requires the launch receipt.
 
 Validated results live outside the canonical reconciliation directory in its
-real sibling named `semantic-review`. `run-all` launches at most one worker for
-the complete admitted residual. Raw Luna output remains advisory until
+real sibling named `semantic-review`. `run-all` launches successive workers until
+all eligible residual components have been reviewed. Completed packets are
+archived independently; only unreviewed rows enter subsequent preparations. Raw Luna output remains advisory until
 validation. The validator then applies accepted decisions to
 `semantic_resolution_application.json`, `resolution_funnel.json`, and
 `human_review_queue.json`, and writes `operational_review_payload.json` as the

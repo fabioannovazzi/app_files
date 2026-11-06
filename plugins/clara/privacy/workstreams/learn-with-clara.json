@@ -110,7 +110,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-05",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "8b712899578046c32062b7a5239d269c5808a8df5a4459676ad37ef54887fdfa"
+    "source_fingerprint": "8680c6db3e9a147434de23af656915e709c3106d47c59ede0904ab2779e0160b"
   },
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/desktop_teaching",
