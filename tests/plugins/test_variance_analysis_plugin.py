@@ -3467,3 +3467,48 @@ def test_client_report_describes_offsets_only_when_both_signs_exist(
     )
     assert ("compensazioni fra contributi positivi e negativi" in text) is has_offsets
     assert "Il contributo non dipende da un solo elemento" not in text
+
+
+def test_small_multiples_without_legacy_frame_keep_panel_names(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import plotly.graph_objects as go
+
+    load_core()
+    import legacy_plotting
+
+    frame = pl.DataFrame(
+        {
+            "Month": ["January", "February"],
+            "amount_baseline": [18000.0, 29000.0],
+            "amount_comparison": [30000.0, 23000.0],
+            "total_delta": [12000.0, -6000.0],
+        }
+    )
+    recipe = {
+        "mappings": {
+            "baseline_period": "PL",
+            "comparison_period": "AC",
+            "dimensions": ["Month"],
+        },
+        "options": {
+            "waterfall_small_multiples": True,
+            "waterfall_small_multiples_dimension": "Month",
+        },
+    }
+    captured = []
+
+    def force_fallback(figure, *args, **kwargs):
+        captured.append(figure)
+        raise ValueError("Exercise fallback without a legacy frame")
+
+    monkeypatch.setattr(go.Figure, "write_image", force_fallback)
+    export = legacy_plotting.write_waterfall_png(
+        frame, recipe, tmp_path, render_standard=False
+    )
+
+    assert len(export.paths) == 1
+    assert [annotation.text for annotation in captured[0].layout.annotations] == [
+        "January",
+        "February",
+    ]

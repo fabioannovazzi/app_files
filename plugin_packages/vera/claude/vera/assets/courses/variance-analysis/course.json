@@ -68,7 +68,7 @@
     },
     {
       "path": "modules/variance-analysis/scripts/legacy_plotting.py",
-      "sha256": "662fd0585d699e4f9a2c29efd29377f20cd876c9bffedb9d4686b53bcb173e8a"
+      "sha256": "2f64af9fc27ff5bcc1fd0cbc78dd48bec512be820119d147e4dbd744a2daa656"
     },
     {
       "path": "modules/variance-analysis/scripts/model_use.py",
@@ -901,5 +901,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "bb0ac11a97dfb0a9e87e047f7f8ee4649abda35bd27484ea0ba69b6c98250100"
+  "canonical_course_sha256": "e420f751b0bb19a2565c5e3090a64126b43779de84eb67a0ff835d88d5cacccb"
 }

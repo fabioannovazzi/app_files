@@ -128,7 +128,9 @@ def _apply_ibcs_title(
         margin["r"] = max(int(margin.get("r") or 0), 60)
     rendered.figure.update_layout(margin=margin)
     if chart_kind in {"standard_variance", "standard_small_multiples"}:
-        _normalize_standard_waterfall(rendered.figure)
+        _normalize_standard_waterfall(
+            rendered.figure, small_multiples=chart_kind == "standard_small_multiples"
+        )
         font_size = 14
         meta = dict(rendered.figure.layout.meta or {})
         meta["waterfall_font_size"] = font_size
@@ -169,7 +171,7 @@ def _apply_ibcs_title(
     return replace(rendered, audit=audit)
 
 
-def _normalize_standard_waterfall(figure: Any) -> None:
+def _normalize_standard_waterfall(figure: Any, *, small_multiples: bool) -> None:
     """Keep displayed amounts in source units and remove legacy title overlays."""
 
     # Trace coordinates are the source amounts; legacy text silently divides
@@ -192,11 +194,12 @@ def _normalize_standard_waterfall(figure: Any) -> None:
     grid = meta.get("waterfall_small_multiples_grid")
     if not grid:
         # Retain the percent-column heading; only the legacy title is redundant.
-        figure.layout.annotations = tuple(
-            annotation
-            for annotation in figure.layout.annotations or ()
-            if annotation.text == "Δ%"
-        )
+        if not small_multiples:
+            figure.layout.annotations = tuple(
+                annotation
+                for annotation in figure.layout.annotations or ()
+                if annotation.text == "Δ%"
+            )
         figure.update_layout(margin_r=75)
         return
 
