@@ -31,6 +31,9 @@ def load(name: str):
 @pytest.fixture
 def module(monkeypatch, tmp_path):
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(tmp_path / "archive-state"))
+    # Model the host session across separately loaded adapters and MCP children;
+    # CI does not inherit the CODEX_THREAD_ID available in a live work chat.
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", "test-local-onboarding")
     monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     monkeypatch.syspath_prepend(str(SCRIPTS))
     module = load("local_onboarding")
