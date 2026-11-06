@@ -294,8 +294,33 @@ def test_failed_render_keeps_previous_version_current(tmp_path, monkeypatch):
     assert not list(output.glob(".treasury-stage-*"))
 
 
+def test_failed_scenario_render_preserves_baseline_and_delivery(tmp_path, monkeypatch):
+    output, record, _ = session(tmp_path)
+    before = (output / "final_artifacts.json").read_bytes()
+
+    def fail(*args):
+        raise OSError("Synthetic scenario disk failure")
+
+    monkeypatch.setattr(treasury_session_module, "write_scenario_artifacts", fail)
+    with pytest.raises(OSError, match="scenario disk failure"):
+        save_scenario(
+            output,
+            expected_record_sha256=record["record_sha256"],
+            dates={"item:C101": "2026-10-02"},
+        )
+    assert current_record(output)[1] == record
+    assert (output / "final_artifacts.json").read_bytes() == before
+    assert not list(output.glob("scenario-*.json"))
+    assert not list(output.glob(".treasury-scenario-*"))
+
+
 def test_alternative_is_saved_without_mutating_baseline(tmp_path):
     output, record, _ = session(tmp_path)
+    baseline_files = {
+        p.relative_to(output): p.read_bytes()
+        for p in (output / "versions").rglob("*")
+        if p.is_file()
+    }
     scenario = save_scenario(
         output,
         expected_record_sha256=record["record_sha256"],
@@ -304,6 +329,37 @@ def test_alternative_is_saved_without_mutating_baseline(tmp_path):
     assert scenario["minimum_daily_cash"] == "-35000.00"
     assert current_record(output)[1] == record
     assert len(list(output.glob("scenario-*.json"))) == 1
+    delivery = read_json(output / "final_artifacts.json")["scenarios"][0]
+    assert delivery["status"] == "hypothetical"
+    assert delivery["baseline_record_sha256"] == record["record_sha256"]
+    report = (output / delivery["report"]).read_text()
+    assert "Scenario ipotetico" in report and "-35.000,00" in report
+    workbook = load_workbook(output / delivery["workbook"], read_only=True)
+    try:
+        daily = list(workbook["Giorni"].values)[1:]
+        assert min(row[2] for row in daily) == -35000
+        assert all(isinstance(row[2], (int, float)) for row in daily)
+    finally:
+        workbook.close()
+    assert all(
+        (output / p).read_bytes() == content for p, content in baseline_files.items()
+    )
+    assert (
+        save_scenario(
+            output,
+            expected_record_sha256=record["record_sha256"],
+            dates={"item:C101": "2026-10-02"},
+        )
+        == scenario
+    )
+    assert len(read_json(output / "final_artifacts.json")["scenarios"]) == 1
+    (output / delivery["report"]).write_text("Changed scenario report")
+    with pytest.raises(TreasuryError, match="alternative.*changed"):
+        save_scenario(
+            output,
+            expected_record_sha256=record["record_sha256"],
+            dates={"item:C101": "2026-10-02"},
+        )
 
 
 def test_report_escapes_supplied_markup_and_excel_formula_text(tmp_path):
