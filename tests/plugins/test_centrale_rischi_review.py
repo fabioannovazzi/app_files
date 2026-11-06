@@ -1724,3 +1724,60 @@ def test_public_page_and_privacy_surface_are_registered() -> None:
         assert phrase in page
     assert "metriche, controlli o righe fonte già presenti" in page
     assert "metrics, controls or source rows already present" in page
+
+
+@pytest.mark.parametrize("mapped", [False, True])
+def test_missing_guarantee_amounts_remain_unavailable(
+    tmp_path: Path, mapped: bool
+) -> None:
+    from openpyxl import load_workbook
+
+    source = tmp_path / "cr.xlsx"
+    _write_source(source)
+    workbook = load_workbook(source)
+    sheet = workbook.active
+    guarantee_column = next(
+        cell.column for cell in sheet[1] if cell.value == "Garantito"
+    )
+    sheet.cell(4, guarantee_column).value = None
+    workbook.save(source)
+    tables = load_source_tables([source])
+    inspection, _, _ = build_inspection(tables)
+    recipe = _reviewed_recipe(inspection)
+    if not mapped:
+        recipe["columns"]["guaranteed_amount"] = ""
+
+    analysis = build_analysis(tables, recipe)
+
+    metric = next(
+        item
+        for item in analysis["metrics"]
+        if item["metric_id"] == "cr.guarantee_coverage_pct"
+    )
+    assert metric["value"] is None
+    assert metric["availability"] == "unavailable"
+    assert analysis["exposures"][2]["guaranteed_amount"] is None
+    assert "Non disponibile" in render_html(analysis)
+
+
+def test_explicit_zero_guarantees_produce_zero_coverage(tmp_path: Path) -> None:
+    from openpyxl import load_workbook
+
+    source = tmp_path / "cr.xlsx"
+    _write_source(source)
+    workbook = load_workbook(source)
+    sheet = workbook.active
+    column = next(cell.column for cell in sheet[1] if cell.value == "Garantito")
+    for row in sheet.iter_rows(min_row=2):
+        row[column - 1].value = 0
+    workbook.save(source)
+
+    analysis, _ = _analysis_for(source)
+
+    metric = next(
+        item
+        for item in analysis["metrics"]
+        if item["metric_id"] == "cr.guarantee_coverage_pct"
+    )
+    assert metric["value"] == "0"
+    assert metric["availability"] == "available"

@@ -59,6 +59,32 @@ def _table(path: Path):
                 "delimiter_basis": delimiter_basis,
             }
         return
+    if suffix == ".xls":
+        import xlrd
+
+        try:
+            workbook = xlrd.open_workbook(str(path), on_demand=True)
+            try:
+                sheets = workbook.sheets()
+                width = max((sheet.ncols for sheet in sheets), default=0)
+
+                def legacy_rows():
+                    for sheet in sheets:
+                        for index in range(sheet.nrows):
+                            row = sheet.row_values(index)
+                            if any(value not in (None, "") for value in row):
+                                yield [_scalar(value) for value in row] + [None] * (
+                                    width - len(row)
+                                )
+
+                yield [
+                    str(i) for i in range(width)
+                ], legacy_rows(), "worksheet_rows", None
+            finally:
+                workbook.release_resources()
+        except xlrd.XLRDError as exc:
+            raise ValueError("Legacy Excel rows could not be measured") from exc
+        return
     if suffix == ".xlsx":
         from openpyxl import load_workbook
 

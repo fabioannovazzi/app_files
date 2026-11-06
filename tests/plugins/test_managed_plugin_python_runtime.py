@@ -1767,3 +1767,42 @@ raise SystemExit(launcher.main(['--module','check-entries','run','helper.py']))
         assert any("PRIVATE_TECHNICAL_VALUE" in p.read_text() for p in diagnostic_files)
     else:
         assert not state["outbox"]
+
+
+@pytest.mark.parametrize("verified_code", [0, 1])
+def test_uv_alias_failure_uses_only_a_verified_installed_interpreter(
+    monkeypatch, verified_code
+):
+    from types import SimpleNamespace
+
+    runtime = load_runtime()
+    monkeypatch.setattr(
+        runtime,
+        "sys",
+        SimpleNamespace(
+            version_info=(3, 14), implementation=SimpleNamespace(name="cpython")
+        ),
+    )
+    monkeypatch.setattr(
+        runtime.shutil, "which", lambda name: "/runtime/uv" if name == "uv" else None
+    )
+
+    def runner(command, **kwargs):
+        if command[1:3] == ["python", "install"]:
+            return subprocess.CompletedProcess(
+                command,
+                1,
+                "",
+                "expected target directory missing for minor version link",
+            )
+        if command[1:3] == ["python", "find"]:
+            return subprocess.CompletedProcess(command, 0, "/runtime/python3.12\n", "")
+        return subprocess.CompletedProcess(
+            command, verified_code, "/runtime/python3.12\n", ""
+        )
+
+    if verified_code:
+        with pytest.raises(ValueError, match="minor version link"):
+            runtime._python312_executable(runner)
+    else:
+        assert runtime._python312_executable(runner) == "/runtime/python3.12"

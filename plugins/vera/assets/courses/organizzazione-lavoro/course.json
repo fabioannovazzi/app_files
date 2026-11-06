@@ -50,7 +50,7 @@
     {
       "path": "scripts/archive_report_measurements.py",
       "repository_path": "plugins/vera/scripts/archive_report_measurements.py",
-      "sha256": "9f886910ad7384bcefa9062a28e6b193d8edae6496b0abedb0c287fe9cdb0e05"
+      "sha256": "d33c8f071a63ef9de0712099454fb4f879f97c25680704f51b95569c2d04a459"
     },
     {
       "path": "scripts/archive_report_receipt.py",

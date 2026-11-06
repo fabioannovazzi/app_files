@@ -124,7 +124,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/worker_capabilities.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/worker_capabilities.py",
-      "sha256": "7c0b8eaff93beb9e5eaaf3d7cb6e4c6a388ef129325a00d181f513b243eec5df"
+      "sha256": "e990031f5683136b2e8fd0d7b0a70d777ad5f92b3f3dfab862241898b501279e"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",

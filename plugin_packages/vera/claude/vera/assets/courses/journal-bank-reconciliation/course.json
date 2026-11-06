@@ -100,7 +100,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/worker_capabilities.py",
-      "sha256": "fbcb0eae8ff0d40234ab953944895617112ee39047ba160c21a140eb2d88d279"
+      "sha256": "2f8dcdccc20609d00bd6edfbde3f061a1b1e85ff6b4f18f22e72566476a1bed9"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
@@ -613,5 +613,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "965c07c315e742a4f2104ae26a5b45ae1a405eef18ed2699257d722359b51bc7"
+  "canonical_course_sha256": "4108402e22cb6d088590983509daf72325a02a77cef3af782c1ded13adf9451e"
 }

@@ -1626,3 +1626,28 @@ def test_table_projection_scans_each_workbook_once(table_projection_case, monkey
     [source] = [item for item in report["sources"] if item["role"] == "input"]
     assert source["sent_cells"] == 1
     assert source["not_sent_cells"] == 5
+
+
+def test_legacy_excel_read_retains_measured_row_and_column_selection(
+    tmp_path, monkeypatch
+):
+    from types import SimpleNamespace
+
+    import xlrd
+    from archive_report_measurements import measure_source, read_selection
+
+    path = tmp_path / "source.xls"
+    path.write_bytes(b"retained-xls-fixture")
+    rows = [["Date", "Amount"], ["2026-11-05", 125.0]]
+    sheet = SimpleNamespace(ncols=2, nrows=2, row_values=lambda i: rows[i])
+    workbook = SimpleNamespace(sheets=lambda: [sheet], release_resources=lambda: None)
+    monkeypatch.setattr(xlrd, "open_workbook", lambda *args, **kwargs: workbook)
+
+    measured = measure_source(path, source_id="legacy-bank")
+    data, evidence = read_selection(measured, offset=1, limit=1, columns=[1])
+
+    assert measured["measurement_error"] is None
+    assert measured["quantity"] == 2
+    assert measured["cells"] == 4
+    assert data["rows"] == [[125.0]]
+    assert evidence["source_id"] == "legacy-bank"

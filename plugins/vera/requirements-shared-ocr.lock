@@ -1366,6 +1366,10 @@ xarray==2026.7.0 \
     --hash=sha256:361b495928fdbf5b58d0969bb6775339019da5e93ca74d61ddf4eb5edd6ce604 \
     --hash=sha256:bf9dd130b93806dc78e90c1b7ac24851b31557b888674c53622235691cf21824
     # via datashader
+xlrd==2.0.1 \
+    --hash=sha256:6a33ee89877bd9abc1158129f6e94be74e2679636b8a205b43b85206c3f0bbdd \
+    --hash=sha256:f72f148f54442c6b056bf931dbc34f986fd0c3b0b6b5a58d013c9aef274d0c88
+    # via mparanza-shared-runtime
 xlsxwriter==3.2.9 \
     --hash=sha256:254b1c37a368c444eac6e2f867405cc9e461b0ed97a3233b2ac1e574efb4140c \
     --hash=sha256:9a5db42bc5dff014806c58a20b9eae7322a134abb6fce3c92c181bfb275ec5b3

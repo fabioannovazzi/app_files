@@ -535,13 +535,13 @@ def build_analysis(
             if columns.get("guarantee_type")
             else ""
         )
-        guaranteed: Decimal | str = (
+        guaranteed: Decimal | str | None = (
             amount_value(
                 "guaranteed_amount",
                 row.get(columns.get("guaranteed_amount", ""), ""),
             )
-            if columns.get("guaranteed_amount")
-            else Decimal("0")
+            if _text(row.get(columns.get("guaranteed_amount", ""), ""))
+            else None
         )
         prejudicial = (
             _text(row.get(columns.get("prejudicial_event", ""), ""))
@@ -652,7 +652,8 @@ def build_analysis(
             "overrun",
             "guaranteed_amount",
         ):
-            monthly[month][field] += row[field]
+            if row[field] is not None:
+                monthly[month][field] += row[field]
         for field in (
             "granted",
             "operational_granted",
@@ -684,7 +685,15 @@ def build_analysis(
     total_used = sum((row["used"] for row in latest), Decimal("0"))
     total_available = sum((row["available"] for row in latest), Decimal("0"))
     total_overrun = sum((row["overrun"] for row in latest), Decimal("0"))
-    total_guaranteed = sum((row["guaranteed_amount"] for row in latest), Decimal("0"))
+    guarantees_complete = all(row["guaranteed_amount"] is not None for row in latest)
+    total_guaranteed = sum(
+        (
+            row["guaranteed_amount"]
+            for row in latest
+            if row["guaranteed_amount"] is not None
+        ),
+        Decimal("0"),
+    )
     top_bank = max(intermediary.values()) if intermediary else Decimal("0")
     prior_used = monthly[months[-2]]["used"] if len(months) > 1 else None
     metrics = [
@@ -727,8 +736,20 @@ def build_analysis(
         _metric(
             "cr.guarantee_coverage_pct",
             "Copertura importi garantiti sulle esposizioni",
-            _ratio(total_guaranteed, total_used),
+            _ratio(total_guaranteed, total_used) if guarantees_complete else None,
             "percent",
+            availability=(
+                "available" if guarantees_complete and total_used else "unavailable"
+            ),
+            reason=(
+                "Importi garantiti mancanti per una o più esposizioni del mese corrente."
+                if not guarantees_complete
+                else (
+                    "Utilizzato nullo: rapporto non calcolabile."
+                    if not total_used
+                    else None
+                )
+            ),
         ),
         _metric(
             "cr.top_intermediary_share_pct",
@@ -993,6 +1014,11 @@ def build_analysis(
         }
         for key, totals in residual_term_totals.items()
     ]
+    incomplete_guarantee_months = {
+        str(row["reference_month"])
+        for row in current_rows
+        if row["guaranteed_amount"] is None
+    }
     monthly_series = [
         {
             "reference_month": month,
@@ -1000,7 +1026,14 @@ def build_analysis(
         }
         for month in months
     ]
-    guarantees = [public_row(row) for row in latest if row["guaranteed_amount"] > 0]
+    for month_row in monthly_series:
+        if month_row["reference_month"] in incomplete_guarantee_months:
+            month_row["guaranteed_amount"] = None
+    guarantees = [
+        public_row(row)
+        for row in latest
+        if row["guaranteed_amount"] is not None and row["guaranteed_amount"] > 0
+    ]
     overruns = [public_row(row) for row in latest if row["overrun"] > 0]
     prejudicial = [public_row(row) for row in latest if row["prejudicial_event"]]
     guarantees_received, guarantees_received_available = auxiliary_rows(
@@ -1027,6 +1060,10 @@ def build_analysis(
         "La Centrale Rischi da sola non consente di calcolare PFN/EBITDA, Debt/Equity o DSCR.",
         "L'output non riproduce né stima il rating proprietario di una banca.",
     ]
+    if not guarantees_complete:
+        limitations.append(
+            "La copertura degli importi garantiti non è disponibile: gli importi mancanti non equivalgono a zero."
+        )
     if not columns.get("prejudicial_event"):
         limitations.append(
             "Le evidenze pregiudizievoli non sono disponibili perché non è stata fornita una colonna proveniente da una fonte separata e confermata."
@@ -1081,7 +1118,7 @@ def build_analysis(
         "prejudicial_events": prejudicial,
         "coverage": {
             "guarantees_on_exposures": (
-                "available" if columns.get("guaranteed_amount") else "unavailable"
+                "available" if guarantees_complete else "unavailable"
             ),
             "guarantees_received": (
                 "available" if guarantees_received_available else "unavailable"
