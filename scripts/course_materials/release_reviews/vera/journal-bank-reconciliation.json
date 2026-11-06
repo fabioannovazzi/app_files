@@ -134,7 +134,40 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+  "course_privacy_source_review_20261105": {
+    "authored_content_unchanged": true,
+    "baseline_commit": "6bbf346bbf4e35ae9fe6c291acffeb4c6f5dedf2",
+    "current_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+    "limits": "Existing editorial and artifact judgments are retained as historical reviews of unchanged materials. No new learner, human editorial, installed-host or professional approval is asserted.",
+    "native_evidence": "GitHub Actions 42018198591 job 127219008965: native execution stage completed and produced teaching-native.xml bound to these exact course hashes; the subsequent editorial identity check failed. The same retained JUnit is verified locally after this bounded review.",
+    "previous_course_sha256": "4bf06a48d146ab00801315c20bbf09666587ff2f3e2d893d442568f8b20a1333",
+    "reviewed_at": "2026-11-05",
+    "reviewer": "Codex agent, bounded source review",
+    "scope": "Reviewed the preceding main change: exact TeamSystem printed-header aliases and pagination-marker handling in journal_bank_core.py. The entire authored course object outside sources matches its previously bound reviewed commit."
+  },
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/journal-bank-reconciliation/references/workflow-reference.md",
+      "modules/journal-bank-reconciliation/scripts/semantic_review.py",
+      "modules/journal-bank-reconciliation/scripts/worker_capabilities.py",
+      "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
+      "vendor/modules/courseware/execution.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "15754543283bf9d79ff28e060dfa06147f807600d6e19e2fac11a3ad0318fbe2",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "d83255c602f5e2162d483fff550eb0d7f4591310",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+    "reviewed_at": "2026-11-06T16:34:18.498937+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "15754543283bf9d79ff28e060dfa06147f807600d6e19e2fac11a3ad0318fbe2",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
@@ -966,16 +999,5 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
-  },
-  "course_privacy_source_review_20261105": {
-    "reviewer": "Codex agent, bounded source review",
-    "reviewed_at": "2026-11-05",
-    "previous_course_sha256": "4bf06a48d146ab00801315c20bbf09666587ff2f3e2d893d442568f8b20a1333",
-    "current_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
-    "baseline_commit": "6bbf346bbf4e35ae9fe6c291acffeb4c6f5dedf2",
-    "authored_content_unchanged": true,
-    "scope": "Reviewed the preceding main change: exact TeamSystem printed-header aliases and pagination-marker handling in journal_bank_core.py. The entire authored course object outside sources matches its previously bound reviewed commit.",
-    "native_evidence": "GitHub Actions 42018198591 job 127219008965: native execution stage completed and produced teaching-native.xml bound to these exact course hashes; the subsequent editorial identity check failed. The same retained JUnit is verified locally after this bounded review.",
-    "limits": "Existing editorial and artifact judgments are retained as historical reviews of unchanged materials. No new learner, human editorial, installed-host or professional approval is asserted."
   }
 }

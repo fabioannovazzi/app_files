@@ -100,7 +100,27 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "f0b8c3bc1a5f4b67557aa816788f0503f9f7a7458cc1a4fead81e79c750457e4",
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "scripts/archive_report_measurements.py",
+      "vendor/modules/courseware/execution.py",
+      "vendor/modules/desktop_teaching/onboarding.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "ffdc1af1b83571c707c868fbb4170d85c20a242a72361f651461d6a8fa691d08",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "ae15eb4ec7ab7652f97250a35e8217f22ef582be",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "f0b8c3bc1a5f4b67557aa816788f0503f9f7a7458cc1a4fead81e79c750457e4",
+    "reviewed_at": "2026-11-06T16:34:18.021667+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "ffdc1af1b83571c707c868fbb4170d85c20a242a72361f651461d6a8fa691d08",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "66a004e46b78c16dc7e2308f1fabc91a235064289c61053448354d469568dba1",

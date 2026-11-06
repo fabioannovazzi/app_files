@@ -123,7 +123,26 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "7e78b4df49ba2c0ce6a8a7ea52b085be4cd0e96f924bc66b9890f85cc23e15c1",
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/centrale-rischi-review/scripts/centrale_rischi_core.py",
+      "vendor/modules/courseware/execution.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "e50770c429306a3409dc15510bf3165ab989557d173fa86a7dda80e8befd06e0",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "f5e380b3dd7f372ae3f26b15cbfe58b83c6595d7",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "7e78b4df49ba2c0ce6a8a7ea52b085be4cd0e96f924bc66b9890f85cc23e15c1",
+    "reviewed_at": "2026-11-06T16:34:18.291335+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "e50770c429306a3409dc15510bf3165ab989557d173fa86a7dda80e8befd06e0",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "78e2b0e6732268a5144bb26b5489e46b01fff4392c66cbf6db8d43741322deef",
