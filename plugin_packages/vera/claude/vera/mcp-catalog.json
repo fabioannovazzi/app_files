@@ -5436,7 +5436,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "registro-imprese-sari-review",
-          "version": "0.1.13"
+          "version": "0.1.14"
         },
         "capabilities": {
           "tools": {},

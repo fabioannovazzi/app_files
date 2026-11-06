@@ -33,7 +33,7 @@
     },
     {
       "path": "modules/registro-imprese-sari/assets/registry-display.json",
-      "sha256": "fdb112a6f37d161d4ec147391d8d226317d05efe8e0fcc0a70f083d2d68bc4a4"
+      "sha256": "9b2d8f7be9bdd938fa4e5fb85a3e0649b107971f6dea3f7ea6009b97ca5f66cd"
     },
     {
       "path": "modules/registro-imprese-sari/references/official-sources.md",
@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/registro-imprese-sari/scripts/package_practice.py",
-      "sha256": "61ee5198d6490d827481f1d248a52f3ff7585e3163b0922ddc778d16f26bba74"
+      "sha256": "b98d6803c779dce2d7099acf265113fcb471b871004e2c825a38d7eb62f45798"
     },
     {
       "path": "modules/registro-imprese-sari/scripts/register_official_source.py",
@@ -678,5 +678,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "cdbb1f3bf82a81d2136d1a95efd95615500475f135de948cd628e1e0cb64fa51"
+  "canonical_course_sha256": "1287c7a7b80e453708f8d109299452e847f88f7ef188b46c89067ec4281989f8"
 }
