@@ -140,6 +140,7 @@ __all__ = [
     "main",
     "prepare_semantic_review",
     "run_semantic_resolution_pipeline",
+    "run_row_triage_pipeline",
     "run_semantic_worker",
     "validate_semantic_review",
 ]
@@ -5301,7 +5302,7 @@ def validate_semantic_review(
     }
 
 
-def run_semantic_resolution_pipeline(
+def run_row_triage_pipeline(
     reconciliation_dir: Path,
     semantic_output_dir: Path,
     *,
@@ -5400,6 +5401,36 @@ def run_semantic_resolution_pipeline(
     }
 
 
+def run_semantic_resolution_pipeline(
+    reconciliation_dir: Path,
+    semantic_output_dir: Path,
+    *,
+    required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+    codex_bin: Path | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
+    worker_selection: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Complete the same grouped review and final workbook on every normal run.
+
+    The exact matcher and row-triage helpers are intermediate evidence, never
+    alternative final-delivery routes. Review certainty does not authorize
+    posting entries or silently change the strict reconciliation ledger.
+    """
+    from grouped_review import complete_grouped_review
+
+    if required_resolution_level not in RESOLUTION_RANK:
+        raise ValueError("Unknown required resolution level")
+    result = complete_grouped_review(
+        reconciliation_dir,
+        semantic_output_dir,
+        client_engagement=client_engagement,
+        worker_selection=worker_selection,
+        codex_bin=codex_bin,
+    )
+    result["required_resolution_level"] = required_resolution_level
+    return result
+
+
 def _add_client_engagement_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--client-engagement", type=Path, required=True)
 
@@ -5433,7 +5464,7 @@ def _parser() -> argparse.ArgumentParser:
     _add_client_engagement_argument(prepare)
     run_all = subparsers.add_parser(
         "run-all",
-        help="Review successive bounded packets, retaining validated progress between batches.",
+        help="Complete grouped review, validate coverage and export the final four-sheet workbook.",
     )
     run_all.add_argument("reconciliation_dir", type=Path)
     run_all.add_argument("--output-dir", type=Path, required=True)
@@ -5610,6 +5641,12 @@ def main() -> int:
                     }
                 ),
             )
+        log_execution_status(
+            args.output_dir,
+            "final reconciliation workbook: %s; measured model usage: %s",
+            result["workbook"],
+            json.dumps(result["model_tokens"]),
+        )
         return 0
     if args.command == "run-worker":
         try:

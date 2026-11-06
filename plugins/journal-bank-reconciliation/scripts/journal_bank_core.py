@@ -278,6 +278,21 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/semantic_review.py",
     ),
     (
+        "implementation.plugin.scripts.grouped_review_py",
+        "implementation",
+        "scripts/grouped_review.py",
+    ),
+    (
+        "implementation.plugin.scripts.grouped_workbook_py",
+        "implementation",
+        "scripts/grouped_workbook.py",
+    ),
+    (
+        "implementation.plugin.scripts.bank_working_copy_py",
+        "implementation",
+        "scripts/bank_working_copy.py",
+    ),
+    (
         "implementation.plugin.scripts.worker_capabilities_py",
         "implementation",
         "scripts/worker_capabilities.py",
@@ -6970,6 +6985,9 @@ def _write_assurance_envelope(
     implementation_receipts = build_implementation_artifact_receipts()
     mutable_control_paths = {
         "artifact_receipts.json",
+        # A repeated strict run can already have this file on disk. An
+        # envelope cannot include a receipt for its own preceding bytes.
+        "assurance_envelope.json",
         "run_intake.json",
         "ui_decisions.json",
         "applied_decisions.json",

@@ -627,22 +627,14 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         if path.parent.name == "journal-bank-reconciliation":
             assert "In Codex, Cowork e Antigravity" in model_block
             assert "Cowork non esegue questo passaggio" not in model_block
-            assert "procede automaticamente in pacchetti limitati" in model_block
-            assert "fino a 25 gruppi indipendenti per chiamata" in model_block
-            assert "mantenendo insieme i candidati collegati" in model_block
-            assert (
-                "esclusi dalle chiamate successive i movimenti già esaminati"
-                in model_block
-            )
-            assert (
-                "Un gruppo troppo grande resta segnalato senza bloccare gli altri"
-                in model_block
-            )
-            assert "non modifica gli abbinamenti deterministici" in model_block
-            assert (
-                "l’intero insieme rientra in un unico pacchetto limitato"
-                not in model_block
-            )
+            assert "tutte le scritture contabili residue" in model_block
+            assert "un massimo di 25 movimenti" in model_block
+            assert "conservando il contesto delle contropartite" in model_block
+            assert "tenendo insieme i gruppi finanziari" in model_block
+            assert "2.400 caratteri del testo originale" in model_block
+            assert "produce il prospetto finale" in model_block
+            assert "i token osservati e gli errori di convalida" in model_block
+            assert "Gli abbinamenti rigorosi non vengono riscritti" in model_block
         else:
             assert "Su Codex" in model_block
             assert "120 righe e 48.000 byte" in model_block

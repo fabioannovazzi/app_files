@@ -163,6 +163,77 @@ def reconciled_case(archive_core, client_case, tmp_path, request):
     return loaded
 
 
+def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rerun(
+    reconciled_case, monkeypatch
+):
+    from tests.plugins.test_journal_bank_reconciliation_plugin import (
+        load_semantic_review,
+    )
+
+    semantic = load_semantic_review()
+    monkeypatch.setitem(sys.modules, "semantic_review", semantic)
+    loaded = reconciled_case
+    output = Path(loaded["calculation_dir"])
+    run_cli(
+        "run_reconciliation.py",
+        loaded,
+        *(item["path"] for item in loaded["context"]["input_bindings"]),
+        "--recipe",
+        output / "suggested_recipe.json",
+    )
+    context = semantic.load_client_engagement_context_file(
+        Path(loaded["run_root"]) / "context.json",
+        expected_workflow_id="journal-bank-reconciliation",
+    )
+
+    def worker(**kwargs):
+        directory = kwargs["output_dir"]
+        packet = json.loads((directory / "packet.json").read_text())
+        response = {
+            "packet_sha256": packet["packet_sha256"],
+            "groups": [
+                {
+                    "bank_ids": packet["focus_ids"],
+                    "journal_ids": [],
+                    "status": "unmatched",
+                    "title": "Commissione bancaria",
+                    "rationale": "Contropartita assente dal giornale fornito.",
+                    "required_documents": ["Giornale completo"],
+                    "evidence": [],
+                }
+            ],
+        }
+        (directory / "luna_response.json").write_text(json.dumps(response))
+        receipt = directory / "luna_launch_receipt.json"
+        receipt.write_text(
+            json.dumps(
+                {
+                    "process": {"duration_ms": 10},
+                    "jsonl_observation": {
+                        "usage": {"input_tokens": 10, "output_tokens": 5}
+                    },
+                }
+            )
+        )
+        return {"launch_receipt": receipt, "response_payload": response}
+
+    monkeypatch.setattr(semantic, "run_isolated_native_worker", worker)
+
+    result = semantic.run_semantic_resolution_pipeline(
+        output,
+        output.parent / "semantic-review",
+        client_engagement=context,
+        worker_selection={"host": "codex"},
+    )
+
+    assert result["exhaustive"] is True
+    assert result["summary"]["bank_row_count"] == 3
+    assert result["summary"]["journal_row_count"] == 2
+    assert result["summary"]["strict_match_count"] == 2
+    assert result["summary"]["bank_rows_requiring_documents"] == 1
+    assert result["workbook"].is_file()
+
+
 def test_calculation_audit_and_status_have_complete_input_lineage(reconciled_case):
     from archive_reporting import read_artifact, snapshot_run
 
@@ -440,7 +511,7 @@ def run_worker_case(
     )
 
     if run_pipeline:
-        result = semantic.run_semantic_resolution_pipeline(
+        result = semantic.run_row_triage_pipeline(
             output, worker_output, client_engagement=context
         )
     else:
