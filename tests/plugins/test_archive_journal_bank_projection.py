@@ -167,9 +167,11 @@ def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rer
     reconciled_case, monkeypatch
 ):
     from tests.plugins.test_journal_bank_reconciliation_plugin import (
+        load_core,
         load_semantic_review,
     )
 
+    load_core()
     semantic = load_semantic_review()
     monkeypatch.setitem(sys.modules, "semantic_review", semantic)
     loaded = reconciled_case
