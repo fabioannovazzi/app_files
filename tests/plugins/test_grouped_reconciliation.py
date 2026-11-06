@@ -205,6 +205,7 @@ def _environment(
     journal: list[dict] | None = None,
     reject_first: bool = False,
     denied: bool = False,
+    protocol_first: bool = False,
 ) -> tuple[Path, Path, list[dict]]:
     reconciliation = tmp_path / "reconciliation"
     output = tmp_path / "semantic-review"
@@ -236,6 +237,9 @@ def _environment(
     (reconciliation / "run_intake.json").write_text("{}")
     calls = []
 
+    class FormatError(ValueError):
+        pass
+
     def worker(**kwargs):
         if denied:
             raise OSError("host denied execution")
@@ -246,6 +250,27 @@ def _environment(
             for record in [*p["bank_records"], *p["journal_records"]]
         ]
         calls.append(p)
+        if protocol_first and len(calls) == 1:
+            events = b"rejected multi-message turn"
+            stderr = b"worker banner"
+            (directory / "luna_process_events.jsonl").write_bytes(events)
+            (directory / "luna_process_stderr.log").write_bytes(stderr)
+            content = {
+                "packet_sha256": p["packet_sha256"],
+                "process": {
+                    "duration_ms": 50,
+                    "events_sha256": hashlib.sha256(events).hexdigest(),
+                    "stderr_sha256": hashlib.sha256(stderr).hexdigest(),
+                },
+                "jsonl_observation": {"usage": {"input_tokens": 7, "output_tokens": 3}},
+            }
+            path = directory / "luna_process_receipt.json"
+            path.write_text(
+                json.dumps({**content, "content_sha256": grouped._digest(content)})
+            )
+            exc = FormatError("Worker emitted multiple completed messages")
+            exc.process_receipt = path
+            raise exc
         if p["journal_records"]:
             groups = [
                 decision(["b1"], ["j1", "j2"]),
@@ -305,6 +330,10 @@ def _environment(
             _artifact_roots_from_intake=lambda *args, **kwargs: {},
             discover_worker_selection=lambda **kwargs: {"host": "codex"},
             run_isolated_native_worker=worker,
+            WorkerResponseFormatError=FormatError,
+            PROCESS_RECEIPT_NAME="luna_process_receipt.json",
+            PROCESS_EVENTS_NAME="luna_process_events.jsonl",
+            PROCESS_STDERR_NAME="luna_process_stderr.log",
             MAX_PROMPT_BYTES=256 * 1024,
         ),
     )
@@ -640,3 +669,45 @@ def test_resume_preserves_user_changed_final_workbook_instead_of_overwriting_it(
 
     assert first["workbook"].read_bytes() == b"user changed workbook"
     assert len(calls) == 1
+
+
+def test_grouped_review_retries_tool_free_protocol_rejection_retains_cost_and_replays_without_call(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    reconciliation, output, calls = _environment(
+        tmp_path, monkeypatch, protocol_first=True
+    )
+
+    result = grouped.complete_grouped_review(reconciliation, output)
+    replayed = grouped.complete_grouped_review(reconciliation, output)
+
+    assert len(calls) == 2
+    assert [a["status"] for a in result["batches"]] == [
+        "rejected_protocol",
+        "validated",
+    ]
+    assert result["model_tokens"] == {
+        "input_tokens": 17,
+        "output_tokens": 7,
+        "total_tokens": 24,
+    }
+    assert replayed["model_tokens"] == result["model_tokens"]
+    assert result["batches"][0]["duration_ms"] == 50
+    assert Path(result["workbook"]).is_file()
+
+
+def test_grouped_review_rejects_changed_retained_protocol_events(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    reconciliation, output, calls = _environment(
+        tmp_path, monkeypatch, protocol_first=True
+    )
+    grouped.complete_grouped_review(reconciliation, output)
+    (output / "grouped-attempts/attempt.0001/luna_process_events.jsonl").write_text(
+        "changed"
+    )
+
+    with pytest.raises(ValueError, match="protocol evidence changed"):
+        grouped.complete_grouped_review(reconciliation, output)
+
+    assert len(calls) == 2

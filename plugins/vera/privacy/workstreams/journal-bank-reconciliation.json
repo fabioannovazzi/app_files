@@ -134,7 +134,7 @@
     },
     {
       "id": "bounded-validated-luna-resolution-funnel",
-      "control": "The currently implemented Codex isolated adapter for residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a runtime-verified deny-default Codex worker (a low-cost model and reasoning effort discovered from the current host model catalog, or an explicit retained selection). It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness. Draft preparation defaults to perfect_match without attributing a decision to the user. The worker still analyses the admitted residuals, but its judgments cannot reach that deterministic-only level, so they remain in the review queue. An explicitly established lower clearance policy remains supported; no professional adoption or signature is implied."
+      "control": "The legacy row-triage diagnostic only (not the normal final grouped review): The currently implemented Codex isolated adapter for residual resolution validates the current deterministic receipts and material-value replay before admitting the complete eligible residual to one size-capped candidate packet for a runtime-verified deny-default Codex worker (a low-cost model and reasoning effort discovered from the current host model catalog, or an explicit retained selection). It never automatically chunks an over-cap residual: no worker launches and every movement remains in the human-review queue. The packet is projected after mapping and omits unmapped raw columns, empty canonical fields, physical source locators, and the derived absolute amount. Raw output is non-authoritative until strict schema, graph, lifecycle, launch-receipt, evidence non-reuse, and evidence checks pass. Accepted decisions update only sibling certainty-funnel, human-review-queue, and operational-review-payload artifacts under the recorded threshold; Luna cannot assign perfect_match or mutate canonical matches, ledgers, receipts, assurance gates, or report readiness. Draft preparation defaults to perfect_match without attributing a decision to the user. The worker still analyses the admitted residuals, but its judgments cannot reach that deterministic-only level, so they remain in the review queue. An explicitly established lower clearance policy remains supported; no professional adoption or signature is implied."
     },
     {
       "id": "component-private-review-transport",
@@ -207,13 +207,17 @@
     {
       "id": "retained-original-implementation-replay",
       "control": "After a review-only release change, verify the original implementation against the exact indexed package selected by the retained Archive run execution binding. Read historical code only as receipt evidence; never import or execute it. Current code owns review save/apply and new implementation receipts. The original envelope, source data and calculated schedules remain unchanged. Missing or changed historical bytes cannot pass replay; no receipt is rewritten to match the new installation. This local code verification adds no model payload or external recipient."
+    },
+    {
+      "id": "retain-rejected-native-process-cost",
+      "control": "The generic Codex launcher retains returned raw event and stderr bytes, their hashes, duration and terminal usage observation before response interpretation. These local diagnostics are unvalidated evidence, never accepted financial decisions. Only a complete otherwise verified tool-free turn with multiple assistant messages is classified as a retryable format rejection; all messages remain rejected. The grouped controller retains that attempt and retries within the same three-call packet budget after source replay. Forbidden tools, changed sources or executables and host denials stop. Missing terminal usage remains unknown. Reopening verifies retained diagnostic hashes and cost metadata. This adds no recipient or model-context fields."
     }
   ],
   "review": {
     "reviewed_at": "2026-11-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3c8e4449634f88ff600dac4f931be1f2f3a1d963fbccb135131e21b5cb06ed67"
+    "source_fingerprint": "bde6413affbd3c370a20389afe5ef4096b628faf677c5cd0fdf021621214febe"
   },
   "governed_repository_paths": [
     "plugins/vera/skills/vera/references/connected-studio-knowledge.md",

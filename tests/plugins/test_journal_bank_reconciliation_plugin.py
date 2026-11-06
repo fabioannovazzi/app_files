@@ -14514,3 +14514,78 @@ def test_teamsystem_partitario_headers_and_page_markers_emit_all_movements(
         "emitted": 2,
         "excluded_reviewed_summary": 1,
     }
+
+
+@pytest.mark.parametrize("forbidden_after_messages", [False, True])
+def test_native_worker_retains_protocol_cost_without_accepting_multiple_messages_or_later_tools(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, forbidden_after_messages: bool
+) -> None:
+    load_core()
+    semantic = load_semantic_review()
+    events = [
+        {"type": "thread.started", "thread_id": "protocol-test"},
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {"id": "preface", "type": "agent_message", "text": "Reviewing"},
+        },
+        {
+            "type": "item.completed",
+            "item": {"id": "answer", "type": "agent_message", "text": "{}"},
+        },
+    ]
+    if forbidden_after_messages:
+        events.append(
+            {
+                "type": "item.completed",
+                "item": {"id": "tool", "type": "command_execution"},
+            }
+        )
+    events.append(
+        {"type": "turn.completed", "usage": {"input_tokens": 120, "output_tokens": 80}}
+    )
+    raw = "".join(json.dumps(event) + "\n" for event in events).encode()
+    _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": raw,
+            "stderr": b"test banner",
+            "duration_ms": 42,
+        },
+    )
+    monkeypatch.setattr(
+        semantic,
+        "resolve_worker_selection",
+        lambda **kwargs: ("gpt-6-luna", "high", {}),
+    )
+    monkeypatch.setattr(
+        semantic, "_worker_banner_attestation", lambda *args, **kwargs: {}
+    )
+    output = tmp_path / "worker-output"
+    output.mkdir()
+
+    with pytest.raises(ValueError) as captured:
+        semantic.run_isolated_native_worker(
+            prompt="Return one JSON object",
+            output_schema={"type": "object"},
+            output_dir=output,
+            workflow_id="journal-bank-reconciliation",
+            packet_sha256="a" * 64,
+        )
+
+    assert isinstance(captured.value, semantic.WorkerResponseFormatError) is (
+        not forbidden_after_messages
+    )
+    receipt = json.loads((output / semantic.PROCESS_RECEIPT_NAME).read_text())
+    assert receipt["jsonl_observation"]["usage"] == {
+        "input_tokens": 120,
+        "output_tokens": 80,
+    }
+    assert receipt["process"]["duration_ms"] == 42
+    assert (output / semantic.PROCESS_EVENTS_NAME).read_bytes() == raw
+    assert not (output / semantic.RESPONSE_NAME).exists()
+    assert not (output / semantic.LAUNCH_RECEIPT_NAME).exists()
+    assert not list(output.glob(".luna-worker-capsule.*"))

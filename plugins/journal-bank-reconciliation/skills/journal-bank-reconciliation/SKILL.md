@@ -361,10 +361,17 @@ sides of a supported relationship. Unconfirmed groups, differences, missing
 counterparts and unresolved questions stay distinct. A named beneficiary alone
 is not a matched ledger row. The strict match files are never rewritten.
 
-Every returned model attempt is retained **before domain validation**, including
-its measured tokens and duration. Invalid domain output can be corrected through
-at most three retained calls with the same sources and controls. A denied host
-operation is not a validation retry. Reopening unchanged validated work replays
+The normal route is identical for every client and every invocation: qualify
+sources, run strict matching, complete grouped review, validate evidence and exact
+sums with full coverage and no reused rows, then export the four-sheet workbook.
+The main chat must not replace an incomplete worker review with manual decisions.
+Every returned Codex process retains its raw events, stderr, observed usage and
+duration before response interpretation. A complete, otherwise verified tool-free
+turn with multiple assistant messages is rejected and can be retried through the
+same stage, never adopted by choosing one message. Invalid domain output can
+also be corrected within the same maximum of three calls per packet. Source,
+executable, isolation and forbidden-tool failures stop; they are not format retries.
+Missing terminal usage remains unknown, never zero. Reopening unchanged validated work replays
 source/response bindings and the retained groups without another model call.
 
 After complete coverage, the same producer writes:
