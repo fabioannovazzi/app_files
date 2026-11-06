@@ -150,7 +150,7 @@ def _table(path: Path):
         with path.open(encoding="utf-8-sig") as handle:
             yield ["document"], ([handle.read()],), "documents", None
         return
-    if suffix in {".txt", ".md", ".jsonl"}:
+    if suffix in {".txt", ".md", ".jsonl", ".log"}:
         with path.open(encoding="utf-8-sig") as handle:
             yield ["text"], ([line.rstrip("\r\n")] for line in handle), "lines", None
         return

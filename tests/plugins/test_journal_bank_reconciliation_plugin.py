@@ -1029,7 +1029,9 @@ def _prepare_two_match_run(tmp_path: Path) -> tuple[Any, Path]:
     return core, output_dir
 
 
-def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Path]:
+def _prepare_ambiguous_semantic_run(
+    tmp_path: Path, *, bank_references: tuple[str, str] = ("BANK-100", "BANK-200")
+) -> tuple[Any, Any, Path, Path]:
     core = load_core()
     semantic_review = load_semantic_review()
     case_dir = tmp_path / "case"
@@ -1054,7 +1056,7 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
                 "80.00",
                 "Payment Alpha",
                 "Alpha",
-                "BANK-100",
+                bank_references[0],
                 "UNMAPPED-BANK-A",
             ],
             [
@@ -1062,7 +1064,7 @@ def _prepare_ambiguous_semantic_run(tmp_path: Path) -> tuple[Any, Any, Path, Pat
                 "80.00",
                 "Payment Beta",
                 "Beta",
-                "BANK-200",
+                bank_references[1],
                 "UNMAPPED-BANK-B",
             ],
         ],
@@ -1516,7 +1518,8 @@ def _call_mcp_server(
     *,
     server_path: Path = MCP_SERVER_PATH,
     env: dict[str, str] | None = None,
-    timeout_seconds: float = 10,
+    # Multi-operation receipt checks exceed ten seconds on a busy local host.
+    timeout_seconds: float = 60,
 ) -> list[dict[str, object]]:
     node = shutil.which("node")
     if node is None:
@@ -14516,6 +14519,61 @@ def test_teamsystem_partitario_headers_and_page_markers_emit_all_movements(
         "emitted": 2,
         "excluded_reviewed_summary": 1,
     }
+
+
+@pytest.mark.parametrize("verdict", ["ambiguous", "no_match", "needs_evidence"])
+def test_semantic_abstention_can_cite_eligible_journal_only_evidence(tmp_path, verdict):
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(
+        tmp_path, bank_references=("", "")
+    )
+    semantic.prepare_semantic_review(reconciliation, output)
+    graph_path = output / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text())
+    response = _valid_semantic_response(graph)
+    for decision in response["component_reviews"][0]["decisions"]:
+        decision.update(
+            verdict=verdict,
+            journal_transaction_id=None,
+            evidence_fields=["reference"],
+            resolution_level="unresolved",
+            identified_counterparty=None,
+            rationale="Ledger references differ, and the bank has no reference to distinguish them.",
+            requested_evidence=["A bank payment reference"],
+        )
+    response_path, events_path = _write_semantic_worker_result(output, response)
+    before = _tree_snapshot(reconciliation)
+
+    result = semantic.validate_semantic_review(
+        reconciliation, output, graph_path, response_path, events_path
+    )
+
+    validated = json.loads(result["validated_suggestions"].read_text())
+    assert validated["component_reviews"] == response["component_reviews"]
+    assert _tree_snapshot(reconciliation) == before
+
+
+def test_semantic_abstention_rejects_field_absent_from_all_candidates(tmp_path):
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    semantic.prepare_semantic_review(reconciliation, output)
+    graph_path = output / "residual_candidate_graph.json"
+    graph = json.loads(graph_path.read_text())
+    response = _valid_semantic_response(graph)
+    decision = response["component_reviews"][0]["decisions"][0]
+    decision.update(
+        verdict="ambiguous",
+        journal_transaction_id=None,
+        evidence_fields=["movement_number"],
+        resolution_level="unresolved",
+        identified_counterparty=None,
+    )
+    response_path, events_path = _write_semantic_worker_result(output, response)
+
+    with pytest.raises(ValueError, match="evidence field is not populated"):
+        semantic.validate_semantic_review(
+            reconciliation, output, graph_path, response_path, events_path
+        )
+
+    assert not (output / "semantic_suggestions_validated.json").exists()
 
 
 def test_rejected_worker_response_retains_usage_without_accepting_suggestions(
