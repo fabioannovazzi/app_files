@@ -14516,3 +14516,52 @@ def test_teamsystem_partitario_headers_and_page_markers_emit_all_movements(
         "emitted": 2,
         "excluded_reviewed_summary": 1,
     }
+
+
+def test_rejected_worker_response_retains_usage_without_accepting_suggestions(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(tmp_path)
+    _mock_semantic_worker_runtime(monkeypatch, semantic, tmp_path, {})
+    usage = {"input_tokens": 120, "output_tokens": 80}
+
+    def rejected_response(*args: Any, **kwargs: Any) -> dict[str, Any]:
+        graph = json.loads((output / "residual_candidate_graph.json").read_text())
+        response = _valid_semantic_response(graph)
+        response["component_reviews"][0]["decisions"][0]["evidence_fields"] = [
+            "movement_number"
+        ]
+        events = [
+            {"type": "thread.started", "thread_id": "rejected_worker_test"},
+            {"type": "turn.started"},
+            {
+                "type": "item.completed",
+                "item": {
+                    "id": "answer",
+                    "type": "agent_message",
+                    "text": json.dumps(response),
+                },
+            },
+            {"type": "turn.completed", "usage": usage},
+        ]
+        return {
+            "return_code": 0,
+            "stdout": "".join(json.dumps(event) + "\n" for event in events).encode(),
+            "stderr": b"",
+            "duration_ms": 42,
+        }
+
+    monkeypatch.setattr(semantic, "_run_captured_process", rejected_response)
+    original = _tree_snapshot(reconciliation)
+
+    with pytest.raises(ValueError, match="Worker evidence field is not populated"):
+        semantic.run_semantic_resolution_pipeline(reconciliation, output)
+
+    receipt = json.loads((output / "luna_launch_receipt.json").read_text())
+    assert receipt["jsonl_observation"]["usage"] == usage
+    assert receipt["process"]["duration_ms"] == 42
+    assert (output / "luna_response.json").is_file()
+    assert (output / "luna_events.jsonl").is_file()
+    assert not (output / semantic.VALIDATED_SUGGESTIONS_NAME).exists()
+    assert not (output / semantic.WORKER_RUN_NAME).exists()
+    assert _tree_snapshot(reconciliation) == original
