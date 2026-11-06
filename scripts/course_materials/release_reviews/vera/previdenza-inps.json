@@ -12,6 +12,21 @@
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
+  "blocked_course_repair_review_20261106": {
+    "authored_inputs_changed": false,
+    "baseline_commit": "c918bee5f97c39691fa6fc355671c8eb915364f3",
+    "changed_fields": [
+      "sources"
+    ],
+    "current_course_sha256": "c7c698309e8e6c456f17df355c100c6ccf1db8e5b1ae0657f0d8db57a94d9f36",
+    "lesson_text_unchanged": true,
+    "limits": "Retain historical named editorial and output judgments; this does not manufacture new learner, voice, native-panel, legal, professional or installed-host acceptance.",
+    "previous_reviewed_course_sha256": "45140077c9f5d6536f9c10bb328e4279be8fd5dfc4027b9913cf701c2e1bce43",
+    "reviewed_at": "2026-11-06T15:54:58.014745+00:00",
+    "reviewer": "Codex /root - bounded source and authored-input review",
+    "source_review": "Hidden-directory exclusion is now relative to the explicitly selected input root. Hidden descendants remain excluded. No document classification, portal acquisition, legal claim or transport behavior changed. Regression reproduced empty inventory before repair and reads selected evidence after it.",
+    "validation": "Current source regressions passed. Fresh final-head teaching CI must bind the complete localized demo/practice matrix to this exact digest."
+  },
   "browser_preview_refresh": {
     "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
     "limits": "Existing artifact hashes remain historical evidence. No new professional approval, live learner completion, installed-version acceptance or validation of every browser host is claimed.",

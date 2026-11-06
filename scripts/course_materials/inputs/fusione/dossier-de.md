@@ -2,6 +2,8 @@
 
 Vollständig fiktives Material. Demonstration: Alpha übernimmt die unabhängige Beta; vorgegebene Eigenkapitalwerte 600.000 und 400.000 EUR. Übung: Alpha übernimmt die unmittelbar zu 100 % gehaltene Beta; Beteiligungsbuchwert 480.000 EUR, Beta-Bucheigenkapital 300.000 EUR.
 
+Geplantes Datum des fiktiven Vorgangs: 1. Dezember 2026 im JSON-Feld planned_date. Es unterscheidet sich vom Abschlussstichtag (30. September 2026) und belegt weder die Durchführung noch eine bestätigte gesetzliche Frist.
+
 Zwei italienische OIC-Gesellschaften, gleichartige gewöhnliche Rechte, keine Barabfindung. Ausgeschlossen: 90 %, umgekehrte Verschmelzung, Schwestergesellschaften, MLBO, IFRS, grenzüberschreitende Fälle, Krise und Neugründung. Keine professionelle Validierung an einem echten Mandanten.
 
 dossier-de.md und ordinary.json für die Demonstration öffnen; wholly-owned.json für die Übung, update.json erst beim Änderungsschritt. JSON trennt Alpha/Beta-Fakten, Salden, Anteilseigner, Steuerwerte und Kalenderannahmen. Kein Ergebnis und keine Bestätigung ist vorab genehmigt.

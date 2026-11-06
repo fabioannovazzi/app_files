@@ -13,6 +13,19 @@ from treasury_core import money, validate_record
 
 __all__ = ["render_html", "render_markdown", "write_artifacts"]
 
+
+def _events_by_date(record: dict[str, Any]) -> list[dict[str, Any]]:
+    """Present dated flows chronologically, leaving undated flows last."""
+    return sorted(
+        record["events"],
+        key=lambda row: (
+            row["expected_date"] is None,
+            row["expected_date"] or "",
+            row["event_id"],
+        ),
+    )
+
+
 STATUS_LABELS = {
     "needs_review": "Richiede revisione",
     "draft_for_review": "Bozza da rivedere",
@@ -137,7 +150,7 @@ def render_markdown(record: dict[str, Any]) -> str:
             f"{display(week['closing_cash'])} | {display(week['minimum_daily_cash'])} |"
         )
     lines.extend(["", "## Incassi e pagamenti attesi", ""])
-    for event in record["events"]:
+    for event in _events_by_date(record):
         lines.append(
             f"- {event['event_id']} · {event['description']}: {display(event['cash_amount'])} · {event['expected_date'] or 'data da definire'}. Base: {event['basis']}"
         )
@@ -178,7 +191,7 @@ def render_html(record: dict[str, Any]) -> str:
         summary = "<p class='notice'>Previsione incompleta: definire le date attese prima di utilizzare i saldi.</p>"
     rows = "".join(
         f"<tr><td>{escape(row['description'])}<br><small>{escape(row['event_id'])}</small></td><td>{escape(row['expected_date'] or 'Da definire')}</td><td>{display(row['cash_amount'])}</td><td>{escape(row['basis'])}</td></tr>"
-        for row in record["events"]
+        for row in _events_by_date(record)
     )
     weeks = "".join(
         f"<tr><td>{escape(week['week_start'])}</td>"
@@ -292,7 +305,7 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
             ["week_start", "net_cash", "closing_cash", "minimum_daily_cash"],
         ),
         "Flussi": (
-            record["events"],
+            _events_by_date(record),
             [
                 "event_id",
                 "description",

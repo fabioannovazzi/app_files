@@ -2,6 +2,8 @@
 
 Entirely fictional material. Demo: Alpha absorbs independent Beta, with supplied equity values EUR 600,000 and 400,000. Practice: Alpha absorbs directly wholly owned Beta, with investment carrying value EUR 480,000 and Beta book equity EUR 300,000.
 
+The fictional operation is planned for 1 December 2026, in the JSON planned_date field. This differs from the balance-sheet date (30 September 2026): it is not evidence of execution or an approved legal deadline.
+
 Two Italian OIC companies, ordinary homogeneous rights and no cash adjustment. Outside this course: 90%, reverse, sister-company, MLBO, IFRS, cross-border, crisis and new-company mergers. This is not professional validation on a real client.
 
 Open dossier-en.md and ordinary.json for the demo; wholly-owned.json for practice and update.json only at the change step. The JSON files separate Alpha/Beta facts, balances, shareholders, tax values and calendar hypotheses. No result or confirmation is pre-approved.

@@ -2,6 +2,8 @@
 
 Materiale interamente sintetico. Dimostrazione: Alpha incorpora Beta indipendente, con valori economici forniti di EUR 600.000 e 400.000. Pratica: Alpha incorpora Beta detenuta direttamente al 100%, con partecipazione contabile di EUR 480.000 e patrimonio netto di Beta di EUR 300.000.
 
+Data prevista dell’operazione fittizia: 1 dicembre 2026, nel campo planned_date dei JSON. È distinta dalla data delle situazioni contabili (30 settembre 2026): non è una prova di esecuzione né una scadenza legale approvata.
+
 Due società italiane OIC, diritti ordinari omogenei, nessun conguaglio. Fuori corso: 90%, inversa, sorelle, MLBO, IFRS, transfrontaliera, crisi e nuova società. Non è una validazione professionale su un cliente reale.
 
 Apri dossier-it.md e ordinary.json per la dimostrazione; wholly-owned.json per la pratica e update.json solo nella fase di variazione. I due JSON separano i fatti Alpha/Beta, le situazioni contabili, i soci, i valori fiscali e le ipotesi del calendario. Nessun risultato o conferma è già approvato.
