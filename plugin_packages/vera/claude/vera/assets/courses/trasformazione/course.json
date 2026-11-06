@@ -125,7 +125,7 @@
     },
     {
       "path": "scripts/notarized_run_receipt.py",
-      "sha256": "2717683cee798a899ea116a77188b63cf4e4e9f40cb4c4d3a278a2b1274c36c3"
+      "sha256": "dd2c59d516e10197e5050bc4f8f29898bc370aa5d5a79f03d978bf703c27dd8d"
     },
     {
       "path": "scripts/operational_incidents.py",
@@ -570,5 +570,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ca2dce14b6f3d162ad9d7070406f3fee74003efa8915f7dc0bfdea70c497daad"
+  "canonical_course_sha256": "1d2b8c8ad2818409cf899015dd966c2ce7f51fa62e2403f89b08907aea60c191"
 }
