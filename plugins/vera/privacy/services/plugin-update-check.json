@@ -2,22 +2,22 @@
   "display_name": "Plugin update check",
   "external_boundaries": [
     {
-      "id": "automatic-version-check",
-      "kind": "hosted_service",
-      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
-      "purpose": "Check whether a newer published Vera version is available",
-      "content": "An HTTP GET with ordinary connection metadata and a generic update-check User-Agent. No client, case, prompt, plugin version, or locally stored file content is placed in the URL or request body.",
-      "retention": "When Codex supplies a plugin-data directory, Vera stores the downloaded public manifest and check time locally and reuses them for up to 24 hours. Without that directory, the hook performs a new check at each startup or resume. Any Mparanza access-log retention is a hosted-service setting outside the plugin's control.",
       "activation": "automatic_session_start",
-      "optional": false,
-      "requires_confirmation": false,
-      "runtime_profiles": [
-        "openai-codex"
-      ],
+      "content": "An HTTP GET with ordinary connection metadata and a generic update-check User-Agent. No client, case, prompt, plugin version, or locally stored file content is placed in the URL or request body.",
       "controls": [
         "The trusted SessionStart hook starts from one fixed HTTPS manifest URL and uses a three-second timeout; a 24-hour local cache is used only when Codex supplies a plugin-data directory.",
         "The request has no query string or request body and is not built from case or conversation content.",
         "The local startup wrapper checks the public version independently of optional onboarding status, emits one JSON response with package identity and a visible update notice, and does not suppress stale-version notices in later sessions. A version-only skill fallback can make the same public GET without CR polling. No tutorial/profile/lesson field, installed version or local path is sent. CR polling remains suppressed for incomplete, inaccessible or active tutorials."
+      ],
+      "destination": "Mparanza's fixed HTTPS plugin-version manifest",
+      "id": "automatic-version-check",
+      "kind": "hosted_service",
+      "optional": false,
+      "purpose": "Check whether a newer published Vera version is available",
+      "requires_confirmation": false,
+      "retention": "When Codex supplies a plugin-data directory, Vera stores the downloaded public manifest and check time locally and reuses them for up to 24 hours. Without that directory, the hook performs a new check at each startup or resume. Any Mparanza access-log retention is a hosted-service setting outside the plugin's control.",
+      "runtime_profiles": [
+        "openai-codex"
       ]
     }
   ],
