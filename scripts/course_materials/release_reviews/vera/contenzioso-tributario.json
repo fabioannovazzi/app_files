@@ -44,7 +44,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "f31e62bd51dc572c62b360c4c2a856a6bbf166b77fe9b57c7df9365e13b0342f",
+  "course_sha256": "261225f66273cb4b0ea3a3bea7bd66fda97958af9378230f94788081abcf2e7e",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "8d10440b801057c790edf7335d82c8cb0200ee076fa0afaf2ab825acc3b9c3ce",
@@ -570,5 +570,19 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "f31e62bd51dc572c62b360c4c2a856a6bbf166b77fe9b57c7df9365e13b0342f",
+    "reviewed_baseline_course_sha256": "e19e710afffef42a4514c5df4588b925b8fe4b35603201b53dbfaae8e37e3bd3",
+    "current_course_sha256": "261225f66273cb4b0ea3a3bea7bd66fda97958af9378230f94788081abcf2e7e",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
   }
 }

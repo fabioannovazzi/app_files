@@ -134,7 +134,7 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
-  "course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+  "course_sha256": "190f84ffe895f482dcc07b37a56e101460dfe6e482a8f28caae71213a3cb84c0",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
@@ -977,5 +977,19 @@
     "scope": "Reviewed the preceding main change: exact TeamSystem printed-header aliases and pagination-marker handling in journal_bank_core.py. The entire authored course object outside sources matches its previously bound reviewed commit.",
     "native_evidence": "GitHub Actions 42018198591 job 127219008965: native execution stage completed and produced teaching-native.xml bound to these exact course hashes; the subsequent editorial identity check failed. The same retained JUnit is verified locally after this bounded review.",
     "limits": "Existing editorial and artifact judgments are retained as historical reviews of unchanged materials. No new learner, human editorial, installed-host or professional approval is asserted."
+  },
+  "reconciliation_archive_source_review_20261106": {
+    "reviewer": "Codex /root",
+    "reviewed_at": "2026-11-06",
+    "previous_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+    "reviewed_baseline_course_sha256": "321a14940c890c37886f76b1acc817c152cc22d542f45b257c82948d3605b120",
+    "current_course_sha256": "190f84ffe895f482dcc07b37a56e101460dfe6e482a8f28caae71213a3cb84c0",
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "fresh_matching_junit_required": true,
+    "installed_host_acceptance": false
   }
 }
