@@ -1771,21 +1771,30 @@ raise SystemExit(launcher.main(['--module','check-entries','run','helper.py']))
 
 @pytest.mark.parametrize("verified_code", [0, 1])
 def test_uv_alias_failure_uses_only_a_verified_installed_interpreter(
-    monkeypatch, verified_code
+    tmp_path: Path, monkeypatch, verified_code
 ):
     from types import SimpleNamespace
 
     runtime = load_runtime()
+    root = tmp_path / "vera"
+    make_packaged_component(root)
     monkeypatch.setattr(
         runtime,
         "sys",
         SimpleNamespace(
-            version_info=(3, 14), implementation=SimpleNamespace(name="cpython")
+            version_info=(3, 14),
+            platform=sys.platform,
+            implementation=sys.implementation,
+            executable=sys.executable,
+            version=sys.version,
         ),
     )
     monkeypatch.setattr(
-        runtime.shutil, "which", lambda name: "/runtime/uv" if name == "uv" else None
+        runtime.shutil,
+        "which",
+        lambda name: "/runtime/uv" if name == "uv" else None,
     )
+    creations = []
 
     def runner(command, **kwargs):
         if command[1:3] == ["python", "install"]:
@@ -1797,12 +1806,20 @@ def test_uv_alias_failure_uses_only_a_verified_installed_interpreter(
             )
         if command[1:3] == ["python", "find"]:
             return subprocess.CompletedProcess(command, 0, "/runtime/python3.12\n", "")
-        return subprocess.CompletedProcess(
-            command, verified_code, "/runtime/python3.12\n", ""
-        )
+        if "-c" in command:
+            return subprocess.CompletedProcess(
+                command, verified_code, "/runtime/python3.12\n", ""
+            )
+        if command[1:3] == ["-m", "venv"]:
+            creations.append(command[0])
+            create_fake_virtualenv(Path(command[-1]))
+        return subprocess.CompletedProcess(command, 0, "", "")
 
+    ready, _, detail = runtime.ensure_runtime(
+        root, "studio-archive", data_dir=tmp_path / "data", runner=runner
+    )
+
+    assert ready is (verified_code == 0)
+    assert creations == ([] if verified_code else ["/runtime/python3.12"])
     if verified_code:
-        with pytest.raises(ValueError, match="minor version link"):
-            runtime._python312_executable(runner)
-    else:
-        assert runtime._python312_executable(runner) == "/runtime/python3.12"
+        assert "minor version link" in detail
