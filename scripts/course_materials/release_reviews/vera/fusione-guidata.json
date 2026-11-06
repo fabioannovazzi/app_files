@@ -45,6 +45,23 @@
     "source_review": "Both authored JSON inputs now provide planned_date2026-12-01, previously hidden in the synthetic demo constructor. Five localized source dossiers explicitly distinguish it from2026-09-30 accounting date and from executed acts/legal deadlines. Native replay consumes the supplied date, preserving the existing technical reference case. No professional confirmation manufactured.",
     "validation": "Current source regressions passed. Fresh final-head teaching CI must bind the complete localized demo/practice matrix to this exact digest."
   },
+  "combined_course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "vendor/modules/courseware/execution.py"
+    ],
+    "current_course_sha256": "9a519274f96f94d3865c986a3f960efb9767a6827c878361c61e21b519252c32",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "d0ce463b65410e5e56a4bec5c93374b99a6d5206",
+    "limits": "Historical editorial judgments and artifact hashes remain unchanged. Fusione retains the separately reviewed explicit fictional date from the blocked-course repair. This record is a source compatibility review, not new learner, installed-host or professional acceptance.",
+    "previous_course_sha256": "b1bf488524d2f7d68ef078a17d1b8905b65287fdaa99a5bc1a60ec31f12fdb3a",
+    "reviewed_at": "2026-11-06T16:46:12.946011+00:00",
+    "reviewer": "Codex /root - combined course repair source compatibility",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
   "committed_shared_contract_integration_20261008": {
     "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
     "course_sha256": "d83272d90274f9a1c103281fb6bfcd72dfc54e60f27230d3c230dac7b6dceba7",
@@ -113,7 +130,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "b1bf488524d2f7d68ef078a17d1b8905b65287fdaa99a5bc1a60ec31f12fdb3a",
+  "course_sha256": "9a519274f96f94d3865c986a3f960efb9767a6827c878361c61e21b519252c32",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",

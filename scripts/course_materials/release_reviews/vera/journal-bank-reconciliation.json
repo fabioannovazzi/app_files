@@ -74,6 +74,23 @@
     ],
     "source_review": "Reviewed the sole shared-contract change: adding composizione-negoziata to the recognized managed workflow IDs. The Studio Archive lesson also binds the additive sealed snapshot history/read/append methods under the existing engagement lock. An AST comparison confirms that every pre-existing ledger function and class is unchanged. No existing lesson behavior or external recipient is added by these changes."
   },
+  "combined_course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/journal-bank-reconciliation/scripts/semantic_review.py"
+    ],
+    "current_course_sha256": "ef7f439e1f760cc8f9f31f706ef1a944078d3de8bd0cba65223581e9078efa7e",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "limits": "Historical editorial judgments and artifact hashes remain unchanged. Fusione retains the separately reviewed explicit fictional date from the blocked-course repair. This record is a source compatibility review, not new learner, installed-host or professional acceptance.",
+    "previous_course_sha256": "15754543283bf9d79ff28e060dfa06147f807600d6e19e2fac11a3ad0318fbe2",
+    "reviewed_at": "2026-11-06T16:46:13.040698+00:00",
+    "reviewer": "Codex /root - combined course repair source compatibility",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
   "combined_geneva_release_refresh": {
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
@@ -167,7 +184,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "15754543283bf9d79ff28e060dfa06147f807600d6e19e2fac11a3ad0318fbe2",
+  "course_sha256": "ef7f439e1f760cc8f9f31f706ef1a944078d3de8bd0cba65223581e9078efa7e",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",

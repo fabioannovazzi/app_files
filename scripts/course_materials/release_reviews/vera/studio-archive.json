@@ -189,6 +189,23 @@
     "limits": "Other languages, native voice hardware, physical window layout and real learner understanding unverified; no install/deploy/publish.",
     "scope": "Italian Codex native local search, full raw source-open evidence, answer, actual clickable input sources, same-index practice update, save/reopen."
   },
+  "combined_course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/studio-archive/scripts/archive_core.py"
+    ],
+    "current_course_sha256": "831c30a9f0c72a21151c48d62635a4586b823f68c2f321590020cd486a5ff46a",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "limits": "Historical editorial judgments and artifact hashes remain unchanged. Fusione retains the separately reviewed explicit fictional date from the blocked-course repair. This record is a source compatibility review, not new learner, installed-host or professional acceptance.",
+    "previous_course_sha256": "f6e6148f07613b4097e97ca243d2fc2809883c831fa7b015b89af1fa9c80216a",
+    "reviewed_at": "2026-11-06T16:46:13.336211+00:00",
+    "reviewer": "Codex /root - combined course repair source compatibility",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
   "combined_geneva_release_refresh": {
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
@@ -313,7 +330,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "f6e6148f07613b4097e97ca243d2fc2809883c831fa7b015b89af1fa9c80216a",
+  "course_sha256": "831c30a9f0c72a21151c48d62635a4586b823f68c2f321590020cd486a5ff46a",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",

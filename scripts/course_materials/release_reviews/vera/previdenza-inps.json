@@ -113,6 +113,23 @@
     "verified_at": "2026-09-27T18:01:22.686635+00:00",
     "workflow": "previdenza-inps"
   },
+  "combined_course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/previdenza-inps/scripts/case_core.py"
+    ],
+    "current_course_sha256": "6625063b0bf1c3b138b5524ffe0f15822264eea00325131cbdb64c5165180372",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "limits": "Historical editorial judgments and artifact hashes remain unchanged. Fusione retains the separately reviewed explicit fictional date from the blocked-course repair. This record is a source compatibility review, not new learner, installed-host or professional acceptance.",
+    "previous_course_sha256": "9ff9d1746ec21a696c2c72ed4f7d52db7f9c6de8f3684228299c5e7bf641f52e",
+    "reviewed_at": "2026-11-06T16:46:13.246056+00:00",
+    "reviewer": "Codex /root - combined course repair source compatibility",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
   "combined_geneva_release_refresh": {
     "content_review": "The complete authored course object is unchanged from the verified course QA commit when source bindings are excluded. Retains both the prior Italian Codex QA record and the Geneva source-bound review from main. No new lesson, language-journey acceptance or professional approval is asserted.",
     "course_qa_commit": "1b9883c484ad7c877bd304914c53c277f7a71ab2",
@@ -191,7 +208,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "9ff9d1746ec21a696c2c72ed4f7d52db7f9c6de8f3684228299c5e7bf641f52e",
+  "course_sha256": "6625063b0bf1c3b138b5524ffe0f15822264eea00325131cbdb64c5165180372",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "f6771f12a9d271ce09c95fc1c20f47a21a3e81f0c04cc7ca56a3fb8f3a1ca33b",

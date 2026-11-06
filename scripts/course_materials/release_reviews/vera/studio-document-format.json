@@ -112,6 +112,23 @@
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
   },
+  "combined_course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "modules/studio-archive/scripts/archive_core.py"
+    ],
+    "current_course_sha256": "8ed27ae42510620cc9deb77bbcf7596bbfc83f73f8572e8a7a9c9c3aa4a3a105",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "limits": "Historical editorial judgments and artifact hashes remain unchanged. Fusione retains the separately reviewed explicit fictional date from the blocked-course repair. This record is a source compatibility review, not new learner, installed-host or professional acceptance.",
+    "previous_course_sha256": "47d9a17bca9b851982449cb9cac8409f5fa78c2d693905bd2598e47ff4b31bd9",
+    "reviewed_at": "2026-11-06T16:46:13.405922+00:00",
+    "reviewer": "Codex /root - combined course repair source compatibility",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
   "combined_windows_archive_integration_20261018": {
     "changed_fields": [
       "sources"
@@ -236,7 +253,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "47d9a17bca9b851982449cb9cac8409f5fa78c2d693905bd2598e47ff4b31bd9",
+  "course_sha256": "8ed27ae42510620cc9deb77bbcf7596bbfc83f73f8572e8a7a9c9c3aa4a3a105",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",

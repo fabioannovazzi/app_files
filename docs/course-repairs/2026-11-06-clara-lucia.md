@@ -28,3 +28,11 @@ The shared teaching evidence limit now accepts up to 200 output references (prev
 ## Source-binding review
 
 Compared all 58 complete compiled courses with the exact historical SHA-256 held by their editorial records: only `sources` differ. Existing editorial and output judgments remain historical. Reviewed the shared teaching output bound and this repair’s rendering, validator and transcript changes. Also inspected already-integrated source changes: producer-native assetti digest; missing guarantee amounts remain unavailable; bounded Windows model-catalog pipe reader; declared legacy Excel reader; and cumulative whole-component reconciliation batching with denial/failure stops. No lesson text, fixture, checkpoint or execution contract changed. Fresh localized native execution against the final course digests remains required in CI.
+
+## Combined repair candidate
+
+The final candidate includes the committed changes from PRs 959 (portable tutorial run binding), 960 (variance charts and truthful report wording), 961 (managed pip environment and retained rejected-worker evidence) and 963 (INPS, Bilancio, explicit fictional Fusione date and chronological treasury output). Canonical versions remain Vera 0.1.583, Clara 0.1.387 and Lucia 0.1.213. Generated release conflicts are regenerated; authored data-path explanations and historical editorial additions from both sides are preserved.
+
+The additional reproduced Vouching handoff repair passes the exact sample run ID into portable-run resolution, then retains and checkpoints the new checks run. Its regression removes ordinary archive configuration and verifies both handoff and new-run lookup. It does not replace archive selection. Managed-runtime recovery removes ambient pip redirection/dry-run settings while preserving proxy and CA settings. Rejected semantic responses retain execution evidence but still pass through response validation before any suggestion is accepted.
+
+Integrated course source comparison uses each review’s exact historical digest. The Fusione review keeps its separately authored date change; the final comparison then differs only in source inventories. Fresh combined native CI and package checks remain mandatory.
