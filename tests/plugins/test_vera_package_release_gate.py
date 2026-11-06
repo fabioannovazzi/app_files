@@ -188,7 +188,9 @@ def test_builder_rejects_stale_index_before_replacing_any_release(
             monkeypatch.setattr(builder, "expected_zip_entries", lambda _: entries)
             build = lambda: builder.build_package(package)
         else:
-            monkeypatch.setattr(builder, "chatgpt_upload_entries", lambda _: entries)
+            monkeypatch.setattr(
+                builder, "chatgpt_upload_entries", lambda _, *, edition="full": entries
+            )
             build = lambda: builder.build_chatgpt_upload(package, output)
 
     with pytest.raises(ValueError, match="Installation content mismatch"):
