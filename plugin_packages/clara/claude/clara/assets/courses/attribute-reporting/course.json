@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
-      "sha256": "40c3fbab3b6fc60f72d4242c780b6bd223b2da303b80cf3549e1408c659c4c65"
+      "sha256": "c03cb78b25c26d7a5d871dc30de3aa997cd860ec877624f81a078e2b7f103ee5"
     },
     {
       "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",
@@ -534,5 +534,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "95ce44a839de1c9c4f9398a6e139ac267c50293eef3c0868c312003925a9861c"
+  "canonical_course_sha256": "87408aeef985beef126ea6a4379733a1cc56e19dc8b8b8dcae3a27f0d2b87696"
 }

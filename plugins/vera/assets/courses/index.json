@@ -207,7 +207,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "fec21bd51b8c5401a450307916555dd43aa68abb3d64ba67f66de6fc21e5d609",
+      "sha256": "899e400ae689c8a58ae893d449e2ad08b6845722d3db7408f560dd808ccef61e",
       "languages": [
         "it",
         "en"
@@ -286,7 +286,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "5a4e870e87bd898f5b2b018c4af789776bb89be38eacb02520b7fc49578de5e3",
+      "sha256": "072fa4dcb48ce147ad89bf1ae45a786274ab6e9763beff612068e7260ed88376",
       "languages": [
         "it",
         "en",
@@ -666,7 +666,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "1348634eb6eb4bc8d7e8a6e35fcbce14d8fceb7d330083d317b97a8bf626d7d7",
+      "sha256": "7a9536255a004a96fb2f10098ee0c91f823737130e999372afe58b9364e700b7",
       "languages": [
         "it",
         "en"
@@ -881,7 +881,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "3c39309f7acaaf9aa4d1d1b28732567a382c65ce59ca17c9b859561d5cb74ada",
+      "sha256": "86d22ff38112d08f59933b85641cef2f191cb2b6c871dcf3eb840ea3c60e2b60",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "4b691dc0535c2eef0d2c3f0c7b88c20f7c2ff1102c3686d23be3c4040677f6a4",
+      "sha256": "21b62f6600572e62112f9901352066f7e043270f28ec24eeecc0a5d09a73440b",
       "languages": [
         "it",
         "en",

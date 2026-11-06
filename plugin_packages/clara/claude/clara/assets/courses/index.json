@@ -62,7 +62,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "618624a80e4c7b6664909f609aeda3c35e40740a2defb505bee41668393bba0a",
+      "sha256": "1595d5c9e0ceb09c602adfbf7b92fd8172ffa996b26938a45875ea87dea9067a",
       "languages": [
         "it",
         "en",
@@ -87,11 +87,11 @@
         "de": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
         "es": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles."
       },
-      "source_sha256": "e1ba84ccbbbb8deafd2abee3784237af2dd4cf3691d909e394302611d8012139"
+      "source_sha256": "ae58e63758faa37066875bd30db66fc2afedfb272020f3619565fb4de4c97889"
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "3a14dae16485223793bfcbe5ab3fc1736bdaf696e94b412d24c7faab4d8c44fa",
+      "sha256": "9f9cd1a38e459df7031626313cbfeec03a6c716c61f3f9b9a32f28497d09fe7c",
       "languages": [
         "it",
         "en",
@@ -116,11 +116,11 @@
         "de": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
         "es": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado."
       },
-      "source_sha256": "3e59db6b5c8a67e8c794a3d9ade03d5a02b616642514e3525ab1bdf37190b458"
+      "source_sha256": "3c1a9103609ed1da807e9bb7718154e47b4d996ba927549f892479df28f7343a"
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "20d196d877cbe276369f06d8a510502ea920adc006c021bf646d91215e945160",
+      "sha256": "e902b7b39c36fa1355eed484b7a8571392de17178913c1d305ea1d50b87ecef3",
       "languages": [
         "it",
         "en"
@@ -136,11 +136,11 @@
         "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       },
-      "source_sha256": "a223c12d81dd5bc48eb385ba5b95174877ff681905e682f6a1251bca44b07248"
+      "source_sha256": "36e7b323431e97a0488411fac8cc889f8fdeef7bb1b0759a5d3ad7a4d009bd9c"
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "6f2921bec56e023c8ec639c006f27c867cc06e57005e3b6c7a9520cbf95b9989",
+      "sha256": "76132a99bece4f12f25fd355300010eb6c2e6a2103a67dc45f8f7fbbb47a4eab",
       "languages": [
         "it",
         "en",
@@ -165,7 +165,7 @@
         "de": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
         "es": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador."
       },
-      "source_sha256": "cdc32dd95e5813ca070b3aee16e979b242299bdec54bc19f81bf97d0be00283e"
+      "source_sha256": "31b6585b6a51070241823a4a2cd124dd9d9dbdacfda92823aac4e106c91782a4"
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",

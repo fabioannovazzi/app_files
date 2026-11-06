@@ -60,7 +60,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "e1ba84ccbbbb8deafd2abee3784237af2dd4cf3691d909e394302611d8012139",
+      "sha256": "ae58e63758faa37066875bd30db66fc2afedfb272020f3619565fb4de4c97889",
       "languages": [
         "it",
         "en",
@@ -88,7 +88,7 @@
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "3e59db6b5c8a67e8c794a3d9ade03d5a02b616642514e3525ab1bdf37190b458",
+      "sha256": "3c1a9103609ed1da807e9bb7718154e47b4d996ba927549f892479df28f7343a",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "a223c12d81dd5bc48eb385ba5b95174877ff681905e682f6a1251bca44b07248",
+      "sha256": "36e7b323431e97a0488411fac8cc889f8fdeef7bb1b0759a5d3ad7a4d009bd9c",
       "languages": [
         "it",
         "en"
@@ -135,7 +135,7 @@
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "83fbdedcc4b680a7d69789838c0d7addbbf4ee03a8858b543d4d16516251931a",
+      "sha256": "bc046156d8055128809d27001fb065aa3ba6c317c4a42bb117f5e7e467a65f20",
       "languages": [
         "it",
         "en",
@@ -163,7 +163,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "cdc32dd95e5813ca070b3aee16e979b242299bdec54bc19f81bf97d0be00283e",
+      "sha256": "31b6585b6a51070241823a4a2cd124dd9d9dbdacfda92823aac4e106c91782a4",
       "languages": [
         "it",
         "en",
@@ -219,7 +219,7 @@
     },
     "transcribe": {
       "path": "transcribe/course.json",
-      "sha256": "3dec4163d3a93376e486050972508c91b6d14ec53aa6942cd56941c9c95b7126",
+      "sha256": "d81bffc4bfa0141d0aadc20bee88488838362e2426b22a3e89e4f8c485b92287",
       "languages": [
         "it",
         "en",

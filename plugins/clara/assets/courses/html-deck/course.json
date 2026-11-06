@@ -190,7 +190,7 @@
     {
       "path": "skills/html-deck/scripts/build_html_deck.py",
       "repository_path": "plugins/clara/skills/html-deck/scripts/build_html_deck.py",
-      "sha256": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1"
+      "sha256": "705edb3c88cc94d67350045250807f23d5af661549afaf1fbcc9dc5373159bf8"
     },
     {
       "path": "skills/html-deck/scripts/build_layout_gallery.py",

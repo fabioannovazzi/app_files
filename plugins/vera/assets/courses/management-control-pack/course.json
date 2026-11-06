@@ -56,7 +56,7 @@
     {
       "path": "modules/management-control-pack/scripts/budget_presentation.py",
       "repository_path": "plugins/management-control-pack/scripts/budget_presentation.py",
-      "sha256": "643f526d3c6980fcefee72d3919c652da0b1016d6a0c9bfabff6de4b3a713706"
+      "sha256": "f28a72487e3c7e726ffc98ee995309d6446469d07feb04ea42b9eb3761e1378d"
     },
     {
       "path": "modules/management-control-pack/scripts/check_dependencies.py",
@@ -91,7 +91,7 @@
     {
       "path": "modules/management-control-pack/scripts/management_control_core.py",
       "repository_path": "plugins/management-control-pack/scripts/management_control_core.py",
-      "sha256": "a0c1444d87c8503fb698168c77846dcd70ad9e5b2dac4bb5e202e2e00af89867"
+      "sha256": "6014b9222498ea75fdacdbaa4baca0188b7f1faf383e80de588a7ce51df4c088"
     },
     {
       "path": "modules/management-control-pack/scripts/management_delivery.py",

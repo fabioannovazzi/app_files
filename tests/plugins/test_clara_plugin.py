@@ -4494,6 +4494,16 @@ def test_finalize_hosted_transcript_records_local_attribution_and_audio_pointer(
     backup_path = imported.session_dir / "raw_transcript_unattributed.md"
     brief = (case_dir / "case_brief.md").read_text(encoding="utf-8")
 
+    report = json.loads(imported.speaker_attribution_report_path.read_text())
+    assert report["status"] == "attributed"
+    assert report["requires_clara_codex_attribution"] is False
+    assert report["attributed_transcript_path"] == str(
+        attributed_path.relative_to(case_dir)
+    )
+    assert (
+        report["attributed_transcript_sha256"]
+        == hashlib.sha256(attributed_path.read_bytes()).hexdigest()
+    )
     assert result.unattributed_transcript_backup_path == backup_path
     assert backup_path.read_text(encoding="utf-8") == raw_text
     assert transcript["path"] == str(attributed_path.resolve())

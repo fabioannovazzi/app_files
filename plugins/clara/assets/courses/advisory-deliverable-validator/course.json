@@ -219,7 +219,7 @@
     {
       "path": "skills/advisory-deliverable-validator/scripts/advisory_validation.py",
       "repository_path": "plugins/clara/skills/advisory-deliverable-validator/scripts/advisory_validation.py",
-      "sha256": "0dd40590d97c29a5e357cdeb6cd555c2ddace6a960882315f1cbb339c25003ab"
+      "sha256": "d32fc7f1c14710aa0346f549b1814ae6b6b18ce3340dbbe3e5eab20ff34ed1e4"
     },
     {
       "path": "vendor/modules/__init__.py",

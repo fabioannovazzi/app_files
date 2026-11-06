@@ -72,6 +72,10 @@
       "sha256": "4b9f57be78573553a69a5f9343ed7a5eca21994f0911d85c9d595c87aea011e5"
     },
     {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/preview-copy.json",
+      "sha256": "a6c4e5666b9b3609c08cdedb82ea05c1a4e19fcf12c36de6bc5a9a46657e3b03"
+    },
+    {
       "path": "modules/comunicazione-professionale/requirements.txt",
       "sha256": "21d6d3b5742482d9d57790df8cea6e1f00bff4742683b748916f5d1223b472f8"
     },
@@ -201,11 +205,11 @@
     },
     {
       "path": "modules/comunicazione-professionale/scripts/review_document_format.py",
-      "sha256": "7b0a6aff7147e56cc79df968455fbedc6c10e39eef609bccd77494f6a7f4052f"
+      "sha256": "fa44c115741da896855973ed42ca05dce602cb1298e6a5029d8efb547a7b4c35"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/studio_document_format.py",
-      "sha256": "f95ed026ce9d288b6e1a6d1a16606288428f3b126a9dfe284dd1b746d2cca826"
+      "sha256": "cf08e7a82facc65fad04ba2f48436503ca4b82a792698466c5beda7f5df8fc57"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/validate_run.py",
@@ -702,5 +706,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fd587077d6bc1bfbcd5c0aa9f17d5962403043adf5237e7e35badca68ea796f7"
+  "canonical_course_sha256": "f23b342f52fc254ddc0e58fae6d5e81110cc4b72700d71f583f439ee97d71c30"
 }

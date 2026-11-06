@@ -29,6 +29,13 @@ def read(path: Path) -> dict:
 def approve(review: Path) -> None:
     """Approve only this fictional regression proposal after checking previews."""
     manifest = read(review / "preview_manifest.json")
+    payload = read(review / "format_review.json")
+    wording = read(
+        ROOT
+        / "plugins/comunicazione-professionale/assets/studio-document-format/preview-copy.json"
+    )[payload["language"]]
+    assert Document(review / "preview-short.docx").paragraphs[0].text == wording[0]
+    assert "```json" not in (review / "format_review.md").read_text()
     assert len(manifest["outputs"]) == 2
     assert Document(review / "preview-short.docx").paragraphs
     assert Document(review / "preview-long.docx").tables

@@ -29,8 +29,9 @@ def render_cycle(plan: dict[str, Any], paragraph: Callable[[str], str]) -> str:
         ("next_test_ids", "Next test or action"),
         ("reopen_when_ids", "When to revisit"),
     ):
-        parts.append(f"<h3>{tr(heading)}</h3>")
-        parts.extend(paragraph(i) for i in cycle[key])
+        if cycle[key]:
+            parts.append(f"<h3>{tr(heading)}</h3>")
+            parts.extend(paragraph(i) for i in cycle[key])
     revision = plan["planning_cycle"]
     parts.append(
         f'<details class="planning-history"><summary>{tr("Planning history and input changes")}</summary>'

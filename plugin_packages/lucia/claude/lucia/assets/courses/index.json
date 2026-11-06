@@ -33,7 +33,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "1df4900c4c4b1a757e0e5e6cb2dcf0560c49995d965d9ae0b8330fc1f2215230",
+      "sha256": "29528ae15873a7edfcedc58f30ef9f681dfa5fe5c17eff691ddd1cb24593a7f3",
       "languages": [
         "it",
         "en",
@@ -58,7 +58,7 @@
         "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
         "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       },
-      "source_sha256": "a7a2f113bcca408e12d0833840bd46cc01c9d24fb41643cb0ba32a5b92817ec2"
+      "source_sha256": "61a07ba341689f31c371769c34ffd0e7d450e647925d7344f87007e2785ed213"
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
@@ -120,7 +120,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "be0eacf5780fe8fc85aad641b145a307d219e5e98c33dff7b7f11a391b8d98ff",
+      "sha256": "58af34093d7b963d81da3d7eabaa58db8795098b13c2faffd49c7a59db32432e",
       "languages": [
         "it",
         "en",
@@ -145,7 +145,7 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "31c1290d573514d261d9d70c4adb0ae1f202229cc11f550db1f5a76c2250d829"
+      "source_sha256": "fa890e589c6c5d81bba696067f6b3c6931151bef8f19d9bbabeacb1eae17acee"
     }
   }
 }

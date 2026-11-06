@@ -135,7 +135,7 @@
     {
       "path": "scripts/finalize_hosted_transcript.py",
       "repository_path": "plugins/clara/scripts/finalize_hosted_transcript.py",
-      "sha256": "0682cd4747141b678a3348bcc8ea793d2e4f2c9dd54dc7d0844f36a820f57a56"
+      "sha256": "3aa94262c8139745e394c2bf8234292028a085f20220df76dd61558f3eeca0fe"
     },
     {
       "path": "scripts/html_deck_runtime.py",

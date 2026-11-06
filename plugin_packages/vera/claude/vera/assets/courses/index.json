@@ -215,7 +215,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "5ca8fa7f50cb78e29af17f81cdd2c157438fdd8fa69d3674ecbb705495f46947",
+      "sha256": "97a080f94899d22f56cf7c37814816d69059eaefd0b081955f03bae169fd7dbb",
       "languages": [
         "it",
         "en"
@@ -231,7 +231,7 @@
         "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       },
-      "source_sha256": "fec21bd51b8c5401a450307916555dd43aa68abb3d64ba67f66de6fc21e5d609"
+      "source_sha256": "899e400ae689c8a58ae893d449e2ad08b6845722d3db7408f560dd808ccef61e"
     },
     "business-valuation": {
       "path": "business-valuation/course.json",
@@ -298,7 +298,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "f0bd1137e17df9820eb45bc3d81d07c5786d54aabbd15a345c8519381cab0382",
+      "sha256": "538fb783957c0a29f75540ebab99b3e874f07f328b6b21be95a8051ef9070998",
       "languages": [
         "it",
         "en",
@@ -323,7 +323,7 @@
         "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
         "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       },
-      "source_sha256": "5a4e870e87bd898f5b2b018c4af789776bb89be38eacb02520b7fc49578de5e3"
+      "source_sha256": "072fa4dcb48ce147ad89bf1ae45a786274ab6e9763beff612068e7260ed88376"
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
@@ -692,7 +692,7 @@
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "903ed32b98001349541df7461cf1baf31b1dda8c6504d14321380761ec088b3f",
+      "sha256": "58c86ae236f20b02fb205afa692a02323b54399157d381afde80a0774f312938",
       "languages": [
         "it",
         "en"
@@ -708,7 +708,7 @@
         "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
         "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review."
       },
-      "source_sha256": "1348634eb6eb4bc8d7e8a6e35fcbce14d8fceb7d330083d317b97a8bf626d7d7"
+      "source_sha256": "7a9536255a004a96fb2f10098ee0c91f823737130e999372afe58b9364e700b7"
     },
     "new-client": {
       "path": "new-client/course.json",
@@ -915,7 +915,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "dcaf32026a65c7989ae234930290065c9ef07d9b30ab5d616a632a4589b529fe",
+      "sha256": "9c134c29d49e719e9f7ad0a8c3bcd95dc984acc64b0f32a0ad095052717ac42c",
       "languages": [
         "it",
         "en",
@@ -940,7 +940,7 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "3c39309f7acaaf9aa4d1d1b28732567a382c65ce59ca17c9b859561d5cb74ada"
+      "source_sha256": "86d22ff38112d08f59933b85641cef2f191cb2b6c871dcf3eb840ea3c60e2b60"
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
@@ -1060,7 +1060,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "025f8068097ef41224849dc591d76b45a843450b5ea600198095853f8585eb98",
+      "sha256": "4b182676e8307fb333a4a81056aea9b05b3efaa77282bc1b2970774ff8da5183",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "4b691dc0535c2eef0d2c3f0c7b88c20f7c2ff1102c3686d23be3c4040677f6a4"
+      "source_sha256": "21b62f6600572e62112f9901352066f7e043270f28ec24eeecc0a5d09a73440b"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",

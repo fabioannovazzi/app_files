@@ -250,6 +250,14 @@ def test_full_pack_calculates_exact_supported_sections(tmp_path: Path) -> None:
 
     pack = build_management_pack(tables, _reviewed_recipe(inspection))
 
+    assert (
+        "No full-period forecast calculated"
+        in pack["sections"]["budget_variance"]["forecast_basis"]
+    )
+    assert "tax" not in pack["sections"]["monthly_pnl"]["supplied_categories"]
+    assert "Tax (not supplied)" in render_markdown(pack)
+    assert "EBIT (supplied categories)" in render_markdown(pack)
+    assert any("not confirmed zero balances" in item for item in pack["limitations"])
     assert pack["status"] == "ready_for_review"
     assert pack["metrics"]["pnl.total.revenue"]["value"] == "2400"
     assert pack["metrics"]["pnl.total.ebitda"]["value"] == "1000"
@@ -1083,7 +1091,7 @@ def test_budget_missing_month_preserves_monthly_comparison_and_omits_cumulative(
     assert len(pack["sections"]["budget_variance"]["rows"]) == 1
     assert "budget.total.ebitda_variance" not in pack["metrics"]
     assert "budget.forecast.ebitda_variance" not in pack["metrics"]
-    assert "2025-02" in pack["limitations"][0]
+    assert any("2025-02" in limitation for limitation in pack["limitations"])
 
 
 @pytest.mark.parametrize("baseline", [0, -100])

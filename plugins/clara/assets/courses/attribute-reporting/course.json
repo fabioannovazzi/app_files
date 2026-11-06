@@ -45,7 +45,7 @@
     {
       "path": "modules/attribute-reporting/scripts/attribute_reporting.py",
       "repository_path": "plugins/attribute-reporting/scripts/attribute_reporting.py",
-      "sha256": "55f7bcb35ccef716be75b77dcea282dda3ddb582919667485ad3f2693dc592ba"
+      "sha256": "dfb71e185cb1a428081cb4e808b4f1410f8878cf140a1e5525e4241831094ad2"
     },
     {
       "path": "modules/attribute-reporting/scripts/bind_mapping_images.py",

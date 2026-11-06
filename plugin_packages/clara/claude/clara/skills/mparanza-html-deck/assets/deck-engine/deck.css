@@ -81,7 +81,7 @@
       inset: 0;
       z-index: 40;
       pointer-events: none;
-      background: radial-gradient(38cqw 38cqw at var(--mx) var(--my), rgba(255, 255, 255, .11), transparent 70%);
+      background: none;
       mix-blend-mode: soft-light;
     }
 
@@ -99,9 +99,7 @@
         opacity var(--motion-enter) var(--ease-soft),
         transform var(--motion-layout) var(--ease),
         visibility 0s linear var(--motion-layout);
-      background:
-        radial-gradient(42cqw 38cqw at var(--mx) var(--my), rgba(255, 255, 255, .58), transparent 72%),
-        linear-gradient(135deg, var(--paper) 0%, #f8f5ef 58%, var(--paper-2) 100%);
+      background: var(--paper);
       isolation: isolate;
     }
 
@@ -120,10 +118,7 @@
 
     .slide[data-tone="dark"] {
       color: #f8f4ed;
-      background:
-        radial-gradient(50cqw 40cqw at var(--mx) var(--my), rgba(163, 41, 49, .25), transparent 68%),
-        radial-gradient(46cqw 36cqw at 88% 90%, rgba(12, 107, 112, .19), transparent 74%),
-        linear-gradient(145deg, #101413 0%, var(--dark) 43%, var(--dark-2) 100%);
+      background: var(--dark);
     }
 
     .slide[data-tone="dark"]::before {
@@ -679,13 +674,13 @@
     .overview-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
     .overview-card { min-height: 7rem; padding: 1rem; color: rgba(255, 255, 255, .72); text-align: left; border: 1px solid rgba(255, 255, 255, .1); border-radius: .7rem; background: rgba(255, 255, 255, .04); }
     .overview-card strong { display: block; margin-top: .7rem; color: #fff; font-family: var(--serif); font-size: 1.05rem; font-weight: 500; line-height: 1.15; }
-    .overview-card span { color: var(--accent-2); font: .65rem var(--mono); }
+    .overview-card span { color: var(--accent-2); font: .875rem var(--sans); text-align: center; width: max-content; max-width: calc(100vw - 2rem); }
     .overview-card.is-active { border-color: var(--accent-2); background: rgba(224, 118, 93, .09); }
     .help-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem 1rem; color: rgba(255, 255, 255, .75); }
     .help-list span { padding: .8rem; border-top: 1px solid rgba(255, 255, 255, .1); }
     kbd { display: inline-grid; min-width: 1.7rem; min-height: 1.7rem; margin-right: .25rem; place-items: center; color: #fff; border: 1px solid rgba(255, 255, 255, .22); border-radius: .3rem; background: rgba(255, 255, 255, .07); font: .72rem var(--mono); }
 
-    .orientation-hint { display: none; position: fixed; left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 130; padding: .55rem .8rem; color: rgba(255, 255, 255, .75); border: 1px solid rgba(255, 255, 255, .12); border-radius: 999px; background: rgba(15, 18, 17, .88); transform: translateX(-50%); font: .65rem var(--mono); }
+    .orientation-hint { display: none; position: fixed; left: 50%; bottom: max(1rem, env(safe-area-inset-bottom)); z-index: 130; padding: .55rem .8rem; color: rgba(255, 255, 255, .75); border: 1px solid rgba(255, 255, 255, .12); border-radius: 999px; background: rgba(15, 18, 17, .88); transform: translateX(-50%); font: .875rem var(--sans); text-align: center; width: max-content; max-width: calc(100vw - 2rem); }
 
     @media (max-width: 1100px), (max-height: 620px) {
       .deck-rail { display: none; }

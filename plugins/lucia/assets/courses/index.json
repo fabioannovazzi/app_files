@@ -32,7 +32,7 @@
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "a7a2f113bcca408e12d0833840bd46cc01c9d24fb41643cb0ba32a5b92817ec2",
+      "sha256": "61a07ba341689f31c371769c34ffd0e7d450e647925d7344f87007e2785ed213",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "31c1290d573514d261d9d70c4adb0ae1f202229cc11f550db1f5a76c2250d829",
+      "sha256": "fa890e589c6c5d81bba696067f6b3c6931151bef8f19d9bbabeacb1eae17acee",
       "languages": [
         "it",
         "en",
