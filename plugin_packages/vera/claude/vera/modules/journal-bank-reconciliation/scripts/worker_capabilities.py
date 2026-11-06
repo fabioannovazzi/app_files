@@ -10,10 +10,11 @@ from __future__ import annotations
 import hashlib
 import json
 import os
+import queue
 import re
-import selectors
 import shutil
 import subprocess
+import threading
 import time
 from pathlib import Path
 from typing import Any, Mapping
@@ -47,69 +48,98 @@ def _catalog(executable: str) -> dict[str, Any]:
         stderr=subprocess.DEVNULL,
     ) as process:
         assert process.stdin is not None and process.stdout is not None
-        with selectors.DefaultSelector() as selector:
-            selector.register(process.stdout, selectors.EVENT_READ)
-            buffer = b""
+        chunks: queue.Queue[bytes | OSError] = queue.Queue(maxsize=2)
+        stopped = threading.Event()
 
-            def request(number: int, method: str, params: dict[str, Any]) -> Any:
-                nonlocal buffer
-                process.stdin.write(
-                    (
-                        json.dumps({"id": number, "method": method, "params": params})
-                        + "\n"
-                    ).encode()
-                )
-                process.stdin.flush()
-                deadline = time.monotonic() + 20
-                while time.monotonic() < deadline:
-                    if b"\n" not in buffer:
-                        if not selector.select(1):
-                            continue
-                        chunk = os.read(process.stdout.fileno(), 65536)
-                        buffer += chunk
-                        if not chunk or len(buffer) > 1_000_000:
-                            raise UnsupportedWorkerCapability(
-                                "Claude model/list probe exited or exceeded its response bound"
-                            )
-                        continue
-                    line, buffer = buffer.split(b"\n", 1)
-                    message = json.loads(line)
-                    if message.get("id") == number:
-                        if "error" in message:
-                            raise UnsupportedWorkerCapability(
-                                f"Claude {method} failed: {message['error']}"
-                            )
-                        return message["result"]
-                raise UnsupportedWorkerCapability(f"Claude {method} timed out")
-
+        def read_stdout() -> None:
             try:
-                runtime = request(
-                    1,
-                    "initialize",
-                    {
-                        "clientInfo": {
-                            "name": "vera-worker-capabilities",
-                            "version": "1",
-                        }
-                    },
+                while not stopped.is_set():
+                    chunk = os.read(process.stdout.fileno(), 65536)
+                    while not stopped.is_set():
+                        try:
+                            chunks.put(chunk, timeout=0.1)
+                            break
+                        except queue.Full:
+                            continue
+                    if not chunk:
+                        return
+            except OSError as exc:
+                if not stopped.is_set():
+                    try:
+                        chunks.put(exc, timeout=0.1)
+                    except queue.Full:
+                        pass
+
+        reader = threading.Thread(target=read_stdout, daemon=True)
+        reader.start()
+        buffer = b""
+
+        def request(number: int, method: str, params: dict[str, Any]) -> Any:
+            nonlocal buffer
+            process.stdin.write(
+                (
+                    json.dumps({"id": number, "method": method, "params": params})
+                    + "\n"
+                ).encode()
+            )
+            process.stdin.flush()
+            deadline = time.monotonic() + 20
+            while time.monotonic() < deadline:
+                if b"\n" not in buffer:
+                    try:
+                        chunk = chunks.get(
+                            timeout=min(1, max(0.01, deadline - time.monotonic()))
+                        )
+                    except queue.Empty:
+                        continue
+                    if isinstance(chunk, OSError):
+                        raise UnsupportedWorkerCapability(
+                            "Claude model/list pipe failed"
+                        ) from chunk
+                    buffer += chunk
+                    if not chunk or len(buffer) > 1_000_000:
+                        raise UnsupportedWorkerCapability(
+                            "Claude model/list probe exited or exceeded its response bound"
+                        )
+                    continue
+                line, buffer = buffer.split(b"\n", 1)
+                message = json.loads(line)
+                if message.get("id") == number:
+                    if "error" in message:
+                        raise UnsupportedWorkerCapability(
+                            f"Claude {method} failed: {message['error']}"
+                        )
+                    return message["result"]
+            raise UnsupportedWorkerCapability(f"Claude {method} timed out")
+
+        try:
+            runtime = request(
+                1,
+                "initialize",
+                {
+                    "clientInfo": {
+                        "name": "vera-worker-capabilities",
+                        "version": "1",
+                    }
+                },
+            )
+            process.stdin.write(b'{"method":"initialized"}\n')
+            process.stdin.flush()
+            models = request(2, "model/list", {"limit": 100, "includeHidden": False})
+            if models.get("nextCursor"):
+                raise UnsupportedWorkerCapability(
+                    "Claude model catalog exceeds the bounded discovery page"
                 )
-                process.stdin.write(b'{"method":"initialized"}\n')
-                process.stdin.flush()
-                models = request(
-                    2, "model/list", {"limit": 100, "includeHidden": False}
-                )
-                if models.get("nextCursor"):
-                    raise UnsupportedWorkerCapability(
-                        "Claude model catalog exceeds the bounded discovery page"
-                    )
-                return {"runtime": runtime["userAgent"], "models": models["data"]}
-            finally:
-                process.terminate()
-                try:
-                    process.wait(timeout=5)
-                except subprocess.TimeoutExpired:
-                    process.kill()
-                    process.wait()
+            return {"runtime": runtime["userAgent"], "models": models["data"]}
+        finally:
+            stopped.set()
+            process.terminate()
+            try:
+                process.wait(timeout=5)
+            except subprocess.TimeoutExpired:
+                process.kill()
+                process.wait()
+            reader.join(timeout=1)
 
 
 def select_worker(

@@ -32,7 +32,7 @@
     },
     {
       "path": "modules/centrale-rischi-review/scripts/centrale_rischi_core.py",
-      "sha256": "bdeaef4f79912337d513b67999a11f2f82d9a11e450382938eb661b97285307e"
+      "sha256": "7e342ab1b2d908833f7a18ddf981d285c1d531c7de7e59e0937c561960a85c87"
     },
     {
       "path": "modules/centrale-rischi-review/scripts/centrale_rischi_pdf.py",
@@ -352,5 +352,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "c70bf986f07928c74792a9f14fff08f51464d1095ce42c10110361829419f6ef"
+  "canonical_course_sha256": "275a78fa3fd74fb908ef187af5b19c41bfbed6df9a769a5c27bfa440f112cfed"
 }

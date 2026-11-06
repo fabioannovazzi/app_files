@@ -159,12 +159,7 @@ def test_catalog_protocol_reports_missing_bounded_capability(
     def start(*args, **kwargs):
         yield process
 
-    @contextmanager
-    def selector():
-        yield SimpleNamespace(register=lambda *_: None, select=lambda _: [True])
-
     monkeypatch.setattr(capabilities.subprocess, "Popen", start)
-    monkeypatch.setattr(capabilities.selectors, "DefaultSelector", selector)
     monkeypatch.setattr(
         capabilities, "os", SimpleNamespace(read=lambda *_: next(chunks))
     )
@@ -194,3 +189,36 @@ def test_invalid_retained_configuration_cannot_launch(
     selection["content_sha256"] = capabilities._digest(selection)
     with pytest.raises(ValueError):
         capabilities.validate_selection(selection, "open-item-reconciliation", None)
+
+
+def test_selection_reads_real_pipes_without_socket_selectors(capabilities, monkeypatch):
+    """Windows pipes cannot be polled with socket selectors (WinError 10038)."""
+    import selectors
+    import subprocess
+    import sys
+
+    original_popen = subprocess.Popen
+    response = json.dumps(catalog())
+    script = """
+import json, sys
+catalog = json.loads(sys.argv[1])
+for line in sys.stdin:
+    request = json.loads(line)
+    if "id" not in request:
+        continue
+    result = {"userAgent": catalog["runtime"]} if request["method"] == "initialize" else {"data": catalog["models"]}
+    print(json.dumps({"id": request["id"], "result": result}), flush=True)
+"""
+
+    def start(*args, **kwargs):
+        return original_popen([sys.executable, "-u", "-c", script, response], **kwargs)
+
+    def unsupported_selector(*args, **kwargs):
+        raise OSError(10038, "Socket operation on a non-socket")
+
+    monkeypatch.setattr(capabilities.subprocess, "Popen", start)
+    monkeypatch.setattr(selectors, "DefaultSelector", unsupported_selector)
+
+    selected = capabilities.select_worker("open-item-reconciliation")
+
+    assert selected["model"] == catalog()["models"][0]["model"]

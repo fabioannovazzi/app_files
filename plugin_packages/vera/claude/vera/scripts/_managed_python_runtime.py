@@ -730,8 +730,8 @@ def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
             timeout=600,
             check=False,
         )
-        if installed.returncode != 0:
-            raise ValueError(_network_permission_detail(_process_detail(installed)))
+        # uv can finish installing CPython but fail while creating a minor-version
+        # alias on Windows. A verified managed interpreter can still be used.
         found = runner(
             [uv, "python", "find", "--managed-python", "cpython@3.12"],
             capture_output=True,
@@ -750,6 +750,8 @@ def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
             )
             if verified.returncode == 0 and verified.stdout.strip():
                 return verified.stdout.strip()
+        if installed.returncode != 0:
+            raise ValueError(_network_permission_detail(_process_detail(installed)))
     raise ValueError(
         "Vera, Clara and Lucia require CPython 3.12. Install Python 3.12 or make uv "
         "available for automatic setup, then rerun the dependency check. "

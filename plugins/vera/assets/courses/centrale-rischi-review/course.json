@@ -35,7 +35,7 @@
     {
       "path": "modules/centrale-rischi-review/scripts/centrale_rischi_core.py",
       "repository_path": "plugins/centrale-rischi-review/scripts/centrale_rischi_core.py",
-      "sha256": "bdeaef4f79912337d513b67999a11f2f82d9a11e450382938eb661b97285307e"
+      "sha256": "7e342ab1b2d908833f7a18ddf981d285c1d531c7de7e59e0937c561960a85c87"
     },
     {
       "path": "modules/centrale-rischi-review/scripts/centrale_rischi_pdf.py",
