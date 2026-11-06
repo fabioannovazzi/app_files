@@ -23,8 +23,8 @@ def test_cash_events_are_presented_in_date_order_without_changing_record(tmp_pat
 
     report.write_artifacts(tmp_path / "forecast", record)
 
-    markdown = (tmp_path / "forecast/report.md").read_text()
-    html = (tmp_path / "forecast/report.html").read_text()
+    markdown = (tmp_path / "forecast/report.md").read_text(encoding="utf-8")
+    html = (tmp_path / "forecast/report.html").read_text(encoding="utf-8")
     assert (
         markdown.index("item:C101")
         < markdown.index("item:S201")
@@ -42,7 +42,10 @@ def test_cash_events_are_presented_in_date_order_without_changing_record(tmp_pat
     finally:
         workbook.close()
     assert record == before
-    assert json.loads((tmp_path / "forecast/forecast.json").read_text()) == before
+    assert (
+        json.loads((tmp_path / "forecast/forecast.json").read_text(encoding="utf-8"))
+        == before
+    )
 
 
 def item(key: str, amount: str, due: str, side: str = "receivable") -> dict:

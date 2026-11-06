@@ -332,7 +332,7 @@ def test_alternative_is_saved_without_mutating_baseline(tmp_path):
     delivery = read_json(output / "final_artifacts.json")["scenarios"][0]
     assert delivery["status"] == "hypothetical"
     assert delivery["baseline_record_sha256"] == record["record_sha256"]
-    report = (output / delivery["report"]).read_text()
+    report = (output / delivery["report"]).read_text(encoding="utf-8")
     assert "Scenario ipotetico" in report and "-35.000,00" in report
     workbook = load_workbook(output / delivery["workbook"], read_only=True)
     try:
@@ -353,7 +353,7 @@ def test_alternative_is_saved_without_mutating_baseline(tmp_path):
         == scenario
     )
     assert len(read_json(output / "final_artifacts.json")["scenarios"]) == 1
-    (output / delivery["report"]).write_text("Changed scenario report")
+    (output / delivery["report"]).write_text("Changed scenario report", encoding="utf-8")
     with pytest.raises(TreasuryError, match="alternative.*changed"):
         save_scenario(
             output,
