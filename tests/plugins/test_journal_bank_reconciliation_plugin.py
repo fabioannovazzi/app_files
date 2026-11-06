@@ -8957,10 +8957,10 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     assert graph["resolution_policy"]["row_scope"] == (
         "unresolved_bank_rows_and_hard_compatible_candidates_only"
     )
-    assert graph["resolution_policy"]["single_packet_required"] is True
-    assert graph["resolution_policy"]["automatic_chunking"] is False
+    assert graph["resolution_policy"]["single_packet_required"] is False
+    assert graph["resolution_policy"]["automatic_chunking"] is True
     assert graph["resolution_policy"]["over_cap_action"] == (
-        "skip_worker_and_retain_human_review_queue"
+        "continue_with_next_bounded_packet"
     )
     assert "UNMAPPED-" not in prompt
     assert "Internal note" not in prompt
@@ -9664,7 +9664,7 @@ def test_semantic_reprepare_archives_prior_worker_generation(
     assert status["status"] == "prepared"
 
 
-def test_semantic_prepare_skips_worker_when_complete_residual_needs_multiple_packets(
+def test_semantic_prepare_keeps_overflow_for_next_packet(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -9723,12 +9723,10 @@ def test_semantic_prepare_skips_worker_when_complete_residual_needs_multiple_pac
             encoding="utf-8"
         )
     )
-    assert preparation["worker_required"] is False
+    assert preparation["worker_required"] is True
     assert preparation["reviewed_bank_count"] == 0
-    assert graph["selected_components"] == []
-    assert graph["deferred_components"][0]["reason"] == (
-        "complete_residual_packet_cap_exceeded"
-    )
+    assert len(graph["selected_components"]) == 1
+    assert graph["deferred_components"][0]["reason"] == "next_packet"
     assert application["summary"]["human_review_count"] == 2
     assert {item["highest_level_reached"] for item in application["assignments"]} == {
         "perfect_match",
@@ -9793,6 +9791,263 @@ def test_semantic_run_all_runs_standard_review_without_additional_authorization(
     )
 
 
+def _prepare_independent_semantic_components(tmp_path, count=35):
+    """Retain unmatched bank rows as separate components, as in Francesco's case."""
+    core = load_core()
+    semantic = load_semantic_review()
+    bank = tmp_path / "bank.csv"
+    journal = tmp_path / "journal.csv"
+    _save_csv(
+        bank,
+        [
+            ["Date", "Amount", "Reference"],
+            ["2026-05-08", "1.00", "ANCHOR-1"],
+            *[["2026-05-09", str(100 + i), f"PAY-{i:03}"] for i in range(count)],
+        ],
+    )
+    _save_csv(
+        journal, [["Date", "Amount", "Reference"], ["2026-05-08", "1.00", "ANCHOR-1"]]
+    )
+    recipe = _prepare_reviewed_recipe(
+        core, bank, journal, tmp_path / "recipe", tolerance="0", date_window_days=0
+    )
+    reconciliation = tmp_path / "reconciliation"
+    core.run_reconciliation(bank, journal, reconciliation, recipe)
+    return semantic, reconciliation, tmp_path / "semantic-review"
+
+
+def _classified_packet_response(graph):
+    """A controlled worker result, not a claim about live model quality."""
+    return {
+        "schema_version": "journal_bank.semantic_worker_response.v3",
+        "candidate_graph_sha256": graph["candidate_graph_sha256"],
+        "component_reviews": [
+            {
+                "component_id": c["component_id"],
+                "decisions": [
+                    {
+                        "bank_transaction_id": r["transaction_id"],
+                        "verdict": "no_match",
+                        "journal_transaction_id": None,
+                        "evidence_fields": ["reference"],
+                        "rationale": "Reference identifies a payment with no supplied ledger candidate.",
+                        "contradictions": [],
+                        "requested_evidence": [],
+                        "resolution_level": "classified",
+                        "classification": "payment",
+                        "identified_counterparty": None,
+                    }
+                    for r in c["bank_records"]
+                ],
+            }
+            for c in graph["selected_components"]
+        ],
+    }
+
+
+def test_semantic_run_all_reviews_35_components_in_two_nonreusing_batches(
+    tmp_path, monkeypatch
+):
+    semantic, reconciliation, output = _prepare_independent_semantic_components(
+        tmp_path
+    )
+    before = _tree_snapshot(reconciliation)
+    packets = []
+
+    def worker(_reconciliation, semantic_path, graph_path, **_):
+        graph = json.loads(graph_path.read_text())
+        packets.append(
+            {
+                r["transaction_id"]
+                for c in graph["selected_components"]
+                for r in c["bank_records"]
+            }
+        )
+        response, events = _write_semantic_worker_result(
+            semantic_path, _classified_packet_response(graph)
+        )
+        return {"response": response, "events": events}
+
+    monkeypatch.setattr(semantic, "run_semantic_worker", worker)
+
+    result = semantic.run_semantic_resolution_pipeline(
+        reconciliation, output, required_resolution_level="classified"
+    )
+
+    assert result["batch_count"] == 2
+    assert [len(p) for p in packets] == [25, 10]
+    assert packets[0].isdisjoint(packets[1])
+    assert result["reviewed_bank_count"] == 35
+    assert result["human_review_count"] == 0
+    assert result["exhaustive"] is True
+    assert result["deferred_component_count"] == 0
+    assert result["batches"][0]["worker_run"].is_file()
+    assert result["batches"][1]["worker_run"].is_file()
+    assert result["batches"][0]["worker_run"] != result["batches"][1]["worker_run"]
+    assert _tree_snapshot(reconciliation) == before
+
+
+def test_semantic_prepare_trims_one_packet_when_prompt_bytes_exceed_capacity(
+    tmp_path, monkeypatch
+):
+    semantic, reconciliation, output = _prepare_independent_semantic_components(
+        tmp_path, count=2
+    )
+    real_prompt = semantic._worker_prompt
+
+    def large_prompt(graph):
+        padding = "X" * 200_000 if len(graph["selected_components"]) > 1 else ""
+        return real_prompt(graph) + padding
+
+    monkeypatch.setattr(semantic, "_worker_prompt", large_prompt)
+    monkeypatch.setattr(semantic, "MAX_PROMPT_BYTES", 100_000)
+
+    prepared = semantic.prepare_semantic_review(reconciliation, output)
+    graph = json.loads((output / "residual_candidate_graph.json").read_text())
+
+    assert prepared["worker_required"] is True
+    assert len(graph["selected_components"]) == 1
+    assert len(graph["deferred_components"]) == 1
+    assert graph["deferred_components"][0]["reason"] == "packet_byte_cap_exceeded"
+    assert (output / "luna_prompt.md").stat().st_size <= 100_000
+
+
+def test_semantic_oversized_component_does_not_block_independent_fit_component(
+    tmp_path, monkeypatch
+):
+    core, semantic = load_core(), load_semantic_review()
+    bank, journal = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    _save_csv(
+        bank,
+        [
+            ["Date", "Amount"],
+            ["2026-05-08", "100"],
+            ["2026-05-08", "100"],
+            ["2026-05-08", "200"],
+        ],
+    )
+    _save_csv(
+        journal, [["Date", "Amount"], ["2026-05-08", "100"], ["2026-05-08", "100"]]
+    )
+    recipe = _prepare_reviewed_recipe(
+        core, bank, journal, tmp_path / "recipe", tolerance="0", date_window_days=0
+    )
+    reconciliation, output = tmp_path / "reconciliation", tmp_path / "semantic-review"
+    core.run_reconciliation(bank, journal, reconciliation, recipe)
+    monkeypatch.setattr(semantic, "MAX_COMPONENT_BANK_ROWS", 1)
+
+    prepared = semantic.prepare_semantic_review(reconciliation, output)
+    graph = json.loads((output / "residual_candidate_graph.json").read_text())
+
+    assert prepared["worker_required"] is True
+    assert graph["counts"]["selected_bank_count"] == 1
+    assert graph["deferred_components"][0]["bank_count"] == 2
+    assert graph["deferred_components"][0]["reason"] == "component_cap_exceeded"
+    assert prepared["human_review_count"] == 3
+
+
+def test_semantic_batch_denial_retains_first_packet_and_resume_reviews_only_remaining(
+    tmp_path, monkeypatch
+):
+    semantic, reconciliation, output = _prepare_independent_semantic_components(
+        tmp_path
+    )
+    completed = []
+
+    def worker(_reconciliation, semantic_path, graph_path, **_):
+        if completed:
+            raise PermissionError("Host denied second packet")
+        graph = json.loads(graph_path.read_text())
+        completed.append(
+            {
+                r["transaction_id"]
+                for c in graph["selected_components"]
+                for r in c["bank_records"]
+            }
+        )
+        response, events = _write_semantic_worker_result(
+            semantic_path, _classified_packet_response(graph)
+        )
+        return {"response": response, "events": events}
+
+    monkeypatch.setattr(semantic, "run_semantic_worker", worker)
+    with pytest.raises(PermissionError, match="Host denied second packet"):
+        semantic.run_semantic_resolution_pipeline(
+            reconciliation, output, required_resolution_level="classified"
+        )
+    retained = json.loads((output / "cumulative_resolution_state.json").read_text())
+    assert retained["reviewed_bank_count"] == 25
+
+    def resumed_worker(_reconciliation, semantic_path, graph_path, **_):
+        graph = json.loads(graph_path.read_text())
+        remaining = {
+            r["transaction_id"]
+            for c in graph["selected_components"]
+            for r in c["bank_records"]
+        }
+        assert len(remaining) == 10
+        assert remaining.isdisjoint(completed[0])
+        response, events = _write_semantic_worker_result(
+            semantic_path, _classified_packet_response(graph)
+        )
+        return {"response": response, "events": events}
+
+    monkeypatch.setattr(semantic, "run_semantic_worker", resumed_worker)
+    result = semantic.run_semantic_resolution_pipeline(
+        reconciliation, output, required_resolution_level="classified"
+    )
+    assert result["batch_count"] == 1
+    assert result["reviewed_bank_count"] == 35
+    assert result["exhaustive"] is True
+
+
+def test_semantic_batches_keep_competing_candidates_together_and_reserve_journals(
+    tmp_path, monkeypatch
+):
+    core = load_core()
+    semantic = load_semantic_review()
+    bank, journal = tmp_path / "bank.csv", tmp_path / "journal.csv"
+    population = [
+        ["Date", "Amount", "Beneficiary", "Description"],
+        ["2026-05-08", "100", "Alpha", "Payment Alpha"],
+        ["2026-05-08", "100", "Beta", "Payment Beta"],
+        ["2026-05-08", "200", "Alpha", "Payment Alpha"],
+        ["2026-05-08", "200", "Beta", "Payment Beta"],
+    ]
+    _save_csv(bank, population)
+    _save_csv(journal, population)
+    recipe = _prepare_reviewed_recipe(
+        core, bank, journal, tmp_path / "recipe", tolerance="0", date_window_days=0
+    )
+    reconciliation, output = tmp_path / "reconciliation", tmp_path / "semantic-review"
+    core.run_reconciliation(bank, journal, reconciliation, recipe)
+    monkeypatch.setattr(semantic, "MAX_SELECTED_COMPONENTS", 1)
+    packets = []
+
+    def worker(_reconciliation, semantic_path, graph_path, **_):
+        graph = json.loads(graph_path.read_text())
+        [component] = graph["selected_components"]
+        assert len(component["bank_records"]) == 2
+        assert len(component["journal_records"]) == 2
+        assert len(component["candidate_edges"]) == 4
+        packets.append({r["transaction_id"] for r in component["journal_records"]})
+        response, events = _write_semantic_worker_result(
+            semantic_path, _valid_semantic_response(graph)
+        )
+        return {"response": response, "events": events}
+
+    monkeypatch.setattr(semantic, "run_semantic_worker", worker)
+    result = semantic.run_semantic_resolution_pipeline(
+        reconciliation, output, required_resolution_level="beneficiary_match"
+    )
+
+    assert result["batch_count"] == 2
+    assert packets[0].isdisjoint(packets[1])
+    assert result["reviewed_bank_count"] == 4
+    assert result["human_review_count"] == 0
+    assert result["exhaustive"] is True
+
+
 def test_semantic_run_all_preserves_worker_denial_without_retry(tmp_path, monkeypatch):
     """Automatic semantic review never turns a denied dispatch into another route."""
     _, semantic_review, reconciliation_dir, semantic_dir = (
@@ -9848,12 +10103,10 @@ def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(
     assert result["reviewed_bank_count"] == 0
     assert result["human_review_count"] == 2
     assert graph["selected_components"] == []
-    assert graph["deferred_components"][0]["reason"] == (
-        "complete_residual_packet_cap_exceeded"
-    )
+    assert graph["deferred_components"][0]["reason"] == "component_cap_exceeded"
     assert status["worker_required"] is False
     assert status["status"] == "completed_with_deferred"
-    assert status["failure_reason"] == "complete_residual_exceeds_caps"
+    assert status["failure_reason"] == "residual_components_exceed_packet_capacity"
 
 
 def test_semantic_reprepare_failure_removes_completed_marker_first(
