@@ -517,16 +517,23 @@ def test_advisory_planner_is_routed_packaged_and_public_in_five_locales() -> Non
     assert clara_page.count('"functions.advisoryPlanning":') == 5
 
 
-def test_advisory_planner_privacy_record_declares_only_dependency_setup() -> None:
+def test_advisory_planner_privacy_record_separates_local_validation_and_reporting() -> (
+    None
+):
     manifest = json.loads(
         (
-            CLARA_ROOT / "privacy" / "workflows" / "advisory-brief-planner.json"
+            CLARA_ROOT / "privacy" / "workstreams" / "advisory-brief-planner.json"
         ).read_text(encoding="utf-8")
     )
     source = SCRIPT_PATH.read_text(encoding="utf-8")
 
-    assert manifest["hosted_service_ids"] == []
-    boundaries = manifest["boundaries_beyond_codex"]
+    assert manifest["service_ids"] == [
+        "managed-python-runtime",
+        "operational-incidents",
+        "run-receipt-stamping",
+        "workflow-usage",
+    ]
+    boundaries = manifest["external_boundaries"]
     assert len(boundaries) == 2
     assert boundaries[0]["id"] == "direct-cli-python-dependency-setup"
     assert "not included in installer requests" in boundaries[0]["content"]

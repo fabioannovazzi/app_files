@@ -1,0 +1,21 @@
+{
+  "deck": "synthetic.pptx",
+  "slides": [
+    {
+      "slide_number": 1,
+      "slide_title": "Revenue",
+      "claims": [
+        {
+          "claim": "Revenue is $25.4m",
+          "claim_key": "revenue",
+          "calculation_ref": {
+            "inputs": [
+              "financial-facts.csv revenue=25356432.55"
+            ],
+            "method": "USD value divided by 1,000,000, rounded to one decimal"
+          }
+        }
+      ]
+    }
+  ]
+}

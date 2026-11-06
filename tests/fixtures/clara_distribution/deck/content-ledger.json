@@ -1,0 +1,77 @@
+{
+  "schema_version": "clara.html_deck_ledger.v2",
+  "sources": [
+    {
+      "id": "source-financial-facts",
+      "label": "Prepared financial facts",
+      "kind": "calculation-output",
+      "locator": "financial-facts.csv",
+      "sha256": "1f811aa0c06ca8e2d396811fef1713f36e1c344e88f9022960f1c80607f7ba91",
+      "publish_locator": false
+    },
+    {
+      "id": "source-customer-concentration",
+      "label": "Prepared customer concentration",
+      "kind": "calculation-output",
+      "locator": "customer-concentration.csv",
+      "sha256": "6e846425e0b0ceb8230f1ee23cfe2c4e98ee09aaae925341a02f113e39d9ca34",
+      "publish_locator": false
+    }
+  ],
+  "slides": [
+    {
+      "slide_id": "diligence-evidence",
+      "basis_status": "source-backed",
+      "basis_note": "",
+      "claims": [
+        {
+          "id": "claim-revenue",
+          "statement": {
+            "$template": {
+              "text": "Revenue is {revenue}",
+              "bindings": {
+                "revenue": {
+                  "id": "revenue",
+                  "mode": "display"
+                }
+              }
+            }
+          },
+          "classification": "fact",
+          "basis_status": "source-backed",
+          "basis_note": "",
+          "source_ids": [
+            "source-financial-facts"
+          ]
+        },
+        {
+          "id": "claim-resilience",
+          "statement": "The buyer should test resilience before pricing.",
+          "classification": "judgement",
+          "basis_status": "speaker-judgement",
+          "basis_note": "Agent inference from concentration exposure; no customer-loss evidence supplied.",
+          "source_ids": [
+            "source-customer-concentration"
+          ]
+        }
+      ]
+    },
+    {
+      "slide_id": "next-work",
+      "basis_status": "speaker-judgement",
+      "basis_note": "Agent review: concentration is observed; retention and churn remain unknown.",
+      "claims": [
+        {
+          "id": "claim-next-work",
+          "statement": "Test customer resilience before pricing",
+          "classification": "judgement",
+          "basis_status": "speaker-judgement",
+          "basis_note": "Recommended follow-up, not a source fact.",
+          "source_ids": [
+            "source-customer-concentration"
+          ]
+        }
+      ]
+    }
+  ]
+}
