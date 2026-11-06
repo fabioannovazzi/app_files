@@ -319,6 +319,18 @@ def _read_artifact(
         )
         if not closed:
             store.source(source)
+    if source["measurement_error"]:
+        # An installed adapter may have become available since admission. Retry
+        # measurement of the exact same bytes, never substitute a newer source.
+        measured = measure_source(
+            path, source_id=source["source_id"], role=source["role"]
+        )
+        if measured["sha256"] != source["sha256"]:
+            raise ValueError("Read source no longer matches its Archive measurement")
+        if measured["measurement_error"] is None:
+            source = {**measured, "aliases": source.get("aliases", [source["path"]])}
+            if not closed:
+                store.source(source)
     data, evidence = read_selection(source, offset=offset, limit=limit, columns=columns)
     token = secrets.token_hex(24)
     if closed:
