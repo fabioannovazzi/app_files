@@ -1,9 +1,4 @@
 {
-  "residual_batching_release_binding": {
-    "version": "0.1.579",
-    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
-    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
-  },
   "francesco_parser_release_binding": {
     "previous_catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
     "scope": "Manifest version refresh only; skill entrypoint bytes and jurisdiction judgments unchanged. Parser repair has local component acceptance only.",
@@ -172,7 +167,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "9824369d8693766bb42d7ecc4cbb6c178e25b44ac7f2aa9a028267356e071740",
+  "catalogue_fingerprint": "b94faa04b540a4a422bab967706f17568d03cceb492b1bee8c6ad28e35f52916",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2588,5 +2583,10 @@
     "version": "0.1.576",
     "previous_catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
     "scope": "Manifest version refresh only; exact skill entries and existing jurisdiction judgments unchanged. Assessment linkage now uses producer digest. Includes merged course privacy-flow release."
+  },
+  "residual_batching_release_binding": {
+    "version": "0.1.579",
+    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
+    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
   }
 }

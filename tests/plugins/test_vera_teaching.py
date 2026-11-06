@@ -23,6 +23,8 @@ from tests.plugins.test_vera_local_onboarding import (
 
 @pytest.fixture
 def teaching(monkeypatch, tmp_path):
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(tmp_path / "archive-state"))
+    monkeypatch.delenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", raising=False)
     monkeypatch.syspath_prepend(str(SCRIPTS))
     onboarding = load("local_onboarding")
     monkeypatch.setitem(sys.modules, "local_onboarding", onboarding)

@@ -295,6 +295,7 @@ jobs:
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
           tests/plugins/test_vera_local_onboarding.py tests/plugins/test_vera_teaching.py tests/plugins/test_vera_course_recovery.py
+          tests/plugins/test_tutorial_archive_binding.py
           --cov=local_teaching --cov=local_onboarding --cov=local_onboarding_case
           --cov=onboarding_session_start --cov=courseware.recovery --cov-fail-under=80
       - name: Verify Clara and Lucia local teaching, isolation and native handoffs

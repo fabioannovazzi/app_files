@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "65af21e15c99d8923fd31fe5d31234963b1776461591f4526fe48ff8a7b9ac46",
+      "sha256": "f399634f0fdff7d127784e3cc3cdfc9f4e52eb422f9a45f9d6a7ee20fc39304d",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "45722d92f3b58612da8fc3362dcd8a2ca4480e0536e23cff95d8bd2217381082"
+      "source_sha256": "50f82d8cd327158c6d515b131622935de6bc0bea60d1b7578cfdb9883b4d4647"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
@@ -1031,7 +1031,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "0c1dfcb39ad445555a83c8cb5c8db101e43cea7a1594828fea06d769d25fa36a",
+      "sha256": "deef040471a8578b6e27d7d4ec85393e0ebcf751fd1fc052c63d6457c0ffbd94",
       "languages": [
         "it",
         "en",
@@ -1056,11 +1056,11 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "ceaa4934643e273679f8fb99d1a81c53ffe74965a1f9dc76557ea037545290fe"
+      "source_sha256": "9afa90ee8f99dddfcf9d318c5df5ab7f823d9de5554dd5b171f5a5b313dab2c0"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "025f8068097ef41224849dc591d76b45a843450b5ea600198095853f8585eb98",
+      "sha256": "a3219930cd9f00dd5d635cf935b86a0d4c212b2c6b07092424e4109f21e0bd36",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "4b691dc0535c2eef0d2c3f0c7b88c20f7c2ff1102c3686d23be3c4040677f6a4"
+      "source_sha256": "88f70dde4dd79cb32bf2c562681b21c9df7fdcb1afcbab162c7754b7a76a610e"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
