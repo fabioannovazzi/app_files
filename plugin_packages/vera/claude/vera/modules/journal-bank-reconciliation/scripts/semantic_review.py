@@ -1820,10 +1820,15 @@ def _deferred_partition(
 def _select_components(
     components: Sequence[dict[str, Any]],
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
-    """Admit all residual components only when they fit one worker packet."""
+    """Pack whole independent components; keep overflow for later validated batches.
+
+    Keeping connected candidates together and reserving used rows through the
+    cumulative state prevents cross-packet competition and evidence reuse.
+    """
 
     selected: list[dict[str, Any]] = []
     deferred: list[dict[str, Any]] = []
+    selected_bank = selected_journal = selected_edges = 0
     for component in components:
         bank_count = len(component["bank_records"])
         journal_count = len(component["journal_records"])
@@ -1834,37 +1839,25 @@ def _select_components(
             )
             continue
         if (
-            bank_count > MAX_COMPONENT_BANK_ROWS
-            or journal_count > MAX_COMPONENT_JOURNAL_ROWS
-            or edge_count > MAX_COMPONENT_EDGES
+            bank_count > min(MAX_COMPONENT_BANK_ROWS, MAX_SELECTED_BANK_ROWS)
+            or journal_count
+            > min(MAX_COMPONENT_JOURNAL_ROWS, MAX_SELECTED_JOURNAL_ROWS)
+            or edge_count > min(MAX_COMPONENT_EDGES, MAX_SELECTED_EDGES)
         ):
             deferred.append(_deferred_component(component, "component_cap_exceeded"))
             continue
+        if (
+            len(selected) >= MAX_SELECTED_COMPONENTS
+            or selected_bank + bank_count > MAX_SELECTED_BANK_ROWS
+            or selected_journal + journal_count > MAX_SELECTED_JOURNAL_ROWS
+            or selected_edges + edge_count > MAX_SELECTED_EDGES
+        ):
+            deferred.append(_deferred_component(component, "next_packet"))
+            continue
         selected.append(component)
-    if deferred:
-        deferred.extend(
-            _deferred_component(component, "complete_residual_packet_required")
-            for component in selected
-        )
-        return [], deferred
-    selected_bank = sum(len(component["bank_records"]) for component in selected)
-    selected_journal = sum(len(component["journal_records"]) for component in selected)
-    selected_edges = sum(len(component["candidate_edges"]) for component in selected)
-    if (
-        len(selected) > MAX_SELECTED_COMPONENTS
-        or selected_bank > MAX_SELECTED_BANK_ROWS
-        or selected_journal > MAX_SELECTED_JOURNAL_ROWS
-        or selected_edges > MAX_SELECTED_EDGES
-    ):
-        return [], [
-            _deferred_partition(
-                bank_count=selected_bank,
-                journal_count=selected_journal,
-                observed_edge_count=selected_edges,
-                observed_candidate_comparison_count=None,
-                reason="complete_residual_packet_cap_exceeded",
-            )
-        ]
+        selected_bank += bank_count
+        selected_journal += journal_count
+        selected_edges += edge_count
     return selected, deferred
 
 
@@ -2048,9 +2041,9 @@ def _graph_content(
             "application": "validated_luna_decisions_apply_to_derived_resolution_funnel",
             "perfect_match_authority": "deterministic_replay_only",
             "row_scope": "unresolved_bank_rows_and_hard_compatible_candidates_only",
-            "single_packet_required": True,
-            "automatic_chunking": False,
-            "over_cap_action": "skip_worker_and_retain_human_review_queue",
+            "single_packet_required": False,
+            "automatic_chunking": True,
+            "over_cap_action": "continue_with_next_bounded_packet",
         },
         "requested_worker_configuration": (
             native_configuration(selection_review)
@@ -2151,22 +2144,8 @@ def _graph_content(
             return graph, _worker_output_schema(graph), prior_state
         if not selected:
             raise ValueError("Bounded semantic graph cannot fit its artifact limits")
-        deferred = [
-            _deferred_partition(
-                bank_count=sum(
-                    len(component["bank_records"]) for component in selected
-                ),
-                journal_count=sum(
-                    len(component["journal_records"]) for component in selected
-                ),
-                observed_edge_count=sum(
-                    len(component["candidate_edges"]) for component in selected
-                ),
-                observed_candidate_comparison_count=None,
-                reason="complete_residual_packet_byte_cap_exceeded",
-            )
-        ]
-        selected = []
+        # Shrink only this packet; do not discard other fit components.
+        deferred.append(_deferred_component(selected.pop(), "packet_byte_cap_exceeded"))
 
 
 def _worker_output_schema(graph: Mapping[str, Any]) -> dict[str, Any]:
@@ -5331,13 +5310,14 @@ def run_semantic_resolution_pipeline(
     client_engagement: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Run at most one worker when the complete residual fits one packet.
+    """Review bounded packets until all eligible bank rows have been covered.
 
-    The gate is mechanical and all-or-nothing because it prevents an
-    unexpectedly large residual from becoming an automatic sequence of model
-    calls. Semantic matching remains model-led inside the admitted packet.
+    Each accepted packet advances the durable cumulative state before the next
+    packet is prepared. A failed/denied worker stops immediately; completed
+    generations remain available for resumption without repeating reviewed rows.
     """
 
+    batches: list[dict[str, Any]] = []
     prepared = prepare_semantic_review(
         reconciliation_dir,
         semantic_output_dir,
@@ -5345,98 +5325,73 @@ def run_semantic_resolution_pipeline(
         required_resolution_level=required_resolution_level,
         worker_selection=worker_selection,
     )
-    reviewed_count = int(prepared["reviewed_bank_count"])
-    if not prepared["worker_required"]:
-        graph = _strict_json_file(
+    while prepared["worker_required"]:
+        reviewed_count = int(prepared["reviewed_bank_count"])
+        worker = run_semantic_worker(
+            reconciliation_dir,
+            semantic_output_dir,
             prepared["candidate_graph"],
-            maximum_bytes=MAX_GRAPH_BYTES,
-            label=CANDIDATE_GRAPH_NAME,
+            codex_bin=codex_bin,
+            client_engagement=client_engagement,
         )
-        exhaustive = int(prepared["deferred_component_count"]) == 0
-        _write_status(
-            Path(semantic_output_dir).resolve(),
-            graph,
-            status_value=(
-                "completed_exhaustive" if exhaustive else "completed_with_deferred"
-            ),
-            failure_reason=(None if exhaustive else "complete_residual_exceeds_caps"),
+        validated = validate_semantic_review(
+            reconciliation_dir,
+            semantic_output_dir,
+            prepared["candidate_graph"],
+            worker["response"],
+            worker["events"],
+            client_engagement=client_engagement,
         )
-        return {
-            "batch_count": 0,
-            "batches": [],
-            "exhaustive": exhaustive,
-            "deferred_component_count": prepared["deferred_component_count"],
-            "reviewed_bank_count": reviewed_count,
-            "human_review_count": prepared["human_review_count"],
-            "resolution_application": semantic_output_dir / RESOLUTION_APPLICATION_NAME,
-            "resolution_funnel": semantic_output_dir / RESOLUTION_FUNNEL_NAME,
-            "human_review_queue": semantic_output_dir / HUMAN_REVIEW_QUEUE_NAME,
-            "operational_review_payload": semantic_output_dir
-            / OPERATIONAL_REVIEW_PAYLOAD_NAME,
+        cumulative = _load_resolution_state(
+            semantic_output_dir / CUMULATIVE_RESOLUTION_STATE_NAME,
+            required=True,
+        )
+        next_reviewed_count = int(cumulative["reviewed_bank_count"])
+        if next_reviewed_count <= reviewed_count:
+            raise ValueError("Semantic worker packet did not advance bank coverage")
+        next_preparation = prepare_semantic_review(
+            reconciliation_dir,
+            semantic_output_dir,
+            client_engagement=client_engagement,
+            required_resolution_level=required_resolution_level,
+            worker_selection=worker_selection,
+        )
+        batch = {
+            "batch_number": len(batches) + 1,
+            "candidate_graph_sha256": prepared["candidate_graph_sha256"],
+            "selected_component_count": prepared["selected_component_count"],
+            "reviewed_bank_count_before": reviewed_count,
+            "reviewed_bank_count_after": next_reviewed_count,
+            "human_review_count_after": validated["summary"]["human_review_count"],
+            "worker_run": next_preparation["archived_generation"] / WORKER_RUN_NAME,
+            "launch_receipt": next_preparation["archived_generation"]
+            / LAUNCH_RECEIPT_NAME,
         }
-    worker = run_semantic_worker(
-        reconciliation_dir,
-        semantic_output_dir,
+        batches.append(batch)
+        prepared = next_preparation
+    graph = _strict_json_file(
         prepared["candidate_graph"],
-        codex_bin=codex_bin,
-        client_engagement=client_engagement,
-    )
-    validated = validate_semantic_review(
-        reconciliation_dir,
-        semantic_output_dir,
-        prepared["candidate_graph"],
-        worker["response"],
-        worker["events"],
-        client_engagement=client_engagement,
-    )
-    cumulative = _load_resolution_state(
-        semantic_output_dir / CUMULATIVE_RESOLUTION_STATE_NAME,
-        required=True,
-    )
-    next_reviewed_count = int(cumulative["reviewed_bank_count"])
-    if next_reviewed_count <= reviewed_count:
-        raise ValueError("Semantic worker packet did not advance bank coverage")
-    final_preparation = prepare_semantic_review(
-        reconciliation_dir,
-        semantic_output_dir,
-        client_engagement=client_engagement,
-        required_resolution_level=required_resolution_level,
-        worker_selection=worker_selection,
-    )
-    if final_preparation["worker_required"]:
-        raise ValueError("Semantic resolution attempted an automatic second packet")
-    final_graph = _strict_json_file(
-        final_preparation["candidate_graph"],
         maximum_bytes=MAX_GRAPH_BYTES,
         label=CANDIDATE_GRAPH_NAME,
     )
-    exhaustive = int(final_preparation["deferred_component_count"]) == 0
+    exhaustive = int(prepared["deferred_component_count"]) == 0
     _write_status(
         Path(semantic_output_dir).resolve(),
-        final_graph,
+        graph,
         status_value=(
             "completed_exhaustive" if exhaustive else "completed_with_deferred"
         ),
-        failure_reason=(None if exhaustive else "complete_residual_exceeds_caps"),
+        failure_reason=(
+            None if exhaustive else "residual_components_exceed_packet_capacity"
+        ),
     )
-    batch = {
-        "batch_number": 1,
-        "candidate_graph_sha256": prepared["candidate_graph_sha256"],
-        "selected_component_count": prepared["selected_component_count"],
-        "reviewed_bank_count_before": reviewed_count,
-        "reviewed_bank_count_after": next_reviewed_count,
-        "human_review_count_after": validated["summary"]["human_review_count"],
-        "worker_run": final_preparation["archived_generation"] / WORKER_RUN_NAME,
-        "launch_receipt": final_preparation["archived_generation"]
-        / LAUNCH_RECEIPT_NAME,
-    }
     return {
-        "batch_count": 1,
-        "batches": [batch],
+        "batch_count": len(batches),
+        "batches": batches,
         "exhaustive": exhaustive,
-        "deferred_component_count": final_preparation["deferred_component_count"],
-        "reviewed_bank_count": next_reviewed_count,
-        "human_review_count": final_preparation["human_review_count"],
+        "deferred_component_count": prepared["deferred_component_count"],
+        "reviewed_bank_count": int(prepared["reviewed_bank_count"]),
+        "human_review_count": prepared["human_review_count"],
         "resolution_application": semantic_output_dir / RESOLUTION_APPLICATION_NAME,
         "resolution_funnel": semantic_output_dir / RESOLUTION_FUNNEL_NAME,
         "human_review_queue": semantic_output_dir / HUMAN_REVIEW_QUEUE_NAME,
@@ -5478,7 +5433,7 @@ def _parser() -> argparse.ArgumentParser:
     _add_client_engagement_argument(prepare)
     run_all = subparsers.add_parser(
         "run-all",
-        help="Run one worker only when the complete residual fits one packet.",
+        help="Review successive bounded packets, retaining validated progress between batches.",
     )
     run_all.add_argument("reconciliation_dir", type=Path)
     run_all.add_argument("--output-dir", type=Path, required=True)
