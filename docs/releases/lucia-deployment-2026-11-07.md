@@ -29,3 +29,13 @@ Final deployed commit, download SHA-256, server checks, CI outcome and repositor
 counts are recorded in the local deployment evidence pack. Native-host,
 clean-OS, cross-platform and independent professional acceptance are separate
 from server deployment and are not established by this release.
+
+Deployment CI caught a test fixture that did not accept the new edition keyword.
+The fixture was corrected without production changes; all 65 metadata tests
+passed locally with 98.55% coverage. Main advanced with variance repair #960
+during CI. Its source changes were integrated; conflicting derived artifacts
+were regenerated. Vera 0.1.591 and Clara 0.1.393 avoid active branch reservations.
+An attempted bulk conflict resolution was rejected by automatic approval review;
+no changes were applied by that command. Source conflicts were then inspected
+individually: versions, source fingerprints and catalogue bindings only.
+Both catalogue binding histories and all prior jurisdiction judgments survive.

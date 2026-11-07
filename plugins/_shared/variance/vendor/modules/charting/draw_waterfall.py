@@ -767,7 +767,9 @@ def _draw_fallback_trace(
             outline=style["outline"],
             width=style["width"],
         )
-        text = _format_number(value)
+        text = (
+            str(trace.text[index]) if trace.text is not None else _format_number(value)
+        )
         # Keep signed amounts out of the reserved row-label column. This also
         # makes negative accounting balances readable in compact panels.
         text_x = x1 + 6
@@ -798,6 +800,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
     annotations = [
         _clean_html(getattr(annotation, "text", ""))
         for annotation in getattr(fig.layout, "annotations", [])
+        if getattr(annotation, "text", "") != "Δ%"
     ]
     meta = fig.layout.meta if isinstance(fig.layout.meta, dict) else {}
     font_size = meta.get("waterfall_font_size")
@@ -848,6 +851,7 @@ def write_waterfall_fallback_png(fig: go.Figure, path: str) -> None:
                 title=title,
                 extent=shared_extent,
                 delta_percent_label=delta_label,
+                font_size=font_size,
             )
         image.save(path, format="PNG")
         return
