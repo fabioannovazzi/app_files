@@ -9740,7 +9740,7 @@ def test_semantic_prepare_keeps_overflow_for_next_packet(
 @pytest.mark.parametrize(
     "clearance,expected_human_review_count", [(None, 2), ("classified", 0)]
 )
-def test_semantic_run_all_runs_standard_review_without_additional_authorization(
+def test_semantic_row_triage_runs_standard_review_without_additional_authorization(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
     clearance: str | None,
@@ -9769,7 +9769,7 @@ def test_semantic_run_all_runs_standard_review_without_additional_authorization(
 
     monkeypatch.setattr(semantic_review, "run_semantic_worker", fake_worker)
 
-    result = semantic_review.run_semantic_resolution_pipeline(
+    result = semantic_review.run_row_triage_pipeline(
         reconciliation_dir,
         semantic_dir,
         **({} if clearance is None else {"required_resolution_level": clearance}),
@@ -9848,7 +9848,7 @@ def _classified_packet_response(graph):
     }
 
 
-def test_semantic_run_all_reviews_35_components_in_two_nonreusing_batches(
+def test_semantic_row_triage_reviews_35_components_in_two_nonreusing_batches(
     tmp_path, monkeypatch
 ):
     semantic, reconciliation, output = _prepare_independent_semantic_components(
@@ -9873,7 +9873,7 @@ def test_semantic_run_all_reviews_35_components_in_two_nonreusing_batches(
 
     monkeypatch.setattr(semantic, "run_semantic_worker", worker)
 
-    result = semantic.run_semantic_resolution_pipeline(
+    result = semantic.run_row_triage_pipeline(
         reconciliation, output, required_resolution_level="classified"
     )
 
@@ -9975,7 +9975,7 @@ def test_semantic_batch_denial_retains_first_packet_and_resume_reviews_only_rema
 
     monkeypatch.setattr(semantic, "run_semantic_worker", worker)
     with pytest.raises(PermissionError, match="Host denied second packet"):
-        semantic.run_semantic_resolution_pipeline(
+        semantic.run_row_triage_pipeline(
             reconciliation, output, required_resolution_level="classified"
         )
     retained = json.loads((output / "cumulative_resolution_state.json").read_text())
@@ -9996,7 +9996,7 @@ def test_semantic_batch_denial_retains_first_packet_and_resume_reviews_only_rema
         return {"response": response, "events": events}
 
     monkeypatch.setattr(semantic, "run_semantic_worker", resumed_worker)
-    result = semantic.run_semantic_resolution_pipeline(
+    result = semantic.run_row_triage_pipeline(
         reconciliation, output, required_resolution_level="classified"
     )
     assert result["batch_count"] == 1
@@ -10040,7 +10040,7 @@ def test_semantic_batches_keep_competing_candidates_together_and_reserve_journal
         return {"response": response, "events": events}
 
     monkeypatch.setattr(semantic, "run_semantic_worker", worker)
-    result = semantic.run_semantic_resolution_pipeline(
+    result = semantic.run_row_triage_pipeline(
         reconciliation, output, required_resolution_level="beneficiary_match"
     )
 
@@ -10051,7 +10051,9 @@ def test_semantic_batches_keep_competing_candidates_together_and_reserve_journal
     assert result["exhaustive"] is True
 
 
-def test_semantic_run_all_preserves_worker_denial_without_retry(tmp_path, monkeypatch):
+def test_semantic_row_triage_preserves_worker_denial_without_retry(
+    tmp_path, monkeypatch
+):
     """Automatic semantic review never turns a denied dispatch into another route."""
     _, semantic_review, reconciliation_dir, semantic_dir = (
         _prepare_ambiguous_semantic_run(tmp_path)
@@ -10065,16 +10067,14 @@ def test_semantic_run_all_preserves_worker_denial_without_retry(tmp_path, monkey
     monkeypatch.setattr(semantic_review, "run_semantic_worker", denied_worker)
 
     with pytest.raises(PermissionError, match="Host denied the model-worker operation"):
-        semantic_review.run_semantic_resolution_pipeline(
-            reconciliation_dir, semantic_dir
-        )
+        semantic_review.run_row_triage_pipeline(reconciliation_dir, semantic_dir)
 
     assert len(calls) == 1
     assert (semantic_dir / "residual_candidate_graph.json").is_file()
     assert (semantic_dir / "human_review_queue.json").is_file()
 
 
-def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(
+def test_semantic_row_triage_skips_worker_when_complete_residual_exceeds_caps(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -10088,7 +10088,7 @@ def test_semantic_run_all_skips_worker_when_complete_residual_exceeds_caps(
 
     monkeypatch.setattr(semantic_review, "run_semantic_worker", unexpected_worker)
 
-    result = semantic_review.run_semantic_resolution_pipeline(
+    result = semantic_review.run_row_triage_pipeline(
         reconciliation_dir,
         semantic_dir,
         required_resolution_level="classified",
@@ -11027,18 +11027,16 @@ def test_skill_and_scripts_keep_codex_as_the_review_layer() -> None:
     assert "Keep the improvement note local to chat or run artifacts." in skill_text
     assert "validate_journal_bank_review" in skill_text
     assert "render_journal_bank_review" in skill_text
-    assert "Native semantic residual resolution" in skill_text
-    assert "semantic_review.py run-worker" in skill_text
-    assert "journal_bank.luna_seatbelt_capsule.v5" in skill_text
-    assert "Retained v1–v4 records validate historical evidence only" in skill_text
-    assert "new work must prepare" in skill_text
-    assert "current chat unchanged" in skill_text
-    assert "Codex JSONL visibility is incomplete" in skill_text
-    assert "luna_launch_receipt.json" in skill_text
-    assert "copy or reconstruct its underlying `codex exec` command" in skill_text
-    assert "codex exec \\" not in skill_text
-    assert "Raw worker output is advisory until the validator accepts it" in skill_text
-    assert "human_review_queue.json" in skill_text
+    assert "Complete grouped review and final workbook" in skill_text
+    assert "semantic_review.py run-all" in skill_text
+    assert "run_semantic_resolution_pipeline" in skill_text
+    assert "all remaining journal counterparts" in skill_text
+    assert "Sintesi, Relazioni, Banca, Partitario" in skill_text
+    assert "before response interpretation" in skill_text
+    assert "same maintained grouped" in skill_text
+    assert "Diagnostic row triage (not final completion)" in skill_text
+    assert "it must not manufacture worker output" in skill_text
+    assert "Never call the technical workbook final" in skill_text
     assert "modules.llm" not in script_text
     assert "model_router" not in script_text
     assert "openai" not in script_text.lower()
@@ -13500,7 +13498,7 @@ def test_semantic_pipeline_preserves_reviewed_selection_through_generation(
         },
     )
 
-    result = semantic.run_semantic_resolution_pipeline(
+    result = semantic.run_row_triage_pipeline(
         reconciliation,
         output,
         worker_selection=review,
@@ -14384,7 +14382,7 @@ def test_native_worker_run_all_resumes_pending_packet_and_validates_funnel(
         semantic_review, "_record_model_submission", lambda *args, **kwargs: None
     )
     with pytest.raises(native_host_worker.NativeWorkerPending):
-        semantic_review.run_semantic_resolution_pipeline(
+        semantic_review.run_row_triage_pipeline(
             reconciliation_dir,
             semantic_dir,
             required_resolution_level="classified",
@@ -14396,7 +14394,7 @@ def test_native_worker_run_all_resumes_pending_packet_and_validates_funnel(
         json.dumps(completed_record(request, _valid_semantic_response(graph)))
     )
 
-    result = semantic_review.run_semantic_resolution_pipeline(
+    result = semantic_review.run_row_triage_pipeline(
         reconciliation_dir,
         semantic_dir,
         required_resolution_level="classified",
@@ -14521,6 +14519,81 @@ def test_teamsystem_partitario_headers_and_page_markers_emit_all_movements(
     }
 
 
+@pytest.mark.parametrize("forbidden_after_messages", [False, True])
+def test_native_worker_retains_protocol_cost_without_accepting_multiple_messages_or_later_tools(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, forbidden_after_messages: bool
+) -> None:
+    load_core()
+    semantic = load_semantic_review()
+    events = [
+        {"type": "thread.started", "thread_id": "protocol-test"},
+        {"type": "turn.started"},
+        {
+            "type": "item.completed",
+            "item": {"id": "preface", "type": "agent_message", "text": "Reviewing"},
+        },
+        {
+            "type": "item.completed",
+            "item": {"id": "answer", "type": "agent_message", "text": "{}"},
+        },
+    ]
+    if forbidden_after_messages:
+        events.append(
+            {
+                "type": "item.completed",
+                "item": {"id": "tool", "type": "command_execution"},
+            }
+        )
+    events.append(
+        {"type": "turn.completed", "usage": {"input_tokens": 120, "output_tokens": 80}}
+    )
+    raw = "".join(json.dumps(event) + "\n" for event in events).encode()
+    _mock_semantic_worker_runtime(
+        monkeypatch,
+        semantic,
+        tmp_path,
+        {
+            "return_code": 0,
+            "stdout": raw,
+            "stderr": b"test banner",
+            "duration_ms": 42,
+        },
+    )
+    monkeypatch.setattr(
+        semantic,
+        "resolve_worker_selection",
+        lambda **kwargs: ("gpt-6-luna", "high", {}),
+    )
+    monkeypatch.setattr(
+        semantic, "_worker_banner_attestation", lambda *args, **kwargs: {}
+    )
+    output = tmp_path / "worker-output"
+    output.mkdir()
+
+    with pytest.raises(ValueError) as captured:
+        semantic.run_isolated_native_worker(
+            prompt="Return one JSON object",
+            output_schema={"type": "object"},
+            output_dir=output,
+            workflow_id="journal-bank-reconciliation",
+            packet_sha256="a" * 64,
+        )
+
+    assert isinstance(captured.value, semantic.WorkerResponseFormatError) is (
+        not forbidden_after_messages
+    )
+    receipt = json.loads((output / semantic.PROCESS_RECEIPT_NAME).read_text())
+    assert receipt["jsonl_observation"]["usage"] == {
+        "input_tokens": 120,
+        "output_tokens": 80,
+    }
+    assert receipt["process"]["duration_ms"] == 42
+    assert (output / semantic.PROCESS_EVENTS_NAME).read_bytes() == raw
+    assert not (output / semantic.RESPONSE_NAME).exists()
+    assert not (output / semantic.LAUNCH_RECEIPT_NAME).exists()
+    assert not list(output.glob(".luna-worker-capsule.*"))
+
+
 @pytest.mark.parametrize("verdict", ["ambiguous", "no_match", "needs_evidence"])
 def test_semantic_abstention_can_cite_eligible_journal_only_evidence(tmp_path, verdict):
     _, semantic, reconciliation, output = _prepare_ambiguous_semantic_run(
@@ -14613,7 +14686,7 @@ def test_rejected_worker_response_retains_usage_without_accepting_suggestions(
     original = _tree_snapshot(reconciliation)
 
     with pytest.raises(ValueError, match="Worker evidence field is not populated"):
-        semantic.run_semantic_resolution_pipeline(reconciliation, output)
+        semantic.run_row_triage_pipeline(reconciliation, output)
 
     receipt = json.loads((output / "luna_launch_receipt.json").read_text())
     assert receipt["jsonl_observation"]["usage"] == usage

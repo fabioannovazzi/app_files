@@ -133,6 +133,7 @@ __all__ = [
     "WORKER_RUN_NAME",
     "run_isolated_luna_worker",
     "run_isolated_native_worker",
+    "WorkerResponseFormatError",
     "resolve_worker_selection",
     "discover_worker_selection",
     "load_worker_selection",
@@ -140,11 +141,26 @@ __all__ = [
     "main",
     "prepare_semantic_review",
     "run_semantic_resolution_pipeline",
+    "run_row_triage_pipeline",
     "run_semantic_worker",
     "validate_semantic_review",
 ]
 
 LOGGER = logging.getLogger(__name__)
+
+
+class WorkerResponseFormatError(ValueError):
+    """A fully observed, tool-free turn has ambiguous assistant output."""
+
+    def __init__(self, message: str, *, usage: Mapping[str, int]) -> None:
+        super().__init__(message)
+        self.usage = dict(usage)
+        self.process_receipt: Path | None = None
+
+
+PROCESS_RECEIPT_NAME = "luna_process_receipt.json"
+PROCESS_EVENTS_NAME = "luna_process_events.jsonl"
+PROCESS_STDERR_NAME = "luna_process_stderr.log"
 
 SEMANTIC_DIRECTORY_NAME = "semantic-review"
 CANDIDATE_GRAPH_NAME = "residual_candidate_graph.json"
@@ -3196,7 +3212,15 @@ def run_isolated_native_worker(
     if unresolved_output.is_symlink() or not unresolved_output.is_dir():
         raise ValueError("Luna output directory must already be an ordinary directory")
     output = unresolved_output.resolve()
-    artifact_names = (RESPONSE_NAME, EVENTS_NAME, STDERR_NAME, LAUNCH_RECEIPT_NAME)
+    artifact_names = (
+        RESPONSE_NAME,
+        EVENTS_NAME,
+        STDERR_NAME,
+        LAUNCH_RECEIPT_NAME,
+        PROCESS_RECEIPT_NAME,
+        PROCESS_EVENTS_NAME,
+        PROCESS_STDERR_NAME,
+    )
     for name in artifact_names:
         _new_output_path(output, name)
 
@@ -3272,26 +3296,37 @@ def run_isolated_native_worker(
             stderr_limit=MAX_STDERR_BYTES,
             timeout_seconds=timeout_seconds,
         )
-        if process_result["return_code"] != 0:
-            raise ValueError("The isolated Luna worker returned a nonzero status")
-        try:
-            events_text = process_result["stdout"].decode("utf-8")
-        except UnicodeDecodeError as exc:
-            raise ValueError("Worker JSONL output is not UTF-8") from exc
-        event_summary = _validate_worker_events(events_text, response=None)
-        response = event_summary["final_response"]
-        banner = _worker_banner_attestation(
-            process_result["stderr"],
-            model=model,
-            reasoning_effort=reasoning_effort,
+        # Retain the returned process before interpreting its response. A bad
+        # event/message shape must not erase an already incurred model call.
+        process_receipt_content = {
+            "schema_version": "vera.native_worker_process.v1",
+            "workflow_id": workflow_id,
+            "packet_sha256": packet_sha256,
+            "acceptance_status": "unvalidated",
+            "process": {
+                "return_code": process_result["return_code"],
+                "duration_ms": process_result["duration_ms"],
+                "events_sha256": hashlib.sha256(process_result["stdout"]).hexdigest(),
+                "stderr_sha256": hashlib.sha256(process_result["stderr"]).hexdigest(),
+            },
+            "jsonl_observation": {
+                "usage": _observed_terminal_usage(process_result["stdout"]),
+                "validation_status": "unvalidated",
+            },
+        }
+        process_receipt = {
+            **process_receipt_content,
+            "content_sha256": canonical_json_sha256(process_receipt_content),
+        }
+        _publish_worker_artifacts(
+            output,
+            capsule,
+            {
+                PROCESS_RECEIPT_NAME: _json_bytes(process_receipt),
+                PROCESS_EVENTS_NAME: process_result["stdout"],
+                PROCESS_STDERR_NAME: process_result["stderr"],
+            },
         )
-        response_bytes = _json_bytes(response)
-        response_sha256 = hashlib.sha256(response_bytes).hexdigest()
-        events_bytes = process_result["stdout"]
-        events_sha256 = hashlib.sha256(events_bytes).hexdigest()
-        stderr_bytes = process_result["stderr"]
-        stderr_sha256 = hashlib.sha256(stderr_bytes).hexdigest()
-
         if _codex_home_boundary_inputs()["bindings"] != boundary_inputs["bindings"]:
             raise ValueError("Claude boundary inputs changed while Luna was running")
         for path, label, digest, binding in (
@@ -3323,6 +3358,26 @@ def run_isolated_native_worker(
                 != binding
             ):
                 raise ValueError(f"{label} changed while Luna was running")
+
+        if process_result["return_code"] != 0:
+            raise ValueError("The isolated Luna worker returned a nonzero status")
+        try:
+            events_text = process_result["stdout"].decode("utf-8")
+        except UnicodeDecodeError as exc:
+            raise ValueError("Worker JSONL output is not UTF-8") from exc
+        banner = _worker_banner_attestation(
+            process_result["stderr"],
+            model=model,
+            reasoning_effort=reasoning_effort,
+        )
+        event_summary = _validate_worker_events(events_text, response=None)
+        response = event_summary["final_response"]
+        response_bytes = _json_bytes(response)
+        response_sha256 = hashlib.sha256(response_bytes).hexdigest()
+        events_bytes = process_result["stdout"]
+        events_sha256 = hashlib.sha256(events_bytes).hexdigest()
+        stderr_bytes = process_result["stderr"]
+        stderr_sha256 = hashlib.sha256(stderr_bytes).hexdigest()
 
         prompt_sha256 = hashlib.sha256(prompt_bytes).hexdigest()
         schema_sha256 = hashlib.sha256(schema_bytes).hexdigest()
@@ -3433,7 +3488,9 @@ def run_isolated_native_worker(
             ),
             "main_chat_model_change": False,
         }
-    except (OSError, ValueError):
+    except (OSError, ValueError) as exc:
+        if isinstance(exc, WorkerResponseFormatError):
+            exc.process_receipt = output / PROCESS_RECEIPT_NAME
         if artifacts_published:
             _remove_published_worker_artifacts(output)
             artifacts_published = False
@@ -3458,8 +3515,8 @@ def _publish_worker_artifacts(
 ) -> None:
     for name in artifacts:
         _new_output_path(semantic_dir, name)
-    staging_dir = capsule / "publish"
-    staging_dir.mkdir(mode=0o700)
+    staging_dir = Path(tempfile.mkdtemp(prefix="publish.", dir=capsule))
+    staging_dir.chmod(0o700)
     staged: dict[str, Path] = {}
     for name, payload in artifacts.items():
         path = staging_dir / name
@@ -4094,6 +4151,31 @@ def _validate_worker_response(
     return normalized_reviews
 
 
+def _observed_terminal_usage(events: bytes) -> dict[str, int] | None:
+    """Read cost metadata without treating an unvalidated answer as accepted."""
+    try:
+        records = [
+            _strict_json_text(line, label="worker cost event")
+            for line in events.decode("utf-8").splitlines()
+        ]
+        completed = [
+            record for record in records if record.get("type") == "turn.completed"
+        ]
+        if len(completed) != 1 or records[-1] != completed[0]:
+            return None
+        usage = completed[0].get("usage")
+        if not isinstance(usage, dict) or not {"input_tokens", "output_tokens"} <= set(
+            usage
+        ):
+            return None
+        return {
+            key: _non_negative_int(value, label="worker cost " + key)
+            for key, value in usage.items()
+        }
+    except (UnicodeDecodeError, ValueError, IndexError):
+        return None
+
+
 def _validate_worker_events(
     events_text: str,
     response: Mapping[str, Any] | None,
@@ -4184,8 +4266,6 @@ def _validate_worker_events(
                 completed_item_order.append(item_id)
                 item_counts[item_type] += 1
                 if item_type == "agent_message":
-                    if agent_message is not None:
-                        raise ValueError("Worker emitted multiple completed messages")
                     message = item.get("text")
                     if not isinstance(message, str):
                         raise ValueError("Completed worker message has no text")
@@ -4220,6 +4300,12 @@ def _validate_worker_events(
         raise ValueError("Worker event stream must contain one completed turn")
     if agent_message is None or agent_message_id != completed_item_order[-1]:
         raise ValueError("Worker final item must be its single completed message")
+    if item_counts["agent_message"] != 1:
+        # All remaining events, tool restrictions and the completed-turn usage
+        # have been checked before classifying this as a response-format retry.
+        raise WorkerResponseFormatError(
+            "Worker emitted multiple completed messages", usage=usage
+        )
     final_message = _strict_json_text(agent_message, label="final worker message")
     if response is not None and final_message != response:
         raise ValueError("Final worker event message differs from retained response")
@@ -5314,7 +5400,7 @@ def validate_semantic_review(
     }
 
 
-def run_semantic_resolution_pipeline(
+def run_row_triage_pipeline(
     reconciliation_dir: Path,
     semantic_output_dir: Path,
     *,
@@ -5413,6 +5499,36 @@ def run_semantic_resolution_pipeline(
     }
 
 
+def run_semantic_resolution_pipeline(
+    reconciliation_dir: Path,
+    semantic_output_dir: Path,
+    *,
+    required_resolution_level: str = DEFAULT_REQUIRED_RESOLUTION_LEVEL,
+    codex_bin: Path | None = None,
+    client_engagement: Mapping[str, Any] | None = None,
+    worker_selection: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Complete the same grouped review and final workbook on every normal run.
+
+    The exact matcher and row-triage helpers are intermediate evidence, never
+    alternative final-delivery routes. Review certainty does not authorize
+    posting entries or silently change the strict reconciliation ledger.
+    """
+    from grouped_review import complete_grouped_review
+
+    if required_resolution_level not in RESOLUTION_RANK:
+        raise ValueError("Unknown required resolution level")
+    result = complete_grouped_review(
+        reconciliation_dir,
+        semantic_output_dir,
+        client_engagement=client_engagement,
+        worker_selection=worker_selection,
+        codex_bin=codex_bin,
+    )
+    result["required_resolution_level"] = required_resolution_level
+    return result
+
+
 def _add_client_engagement_argument(parser: argparse.ArgumentParser) -> None:
     parser.add_argument("--client-engagement", type=Path, required=True)
 
@@ -5446,7 +5562,7 @@ def _parser() -> argparse.ArgumentParser:
     _add_client_engagement_argument(prepare)
     run_all = subparsers.add_parser(
         "run-all",
-        help="Review successive bounded packets, retaining validated progress between batches.",
+        help="Complete grouped review, validate coverage and export the final four-sheet workbook.",
     )
     run_all.add_argument("reconciliation_dir", type=Path)
     run_all.add_argument("--output-dir", type=Path, required=True)
@@ -5623,6 +5739,12 @@ def main() -> int:
                     }
                 ),
             )
+        log_execution_status(
+            args.output_dir,
+            "final reconciliation workbook: %s; measured model usage: %s",
+            result["workbook"],
+            json.dumps(result["model_tokens"]),
+        )
         return 0
     if args.command == "run-worker":
         try:

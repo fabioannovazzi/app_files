@@ -2,7 +2,7 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/lucia-distribution-editions/plugins/vera",
   "version": "0.1.593",
-  "captured_at": "2026-11-07T03:10:50.886405+00:00",
+  "captured_at": "2026-11-07T05:06:41.878023+00:00",
   "catalogue_fingerprint": "13e2acb7338cff18d637bdc66abedcc7d62039cdc1f90429d638459eec5037fa",
   "manifest_sha256": "b883c80dfd897e0ebf3b31c01daf9ce3a8dc109b9fa5f44aa1c74b83d5374ebb",
   "entries": [

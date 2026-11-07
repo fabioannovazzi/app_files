@@ -51,3 +51,12 @@ made that the submitted reduced artifact contains that later runtime repair.
 The second alignment fixture failure was corrected by updating both remaining
 mock signatures; 126 verifier/MCP tests passed with 100% verifier coverage and
 189 downstream alignment tests passed. Runtime integration passed 51 tests.
+
+All 106 checks also passed on 27ae8b9fa. Its merge was rejected when main
+concurrently received #964 (c61cd071d), the grouped reconciliation/workbook fix.
+That implementation is preserved unchanged. Structured JSON comparisons found
+only version/fingerprint differences in conflicting product records; both new
+catalogue history bindings are retained alongside Lucia's binding. Versions
+remain Lucia 0.1.218, Vera 0.1.593 and Clara 0.1.395. The integrated packages are
+rebuilt and rechecked; the preceding green CI run is retained as historical
+integration evidence, not represented as validation of the later commit.

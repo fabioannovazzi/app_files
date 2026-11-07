@@ -293,6 +293,133 @@ none receives a row-order preference.
 Candidates outside the reviewed currency, unit, entity, party, or direction
 perimeter are never matched.
 
+## Authoritative completion route
+
+The normal `semantic_review.py run-all` entrypoint always performs grouped review
+and exports the final four-sheet client workbook through `grouped_review.py` and
+`grouped_workbook.py`. The low-level exact matcher workbook is intermediate.
+Normal completion never substitutes the row-only graph described below.
+
+The grouped packet retains the remaining bank population, all remaining journal
+counterparts and targeted original posting/continuation text. Strict per-row
+amount/date eligibility is not applied as a semantic relevance filter. The
+model proposes explicit sets of bank and journal IDs; code checks literal source
+citations, signed group totals, perimeter, coverage and non-reuse. Up to 25 focus
+rows are covered per call with whole groups allowed across the focus boundary.
+Every returned attempt's launcher receipt and tokens remain available even when
+domain validation rejects it. The source-bound accepted state resumes without
+another call. An incomplete review cannot produce a final workbook.
+
+See the maintained skill for final artifact names, bank working-copy preparation
+and the fixed sequence. The following funnel is diagnostic row triage only.
+
+## Diagnostic Claude-Only Residual Resolution Funnel
+
+After a qualified deterministic run, `semantic_review.py prepare` projects the
+unmatched partitions into a bounded candidate graph. Without an explicit
+clearance policy, preparation defaults to `perfect_match`: it does not require a
+user choice, still prepares the worker and retains semantic residuals for draft
+review. An explicitly supplied `--required-level` applies the established
+clearance policy; the default must not be described as a user decision.
+Preparation first validates the current output
+receipts and material-value ledger replay.
+An edge exists only when the core candidate predicate accepts the exact amount
+and reviewed currency, unit, entity, party, and direction perimeter, and the
+pair also has either a shared stable explicit reference or two actual dates
+inside the reviewed date window. Description and beneficiary similarity cannot
+create an edge.
+
+The graph groups eligible rows into connected components and packs independent
+components into successive bounded requests, at most 25 per packet. It never
+splits a connected candidate group across requests. Bank-row, journal-row, edge,
+graph-byte and prompt-byte limits bound each request, not the complete review.
+Overflow remains pending for the next packet. An individually oversized component
+or an unexpected deterministic singleton remains explicitly deferred without
+blocking other fit components. Each validated packet updates cumulative reviewed
+bank IDs and used journal IDs before another packet is prepared. This prevents
+repeat review and cross-packet evidence reuse. Failure or host denial stops the
+sequence immediately; retained generations support resumption.
+
+Packet projection happens after source-column mapping. The worker receives
+only populated canonical fields for unresolved bank rows and their
+hard-compatible candidates. Unmapped raw columns, empty canonical fields,
+physical source locators, and the mechanically derived absolute amount remain
+outside model context. The opaque transaction ID preserves local linkage and
+the signed amount remains available as evidence.
+
+Only the main Claude chat may orchestrate the optional model pass. It keeps its
+existing model and invokes `semantic_review.py run-worker`, which requests one
+separate ephemeral worker for the complete selected packet. The shared owned
+`semantic_worker_policy.json` supplies low-cost candidates, and
+`worker_capabilities.py` selects an advertised model/effort from the current host.
+The graph retains that selection for replay; availability is not model-quality
+evidence. Never reconstruct or run the underlying `codex exec` command
+directly. The launcher checks actual isolation and required CLI capabilities on the
+current macOS and Claude, without fixed external version/build/hash gates.
+It records executable snapshots per run and rejects concurrent changes.
+The Vera-owned deny-default policy hash remains fixed. It uses a
+mode-`0700` capsule, prompt stdin, bounded parent capture, a read-only inner
+sandbox, ignored project rules, absent-or-empty global Claude instructions, and
+enumerated feature disables. Exact-read and outside-read-denial canaries run
+before the worker; the qualified boundary also denied the hidden `view_image`
+path access to an outside nonce image. Do not launch a worker per candidate,
+change the model of the current chat, or use Luna to run source qualification,
+matching, ledger replay, assurance, or final review.
+
+The boundary permits exact Claude authentication and installation-ID access and
+outbound network access, so the packet is transmitted to the Anthropic Claude
+service. The installation-ID file has the narrow write permission required by
+the running Claude build but must remain byte-identical. The capsule is deleted after
+the turn. The response, JSONL, stderr, and content-bound launch receipt are
+published together only after packet, source, runtime-input, executable, and
+boundary checks replay successfully.
+
+Worker decisions are limited to `suggest_match`, `ambiguous`, `no_match`, and
+`needs_evidence`, plus a strongest supported resolution level and optional
+classification or identified counterparty. A suggested journal row must be an existing graph neighbor;
+other verdicts cannot name a journal row. Validation requires the current graph
+digest, exactly one review of every selected component and bank row, global
+non-reuse of journal evidence, bounded evidence and rationale fields, a strict
+thread/turn/item lifecycle, no JSONL-visible forbidden item, and equality
+between the final event message and retained response. Any violation rejects
+the entire response. JSONL visibility is incomplete and therefore cannot prove
+that no hidden tool path ran; the pinned outer filesystem boundary is the
+primary containment control. JSONL also does not attest the selected model or
+reasoning effort, so worker metadata records both as requested rather than
+observed and validation requires the launch receipt.
+
+Validated results live outside the canonical reconciliation directory in its
+real sibling named `semantic-review`. The diagnostic Python API
+`run_row_triage_pipeline` launches successive workers until
+all eligible residual components have been reviewed. Completed packets are
+archived independently; only unreviewed rows enter subsequent preparations. Raw Luna output remains advisory until
+validation. The validator then applies accepted decisions to
+`semantic_resolution_application.json`, `resolution_funnel.json`, and
+`human_review_queue.json`, and writes `operational_review_payload.json` as the
+bank-side human workbench input. Unmatched journal rows remain strict evidence
+and candidate context but are not standalone work items. The funnel levels are `classified`,
+`candidate_match`, `beneficiary_match`, `identifier_match`, and
+`perfect_match`; “at least” totals are cumulative even though each movement is
+assigned only its highest level. Levels express sufficiency, not the presence
+of every weaker evidence field. Only deterministic replay may assign
+`perfect_match`; Luna may clear operational review at a lower user-selected
+threshold but cannot alter native matches, ledgers, artifact receipts,
+assurance gates, or report readiness. If the current preparation closure remains valid,
+worker unavailability or invalid output is recorded as `worker_failed`; source
+or packet tampering instead fails without writing a falsely bound status. A
+validated generation remains terminal until a new preparation archives its
+fixed-name artifacts under `semantic-review/history/`. In every failure mode,
+the main Claude chat and deterministic reconciliation remain unchanged.
+
+The diagnostic `run_row_triage_pipeline` performs its final preparation itself.
+Its completed batch returns
+the retained `worker_run` and `launch_receipt` paths, also emitted by the CLI as
+`validated worker evidence`. Those files belong to the archived generation;
+the current top-level status and resolution artifacts describe the exhaustive
+result. A terminal `worker_required=false` does not mean the preceding batch
+was skipped. Use the actual returned paths, and read artifact contents through
+the run-bound Archive reader so the privacy report records the delivery.
+
 ## Source Qualification
 
 - Tabular files emit rows only after date and amount or debit/credit fields are
