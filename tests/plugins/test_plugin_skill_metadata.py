@@ -160,7 +160,9 @@ def builder_case(tmp_path, monkeypatch, product, host):
         target = replace(target, output_zip=output)
         monkeypatch.setattr(codex, "validate_plugin_source", lambda _: [])
         monkeypatch.setattr(codex, "expected_zip_entries", lambda _: entries)
-        monkeypatch.setattr(codex, "chatgpt_upload_entries", lambda _: entries)
+        monkeypatch.setattr(
+            codex, "chatgpt_upload_entries", lambda _, *, edition="full": entries
+        )
         if host == "codex":
             build = lambda: codex.build_package(target)
             check = lambda: codex.verify_package(target)
