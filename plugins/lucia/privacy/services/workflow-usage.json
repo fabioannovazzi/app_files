@@ -119,7 +119,7 @@
       "kind": "hosted_service",
       "destination": "Public visitors to Mparanza GET /api/usage-summary and /static/shared/utilizzo/index.html",
       "purpose": "Publish aggregate distinct-user starts, completions and non-completions per activity and application",
-      "content": "Only aggregate integer counts, catalog function IDs and labels, product minimum reporting versions, supported app names, an identity-coverage boolean and snapshot time are public. The server internally deduplicates proven computer IDs across retained runs, functions, products and apps. The publication contains no computer, installation or run identifiers, per-user history, documents, prompts, feedback, ratings, hashes, capabilities or test-exclusion details. No model call is made by this projection. Codex, Cowork and Antigravity are included from the product-specific instrumented version; no time window or testing epoch date is applied.",
+      "content": "Only aggregate integer counts, catalog function IDs and labels, product minimum reporting versions and their release dates, supported app names, an identity-coverage boolean and snapshot time are public. The server internally deduplicates proven computer IDs across retained runs, functions, products and apps. The publication contains no computer, installation or run identifiers, per-user history, documents, prompts, feedback, ratings, hashes, capabilities or test-exclusion details. No model call is made by this projection. Codex, Cowork and Antigravity are included from the product-specific instrumented version; no time window or testing epoch date is applied.",
       "runtime_profiles": [
         "openai-codex",
         "anthropic-cowork",
@@ -201,7 +201,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "155d0286fced6ee226d4c5644602daded02b1bdb4a92d04b5dbbc11ba81faed2"
+    "source_fingerprint": "6713e96c0b93c4ea79f52ea02c5df754d6f4f0a1ffea0c97919879ba90c1462d"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",

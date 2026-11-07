@@ -5,6 +5,18 @@ Vera, Clara and Lucia. It refreshes `/api/usage-summary` once per minute while
 visible. Only received activity from Codex, Cowork and Antigravity is included.
 Each product's `instrumented_from_version` is the inclusive minimum start
 version; versions are compared numerically. There is no rolling date window.
+`instrumented_version_released_on` records the release date of that minimum
+version, displayed beside its number. It does not filter task timestamps.
+
+| Product | Minimum version | Release date | Evidence |
+| --- | --- | --- | --- |
+| Vera | 0.1.404 | 2026-10-17 | [PR 851](https://github.com/fabioannovazzi/app_files/pull/851), merge `54da75ab0`; production `main` fast-forward at 18:30:15 UTC on the same day |
+| Clara | 0.1.298 | 2026-10-18 | [PR 857](https://github.com/fabioannovazzi/app_files/pull/857), merge `556d8810f`; production `main` fast-forward at 10:09:30 UTC on the same day |
+| Lucia | 0.1.121 | 2026-10-18 | Same product release and production fast-forward as Clara |
+
+These package-release dates were verified against manifests, merged PRs and the
+production Git reflog on 2026-11-07. They do not claim Marketplace publication
+dates or the date an individual installed or first used a version.
 
 The agreed counting unit is the proven computer ID. Repeat tasks, reporting
 instances and apps do not multiply one user. Each function, app and the global
@@ -21,7 +33,8 @@ computer proof is never replaced by an installation UUID; an aggregate coverage
 flag prevents presenting such a result as complete.
 
 Only nonzero rows are published. The response contains aggregate counts, catalog
-labels, minimum versions, supported apps, a coverage flag and the refresh time.
+labels, minimum versions and their release dates, supported apps, a coverage flag
+and the refresh time.
 No computer, installation or run IDs, comments, ratings, documents, credentials,
 individual histories or test-exclusion details leave the server. Displayed
 function labels use the product language; the Lucia document check uses its

@@ -97,6 +97,10 @@ def inspect(connection: Any, sql: Callable[[str], str], now: str) -> dict[str, A
     return {
         "updated_at": now,
         "minimum_versions": versions,
+        "minimum_version_release_dates": {
+            product: catalog["instrumented_version_released_on"]
+            for product, catalog in catalogs.items()
+        },
         "supported_apps": list(APPS),
         "identity_complete": identity_complete,
         "totals": total.counts(),

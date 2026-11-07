@@ -38,8 +38,11 @@
     document.querySelectorAll("[data-total]").forEach(cell => {
       cell.textContent = data.totals[cell.dataset.total].toLocaleString("it-IT");
     });
-    document.getElementById("versions").textContent = "Versioni incluse: " +
-      ["vera", "lucia", "clara"].map(product => `${names[product]} ${data.minimum_versions[product]} o superiore`).join(" · ");
+    const releaseDate = new Intl.DateTimeFormat("it-IT", { dateStyle: "long", timeZone: "UTC" });
+    document.getElementById("versions").textContent = "Versioni minime incluse e date di rilascio:\n" +
+      ["vera", "lucia", "clara"].map(product =>
+        `${names[product]} ${data.minimum_versions[product]} — ${releaseDate.format(new Date(data.minimum_version_release_dates[product] + "T00:00:00Z"))}`
+      ).join("\n") + "\nSono incluse anche le versioni successive.";
     document.getElementById("empty").hidden = data.totals.started > 0;
     document.getElementById("coverage").hidden = data.identity_complete;
     document.getElementById("results").hidden = false;

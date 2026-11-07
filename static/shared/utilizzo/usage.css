@@ -15,7 +15,7 @@ nav a { padding-block: 12px; font-weight: 500; text-decoration: none; }
 h1 { margin: 0; font-size: clamp(2.9rem, 6.8vw, 5rem); font-weight: 650; line-height: 1.02; letter-spacing: -.055em; }
 .lead { max-width: 650px; margin: 24px 0; font-size: clamp(1.2rem, 2.3vw, 1.55rem); line-height: 1.4; letter-spacing: -.015em; }
 .scope { margin: 0 0 6px; font-weight: 500; }
-.versions { margin: 0; color: #48617e; font-size: .92rem; }
+.versions { margin: 0; color: #48617e; font-size: .92rem; white-space: pre-line; }
 .status { margin: 28px 0 48px; color: #48617e; font-size: .85rem; }
 section { margin-bottom: 64px; }
 .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 24px; margin-bottom: 20px; }

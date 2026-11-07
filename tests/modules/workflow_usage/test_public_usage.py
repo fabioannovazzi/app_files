@@ -210,11 +210,17 @@ def test_public_usage_endpoint_exposes_only_aggregate_fields_and_no_write_route(
     assert set(response.json()) == {
         "updated_at",
         "minimum_versions",
+        "minimum_version_release_dates",
         "supported_apps",
         "identity_complete",
         "totals",
         "functions",
         "apps",
+    }
+    assert response.json()["minimum_version_release_dates"] == {
+        "vera": "2026-10-17",
+        "clara": "2026-10-18",
+        "lucia": "2026-10-18",
     }
     assert str(computer.device_id) not in response.text
     assert str(owner.installation_id) not in response.text
