@@ -1,4 +1,5 @@
 {
+  "display_name": "Managed Python runtime",
   "external_boundaries": [
     {
       "id": "declared-core-dependency-retrieval",
@@ -98,12 +99,14 @@
     "scripts/verify_mcp_package.cjs",
     "scripts/run_service_mcp.cjs"
   ],
-  "service_id": "managed-python-runtime",
+  "governed_repository_paths": [
+    "plugins/_shared/vendor/modules/vera_assurance/recovery.py"
+  ],
   "review": {
-    "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-06",
-    "source_fingerprint": "a0244f9d60096d433bf9f0f2de4eb50c8fd69327de75d479a56b29f04b46d33c"
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "fb6694ac4bd84df0c34e95e2dd8f7dd479d8580a50c5990738102f46045fa742"
   },
   "runtime_profiles": [
     "openai-codex",
@@ -203,8 +206,5 @@
       "on_violation": "Keep the same job and accessible completed work, expose checkpoint availability separately, and recover only from actual verified copies at an authorized destination. Do not claim inaccessible or unsaved bytes were recovered."
     }
   ],
-  "display_name": "Managed Python runtime",
-  "governed_repository_paths": [
-    "plugins/_shared/vendor/modules/vera_assurance/recovery.py"
-  ]
+  "service_id": "managed-python-runtime"
 }

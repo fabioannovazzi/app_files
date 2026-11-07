@@ -1,0 +1,10 @@
+[run]
+source = plugins/journal-bank-reconciliation/scripts
+
+[report]
+include =
+    */grouped_review.py
+    */grouped_workbook.py
+    */bank_working_copy.py
+fail_under = 80
+show_missing = True

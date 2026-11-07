@@ -317,13 +317,109 @@ Omit `--tolerance` and `--date-window-days` to use the sealed recipe policy. If 
    matches/residuals, unmatched partitions, blocked relationship ledger, gates,
    and audit instead.
 
-## Native semantic residual resolution
+## Complete grouped review and final workbook
 
-Use the ordinary `semantic_review.py run-all` command against the completed reconciliation directory and its sibling semantic-review directory, with the same `--client-engagement` context. The packaged host policy prepares a bounded native request. Complete `NATIVE_WORKER_PENDING` automatically using `references/native-host-workers.md`, then resume the identical command. Use the actual Cowork `Agent` tool and registered `vera:reconciliation-reviewer`; verify its current model choices and declared tools before dispatch. Keep the main chat model unchanged.
+Always use the same production sequence: source qualification, strict matching,
+complete grouped review, exact arithmetic/coverage/non-reuse checks, and the
+final client workbook. The initial `reconciliation/journal_bank_reconciliation.xlsx`
+is an intermediate technical export. Never deliver it as the completed review.
 
-The parent retains the exact invocation and completed response; these are host-reported observations, not provider attestation or OS isolation proof. Both parent and child receive the bounded mapped evidence. Missing capabilities leave the draft unresolved without substituting another host. Do not ask the user to copy requests, choose routine mappings or approve draft preparation. Keep the default `perfect_match` clearance level unless an operational policy has already been explicitly established. Semantic judgment cannot claim deterministic perfect-match authority.
+After a qualified strict run, continue automatically:
 
-After resumption, use the returned worker-evidence paths and the regenerated resolution funnel, review queue and operational payload. Completed worker files move to the returned history generation; do not reconstruct paths.
+```bash
+python scripts/semantic_review.py run-all <output-dir>/reconciliation \
+  --output-dir <output-dir>/semantic-review \
+  --client-engagement <client_engagement_path>
+```
+
+`run-all` and `run_semantic_resolution_pipeline` call the same maintained grouped
+review and exporter. No client-specific helper, manual alternative or case-name
+branch may replace that route. Semantic review uses the established host account
+and authorized reconciliation scope. Do not ask for a second consent receipt.
+An actual host denial stops execution; do not bypass it.
+
+The model sees the remaining bank rows and **all remaining journal counterparts**,
+not just exact amount/same-day graph neighbors. Targeted original PDF posting and
+continuation text supplies source context absent from normalized descriptions.
+Names, dates, signed amounts, descriptions, references and selected posting text
+are real case data; they are not automatically anonymized. Unmapped unrelated
+columns, whole raw tables, credentials and other-client evidence remain excluded.
+Only the qualified native launcher sends the bounded packet. The main chat keeps
+its model and reviews the result; it must not manufacture worker output.
+
+Each call focuses on at most 25 bank rows (or remaining journal rows), while
+retaining the counterpart context needed to join whole financial groups. A group
+can include additional bank rows, so salary totals are not split at a packet
+boundary. Subsequent packets exclude accepted bank/journal evidence. The model
+may propose one-to-many, many-to-one and many-to-many relationships, timing
+explanations and monetary differences. Exact arithmetic never silently absorbs
+a fee or a cent. Equal totals alone do not establish a semantic relationship.
+
+The validator requires every focus movement, no reused rows, exact signed sums
+for concordant/proposed groups and literal non-monetary source evidence on both
+sides of a supported relationship. Unconfirmed groups, differences, missing
+counterparts and unresolved questions stay distinct. A named beneficiary alone
+is not a matched ledger row. The strict match files are never rewritten.
+
+The normal route is identical for every client and every invocation: qualify
+sources, run strict matching, complete grouped review, validate evidence and exact
+sums with full coverage and no reused rows, then export the four-sheet workbook.
+The main chat must not replace an incomplete worker review with manual decisions.
+Every returned Claude process retains its raw events, stderr, observed usage and
+duration before response interpretation. A complete, otherwise verified tool-free
+turn with multiple assistant messages is rejected and can be retried through the
+same stage, never adopted by choosing one message. Invalid domain output can
+also be corrected within the same maximum of three calls per packet. Source,
+executable, isolation and forbidden-tool failures stop; they are not format retries.
+Missing terminal usage remains unknown, never zero. Reopening unchanged validated work replays
+source/response bindings and the retained groups without another model call.
+
+After complete coverage, the same producer writes:
+
+- `grouped_reconciliation_result.json`: checked relationships, source binding,
+  row counts, differences and measurements for all attempts;
+- `Riconciliazione_banca_partitario.xlsx`: **Sintesi, Relazioni, Banca, Partitario**,
+  with concordant groups, proposals, differences and required documents;
+- `grouped_review_status.json`: complete/incomplete outcome and actual final path.
+
+Deliver the returned final workbook and its result, not the intermediate export.
+Completion means every supplied movement has an explicit disposition; it does
+not mean all differences disappeared, an invoice allocation was verified, a
+professional adopted the work or entries were posted. If the worker, source
+replay, coverage, evidence or financial validation cannot complete, retain the
+intermediates and diagnose that block. Never call the technical workbook final.
+Report full elapsed time, all measured model attempts and any missing token or
+privacy observations honestly. Privacy reporting failures do not suppress the
+useful accounting result.
+
+### Reviewed bank working copies
+
+When a bank XLS has undated manual calculation cells, use the maintained
+`inspect_inputs.py --prepare-bank-json '<reviewed JSON>'` action in the source
+preparation run. Decisions identify the exact bound source path/hash, sheet,
+zero-based date/description/amount columns, date convention, and every excluded
+physical row. Include `reviewer_ref` and `reviewed_on`. The action retains all
+excluded cells and original-to-working row links. It never silently discards an
+undated amount. Seal these preparation outputs and bind the working copies as
+same-engagement upstream inputs for the calculation stage. Do not write an ad hoc
+customer parser or copy old review conclusions into a fresh worker response.
+
+### Diagnostic row triage (not final completion)
+
+`prepare`, `run-worker`, `validate` and `run_row_triage_pipeline` retain the narrow
+historical exact-edge graph for diagnosis and historical receipt replay only.
+They do not perform complete grouped reconciliation or produce the final client
+workbook. Use `run-all` for every normal completion, including a resumed run.
+The technical certainty funnel must not be presented as a count of completed
+bank-to-ledger relationships. A counterparty name is not a matched posting.
+
+Runtime capabilities, native host dispatch, isolation controls, source replay and
+receipt validation still apply. See `../../references/workflow-reference.md`
+and `../../references/native-host-workers.md` for the low-level diagnostic
+protocol. Never reconstruct `codex exec`, change the current chat model,
+hand-author worker responses or bypass an actual host denial. The grouped stage
+uses the same maintained native launcher; it does not introduce a model API or
+new provider. Final arithmetic and review status do not authorize posting.
 
 ## Mapping Recipe Rules
 
@@ -448,7 +544,7 @@ Claude may inspect individual rows and explain unresolved items, but should keep
 - `reconciliation/unmatched_bank.csv`;
 - `reconciliation/unmatched_journal.csv`;
 - `reconciliation/bank_pdf_non_movement_rows.csv`;
-- `reconciliation/journal_bank_reconciliation.xlsx`;
+- `reconciliation/journal_bank_reconciliation.xlsx` (intermediate technical export);
 - `reconciliation/reconciliation_audit.json`;
 - `reconciliation/input_receipts.json`;
 - `reconciliation/source_qualifications.json`;
@@ -464,6 +560,8 @@ Claude may inspect individual rows and explain unresolved items, but should keep
 - `reconciliation/ui_decisions.json`;
 - `reconciliation/applied_decisions.json` after reviewer decisions are applied;
 - `reconciliation/final_artifacts.json`.
+
+Final delivery additionally requires `semantic-review/grouped_reconciliation_result.json` and the returned four-sheet `semantic-review/Riconciliazione_banca_partitario.xlsx`. No intermediate workbook substitutes for these outputs.
 
 ## Cowork review handoff
 
