@@ -15,8 +15,8 @@ const callbacks = {};
 let timer;
 const snapshot = {
   updated_at: "2026-11-07T12:00:00+00:00",
-  minimum_versions: { vera: "0.1.404", clara: "0.1.298", lucia: "0.1.121" },
-  minimum_version_release_dates: { vera: "2026-10-17", clara: "2026-10-18", lucia: "2026-10-18" },
+  minimum_versions: { vera: "0.1.492", clara: "0.1.347", lucia: "0.1.176" },
+  minimum_version_release_dates: { vera: "2026-10-25", clara: "2026-10-25", lucia: "2026-10-25" },
   identity_complete: true,
   totals: { started: 3, completed: 2, failed: 1 },
   functions: [
@@ -61,9 +61,10 @@ const settle = () => new Promise(resolve => setImmediate(resolve));
   assert.equal(elements.apps.children.length, 2);
   assert.equal(elements.functions.children[1].children[0].children[1].textContent, "Trova errori e incoerenze nel documento");
   assert.equal(elements.results.hidden, false);
-  assert.match(elements.versions.textContent, /Vera 0\.1\.404 — 17 ottobre 2026/);
-  assert.match(elements.versions.textContent, /Clara 0\.1\.298 — 18 ottobre 2026/);
-  assert.match(elements.versions.textContent, /Lucia 0\.1\.121 — 18 ottobre 2026/);
+  assert.match(elements.versions.textContent, /Vera 0\.1\.492 — 25 ottobre 2026/);
+  assert.match(elements.versions.textContent, /Clara 0\.1\.347 — 25 ottobre 2026/);
+  assert.match(elements.versions.textContent, /Lucia 0\.1\.176 — 25 ottobre 2026/);
+  assert.match(elements.versions.textContent, /senza MCP remoto/);
   assert.match(elements.versions.textContent, /Sono incluse anche le versioni successive/);
   assert.doesNotMatch(elements.versions.textContent, /30 giorni|raccolta|Fabio/);
 

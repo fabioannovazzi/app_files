@@ -12,6 +12,13 @@ from modules.workflow_usage.products import PRODUCTS, Product, catalog_metadata
 __all__ = ["inspect"]
 
 APPS = ("codex", "cowork", "antigravity")
+# First deployed releases without remote reporting MCP (PR #910).
+# The earlier instrumented versions remain valid collection history.
+_HTTPS_RELEASES: dict[Product, tuple[str, str]] = {
+    "vera": ("0.1.492", "2026-10-25"),
+    "clara": ("0.1.347", "2026-10-25"),
+    "lucia": ("0.1.176", "2026-10-25"),
+}
 
 
 @dataclass
@@ -44,10 +51,7 @@ def inspect(connection: Any, sql: Callable[[str], str], now: str) -> dict[str, A
     They implement the agreed metric without inferring people or task meaning.
     """
     catalogs = {product: catalog_metadata(product) for product in PRODUCTS}
-    versions = {
-        product: catalog["instrumented_from_version"]
-        for product, catalog in catalogs.items()
-    }
+    versions = {product: release[0] for product, release in _HTTPS_RELEASES.items()}
     minimums = {product: _version(version) for product, version in versions.items()}
     excluded = set()
     for product in PRODUCTS:
@@ -98,8 +102,7 @@ def inspect(connection: Any, sql: Callable[[str], str], now: str) -> dict[str, A
         "updated_at": now,
         "minimum_versions": versions,
         "minimum_version_release_dates": {
-            product: catalog["instrumented_version_released_on"]
-            for product, catalog in catalogs.items()
+            product: release[1] for product, release in _HTTPS_RELEASES.items()
         },
         "supported_apps": list(APPS),
         "identity_complete": identity_complete,

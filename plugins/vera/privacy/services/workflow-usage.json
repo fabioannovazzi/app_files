@@ -113,7 +113,7 @@
       "kind": "hosted_service",
       "destination": "Public visitors to Mparanza GET /api/usage-summary and /static/shared/utilizzo/index.html",
       "purpose": "Publish aggregate distinct-user starts, completions and non-completions per activity and application",
-      "content": "Only aggregate integer counts, catalog function IDs and labels, product minimum reporting versions and their release dates, supported app names, an identity-coverage boolean and snapshot time are public. The server internally deduplicates proven computer IDs across retained runs, functions, products and apps. The publication contains no computer, installation or run identifiers, per-user history, documents, prompts, feedback, ratings, hashes, capabilities or test-exclusion details. No model call is made by this projection. Codex, Cowork and Antigravity are included from the product-specific instrumented version; no time window or testing epoch date is applied.",
+      "content": "Only aggregate integer counts, catalog function IDs and labels, product minimum HTTPS-reporting versions and their release dates, supported app names, an identity-coverage boolean and snapshot time are public. The server internally deduplicates proven computer IDs across retained runs, functions, products and apps. The publication contains no computer, installation or run identifiers, per-user history, documents, prompts, feedback, ratings, hashes, capabilities or test-exclusion details. No model call is made by this projection. Codex, Cowork and Antigravity are included from the first deployed product release without remote reporting MCP (Vera 0.1.492, Clara 0.1.347, Lucia 0.1.176; 25 October 2026); no time window or testing epoch date is applied.",
       "runtime_profiles": [
         "openai-codex",
         "anthropic-cowork",
@@ -195,6 +195,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "b195cbb79748b2acdff51a05e408a24aedb6ccbc168d625becf5ffa15e7d4e80"
+    "source_fingerprint": "43150fcff12d491673be39051cb09ac4128b5d135760ee4da7c9973da6d92512"
   }
 }
