@@ -617,7 +617,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "189ecb75919f9104262601014c34e4f7633de579b70ae1cd8cb0d8c25b5c7640",
+      "sha256": "0717c4c7f733e59ad03c2fc3deebe14b4d7c488cab81bd8579bcc45d0d52359a",
       "languages": [
         "it",
         "en",
@@ -642,7 +642,7 @@
         "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
         "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       },
-      "source_sha256": "b0b7d85ba055c2cfb1f5b05d12cb7ceb1d53ccd78030e11ffae4d1ded1209535"
+      "source_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280"
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",

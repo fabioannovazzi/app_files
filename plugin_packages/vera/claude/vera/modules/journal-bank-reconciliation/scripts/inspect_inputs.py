@@ -95,6 +95,10 @@ def main() -> int:
     parser.add_argument("--client-engagement", type=Path, required=True)
     parser.add_argument("--sample", type=Path, help="Optional sample movements file.")
     parser.add_argument("--recipe", type=Path, help="Optional existing recipe JSON.")
+    parser.add_argument(
+        "--prepare-bank-json",
+        help="Reproduce explicit source-bound bank-sheet row/column decisions; preparation only.",
+    )
     parser.add_argument("--pdf-side", choices=("bank", "journal"), default="journal")
     parser.add_argument(
         "--pdf-source",
@@ -120,6 +124,28 @@ def main() -> int:
     except AssuranceContractError as exc:
         LOGGER.error("CLIENT_ENGAGEMENT_BLOCKED: %s", exc)
         return 2
+
+    if args.prepare_bank_json is not None:
+        from bank_working_copy import prepare_reviewed_bank_copies
+
+        try:
+            decisions = json.loads(args.prepare_bank_json)
+            context = load_client_engagement_context_file(
+                args.client_engagement,
+                expected_workflow_id="journal-bank-reconciliation",
+                input_paths=[Path(item["source_path"]) for item in decisions["files"]],
+                output_dir=args.output_dir,
+            )
+            result = prepare_reviewed_bank_copies(
+                decisions, args.output_dir, context=context
+            )
+        except (KeyError, TypeError, ValueError, OSError) as exc:
+            LOGGER.error("BANK_PREPARATION_BLOCKED: %s", exc)
+            return 2
+        log_execution_status(
+            args.output_dir, "bank working copies prepared: %s", result
+        )
+        return 0
 
     if args.pdf_recovery:
         if not args.pdf_currency:

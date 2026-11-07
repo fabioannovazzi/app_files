@@ -178,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "87b4e254d4b68ec7f99fbbd29b7dc39dcf7c0b2bc1e1ec2a55f5ba5f3be1cdab",
+  "catalogue_fingerprint": "283473cc7f7f17960854e76530a1edc08a965aa174a84bac12e082ed4c8a7e95",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -380,6 +380,12 @@
     "previous_catalogue_fingerprint": "9824369d8693766bb42d7ecc4cbb6c178e25b44ac7f2aa9a028267356e071740",
     "scope": "Manifest version only; exact entrypoints unchanged. Existing jurisdiction judgments preserved; no new jurisdiction acceptance."
   },
+  "course_repairs_release_594": {
+    "previous_catalogue_fingerprint": "30dba07dc39be50e98a2d9f40fe5116015efa7b49c118958c26fabcfed405328",
+    "version": "0.1.594",
+    "reviewed_at": "2026-11-07",
+    "scope": "All 55 skill entrypoints are byte-identical to the integrated candidate. Canonical release identity only; existing jurisdiction judgments retained. No new Swiss professional or installed-chat acceptance."
+  },
   "course_repairs_release_binding_20261107": {
     "version": "0.1.590",
     "scope": "Version identity refresh after integrating main960; all 55 skill entrypoint bytes and existing jurisdiction judgments unchanged. No new professional acceptance."
@@ -511,6 +517,11 @@
     "change": "Optional introductory single-course teaching route; professional workflow scope and Geneva dispositions unchanged. Language alone never selects jurisdiction.",
     "reviewed_at": "2026-09-29",
     "version": "0.1.275"
+  },
+  "grouped_reconciliation_release_binding": {
+    "version": "0.1.592",
+    "previous_catalogue_fingerprint": "0d45b880d5eb62d57ae630f1b2242887ed2faa6392f5253fab1f42ac1e197a28",
+    "scope": "Manifest identity refresh after integrating shared runtime dependency repair #961. Root skill entrypoints and jurisdiction judgments unchanged; no new jurisdiction acceptance."
   },
   "hardlink_execution_release_binding_20261007": {
     "changed_entrypoints": [
@@ -2635,10 +2646,10 @@
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
   },
-  "course_repairs_release_594": {
-    "previous_catalogue_fingerprint": "30dba07dc39be50e98a2d9f40fe5116015efa7b49c118958c26fabcfed405328",
-    "version": "0.1.594",
+  "course_repairs_release_595": {
+    "previous_catalogue_fingerprint": "87b4e254d4b68ec7f99fbbd29b7dc39dcf7c0b2bc1e1ec2a55f5ba5f3be1cdab",
+    "version": "0.1.595",
     "reviewed_at": "2026-11-07",
-    "scope": "All 55 skill entrypoints are byte-identical to the integrated candidate. Canonical release identity only; existing jurisdiction judgments retained. No new Swiss professional or installed-chat acceptance."
+    "scope": "All 55 skill entrypoints exactly match integrated main c61cd071, including its reviewed grouped bank reconciliation entrypoint. Existing jurisdiction judgments and both release histories retained; canonical release identity refreshed, no new jurisdiction or live acceptance."
   }
 }
