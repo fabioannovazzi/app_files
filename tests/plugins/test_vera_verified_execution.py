@@ -105,6 +105,8 @@ def test_preparation_error_preserves_numeric_evidence_and_exposes_failed_deliver
         )
 
     monkeypatch.setattr(recovery.subprocess, "run", reporting_process)
+    # This mocked delivery test must not inherit a real tutorial's local-only mode.
+    monkeypatch.delenv("MPARANZA_INCIDENT_DELIVERY", raising=False)
 
     recovery.report_preparation_failure(root, "journal-bank-reconciliation", error)
 

@@ -253,7 +253,7 @@ def test_shared_setup_repairs_drift_despite_ambient_pip_settings(
     )
     lock = selection.plugin_root / "requirements-shared-core.lock"
     lock.write_text(
-        f"--no-index\n--find-links {tmp_path}\nrecovery-probe==1.0 "
+        f"--no-index\n--find-links {tmp_path.as_uri()}\nrecovery-probe==1.0 "
         f"--hash=sha256:{hashlib.sha256(locked_wheel.read_bytes()).hexdigest()}\n"
     )
     redirected = tmp_path / "unrelated-target"
