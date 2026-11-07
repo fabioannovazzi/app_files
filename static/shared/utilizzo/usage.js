@@ -39,7 +39,7 @@
       cell.textContent = data.totals[cell.dataset.total].toLocaleString("it-IT");
     });
     const releaseDate = new Intl.DateTimeFormat("it-IT", { dateStyle: "long", timeZone: "UTC" });
-    document.getElementById("versions").textContent = "Versioni minime incluse e date di rilascio:\n" +
+    document.getElementById("versions").textContent = "Versioni minime incluse (senza MCP remoto) e date di rilascio:\n" +
       ["vera", "lucia", "clara"].map(product =>
         `${names[product]} ${data.minimum_versions[product]} — ${releaseDate.format(new Date(data.minimum_version_release_dates[product] + "T00:00:00Z"))}`
       ).join("\n") + "\nSono incluse anche le versioni successive.";

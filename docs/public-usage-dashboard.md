@@ -3,20 +3,29 @@
 `/static/shared/utilizzo/index.html` is an Italian aggregate page linked from
 Vera, Clara and Lucia. It refreshes `/api/usage-summary` once per minute while
 visible. Only received activity from Codex, Cowork and Antigravity is included.
-Each product's `instrumented_from_version` is the inclusive minimum start
-version; versions are compared numerically. There is no rolling date window.
-`instrumented_version_released_on` records the release date of that minimum
-version, displayed beside its number. It does not filter task timestamps.
+The inclusive minimum start version is the first deployed package without remote
+reporting MCP, defined in `public_usage.py`. Versions are compared numerically;
+there is no rolling date window. The release date is displayed beside the version
+and does not filter task timestamps. Earlier `instrumented_from_version` catalogue
+metadata records the introduction of collection and is not the dashboard cutoff.
 
 | Product | Minimum version | Release date | Evidence |
 | --- | --- | --- | --- |
-| Vera | 0.1.404 | 2026-10-17 | [PR 851](https://github.com/fabioannovazzi/app_files/pull/851), merge `54da75ab0`; production `main` fast-forward at 18:30:15 UTC on the same day |
-| Clara | 0.1.298 | 2026-10-18 | [PR 857](https://github.com/fabioannovazzi/app_files/pull/857), merge `556d8810f`; production `main` fast-forward at 10:09:30 UTC on the same day |
-| Lucia | 0.1.121 | 2026-10-18 | Same product release and production fast-forward as Clara |
+| Vera | 0.1.492 | 2026-10-25 | [PR 910](https://github.com/fabioannovazzi/app_files/pull/910), merge `a37a4f9c6` at 20:44:14 UTC; production `main` fast-forward at 20:44:25 UTC |
+| Clara | 0.1.347 | 2026-10-25 | Same release and production fast-forward as Vera |
+| Lucia | 0.1.176 | 2026-10-25 | Same release; final merged canonical manifest and PR body specify 0.1.176, superseding the preparation document's 0.1.175 |
 
 These package-release dates were verified against manifests, merged PRs and the
 production Git reflog on 2026-11-07. They do not claim Marketplace publication
 dates or the date an individual installed or first used a version.
+
+The original dashboard mistakenly selected the older collection-introduction
+versions (Vera 0.1.404, Clara 0.1.298, Lucia 0.1.121). PR 910 removes each
+product's HTTP MCP registration while preserving local MCP and ordinary HTTPS
+reporting. Its parent still declares all three remote reporting registrations.
+PR 916 retires the server's legacy endpoints the next day; that is not the
+client-package cutoff. Legacy completion events cannot turn a newer start into
+a completed user in this dashboard.
 
 The agreed counting unit is the proven computer ID. Repeat tasks, reporting
 instances and apps do not multiply one user. Each function, app and the global
@@ -49,8 +58,21 @@ field boundaries.
 
 ## Validation and recovered blocks
 
-- Reporting/receipt regression suite: 186 passed, 94.84% workflow-usage coverage;
-  the new aggregate module has 100% coverage. The 22 dashboard regressions pass.
+The corrected cutoff was recalculated against retained production records on
+2026-11-07 without changing records: 3 distinct starters, 2 completers, 1 failed;
+the activity and app rows are unchanged. The boundary regressions explicitly
+exclude the old collection releases and the immediate predecessors of each
+HTTPS release, include the first HTTPS release, and ignore legacy completions.
+
+During this correction, the canonical version/catalogue updates made the owned
+privacy fingerprints stale, blocking package generation. Those exact metadata
+changes were inspected and the affected reviews refreshed; all 55 Vera skill
+entrypoint bytes remain unchanged. A reporting test run made before contract
+regeneration had 190 passes and 3 stale-contract failures. After regeneration,
+all 193 reporting/receipt tests pass; no validation was weakened.
+
+- Reporting/receipt regression suite: 193 passed, 94.85% workflow-usage coverage;
+  the aggregate module has 100% coverage. The 29 dashboard regressions pass.
 - The rendered page was inspected at 1440px and 390px using representative
   aggregate fixtures. Both tables fit the mobile viewport, totals and labels
   agree with the response, and no JavaScript errors were observed. This local

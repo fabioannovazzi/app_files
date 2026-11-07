@@ -178,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "ab994c23afafb7a29af12c61e1bd774719ca24bfbf5d14b9c26392bb033558b7",
+  "catalogue_fingerprint": "f881af5b40229a6b817f5ac2cabab27add58c4b334421781a0d3b010493644a8",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -570,6 +570,11 @@
     "previous_catalogue_fingerprint": "675f91978d8303e3f823355c4260d6898709fae380392df53e82cc81e0815d91",
     "scope": "The Vera router now directs technical reporting through the retained local owner over ordinary HTTPS, with agent-operated HTTPS browser recovery when local execution is unavailable. The 55 function IDs and all existing Geneva assessment rows are unchanged. This infrastructure transport change establishes no additional jurisdiction support or professional acceptance.",
     "version": "0.1.492"
+  },
+  "https_usage_cohort_release_binding": {
+    "previous_catalogue_fingerprint": "ab994c23afafb7a29af12c61e1bd774719ca24bfbf5d14b9c26392bb033558b7",
+    "scope": "Public usage cutoff correction only; all 55 skill entrypoint bytes and existing jurisdiction judgments are unchanged.",
+    "version": "0.1.599"
   },
   "incident_agent_recovery_release_binding": {
     "date": "2026-10-15",

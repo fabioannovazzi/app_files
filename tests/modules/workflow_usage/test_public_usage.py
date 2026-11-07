@@ -15,10 +15,10 @@ from modules.operational_incidents import api
 from modules.operational_incidents.contracts import Credentials, DeviceCredentials
 from modules.operational_incidents.store import IncidentStore
 from modules.workflow_usage.contracts import WorkflowEvent
-from modules.workflow_usage.products import catalog_metadata
 
 NOW = "2026-11-07T12:00:00+00:00"
 OLD = "2026-01-01T12:00:00+00:00"
+HTTPS_VERSIONS = {"vera": "0.1.492", "clara": "0.1.347", "lucia": "0.1.176"}
 
 
 @pytest.fixture
@@ -47,8 +47,7 @@ def add_run(
     common = {
         "run_id": uuid4(),
         "product": product,
-        "product_version": version
-        or catalog_metadata(product)["instrumented_from_version"],
+        "product_version": version or HTTPS_VERSIONS[product],
         "occurred_at": NOW,
     }
     store.workflow_record(
@@ -145,12 +144,18 @@ def test_public_usage_counts_started_without_completion_as_failed(store, state):
     "product,pipeline,version,expected",
     (
         ("vera", "business-planning", "0.1.403", 0),
-        ("vera", "business-planning", "0.1.404", 1),
+        ("vera", "business-planning", "0.1.404", 0),
+        ("vera", "business-planning", "0.1.491", 0),
+        ("vera", "business-planning", "0.1.492", 1),
         ("vera", "business-planning", "0.1.1000", 1),
         ("clara", "business-planning", "0.1.297", 0),
-        ("clara", "business-planning", "0.1.298", 1),
+        ("clara", "business-planning", "0.1.298", 0),
+        ("clara", "business-planning", "0.1.346", 0),
+        ("clara", "business-planning", "0.1.347", 1),
         ("lucia", "controllo-documento", "0.1.120", 0),
-        ("lucia", "controllo-documento", "0.1.121", 1),
+        ("lucia", "controllo-documento", "0.1.121", 0),
+        ("lucia", "controllo-documento", "0.1.175", 0),
+        ("lucia", "controllo-documento", "0.1.176", 1),
     ),
 )
 def test_public_usage_uses_each_products_numeric_version_threshold(
@@ -174,6 +179,16 @@ def test_public_usage_keeps_older_received_activity_without_a_time_window(
 
     assert result["totals"] == {"started": 1, "completed": 1, "failed": 0}
     assert result["updated_at"] == NOW
+
+
+def test_public_usage_legacy_completion_does_not_complete_an_https_start(store):
+    computer = device()
+    add_run(store, computer, version="0.1.491", state="completed")
+    add_run(store, computer, version="0.1.492")
+
+    result = store.public_workflow_usage()
+
+    assert result["totals"] == {"started": 1, "completed": 0, "failed": 1}
 
 
 @pytest.mark.parametrize("host", ("chatgpt", "unknown"))
@@ -218,10 +233,11 @@ def test_public_usage_endpoint_exposes_only_aggregate_fields_and_no_write_route(
         "apps",
     }
     assert response.json()["minimum_version_release_dates"] == {
-        "vera": "2026-10-17",
-        "clara": "2026-10-18",
-        "lucia": "2026-10-18",
+        "vera": "2026-10-25",
+        "clara": "2026-10-25",
+        "lucia": "2026-10-25",
     }
+    assert response.json()["minimum_versions"] == HTTPS_VERSIONS
     assert str(computer.device_id) not in response.text
     assert str(owner.installation_id) not in response.text
     assert owner.installation_key not in response.text
