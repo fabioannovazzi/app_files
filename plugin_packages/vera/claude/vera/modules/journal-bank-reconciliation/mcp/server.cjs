@@ -99,6 +99,21 @@ const IMPLEMENTATION_ARTIFACT_SPECS = [
     "scripts/semantic_review.py",
   ],
   [
+    "implementation.plugin.scripts.grouped_review_py",
+    "implementation",
+    "scripts/grouped_review.py",
+  ],
+  [
+    "implementation.plugin.scripts.grouped_workbook_py",
+    "implementation",
+    "scripts/grouped_workbook.py",
+  ],
+  [
+    "implementation.plugin.scripts.bank_working_copy_py",
+    "implementation",
+    "scripts/bank_working_copy.py",
+  ],
+  [
     "implementation.plugin.scripts.worker_capabilities_py",
     "implementation",
     "scripts/worker_capabilities.py",

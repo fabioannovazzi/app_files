@@ -1,14 +1,4 @@
 {
-  "residual_batching_release_binding": {
-    "version": "0.1.579",
-    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
-    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
-  },
-  "francesco_parser_release_binding": {
-    "previous_catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
-    "scope": "Manifest version refresh only; skill entrypoint bytes and jurisdiction judgments unchanged. Parser repair has local component acceptance only.",
-    "version": "0.1.574"
-  },
   "actionable_diagnostics_release_binding": {
     "reviewed_at": "2026-10-22T07:00:50.365348+00:00",
     "scope": "Canonical version changed to 0.1.475. Exact skill entrypoint identities and contents are unchanged; existing jurisdiction judgments retained."
@@ -127,6 +117,22 @@
     "scope": "Manifest version advanced; all 46 skill entrypoint hashes are unchanged. Existing Geneva dispositions and jurisdiction limits are retained. The Italian Adeguati assetti teaching expansion does not establish Geneva construction acceptance.",
     "source_version": "0.1.311"
   },
+  "assetti_link_release_binding": {
+    "version": "0.1.576",
+    "previous_catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
+    "scope": "Manifest version refresh only; exact skill entries and existing jurisdiction judgments unchanged. Assessment linkage now uses producer digest. Includes merged course privacy-flow release."
+  },
+  "bank_csv_download_binding_20261104": {
+    "added_entrypoints": [
+      "bank-csv-download"
+    ],
+    "changed_entrypoints": [
+      "vera"
+    ],
+    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
+    "scope": "Register the direct computer-use bank download function as unresolved for Geneva. Preserve all existing function dispositions. The root router now selects this operation for acquisition; no Swiss portal or professional acceptance is established.",
+    "version": "0.1.568"
+  },
   "bank_pdf_recovery_source_review": {
     "changed_entrypoints": [
       "journal-bank-reconciliation"
@@ -172,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "ae213f6757374502cc5e99c9bd928a54fb3f6d05d5b27b3aa4784184cb83d7b2",
+  "catalogue_fingerprint": "4052ddc38bad28e989d492dda0213396cc2b3d910376fba326c9a0369c9cce8d",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -450,6 +456,11 @@
     "scope": "All skill entrypoint bytes and existing jurisdiction judgments are unchanged. Fully verified shared code can renew stale filesystem metadata; no new jurisdiction acceptance is claimed.",
     "version": "0.1.508"
   },
+  "francesco_parser_release_binding": {
+    "previous_catalogue_fingerprint": "35f485e0d5f6c51f29a3da004b2a1bbb3543dc31ac66a792e759d05130ce37de",
+    "scope": "Manifest version refresh only; skill entrypoint bytes and jurisdiction judgments unchanged. Parser repair has local component acceptance only.",
+    "version": "0.1.574"
+  },
   "fusione_p0_release_binding": {
     "added_skills": [
       "fusione-guidata"
@@ -473,6 +484,11 @@
     "change": "Optional introductory single-course teaching route; professional workflow scope and Geneva dispositions unchanged. Language alone never selects jurisdiction.",
     "reviewed_at": "2026-09-29",
     "version": "0.1.275"
+  },
+  "grouped_reconciliation_release_binding": {
+    "version": "0.1.592",
+    "previous_catalogue_fingerprint": "0d45b880d5eb62d57ae630f1b2242887ed2faa6392f5253fab1f42ac1e197a28",
+    "scope": "Manifest identity refresh after integrating shared runtime dependency repair #961. Root skill entrypoints and jurisdiction judgments unchanged; no new jurisdiction acceptance."
   },
   "hardlink_execution_release_binding_20261007": {
     "changed_entrypoints": [
@@ -514,6 +530,10 @@
     "date": "2026-10-15",
     "scope": "Canonical manifest/version refresh. All 55 recorded skill entrypoints are unchanged; only the shared technical incident conversation and recovery service changed. Preserve existing Geneva judgments and jurisdiction limits; no additional professional workflow or Geneva acceptance is claimed.",
     "version": "0.1.392"
+  },
+  "incident_archive_release_binding_20261104": {
+    "basis": "The Vera wrapper now distinguishes a native component check from the root CLI. The skill IDs, jurisdiction methods and existing assessment decisions are unchanged.",
+    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56"
   },
   "incident_pipeline_release_binding": {
     "date": "2026-10-13",
@@ -603,6 +623,20 @@
     "basis": "All 55 skill IDs and entrypoint bytes are unchanged; only release identity and local service lifetime change. Existing jurisdiction assessments and acceptance limits remain unchanged.",
     "previous_catalogue_fingerprint": "89920afa40330f8cfb5fce2816f9106c3613bc1161068131038c17bade88848b",
     "version": "0.1.478"
+  },
+  "managed_pip_merged_release_binding": {
+    "version": "0.1.589",
+    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
+    "scope": "Manifest binding only after merging Archive and reconciliation repairs. Exact skill entries and jurisdiction judgments unchanged."
+  },
+  "managed_pip_release_binding": {
+    "version": "0.1.582",
+    "previous_catalogue_fingerprint": "9824369d8693766bb42d7ecc4cbb6c178e25b44ac7f2aa9a028267356e071740",
+    "scope": "Manifest version refresh for pip setup isolation. Skill entrypoints and jurisdiction judgments unchanged."
+  },
+  "managed_pip_variance_integration_binding": {
+    "version": "0.1.590",
+    "scope": "Manifest binding after integrating variance chart repair; existing jurisdiction judgments unchanged."
   },
   "manual_trial_status_release_binding": {
     "date": "2026-10-17",
@@ -707,6 +741,30 @@
     "previous_catalogue_fingerprint": "1aec3fcdcec2c2ade621ff1486afc08212be31f5e260b83da91267168bc41567",
     "scope": "Integrates pending Archive intake and reporting repairs with native Cowork and Antigravity bounded worker handoffs. Existing jurisdiction dispositions remain unchanged. Component probes and regressions do not resume or establish campaign acceptance.",
     "version": "0.1.472"
+  },
+  "native_ui_consolidation_release_binding_20261104": {
+    "previous_catalogue_fingerprint": "b97cb0ba4f0d537bdc704facff0546e2c4daf60bbdc71d952dab2a665bade21b",
+    "scope": "Canonical version and shared typography refresh. Every professional skill entrypoint ID and SHA-256 is unchanged. Existing jurisdiction judgments are retained; this does not establish new professional or Geneva acceptance.",
+    "version": "0.1.561"
+  },
+  "native_ui_content_release_binding_20261104": {
+    "version": "0.1.564",
+    "previous_catalogue_fingerprint": "75ac1c88a02b2fa85eac7e3c04218660f02a3b5332ee8950b67eacb5c67ba09a",
+    "scope": "Version and read-only UI presentation update; all professional skill identities and hashes, calculations, authorization boundaries and existing jurisdiction judgments are unchanged. No new Desktop or professional acceptance."
+  },
+  "native_ui_expanded_desktop_copy_20261104": {
+    "previous_catalogue_fingerprint": "84921b94d4db895892bb22b7bba168b2cbd2ad79482dbd573bfb12dd7f5ae42d",
+    "scope": "Manifest version binding only; all 54 public skill entries byte-identical. Preserve existing jurisdiction judgments. Desktop copy audit is not new Swiss professional acceptance.",
+    "source_review": "docs/audits/clara-lucia-ui-consolidation-2026-11-04.md"
+  },
+  "native_ui_final_binding_20261105": {
+    "previous_catalogue_fingerprint": "3a96c982c083e63817c27a19f0ebc7956d4a1433026a396e39b8ea5bccabc8a1",
+    "scope": "Manifest binding only over main 383bb4f: all 55 public entry contents are unchanged. Preserve main bank-acquisition classification and prior jurisdiction judgments; no Swiss acceptance inferred."
+  },
+  "native_ui_main_integration_release_binding_20261104": {
+    "version": "0.1.564",
+    "base": "acb88b4c5c05e5cb715b1789415df6b09664d171",
+    "scope": "Retain main’s exclusion of the developer privacy-review skill from user packages and its authored jurisdiction judgments. Native app presentation changes add no professional function or jurisdiction acceptance."
   },
   "native_ui_retirement_release_binding_20261103": {
     "previous_catalogue_fingerprint": "b54f894c50c1525378637fcce3fe29e6a6f7684e4df3c3defed2203fca4af3f8",
@@ -880,6 +938,11 @@
     "current_catalogue_fingerprint": "6541c45fb47d43fd9e7c3f9ccf4dba821c8f54b59b07ed624907de3240ece855",
     "main_commit": "d43d30ef3001ead9176b5f2a9b97e8246e2a9746",
     "scope": "Retain all current native-UI source qualifications and the optional research-source helper. No new Geneva or subscriber acceptance claimed."
+  },
+  "residual_batching_release_binding": {
+    "version": "0.1.579",
+    "previous_catalogue_fingerprint": "e9850cd0c9196745c430ddb4f4dd75bd8f8329de646a5a8d5029b7b4131c4282",
+    "scope": "Manifest cache identity updated for residual batching release; no new jurisdiction acceptance."
   },
   "rows": [
     {
@@ -2427,6 +2490,11 @@
     "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
     "version": "0.1.291"
   },
+  "variance_chart_reconciliation_integration_binding": {
+    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
+    "version": "0.1.589",
+    "scope": "Canonical version refresh after integrating reconciliation and Archive repair #965. Skill entrypoints and existing jurisdiction judgments are unchanged from main."
+  },
   "verified_code_termination_release_binding_20261022": {
     "changed_entrypoints": [],
     "previous_catalogue_fingerprint": "4188c1e71a75c970206ae60fe81fbb1fe0a049dc84b1d3e50883bbe7dd755711",
@@ -2454,6 +2522,12 @@
     "previous_catalogue_fingerprint": "e7ec18f7ca424642f55d3332061a2c6adbd7bfba55c6c369433c128a0df36af1",
     "scope": "Only the product manifest/version changed in this snapshot; all 55 skill entrypoint hashes and function IDs are unchanged. Preserve all prior Geneva dispositions and limits. Windows file/process portability and isolation of invalid archive runs do not establish new jurisdiction or original-client acceptance.",
     "version": "0.1.417"
+  },
+  "windows_course_main_integration_release_binding_20261104": {
+    "integrated_main": "2c3669d45a85e9fab4cf96200fdc202c99c6819c",
+    "previous_catalogue_fingerprint": "91aca5cc9a3667dcb09f8ebd6ac00202167b177c273e3f4cdaae4d23d5a9650a",
+    "scope": "Skill IDs and exact entrypoint bytes match integrated main, retaining its bank-download and course-completion scope. Existing jurisdiction judgments are retained; this refresh binds only the canonical release manifest.",
+    "version": "0.1.572"
   },
   "windows_lock_pdf_main_integration_20261018": {
     "scope": "Preserved current main PDF source and all55 skill entrypoint hashes and assessment rows. Only product manifest binding changes; no Swiss professional or host acceptance asserted.",
@@ -2538,74 +2612,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "native_ui_consolidation_release_binding_20261104": {
-    "previous_catalogue_fingerprint": "b97cb0ba4f0d537bdc704facff0546e2c4daf60bbdc71d952dab2a665bade21b",
-    "scope": "Canonical version and shared typography refresh. Every professional skill entrypoint ID and SHA-256 is unchanged. Existing jurisdiction judgments are retained; this does not establish new professional or Geneva acceptance.",
-    "version": "0.1.561"
-  },
-  "native_ui_content_release_binding_20261104": {
-    "version": "0.1.564",
-    "previous_catalogue_fingerprint": "75ac1c88a02b2fa85eac7e3c04218660f02a3b5332ee8950b67eacb5c67ba09a",
-    "scope": "Version and read-only UI presentation update; all professional skill identities and hashes, calculations, authorization boundaries and existing jurisdiction judgments are unchanged. No new Desktop or professional acceptance."
-  },
-  "native_ui_main_integration_release_binding_20261104": {
-    "version": "0.1.564",
-    "base": "acb88b4c5c05e5cb715b1789415df6b09664d171",
-    "scope": "Retain main’s exclusion of the developer privacy-review skill from user packages and its authored jurisdiction judgments. Native app presentation changes add no professional function or jurisdiction acceptance."
-  },
-  "native_ui_expanded_desktop_copy_20261104": {
-    "previous_catalogue_fingerprint": "84921b94d4db895892bb22b7bba168b2cbd2ad79482dbd573bfb12dd7f5ae42d",
-    "scope": "Manifest version binding only; all 54 public skill entries byte-identical. Preserve existing jurisdiction judgments. Desktop copy audit is not new Swiss professional acceptance.",
-    "source_review": "docs/audits/clara-lucia-ui-consolidation-2026-11-04.md"
-  },
-  "bank_csv_download_binding_20261104": {
-    "added_entrypoints": [
-      "bank-csv-download"
-    ],
-    "changed_entrypoints": [
-      "vera"
-    ],
-    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56",
-    "scope": "Register the direct computer-use bank download function as unresolved for Geneva. Preserve all existing function dispositions. The root router now selects this operation for acquisition; no Swiss portal or professional acceptance is established.",
-    "version": "0.1.568"
-  },
-  "incident_archive_release_binding_20261104": {
-    "basis": "The Vera wrapper now distinguishes a native component check from the root CLI. The skill IDs, jurisdiction methods and existing assessment decisions are unchanged.",
-    "previous_catalogue_fingerprint": "dec78462f6d2840e323f70120784e7fe249bf49baf2a3721155e1e886ce95b56"
-  },
-  "windows_course_main_integration_release_binding_20261104": {
-    "integrated_main": "2c3669d45a85e9fab4cf96200fdc202c99c6819c",
-    "previous_catalogue_fingerprint": "91aca5cc9a3667dcb09f8ebd6ac00202167b177c273e3f4cdaae4d23d5a9650a",
-    "scope": "Skill IDs and exact entrypoint bytes match integrated main, retaining its bank-download and course-completion scope. Existing jurisdiction judgments are retained; this refresh binds only the canonical release manifest.",
-    "version": "0.1.572"
-  },
-  "native_ui_final_binding_20261105": {
-    "previous_catalogue_fingerprint": "3a96c982c083e63817c27a19f0ebc7956d4a1433026a396e39b8ea5bccabc8a1",
-    "scope": "Manifest binding only over main 383bb4f: all 55 public entry contents are unchanged. Preserve main bank-acquisition classification and prior jurisdiction judgments; no Swiss acceptance inferred."
-  },
-  "assetti_link_release_binding": {
-    "version": "0.1.576",
-    "previous_catalogue_fingerprint": "386aaf6e16c9f2e87a2c8d68a9345f6e54b5eea0d52ef6857604a69fe1b82e90",
-    "scope": "Manifest version refresh only; exact skill entries and existing jurisdiction judgments unchanged. Assessment linkage now uses producer digest. Includes merged course privacy-flow release."
-  },
-  "managed_pip_release_binding": {
-    "version": "0.1.582",
-    "previous_catalogue_fingerprint": "9824369d8693766bb42d7ecc4cbb6c178e25b44ac7f2aa9a028267356e071740",
-    "scope": "Manifest version refresh for pip setup isolation. Skill entrypoints and jurisdiction judgments unchanged."
-  },
-  "managed_pip_merged_release_binding": {
-    "version": "0.1.589",
-    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
-    "scope": "Manifest binding only after merging Archive and reconciliation repairs. Exact skill entries and jurisdiction judgments unchanged."
-  },
-  "variance_chart_reconciliation_integration_binding": {
-    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
-    "version": "0.1.589",
-    "scope": "Canonical version refresh after integrating reconciliation and Archive repair #965. Skill entrypoints and existing jurisdiction judgments are unchanged from main."
-  },
-  "managed_pip_variance_integration_binding": {
-    "version": "0.1.590",
-    "scope": "Manifest binding after integrating variance chart repair; existing jurisdiction judgments unchanged."
   }
 }

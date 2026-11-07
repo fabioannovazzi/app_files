@@ -283,7 +283,27 @@ none receives a row-order preference.
 Candidates outside the reviewed currency, unit, entity, party, or direction
 perimeter are never matched.
 
-## Codex-Only Residual Resolution Funnel
+## Authoritative completion route
+
+The normal `semantic_review.py run-all` entrypoint always performs grouped review
+and exports the final four-sheet client workbook through `grouped_review.py` and
+`grouped_workbook.py`. The low-level exact matcher workbook is intermediate.
+Normal completion never substitutes the row-only graph described below.
+
+The grouped packet retains the remaining bank population, all remaining journal
+counterparts and targeted original posting/continuation text. Strict per-row
+amount/date eligibility is not applied as a semantic relevance filter. The
+model proposes explicit sets of bank and journal IDs; code checks literal source
+citations, signed group totals, perimeter, coverage and non-reuse. Up to 25 focus
+rows are covered per call with whole groups allowed across the focus boundary.
+Every returned attempt's launcher receipt and tokens remain available even when
+domain validation rejects it. The source-bound accepted state resumes without
+another call. An incomplete review cannot produce a final workbook.
+
+See the maintained skill for final artifact names, bank working-copy preparation
+and the fixed sequence. The following funnel is diagnostic row triage only.
+
+## Diagnostic Codex-Only Residual Resolution Funnel
 
 After a qualified deterministic run, `semantic_review.py prepare` projects the
 unmatched partitions into a bounded candidate graph. Without an explicit
@@ -359,7 +379,8 @@ reasoning effort, so worker metadata records both as requested rather than
 observed and validation requires the launch receipt.
 
 Validated results live outside the canonical reconciliation directory in its
-real sibling named `semantic-review`. `run-all` launches successive workers until
+real sibling named `semantic-review`. The diagnostic Python API
+`run_row_triage_pipeline` launches successive workers until
 all eligible residual components have been reviewed. Completed packets are
 archived independently; only unreviewed rows enter subsequent preparations. Raw Luna output remains advisory until
 validation. The validator then applies accepted decisions to
@@ -380,7 +401,8 @@ validated generation remains terminal until a new preparation archives its
 fixed-name artifacts under `semantic-review/history/`. In every failure mode,
 the main Codex chat and deterministic reconciliation remain unchanged.
 
-`run-all` performs that final preparation itself. Its completed batch returns
+The diagnostic `run_row_triage_pipeline` performs its final preparation itself.
+Its completed batch returns
 the retained `worker_run` and `launch_receipt` paths, also emitted by the CLI as
 `validated worker evidence`. Those files belong to the archived generation;
 the current top-level status and resolution artifacts describe the exhaustive
