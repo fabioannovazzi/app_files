@@ -69,6 +69,14 @@ jobs:
         run: node --test tests/test_plugin_download_versions.mjs
       - name: Verify stale-package rejection
         run: python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_product_release_alignment.py --cov --cov-config=tests/product_release.coveragerc
+      - name: Verify Clara reduced-package dependencies and shared workflow bytes
+        run: |
+          python -m pip install python-pptx playwright defusedxml
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_distribution_editions.py tests/plugins/test_clara_html_data_visuals.py tests/plugins/test_clara_advisory_brief_planner.py --cov=scripts.clara_distribution --cov-report=term-missing --cov-fail-under=80
+          python -m black --check scripts/clara_distribution.py scripts/acceptance_clara_distribution.py tests/plugins/test_clara_distribution_editions.py
+          python -m isort --check-only scripts/clara_distribution.py scripts/acceptance_clara_distribution.py tests/plugins/test_clara_distribution_editions.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports scripts/clara_distribution.py scripts/acceptance_clara_distribution.py
+          python -m bandit -q -ll scripts/clara_distribution.py scripts/acceptance_clara_distribution.py
       - name: Verify repository download limit and archive prerequisites
         run: python -m pytest --noconftest -q -o addopts='' tests/scripts/test_repository_archive_size.py tests/scripts/test_product_archive_prerequisites.py --cov=scripts.check_repository_archive_size --cov-report=term-missing --cov-fail-under=80
       - name: Verify single-copy course downloads and historical URLs

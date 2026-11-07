@@ -1976,12 +1976,24 @@ def project_chatgpt_course_sources(
         ).encode()
 
 
-def chatgpt_upload_entries(package: BuildTarget) -> dict[str, bytes]:
+def chatgpt_upload_entries(
+    package: BuildTarget, *, edition: str = "full"
+) -> dict[str, bytes]:
     """Return one source-derived upload tree with complete MCP capabilities."""
 
     if len(package.plugin_names) != 1:
         raise ValueError("ChatGPT upload ZIPs must contain exactly one root plugin")
     plugin_name = package.plugin_names[0]
+    if edition == "marketplace":
+        if plugin_name == "clara":
+            from scripts.clara_distribution import marketplace_entries
+        else:
+            raise ValueError(
+                "The MCP-free marketplace edition supports Clara only"
+            )
+        return marketplace_entries(package, source_root=ROOT)
+    if edition != "full":
+        raise ValueError(f"Unknown edition: {edition}")
     prefix = f"{package.package_root}/plugins/{plugin_name}/"
     packaged_entries = source_zip_entries(package, project_vera_privacy=False)
     browser_cards = (
@@ -2326,10 +2338,12 @@ def build_package(package: BuildTarget) -> Path:
     return package.output_zip
 
 
-def build_chatgpt_upload(package: BuildTarget, output: Path) -> Path:
+def build_chatgpt_upload(
+    package: BuildTarget, output: Path, *, edition: str = "full"
+) -> Path:
     """Build an OpenAI Platform upload ZIP without changing the install ZIP."""
 
-    entries = chatgpt_upload_entries(package)
+    entries = chatgpt_upload_entries(package, edition=edition)
     output.parent.mkdir(parents=True, exist_ok=True)
     temp_path: Path | None = None
     try:
@@ -2359,12 +2373,14 @@ def build_chatgpt_upload(package: BuildTarget, output: Path) -> Path:
     return output
 
 
-def verify_chatgpt_upload(package: BuildTarget, output: Path) -> list[str]:
+def verify_chatgpt_upload(
+    package: BuildTarget, output: Path, *, edition: str = "full"
+) -> list[str]:
     """Return source-drift errors for an OpenAI Platform upload ZIP."""
 
     if not output.exists():
         return [f"ZIP missing: {output}"]
-    expected = chatgpt_upload_entries(package)
+    expected = chatgpt_upload_entries(package, edition=edition)
     errors: list[str] = []
     with ZipFile(output) as archive:
         actual_names = {name for name in archive.namelist() if not name.endswith("/")}
@@ -2489,7 +2505,15 @@ def main(argv: list[str] | None = None) -> int:
         metavar="PATH",
         help="Build or verify one plugin ZIP for OpenAI Platform upload.",
     )
+    parser.add_argument(
+        "--edition",
+        choices=("full", "marketplace"),
+        default="full",
+        help="Explicit reduced local-file edition; full preserves existing packages.",
+    )
     args = parser.parse_args(argv)
+    if args.edition == "marketplace" and args.chatgpt_upload is None:
+        parser.error("--edition marketplace requires --chatgpt-upload PATH")
 
     all_packages = load_packages(args.config)
     all_bundles = load_bundles(args.config)
@@ -2500,7 +2524,9 @@ def main(argv: list[str] | None = None) -> int:
         package = packages[0]
         try:
             if args.check:
-                errors = verify_chatgpt_upload(package, args.chatgpt_upload)
+                errors = verify_chatgpt_upload(
+                    package, args.chatgpt_upload, edition=args.edition
+                )
                 if errors:
                     print(
                         f"[FAIL] {package.target_name}: {args.chatgpt_upload}",
@@ -2511,7 +2537,9 @@ def main(argv: list[str] | None = None) -> int:
                     return 1
                 print(f"[OK] {package.target_name}: {args.chatgpt_upload}")
                 return 0
-            output = build_chatgpt_upload(package, args.chatgpt_upload)
+            output = build_chatgpt_upload(
+                package, args.chatgpt_upload, edition=args.edition
+            )
             print(f"[BUILT] {package.target_name}: {output}")
             return 0
         except (BadZipFile, OSError, RuntimeError, ValueError) as exc:

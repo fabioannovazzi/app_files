@@ -143,7 +143,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "9638feb7e9e0a41ec9ef63b4179920e8513ff6dcb2639c6f96cab344318ea798",
+  "course_sha256": "b4c2f8508fb8e24117c43e7f4fa4bee069259421b432b166fdff24d82ff1bad6",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "fcad0b2f4123dd82b2c9db415c7e44a69753ebac7be5c6d9caf4c9a0e818416e",
@@ -841,5 +841,13 @@
     "previous_course_sha256": "afcc81c60568ecfad22be3d17ebf7ff4ee93c46c00040fae4ddc455e420c7114",
     "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
     "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  },
+  "course_main967_source_binding_20261107": {
+    "reviewer": "Codex /root - bounded source binding integration",
+    "reviewed_at": "2026-11-07",
+    "previous_course_sha256": "9638feb7e9e0a41ec9ef63b4179920e8513ff6dcb2639c6f96cab344318ea798",
+    "current_course_sha256": "b4c2f8508fb8e24117c43e7f4fa4bee069259421b432b166fdff24d82ff1bad6",
+    "source_review": "Preserved main PR967 chart label padding at both horizontal bar ends, using displayed value width. Full package behavior remains default; reduced edition is explicit. Complete compiled course excluding sources is identical to the prior tested candidate. Presentation baseline HTML and work ZIP bytes remain unchanged after the supported builder.",
+    "limits": "Historical editorial and artifact judgments remain historical. New exact-head CI is required before merge. No new learner, native Desktop, voice or professional acceptance inferred."
   }
 }
