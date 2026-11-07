@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-grouped-review/plugins/vera",
-  "version": "0.1.586",
-  "captured_at": "2026-11-06T21:54:37.742182+00:00",
-  "catalogue_fingerprint": "eff3381c946808626bba9a87ae3c014172ec2f584e9c967505d72c53cb38fb1a",
-  "manifest_sha256": "eff104251da66ca591fea1635127194364ed989b57e62b738a0fb2ce126b9fac",
+  "version": "0.1.591",
+  "captured_at": "2026-11-07T00:23:27.677527+00:00",
+  "catalogue_fingerprint": "0d45b880d5eb62d57ae630f1b2242887ed2faa6392f5253fab1f42ac1e197a28",
+  "manifest_sha256": "45cca2de6360eaac29e2654879886f5394647efcbf5362e18b7060425805fba3",
   "entries": [
     {
       "function_id": "adeguati-assetti",

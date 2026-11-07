@@ -63,3 +63,51 @@ def test_waterfall_fallback_rejects_figure_without_waterfall(tmp_path: Path) -> 
 
     with pytest.raises(ValueError, match="No waterfall traces"):
         waterfall.write_waterfall_fallback_png(fig, str(tmp_path / "invalid.png"))
+
+
+def test_small_multiples_fallback_preserves_amount_labels_and_uniform_font(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    import plotly.graph_objects as go
+    from PIL import ImageDraw, ImageFont
+
+    waterfall = load_vendor_draw_waterfall()
+    # Exercise font-size propagation independently of fonts installed on the host.
+    monkeypatch.setattr(
+        waterfall, "_font", lambda size: ImageFont.load_default(size=size)
+    )
+    figure = go.Figure(
+        data=[
+            go.Waterfall(
+                orientation="h",
+                measure=["absolute", "relative", "total"],
+                y=["PL", "Change", "AC"],
+                x=[47000, 6000, 53000],
+                text=["47,000", "+6,000", "53,000"],
+            )
+        ]
+        * 2
+    )
+    figure.update_layout(
+        title="Amounts | EUR",
+        meta={
+            "waterfall_font_size": 14,
+            "waterfall_small_multiples_grid": {"rows": 1, "cols": 2},
+            "waterfall_panel_titles": ["January", "February"],
+        },
+    )
+    text_calls = []
+    original = ImageDraw.ImageDraw.text
+
+    def record_text(self, xy, text, *args, **kwargs):
+        text_calls.append((text, kwargs["font"].size))
+        return original(self, xy, text, *args, **kwargs)
+
+    monkeypatch.setattr(ImageDraw.ImageDraw, "text", record_text)
+
+    waterfall.write_waterfall_fallback_png(figure, str(tmp_path / "fallback.png"))
+
+    assert ("47,000", 14) in text_calls
+    assert ("+6,000", 14) in text_calls
+    assert ("53,000", 14) in text_calls
+    assert {size for _, size in text_calls} == {14}
