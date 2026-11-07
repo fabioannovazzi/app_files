@@ -60,6 +60,7 @@
     "learn-with-vera"
   ],
   "instrumented_from_version": "0.1.404",
+  "instrumented_version_released_on": "2026-10-17",
   "entrypoints": {
     "report-enti-locali": "financial-report-builder"
   },

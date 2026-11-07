@@ -158,16 +158,26 @@ def test_vera_cowork_services_include_shared_runtime_and_run_receipts() -> None:
         "research-subscriptions": ["openai-codex"],
         "studio-work": RUNTIME_PROFILE_IDS,
         "operational-incidents": RUNTIME_PROFILE_IDS,
-        "workflow-usage": RUNTIME_PROFILE_IDS,
+        "workflow-usage": RUNTIME_PROFILE_IDS + ["google-antigravity"],
     }
 
     assert {
         manifest["service_id"]: manifest["runtime_profiles"] for manifest in manifests
     } == expected
-    assert all(
-        boundary["runtime_profiles"] == expected[manifest["service_id"]]
+    boundaries = {
+        (manifest["service_id"], boundary["id"]): boundary["runtime_profiles"]
         for manifest in manifests
         for boundary in manifest["external_boundaries"]
+    }
+    assert boundaries.pop(("workflow-usage", "public-distinct-user-usage")) == [
+        "openai-codex",
+        "anthropic-cowork",
+        "google-antigravity",
+    ]
+    private_boundary_profiles = {**expected, "workflow-usage": RUNTIME_PROFILE_IDS}
+    assert all(
+        profiles == private_boundary_profiles[service]
+        for (service, _boundary), profiles in boundaries.items()
     )
 
 
