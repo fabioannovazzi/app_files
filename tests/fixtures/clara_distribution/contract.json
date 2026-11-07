@@ -1,0 +1,164 @@
+{
+  "schema_version": "1.0",
+  "contract_status": "ready_for_handoff",
+  "decision": "Whether the board should integrate the sales teams before 2027-01-15.",
+  "purpose": "Give the board a source-faithful presentation of the integration decision and open conditions.",
+  "audience": "Board of Aurora Foods",
+  "deliverable_type": "Standalone HTML presentation for board review",
+  "output_language": "en",
+  "scope_included": [
+    "Customer-retention implications of integrating the sales teams",
+    "Implementation conditions before 2027-01-15"
+  ],
+  "scope_excluded": [
+    "France"
+  ],
+  "available_inputs": [
+    {
+      "id": "assignment",
+      "description": "Natural advisory assignment from the board sponsor",
+      "status": "available",
+      "source_ref": "assignment.md"
+    }
+  ],
+  "evidence_requirements": [
+    {
+      "id": "customer-loss-evidence",
+      "requirement": "Evidence on customer losses that could change the integration decision",
+      "rationale": "The assignment names customer loss as the decision-changing test.",
+      "status": "planned",
+      "input_ids": [
+        "assignment"
+      ]
+    }
+  ],
+  "analysis_plan": [
+    {
+      "id": "decision-conditions",
+      "objective": "Identify the customer-retention conditions for integration",
+      "method": "Present supplied evidence and clearly label missing customer-retention evidence.",
+      "input_ids": [
+        "assignment"
+      ],
+      "output": "Evidence-bounded presentation for board discussion"
+    }
+  ],
+  "assumptions": [
+    {
+      "statement": "The requested EUR 12.5 million acquisition price is contextual, not a decision threshold.",
+      "status": "provisional",
+      "materiality": "contextual"
+    }
+  ],
+  "unresolved_questions": [],
+  "success_criteria": [
+    "The presentation preserves the integration question and the missing customer-retention evidence without inventing a recommendation.",
+    "France remains outside scope."
+  ],
+  "selected_clara_workflow": "clara:html-deck",
+  "validation_profile": {
+    "review_dimensions": [
+      "contract_conformance",
+      "factual_source_support",
+      "calculations_data_provenance",
+      "reasoning_assumptions",
+      "contradictions_missing_evidence",
+      "recommendation_evidence_decision_fit",
+      "professional_judgement_boundaries",
+      "correction_needs",
+      "residual_uncertainty",
+      "delivery_readiness"
+    ],
+    "format_checks": []
+  },
+  "validation_scope": {
+    "coverage": "all_material_content",
+    "included_sections": [
+      "All material recommendation claims",
+      "Dates, figures, entities, constraints, and explicit questions"
+    ],
+    "excluded_sections": [],
+    "limitations": []
+  },
+  "correction_policy": {
+    "mode": "separate_artifact",
+    "preserve_original": true,
+    "allowed": true,
+    "approval_required_before_delivery": false
+  },
+  "professional_judgement_policy": {
+    "owner": "Consultant",
+    "model_role": "Identify issues and draft evidence-bounded corrections",
+    "approval_required_before_delivery": false
+  },
+  "source_facts": [
+    {
+      "category": "entity",
+      "text": "Aurora Foods acquired Delta Retail.",
+      "source_anchor": "Aurora Foods acquired Delta Retail",
+      "input_id": "assignment"
+    },
+    {
+      "category": "date",
+      "text": "The acquisition date is 2026-09-30.",
+      "source_anchor": "2026-09-30",
+      "literal_value": "2026-09-30",
+      "input_id": "assignment"
+    },
+    {
+      "category": "number",
+      "text": "The acquisition price is EUR 12.5 million.",
+      "source_anchor": "EUR 12.5 million",
+      "literal_value": "EUR 12.5",
+      "input_id": "assignment"
+    },
+    {
+      "category": "date",
+      "text": "The decision concerns integration before 2027-01-15.",
+      "source_anchor": "2027-01-15",
+      "literal_value": "2027-01-15",
+      "input_id": "assignment"
+    },
+    {
+      "category": "constraint",
+      "text": "France is outside scope.",
+      "source_anchor": "Keep France outside scope",
+      "input_id": "assignment"
+    }
+  ],
+  "explicit_questions": [
+    {
+      "question": "Which customer losses could change the decision?",
+      "input_id": "assignment"
+    }
+  ],
+  "generation_handoff": {
+    "workflow": "clara:html-deck",
+    "objective": "Prepare a standalone HTML presentation of supplied integration evidence and unresolved conditions.",
+    "input_ids": [
+      "assignment"
+    ],
+    "instructions": [
+      "Build a standalone HTML presentation from the supplied evidence, preserving open questions.",
+      "Keep France outside scope and preserve every dated decision condition."
+    ],
+    "expected_outputs": [
+      "index.html",
+      "content-ledger.json",
+      "browser-qa.json"
+    ],
+    "preserve_specialist_authority": true
+  },
+  "model_review": {
+    "method": "model_led_assignment_contract_review",
+    "dimensions": {
+      "material_facts_dates_numbers_entities_constraints_questions": "conforms",
+      "decision_purpose_audience_deliverable": "conforms",
+      "scope_inputs_evidence": "conforms",
+      "analysis_and_success_criteria": "conforms",
+      "workflow_and_generation_handoff": "conforms",
+      "validation_and_professional_judgement": "conforms"
+    },
+    "overall_status": "conforms"
+  }
+}

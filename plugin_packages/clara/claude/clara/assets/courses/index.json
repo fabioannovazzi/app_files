@@ -140,7 +140,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "c93503eb7e993ade64bfc239f464fed3d98cb24c9ee6ddb85b49c3413879c218",
+      "sha256": "fd4a8cac028c1f3aebb237ce27a675622ff28a7d8c1fd1186108bc9a7f7d8773",
       "languages": [
         "it",
         "en",
@@ -165,7 +165,7 @@
         "de": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
         "es": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador."
       },
-      "source_sha256": "dfb7701e5c146c23a58e2f84e3cb574e700f385ca7c059967334325c399525a2"
+      "source_sha256": "b5287dec2eeef945885d2871aba0d8176d6164e477086f47ebe7343e6b3baad4"
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",

@@ -193,7 +193,9 @@ def test_upload_missing_launcher_preserves_existing_archive(
             }
         ).encode()
     }
-    monkeypatch.setattr(builder, "chatgpt_upload_entries", lambda _: entries)
+    monkeypatch.setattr(
+        builder, "chatgpt_upload_entries", lambda _, *, edition="full": entries
+    )
     output = tmp_path / "upload.zip"
     output.write_bytes(b"previous archive")
 

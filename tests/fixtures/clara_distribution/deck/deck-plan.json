@@ -1,0 +1,123 @@
+{
+  "schema_version": "clara.html_deck_plan.v2",
+  "allow_bespoke_html": false,
+  "evidence": {
+    "bundle": {
+      "path": "evidence-bundle.json",
+      "sha256": "c82f2d845fcc93ce5e0884246894cc185d308c48df12c94739f082d7d4bfc415"
+    },
+    "numeric_policy": "require_bindings",
+    "bindings": {
+      "revenue": {
+        "kind": "table_cell",
+        "artifact_id": "financial-facts",
+        "row_key": {
+          "fact_id": "revenue"
+        },
+        "field": "value",
+        "value_type": "decimal",
+        "display": {
+          "decimals": 1,
+          "scale": "0.000001",
+          "rounding": "half_up",
+          "prefix": "$",
+          "suffix": "m"
+        }
+      },
+      "customer-series": {
+        "kind": "table_rows",
+        "artifact_id": "customer-concentration",
+        "fields": {
+          "label": "label",
+          "value": "value"
+        },
+        "value_type": "records"
+      }
+    }
+  },
+  "slides": [
+    {
+      "id": "diligence-evidence",
+      "layout_id": "visual-takeaway",
+      "title": {
+        "$template": {
+          "text": "Revenue is {revenue}",
+          "bindings": {
+            "revenue": {
+              "id": "revenue",
+              "mode": "display"
+            }
+          }
+        }
+      },
+      "chapter": "evidence",
+      "chapter_label": "Evidence",
+      "tone": "light",
+      "notes": "Synthetic acceptance example. Revenue and customer shares come from the supplied CSV fixtures; the resilience test is an agent recommendation, not a finding.",
+      "source_refs": [
+        "source-financial-facts",
+        "source-customer-concentration"
+      ],
+      "claim_refs": [
+        "claim-revenue",
+        "claim-resilience"
+      ],
+      "slots": {
+        "eyebrow": "Financial evidence",
+        "title": {
+          "$template": {
+            "text": "Revenue is {revenue}",
+            "bindings": {
+              "revenue": {
+                "id": "revenue",
+                "mode": "display"
+              }
+            }
+          }
+        },
+        "visual": {
+          "renderer": "data_visual",
+          "spec": {
+            "type": "bar",
+            "title": "Customer revenue share (fraction)",
+            "data": {
+              "$binding": {
+                "id": "customer-series",
+                "mode": "raw"
+              }
+            },
+            "description": "Customer share of revenue, expressed as a fraction of total revenue."
+          },
+          "source_refs": [
+            "source-customer-concentration"
+          ]
+        },
+        "takeaway_label": "Implication",
+        "takeaway": "The buyer should test resilience before pricing.",
+        "source_note": "Synthetic financial and customer fixtures."
+      }
+    },
+    {
+      "id": "next-work",
+      "layout_id": "editorial-cover",
+      "title": "Test customer resilience before pricing",
+      "chapter": "decision",
+      "chapter_label": "Next work",
+      "tone": "dark",
+      "notes": "Agent recommendation only. Customer churn and retention evidence were not supplied, so no investment conclusion follows.",
+      "source_refs": [
+        "source-customer-concentration"
+      ],
+      "claim_refs": [
+        "claim-next-work"
+      ],
+      "slots": {
+        "eyebrow": "Open evidence need",
+        "title": "Test customer resilience before pricing",
+        "subtitle": "The supplied concentration snapshot does not establish customer retention.",
+        "author": "Synthetic acceptance example",
+        "source_note": "Agent inference from the supplied customer-share fixture."
+      }
+    }
+  ]
+}

@@ -309,3 +309,24 @@ def test_composer_extension_uses_stable_slide_context_and_explicit_sources() -> 
 
     assert 'data-component-id="evidence-visual"' in rendered
     assert 'data-source-ids="source-a"' in rendered
+
+
+@pytest.mark.parametrize("value", [0.184, 123456.78, -123456.78, 0])
+def test_bar_value_label_stays_inside_canvas_and_clear_of_category(
+    value: float,
+) -> None:
+    """A longest bar must not place its numeric label beyond the SVG boundary."""
+    from xml.etree import ElementTree
+
+    module = load_module()
+    markup = module.render_visual(
+        {**base_spec("bar"), "data": [{"label": "Customer A", "value": value}]}
+    )
+    svg = ElementTree.fromstring(markup).find("svg")
+    label = svg.find("text[@class='data-value-label']")
+    x = float(label.attrib["x"])
+    text_width = len(label.text) * 8
+    left = x - text_width if label.attrib["text-anchor"] == "end" else x
+    right = left + text_width
+    assert left >= 186  # Category column ends before the numeric plot.
+    assert right <= 600  # Published SVG canvas width.
