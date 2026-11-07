@@ -1135,7 +1135,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "b918ef7f8937ad011c572081164dbe929946a1848a4ae5c96fc09caf1a723d83",
+      "sha256": "3f5fb28d7ea2c83a2dd5a234a646b8c24369cda674997182e7b94d66194542dc",
       "languages": [
         "it",
         "en",
@@ -1160,7 +1160,7 @@
         "de": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
         "es": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones."
       },
-      "source_sha256": "7f13e2cfa9d592026e2e99f0c33fcea3e83da2b5cc4e92fcc9327b5bf3a02980"
+      "source_sha256": "289d72b01f540dddd61ed584fbf8080408d387def00d5f36fad02046099eb4fa"
     },
     "vouching": {
       "path": "vouching/course.json",
