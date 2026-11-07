@@ -110,7 +110,7 @@
     {
       "path": "modules/report-builder/scripts/report_builder_core.py",
       "repository_path": "plugins/report-builder/scripts/report_builder_core.py",
-      "sha256": "eeb4fa90088c23ab71423192a3eacf4843bbc450c705b222e57eb00932774283"
+      "sha256": "9ddfe209d55adb9c38e662b7c1c7febbf3b7d626e6836b1c279402923a04297f"
     },
     {
       "path": "modules/report-builder/scripts/report_builder_integrity.py",
@@ -300,7 +300,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

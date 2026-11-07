@@ -60,7 +60,9 @@ def test_fusione_kit_executes_both_branches_and_reopens_changes(
         return original_paper(self, name, kind, request)
 
     monkeypatch.setattr(native.Demo, "paper", from_convention)
-    demo = native.prepare_case(tmp_path / "case-run", inputs["branch"])
+    demo = native.prepare_case(
+        tmp_path / "case-run", inputs["branch"], planned_date=inputs["planned_date"]
+    )
     store = demo.store
     exchange = store.read("exchange")["data"]["result"]
     bridge = store.read("bridge")["data"]["result"]

@@ -319,3 +319,12 @@ def test_french_chf_report_preserves_shared_calculations():
     assert ">3\u202f000<" in rendered
     assert plan["calculations"]["base/2027-01/ebitda"]["value"] == "-100"
     assert plan["calculations"]["base/2027-01/ebitda"]["unit"] == "CHF"
+
+
+def test_authored_currency_does_not_duplicate_bound_calculation_unit():
+    case = case_data()
+    case["narrative"][0]["text"] = "The adjusted operating result is {{ebitda}} EUR."
+    plan = build_plan(case, source_root=FIXTURE)
+    page = compile_html(plan, source_root=FIXTURE)
+    assert ">-100 EUR</a>." in page
+    assert ">-100 EUR</a> EUR" not in page

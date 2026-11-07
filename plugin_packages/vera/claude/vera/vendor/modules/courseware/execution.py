@@ -12,7 +12,15 @@ import json
 from pathlib import Path
 from typing import Any
 
-__all__ = ["ExecutionError", "collect_execution", "verify_execution"]
+__all__ = [
+    "MAX_OUTPUT_ARTIFACTS",
+    "ExecutionError",
+    "collect_execution",
+    "verify_execution",
+]
+
+# Complete valuation workpapers exceed 30 files; retain a bounded local record.
+MAX_OUTPUT_ARTIFACTS = 200
 
 
 class ExecutionError(ValueError):
@@ -61,8 +69,9 @@ def _json(path: Path) -> dict[str, Any]:
 def _records(
     root: Path, values: Any, field: str, previous_roots: tuple[Path, ...] = ()
 ) -> list[dict[str, str]]:
-    if not isinstance(values, list) or not 1 <= len(values) <= 30:
-        raise ExecutionError(f"Execution requires 1 to 30 {field}")
+    limit = MAX_OUTPUT_ARTIFACTS if field == "outputs" else 30
+    if not isinstance(values, list) or not 1 <= len(values) <= limit:
+        raise ExecutionError(f"Execution requires 1 to {limit} {field}")
     records = []
     for value in values:
         if not isinstance(value, dict) or set(value) != {"path", "sha256"}:

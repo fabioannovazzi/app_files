@@ -65,12 +65,12 @@
     {
       "path": "modules/treasury-forecast/scripts/treasury_report.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_report.py",
-      "sha256": "7583af8b8ecfa3653dad21cd122a53d3da4541eda4c932919a7f598057844ec8"
+      "sha256": "f78e574306b7f7b177c17dc44eed43e51409c80394b61c71a9b8fe8a1c884043"
     },
     {
       "path": "modules/treasury-forecast/scripts/treasury_session.py",
       "repository_path": "plugins/treasury-forecast/scripts/treasury_session.py",
-      "sha256": "920a3880697042ce97c9293eb04cdc406a25f1fbcf0c839cf74178942107c98d"
+      "sha256": "36f21748bf0f03e4bb3e7233c84ee3d47156dcdc4e6220a7b2315995f72f9508"
     },
     {
       "path": "modules/treasury-forecast/skills/treasury-forecast/SKILL.md",
@@ -225,7 +225,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

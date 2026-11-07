@@ -12,7 +12,7 @@ from typing import Any
 from management_report_copy import report_label
 from reporting_table import render_reporting_table
 
-__all__ = ["render_budget_comparisons"]
+__all__ = ["budget_labels", "render_budget_comparisons"]
 
 LINES = (
     ("revenue", "Ricavi", "Revenue"),
@@ -40,6 +40,28 @@ COSTS = {"cogs", "operating_expense", "depreciation_amortization", "interest", "
 TOTALS = {"gross_profit", "ebitda", "ebit", "net_result"}
 
 
+def budget_labels(pack: Mapping[str, Any]) -> dict[str, str]:
+    """Qualify absent categories consistently across HTML, Markdown and Excel."""
+    language = pack.get("language", "en")
+    labels = {key: report_label(key, language) for key, _, _ in LINES}
+    supplied = pack["sections"]["monthly_pnl"].get("supplied_categories")
+    qualifiers = {
+        "it": ("voci fornite", "non fornito"),
+        "en": ("supplied categories", "not supplied"),
+        "fr": ("postes fournis", "non fourni"),
+        "de": ("bereitgestellte Kategorien", "nicht bereitgestellt"),
+        "es": ("partidas facilitadas", "no facilitado"),
+    }
+    partial, missing = qualifiers.get(language, qualifiers["en"])
+    if supplied is not None:
+        for key in labels:
+            if key == "ebit":
+                labels[key] += f" ({partial})"
+            elif key not in TOTALS and key not in supplied:
+                labels[key] += f" ({missing})"
+    return labels
+
+
 def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
     """Select compiled views without changing numbers, signs, units or scales."""
     section = pack["sections"]["budget_variance"]
@@ -53,7 +75,7 @@ def render_budget_comparisons(pack: Mapping[str, Any]) -> str:
         grouped[row["view"]].append(row)
     if not grouped:
         return ""
-    labels = {key: label(key) for key, _, _ in LINES}
+    labels = budget_labels(pack)
     rendered_rows: dict[str, list[dict[str, Any]]] = {}
     for view, values in grouped.items():
         by_metric = {row["metric"]: row for row in values}

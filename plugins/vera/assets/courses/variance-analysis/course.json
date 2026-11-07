@@ -84,7 +84,7 @@
     {
       "path": "modules/variance-analysis/scripts/legacy_plotting.py",
       "repository_path": "plugins/variance-analysis/scripts/legacy_plotting.py",
-      "sha256": "2f64af9fc27ff5bcc1fd0cbc78dd48bec512be820119d147e4dbd744a2daa656"
+      "sha256": "3b376668b97a3ff7cb9770bc0cab3113210b4cb096b07c90a02b0ed1c34217b6"
     },
     {
       "path": "modules/variance-analysis/scripts/model_use.py",
@@ -699,7 +699,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

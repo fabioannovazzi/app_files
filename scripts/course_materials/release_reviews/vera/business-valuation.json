@@ -148,7 +148,25 @@
     "recovery_test": "tests.plugins.test_business_valuation::test_valuation_teaching_missing_terminal_requires_new_evidence[recovery]",
     "same_engagement_test": "tests.plugins.test_business_valuation::test_valuation_teaching_four_runs_reopen_sealed_artifacts_in_one_engagement"
   },
-  "course_sha256": "e0478133165d8f85197956b640a6dadc3f0a12e0b862c33c6bbc74561b256569",
+  "course_repair_source_binding_20261106": {
+    "authored_content_unchanged": true,
+    "changed_fields": [
+      "sources"
+    ],
+    "changed_source_paths": [
+      "vendor/modules/courseware/execution.py"
+    ],
+    "comparison": "Compared the complete course with the exact historical SHA-256 recorded by its review. All fields except sources are identical, including localized text, fixtures, checkpoints and execution contracts.",
+    "current_course_sha256": "fb739c5952f537fa030f703a99ff7a08c580a9e88000a6f8dd455a817dd5eb15",
+    "fresh_matching_junit_required": true,
+    "historical_commit": "f5e380b3dd7f372ae3f26b15cbfe58b83c6595d7",
+    "limits": "Historical editorial identities, verdicts, dates and artifact hashes are preserved. This records source compatibility only, not new learner, installed-host or professional acceptance. Fresh localized native demo/practice CI against the current course digest is required.",
+    "previous_course_sha256": "e0478133165d8f85197956b640a6dadc3f0a12e0b862c33c6bbc74561b256569",
+    "reviewed_at": "2026-11-06T16:34:18.274532+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review",
+    "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
+  },
+  "course_sha256": "fb739c5952f537fa030f703a99ff7a08c580a9e88000a6f8dd455a817dd5eb15",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "eac778326f013cf82df8b03988beb3939d75e2432fcab978dcadec8ab9634b0f",

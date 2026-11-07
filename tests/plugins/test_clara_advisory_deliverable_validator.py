@@ -1908,3 +1908,72 @@ def test_full_preparation_preserves_material_text_beyond_basic_preview(
     assert "12" in extracted
     assert "Source: appendix B" in extracted
     assert paths["coverage_inventory"].is_file()
+
+
+@pytest.mark.parametrize("tamper", [False, True])
+def test_budget_receipt_checks_exact_deliverable_and_output_bytes(
+    tmp_path: Path, tamper: bool
+) -> None:
+    artifact = tmp_path / "execution_receipt.json"
+    check = {
+        "workflow": "clara:reporting-engine",
+        "requirement": "required",
+        "reason": "Budget report",
+        "artifact_refs": [str(artifact)],
+    }
+    validator, _, contract_path, output_dir, paths, inventory = _prepare(
+        tmp_path, format_checks=[check]
+    )
+    source = Path(inventory["source_path"])
+    body = {
+        "schema_version": "vera.management_control_execution_receipt.v1",
+        "workflow_id": "management-control-pack",
+        "status": "partial",
+        "outputs": [
+            {
+                "path": source.name,
+                "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                "byte_count": source.stat().st_size,
+            }
+        ],
+    }
+    body["content_sha256"] = hashlib.sha256(
+        (
+            json.dumps(body, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+            + "\n"
+        ).encode()
+    ).hexdigest()
+    if tamper:
+        body["outputs"][0]["byte_count"] += 1
+    artifact.write_text(json.dumps(body))
+    review = _review(
+        inventory,
+        format_checks=[
+            {
+                "workflow": "clara:reporting-engine",
+                "status": "passed",
+                "artifact_refs": [str(artifact)],
+                "analysis": "Native budget receipt",
+            }
+        ],
+    )
+    review_path = output_dir / "review.json"
+    review_path.write_text(json.dumps(review))
+    _, audit = validator.package_validation(
+        paths["deliverable_inventory"], review_path, contract_path, output_dir
+    )
+    assert audit["record_complete"] is (not tamper)
+
+
+def test_no_corrected_artifact_does_not_claim_a_completed_rereview(
+    tmp_path: Path,
+) -> None:
+    validator, _, contract_path, output_dir, paths, inventory = _prepare(tmp_path)
+    review_path = output_dir / "review.json"
+    review_path.write_text(json.dumps(_review(inventory)))
+    _, audit = validator.package_validation(
+        paths["deliverable_inventory"], review_path, contract_path, output_dir
+    )
+    assert audit["record_complete"] is True
+    assert audit["corrected_artifact"] is None
+    assert audit["checks"]["corrected_artifact_re_reviewed"] is None

@@ -26,6 +26,34 @@ CHECK_DEPENDENCIES_PATH = SCRIPT_DIR / "check_dependencies.py"
 MCP_SERVER_PATH = ROOT / "plugins" / "journal-sampling" / "mcp" / "server.cjs"
 
 
+def test_sample_workbook_money_is_numeric_without_rounding_exact_large_values(tmp_path):
+    core = load_core()
+    sample = core.pl.DataFrame(
+        {
+            "movement_number": ["000123", "000124"],
+            "debit": ["1220.50", "1234567890123456.78"],
+            "credit": ["0", "0"],
+            "amount_signed": ["1220.50", "1234567890123456.78"],
+            "amount_abs": ["1220.50", "1234567890123456.78"],
+            "reported_increment": ["0.01", "0.01"],
+        }
+    )
+    original = sample.clone()
+    path = tmp_path / "sample.xlsx"
+    core._write_sample_xlsx(sample, path, language="it")
+    workbook = openpyxl.load_workbook(path)
+    try:
+        sheet = workbook.active
+        assert sheet["A2"].value == "000123" and sheet["A2"].data_type == "s"
+        assert sheet["B2"].value == 1220.5 and sheet["B2"].data_type == "n"
+        assert sheet["F2"].value == 0.01 and sheet["F2"].data_type == "n"
+        assert sheet["B3"].value == "1234567890123456.78"
+        assert sheet["B3"].data_type == "s" and sheet["B3"].comment is not None
+    finally:
+        workbook.close()
+    assert_frame_equal(sample, original)
+
+
 @pytest.mark.parametrize("currencies", [[], ["EUR", "CHF", "CHF"]])
 def test_review_intake_has_no_invented_single_currency(
     tmp_path: Path, currencies: list[str]
@@ -156,6 +184,7 @@ TRANSITIVE_IMPLEMENTATION_ATTACKS = [
     ("assurance", "money.py"),
     ("assurance", "relationships.py"),
     ("assurance", "review_output_transaction.cjs"),
+    ("assurance", "recovery.py"),
     ("assurance", "serialization.py"),
     ("shared_pdf", "__init__.py"),
     ("shared_pdf", "rules.py"),

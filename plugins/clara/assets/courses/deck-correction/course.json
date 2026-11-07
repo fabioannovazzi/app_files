@@ -195,7 +195,7 @@
     {
       "path": "scripts/finalize_hosted_transcript.py",
       "repository_path": "plugins/clara/scripts/finalize_hosted_transcript.py",
-      "sha256": "0682cd4747141b678a3348bcc8ea793d2e4f2c9dd54dc7d0844f36a820f57a56"
+      "sha256": "3aa94262c8139745e394c2bf8234292028a085f20220df76dd61558f3eeca0fe"
     },
     {
       "path": "scripts/html_deck_runtime.py",
@@ -375,7 +375,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -440,7 +440,7 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+      "sha256": "065c7b3f8d3376d433fd74d4d0db8d316adb1e20720c1d88e7af7ecb85eecf61"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",
@@ -451,7 +451,7 @@
   "files": [
     {
       "path": "files/input/original-deck-it.html",
-      "sha256": "b9f6302e26dc701106ce360424dca26a88c923f6b3f2516e784e5d27e27372f0",
+      "sha256": "364e3969b3ab02d12ba65eee25ae473c3ca6e1833916f79fb93acacb06fea1f4",
       "languages": [
         "it"
       ],
@@ -475,7 +475,7 @@
     },
     {
       "path": "files/practice/original-deck-it.html",
-      "sha256": "b9f6302e26dc701106ce360424dca26a88c923f6b3f2516e784e5d27e27372f0",
+      "sha256": "364e3969b3ab02d12ba65eee25ae473c3ca6e1833916f79fb93acacb06fea1f4",
       "languages": [
         "it"
       ],
@@ -499,7 +499,7 @@
     },
     {
       "path": "files/input/original-deck-en.html",
-      "sha256": "91151f34a4931111281486837b1e59b74f46c708e9fe10cfdbd25ee60bdf9768",
+      "sha256": "2a792c17aea47240a05b32e311c39ba486a2b4ace21f0eec7caf232e812f54ba",
       "languages": [
         "en"
       ],
@@ -523,7 +523,7 @@
     },
     {
       "path": "files/practice/original-deck-en.html",
-      "sha256": "91151f34a4931111281486837b1e59b74f46c708e9fe10cfdbd25ee60bdf9768",
+      "sha256": "2a792c17aea47240a05b32e311c39ba486a2b4ace21f0eec7caf232e812f54ba",
       "languages": [
         "en"
       ],
@@ -547,7 +547,7 @@
     },
     {
       "path": "files/input/original-deck-fr.html",
-      "sha256": "ab28e93727bed3a79c198e636eff9b576f8959d7f12ab586b10dd4043aff548f",
+      "sha256": "c0075c10a9444017a8fefdda02560e2b24fd88e667c784a15ccc3b87f1d95da0",
       "languages": [
         "fr"
       ],
@@ -571,7 +571,7 @@
     },
     {
       "path": "files/practice/original-deck-fr.html",
-      "sha256": "ab28e93727bed3a79c198e636eff9b576f8959d7f12ab586b10dd4043aff548f",
+      "sha256": "c0075c10a9444017a8fefdda02560e2b24fd88e667c784a15ccc3b87f1d95da0",
       "languages": [
         "fr"
       ],
@@ -595,7 +595,7 @@
     },
     {
       "path": "files/input/original-deck-de.html",
-      "sha256": "934a98b2409fdec35dc3b3f28fa43a6de393c94a060a4c56f3056ee535140b97",
+      "sha256": "9b2bf0e837ff5f6a5192696d6674a6c7b922bdfcbfcdbb9e3ab74967e3717987",
       "languages": [
         "de"
       ],
@@ -619,7 +619,7 @@
     },
     {
       "path": "files/practice/original-deck-de.html",
-      "sha256": "934a98b2409fdec35dc3b3f28fa43a6de393c94a060a4c56f3056ee535140b97",
+      "sha256": "9b2bf0e837ff5f6a5192696d6674a6c7b922bdfcbfcdbb9e3ab74967e3717987",
       "languages": [
         "de"
       ],
@@ -643,7 +643,7 @@
     },
     {
       "path": "files/input/original-deck-es.html",
-      "sha256": "6c167b09465372dc63bd123a2e6e0ac9764aa637178c240b2ce018fd3e76b32f",
+      "sha256": "0b720a9bf36d2dde22e9749155368d2ba0be73631711e6037631b91f15ea36af",
       "languages": [
         "es"
       ],
@@ -667,7 +667,7 @@
     },
     {
       "path": "files/practice/original-deck-es.html",
-      "sha256": "6c167b09465372dc63bd123a2e6e0ac9764aa637178c240b2ce018fd3e76b32f",
+      "sha256": "0b720a9bf36d2dde22e9749155368d2ba0be73631711e6037631b91f15ea36af",
       "languages": [
         "es"
       ],

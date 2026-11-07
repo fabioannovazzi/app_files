@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "1f9e3bb9889b3fd3b799c22b12a80d7c7accff051039710de9c6a034b1c372a8",
+      "sha256": "edd89dba046f8ea5e73842355920f083ae2c8f92d358faee66de1f3f5a81c1ce",
       "languages": [
         "it",
         "en",
@@ -29,11 +29,11 @@
         "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
         "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
       },
-      "source_sha256": "d21ac03c6b8b0921b42d6f79172af8fc838610247cc1c565b53896275e4c183d"
+      "source_sha256": "4f23aba83eea37bfba63bb75d3574cec1c3b8a6304c317cc174e3d5e66d05b7f"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "1df4900c4c4b1a757e0e5e6cb2dcf0560c49995d965d9ae0b8330fc1f2215230",
+      "sha256": "b1c7f31a5dee51e892ccd9aa37b2b7118ad4f01f3e97306883bd1a1eaa976a5d",
       "languages": [
         "it",
         "en",
@@ -58,11 +58,11 @@
         "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
         "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       },
-      "source_sha256": "a7a2f113bcca408e12d0833840bd46cc01c9d24fb41643cb0ba32a5b92817ec2"
+      "source_sha256": "1b6ad266bb7c2c3b957cf96e31db1ce1a85848f2cefc9d55dda533068d303fd7"
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "97df717b4eb5d85b39ac17ed5b51103d04516179549ad33b3ca7235001180149",
+      "sha256": "23153d9a6384c1ad419130016a16a64f32886904503c3c784726e619f44e8382",
       "languages": [
         "it",
         "en",
@@ -87,11 +87,11 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "04ffb9f99722412c741c62a19df55c49ef1a586e71278f6d0a7dc66f43762a4c"
+      "source_sha256": "40611fd248589795dcef2dac908be14c8f1955521b3467b54fc362ee3a7e34dc"
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "877e1f05db00c4e826003ecb7bf9bac022475187e0ab07ad8541b2c26f848cbf",
+      "sha256": "963c0d9181316e3a513eb4c1e3aa48442acd5c3e6fd1ba91fd95e36545ceb0f4",
       "languages": [
         "it",
         "en",
@@ -116,11 +116,11 @@
         "de": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
         "es": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación."
       },
-      "source_sha256": "9a00e735bffbc87f621df1c1277661a28e85f944d00d826de6f78552cfc2e05d"
+      "source_sha256": "1533573c67e69a7097f0070d01edee2e080319fa3dd629fd53858d226018a92a"
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "be0eacf5780fe8fc85aad641b145a307d219e5e98c33dff7b7f11a391b8d98ff",
+      "sha256": "36485240b563c48397ab265af62f50d4644477eeff3728fac11bae2905ed1a77",
       "languages": [
         "it",
         "en",
@@ -145,7 +145,7 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "31c1290d573514d261d9d70c4adb0ae1f202229cc11f550db1f5a76c2250d829"
+      "source_sha256": "55c37b0190192ead0c608f526980359aea560c63a376d2dd6ffd6e9813158af9"
     }
   }
 }

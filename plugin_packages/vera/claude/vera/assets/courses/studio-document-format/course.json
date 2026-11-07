@@ -72,6 +72,10 @@
       "sha256": "4b9f57be78573553a69a5f9343ed7a5eca21994f0911d85c9d595c87aea011e5"
     },
     {
+      "path": "modules/comunicazione-professionale/assets/studio-document-format/preview-copy.json",
+      "sha256": "ce90dfcdc932ffd9b415d9b1306c2df3c046bb1ca596812d7512105ac38f75e4"
+    },
+    {
       "path": "modules/comunicazione-professionale/requirements.txt",
       "sha256": "21d6d3b5742482d9d57790df8cea6e1f00bff4742683b748916f5d1223b472f8"
     },
@@ -201,11 +205,11 @@
     },
     {
       "path": "modules/comunicazione-professionale/scripts/review_document_format.py",
-      "sha256": "7b0a6aff7147e56cc79df968455fbedc6c10e39eef609bccd77494f6a7f4052f"
+      "sha256": "45ab376f76bfdc00cf6b8b5bddd5fc57c307672923564dfebae73dcc0a5a2445"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/studio_document_format.py",
-      "sha256": "f95ed026ce9d288b6e1a6d1a16606288428f3b126a9dfe284dd1b746d2cca826"
+      "sha256": "cf08e7a82facc65fad04ba2f48436503ca4b82a792698466c5beda7f5df8fc57"
     },
     {
       "path": "modules/comunicazione-professionale/scripts/validate_run.py",
@@ -305,7 +309,7 @@
     },
     {
       "path": "modules/report-builder/scripts/report_builder_core.py",
-      "sha256": "6149f308ccb6498167bf00ada475a8ab0b22c19836cae5a95db691baa7bcbb90"
+      "sha256": "3e1293dc00215a9062d4c73ae056252d9a216d310f8696140815e403ac1fda03"
     },
     {
       "path": "modules/report-builder/scripts/report_builder_integrity.py",
@@ -397,7 +401,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "9739f4e561a9add90ba3965cf8661e4328d4c9f731380feac4c28b960516fec2"
+      "sha256": "e82df6e0f957aa4474873f9afab64b94a045c74eaaa9d09da54c902197b8d361"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -1010,5 +1014,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "68e1e50c8f29b5be236ccc1d264d0e6db94d66408d4857837a0d916a4b6e9e98"
+  "canonical_course_sha256": "e3c7e3cd43a9752a9fffd4da1a714501ca6fe84a40d47af8bb7e99f7d89af4ed"
 }

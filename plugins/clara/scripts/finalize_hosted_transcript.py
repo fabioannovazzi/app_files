@@ -443,7 +443,9 @@ def finalize_hosted_transcript(
             pointer_paths.append(
                 candidate if candidate.is_absolute() else case_dir / candidate
             )
+    attribution_report = raw_path.parent / "speaker_attribution_report.json"
     mutation_paths = [
+        attribution_report,
         case_dir / "material_registry.json",
         case_dir / "case_manifest.json",
         case_dir / CASE_BRIEF_FILENAME,
@@ -497,6 +499,22 @@ def finalize_hosted_transcript(
         if pointer_id is not None:
             metadata["raw_audio_pointer_material_id"] = pointer_id
         material["source_metadata"] = metadata
+        if attribution_report.is_file():
+            report = json.loads(attribution_report.read_text(encoding="utf-8"))
+            report.update(
+                status="attributed",
+                requires_clara_codex_attribution=False,
+                attributed_transcript_path=_relative_path(case_dir, attributed_path),
+                finalized_at=timestamp,
+                finalization_note=speaker_attribution_note,
+                attributed_transcript_sha256=_sha256(attributed_path),
+            )
+            # Keep unresolved identity notes and review requirements: recording
+            # attributed text does not establish a person's identity.
+            attribution_report.write_text(
+                json.dumps(report, indent=2, ensure_ascii=True) + "\n",
+                encoding="utf-8",
+            )
         transcript_receipt = _transcript_receipt(
             case_dir=case_dir,
             material_id=material_id,

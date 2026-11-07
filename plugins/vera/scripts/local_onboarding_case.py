@@ -137,7 +137,9 @@ def prepare_case(
         )
     attempt = root / f"{phase}-{secrets.token_hex(8)}"
     case = (
-        attempt / "archive" / "Teaching client" if workflow == "vouching" else attempt
+        attempt / "archive" / "Teaching client"
+        if workflow in {"vouching", "archive-organization"}
+        else attempt
     )
     case.mkdir(mode=0o700, parents=True)
     if archive_source is not None and workflow == "studio-archive":
@@ -285,14 +287,15 @@ def prepare_case(
         "work_binding": binding,
         **started,
     }
-    if workflow == "vouching":
+    if workflow in {"vouching", "archive-organization"}:
         # The normal handoff resolves client IDs through an archive index.
         # This private tutorial index never changes the user's archive setup.
         state = attempt / "archive-state"
         _archive().configure_archive(case.parent, state_dir=state)
+        result.update(archive_root=str(case.parent), archive_state_dir=str(state))
+    if workflow == "vouching":
         result.update(
             prerequisite_workflow="journal-sampling",
-            archive_state_dir=str(state),
             support_input_ids=[
                 item["receipt"]["input_id"]
                 for item in inputs

@@ -8,6 +8,7 @@ import hashlib
 import importlib.util
 import json
 import logging
+import math
 import os
 import re
 import sqlite3
@@ -1440,7 +1441,8 @@ def _open_database(path: Path, fingerprint: str) -> sqlite3.Connection:
     connection = sqlite3.connect(path)
     connection.execute("PRAGMA journal_mode=WAL")
     connection.execute("PRAGMA synchronous=FULL")
-    connection.executescript("""
+    connection.executescript(
+        """
         CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL);
         CREATE TABLE IF NOT EXISTS audit_items (
             invoice_id TEXT PRIMARY KEY,
@@ -1466,7 +1468,8 @@ def _open_database(path: Path, fingerprint: str) -> sqlite3.Connection:
             recovery_source TEXT,
             completed_at TEXT
         );
-        """)
+        """
+    )
     existing = connection.execute(
         "SELECT value FROM metadata WHERE key='run_fingerprint'"
     ).fetchone()
@@ -1952,6 +1955,30 @@ def _write_exception_workpaper(
         {"bold": True, "font_color": "#FFFFFF", "bg_color": "#173F67", "border": 1}
     )
     wrap_format = workbook.add_format({"text_wrap": True, "valign": "top"})
+    money_format = workbook.add_format(
+        {"num_format": "#,##0.00############", "valign": "top"}
+    )
+
+    def write_money(sheet, row_number, column_number, value):
+        if value is None or value == "":
+            sheet.write_blank(row_number, column_number, None, money_format)
+            return
+        exact = Decimal(str(value))
+        numeric = float(exact)
+        if (
+            math.isfinite(numeric)
+            and len(exact.normalize().as_tuple().digits) <= 15
+            and Decimal(str(numeric)) == exact
+        ):
+            sheet.write_number(row_number, column_number, numeric, money_format)
+        else:
+            sheet.write_string(row_number, column_number, str(value), wrap_format)
+            sheet.write_comment(
+                row_number,
+                column_number,
+                "Valore esatto conservato come testo: supera la precisione numerica di Excel.",
+            )
+
     summary_sheet = workbook.add_worksheet("Summary")
     summary_sheet.write("A1", "Vera — Intelligent Passive-Invoice Audit", title_format)
     summary_sheet.write("A3", "Metric", header_format)
@@ -2016,7 +2043,10 @@ def _write_exception_workpaper(
             ),
         ]
         for column_number, value in enumerate(values):
-            exception_sheet.write(row_number, column_number, value, wrap_format)
+            if columns[column_number] == "gross_amount":
+                write_money(exception_sheet, row_number, column_number, value)
+            else:
+                exception_sheet.write(row_number, column_number, value, wrap_format)
     exception_sheet.freeze_panes(1, 0)
     exception_sheet.autofilter(0, 0, max(len(rows), 1), len(columns) - 1)
     exception_sheet.set_column(0, 5, 18)
@@ -2036,9 +2066,12 @@ def _write_exception_workpaper(
         orphan_sheet.write(0, index, column, header_format)
     for row_number, orphan in enumerate(orphans, start=1):
         for column_number, column in enumerate(orphan_columns):
-            orphan_sheet.write(
-                row_number, column_number, orphan.get(column, ""), wrap_format
-            )
+            if column == "comparison_gross_amount":
+                write_money(orphan_sheet, row_number, column_number, orphan.get(column))
+            else:
+                orphan_sheet.write(
+                    row_number, column_number, orphan.get(column, ""), wrap_format
+                )
     orphan_sheet.freeze_panes(1, 0)
     orphan_sheet.autofilter(0, 0, max(len(orphans), 1), len(orphan_columns) - 1)
     orphan_sheet.set_column(0, len(orphan_columns) - 1, 22)

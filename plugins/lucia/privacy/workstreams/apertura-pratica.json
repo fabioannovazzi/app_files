@@ -1,113 +1,5 @@
 {
-  "schema_version": 3,
-  "workstream": "apertura-pratica",
   "display_name": "Fascicolo nuova pratica",
-  "role": "workflow",
-  "governed_paths": [
-    "skills",
-    "scripts",
-    "schemas",
-    "references",
-    "assets",
-    "evals"
-  ],
-  "governed_repository_paths": [
-    "plugins/studio-archive/scripts/archive_core.py",
-    "plugins/studio-archive/scripts/studio_archive.py",
-    "plugins/studio-archive/scripts/client_ledger.py",
-    "plugins/studio-archive/mcp/server.cjs",
-    "plugins/vera/scripts/model_data_report.py",
-    "plugins/vera/skills/vera/references/model-data-report-contract.md",
-    "plugins/studio-archive/scripts/build_model_data_report.py",
-    "plugins/studio-archive/scripts/readable_archive.py",
-    "plugins/studio-archive/scripts/archive_preferences.py",
-    "plugins/_shared/vendor/modules/deal_redux",
-    "plugins/lucia/scripts/workflow_usage.py",
-    "plugins/lucia/scripts/model_data_report.py",
-    "plugins/lucia/scripts/notarized_run_receipt.py",
-    "plugins/lucia/scripts/operational_incidents.py",
-    "plugins/lucia/scripts/reporting_product.py",
-    "plugins/lucia/skills/lucia/references/workflow-usage.md",
-    "plugins/lucia/skills/lucia/references/incident-recovery.md",
-    "plugins/lucia/skills/lucia/references/model-data-report-contract.md",
-    "plugins/lucia/usage/pipelines.json",
-    "plugins/studio-archive/scripts/input_verification.py",
-    "plugins/lucia/scripts/matter_mcp.py",
-    "plugins/lucia/scripts/matter_mcp.cjs",
-    "plugins/_shared/vendor/modules/vera_assurance/serialization.py"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
-  "model_context": {
-    "policy": "real_case_data_may_enter_selected_runtime_model_context",
-    "classes": [
-      {
-        "id": "legal-matter-opening-material",
-        "purpose": "Prepare a new client matter or a new matter for an existing client for lawyer review",
-        "content": "Selected identity and contact material; client, assisted-party, counterparty and other relevant party names, aliases and identifiers; requested work, facts, jurisdiction and procedural posture; engagement scope, exclusions, authority and fee status; conflict-register search references and candidate matches; possible deadline triggers and source references; confidentiality restrictions; conditional AML applicability material; privacy and retention posture; missing items; original imported filenames (including aliases for identical bytes), evidence names, bytes and SHA-256 receipts; model provenance; proposed folder plan; lawyer review decisions and final package status. The workflow does not promise automatic anonymization, automatic conflict clearance, binding deadline calculation, engagement acceptance or local-only model processing.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "readable-archive-navigation",
-        "purpose": "Reopen locally retained client matter inputs and finalized artifacts",
-        "content": "Returned local index path, counts and navigation status or error. Generated local HTML contains existing matter labels, dates, statuses and relative links to exact ledger files; it creates no document copies and makes no external requests.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "approved-archive-profile",
-        "purpose": "Reconnect an explicitly approved client archive in fresh sessions",
-        "content": "The last approved local archive root and root-specific confirmed identity aliases remain in an owner-private local profile, separately from session-owned configuration and active run selection. These profile files are not automatically sent to the model or copied into the archive. Returned archive locations, matching client IDs and safe directory labels can enter the invoking model context. Continuity requires the host to retain the local profile; temporary hosts provide no persistence guarantee.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "negotiation-position-review",
-        "purpose": "Prepare source-linked negotiating positions from a selected tracked Word document or selected earlier round",
-        "content": "Selected contract and proposed/deleted text, paragraph context, revision authors and dates, comments and anchors, party roles, instructions, exact quotations, model-authored grouping/effects, requested responses and selected earlier review. Local helpers inventory, validate and render retained files; they make no Mike or separate model API request. Generic legal-source queries use the product legal-question workflow. Host model and Word processing follow the selected account; no automatic anonymization or local-only model guarantee.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "handled-archive-error-review",
-        "purpose": "Diagnose a handled Archive helper failure through the existing local host review",
-        "content": "Handled Archive, OS, value and SQLite exceptions are retained locally before the unchanged structured error returns. The selected host model may review this diagnostic under its existing account; dynamic paths or case values may be present locally. The shared Lucia technical collector sends source-bound exception facts automatically, and the host sends only reviewed relevant technical evidence to the product incident service. Raw stderr and professional stdout are not forwarded.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "selected-archive-input-verification",
-        "purpose": "Verify selected saved inputs and compare their immutable receipts with a supplied prior baseline",
-        "content": "The selected client, engagement and input IDs; prior receipt seals when supplied; verified input names, roles, controlled absolute and relative paths, byte counts, file hashes, receipt seals, timestamps and verification results or bounded failures. Optional exact-population checking returns current input IDs for the selected engagement. Complete file bytes are read locally for hashing; this operation returns no document text and makes no new connector, model API or hosted-service call. Returned metadata can enter the invoking host model context and is not anonymized.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      },
-      {
-        "id": "native-matter-review",
-        "purpose": "Review the explicitly selected prepared matter and retain pending professional decisions",
-        "content": "The local MCP app reads the current selected intake and prepared review. Full review and restored pending decisions reach the app through app-only metadata; the opener returns only ready/error status to the model. App-only saving is bound to an unguessable session, current intake/review hashes, pending-file revision and a stable local mutation lock. User selections and reviewer notes persist locally as pending decisions. Saving neither applies decisions nor accepts an engagement, resolves conflicts or confirms legal deadlines. Explicit application remains the existing separate workflow. Ordinary model reads of selected matter evidence retain the selected-host model boundary; app-only display is not a local-only conversation guarantee. No loopback preview is needed.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork"
-        ]
-      }
-    ]
-  },
   "external_boundaries": [
     {
       "id": "optional-current-official-source-research",
@@ -193,49 +85,106 @@
       ]
     }
   ],
-  "security_controls": [
-    {
-      "id": "private-path-and-immutable-evidence",
-      "control": "Initialization rejects repository paths, uses owner-only permissions and atomic writes; evidence intake accepts only regular non-linked files, snapshots bytes without moving or renaming originals, and records size and SHA-256."
-    },
-    {
-      "id": "dedicated-legal-opening-validator",
-      "control": "The validator checks exhaustive schema structure, reference closure, immutable evidence hashes, professional-gate completeness and receipt freshness while explicitly leaving conflict, deadline, applicability and engagement judgments to the lawyer."
-    },
-    {
-      "id": "digest-bound-explicit-review",
-      "control": "Review decisions bind the exact intake and substantive review payload digests, require a named reviewer and explicit confirmation, and become stale when the intake changes. The local workbench restores only valid decisions for the current review and validates submitted page bindings before replacing a saved decision file."
-    },
-    {
-      "id": "no-automatic-file-operation-or-acceptance",
-      "control": "The workflow proposes a folder plan but never moves, renames or deletes source files and never claims that a client, engagement, conflict result or deadline was accepted automatically."
-    },
-    {
-      "id": "conditional-aml-boundary",
-      "control": "AML applicability is represented as a separate professional assessment with applicable, not-applicable or uncertain status; the workflow does not infer applicability merely because a client or matter is new."
-    },
-    {
-      "id": "local-model-data-report-finalization",
-      "control": "Durable Studio Archive finalization requires run-bound, hash-consistent model-data JSON and Markdown reports. Lucia builds the readable report through workflow_usage using the original primary task ID, requests a server-signed digest receipt and links the actual receipt to that task. The readable report and professional source content remain local to the selected host. The receipt proves retained digest and timestamp, not provider transmission or professional correctness; unavailable delivery remains pending with its original request."
-    },
-    {
-      "id": "session-bound-archive-configuration",
-      "control": "Studio Archive separates default configuration by host session identity, holds a process lock on configured state and rejects configuration changes during an operation. These controls do not anonymize case data or prove provider transmission."
-    },
-    {
-      "id": "private-root-specific-identity-continuity",
-      "control": "Approved archive discovery is revalidated before a fresh isolated session adopts it; existing sessions stay pinned. Private identity aliases are root-specific and short cross-process transactions prevent lost updates. Unavailable or malformed profile state fails closed, and private profile storage must remain outside source archives."
-    },
-    {
-      "id": "maintained-read-only-input-verification",
-      "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
-    }
+  "governed_paths": [
+    "skills",
+    "scripts",
+    "schemas",
+    "references",
+    "assets",
+    "evals"
   ],
-  "review": {
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "399c437d6d7f4637e414e3ce08c426a2b92196387ef8a92ea0256a885253bf76"
+  "governed_repository_paths": [
+    "plugins/studio-archive/scripts/archive_core.py",
+    "plugins/studio-archive/scripts/studio_archive.py",
+    "plugins/studio-archive/scripts/client_ledger.py",
+    "plugins/studio-archive/mcp/server.cjs",
+    "plugins/vera/scripts/model_data_report.py",
+    "plugins/vera/skills/vera/references/model-data-report-contract.md",
+    "plugins/studio-archive/scripts/build_model_data_report.py",
+    "plugins/studio-archive/scripts/readable_archive.py",
+    "plugins/studio-archive/scripts/archive_preferences.py",
+    "plugins/_shared/vendor/modules/deal_redux",
+    "plugins/lucia/scripts/workflow_usage.py",
+    "plugins/lucia/scripts/model_data_report.py",
+    "plugins/lucia/scripts/notarized_run_receipt.py",
+    "plugins/lucia/scripts/operational_incidents.py",
+    "plugins/lucia/scripts/reporting_product.py",
+    "plugins/lucia/skills/lucia/references/workflow-usage.md",
+    "plugins/lucia/skills/lucia/references/incident-recovery.md",
+    "plugins/lucia/skills/lucia/references/model-data-report-contract.md",
+    "plugins/lucia/usage/pipelines.json",
+    "plugins/studio-archive/scripts/input_verification.py",
+    "plugins/lucia/scripts/matter_mcp.py",
+    "plugins/lucia/scripts/matter_mcp.cjs",
+    "plugins/_shared/vendor/modules/vera_assurance/serialization.py"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "legal-matter-opening-material",
+        "purpose": "Prepare a new client matter or a new matter for an existing client for lawyer review",
+        "content": "Selected identity and contact material; client, assisted-party, counterparty and other relevant party names, aliases and identifiers; requested work, facts, jurisdiction and procedural posture; engagement scope, exclusions, authority and fee status; conflict-register search references and candidate matches; possible deadline triggers and source references; confidentiality restrictions; conditional AML applicability material; privacy and retention posture; missing items; original imported filenames (including aliases for identical bytes), evidence names, bytes and SHA-256 receipts; model provenance; proposed folder plan; lawyer review decisions and final package status. The workflow does not promise automatic anonymization, automatic conflict clearance, binding deadline calculation, engagement acceptance or local-only model processing.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "readable-archive-navigation",
+        "purpose": "Reopen locally retained client matter inputs and finalized artifacts",
+        "content": "Returned local index path, counts and navigation status or error. Generated local HTML contains existing matter labels, dates, statuses and relative links to exact ledger files; it creates no document copies and makes no external requests.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "approved-archive-profile",
+        "purpose": "Reconnect an explicitly approved client archive in fresh sessions",
+        "content": "The last approved local archive root and root-specific confirmed identity aliases remain in an owner-private local profile, separately from session-owned configuration and active run selection. These profile files are not automatically sent to the model or copied into the archive. Returned archive locations, matching client IDs and safe directory labels can enter the invoking model context. Continuity requires the host to retain the local profile; temporary hosts provide no persistence guarantee.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "negotiation-position-review",
+        "purpose": "Prepare source-linked negotiating positions from a selected tracked Word document or selected earlier round",
+        "content": "Selected contract and proposed/deleted text, paragraph context, revision authors and dates, comments and anchors, party roles, instructions, exact quotations, model-authored grouping/effects, requested responses and selected earlier review. Local helpers inventory, validate and render retained files; they make no Mike or separate model API request. Generic legal-source queries use the product legal-question workflow. Host model and Word processing follow the selected account; no automatic anonymization or local-only model guarantee.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "handled-archive-error-review",
+        "purpose": "Diagnose a handled Archive helper failure through the existing local host review",
+        "content": "Handled Archive, OS, value and SQLite exceptions are retained locally before the unchanged structured error returns. The selected host model may review this diagnostic under its existing account; dynamic paths or case values may be present locally. The shared Lucia technical collector sends source-bound exception facts automatically, and the host sends only reviewed relevant technical evidence to the product incident service. Raw stderr and professional stdout are not forwarded.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "selected-archive-input-verification",
+        "purpose": "Verify selected saved inputs and compare their immutable receipts with a supplied prior baseline",
+        "content": "The selected client, engagement and input IDs; prior receipt seals when supplied; verified input names, roles, controlled absolute and relative paths, byte counts, file hashes, receipt seals, timestamps and verification results or bounded failures. Optional exact-population checking returns current input IDs for the selected engagement. Complete file bytes are read locally for hashing; this operation returns no document text and makes no new connector, model API or hosted-service call. Returned metadata can enter the invoking host model context and is not anonymized.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      },
+      {
+        "id": "native-matter-review",
+        "purpose": "Review the explicitly selected prepared matter and retain pending professional decisions",
+        "content": "The local MCP app reads the current selected intake and prepared review. Full review and restored pending decisions reach the app through app-only metadata; the opener returns only ready/error status to the model. App-only saving is bound to an unguessable session, current intake/review hashes, pending-file revision and a stable local mutation lock. User selections and reviewer notes persist locally as pending decisions. Saving neither applies decisions nor accepts an engagement, resolves conflicts or confirms legal deadlines. Explicit application remains the existing separate workflow. Ordinary model reads of selected matter evidence retain the selected-host model boundary; app-only display is not a local-only conversation guarantee. No loopback preview is needed.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
+      }
+    ]
   },
   "public_explanations": {
     "apertura-pratica": {
@@ -274,10 +223,61 @@
       }
     }
   },
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "68d3ebdaab63216ca4eba0111cca70fb95a0e3575cd912c1b18141c491553d6a"
+  },
+  "role": "workflow",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 3,
+  "security_controls": [
+    {
+      "id": "private-path-and-immutable-evidence",
+      "control": "Initialization rejects repository paths, uses owner-only permissions and atomic writes; evidence intake accepts only regular non-linked files, snapshots bytes without moving or renaming originals, and records size and SHA-256."
+    },
+    {
+      "id": "dedicated-legal-opening-validator",
+      "control": "The validator checks exhaustive schema structure, reference closure, immutable evidence hashes, professional-gate completeness and receipt freshness while explicitly leaving conflict, deadline, applicability and engagement judgments to the lawyer."
+    },
+    {
+      "id": "digest-bound-explicit-review",
+      "control": "Review decisions bind the exact intake and substantive review payload digests, require a named reviewer and explicit confirmation, and become stale when the intake changes. The local workbench restores only valid decisions for the current review and validates submitted page bindings before replacing a saved decision file."
+    },
+    {
+      "id": "no-automatic-file-operation-or-acceptance",
+      "control": "The workflow proposes a folder plan but never moves, renames or deletes source files and never claims that a client, engagement, conflict result or deadline was accepted automatically."
+    },
+    {
+      "id": "conditional-aml-boundary",
+      "control": "AML applicability is represented as a separate professional assessment with applicable, not-applicable or uncertain status; the workflow does not infer applicability merely because a client or matter is new."
+    },
+    {
+      "id": "local-model-data-report-finalization",
+      "control": "Durable Studio Archive finalization requires run-bound, hash-consistent model-data JSON and Markdown reports. Lucia builds the readable report through workflow_usage using the original primary task ID, requests a server-signed digest receipt and links the actual receipt to that task. The readable report and professional source content remain local to the selected host. The receipt proves retained digest and timestamp, not provider transmission or professional correctness; unavailable delivery remains pending with its original request."
+    },
+    {
+      "id": "session-bound-archive-configuration",
+      "control": "Studio Archive separates default configuration by host session identity, holds a process lock on configured state and rejects configuration changes during an operation. These controls do not anonymize case data or prove provider transmission."
+    },
+    {
+      "id": "private-root-specific-identity-continuity",
+      "control": "Approved archive discovery is revalidated before a fresh isolated session adopts it; existing sessions stay pinned. Private identity aliases are root-specific and short cross-process transactions prevent lost updates. Unavailable or malformed profile state fails closed, and private profile storage must remain outside source archives."
+    },
+    {
+      "id": "maintained-read-only-input-verification",
+      "control": "Select 1 to 100 unique exact input IDs within the selected client engagement. Use the maintained receipt reader to validate ownership, non-linked controlled paths, receipt seals and all file bytes. Compare an optional complete set of prior receipt seals without inventing a historical baseline. Reject malformed arguments, preserve structured failures and perform no client-tree repair or mutation. Exact-population checks are explicit. Byte verification does not establish document meaning, authored version lineage, historical retry outcomes or professional acceptance."
+    }
+  ],
   "service_ids": [
     "managed-python-runtime",
     "operational-incidents",
     "run-receipt-stamping",
     "workflow-usage"
-  ]
+  ],
+  "workstream": "apertura-pratica"
 }

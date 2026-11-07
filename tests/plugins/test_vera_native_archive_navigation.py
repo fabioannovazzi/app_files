@@ -303,6 +303,62 @@ def test_native_registry_cross_client_engagement_refuses(registry_workspace):
     assert (output / "treasury_session.json").read_bytes() == before
 
 
+def test_exact_review_reopens_retained_run_outside_current_archive(
+    registry_workspace, tmp_path
+):
+    env, _, binding, output, other_id, _ = registry_workspace
+    before = (output / "treasury_session.json").read_bytes()
+    script = """
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import archive_core as core
+root = Path(sys.argv[2])
+loaded = core.ledger.load_run(root, sys.argv[3], sys.argv[4])
+assert core._remember_run_binding(core._state_dir(None), root, loaded)['status'] == 'retained'
+"""
+    saved = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(ARCHIVE.parent),
+            str(Path(binding["client_root"])),
+            binding["engagement_id"],
+            binding["run_id"],
+        ],
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    assert saved.returncode == 0, saved.stderr
+    different_archive = tmp_path / "Different archive"
+    different_archive.mkdir()
+    archive_cli(env, "configure", "--archive-root", str(different_archive))
+
+    reopened = native_call(
+        env,
+        "vera_open_review",
+        {key: binding[key] for key in ("client_id", "engagement_id", "run_id")},
+    )
+    assert reopened["client_id"] == binding["client_id"]
+    view = native_call(env, "vera_workspace_view", {"work_ref": reopened["work_ref"]})
+    assert view["data"]["opening_cash"] == "40000.00"
+    with pytest.raises(ValueError):
+        native_call(
+            env,
+            "vera_open_review",
+            {
+                "client_id": other_id,
+                "engagement_id": binding["engagement_id"],
+                "run_id": binding["run_id"],
+            },
+        )
+    assert (output / "treasury_session.json").read_bytes() == before
+
+
 def test_native_registry_other_session_cannot_adopt_private_state(registry_workspace):
     env, _, _, _, _, _ = registry_workspace
 

@@ -361,7 +361,20 @@ function errorResponse(id, code, message) {
 
 function callBridge(tool, args) {
   const python = process.env.VERA_XBRL_PYTHON || "python3";
-  const result = spawnSync(python, [BRIDGE], {
+  // The host's bootstrap Python need not have the component dependencies.
+  // Let the owning product select its managed worker, as its CLI does.
+  const launchers = [
+    path.resolve(PLUGIN_ROOT, "..", "..", "scripts", "managed_python_runtime.py"),
+    ...["vera", "clara", "lucia"].map((product) =>
+      path.resolve(PLUGIN_ROOT, "..", product, "scripts", "managed_python_runtime.py"),
+    ),
+  ];
+  const launcher = !process.env.VERA_XBRL_PYTHON
+    && launchers.find((candidate) => fs.existsSync(candidate));
+  const command = launcher
+    ? [launcher, "--module", "bilancio-xbrl-it", "run", "scripts/service_bridge.py"]
+    : [BRIDGE];
+  const result = spawnSync(python, command, {
     cwd: PLUGIN_ROOT,
     env: process.env,
     input: JSON.stringify({ tool, arguments: args }),

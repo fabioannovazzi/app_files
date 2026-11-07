@@ -74,7 +74,7 @@
     {
       "path": "modules/journal-sampling/scripts/journal_sampling_core.py",
       "repository_path": "plugins/journal-sampling/scripts/journal_sampling_core.py",
-      "sha256": "d5163545966f3292022de4fea03e4720eb485da7bfc0e952bfb76bdb9c3749dd"
+      "sha256": "db98ace064a05b93b8540ac9dd9b59c2ca81dedf2186ff2583b135e24d0f3180"
     },
     {
       "path": "modules/journal-sampling/scripts/normalize_journal.py",
@@ -279,7 +279,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

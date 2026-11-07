@@ -580,7 +580,24 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
             else:
                 r = refs[claim["evidence_id"]]
                 rendered = f'<a href="#reader-sources" data-evidence-id="{e(r["id"])}">{e(claim["value"])} {e(format_unit(r["unit"], lang))}</a>'
-            prose = prose.replace("{{" + key + "}}", rendered)
+            token = "{{" + key + "}}"
+            unit = format_unit(
+                c["unit"] if "calculation_id" in claim else r["unit"], lang
+            )
+            # Keep the canonical unit, including any denominator. Authored
+            # prose may repeat either that unit or just its currency prefix.
+            suffixes = {unit}
+            if "/" in unit:
+                suffixes.add(unit.split("/", 1)[0])
+            suffix_pattern = "|".join(
+                re.escape(e(value)) for value in sorted(suffixes, key=len, reverse=True)
+            )
+            prose = re.sub(
+                re.escape(token) + r"\s+(?:" + suffix_pattern + r")(?![\w/])",
+                lambda _match: rendered,
+                prose,
+            )
+            prose = prose.replace(token, rendered)
         status = (
             "Provisional interpretation — professional review pending"
             if n["provisional"]
@@ -637,6 +654,19 @@ def compile_html(plan: dict[str, Any], *, source_root: Path) -> str:
 
         parts.append(render_cycle(plan, lambda i: paragraph(i, repeat=True)))
         for section, heading in SECTIONS.items():
+            has_text = any(
+                i not in rendered_narrative for i in assessment["sections"][section]
+            )
+            has_tables = any(
+                t["section"] == section
+                for t in case.get("presentation", {}).get("tables", [])
+            )
+            has_charts = any(c["section"] == section for c in plan["charts"])
+            has_actions = section == "next_actions" and bool(
+                case.get("presentation", {}).get("actions")
+            )
+            if not (has_text or has_tables or has_charts or has_actions):
+                continue
             parts.append(f'<section id="{section}"><h2>{e(tr(heading))}</h2>')
             table_captions = {
                 t["caption_id"] for t in case.get("presentation", {}).get("tables", [])

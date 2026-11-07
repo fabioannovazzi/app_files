@@ -83,7 +83,11 @@
     "technical_evidence": "Riferimenti tecnici",
     "handoff_read": "Apri la [checklist della pratica](studio_checklist.md): trovi i dati del caso, le proposte, le fonti e i documenti ancora da acquisire.",
     "handoff_decide": "Chiedi a Vera: «Mostrami la revisione della pratica». Seleziona una proposta, confrontala con i documenti e indica se accettarla, chiedere chiarimenti o richiedere una modifica.",
-    "handoff_confirm": "Salva le decisioni. Quando scegli «Applica alla carta», controlla con Vera quali decisioni sono state registrate e quali attività restano aperte. Una richiesta di modifica deve ancora essere eseguita. Il [quesito SARI](sari_question_draft.md) resta una bozza da valutare."
+    "handoff_confirm": "Salva le decisioni. Quando scegli «Applica alla carta», controlla con Vera quali decisioni sono state registrate e quali attività restano aperte. Una richiesta di modifica deve ancora essere eseguita. Il [quesito SARI](sari_question_draft.md) resta una bozza da valutare.",
+    "Data indicata per l’operazione": "Data indicata per l’operazione",
+    "Aggiornamento della fonte": "Aggiornamento della fonte",
+    "Consultazione della fonte": "Consultazione della fonte",
+    "Registrazione nel fascicolo": "Registrazione nel fascicolo"
   },
   "es": {
     "## Perimetro del caso": "## Alcance del caso",
@@ -169,7 +173,11 @@
     "technical_evidence": "Referencias técnicas",
     "handoff_read": "Abra la [lista de comprobación del trámite](studio_checklist.md): contiene los datos, las propuestas, las fuentes y los documentos aún necesarios.",
     "handoff_decide": "Pida a Vera: «Muéstrame la revisión del trámite». Seleccione una propuesta, compárela con los documentos y decida si aceptarla, solicitar una aclaración o pedir un cambio.",
-    "handoff_confirm": "Guarde sus decisiones. Tras «Aplicar al documento», compruebe con Vera qué decisiones se han registrado y qué tareas siguen abiertas. Los cambios solicitados aún deben realizarse. La [pregunta para SARI](sari_question_draft.md) sigue siendo un borrador para su revisión."
+    "handoff_confirm": "Guarde sus decisiones. Tras «Aplicar al documento», compruebe con Vera qué decisiones se han registrado y qué tareas siguen abiertas. Los cambios solicitados aún deben realizarse. La [pregunta para SARI](sari_question_draft.md) sigue siendo un borrador para su revisión.",
+    "Data indicata per l’operazione": "Fecha indicada para la operación",
+    "Aggiornamento della fonte": "Actualización de la fuente",
+    "Consultazione della fonte": "Consulta de la fuente",
+    "Registrazione nel fascicolo": "Registro en el expediente"
   },
   "en": {
     "## Perimetro del caso": "## Case scope",
@@ -255,7 +263,11 @@
     "technical_evidence": "Technical references",
     "handoff_read": "Open the [preparation checklist](studio_checklist.md) for the case facts, proposals, sources and documents still needed.",
     "handoff_decide": "Ask Vera: “Show me the practice review.” Select a proposal, compare it with the documents and choose whether to accept it, request clarification or ask for a change.",
-    "handoff_confirm": "Save your decisions. When you select “Apply to workpaper”, check with Vera which decisions were recorded and which tasks remain open. A requested change still needs to be carried out. The [SARI question](sari_question_draft.md) remains a draft for consideration."
+    "handoff_confirm": "Save your decisions. When you select “Apply to workpaper”, check with Vera which decisions were recorded and which tasks remain open. A requested change still needs to be carried out. The [SARI question](sari_question_draft.md) remains a draft for consideration.",
+    "Data indicata per l’operazione": "Date stated for the operation",
+    "Aggiornamento della fonte": "Source update",
+    "Consultazione della fonte": "Source access",
+    "Registrazione nel fascicolo": "Recorded in the case"
   },
   "fr": {
     "## Perimetro del caso": "## Périmètre du dossier",
@@ -341,7 +353,11 @@
     "technical_evidence": "Références techniques",
     "handoff_read": "Ouvrez la [liste de contrôle du dossier](studio_checklist.md) pour consulter les faits, les propositions, les sources et les pièces encore nécessaires.",
     "handoff_decide": "Demandez à Vera : « Montre-moi la révision du dossier. » Sélectionnez une proposition, comparez-la aux pièces et choisissez de l’accepter, de demander des précisions ou une modification.",
-    "handoff_confirm": "Enregistrez vos décisions. Après « Appliquer au document », vérifiez avec Vera les décisions enregistrées et les tâches encore ouvertes. Une modification demandée reste à réaliser. La [question SARI](sari_question_draft.md) reste un projet à examiner."
+    "handoff_confirm": "Enregistrez vos décisions. Après « Appliquer au document », vérifiez avec Vera les décisions enregistrées et les tâches encore ouvertes. Une modification demandée reste à réaliser. La [question SARI](sari_question_draft.md) reste un projet à examiner.",
+    "Data indicata per l’operazione": "Date indiquée pour l’opération",
+    "Aggiornamento della fonte": "Mise à jour de la source",
+    "Consultazione della fonte": "Consultation de la source",
+    "Registrazione nel fascicolo": "Enregistrement au dossier"
   },
   "de": {
     "## Perimetro del caso": "## Umfang des Vorgangs",
@@ -427,6 +443,10 @@
     "technical_evidence": "Technische Verweise",
     "handoff_read": "Öffnen Sie die [Checkliste zum Vorgang](studio_checklist.md). Sie enthält die Fallangaben, Vorschläge, Quellen und noch benötigten Unterlagen.",
     "handoff_decide": "Bitten Sie Vera: „Zeig mir die Prüfung des Vorgangs.“ Wählen Sie einen Vorschlag, vergleichen Sie ihn mit den Unterlagen und entscheiden Sie, ob Sie ihn annehmen, eine Klärung oder eine Änderung anfordern.",
-    "handoff_confirm": "Speichern Sie Ihre Entscheidungen. Prüfen Sie nach „Auf Arbeitspapier anwenden“ mit Vera, welche Entscheidungen erfasst wurden und welche Aufgaben offen bleiben. Eine angeforderte Änderung muss noch ausgeführt werden. Die [SARI-Frage](sari_question_draft.md) bleibt ein zu prüfender Entwurf."
+    "handoff_confirm": "Speichern Sie Ihre Entscheidungen. Prüfen Sie nach „Auf Arbeitspapier anwenden“ mit Vera, welche Entscheidungen erfasst wurden und welche Aufgaben offen bleiben. Eine angeforderte Änderung muss noch ausgeführt werden. Die [SARI-Frage](sari_question_draft.md) bleibt ein zu prüfender Entwurf.",
+    "Data indicata per l’operazione": "Angegebenes Datum des Vorgangs",
+    "Aggiornamento della fonte": "Aktualisierung der Quelle",
+    "Consultazione della fonte": "Abruf der Quelle",
+    "Registrazione nel fascicolo": "Erfassung in der Akte"
   }
 }

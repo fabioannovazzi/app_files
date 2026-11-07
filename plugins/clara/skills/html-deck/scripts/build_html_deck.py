@@ -183,6 +183,17 @@ def replace_metadata(text: str, metadata: dict[str, str]) -> str:
         rendered = rendered.replace(
             "{{" + token + "}}", html.escape(metadata[field], quote=True)
         )
+    hints = {
+        "it": "Ruota lo schermo per la presentazione",
+        "fr": "Tournez l’écran pour la présentation",
+        "de": "Für die Präsentation Bildschirm drehen",
+        "es": "Gira la pantalla para ver la presentación",
+        "en": "Rotate for presentation view",
+    }
+    language = metadata["language"].split("-")[0].lower()
+    rendered = rendered.replace(
+        "Rotate for presentation view", hints.get(language, hints["en"])
+    )
     return rendered
 
 

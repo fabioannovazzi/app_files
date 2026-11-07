@@ -45,7 +45,7 @@
     {
       "path": "modules/passive-invoice-audit/scripts/audit_core.py",
       "repository_path": "plugins/passive-invoice-audit/scripts/audit_core.py",
-      "sha256": "d5952320902d07b296f4d463515196b2fd2b26121d9b9c03fcf86f9f6d5dd474"
+      "sha256": "620bd7a8bae4d41f3b3c7b79bb3806e878118eab4e8ac4e3135ebca30c9f715f"
     },
     {
       "path": "modules/passive-invoice-audit/scripts/check_dependencies.py",
@@ -235,7 +235,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

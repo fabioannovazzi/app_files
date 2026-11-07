@@ -219,7 +219,7 @@
     {
       "path": "skills/advisory-deliverable-validator/scripts/advisory_validation.py",
       "repository_path": "plugins/clara/skills/advisory-deliverable-validator/scripts/advisory_validation.py",
-      "sha256": "0dd40590d97c29a5e357cdeb6cd555c2ddace6a960882315f1cbb339c25003ab"
+      "sha256": "d32fc7f1c14710aa0346f549b1814ae6b6b18ce3340dbbe3e5eab20ff34ed1e4"
     },
     {
       "path": "vendor/modules/__init__.py",
@@ -299,7 +299,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",
@@ -364,7 +364,7 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "a6e48f4aacaf83d5ad3d2db4e60ba696c9583c719dbf20270f62e21e8d186782"
+      "sha256": "065c7b3f8d3376d433fd74d4d0db8d316adb1e20720c1d88e7af7ecb85eecf61"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",

@@ -40,7 +40,7 @@
     {
       "path": "modules/registro-imprese-sari/assets/registry-display.json",
       "repository_path": "plugins/registro-imprese-sari/assets/registry-display.json",
-      "sha256": "d23f4e87734cd183f5aade35fd78130430c6d4e4c8299956310383dca3f28981"
+      "sha256": "54d1b131ae82f70a68ea842dd967fe0dc6dcf9bfb33b929f2b616d1e7bba5d41"
     },
     {
       "path": "modules/registro-imprese-sari/references/official-sources.md",
@@ -90,7 +90,7 @@
     {
       "path": "modules/registro-imprese-sari/scripts/package_practice.py",
       "repository_path": "plugins/registro-imprese-sari/scripts/package_practice.py",
-      "sha256": "61ee5198d6490d827481f1d248a52f3ff7585e3163b0922ddc778d16f26bba74"
+      "sha256": "b98d6803c779dce2d7099acf265113fcb471b871004e2c825a38d7eb62f45798"
     },
     {
       "path": "modules/registro-imprese-sari/scripts/register_official_source.py",
@@ -270,7 +270,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

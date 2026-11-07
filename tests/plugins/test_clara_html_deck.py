@@ -971,3 +971,15 @@ def test_case_bound_cli_rejects_superseded_claim(tmp_path):
     assert result.returncode != 0
     assert "is not active in shared advisory lineage" in result.stderr
     assert "ModuleNotFoundError" not in result.stderr
+
+
+def test_italian_deck_localizes_orientation_hint_without_changing_title():
+    builder = load_build_module()
+    metadata = {field: "" for field in builder.TOKENS.values()}
+    metadata.update(language="it-IT", title="Titolo della presentazione")
+    rendered = builder.replace_metadata(
+        "{{DECK_TITLE}}<div>Rotate for presentation view</div>", metadata
+    )
+    assert "Titolo della presentazione" in rendered
+    assert "Ruota lo schermo per la presentazione" in rendered
+    assert "Rotate for presentation view" not in rendered

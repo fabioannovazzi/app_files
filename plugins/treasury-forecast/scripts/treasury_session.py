@@ -18,7 +18,7 @@ from treasury_core import (
     validate_record,
 )
 from treasury_inputs import read_json
-from treasury_report import write_artifacts
+from treasury_report import write_artifacts, write_scenario_artifacts
 
 __all__ = [
     "create_session",
@@ -285,8 +285,58 @@ def save_scenario(
         if path.exists():
             if read_json(path) != scenario:
                 raise TreasuryError("Saved alternative was changed")
+        # Reports belong to their own immutable scenario tree, never the
+        # baseline forecast version. Preserve the legacy JSON as well.
+        relative = f"scenarios/{digest(scenario)}"
+        target = output / relative
+        if target.exists():
+            if target.is_symlink():
+                raise TreasuryError("Saved alternative was changed")
+            inventory = read_json(target / "artifact_manifest.json")
+            if read_json(target / "scenario.json") != scenario:
+                raise TreasuryError("Saved alternative was changed")
+            for name, expected in inventory["files"].items():
+                candidate = target / name
+                if (
+                    Path(name).name != name
+                    or candidate.is_symlink()
+                    or hashlib.sha256(candidate.read_bytes()).hexdigest() != expected
+                ):
+                    raise TreasuryError("Saved alternative artifact was changed")
         else:
+            staging = output / f".treasury-scenario-{uuid.uuid4().hex}"
+            try:
+                names = write_scenario_artifacts(staging, record, scenario)
+                _write(
+                    staging / "artifact_manifest.json",
+                    {
+                        "files": {
+                            name: hashlib.sha256(
+                                (staging / name).read_bytes()
+                            ).hexdigest()
+                            for name in names
+                        }
+                    },
+                )
+                target.parent.mkdir(exist_ok=True)
+                staging.rename(target)
+            finally:
+                if staging.exists():
+                    shutil.rmtree(staging)
+        if not path.exists():
             _write(path, scenario)
+        delivery = read_json(output / "final_artifacts.json")
+        scenarios = delivery.setdefault("scenarios", [])
+        entry = {
+            "status": "hypothetical",
+            "baseline_record_sha256": record["record_sha256"],
+            "scenario": f"{relative}/scenario.json",
+            "report": f"{relative}/report.html",
+            "workbook": f"{relative}/tesoreria.xlsx",
+        }
+        if entry not in scenarios:
+            scenarios.append(entry)
+            _write(output / "final_artifacts.json", delivery)
         return scenario
 
 

@@ -814,6 +814,60 @@ def _audit_format_check_artifacts(
             except (AdvisoryValidationError, OSError, UnicodeDecodeError):
                 artifact_payload = None
             result = _authoritative_format_result(str(workflow), artifact_payload)
+            if (
+                workflow == "clara:reporting-engine"
+                and isinstance(artifact_payload, dict)
+                and artifact_payload.get("schema_version")
+                == "vera.management_control_execution_receipt.v1"
+                and artifact_payload.get("workflow_id") == "management-control-pack"
+            ):
+                # Budget-report is a supported Reporting Engine route. Validate
+                # its own receipt and every output, never synthesize a manifest.
+                body = dict(artifact_payload)
+                digest = body.pop("content_sha256", None)
+                expected = hashlib.sha256(
+                    (
+                        json.dumps(
+                            body,
+                            ensure_ascii=False,
+                            sort_keys=True,
+                            separators=(",", ":"),
+                        )
+                        + "\n"
+                    ).encode("utf-8")
+                ).hexdigest()
+                outputs = body.get("outputs", [])
+                valid = digest == expected and body.get("status") in {
+                    "ready_for_review",
+                    "partial",
+                }
+                bound = False
+                valid = valid and isinstance(outputs, list) and bool(outputs)
+                for output in outputs if isinstance(outputs, list) else []:
+                    if not isinstance(output, dict) or not isinstance(
+                        output.get("path"), str
+                    ):
+                        valid = False
+                        continue
+                    target = (artifact_path.parent / output["path"]).resolve()
+                    if (
+                        not target.is_relative_to(artifact_path.parent.resolve())
+                        or not target.is_file()
+                    ):
+                        valid = False
+                        continue
+                    actual = _sha256(target)
+                    valid = (
+                        valid
+                        and actual == output.get("sha256")
+                        and target.stat().st_size == output.get("byte_count")
+                    )
+                    bound = bound or actual == deliverable_sha256
+                result = (
+                    "reporting_engine_render",
+                    valid and bound,
+                    deliverable_sha256 if bound else None,
+                )
             if result is not None:
                 result_kind, passed, input_sha256 = result
                 authoritative_results[result_kind] = passed
@@ -2507,8 +2561,11 @@ def package_validation(
                 and correction_record.get("corrected_artifact_sha256")
                 == corrected_metadata["sha256"]
             ),
-            "corrected_artifact_re_reviewed": correction_status != "completed"
-            or corrected_validation_metadata is not None,
+            "corrected_artifact_re_reviewed": (
+                corrected_validation_metadata is not None
+                if correction_status == "completed"
+                else None
+            ),
             "format_check_artifacts_exist": not artifact_errors,
             "hidden_model_api_calls": False,
         },

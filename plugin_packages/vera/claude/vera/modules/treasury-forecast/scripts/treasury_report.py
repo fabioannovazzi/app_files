@@ -9,9 +9,27 @@ import textwrap
 from pathlib import Path
 from typing import Any
 
-from treasury_core import money, validate_record
+from treasury_core import TreasuryError, build_scenario, money, validate_record
 
-__all__ = ["render_html", "render_markdown", "write_artifacts"]
+__all__ = [
+    "render_html",
+    "render_markdown",
+    "write_artifacts",
+    "write_scenario_artifacts",
+]
+
+
+def _events_by_date(record: dict[str, Any]) -> list[dict[str, Any]]:
+    """Present dated flows chronologically, leaving undated flows last."""
+    return sorted(
+        record["events"],
+        key=lambda row: (
+            row["expected_date"] is None,
+            row["expected_date"] or "",
+            row["event_id"],
+        ),
+    )
+
 
 STATUS_LABELS = {
     "needs_review": "Richiede revisione",
@@ -137,7 +155,7 @@ def render_markdown(record: dict[str, Any]) -> str:
             f"{display(week['closing_cash'])} | {display(week['minimum_daily_cash'])} |"
         )
     lines.extend(["", "## Incassi e pagamenti attesi", ""])
-    for event in record["events"]:
+    for event in _events_by_date(record):
         lines.append(
             f"- {event['event_id']} · {event['description']}: {display(event['cash_amount'])} · {event['expected_date'] or 'data da definire'}. Base: {event['basis']}"
         )
@@ -178,7 +196,7 @@ def render_html(record: dict[str, Any]) -> str:
         summary = "<p class='notice'>Previsione incompleta: definire le date attese prima di utilizzare i saldi.</p>"
     rows = "".join(
         f"<tr><td>{escape(row['description'])}<br><small>{escape(row['event_id'])}</small></td><td>{escape(row['expected_date'] or 'Da definire')}</td><td>{display(row['cash_amount'])}</td><td>{escape(row['basis'])}</td></tr>"
-        for row in record["events"]
+        for row in _events_by_date(record)
     )
     weeks = "".join(
         f"<tr><td>{escape(week['week_start'])}</td>"
@@ -272,6 +290,130 @@ def _csv(path: Path, rows: list[dict[str, Any]], columns: list[str]) -> None:
             writer.writerow(values)
 
 
+def write_scenario_artifacts(
+    directory: Path, baseline: dict[str, Any], scenario: dict[str, Any]
+) -> list[str]:
+    """Export the actual hypothetical schedule without creating an accepted record."""
+    from openpyxl import Workbook
+    from openpyxl.styles import Alignment, Font
+
+    validate_record(baseline)
+    if scenario != build_scenario(baseline, scenario["date_overrides"]):
+        raise TreasuryError("Scenario does not match its baseline and date assumptions")
+    directory.mkdir(parents=True, exist_ok=False)
+    display = lambda amount: _display(amount, baseline["currency"])
+    title = "Scenario ipotetico — Budget di tesoreria"
+    minimum = display(scenario["minimum_daily_cash"])
+    heading = (
+        f"{baseline['company_name']} · {baseline['as_of']} — {baseline['horizon_end']}"
+        f" · {baseline['currency']}"
+    )
+    caveat = "Ipotesi alternativa sulle date, non previsione accettata né garanzia di liquidità."
+    lines = [
+        f"# {title}",
+        "",
+        heading,
+        "",
+        caveat,
+        "",
+        f"Minimo giornaliero: {minimum}",
+        "",
+        "## Date ipotizzate",
+        "",
+    ]
+    event_names = {row["event_id"]: row["description"] for row in baseline["events"]}
+    for event_id, date in sorted(scenario["date_overrides"].items()):
+        lines.append(f"- {event_names[event_id]}: {date}")
+    lines.extend(
+        [
+            "",
+            "## Saldi giornalieri",
+            "",
+            "| Data | Flusso netto | Cassa finale |",
+            "|---|---:|---:|",
+        ]
+    )
+    lines.extend(
+        f"| {r['date']} | {display(r['net_cash'])} | {display(r['closing_cash'])} |"
+        for r in scenario["daily"]
+    )
+    (directory / "report.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    rows = "".join(
+        f"<tr><td>{r['date']}</td><td>{display(r['net_cash'])}</td>"
+        f"<td>{display(r['closing_cash'])}</td></tr>"
+        for r in scenario["daily"]
+    )
+    overrides = "".join(
+        f"<li>{html.escape(event_names[k])}: {v}</li>"
+        for k, v in sorted(scenario["date_overrides"].items())
+    )
+    (directory / "report.html").write_text(
+        f"<!doctype html><html lang='it'><meta charset='utf-8'>"
+        f"<meta name='viewport' content='width=device-width,initial-scale=1'>"
+        f"<title>{title}</title><style>{STYLE}</style><body><h1>{title}</h1>"
+        f"<p>{html.escape(heading)}</p><p class='notice'>{caveat}</p>"
+        f"<p>Minimo giornaliero: {minimum}</p>"
+        f"<h2>Date ipotizzate</h2><ul>{overrides}</ul><h2>Saldi giornalieri</h2>"
+        f"<table><tr><th>Data</th><th>Flusso netto</th><th>Cassa finale</th></tr>{rows}</table>"
+        "</body></html>",
+        encoding="utf-8",
+    )
+    (directory / "scenario.json").write_text(
+        json.dumps(scenario, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    workbook = Workbook()
+    summary = workbook.active
+    summary.title = "Sintesi"
+    for row in [
+        [title, baseline["company_name"]],
+        ["Stato", "Ipotetico"],
+        ["Limiti", caveat],
+        ["Valuta", baseline["currency"]],
+        ["Minimo giornaliero", money(scenario["minimum_daily_cash"])],
+    ]:
+        summary.append(row)
+    for name, columns in [
+        ("Giorni", ["date", "net_cash", "closing_cash"]),
+        ("Settimane", ["week_start", "net_cash", "closing_cash", "minimum_daily_cash"]),
+    ]:
+        values = scenario["daily" if name == "Giorni" else "weekly"]
+        _csv(directory / f"{name.lower()}.csv", values, columns)
+        sheet = workbook.create_sheet(name)
+        sheet.append(
+            [COLUMN_LABELS[k].replace("EUR", baseline["currency"]) for k in columns]
+        )
+        for row in values:
+            sheet.append(
+                [
+                    row[k] if k in {"date", "week_start"} else money(row[k])
+                    for k in columns
+                ]
+            )
+    for sheet in workbook:
+        sheet.freeze_panes = "A2"
+        for column in sheet.columns:
+            sheet.column_dimensions[column[0].column_letter].width = (
+                48 if sheet.title == "Sintesi" else 25
+            )
+        for row in sheet:
+            line_count = 1
+            for cell in row:
+                cell.alignment = Alignment(wrap_text=True, vertical="top")
+                cell.font = Font(name="Instrument Sans", size=11)
+                if isinstance(cell.value, str):
+                    cell.data_type = "s"
+                else:
+                    cell.number_format = "#,##0.00;[Red](#,##0.00)"
+                width = int(sheet.column_dimensions[cell.column_letter].width) - 3
+                line_count = max(
+                    line_count, len(textwrap.wrap(str(cell.value or ""), width=width))
+                )
+            sheet.row_dimensions[row[0].row].height = 16 * line_count + 8
+    workbook.save(directory / "tesoreria.xlsx")
+    workbook.close()
+    return sorted(path.name for path in directory.iterdir())
+
+
 def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
     """Write an immutable version package using the canonical calculated values."""
     from openpyxl import Workbook
@@ -292,7 +434,7 @@ def write_artifacts(directory: Path, record: dict[str, Any]) -> list[str]:
             ["week_start", "net_cash", "closing_cash", "minimum_daily_cash"],
         ),
         "Flussi": (
-            record["events"],
+            _events_by_date(record),
             [
                 "event_id",
                 "description",

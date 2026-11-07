@@ -81,6 +81,7 @@ def test_correction_kit_changes_only_the_requested_slide(
     ]
     archive_path = next(p for p in files if p.suffix == ".zip")
     original_html = next(p for p in files if p.suffix == ".html")
+    original_html_bytes = original_html.read_bytes()
     feedback = next(p for p in files if p.suffix == ".md")
     original = tmp_path / "original"
     original.mkdir()
@@ -100,7 +101,21 @@ def test_correction_kit_changes_only_the_requested_slide(
         p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in original.iterdir()
     }
     baseline_built = build_deck(original, tmp_path / "baseline-built")
-    assert baseline_built.read_bytes() == original_html.read_bytes()
+    # Authored teaching inputs must match the current supported renderer.
+    assert baseline_built.read_bytes() == original_html_bytes
+    command(
+        "inspect_html_deck.py", original_html, "--report", tmp_path / "source-html.json"
+    )
+    command(
+        "inspect_html_deck.py",
+        baseline_built,
+        "--report",
+        tmp_path / "rebuilt-html.json",
+    )
+    source_deck = json.loads((tmp_path / "source-html.json").read_text())["deck"]
+    rebuilt_deck = json.loads((tmp_path / "rebuilt-html.json").read_text())["deck"]
+    assert rebuilt_deck["title"] == source_deck["title"]
+    assert rebuilt_deck["slides"] == source_deck["slides"]
     command("inspect_html_deck.py", original, "--report", tmp_path / "baseline.json")
     inventory = json.loads((tmp_path / "baseline.json").read_text())
     plan = json.loads((original / "deck-plan.json").read_text())
@@ -188,7 +203,8 @@ def test_correction_kit_changes_only_the_requested_slide(
     comparison = json.loads((tmp_path / "revision-comparison.json").read_text())
     assert comparison["result"] == "pass"
     html = build_deck(corrected, tmp_path / "corrected-built")
-    assert html.read_bytes() != original_html.read_bytes()
+    assert html.read_bytes() != baseline_built.read_bytes()
+    assert original_html.read_bytes() == original_html_bytes
     assert {
         p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in original.iterdir()
     } == hashes

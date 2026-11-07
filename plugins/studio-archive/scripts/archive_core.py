@@ -3628,7 +3628,9 @@ def start_check_entries_from_sample(
     """Prepare and start Check Entries from one exact sample and support batch."""
 
     private_state = _state_dir(state_dir)
-    root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
+    root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state, run_id=sample_run_id
+    )
     if isinstance(support_input_ids, (str, bytes)) or not support_input_ids:
         raise ArchiveError("Select at least one support input for Check Entries.")
     normalized_support_ids = list(support_input_ids)
@@ -3682,6 +3684,8 @@ def start_check_entries_from_sample(
             )
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Check Entries handoff could not start: {exc}") from exc
+    binding_status = _remember_run_binding(private_state, root, active)
+    recovery = _checkpoint_work(private_state, active)
     return {
         "status": active["run"]["status"],
         "preparation_status": prepared["status"],
@@ -3693,6 +3697,8 @@ def start_check_entries_from_sample(
         "input_manifest": active["input_manifest"],
         "client_engagement": active["context"],
         "client_engagement_path": active["context_path"],
+        "work_binding": binding_status,
+        "recovery": recovery,
     }
 
 

@@ -157,7 +157,7 @@
     },
     {
       "path": "skills/mparanza-html-deck/scripts/build_html_deck.py",
-      "sha256": "b797e5a2487d9c43a3a5a595be791d1c4d9ed76b3f04a14f49265c2519fff2d1"
+      "sha256": "705edb3c88cc94d67350045250807f23d5af661549afaf1fbcc9dc5373159bf8"
     },
     {
       "path": "skills/mparanza-html-deck/scripts/build_layout_gallery.py",
@@ -458,5 +458,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b5f863e2406883f4598498b74affc347e99243c52d37c4784531f4493ea842de"
+  "canonical_course_sha256": "bed5daecca76e68f0d2571aedfa5cd2e1dfd4791865d482b95cc57289aa7d4a6"
 }

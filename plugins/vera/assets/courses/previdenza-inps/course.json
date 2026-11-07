@@ -80,7 +80,7 @@
     {
       "path": "modules/previdenza-inps/scripts/case_core.py",
       "repository_path": "plugins/previdenza-inps/scripts/case_core.py",
-      "sha256": "89b27943613fb49f569aa3a6ddb2ae3eb1abfc95369ecef4bc31a0096131b3af"
+      "sha256": "7a8046c53d55d18979a9f8f9780b73e33dd94cace102e6e8ce04e58019af3cef"
     },
     {
       "path": "modules/previdenza-inps/scripts/check_dependencies.py",
@@ -280,7 +280,7 @@
     {
       "path": "vendor/modules/courseware/execution.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/execution.py",
-      "sha256": "7120377ddf6a41e34b9dfa30b1382b0dab088a03289b3ee6b840e592b7019936"
+      "sha256": "6aa0933970b41ea790d3ef2f92d2e1aa942a490e3cf76225dfe15aaa055dfd29"
     },
     {
       "path": "vendor/modules/courseware/html_view.py",

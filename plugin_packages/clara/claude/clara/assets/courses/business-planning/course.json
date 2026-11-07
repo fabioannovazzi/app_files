@@ -82,7 +82,7 @@
     },
     {
       "path": "modules/business-planning/scripts/planning_decision_report.py",
-      "sha256": "26ed46e24534a99bc3772c198785021b7365b52cbb5b99a48f11ac56b6ecacd7"
+      "sha256": "41de252255551ce768c4dd3fb5ae3f86a161d17eaccd3581a69ad6b374ff86d7"
     },
     {
       "path": "modules/business-planning/scripts/planning_financing.py",
@@ -102,7 +102,7 @@
     },
     {
       "path": "modules/business-planning/scripts/planning_report.py",
-      "sha256": "09e16a16a966ed1c5499f6df58b6c924b4daf11d8eb377f79a207d5b381790c0"
+      "sha256": "077d47c8bb10d28b0dfb5d20140d60da9247d9483d5697dbe0924a69b7992822"
     },
     {
       "path": "modules/business-planning/scripts/planning_site.py",
@@ -378,5 +378,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b3c535c174638faa006b7fb77bd6622eba305b5a2cd02a8757f35602ff713ae7"
+  "canonical_course_sha256": "741d13b94435ee29b033da39530490c733808c809a1a6cb03c9f699c4c11b54f"
 }

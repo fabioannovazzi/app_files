@@ -2,6 +2,8 @@
 
 Material totalmente ficticio. Demostración: Alpha absorbe a Beta independiente, valores económicos proporcionados de 600.000 y 400.000 EUR. Práctica: Alpha absorbe a Beta participada directamente al 100 %, inversión contable de 480.000 EUR y patrimonio neto de Beta de 300.000 EUR.
 
+Fecha prevista de la operación ficticia: 1 de diciembre de 2026, en el campo planned_date de los JSON. Es distinta de la fecha de los estados contables (30 de septiembre de 2026): no acredita la ejecución ni un plazo legal aprobado.
+
 Dos sociedades italianas OIC, derechos ordinarios homogéneos y sin compensación en efectivo. Fuera del curso: 90 %, inversa, sociedades hermanas, MLBO, IFRS, transfronteriza, crisis y nueva sociedad. No es validación profesional con un cliente real.
 
 Abrir dossier-es.md y ordinary.json para la demostración; wholly-owned.json para la práctica y update.json solo al introducir el cambio. Los JSON separan hechos Alpha/Beta, balances, socios, valores fiscales e hipótesis del calendario. No hay resultados ni confirmaciones preaprobados.

@@ -65,7 +65,7 @@
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_p1_demo.py",
-      "sha256": "9724903e50ac35cff3310e20c961c70f602deb69c95d56541698ec228cd7b218"
+      "sha256": "117d5a195915897d3de47f3f0b556c7e102dcac455fef8623dc9320aa65e41f9"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_report.py",
@@ -295,7 +295,7 @@
   "files": [
     {
       "path": "files/input/ordinary.json",
-      "sha256": "73c6bab7ca55b2b913653ef1f59cc03b8b435181d2414ef59b2fe190ecb4e8c3",
+      "sha256": "eecfdcb7e0f636c5c3d0bb312593fdc272305a25b63d2fc5d9d0e3b6862a1613",
       "languages": [
         "it",
         "en",
@@ -307,7 +307,7 @@
     },
     {
       "path": "files/practice/wholly-owned.json",
-      "sha256": "04f8a536f8a430ddf177951d0e214dac015ebca1a1d10b3306e61ad8df0c6c51",
+      "sha256": "d6e79e76848f5a46458bb4526ac4a355ef5b6a1bfac9e3fccdfe1dbd0dde3f1e",
       "languages": [
         "it",
         "en",
@@ -331,7 +331,7 @@
     },
     {
       "path": "files/input/dossier-it.md",
-      "sha256": "906a77c5aeb5078c78478edaca3d3380c923ec1b2aaa90dcb8a097a5766ff1b9",
+      "sha256": "ae804f518e8639a30818b08354e9c0f28548dc6d5757244eedfd59060b218148",
       "languages": [
         "it"
       ],
@@ -339,7 +339,7 @@
     },
     {
       "path": "files/input/dossier-en.md",
-      "sha256": "c0c4fd0c241e40075b3ed202388ae3d92225697b12af1755abeddad4f1c0d205",
+      "sha256": "b1160c471a2dd59fc0b03778fb1410772bcd9ef9dc6162221981068b8be84707",
       "languages": [
         "en"
       ],
@@ -347,7 +347,7 @@
     },
     {
       "path": "files/input/dossier-fr.md",
-      "sha256": "2e1e4c1ae02ae9d9a8534e225706a3eb9a3db7228548be82e6bfa1b13d93d7b5",
+      "sha256": "4cb3973b66860324872c6ae66e55187f21dcfccc9606e7ecad1c4b1fbef73bb5",
       "languages": [
         "fr"
       ],
@@ -355,7 +355,7 @@
     },
     {
       "path": "files/input/dossier-de.md",
-      "sha256": "3a4ba6a4aa56b9f14eee142d42fa3d15651861bdac11d80db15a9f4caa104184",
+      "sha256": "a3ea907e196c861a5341c587396023a86aa27ba55658fbb5bbb44e62e1b991b2",
       "languages": [
         "de"
       ],
@@ -363,7 +363,7 @@
     },
     {
       "path": "files/input/dossier-es.md",
-      "sha256": "efa938afb5f4fa3fdb746e9375737589686cd8f1e9d30a390fb4b3963ac27d30",
+      "sha256": "3ff06abf7b3b5cc05d8f063156082704e1254ce1f5696dce114e051e5df0fb28",
       "languages": [
         "es"
       ],
@@ -518,5 +518,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "b92be58c3e2b0a6a2e3dcc8c5a6bb98fbdabfc0e7bc99b78c250bd6ed8114add"
+  "canonical_course_sha256": "3b8ef2431165037fb73d1ee63cb6263e3386fc6ae3ea5958ad5c713083847a53"
 }

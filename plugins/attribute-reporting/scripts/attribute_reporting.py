@@ -3176,12 +3176,20 @@ def _render_table(
     row_count_label = _display(
         "1 evidence row" if len(rows) == 1 else "{count} evidence rows", language
     ).format(count=len(rows))
+    scroll_hint = {
+        "it": "Se la tabella supera lo schermo, scorri orizzontalmente per leggere tutte le colonne.",
+        "en": "If the table exceeds the screen, scroll horizontally to read all columns.",
+        "fr": "Si le tableau dépasse l’écran, faites défiler horizontalement pour lire toutes les colonnes.",
+        "de": "Wenn die Tabelle breiter als der Bildschirm ist, horizontal scrollen, um alle Spalten zu lesen.",
+        "es": "Si la tabla supera la pantalla, desplázate horizontalmente para leer todas las columnas.",
+    }[language]
     table_html = (
         f"<figure class=\"evidence-table\" data-table-key=\"{html.escape(str(table['table_key']))}\" "
         f'data-table-sha256="{actual_sha}">'
         f"<figcaption><span>{html.escape(title)}</span>"
         f"<small>{html.escape(row_count_label)}</small></figcaption>"
-        '<div class="table-scroll"><table><thead><tr>'
+        f'<p class="source-note">{html.escape(scroll_hint)}</p>'
+        f'<div class="table-scroll" tabindex="0" role="region" aria-label="{html.escape(title)}"><table><thead><tr>'
         + header
         + "</tr></thead><tbody>"
         + "".join(body_rows)
