@@ -40,7 +40,7 @@ from modules.pdp.postgres_compat import (
 )
 from modules.utilities.cache import get_cache_dir
 from modules.workflow_usage import computers as workflow_computers
-from modules.workflow_usage import courses
+from modules.workflow_usage import courses, public_usage
 from modules.workflow_usage import repository as workflow_repository
 from modules.workflow_usage import testing as workflow_testing
 from modules.workflow_usage.contracts import WorkflowEvent
@@ -506,6 +506,12 @@ class IncidentStore:
             }
 
             return {**inspected, "evidence_sha256": evidence_hash(inspected)}
+
+    def public_workflow_usage(self) -> dict[str, Any]:
+        """Return only aggregate user counts for the public usage page."""
+        with self._connection() as connection:
+            self._schema(connection)
+            return public_usage.inspect(connection, self._sql, _now())
 
     def workflow_overview(self, limit: int = 10000) -> dict[str, Any]:
         """Operator-only inventory; never expose installation usage publicly."""

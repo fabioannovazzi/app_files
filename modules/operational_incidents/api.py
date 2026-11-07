@@ -660,6 +660,14 @@ class WorkflowFeedback(BaseModel):
     comment: str | None = Field(default=None, max_length=2000)
 
 
+@router.get("/api/usage-summary")
+def public_workflow_usage(
+    store: IncidentStore = Depends(get_incident_store),
+) -> JSONResponse:
+    """Publish aggregate counts only, with no individual IDs or histories."""
+    return JSONResponse(store.public_workflow_usage(), headers=_NO_CACHE)
+
+
 @router.get("/api/vera/course-status")
 def vera_course_status(
     store: IncidentStore = Depends(get_incident_store),

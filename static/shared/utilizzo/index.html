@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Utenti distinti che hanno avviato o completato le funzioni di Vera, Lucia e Clara su Codex, Cowork e Antigravity.">
+  <meta name="theme-color" content="#FFFFFF">
+  <link rel="canonical" href="https://mparanza.com/static/shared/utilizzo/index.html">
+  <title>Utilizzo e risultati · Mparanza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;650&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="usage.css">
+  <script defer src="usage.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#contenuto">Vai al contenuto</a>
+  <header class="site-header">
+    <a class="brand" href="/?lang=it">Mparanza</a>
+    <nav aria-label="Prodotti">
+      <a href="../vera/index.html?lang=it">Vera</a>
+      <a href="../lucia/index.html?lang=it">Lucia</a>
+      <a href="../clara/index.html?lang=it">Clara</a>
+    </nav>
+  </header>
+  <main id="contenuto">
+    <div class="intro">
+      <p class="eyebrow">Vera · Lucia · Clara</p>
+      <h1>Utilizzo e risultati</h1>
+      <p class="lead">Utenti distinti che hanno avviato o completato almeno un’attività.</p>
+      <p class="scope">Codex, Cowork e Antigravity.</p>
+      <p class="versions" id="versions">Caricamento delle versioni incluse nel conteggio…</p>
+    </div>
+
+    <p class="status" id="status" role="status" aria-live="polite">Caricamento dei dati…</p>
+    <noscript><p>Attiva JavaScript per visualizzare i conteggi aggiornati.</p></noscript>
+    <div id="results" hidden>
+      <section aria-labelledby="functions-heading">
+        <div class="section-heading">
+          <h2 id="functions-heading">Per attività</h2>
+          <p>Solo le attività avviate da almeno un utente.</p>
+        </div>
+        <div class="table-scroll" role="region" aria-label="Utenti distinti per attività" tabindex="0">
+          <table>
+            <caption class="sr-only">Utenti distinti per attività e totale deduplicato tra tutti i prodotti</caption>
+            <thead><tr><th scope="col">Attività</th><th scope="col">Hanno<br>avviato</th><th scope="col">Hanno<br>completato</th><th scope="col">Falliti</th></tr></thead>
+            <tbody id="functions"></tbody>
+            <tfoot><tr><th scope="row">Totale utenti distinti</th><td data-total="started"></td><td data-total="completed"></td><td data-total="failed"></td></tr></tfoot>
+          </table>
+        </div>
+        <p id="empty" class="table-note" hidden>Non risultano ancora attività avviate nelle versioni incluse.</p>
+      </section>
+
+      <section aria-labelledby="apps-heading">
+        <div class="section-heading"><h2 id="apps-heading">Per applicazione</h2></div>
+        <div class="table-scroll" role="region" aria-label="Utenti distinti per applicazione" tabindex="0">
+          <table>
+            <caption class="sr-only">Utenti distinti su Codex, Cowork e Antigravity</caption>
+            <thead><tr><th scope="col">Applicazione</th><th scope="col">Hanno<br>avviato</th><th scope="col">Hanno<br>completato</th><th scope="col">Falliti</th></tr></thead>
+            <tbody id="apps"></tbody>
+            <tfoot><tr><th scope="row">Totale utenti distinti</th><td data-total="started"></td><td data-total="completed"></td><td data-total="failed"></td></tr></tfoot>
+          </table>
+        </div>
+      </section>
+
+      <aside class="method" aria-labelledby="method-heading">
+        <h2 id="method-heading">Come leggere i numeri</h2>
+        <p>Un computer conta come un utente. Gli avvii ripetuti della stessa attività contano una sola volta. Basta un completamento per rientrare tra gli utenti che l’hanno completata.</p>
+        <p><strong>Falliti = utenti che hanno avviato − utenti che hanno completato.</strong> Il totale conta ogni utente una sola volta, anche quando usa più attività, prodotti o applicazioni.</p>
+        <p>I dati provengono dai report ricevuti dalle versioni indicate. Sono pubblicati soltanto conteggi aggregati.</p>
+        <p id="coverage" hidden>Il conteggio è parziale: alcune attività ricevute non sono ancora attribuibili a utenti distinti.</p>
+      </aside>
+    </div>
+  </main>
+  <footer><a href="/?lang=it">Mparanza</a><a href="/data-handling?lang=it">Gestione dei dati</a></footer>
+</body>
+</html>
