@@ -346,6 +346,20 @@ def _process_detail(completed: subprocess.CompletedProcess[str]) -> str:
     )
 
 
+def _pip_environment(environment: dict[str, str]) -> dict[str, str]:
+    """Keep ambient pip configuration from skipping or redirecting managed installs."""
+    result = {
+        key: value
+        for key, value in environment.items()
+        if not key.upper().startswith("PIP_")
+        and key.upper() not in {"PYTHONHOME", "PYTHONPATH"}
+    }
+    # Disables global, user and virtualenv pip configuration, including dry-run
+    # and target overrides. Ordinary proxy and CA environment settings remain.
+    result["PIP_CONFIG_FILE"] = os.devnull
+    return result
+
+
 def _bootstrap_pip(
     target: Path,
     *,
@@ -354,9 +368,7 @@ def _bootstrap_pip(
     """Return a pip command that installs into a pip-less virtual environment."""
 
     target_python = runtime_python(target)
-    base_environment = dict(os.environ)
-    base_environment.pop("PYTHONHOME", None)
-    base_environment.pop("PYTHONPATH", None)
+    base_environment = _pip_environment(dict(os.environ))
     base_pip = [
         sys.executable,
         "-m",
@@ -378,8 +390,7 @@ def _bootstrap_pip(
     if probe.returncode == 0:
         return base_pip, base_environment, ""
 
-    target_environment = runtime_environment(target)
-    target_environment.pop("PYTHONPATH", None)
+    target_environment = _pip_environment(runtime_environment(target))
     ensured = runner(
         [
             str(target_python),

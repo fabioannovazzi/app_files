@@ -39,3 +39,15 @@ An attempted bulk conflict resolution was rejected by automatic approval review;
 no changes were applied by that command. Source conflicts were then inspected
 individually: versions, source fingerprints and catalogue bindings only.
 Both catalogue binding histories and all prior jurisdiction judgments survive.
+
+After all 106 checks passed on d611a9439, the attempted merge was rejected because
+main concurrently received #961 (3165c62f5), isolating managed pip setup from
+ambient settings. Its implementation and tests are retained. New full release:
+Lucia 0.1.218, Vera 0.1.593, Clara 0.1.395. The earlier full 0.1.216 deployment
+candidates are superseded. The original reduced Marketplace 0.1.216 submission
+remains untouched; unlike the earlier metadata-only rebuild, the latest source
+also includes the managed runtime repair and new version metadata. No claim is
+made that the submitted reduced artifact contains that later runtime repair.
+The second alignment fixture failure was corrected by updating both remaining
+mock signatures; 126 verifier/MCP tests passed with 100% verifier coverage and
+189 downstream alignment tests passed. Runtime integration passed 51 tests.
