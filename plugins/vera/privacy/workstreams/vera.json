@@ -1,5 +1,38 @@
 {
+  "schema_version": 3,
+  "workstream": "vera",
   "display_name": "Vera",
+  "role": "internal_engine",
+  "governed_paths": [
+    "skills/vera",
+    "scripts/native_execution.py",
+    "scripts/native_execution_mcp.cjs",
+    "scripts/verify_mcp_package.cjs",
+    "scripts/component_service.cjs",
+    "scripts/run_service_mcp.cjs"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
+  "model_context": {
+    "policy": "real_case_data_may_enter_selected_runtime_model_context",
+    "classes": [
+      {
+        "id": "selected-task-evidence",
+        "purpose": "Carry out vera using the selected evidence and user instructions",
+        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Native calculation jobs retain their bound package. Component reviews and product MCP services verify and use the installed release without a persistent update gateway or routing to an older release. An update during use may require reopening the chat; interrupted mutations are not automatically replayed. This changes local code lifetime, not model payloads or external recipients. Opening a saved review sends the launch status and, when supplied, an opaque work reference to the host model. The registered panel receives case data in app-only metadata. A user-selected discussion passes the selection reference to the current chat and can retrieve the workflow’s bounded evidence. Opening a directory or review alone does not send the whole table to chat.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork",
+          "openai-chatgpt",
+          "google-antigravity"
+        ]
+      }
+    ]
+  },
   "external_boundaries": [
     {
       "id": "host-connected-studio-knowledge",
@@ -22,43 +55,28 @@
       ]
     }
   ],
-  "governed_paths": [
-    "skills/vera",
-    "scripts/native_execution.py",
-    "scripts/native_execution_mcp.cjs",
-    "scripts/verify_mcp_package.cjs",
-    "scripts/component_service.cjs",
-    "scripts/run_service_mcp.cjs"
-  ],
-  "governed_repository_paths": [
-    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
-    "plugins/vera/ui/review-routes.json",
-    "plugins/vera/mcp/workspace.cjs",
-    "plugins/vera/ui/workspace.js",
-    "scripts/build_product_mcp_catalog.cjs",
-    "connectors/vera-1password/SKILL.md",
-    "connectors/vera-1password/login.mjs",
-    "connectors/vera-connect-service/SKILL.md",
-    "connectors/vera-connect-service/setup_acube.py",
-    "connectors/vera-acube/server.mjs",
-    "connectors/vera-acube/archive_invoice.py"
-  ],
-  "model_context": {
-    "policy": "real_case_data_may_enter_selected_runtime_model_context",
-    "classes": [
-      {
-        "id": "selected-task-evidence",
-        "purpose": "Carry out vera using the selected evidence and user instructions",
-        "content": "User task, selected files and tool responses, routing decisions and professional outputs may enter the selected host model context. Read only the authorized task scope. Each specialist has its own record; this router does not promise local inference or anonymization. Optional connections and their selected inputs follow the registered services and integration instructions. Published helper execution may use the native execution service. Its returned job status and exact helper stdout/stderr enter this same host model context; diagnostic text can contain case data and is not automatically anonymized. Requests and outputs remain in private local job storage for recovery. They are not transmitted to the incident service. Source-specific boundaries remain those of the selected specialist. Native status includes the technical indexed-package hash. Native calculation jobs retain their bound package. Component reviews and product MCP services verify and use the installed release without a persistent update gateway or routing to an older release. An update during use may require reopening the chat; interrupted mutations are not automatically replayed. This changes local code lifetime, not model payloads or external recipients. Opening a saved review sends the launch status and, when supplied, an opaque work reference to the host model. The registered panel receives case data in app-only metadata. A user-selected discussion passes the selection reference to the current chat and can retrieve the workflow’s bounded evidence. Opening a directory or review alone does not send the whole table to chat.",
-        "runtime_profiles": [
-          "openai-codex",
-          "anthropic-cowork",
-          "openai-chatgpt",
-          "google-antigravity"
-        ]
-      }
-    ]
+  "security_controls": [],
+  "review": {
+    "basis": "external_boundary_review_of_workflow_source",
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "e876bbbb728c3331dc72ef8f6505a9e23f2d41ce65b954995b8f294b2d621387"
   },
+  "service_ids": [
+    "cnc-authenticated-review",
+    "datev-starter",
+    "local-onboarding",
+    "managed-python-runtime",
+    "native-workspace",
+    "operational-incidents",
+    "plugin-feedback",
+    "plugin-update-check",
+    "research-subscriptions",
+    "run-receipt-stamping",
+    "studio-work",
+    "workflow-usage",
+    "on-demand-mcp"
+  ],
   "public_explanations": {
     "vera-integrazioni": {
       "status": "relevant",
@@ -251,35 +269,17 @@
       }
     }
   },
-  "review": {
-    "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "2cd81ce134219d2b10e2b8f53a66273599cab5af79a90cbcca18f02b25e4ef5e"
-  },
-  "role": "internal_engine",
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork",
-    "openai-chatgpt",
-    "google-antigravity"
-  ],
-  "schema_version": 3,
-  "security_controls": [],
-  "service_ids": [
-    "cnc-authenticated-review",
-    "datev-starter",
-    "local-onboarding",
-    "managed-python-runtime",
-    "native-workspace",
-    "operational-incidents",
-    "plugin-feedback",
-    "plugin-update-check",
-    "research-subscriptions",
-    "run-receipt-stamping",
-    "studio-work",
-    "workflow-usage",
-    "on-demand-mcp"
-  ],
-  "workstream": "vera"
+  "governed_repository_paths": [
+    "plugins/vera/skills/vera/references/connected-studio-knowledge.md",
+    "plugins/vera/ui/review-routes.json",
+    "plugins/vera/mcp/workspace.cjs",
+    "plugins/vera/ui/workspace.js",
+    "scripts/build_product_mcp_catalog.cjs",
+    "connectors/vera-1password/SKILL.md",
+    "connectors/vera-1password/login.mjs",
+    "connectors/vera-connect-service/SKILL.md",
+    "connectors/vera-connect-service/setup_acube.py",
+    "connectors/vera-acube/server.mjs",
+    "connectors/vera-acube/archive_invoice.py"
+  ]
 }

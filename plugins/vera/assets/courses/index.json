@@ -160,7 +160,7 @@
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "479f3dcf763014b774bddaca83b7b0d3e0ca4fc133f8dda5c0ba16d2e53d1394",
+      "sha256": "0397481a27cc6b4aaf0688936d8fe138b7a20dee1417619ed0aa7c903e31bf7a",
       "languages": [
         "it",
         "en"
@@ -258,7 +258,7 @@
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "425af6ad480904d229907462d3c51034dbdad3432e07e81748d283af283d84c1",
+      "sha256": "c4dd8be97abc8b58d8aa9285c4f920c16e657f5892da7a93b4181cd0df247379",
       "languages": [
         "it",
         "en",
@@ -342,7 +342,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "261225f66273cb4b0ea3a3bea7bd66fda97958af9378230f94788081abcf2e7e",
+      "sha256": "91036c90cf66b7da027289694548788e70806e16813aa3bb8816021053a7dfb6",
       "languages": [
         "it",
         "en",
@@ -741,7 +741,7 @@
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "44fb4d4136f2edabfe7a5f2dd38a7e196af51b1bf17b07c0a2a9968c933b01e4",
+      "sha256": "39a3d5fb4ac0f2bc3da3d2871536bfc39d740a975860912b1dd3132c6c01a37b",
       "languages": [
         "it",
         "en",
@@ -1021,7 +1021,7 @@
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "733d1b73ff8a8af791a909631649cf94e9655dc1590dc535066af88fe2c82189",
+      "sha256": "22376eb6d1446d7d11bb56f864c1758ee08f6c77a00622ec221c197cd99f0386",
       "languages": [
         "it",
         "en",
@@ -1049,7 +1049,7 @@
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "d7a0ed2898805189ca3948e71e42880e9e6bff54e130c8bc4cf1fe340d5064c0",
+      "sha256": "add2e5f1a5441e3442549bd3155cc8f7fcc5edd089a3ef428fd15cccf9044092",
       "languages": [
         "it",
         "en",
@@ -1093,7 +1093,7 @@
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "289d72b01f540dddd61ed584fbf8080408d387def00d5f36fad02046099eb4fa",
+      "sha256": "24808443779735ed30eb6018abbcb6879eb85dba6be93f1cdd8683a4906a6ffa",
       "languages": [
         "it",
         "en",

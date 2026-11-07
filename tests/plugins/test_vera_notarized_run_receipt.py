@@ -41,6 +41,8 @@ class _Response:
 
 
 def _modules(monkeypatch: pytest.MonkeyPatch) -> tuple[Any, Any]:
+    # These tests inject an in-memory transport; select delivery mode per case.
+    monkeypatch.delenv("MPARANZA_INCIDENT_DELIVERY", raising=False)
     monkeypatch.syspath_prepend(str(SCRIPTS))
     sys.modules.pop("model_data_report", None)
     sys.modules.pop("notarized_run_receipt", None)
@@ -274,6 +276,24 @@ def test_failed_stamp_keeps_same_minimal_request_for_retry(
         )
 
     assert (tmp_path / "model_data_receipt_request.json").read_bytes() == first_request
+
+
+def test_direct_stamp_in_local_only_mode_never_calls_transport(tmp_path, monkeypatch):
+    report_module, receipt_module = _modules(monkeypatch)
+    report_path = _report(report_module, tmp_path)
+    original = report_path.read_bytes()
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "local-only")
+
+    def forbidden(*args, **kwargs):
+        pytest.fail("Local-only receipt retry attempted transmission")
+
+    result = receipt_module.stamp_model_data_report(
+        report_path, output_dir=tmp_path, plugin_root=PLUGIN_ROOT, opener=forbidden
+    )
+
+    assert result == {"status": "not_requested", "reason": "local_only"}
+    assert report_path.read_bytes() == original
+    assert not (tmp_path / "model_data_receipt_request.json").exists()
 
 
 def test_late_receipt_preserves_sealed_outputs_and_original_request(

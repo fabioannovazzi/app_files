@@ -1,0 +1,14 @@
+{
+  "review": {
+    "prompts": [
+      "Rivedi questo contratto per la parte che assisto: collega rischi e modifiche proposte alle clausole fornite e indica i dati mancanti.",
+      "Confronta queste due versioni del contratto e prepara una tabella con le modifiche, le citazioni e le conseguenze da valutare.",
+      "Controlla questo documento per nomi, importi, definizioni e rinvii incoerenti. Distingui i rilievi documentati dai controlli ancora aperti.",
+      "Riprendi la revisione salvata in questa cartella, modifica il rilievo indicato e conserva la versione precedente.",
+      "Prepara una bozza dal modello allegato con questi fatti, lasciando espliciti i dati non forniti."
+    ]
+  },
+  "publication": {
+    "release_notes": "Edizione documentale desktop senza MCP: revisione contratti, controllo documento, confronto versioni, revisione documentale, estrazione clausole e bozze da modelli forniti. Richiede esecuzione Python locale; non include ricerca legale, Archive, corsi o pannelli nativi. Corretti dipendenze e istruzioni del pacchetto ridotto, verifiche Word obsolete, etichette italiane e rispetto della modalità locale nei tentativi di ricevuta. Rapporti sui dati e documenti professionali hanno esiti separati."
+  }
+}

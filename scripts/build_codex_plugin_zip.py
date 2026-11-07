@@ -63,6 +63,7 @@ CODEX_PACKAGE_EXCLUDED_PREFIXES = (
     (".claude-plugin",),
     ("agents",),
     ("submission",),
+    ("distributions",),
     ("samples", "cowork"),
 )
 CODEX_PACKAGE_EXCLUDED_PATHS = {
@@ -1298,6 +1299,21 @@ def source_zip_entries(
                 exclude_vendor_modules=component_vendor is not None,
             ):
                 rel = path.relative_to(component_dir).as_posix()
+                # These are development tests or Vera-only reconciliation drivers,
+                # not Lucia workflows. Shipping them creates unresolved imports
+                # (pytest/audit_assurance) in an otherwise complete Lucia runtime.
+                if plugin_dir.name == "lucia" and (
+                    rel.startswith("tests/")
+                    or (
+                        component_name == "studio-archive"
+                        and rel
+                        in {
+                            "scripts/open_items_source_preflight.py",
+                            "scripts/reconcile_open_items.py",
+                        }
+                    )
+                ):
+                    continue
                 entries[f"{component_root}/{rel}"] = path.read_bytes()
             for rel, path in shared_vendor_module_entries(component_vendor).items():
                 entries[f"{component_root}/vendor/modules/{rel}"] = path.read_bytes()
@@ -1979,7 +1995,7 @@ def project_chatgpt_course_sources(
 def chatgpt_upload_entries(
     package: BuildTarget, *, edition: str = "full"
 ) -> dict[str, bytes]:
-    """Return one source-derived upload tree with complete MCP capabilities."""
+    """Build a full upload tree or an explicitly reduced local-file edition."""
 
     if len(package.plugin_names) != 1:
         raise ValueError("ChatGPT upload ZIPs must contain exactly one root plugin")
@@ -1987,9 +2003,11 @@ def chatgpt_upload_entries(
     if edition == "marketplace":
         if plugin_name == "clara":
             from scripts.clara_distribution import marketplace_entries
+        elif plugin_name == "lucia":
+            from scripts.lucia_distribution import marketplace_entries
         else:
             raise ValueError(
-                "The MCP-free marketplace edition supports Clara only"
+                "The MCP-free marketplace edition supports Clara and Lucia only"
             )
         return marketplace_entries(package, source_root=ROOT)
     if edition != "full":

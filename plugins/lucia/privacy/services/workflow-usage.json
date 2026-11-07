@@ -178,7 +178,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "76ec5445be108c36fda36e9eab5b462edb3970234724af45e1860412b8a1d632"
+    "source_fingerprint": "137285111b9a491d97b6b9983d29629968efdedd41c622221459f59d3e066680"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
