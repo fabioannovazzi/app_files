@@ -1,8 +1,6 @@
 {
-  "schema_version": 3,
-  "workstream": "variance-analysis",
   "display_name": "Variance Analysis",
-  "role": "internal_engine",
+  "external_boundaries": [],
   "governed_paths": [
     ".codex-plugin/plugin.json",
     "skills",
@@ -10,12 +8,11 @@
     "mcp",
     "assets"
   ],
+  "governed_repository_paths": [
+    "plugins/clara/skills/reporting-engine/SKILL.md"
+  ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
   ],
   "model_context": {
     "policy": "real_case_data_may_enter_selected_runtime_model_context",
@@ -58,22 +55,25 @@
       }
     ]
   },
-  "external_boundaries": [],
-  "security_controls": [],
+  "public_explanations": {},
   "review": {
+    "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_workflow_source",
     "source_fingerprint": "687bde882a4d965e7b1fa53d4a841b5043d23efc9f59fc2753b3e38d05f51e9f"
   },
-  "governed_repository_paths": [
-    "plugins/clara/skills/reporting-engine/SKILL.md"
+  "role": "internal_engine",
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
   ],
-  "public_explanations": {},
+  "schema_version": 3,
+  "security_controls": [],
   "service_ids": [
     "managed-python-runtime",
     "operational-incidents",
     "run-receipt-stamping",
     "workflow-usage"
-  ]
+  ],
+  "workstream": "variance-analysis"
 }

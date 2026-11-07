@@ -178,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "06088193019e74367f0e995c52ec697ae1d56f663f5505302066727c1676f584",
+  "catalogue_fingerprint": "30dba07dc39be50e98a2d9f40fe5116015efa7b49c118958c26fabcfed405328",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -349,6 +349,11 @@
     "previous_catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
     "review": "Only course workspace setup and filesystem readiness changed. Existing country applicability decisions and limitations are unchanged; no new jurisdiction or live-host acceptance is claimed.",
     "version": "0.1.339"
+  },
+  "course_main965_integration_binding_20261106": {
+    "version": "0.1.589",
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "scope": "Combined course and Archive/reconciliation repairs. All 55 skill entrypoints and prior jurisdiction judgments are retained; version binding adds no jurisdiction acceptance."
   },
   "course_numeric_test_release_binding_20261106": {
     "version": "0.1.588",
@@ -2489,6 +2494,11 @@
     "source_main": "c3f09ad78f69a96445762e3772b7c05ec88d5862",
     "version": "0.1.291"
   },
+  "variance_chart_reconciliation_integration_binding": {
+    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
+    "version": "0.1.589",
+    "scope": "Canonical version refresh after integrating reconciliation and Archive repair #965. Skill entrypoints and existing jurisdiction judgments are unchanged from main."
+  },
   "verified_code_termination_release_binding_20261022": {
     "changed_entrypoints": [],
     "previous_catalogue_fingerprint": "4188c1e71a75c970206ae60fe81fbb1fe0a049dc84b1d3e50883bbe7dd755711",
@@ -2607,9 +2617,8 @@
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
   },
-  "course_main965_integration_binding_20261106": {
-    "version": "0.1.589",
-    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
-    "scope": "Combined course and Archive/reconciliation repairs. All 55 skill entrypoints and prior jurisdiction judgments are retained; version binding adds no jurisdiction acceptance."
+  "course_repairs_release_binding_20261107": {
+    "version": "0.1.590",
+    "scope": "Version identity refresh after integrating main960; all 55 skill entrypoint bytes and existing jurisdiction judgments unchanged. No new professional acceptance."
   }
 }
