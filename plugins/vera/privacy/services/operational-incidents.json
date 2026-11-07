@@ -1,44 +1,5 @@
 {
-  "schema_version": 2,
-  "service_id": "operational-incidents",
   "display_name": "Automatic operational incident recovery",
-  "governed_paths": [
-    ".mcp.json",
-    "scripts/operational_incidents.py",
-    "scripts/check_dependencies.py",
-    "scripts/managed_python_runtime.py",
-    "scripts/onboarding_session_start.py",
-    "skills/vera/SKILL.md",
-    "skills/vera/references/incident-recovery.md",
-    "scripts/_managed_python_runtime.py",
-    "scripts/verified_execution.py",
-    "skills/vera/references/execution-recovery.md",
-    "scripts/technical_runner.py",
-    "scripts/incident_host_mcp.cjs",
-    "scripts/reporting_product.py",
-    "scripts/diagnostic_context.py",
-    "scripts/native_execution.py",
-    "scripts/native_execution_mcp.cjs",
-    "scripts/incident_tool_schemas.json"
-  ],
-  "governed_repository_paths": [
-    "modules/operational_incidents",
-    "modules/hosted_services/api.py",
-    "scripts/manage_incidents.py",
-    "scripts/render_incident_alert.py",
-    "scripts/summarize_incident_monitor.py",
-    "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py",
-    "plugins/_shared/vendor/modules/vera_assurance",
-    "modules/operational_incidents/recovery.py",
-    "templates/incident_recovery.html",
-    "static/shared/incident-recovery.js",
-    "static/shared/incident-recovery.css"
-  ],
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork"
-  ],
   "external_boundaries": [
     {
       "controls": [
@@ -81,6 +42,50 @@
       "destination": "Mparanza ordinary HTTPS operational-incident API and https://mparanza.com/vera/incident-recovery"
     }
   ],
+  "governed_paths": [
+    ".mcp.json",
+    "scripts/operational_incidents.py",
+    "scripts/check_dependencies.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/onboarding_session_start.py",
+    "skills/vera/SKILL.md",
+    "skills/vera/references/incident-recovery.md",
+    "scripts/_managed_python_runtime.py",
+    "scripts/verified_execution.py",
+    "skills/vera/references/execution-recovery.md",
+    "scripts/technical_runner.py",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/reporting_product.py",
+    "scripts/diagnostic_context.py",
+    "scripts/native_execution.py",
+    "scripts/native_execution_mcp.cjs",
+    "scripts/incident_tool_schemas.json"
+  ],
+  "governed_repository_paths": [
+    "modules/operational_incidents",
+    "modules/hosted_services/api.py",
+    "scripts/manage_incidents.py",
+    "scripts/render_incident_alert.py",
+    "scripts/summarize_incident_monitor.py",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py",
+    "plugins/_shared/vendor/modules/vera_assurance",
+    "modules/operational_incidents/recovery.py",
+    "templates/incident_recovery.html",
+    "static/shared/incident-recovery.js",
+    "static/shared/incident-recovery.css"
+  ],
+  "review": {
+    "basis": "external_boundary_review_of_shared_service_source",
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "source_fingerprint": "02baa5fa1635d7878ba36edb17fa378b3237938d219f8b3076a1457e486e836b"
+  },
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork"
+  ],
+  "schema_version": 2,
   "security_controls": [
     {
       "id": "capability-isolation",
@@ -131,10 +136,5 @@
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
     }
   ],
-  "review": {
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "94c5309b7852b9bc4ea2aa39a54cef39597ac223abf6c143dc9fe022b55cb8b2"
-  }
+  "service_id": "operational-incidents"
 }

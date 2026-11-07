@@ -178,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "0d45b880d5eb62d57ae630f1b2242887ed2faa6392f5253fab1f42ac1e197a28",
+  "catalogue_fingerprint": "4052ddc38bad28e989d492dda0213396cc2b3d910376fba326c9a0369c9cce8d",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -486,9 +486,9 @@
     "version": "0.1.275"
   },
   "grouped_reconciliation_release_binding": {
-    "version": "0.1.591",
-    "previous_catalogue_fingerprint": "eff3381c946808626bba9a87ae3c014172ec2f584e9c967505d72c53cb38fb1a",
-    "scope": "Manifest identity refresh after integrating variance repair #960. All root skill entrypoint bytes and jurisdiction judgments unchanged; no new jurisdiction acceptance."
+    "version": "0.1.592",
+    "previous_catalogue_fingerprint": "0d45b880d5eb62d57ae630f1b2242887ed2faa6392f5253fab1f42ac1e197a28",
+    "scope": "Manifest identity refresh after integrating shared runtime dependency repair #961. Root skill entrypoints and jurisdiction judgments unchanged; no new jurisdiction acceptance."
   },
   "hardlink_execution_release_binding_20261007": {
     "changed_entrypoints": [
@@ -623,6 +623,20 @@
     "basis": "All 55 skill IDs and entrypoint bytes are unchanged; only release identity and local service lifetime change. Existing jurisdiction assessments and acceptance limits remain unchanged.",
     "previous_catalogue_fingerprint": "89920afa40330f8cfb5fce2816f9106c3613bc1161068131038c17bade88848b",
     "version": "0.1.478"
+  },
+  "managed_pip_merged_release_binding": {
+    "version": "0.1.589",
+    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
+    "scope": "Manifest binding only after merging Archive and reconciliation repairs. Exact skill entries and jurisdiction judgments unchanged."
+  },
+  "managed_pip_release_binding": {
+    "version": "0.1.582",
+    "previous_catalogue_fingerprint": "9824369d8693766bb42d7ecc4cbb6c178e25b44ac7f2aa9a028267356e071740",
+    "scope": "Manifest version refresh for pip setup isolation. Skill entrypoints and jurisdiction judgments unchanged."
+  },
+  "managed_pip_variance_integration_binding": {
+    "version": "0.1.590",
+    "scope": "Manifest binding after integrating variance chart repair; existing jurisdiction judgments unchanged."
   },
   "manual_trial_status_release_binding": {
     "date": "2026-10-17",
