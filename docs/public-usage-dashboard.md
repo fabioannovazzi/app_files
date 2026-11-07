@@ -55,3 +55,4 @@ field boundaries.
 | GitHub connector returned 403 for PR creation | Used the configured GitHub CLI to open the authorized PR. |
 | CI rejected stale shared-service privacy fingerprints | Reviewed the new public boundary, refreshed the affected services and regenerated source contracts and packaged declarations. The rejected checks were archive generation and the bandi package-contract test. |
 | Canonical version update invalidated the localization catalogue snapshot | Verified that all 55 skill entrypoints were byte-identical, then rebound the existing assessment to the new manifest. No jurisdiction judgment or professional acceptance claim changed. |
+| A privacy regression expected every usage boundary to have only Codex and Cowork profiles | Updated the test to require all three requested apps for the new public aggregate boundary while retaining the exact existing profiles for private boundaries. Production declarations were not weakened. |
