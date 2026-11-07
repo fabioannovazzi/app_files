@@ -172,7 +172,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "92486f1d7d3e636f8576b1c7c67330b0821b31d37eccf697caac783fa0072510",
+  "catalogue_fingerprint": "ae213f6757374502cc5e99c9bd928a54fb3f6d05d5b27b3aa4784184cb83d7b2",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2598,5 +2598,14 @@
     "version": "0.1.589",
     "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
     "scope": "Manifest binding only after merging Archive and reconciliation repairs. Exact skill entries and jurisdiction judgments unchanged."
+  },
+  "variance_chart_reconciliation_integration_binding": {
+    "previous_catalogue_fingerprint": "0b6be734ec4eafcf14af70d70126d0b4b92a3f494e7743ea2af50130cd6d93dd",
+    "version": "0.1.589",
+    "scope": "Canonical version refresh after integrating reconciliation and Archive repair #965. Skill entrypoints and existing jurisdiction judgments are unchanged from main."
+  },
+  "managed_pip_variance_integration_binding": {
+    "version": "0.1.590",
+    "scope": "Manifest binding after integrating variance chart repair; existing jurisdiction judgments unchanged."
   }
 }

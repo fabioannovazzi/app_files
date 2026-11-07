@@ -274,7 +274,7 @@ def _text(language: str) -> dict[str, str]:
             "drilldown_balance": (
                 "Il saldo include compensazioni fra contributi positivi e " "negativi."
             ),
-            "drilldown_concentration": "Il contributo non dipende da un solo elemento.",
+            "drilldown_concentration": "Dettaglio dei contributi al saldo.",
             "drilldown_composition": "Il residuo è concentrato su pochi contributi.",
             "top_contributions": "Principali contributi: {items}",
             "root_cause_bridge": "Bridge delle cause",
@@ -460,9 +460,7 @@ def _text(language: str) -> dict[str, str]:
                 "El saldo incluye compensaciones entre contribuciones positivas "
                 "y negativas."
             ),
-            "drilldown_concentration": (
-                "La contribución no depende de un solo elemento."
-            ),
+            "drilldown_concentration": ("Detalle de las contribuciones al saldo."),
             "drilldown_composition": (
                 "El residual se concentra en pocas contribuciones."
             ),
@@ -631,7 +629,7 @@ def _text(language: str) -> dict[str, str]:
             "The balance includes offsets between positive and negative "
             "contributions."
         ),
-        "drilldown_concentration": "The contribution is not dependent on one item.",
+        "drilldown_concentration": "Detail of contributions to the balance.",
         "drilldown_composition": "The residual is concentrated in a few items.",
         "top_contributions": "Main contributions: {items}",
     }
@@ -943,7 +941,9 @@ def _drilldown_finding_rows(
         top_items = _top_positive_and_negative(drilldown_rows, labels)
         reading = (
             labels["drilldown_balance"]
+            # Offsets are an arithmetic fact only when both signs occur.
             if any(amount < 0 for _, amount in top_items)
+            and any(amount > 0 for _, amount in top_items)
             else labels["drilldown_concentration"]
         )
         findings.append(
