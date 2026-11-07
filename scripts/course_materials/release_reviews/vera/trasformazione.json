@@ -119,7 +119,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "e5b72a8fb6f23ffcdc74e591c0a544662717c9485b6439f0525cd47a2007bffa",
+  "course_sha256": "78f1f79e0addf589c2c00fea20d88fe2780d3eaaf94ce6bc47a2c8d01d307581",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "3705804b3da7ba3c01a920558b4281eea11d1b3511c201317930ba8b5b33334b",
@@ -898,5 +898,13 @@
     "previous_course_sha256": "c3e82e4ede5587094344f630c25f49c0336e1a6281538f4b4df9e35f13294460",
     "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
     "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  },
+  "course_main968_source_binding_20261107": {
+    "reviewer": "Codex /root - bounded source integration",
+    "reviewed_at": "2026-11-07",
+    "previous_course_sha256": "e5b72a8fb6f23ffcdc74e591c0a544662717c9485b6439f0525cd47a2007bffa",
+    "current_course_sha256": "78f1f79e0addf589c2c00fea20d88fe2780d3eaaf94ce6bc47a2c8d01d307581",
+    "source_review": "Main968 preserves explicit local-only suppression before receipt request creation or network use. Lucia packaging excludes developer tests and Vera-only reconciliation drivers; full edition remains default. Compiled course fields excluding sources are unchanged from tested .596.",
+    "limits": "Historical editorial judgments retained; fresh combined-head CI required. No learner, professional or Desktop acceptance inferred."
   }
 }

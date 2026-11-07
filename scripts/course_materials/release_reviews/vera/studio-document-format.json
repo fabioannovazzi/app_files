@@ -264,7 +264,7 @@
     "reviewer": "Codex /root - bounded report output source review",
     "source_review": "Inspected report-builder Markdown omission repair, compact-table pagination and continuous audit appendix; numeric review, source capture and integrity validation unchanged. The component version advances to0.1.47. Shared studio-format preview code calls the same renderer. Full compiled course comparison shows only source inventory changes; original editorial judgments and outputs remain historical. Fresh current-digest localized execution remains required."
   },
-  "course_sha256": "23316d98625bc64431773590ab7e8eec0c6400b8c5cfaadfc79c149938f502f2",
+  "course_sha256": "771ff87e22bb136e0071b0f5fffda79632cd6c9558a67f9f2b07c9f0ea8a88f4",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e81595cc138fcea68e0681c56ccbfec5f965b2ecb1cfd9e5a7ce7fcce18d72cf",
@@ -1072,5 +1072,13 @@
     "previous_course_sha256": "65e91516676a7b24642e9d01d50da64cb811636e51ba24fc0cb2b972b22d8470",
     "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
     "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  },
+  "course_main968_source_binding_20261107": {
+    "reviewer": "Codex /root - bounded source integration",
+    "reviewed_at": "2026-11-07",
+    "previous_course_sha256": "23316d98625bc64431773590ab7e8eec0c6400b8c5cfaadfc79c149938f502f2",
+    "current_course_sha256": "771ff87e22bb136e0071b0f5fffda79632cd6c9558a67f9f2b07c9f0ea8a88f4",
+    "source_review": "Main968 preserves explicit local-only suppression before receipt request creation or network use. Lucia packaging excludes developer tests and Vera-only reconciliation drivers; full edition remains default. Compiled course fields excluding sources are unchanged from tested .596.",
+    "limits": "Historical editorial judgments retained; fresh combined-head CI required. No learner, professional or Desktop acceptance inferred."
   }
 }

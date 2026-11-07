@@ -171,7 +171,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "8ab2a27a8bb3ffc31c90cc052a8fde2134b314244a26307248af06f3af808254",
+  "course_sha256": "03a264d52eac6a4d1c1e2d647e03464eb4843c768a57e2a3a4c40a033a6ae65a",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e73259cad5eef4b20cced03f0f74a72ea58d3516ec171493b0c82ad30e019fd0",
@@ -968,5 +968,13 @@
     "current_course_sha256": "8ab2a27a8bb3ffc31c90cc052a8fde2134b314244a26307248af06f3af808254",
     "content_review": "Regenerated the five authored fictional original decks and work ZIPs with the supported baseline builder. Complete slide DOM inventories and titles are identical to the previous teaching inputs; every member inside each work ZIP remains byte-identical. All course fields except file hashes are identical. Current renderer supplies the previously reviewed localized rotation hint and gradient removal. Exact byte equality is restored in the native correction test.",
     "limits": "Historical editorial and output-artifact reviews retained as historical evidence. Fresh CI must execute all localized demo and practice cases bound to this digest. This does not assert live Desktop, learner, voice or professional acceptance."
+  },
+  "course_main968_source_binding_20261107": {
+    "reviewer": "Codex /root - bounded source integration",
+    "reviewed_at": "2026-11-07",
+    "previous_course_sha256": "8ab2a27a8bb3ffc31c90cc052a8fde2134b314244a26307248af06f3af808254",
+    "current_course_sha256": "03a264d52eac6a4d1c1e2d647e03464eb4843c768a57e2a3a4c40a033a6ae65a",
+    "source_review": "Main968 preserves explicit local-only suppression before receipt request creation or network use. Lucia packaging excludes developer tests and Vera-only reconciliation drivers; full edition remains default. Compiled course fields excluding sources are unchanged from tested .596.",
+    "limits": "Historical editorial judgments retained; fresh combined-head CI required. No learner, professional or Desktop acceptance inferred."
   }
 }

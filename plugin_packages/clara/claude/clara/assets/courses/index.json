@@ -4,7 +4,7 @@
   "courses": {
     "advisory-brief-planner": {
       "path": "advisory-brief-planner/course.json",
-      "sha256": "8a0a5fa9fb8b3a4008f86c73af847ce418d508c04c16f2c4dc608dbd4811fd4e",
+      "sha256": "c82dfce62833e8850fd65aac576916bede96ad807c5102106d5d47845f6d672a",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Lernen, aus einer Anfrage einen klaren Auftrag mit Entscheidung, Quellen, Ergebnis und nächsten Arbeitsschritten zu machen.",
         "es": "Aprender a convertir una petición en un encargo claro: decisión, fuentes, entregable y trabajo siguiente."
       },
-      "source_sha256": "a95d81d2695fc8428b5b45754fa49230011d8170de8f93079bb03d6e3a2147f7"
+      "source_sha256": "64bbd3f7a6ce9daccb8782b47cb291a4c71d321da7bcdda96c7c47062870ca8f"
     },
     "advisory-case-director": {
       "path": "advisory-case-director/course.json",
@@ -62,7 +62,7 @@
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",
-      "sha256": "6f247fdd7997e7c09bb81ab842704f41e5ab12cd0ec27cb67e9d4b0b5e8c3f04",
+      "sha256": "8a1b9d4a48451c5fe20a4ca624bfcf1de088321861680d6d9a3d18a4b3699e97",
       "languages": [
         "it",
         "en",
@@ -87,11 +87,11 @@
         "de": "Lernen, ob ein Dokument seinen Auftrag erfüllt und seine Empfehlung aus den vorhandenen Quellen folgt.",
         "es": "Aprender a comprobar si un documento responde al encargo y si su recomendación se deriva de las fuentes disponibles."
       },
-      "source_sha256": "b1d8656fdd4542ca1ae8f68efc5dc13dc15d535cd8f39e4a6a7263714c59bf21"
+      "source_sha256": "d34e2e6d8f982b0895b1a0e22805c2b7ac73dec50c98bcc0dedc042ad6f9a9e3"
     },
     "attribute-reporting": {
       "path": "attribute-reporting/course.json",
-      "sha256": "5f0779004aea6316c7865ab66b08c457981f923bcab590d7b46f07da2a93f380",
+      "sha256": "a7204064ea3db4cef026b9b1319d4d01a916351a03ee0278d09263de32c95dda",
       "languages": [
         "it",
         "en",
@@ -116,7 +116,7 @@
         "de": "Lernen, ein vorhandenes Handelsdatenpaket bereitzustellen, eine Analyse anzufordern und den geprüften HTML-Bericht zu verwenden.",
         "es": "Aprender a aportar un paquete de datos comerciales existente, solicitar un análisis y utilizar el informe HTML verificado."
       },
-      "source_sha256": "87a31b30cbec70ee653812fca47a1dd7d64fd0fc74e1a3c8a9aed7b35610e112"
+      "source_sha256": "a2b32e19cb53cace629b0d29cf22045f44798133e8e4ab68754fbaedc2feb920"
     },
     "business-planning": {
       "path": "business-planning/course.json",
@@ -140,7 +140,7 @@
     },
     "html-deck": {
       "path": "html-deck/course.json",
-      "sha256": "f402c0eb02f89239dba4b392b3396a1a6b58b20a7de1982544079d65af4f9d26",
+      "sha256": "dc22a7a1789f72fd6410e7349cfd8586cb5edfd3b9e19afac47dc88939c91bdb",
       "languages": [
         "it",
         "en",
@@ -165,11 +165,11 @@
         "de": "Lernen Sie, aus Dokumenten und einer klaren Anfrage brauchbare Folien zu erstellen, Aussagen zu prüfen und im Browser zu präsentieren.",
         "es": "Aprender a transformar documentos y una petición clara en diapositivas útiles, comprobar sus mensajes y presentarlas en el navegador."
       },
-      "source_sha256": "b4c2f8508fb8e24117c43e7f4fa4bee069259421b432b166fdff24d82ff1bad6"
+      "source_sha256": "f1c4b74e3b4d4bc4d77762722b4a85517285d75406c6b5f131d66af2300e383d"
     },
     "reporting-engine": {
       "path": "reporting-engine/course.json",
-      "sha256": "a89f0151ba748cc3ad28c08b44cbe10fe16d39e5342bb43084576c7764bf05fd",
+      "sha256": "49547cfa1831e07f6ed20053e1f4a06ce01ea0d8ba5d6f425ffb7ae9acbdb3ad",
       "languages": [
         "it",
         "en",
@@ -194,7 +194,7 @@
         "de": "Lernen Sie, Ist und Budget zu vergleichen, die Berichtserstellung zu verfolgen und die Abweichungen bei der Monatsbesprechung zu nutzen.",
         "es": "Aprende a comparar resultados y presupuesto, seguir la preparación del informe y utilizar las diferencias en la revisión mensual."
       },
-      "source_sha256": "c02d2bf938a685e66f3d47f1b35affc3249c0c05b0c4bf334d5ac25535e9bf29"
+      "source_sha256": "7c09c37dc7ae0ea57242480594b234c7950880bd57c89f2c5ed25623227408d2"
     }
   }
 }

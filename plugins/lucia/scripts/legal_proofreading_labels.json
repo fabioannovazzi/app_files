@@ -50,6 +50,10 @@
       "entities": "Mappa soggetti",
       "sections": "Mappa sezioni",
       "terms": "Mappa termini"
+    },
+    "limit_messages": {
+      "source reading is incomplete or unavailable.": "Lettura della fonte incompleta o non disponibile.",
+      "visual review not complete.": "Verifica visiva non completata."
     }
   },
   "en": {
@@ -103,6 +107,10 @@
       "entities": "Entity map",
       "sections": "Section map",
       "terms": "Term map"
+    },
+    "limit_messages": {
+      "source reading is incomplete or unavailable.": "Source reading is incomplete or unavailable.",
+      "visual review not complete.": "Visual review not complete."
     }
   },
   "fr": {
@@ -156,6 +164,10 @@
       "entities": "Carte des entités",
       "sections": "Carte des sections",
       "terms": "Carte des termes"
+    },
+    "limit_messages": {
+      "source reading is incomplete or unavailable.": "Lecture de la source incomplète ou indisponible.",
+      "visual review not complete.": "Vérification visuelle non terminée."
     }
   },
   "de": {
@@ -209,6 +221,10 @@
       "entities": "Parteienverzeichnis",
       "sections": "Abschnittsverzeichnis",
       "terms": "Begriffsverzeichnis"
+    },
+    "limit_messages": {
+      "source reading is incomplete or unavailable.": "Die Quelle wurde nicht vollständig gelesen oder ist nicht verfügbar.",
+      "visual review not complete.": "Visuelle Prüfung nicht abgeschlossen."
     }
   },
   "es": {
@@ -262,6 +278,10 @@
       "entities": "Mapa de entidades",
       "sections": "Mapa de secciones",
       "terms": "Mapa de términos"
+    },
+    "limit_messages": {
+      "source reading is incomplete or unavailable.": "Lectura de la fuente incompleta o no disponible.",
+      "visual review not complete.": "Revisión visual no completada."
     }
   }
 }

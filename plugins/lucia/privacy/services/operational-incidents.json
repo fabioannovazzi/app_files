@@ -1,5 +1,43 @@
 {
+  "schema_version": 2,
+  "service_id": "operational-incidents",
   "display_name": "Automatic operational incident recovery",
+  "governed_paths": [
+    ".mcp.json",
+    "scripts/operational_incidents.py",
+    "scripts/check_dependencies.py",
+    "scripts/managed_python_runtime.py",
+    "scripts/onboarding_session_start.py",
+    "skills/lucia/SKILL.md",
+    "skills/lucia/references/incident-recovery.md",
+    "scripts/_managed_python_runtime.py",
+    "scripts/verified_execution.py",
+    "scripts/technical_runner.py",
+    "scripts/incident_host_mcp.cjs",
+    "scripts/reporting_product.py",
+    "scripts/diagnostic_context.py",
+    "scripts/incident_tool_schemas.json"
+  ],
+  "governed_repository_paths": [
+    "modules/operational_incidents",
+    "modules/hosted_services/api.py",
+    "scripts/manage_incidents.py",
+    "scripts/render_incident_alert.py",
+    "scripts/summarize_incident_monitor.py",
+    "plugins/_shared/reporting-runtime",
+    "scripts/sync_reporting_runtime.py",
+    "plugins/_shared/vendor/modules/vera_assurance",
+    "modules/operational_incidents/recovery.py",
+    "templates/incident_recovery.html",
+    "static/shared/incident-recovery.js",
+    "static/shared/incident-recovery.css"
+  ],
+  "runtime_profiles": [
+    "openai-codex",
+    "anthropic-cowork",
+    "openai-chatgpt",
+    "google-antigravity"
+  ],
   "external_boundaries": [
     {
       "id": "automatic-technical-incident-loop",
@@ -44,49 +82,6 @@
       ]
     }
   ],
-  "governed_paths": [
-    ".mcp.json",
-    "scripts/operational_incidents.py",
-    "scripts/check_dependencies.py",
-    "scripts/managed_python_runtime.py",
-    "scripts/onboarding_session_start.py",
-    "skills/lucia/SKILL.md",
-    "skills/lucia/references/incident-recovery.md",
-    "scripts/_managed_python_runtime.py",
-    "scripts/verified_execution.py",
-    "scripts/technical_runner.py",
-    "scripts/incident_host_mcp.cjs",
-    "scripts/reporting_product.py",
-    "scripts/diagnostic_context.py",
-    "scripts/incident_tool_schemas.json"
-  ],
-  "governed_repository_paths": [
-    "modules/operational_incidents",
-    "modules/hosted_services/api.py",
-    "scripts/manage_incidents.py",
-    "scripts/render_incident_alert.py",
-    "scripts/summarize_incident_monitor.py",
-    "plugins/_shared/reporting-runtime",
-    "scripts/sync_reporting_runtime.py",
-    "plugins/_shared/vendor/modules/vera_assurance",
-    "modules/operational_incidents/recovery.py",
-    "templates/incident_recovery.html",
-    "static/shared/incident-recovery.js",
-    "static/shared/incident-recovery.css"
-  ],
-  "review": {
-    "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-11-04",
-    "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "32a961abbc4f2c3e40462e4eaf9d34ff245b77725ba907137137cabcc5d34b7c"
-  },
-  "runtime_profiles": [
-    "openai-codex",
-    "anthropic-cowork",
-    "openai-chatgpt",
-    "google-antigravity"
-  ],
-  "schema_version": 2,
   "security_controls": [
     {
       "id": "capability-isolation",
@@ -137,6 +132,12 @@
       "on_violation": "Reject unauthorized cross-origin, product or owner access without replacing retained evidence. Preserve unacknowledged delivery; no professional result is invalidated by a reporting failure."
     }
   ],
+  "review": {
+    "reviewed_at": "2026-11-04",
+    "reviewed_by": "privacy-surface-review",
+    "basis": "external_boundary_review_of_shared_service_source",
+    "source_fingerprint": "6614785bf6030efd1cb73a61423659934b29115f6ca98de64b451f7fc6aaaa5e"
+  },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
     "data_sent": [
@@ -179,6 +180,5 @@
       "status": "documented",
       "statement": "Local capabilities, pending reports and receipts persist outside client folders. In tested Cowork task containers this filesystem is task-local; the browser session retains a separate random reporting identity when that host preserves browser cookies. Access tokens last one hour; rotating refresh grants expire after 90 idle days and can be revoked. Token/code hashes and incident records have no automatic deletion period. Access requires the local capability or browser cookie, with explicit capability proof before linking local reports. Retired OAuth tokens no longer authenticate reporting requests; existing historical records remain retained. Pending diagnostic pointers and raw stderr persist in the private incident directory until a matching actual recorded supplementation receipt is acknowledged; unsuccessful review or delivery retains them. Supplementation never replaces the original recovery episode or reopens recovered records. Recorded original/outcome receipts can acknowledge only their exact local queued UUID without replacing the local capability or original reporting identity. Remedy revisions are retained from the surviving migration revision onward; overwritten legacy revisions are not reconstructed. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced."
     }
-  },
-  "service_id": "operational-incidents"
+  }
 }

@@ -281,6 +281,13 @@ def main(argv: list[str] | None = None) -> int:
             args.request.resolve(),
         }:
             raise ValueError("Verification report must not overwrite its input.")
+        # A failed new verification must not leave an earlier success looking
+        # current. Preserve its exact bytes as history before reading new inputs.
+        if args.report.exists():
+            digest = hashlib.sha256(args.report.read_bytes()).hexdigest()[:12]
+            args.report.replace(
+                args.report.with_name(f"previous-{digest}-{args.report.name}")
+            )
         report = verify_word_result(
             args.original,
             args.result,

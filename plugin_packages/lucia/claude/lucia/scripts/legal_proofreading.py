@@ -161,6 +161,9 @@ def render_audit(run_dir: Path, audit_path: Path) -> Path:
         raise ValueError("Invalid audit: " + "; ".join(validation["errors"]))
     lang = audit["context"].get("language", "it")
     labels = _load(Path(__file__).with_name("legal_proofreading_labels.json"))[lang]
+    context_labels = _load(Path(__file__).with_name("legal_documents_labels.json"))[
+        lang
+    ]["context_labels"]
     esc = lambda value: html.escape(str(value), quote=True)
     findings = sorted(audit["findings"], key=lambda f: SEVERITIES.index(f["severity"]))
     rows = []
@@ -186,8 +189,9 @@ def render_audit(run_dir: Path, audit_path: Path) -> Path:
             + "</tr>"
         )
     context = "".join(
-        f"<dt>{esc(key)}</dt><dd>{esc(value)}</dd>"
+        f"<dt>{esc(context_labels[key])}</dt><dd>{esc('; '.join(value) if isinstance(value, list) else value)}</dd>"
         for key, value in audit["context"].items()
+        if key in context_labels and value
     )
     sections = []
     for source_id, document in audit["documents"].items():
@@ -212,7 +216,15 @@ def render_audit(run_dir: Path, audit_path: Path) -> Path:
         sections.append(
             f"<section><h3>{esc(source_id)}</h3><table>{pass_rows}</table><p>{esc(document['visual_review']['evidence'])}</p>{''.join(maps)}</section>"
         )
-    limits = "".join(f"<li>{esc(limit)}</li>" for limit in validation["limitations"])
+    # Translate owned diagnostic messages only; never reinterpret authored notes.
+    display_limits = []
+    for limit in validation["limitations"]:
+        source_id, separator, message = limit.partition(": ")
+        if separator and source_id in audit["documents"]:
+            message = labels["limit_messages"].get(message, message)
+            limit = source_id + separator + message
+        display_limits.append(limit)
+    limits = "".join(f"<li>{esc(limit)}</li>" for limit in display_limits)
     takeaways = "".join(f"<li>{esc(item)}</li>" for item in audit["takeaways"])
     body = f"""<!doctype html><html lang="{lang}"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{esc(labels['title'])}</title>
 <style>body{{font:16px/1.6 'Instrument Sans',Arial,sans-serif;color:#172b4d;margin:40px auto;padding:0 24px;max-width:1200px}}h1,h2,h3{{line-height:1.2}}h1{{font-size:36px}}h2{{margin-top:40px}}table{{border-collapse:collapse;width:100%;font-size:14px}}th,td{{border:1px solid #ccd5df;text-align:left;vertical-align:top;padding:12px}}thead{{background:#edf3f8}}blockquote{{margin:8px 0;white-space:pre-wrap}}dt{{font-weight:bold}}dd{{margin:0 0 12px}}.table{{overflow:auto}}@media print{{body{{margin:0}}thead{{display:table-header-group}}tr{{break-inside:avoid}}}}</style>
