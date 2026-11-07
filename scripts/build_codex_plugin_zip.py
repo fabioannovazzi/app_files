@@ -1995,16 +1995,20 @@ def project_chatgpt_course_sources(
 def chatgpt_upload_entries(
     package: BuildTarget, *, edition: str = "full"
 ) -> dict[str, bytes]:
-    """Build the full upload tree or Lucia’s explicitly reduced desktop edition."""
+    """Build a full upload tree or an explicitly reduced local-file edition."""
 
     if len(package.plugin_names) != 1:
         raise ValueError("ChatGPT upload ZIPs must contain exactly one root plugin")
     plugin_name = package.plugin_names[0]
     if edition == "marketplace":
-        if plugin_name != "lucia":
-            raise ValueError("The MCP-free marketplace edition is Lucia-specific")
-        from scripts.lucia_distribution import marketplace_entries
-
+        if plugin_name == "clara":
+            from scripts.clara_distribution import marketplace_entries
+        elif plugin_name == "lucia":
+            from scripts.lucia_distribution import marketplace_entries
+        else:
+            raise ValueError(
+                "The MCP-free marketplace edition supports Clara and Lucia only"
+            )
         return marketplace_entries(package, source_root=ROOT)
     if edition != "full":
         raise ValueError(f"Unknown edition: {edition}")
@@ -2523,7 +2527,7 @@ def main(argv: list[str] | None = None) -> int:
         "--edition",
         choices=("full", "marketplace"),
         default="full",
-        help="Lucia marketplace is the reduced MCP-free desktop candidate; full preserves existing packages.",
+        help="Explicit reduced local-file edition; full preserves existing packages.",
     )
     args = parser.parse_args(argv)
     if args.edition == "marketplace" and args.chatgpt_upload is None:

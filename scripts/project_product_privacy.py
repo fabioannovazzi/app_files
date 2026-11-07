@@ -107,9 +107,12 @@ def project_privacy(
             local[cards_path] = contract.canonical_bytes(cards)
 
     if edition_policy is not None:
-        if product != "lucia" or edition_policy["edition"] != "marketplace":
+        if (
+            product not in {"clara", "lucia"}
+            or edition_policy["edition"] != "marketplace"
+        ):
             raise ValueError(
-                "Only the reviewed Lucia marketplace projection is supported"
+                "Only reviewed Clara/Lucia marketplace projections are supported"
             )
         registry["developer_skills"] = []
         schema = json.loads(local["privacy/registry.schema.json"])

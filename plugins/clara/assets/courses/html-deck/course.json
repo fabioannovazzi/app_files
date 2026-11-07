@@ -215,7 +215,7 @@
     {
       "path": "skills/html-deck/scripts/data_visuals.py",
       "repository_path": "plugins/clara/skills/html-deck/scripts/data_visuals.py",
-      "sha256": "68a195e3ea68be169994b16a79ee5dcf76573e2def869071884176394b62c9b5"
+      "sha256": "56cec765974273d9e7cdd460976de46b0441eea486dcf591dbe8af9062bccb54"
     },
     {
       "path": "skills/html-deck/scripts/evidence_bindings.py",

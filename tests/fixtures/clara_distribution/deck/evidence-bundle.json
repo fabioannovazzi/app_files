@@ -1,0 +1,41 @@
+{
+  "artifacts": [
+    {
+      "id": "financial-facts",
+      "media_type": "text/csv",
+      "path": "financial-facts.csv",
+      "sha256": "1f811aa0c06ca8e2d396811fef1713f36e1c344e88f9022960f1c80607f7ba91",
+      "size_bytes": 99,
+      "snapshot_id": "closing-snapshot",
+      "source_id": "source-financial-facts",
+      "table": {
+        "key_fields": [
+          "fact_id"
+        ],
+        "order_by": [
+          "display_order"
+        ]
+      }
+    },
+    {
+      "id": "customer-concentration",
+      "media_type": "text/csv",
+      "path": "customer-concentration.csv",
+      "sha256": "6e846425e0b0ceb8230f1ee23cfe2c4e98ee09aaae925341a02f113e39d9ca34",
+      "size_bytes": 129,
+      "snapshot_id": "closing-snapshot",
+      "source_id": "source-customer-concentration",
+      "table": {
+        "key_fields": [
+          "row_id"
+        ],
+        "order_by": [
+          "display_order"
+        ]
+      }
+    }
+  ],
+  "bundle_id": "diligence-case",
+  "description": "Deterministically prepared financial and customer facts.",
+  "schema_version": "clara.evidence_bundle.v1"
+}

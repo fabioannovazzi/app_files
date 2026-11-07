@@ -228,14 +228,25 @@ def _render_bar(spec: Mapping[str, Any]) -> str:
     values = [_number(row.get("value"), label="visual.data[].value") for row in rows]
     low, high = _extent(values, include_zero=True)
     row_height = min(42.0, 198.0 / max(1, len(rows)))
-    baseline = _scale(0.0, low, high, PLOT_LEFT + 130.0, PLOT_RIGHT)
+    # Reserve measured text capacity outside both bar ends. The SVG uses 12px
+    # monospace labels; an 8-unit glyph allowance plus spacing prevents clipping
+    # without changing the supplied values or the model-selected chart meaning.
+    positive_width = max(
+        (len(_fmt(value)) * 8.0 for value in values if value >= 0), default=0.0
+    )
+    negative_width = max(
+        (len(_fmt(value)) * 8.0 for value in values if value < 0), default=0.0
+    )
+    plot_left = PLOT_LEFT + 130.0 + negative_width + 12.0
+    plot_right = SVG_WIDTH - positive_width - 20.0
+    baseline = _scale(0.0, low, high, plot_left, plot_right)
     parts = [_svg_open(spec, "bar")]
     for index, (row, value) in enumerate(zip(rows, values, strict=True)):
         label = _bounded_text(
             row.get("label"), label="visual.data[].label", max_chars=16
         )
         y = PLOT_TOP + 22.0 + index * row_height
-        x_value = _scale(value, low, high, PLOT_LEFT + 130.0, PLOT_RIGHT)
+        x_value = _scale(value, low, high, plot_left, plot_right)
         x = min(baseline, x_value)
         width = max(1.0, abs(x_value - baseline))
         parts.append(

@@ -21,6 +21,17 @@ def marketplace():
     return builder.chatgpt_upload_entries(package, edition="marketplace")
 
 
+@pytest.mark.parametrize("product", ["lucia", "clara"])
+def test_shared_builder_keeps_both_reduced_distribution_selectors(product):
+    package = next(p for p in builder.load_packages() if p.plugin == product)
+
+    entries = builder.chatgpt_upload_entries(package, edition="marketplace")
+
+    assert json.loads(entries["plugin.json"])["name"] == product
+    assert f"skills/{product}/SKILL.md" in entries
+    assert ".mcp.json" not in entries
+
+
 def test_marketplace_exposes_only_retained_skills_and_no_registrations(marketplace):
     skills = {
         name.split("/")[1]
@@ -103,9 +114,11 @@ def test_marketplace_privacy_registry_covers_exact_exposed_scope(marketplace):
     )
 
 
-def test_reduced_edition_cannot_silently_strip_clara():
-    package = next(p for p in builder.load_packages() if p.plugin == "clara")
-    with pytest.raises(ValueError, match="Lucia-specific"):
+def test_reduced_edition_cannot_silently_strip_unsupported_vera():
+    package = builder.select_packages(
+        builder.load_packages(), builder.load_bundles(), ["vera"]
+    )[0]
+    with pytest.raises(ValueError, match="supports Clara and Lucia only"):
         builder.chatgpt_upload_entries(package, edition="marketplace")
 
 

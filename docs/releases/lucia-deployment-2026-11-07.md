@@ -60,3 +60,13 @@ catalogue history bindings are retained alongside Lucia's binding. Versions
 remain Lucia 0.1.218, Vera 0.1.593 and Clara 0.1.395. The integrated packages are
 rebuilt and rechecked; the preceding green CI run is retained as historical
 integration evidence, not represented as validation of the later commit.
+
+Main advanced again with Clara reduced-edition release #967 (3919ea2c7) while
+104 of 106 checks were green. Its shared-builder changes are integrated with
+Lucia's selector, preserving both explicit reduced editions. A parametrized
+regression proves both selectors build their own package; the old assertion
+that Clara must be rejected now checks the unsupported Vera reduction instead.
+The first rerun exposed a test-harness lookup of Vera as a standalone package;
+it was corrected to use the maintained package/bundle selector. Derived privacy
+fingerprints and course hashes were regenerated without changing review judgments.
+Full and reduced packages are rebuilt and their affected acceptance checks rerun.
