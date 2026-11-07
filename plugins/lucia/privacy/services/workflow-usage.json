@@ -29,7 +29,8 @@
     "modules/operational_incidents/recovery.py",
     "templates/incident_recovery.html",
     "static/shared/incident-recovery.js",
-    "static/shared/incident-recovery.css"
+    "static/shared/incident-recovery.css",
+    "static/shared/utilizzo"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -112,6 +113,28 @@
         "The public response is an allowlisted projection of status-only fields; reset is available only to the server operator.",
         "The operator can initialize a missing counting baseline with registered agent computers and an explicit timezone-aware past start. It includes retained completions after that boundary without replaying events. Initialization is transaction-serialized, idempotent for the exact configuration and cannot replace an existing baseline; reset remains a separate explicit operation."
       ]
+    },
+    {
+      "id": "public-distinct-user-usage",
+      "kind": "hosted_service",
+      "destination": "Public visitors to Mparanza GET /api/usage-summary and /static/shared/utilizzo/index.html",
+      "purpose": "Publish aggregate distinct-user starts, completions and non-completions per activity and application",
+      "content": "Only aggregate integer counts, catalog function IDs and labels, product minimum reporting versions, supported app names, an identity-coverage boolean and snapshot time are public. The server internally deduplicates proven computer IDs across retained runs, functions, products and apps. The publication contains no computer, installation or run identifiers, per-user history, documents, prompts, feedback, ratings, hashes, capabilities or test-exclusion details. No model call is made by this projection. Codex, Cowork and Antigravity are included from the product-specific instrumented version; no time window or testing epoch date is applied.",
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork",
+        "google-antigravity"
+      ],
+      "retention": "The projection adds no retained user records. Existing lifecycle records retain their established retention. The browser holds only the latest aggregate response in memory and refreshes while visible; the server sends no-store.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The GET handler constructs a fixed aggregate projection. No request can select an individual identity or read underlying runs through this route.",
+        "Explicit test samples and registered test computer identities are omitted across products. Missing computer proof is not replaced by a reporter identity and makes the aggregate coverage flag incomplete.",
+        "Exact sets deduplicate repeated activity and cross-app/product overlap. Failed is the explicitly defined difference between starters and completers, not a mutation of unknown or failed task events.",
+        "The frontend uses text nodes for returned labels, sends no credentials with the aggregate request and retains the last successful display during a transport failure."
+      ]
     }
   ],
   "security_controls": [
@@ -176,9 +199,9 @@
   ],
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "137285111b9a491d97b6b9983d29629968efdedd41c622221459f59d3e066680"
+    "source_fingerprint": "155d0286fced6ee226d4c5644602daded02b1bdb4a92d04b5dbbc11ba81faed2"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
