@@ -2206,7 +2206,10 @@ def test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance
         "",
     ]
     if phase == "practice":
-        baseline_bytes = (output / artifacts["forecast"]).read_bytes()
+        baseline_bytes = {
+            key: (output / artifacts[key]).read_bytes()
+            for key in ("forecast", "report", "workbook")
+        }
         scenario_request = output / "hypothetical-dates-request.json"
         _write(scenario_request, {"item:ar-01": "2026-04-20"})
         _run(
@@ -2228,8 +2231,24 @@ def test_treasury_kit_inputs_produce_real_reviewable_forecast_without_acceptance
         assert baseline_days["2026-04-15"]["closing_cash"] == "34000.00"
         assert scenario_days["2026-04-15"]["closing_cash"] == "16000.00"
         assert scenario_days["2026-04-20"]["closing_cash"] == "34000.00"
-        assert (output / artifacts["forecast"]).read_bytes() == baseline_bytes
-        assert _read(output / "final_artifacts.json") == artifacts
+        assert {
+            key: (output / artifacts[key]).read_bytes() for key in baseline_bytes
+        } == baseline_bytes
+        delivered = _read(output / "final_artifacts.json")
+        scenarios = delivered.pop("scenarios")
+        assert delivered == artifacts
+        assert len(scenarios) == 1
+        alternative = scenarios[0]
+        assert alternative["status"] == "hypothetical"
+        assert alternative["baseline_record_sha256"] == forecast["record_sha256"]
+        assert Path(alternative["scenario"]).parts[0] == "scenarios"
+        assert _read(output / alternative["scenario"]) == scenario
+        assert (output / alternative["report"]).is_file()
+        assert (output / alternative["workbook"]).stat().st_size > 0
+        scenario_directory = (output / alternative["scenario"]).parent
+        assert (scenario_directory / "report.md").is_file()
+        assert (scenario_directory / "giorni.csv").is_file()
+        assert (scenario_directory / "settimane.csv").is_file()
         note.extend(
             [
                 "## Ritardo dell’incasso di Aurora",
