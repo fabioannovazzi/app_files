@@ -101,8 +101,8 @@ def test_correction_kit_changes_only_the_requested_slide(
         p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in original.iterdir()
     }
     baseline_built = build_deck(original, tmp_path / "baseline-built")
-    # Historical decks retain their original renderer chrome. Compare slide
-    # content and structure while allowing the current renderer's UI repairs.
+    # Authored teaching inputs must match the current supported renderer.
+    assert baseline_built.read_bytes() == original_html_bytes
     command(
         "inspect_html_deck.py", original_html, "--report", tmp_path / "source-html.json"
     )

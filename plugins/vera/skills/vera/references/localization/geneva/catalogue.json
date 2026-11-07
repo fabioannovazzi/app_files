@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/course-clara-lucia-repairs/plugins/vera",
-  "version": "0.1.590",
-  "captured_at": "2026-11-07T00:17:15.001747+00:00",
-  "catalogue_fingerprint": "30dba07dc39be50e98a2d9f40fe5116015efa7b49c118958c26fabcfed405328",
-  "manifest_sha256": "593740a4423216e6b3691f0c4499b0ff143f207e1f0ad586469fa29530e60911",
+  "version": "0.1.594",
+  "captured_at": "2026-11-07T04:35:43.115470+00:00",
+  "catalogue_fingerprint": "87b4e254d4b68ec7f99fbbd29b7dc39dcf7c0b2bc1e1ec2a55f5ba5f3be1cdab",
+  "manifest_sha256": "4c6aef613468a0f83c5da5baf5d0ab87021ce5b53b969de55a4e164b928e36e8",
   "entries": [
     {
       "function_id": "adeguati-assetti",

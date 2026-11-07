@@ -135,7 +135,7 @@
     },
     "deck-correction": {
       "path": "deck-correction/course.json",
-      "sha256": "4ffab0f44c9f930953816bfd1cb16211e537cc327ac0a8c8357cbca696009c59",
+      "sha256": "8ab2a27a8bb3ffc31c90cc052a8fde2134b314244a26307248af06f3af808254",
       "languages": [
         "it",
         "en",
