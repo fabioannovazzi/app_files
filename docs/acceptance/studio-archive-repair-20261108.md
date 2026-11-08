@@ -88,3 +88,10 @@ contracts are identical to origin/main. Their source-binding reviews now record
 the Archive/incident repairs without replacing historical editorial judgments.
 The downloaded native JUnit evidence validates all 58 kits and 258 locales
 against the exact current course hashes. Final-head CI remains required.
+
+Refreshing those review records also required refreshing their owning Vera
+local-onboarding and Clara teaching privacy fingerprints. The next package build
+reported that stale dependency before execution. Reviewed changes add only
+source-review evidence, with no changed model payload, transport or recipient.
+The affected privacy contracts and all host packages were regenerated; the
+course hashes still validate against the retained native JUnit evidence.
