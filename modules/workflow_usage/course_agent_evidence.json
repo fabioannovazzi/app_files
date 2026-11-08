@@ -1,0 +1,115 @@
+{
+  "campaign": "2026-11-05 Codex course acceptance; baseline worked cohort confirmed 2026-11-08",
+  "codex_thread": "01a1ab4c-02a3-7fe2-afdd-824d06819c90",
+  "courses": {
+    "adeguati-assetti": {
+      "campaign_result": "demo_practice_lab_handoff_agent_tested_issues",
+      "course_sha256": "bec8867f798e6a1aa9cd01169d4fbbb4c31a6d19233e9c287af70ee122b471f5"
+    },
+    "agenzia-acquisition": {
+      "campaign_result": "demo_and_practice_agent_tested_issues",
+      "course_sha256": "ff970c856d22b66fb91aa0eaccf9df156ce21df5f0445309a376189555ac7b5f"
+    },
+    "aml-review": {
+      "campaign_result": "demo_and_practice_agent_tested_issues",
+      "course_sha256": "219daa55c2a231d58697e1bb326a3fa79d6df4fb951c7719b8ec72780b321f9e"
+    },
+    "avviso-intake": {
+      "campaign_result": "demo_and_practice_agent_tested_issues",
+      "course_sha256": "9b26ef0c7334bbe1f4a4ea7ade1a2ac9bb07b5dec91ac71e53d87f4dc9fe588d"
+    },
+    "business-planning": {
+      "campaign_result": "demo_and_practice_agent_tested_issues",
+      "course_sha256": "d2e60652e40e0dec5d03e73f13c606e0cbabf1f47c21d0502fadba7ee48d3168"
+    },
+    "business-valuation": {
+      "campaign_result": "four_runs_tested_reopen_and_registration_gap",
+      "course_sha256": "67fdf111ca59462d68bbb9f68b4f0be374cdae2a844f3e3c6cbc11f463793d7e"
+    },
+    "centrale-rischi-review": {
+      "campaign_result": "demo_practice_calculated_after_actual_mapping_confirmation",
+      "course_sha256": "c70bf986f07928c74792a9f14fff08f51464d1095ce42c10110361829419f6ef"
+    },
+    "composizione-negoziata": {
+      "campaign_result": "ai_dossier_and_forecast_branches_tested_with_limits",
+      "course_sha256": "285ce746534b644da7b51942f469398d1881dbb4e30c0a272299aa48b3d1fe88"
+    },
+    "contenzioso-tributario": {
+      "campaign_result": "demo_practice_saved_conditional_calendar_with_limits",
+      "course_sha256": "cce99bb5a3275ec757fe1a0b4e9a5ac9788c39a49a3f345b8f5ad1ee486bc1b3"
+    },
+    "dati-fiscali-strutturati": {
+      "campaign_result": "demo_practice_fields_verified_ui_unproven",
+      "course_sha256": "b2d7fa4ca9c6814e50a5714890012bf11192bcedcea7811afa4ad6bebadc9b08"
+    },
+    "email-cliente": {
+      "campaign_result": "demo_practice_drafts_recovered_with_public_review_service",
+      "course_sha256": "26612fbaea366388527daff7c6ccac02bc150d66058c9608b9a509ba87bec1c7"
+    },
+    "esg-reporting-assurance": {
+      "campaign_result": "demo_practice_registered_with_limits",
+      "course_sha256": "8603407cee738a8e912bbd45c6d7e8034743d35adc176c65bae82ae926cc6a36"
+    },
+    "fatture-xml-check": {
+      "campaign_result": "agent_demo_and_practice_verified_with_ui_issues",
+      "course_sha256": "511f86a766240f6f01fb56a4173a873d1704bf5d46be15938e4d7badac225228"
+    },
+    "financial-analysis": {
+      "campaign_result": "tested_with_issues",
+      "course_sha256": "28fadba175df9d08e0cc282327064b154ceb2b85e0c8ac253eb9f83231246dd7"
+    },
+    "financial-report-builder": {
+      "campaign_result": "demo_practice_registered_review_and_layout_issues",
+      "course_sha256": "94fbca0384d87082d4e4b7027cf517c655163815bf2b384d194346a524c21d38"
+    },
+    "journal-bank-reconciliation": {
+      "campaign_result": "agent_demo_and_practice_verified_with_issues",
+      "course_sha256": "1af34858826195ed1a24c47e60ac818c3109adf3d7a0560d885fa412f92d666d"
+    },
+    "management-control-pack": {
+      "campaign_result": "demo_practice_registered_dashboard_unproven",
+      "course_sha256": "958fa3d55a8fff40ad2c6ba055428f2bde2f7482ecb48d2b2046879d9ecbbcb7"
+    },
+    "new-client": {
+      "campaign_result": "demo_practice_registered_dossier_ui_and_continuity_limits",
+      "course_sha256": "2689fcef9345ffbc4e1676c9d758b1d5083dc4e2be5050b9240e09df0f47aa17"
+    },
+    "organizzazione-lavoro": {
+      "campaign_result": "local_demo_practice_verified_external_voice_unproven",
+      "course_sha256": "eb7a7928b7234df5a6ba7e2a62cf3ee443d025a668c319bd036e506d9cf7f01b"
+    },
+    "patent-box-review": {
+      "campaign_result": "synthetic_demo_practice_verified_dossier_partial",
+      "course_sha256": "f97419ccb27806792f44603d5c22c6e486a7a3feb9dd2cc3c5ed6ce1d32fd306"
+    },
+    "presenza-digitale-studio": {
+      "campaign_result": "local_demo_practice_verified_publication_unproven",
+      "course_sha256": "18ab2d63b5dc58010bf4e53a2324b0be8f69021fc7789f8863718995fb4f3c2a"
+    },
+    "purchase-invoice-review": {
+      "campaign_result": "native_demo_practice_verified_workpaper_ux_issues",
+      "course_sha256": "de625249c8098394008efe57eb28019699948247f449c21e37babfafca0f40a0"
+    },
+    "registro-imprese-sari": {
+      "campaign_result": "partial_native_demo_practice_source_review_pending",
+      "course_sha256": "f29745a09df1aafe7f69156d8bc7b334684533695ced100dc1e5cd8142b6289e"
+    },
+    "studio-archive": {
+      "campaign_result": "local_search_demo_practice_verified_ui_unverified",
+      "course_sha256": "4d9abc1902daef47186cd5ec53a858928b313566a75aab5e5be29b0954bad6d5"
+    },
+    "studio-document-format": {
+      "campaign_result": "partial_previews_demo_practice_verified",
+      "course_sha256": "93a31be2f5da30859ade6fe555cd1bd26ed7aed87ba712ebba1b1b9a6a11e8ca"
+    },
+    "trasformazione": {
+      "campaign_result": "synthetic_demo_practice_verified",
+      "course_sha256": "56842c9aad378bfde8fe5a2227dab4bd44849ebdadd2a76df2ad4dc30194c5fe"
+    },
+    "treasury-forecast": {
+      "campaign_result": "draft_demo_practice_verified_native_ui_unavailable",
+      "course_sha256": "b0fafa79b799e419b0c54980fe4bdffde6ca8f08508a48c927229264e3bfda62"
+    }
+  },
+  "scope": "Historical synthetic course tests. This does not assert a learner finish, machine count, current-version acceptance or coverage in other languages. The 17 Vera courses queued for fresh acceptance are excluded."
+}

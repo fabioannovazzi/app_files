@@ -91,4 +91,12 @@ def levels(connection: Any, sql: Callable[[str], str]) -> dict[str, str]:
             result[course] = "agent"
         else:
             result[course] = "completed"
+    # Agent acceptance is independent of learner finishes. It can supply the
+    # quarter circle, but must never add a machine or hide a higher status.
+    evidence = json.loads(
+        Path(__file__).with_name("course_agent_evidence.json").read_bytes()
+    )
+    for course in evidence["courses"]:
+        if result.get(course) in {"untried", "completed"}:
+            result[course] = "agent"
     return result

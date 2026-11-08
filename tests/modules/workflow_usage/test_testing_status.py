@@ -425,7 +425,10 @@ def test_course_completions_and_professional_runs_advance_independently(setup):
         return client.get("/api/vera/course-status").json()["courses"]
 
     record(store, first, pipeline="fatture-xml-check")
-    assert courses()["fatture-xml-check"] == "untried"
+    assert courses()["fatture-xml-check"] == "agent"
+    assert courses()["bilancio-oic"] == "untried"
+    assert submit(first, course="fatture-xml-check").status_code == 200
+    assert courses()["fatture-xml-check"] == "tried"
     key = uuid4()
     assert submit(agent_owner, event_id=key).status_code == 200
     assert submit(agent_owner, event_id=key).status_code == 200
@@ -445,7 +448,7 @@ def test_course_completions_and_professional_runs_advance_independently(setup):
     )
     assert submit(register(store), course="get-started").status_code == 200
     assert courses()["get-started"] == "completed"
-    assert courses()["fatture-xml-check"] == "untried"
+    assert courses()["fatture-xml-check"] == "tried"
 
 
 def test_every_public_vera_course_and_language_uses_its_own_course_id():

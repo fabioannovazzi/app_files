@@ -1,13 +1,13 @@
-/* Only concluded Vera lessons feed this catalogue and its language editions. */
+/* Vera course status combines registered finishes and documented agent tests. */
 (() => {
   const icons = [...document.querySelectorAll("[data-vera-course]")];
   if (!icons.length) return;
   const copy = {
-    it: ["Stato del corso non disponibile", "Nessun completamento registrato", "Corso completato; computer non classificato", "Corso completato dal computer di test", "Corso completato su uno o due computer di professionisti", "Corso completato su almeno tre computer di professionisti"],
-    en: ["Course status unavailable", "No recorded completion", "Course completed; computer not classified", "Course completed on the test computer", "Course completed on one or two professional computers", "Course completed on at least three professional computers"],
-    fr: ["État du cours indisponible", "Aucun achèvement enregistré", "Cours terminé ; ordinateur non classé", "Cours terminé sur l’ordinateur de test", "Cours terminé sur un ou deux ordinateurs de professionnels", "Cours terminé sur au moins trois ordinateurs de professionnels"],
-    de: ["Kursstatus nicht verfügbar", "Kein Abschluss erfasst", "Kurs abgeschlossen; Rechner nicht zugeordnet", "Kurs auf dem Testrechner abgeschlossen", "Kurs auf einem oder zwei beruflich genutzten Rechnern abgeschlossen", "Kurs auf mindestens drei beruflich genutzten Rechnern abgeschlossen"],
-    es: ["Estado del curso no disponible", "Ninguna finalización registrada", "Curso completado; equipo sin clasificar", "Curso completado en el equipo de prueba", "Curso completado en uno o dos equipos de profesionales", "Curso completado en al menos tres equipos de profesionales"]
+    it: ["Stato del corso non disponibile", "Nessun completamento registrato", "Corso completato; computer non classificato", "Corso provato con dati sintetici da un agente o completato su un computer di test", "Corso completato su uno o due computer", "Corso completato su almeno tre computer"],
+    en: ["Course status unavailable", "No recorded completion", "Course completed; computer not classified", "Course tested by an agent with synthetic data or completed on a test computer", "Course completed on one or two computers", "Course completed on at least three computers"],
+    fr: ["État du cours indisponible", "Aucun achèvement enregistré", "Cours terminé ; ordinateur non classé", "Cours testé par un agent avec des données synthétiques ou terminé sur un ordinateur de test", "Cours terminé sur un ou deux ordinateurs", "Cours terminé sur au moins trois ordinateurs"],
+    de: ["Kursstatus nicht verfügbar", "Kein Abschluss erfasst", "Kurs abgeschlossen; Rechner nicht zugeordnet", "Kurs mit synthetischen Daten durch einen Agenten getestet oder auf einem Testrechner abgeschlossen", "Kurs auf einem oder zwei Rechnern abgeschlossen", "Kurs auf mindestens drei Rechnern abgeschlossen"],
+    es: ["Estado del curso no disponible", "Ninguna finalización registrada", "Curso completado; equipo sin clasificar", "Curso probado por un agente con datos sintéticos o completado en un equipo de prueba", "Curso completado en uno o dos equipos", "Curso completado en al menos tres equipos"]
   };
   const labels = copy[document.documentElement.lang] || copy.it;
   const states = ["unknown", "untried", "completed", "agent", "tried", "repeated"];
