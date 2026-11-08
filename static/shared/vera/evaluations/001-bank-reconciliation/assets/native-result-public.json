@@ -1,0 +1,224 @@
+{
+  "note": "Public projection of the native result. Absolute execution paths, private IDs and runtime receipts omitted; accounting relations and model measurements unchanged.",
+  "summary": {
+    "bank_row_count": 7,
+    "journal_row_count": 7,
+    "bank_status_counts": {
+      "unmatched": 1,
+      "concordant": 6
+    },
+    "concordant_bank_count": 6,
+    "bank_rows_requiring_documents": 1,
+    "bank_net": "-262",
+    "journal_net": "-594",
+    "bank_minus_journal": "332",
+    "review_complete": true,
+    "entries_posted": false,
+    "currency": "EUR",
+    "unit": "currency",
+    "strict_match_count": 6,
+    "strict_pair_count": 6
+  },
+  "relations": [
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:8"
+      ],
+      "journal_ids": [],
+      "status": "unmatched",
+      "title": "Commissioni bancarie di marzo senza contropartita",
+      "rationale": "Il movimento bancario di €18 non trova una contropartita supportata tra le righe contabili fornite; la riga contabile disponibile riguarda un pagamento di €350 a un fornitore. Risulta mancante dai registri forniti.",
+      "required_documents": [
+        "Registrazione contabile delle commissioni bancarie di marzo o dettaglio delle commissioni applicate dalla banca."
+      ],
+      "evidence": [
+        {
+          "side": "bank",
+          "transaction_id": "bank:bank-march-2026.3bed05b08ce2:CSV:8",
+          "field": "description",
+          "quote": "Commissioni bancarie marzo"
+        }
+      ],
+      "bank_sum": "-18",
+      "journal_sum": "0",
+      "difference": "-18",
+      "id": "R001"
+    },
+    {
+      "bank_ids": [],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:4"
+      ],
+      "status": "unmatched",
+      "title": "Pagamento F107 senza movimento bancario fornito",
+      "rationale": "Il giornale riporta un pagamento di 350 EUR del 30 marzo 2026, ma il pacchetto non contiene movimenti bancari da collegare. L’assenza riguarda solo i documenti forniti e non dimostra che il pagamento manchi dall’intero sistema contabile.",
+      "required_documents": [
+        "Estratto conto o distinta bancaria che mostri il pagamento OUT-007 del 30 marzo 2026; se disponibile, prova di esecuzione del pagamento."
+      ],
+      "evidence": [
+        {
+          "side": "journal",
+          "transaction_id": "journal:journal-march-2026.ab85c3939588:CSV:4",
+          "field": "description",
+          "quote": "Pagamento fattura F107"
+        },
+        {
+          "side": "journal",
+          "transaction_id": "journal:journal-march-2026.ab85c3939588:CSV:4",
+          "field": "reference",
+          "quote": "OUT-007"
+        }
+      ],
+      "bank_sum": "0",
+      "journal_sum": "-350",
+      "difference": "350",
+      "id": "R002"
+    },
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:2"
+      ],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:3"
+      ],
+      "status": "concordant",
+      "title": "Incasso fattura C101",
+      "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
+      "required_documents": [],
+      "evidence": [],
+      "method": "strict",
+      "bank_sum": "2440",
+      "journal_sum": "2440",
+      "difference": "0",
+      "id": "R003"
+    },
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:3"
+      ],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:7"
+      ],
+      "status": "concordant",
+      "title": "Pagamento fattura F102",
+      "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
+      "required_documents": [],
+      "evidence": [],
+      "method": "strict",
+      "bank_sum": "-1220",
+      "journal_sum": "-1220",
+      "difference": "0",
+      "id": "R004"
+    },
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:4"
+      ],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:8"
+      ],
+      "status": "concordant",
+      "title": "Pagamento fattura F103",
+      "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
+      "required_documents": [],
+      "evidence": [],
+      "method": "strict",
+      "bank_sum": "-732",
+      "journal_sum": "-732",
+      "difference": "0",
+      "id": "R005"
+    },
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:5"
+      ],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:5"
+      ],
+      "status": "concordant",
+      "title": "Incasso fattura C104",
+      "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
+      "required_documents": [],
+      "evidence": [],
+      "method": "strict",
+      "bank_sum": "488",
+      "journal_sum": "488",
+      "difference": "0",
+      "id": "R006"
+    },
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:6"
+      ],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:6"
+      ],
+      "status": "concordant",
+      "title": "Pagamento fattura F105",
+      "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
+      "required_documents": [],
+      "evidence": [],
+      "method": "strict",
+      "bank_sum": "-610",
+      "journal_sum": "-610",
+      "difference": "0",
+      "id": "R007"
+    },
+    {
+      "bank_ids": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:7"
+      ],
+      "journal_ids": [
+        "journal:journal-march-2026.ab85c3939588:CSV:2"
+      ],
+      "status": "concordant",
+      "title": "Pagamento fattura F106",
+      "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
+      "required_documents": [],
+      "evidence": [],
+      "method": "strict",
+      "bank_sum": "-610",
+      "journal_sum": "-610",
+      "difference": "0",
+      "id": "R008"
+    }
+  ],
+  "model_tokens": {
+    "input_tokens": 39865,
+    "output_tokens": 1132,
+    "total_tokens": 40997
+  },
+  "elapsed_seconds": 29.410079956054688,
+  "model_attempts": [
+    {
+      "attempt": 1,
+      "packet_sha256": "e40332177f4427c312c1c5ef1443040052211c9740629cb6f33a6864b553f57c",
+      "usage": {
+        "input_tokens": 26680,
+        "cached_input_tokens": 13056,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 719,
+        "reasoning_output_tokens": 446
+      },
+      "duration_ms": 17602,
+      "status": "validated",
+      "group_count": 1,
+      "reviewed_bank_count": 1
+    },
+    {
+      "attempt": 2,
+      "packet_sha256": "8a03306e47a0f026a476855bf1557b5d5e743a1da92f935ad80d9c9f3c4eaa91",
+      "usage": {
+        "input_tokens": 13185,
+        "cached_input_tokens": 0,
+        "cache_write_input_tokens": 0,
+        "output_tokens": 413,
+        "reasoning_output_tokens": 126
+      },
+      "duration_ms": 10308,
+      "status": "validated",
+      "group_count": 1,
+      "reviewed_bank_count": 0
+    }
+  ]
+}
