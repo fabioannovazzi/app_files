@@ -326,6 +326,30 @@ def _input_receipt_identity(arguments: list[str]) -> dict[str, Any] | None:
     return None
 
 
+def _archive_run_identity(arguments: list[str]) -> dict[str, str] | None:
+    """Bind native retries to exact run IDs while allowing corrected artifact data."""
+    try:
+        index = arguments.index("run")
+        if Path(arguments[index + 1]).name != "studio_archive.py":
+            return None
+        identity = {"command": arguments[index + 2]}
+        for name, prefix in (
+            ("client-id", "client"),
+            ("engagement-id", "eng"),
+            ("run-id", "run"),
+        ):
+            option = "--" + name
+            if arguments.count(option) != 1:
+                return None
+            value = arguments[arguments.index(option) + 1]
+            if not re.fullmatch(prefix + r"_[0-9a-f]{24}", value):
+                return None
+            identity[name] = value
+        return identity
+    except (ValueError, IndexError):
+        return None
+
+
 def execution_identity(
     workflow: str, arguments: list[str], original_report_id: str | None = None
 ) -> dict[str, str]:
@@ -341,6 +365,19 @@ def execution_identity(
             encoded.encode(),
             hashlib.sha256,
         ).hexdigest()
+        binding_key = key
+        if workflow == "studio-archive":
+            archive_identity = _archive_run_identity(arguments)
+            if archive_identity is not None:
+                binding_key = hmac.new(
+                    state["credentials"]["installation_key"].encode(),
+                    json.dumps(
+                        [workflow, archive_identity],
+                        ensure_ascii=False,
+                        separators=(",", ":"),
+                    ).encode(),
+                    hashlib.sha256,
+                ).hexdigest()
         scope = _delivery_scope()
         operation_key = f"{scope}:{key}" if scope else key
         identifier = state.setdefault("operations", {}).setdefault(
@@ -361,14 +398,21 @@ def execution_identity(
                 raise ValueError("Original operation receipt is unavailable")
             if (
                 receipt["report"].get("input_binding") is not None
-                and receipt["report"]["input_binding"] != key
+                and receipt["report"]["input_binding"] != binding_key
             ):
                 raise ValueError("Original input receipt binding has changed")
+            if workflow == "studio-archive" and not receipt["report"].get(
+                "input_binding"
+            ):
+                # Older reports lack a run binding. Their saved invocation hash
+                # still proves an exact retry; never guess a different case/run.
+                if identifier != receipt["report"]["operation_id"]:
+                    raise ValueError("Original Archive invocation binding has changed")
             identifier = receipt["report"]["operation_id"]
         _write(state)
     result = {"operation_id": identifier, "session_id": _SESSION}
-    if inputs is not None:
-        result["input_binding"] = key
+    if inputs is not None or workflow == "studio-archive":
+        result["input_binding"] = binding_key
     return result
 
 

@@ -1714,3 +1714,152 @@ def test_retry_progress_gives_each_failure_episode_its_own_event(tmp_path, monke
         episodes[0]["recovery_events"][0]["event_id"]
         != episodes[1]["recovery_events"][0]["event_id"]
     )
+
+
+def archive_run_arguments():
+    """Use the exact native Archive CLI shape, without professional file contents."""
+    return [
+        "--module",
+        "studio-archive",
+        "run",
+        "scripts/studio_archive.py",
+        "write-run-artifact",
+        "--client-id",
+        "client_" + "a" * 24,
+        "--engagement-id",
+        "eng_" + "a" * 24,
+        "--run-id",
+        "run_" + "a" * 24,
+        "--name",
+        "result.md",
+        "--content-stdin",
+    ]
+
+
+def test_archive_retry_binding_mismatch_preserves_professional_execution(
+    tmp_path, monkeypatch, caplog
+):
+    module, store, _ = client(tmp_path, monkeypatch)
+    arguments = archive_run_arguments()
+    original = module.execution_identity("studio-archive", arguments)
+    failure = module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Synthetic failure",
+        execution=original,
+    )
+    changed = list(arguments)
+    changed[10] = "run_" + "b" * 24
+    monkeypatch.setitem(sys.modules, "operational_incidents", module)
+    spec = importlib.util.spec_from_file_location(
+        "archive_retry_launcher",
+        ROOT / "plugins/vera/scripts/managed_python_runtime.py",
+    )
+    launcher = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(launcher)
+    output = tmp_path / "reviewable-result.txt"
+
+    def execute(*_args):
+        output.write_text("Prepared result survives reporting mismatch")
+        return 0, None
+
+    monkeypatch.setattr(launcher, "_execute_with_diagnostics", execute)
+
+    result = launcher.run_verified_helper(
+        tmp_path, changed, "studio-archive", failure["report"]["report_id"]
+    )
+
+    assert result == 0
+    assert output.read_text() == "Prepared result survives reporting mismatch"
+    assert store.show(failure["incident_id"])["recovery_events"] == []
+    assert "Professional execution continues" in caplog.text
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+@pytest.mark.parametrize("changed_index", [4, 6, 8, 10])
+def test_archive_retry_rejects_another_command_client_engagement_or_run(
+    tmp_path, monkeypatch, product, changed_index
+):
+    module, store, _ = client(tmp_path, monkeypatch, product)
+    arguments = archive_run_arguments()
+    execution = module.execution_identity("studio-archive", arguments)
+    failure = module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Synthetic failed write",
+        execution=execution,
+    )
+    changed = list(arguments)
+    changed[changed_index] = (
+        "complete-workflow"
+        if changed_index == 4
+        else arguments[changed_index].replace("a", "b")
+    )
+
+    with pytest.raises(ValueError, match="input receipt binding has changed"):
+        module.execution_identity(
+            "studio-archive", changed, failure["report"]["report_id"]
+        )
+
+    assert store.show(failure["incident_id"])["recovery_events"] == []
+
+
+def test_archive_retry_allows_corrected_artifact_name_on_the_same_run(
+    tmp_path, monkeypatch
+):
+    module, store, _ = client(tmp_path, monkeypatch)
+    arguments = archive_run_arguments()
+    original = module.execution_identity("studio-archive", arguments)
+    failure = module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Synthetic failed write",
+        execution=original,
+    )
+    corrected = list(arguments)
+    corrected[12] = "corrected.md"
+    independent = module.execution_identity("studio-archive", corrected)
+    assert independent["operation_id"] != original["operation_id"]
+
+    retry = module.execution_identity(
+        "studio-archive", corrected, failure["report"]["report_id"]
+    )
+    module.record_execution_progress(retry, "retry-succeeded")
+
+    assert retry["operation_id"] == original["operation_id"]
+    assert retry["input_binding"] == original["input_binding"]
+    episode = store.show(failure["incident_id"])
+    assert episode["status"] == "open"
+    assert [event["kind"] for event in episode["recovery_events"]] == [
+        "retry-succeeded"
+    ]
+
+
+@pytest.mark.parametrize("changed_run", [False, True])
+def test_legacy_archive_report_requires_its_retained_exact_invocation(
+    tmp_path, monkeypatch, changed_run
+):
+    module, _, _ = client(tmp_path, monkeypatch)
+    arguments = archive_run_arguments()
+    execution = module.execution_identity("studio-archive", arguments)
+    execution.pop(
+        "input_binding"
+    )  # Historical reports retained the operation hash only.
+    failure = module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Synthetic legacy failure",
+        execution=execution,
+    )
+    retry_arguments = list(arguments)
+    if changed_run:
+        retry_arguments[10] = "run_" + "b" * 24
+        with pytest.raises(ValueError, match="Archive invocation binding has changed"):
+            module.execution_identity(
+                "studio-archive", retry_arguments, failure["report"]["report_id"]
+            )
+    else:
+        retry = module.execution_identity(
+            "studio-archive", retry_arguments, failure["report"]["report_id"]
+        )
+        assert retry["operation_id"] == execution["operation_id"]

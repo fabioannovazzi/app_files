@@ -3951,7 +3951,9 @@ def import_studio_client_document(
         )
     try:
         resolved_source = source_path.expanduser().resolve(strict=True)
-        archive_roots = {client_root.parent}
+        # A restored client can live beside ordinary user documents. Its parent
+        # is not an Archive boundary; only configured roots and client ledgers are.
+        archive_roots: set[Path] = set()
         try:
             archive_roots.add(
                 _load_config(private_state, validate_scope_roots=False).archive_root
@@ -3959,9 +3961,13 @@ def import_studio_client_document(
         except ArchiveError:
             # Exact retained work remains usable without a session selection.
             pass
-        if any(
+        foreign_scope = any(
             _path_is_within(resolved_source, root) for root in archive_roots
-        ) and not _path_is_within(resolved_source, client_root):
+        ) or any(
+            (parent / ledger.LEDGER_DIRECTORY / "client.json").exists()
+            for parent in resolved_source.parents
+        )
+        if foreign_scope and not _path_is_within(resolved_source, client_root):
             raise ArchiveError(
                 "Selected import source belongs to another Studio Archive scope."
             )
@@ -4228,6 +4234,13 @@ def restore_studio_client_workflow(
         )
         root = context_path.parents[5]
         loaded = ledger.load_run(root, engagement_id, run_id)
+        # Run checkpoints retain admitted copies, not the engagement's original
+        # input collection. Permit new imports without inventing missing receipts.
+        ledger._ordinary_directory(
+            root / ledger.LEDGER_DIRECTORY / "engagements" / engagement_id / "inputs",
+            label="restored engagement input directory",
+            create=True,
+        )
     except (
         OSError,
         ValueError,

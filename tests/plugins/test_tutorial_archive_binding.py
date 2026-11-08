@@ -120,6 +120,7 @@ def test_engagement_import_rejects_foreign_source_scope(prepared_case, tmp_path)
     run = prepared["run"]
     sibling = Path(prepared["client_root"]).parent / "another-client"
     sibling.mkdir()
+    archive.ledger.create_client_manifest(sibling, "client_" + "b" * 24)
     source = sibling / "private.txt"
     source.write_text("other client")
 

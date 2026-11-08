@@ -178,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "f19f1f8e59d038dd491017f342358aaece0e68b9b5d21d7c1223be96dbea574a",
+  "catalogue_fingerprint": "2f23bfcdd17bf9f204677f9a5d6f4d7cbd8b0ea44b4ff0f251e999ee8e14e634",
   "course_indicator_release_binding": {
     "version": "0.1.600",
     "scope": "All 55 skill entrypoints and their hashes are unchanged. Jurisdiction assessments are preserved."
