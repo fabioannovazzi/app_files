@@ -157,16 +157,19 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
         content = [f'<section id="{product}"><h2>{product.title()}</h2>']
         if product == "vera":
             content.append(
-                "<p>Il cerchio indica i completamenti registrati per ciascun corso, in tutte le lingue. Ogni computer conta una volta.</p>"
+                "<p>Il cerchio indica le prove con dati sintetici e i completamenti registrati per ciascun corso. Per i completamenti, ogni computer conta una volta.</p>"
                 '<div class="course-legend">'
                 + "".join(
                     f'<span><i class="course-key" data-level="{level}" aria-hidden="true"></i> {label}</span>'
                     for level, label in (
-                        ("untried", "Nessuno registrato"),
+                        ("untried", "Nessuna prova o completamento registrato"),
                         ("completed", "Completato, computer non classificato"),
-                        ("agent", "Computer di test"),
-                        ("tried", "1–2 computer di professionisti"),
-                        ("repeated", "3 o più computer di professionisti"),
+                        (
+                            "agent",
+                            "Prova con dati sintetici da un agente o completamento su computer di test",
+                        ),
+                        ("tried", "1–2 computer"),
+                        ("repeated", "3 o più computer"),
                         ("unknown", "Stato non disponibile"),
                     )
                 )

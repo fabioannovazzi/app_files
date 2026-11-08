@@ -109,6 +109,24 @@
       ]
     },
     {
+      "id": "public-vera-course-status",
+      "kind": "hosted_service",
+      "destination": "Mparanza public GET /api/vera/course-status and Vera course catalogue",
+      "purpose": "Display Vera course completion levels and documented synthetic agent test evidence.",
+      "content": "The public response contains only course IDs and status names. The server uses existing completion events and linked anonymous computer IDs internally. Documented synthetic tests add only a quarter-circle status when a higher machine level is absent. They do not create completion events, increase counts or expose acceptance artifacts, machine IDs, learner identities, or local files.",
+      "runtime_profiles": [
+        "openai-codex",
+        "anthropic-cowork"
+      ],
+      "retention": "Existing completion retention is unchanged. Reviewed synthetic course evidence is repository source.",
+      "activation": "automatic_on_first_use",
+      "optional": false,
+      "requires_confirmation": false,
+      "controls": [
+        "The catalogue makes the existing anonymous GET without credentials. No model call or additional event is introduced."
+      ]
+    },
+    {
       "id": "public-distinct-user-usage",
       "kind": "hosted_service",
       "destination": "Public visitors to Mparanza GET /api/usage-summary and /static/shared/utilizzo/index.html",
@@ -195,6 +213,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "43150fcff12d491673be39051cb09ac4128b5d135760ee4da7c9973da6d92512"
+    "source_fingerprint": "2d208aca5c4334a3aad72083669474f0cd19c62d9b226f877ffc71e98c5e024e"
   }
 }
