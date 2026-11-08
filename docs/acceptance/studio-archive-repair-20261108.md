@@ -80,3 +80,11 @@ absent. The recovery suite then passed 150 tests, skipped 3, with 85.43% coverag
 A separate Clara Linux job failed before product execution because GitHub's
 Python download returned HTTP 504; it is an infrastructure failure, not package
 acceptance evidence.
+
+The next CI teaching stage passed 1,742 tests with 3 skips and 85.05% coverage,
+then failed its editorial source-fingerprint check. Eighteen reviewed courses
+changed only in their source records; complete lesson content and execution
+contracts are identical to origin/main. Their source-binding reviews now record
+the Archive/incident repairs without replacing historical editorial judgments.
+The downloaded native JUnit evidence validates all 58 kits and 258 locales
+against the exact current course hashes. Final-head CI remains required.
