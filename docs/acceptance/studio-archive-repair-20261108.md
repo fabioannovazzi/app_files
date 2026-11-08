@@ -72,3 +72,11 @@ review because they would transmit operation identifiers and recovery history to
 Vera's incident service. They remain local, pending explicit transmission approval.
 No incident closure, customer communication or monitor schedule change was made.
 No Marketplace upload, submission or publication is part of this release.
+
+The first CI run found an old assertion requiring the readable view to remain
+unavailable after session loss. It now verifies the repaired ready view and its
+actual index file, while still requiring the lost session configuration to stay
+absent. The recovery suite then passed 150 tests, skipped 3, with 85.43% coverage.
+A separate Clara Linux job failed before product execution because GitHub's
+Python download returned HTTP 504; it is an infrastructure failure, not package
+acceptance evidence.

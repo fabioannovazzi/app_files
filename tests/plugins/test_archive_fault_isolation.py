@@ -254,7 +254,8 @@ def test_start_retains_selected_job_when_session_configuration_is_lost(case):
 
     assert result["status"] == "running"
     assert result["run"]["run_id"] == prepared["run"]["run_id"]
-    assert result["readable_archive"]["status"] == "unavailable"
+    assert result["readable_archive"]["status"] == "ready"
+    assert Path(result["readable_archive"]["index_path"]).is_file()
     assert not core._config_path(state).exists()
 
 
