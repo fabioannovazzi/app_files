@@ -164,7 +164,10 @@ def render(destination: Path, *, preview: bool = False, public: bool = False) ->
                     for level, label in (
                         ("untried", "Nessuna prova o completamento registrato"),
                         ("completed", "Completato, computer non classificato"),
-                        ("agent", "Prova con dati sintetici da un agente o completamento su computer di test"),
+                        (
+                            "agent",
+                            "Prova con dati sintetici da un agente o completamento su computer di test",
+                        ),
                         ("tried", "1–2 computer"),
                         ("repeated", "3 o più computer"),
                         ("unknown", "Stato non disponibile"),
