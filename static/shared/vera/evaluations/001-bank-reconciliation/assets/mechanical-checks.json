@@ -1,0 +1,354 @@
+{
+  "case": "001",
+  "checks": [
+    {
+      "check": "Frozen expectations unchanged",
+      "expected": "1bae23da6b454a81b1f8392d503e3fd396938e7d7203c0c8883837672e6b86ac",
+      "actual": "1bae23da6b454a81b1f8392d503e3fd396938e7d7203c0c8883837672e6b86ac",
+      "passed": true
+    },
+    {
+      "check": "Input unchanged: bank-march-2026.csv",
+      "expected": "291613df2bf8df90c50d51449702b48a258675eac8728349081fbd42caaa3387",
+      "actual": "291613df2bf8df90c50d51449702b48a258675eac8728349081fbd42caaa3387",
+      "passed": true
+    },
+    {
+      "check": "Input unchanged: journal-march-2026.csv",
+      "expected": "9036bcda9374c82caefbba6d7186593344963f75feae6dbe9647c59b1614b9cc",
+      "actual": "9036bcda9374c82caefbba6d7186593344963f75feae6dbe9647c59b1614b9cc",
+      "passed": true
+    },
+    {
+      "check": "Bank rows",
+      "expected": 7,
+      "actual": 7,
+      "passed": true
+    },
+    {
+      "check": "Journal rows",
+      "expected": 7,
+      "actual": 7,
+      "passed": true
+    },
+    {
+      "check": "Matched pairs",
+      "expected": 6,
+      "actual": 6,
+      "passed": true
+    },
+    {
+      "check": "Exact pair identities including both EUR 610 payments",
+      "expected": [
+        [
+          "IN-001",
+          "IN-001"
+        ],
+        [
+          "IN-004",
+          "IN-004"
+        ],
+        [
+          "OUT-002",
+          "OUT-002"
+        ],
+        [
+          "OUT-003",
+          "OUT-003"
+        ],
+        [
+          "OUT-005",
+          "OUT-005"
+        ],
+        [
+          "OUT-006",
+          "OUT-006"
+        ]
+      ],
+      "actual": [
+        [
+          "IN-001",
+          "IN-001"
+        ],
+        [
+          "IN-004",
+          "IN-004"
+        ],
+        [
+          "OUT-002",
+          "OUT-002"
+        ],
+        [
+          "OUT-003",
+          "OUT-003"
+        ],
+        [
+          "OUT-005",
+          "OUT-005"
+        ],
+        [
+          "OUT-006",
+          "OUT-006"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "check": "Bank-only reference",
+      "expected": [
+        "FEE-MAR"
+      ],
+      "actual": [
+        "FEE-MAR"
+      ],
+      "passed": true
+    },
+    {
+      "check": "Journal-only reference",
+      "expected": [
+        "OUT-007"
+      ],
+      "actual": [
+        "OUT-007"
+      ],
+      "passed": true
+    },
+    {
+      "check": "Bank-only amount",
+      "expected": "-18.00",
+      "actual": "-18.00",
+      "passed": true
+    },
+    {
+      "check": "Journal-only amount",
+      "expected": "-350.00",
+      "actual": "-350.00",
+      "passed": true
+    },
+    {
+      "check": "Bank net",
+      "expected": "-262.00",
+      "actual": "-262.00",
+      "passed": true
+    },
+    {
+      "check": "Journal net",
+      "expected": "-594.00",
+      "actual": "-594.00",
+      "passed": true
+    },
+    {
+      "check": "Net difference",
+      "expected": "332.00",
+      "actual": "332.00",
+      "passed": true
+    },
+    {
+      "check": "Matched net",
+      "expected": "-244.00",
+      "actual": "-244.00",
+      "passed": true
+    },
+    {
+      "check": "No reused bank row",
+      "expected": 6,
+      "actual": 6,
+      "passed": true
+    },
+    {
+      "check": "No reused journal row",
+      "expected": 6,
+      "actual": 6,
+      "passed": true
+    },
+    {
+      "check": "Exact signed amounts and two-day window",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Full bank coverage",
+      "expected": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:2",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:3",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:4",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:5",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:6",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:7",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:8"
+      ],
+      "actual": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:2",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:3",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:4",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:5",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:6",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:7",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:8"
+      ],
+      "passed": true
+    },
+    {
+      "check": "Full journal coverage",
+      "expected": [
+        "journal:journal-march-2026.ab85c3939588:CSV:2",
+        "journal:journal-march-2026.ab85c3939588:CSV:3",
+        "journal:journal-march-2026.ab85c3939588:CSV:4",
+        "journal:journal-march-2026.ab85c3939588:CSV:5",
+        "journal:journal-march-2026.ab85c3939588:CSV:6",
+        "journal:journal-march-2026.ab85c3939588:CSV:7",
+        "journal:journal-march-2026.ab85c3939588:CSV:8"
+      ],
+      "actual": [
+        "journal:journal-march-2026.ab85c3939588:CSV:2",
+        "journal:journal-march-2026.ab85c3939588:CSV:3",
+        "journal:journal-march-2026.ab85c3939588:CSV:4",
+        "journal:journal-march-2026.ab85c3939588:CSV:5",
+        "journal:journal-march-2026.ab85c3939588:CSV:6",
+        "journal:journal-march-2026.ab85c3939588:CSV:7",
+        "journal:journal-march-2026.ab85c3939588:CSV:8"
+      ],
+      "passed": true
+    },
+    {
+      "check": "Final result preserves all six exact pairs",
+      "expected": [
+        [
+          "IN-001",
+          "IN-001"
+        ],
+        [
+          "IN-004",
+          "IN-004"
+        ],
+        [
+          "OUT-002",
+          "OUT-002"
+        ],
+        [
+          "OUT-003",
+          "OUT-003"
+        ],
+        [
+          "OUT-005",
+          "OUT-005"
+        ],
+        [
+          "OUT-006",
+          "OUT-006"
+        ]
+      ],
+      "actual": [
+        [
+          "IN-001",
+          "IN-001"
+        ],
+        [
+          "IN-004",
+          "IN-004"
+        ],
+        [
+          "OUT-002",
+          "OUT-002"
+        ],
+        [
+          "OUT-003",
+          "OUT-003"
+        ],
+        [
+          "OUT-005",
+          "OUT-005"
+        ],
+        [
+          "OUT-006",
+          "OUT-006"
+        ]
+      ],
+      "passed": true
+    },
+    {
+      "check": "Final result preserves two separate open items",
+      "expected": 2,
+      "actual": 2,
+      "passed": true
+    },
+    {
+      "check": "Final review complete",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "No accounting entries posted",
+      "expected": false,
+      "actual": false,
+      "passed": true
+    },
+    {
+      "check": "Final bank rows each occur once",
+      "expected": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:2",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:3",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:4",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:5",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:6",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:7",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:8"
+      ],
+      "actual": [
+        "bank:bank-march-2026.3bed05b08ce2:CSV:2",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:3",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:4",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:5",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:6",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:7",
+        "bank:bank-march-2026.3bed05b08ce2:CSV:8"
+      ],
+      "passed": true
+    },
+    {
+      "check": "Final journal rows each occur once",
+      "expected": [
+        "journal:journal-march-2026.ab85c3939588:CSV:2",
+        "journal:journal-march-2026.ab85c3939588:CSV:3",
+        "journal:journal-march-2026.ab85c3939588:CSV:4",
+        "journal:journal-march-2026.ab85c3939588:CSV:5",
+        "journal:journal-march-2026.ab85c3939588:CSV:6",
+        "journal:journal-march-2026.ab85c3939588:CSV:7",
+        "journal:journal-march-2026.ab85c3939588:CSV:8"
+      ],
+      "actual": [
+        "journal:journal-march-2026.ab85c3939588:CSV:2",
+        "journal:journal-march-2026.ab85c3939588:CSV:3",
+        "journal:journal-march-2026.ab85c3939588:CSV:4",
+        "journal:journal-march-2026.ab85c3939588:CSV:5",
+        "journal:journal-march-2026.ab85c3939588:CSV:6",
+        "journal:journal-march-2026.ab85c3939588:CSV:7",
+        "journal:journal-march-2026.ab85c3939588:CSV:8"
+      ],
+      "passed": true
+    },
+    {
+      "check": "Final bank net",
+      "expected": "-262.00",
+      "actual": "-262.00",
+      "passed": true
+    },
+    {
+      "check": "Final journal net",
+      "expected": "-594.00",
+      "actual": "-594.00",
+      "passed": true
+    },
+    {
+      "check": "Final difference",
+      "expected": "332.00",
+      "actual": "332.00",
+      "passed": true
+    }
+  ],
+  "passed": true,
+  "pass_count": 29,
+  "check_count": 29
+}

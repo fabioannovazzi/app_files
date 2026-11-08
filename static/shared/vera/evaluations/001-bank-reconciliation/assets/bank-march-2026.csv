@@ -1,0 +1,8 @@
+Date,Reference,Description,Counterparty,Amount,Currency
+2026-03-03,IN-001,Incasso fattura C101,Cliente Aurora,2440.00,EUR
+2026-03-05,OUT-002,Pagamento fattura F102,Fornitore Faro,-1220.00,EUR
+2026-03-10,OUT-003,Pagamento fattura F103,Fornitore Luce,-732.00,EUR
+2026-03-14,IN-004,Incasso fattura C104,Cliente Stella,488.00,EUR
+2026-03-20,OUT-005,Pagamento fattura F105,Fornitore Olmo,-610.00,EUR
+2026-03-21,OUT-006,Pagamento fattura F106,Fornitore Pino,-610.00,EUR
+2026-03-31,FEE-MAR,Commissioni bancarie marzo,Banca Dimostrativa,-18.00,EUR

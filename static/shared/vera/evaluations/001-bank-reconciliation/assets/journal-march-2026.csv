@@ -1,0 +1,8 @@
+Date,Account,Reference,Description,Counterparty,Amount,Currency
+2026-03-21,B100,OUT-006,Pagamento fattura F106,Fornitore Pino,-610.00,EUR
+2026-03-03,B100,IN-001,Incasso fattura C101,Cliente Aurora,2440.00,EUR
+2026-03-30,B100,OUT-007,Pagamento fattura F107,Fornitore Quercia,-350.00,EUR
+2026-03-14,B100,IN-004,Incasso fattura C104,Cliente Stella,488.00,EUR
+2026-03-19,B100,OUT-005,Pagamento fattura F105,Fornitore Olmo,-610.00,EUR
+2026-03-05,B100,OUT-002,Pagamento fattura F102,Fornitore Faro,-1220.00,EUR
+2026-03-11,B100,OUT-003,Pagamento fattura F103,Fornitore Luce,-732.00,EUR

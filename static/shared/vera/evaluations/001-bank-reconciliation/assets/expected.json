@@ -1,0 +1,47 @@
+{
+  "case_id": "001",
+  "frozen_at": "2026-11-08T19:26:37.007556+00:00",
+  "source": "Agent-authored synthetic case; expectations specified before execution and not supplied to the workflow. Mechanical checks are separate from the product implementation; no independent human review claimed.",
+  "bank_rows": 7,
+  "journal_rows": 7,
+  "matches": 6,
+  "bank_only": 1,
+  "journal_only": 1,
+  "matched_references": [
+    "IN-001",
+    "OUT-002",
+    "OUT-003",
+    "IN-004",
+    "OUT-005",
+    "OUT-006"
+  ],
+  "bank_only_reference": "FEE-MAR",
+  "journal_only_reference": "OUT-007",
+  "bank_net": "-262.00",
+  "journal_net": "-594.00",
+  "bank_minus_journal": "332.00",
+  "matched_net": "-244.00",
+  "bank_only_amount": "-18.00",
+  "journal_only_amount": "-350.00",
+  "required_dispositions": [
+    "The EUR 18 bank charge has no supplied journal counterpart.",
+    "The EUR 350 journal payment has no supplied bank counterpart; timing or settlement cannot be established from these documents alone."
+  ],
+  "must_not": [
+    "Pair OUT-005 with OUT-006 merely because both are EUR 610.",
+    "Pair the EUR 18 fee with the unrelated EUR 350 payment.",
+    "Claim all movements are reconciled or professional adoption occurred."
+  ],
+  "delivery": [
+    "English output",
+    "Original reference values and counterparty names remain inspectable",
+    "Final workbook and usable HTML evaluation"
+  ],
+  "scope_limits": [
+    "One synthetic CSV case",
+    "No PDF/OCR",
+    "No plain-Codex baseline",
+    "No statistical reliability claim",
+    "No human professional acceptance"
+  ]
+}

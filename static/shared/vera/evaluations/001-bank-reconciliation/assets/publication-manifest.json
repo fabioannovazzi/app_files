@@ -1,0 +1,22 @@
+{
+  "case": "001",
+  "native_workbook_unchanged": true,
+  "native_workbook_sha256": "dec254f2ecb2092517f6524edee1b56b52fb565e46733fbeb763da1efc182899",
+  "mechanical_checks": 29,
+  "mechanical_passed": 29,
+  "pipeline": "completed",
+  "delivery": "failed_language_and_traceability",
+  "privacy": "incomplete_unverified",
+  "files": {
+    "font-license.txt": "bc29b497c4e8316b2d248322a9cea670c2f0afc24ae0eb7bbaa54e02e00eebab",
+    "expected.json": "1bae23da6b454a81b1f8392d503e3fd396938e7d7203c0c8883837672e6b86ac",
+    "workbook-checks.json": "31048bf28b74afec1a4147c16cab27c7e3590b7f56025d710c05595badb13ba2",
+    "Riconciliazione_banca_partitario.xlsx": "dec254f2ecb2092517f6524edee1b56b52fb565e46733fbeb763da1efc182899",
+    "mechanical-checks.json": "0b3fb0adb073df33b39aec73cea8f59da6a576452487c76cd562aa17f5d3595f",
+    "privacy-report-public.txt": "90f4d938af3a8d648203ff4c9e13faddb45d2b91ba7b01197d4228c33edb1054",
+    "journal-march-2026.csv": "9036bcda9374c82caefbba6d7186593344963f75feae6dbe9647c59b1614b9cc",
+    "request.txt": "f371f3ed394d751ff2005f4c97f65d01b5d5b88091d12181273cba7db76d94dd",
+    "native-result-public.json": "671b3fd4f89e3b7d27b21b652936c02ab360c6a3fece90a781a809fa8ea02e78",
+    "bank-march-2026.csv": "291613df2bf8df90c50d51449702b48a258675eac8728349081fbd42caaa3387"
+  }
+}
