@@ -178,7 +178,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "e5596f63589a576018089cf85914061d80576e60c4607fc62e3b2a9850402f7b",
+  "catalogue_fingerprint": "f19f1f8e59d038dd491017f342358aaece0e68b9b5d21d7c1223be96dbea574a",
   "course_indicator_release_binding": {
     "version": "0.1.600",
     "scope": "All 55 skill entrypoints and their hashes are unchanged. Jurisdiction assessments are preserved."
@@ -2677,5 +2677,10 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
+  },
+  "archive_repair_release_binding_20261108": {
+    "previous_catalogue_fingerprint": "e5596f63589a576018089cf85914061d80576e60c4607fc62e3b2a9850402f7b",
+    "version": "0.1.601",
+    "scope": "Learn-with-Vera now retries only the same tutorial binding. Archive routing and exact-operation progress are infrastructure changes; existing jurisdiction dispositions and professional acceptance limits are unchanged."
   }
 }

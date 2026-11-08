@@ -2386,13 +2386,17 @@ def _readable_after_write(
             client_id = result.get("client", {}).get("client_id")
         if client_id is not None:
             try:
-                folder = get_studio_client_folder(
-                    client_id, state_dir=kwargs.get("state_dir")
-                )["client_folder"]
+                private_state = _state_dir(kwargs.get("state_dir"))
+                client_root = _retained_scope_root(private_state, client_id)
+                if client_root is None:
+                    folder = get_studio_client_folder(
+                        client_id, state_dir=private_state
+                    )["client_folder"]
+                    client_root = Path(folder["client_root"])
                 from readable_archive import refresh_readable_archive
 
                 result["readable_archive"] = refresh_readable_archive(
-                    Path(folder["client_root"]), ledger
+                    client_root, ledger
                 )
             except (ArchiveError, ledger.LedgerError, OSError, UnicodeError) as exc:
                 # Ledger mutation remains committed; expose the separate view failure.
@@ -3496,31 +3500,42 @@ def prepare_studio_client_workflow(
     if workflow_id not in CLIENT_WORKFLOW_IDS:
         raise ArchiveError("Workflow is not supported by the client engagement gate.")
     private_state = _state_dir(state_dir)
-    config = _load_config(private_state, validate_scope_roots=False)
-    current, _ = _current_scope_view(config)
-    inventory = _client_inventory(current)
-    matches: list[tuple[str, Scope]] = []
-    for client in inventory["clients"]:
-        scope = next(
-            (item for item in current.scopes if item.scope_id == client["scope_id"]),
-            None,
-        )
-        if scope is None:
-            continue
-        try:
-            client_root = _resolve_scope_root(current.archive_root, scope)
-            ledger.load_engagement_manifest(client_root, engagement_id)
-        except (ArchiveError, ledger.LedgerError, OSError):
-            continue
-        matches.append((client["client_id"], scope))
-    if not matches:
-        raise ArchiveError("Client engagement was not found.")
-    if len(matches) != 1:
-        raise ArchiveError(
-            "Client engagement identity is ambiguous across customer folders."
-        )
-    client_id, scope = matches[0]
-    client_root = _resolve_scope_root(current.archive_root, scope)
+    client_root = _retained_scope_root(private_state, None, engagement_id)
+    if client_root is not None:
+        client_id = ledger.load_engagement_manifest(client_root, engagement_id)[
+            "client_id"
+        ]
+        inventory = {"blocked_clients": [], "complete": True, "directory_issues": []}
+    else:
+        config = _load_config(private_state, validate_scope_roots=False)
+        current, _ = _current_scope_view(config)
+        inventory = _client_inventory(current)
+        matches: list[tuple[str, Scope]] = []
+        for client in inventory["clients"]:
+            scope = next(
+                (
+                    item
+                    for item in current.scopes
+                    if item.scope_id == client["scope_id"]
+                ),
+                None,
+            )
+            if scope is None:
+                continue
+            try:
+                client_root = _resolve_scope_root(current.archive_root, scope)
+                ledger.load_engagement_manifest(client_root, engagement_id)
+            except (ArchiveError, ledger.LedgerError, OSError):
+                continue
+            matches.append((client["client_id"], scope))
+        if not matches:
+            raise ArchiveError("Client engagement was not found.")
+        if len(matches) != 1:
+            raise ArchiveError(
+                "Client engagement identity is ambiguous across customer folders."
+            )
+        client_id, scope = matches[0]
+        client_root = _resolve_scope_root(current.archive_root, scope)
     try:
         prepared = ledger.prepare_run(
             client_root,
@@ -3916,16 +3931,10 @@ def import_studio_client_document(
             "Engagement creation and document import are separate actions."
         )
     private_state = _state_dir(state_dir)
-    folder = get_studio_client_folder(client_id, state_dir=private_state)[
-        "client_folder"
-    ]
-    client_root = Path(folder["client_root"])
-    try:
-        engagement = ledger.load_engagement_manifest(client_root, engagement_id)
-    except ledger.LedgerError as exc:
-        raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
-    if engagement["client_id"] != client_id:
-        raise ArchiveError("Selected engagement belongs to another client.")
+    client_root = _selected_ledger_root(
+        client_id, engagement_id, state_dir=private_state
+    )
+    engagement = ledger.load_engagement_manifest(client_root, engagement_id)
     if (
         expected_sha256 is not None
         and re.fullmatch(r"[0-9a-f]{64}", expected_sha256) is None
@@ -3942,10 +3951,17 @@ def import_studio_client_document(
         )
     try:
         resolved_source = source_path.expanduser().resolve(strict=True)
-        archive_root = Path(folder["archive_root"])
-        if _path_is_within(resolved_source, archive_root) and not _path_is_within(
-            resolved_source, client_root
-        ):
+        archive_roots = {client_root.parent}
+        try:
+            archive_roots.add(
+                _load_config(private_state, validate_scope_roots=False).archive_root
+            )
+        except ArchiveError:
+            # Exact retained work remains usable without a session selection.
+            pass
+        if any(
+            _path_is_within(resolved_source, root) for root in archive_roots
+        ) and not _path_is_within(resolved_source, client_root):
             raise ArchiveError(
                 "Selected import source belongs to another Studio Archive scope."
             )
@@ -4019,10 +4035,12 @@ def list_studio_client_engagements(
     """List recoverable engagements, exact receipts, lifecycle, and artifacts."""
 
     private_state = _state_dir(state_dir)
-    folder = get_studio_client_folder(client_id, state_dir=private_state)[
-        "client_folder"
-    ]
-    client_root = Path(folder["client_root"])
+    client_root = _retained_scope_root(private_state, client_id)
+    if client_root is None:
+        folder = get_studio_client_folder(client_id, state_dir=private_state)[
+            "client_folder"
+        ]
+        client_root = Path(folder["client_root"])
     try:
         engagement_inventory = ledger.inspect_engagements(client_root, client_id)
         stored_engagements = engagement_inventory["engagements"]
@@ -4305,6 +4323,42 @@ def _retained_run_root(
     return root
 
 
+def _retained_scope_root(
+    state: Path, client_id: str | None, engagement_id: str | None = None
+) -> Path | None:
+    """Resolve exact portable IDs through verified run receipts, never names.
+
+    Existing run bindings also cover engagement continuation and client reopen.
+    Multiple live copies are ambiguous; choosing one could write to the wrong copy.
+    """
+    owner = _archive_profile(state) or state
+    roots: set[Path] = set()
+    for path in (owner / "work-bindings").glob("*.json"):
+        try:
+            record = preferences.read_json(path)
+        except (OSError, ValueError, ArchiveError):
+            continue
+        if not isinstance(record, dict):
+            continue
+        selected_client = record.get("client_id")
+        if not isinstance(selected_client, str) or (
+            client_id is not None and selected_client != client_id
+        ):
+            continue
+        selected_engagement = record.get("engagement_id")
+        run_id = record.get("run_id")
+        if not isinstance(selected_engagement, str) or not isinstance(run_id, str):
+            continue
+        if engagement_id is not None and selected_engagement != engagement_id:
+            continue
+        root = _retained_run_root(state, selected_client, selected_engagement, run_id)
+        if root is not None:
+            roots.add(root.resolve())
+    if len(roots) > 1:
+        raise ArchiveError("Selected retained identity has multiple live locations.")
+    return next(iter(roots), None)
+
+
 def _selected_ledger_root(
     client_id: str,
     engagement_id: str,
@@ -4314,6 +4368,10 @@ def _selected_ledger_root(
 ) -> Path:
     if run_id is not None:
         retained = _retained_run_root(state_dir, client_id, engagement_id, run_id)
+        if retained is not None:
+            return retained
+    else:
+        retained = _retained_scope_root(state_dir, client_id, engagement_id)
         if retained is not None:
             return retained
     folder = get_studio_client_folder(client_id, state_dir=state_dir)["client_folder"]

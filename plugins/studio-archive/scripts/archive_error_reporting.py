@@ -26,10 +26,12 @@ def record_error(
         return False
     client_id, engagement_id, run_id = identities
     try:
-        folder = core.get_studio_client_folder(client_id, state_dir=state_dir)[
-            "client_folder"
-        ]
-        client_root = Path(folder["client_root"])
+        client_root = core._selected_ledger_root(
+            client_id,
+            engagement_id,
+            run_id=run_id,
+            state_dir=core._state_dir(state_dir),
+        )
         engagement = ledger.load_engagement_manifest(client_root, engagement_id)
         root, run_path, _, _ = ledger._load_run_paths(
             client_root, engagement_id, run_id

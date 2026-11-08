@@ -495,7 +495,7 @@ function toolDefinitions() {
             items: objectSchema(
               {
                 run_id: { type: "string", pattern: "^run_[0-9a-f]{24}$" },
-                artifact_id: { type: "string", minLength: 1, maxLength: 120 },
+                artifact_id: { type: "string", minLength: 1, maxLength: 120, pattern: "^[a-z0-9][a-z0-9._-]{0,119}$", description: "Lowercase stable ID, e.g. prep01. Independent of the filename, which may contain uppercase letters." },
                 role: { type: "string", minLength: 1, maxLength: 80 },
               },
               ["run_id", "artifact_id", "role"],
@@ -618,7 +618,7 @@ function toolDefinitions() {
             maxItems: 20000,
             items: objectSchema(
               {
-                artifact_id: { type: "string", minLength: 1, maxLength: 120 },
+                artifact_id: { type: "string", minLength: 1, maxLength: 120, pattern: "^[a-z0-9][a-z0-9._-]{0,119}$", description: "Lowercase stable ID, e.g. prep01. Independent of the filename, which may contain uppercase letters." },
                 path: {
                   type: "string", minLength: 1, maxLength: 4096,
                   description: "File path relative to this run's output_dir (for example result.pdf). Absolute paths inside output_dir and run-relative outputs/result.pdf are also accepted. An existing output-relative path takes precedence. The saved manifest always uses output-relative paths.",
@@ -918,7 +918,14 @@ function toolDefinitions() {
       ),
       annotations: annotations(true),
     },
-  ];
+  ].map((definition) => ({
+    ...definition,
+    inputSchema: {...definition.inputSchema, properties: {
+      ...definition.inputSchema.properties,
+      incident_report_id: {type: "string", format: "uuid", description:
+        "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."},
+    }},
+  }));
 }
 
 function pythonExecutable() {
@@ -949,7 +956,7 @@ function pythonExecutable() {
   return process.platform === "win32" ? "python" : "python3";
 }
 
-function workerArguments(command) {
+function workerArguments(command, reportId = null) {
   // Repository components and product packages use different layouts. Always
   // let the product launcher choose the worker interpreter when it is present.
   const candidates = [
@@ -963,7 +970,8 @@ function workerArguments(command) {
   const launcher = candidates.find((candidate) => fs.existsSync(candidate));
   if (launcher) {
     return [
-      launcher, "--module", "studio-archive", "run",
+      launcher, "--module", "studio-archive",
+      ...(reportId ? ["--incident-report-id", reportId] : []), "run",
       "scripts/studio_archive.py", ...command,
     ];
   }
@@ -1821,6 +1829,12 @@ function commandForTool(name, rawArgs) {
 }
 
 function callTool(name, args) {
+  const {incident_report_id: reportId, ...operationArgs} = args;
+  if (reportId !== undefined && (typeof reportId !== "string" ||
+      !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(reportId))) {
+    throw new Error("incident_report_id must be the original retained report UUID.");
+  }
+  args = operationArgs;
   const spawnOptions = {
     cwd: PLUGIN_ROOT,
     env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId, VERA_STUDIO_ARCHIVE_MCP: "1" },
@@ -1833,7 +1847,7 @@ function callTool(name, args) {
   if (name === TOOL_NAMES.writeRunArtifact) spawnOptions.input = args.content;
   const completed = spawnSync(
     pythonExecutable(),
-    workerArguments(commandForTool(name, args)),
+    workerArguments(commandForTool(name, args), reportId),
     spawnOptions,
   );
   if (completed.error) throw completed.error;
@@ -1985,7 +1999,15 @@ function handleRpc(message) {
       return rpcError(id, -32602, "tools/call arguments must be an object");
     }
     try {
-      return rpcResult(id, toolResult(callTool(params.name, params.arguments)));
+      const result = toolResult(callTool(params.name, params.arguments));
+      if (!result.isError && params.arguments.incident_report_id) {
+        result._meta = {...result._meta, incident_recovery: {
+          report_id: params.arguments.incident_report_id,
+          status: "original_task_verification_required",
+          instruction: "Inspect this actual result against the original case and inputs. Review and supplement retained diagnostics, then use operational_incidents.py verify-task with the original receipt. Success of this call alone does not close the incident. Keep privacy reporting separate.",
+        }};
+      }
+      return rpcResult(id, result);
     } catch (error) {
       return rpcResult(id, recordToolError(params.arguments, toolError(error)));
     }

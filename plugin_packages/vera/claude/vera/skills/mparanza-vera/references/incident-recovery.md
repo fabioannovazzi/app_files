@@ -336,3 +336,19 @@ do not require the user to relay messages or ask again to receive a remedy.
 If the host ends the turn or the user stops the task, preserve the incident and
 resume at the next connected session. Do not claim a background wake-up, force
 an app update, or fabricate original context when the host cannot provide it.
+
+## Native Studio Archive retries
+
+After a native Archive error, retain the original incident report UUID from the
+local incident status. For the original retry, pass `incident_report_id` to the
+same native Archive tool, including when correcting artifact declaration IDs.
+Keep the exact client, engagement, run and sources. This binds observed retry
+progress even if temporary declaration filenames change. It does not authorize
+another case or prove professional acceptance.
+
+After success, inspect the returned saved bytes/hash or finalized manifest for
+that original operation. Review and supplement any retained diagnostic, then
+use the existing `verify-task` route with the original report and operation
+identity. A successful direct-ledger workaround is supplemental evidence only;
+it does not close a failed native import. Record pipeline, privacy-report and
+incident-delivery outcomes separately. Queued or rejected evidence stays open.

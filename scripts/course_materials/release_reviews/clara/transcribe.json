@@ -173,7 +173,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "e69411bebab131e258c6ae7d62f320eed24642d0852a20c12f1cc19779f5a2d4",
+  "course_sha256": "12f7152b8cf5faf440b642a40c28e41ff0c3ef0a2345bddd5b65f682e523bead",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "e8d57796bd3b475c4a03f7206b7bbb426601cb8dccd716649ea58e7857a3efb2",
@@ -904,5 +904,16 @@
     "current_course_sha256": "e69411bebab131e258c6ae7d62f320eed24642d0852a20c12f1cc19779f5a2d4",
     "source_review": "Main968 preserves explicit local-only suppression before receipt request creation or network use. Lucia packaging excludes developer tests and Vera-only reconciliation drivers; full edition remains default. Compiled course fields excluding sources are unchanged from tested .596.",
     "limits": "Historical editorial judgments retained; fresh combined-head CI required. No learner, professional or Desktop acceptance inferred."
+  },
+  "archive_repair_source_binding_20261108": {
+    "reviewer": "Codex agent - bounded source compatibility review",
+    "reviewed_at": "2026-11-08",
+    "baseline_commit": "e304fa4529556e110ef6fd0516d59b3f4d8dab4c",
+    "previous_course_sha256": "e69411bebab131e258c6ae7d62f320eed24642d0852a20c12f1cc19779f5a2d4",
+    "current_course_sha256": "12f7152b8cf5faf440b642a40c28e41ff0c3ef0a2345bddd5b65f682e523bead",
+    "content_review": "Compared complete compiled course JSON against origin/main: every field except sources is identical, including authored languages, inputs, checkpoints, practice, timing and execution definitions. Historical editorial judgments and output-artifact reviews are retained.",
+    "source_review": "Changed source records are limited to the reviewed Archive exact retained-case routing, privacy-error routing, and shared incident retry-progress repairs documented in docs/acceptance/studio-archive-repair-20261108.md.",
+    "native_evidence": "GitHub Actions run 42470659436, job 128704016817, head 08439c4e164b7e2f26136169f963d16a52c5b083: native teaching stage passed 1742 tests, skipped 3, with 85.05% coverage. The subsequent stale editorial fingerprint check failed. Downloaded JUnit must match these exact course hashes; final-head CI remains required.",
+    "limits": "Source-binding review only. No new learner, visual, professional or installed-chat acceptance is asserted."
   }
 }

@@ -401,11 +401,11 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "e82df6e0f957aa4474873f9afab64b94a045c74eaaa9d09da54c902197b8d361"
+      "sha256": "8bbcc1098caa17bc9dca3aac2ae49550416ee0bb9cfcfe5abe2e5f4438590b5b"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
-      "sha256": "1e6b75417003089eec78c1a36fafbb63af0935e3ea48d8e91314b510cc9080d4"
+      "sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -601,7 +601,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "132798f1fd83c607ee91bcac93364ac8dd9cb360b7f91f6300d8d4e24bb9105e"
+      "sha256": "a72948d0c4eeab55e000aaaec9b6ecbd2b35423ad4739e0d472c10986fc79ec8"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -1014,5 +1014,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e3c7e3cd43a9752a9fffd4da1a714501ca6fe84a40d47af8bb7e99f7d89af4ed"
+  "canonical_course_sha256": "6730a7350d9908ea088ec3934075bd03ff0c2044a8c28ed878d8712a6e0dce30"
 }

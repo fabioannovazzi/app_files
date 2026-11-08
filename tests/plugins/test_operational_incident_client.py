@@ -1626,3 +1626,91 @@ def test_cached_readiness_requires_existing_local_report_receipt(tmp_path, monke
         "report",
         "observed-success",
     ]
+
+
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_retry_progress_survives_missing_status_poll(tmp_path, monkeypatch, product):
+    module, store, post = client(tmp_path, monkeypatch, product)
+    execution = module.execution_identity(
+        "studio-archive", ["run", "scripts/studio_archive.py", "write-artifact"]
+    )
+    failed = module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Selected identity unavailable",
+        execution=execution,
+    )
+    assert not module._read().get("pending_incidents")
+
+    module.record_execution_progress(execution, "retry-succeeded")
+
+    status = post("status", {"credentials": module.local_context()["credentials"]})
+    incident = status["incidents"][0]
+    assert incident["status"] != "recovered"
+    assert incident["report_metadata"]["operation_id"] == execution["operation_id"]
+    assert not any(
+        item["operation"] == "observed-progress" for item in module._read()["outbox"]
+    )
+    assert failed["report"]["operation_id"] == execution["operation_id"]
+    assert [
+        row["kind"] for row in store.show(incident["incident_id"])["recovery_events"]
+    ] == ["retry-succeeded"]
+
+
+def test_actual_retry_waits_for_original_report_delivery(tmp_path, monkeypatch):
+    module, store, post = client(tmp_path, monkeypatch)
+    execution = module.execution_identity(
+        "studio-archive", ["run", "studio_archive.py", "write"]
+    )
+    flush = module._flush
+    monkeypatch.setattr(module, "_flush", lambda state: None)
+    module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Missing identity",
+        execution=execution,
+    )
+
+    module.record_execution_progress(execution, "retry-succeeded")
+
+    retained = module._read()
+    assert [row["operation"] for row in retained["outbox"]] == [
+        "report",
+        "observed-progress",
+    ]
+    flush(retained)
+    episode = store.queue()[0]
+    assert [row["kind"] for row in episode["recovery_events"]] == ["retry-succeeded"]
+    assert episode["outcomes"] == []
+
+
+def test_retry_progress_gives_each_failure_episode_its_own_event(tmp_path, monkeypatch):
+    module, store, post = client(tmp_path, monkeypatch)
+    execution = module.execution_identity(
+        "studio-archive", ["run", "studio_archive.py", "write"]
+    )
+    module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "First failure",
+        error_type="FirstFailure",
+        execution=execution,
+    )
+    module.report_failure(
+        "studio-archive",
+        "helper:studio_archive.py",
+        "Second failure",
+        error_type="SecondFailure",
+        execution=execution,
+    )
+
+    module.record_execution_progress(execution, "retry-succeeded")
+
+    episodes = store.queue()
+    assert len(episodes) == 2
+    assert episodes[0]["recovery_events"][0]["kind"] == "retry-succeeded"
+    assert episodes[1]["recovery_events"][0]["kind"] == "retry-succeeded"
+    assert (
+        episodes[0]["recovery_events"][0]["event_id"]
+        != episodes[1]["recovery_events"][0]["event_id"]
+    )

@@ -57,7 +57,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-05",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6a2999eda46532fbdd3fdeae59a3f015ad272e79c86fd563bcd3eb6b408ac232"
+    "source_fingerprint": "f9839b2190087b191b038e51f148e401a6f8c532286d2b42d9ddc8c303d65b48"
   },
   "service_ids": [
     "local-onboarding",

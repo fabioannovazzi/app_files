@@ -1042,6 +1042,55 @@ def _expand_success(
     return True
 
 
+def _expand_progress(
+    state: dict[str, Any], item: dict[str, Any], status: dict[str, Any] | None = None
+) -> bool:
+    """Deliver actual retry evidence only for its exact latest reported episode."""
+    receipts = [
+        row
+        for row in state["receipts"]
+        if row["report_id"] in item["payload"]["report_ids"]
+    ]
+    if not receipts:
+        return False
+    if status is None:
+        status = _post("status", {"credentials": state["credentials"]})
+    matches = [
+        incident
+        for incident in status["incidents"]
+        if any(
+            row["incident_id"] == incident["incident_id"]
+            and row["report_id"] == incident["latest_report_id"]
+            for row in receipts
+        )
+        and incident.get("report_metadata", {}).get("operation_id")
+        == item["payload"]["operation_id"]
+    ]
+    if not matches:
+        return False
+    index = state["outbox"].index(item)
+    state["outbox"][index : index + 1] = [
+        {
+            **item,
+            "operation": "progress",
+            "payload": {
+                "progress": {
+                    "event_id": str(uuid4()),
+                    "incident_id": incident["incident_id"],
+                    "report_id": incident["latest_report_id"],
+                    "remedy_revision": incident["revision"],
+                    "kind": item["payload"]["kind"],
+                    "operation_id": item["payload"]["operation_id"],
+                }
+            },
+        }
+        for incident in matches
+        if incident["status"] != "recovered"
+    ]
+    _write(state)
+    return True
+
+
 def _flush(state: dict[str, Any]) -> None:
     if _local_delivery_only():
         return
@@ -1095,6 +1144,10 @@ def _flush(state: dict[str, Any]) -> None:
             ),
             eligible[0],
         )
+        if item["operation"] == "observed-progress":
+            if not _expand_progress(state, item):
+                deferred.add(id(item))
+            continue
         if item["operation"] == "observed-success":
             if not _expand_success(state, item):
                 deferred.add(id(item))
@@ -1686,27 +1739,34 @@ def _report_pdf_history(
 def record_execution_progress(execution: dict[str, str], kind: str) -> None:
     """Durably record actual retries of a known original operation, not closure."""
     state = _read()
-    for incident in state.get("pending_incidents", []):
-        metadata = incident.get("report_metadata", {})
-        if (
-            incident["status"] == "recovered"
-            or metadata.get("operation_id") != execution["operation_id"]
-        ):
-            continue
+    # A retry can finish before the failure is delivered or status is polled.
+    # Keep exact operation evidence locally until its original receipt is known.
+    reports = [row["report"] for row in state["receipts"] if _in_scope(row)]
+    reports.extend(
+        row["payload"]["report"]
+        for row in state["outbox"]
+        if row["operation"] == "report"
+        and _in_scope(row)
+        and not row["payload"]["report"].get("evidence_for_report_id")
+    )
+    targets = list(
+        dict.fromkeys(
+            report["report_id"]
+            for report in reports
+            if report.get("operation_id") == execution["operation_id"]
+        )
+    )
+    if targets:
         state["outbox"].append(
             _queue_item(
                 state,
                 {
-                    "operation": "progress",
+                    "operation": "observed-progress",
                     "payload": {
-                        "progress": {
-                            "event_id": str(uuid4()),
-                            "incident_id": incident["incident_id"],
-                            "report_id": incident["latest_report_id"],
-                            "remedy_revision": incident["revision"],
-                            "kind": kind,
-                            "operation_id": execution["operation_id"],
-                        }
+                        "report_ids": targets,
+                        "kind": kind,
+                        "operation_id": execution["operation_id"],
+                        "event_id": str(uuid4()),
                     },
                 },
             )
@@ -1821,6 +1881,8 @@ def check_incidents(
         for item in list(state["outbox"]):
             if item["operation"] == "observed-success" and _in_scope(item):
                 _expand_success(state, item, result)
+            if item["operation"] == "observed-progress" and _in_scope(item):
+                _expand_progress(state, item, result)
     selected_incidents = result["incidents"]
     if _delivery_scope() is not None:
         selected_reports = {
