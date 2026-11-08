@@ -70,6 +70,49 @@ def test_damaged_unrelated_client_does_not_prevent_selected_continuation(case):
         core.get_studio_client_folder(other_id, state_dir=state)
 
 
+@pytest.mark.parametrize("inside_restored_client", [False, True])
+def test_restored_case_imports_authorized_files_without_claiming_its_parent(
+    case, tmp_path, inside_restored_client
+):
+    core, _, state, _, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    run_id = prepared["run"]["run_id"]
+    core.checkpoint_studio_client_workflow(cid, eid, run_id, state_dir=state)
+    destination = tmp_path / "restored-client"
+    core.restore_studio_client_workflow(cid, eid, run_id, destination, state_dir=state)
+    source_root = destination if inside_restored_client else tmp_path
+    source = source_root / "new-authorized-input.txt"
+    source.write_text("New fictional source", encoding="utf-8")
+
+    imported = core.import_studio_client_document(
+        cid, source, "support", engagement_id=eid, state_dir=state
+    )
+
+    assert Path(imported["imported_path"]).read_bytes() == source.read_bytes()
+    assert Path(imported["imported_path"]).is_relative_to(destination)
+
+
+def test_retained_import_rejects_another_client_outside_configured_archive(
+    case, tmp_path
+):
+    core, _, state, _, cid, eid, input_id = case
+    core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    other = tmp_path / "independent-client"
+    other.mkdir()
+    core.ledger.create_client_manifest(other, "client_" + "b" * 24)
+    source = other / "source.txt"
+    source.write_text("Other client's fictional source", encoding="utf-8")
+
+    with pytest.raises(core.ArchiveError, match="another Studio Archive scope"):
+        core.import_studio_client_document(
+            cid, source, "support", engagement_id=eid, state_dir=state
+        )
+
+
 @pytest.mark.parametrize("unavailable", ["original", "receipt", "changed_original"])
 def test_started_run_uses_prepared_copy_when_original_changes(case, unavailable):
     """A passed import must not become a new prerequisite between helpers."""

@@ -143,7 +143,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "aac5b864c61b4f8736d3d1e992f0a4e74e5496a2012a740156cd1de42004567b",
+  "course_sha256": "4a9de2545f8e31a643a83393218e22db7e63709fd8b856ea3710f7d363206130",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "fcad0b2f4123dd82b2c9db415c7e44a69753ebac7be5c6d9caf4c9a0e818416e",
@@ -868,5 +868,16 @@
     "source_review": "Changed source records are limited to the reviewed Archive exact retained-case routing, privacy-error routing, and shared incident retry-progress repairs documented in docs/acceptance/studio-archive-repair-20261108.md.",
     "native_evidence": "GitHub Actions run 42470659436, job 128704016817, head 08439c4e164b7e2f26136169f963d16a52c5b083: native teaching stage passed 1742 tests, skipped 3, with 85.05% coverage. The subsequent stale editorial fingerprint check failed. Downloaded JUnit must match these exact course hashes; final-head CI remains required.",
     "limits": "Source-binding review only. No new learner, visual, professional or installed-chat acceptance is asserted."
+  },
+  "archive_followup_source_binding_20261108": {
+    "reviewer": "Codex agent - bounded source compatibility review",
+    "reviewed_at": "2026-11-08",
+    "baseline_commit": "3521585f1c44a7d3c3e9e6e39ca35dd33f311e4a",
+    "previous_course_sha256": "aac5b864c61b4f8736d3d1e992f0a4e74e5496a2012a740156cd1de42004567b",
+    "current_course_sha256": "4a9de2545f8e31a643a83393218e22db7e63709fd8b856ea3710f7d363206130",
+    "content_review": "Every compiled field except sources equals the reviewed baseline. Authored content and historical editorial judgments remain unchanged.",
+    "source_review": "Reviewed restored-case import boundary and missing input collection repairs, plus exact Archive retry association. No lesson content or model payload change.",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, professional or installed-host acceptance."
   }
 }
