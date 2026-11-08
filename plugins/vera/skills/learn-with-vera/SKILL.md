@@ -121,7 +121,15 @@ window using the **Browser preview** procedure in `references/prepared-courses.m
 `references/prepared-courses.md`; do not use the Studio Archive adapter or offer
 a transition to real client files. For other workflows, import those exact
 source files through the real tutorial case adapter. Preserve the returned
-input bindings and output directory. Read the active worker contract before
+input bindings and output directory. Check `work_binding.status` before native
+Archive calls. If unavailable, preserve the prepared case and run
+`local_onboarding_case.py --retry-binding <tutorial_case_path>` through the
+installed managed runtime. If the host denies filesystem access, obtain the
+required host permission for that exact retry. Do not repeat case preparation,
+create a client or change the selected archive. Continue the same job after
+`native_archive_ready=true`; a failed bookkeeping retry does not discard its
+files or prevent work through its already verified portable context.
+Read the active worker contract before
 each bounded dispatch and execute the actual current pipeline in that worker.
 The teacher stays in the voice chat and follows the worker's verified progress.
 Pause at the kit's relevant checkpoints during execution, not as an unrelated

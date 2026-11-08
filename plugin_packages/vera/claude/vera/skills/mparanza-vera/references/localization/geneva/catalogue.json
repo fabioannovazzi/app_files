@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/app-files-course-agent-evidence/plugins/vera",
-  "version": "0.1.600",
-  "captured_at": "2026-11-08T07:45:50.455695+00:00",
-  "catalogue_fingerprint": "e5596f63589a576018089cf85914061d80576e60c4607fc62e3b2a9850402f7b",
-  "manifest_sha256": "ea39cdfafbf6050723e92ce2afaad236d5280a77ff57c14019369df0bd33813b",
+  "root": "/private/tmp/archive-repair-20261108/plugins/vera",
+  "version": "0.1.601",
+  "captured_at": "2026-11-08T09:38:38.433581+00:00",
+  "catalogue_fingerprint": "f19f1f8e59d038dd491017f342358aaece0e68b9b5d21d7c1223be96dbea574a",
+  "manifest_sha256": "863aee86004a7e448c3affb0776a36e0b806a528a11ab33343187938352af1ee",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -154,7 +154,7 @@
     {
       "function_id": "learn-with-vera",
       "skill_path": "skills/learn-with-vera/SKILL.md",
-      "sha256": "ad444f58b91c72066c13a2a96d1f209f8825af8692ae5ffa84163804d8784a52"
+      "sha256": "57e134ca13ee0dd1c9613768b93bd9250f5caca8ad39761e59d30ffe6e87297b"
     },
     {
       "function_id": "legal-tax-answer-planner",

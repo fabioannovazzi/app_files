@@ -115,3 +115,49 @@ def test_archive_cli_retains_actual_operation_error_when_its_recorder_fails(
     assert code == 1
     assert result["error"]["message"] == "Selected storage disconnected"
     assert result["reporting"]["status"] == "unavailable"
+
+
+def test_native_artifact_schema_exposes_backend_id_contract():
+    import jsonschema
+
+    response = subprocess.run(
+        ["node", str(SERVER)],
+        input=json.dumps({"jsonrpc": "2.0", "id": 1, "method": "tools/list"}) + "\n",
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    definition = next(
+        tool
+        for tool in json.loads(response.stdout)["result"]["tools"]
+        if tool["name"] == "finalize_studio_client_workflow"
+    )
+    artifact = {
+        "artifact_id": "prep01",
+        "path": "README_HUMAN.md",
+        "purpose": "Review",
+        "audience": "internal",
+        "media_type": "text/markdown",
+    }
+    value = {**_identifiers(), "artifacts": [artifact]}
+    jsonschema.validate(value, definition["inputSchema"])
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(
+            {**value, "artifacts": [{**artifact, "artifact_id": "README_HUMAN_md"}]},
+            definition["inputSchema"],
+        )
+
+
+def test_native_retry_forwards_original_report_identity(tmp_path):
+    report_id = "89f51a92-f4ff-420b-b676-486d53a56353"
+    worker = """
+      const index = args.indexOf('--incident-report-id');
+      if (index < 0 || args[index + 1] !== '89f51a92-f4ff-420b-b676-486d53a56353') {
+        return {status: 1, stderr:'Original report identity missing'};
+      }
+      return {status:0, stdout:'{"status":"running"}'};
+    """
+    result = _call(
+        tmp_path, worker, arguments={**_identifiers(), "incident_report_id": report_id}
+    )
+    assert result["isError"] is False

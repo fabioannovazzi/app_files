@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.600",
+  "version": "0.1.601",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -8569,7 +8569,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.600",
+          "version": "0.1.601",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
@@ -35258,7 +35258,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "vera-studio-archive",
-          "version": "0.1.74"
+          "version": "0.1.75"
         },
         "capabilities": {
           "tools": {}
@@ -35284,6 +35284,11 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35322,6 +35327,11 @@
               "destination": {
                 "type": "string",
                 "minLength": 1
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35345,7 +35355,13 @@
           "description": "Read the local Studio Archive configuration, exact available scopes, refresh state, index counts, and named evidence gaps. Call this before searching. A fresh session can revalidate the approved private-profile root and save isolated session configuration; no client is created.",
           "inputSchema": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
             "required": [],
             "additionalProperties": false
           },
@@ -35362,7 +35378,13 @@
           "description": "List registered client and orphaned-profile records using stable IDs, display labels, status, and private-identity counts. Stored email addresses, legal names, and tax identifiers remain local. Healthy clients remain usable when directory_complete or identity_registry_complete is false; report the returned issues. An incomplete directory does not prove a client is absent and must not trigger duplicate registration.",
           "inputSchema": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
             "required": [],
             "additionalProperties": false
           },
@@ -35392,6 +35414,11 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 254
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35418,6 +35445,11 @@
                 "type": "string",
                 "pattern": "^client_[0-9a-f]{24}$",
                 "description": "Stable client_id returned by Studio Archive."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35459,6 +35491,11 @@
                   "pattern": "^[0-9a-f]{64}$"
                 },
                 "description": "Optional original file hashes, one per selected path in the same order. Required when verifying an attachment transferred between environments; compute from originals using a file tool, never invent them."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35509,6 +35546,11 @@
                   "maxLength": 32
                 },
                 "description": "Optional confirmed codice fiscale or partita IVA values."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35557,6 +35599,11 @@
                 "type": "string",
                 "pattern": "^eng_[0-9a-f]{24}$",
                 "description": "Exact engagement selected or created before this separate import action."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35602,6 +35649,11 @@
               "copy_authorized": {
                 "type": "boolean",
                 "const": true
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35633,6 +35685,11 @@
               "engagement_id": {
                 "type": "string",
                 "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35654,7 +35711,13 @@
           "description": "Read whether a private Google Drive OAuth token and exact client-folder bindings are present. This does not call Google Drive.",
           "inputSchema": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
             "required": [],
             "additionalProperties": false
           },
@@ -35680,6 +35743,11 @@
                 "type": "string",
                 "pattern": "^[A-Za-z0-9_-]{3,256}$",
                 "description": "Exact Google Drive client-folder ID selected by the user."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35709,6 +35777,11 @@
               "engagement_id": {
                 "type": "string",
                 "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35742,6 +35815,11 @@
               "snapshot_input_id": {
                 "type": "string",
                 "pattern": "^input_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35780,6 +35858,11 @@
               "item_ref": {
                 "type": "string",
                 "pattern": "^archive_item_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35818,6 +35901,11 @@
                 "minLength": 1,
                 "maxLength": 200,
                 "description": "Software-managed request key. Generate once per intentionally new engagement and reuse unchanged on every retry."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35843,6 +35931,11 @@
               "client_id": {
                 "type": "string",
                 "pattern": "^client_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -35909,6 +36002,11 @@
               "require_exact_input_set": {
                 "type": "boolean",
                 "default": false
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36001,7 +36099,9 @@
                     "artifact_id": {
                       "type": "string",
                       "minLength": 1,
-                      "maxLength": 120
+                      "maxLength": 120,
+                      "pattern": "^[a-z0-9][a-z0-9._-]{0,119}$",
+                      "description": "Lowercase stable ID, e.g. prep01. Independent of the filename, which may contain uppercase letters."
                     },
                     "role": {
                       "type": "string",
@@ -36036,6 +36136,11 @@
               "new_run": {
                 "type": "boolean",
                 "description": "True only when the user explicitly requests a separate run. Reuse the same idempotency_key for safe retries and choose a new key for another distinct run."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36069,6 +36174,11 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36111,6 +36221,11 @@
               "content": {
                 "type": "string",
                 "maxLength": 65536
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36169,6 +36284,11 @@
                   "type": "integer",
                   "minimum": 0
                 }
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36204,6 +36324,11 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36266,6 +36391,11 @@
               },
               "new_run": {
                 "type": "boolean"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36306,6 +36436,11 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 1000
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36341,6 +36476,11 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36391,7 +36531,9 @@
                     "artifact_id": {
                       "type": "string",
                       "minLength": 1,
-                      "maxLength": 120
+                      "maxLength": 120,
+                      "pattern": "^[a-z0-9][a-z0-9._-]{0,119}$",
+                      "description": "Lowercase stable ID, e.g. prep01. Independent of the filename, which may contain uppercase letters."
                     },
                     "path": {
                       "type": "string",
@@ -36427,6 +36569,11 @@
                   ],
                   "additionalProperties": false
                 }
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36461,6 +36608,11 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36491,6 +36643,11 @@
               "engagement_id": {
                 "type": "string",
                 "pattern": "^eng_[0-9a-f]{24}$"
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36512,7 +36669,13 @@
           "description": "Recover private client pointers from portable customer manifests and inspect engagement, input, and run records independently. Preserve damaged aliases and records; return healthy work alongside explicit issues and completeness flags. An incomplete inventory is not an empty archive.",
           "inputSchema": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
             "required": [],
             "additionalProperties": false
           },
@@ -36538,6 +36701,11 @@
                 "type": "integer",
                 "minimum": 0,
                 "maximum": 365000
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36558,7 +36726,13 @@
           "description": "Open the operating system's native folder chooser, diagnose the selected shared archive folder, and save this user's private local configuration. Use this guided action before asking the user to type an absolute path.",
           "inputSchema": {
             "type": "object",
-            "properties": {},
+            "properties": {
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
+              }
+            },
             "required": [],
             "additionalProperties": false
           },
@@ -36581,6 +36755,11 @@
                 "minLength": 1,
                 "maxLength": 4096,
                 "description": "Absolute local, mounted, or native Windows UNC path selected for the shared studio archive."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36607,6 +36786,11 @@
                 "minLength": 1,
                 "maxLength": 4096,
                 "description": "Absolute path to the shared or synced studio archive folder."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36646,6 +36830,11 @@
               "enable_ocr": {
                 "type": "boolean",
                 "description": "Try already-installed local OCR for scans and sparse PDF pages."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [],
@@ -36681,6 +36870,11 @@
                 "minimum": 1,
                 "maximum": 20,
                 "description": "Maximum candidate chunks; defaults to 10."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36713,6 +36907,11 @@
                 "minimum": 0,
                 "maximum": 2,
                 "description": "Adjacent chunks on each side; defaults to 0."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36777,6 +36976,11 @@
                 "type": "string",
                 "pattern": "^scope_[0-9a-f]{24}$",
                 "description": "Explicitly move one listed orphaned profile to this target scope. Supply no identity arrays in the same call."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36818,6 +37022,11 @@
                 "type": "string",
                 "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
                 "description": "Optional exclusive upper date bound in YYYY-MM-DD."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [
@@ -36858,6 +37067,11 @@
                 "type": "string",
                 "pattern": "^scope_[0-9a-f]{24}$",
                 "description": "Optional selected client scope used for the fail-closed answer check."
+              },
+              "incident_report_id": {
+                "type": "string",
+                "format": "uuid",
+                "description": "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."
               }
             },
             "required": [

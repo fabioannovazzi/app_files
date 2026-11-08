@@ -21,7 +21,7 @@ from typing import Any
 
 from local_onboarding import MARKER, OnboardingError, Store
 
-__all__ = ["prepare_case", "main"]
+__all__ = ["prepare_case", "retry_case_binding", "main"]
 
 
 def _ledger() -> ModuleType:
@@ -308,7 +308,35 @@ def prepare_case(
         else "tutorial_case.json"
     )
     result["tutorial_case_path"] = str(metadata)
+    result["native_archive_ready"] = binding["status"] == "retained"
+    if binding["status"] != "retained":
+        result["binding_recovery"] = {
+            "script": "scripts/local_onboarding_case.py",
+            "arguments": ["--retry-binding", str(metadata)],
+            "instruction": "Preserve this prepared job. Retry its binding before native Archive calls; request host filesystem permission only if required. Do not repeat preparation or archive setup.",
+        }
     metadata.write_text(
+        json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    return result
+
+
+def retry_case_binding(case_path: Path) -> dict[str, Any]:
+    """Retry only the private pointer for the same prepared job; never recreate it."""
+    result = json.loads(case_path.read_text(encoding="utf-8"))
+    run = result["run"]
+    root = Path(result["client_root"])
+    loaded = _ledger().load_run(root, run["engagement_id"], run["run_id"])
+    if any(
+        loaded["run"][key] != run[key]
+        for key in ("client_id", "engagement_id", "run_id", "static_sha256")
+    ):
+        raise OnboardingError("Tutorial recovery belongs to another prepared job")
+    result["work_binding"] = _archive().retain_studio_run_binding(
+        root, run["engagement_id"], run["run_id"]
+    )
+    result["native_archive_ready"] = result["work_binding"]["status"] == "retained"
+    case_path.write_text(
         json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
     )
     return result
@@ -317,18 +345,29 @@ def prepare_case(
 def main(argv: list[str] | None = None) -> int:
     """Prepare selected local files for the active paired lesson."""
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--retry-binding", type=Path)
     parser.add_argument("--state-root", type=Path)
     parser.add_argument(
         "--session", help="Repeated teaching session; omit for onboarding"
     )
-    parser.add_argument("--thread-id", required=True)
-    parser.add_argument("--workflow", required=True)
-    parser.add_argument("--token", required=True)
-    parser.add_argument("--phase", choices=["demo", "practice"], required=True)
-    parser.add_argument("--source", type=Path, action="append", required=True)
+    parser.add_argument("--thread-id")
+    parser.add_argument("--workflow")
+    parser.add_argument("--token")
+    parser.add_argument("--phase", choices=["demo", "practice"])
+    parser.add_argument("--source", type=Path, action="append")
     parser.add_argument("--source-root", type=Path)
     args = parser.parse_args(argv)
     try:
+        if args.retry_binding:
+            result = retry_case_binding(args.retry_binding)
+            sys.stdout.write(json.dumps(result, indent=2) + "\n")
+            return 0 if result["native_archive_ready"] else 2
+        if not all(
+            (args.thread_id, args.workflow, args.token, args.phase, args.source)
+        ):
+            parser.error(
+                "Preparation requires thread-id, workflow, token, phase and source"
+            )
         store = Store(args.state_root)
         if args.session:
             from local_teaching import TeachingStore

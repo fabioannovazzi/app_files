@@ -209,7 +209,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/lucia/scripts/operational_incidents.py",
-      "sha256": "132798f1fd83c607ee91bcac93364ac8dd9cb360b7f91f6300d8d4e24bb9105e"
+      "sha256": "a72948d0c4eeab55e000aaaec9b6ecbd2b35423ad4739e0d472c10986fc79ec8"
     },
     {
       "path": "scripts/selective_reporting.py",

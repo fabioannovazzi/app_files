@@ -500,12 +500,12 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "3fffcf8ad290ba9ce990985c1ea1627d14e603aaca611840f28272925b8eef55"
+      "sha256": "c01b8a7963b576cd458fe13fcc58546d0b58865a2b713ef67e7c0f5ae0829871"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
       "repository_path": "plugins/studio-archive/scripts/archive_error_reporting.py",
-      "sha256": "1e6b75417003089eec78c1a36fafbb63af0935e3ea48d8e91314b510cc9080d4"
+      "sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5"
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
@@ -765,7 +765,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "132798f1fd83c607ee91bcac93364ac8dd9cb360b7f91f6300d8d4e24bb9105e"
+      "sha256": "a72948d0c4eeab55e000aaaec9b6ecbd2b35423ad4739e0d472c10986fc79ec8"
     },
     {
       "path": "scripts/selective_reporting.py",
