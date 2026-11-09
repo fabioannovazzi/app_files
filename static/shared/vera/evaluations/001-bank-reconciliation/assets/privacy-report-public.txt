@@ -50,4 +50,5 @@ Invii registrati: 24; 142513 caratteri.
 
 Il report e le evidenze restano su questa macchina. Il server riceve l’impronta del report con Vera userID, esecuzione, revisione e versione del prodotto.
 
-Ricevuta server non verificata. Invio iniziale respinto durante il limite di frequenza HTTP 429; il tentativo successivo di timbratura ha restituito HTTP 409. Richiesta originale conservata.
+Ricevuta server verificata sullo stesso report, esecuzione, utente e revisione 1. SHA-256 del report completo locale: f0cfa3c6ada0cffe0a41d27a515c8b0b21de9378e8ba85ac215973298797e9f7. La copia pubblica omette gli identificativi privati e non ha la stessa impronta.
+Recupero: invio iniziale respinto con HTTP 429; timbratura generica respinta con HTTP 409. Ripetuta la chiusura idempotente dello stesso lavoro tramite il comando Archive, senza ricalcolo: ricevuta ottenuta e verifica nativa superata. La misurazione incompleta resta distinta dalla validità della ricevuta.
