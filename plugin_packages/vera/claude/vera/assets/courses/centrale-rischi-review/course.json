@@ -104,7 +104,7 @@
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "29b63ca46f082787274bcd3a40bf5706085756c35f2ebc16919e736be22f4f53"
+      "sha256": "9627cb88e33651bdaac62f815e979d5b0619cf8093f122ba1dc938d2de4fc8d3"
     },
     {
       "path": "modules/centrale-rischi-review/vendor/modules/vera_assurance/serialization.py",
@@ -240,7 +240,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "29b63ca46f082787274bcd3a40bf5706085756c35f2ebc16919e736be22f4f53"
+      "sha256": "9627cb88e33651bdaac62f815e979d5b0619cf8093f122ba1dc938d2de4fc8d3"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",
@@ -352,5 +352,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "041fe8e439ab7dba85f5c476ab41a8e2c8ac44ef4dcda322f158509febbdaeb5"
+  "canonical_course_sha256": "410c68134ff888d4414efc67207169a858b50aa446f2ba03eb6be01129b75597"
 }

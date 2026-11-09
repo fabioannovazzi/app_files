@@ -120,7 +120,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "f3a16fdfc8a71d876c7f4bb92458e136ef6852067f6c253907ef8e9f3cc0cb61",
+      "sha256": "8820552296061b0ac9b7aa7873ce896b5eeb5c43233660d0989b51b75bee282e",
       "languages": [
         "it",
         "en",
@@ -145,7 +145,7 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "a5688a7927cbcbd524f8ec9e85f57bafbdd88f22d00d7c62cfddd24ecfb03608"
+      "source_sha256": "183dc740ca3ae8168339493951ad060139a58e1e7c6a0165bd73bab427897be3"
     }
   }
 }

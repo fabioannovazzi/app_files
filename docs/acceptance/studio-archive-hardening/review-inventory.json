@@ -152,10 +152,11 @@
         "P004",
         "R005",
         "R006",
-        "R008"
+        "R008",
+        "R011"
       ],
-      "review_note": "Reviewed shared transaction runtime with full-lifecycle ownership and interruption recovery. 111 five-consumer cases and final 24 boundary cases passed. Host-local ordinary filesystem only; network/cloud-sync hosts remain unproved.",
-      "reviewed_working_sha256": "29b63ca46f082787274bcd3a40bf5706085756c35f2ebc16919e736be22f4f53"
+      "review_note": "Reviewed shared transaction runtime with full-lifecycle ownership and interruption recovery. 111 five-consumer cases and final 24 boundary cases passed. Host-local ordinary filesystem only; network/cloud-sync hosts remain unproved. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
+      "reviewed_working_sha256": "9627cb88e33651bdaac62f815e979d5b0619cf8093f122ba1dc938d2de4fc8d3"
     },
     {
       "path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
@@ -1016,11 +1017,12 @@
         ]
       ],
       "findings": [
-        "P005"
+        "P005",
+        "P011"
       ],
       "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_reporting.py",
-      "reviewed_working_sha256": "800384074cde48288f5572245d31a7dcd07ef78a2760ef1a2fe9f4f3f349bb10",
-      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+      "reviewed_working_sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance. Final P011 delta inspected; product copy is byte-identical to canonical shared source, including validated reads for intentionally excluded pipelines."
     },
     {
       "path": "plugins/vera/scripts/archive_reporting_failure.py",
@@ -1284,12 +1286,13 @@
           4065
         ]
       ],
-      "reviewed_working_sha256": "c8704708d879e82c1563447c8c88317afb3ecaeb659563d42e7326db9a42e7d0",
+      "reviewed_working_sha256": "749554530471858b110d7c7dc6a34b98b81ca15188f51b24fe1bdb09e1da6dfa",
       "findings": [
-        "R006"
+        "R006",
+        "R011"
       ],
       "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
-      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
       "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
     },
     {
@@ -1338,12 +1341,13 @@
           4620
         ]
       ],
-      "reviewed_working_sha256": "9c45a53e9311f81911e4886529f3441c170b97c6ea28e68bb69a73e5c7ee0106",
+      "reviewed_working_sha256": "e91357372c2807e196d1b436165bfa9b72abed3ba60449db056d99091d6d2d79",
       "findings": [
-        "R006"
+        "R006",
+        "R011"
       ],
       "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
-      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
       "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
     },
     {
@@ -1380,12 +1384,13 @@
           4968
         ]
       ],
-      "reviewed_working_sha256": "9267f8677ac782d5371e126cbd5582d8a7bc5cc018184295da7f9d1b4aa3043d",
+      "reviewed_working_sha256": "0dd1b74610164de589c920bc72c8d86465a2d06d62e32a2ed52d283c950bb1c1",
       "findings": [
-        "R006"
+        "R006",
+        "R011"
       ],
       "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
-      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
       "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
     },
     {

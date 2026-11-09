@@ -41,11 +41,26 @@ results. Repairs are local until release evidence proves otherwise. The register
 distinguishes reproduced defects, verified preservation boundaries and open
 investigations; a passing unit suite is not installed-product acceptance.
 
-## Acceptance still pending
+## Current acceptance and remaining gates
 
 Scoped first-pass code review and the source-level failure matrix are recorded.
-Fresh-chat candidate behavior, release checks and deployment remain pending. Windows installed-host behavior, live Drive behavior
-and simultaneous cloud-sync computers remain unverified external-environment gaps.
+Fresh installed Vera 0.1.604 established client isolation, retry reuse, saved-work
+completion and reopening. Fresh installed 0.1.605 established restoration of that
+same completed run while the original folder was unavailable, reviewed organization,
+rollback and preservation of later files on repeated rollback. See the two installed
+assessment records for exact identities, recovered blocks and evidence limits.
+
+The 0.1.605 readable privacy report was delivered and reopened unchanged. Measurement
+remains explicitly incomplete where source coordinates or derived-output lineage
+are unavailable. Remote receipt submission encountered registration rate limiting;
+verification found no matching receipt. A subsequent receipt retry requires user
+approval after automatic approval review rejected that authenticated submission.
+
+R011 repairs a Windows CI failure in deep-path temporary-directory creation after
+those installed checks. Its rebuilt candidates, exact-head CI, current-candidate
+acceptance and deployment remain pending. Native Windows installed-host behavior,
+live Drive behavior and simultaneous cloud-sync computers remain unverified
+external-environment gaps.
 
 A local macOS scale probe of 5,000 small text documents across 100 clients is
 recorded in `scale-result.json`; it is not OCR, large-file, network-filesystem or

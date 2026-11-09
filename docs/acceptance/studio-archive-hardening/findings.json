@@ -445,5 +445,14 @@
       "test_service_verification_failure_preserves_completed_pipeline"
     ],
     "validation": "158 reporting/recovery tests passed, including excluded-policy historical-report corruption/network cases. Black, Isort, Mypy and Bandit passed."
+  },
+  {
+    "id": "R011",
+    "status": "fixed_locally",
+    "harm": "Windows native saved-review operations fail creating ownership directories under deep client paths; two actual producer CI cases returned ENOENT from mkdtemp.",
+    "reproduction": "GitHub Windows job 129378379011 failed both native vouching and open-item selected-context sends. Portable regression enforcing the same long-path mkdtemp boundary fails before repair.",
+    "repair": "Use an extended-length path for atomic temporary directory creation, then retain the ordinary path spelling for comparisons and recovery receipts. Full ownership hashes remain unchanged. Canonical runtime and three embedded consumers synchronized.",
+    "test": "test_review_transaction_commits_in_deep_client_path",
+    "validation": "26 output-boundary cases and 77 selected native producer/consumer transaction cases pass locally. Native Windows rerun and regenerated packages pending."
   }
 ]

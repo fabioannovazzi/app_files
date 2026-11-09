@@ -464,3 +464,58 @@ def test_review_recovery_rejects_evidence_moved_to_another_parent(interrupted_re
     assert (moved / "trusted-backup" / "result.txt").read_text(
         encoding="utf-8"
     ) == "Original retained result"
+
+
+@pytest.mark.parametrize("emulate_windows_mkdtemp", [False, True])
+def test_review_transaction_commits_in_deep_client_path(
+    tmp_path, emulate_windows_mkdtemp
+):
+    output = tmp_path / ("client-" + "a" * 70) / ("engagement-" + "b" * 70) / "outputs"
+    output.mkdir(parents=True)
+    (output / "result.txt").write_text("Original", encoding="utf-8")
+    script = r"""
+const fs = require('node:fs');
+const path = require('node:path');
+const runtime = require(process.argv[1]);
+const output = process.argv[2];
+if (process.argv[3] === 'true') {
+  // Model the observed Windows mkdtemp failure for long unqualified paths.
+  // All actual file writes still run on this host's real filesystem.
+  const nativeMkdtemp = fs.mkdtempSync;
+  const namespace = 'TEST-WINDOWS-NAMESPACE:';
+  path.toNamespacedPath = value => namespace + value;
+  fs.mkdtempSync = function(prefix) {
+    if (!prefix.startsWith(namespace) && prefix.length + 6 >= 260) {
+      const error = new Error('ENOENT: Windows long mkdtemp prefix');
+      error.code = 'ENOENT';
+      throw error;
+    }
+    return nativeMkdtemp(prefix.startsWith(namespace) ? prefix.slice(namespace.length) : prefix);
+  };
+}
+const result = runtime.withGeneratedReviewOutputTransaction(output, ({workingOutputDir}) => {
+  fs.writeFileSync(path.join(workingOutputDir, 'result.txt'), 'Reviewed revision');
+  return runtime.generatedReviewTransactionEnvelope({saved: true}, ['result.txt']);
+});
+process.stdout.write(JSON.stringify(result));
+"""
+
+    completed = subprocess.run(
+        [
+            "node",
+            "-e",
+            script,
+            str(RUNTIME),
+            str(output),
+            str(emulate_windows_mkdtemp).lower(),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert json.loads(completed.stdout) == {"saved": True}
+    assert (output / "result.txt").read_text(encoding="utf-8") == "Reviewed revision"
+    assert sorted(path.name for path in output.parent.iterdir()) == ["outputs"]

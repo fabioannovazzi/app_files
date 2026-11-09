@@ -592,6 +592,13 @@ const GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR = Symbol(
   "generated-review-transaction-operation-error",
 );
 
+function generatedReviewCreateTempDirectory(prefix) {
+  // Windows mkdtemp needs an extended-length path for deep client folders.
+  // Keep the ordinary spelling for identity comparisons and persisted receipts.
+  const created = fs.mkdtempSync(path.toNamespacedPath(prefix));
+  return path.join(path.dirname(prefix), path.basename(created));
+}
+
 function generatedReviewPathEntryStat(targetPath) {
   try {
     return fs.lstatSync(targetPath);
@@ -1165,7 +1172,7 @@ function generatedReviewRestoreFromTrustedImage(
 ) {
   // Recovery is deliberately created only after the untrusted operation has
   // returned. It never depends on a transaction tree that the operation knew.
-  const recoveryRoot = fs.mkdtempSync(
+  const recoveryRoot = generatedReviewCreateTempDirectory(
     path.join(outputParent, ".generated-review-recovery-"),
   );
   fs.chmodSync(recoveryRoot, 0o700);
@@ -1263,7 +1270,7 @@ function generatedReviewWithOutputClaim(outputDir, operation) {
   // publishes before scanning and abstains if ANY other live owner exists.
   // There is no priority rule that could let a later owner overtake an earlier
   // scan, and no mutable shared lock pathname to race during stale recovery.
-  const claim = fs.mkdtempSync(path.join(parent, `${prefix}${host}-${process.pid}-`));
+  const claim = generatedReviewCreateTempDirectory(path.join(parent, `${prefix}${host}-${process.pid}-`));
   const identity = generatedReviewDirectoryIdentity(claim);
   try {
     for (const name of fs.readdirSync(parent)) {
@@ -1421,7 +1428,7 @@ function generatedReviewRunOutputTransaction(
   let canonicalDetached = false;
   let committed = false;
   try {
-    transactionRoot = fs.mkdtempSync(
+    transactionRoot = generatedReviewCreateTempDirectory(
       path.join(outputParent, ".generated-review-transaction-"),
     );
     fs.chmodSync(transactionRoot, 0o700);
@@ -1491,7 +1498,7 @@ function generatedReviewRunOutputTransaction(
       throw new Error("Review transaction root changed.");
     }
 
-    commitRoot = fs.mkdtempSync(
+    commitRoot = generatedReviewCreateTempDirectory(
       path.join(outputParent, ".generated-review-commit-"),
     );
     fs.chmodSync(commitRoot, 0o700);
