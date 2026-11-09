@@ -1,90 +1,420 @@
 {
-  "sheets": [
-    {
-      "name": "Sintesi",
-      "rows": 25,
-      "columns": 6,
-      "headers": [
-        "Evaluation 001 - Synthetic March reconciliation \u2014 Riconciliazione banca / partitario",
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "name": "Relazioni",
-      "rows": 13,
-      "columns": 10,
-      "headers": [
-        "Relazioni tra banca e partitario",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "name": "Banca",
-      "rows": 12,
-      "columns": 10,
-      "headers": [
-        "Banca",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    },
-    {
-      "name": "Partitario",
-      "rows": 12,
-      "columns": 10,
-      "headers": [
-        "Partitario",
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null
-      ]
-    }
-  ],
+  "scope": "Rigenerazione del solo Excel con il generatore corretto; fonti normalizzate e decisioni originali conservate. Nessuna nuova chiamata al modello.",
+  "component_version": "0.1.85",
+  "product_version": "0.1.603",
   "original_refs_found": {
-    "IN-001": false,
-    "OUT-002": false,
-    "OUT-003": false,
-    "IN-004": false,
-    "OUT-005": false,
-    "OUT-006": false,
-    "FEE-MAR": false,
+    "FEE-MAR": true,
+    "IN-001": true,
+    "IN-004": true,
+    "OUT-002": true,
+    "OUT-003": true,
+    "OUT-005": true,
+    "OUT-006": true,
     "OUT-007": true
   },
   "counterparties_found": {
-    "Cliente Aurora": false,
-    "Fornitore Faro": false,
-    "Fornitore Luce": false,
-    "Cliente Stella": false,
-    "Fornitore Olmo": false,
-    "Fornitore Pino": false,
-    "Banca Dimostrativa": false,
-    "Fornitore Quercia": false
+    "Banca Dimostrativa": true,
+    "Cliente Aurora": true,
+    "Cliente Stella": true,
+    "Fornitore Faro": true,
+    "Fornitore Luce": true,
+    "Fornitore Olmo": true,
+    "Fornitore Pino": true,
+    "Fornitore Quercia": true
   },
-  "private_path_found": false,
-  "sha256": "dec254f2ecb2092517f6524edee1b56b52fb565e46733fbeb763da1efc182899"
+  "passed": true,
+  "pass_count": 64,
+  "checks": [
+    {
+      "check": "Banca riga 6: riferimento",
+      "expected": "IN-001",
+      "actual": "IN-001",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 6: controparte",
+      "expected": "Cliente Aurora",
+      "actual": "Cliente Aurora",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 6: importo",
+      "expected": 2440.0,
+      "actual": 2440,
+      "passed": true
+    },
+    {
+      "check": "Banca riga 7: riferimento",
+      "expected": "OUT-002",
+      "actual": "OUT-002",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 7: controparte",
+      "expected": "Fornitore Faro",
+      "actual": "Fornitore Faro",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 7: importo",
+      "expected": -1220.0,
+      "actual": -1220,
+      "passed": true
+    },
+    {
+      "check": "Banca riga 8: riferimento",
+      "expected": "OUT-003",
+      "actual": "OUT-003",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 8: controparte",
+      "expected": "Fornitore Luce",
+      "actual": "Fornitore Luce",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 8: importo",
+      "expected": -732.0,
+      "actual": -732,
+      "passed": true
+    },
+    {
+      "check": "Banca riga 9: riferimento",
+      "expected": "IN-004",
+      "actual": "IN-004",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 9: controparte",
+      "expected": "Cliente Stella",
+      "actual": "Cliente Stella",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 9: importo",
+      "expected": 488.0,
+      "actual": 488,
+      "passed": true
+    },
+    {
+      "check": "Banca riga 10: riferimento",
+      "expected": "OUT-005",
+      "actual": "OUT-005",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 10: controparte",
+      "expected": "Fornitore Olmo",
+      "actual": "Fornitore Olmo",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 10: importo",
+      "expected": -610.0,
+      "actual": -610,
+      "passed": true
+    },
+    {
+      "check": "Banca riga 11: riferimento",
+      "expected": "OUT-006",
+      "actual": "OUT-006",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 11: controparte",
+      "expected": "Fornitore Pino",
+      "actual": "Fornitore Pino",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 11: importo",
+      "expected": -610.0,
+      "actual": -610,
+      "passed": true
+    },
+    {
+      "check": "Banca riga 12: riferimento",
+      "expected": "FEE-MAR",
+      "actual": "FEE-MAR",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 12: controparte",
+      "expected": "Banca Dimostrativa",
+      "actual": "Banca Dimostrativa",
+      "passed": true
+    },
+    {
+      "check": "Banca riga 12: importo",
+      "expected": -18.0,
+      "actual": -18,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 6: riferimento",
+      "expected": "OUT-006",
+      "actual": "OUT-006",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 6: controparte",
+      "expected": "Fornitore Pino",
+      "actual": "Fornitore Pino",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 6: importo",
+      "expected": -610.0,
+      "actual": -610,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 7: riferimento",
+      "expected": "IN-001",
+      "actual": "IN-001",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 7: controparte",
+      "expected": "Cliente Aurora",
+      "actual": "Cliente Aurora",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 7: importo",
+      "expected": 2440.0,
+      "actual": 2440,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 8: riferimento",
+      "expected": "OUT-007",
+      "actual": "OUT-007",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 8: controparte",
+      "expected": "Fornitore Quercia",
+      "actual": "Fornitore Quercia",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 8: importo",
+      "expected": -350.0,
+      "actual": -350,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 9: riferimento",
+      "expected": "IN-004",
+      "actual": "IN-004",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 9: controparte",
+      "expected": "Cliente Stella",
+      "actual": "Cliente Stella",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 9: importo",
+      "expected": 488.0,
+      "actual": 488,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 10: riferimento",
+      "expected": "OUT-005",
+      "actual": "OUT-005",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 10: controparte",
+      "expected": "Fornitore Olmo",
+      "actual": "Fornitore Olmo",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 10: importo",
+      "expected": -610.0,
+      "actual": -610,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 11: riferimento",
+      "expected": "OUT-002",
+      "actual": "OUT-002",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 11: controparte",
+      "expected": "Fornitore Faro",
+      "actual": "Fornitore Faro",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 11: importo",
+      "expected": -1220.0,
+      "actual": -1220,
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 12: riferimento",
+      "expected": "OUT-003",
+      "actual": "OUT-003",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 12: controparte",
+      "expected": "Fornitore Luce",
+      "actual": "Fornitore Luce",
+      "passed": true
+    },
+    {
+      "check": "Partitario riga 12: importo",
+      "expected": -732.0,
+      "actual": -732,
+      "passed": true
+    },
+    {
+      "check": "Totale netto banca",
+      "expected": -262,
+      "actual": -262.0,
+      "passed": true
+    },
+    {
+      "check": "Totale netto partitario",
+      "expected": -594,
+      "actual": -594.0,
+      "passed": true
+    },
+    {
+      "check": "Differenza netta",
+      "expected": 332,
+      "actual": 332.0,
+      "passed": true
+    },
+    {
+      "check": "Abbinamenti rigorosi",
+      "expected": 6,
+      "actual": 6,
+      "passed": true
+    },
+    {
+      "check": "Relazione R001: totale banca",
+      "expected": -18.0,
+      "actual": -18.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R001: totale partitario",
+      "expected": 0.0,
+      "actual": 0.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R002: totale banca",
+      "expected": 0.0,
+      "actual": 0.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R002: totale partitario",
+      "expected": -350.0,
+      "actual": -350.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R003: totale banca",
+      "expected": 2440.0,
+      "actual": 2440.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R003: totale partitario",
+      "expected": 2440.0,
+      "actual": 2440.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R004: totale banca",
+      "expected": -1220.0,
+      "actual": -1220.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R004: totale partitario",
+      "expected": -1220.0,
+      "actual": -1220.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R005: totale banca",
+      "expected": -732.0,
+      "actual": -732.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R005: totale partitario",
+      "expected": -732.0,
+      "actual": -732.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R006: totale banca",
+      "expected": 488.0,
+      "actual": 488.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R006: totale partitario",
+      "expected": 488.0,
+      "actual": 488.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R007: totale banca",
+      "expected": -610.0,
+      "actual": -610.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R007: totale partitario",
+      "expected": -610.0,
+      "actual": -610.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R008: totale banca",
+      "expected": -610.0,
+      "actual": -610.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R008: totale partitario",
+      "expected": -610.0,
+      "actual": -610.0,
+      "passed": true
+    },
+    {
+      "check": "Tutti gli 8 riferimenti conservati",
+      "expected": 8,
+      "actual": 8,
+      "passed": true
+    },
+    {
+      "check": "Tutte le 8 controparti conservate",
+      "expected": 8,
+      "actual": 8,
+      "passed": true
+    }
+  ],
+  "sha256": "550375a347d86169b789cd49d9947e0b7dd53220b41d53bb7df0516d2c46870b",
+  "source_result_sha256": "3fb05c5f23fed659f40f41d72e87a31d882988e8f8ec32fed8ae6c92470d4648",
+  "generator_sha256": "d7074c807f3c546e549e5be42e5f756e81d2fc605de52737f84a818545f287da",
+  "source_files": {
+    "normalized_bank.csv": "8b8084d7e2d82d28128c345377583b0e17145bdd48a3416526b0061414282e8a",
+    "normalized_journal.csv": "1d44b7c4e2868bfee9c653d723ee7dd815db009d977fd9aac4e767c6114bbcfa"
+  }
 }

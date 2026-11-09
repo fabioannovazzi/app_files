@@ -421,6 +421,77 @@ def test_complete_review_batches_35_rows_without_dropping_context_or_reusing_evi
     assert result["summary"]["bank_status_counts"] == {"unmatched": 35}
 
 
+def test_final_workbook_keeps_source_references_and_counterparties_for_equal_amounts(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    reconciliation, output, _ = _environment(tmp_path, monkeypatch, bank=[], journal=[])
+    _write_csv(
+        reconciliation / "normalized_bank.csv",
+        [
+            {
+                **row("b1", "-610"),
+                "reference": "OUT-005",
+                "beneficiary": "Fornitore Olmo",
+            },
+            {
+                **row("b2", "-610"),
+                "reference": "OUT-006",
+                "beneficiary": "Fornitore Pino",
+            },
+        ],
+    )
+    _write_csv(
+        reconciliation / "normalized_journal.csv",
+        [
+            {**row("j2", "-610"), "reference": "OUT-006", "beneficiary": "Pino Srl"},
+            {**row("j1", "-610"), "reference": "OUT-005", "beneficiary": "Olmo Srl"},
+        ],
+    )
+    _write_csv(
+        reconciliation / "reconciliation_matches.csv",
+        [
+            {"bank_transaction_id": "b1", "journal_transaction_id": "j1"},
+            {"bank_transaction_id": "b2", "journal_transaction_id": "j2"},
+        ],
+    )
+
+    result = grouped.complete_grouped_review(reconciliation, output)
+
+    book = openpyxl.load_workbook(result["workbook"], data_only=True)
+    assert list(
+        book["Banca"].iter_rows(
+            min_row=5, max_row=7, min_col=4, max_col=5, values_only=True
+        )
+    ) == [
+        ("Riferimento originale", "Controparte"),
+        ("OUT-005", "Fornitore Olmo"),
+        ("OUT-006", "Fornitore Pino"),
+    ]
+    assert list(
+        book["Partitario"].iter_rows(
+            min_row=6, max_row=7, min_col=4, max_col=5, values_only=True
+        )
+    ) == [
+        ("OUT-006", "Pino Srl"),
+        ("OUT-005", "Olmo Srl"),
+    ]
+    assert book["Relazioni"]["B6"].value == "B001 · OUT-005\nFornitore Olmo"
+    assert book["Relazioni"]["C6"].value == "C002 · OUT-005\nOlmo Srl"
+    assert book["Relazioni"]["B7"].value == "B002 · OUT-006\nFornitore Pino"
+    assert book["Relazioni"]["C7"].value == "C001 · OUT-006\nPino Srl"
+    assert book["Relazioni"]["D6"].value == -610
+    assert book["Relazioni"]["E6"].value == -610
+    assert book["Sintesi"]["B8"].value == -1220
+    assert book["Sintesi"]["D8"].value == 0
+    assert book["Sintesi"]["B15"].value == 2
+    formulas = openpyxl.load_workbook(result["workbook"], data_only=False)
+    assert (
+        formulas["Relazioni"]["D6"].value
+        == "=SUMIF(Banca!$B$6:$B$7,A6,Banca!$G$6:$G$7)"
+    )
+    assert formulas["Sintesi"]["B15"].value == '=COUNTIF(Banca!$H$6:$H$7,"Concorde")'
+
+
 def test_complete_review_resumes_from_validated_decisions_without_another_model_call(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
