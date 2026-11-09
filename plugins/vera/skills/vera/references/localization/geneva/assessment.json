@@ -106,6 +106,11 @@
     "scope": "Canonical manifest/version binding only: every skill entrypoint and existing jurisdiction judgment is preserved. Exact-run recovery, terminal reporting after input loss and damaged-record isolation establish no new Geneva or native-host professional acceptance.",
     "version": "0.1.473"
   },
+  "archive_repair_release_binding_20261108": {
+    "previous_catalogue_fingerprint": "e5596f63589a576018089cf85914061d80576e60c4607fc62e3b2a9850402f7b",
+    "scope": "Learn-with-Vera now retries only the same tutorial binding. Archive routing and exact-operation progress are infrastructure changes; existing jurisdiction dispositions and professional acceptance limits are unchanged.",
+    "version": "0.1.601"
+  },
   "assessment_date": "2026-09-28",
   "assetti_construction_release_binding": {
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation.",
@@ -178,11 +183,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "2f23bfcdd17bf9f204677f9a5d6f4d7cbd8b0ea44b4ff0f251e999ee8e14e634",
-  "course_indicator_release_binding": {
-    "version": "0.1.600",
-    "scope": "All 55 skill entrypoints and their hashes are unchanged. Jurisdiction assessments are preserved."
-  },
+  "catalogue_fingerprint": "a1de497ee17e8c7be436096beca84edcbeec8b917612e7112e7f8e2c3eb8927a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -353,6 +354,10 @@
     "previous_catalogue_fingerprint": "bf91761d554760069d3294167bcb2f14ffbe976333d3687eb7463fba5b24b2df",
     "review": "Only course workspace setup and filesystem readiness changed. Existing country applicability decisions and limitations are unchanged; no new jurisdiction or live-host acceptance is claimed.",
     "version": "0.1.339"
+  },
+  "course_indicator_release_binding": {
+    "scope": "All 55 skill entrypoints and their hashes are unchanged. Jurisdiction assessments are preserved.",
+    "version": "0.1.600"
   },
   "course_main965_integration_binding_20261106": {
     "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
@@ -936,6 +941,11 @@
     "review": "Register the new Italian AGCM workflow as Unresolved for CH-GE, refresh the manifest and entrypoint identity, and preserve all prior target judgments. Translated explanation pages do not qualify Swiss applicability; professional document-led pilot acceptance remains pending. Preserves the newer French discovery keywords and Antigravity documentation; neither changes the recorded jurisdiction qualifications.",
     "reviewed_at": "2026-10-02",
     "version": "0.1.334"
+  },
+  "reconciliation_export_release_binding_20261109": {
+    "previous_catalogue_fingerprint": "2f23bfcdd17bf9f204677f9a5d6f4d7cbd8b0ea44b4ff0f251e999ee8e14e634",
+    "scope": "Manifest version changed; all 55 skill entrypoint bytes and existing jurisdiction judgments remain unchanged. The reconciliation workbook now retains mapped source references and counterparties. No new model or hosted transmission path.",
+    "version": "0.1.603"
   },
   "reconciliation_repair_release_binding_20261026": {
     "previous_catalogue_fingerprint": "e0bad020982658cc82b4019ab478e12a357406399022920667bcbdfc92d9d278",
@@ -2677,10 +2687,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "archive_repair_release_binding_20261108": {
-    "previous_catalogue_fingerprint": "e5596f63589a576018089cf85914061d80576e60c4607fc62e3b2a9850402f7b",
-    "version": "0.1.601",
-    "scope": "Learn-with-Vera now retries only the same tutorial binding. Archive routing and exact-operation progress are infrastructure changes; existing jurisdiction dispositions and professional acceptance limits are unchanged."
   }
 }

@@ -1,0 +1,90 @@
+{
+  "sheets": [
+    {
+      "name": "Sintesi",
+      "rows": 25,
+      "columns": 6,
+      "headers": [
+        "Evaluation 001 - Synthetic March reconciliation \u2014 Riconciliazione banca / partitario",
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Relazioni",
+      "rows": 13,
+      "columns": 10,
+      "headers": [
+        "Relazioni tra banca e partitario",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Banca",
+      "rows": 12,
+      "columns": 10,
+      "headers": [
+        "Banca",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    {
+      "name": "Partitario",
+      "rows": 12,
+      "columns": 10,
+      "headers": [
+        "Partitario",
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  ],
+  "original_refs_found": {
+    "IN-001": false,
+    "OUT-002": false,
+    "OUT-003": false,
+    "IN-004": false,
+    "OUT-005": false,
+    "OUT-006": false,
+    "FEE-MAR": false,
+    "OUT-007": true
+  },
+  "counterparties_found": {
+    "Cliente Aurora": false,
+    "Fornitore Faro": false,
+    "Fornitore Luce": false,
+    "Cliente Stella": false,
+    "Fornitore Olmo": false,
+    "Fornitore Pino": false,
+    "Banca Dimostrativa": false,
+    "Fornitore Quercia": false
+  },
+  "private_path_found": false,
+  "sha256": "dec254f2ecb2092517f6524edee1b56b52fb565e46733fbeb763da1efc182899"
+}

@@ -20,6 +20,14 @@ LABELS = {
 }
 
 
+def _movement_caption(row: Mapping[str, Any], label: str) -> str:
+    """Keep each source's own reference and counterparty beside its workbook ID."""
+    reference = str(row.get("reference") or "")
+    counterparty = str(row.get("beneficiary") or "")
+    identifier = f"{label} · {reference}" if reference else label
+    return f"{identifier}\n{counterparty}" if counterparty else identifier
+
+
 def export_final_workbook(
     path: Path,
     result: Mapping[str, Any],
@@ -49,6 +57,8 @@ def export_final_workbook(
     journal_group = {
         row_id: group for group in relations for row_id in group["journal_ids"]
     }
+    bank_by_id = {row["transaction_id"]: row for row in bank}
+    journal_by_id = {row["transaction_id"]: row for row in journal}
     if len(bank_group) != len(bank) or len(journal_group) != len(journal):
         raise ValueError("Final workbook requires complete non-reusing source coverage")
     with xlsxwriter.Workbook(
@@ -115,9 +125,9 @@ def export_final_workbook(
             ("Partitario", journal, journal_group),
         ):
             sheet = sheets[name]
-            sheet.merge_range("A1:J1", name, title)
+            sheet.merge_range("A1:L1", name, title)
             sheet.merge_range(
-                "A2:J2",
+                "A2:L2",
                 "Ogni riga appartiene a una sola relazione. I riferimenti alla fonte restano visibili.",
                 note,
             )
@@ -125,6 +135,8 @@ def export_final_workbook(
                 "ID movimento",
                 "Relazione",
                 "Data",
+                "Riferimento originale",
+                "Controparte",
                 "Descrizione",
                 f"Importo {currency}",
                 "Esito",
@@ -134,7 +146,9 @@ def export_final_workbook(
                 "Metodo",
             ]
             sheet.write_row(4, 0, columns, header)
-            for column, width in enumerate((12, 13, 13, 68, 17, 25, 48, 70, 55, 18)):
+            for column, width in enumerate(
+                (12, 13, 13, 24, 32, 52, 17, 25, 48, 70, 55, 18)
+            ):
                 sheet.set_column(column, column, width)
             sheet.freeze_panes(5, 2)
             for index, row in enumerate(rows, 5):
@@ -154,24 +168,26 @@ def export_final_workbook(
                     date.fromisoformat(str(row["transaction_date"])),
                     date_format,
                 )
-                sheet.write_string(index, 3, str(row.get("description") or ""), text)
+                sheet.write_string(index, 3, str(row.get("reference") or ""), text)
+                sheet.write_string(index, 4, str(row.get("beneficiary") or ""), text)
+                sheet.write_string(index, 5, str(row.get("description") or ""), text)
                 sheet.write_number(
-                    index, 4, float(Decimal(str(row["amount_signed"]))), money
+                    index, 6, float(Decimal(str(row["amount_signed"]))), money
                 )
                 sheet.write_string(
-                    index, 5, LABELS[group["status"]], status_formats[group["status"]]
+                    index, 7, LABELS[group["status"]], status_formats[group["status"]]
                 )
                 locator = f"{row['source_file']} · {row['source_sheet']} · riga {row['source_row']}"
-                sheet.write_string(index, 6, locator, text)
+                sheet.write_string(index, 8, locator, text)
                 sheet.write_string(
-                    index, 7, evidence.get(str(row["transaction_id"]), ""), text
+                    index, 9, evidence.get(str(row["transaction_id"]), ""), text
                 )
                 sheet.write_string(
-                    index, 8, "\n".join(group["required_documents"]), text
+                    index, 10, "\n".join(group["required_documents"]), text
                 )
                 sheet.write_string(
                     index,
-                    9,
+                    11,
                     (
                         "Rigoroso"
                         if group.get("method") == "strict"
@@ -181,9 +197,9 @@ def export_final_workbook(
                 )
                 sheet.set_row(index, 52)
                 source_rows[str(row["transaction_id"])] = index + 1
-            sheet.autofilter(4, 0, max(4, len(rows) + 4), 9)
+            sheet.autofilter(4, 0, max(4, len(rows) + 4), 11)
             sheet.repeat_rows(0, 4)
-            sheet.print_area(0, 0, len(rows) + 4, 9)
+            sheet.print_area(0, 0, len(rows) + 4, 11)
 
         sheet = sheets["Relazioni"]
         sheet.merge_range("A1:J1", "Relazioni tra banca e partitario", title)
@@ -209,7 +225,7 @@ def export_final_workbook(
             ],
             header,
         )
-        for column, width in enumerate((13, 20, 22, 18, 18, 18, 25, 40, 75, 70)):
+        for column, width in enumerate((13, 34, 34, 18, 18, 18, 25, 40, 75, 70)):
             sheet.set_column(column, column, width)
         sheet.freeze_panes(5, 1)
         bank_end = max(6, len(bank) + 5)
@@ -217,22 +233,26 @@ def export_final_workbook(
         for index, group in enumerate(relations, 5):
             excel_row = index + 1
             sheet.write_string(index, 0, group["id"], text)
+            caption_lines = 1
             for column, key in ((1, "bank_ids"), (2, "journal_ids")):
                 labels = bank_labels if key == "bank_ids" else journal_labels
-                sheet.write_string(
-                    index, column, "\n".join(labels[i] for i in group[key]), text
+                records = bank_by_id if key == "bank_ids" else journal_by_id
+                caption = "\n".join(
+                    _movement_caption(records[i], labels[i]) for i in group[key]
                 )
+                caption_lines = max(caption_lines, len(caption.splitlines()))
+                sheet.write_string(index, column, caption, text)
             sheet.write_formula(
                 index,
                 3,
-                f"=SUMIF(Banca!$B$6:$B${bank_end},A{excel_row},Banca!$E$6:$E${bank_end})",
+                f"=SUMIF(Banca!$B$6:$B${bank_end},A{excel_row},Banca!$G$6:$G${bank_end})",
                 money,
                 float(Decimal(group["bank_sum"])),
             )
             sheet.write_formula(
                 index,
                 4,
-                f"=SUMIF(Partitario!$B$6:$B${journal_end},A{excel_row},Partitario!$E$6:$E${journal_end})",
+                f"=SUMIF(Partitario!$B$6:$B${journal_end},A{excel_row},Partitario!$G$6:$G${journal_end})",
                 money,
                 float(Decimal(group["journal_sum"])),
             )
@@ -249,7 +269,8 @@ def export_final_workbook(
             sheet.write_string(index, 7, group["title"], text)
             sheet.write_string(index, 8, group["rationale"], text)
             sheet.write_string(index, 9, "\n".join(group["required_documents"]), text)
-            sheet.set_row(index, 72 if group.get("method") != "strict" else 44)
+            minimum_height = 72 if group.get("method") != "strict" else 44
+            sheet.set_row(index, min(409, max(minimum_height, caption_lines * 16)))
         sheet.autofilter(4, 0, max(4, len(relations) + 4), 9)
         sheet.repeat_rows(0, 4)
         sheet.print_area(0, 0, len(relations) + 4, 9)
@@ -295,7 +316,7 @@ def export_final_workbook(
                 criterion = '">0"' if positive else '"<0"'
                 formula = (
                     "" if positive else "-"
-                ) + f"SUMIF({name}!$E$6:$E${end},{criterion},{name}!$E$6:$E${end})"
+                ) + f"SUMIF({name}!$G$6:$G${end},{criterion},{name}!$G$6:$G${end})"
                 sheet.write_formula(index, column, "=" + formula, money, float(value))
                 values.append(value)
             sheet.write_formula(
@@ -324,7 +345,7 @@ def export_final_workbook(
             sheet.write_formula(
                 index,
                 1,
-                f'=COUNTIF(Banca!$F$6:$F${bank_end},"{LABELS[status]}")',
+                f'=COUNTIF(Banca!$H$6:$H${bank_end},"{LABELS[status]}")',
                 integer,
                 count,
             )
