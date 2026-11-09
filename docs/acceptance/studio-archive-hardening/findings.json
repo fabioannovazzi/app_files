@@ -423,5 +423,14 @@
     "repair": "Invoke the existing verified output recovery before explicit private JSON reads, retaining its ownership, integrity and live-writer checks.",
     "test": "test_private_review_recovers_after_output_detached_by_process_exit",
     "validation": "All 38 selected Vouching tests passed, including all four real-process-exit/private-path regressions, read-only assurance replay, transaction faults and unsafe internal entries. Black/Isort across 50 changed Python files, changed JavaScript syntax and diff whitespace checks passed."
+  },
+  {
+    "id": "I002",
+    "status": "fixed_locally",
+    "harm": "An edit arriving after a pending intake file was copied to recovery storage but before its original path was unlinked was lost.",
+    "reproduction": "Public folder-intake regression injects an edit at retirement after an interrupted copy; neither canonical tree nor recovery evidence contained those bytes before repair.",
+    "repair": "Atomically move the actual partial entry into private recovery evidence, then validate that retained file. Do not delete a separately verified source after copying it.",
+    "test": "test_intake_retry_preserves_edit_arriving_during_partial_file_retirement",
+    "validation": "25 intake/concurrency cases passed. Original source and concurrent edit bytes retained. Isort and Mypy passed."
   }
 ]

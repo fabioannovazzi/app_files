@@ -183,7 +183,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "9dc16fb7f2aa6343c68f7ab6538ebdd83f0d2fa83f9b9c2836d6a8e69bfcc6bc",
+  "catalogue_fingerprint": "c5f3f79ec11ddcb320dc46c8f240c4eb14f104c7148b9489ccd82ca62507ff74",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2690,8 +2690,8 @@
   },
   "archive_hardening_release_binding_20261109": {
     "previous_catalogue_fingerprint": "a1de497ee17e8c7be436096beca84edcbeec8b917612e7112e7f8e2c3eb8927a",
-    "version": "0.1.604",
+    "version": "0.1.605",
     "changed_entrypoints": [],
-    "scope": "Archive interruption recovery, original-file preservation, honest bounded search and Drive permission explanations. Existing jurisdiction dispositions retained; no new jurisdiction or installed-host acceptance. See docs/acceptance/studio-archive-hardening."
+    "scope": "Archive interruption recovery, original-file preservation, honest bounded search and Drive permission explanations. Existing jurisdiction dispositions retained; no new jurisdiction or installed-host acceptance. See docs/acceptance/studio-archive-hardening. Final intake retirement race repaired; entrypoint bytes and jurisdiction judgments unchanged."
   }
 }

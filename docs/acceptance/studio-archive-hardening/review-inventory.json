@@ -120,7 +120,9 @@
           501
         ]
       ],
-      "reviewed_sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
+      "reviewed_sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715",
+      "reviewed_working_sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
     },
     {
       "path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
@@ -295,7 +297,9 @@
       ],
       "findings": [],
       "reviewed_sha256": "1c6a83002e2088968f441dd82774040702c04e529b24aaa13f3a32caa5afeba1",
-      "review_notes": "Semantic judgment stays model-led; opaque reference coverage and exact identity checks are mechanical, not semantic substitutes."
+      "review_notes": "Semantic judgment stays model-led; opaque reference coverage and exact identity checks are mechanical, not semantic substitutes.",
+      "reviewed_working_sha256": "47ca99702673778ac2eba1c140160e87a40998e4bb446f50b67bb501d9869bf1",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
     },
     {
       "path": "plugins/archive-organization/references/proposal-contract.md",
@@ -678,7 +682,8 @@
       "status": "first_pass_reviewed",
       "reviewed_ranges": [],
       "findings": [
-        "I001"
+        "I001",
+        "I002"
       ],
       "reviewed_ranges_at_baseline": [
         [
@@ -686,7 +691,9 @@
           293
         ]
       ],
-      "reviewed_sha256": "9083daba8673f0d3123fbf7543713c1e12c25482ab196c2b77c71901b555bfb2"
+      "reviewed_sha256": "9083daba8673f0d3123fbf7543713c1e12c25482ab196c2b77c71901b555bfb2",
+      "reviewed_working_sha256": "834a3d5462167d9109346ff6623e0e09365324a5a969c6cb8d283e1ac0deb111",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
     },
     {
       "path": "plugins/studio-archive/scripts/google_drive.py",
@@ -702,7 +709,9 @@
         "D001"
       ],
       "reviewed_sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5",
-      "review_notes": "Read API pagination, metadata normalization, download boundary, OAuth token persistence, ADC fallback and recursive snapshot. No live calls. Pagination/folder traversal boundedness needs reproduction; token-selection fallback and refreshed-token persistence need caller review."
+      "review_notes": "Read API pagination, metadata normalization, download boundary, OAuth token persistence, ADC fallback and recursive snapshot. No live calls. Pagination/folder traversal boundedness needs reproduction; token-selection fallback and refreshed-token persistence need caller review.",
+      "reviewed_working_sha256": "ea63dc63dadc8ebca8b2a2f9fae0bda6741ffc8951851d310ae4a27c3405a19e",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
     },
     {
       "path": "plugins/studio-archive/scripts/input_verification.py",
@@ -790,8 +799,8 @@
         ]
       ],
       "findings": [],
-      "review_note": "Read all CLI argument schemas, dispatch, JSON/stdin handling, runtime guard and error recording. Core behavior is delegated to archive_core; no standalone CLI claim beyond source tests. Reporter import failures in the CLI error path remain an investigation.",
-      "reviewed_working_sha256": "a3a9ec199b5310329b0c40ecf61c41d57bef88ed299e7a02f2ff297d478c5253"
+      "review_note": "Read all CLI argument schemas, dispatch, JSON/stdin handling, runtime guard and error recording. Core behavior is delegated to archive_core; no standalone CLI claim beyond source tests. Reporter import failures in the CLI error path remain an investigation. Final source delta inspected against the release base; current identity recorded.",
+      "reviewed_working_sha256": "848509b3c2a6671f6c287e7b8527082b1cdcf555007997d9517d2284d1b67021"
     },
     {
       "path": "plugins/studio-archive/scripts/whatsapp_desktop_guard.mjs",
@@ -807,7 +816,9 @@
         "W001"
       ],
       "reviewed_sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5",
-      "review_notes": "Reviewed search/composer checks, exact phone card binding, target reopening and subtree extraction. Executable fake-adapter tests run; live WhatsApp/host API compatibility unverified."
+      "review_notes": "Reviewed search/composer checks, exact phone card binding, target reopening and subtree extraction. Executable fake-adapter tests run; live WhatsApp/host API compatibility unverified.",
+      "reviewed_working_sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
     },
     {
       "path": "plugins/studio-archive/skills/studio-archive/SKILL.md",

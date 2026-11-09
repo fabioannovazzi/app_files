@@ -153,3 +153,11 @@ The full automatic-reporting workflow selection passed locally: 367 tests, 85.98
 Release --check completed successfully for all three products and host packages. Recovery/session/standalone gate passed: 175 tests, three environment skips, 86.13% recovery coverage against the 80% requirement. Logs: product-release-check.log and release-recovery-coverage.log.
 
 Package-integrity/update tests initially returned 415 passed, two skips and one stale assertion: the test looked for removed duplicate privacy copy inside HTML, although the live page uses function-model-data.js and the reviewed public contract. The retained disclosures were inspected in static/shared/privacy-contracts/vera.json. Updated only the test to read that actual contract, assert both pages load the renderer, and retain all scope/route limitations. The repaired test passed (one passed, 398 deselected). No production change was made to satisfy this test; the previously verified 20 rendered-page combinations remain the rendering evidence.
+
+## Final preservation audit (I002)
+
+Six inventory fingerprints still described pre-repair source. Reinspection of their complete diffs confirmed the recorded repairs and exposed an intake retirement race: a later edit could arrive after the recovery copy was verified and before unlink. The public regression reproduced lost edit bytes. Retirement now atomically moves the actual partial file into recovery evidence; 25 intake/concurrency cases passed, with source and concurrent edits preserved. Isort and Mypy pass. Inventory identities updated from inspected current source.
+
+PR #978 at 56f39758e remains under CI. Installed Vera 0.1.604 acceptance is running in fresh chat 01a1c1a6-8cce-7d20-92d5-2aff8b496362; its exposed skill and native MCP operations are observed, but lifecycle acceptance is not yet complete. This additional source repair requires rebuilt Vera/Lucia candidates and a new CI head.
+
+I002 release candidates rebuilt successfully: Vera 0.1.605, Clara 0.1.405, Lucia 0.1.228. Codex, ChatGPT-upload, Cowork and Antigravity artifacts align; native server startup checks passed during the build. Black, Isort, Mypy and Bandit pass for the final intake repair. Final parity and package-integrity checks follow on the committed candidate. The 0.1.604 fresh-session run remains version-specific evidence and has not yet completed.

@@ -9,7 +9,7 @@ All repairs remain local until the release record establishes otherwise.
 | Search | Unreadable/malformed Office file; index writer exits; source changes during extraction; clipped text | Other files remain searchable; prior index retained; changed evidence rejected; truncation disclosed | S001–S004 |
 | Client creation | Registry write fails after visible folder creation | Preserve the folder and concurrent user files; return a recoverable path | L004 |
 | Engagement/run creation | Lost response; real exit during staging/publication; damaged retained JSON | Reuse committed identity and imports; preserve evidence; isolate damaged records | L001–L003 |
-| Folder intake | Concurrent exact delivery; interrupted copy/publication; hardlinks unavailable | One delivery; retry preserves partial bytes and never overwrites conflicting originals | I001 |
+| Folder intake | Concurrent exact delivery; interrupted copy/publication; hardlinks unavailable | One delivery; retry preserves partial bytes and concurrent retirement edits without overwriting conflicting originals | I001–I002 |
 | Organization | Repeated rollback; changed plan; rebuilding an already-applied plan | No second mutation; reject foreign plan; retain later user edits | O001–O004 |
 | Drive discovery | Repeated pagination token; oversized traversal/listing | Bounded failure with explicit limits rather than an endless request loop | D001–D002, simulated gateway only |
 | Saved-work restore | Exit at restoration boundaries; competing destination creation; foreign checkpoint; symlink | Resume owned restoration or require a new destination; never replace unrelated/newer work | R001–R004 |

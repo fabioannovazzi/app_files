@@ -266,18 +266,13 @@ def copy_source_folder(
                         label="intake recovery evidence",
                         create=True,
                     )
-                    preserved = ledger._stable_copy(partial, evidence / "partial-copy")
-                    if (
-                        preserved != observed_bytes
-                        or ledger._stable_file_identity(
-                            partial, label="pending intake file"
-                        )
-                        != preserved
-                    ):
-                        raise ledger.LedgerError(
-                            "Pending intake changed while preserving recovery evidence."
-                        )
-                    partial.unlink()
+                    # Move the actual entry rather than deleting it after a
+                    # copy: an edit between verification and unlink would be
+                    # lost. A concurrent writer retains the moved inode too.
+                    preserved = partial.rename(evidence / "partial-copy")
+                    ledger._stable_file_identity(
+                        preserved, label="preserved intake recovery evidence"
+                    )
         observed = _inventory(destination, pending_allowed=True)
         if not set(observed["directories"]).issubset(inventory["directories"]) or any(
             expected.get(row["relative_path"]) != row for row in observed["files"]

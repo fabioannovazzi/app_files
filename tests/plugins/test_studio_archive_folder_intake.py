@@ -308,3 +308,66 @@ print(json.dumps(result))
             for path in Path(recovered["recovery_evidence_path"]).rglob("*")
             if path.is_file()
         )
+
+
+def test_intake_retry_preserves_edit_arriving_during_partial_file_retirement(tmp_path):
+    """A concurrent edit at retirement must survive in the recovery evidence."""
+    cid, eid, source = case(tmp_path)
+    program = r"""
+import json,os,sys
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+import archive_core as core
+original_copy=core.folder_intake.ledger._stable_copy
+target=None
+def interrupted(source,destination,**kwargs):
+    global target
+    target=destination
+    destination.write_bytes(b'Interrupted copy')
+    raise OSError('Synthetic interrupted copy')
+core.folder_intake.ledger._stable_copy=interrupted
+try:
+    core.copy_studio_client_source_folder(sys.argv[2],sys.argv[3],Path(sys.argv[4]),copy_authorized=True)
+except (OSError,core.ArchiveError):
+    pass
+core.folder_intake.ledger._stable_copy=original_copy
+original_unlink=Path.unlink
+original_rename=Path.rename
+edited=False
+def edit_at_retirement(path):
+    global edited
+    if path==target and not edited:
+        path.write_bytes(b'Concurrent user edit at retirement')
+        edited=True
+def unlink(path,*args,**kwargs):
+    edit_at_retirement(path)
+    return original_unlink(path,*args,**kwargs)
+def rename(path,*args,**kwargs):
+    edit_at_retirement(path)
+    return original_rename(path,*args,**kwargs)
+Path.unlink=unlink
+Path.rename=rename
+try:
+    core.copy_studio_client_source_folder(sys.argv[2],sys.argv[3],Path(sys.argv[4]),copy_authorized=True)
+except (OSError,core.ArchiveError):
+    pass
+print(json.dumps({'edited':edited}))
+"""
+    result = subprocess.run(
+        [sys.executable, "-c", program, str(CLI.parent), cid, eid, str(source)],
+        env={
+            **os.environ,
+            "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "retirement"),
+            "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str(tmp_path / "profile"),
+            "VERA_STUDIO_ARCHIVE_SESSION_ID": "retirement",
+        },
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    )
+
+    assert json.loads(result.stdout)["edited"] is True
+    retained = [p.read_bytes() for p in (tmp_path / "Studio").rglob("*") if p.is_file()]
+    assert b"Concurrent user edit at retirement" in retained
+    assert (source / "2025/invoice.txt").read_text() == "2025 SNC invoice A17 EUR1220"
