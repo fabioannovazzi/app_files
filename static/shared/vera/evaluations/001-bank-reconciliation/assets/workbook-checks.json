@@ -1,30 +1,25 @@
 {
-  "scope": "Rigenerazione del solo Excel con il generatore corretto; fonti normalizzate e decisioni originali conservate. Nessuna nuova chiamata al modello.",
-  "component_version": "0.1.85",
-  "product_version": "0.1.603",
-  "original_refs_found": {
-    "FEE-MAR": true,
-    "IN-001": true,
-    "IN-004": true,
-    "OUT-002": true,
-    "OUT-003": true,
-    "OUT-005": true,
-    "OUT-006": true,
-    "OUT-007": true
-  },
-  "counterparties_found": {
-    "Banca Dimostrativa": true,
-    "Cliente Aurora": true,
-    "Cliente Stella": true,
-    "Fornitore Faro": true,
-    "Fornitore Luce": true,
-    "Fornitore Olmo": true,
-    "Fornitore Pino": true,
-    "Fornitore Quercia": true
-  },
+  "scope": "Verifica dell’Excel prodotto dalla nuova esecuzione completa di Vera 0.1.603, senza modificare il file.",
   "passed": true,
-  "pass_count": 64,
+  "pass_count": 94,
+  "check_count": 94,
   "checks": [
+    {
+      "check": "Quattro fogli previsti",
+      "expected": [
+        "Sintesi",
+        "Relazioni",
+        "Banca",
+        "Partitario"
+      ],
+      "actual": [
+        "Sintesi",
+        "Relazioni",
+        "Banca",
+        "Partitario"
+      ],
+      "passed": true
+    },
     {
       "check": "Banca riga 6: riferimento",
       "expected": "IN-001",
@@ -278,25 +273,25 @@
       "passed": true
     },
     {
-      "check": "Totale netto banca",
+      "check": "Totale banca",
       "expected": -262,
       "actual": -262.0,
       "passed": true
     },
     {
-      "check": "Totale netto partitario",
+      "check": "Totale partitario",
       "expected": -594,
       "actual": -594.0,
       "passed": true
     },
     {
-      "check": "Differenza netta",
+      "check": "Differenza",
       "expected": 332,
       "actual": 332.0,
       "passed": true
     },
     {
-      "check": "Abbinamenti rigorosi",
+      "check": "Abbinamenti",
       "expected": 6,
       "actual": 6,
       "passed": true
@@ -314,6 +309,18 @@
       "passed": true
     },
     {
+      "check": "Relazione R001: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R001: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
       "check": "Relazione R002: totale banca",
       "expected": 0.0,
       "actual": 0.0,
@@ -323,6 +330,18 @@
       "check": "Relazione R002: totale partitario",
       "expected": -350.0,
       "actual": -350.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R002: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R002: controparte Partitario",
+      "expected": true,
+      "actual": true,
       "passed": true
     },
     {
@@ -338,6 +357,30 @@
       "passed": true
     },
     {
+      "check": "Relazione R003: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R003: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R003: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R003: controparte Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
       "check": "Relazione R004: totale banca",
       "expected": -1220.0,
       "actual": -1220.0,
@@ -347,6 +390,30 @@
       "check": "Relazione R004: totale partitario",
       "expected": -1220.0,
       "actual": -1220.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R004: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R004: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R004: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R004: controparte Partitario",
+      "expected": true,
+      "actual": true,
       "passed": true
     },
     {
@@ -362,6 +429,30 @@
       "passed": true
     },
     {
+      "check": "Relazione R005: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R005: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R005: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R005: controparte Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
       "check": "Relazione R006: totale banca",
       "expected": 488.0,
       "actual": 488.0,
@@ -371,6 +462,30 @@
       "check": "Relazione R006: totale partitario",
       "expected": 488.0,
       "actual": 488.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R006: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R006: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R006: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R006: controparte Partitario",
+      "expected": true,
+      "actual": true,
       "passed": true
     },
     {
@@ -386,6 +501,30 @@
       "passed": true
     },
     {
+      "check": "Relazione R007: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R007: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R007: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R007: controparte Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
       "check": "Relazione R008: totale banca",
       "expected": -610.0,
       "actual": -610.0,
@@ -395,6 +534,30 @@
       "check": "Relazione R008: totale partitario",
       "expected": -610.0,
       "actual": -610.0,
+      "passed": true
+    },
+    {
+      "check": "Relazione R008: riferimento Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R008: controparte Banca",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R008: riferimento Partitario",
+      "expected": true,
+      "actual": true,
+      "passed": true
+    },
+    {
+      "check": "Relazione R008: controparte Partitario",
+      "expected": true,
+      "actual": true,
       "passed": true
     },
     {
@@ -408,13 +571,33 @@
       "expected": 8,
       "actual": 8,
       "passed": true
+    },
+    {
+      "check": "Nessun errore Excel nei valori salvati",
+      "expected": 0,
+      "actual": 0,
+      "passed": true
     }
   ],
-  "sha256": "550375a347d86169b789cd49d9947e0b7dd53220b41d53bb7df0516d2c46870b",
-  "source_result_sha256": "3fb05c5f23fed659f40f41d72e87a31d882988e8f8ec32fed8ae6c92470d4648",
-  "generator_sha256": "d7074c807f3c546e549e5be42e5f756e81d2fc605de52737f84a818545f287da",
-  "source_files": {
-    "normalized_bank.csv": "8b8084d7e2d82d28128c345377583b0e17145bdd48a3416526b0061414282e8a",
-    "normalized_journal.csv": "1d44b7c4e2868bfee9c653d723ee7dd815db009d977fd9aac4e767c6114bbcfa"
+  "sha256": "b3f566cf39ed581c873a74b3f3e42c83c14eca786240731b3df5800543442f0e",
+  "references": {
+    "IN-001": true,
+    "OUT-002": true,
+    "OUT-003": true,
+    "IN-004": true,
+    "OUT-005": true,
+    "OUT-006": true,
+    "FEE-MAR": true,
+    "OUT-007": true
+  },
+  "counterparties": {
+    "Cliente Aurora": true,
+    "Fornitore Faro": true,
+    "Fornitore Luce": true,
+    "Cliente Stella": true,
+    "Fornitore Olmo": true,
+    "Fornitore Pino": true,
+    "Banca Dimostrativa": true,
+    "Fornitore Quercia": true
   }
 }

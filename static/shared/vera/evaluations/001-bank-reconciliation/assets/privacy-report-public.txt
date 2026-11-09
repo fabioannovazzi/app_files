@@ -3,52 +3,52 @@
 Questo report misura esclusivamente i dati emessi da Vera durante questa esecuzione. Non ispeziona la chat o le attività di altri strumenti.
 
 Processo: **journal-bank-reconciliation**
-Execution and user identifiers omitted from this public copy.
-Inizio: 2026-11-08T19:29:54.007945+00:00 · Fine: 2026-11-08T19:39:31.229631+00:00
+Identificativi dell’esecuzione e dell’utente omessi nella copia pubblica.
+Inizio: 2026-11-09T18:20:58.440397+00:00 · Fine: 2026-11-09T18:30:36.391811+00:00
 Esito: completed · Rilevazione: incomplete
 
 | Fonte locale | Unità | Disponibili | Inviate da Vera | Non inviate da Vera |
 |---|---|---:|---:|---:|
 | source_qualifications.json | documents | 1 | 1 | non determinabile |
 | ↳ source_qualifications.json | Celle | 1 | 1 | non determinabile |
-| input_receipts.json | documents | 1 | 1 | non determinabile |
-| ↳ input_receipts.json | Celle | 1 | 1 | non determinabile |
-| grouped_worker_run.json | documents | 1 | 1 | non determinabile |
-| ↳ grouped_worker_run.json | Celle | 1 | 1 | non determinabile |
-| reconciliation_audit.json | documents | 1 | 1 | non determinabile |
-| ↳ reconciliation_audit.json | Celle | 1 | 1 | non determinabile |
-| assurance_gates.json | documents | 1 | 1 | non determinabile |
-| ↳ assurance_gates.json | Celle | 1 | 1 | non determinabile |
-| inspection.json | documents | 1 | 1 | non determinabile |
-| ↳ inspection.json | Celle | 1 | 1 | non determinabile |
-| Riconciliazione_banca_partitario.xlsx | worksheet_rows | 50 | 20 | non determinabile |
-| ↳ Riconciliazione_banca_partitario.xlsx | Celle | 500 | 200 | non determinabile |
-| grouped_review_status.json | documents | 1 | 1 | non determinabile |
-| ↳ grouped_review_status.json | Celle | 1 | 1 | non determinabile |
-| review_notes.md | lines | 17 | 17 | non determinabile |
-| ↳ review_notes.md | Celle | 17 | 17 | non determinabile |
-| grouped_reconciliation_result.json | documents | 1 | 1 | non determinabile |
-| ↳ grouped_reconciliation_result.json | Celle | 1 | 1 | non determinabile |
-| grouped_worker_run.json | documents | 1 | 1 | non determinabile |
-| ↳ grouped_worker_run.json | Celle | 1 | 1 | non determinabile |
 | suggested_recipe.json | documents | 1 | 1 | non determinabile |
 | ↳ suggested_recipe.json | Celle | 1 | 1 | non determinabile |
+| grouped_reconciliation_result.json | documents | 1 | 1 | non determinabile |
+| ↳ grouped_reconciliation_result.json | Celle | 1 | 1 | non determinabile |
+| assurance_gates.json | documents | 1 | 1 | non determinabile |
+| ↳ assurance_gates.json | Celle | 1 | 1 | non determinabile |
+| grouped_worker_run.json | documents | 1 | 1 | non determinabile |
+| ↳ grouped_worker_run.json | Celle | 1 | 1 | non determinabile |
+| review_notes.md | lines | 17 | 17 | non determinabile |
+| ↳ review_notes.md | Celle | 17 | 17 | non determinabile |
+| input_receipts.json | documents | 1 | 1 | non determinabile |
+| ↳ input_receipts.json | Celle | 1 | 1 | non determinabile |
+| grouped_review_status.json | documents | 1 | 1 | non determinabile |
+| ↳ grouped_review_status.json | Celle | 1 | 1 | non determinabile |
+| luna_launch_receipt.json | documents | 1 | 1 | non determinabile |
+| ↳ luna_launch_receipt.json | Celle | 1 | 1 | non determinabile |
+| source_qualifications.json | documents | 1 | 1 | non determinabile |
+| ↳ source_qualifications.json | Celle | 1 | 1 | non determinabile |
+| inspection.json | documents | 1 | 1 | non determinabile |
+| ↳ inspection.json | Celle | 1 | 1 | non determinabile |
+| reconciliation_audit.json | documents | 1 | 1 | non determinabile |
+| ↳ reconciliation_audit.json | Celle | 1 | 1 | non determinabile |
 | bank-march-2026.csv | rows | 7 | 7 | non determinabile |
 | ↳ bank-march-2026.csv | Celle | 42 | 42 | non determinabile |
 | journal-march-2026.csv | rows | 7 | 7 | non determinabile |
 | ↳ journal-march-2026.csv | Celle | 49 | 49 | non determinabile |
 
-Invii registrati: 29; 161965 caratteri.
+Invii registrati: 24; 142513 caratteri.
 
 **Misurazione incompleta: una parte dei dati inviati non dispone di coordinate verificabili nella fonte.**
 
-- `derived_output_lineage_unavailable:artifact_37c9134b5fe4705a38cc5f44`
-- `derived_output_lineage_unavailable:artifact_91b4c0ffd34e0992a629f0f7`
-- `derived_output_lineage_unavailable:artifact_ab972baf76df0fea67e006b2`
-- `derived_output_lineage_unavailable:artifact_d37e7eeb9723ce818f1d3a5e`
-- `derived_output_lineage_unavailable:artifact_e8cbf8f3073dab316942bbdd`
+- `derived_output_lineage_unavailable:artifact_5389ee5888f47537909b5698`
+- `derived_output_lineage_unavailable:artifact_85feff1f814290f269d39d61`
+- `derived_output_lineage_unavailable:artifact_d8539c94da926a4c4228d1ef`
+- `derived_output_lineage_unavailable:artifact_d8de0027b0cfafced107539c`
 - `sent_data_has_no_source_coordinates`
 
 Il report e le evidenze restano su questa macchina. Il server riceve l’impronta del report con Vera userID, esecuzione, revisione e versione del prodotto.
 
-Server receipt: pending (HTTPError). Saved report verification: unavailable (HTTPError).
+Ricevuta server verificata sullo stesso report, esecuzione, utente e revisione 1. SHA-256 del report completo locale: f0cfa3c6ada0cffe0a41d27a515c8b0b21de9378e8ba85ac215973298797e9f7. La copia pubblica omette gli identificativi privati e non ha la stessa impronta.
+Recupero: invio iniziale respinto con HTTP 429; timbratura generica respinta con HTTP 409. Ripetuta la chiusura idempotente dello stesso lavoro tramite il comando Archive, senza ricalcolo: ricevuta ottenuta e verifica nativa superata. La misurazione incompleta resta distinta dalla validità della ricevuta.
