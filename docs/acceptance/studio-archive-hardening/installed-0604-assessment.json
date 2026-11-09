@@ -1,0 +1,29 @@
+{
+  "thread_id": "01a1c1a6-8cce-7d20-92d5-2aff8b496362",
+  "observed_version": "Vera 0.1.604",
+  "evidence_path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0604-acceptance/outputs/acceptance-result.json",
+  "evidence_sha256": "2ab4481d2904a0ed75d544cfb0ebbf7b4b97c3c0f6bbdcebe7f8798459fa5528",
+  "observed_checks": {
+    "version_matches_requested": true,
+    "synthetic_clients_created": true,
+    "input_verification": true,
+    "import_retry_same_input": true,
+    "import_retry_already_imported": true,
+    "single_alfa_import": true,
+    "client_isolation": true,
+    "completed": true,
+    "completed_artifacts_available": true,
+    "note_reopened_content_matches": true,
+    "note_contains_synthetic_facts": true,
+    "note_contains_no_beta_unique_content": true,
+    "one_run_only": true,
+    "checkpoint_retained": true,
+    "restore_not_performed": true
+  },
+  "scope": "Minimal synthetic Archive lifecycle fixture using its installed authored-artifact operation. No specialist preparation engine was executed.",
+  "note_sha256": "dc1efbf24206baec7fa5d11a703751f1564920ddb4fb76ab20f2a2b577b3d740",
+  "pipeline": "completed and reopened through installed native tools",
+  "reporting": "Pipeline intentionally excluded. Read/verify calls returned false unavailable diagnostics, reproduced and repaired as P011. No readable report or server receipt claimed.",
+  "restoration": "retained checkpoint verified present; restoration not yet performed",
+  "latest_candidate_acceptance": "pending; current worktree adds I002 and P011 after this installed build"
+}

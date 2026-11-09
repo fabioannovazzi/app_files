@@ -286,9 +286,15 @@ def _parser() -> argparse.ArgumentParser:
     finalize_workflow.add_argument("--client-id", required=True)
     finalize_workflow.add_argument("--engagement-id", required=True)
     finalize_workflow.add_argument("--run-id", required=True)
-    finalize_workflow.add_argument(
+    artifact_source = finalize_workflow.add_mutually_exclusive_group()
+    artifact_source.add_argument(
         "--artifacts-json",
         help="Omit to list this run’s physical output paths before declaring them.",
+    )
+    artifact_source.add_argument(
+        "--artifacts-stdin",
+        action="store_true",
+        help="Read artifact declarations from standard input without command-line size limits.",
     )
     finalize_workflow.add_argument("--expected-declaration-sha256")
 
@@ -528,10 +534,12 @@ def main(argv: list[str] | None = None) -> int:
             artifact_payload = None
             if args.artifacts_json is not None:
                 artifact_payload = json.loads(args.artifacts_json)
-            if args.artifacts_json is not None and not isinstance(
-                artifact_payload, list
-            ):
-                raise ArchiveError("artifacts-json must contain a JSON array.")
+            elif args.artifacts_stdin:
+                artifact_payload = json.load(sys.stdin)
+            if (
+                args.artifacts_json is not None or args.artifacts_stdin
+            ) and not isinstance(artifact_payload, list):
+                raise ArchiveError("Artifact declarations must contain a JSON array.")
             result = finalize_studio_client_workflow(
                 args.client_id,
                 args.engagement_id,

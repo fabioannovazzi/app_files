@@ -355,36 +355,42 @@ def test_vera_public_process_model_data_contract_is_canonical_and_linked() -> No
     assert "`public-process-page-contract.md`" in catalog
 
 
+def _archive_public_model_copy(workflow: str) -> str:
+    """Read the reviewed copy consumed by the public page renderer."""
+    page = (ROOT / "static/shared" / workflow / "index.html").read_text(
+        encoding="utf-8"
+    )
+    assert "function-model-data.js" in page
+    contract = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text(encoding="utf-8")
+    )["pages"][workflow]
+    assert set(contract["copy"]) == {"it", "en", "fr", "de", "es"}
+    assert all(contract["copy"].values())
+    return "\n".join(
+        paragraph for localized in contract["copy"].values() for paragraph in localized
+    )
+
+
 def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None:
     studio_page = (
         ROOT / "static" / "shared" / "studio-archive" / "index.html"
-    ).read_text(encoding="utf-8")
-    organization_page = (
-        ROOT / "static" / "shared" / "archive-organization" / "index.html"
     ).read_text(encoding="utf-8")
     browser_automation_copy = (
         ROOT / "static" / "shared" / "product-function-pages.js"
     ).read_text(encoding="utf-8")
 
-    for key in (
-        "model.engagement.selection",
-        "model.engagement.run",
-        "model.engagement.organization",
-    ):
-        assert studio_page.count(f'"{key}":') == 5
-        assert "function-model-data.js" in studio_page
+    studio_copy = _archive_public_model_copy("studio-archive")
+    organization_copy = _archive_public_model_copy("archive-organization")
     assert '"model.engagement.copy":' not in studio_page
-    assert organization_page.count('"model.inventory.copy":') == 5
-    assert organization_page.count('"model.review.copy":') == 5
     for snippet in (
         "the number of stored email addresses, legal names, and tax identifiers",
         "but not the values",
         "code returns only exact matches",
         "the entire snapshot, within 5,000 files and 2 GB",
         "Raw hashes, Drive IDs, versions, capabilities, and absolute paths stay local",
-        "Organization technical references are pseudonymized",
+        "opaque references",
     ):
-        assert snippet in studio_page
+        assert snippet in studio_copy
     assert "model.engagement.agenzia" not in studio_page
     for snippet in (
         '"browser-automation"',
@@ -403,22 +409,19 @@ def test_archive_pages_explain_the_purpose_preserving_model_projection() -> None
         "rohe Hashes und Ausführungs-IDs",
         "huellas e ID de ejecución brutos",
     ):
-        assert contradictory_exclusion not in studio_page
+        assert contradictory_exclusion not in studio_copy
     for snippet in (
         "every snapshot file, not a sample",
         "Hashes, Drive root, file and parent IDs, versions, capabilities, checksums, and absolute source paths remain in local control",
         "random reference tied to the payload hash for four hours",
         "With local MCP and a linked run",
         "canonical files remain available for review, but decisions stay pending",
-        "Technical references are pseudonymized; document content is not automatically anonymized",
+        "Complete files are not sent automatically",
     ):
-        assert snippet in organization_page
+        assert snippet in organization_copy
 
 
 def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
-    studio_page = (
-        ROOT / "static" / "shared" / "studio-archive" / "index.html"
-    ).read_text(encoding="utf-8")
     inps_page = (
         ROOT / "static" / "shared" / "previdenza-inps" / "index.html"
     ).read_text(encoding="utf-8")
@@ -426,7 +429,7 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
         ROOT / "static" / "shared" / "registro-imprese-sari" / "index.html"
     ).read_text(encoding="utf-8")
 
-    assert studio_page.count('"model.gmail.copy":') == 5
+    studio_copy = _archive_public_model_copy("studio-archive")
     for snippet in (
         "The model receives, with the same limits",
         "one initial search of up to 20 candidates",
@@ -435,7 +438,7 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
         "With local MCP, operations remain bound to the correct run",
         "does not report a decision as saved or applied without a persisted artifact",
     ):
-        assert snippet in studio_page
+        assert snippet in studio_copy
     for stale_source_copy in (
         "Connect OpenAI’s Gmail connector separately",
         "Colleghi separatamente il connector Gmail di OpenAI",
@@ -443,7 +446,7 @@ def test_runtime_parity_disclosures_match_capability_based_routes() -> None:
         "Verbinden Sie den Gmail-Connector von OpenAI separat",
         "Conecta por separado el conector de Gmail de OpenAI",
     ):
-        assert stale_source_copy not in studio_page
+        assert stale_source_copy not in studio_copy
 
     for snippet in (
         "Only in Codex Desktop",
@@ -509,7 +512,9 @@ def test_shared_model_data_copy_names_the_model_not_the_runtime_pair() -> None:
         page = (ROOT / "static" / "shared" / workflow / "index.html").read_text(
             encoding="utf-8"
         )
-        if workflow == "concordato-plan-review":
+        if workflow in {"studio-archive", "archive-organization"}:
+            pages[workflow] = _archive_public_model_copy(workflow)
+        elif workflow == "concordato-plan-review":
             pages[workflow] = page
         else:
             localized_model_values = re.findall(r'"model\.[^"]+":\s*"([^"]*)"', page)

@@ -172,6 +172,7 @@ const {
   generatedReviewCaptureDirectoryImage,
   generatedReviewCollectApplicationWritePaths,
   generatedReviewPathEntryStat,
+  generatedReviewRecoverInterruptedOutput,
   generatedReviewTransactionEnvelope,
   withGeneratedReviewOutputTransaction,
   archiveReportingPaths,
@@ -815,6 +816,7 @@ function materializePrivateReviewArgs(inputArgs) {
   const runIntakePath = boundedOptionalString(args.run_intake_path, "run_intake_path");
   if (runIntakePath) {
     const resolved = path.resolve(runIntakePath);
+    generatedReviewRecoverInterruptedOutput(path.dirname(resolved));
     args.run_intake = readPrivateReviewJson(resolved, "run_intake_path");
     outputDir = path.dirname(resolved);
   }
@@ -824,6 +826,7 @@ function materializePrivateReviewArgs(inputArgs) {
     if (outputDir && path.dirname(resolved) !== outputDir) {
       throw new Error("review_payload_path must be in the run output folder");
     }
+    generatedReviewRecoverInterruptedOutput(path.dirname(resolved));
     args.review_payload = readPrivateReviewJson(resolved, "review_payload_path");
     outputDir ||= path.dirname(resolved);
   }
@@ -837,6 +840,7 @@ function materializePrivateReviewArgs(inputArgs) {
       if (outputDir && path.dirname(resolved) !== outputDir) {
         throw new Error(`${pathField} must be in the run output folder`);
       }
+      generatedReviewRecoverInterruptedOutput(path.dirname(resolved));
       args[objectField] = readPrivateReviewJson(resolved, pathField);
       outputDir ||= path.dirname(resolved);
     } else if (!isPlainObject(args[objectField]) && outputDir) {
@@ -1402,6 +1406,7 @@ function saveDecisionPayload(inputArgs) {
     );
   };
   if (!outputDir) return persist(inputArgs, null).result;
+  generatedReviewRecoverInterruptedOutput(outputDir);
   validateCheckEntriesTransactionInput(outputDir);
   preflightClientRun(outputDir, expectedRunId);
   let assuredWorkflow = false;
@@ -4175,6 +4180,7 @@ function applyDecisionPayload(inputArgs) {
       false,
     );
   }
+  generatedReviewRecoverInterruptedOutput(outputDir);
   validateCheckEntriesTransactionInput(outputDir);
   preflightClientRun(outputDir, expectedRunId);
   let assuredWorkflow = false;

@@ -206,6 +206,7 @@ def stamp_report(report_path: Path) -> dict[str, Any]:
         OSError,
         ValueError,
         TypeError,
+        ImportError,
         sqlite3.Error,
         urllib.error.URLError,
     ) as exc:
@@ -219,7 +220,14 @@ def retry_pending(
     for root in registry.pending_receipts(run_root=run_root):
         try:
             _retry_one(registry, root)
-        except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+        except (
+            OSError,
+            ValueError,
+            KeyError,
+            TypeError,
+            ImportError,
+            sqlite3.Error,
+        ) as exc:
             if strict:
                 raise
             # Keep the failed proof pending and move it behind other retries.

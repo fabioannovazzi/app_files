@@ -511,9 +511,10 @@ def _read(*, create: bool = True) -> dict[str, Any]:
         metadata = path.lstat()
         if not stat.S_ISREG(metadata.st_mode) or metadata.st_nlink != 1:
             raise ValueError("Incident state must be an ordinary private file")
-        return _migrate_delivery_permissions(
-            json.loads(path.read_text(encoding="utf-8"))
-        )
+        state = json.loads(path.read_text(encoding="utf-8"))
+        if not isinstance(state, dict):
+            raise ValueError("Incident state must be a JSON object")
+        return _migrate_delivery_permissions(state)
     return {
         "credentials": {
             "installation_id": str(uuid4()),

@@ -78,6 +78,7 @@ const {
   generatedReviewAtomicWriteFileSync,
   generatedReviewCollectApplicationWritePaths,
   generatedReviewPathEntryStat,
+  generatedReviewRecoverInterruptedOutput,
   generatedReviewRewriteOutputPaths,
   generatedReviewTransactionEnvelope,
   withGeneratedReviewOutputTransaction,
@@ -620,6 +621,7 @@ function saveDecisionPayload(inputArgs) {
     );
   };
   if (!outputDir) return persist(inputArgs, null).result;
+  generatedReviewRecoverInterruptedOutput(outputDir);
   preflightClientWorkflowRun(outputDir, inputArgs?.review_payload?.run_id);
   validateReportBuilderTransactionInput(outputDir);
   return withGeneratedReviewOutputTransaction(
@@ -4200,6 +4202,7 @@ function applyDecisionPayload(inputArgs) {
     });
   };
   if (!outputDir) return applyPrepared(prepareApplication(inputArgs), null);
+  generatedReviewRecoverInterruptedOutput(outputDir);
   preflightClientWorkflowRun(outputDir, inputArgs?.review_payload?.run_id);
   validateReportBuilderTransactionInput(outputDir);
   return withGeneratedReviewOutputTransaction(

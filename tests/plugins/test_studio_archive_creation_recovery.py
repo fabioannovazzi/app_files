@@ -17,6 +17,29 @@ from tests.plugins.test_archive_fault_isolation import case
 __all__: list[str] = []
 SCRIPTS = Path(__file__).resolve().parents[2] / "plugins/studio-archive/scripts"
 
+
+def test_failed_client_registration_preserves_concurrently_added_document(
+    case, monkeypatch
+):
+    core, studio, state, _, _, _, _ = case
+    destination = studio / "Concurrent client"
+    document = destination / "professional-work.txt"
+
+    def fail_registry_write(*args, **kwargs):
+        document.write_text("Work added during registration", encoding="utf-8")
+        raise OSError("Registry disk unavailable")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(core, "_write_client_identities", fail_registry_write)
+        with pytest.raises(core.ArchiveError):
+            core.create_studio_client("Concurrent client", state_dir=state)
+
+    assert document.read_text(encoding="utf-8") == "Work added during registration"
+    manifest = core.ledger.load_client_manifest(destination)
+    recovered = core.get_studio_client_folder(manifest["client_id"], state_dir=state)
+    assert Path(recovered["client_folder"]["client_root"]) == destination
+
+
 # Interrupt after the durable commit and before the caller receives its result.
 INTERRUPTED_WORKER = """
 import os, sys
@@ -27,9 +50,16 @@ state, cid, eid, input_id, operation = sys.argv[2:]
 writer = core.ledger._write_json
 def interrupted(path, payload):
     writer(path, payload)
-    if path.name == ('engagement.json' if operation == 'create' else 'run.json'):
+    if operation == 'create' and path.name == 'engagement.json':
         os._exit(37)
 core.ledger._write_json = interrupted
+rename = Path.rename
+def interrupted_publish(path, target):
+    result = rename(path, target)
+    if operation == 'prepare' and Path(target).parent.name == 'runs':
+        os._exit(37)
+    return result
+Path.rename = interrupted_publish
 if operation == 'create':
     core.create_studio_client_engagement(
         cid, 'Lost process reply', idempotency_key='lost-reply', state_dir=Path(state))
@@ -120,6 +150,39 @@ def test_fresh_cli_recovers_committed_request_after_worker_exit(case, operation)
         assert result["status"] == "already_prepared"
         assert result["run"]["run_id"] == target.name
         assert (target / "run.json").read_bytes() == retained
+
+
+@pytest.mark.parametrize("changed_document", [False, True])
+def test_creation_retry_reports_current_inputs_and_damage(
+    case, tmp_path, changed_document
+):
+    core, _, state, _, cid, _, _ = case
+    arguments = {"state_dir": state, "idempotency_key": "current-inputs"}
+    first = core.create_studio_client_engagement(cid, "Current documents", **arguments)
+    eid = first["engagement"]["engagement_id"]
+    source = tmp_path / "retry-source.txt"
+    source.write_text("Retained original", encoding="utf-8")
+    imported = core.import_studio_client_document(
+        cid, source, "source", engagement_id=eid, state_dir=state
+    )
+    retained = Path(imported["imported_path"])
+    if changed_document:
+        retained.write_text("Later changed bytes", encoding="utf-8")
+    before = retained.read_bytes()
+
+    repeated = core.create_studio_client_engagement(
+        cid, "Current documents", **arguments
+    )
+
+    assert repeated["status"] == "already_created"
+    assert repeated["engagement"]["engagement_id"] == eid
+    assert repeated["source_archive_mutated"] is False
+    assert retained.read_bytes() == before
+    assert repeated["engagement"]["ledger_complete"] is not changed_document
+    assert len(repeated["engagement"]["blocked_inputs"]) == int(changed_document)
+    assert [row["input_id"] for row in repeated["engagement"]["imports"]] == (
+        [] if changed_document else [imported["input_id"]]
+    )
 
 
 def test_repeated_engagement_request_reuses_the_committed_identity(case):

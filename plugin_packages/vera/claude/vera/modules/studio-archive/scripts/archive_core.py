@@ -2398,7 +2398,13 @@ def _readable_after_write(
                 result["readable_archive"] = refresh_readable_archive(
                     client_root, ledger
                 )
-            except (ArchiveError, ledger.LedgerError, OSError, UnicodeError) as exc:
+            except (
+                ArchiveError,
+                ledger.LedgerError,
+                OSError,
+                UnicodeError,
+                ImportError,
+            ) as exc:
                 # Ledger mutation remains committed; expose the separate view failure.
                 result["readable_archive"] = {
                     "status": "unavailable",
@@ -2478,9 +2484,15 @@ def create_studio_client(
         except (ArchiveError, OSError):
             _write_private_json(_config_path(private_state), config.as_json())
             raise
-    except (ArchiveError, OSError):
-        shutil.rmtree(client_root, ignore_errors=True)
-        raise
+    except (ArchiveError, OSError) as exc:
+        # The folder is already visible to the user and other processes. Even
+        # on failed registration, recursive cleanup could erase their new work
+        # or the portable identity that permits recovery without the registry.
+        raise ArchiveError(
+            f"Client registration could not finish; folder retained at {client_root}. "
+            "Select the existing folder to resume registration. "
+            f"Cause: {exc}"
+        ) from exc
     folder = get_studio_client_folder(client_id, state_dir=private_state)
     _remember_known_scopes(private_state, updated_config)
     return {
@@ -2519,6 +2531,7 @@ def create_studio_client_engagement(
                 client_root, client_id, label, idempotency_key=idempotency_key
             )
             engagement, created = outcome["engagement"], outcome["created"]
+        inventory = ledger.inspect_inputs(client_root, engagement["engagement_id"])
     except ledger.LedgerError as exc:
         raise ArchiveError(f"Customer-folder engagement is invalid: {exc}") from exc
     input_root = (
@@ -2531,7 +2544,12 @@ def create_studio_client_engagement(
     return {
         "status": "created" if created else "already_created",
         "client_id": client_id,
-        "engagement": {**engagement, "imports": []},
+        "engagement": {
+            **engagement,
+            "imports": inventory["inputs"],
+            "blocked_inputs": inventory["blocked_inputs"],
+            "ledger_complete": inventory["complete"],
+        },
         "input_dir": str(input_root.resolve(strict=True)),
         "source_archive_mutated": created,
     }
@@ -3146,12 +3164,13 @@ def _bounded_extraction_payload(extraction: ExtractionResult) -> dict[str, Any]:
     locators: list[dict[str, str]] = []
     consumed = 0
     for chunk in extraction.chunks:
-        remaining = MAX_OPEN_CHARS - consumed
+        separator_length = 2 if text_parts else 0
+        remaining = MAX_OPEN_CHARS - consumed - separator_length
         if remaining <= 0:
             break
         selected_text = chunk.text[:remaining]
         text_parts.append(selected_text)
-        consumed += len(selected_text)
+        consumed += len(selected_text) + separator_length
         locators.append(
             {
                 "kind": chunk.locator_kind,
@@ -3159,7 +3178,10 @@ def _bounded_extraction_payload(extraction: ExtractionResult) -> dict[str, Any]:
             }
         )
     limitations = list(extraction.limitations)
-    if len(extraction.chunks) > len(locators):
+    full_length = sum(len(chunk.text) for chunk in extraction.chunks) + 2 * max(
+        0, len(extraction.chunks) - 1
+    )
+    if full_length > consumed:
         limitations.append("open_text_truncated")
     return {
         "status": extraction.status,
@@ -3253,6 +3275,13 @@ def open_studio_archive_organization_item(
             "Local archive source changed after the selected snapshot."
         )
     extraction = _extract_document(source, enable_ocr=False)
+    current_source = _resolve_source_file(client_root, relative_path)
+    if current_source != source or _sha256_file(current_source) != str(
+        expected["sha256"]
+    ):
+        raise SourceChangedError(
+            "Local archive source changed while the evidence was being read."
+        )
     bounded = _bounded_extraction_payload(extraction)
     return {
         **bounded,
@@ -3412,27 +3441,9 @@ def open_studio_google_drive_source(
         extraction = _extract_document(temporary, enable_ocr=False)
     finally:
         temporary.unlink(missing_ok=True)
-    text_parts: list[str] = []
-    locators: list[dict[str, str]] = []
-    consumed = 0
-    for chunk in extraction.chunks:
-        remaining = MAX_OPEN_CHARS - consumed
-        if remaining <= 0:
-            break
-        selected_text = chunk.text[:remaining]
-        text_parts.append(selected_text)
-        consumed += len(selected_text)
-        locators.append(
-            {
-                "kind": chunk.locator_kind,
-                "value": chunk.locator_value,
-            }
-        )
-    limitations = list(extraction.limitations)
-    if len(extraction.chunks) > len(locators):
-        limitations.append("open_text_truncated")
+    bounded = _bounded_extraction_payload(extraction)
     return {
-        "status": extraction.status,
+        **bounded,
         "client_id": client_id,
         "engagement_id": engagement_id,
         "snapshot_input_id": snapshot_input_id,
@@ -3444,11 +3455,7 @@ def open_studio_google_drive_source(
         "citation": (
             f"gdrive:{file_id}@v{current['version']} " f"({expected['relative_path']})"
         ),
-        "text": "\n\n".join(text_parts),
-        "locators": locators,
-        "extraction_method": extraction.extraction_method,
         "evidence_mode": evidence_mode,
-        "limitations": limitations,
         "google_drive_api_called": True,
         "remote_archive_mutated": False,
         "temporary_content_deleted": True,
@@ -4185,17 +4192,24 @@ def _recovery_store(state: Path, identities: Sequence[str]) -> Path:
 
 def _checkpoint_work(state: Path, loaded: Mapping[str, Any]) -> dict[str, Any]:
     """A checkpoint failure must not hide the already committed professional work."""
-    from vera_assurance.recovery import checkpoint_run
-
     run = loaded["run"]
     try:
+        from vera_assurance.recovery import checkpoint_run
+
         return checkpoint_run(
             Path(loaded["context_path"]),
             _recovery_store(
                 state, (run["client_id"], run["engagement_id"], run["run_id"])
             ),
         )
-    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        ImportError,
+        sqlite3.Error,
+    ) as exc:
         return {
             "status": "unavailable",
             "reason": type(exc).__name__,
@@ -4378,6 +4392,7 @@ def _selected_ledger_root(
     *,
     state_dir: Path,
     run_id: str | None = None,
+    retry_pending_reporting: bool = True,
 ) -> Path:
     if run_id is not None:
         retained = _retained_run_root(state_dir, client_id, engagement_id, run_id)
@@ -4395,7 +4410,7 @@ def _selected_ledger_root(
         raise ArchiveError(f"Selected client engagement is invalid: {exc}") from exc
     if engagement["client_id"] != client_id:
         raise ArchiveError("Selected engagement belongs to another client.")
-    if run_id is None:
+    if run_id is None or not retry_pending_reporting:
         return client_root
     try:
         # Recovery of another run must not take locks or make network calls on
@@ -4406,6 +4421,7 @@ def _selected_ledger_root(
         ValueError,
         KeyError,
         TypeError,
+        ImportError,
         sqlite3.Error,
         ledger.LedgerError,
     ) as exc:
@@ -4413,6 +4429,29 @@ def _selected_ledger_root(
             "Pending Archive reporting could not be retried: %s", type(exc).__name__
         )
     return client_root
+
+
+def _deliver_run_metadata(
+    loaded: Mapping[str, Any], result: dict[str, Any]
+) -> dict[str, Any]:
+    """Return committed work even when the optional metadata recorder cannot load."""
+    try:
+        if ledger._reporting_runtime().selective_reporting_enabled():
+            from archive_reporting import metadata_result
+
+            return metadata_result(loaded, result)
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        ImportError,
+        sqlite3.Error,
+    ) as exc:
+        result["reporting"] = ledger._save_review_reporting(
+            loaded, ledger._review_reporting_failure(loaded, exc)
+        )
+    return result
 
 
 def _run_result(loaded: Mapping[str, Any]) -> dict[str, Any]:
@@ -4425,11 +4464,7 @@ def _run_result(loaded: Mapping[str, Any]) -> dict[str, Any]:
             # This acknowledgement contains lifecycle metadata only. Do not
             # obscure a committed state with another write to the failed recorder.
             return result
-    if ledger._reporting_runtime().selective_reporting_enabled():
-        from archive_reporting import metadata_result
-
-        result = metadata_result(loaded, result)
-    return result
+    return _deliver_run_metadata(loaded, result)
 
 
 @_readable_after_write
@@ -4462,7 +4497,11 @@ def verify_studio_run_report(
 ) -> dict[str, Any]:
     """Verify a selected run's saved report without triggering reporting recovery."""
     root = _selected_ledger_root(
-        client_id, engagement_id, state_dir=_state_dir(state_dir), run_id=run_id
+        client_id,
+        engagement_id,
+        state_dir=_state_dir(state_dir),
+        run_id=run_id,
+        retry_pending_reporting=False,
     )
     try:
         return ledger.verify_run_report(root, engagement_id, run_id)
@@ -4609,29 +4648,32 @@ def finalize_studio_client_workflow(
                 "run_id": run_id,
                 "output_paths": [path for path in paths if path not in automatic],
             }
-            if runtime.selective_reporting_enabled() and runtime.report_pipeline(
-                loaded["run"]["workflow_id"]
-            ):
-                from archive_reporting import record_send
-                from archive_reporting_failure import (
-                    REPORTING_ERRORS,
-                    reporting_failure,
-                )
+            try:
+                if runtime.selective_reporting_enabled() and runtime.report_pipeline(
+                    loaded["run"]["workflow_id"]
+                ):
+                    from archive_reporting import record_send
+                    from archive_reporting_failure import (
+                        REPORTING_ERRORS,
+                        reporting_failure,
+                    )
 
-                try:
-                    record_send(
-                        Path(loaded["run_root"]),
-                        result,
-                        channel="archive_declaration_preview",
-                    )
-                except REPORTING_ERRORS as exc:
-                    result["reporting"] = reporting_failure(
-                        loaded["run"]["workflow_id"],
-                        {},
-                        exc,
-                        stage="declaration_preview",
-                        root=Path(loaded["run_root"]),
-                    )
+                    try:
+                        record_send(
+                            Path(loaded["run_root"]),
+                            result,
+                            channel="archive_declaration_preview",
+                        )
+                    except REPORTING_ERRORS as exc:
+                        result["reporting"] = reporting_failure(
+                            loaded["run"]["workflow_id"],
+                            {},
+                            exc,
+                            stage="declaration_preview",
+                            root=Path(loaded["run_root"]),
+                        )
+            except ImportError as exc:
+                result["reporting"] = ledger._review_reporting_failure(loaded, exc)
             return result
         loaded = ledger.finalize_run(
             root,
@@ -4650,11 +4692,10 @@ def finalize_studio_client_workflow(
         "reporting": loaded["reporting"],
     }
     result["recovery"] = _checkpoint_work(private_state, loaded)
-    if ledger._reporting_runtime().selective_reporting_enabled():
-        from archive_reporting import metadata_result
-
-        result = metadata_result(loaded, result)
-    return result
+    if loaded["reporting"].get("status") == "unavailable":
+        # Preserve the sealed outcome without re-entering the failed collector.
+        return result
+    return _deliver_run_metadata(loaded, result)
 
 
 @_readable_after_write
@@ -4805,11 +4846,11 @@ def recover_studio_client_ledger(
                 }
             )
             continue
-        from readable_archive import refresh_readable_archive
-
         try:
+            from readable_archive import refresh_readable_archive
+
             refresh_readable_archive(root, ledger)
-        except (ledger.LedgerError, OSError, UnicodeError) as exc:
+        except (ledger.LedgerError, OSError, UnicodeError, ImportError) as exc:
             navigation_issues.append({"client_id": client_id, "reason": str(exc)})
     complete = not any(
         (
@@ -4942,6 +4983,7 @@ def plan_gmail_client_search(
                     f"from:{address}",
                     f"to:{address}",
                     f"cc:{address}",
+                    f"bcc:{address}",
                 )
             )
             queries.append(
@@ -6175,6 +6217,7 @@ def _extract_document(
         OSError,
         RecursionError,
         RuntimeError,
+        SyntaxError,  # Includes XML parser errors from supported Office readers.
         TypeError,
         UnicodeError,
         ValueError,
@@ -6727,8 +6770,13 @@ def search_archive(
         raise ArchiveError("Search limit must be between 1 and 20.")
     private_state = _state_dir(state_dir)
     config = _load_config(private_state, validate_scope_roots=False)
-    _, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
+    current, scopes_changed = _current_scope_view(config)
+    unchanged_scopes = {
+        scope.scope_id for scope in config.scopes if scope in current.scopes
+    }
+    # A new unrelated client does not invalidate an existing scoped index.
+    # Global searches still require refresh so they cannot omit a new scope.
+    if scopes_changed and (scope_id == "all" or scope_id not in unchanged_scopes):
         raise ArchiveError(
             "Top-level archive scopes changed; refresh before searching."
         )
@@ -6866,6 +6914,8 @@ def search_archive(
         return {
             "query": query,
             "scope_id": scope_id,
+            "scope_configuration_changed": scopes_changed,
+            "index_requires_refresh": scopes_changed,
             "result_count": len(results),
             "results": results,
             **_scan_issue_status(
@@ -6897,11 +6947,7 @@ def open_archive_source(
         raise ArchiveError("context_chunks must be between 0 and 2.")
     private_state = _state_dir(state_dir)
     config = _load_config(private_state, validate_scope_roots=False)
-    _, scopes_changed = _current_scope_view(config)
-    if scopes_changed:
-        raise ArchiveError(
-            "Top-level archive scopes changed; refresh before opening sources."
-        )
+    current, scopes_changed = _current_scope_view(config)
     connection = _connect(private_state, readonly=True)
     try:
         if _metadata_get(connection, "config_fingerprint") != _config_fingerprint(
@@ -6923,6 +6969,13 @@ def open_archive_source(
         ).fetchone()
         if row is None:
             raise ArchiveError("Source ID is not present in the current index.")
+        if scopes_changed and not any(
+            scope.scope_id == row["scope_id"] and scope in current.scopes
+            for scope in config.scopes
+        ):
+            raise ArchiveError(
+                "Selected archive scope changed; refresh before opening sources."
+            )
         source_path = _resolve_source_file(
             config.archive_root, str(row["relative_path"])
         )
@@ -6975,6 +7028,8 @@ def open_archive_source(
             ),
             "source_sha256": str(row["sha256"]),
             "source_verified": True,
+            "scope_configuration_changed": scopes_changed,
+            "index_requires_refresh": scopes_changed,
             "extraction_method": str(row["extraction_method"]),
             "document_status": str(row["status"]),
             "needs_ocr": bool(row["needs_ocr"]),

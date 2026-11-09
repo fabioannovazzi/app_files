@@ -12,7 +12,14 @@ from uuid import uuid4
 
 __all__ = ["REPORTING_ERRORS", "reporting_failure", "isolated_projection"]
 
-REPORTING_ERRORS = (OSError, ValueError, KeyError, TypeError, sqlite3.Error)
+REPORTING_ERRORS = (
+    OSError,
+    ValueError,
+    KeyError,
+    TypeError,
+    ImportError,
+    sqlite3.Error,
+)
 
 
 def reporting_failure(
@@ -28,8 +35,6 @@ def reporting_failure(
     If storage is also unavailable, the returned status and stderr notice remain
     truthful about that failure. Never claim missing measurements were recovered.
     """
-    from archive_report_store import RunStore, atomic_json, now
-
     detail = {
         "status": "unavailable",
         "code": "archive_reporting_unavailable",
@@ -41,6 +46,8 @@ def reporting_failure(
         "retry_action": "retry_reporting_only",
     }
     try:
+        from archive_report_store import RunStore, atomic_json, now
+
         if root is None:
             from archive_emit import _run_roots
 

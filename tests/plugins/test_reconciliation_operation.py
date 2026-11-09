@@ -127,6 +127,28 @@ def test_one_call_delivers_exact_match_and_reopening_does_not_recalculate(
         operation.reconcile(changed, state_dir=client_case.state_dir)
 
 
+def test_completed_request_reopens_retained_result_after_original_sources_disappear(
+    operation, client_case, tmp_path, monkeypatch, reporting_runtime
+):
+    request = request_for(client_case, tmp_path)
+    completed = operation.reconcile(request, state_dir=client_case.state_dir)
+    for source in request["sources"]:
+        Path(source["path"]).unlink()
+
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Completed work must not re-admit sources or recalculate")
+
+    monkeypatch.setattr(operation, "check_sources", forbidden)
+    monkeypatch.setattr(operation, "_command", forbidden)
+
+    reopened = operation.reconcile(request, state_dir=client_case.state_dir)
+
+    assert reopened["run_id"] == completed["run_id"]
+    assert reopened["status"] == "completed"
+    assert reopened["artifacts"] == completed["artifacts"]
+    assert all(Path(path).is_file() for path in reopened["artifacts"])
+
+
 def test_failed_producer_retains_run_and_repeated_request_does_not_retry(
     operation, client_case, tmp_path, monkeypatch, reporting_runtime
 ):
@@ -264,7 +286,7 @@ def test_reviewed_draft_finishes_with_retained_checkpoint_without_recalculation(
 
 
 def test_unsupported_source_is_rejected_before_any_archive_write(
-    operation, tmp_path, monkeypatch
+    operation, client_case, tmp_path, monkeypatch
 ):
     source = tmp_path / "payments.csv"
     source.write_text("InvoiceX;DateX;ValueX\nF1;01/09/2026;100\n")
@@ -276,15 +298,15 @@ def test_unsupported_source_is_rejected_before_any_archive_write(
 
     monkeypatch.setattr(operation.archive, "import_studio_client_document", forbidden)
     request = {
-        "client_id": "unused",
-        "engagement_id": "unused",
+        "client_id": client_case.client_id,
+        "engagement_id": client_case.engagement_id,
         "request_id": "invalid",
         "sources": [{"path": str(source), "mapping": mapping}],
     }
     with pytest.raises(
         operation.archive.ArchiveError, match="does not support this source role"
     ):
-        operation.reconcile(request)
+        operation.reconcile(request, state_dir=client_case.state_dir)
 
 
 def test_declared_lists_normal_operation_delivers_draft_and_reports_separately(

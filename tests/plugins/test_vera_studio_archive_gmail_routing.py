@@ -198,6 +198,7 @@ def test_gmail_plan_is_bounded_to_selected_client_and_neutralizes_operators(
     )
     assert "from:amministrazione@rossi.it" in direct_query
     assert "to:amministrazione@rossi.it" in direct_query
+    assert "bcc:amministrazione@rossi.it" in direct_query
     assert "after:2026/01/01" in direct_query
     assert "before:2027/01/01" in direct_query
     assert "from:contabilita@bianchi.it" not in direct_query

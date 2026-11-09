@@ -183,7 +183,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "a1de497ee17e8c7be436096beca84edcbeec8b917612e7112e7f8e2c3eb8927a",
+  "catalogue_fingerprint": "9a64784eb1757adbf8f2db40ae4fcfefebcfdd20bf2f4f95700ecba1e956fe8d",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2687,5 +2687,11 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
+  },
+  "archive_hardening_release_binding_20261109": {
+    "previous_catalogue_fingerprint": "a1de497ee17e8c7be436096beca84edcbeec8b917612e7112e7f8e2c3eb8927a",
+    "version": "0.1.607",
+    "changed_entrypoints": [],
+    "scope": "Archive interruption recovery, original-file preservation, honest bounded search and Drive permission explanations. Existing jurisdiction dispositions retained; no new jurisdiction or installed-host acceptance. See docs/acceptance/studio-archive-hardening. Final intake retirement race repaired; entrypoint bytes and jurisdiction judgments unchanged. R011 temporary-directory path repair; all 55 entrypoints remain byte-identical. R012 native first-save directory permissions; all entrypoint bytes and jurisdiction judgments retained."
   }
 }

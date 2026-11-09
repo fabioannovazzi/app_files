@@ -20,15 +20,22 @@ for _scripts in (
         if str(_scripts) not in sys.path:
             sys.path.insert(0, str(_scripts))
         break
-from selective_reporting import report_pipeline
 
 __all__ = [
     "begin_report",
     "finish_report",
     "report_declarations",
+    "report_pipeline",
     "retain_artifact_manifest",
     "selective_reporting_enabled",
 ]
+
+
+def report_pipeline(workflow_id: str) -> Any:
+    """Load optional collector routing only inside reporting operations."""
+    from selective_reporting import report_pipeline as selected_pipeline
+
+    return selected_pipeline(workflow_id)
 
 
 def selective_reporting_enabled() -> bool:

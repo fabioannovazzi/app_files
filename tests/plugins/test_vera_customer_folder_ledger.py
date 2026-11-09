@@ -264,6 +264,102 @@ def test_local_archive_organization_projection_keeps_full_population_and_relatio
     assert str(client_case.client_root) not in serialized
 
 
+def test_local_organization_open_rejects_document_changed_during_extraction(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    source = client_case.client_root / "notice.txt"
+    source.write_text("Original snapshot evidence", encoding="utf-8")
+    snapshot = archive_core.snapshot_studio_client_folder(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+    extract = archive_core._extract_document
+
+    def changed_extract(path, **kwargs):
+        path.write_text("Changed professional evidence", encoding="utf-8")
+        return extract(path, **kwargs)
+
+    monkeypatch.setattr(archive_core, "_extract_document", changed_extract)
+
+    with pytest.raises(archive_core.SourceChangedError, match="while"):
+        archive_core.open_studio_archive_organization_item(
+            client_case.client_id,
+            client_case.engagement_id,
+            snapshot["input_id"],
+            snapshot["model_inventory"]["files"][0]["item_ref"],
+            state_dir=client_case.state_dir,
+        )
+
+    assert source.read_text(encoding="utf-8") == "Changed professional evidence"
+
+
+@pytest.mark.parametrize("limit", [8, 1000])
+def test_local_organization_open_reports_clipped_final_chunk(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    limit: int,
+) -> None:
+    content = "Professional notice evidence"
+    (client_case.client_root / "notice.txt").write_text(content, encoding="utf-8")
+    snapshot = archive_core.snapshot_studio_client_folder(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+    )
+    monkeypatch.setattr(archive_core, "MAX_OPEN_CHARS", limit)
+
+    opened = archive_core.open_studio_archive_organization_item(
+        client_case.client_id,
+        client_case.engagement_id,
+        snapshot["input_id"],
+        snapshot["model_inventory"]["files"][0]["item_ref"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert opened["text"] == content[:limit]
+    assert ("open_text_truncated" in opened["limitations"]) == (limit < len(content))
+
+
+@pytest.mark.parametrize("limit", [8, 1000])
+def test_drive_open_reports_clipped_final_chunk(
+    client_case: SimpleNamespace,
+    archive_core: ModuleType,
+    monkeypatch: pytest.MonkeyPatch,
+    limit: int,
+) -> None:
+    gateway = _FakeGoogleDriveGateway(archive_core)
+    archive_core.bind_studio_client_google_drive(
+        client_case.client_id,
+        "root_workspace",
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    snapshot = archive_core.snapshot_studio_client_google_drive(
+        client_case.client_id,
+        client_case.engagement_id,
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+    monkeypatch.setattr(archive_core, "MAX_OPEN_CHARS", limit)
+
+    opened = archive_core.open_studio_archive_organization_item(
+        client_case.client_id,
+        client_case.engagement_id,
+        snapshot["input_id"],
+        snapshot["model_inventory"]["files"][0]["item_ref"],
+        state_dir=client_case.state_dir,
+        gateway=gateway,
+    )
+
+    content = "Verbale assemblea approved by the client."
+    assert opened["text"] == content[:limit]
+    assert ("open_text_truncated" in opened["limitations"]) == (limit < len(content))
+
+
 def test_import_requires_an_explicit_engagement(
     client_case: SimpleNamespace,
     archive_core: ModuleType,

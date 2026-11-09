@@ -1,0 +1,30 @@
+{
+  "thread_id": "01a1c0ca-d95c-7771-8949-a8690f84362f",
+  "observed_version": "Vera 0.1.597",
+  "source_directory": "/Users/fabio/Documents/Codex/2026-11-09/create-an-active-goal-in-this/outputs",
+  "artifacts": {
+    "studio-archive-findings.md": "d26fb784a70f9db94b51f598601019092fad76b48acec8f2cb5b9c1498304071",
+    "archive-tool-evidence.json": "4f8d3d39f2e97db0743b9d4c313916189fb94ce66d6d89c909241b92044a569b",
+    "files-and-links.json": "50e46211cf4e53dfa91e468671ea323d2ccec1dbfb154d792c52f05c90f69420"
+  },
+  "scope": "One synthetic document-only case through installed tools; no native panel interaction or specialist run completion verified.",
+  "observed": [
+    "One practice, two verified inputs; original and follow-up preserved; six links resolve.",
+    "Import retry reused same input; creation retry reused same practice but misleadingly returned imports:[].",
+    "No repeated confirmations or generic professional attestations observed on this tool route.",
+    "UI access restriction, reporting registration denial and HTTP 429 recorded separately from Archive behavior."
+  ],
+  "incorporated_as": [
+    "L001: current input projection on creation retry",
+    "Acceptance: group intake inputs, retain settled choices and agent-managed IDs",
+    "Acceptance: reporting failures remain nonblocking and separately reported"
+  ],
+  "not_proven": [
+    "native panel usability",
+    "specialist run lifecycle",
+    "restore",
+    "fresh-chat resume",
+    "Gmail/Drive/WhatsApp",
+    "Windows or cross-machine behavior"
+  ]
+}

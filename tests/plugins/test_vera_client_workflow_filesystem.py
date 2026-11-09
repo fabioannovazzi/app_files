@@ -257,7 +257,7 @@ OUTPUT_DISCOVERY_REVIEW_WRITER_WORKFLOWS = (
     (
         "journal-bank-reconciliation",
         "1.0",
-        "review_artifact",
+        "unmatched_bank",
         "journal_bank",
     ),
     ("prompt-optimizer", "1.0", "review_artifact", "prompt_optimizer"),
@@ -1206,6 +1206,13 @@ def test_finalization_records_missing_measurements_without_inventing_a_report(
     tmp_path: Path, monkeypatch
 ) -> None:
     monkeypatch.syspath_prepend(str(ROOT / "plugins/studio-archive/scripts"))
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
+    import archive_reporting
+
+    def unavailable_measurement(*args, **kwargs):
+        raise ValueError("Synthetic source measurement failure")
+
+    monkeypatch.setattr(archive_reporting, "measure_source", unavailable_measurement)
     ledger = _load_customer_ledger()
     context_path, _, output_dir, run_id = _running_context(tmp_path, "journal-sampling")
     context = json.loads(context_path.read_text(encoding="utf-8"))
@@ -1228,3 +1235,9 @@ def test_finalization_records_missing_measurements_without_inventing_a_report(
     assert result["reporting"]["status"] == "available"
     report = json.loads((output_dir / "model_data_report.json").read_text())
     assert report["collection_status"] == "incomplete"
+    assert any(
+        error.startswith("source_measurement_unavailable:")
+        for error in report["errors"]
+    )
+    assert result["run"]["status"] == "ready_for_review"
+    assert (output_dir / "result.txt").read_text() == "reviewable result"

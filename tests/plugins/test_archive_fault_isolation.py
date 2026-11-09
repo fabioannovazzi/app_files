@@ -7,6 +7,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -46,6 +47,92 @@ def case(tmp_path: Path, monkeypatch: pytest.MonkeyPatch):
         cid, source, "source", engagement_id=engagement, state_dir=state
     )
     return core, studio, state, root, cid, engagement, imported["input_id"]
+
+
+def test_process_exit_during_preparation_preserves_evidence_and_allows_retry(case):
+    core, _, _, root, cid, eid, input_id = case
+    script = """
+import os, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import client_ledger as ledger
+original = ledger._write_json
+def interrupted(path, payload):
+    original(path, payload)
+    if path.name == 'context.json':
+        os._exit(95)
+ledger._write_json = interrupted
+ledger.prepare_run(Path(sys.argv[2]), sys.argv[3], sys.argv[4],
+    'treasury-forecast', '1.0.0', input_ids=[sys.argv[5]], idempotency_key='interrupted')
+"""
+    exited = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(ROOT / "plugins/studio-archive/scripts"),
+            str(root),
+            cid,
+            eid,
+            input_id,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert exited.returncode == 95, exited.stderr
+    runs = root / "Vera/engagements" / eid / "runs"
+    evidence = runs.parent / "run-preparation-evidence"
+    retained = {p: p.read_bytes() for p in evidence.rglob("*") if p.is_file()}
+
+    result = core.ledger.prepare_run(
+        root,
+        cid,
+        eid,
+        "treasury-forecast",
+        "1.0.0",
+        input_ids=[input_id],
+        idempotency_key="interrupted",
+    )
+
+    assert result["status"] == "prepared"
+    assert retained
+    assert all(p.read_bytes() == content for p, content in retained.items())
+    repeated = core.ledger.prepare_run(
+        root,
+        cid,
+        eid,
+        "treasury-forecast",
+        "1.0.0",
+        input_ids=[input_id],
+        idempotency_key="interrupted",
+    )
+    assert repeated["run"]["run_id"] == result["run"]["run_id"]
+    assert len(list(runs.glob("run_*"))) == 1
+    assert len(core.ledger.list_runs(root, eid)) == 1
+
+
+@pytest.mark.parametrize("invalid_number", ["NaN", "Infinity", "-Infinity"])
+def test_nonfinite_json_in_sibling_client_is_reported_without_hiding_healthy_client(
+    case, invalid_number
+):
+    core, studio, state, root, cid, eid, input_id = case
+    other = studio / "Damaged sibling"
+    other.mkdir()
+    core.ledger.create_client_manifest(other, "client_" + "d" * 24)
+    manifest = other / "Vera/client.json"
+    payload = json.loads(manifest.read_text())
+    payload["created_at"] = "INVALID_NUMBER"
+    damaged = json.dumps(payload).replace('"INVALID_NUMBER"', invalid_number)
+    manifest.write_text(damaged)
+
+    result = core.ledger.inspect_client_manifests([("healthy", root), ("bad", other)])
+
+    assert [row["client_id"] for row in result["clients"]] == [cid]
+    assert result["blocked_clients"][0]["scope_id"] == "bad"
+    assert result["complete"] is False
+    assert manifest.read_text() == damaged
 
 
 def test_damaged_unrelated_client_does_not_prevent_selected_continuation(case):
@@ -208,9 +295,18 @@ def test_general_destination_needs_no_client_identity_or_onboarding(case):
     assert Path(created["client_folder"]["client_root"]).name == "Vari"
 
 
-@pytest.mark.parametrize("failure_at", ["finish_report", "report_status_write"])
+@pytest.mark.parametrize(
+    ("failure_at", "error_type"),
+    [
+        ("finish_report", OSError),
+        ("finish_report", ImportError),
+        ("report_status_write", OSError),
+        ("report_status_write", ImportError),
+        ("runtime_import", ImportError),
+    ],
+)
 def test_finalize_preserves_reviewable_output_when_reporting_fails(
-    case, monkeypatch, failure_at
+    case, monkeypatch, failure_at, error_type
 ):
     core, studio, state, root, cid, eid, input_id = case
     prepared = core.prepare_studio_client_workflow(
@@ -223,7 +319,7 @@ def test_finalize_preserves_reviewable_output_when_reporting_fails(
     runtime = core.ledger._reporting_runtime()
 
     def unavailable(*args, **kwargs):
-        raise OSError("Synthetic reporting failure")
+        raise error_type("Synthetic reporting failure")
 
     real_write = core.ledger._write_json
 
@@ -234,6 +330,9 @@ def test_finalize_preserves_reviewable_output_when_reporting_fails(
 
     if failure_at == "finish_report":
         monkeypatch.setattr(runtime, "finish_report", unavailable)
+    elif failure_at == "runtime_import":
+        monkeypatch.setitem(sys.modules, "selective_reporting", None)
+        core.ledger._reporting_runtime.cache_clear()
     else:
         monkeypatch.setattr(core.ledger, "_write_json", unavailable_status)
 
@@ -261,6 +360,52 @@ def test_finalize_preserves_reviewable_output_when_reporting_fails(
         core.ledger.validate_run_artifacts(root, eid, run_id)["artifacts"][0]["path"]
         == "result.md"
     )
+
+
+def test_output_preview_remains_available_when_reporting_router_cannot_import(
+    case, monkeypatch
+):
+    core, _, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    rid = prepared["run"]["run_id"]
+    core.start_studio_client_workflow(cid, eid, rid, state_dir=state)
+    output = Path(prepared["client_engagement"]["output_dir"]) / "draft.md"
+    output.write_text("Retained draft")
+    monkeypatch.setitem(sys.modules, "selective_reporting", None)
+
+    result = core.finalize_studio_client_workflow(cid, eid, rid, state_dir=state)
+
+    assert result["status"] == "declaration_preview"
+    assert result["output_paths"] == ["draft.md"]
+    assert result["reporting"]["status"] == "unavailable"
+    assert output.read_text() == "Retained draft"
+    assert core.ledger.load_run(root, eid, rid)["run"]["status"] == "running"
+
+
+@pytest.mark.parametrize("local_only", [False, True])
+def test_report_verification_handles_missing_dependency_without_changing_run(
+    case, monkeypatch, local_only
+):
+    core, _, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+    )
+    rid = prepared["run"]["run_id"]
+    output = Path(prepared["client_engagement"]["output_dir"])
+    (output / "model_data_report_options.json").write_text(
+        json.dumps({"local_only": local_only})
+    )
+    (output / "model_data_report.json").write_text(json.dumps({"run_id": rid}))
+    run_path = output.parent / "run.json"
+    before = run_path.read_bytes()
+    monkeypatch.setitem(sys.modules, "archive_report_receipt", None)
+
+    result = core.ledger.verify_run_report(root, eid, rid)
+
+    assert result["status"] == ("not_requested" if local_only else "unavailable")
+    assert run_path.read_bytes() == before
 
 
 def test_existing_general_folder_registers_without_invented_client_name(case):

@@ -185,7 +185,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
+      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/decisions.py",
@@ -205,7 +205,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/recovery.py",
-      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
+      "sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/relationships.py",
@@ -213,7 +213,7 @@
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
+      "sha256": "63075c6c3b0eff1d3a6706aa59d0dd1e00c558f9a4b51dcf952e881caccfa348"
     },
     {
       "path": "modules/bandi-agevolazioni/vendor/modules/vera_assurance/serialization.py",
@@ -321,7 +321,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df"
+      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -341,7 +341,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384"
+      "sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -349,7 +349,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420"
+      "sha256": "63075c6c3b0eff1d3a6706aa59d0dd1e00c558f9a4b51dcf952e881caccfa348"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",
@@ -766,5 +766,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "92185a1c4c8d24748e6542ffda353f32889ad13570a563f7902c10bbc54093e1"
+  "canonical_course_sha256": "2cb6ceb8b413dd424327258b7fa92b9f2c4d17ecc8e9992ae574d7abf59ffcd0"
 }

@@ -9,6 +9,7 @@ import stat
 import unicodedata
 from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 import client_ledger as ledger
 
@@ -221,8 +222,58 @@ def copy_source_folder(
             raise ledger.LedgerError(
                 "Folder intake has an uncertain or foreign destination."
             )
-        observed = _inventory(destination, pending_allowed=True)
         expected = {row["relative_path"]: row for row in inventory["files"]}
+        publication = store / (intake_id + "-publication.json")
+        pending = None
+        if publication.exists() or publication.is_symlink():
+            progress = ledger._validate_seal(
+                ledger._read_json(publication, label="intake publication"),
+                label="intake publication",
+            )
+            if progress.get("intake_id") != intake_id:
+                raise ledger.LedgerError(
+                    "Folder intake publication belongs to another request."
+                )
+            pending = progress.get("pending_file")
+        if pending is not None:
+            if not isinstance(pending, str) or pending not in expected:
+                raise ledger.LedgerError(
+                    "Folder intake pending publication is invalid."
+                )
+            partial = destination / pending
+            if (
+                ledger._ordinary_directory(
+                    partial.parent, label="pending intake parent"
+                )
+                != partial.parent
+            ):
+                raise ledger.LedgerError("Folder intake cannot follow symbolic links.")
+            if partial.exists() or partial.is_symlink():
+                observed_bytes = ledger._stable_file_identity(
+                    partial, label="pending intake file"
+                )
+                row = expected[pending]
+                if observed_bytes != (row["byte_count"], row["sha256"]):
+                    # Never discard bytes written during an interrupted copy,
+                    # including a later user edit before publication committed.
+                    evidence_root = ledger._ordinary_directory(
+                        store / (intake_id + "-evidence"),
+                        label="intake recovery evidence",
+                        create=True,
+                    )
+                    evidence = ledger._ordinary_directory(
+                        evidence_root / uuid4().hex,
+                        label="intake recovery evidence",
+                        create=True,
+                    )
+                    # Move the actual entry rather than deleting it after a
+                    # copy: an edit between verification and unlink would be
+                    # lost. A concurrent writer retains the moved inode too.
+                    preserved = partial.rename(evidence / "partial-copy")
+                    ledger._stable_file_identity(
+                        preserved, label="preserved intake recovery evidence"
+                    )
+        observed = _inventory(destination, pending_allowed=True)
         if not set(observed["directories"]).issubset(inventory["directories"]) or any(
             expected.get(row["relative_path"]) != row for row in observed["files"]
         ):
@@ -248,6 +299,15 @@ def copy_source_folder(
                     target, label="retained intake file"
                 )
             else:
+                ledger._write_json(
+                    publication,
+                    ledger._sealed(
+                        {
+                            "intake_id": intake_id,
+                            "pending_file": row["relative_path"],
+                        }
+                    ),
+                )
                 size, digest = ledger._stable_copy(
                     original,
                     target,
@@ -258,6 +318,7 @@ def copy_source_folder(
                 raise ledger.LedgerError(
                     "Copied folder intake file does not match its source."
                 )
+            publication.unlink(missing_ok=True)
         if (
             _inventory(resolved) != inventory
             or _inventory(destination, pending_allowed=True) != inventory
@@ -289,5 +350,10 @@ def _result(
         "byte_count": sum(row["byte_count"] for row in inventory["files"]),
         "original_preserved": True,
         "tree_preserved": True,
+        "recovery_evidence_path": (
+            str(receipt.parent / (intake_id + "-evidence"))
+            if (receipt.parent / (intake_id + "-evidence")).is_dir()
+            else None
+        ),
         "document_meaning_qualified": False,
     }

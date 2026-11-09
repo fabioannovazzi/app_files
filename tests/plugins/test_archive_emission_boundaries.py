@@ -247,10 +247,17 @@ def test_mcp_bridge_records_model_payload_and_keeps_app_metadata_out(
     }
     recorder = sys.executable
     if not recording_available:
-        broken = tmp_path / "unavailable-recorder"
-        broken.write_text("#!/bin/sh\nexit 1\n")
-        broken.chmod(0o700)
-        recorder = str(broken)
+        # Fail the recorder call after real interpreter capability discovery.
+        # A POSIX shell executable is not a portable failure fixture on Windows.
+        launcher.write_text(
+            "const cp = require('node:child_process');"
+            "const originalSpawnSync = cp.spawnSync;"
+            "cp.spawnSync = (command, args, options) => {"
+            "if (args?.some(value => String(value).endsWith('archive_emit.py'))) "
+            "return {status: 1, stderr: 'Synthetic recorder unavailable'};"
+            "return originalSpawnSync(command, args, options); };\n"
+            + launcher.read_text()
+        )
 
     result = subprocess.run(
         ["node", str(launcher)],
@@ -299,7 +306,7 @@ def test_recording_failure_delivers_mutation_result_without_repeating_work(
     binding = json.dumps({"run_root": str(run_root), "report_revision": 1})
     launcher.write_text(
         "const cp=require('node:child_process');"
-        "cp.spawnSync=(python,args,options)=>{const m=JSON.parse(options.input);"
+        "cp.spawnSync=(python,args,options)=>{if(!options.input)return {status:0,stdout:python};const m=JSON.parse(options.input);"
         f"if(m.action==='bind' && {json.dumps(failure_stage)}==='after_tool_return')"
         f"return {{status:0,stdout:{json.dumps(binding)}}};"
         "return {status:1,stdout:''};};"
@@ -504,3 +511,73 @@ def test_mcp_delivers_result_with_separate_gap_when_report_closed_during_work(
         state_dir=client_case.state_dir,
     )
     assert report_path.read_bytes() == sealed_report
+
+
+def test_mcp_reporting_uses_managed_python_without_path_alias(tmp_path):
+    import shutil
+
+    node = shutil.which("node")
+    assert node is not None
+    runtime = tmp_path / "runtime"
+    interpreter = (
+        runtime / "venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    )
+    interpreter.parent.mkdir(parents=True)
+    import venv
+
+    # A bare python.exe symlink lacks Windows' interpreter DLL/configuration.
+    # Build a real, dependency-free managed environment on every host.
+    venv.EnvBuilder(with_pip=False).create(runtime / "venv")
+    assert interpreter.is_file()
+    plugin = tmp_path / "product"
+    (plugin / "scripts").mkdir(parents=True)
+    calls = tmp_path / "recorded.jsonl"
+    (plugin / "scripts/archive_emit.py").write_text(
+        "import json, sys\nfrom pathlib import Path\n"
+        "message = json.load(sys.stdin)\n"
+        f"with Path({str(calls)!r}).open('a') as handle:\n"
+        "    handle.write(json.dumps(message.get('action', 'record')) + '\\n')\n"
+        "print(json.dumps({'run_root': None}))\n"
+    )
+    worker = tmp_path / "worker.cjs"
+    worker.write_text(
+        "require('node:readline').createInterface({input:process.stdin})"
+        ".on('line',line=>{const m=JSON.parse(line);"
+        "process.stdout.write(JSON.stringify({jsonrpc:'2.0',id:m.id,"
+        "result:{content:[{type:'text',text:'Retained result'}]}})+'\\n');});"
+    )
+    launcher = tmp_path / "bridge.cjs"
+    launcher.write_text(
+        "const cp=require('node:child_process');"
+        f"const {{bridge}}=require({json.dumps(str(SCRIPTS / 'archive_emission_mcp.cjs'))});"
+        f"const child=cp.spawn(process.execPath,[{json.dumps(str(worker))}],{{stdio:['pipe','pipe','inherit']}});"
+        f"bridge(child,'report-builder',{json.dumps(str(plugin))});"
+    )
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in {"PYTHON", "VIRTUAL_ENV", "VERA_REPORTING_PYTHON"}
+    }
+    environment.update(PATH="", MPARANZA_RUNTIME_ROOT=str(runtime))
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {"name": "save_review", "arguments": {}},
+    }
+
+    observed = subprocess.run(
+        [node, str(launcher)],
+        input=json.dumps(request) + "\n",
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=20,
+        check=False,
+    )
+
+    assert observed.returncode == 0, observed.stderr
+    result = json.loads(observed.stdout)["result"]
+    assert "reporting" not in result.get("_meta", {})
+    assert result["content"][0]["text"] == "Retained result"
+    assert calls.read_text().splitlines() == ['"bind"', '"record"']

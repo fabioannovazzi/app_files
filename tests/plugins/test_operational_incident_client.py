@@ -1139,6 +1139,23 @@ def test_symlink_state_does_not_follow_target(tmp_path, monkeypatch):
     assert target.read_text() == "do not read or overwrite"
 
 
+@pytest.mark.parametrize("payload", [None, [], "damaged queue", True])
+@pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
+def test_non_object_incident_state_is_preserved_without_blocking_failure_report(
+    tmp_path, monkeypatch, payload, product
+):
+    module, _, _ = client(tmp_path, monkeypatch, product)
+    context = module.local_context()
+    state = Path(context["outbox_path"])
+    retained = json.dumps(payload).encode()
+    state.write_bytes(retained)
+
+    result = module.report_failure("studio-archive", "execution", "Synthetic failure")
+
+    assert result["reporting"] == "local-state-unavailable"
+    assert state.read_bytes() == retained
+
+
 def test_long_technical_message_is_delivered_completely(tmp_path, monkeypatch):
     module, store, _ = client(tmp_path, monkeypatch)
     message = "technical detail " * 12000

@@ -611,6 +611,13 @@ const GENERATED_REVIEW_TRANSACTION_OPERATION_ERROR = Symbol(
   "generated-review-transaction-operation-error",
 );
 
+function generatedReviewCreateTempDirectory(prefix) {
+  // Windows mkdtemp needs an extended-length path for deep client folders.
+  // Keep the ordinary spelling for identity comparisons and persisted receipts.
+  const created = fs.mkdtempSync(path.toNamespacedPath(prefix));
+  return path.join(path.dirname(prefix), path.basename(created));
+}
+
 function generatedReviewPathEntryStat(targetPath) {
   try {
     return fs.lstatSync(targetPath);
@@ -860,8 +867,13 @@ function generatedReviewMaterializeDirectoryImage(targetDir, image) {
     throw new Error("Review transaction target already exists.");
   }
   fs.mkdirSync(targetDir, { mode: 0o700 });
-  const effectiveImage =
-    image || { rootMode: 0o755, directories: [], files: [] };
+  // A new output has no previous permission image to restore. Preserve the
+  // mode actually created by this filesystem (Windows cannot set POSIX bits).
+  const effectiveImage = image || {
+    rootMode: fs.lstatSync(targetDir).mode & 0o7777,
+    directories: [],
+    files: [],
+  };
   for (const directory of [...effectiveImage.directories].sort(
     (left, right) =>
       left.path.split("/").length - right.path.split("/").length ||
@@ -1184,7 +1196,7 @@ function generatedReviewRestoreFromTrustedImage(
 ) {
   // Recovery is deliberately created only after the untrusted operation has
   // returned. It never depends on a transaction tree that the operation knew.
-  const recoveryRoot = fs.mkdtempSync(
+  const recoveryRoot = generatedReviewCreateTempDirectory(
     path.join(outputParent, ".generated-review-recovery-"),
   );
   fs.chmodSync(recoveryRoot, 0o700);
@@ -1220,13 +1232,17 @@ function generatedReviewRestoreFromTrustedImage(
     }
     restored = true;
   } finally {
-    const cleanup = generatedReviewRemoveTrackedRootWithinParent(
-      outputParent,
-      recoveryRoot,
-      recoveryIdentity,
-    );
-    if (!cleanup.found || cleanup.relocated) {
-      throw new Error("Review output recovery root changed.");
+    // A failed rename may leave the only usable original in this tree.
+    // Retain recovery evidence until canonical restoration is verified.
+    if (restored) {
+      const cleanup = generatedReviewRemoveTrackedRootWithinParent(
+        outputParent,
+        recoveryRoot,
+        recoveryIdentity,
+      );
+      if (!cleanup.found || cleanup.relocated) {
+        throw new Error("Review output recovery root changed.");
+      }
     }
   }
   if (!restored) {
@@ -1245,6 +1261,155 @@ function generatedReviewCanonicalMatchesTrusted(outputDir, trustedImage) {
     );
   } catch {
     return false;
+  }
+}
+
+// Exact bytes and modes, rather than semantic judgment, determine recovery ownership.
+function generatedReviewImageDigest(image) {
+  const digest = require("node:crypto").createHash("sha256");
+  if (image === null) return digest.update("absent").digest("hex");
+  digest.update(JSON.stringify({
+    rootMode: image.rootMode,
+    directories: image.directories,
+    files: image.files.map(({ path, mode, payload }) => ({
+      path, mode, size: payload.length,
+      sha256: require("node:crypto").createHash("sha256").update(payload).digest("hex"),
+    })),
+  }));
+  return digest.digest("hex");
+}
+
+function generatedReviewWithOutputClaim(outputDir, operation) {
+  if (!outputDir) return operation();
+  const output = path.resolve(outputDir);
+  if (output === path.parse(output).root) {
+    throw new Error("Review output transaction rejected the output path.");
+  }
+  const parent = path.dirname(output);
+  generatedReviewValidateRealDirectoryAncestors(parent);
+  const hash = value => require("node:crypto").createHash("sha256").update(value).digest("hex");
+  const prefix = `.generated-review-owner-${hash(path.basename(output))}-`;
+  const host = hash(require("node:os").hostname());
+  // Publish the complete owner identity in one atomic mkdir. Every contender
+  // publishes before scanning and abstains if ANY other live owner exists.
+  // There is no priority rule that could let a later owner overtake an earlier
+  // scan, and no mutable shared lock pathname to race during stale recovery.
+  const claim = generatedReviewCreateTempDirectory(path.join(parent, `${prefix}${host}-${process.pid}-`));
+  const identity = generatedReviewDirectoryIdentity(claim);
+  try {
+    for (const name of fs.readdirSync(parent)) {
+      if (!name.startsWith(prefix) || name === path.basename(claim)) continue;
+      const match = /^([a-f0-9]{64})-([1-9][0-9]*)-[A-Za-z0-9]+$/.exec(name.slice(prefix.length));
+      const other = path.join(parent, name);
+      const entry = generatedReviewPathEntryStat(other);
+      if (!entry) continue;
+      if (!match || !entry.isDirectory() || entry.isSymbolicLink()) {
+        throw new Error("Review output ownership evidence is invalid; retained unchanged.");
+      }
+      if (match[1] !== host) {
+        throw new Error("Review output transaction has an owner on another host; retry there.");
+      }
+      let alive = true;
+      try { process.kill(Number(match[2]), 0); }
+      catch (error) { if (error.code === "ESRCH") alive = false; else throw error; }
+      if (alive) throw new Error("Review output transaction is already active; retry after it finishes.");
+      // Dead owners never block retry. Remove only an empty ownership marker;
+      // all transaction, commit and recovery evidence is handled separately.
+      try { fs.rmdirSync(other); }
+      catch (error) { if (error.code !== "ENOENT" && error.code !== "ENOTEMPTY") throw error; }
+    }
+    return operation();
+  } finally {
+    if (generatedReviewIdentityMatches(generatedReviewPathEntryStat(claim), identity)) {
+      fs.rmdirSync(claim);
+    }
+  }
+}
+
+function generatedReviewRecoverInterruptedOutput(outputDir) {
+  return generatedReviewWithOutputClaim(outputDir, () =>
+    generatedReviewRecoverInterruptedOutputUnlocked(outputDir));
+}
+
+function generatedReviewRecoverInterruptedOutputUnlocked(outputDir) {
+  const output = path.resolve(outputDir);
+  const parent = path.dirname(output);
+  generatedReviewValidateRealDirectoryAncestors(parent);
+  const pending = [];
+  for (const name of fs.readdirSync(parent)) {
+    if (!name.startsWith(".generated-review-commit-")) continue;
+    const root = path.join(parent, name);
+    const entry = generatedReviewPathEntryStat(root);
+    if (!entry?.isDirectory() || entry.isSymbolicLink()) continue;
+    const receiptPath = path.join(root, "recovery.json");
+    const receiptEntry = generatedReviewPathEntryStat(receiptPath);
+    if (!receiptEntry) continue; // No canonical change is allowed before this receipt.
+    if (!receiptEntry.isFile() || receiptEntry.nlink !== 1 || receiptEntry.size > 8192) {
+      throw new Error("Review recovery receipt is unsafe; retained files were preserved.");
+    }
+    const receipt = JSON.parse(fs.readFileSync(receiptPath, "utf8"));
+    if (receipt.output !== path.basename(output)) continue;
+    if (
+      receipt.schema !== "review-output-recovery.v1" ||
+      !generatedReviewIdentityMatches(generatedReviewPathEntryStat(parent), receipt.parentIdentity) ||
+      receipt.host !== require("node:os").hostname() ||
+      !Number.isSafeInteger(receipt.pid) || receipt.pid < 0 ||
+      !/^[a-f0-9]{64}$/.test(receipt.original) ||
+      !/^[a-f0-9]{64}$/.test(receipt.candidate) ||
+      !generatedReviewIdentityMatches(entry, receipt.identity)
+    ) {
+      throw new Error("Review recovery identity is invalid; retained files were preserved.");
+    }
+    const claim = /^\.generated-review-commit-recover-(\d+)-/.exec(name);
+    const owner = claim ? Number(claim[1]) : receipt.pid;
+    if (owner !== 0) {
+      try {
+        process.kill(owner, 0);
+        throw new Error("Another review commit is still active.");
+      } catch (error) {
+        if (error.code !== "ESRCH") throw error;
+      }
+    }
+    pending.push({ root, receipt });
+  }
+  if (pending.length > 1) {
+    throw new Error("Multiple interrupted review commits require reconciliation.");
+  }
+  for (const { root: previousRoot, receipt } of pending) {
+    // Renaming claims this exact retained tree atomically. The PID in its name
+    // also makes an interrupted recovery discoverable without a write window.
+    const root = path.join(parent, `.generated-review-commit-recover-${process.pid}-${require("node:crypto").randomUUID()}`);
+    fs.renameSync(previousRoot, root);
+    try {
+      const current = generatedReviewPathEntryExists(output)
+        ? generatedReviewCaptureDirectoryImage(output) : null;
+      const currentDigest = generatedReviewImageDigest(current);
+      const backup = path.join(root, "trusted-backup");
+      const original = generatedReviewPathEntryExists(backup)
+        ? generatedReviewCaptureDirectoryImage(backup) : null;
+      const originalDigest = generatedReviewImageDigest(original);
+      if (currentDigest !== receipt.original) {
+        if (originalDigest !== receipt.original ||
+            (current !== null && currentDigest !== receipt.candidate)) {
+          throw new Error("Interrupted review files changed; retained files were preserved.");
+        }
+        // Keep an already-published revision as evidence before restoring its predecessor.
+        const savedCandidate = path.join(root, "recovered-candidate");
+        if (current && !generatedReviewPathEntryExists(savedCandidate)) {
+          generatedReviewMaterializeDirectoryImage(savedCandidate, current);
+        }
+        generatedReviewRestoreFromTrustedImage(output, original, parent);
+      }
+      // Retain crash evidence, but do not mistake it for a pending commit on the next retry.
+      const retained = path.join(parent, path.basename(root).replace(".generated-review-commit-", ".generated-review-retained-"));
+      if (generatedReviewPathEntryExists(retained)) {
+        throw new Error("Review recovery evidence destination already exists.");
+      }
+      fs.renameSync(root, retained);
+    } catch (error) {
+      if (!generatedReviewPathEntryExists(previousRoot)) fs.renameSync(root, previousRoot);
+      throw error;
+    }
   }
 }
 
@@ -1274,6 +1439,7 @@ function generatedReviewRunOutputTransaction(
   }
   const outputParent = path.dirname(resolvedOutputDir);
   generatedReviewValidateRealDirectoryAncestors(outputParent);
+  generatedReviewRecoverInterruptedOutputUnlocked(resolvedOutputDir);
   const outputExisted = generatedReviewPathEntryExists(resolvedOutputDir);
   const trustedImage = outputExisted
     ? generatedReviewCaptureDirectoryImage(resolvedOutputDir)
@@ -1286,7 +1452,7 @@ function generatedReviewRunOutputTransaction(
   let canonicalDetached = false;
   let committed = false;
   try {
-    transactionRoot = fs.mkdtempSync(
+    transactionRoot = generatedReviewCreateTempDirectory(
       path.join(outputParent, ".generated-review-transaction-"),
     );
     fs.chmodSync(transactionRoot, 0o700);
@@ -1297,6 +1463,8 @@ function generatedReviewRunOutputTransaction(
       workingOutputDir,
       trustedImage,
     );
+    const workingBaseline = trustedImage ||
+      generatedReviewCaptureDirectoryImage(workingOutputDir);
     if (
       !generatedReviewCanonicalMatchesTrusted(
         resolvedOutputDir,
@@ -1320,7 +1488,7 @@ function generatedReviewRunOutputTransaction(
     const workingImage =
       generatedReviewCaptureDirectoryImage(workingOutputDir);
     const authorized = generatedReviewValidateAuthorizedChanges(
-      trustedImage,
+      workingBaseline,
       workingImage,
       envelope.authorizedWritePaths,
     );
@@ -1356,7 +1524,7 @@ function generatedReviewRunOutputTransaction(
       throw new Error("Review transaction root changed.");
     }
 
-    commitRoot = fs.mkdtempSync(
+    commitRoot = generatedReviewCreateTempDirectory(
       path.join(outputParent, ".generated-review-commit-"),
     );
     fs.chmodSync(commitRoot, 0o700);
@@ -1375,6 +1543,21 @@ function generatedReviewRunOutputTransaction(
     ) {
       throw new Error("Review output changed before transaction commit.");
     }
+    generatedReviewAtomicWriteFileSync(
+      path.join(commitRoot, "recovery.json"),
+      JSON.stringify({
+        schema: "review-output-recovery.v1",
+        output: path.basename(resolvedOutputDir),
+        parent: outputParent,
+        parentIdentity: generatedReviewDirectoryIdentity(outputParent),
+        host: require("node:os").hostname(),
+        pid: process.pid,
+        identity: commitIdentity,
+        original: generatedReviewImageDigest(trustedImage),
+        candidate: generatedReviewImageDigest(workingImage),
+      }),
+      "utf8",
+    );
     if (outputExisted) {
       fs.renameSync(resolvedOutputDir, commitBackup);
       canonicalDetached = true;
@@ -1425,6 +1608,8 @@ function generatedReviewRunOutputTransaction(
       [transactionRoot, transactionIdentity],
       [commitRoot, commitIdentity],
     ]) {
+      // Preserve the detached original and candidate when recovery failed.
+      if (rollbackFailed) break;
       if (!trackedPath || !trackedIdentity) continue;
       try {
         generatedReviewRemoveTrackedRootWithinParent(
@@ -1437,6 +1622,17 @@ function generatedReviewRunOutputTransaction(
       }
     }
     if (rollbackFailed) {
+      // A handled failure no longer owns the retained commit; allow a retry
+      // in this same server process once the filesystem is available again.
+      try {
+        const receiptPath = path.join(commitRoot, "recovery.json");
+        if (generatedReviewIdentityMatches(generatedReviewPathEntryStat(commitRoot), commitIdentity)) {
+          const receipt = JSON.parse(fs.readFileSync(receiptPath, "utf8"));
+          generatedReviewAtomicWriteFileSync(receiptPath, JSON.stringify({ ...receipt, pid: 0 }), "utf8");
+        }
+      } catch {
+        // Preserve all evidence even if recording release of ownership fails.
+      }
       const rollbackError = new Error(
         options.rollbackFailureMessage ||
           "Review output transaction could not be restored safely.",
@@ -1485,29 +1681,31 @@ function withGeneratedReviewOutputTransaction(
   operation,
   options = {},
 ) {
-  const failureMessage =
-    options.failureMessage || "Review output transaction failed safely.";
-  const rollbackFailureMessage =
-    options.rollbackFailureMessage ||
-    "Review output transaction could not be restored safely.";
-  try {
-    return generatedReviewRunOutputTransaction(outputDir, operation, {
-      ...options,
-      failureMessage,
-      rollbackFailureMessage,
-    });
-  } catch (error) {
-    const rollbackFailed =
-      error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] === "rollback";
-    const publicMessage = rollbackFailed
-      ? rollbackFailureMessage
-      : generatedReviewMappedOperationFailure(
-          error,
-          options,
-          failureMessage,
-        );
-    throw new Error(publicMessage);
-  }
+  return generatedReviewWithOutputClaim(outputDir, () => {
+    const failureMessage =
+      options.failureMessage || "Review output transaction failed safely.";
+    const rollbackFailureMessage =
+      options.rollbackFailureMessage ||
+      "Review output transaction could not be restored safely.";
+    try {
+      return generatedReviewRunOutputTransaction(outputDir, operation, {
+        ...options,
+        failureMessage,
+        rollbackFailureMessage,
+      });
+    } catch (error) {
+      const rollbackFailed =
+        error?.[GENERATED_REVIEW_TRANSACTION_ERROR_KIND] === "rollback";
+      const publicMessage = rollbackFailed
+        ? rollbackFailureMessage
+        : generatedReviewMappedOperationFailure(
+            error,
+            options,
+            failureMessage,
+          );
+      throw new Error(publicMessage);
+    }
+  });
 }
 
 // Limitation: this is a bounded transaction contract, not an OS sandbox.
@@ -3074,6 +3272,7 @@ function workflowReviewTransactionOptions(kind, inputArgs, parentState) {
 function saveDecisionPayload(inputArgs) {
   const canonicalOutputDir = resolveRunOutputDir(inputArgs);
   if (!canonicalOutputDir) return saveDecisionPayloadWrites(inputArgs);
+  generatedReviewRecoverInterruptedOutput(canonicalOutputDir);
   preflightClientWorkflowRun(
     canonicalOutputDir,
     inputArgs?.review_payload?.run_id,
@@ -4250,6 +4449,7 @@ function nextActionsWithReviewApplication(currentNextActions, appliedDecisions, 
 function applyDecisionPayload(inputArgs) {
   const canonicalOutputDir = resolveRunOutputDir(inputArgs);
   if (!canonicalOutputDir) return applyDecisionPayloadWrites(inputArgs);
+  generatedReviewRecoverInterruptedOutput(canonicalOutputDir);
   preflightClientWorkflowRun(
     canonicalOutputDir,
     inputArgs?.review_payload?.run_id,

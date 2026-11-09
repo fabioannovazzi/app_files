@@ -4,7 +4,7 @@
   "courses": {
     "apertura-pratica": {
       "path": "apertura-pratica/course.json",
-      "sha256": "b3834d13c9438dcf81171caff4f37904f0f1e4c850bc4d3c938be0217546c7b2",
+      "sha256": "e9d303c79b898844e8edd1ad4c1303ca79e332833fca5d980e3439e86bc7fd37",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Lernen Sie, aus Mandantenanfrage und Unterlagen eine prüfbare Akte zu erstellen und den Bedarf vor der Eröffnung zu erkennen.",
         "es": "Aprende a partir de la solicitud y los documentos del cliente, obtener un expediente revisable e identificar qué falta antes de abrirlo."
       },
-      "source_sha256": "6ad5aa81ae748c81aee6337b9a8b34eb3d078581ecc37122f8a4955b883b15f6"
+      "source_sha256": "a92e75683d80728032ecc06b8a71c6cbbffc5df9e12ac0c0eb0f316c0b3e54e9"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
@@ -62,7 +62,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "3ac468625cafd4bddee932059306ac4d5ef8d8a26b357d5f429e1a469c56ca8a",
+      "sha256": "34cb1917e74df36c9e1db6d0a4dcdf864cce6927f9edc2429e2be245c053d395",
       "languages": [
         "it",
         "en",
@@ -87,7 +87,7 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "727a81d965d0c19161759e3ea94aff5a6b3dd0f9649ba3c0b117b1f56cb0528c"
+      "source_sha256": "fccbded6ecc52a1e2d4ef1d39b6c097387d74b7343e2490e3e512613659a39ef"
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
@@ -120,7 +120,7 @@
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "36485240b563c48397ab265af62f50d4644477eeff3728fac11bae2905ed1a77",
+      "sha256": "8b64f95c68769f4139889fd198d03066d5049c688f4299b60ddf10affd5cedaf",
       "languages": [
         "it",
         "en",
@@ -145,7 +145,7 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "55c37b0190192ead0c608f526980359aea560c63a376d2dd6ffd6e9813158af9"
+      "source_sha256": "e6ee042dfadedec7a89b4573530bdddb73f050a55d315485746a15383f5efb05"
     }
   }
 }

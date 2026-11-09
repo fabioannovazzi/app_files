@@ -1,0 +1,161 @@
+{
+  "thread_id": "01a1c1bc-05d7-7a21-9ba2-115f82b185f9",
+  "observed_version": "Vera 0.1.605",
+  "evidence_path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/acceptance-result.json",
+  "evidence_sha256": "40ae69719dcfa74e37f0d2f8752a6ffb11c44688966d92953754bd8786a2da82",
+  "overall_status": "completed_with_reporting_limitations",
+  "restore": {
+    "status": "passed",
+    "checks": {
+      "note_sha256": "dc1efbf24206baec7fa5d11a703751f1564920ddb4fb76ab20f2a2b577b3d740",
+      "note_hash_matches": true,
+      "note_content_matches": true,
+      "same_client": true,
+      "same_engagement": true,
+      "same_run": true,
+      "same_completed_history": true,
+      "completed": true
+    },
+    "original_preserved": true,
+    "no_recalculation": true,
+    "excluded_reporting": {
+      "reason": "pipeline_not_selected",
+      "run_id": "run_16ab4ba6cdd180fe07f3d6e7",
+      "status": "not_applicable"
+    }
+  },
+  "organization": {
+    "pipeline_status": "completed",
+    "file_operation_acceptance": "passed",
+    "repeat_integrity_checks": [
+      {
+        "path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/archive-0605/Gamma Prova Riordino 0605/Contratti/2026/Manutenzione/2026-10-12_Contratto-manutenzione_Gamma-Prova-Riordino-0605_GAMMA-C01.txt",
+        "expected_sha256": "0f86da3a081c949843eec37fbe1d0543c20a7c4e8b4cbcc9ea30131315e64f25",
+        "actual_sha256": "0f86da3a081c949843eec37fbe1d0543c20a7c4e8b4cbcc9ea30131315e64f25",
+        "unchanged": true
+      },
+      {
+        "path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/archive-0605/Gamma Prova Riordino 0605/Da_verificare/Duplicati_esatti/run_b139ef1cf9dd1fe2a0cfb1f5/documenti-gamma/copia-contratto.txt",
+        "expected_sha256": "772cb672d96d7faadca7f60a47751487e3738ca17b0b7f8e5dfc533337f1d795",
+        "actual_sha256": "772cb672d96d7faadca7f60a47751487e3738ca17b0b7f8e5dfc533337f1d795",
+        "unchanged": true
+      },
+      {
+        "path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/archive-0605/Gamma Prova Riordino 0605/Contabilita/2026/Chiusura-ottobre/2026-10-31_Prospetto-contabile_Gamma-Prova-Riordino-0605_GAMMA-P01.txt",
+        "expected_sha256": "da40b55368b9cff1506e045aa8bf5df9001f9bfd6ed6fecdf3540584b0eace59",
+        "actual_sha256": "da40b55368b9cff1506e045aa8bf5df9001f9bfd6ed6fecdf3540584b0eace59",
+        "unchanged": true
+      },
+      {
+        "path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/archive-0605/Gamma Prova Riordino 0605/documenti-gamma/contratto.txt",
+        "expected_sha256": "829c14acc83e0afaedfdbce090a57329416472f57a0c53fed1ebced825ddfb62",
+        "actual_sha256": "829c14acc83e0afaedfdbce090a57329416472f57a0c53fed1ebced825ddfb62",
+        "unchanged": true
+      },
+      {
+        "path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/archive-0605/Gamma Prova Riordino 0605/documenti-gamma/copia-contratto.txt",
+        "expected_sha256": "829c14acc83e0afaedfdbce090a57329416472f57a0c53fed1ebced825ddfb62",
+        "actual_sha256": "829c14acc83e0afaedfdbce090a57329416472f57a0c53fed1ebced825ddfb62",
+        "unchanged": true
+      },
+      {
+        "path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0605-restore-organization/outputs/archive-0605/Gamma Prova Riordino 0605/documenti-gamma/prospetto.txt",
+        "expected_sha256": "de6dd9bd4699c29f6b06415d07f8f230a022144ea588a701ece4b4721b09ca33",
+        "actual_sha256": "de6dd9bd4699c29f6b06415d07f8f230a022144ea588a701ece4b4721b09ca33",
+        "unchanged": true
+      }
+    ],
+    "same_run_count": 1,
+    "ledger_complete": true,
+    "run_status": "completed",
+    "inputs_valid": true,
+    "artifacts_available": true
+  },
+  "reporting": {
+    "local_report_status": "available",
+    "collection_status": "incomplete",
+    "measurement_errors": [
+      "derived_output_lineage_unavailable:artifact_42b70bbd612fdacc485d0a62",
+      "derived_output_lineage_unavailable:artifact_8aa000bb9a57f67e075484af",
+      "derived_output_lineage_unavailable:artifact_ef6e5b0ab5edd1c08e24df8c",
+      "sent_data_has_no_source_coordinates"
+    ],
+    "report_sha256": "21feb16f41de139b512c58544c3e58aa754715adf5af6432dbd5235c1743aa17",
+    "reopened_same_content": true,
+    "reopened_without_rerunning_organization": true,
+    "receipt_verified": false,
+    "server_receipt_at_completion": {
+      "reason": "HTTPError",
+      "status": "pending"
+    }
+  },
+  "limitations": [
+    "Synthetic agent acceptance only; no human professional review, real customer data or customer-machine acceptance.",
+    "Native UI was not visually exercised; installed MCP/service route, managed helper and saved navigation were checked.",
+    "Restore qualifies the exact retained run, admitted input copy and completed note. Restored engagement listing has imports=[] although its run input binding validates; full engagement-import restoration is not claimed.",
+    "Automatic reporting observes Vera emissions only, not this chat or shell operations. Fixture creation and independent hash checks were outside that measurement boundary.",
+    "Report source table does not establish that the synthetic document texts stayed local: all three were actually returned to the model by installed item openings, and the report is explicitly incomplete.",
+    "Rollback repeat was tested after a completed rollback with new files at former destinations; concurrent mutation during a first rollback, crash recovery and Drive mode were not tested.",
+    "Report receipt remains unavailable; verified usage-task Computer ID does not prove report receipt verification.",
+    "Original renamed Alfa, first empty destination, restored Alfa, Gamma files, subsequent sentinels and all evidence retained."
+  ],
+  "blocks_and_recoveries": [
+    {
+      "category": "restore",
+      "stage": "first_destination",
+      "observed": "Existing empty destination refused because no restore receipt exists.",
+      "pipeline_blocking": true,
+      "action": "Preserved first empty destination; invoked same installed restore with identical IDs and a second new, nonexistent authorized outputs path.",
+      "resolved": true
+    },
+    {
+      "category": "usage_delivery",
+      "stage": "start",
+      "observed": "HTTPError; one local event initially queued.",
+      "pipeline_blocking": false,
+      "action": "Retained task UUID; completed and flushed only that task. Final local queued=0 and native computer link verified.",
+      "resolved": true
+    },
+    {
+      "category": "usage_remote_state",
+      "stage": "final_status",
+      "observed": "Local started and completed events acknowledged, queued=0; remote snapshot still sequence=1/state=unknown and lists started only.",
+      "pipeline_blocking": false,
+      "action": "Recorded differing local and remote evidence without claiming remote completed state.",
+      "resolved": false
+    },
+    {
+      "category": "measurement",
+      "stage": "final_report",
+      "observed": "Incomplete: derived_output_lineage_unavailable for 3 artifacts, sent_data_has_no_source_coordinates.",
+      "pipeline_blocking": false,
+      "action": "Delivered honest final report, kept same run; no reporting suppression, artificial counts, recalculation or replacement.",
+      "resolved": false
+    },
+    {
+      "category": "receipt_verification",
+      "stage": "terminal_report",
+      "observed": "Receipt pending HTTPError; verify_studio_run_report unavailable HTTPError on all 3 attempts.",
+      "pipeline_blocking": false,
+      "action": "Retried same exact run read-only, including after usage delivery recovered; preserved frozen report and useful file result.",
+      "resolved": false
+    },
+    {
+      "category": "instruction_discovery",
+      "stage": "policy_filename",
+      "observed": "Attempted default-studio-policy.json absent.",
+      "pipeline_blocking": false,
+      "action": "Listed installed module; read actual default-archive-policy.json. Installed prepare-review used default policy.",
+      "resolved": true
+    },
+    {
+      "category": "instruction_discovery",
+      "stage": "execution_script_lookup",
+      "observed": "Optional rg lookup of guessed execution-service filenames returned exit 2, no matches.",
+      "pipeline_blocking": false,
+      "action": "Used already exposed vera_execute tool and installed model_data_report.py show; no source changes or alternate package.",
+      "resolved": true
+    }
+  ],
+  "latest_source_boundary": "R011 Windows temporary-path repair is newer than this installed build; rebuilt-candidate acceptance remains pending."
+}

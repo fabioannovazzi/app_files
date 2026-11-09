@@ -413,6 +413,7 @@ fs.renameSync = function reviewTransactionCommitFault(source, target) {
     triggered = true;
     fs.writeFileSync(marker, "commit fault triggered\\n");
     const trustedBackup = path.join(commitRoot, "trusted-backup");
+    if (scenario === "process_exit") process.exit(96);
     if (scenario === "poison_file") {
       fs.writeFileSync(
         path.join(trustedBackup, "run_intake.json"),
@@ -6287,3 +6288,35 @@ def test_unreviewed_table_does_not_claim_a_reviewer_rejected_it(language: str) -
         "de": "Prüfen Sie",
         "es": "Compruebe si",
     }[language] in reason
+
+
+def test_review_save_resumes_after_process_exit_with_original_output_detached(
+    monkeypatch: Any,
+    tmp_path: Path,
+) -> None:
+    output_dir, arguments = _report_transaction_fixture(tmp_path)
+    original = (output_dir / "report_draft.md").read_bytes()
+    _install_review_transaction_commit_fault(
+        monkeypatch,
+        tmp_path,
+        output_dir,
+        "process_exit",
+    )
+    with pytest.raises(subprocess.CalledProcessError) as failure:
+        _call_mcp_server_response(
+            "tools/call",
+            {"name": "save_report_builder_decisions", "arguments": arguments},
+        )
+    assert failure.value.returncode == 96
+    assert not output_dir.exists()
+    monkeypatch.delenv("NODE_OPTIONS")
+
+    observed = _call_mcp_server_response(
+        "tools/call",
+        {"name": "save_report_builder_decisions", "arguments": arguments},
+    )["result"]["structuredContent"]
+
+    assert observed["ok"] is True
+    assert observed["persisted"] is True
+    assert (output_dir / "report_draft.md").read_bytes() == original
+    assert (output_dir / "ui_decisions.json").is_file()

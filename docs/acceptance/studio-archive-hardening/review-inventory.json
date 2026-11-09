@@ -1,0 +1,1436 @@
+{
+  "baseline_commit": "ce847d66468d6085b9e333835ecb5628aa58649a",
+  "scope_note": "Initial inventory; follow imports and callers before claiming complete coverage. Shared assurance files may be out of the owning Archive path and must be classified explicitly.",
+  "files": [
+    {
+      "path": "plugins/_shared/reporting-runtime/operational_incidents.py",
+      "sha256": "750e37caf1b034f6db2d73d670ed002b9e4fc40723f896577f0a89fc67335d71",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          2394
+        ]
+      ],
+      "findings": [
+        "P008"
+      ],
+      "reviewed_working_sha256": "686ed0140b970aff8b4314a3e53a13e202b1c80af91a95f949613f33f36342d1",
+      "review_note": "Completed first pass of scope/permission retention, private state, exact delivery receipt matching, bounded transport, failure/progress/success evidence, PDF recovery metadata, native remedies and original-task verification. P008 repaired top-level malformed state. Successful preparation is explicitly distinguished from original-task recovery. This does not prove live delivery, arbitrary nested-state resilience, or all incident consumers outside Archive."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/__init__.py",
+      "sha256": "e7c525a93ec80ec01a6134527f33a17d07f61cccafd90b33d26bdb96d8e1281f",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          93
+        ]
+      ],
+      "findings": [],
+      "review_note": "Exports contracts and accounting helpers; core Archive imports workflow identifiers, handoff identifier and client folder binding. Classify downstream helper execution separately, not as automatically exercised by importing this package."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
+      "sha256": "3ff2110aa3153c9b2e1cfc25b5febce6ef78155000c60ed76f2779ebcc5dd6df",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          2440
+        ]
+      ],
+      "findings": [
+        "P004"
+      ],
+      "review_note": "First pass complete for shared contracts: Archive client/run/input/output identity and P004 reporting sidecars, legacy reader/builder, mechanical qualification/gate/numeric schemas and standalone task capture. Standalone explicitly has no Archive registration; standalone interruption/large-selection memory behavior is not established by Archive recovery tests. No new semantic classifiers were added.",
+      "reviewed_working_sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/decisions.py",
+      "sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          168
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "28b62f4932997aa50d4d5b099383823096c203a035f1fdbb94ec97b0ce7fe63b",
+      "review_note": "Reviewed complete shared helper: mechanical identity/source bindings or numerical controls; no Archive persistence mutation repair required in this pass. Specialist semantic decisions are outside this helper review."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/envelope.py",
+      "sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          488
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "80f9b005b190a2607ab3a12ad9c508174c8de100d7b9752f87644c62db070358",
+      "review_note": "Reviewed receipt replay, identity uniqueness, source/decision references and evidence gates. No Archive storage write occurs here; professional judgment remains supplied by the caller."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
+      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          197
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1",
+      "review_note": "Reviewed complete shared helper: mechanical identity/source bindings or numerical controls; no Archive persistence mutation repair required in this pass. Specialist semantic decisions are outside this helper review."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/money.py",
+      "sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          310
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "a2064acd368ae921fc37156e88711ed9afef4c7b8de7a374be552fa644a52431",
+      "review_note": "Reviewed complete shared helper: mechanical identity/source bindings or numerical controls; no Archive persistence mutation repair required in this pass. Specialist semantic decisions are outside this helper review."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/recovery.py",
+      "sha256": "9b09d6ac750c7add1574fb1c51d17308a1e4f452839c47839bfe58ddf006d384",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [],
+      "findings": [
+        "R001",
+        "R002",
+        "R003",
+        "R004"
+      ],
+      "reviewed_ranges_at_baseline": [
+        [
+          1,
+          501
+        ]
+      ],
+      "reviewed_sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715",
+      "reviewed_working_sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/relationships.py",
+      "sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          389
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "bfadd997d33e764f414e55d967933a7745ba0a9032df21addf8fed076400a085",
+      "review_note": "Reviewed complete shared helper: mechanical identity/source bindings or numerical controls; no Archive persistence mutation repair required in this pass. Specialist semantic decisions are outside this helper review."
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
+      "sha256": "92718fc4d3cdd30b7a317a0c9eaa38fedad3981c8383c50c09ec7a93e754e420",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          1178
+        ]
+      ],
+      "findings": [
+        "P004",
+        "R005",
+        "R006",
+        "R008",
+        "R011",
+        "R012"
+      ],
+      "review_note": "Reviewed shared transaction runtime with full-lifecycle ownership and interruption recovery. 111 five-consumer cases and final 24 boundary cases passed. Host-local ordinary filesystem only; network/cloud-sync hosts remain unproved. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
+      "reviewed_working_sha256": "63075c6c3b0eff1d3a6706aa59d0dd1e00c558f9a4b51dcf952e881caccfa348"
+    },
+    {
+      "path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
+      "sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          320
+        ]
+      ],
+      "findings": [],
+      "review_notes": "Canonical hashing, byte snapshots, receipts and OS lock mechanics reviewed. Artifact receipt creation resolves paths before symlink check; caller-boundary review remains pending.",
+      "reviewed_sha256": "8fdbb590830d8a41b6bb3271ceb0abf9874237d0151028b994b9e5521077141f"
+    },
+    {
+      "path": "plugins/archive-organization/.app.json",
+      "sha256": "1284c18c07b6548843fdcaa9ff0cb0d2dd61d029248cfa3f93a2dddeba55d0fb",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          3
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "1284c18c07b6548843fdcaa9ff0cb0d2dd61d029248cfa3f93a2dddeba55d0fb",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/.codex-plugin/plugin.json",
+      "sha256": "9d0d94f9346f57b6e2cb9b1ed704c1318d3e436a3bd88e209a195e10b28c48dc",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          51
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "9d0d94f9346f57b6e2cb9b1ed704c1318d3e436a3bd88e209a195e10b28c48dc",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/.mcp.json",
+      "sha256": "e38effab4d8460aa6ceb6b36eaf10f72cc04e3f7650d9d2b5812e738ca3461df",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "e38effab4d8460aa6ceb6b36eaf10f72cc04e3f7650d9d2b5812e738ca3461df",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/README.md",
+      "sha256": "d29c86c7d3f793ecd6684e8ee3ca6b7ba70dfb371ccbb119604d1821ce93378d",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          35
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "d29c86c7d3f793ecd6684e8ee3ca6b7ba70dfb371ccbb119604d1821ce93378d",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/assets/review-workbench-adapter.json",
+      "sha256": "63024ad9099127bec391d9555786ce901319da4b6482ff1d0f5db9fdffd0f759",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          175
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "63024ad9099127bec391d9555786ce901319da4b6482ff1d0f5db9fdffd0f759",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/evals/trigger_fixtures.json",
+      "sha256": "8c3e54d35b1c7164cd9abf3993a5b724a0ebe1be385324e03296f8c76089c624",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          37
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "8c3e54d35b1c7164cd9abf3993a5b724a0ebe1be385324e03296f8c76089c624",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/mcp/server.cjs",
+      "sha256": "8d61e34164f0b0df70bbf8d27e0ff41c127116c580cf47a903aa9bf32d0e772a",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          712
+        ]
+      ],
+      "findings": [
+        "M001"
+      ],
+      "review_note": "Reviewed payload and decision checks, hash-bound expiring references, persistence preflight, temp-file cleanup, Python routing and JSON-RPC error projection. Managed interpreter route requires reproduction. Widget asset and product host wrapper added to inventory separately.",
+      "reviewed_working_sha256": "2f7f9a6b5cb2884c808450931e12c3d86c3689f983809a9eba0c60e84c91b4e9"
+    },
+    {
+      "path": "plugins/archive-organization/references/default-archive-policy.json",
+      "sha256": "48997809fd9a2d8639638d92f0f4b146a0189f42936367fc539ea419d86f3dc1",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          45
+        ]
+      ],
+      "findings": [],
+      "review_note": "Concrete default category/path template; semantic proposals remain model-led and configurable. Policy digest verified by organizer load path.",
+      "reviewed_working_sha256": "48997809fd9a2d8639638d92f0f4b146a0189f42936367fc539ea419d86f3dc1"
+    },
+    {
+      "path": "plugins/archive-organization/references/model-inventory-contract.md",
+      "sha256": "1c6a83002e2088968f441dd82774040702c04e529b24aaa13f3a32caa5afeba1",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          28
+        ]
+      ],
+      "findings": [],
+      "reviewed_sha256": "1c6a83002e2088968f441dd82774040702c04e529b24aaa13f3a32caa5afeba1",
+      "review_notes": "Semantic judgment stays model-led; opaque reference coverage and exact identity checks are mechanical, not semantic substitutes.",
+      "reviewed_working_sha256": "47ca99702673778ac2eba1c140160e87a40998e4bb446f50b67bb501d9869bf1",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
+    },
+    {
+      "path": "plugins/archive-organization/references/proposal-contract.md",
+      "sha256": "5a3dfee5cfd7197593ae14aaa069907ce287cc9f3d761bdaffcdce501cff8d82",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          39
+        ]
+      ],
+      "findings": [],
+      "reviewed_sha256": "5a3dfee5cfd7197593ae14aaa069907ce287cc9f3d761bdaffcdce501cff8d82",
+      "review_notes": "Semantic judgment stays model-led; opaque reference coverage and exact identity checks are mechanical, not semantic substitutes."
+    },
+    {
+      "path": "plugins/archive-organization/references/review-labels.json",
+      "sha256": "ab567a2220cc1c27146d5e0780ae61e3f57a88f1bff4acec8ac60cea4dadabf1",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          362
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "ab567a2220cc1c27146d5e0780ae61e3f57a88f1bff4acec8ac60cea4dadabf1",
+      "review_note": "Reviewed all five language dictionaries for save/compile versus filesystem execution distinction, retained copies and relative destination limits."
+    },
+    {
+      "path": "plugins/archive-organization/scripts/archive_organization.py",
+      "sha256": "9e22910175b0497a09f6ca7f9998eba979b408dd4da377c9d352a864e1746bf4",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          2433
+        ]
+      ],
+      "findings": [
+        "O001",
+        "O002",
+        "O003",
+        "O004"
+      ],
+      "reviewed_ranges_at_baseline": [
+        [
+          1,
+          1593
+        ],
+        [
+          1725,
+          2264
+        ]
+      ],
+      "reviewed_sha256": "a028788ad9235773b196c4bfc56b871d2b0ebd35ddb649797b73cd74886cde6b",
+      "review_notes": "Completed initial review of proposal/plan/review/apply/rollback/CLI code. O001-O004 repaired. Further integration, scale and adversarial tests remain required; first-pass review is not acceptance.",
+      "reviewed_working_sha256": "05034038b55ecd4dbb6d61b34142abd06ced91f1905b8f2b1198f24d526dec6c",
+      "review_note": " CI type-check follow-up: separate the Drive dictionary operation list from the local tuple list by variable name; validation behavior unchanged."
+    },
+    {
+      "path": "plugins/archive-organization/scripts/check_dependencies.py",
+      "sha256": "0b2213807528cda8f6ab9979b75a69debb00cdb7c15f69972237982c3aca622d",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          77
+        ]
+      ],
+      "findings": [],
+      "review_note": "Checks owned files and declared Drive import availability. Dotted-module find_spec can raise when a parent package is absent; diagnostic behavior needs follow-up.",
+      "reviewed_working_sha256": "0b2213807528cda8f6ab9979b75a69debb00cdb7c15f69972237982c3aca622d"
+    },
+    {
+      "path": "plugins/archive-organization/skills/archive-organization/SKILL.md",
+      "sha256": "6f223b9bf4713f47121262724bdf243af302b3c74ddf26e197750f341f9bf8a8",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          236
+        ]
+      ],
+      "findings": [
+        "H003"
+      ],
+      "reviewed_working_sha256": "4af6286f5ae74620136541c1c671340518b35c597d35c70ee8ead75574da8a17",
+      "review_note": "Reviewed full organization workflow, dry run versus filesystem apply, byte versus semantic duplicates and rollback limits; this is instruction review, not live Drive acceptance."
+    },
+    {
+      "path": "plugins/archive-organization/tests/test_archive_organization.py",
+      "sha256": "ec615fb4ecdac6a7154c3507b6dc40d4cdcde7078e3197f4ab78fe8b48c651a4",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          1292
+        ]
+      ],
+      "findings": [],
+      "review_note": "Reviewed local byte-preserving organization/rollback, approved-plan binding, changed-source and later-work preservation, mutation exclusion, file-boundary injection, model-reference privacy, retention, and simulated Drive identity/version/pagination/lost-response behavior. KeyboardInterrupt injection is not an actual process kill; simulated Drive does not establish live Drive permission or network recovery acceptance.",
+      "reviewed_working_sha256": "ec8c82680a830f38879c2faee2bf136a355debff83052e1c749bb233da46d92f"
+    },
+    {
+      "path": "plugins/studio-archive/.app.json",
+      "sha256": "1284c18c07b6548843fdcaa9ff0cb0d2dd61d029248cfa3f93a2dddeba55d0fb",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          3
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "1284c18c07b6548843fdcaa9ff0cb0d2dd61d029248cfa3f93a2dddeba55d0fb",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/studio-archive/.codex-plugin/plugin.json",
+      "sha256": "e61c8504106679e0a906c4b005d76369e2b700ffc80e5616d42af2f8ad3e2115",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          62
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "e61c8504106679e0a906c4b005d76369e2b700ffc80e5616d42af2f8ad3e2115",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/studio-archive/.mcp.json",
+      "sha256": "f8f5d32f7ad9cdbaa74ae7ed877efc17517ada912f77b15692e61e6846e79205",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          18
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "f8f5d32f7ad9cdbaa74ae7ed877efc17517ada912f77b15692e61e6846e79205",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/studio-archive/README.md",
+      "sha256": "4c7605e8713ab16b273f895acf5e2a27077f905adf46d8619593350feaae3608",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          268
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "cd4fd643f09cb47bc9aaaa9502c8b1c9c1fa749ce36b72c4bb149fd03b1405f0",
+      "review_note": "Aligned four functions, documented selected-job checkpoint/restore commands, distinguished ledger recovery from organization rollback, and removed unsupported cross-computer acceptance wording."
+    },
+    {
+      "path": "plugins/studio-archive/evals/trigger_fixtures.json",
+      "sha256": "74aa9c8b070b152281026284b65d739cf491c2f877a7aba3b279cd62453e64b8",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          57
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "74aa9c8b070b152281026284b65d739cf491c2f877a7aba3b279cd62453e64b8",
+      "review_note": "Inspected configuration/documentation and its claimed scope; metadata and trigger fixtures do not prove installed acceptance."
+    },
+    {
+      "path": "plugins/studio-archive/mcp/server.cjs",
+      "sha256": "91e12395081ed877a844bb98806b35c1caaa6fa924aa4a646e8b1aa6f5407cb9",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          2061
+        ]
+      ],
+      "findings": [
+        "M003"
+      ],
+      "reviewed_working_sha256": "14b53e092500ebb564900b19d441bb699e2fdcc321980d455e82b2699630b5b2",
+      "review_note": "Reviewed all tool schemas, dispatch validation, interpreter/managed-launcher selection, error/reporting envelopes and transport. Large declaration repair verified; large preparation/upstream argument lists remain an investigation."
+    },
+    {
+      "path": "plugins/studio-archive/scripts/archive_core.py",
+      "sha256": "d45b5b30671d988827e1b07638b252ff11d1fe08c567cd4c194f3ccafe9c7b5e",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          7083
+        ]
+      ],
+      "findings": [
+        "S001",
+        "L001",
+        "G001",
+        "S002",
+        "P002",
+        "P003",
+        "P006",
+        "L004",
+        "S003",
+        "R009",
+        "S004",
+        "P009",
+        "P010"
+      ],
+      "reviewed_ranges_at_baseline": [
+        [
+          1378,
+          1443
+        ],
+        [
+          3721,
+          3764
+        ],
+        [
+          6531,
+          6576
+        ],
+        [
+          6717,
+          6795
+        ],
+        [
+          6884,
+          6990
+        ]
+      ],
+      "reviewed_sha256": "d45b5b30671d988827e1b07638b252ff11d1fe08c567cd4c194f3ccafe9c7b5e",
+      "extraction_review_note": "Reviewed text, Office, EML, PDF/image/OCR extraction and transactional index refresh. Malformed Office XML isolated with S002. Actual subprocess exit during rebuild preserves prior searchable index. Optional OCR dependency and live extraction resource performance require separate acceptance.",
+      "reviewed_working_sha256": "e88efa643680127222fc318c164107778979a3cea9e6d7e23bc21b2c977a250d",
+      "review_note": "First pass completed across configuration, identities, organization inventory/opening, workflow dispatch, imports, checkpoints/restoration, Gmail routing, SQLite indexing and scoped search. S003 and R009 confirmed and repaired. First-pass completion does not establish release or installed acceptance. Follow-up: selected reporting retry critical path and post-commit metadata result imports; Drive binding concurrency across distinct sessions needs evidence before classifying a defect. S004 fixes clipped final-fragment indication and shares bounded local/Drive projection. P009/P010 close demonstrated post-commit metadata import and read-only verification retry defects. Drive binding concurrency concern inspected: token and bindings are per-state files, and same-state configured calls hold the configuration lease; no shared-profile binding-write race demonstrated. Cross-machine/live Drive acceptance remains unproved."
+    },
+    {
+      "path": "plugins/studio-archive/scripts/archive_error_reporting.py",
+      "sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          77
+        ]
+      ],
+      "findings": [],
+      "review_notes": "Exact run ownership, active collection, selected pipeline only; caller exception coverage still requires follow-through.",
+      "reviewed_sha256": "1d58322709a8e648888c9b3ab2c15439734de7c437fe2682f6b2b2eff7c88bd5"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/archive_preferences.py",
+      "sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          180
+        ]
+      ],
+      "findings": [],
+      "review_notes": "Owner-private bounded records, symlink rejection, bounded OS locking and thread reentrancy reviewed; runtime compatibility tests remain required.",
+      "reviewed_sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/build_model_data_report.py",
+      "sha256": "57eebdae3bb98531ee030dda2fca05de45ce84331ac4f8fdede6a3c3b06ea409",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          31
+        ]
+      ],
+      "findings": [],
+      "review_note": "Thin wrapper locating the canonical report builder and explicitly disabling server attestation for generic lifecycle reports.",
+      "reviewed_working_sha256": "57eebdae3bb98531ee030dda2fca05de45ce84331ac4f8fdede6a3c3b06ea409"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/check_dependencies.py",
+      "sha256": "9af5b8c81cdd7c1811d2a2d39c0d8db19c51d098cde5f4bb808df1af6ee18ea4",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          112
+        ]
+      ],
+      "findings": [],
+      "review_note": "Checks required import availability and FTS5 secure deletion in the declared CPython 3.12 environment. Optional OCR is selected by requirements arguments; no install performed.",
+      "reviewed_working_sha256": "9af5b8c81cdd7c1811d2a2d39c0d8db19c51d098cde5f4bb808df1af6ee18ea4"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/client_ledger.py",
+      "sha256": "63c5ae91565f0ac94a1d192992c1a288ace5cad02e1a35a7b036a4b056c36c88",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          677,
+          850
+        ],
+        [
+          2540,
+          2635
+        ],
+        [
+          2876,
+          2908
+        ],
+        [
+          3064,
+          3148
+        ],
+        [
+          210,
+          278
+        ],
+        [
+          815,
+          1115
+        ],
+        [
+          1192,
+          2527
+        ],
+        [
+          2794,
+          2991
+        ],
+        [
+          1,
+          210
+        ],
+        [
+          278,
+          355
+        ],
+        [
+          413,
+          677
+        ],
+        [
+          2527,
+          2807
+        ],
+        [
+          2999,
+          3545
+        ]
+      ],
+      "findings": [
+        "L001",
+        "P001",
+        "I001",
+        "L002",
+        "P002",
+        "L003",
+        "P003",
+        "P006",
+        "R009",
+        "P011"
+      ],
+      "reviewed_ranges_at_baseline": [
+        [
+          1115,
+          1175
+        ]
+      ],
+      "reviewed_sha256": "aa581761e865414ac840e1bf6ba165ff5447178ec094a52f0fa26bfbe06248fc",
+      "review_note": "Full first-pass review completed across turns. Findings remain local repairs. Remaining investigations: local snapshot directory-only resource bounds, optional dependency failures in declaration preview/report verification and retry wrappers, direct low-level client creation interruption. User-facing idempotent engagement creation uses ensure_engagement, not create_engagement. P011 scoped delta reviewed: excluded reads retain existing byte/ownership validation; present historical reports remain verified.",
+      "reviewed_working_sha256": "c27a214461085b03450d25293be7259a84d93e6144971c5861f0cda472f9b2df"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/folder_intake.py",
+      "sha256": "11a9eb7d2be366890b0db14ca2588454b288d53e414d86193c2f5b867b40947c",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [],
+      "findings": [
+        "I001",
+        "I002"
+      ],
+      "reviewed_ranges_at_baseline": [
+        [
+          1,
+          293
+        ]
+      ],
+      "reviewed_sha256": "9083daba8673f0d3123fbf7543713c1e12c25482ab196c2b77c71901b555bfb2",
+      "reviewed_working_sha256": "834a3d5462167d9109346ff6623e0e09365324a5a969c6cb8d283e1ac0deb111",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
+    },
+    {
+      "path": "plugins/studio-archive/scripts/google_drive.py",
+      "sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          461
+        ]
+      ],
+      "findings": [
+        "D001"
+      ],
+      "reviewed_sha256": "7ea637902377f41bbc785f0d2224246bba69f7f5eb67526120ccbd9e7ed5e2e5",
+      "review_notes": "Read API pagination, metadata normalization, download boundary, OAuth token persistence, ADC fallback and recursive snapshot. No live calls. Pagination/folder traversal boundedness needs reproduction; token-selection fallback and refreshed-token persistence need caller review.",
+      "reviewed_working_sha256": "ea63dc63dadc8ebca8b2a2f9fae0bda6741ffc8951851d310ae4a27c3405a19e",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
+    },
+    {
+      "path": "plugins/studio-archive/scripts/input_verification.py",
+      "sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          203
+        ]
+      ],
+      "findings": [],
+      "review_notes": "Bounded exact selection, receipt/bytes and optional baseline checks, exact population readback; explicitly excludes semantics and future changes.",
+      "reviewed_sha256": "00d4ac63e8ee22553b51c709f38c2917a088e0435961465a244503af5255ce8f"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/open_items_source_preflight.py",
+      "sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          73
+        ]
+      ],
+      "findings": [],
+      "review_note": "Read-only agent-selected mapping/capability adapter. Delegates parsing to the reconciliation producer, with hashes checked before admission. Does not itself establish source meaning.",
+      "reviewed_working_sha256": "97dd7d84004984f16bbd233a705984d9195192d7da39107e54e21d6daa487e4b"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/readable_archive.py",
+      "sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          282
+        ]
+      ],
+      "findings": [],
+      "review_note": "Reviewed generated ownership marker, escaped labels/encoded relative links, lock/atomic page replacement, valid versus blocked input/job projections and artifact integrity links. Existing tests cover relocation, unowned-file preservation, unfinished output hiding and changed finalized outputs. This is local rendering evidence, not installed UI acceptance.",
+      "reviewed_working_sha256": "32d0cbb605fb70ee549264a6fe244aec9126de8906eeba2cc135517c7c9c97a8"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/reconcile_open_items.py",
+      "sha256": "04f97595d2991697c2474d5a1add4a024df817c3789cc161c4da913333570b35",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          380
+        ]
+      ],
+      "findings": [
+        "X001"
+      ],
+      "review_note": "Reviewed full public orchestration, execution lease, source admission, request identity, review checkpoint, finalization/delivery. X001 repairs reopened source admission on exact retained requests. Concurrent whole-operation retries and checkpoint/request atomic publication remain investigations beyond the already-locked ledger operations.",
+      "reviewed_working_sha256": "d7fa0ec87b7ca76105fef10394d9f4a4c71ba6f5cb31962651d2368acc779ef5"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/run_reporting.py",
+      "sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          99
+        ]
+      ],
+      "findings": [
+        "P002"
+      ],
+      "review_notes": "Product/pipeline routing, lazy imports, generated artifact declarations and receipt retention reviewed with ledger callers.",
+      "reviewed_sha256": "2c94a9397e4200b55fdad0921fa596297685da6c62466da8243be96f1ec8ea2a",
+      "reviewed_working_sha256": "616cfe71f20c2b2c3e20a6fe3f9d8422267bb453f5c47c9941d749ac88ed3a56"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/studio_archive.py",
+      "sha256": "a3a9ec199b5310329b0c40ecf61c41d57bef88ed299e7a02f2ff297d478c5253",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          628
+        ]
+      ],
+      "findings": [],
+      "review_note": "Read all CLI argument schemas, dispatch, JSON/stdin handling, runtime guard and error recording. Core behavior is delegated to archive_core; no standalone CLI claim beyond source tests. Reporter import failures in the CLI error path remain an investigation. Final source delta inspected against the release base; current identity recorded.",
+      "reviewed_working_sha256": "848509b3c2a6671f6c287e7b8527082b1cdcf555007997d9517d2284d1b67021"
+    },
+    {
+      "path": "plugins/studio-archive/scripts/whatsapp_desktop_guard.mjs",
+      "sha256": "79f43c094c5c6e703b07dd65b936d40d9f5b1ad33b4f0f7dd50afa1f1ce277dc",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          731
+        ]
+      ],
+      "findings": [
+        "W001"
+      ],
+      "reviewed_sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5",
+      "review_notes": "Reviewed search/composer checks, exact phone card binding, target reopening and subtree extraction. Executable fake-adapter tests run; live WhatsApp/host API compatibility unverified.",
+      "reviewed_working_sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5",
+      "review_note": " Final source delta inspected against the release base; current identity recorded."
+    },
+    {
+      "path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
+      "sha256": "80b4094cbd4b4d8d5ef0acebe5f9cd90ca69f2d69fa4ba09662217cd7fa8543e",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          1122
+        ]
+      ],
+      "findings": [],
+      "review_notes": "Gmail and WhatsApp routing, scopes, mutation prohibitions and evidence limits reviewed against helpers. Full lifecycle instructions remain pending.",
+      "reviewed_working_sha256": "690190a8c0e09eaaa7e108bfec998f3db5a3efa2c3a05246a94efef0ab1b0e6e",
+      "review_note": "Reviewed all four access routes, intake/lifecycle, preservation, reporting and continuation instructions. Aligned interruption-before-first-marker behavior with R003, and resolved inconsistent redundant-copy confirmation wording using existing authority. Fresh-chat acceptance remains separate."
+    },
+    {
+      "path": "plugins/studio-archive/skills/studio-archive/references/geneva.md",
+      "sha256": "a2ebdb373a74fb7a76ba8d3a311d42c973941a86bbe7537e51d979ce76b15ff0",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          7
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "a2ebdb373a74fb7a76ba8d3a311d42c973941a86bbe7537e51d979ce76b15ff0",
+      "review_note": "Reviewed jurisdiction/language separation and exact identity boundaries; no live legal applicability claim."
+    },
+    {
+      "path": "plugins/studio-archive/skills/studio-archive/references/input-verification.md",
+      "sha256": "52e3da59ec7c56b34f48a1a8e21672bbd6540503c8c7e2ecc1b5cdf5b3f137b8",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          53
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "52e3da59ec7c56b34f48a1a8e21672bbd6540503c8c7e2ecc1b5cdf5b3f137b8",
+      "review_note": "Reviewed selected-input, exact-set, caller-baseline and read-time verification boundaries against the implemented public route."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_cli.py",
+      "sha256": "e96d672fd62106622063a78f47c416ec35fa74bf16f6cdaa3ac7d4c49c4664f7",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          245
+        ]
+      ],
+      "findings": [],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_cli.py",
+      "reviewed_working_sha256": "e96d672fd62106622063a78f47c416ec35fa74bf16f6cdaa3ac7d4c49c4664f7",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_emission_mcp.cjs",
+      "sha256": "e33c6625a931140504a34210723cf81a96719f331560d953847892cd0bb2d803",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          116
+        ]
+      ],
+      "findings": [
+        "M002"
+      ],
+      "reviewed_working_sha256": "6fec1f86d4587bdb2e0cbaceb0b1543ea7864d63ba66894ad6bb812591735a8f",
+      "review_note": "Reviewed request/token ownership, recorder failure delivery and managed interpreter discovery. Malformed protocol-line handling remains an investigation."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_emit.py",
+      "sha256": "e6af4a0b8ac814638f85541cd18d9841760ca7f0410e8039256b92521c72416a",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          260
+        ]
+      ],
+      "findings": [],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_emit.py",
+      "reviewed_working_sha256": "e6af4a0b8ac814638f85541cd18d9841760ca7f0410e8039256b92521c72416a",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_projection.py",
+      "sha256": "96dfa605cce28df808400ab76dab98cd3c27d7ae7fd71c343ea56dd8f7b3027c",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          546
+        ]
+      ],
+      "findings": [
+        "P005"
+      ],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_projection.py",
+      "reviewed_working_sha256": "96dfa605cce28df808400ab76dab98cd3c27d7ae7fd71c343ea56dd8f7b3027c",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_report_legacy.py",
+      "sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          297
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "6dadb7f05b50afb13f7d23cde1e0e6a0748ad850a7df7dadace66f66cf96098e",
+      "review_note": "Reviewed retained schema-3 validation and rendering. Historical receipt semantics retained; no new live-report guarantee inferred."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_report_measurements.py",
+      "sha256": "8b57f977f3bfb47a4d9dc1b22370ae0d135368933577356bbf02e8a525b86b41",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          322
+        ]
+      ],
+      "findings": [
+        "P007"
+      ],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_report_measurements.py",
+      "reviewed_working_sha256": "dc6776113459131fbf756dbd8882e622c9441e80200ece7f64f24b259eb94118",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_report_receipt.py",
+      "sha256": "d4b7cdad03bf1745632cd96087bbf352b89633d442d9ba32f606a85f1cd5662c",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          332
+        ]
+      ],
+      "findings": [
+        "P006"
+      ],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_report_receipt.py",
+      "reviewed_working_sha256": "04758e412e1dabdbd63f0b8de8f6018077a00c642a235ac869351df24039796d",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_report_seal.py",
+      "sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          132
+        ]
+      ],
+      "findings": [],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_report_seal.py",
+      "reviewed_working_sha256": "a74fc59815602ed9a3ee3ff7d31d2cdc2989a7f106a29185767750990f88649b",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_report_store.py",
+      "sha256": "916017ea711652bf12d885725b50a8cc168a2624e7f5ad4cee12297f73822186",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          504
+        ]
+      ],
+      "findings": [],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_report_store.py",
+      "reviewed_working_sha256": "916017ea711652bf12d885725b50a8cc168a2624e7f5ad4cee12297f73822186",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_reporting.py",
+      "sha256": "800384074cde48288f5572245d31a7dcd07ef78a2760ef1a2fe9f4f3f349bb10",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          906
+        ]
+      ],
+      "findings": [
+        "P005",
+        "P011"
+      ],
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_reporting.py",
+      "reviewed_working_sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance. Final P011 delta inspected; product copy is byte-identical to canonical shared source, including validated reads for intentionally excluded pipelines."
+    },
+    {
+      "path": "plugins/vera/scripts/archive_reporting_failure.py",
+      "sha256": "3705b3118295be6c25f125560baf1db7312c4c83e5d41cdff6f3cb661c893f5f",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          103
+        ]
+      ],
+      "findings": [
+        "P005"
+      ],
+      "reviewed_working_sha256": "3a618de9edb0678412ba6d5d47ddef5ccfdcb9f022cf81055647e242d94fff24",
+      "review_note": "Reviewed canonical shared reporting source and verified exact product-copy parity. Mechanical source coordinates, local persistence, receipt binding and failure boundaries reviewed; this is not live receipt-server or installed-product acceptance.",
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/archive_reporting_failure.py"
+    },
+    {
+      "path": "plugins/vera/scripts/managed_python_runtime.py",
+      "sha256": "0f6bb7331551e626b498fce93f43951a325c10541a5b458e0c4144e8158ee3bf",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          497
+        ]
+      ],
+      "findings": [],
+      "reviewed_working_sha256": "0f6bb7331551e626b498fce93f43951a325c10541a5b458e0c4144e8158ee3bf",
+      "review_note": "Reviewed wrapper routing, verified execution, diagnostics and delivery-report calls. Imported implementation and initial optional-import failures remain dependency review items."
+    },
+    {
+      "path": "static/shared/archive-organization/index.html",
+      "sha256": "ff1d62f20527057cfdca10f4677e62fa7fe3763ec06a9ec84ac2a22ff0ea2316",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          313
+        ]
+      ],
+      "findings": [
+        "H002",
+        "H003",
+        "H004"
+      ],
+      "reviewed_working_sha256": "fbd50080df793baecd216a1597153642df09735368bbb911a103a9d771011999",
+      "review_note": "Reviewed current static structure, five-language explanations and language controls. Removed obsolete modelDataCopy rather than maintaining unrendered claims; governed shared privacy contracts remain authoritative and require release refresh. Twenty local browser checks verify both pages at desktop/mobile widths and all five language buttons, including visible final privacy text. First-pass source/browser review is not public deployment or installed acceptance. Linked external videos were not assessed as release evidence."
+    },
+    {
+      "path": "static/shared/studio-archive/index.html",
+      "sha256": "67bd6bbfe846a85413b0ba02501ca344ae2d95b0d4a1c961a5c2b032f235510d",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          1471
+        ]
+      ],
+      "findings": [
+        "H001",
+        "H004"
+      ],
+      "reviewed_sha256": "b68ae8ed69a41e04bc08c024543ad83a044d5367c1d57d7b01d3ffd015b430f0",
+      "review_notes": "Updated all five language dictionaries and Italian fallback with four functions, checkpoint limitations and unverified multi-computer behavior. Browser verified all languages and no desktop/mobile overflow. Remaining existing connector/extraction claims need integration review; shared privacy contracts still require release refresh.",
+      "reviewed_working_sha256": "4271d5b2d8cda245bc54e69f6bdf8e94935b62a212cea8503320fe3c47fb9223",
+      "review_note": "Reviewed current static structure, five-language explanations and language controls. Removed obsolete modelDataCopy rather than maintaining unrendered claims; governed shared privacy contracts remain authoritative and require release refresh. Twenty local browser checks verify both pages at desktop/mobile widths and all five language buttons, including visible final privacy text. First-pass source/browser review is not public deployment or installed acceptance. Linked external videos were not assessed as release evidence."
+    },
+    {
+      "path": "plugins/archive-organization/assets/archive-organization-review-widget.html",
+      "sha256": "5c4cf6ea8be8849a46cc8501245ba0c74c6ef3c66420cb18065ee69783ef4fec",
+      "status": "excluded_retired_product_ui",
+      "reviewed_ranges": [
+        [
+          2608,
+          2640
+        ],
+        [
+          3028,
+          3260
+        ],
+        [
+          3860,
+          4059
+        ]
+      ],
+      "findings": [],
+      "scope_reason": "Followed Archive Organization MCP resources, host transport and contract tests.",
+      "review_note": "Confirmed scripts/vera_ui_retirement.py explicitly removes this browser widget from the Vera product. Reviewed payload/save/apply paths before classification; remaining standalone legacy UI work excluded per repository instruction not to invest in legacy UI. Native review persistence remains in scope."
+    },
+    {
+      "path": "plugins/vera/scripts/component_service.cjs",
+      "sha256": "7edddc073a8953f8989ae4af6b1c92e0fc288a74cf8760ea7ac2e5eb69d701ea",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          85
+        ]
+      ],
+      "findings": [],
+      "scope_reason": "Followed Archive Organization MCP resources, host transport and contract tests.",
+      "reviewed_working_sha256": "7edddc073a8953f8989ae4af6b1c92e0fc288a74cf8760ea7ac2e5eb69d701ea",
+      "review_note": "Reviewed component allowlist, verified component path, child lifecycle and bridge selection; verifier dependency review remains separate."
+    },
+    {
+      "path": "plugins/vera/scripts/run_component_mcp.cjs",
+      "sha256": "019db4804c38c96e4be4264b0164830d95ea027cc3fb3701d852e13c52078c4a",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          6
+        ]
+      ],
+      "findings": [],
+      "scope_reason": "Followed Archive Organization MCP resources, host transport and contract tests.",
+      "reviewed_working_sha256": "019db4804c38c96e4be4264b0164830d95ea027cc3fb3701d852e13c52078c4a",
+      "review_note": "Reviewed verified launcher entrypoint; verification implementation is a separate dependency."
+    },
+    {
+      "path": "tests/plugins/test_archive_organization_plugin.py",
+      "sha256": "e3b2b6f24d967b872facb2dc5c365ab807ebc2651fcc2ae3ba89cee898bd80e7",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          373
+        ]
+      ],
+      "findings": [],
+      "scope_reason": "Followed Archive Organization MCP resources, host transport and contract tests.",
+      "review_note": "Reviewed source coverage of managed interpreter discovery, generated artifact contract, five-language component and Vera MCP reference persistence, review-only unbound references, invalid-language no-write behavior and retired widget generator consistency. Stub launcher routing is not installed acceptance; widget rendering is not native product UI acceptance.",
+      "reviewed_working_sha256": "ecaf9138a7d4e8d0e156fb086fc8b4079f4e9804988064b856b61dd4d72e0f5a"
+    },
+    {
+      "path": "plugins/report-builder/mcp/server.cjs",
+      "sha256": "cccaac0fa71f812e26cba51aa3a60547198013128380267744d4e6abe3c44d32",
+      "status": "scoped_first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          80,
+          84
+        ],
+        [
+          643,
+          647
+        ],
+        [
+          4224,
+          4228
+        ],
+        [
+          588,
+          785
+        ],
+        [
+          3187,
+          3230
+        ],
+        [
+          4200,
+          4305
+        ],
+        [
+          4575,
+          4650
+        ]
+      ],
+      "reviewed_working_sha256": "bd1c1bf2e6469aafcc23305f20a39931b6b6d116c0bd0c1a0721eb6cfce9889a",
+      "findings": [
+        "R006"
+      ],
+      "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap.",
+      "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
+    },
+    {
+      "path": "plugins/check-entries/mcp/server.cjs",
+      "sha256": "f899f0b372a4f3c37b833f9e15e8b164bfc9da6f43eee5914cd6191491efc633",
+      "status": "scoped_first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          174,
+          178
+        ],
+        [
+          1423,
+          1427
+        ],
+        [
+          4197,
+          4201
+        ],
+        [
+          831,
+          920
+        ],
+        [
+          1382,
+          1508
+        ],
+        [
+          1745,
+          1778
+        ],
+        [
+          4150,
+          4290
+        ],
+        [
+          4662,
+          4728
+        ],
+        [
+          4765,
+          4818
+        ]
+      ],
+      "reviewed_working_sha256": "b732faff05ec3b66aef41c20464edfd651a572d9425a9b5664ec66210f852496",
+      "findings": [
+        "R006",
+        "R010"
+      ],
+      "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap.",
+      "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
+    },
+    {
+      "path": "plugins/journal-sampling/mcp/server.cjs",
+      "sha256": "e9f3121219d08f1d3e3149702d933ab1b9511a03730ced4922fbe3e5701b6cde",
+      "status": "scoped_first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1541,
+          1545
+        ],
+        [
+          1649,
+          1653
+        ],
+        [
+          2767,
+          2771
+        ],
+        [
+          3921,
+          3925
+        ],
+        [
+          2338,
+          2385
+        ],
+        [
+          2775,
+          2898
+        ],
+        [
+          3940,
+          4065
+        ]
+      ],
+      "reviewed_working_sha256": "539132d2eae8ad2b1c6dae58c4cc18ce80f173ba4267c82efab465c30e61bf5b",
+      "findings": [
+        "R006",
+        "R011",
+        "R012"
+      ],
+      "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
+      "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
+    },
+    {
+      "path": "plugins/open-item-reconciliation/mcp/server.cjs",
+      "sha256": "6be182a7f00f55ce362d7c4999cd9fc9a6d71bf33f554e88c6ad7ed88032ec4b",
+      "status": "scoped_first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          758,
+          762
+        ],
+        [
+          772,
+          776
+        ],
+        [
+          1977,
+          1981
+        ],
+        [
+          2085,
+          2089
+        ],
+        [
+          3274,
+          3278
+        ],
+        [
+          4470,
+          4474
+        ],
+        [
+          752,
+          800
+        ],
+        [
+          2743,
+          2795
+        ],
+        [
+          3290,
+          3380
+        ],
+        [
+          4495,
+          4620
+        ]
+      ],
+      "reviewed_working_sha256": "d7b2ea3491ec4135d1780f2b56fdc290cf0054e80f2a82a5212679846730d33e",
+      "findings": [
+        "R006",
+        "R011",
+        "R012"
+      ],
+      "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
+      "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
+    },
+    {
+      "path": "plugins/concordato-plan-review/mcp/server.cjs",
+      "sha256": "1536267b36807958e08f7063c0464a06dda504836cffb4df64e75ab2589fcfb1",
+      "status": "scoped_first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1268,
+          1272
+        ],
+        [
+          1376,
+          1380
+        ],
+        [
+          3205,
+          3209
+        ],
+        [
+          4382,
+          4386
+        ],
+        [
+          3220,
+          3327
+        ],
+        [
+          4425,
+          4550
+        ],
+        [
+          4921,
+          4968
+        ]
+      ],
+      "reviewed_working_sha256": "84e51701e45c8cf8984e7dd60714add7a2eccbd82d3eddba6b5096a2c4ae1622",
+      "findings": [
+        "R006",
+        "R011",
+        "R012"
+      ],
+      "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
+      "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
+    },
+    {
+      "path": "plugins/vera/scripts/verified_execution.py",
+      "sha256": "6d6bc49b6075af24e28f36356959b4263ea00c71cbb0b33ab2a6c4beb0c8e3f6",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          1192
+        ]
+      ],
+      "findings": [
+        "R007"
+      ],
+      "scope_reason": "Direct execution dependency of managed_python_runtime.py; inspect Archive launch/isolation/failure boundaries, avoid expanding into unrelated runtime features.",
+      "reviewed_working_sha256": "3f66afd2e1c7004111bb3137cdf4367b759a7f4534de0c38957be67faec8ef01",
+      "review_note": "Reviewed complete execution wrapper/dependency adapter: package integrity, private code materialization, leases, cleanup, run binding and interpreter selection. This is source review with source/runtime regressions; actual installed Windows and shared backend acceptance remain separate.",
+      "reviewed_source_path": "plugins/_shared/reporting-runtime/verified_execution.py"
+    },
+    {
+      "path": "plugins/vera/scripts/_managed_python_runtime.py",
+      "sha256": "944934937a005693a026a1509054e21fd8c3cbb7883b55d767c879dae61ecb7d",
+      "status": "first_pass_reviewed",
+      "reviewed_ranges": [
+        [
+          1,
+          984
+        ]
+      ],
+      "findings": [],
+      "scope_reason": "Direct execution dependency of managed_python_runtime.py; inspect Archive launch/isolation/failure boundaries, avoid expanding into unrelated runtime features.",
+      "reviewed_working_sha256": "944934937a005693a026a1509054e21fd8c3cbb7883b55d767c879dae61ecb7d",
+      "review_note": "Reviewed complete execution wrapper/dependency adapter: package integrity, private code materialization, leases, cleanup, run binding and interpreter selection. This is source review with source/runtime regressions; actual installed Windows and shared backend acceptance remain separate."
+    }
+  ],
+  "reconciled_main_commit": "03427c49e9a5bf9d3b84b84c625b5491ca8b2d03"
+}

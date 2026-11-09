@@ -1,0 +1,37 @@
+{
+  "thread_id": "01a1c1dc-9cf0-7c71-b7b3-c59c3a0d3a48",
+  "evidence_path": "/Users/fabio/Documents/Codex/2026-11-09/studio-archive-0606-runtime-acceptance/outputs/acceptance-result.json",
+  "evidence_sha256": "f42ba4f373645d6d56440cc6e213f215dcfc99d7405bbfbacbc5f582fbf09693",
+  "status": "passed",
+  "version": "0.1.606",
+  "stages": [
+    {
+      "name": "candidate_gate",
+      "status": "passed"
+    },
+    {
+      "name": "successful_commit",
+      "status": "passed"
+    },
+    {
+      "name": "throw_after_working_copy_change",
+      "status": "passed"
+    },
+    {
+      "name": "no_change_recovery_and_read",
+      "status": "passed"
+    }
+  ],
+  "path_characters": 448,
+  "installed_runtime_matches_source": true,
+  "committed_result_hash_matches": true,
+  "no_remaining_markers": true,
+  "limitations": [
+    "Real local filesystem calls on this host; no Windows simulation.",
+    "Windows installed-host behavior remains unverified.",
+    "Source and CI evidence are separate; this check does not attest them.",
+    "No native Archive lifecycle, restoration or organization retest.",
+    "No professional workflow, professional acceptance or adoption."
+  ],
+  "latest_source_boundary": "R012 first-save permission repair and three Windows test-fixture corrections are newer than this installed runtime. Exact next-candidate validation remains pending."
+}

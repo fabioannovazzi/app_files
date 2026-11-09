@@ -74,12 +74,12 @@
     {
       "path": "scripts/archive_report_measurements.py",
       "repository_path": "plugins/clara/scripts/archive_report_measurements.py",
-      "sha256": "8b57f977f3bfb47a4d9dc1b22370ae0d135368933577356bbf02e8a525b86b41"
+      "sha256": "dc6776113459131fbf756dbd8882e622c9441e80200ece7f64f24b259eb94118"
     },
     {
       "path": "scripts/archive_report_receipt.py",
       "repository_path": "plugins/clara/scripts/archive_report_receipt.py",
-      "sha256": "d4b7cdad03bf1745632cd96087bbf352b89633d442d9ba32f606a85f1cd5662c"
+      "sha256": "04758e412e1dabdbd63f0b8de8f6018077a00c642a235ac869351df24039796d"
     },
     {
       "path": "scripts/archive_report_seal.py",
@@ -94,12 +94,12 @@
     {
       "path": "scripts/archive_reporting.py",
       "repository_path": "plugins/clara/scripts/archive_reporting.py",
-      "sha256": "800384074cde48288f5572245d31a7dcd07ef78a2760ef1a2fe9f4f3f349bb10"
+      "sha256": "67013369177f82f56645f5529fb604cc6ee044def8bceef12a36db94e3607b6a"
     },
     {
       "path": "scripts/archive_reporting_failure.py",
       "repository_path": "plugins/clara/scripts/archive_reporting_failure.py",
-      "sha256": "3705b3118295be6c25f125560baf1db7312c4c83e5d41cdff6f3cb661c893f5f"
+      "sha256": "3a618de9edb0678412ba6d5d47ddef5ccfdcb9f022cf81055647e242d94fff24"
     },
     {
       "path": "scripts/bounded_process.py",
@@ -164,7 +164,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "750e37caf1b034f6db2d73d670ed002b9e4fc40723f896577f0a89fc67335d71"
+      "sha256": "686ed0140b970aff8b4314a3e53a13e202b1c80af91a95f949613f33f36342d1"
     },
     {
       "path": "scripts/public_http.py",
@@ -184,7 +184,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/clara/scripts/verified_execution.py",
-      "sha256": "6d6bc49b6075af24e28f36356959b4263ea00c71cbb0b33ab2a6c4beb0c8e3f6"
+      "sha256": "3f66afd2e1c7004111bb3137cdf4367b759a7f4534de0c38957be67faec8ef01"
     },
     {
       "path": "scripts/verify_advisory_delivery.py",

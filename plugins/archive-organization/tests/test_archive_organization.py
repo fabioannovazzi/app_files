@@ -485,6 +485,45 @@ def test_review_apply_and_rollback_preserve_bytes(tmp_path: Path) -> None:
         assert (client_root / relative).read_bytes() == content
 
 
+@pytest.mark.parametrize("operation", ["prepare", "save", "compile"])
+def test_review_writes_after_apply_preserve_rollback_evidence(
+    tmp_path: Path, operation: str
+) -> None:
+    context_path, snapshot, originals = _prepared_run(tmp_path)
+    proposals = _proposals(tmp_path, snapshot)
+    review = organizer.build_review_package(context_path, proposals)
+    approved = _review_and_approve(context_path, tmp_path, review)
+    organizer.apply_approved_plan(
+        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+    )
+    output = Path(review["output_dir"])
+    retained = {
+        path.name: path.read_bytes() for path in output.iterdir() if path.is_file()
+    }
+    commands = {
+        "prepare": lambda: organizer.build_review_package(context_path, proposals),
+        "save": lambda: organizer.persist_review_decisions(
+            context_path, tmp_path / "decisions.json"
+        ),
+        "compile": lambda: organizer.compile_approved_plan(
+            context_path, output / "ui_decisions.json"
+        ),
+    }
+
+    with pytest.raises(organizer.ArchiveOrganizationError, match="retain.*rollback"):
+        commands[operation]()
+
+    assert {
+        path.name: path.read_bytes() for path in output.iterdir() if path.is_file()
+    } == retained
+    rolled_back = organizer.rollback_applied_plan(context_path)
+    assert rolled_back["status"] == "rolled_back"
+    assert {
+        relative: (context_path.parents[5] / relative).read_bytes()
+        for relative in originals
+    } == originals
+
+
 def test_apply_requires_distinct_explicit_approval(tmp_path: Path) -> None:
     context_path, snapshot, _ = _prepared_run(tmp_path)
     review = organizer.build_review_package(
@@ -653,6 +692,155 @@ def test_google_drive_apply_and_rollback_preserve_file_ids(tmp_path: Path) -> No
     assert gateway.files["file_pdf_1"]["name"] == "Comunicazione 36bis.pdf"
     assert gateway.files["file_doc_1"]["parents"] == ["root_123"]
     assert gateway.files["file_doc_1"]["name"] == "Verbale assemblea"
+
+
+@pytest.mark.parametrize(
+    "field", ["source_parent_id", "source_name", "approved_plan_sha256"]
+)
+def test_drive_rollback_rejects_journal_changes_before_remote_mutation(
+    tmp_path: Path, field: str
+) -> None:
+    context_path, snapshot, gateway = _prepared_drive_run(tmp_path)
+    review = organizer.build_review_package(
+        context_path, _proposals(tmp_path, snapshot, category="ade")
+    )
+    approved = _review_and_approve(context_path, tmp_path, review)
+    applied = organizer.apply_approved_plan(
+        context_path,
+        Path(approved["approved_plan_path"]),
+        explicit_approval=True,
+        drive_gateway=gateway,
+    )
+    journal_path = Path(applied["journal_path"])
+    journal = json.loads(journal_path.read_text())
+    if field == "approved_plan_sha256":
+        journal[field] = "0" * 64
+    else:
+        journal["operations"][0][field] = "unrelated-destination"
+    journal_path.write_text(json.dumps(journal))
+    before = deepcopy(gateway.files)
+    retained = journal_path.read_bytes()
+
+    with pytest.raises(
+        organizer.ArchiveOrganizationError,
+        match="journal differs from the approved plan",
+    ):
+        organizer.rollback_applied_plan(context_path, drive_gateway=gateway)
+
+    assert gateway.files == before
+    assert journal_path.read_bytes() == retained
+
+
+def test_completed_drive_rollback_replay_reports_no_remote_mutation(
+    tmp_path: Path,
+) -> None:
+    context_path, snapshot, gateway = _prepared_drive_run(tmp_path)
+    review = organizer.build_review_package(
+        context_path, _proposals(tmp_path, snapshot, category="ade")
+    )
+    approved = _review_and_approve(context_path, tmp_path, review)
+    applied = organizer.apply_approved_plan(
+        context_path,
+        Path(approved["approved_plan_path"]),
+        explicit_approval=True,
+        drive_gateway=gateway,
+    )
+    organizer.rollback_applied_plan(context_path, drive_gateway=gateway)
+    journal_path = Path(applied["journal_path"])
+    retained = journal_path.read_bytes()
+    before = deepcopy(gateway.files)
+
+    repeated = organizer.rollback_applied_plan(context_path, drive_gateway=gateway)
+
+    assert repeated["remote_archive_mutated"] is False
+    assert repeated["rolled_back_count"] == 0
+    assert repeated["replayed"] is True
+    assert gateway.files == before
+    assert journal_path.read_bytes() == retained
+
+
+def test_drive_listing_rejects_repeated_page_token_before_repeating_requests(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    service = _FakeGoogleService()
+    gateway = drive_adapter.GoogleApiDriveGateway(service)
+    calls = []
+
+    def repeated_page(request, *, label):
+        calls.append(request)
+        assert len(calls) <= 2, "Repeated token caused another unnecessary API request"
+        return {"files": [], "nextPageToken": "same-token"}
+
+    monkeypatch.setattr(gateway, "_execute", repeated_page)
+
+    with pytest.raises(drive_adapter.DriveError, match="repeated page token"):
+        gateway.list_children("root_123")
+
+    assert len(calls) == 2
+
+
+@pytest.mark.parametrize("empty_pages", [True, False])
+def test_drive_listing_bounds_unique_pages_and_accumulated_children(
+    monkeypatch: pytest.MonkeyPatch, empty_pages: bool
+) -> None:
+    gateway = drive_adapter.GoogleApiDriveGateway(_FakeGoogleService())
+    monkeypatch.setattr(drive_adapter, "MAX_LIST_PAGES", 3, raising=False)
+    monkeypatch.setattr(drive_adapter, "MAX_LIST_CHILDREN", 2, raising=False)
+    calls = []
+
+    def unique_page(request, *, label):
+        calls.append(request)
+        assert len(calls) <= 3, "Unbounded Drive listing continued requesting pages"
+        return {
+            "files": [] if empty_pages else [{"id": f"file_{len(calls)}"}],
+            "nextPageToken": f"page-{len(calls)}",
+        }
+
+    monkeypatch.setattr(gateway, "_execute", unique_page)
+
+    with pytest.raises(drive_adapter.DriveError, match="listing is incomplete"):
+        gateway.list_children("root_123")
+
+    assert len(calls) == 3
+
+
+def test_drive_listing_returns_complete_result_at_both_boundaries(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    gateway = drive_adapter.GoogleApiDriveGateway(_FakeGoogleService())
+    monkeypatch.setattr(drive_adapter, "MAX_LIST_PAGES", 1)
+    monkeypatch.setattr(drive_adapter, "MAX_LIST_CHILDREN", 1)
+    child = {"id": "file_123"}
+    monkeypatch.setattr(
+        gateway, "_execute", lambda request, *, label: {"files": [child]}
+    )
+
+    result = gateway.list_children("root_123")
+
+    assert result == [child]
+
+
+def test_drive_snapshot_bounds_empty_folder_traversal() -> None:
+    gateway = FakeDriveGateway()
+    gateway.files = {"root_123": gateway.files["root_123"]}
+    gateway.files.update(
+        {
+            f"empty_{index}": gateway._metadata(
+                f"empty_{index}",
+                f"Empty {index}",
+                drive_adapter.DRIVE_FOLDER_MIME_TYPE,
+                parents=["root_123"],
+            )
+            for index in range(5000)
+        }
+    )
+
+    with pytest.raises(drive_adapter.DriveError, match="folder boundary"):
+        drive_adapter.snapshot_google_drive_folder(
+            gateway, "root_123", "client_test", "eng_test"
+        )
+
+    assert len(gateway.files) == 5001
 
 
 def test_google_drive_apply_rejects_changed_version(tmp_path: Path) -> None:
@@ -857,7 +1045,9 @@ def test_interrupted_file_boundary_preserves_recoverable_bytes(
     assert organizer.rollback_applied_plan(context_path)["status"] == "rolled_back"
 
 
-@pytest.mark.parametrize("competitor", ["apply", "rollback"])
+@pytest.mark.parametrize(
+    "competitor", ["apply", "rollback", "prepare", "save", "compile"]
+)
 def test_public_mutation_rejects_competing_operation(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch, competitor: str
 ) -> None:
@@ -894,8 +1084,20 @@ def test_public_mutation_rejects_competing_operation(
                         organizer.apply_approved_plan(
                             context_path, approved_path, explicit_approval=True
                         )
-                    else:
+                    elif competitor == "rollback":
                         organizer.rollback_applied_plan(context_path)
+                    elif competitor == "prepare":
+                        organizer.build_review_package(
+                            context_path, _proposals(tmp_path, snapshot)
+                        )
+                    elif competitor == "save":
+                        organizer.persist_review_decisions(
+                            context_path, tmp_path / "decisions.json"
+                        )
+                    else:
+                        organizer.compile_approved_plan(
+                            context_path, Path(review["ui_decisions_path"])
+                        )
             finally:
                 release.set()
             assert applying.result(timeout=5)["status"] == "applied"
@@ -926,6 +1128,37 @@ def test_rollback_preserves_changed_destination_for_review(tmp_path: Path) -> No
     assert changed.read_bytes() == b"Later professional revision must survive recovery"
     assert not (client_root / operation["source_relative_path"]).exists()
     assert journal_path.read_bytes() == journal_before
+
+
+@pytest.mark.parametrize("later_content", [b"same", b"new"])
+def test_completed_rollback_retry_preserves_later_destination_files(
+    tmp_path: Path, later_content: bytes
+) -> None:
+    context_path, snapshot, _ = _prepared_run(tmp_path)
+    review = core.build_review_package(context_path, _proposals(tmp_path, snapshot))
+    approved = _review_and_approve(context_path, tmp_path, review)
+    applied = organizer.apply_approved_plan(
+        context_path, Path(approved["approved_plan_path"]), explicit_approval=True
+    )
+    organizer.rollback_applied_plan(context_path)
+    journal_path = Path(applied["journal_path"])
+    journal_before = journal_path.read_bytes()
+    operation = json.loads(journal_before)["operations"][0]
+    root = context_path.parents[5]
+    target = root / operation["target_relative_path"]
+    source = root / operation["source_relative_path"]
+    content = {b"same": source.read_bytes(), b"new": b"New user work after rollback"}[
+        later_content
+    ]
+    target.write_bytes(content)
+
+    replay = organizer.rollback_applied_plan(context_path)
+
+    assert target.read_bytes() == content
+    assert source.exists()
+    assert journal_path.read_bytes() == journal_before
+    assert replay["status"] == "rolled_back"
+    assert replay["source_archive_mutated"] is False
 
 
 @pytest.mark.parametrize("phase", ["apply", "rollback"])
