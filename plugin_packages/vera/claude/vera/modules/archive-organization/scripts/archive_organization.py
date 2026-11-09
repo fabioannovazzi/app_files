@@ -2208,7 +2208,7 @@ def _rollback_applied_plan_locked(
         approved = _validated_approved(
             journal_path.parent / "approved_plan.json", context
         )
-        expected = [
+        expected_drive_operations = [
             {
                 "item_id": item["item_id"],
                 "file_id": item["drive_file_id"],
@@ -2238,11 +2238,11 @@ def _rollback_applied_plan_locked(
             )
             or journal.get("approved_plan_sha256") != approved["content_sha256"]
             or not isinstance(operations, list)
-            or len(operations) != len(expected)
+            or len(operations) != len(expected_drive_operations)
             or any(
                 not isinstance(observed, dict)
                 or any(observed.get(key) != value for key, value in planned.items())
-                for observed, planned in zip(operations, expected)
+                for observed, planned in zip(operations, expected_drive_operations)
             )
         ):
             raise ArchiveOrganizationError(

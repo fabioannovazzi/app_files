@@ -247,12 +247,17 @@ def test_mcp_bridge_records_model_payload_and_keeps_app_metadata_out(
     }
     recorder = sys.executable
     if not recording_available:
-        broken = tmp_path / "unavailable-recorder"
-        broken.write_text(
-            '#!/bin/sh\nif [ "$1" = "-I" ]; then echo "$0"; exit 0; fi\nexit 1\n'
+        # Fail the recorder call after real interpreter capability discovery.
+        # A POSIX shell executable is not a portable failure fixture on Windows.
+        launcher.write_text(
+            "const cp = require('node:child_process');"
+            "const originalSpawnSync = cp.spawnSync;"
+            "cp.spawnSync = (command, args, options) => {"
+            "if (args?.some(value => String(value).endsWith('archive_emit.py'))) "
+            "return {status: 1, stderr: 'Synthetic recorder unavailable'};"
+            "return originalSpawnSync(command, args, options); };\n"
+            + launcher.read_text()
         )
-        broken.chmod(0o700)
-        recorder = str(broken)
 
     result = subprocess.run(
         ["node", str(launcher)],
@@ -518,12 +523,12 @@ def test_mcp_reporting_uses_managed_python_without_path_alias(tmp_path):
         runtime / "venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
     )
     interpreter.parent.mkdir(parents=True)
-    try:
-        interpreter.symlink_to(sys.executable)
-    except OSError:
-        pytest.skip(
-            "Host does not permit an interpreter symlink for this capability test"
-        )
+    import venv
+
+    # A bare python.exe symlink lacks Windows' interpreter DLL/configuration.
+    # Build a real, dependency-free managed environment on every host.
+    venv.EnvBuilder(with_pip=False).create(runtime / "venv")
+    assert interpreter.is_file()
     plugin = tmp_path / "product"
     (plugin / "scripts").mkdir(parents=True)
     calls = tmp_path / "recorded.jsonl"

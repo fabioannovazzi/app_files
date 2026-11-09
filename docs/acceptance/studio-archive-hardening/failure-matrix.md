@@ -14,6 +14,7 @@ All repairs remain local until the release record establishes otherwise.
 | Drive discovery | Repeated pagination token; oversized traversal/listing | Bounded failure with explicit limits rather than an endless request loop | D001–D002, simulated gateway only |
 | Saved-work restore | Exit at restoration boundaries; competing destination creation; foreign checkpoint; symlink | Resume owned restoration or require a new destination; never replace unrelated/newer work | R001–R004 |
 | Saved review transaction | Commit and rollback both fail; real exits before/after detach and publish; recovery itself exits | Preserve predecessor and candidate evidence; verified retry restores the predecessor | R005–R006 |
+| Review runtime portability | Windows long temporary paths; new output on a filesystem retaining native directory permissions | Preserve full ownership hashes; create and validate new output against actual initial mode; retain existing-output mode checks | R011–R012; native rerun tracked separately |
 | Execution binding | Process exits during binding publication | No partial canonical binding; retry can establish one complete binding | R007 |
 | Concurrent review writes | Second real process targets the same output during the first transaction | Reject overlap before mutation; first rollback cannot erase another successful save | R008 |
 | Optional recovery/navigation | Import unavailable after useful work committed | Return committed work, disclose unavailable checkpoint/navigation, still verify admitted input hashes | R009 |

@@ -56,9 +56,11 @@ are unavailable. Remote receipt submission encountered registration rate limitin
 verification found no matching receipt. A subsequent receipt retry requires user
 approval after automatic approval review rejected that authenticated submission.
 
-R011 repairs a Windows CI failure in deep-path temporary-directory creation after
-those installed checks. Its rebuilt candidates, exact-head CI, current-candidate
-acceptance and deployment remain pending. Native Windows installed-host behavior,
+R011 repaired Windows deep-path temporary-directory creation; the previously failing
+Windows producer job passed at 2607f57f6. Fresh installed 0.1.606 runtime checks passed
+commit, failure rollback and unchanged recovery on a 448-character macOS path.
+R012 then repaired a first-save permission assumption exposed by the wider Windows
+matrix. Its regenerated candidates, exact-head CI and deployment remain pending. Native Windows installed-host behavior,
 live Drive behavior and simultaneous cloud-sync computers remain unverified
 external-environment gaps.
 

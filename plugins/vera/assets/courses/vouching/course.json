@@ -180,7 +180,7 @@
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "9627cb88e33651bdaac62f815e979d5b0619cf8093f122ba1dc938d2de4fc8d3"
+      "sha256": "63075c6c3b0eff1d3a6706aa59d0dd1e00c558f9a4b51dcf952e881caccfa348"
     },
     {
       "path": "modules/check-entries/vendor/modules/vera_assurance/serialization.py",
@@ -500,7 +500,7 @@
     {
       "path": "vendor/modules/vera_assurance/review_output_transaction.cjs",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs",
-      "sha256": "9627cb88e33651bdaac62f815e979d5b0619cf8093f122ba1dc938d2de4fc8d3"
+      "sha256": "63075c6c3b0eff1d3a6706aa59d0dd1e00c558f9a4b51dcf952e881caccfa348"
     },
     {
       "path": "vendor/modules/vera_assurance/serialization.py",

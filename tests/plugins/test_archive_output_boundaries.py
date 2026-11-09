@@ -246,7 +246,7 @@ try {
 
     result = json.loads(observed.stdout)
     assert result["saved"] is True, result
-    assert result["contender"]["saved"] is (not same_output)
+    assert result["contender"]["saved"] is (not same_output), result
     assert ("already active" in result["contender"].get("error", "")) is same_output
     assert (second_output / "result.txt").read_text() == expected_second_result
     assert (output / "result.txt").read_text() == "First saved result"
@@ -482,6 +482,7 @@ if (process.argv[3] === 'true') {
   // Model the observed Windows mkdtemp failure for long unqualified paths.
   // All actual file writes still run on this host's real filesystem.
   const nativeMkdtemp = fs.mkdtempSync;
+  const nativeNamespacedPath = path.toNamespacedPath;
   const namespace = 'TEST-WINDOWS-NAMESPACE:';
   path.toNamespacedPath = value => namespace + value;
   fs.mkdtempSync = function(prefix) {
@@ -490,7 +491,8 @@ if (process.argv[3] === 'true') {
       error.code = 'ENOENT';
       throw error;
     }
-    return nativeMkdtemp(prefix.startsWith(namespace) ? prefix.slice(namespace.length) : prefix);
+    const realPrefix = prefix.startsWith(namespace) ? prefix.slice(namespace.length) : prefix;
+    return nativeMkdtemp(nativeNamespacedPath(realPrefix));
   };
 }
 const result = runtime.withGeneratedReviewOutputTransaction(output, ({workingOutputDir}) => {
@@ -519,3 +521,41 @@ process.stdout.write(JSON.stringify(result));
     assert json.loads(completed.stdout) == {"saved": True}
     assert (output / "result.txt").read_text(encoding="utf-8") == "Reviewed revision"
     assert sorted(path.name for path in output.parent.iterdir()) == ["outputs"]
+
+
+def test_new_review_output_uses_observed_directory_permissions(tmp_path):
+    output = tmp_path / "new-output"
+    script = r"""
+const fs = require('node:fs'), path = require('node:path');
+const runtime = require(process.argv[1]);
+const output = process.argv[2];
+const mkdir = fs.mkdirSync, chmod = fs.chmodSync;
+// Model filesystems such as Windows where directory chmod cannot set POSIX bits.
+fs.mkdirSync = function(target, options) {
+  const result = mkdir(target, options);
+  chmod(target, 0o777);
+  return result;
+};
+fs.chmodSync = function(target, mode) {
+  if (fs.lstatSync(target).isDirectory()) return;
+  return chmod(target, mode);
+};
+const result = runtime.withGeneratedReviewOutputTransaction(output, ({workingOutputDir}) => {
+  fs.writeFileSync(path.join(workingOutputDir, 'result.txt'), 'First saved result');
+  return runtime.generatedReviewTransactionEnvelope({saved: true}, ['result.txt']);
+});
+process.stdout.write(JSON.stringify(result));
+"""
+
+    observed = subprocess.run(
+        ["node", "-e", script, str(RUNTIME), str(output)],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+
+    assert observed.returncode == 0, observed.stderr
+    assert json.loads(observed.stdout) == {"saved": True}
+    assert (output / "result.txt").read_text() == "First saved result"
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["new-output"]

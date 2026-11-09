@@ -153,10 +153,11 @@
         "R005",
         "R006",
         "R008",
-        "R011"
+        "R011",
+        "R012"
       ],
-      "review_note": "Reviewed shared transaction runtime with full-lifecycle ownership and interruption recovery. 111 five-consumer cases and final 24 boundary cases passed. Host-local ordinary filesystem only; network/cloud-sync hosts remain unproved. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
-      "reviewed_working_sha256": "9627cb88e33651bdaac62f815e979d5b0619cf8093f122ba1dc938d2de4fc8d3"
+      "review_note": "Reviewed shared transaction runtime with full-lifecycle ownership and interruption recovery. 111 five-consumer cases and final 24 boundary cases passed. Host-local ordinary filesystem only; network/cloud-sync hosts remain unproved. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
+      "reviewed_working_sha256": "63075c6c3b0eff1d3a6706aa59d0dd1e00c558f9a4b51dcf952e881caccfa348"
     },
     {
       "path": "plugins/_shared/vendor/modules/vera_assurance/serialization.py",
@@ -358,7 +359,8 @@
       ],
       "reviewed_sha256": "a028788ad9235773b196c4bfc56b871d2b0ebd35ddb649797b73cd74886cde6b",
       "review_notes": "Completed initial review of proposal/plan/review/apply/rollback/CLI code. O001-O004 repaired. Further integration, scale and adversarial tests remain required; first-pass review is not acceptance.",
-      "reviewed_working_sha256": "e17a2321c2f79054657732a98105dd9118878518f68cb497a9322d425ef13fc4"
+      "reviewed_working_sha256": "05034038b55ecd4dbb6d61b34142abd06ced91f1905b8f2b1198f24d526dec6c",
+      "review_note": " CI type-check follow-up: separate the Drive dictionary operation list from the local tuple list by variable name; validation behavior unchanged."
     },
     {
       "path": "plugins/archive-organization/scripts/check_dependencies.py",
@@ -1286,13 +1288,14 @@
           4065
         ]
       ],
-      "reviewed_working_sha256": "749554530471858b110d7c7dc6a34b98b81ca15188f51b24fe1bdb09e1da6dfa",
+      "reviewed_working_sha256": "539132d2eae8ad2b1c6dae58c4cc18ce80f173ba4267c82efab465c30e61bf5b",
       "findings": [
         "R006",
-        "R011"
+        "R011",
+        "R012"
       ],
       "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
-      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
       "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
     },
     {
@@ -1341,13 +1344,14 @@
           4620
         ]
       ],
-      "reviewed_working_sha256": "e91357372c2807e196d1b436165bfa9b72abed3ba60449db056d99091d6d2d79",
+      "reviewed_working_sha256": "d7b2ea3491ec4135d1780f2b56fdc290cf0054e80f2a82a5212679846730d33e",
       "findings": [
         "R006",
-        "R011"
+        "R011",
+        "R012"
       ],
       "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
-      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
       "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
     },
     {
@@ -1384,13 +1388,14 @@
           4968
         ]
       ],
-      "reviewed_working_sha256": "0dd1b74610164de589c920bc72c8d86465a2d06d62e32a2ed52d283c950bb1c1",
+      "reviewed_working_sha256": "84e51701e45c8cf8984e7dd60714add7a2eccbd82d3eddba6b5096a2c4ae1622",
       "findings": [
         "R006",
-        "R011"
+        "R011",
+        "R012"
       ],
       "scope_reason": "Recovery must run before consumer output preflight or path-based review loading. Embedded runtimes synchronized from canonical implementation.",
-      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending.",
+      "review_note": "First pass completed for the explicit Archive integration scope and recorded ranges: client/run identity, preflight, transaction/recovery ordering, saved-review publication and canonical result paths. Specialist semantic/calculation logic outside those ranges is not claimed reviewed. R010 closes the reproduced Vouching private-file-before-recovery gap. Inspected R011 extended-path temporary-directory delta and canonical embedded synchronization; Windows native rerun remains pending. Inspected R012 native mode for a newly created empty output; existing output mode checks retained. Windows test fixtures use actual venv, subprocess injection and native namespaced paths.",
       "review_scope": "Archive client-run identity, shared transaction/recovery calls, saved-review publication and result paths. Specialist calculation/semantic logic is separate from this Archive audit."
     },
     {

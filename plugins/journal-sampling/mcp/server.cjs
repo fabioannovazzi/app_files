@@ -1140,8 +1140,13 @@ function generatedReviewMaterializeDirectoryImage(targetDir, image) {
     throw new Error("Review transaction target already exists.");
   }
   fs.mkdirSync(targetDir, { mode: 0o700 });
-  const effectiveImage =
-    image || { rootMode: 0o755, directories: [], files: [] };
+  // A new output has no previous permission image to restore. Preserve the
+  // mode actually created by this filesystem (Windows cannot set POSIX bits).
+  const effectiveImage = image || {
+    rootMode: fs.lstatSync(targetDir).mode & 0o7777,
+    directories: [],
+    files: [],
+  };
   for (const directory of [...effectiveImage.directories].sort(
     (left, right) =>
       left.path.split("/").length - right.path.split("/").length ||
@@ -1731,6 +1736,8 @@ function generatedReviewRunOutputTransaction(
       workingOutputDir,
       trustedImage,
     );
+    const workingBaseline = trustedImage ||
+      generatedReviewCaptureDirectoryImage(workingOutputDir);
     if (
       !generatedReviewCanonicalMatchesTrusted(
         resolvedOutputDir,
@@ -1754,7 +1761,7 @@ function generatedReviewRunOutputTransaction(
     const workingImage =
       generatedReviewCaptureDirectoryImage(workingOutputDir);
     const authorized = generatedReviewValidateAuthorizedChanges(
-      trustedImage,
+      workingBaseline,
       workingImage,
       envelope.authorizedWritePaths,
     );

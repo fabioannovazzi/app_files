@@ -454,5 +454,14 @@
     "repair": "Use an extended-length path for atomic temporary directory creation, then retain the ordinary path spelling for comparisons and recovery receipts. Full ownership hashes remain unchanged. Canonical runtime and three embedded consumers synchronized.",
     "test": "test_review_transaction_commits_in_deep_client_path",
     "validation": "26 output-boundary cases and 77 selected native producer/consumer transaction cases pass locally. Native Windows rerun and regenerated packages pending."
+  },
+  {
+    "id": "R012",
+    "status": "fixed_locally",
+    "harm": "A first save into an absent output directory fails on filesystems that cannot apply the assumed POSIX directory mode. Windows independent-output CI exposed this route.",
+    "reproduction": "A public transaction regression models a filesystem retaining its native directory mode despite chmod; first save fails before repair.",
+    "repair": "For an absent predecessor, use the mode actually created by the filesystem and capture the empty working baseline before the operation. Preserve strict byte and mode comparisons, including changes during a first save.",
+    "test": "test_new_review_output_uses_observed_directory_permissions",
+    "validation": "57 boundary/emission cases pass locally. Wider consumer suite and native Windows rerun pending."
   }
 ]

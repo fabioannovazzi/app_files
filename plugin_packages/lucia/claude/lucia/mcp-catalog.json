@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.229",
+  "version": "0.1.230",
   "services": [
     {
       "name": "luciaDeepResearchValidator",
