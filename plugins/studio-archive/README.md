@@ -1,16 +1,23 @@
 # Vera · Archivio dello Studio
 
-This Vera component owns the portable customer-folder ledger used by local
-Codex workflows. It has four independent routes. In ChatGPT or Codex,
-the separately connected OpenAI Gmail connector searches one selected client's
-correspondence. Codex Desktop can additionally inspect one verified one-to-one
-chat in the local WhatsApp application through Computer Use, make one shared
-studio folder searchable without a shared ChatGPT account or central database,
-or bind one client to a My Drive or Shared Drive folder for native Drive
-snapshots and transient evidence opening.
+Studio Archive supports four distinct functions:
 
-Fabio and Paolo each configure the same shared or synced source folder from
-their own Vera installation in Codex Desktop. On first use, Vera opens the
+1. Find documents in an approved archive scope and verify the source before citing it.
+2. Organize existing files through the separate Archive Organization component,
+   which saves reviewed decisions and supports rollback of unchanged moved files.
+3. Keep client, engagement and job records with exact input copies and declared
+   outputs, so later work can resume from files rather than chat history.
+4. Restore one saved job from its last available local checkpoint into a new
+   destination, preserving its identity and retained bytes.
+
+Gmail, WhatsApp Desktop, local folders and Google Drive are access routes with
+separate boundaries. Gmail uses the separately connected OpenAI connector.
+WhatsApp inspection uses one verified one-to-one chat in the local application.
+Local search uses a private index. Drive snapshots bind one client to an exact
+My Drive or Shared Drive folder.
+
+Each installation configures an approved source folder separately.
+On first use, Vera opens the
 operating system's folder chooser, diagnoses the selected root, and saves the
 private local configuration; a typed absolute path is only a fallback when the
 native chooser is unavailable. Each computer builds its own
@@ -51,7 +58,10 @@ preserve lifecycle, purpose, and the exact selected inputs; the run-local input
 view prevents a workflow from accidentally consuming later files; the artifact
 manifest states why every output exists, who it is for, and which exact bytes
 are presented for review. Absolute machine paths are hydrated at runtime, so
-the folder can be renamed or opened from another configured computer.
+a renamed folder can retain its identity. This does not synchronize files or
+coordinate cloud-sync conflicts. Installed cross-computer behavior and
+simultaneous cloud synchronization require separate acceptance; local rename
+and recovery tests do not establish them.
 
 The explicit flow is:
 
@@ -78,6 +88,22 @@ verifies the ledger.
 A folder rename retains the same client identity. The retention report is
 non-destructive; closing an engagement requires every active run to be
 completed or cancelled.
+
+### Restoring saved work
+
+`checkpoint-workflow` retains the selected job's current files in the private
+local recovery store. `restore-workflow` verifies that checkpoint and restores
+the same job into an authorized new destination. It does not overwrite an
+existing unrelated folder. An interrupted restore can resume from its retained
+receipt; if the first receipt was never written, the partial destination is
+preserved and a different new destination is required.
+
+Restoration includes only bytes captured in the available checkpoint. It does
+not restore chat history, the entire source archive or files created after that
+checkpoint. Because the checkpoint is local, it is not protection against loss
+of both the source and the recovery store, and it is not an off-device backup.
+`recover-ledger` instead rebuilds local pointers from surviving client folders;
+Archive Organization rollback instead reverses eligible file moves.
 
 Gmail messages remain in Gmail. Vera stores no Gmail credentials, tokens,
 message bodies, attachments, or local mailbox copy. Confirmed addresses remain
@@ -181,6 +207,8 @@ python scripts/studio_archive.py finalize-workflow --client-id client_... --enga
 python scripts/studio_archive.py complete-workflow --client-id client_... --engagement-id eng_... --run-id run_...
 python scripts/studio_archive.py close-engagement --client-id client_... --engagement-id eng_...
 python scripts/studio_archive.py recover-ledger
+python scripts/studio_archive.py checkpoint-workflow --client-id client_... --engagement-id eng_... --run-id run_...
+python scripts/studio_archive.py restore-workflow --client-id client_... --engagement-id eng_... --run-id run_... --destination /absolute/path/new-destination
 python scripts/studio_archive.py retention-report --client-id client_... --older-than-days 365
 python scripts/studio_archive.py search --scope-id scope_... --query "cessione quote"
 python scripts/studio_archive.py open --source-id src_...

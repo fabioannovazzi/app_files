@@ -23,8 +23,12 @@ Archive Organization receives one complete projected inventory with schema
   paths were not returned.
 
 The projection does not sample the archive: every file within the 5,000-file
-and 2 GB snapshot bounds remains available for semantic classification. Local
-deterministic code retains and revalidates the raw path, content hash, Drive
+and 2 GB snapshot bounds remains available for semantic classification.
+Drive traversal additionally permits at most 5,000 folders, including the root;
+an oversized tree requires selecting a smaller root and is not reported as a
+complete inventory. Repeated Drive pagination tokens also produce an incomplete
+listing error instead of repeating the request indefinitely.
+Local deterministic code retains and revalidates the raw path, content hash, Drive
 file and parent IDs, version, checksum, and capability data required for safe
 opening or execution.
 
@@ -36,3 +40,8 @@ This is purpose-limited pseudonymization of technical handles, not
 anonymization. Client-facing names, projected relative paths, and selected
 document content remain visible when they are material to professional filing
 judgment.
+
+Each Drive folder listing is bounded to 100 API pages and 10,000 child entries.
+Reaching the page bound with another page pending, exceeding the child bound,
+or receiving a repeated page token reports an incomplete listing; no partial
+inventory is returned as complete. Retry or select a smaller root.

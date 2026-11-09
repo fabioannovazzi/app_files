@@ -947,10 +947,20 @@ def bind_execution_run(run_root: Path, current_root: Path) -> Path:
                 raise ValueError("Invalid run execution package binding")
         else:
             selected = digest
-            # Catalog serialization and exclusive creation protect simultaneous
-            # first calculation/review requests for the same run.
-            with record.open("x", encoding="utf-8") as handle:
-                json.dump({"schema_version": 1, "package_sha256": digest}, handle)
+            # Publish complete bytes under the catalog lock. A process exit
+            # during staging must not leave a corrupt authoritative binding.
+            descriptor, name = tempfile.mkstemp(
+                prefix=".execution-runtime-", suffix=".tmp", dir=run_root
+            )
+            staged = Path(name)
+            try:
+                with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+                    json.dump({"schema_version": 1, "package_sha256": digest}, handle)
+                    handle.flush()
+                    os.fsync(handle.fileno())
+                staged.replace(record)
+            finally:
+                staged.unlink(missing_ok=True)
         root = current_root if selected == digest else _code_store() / selected
         if not root.is_dir():
             raise ValueError(

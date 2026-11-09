@@ -41,7 +41,7 @@ def _start(core, case):
 def _ready(core, case, loaded):
     output = Path(loaded["output_dir"])
     (output / "result.txt").write_bytes(b"Preserved professional result\n")
-    core.finalize_studio_client_workflow(
+    return core.finalize_studio_client_workflow(
         case.client_id,
         case.engagement_id,
         loaded["run"]["run_id"],
@@ -97,8 +97,9 @@ def test_delivery_instruction_reads_the_actual_terminal_response(
 
 
 @pytest.mark.parametrize("outcome", ["failed", "cancelled", "completed"])
+@pytest.mark.parametrize("error_type", [OSError, ImportError])
 def test_local_report_failure_returns_committed_status_and_remains_recoverable(
-    archive_core, client_case, monkeypatch, outcome
+    archive_core, client_case, monkeypatch, outcome, error_type
 ):
     import archive_reporting
     from archive_report_store import Registry
@@ -109,7 +110,7 @@ def test_local_report_failure_returns_committed_status_and_remains_recoverable(
     retained = report.read_bytes()
 
     def unavailable(*args, **kwargs):
-        raise OSError("Synthetic report write failure")
+        raise error_type("Synthetic report write failure")
 
     monkeypatch.setattr(archive_reporting, "snapshot_run", unavailable)
 
@@ -217,8 +218,9 @@ def test_interrupted_markdown_write_recovers_same_report_without_recalculation(
     )
 
 
+@pytest.mark.parametrize("error_type", [OSError, ImportError])
 def test_failed_terminal_recovery_does_not_skip_healthy_sibling_or_receipts(
-    archive_core, client_case, monkeypatch
+    archive_core, client_case, monkeypatch, error_type
 ):
     import archive_report_receipt
     import archive_reporting
@@ -238,7 +240,7 @@ def test_failed_terminal_recovery_does_not_skip_healthy_sibling_or_receipts(
 
     def broken_only(loaded):
         if loaded["run"]["run_id"] == broken["run"]["run_id"]:
-            raise OSError("Synthetic retained broken report")
+            raise error_type("Synthetic retained broken report")
         return original(loaded)
 
     monkeypatch.setattr(archive_reporting, "snapshot_run", broken_only)
@@ -544,3 +546,186 @@ def test_recovery_selector_does_not_follow_run_id_into_another_engagement(
     assert (
         Path(loaded["output_dir"]) / "model_data_report.json"
     ).read_bytes() == before
+
+
+def test_metadata_delivery_survives_missing_failure_recording_dependency(
+    archive_core, client_case, monkeypatch, capsys
+):
+    import builtins
+
+    import archive_reporting
+
+    loaded = _start(archive_core, client_case)
+    _ready(archive_core, client_case, loaded)
+    output = Path(loaded["output_dir"]) / "result.txt"
+    original = output.read_bytes()
+    committed_result = {"result_path": str(output), "status": "ready_for_review"}
+
+    def unavailable_metadata(*args, **kwargs):
+        raise OSError("Synthetic collector storage failure")
+
+    original_import = builtins.__import__
+
+    def unavailable_store(name, *args, **kwargs):
+        if name == "archive_report_store":
+            raise ImportError("Synthetic missing reporting dependency")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(archive_reporting, "_metadata_result", unavailable_metadata)
+    monkeypatch.setattr(builtins, "__import__", unavailable_store)
+
+    result = archive_reporting.metadata_result(loaded, committed_result)
+
+    assert result["result_path"] == str(output)
+    assert result["status"] == "ready_for_review"
+    assert result["reporting"]["status"] == "unavailable"
+    assert result["reporting"]["gap_saved"] is False
+    assert result["reporting"]["measurement_gap"] is True
+    assert "archive_reporting_unavailable" in capsys.readouterr().err
+    assert output.read_bytes() == original
+
+
+@pytest.mark.parametrize("outcome", ["ready_for_review", "completed"])
+def test_committed_result_survives_metadata_delivery_import_failure(
+    archive_core, client_case, monkeypatch, outcome
+):
+    import builtins
+
+    loaded = _start(archive_core, client_case)
+    if outcome == "completed":
+        _ready(archive_core, client_case, loaded)
+    original_import = builtins.__import__
+
+    def unavailable_metadata(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "archive_reporting" and "metadata_result" in fromlist:
+            raise ImportError("Synthetic unavailable metadata delivery")
+        return original_import(name, globals, locals, fromlist, level)
+
+    monkeypatch.setattr(builtins, "__import__", unavailable_metadata)
+
+    if outcome == "completed":
+        result = _terminate(archive_core, client_case, loaded, outcome)
+    else:
+        result = _ready(archive_core, client_case, loaded)
+
+    assert result["status"] == outcome
+    assert result["reporting"]["status"] == "unavailable"
+    assert result["reporting"]["retry_pending"] is True
+    assert (
+        json.loads((Path(loaded["run_root"]) / "run.json").read_text())["status"]
+        == outcome
+    )
+    assert (
+        Path(loaded["output_dir"]) / "result.txt"
+    ).read_bytes() == b"Preserved professional result\n"
+
+
+def test_projection_dependency_failure_does_not_abort_producer(
+    archive_core, client_case, monkeypatch, capsys
+):
+    import archive_projection
+
+    loaded = _start(archive_core, client_case)
+
+    def unavailable_binding(*args, **kwargs):
+        raise ImportError("Synthetic unavailable collector binding")
+
+    monkeypatch.setattr(archive_projection, "bound_run", unavailable_binding)
+
+    result = archive_projection.is_recording(
+        "journal-bank-reconciliation", Path(loaded["output_dir"])
+    )
+
+    assert result is False
+    assert "archive_reporting_unavailable" in capsys.readouterr().err
+    assert (
+        archive_core.ledger.load_run(
+            client_case.client_root,
+            client_case.engagement_id,
+            loaded["run"]["run_id"],
+        )["run"]["status"]
+        == "running"
+    )
+
+
+def test_uncached_job_save_survives_unavailable_report_retry(
+    archive_core, client_case, monkeypatch, caplog
+):
+    loaded = _start(archive_core, client_case)
+    monkeypatch.setattr(archive_core, "_retained_run_root", lambda *args: None)
+
+    def unavailable_retry(*args, **kwargs):
+        raise ImportError("Synthetic missing receipt dependency")
+
+    monkeypatch.setattr(archive_core.ledger, "retry_reporting", unavailable_retry)
+
+    saved = archive_core.write_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        "result.md",
+        "Completed authored work",
+        state_dir=client_case.state_dir,
+    )
+
+    assert saved["run_id"] == loaded["run"]["run_id"]
+    assert (
+        Path(loaded["output_dir"]) / "authored/result.md"
+    ).read_text() == "Completed authored work"
+    assert "Pending Archive reporting could not be retried" in caplog.text
+
+
+def test_receipt_transport_dependency_failure_preserves_local_report(
+    archive_core, client_case, monkeypatch, reporting_runtime
+):
+    import builtins
+
+    loaded = _start(archive_core, client_case)
+    _ready(archive_core, client_case, loaded)
+    _terminate(archive_core, client_case, loaded, "completed")
+    report = Path(loaded["output_dir"]) / "model_data_report.json"
+    original = report.read_bytes()
+    original_import = builtins.__import__
+
+    def unavailable_transport(name, *args, **kwargs):
+        if name == "operational_incidents":
+            raise ImportError("Synthetic unavailable receipt transport")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", unavailable_transport)
+
+    result = reporting_runtime(report)
+
+    assert result == {"status": "pending", "reason": "ImportError"}
+    assert report.read_bytes() == original
+    assert (
+        Path(loaded["output_dir"]) / "result.txt"
+    ).read_bytes() == b"Preserved professional result\n"
+
+
+def test_receipt_retry_dependency_failure_does_not_skip_next_run(
+    archive_core, client_case, monkeypatch, caplog
+):
+    import archive_report_receipt
+    from archive_report_store import Registry
+
+    first = _start(archive_core, client_case)
+    second = _start(archive_core, client_case)
+    _terminate(archive_core, client_case, first, "failed")
+    _terminate(archive_core, client_case, second, "failed")
+    attempted = []
+    original = archive_report_receipt._retry_one
+
+    def first_unavailable(registry, root):
+        attempted.append(root)
+        if root == Path(first["run_root"]):
+            raise ImportError("Synthetic unavailable first receipt dependency")
+        return original(registry, root)
+
+    monkeypatch.setattr(archive_report_receipt, "_retry_one", first_unavailable)
+
+    archive_report_receipt.retry_pending(Registry(), strict=False)
+
+    assert set(attempted) == {Path(first["run_root"]), Path(second["run_root"])}
+    assert "An Archive proof remains pending: ImportError" in caplog.text
+    assert Path(first["run_root"]) in Registry().pending_receipts()

@@ -76,6 +76,87 @@ def _rpc_call(
     return json.loads(process.stdout.readline())["result"]
 
 
+def test_packaged_review_uses_managed_python_without_virtualenv_or_path_python(
+    tmp_path: Path,
+) -> None:
+    context, snapshot, _ = scenario._prepared_run(tmp_path)
+    prepared = core.build_review_package(
+        context, scenario._proposals(tmp_path, snapshot)
+    )
+    review = json.loads(Path(prepared["review_payload_path"]).read_text())
+    product = tmp_path / "product"
+    component = product / "modules/archive-organization"
+    (component / "mcp").mkdir(parents=True)
+    (component / ".codex-plugin").mkdir()
+    shutil.copy2(PLUGIN_ROOT / "mcp/server.cjs", component / "mcp/server.cjs")
+    shutil.copy2(
+        PLUGIN_ROOT / ".codex-plugin/plugin.json",
+        component / ".codex-plugin/plugin.json",
+    )
+    (product / "scripts").mkdir()
+    receipt = tmp_path / "launcher-call.json"
+    preflight = {
+        "run_id": review["run_id"],
+        "output_dir": prepared["output_dir"],
+        "write_enabled": True,
+    }
+    (product / "scripts/managed_python_runtime.py").write_text(
+        "import json, sys\nfrom pathlib import Path\n"
+        f"Path({str(receipt)!r}).write_text(json.dumps(sys.argv[1:]))\n"
+        "assert sys.argv[1:5] == ['--module', 'archive-organization', 'run', "
+        "'scripts/archive_organization.py']\n"
+        f"print(json.dumps({preflight!r}))\n"
+    )
+    runtime = tmp_path / "runtime"
+    python = (
+        runtime / "venv" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    )
+    python.parent.mkdir(parents=True)
+    python.symlink_to(sys.executable)
+    environment = {
+        key: value
+        for key, value in os.environ.items()
+        if key not in {"VIRTUAL_ENV", "PYTHON"}
+    }
+    environment.update(
+        PATH=str(tmp_path / "empty-path"), MPARANZA_RUNTIME_ROOT=str(runtime)
+    )
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "validate_archive_organization_review",
+            "arguments": {
+                "client_engagement": str(context),
+                "review_payload": review,
+            },
+        },
+    }
+
+    completed = subprocess.run(
+        [_node_executable(), str(component / "mcp/server.cjs")],
+        input=json.dumps(request) + "\n",
+        env=environment,
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=True,
+    )
+
+    result = json.loads(completed.stdout)["result"]
+    assert result["isError"] is False, result
+    assert json.loads(receipt.read_text())[4:] == [
+        "preflight",
+        "--client-engagement",
+        str(context),
+        "--read-only",
+    ]
+    assert (
+        result["structuredContent"]["review_reference"]["persistence_enabled"] is True
+    )
+
+
 def test_generated_archive_organization_review_contract(tmp_path: Path) -> None:
     context_path, snapshot, _ = scenario._prepared_run(tmp_path)
 

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 import re
 import secrets
@@ -115,8 +116,8 @@ def archive_reporting_paths(
     if not present:
         return set()
     if not {"model_data_report.json", "model_data_report.md"}.issubset(present):
-        raise AssuranceContractError(
-            "Archive reporting sidecars require the report pair"
+        logging.getLogger(__name__).warning(
+            "Archive report pair is incomplete; reporting remains separate from professional outputs."
         )
     for name in present:
         path = root / name
@@ -125,8 +126,14 @@ def archive_reporting_paths(
             raise AssuranceContractError(
                 "Archive reporting sidecars must be ordinary single-link files"
             )
-    report = json.loads((root / "model_data_report.json").read_text(encoding="utf-8"))
-    if (
+    if not expected_workflow_ids:
+        raise AssuranceContractError("Expected Archive workflows are required")
+    report = (
+        json.loads((root / "model_data_report.json").read_text(encoding="utf-8"))
+        if "model_data_report.json" in present
+        else None
+    )
+    if "model_data_report.json" in present and (
         not isinstance(report, dict)
         or report.get("schema_version") not in {3, 4}
         or report.get("product") != "vera"
@@ -153,7 +160,9 @@ def archive_reporting_paths(
                 )
     context = load_client_engagement_context_file(
         canonical_root.parent / "context.json",
-        expected_workflow_id=report["workflow_id"],
+        expected_workflow_id=(
+            report["workflow_id"] if report is not None else expected_workflow_ids[0]
+        ),
         output_dir=canonical_root,
         allowed_statuses=(
             "running",
@@ -166,7 +175,8 @@ def archive_reporting_paths(
     if (
         context["schema_version"] != "vera.client_workflow_context.v2"
         or Path(context["output_dir"]) != canonical_root.resolve()
-        or report.get("run_id") != context["run_id"]
+        or context["workflow_id"] not in expected_workflow_ids
+        or (report is not None and report.get("run_id") != context["run_id"])
     ):
         raise AssuranceContractError("Archive reporting sidecars belong to another run")
     return present

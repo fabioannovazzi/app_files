@@ -1,0 +1,68 @@
+{
+  "languages": [
+    {
+      "language": "it",
+      "headings": [
+        "1. Trovare un documento",
+        "2. Conservare documenti e lavori",
+        "3. Ripristinare un lavoro salvato",
+        "4. Riordinare file esistenti"
+      ],
+      "model_data_last": true,
+      "desktop_overflow": false
+    },
+    {
+      "language": "en",
+      "headings": [
+        "1. Find a document",
+        "2. Retain documents and work",
+        "3. Restore saved work",
+        "4. Organize existing files"
+      ],
+      "model_data_last": true,
+      "desktop_overflow": false
+    },
+    {
+      "language": "fr",
+      "headings": [
+        "1. Retrouver un document",
+        "2. Conserver documents et travaux",
+        "3. Restaurer un travail enregistr\u00e9",
+        "4. Classer les fichiers existants"
+      ],
+      "model_data_last": true,
+      "desktop_overflow": false
+    },
+    {
+      "language": "de",
+      "headings": [
+        "1. Ein Dokument finden",
+        "2. Dokumente und Arbeit speichern",
+        "3. Gespeicherte Arbeit wiederherstellen",
+        "4. Vorhandene Dateien ordnen"
+      ],
+      "model_data_last": true,
+      "desktop_overflow": false
+    },
+    {
+      "language": "es",
+      "headings": [
+        "1. Encontrar un documento",
+        "2. Conservar documentos y trabajos",
+        "3. Restaurar trabajo guardado",
+        "4. Ordenar archivos existentes"
+      ],
+      "model_data_last": true,
+      "desktop_overflow": false
+    }
+  ],
+  "mobile_overflow": false,
+  "script_errors": [],
+  "external_requests": "blocked; local assets only",
+  "contract_suite": {
+    "passed": 28,
+    "failed": 1,
+    "failure": "Unchanged vera-integrazioni/services page lacks area mapping in function-page-navigation.js.",
+    "archive_page_browser": "passed"
+  }
+}

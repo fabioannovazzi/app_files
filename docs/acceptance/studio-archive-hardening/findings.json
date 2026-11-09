@@ -1,0 +1,427 @@
+[
+  {
+    "id": "R001",
+    "status": "fixed_locally",
+    "harm": "A process exit during restored-file staging leaves a temporary file which prevents the same destination from resuming.",
+    "reproduction": "Actual subprocess os._exit(91); failed before repair, passes after.",
+    "repair": "Stage recovered bytes inside retained work-restore-evidence.",
+    "test": "test_process_exit_during_restore_resumes_without_discarding_work[copy]"
+  },
+  {
+    "id": "R002",
+    "status": "fixed_locally",
+    "harm": "A process exit during progress JSON replacement leaves a staging file outside the evidence area, blocking resumed restoration.",
+    "reproduction": "Actual subprocess exit before second progress replacement; failed before repair.",
+    "repair": "Stage restoration metadata and its recovery reference inside the same retained evidence area.",
+    "tests": [
+      "test_process_exit_during_restore_resumes_without_discarding_work[progress_update]",
+      "test_process_exit_during_restore_resumes_without_discarding_work[reference]"
+    ]
+  },
+  {
+    "id": "O001",
+    "status": "fixed_locally",
+    "harm": "Replaying a completed rollback deletes a later identical file recreated at the former destination; a later changed file instead causes a spurious failure.",
+    "reproduction": "Both identical and changed post-rollback files fail the regression before repair.",
+    "repair": "After checking the saved approved-plan binding, replay a terminal fully rolled-back journal without filesystem mutation.",
+    "test": "test_completed_rollback_retry_preserves_later_destination_files"
+  },
+  {
+    "id": "R003",
+    "status": "verified_preservation_boundary",
+    "harm": "Crash between destination creation and publication of the first restore marker leaves ownership uncertain; same destination cannot currently be adopted automatically.",
+    "reproduction": "Actual subprocess exit before first restore marker commit; same destination rejected unchanged; same saved run restores at alternative destination.",
+    "repair": "Error now explicitly directs recovery of the same run at a new destination. Unreceipted contents are never adopted.",
+    "test": "test_process_exit_during_restore_resumes_without_discarding_work[initial_marker]"
+  },
+  {
+    "id": "S001",
+    "status": "fixed_locally",
+    "harm": "Search/open currently reject every indexed source after any top-level scope change, even an unrelated added client folder.",
+    "reproduction": "New unrelated client blocks selected-scope search and verified opening before repair.",
+    "repair": "Allow exact unchanged selected scopes; keep global refresh requirement and source byte verification; return refresh flags.",
+    "tests": [
+      "test_unrelated_new_client_does_not_block_selected_scope_search",
+      "test_unrelated_new_client_does_not_block_verified_existing_source",
+      "test_global_search_requires_refresh_after_new_client_is_added",
+      "test_selected_scope_rename_still_requires_refresh",
+      "test_unrelated_scope_change_does_not_allow_stale_document_bytes"
+    ]
+  },
+  {
+    "id": "I001",
+    "status": "fixed_locally",
+    "harm": "Folder intake uses hard-link publication and may fail on writable destinations lacking hard-link support.",
+    "reproduction": "Subprocess tests force ENOTSUP and EXDEV during hardlink publication. Normal copy and actual os._exit(93) during fallback publication verify exact retry.",
+    "repair": "Fallback to exclusive file creation on unsupported/cross-device links. Small sealed per-file publication records retain partial bytes separately before retry; completed/changed unrelated files remain protected. Evidence preservation copies and verifies before unlink, so it works across filesystems.",
+    "test": "test_intake_without_hardlinks_preserves_partial_publication_and_retries"
+  },
+  {
+    "id": "L001",
+    "status": "fixed_locally",
+    "harm": "Creation retry returns an empty import list after documents have been saved, misleading the caller about retained work.",
+    "source_thread": "01a1c0ca-d95c-7771-8949-a8690f84362f",
+    "reproduction": "Reproduced in installed Vera 0.1.597 assessment; local regression fails before repair for healthy and changed retained inputs.",
+    "repair": "Hydrate current validated imports and expose blocked-input/completeness information on creation responses.",
+    "test": "test_creation_retry_reports_current_inputs_and_damage"
+  },
+  {
+    "id": "R004",
+    "status": "fixed_locally",
+    "harm": "A destination created concurrently after restore preflight receives restoration metadata before unrelated-content rejection.",
+    "reproduction": "Inject ordinary owner-private folder creation at mkdir; its directory gains unwanted restore files before repair.",
+    "repair": "Exclusive destination mkdir for new restore requests; existing receipted requests retain resumability.",
+    "test": "test_restore_does_not_claim_destination_created_after_preflight"
+  },
+  {
+    "id": "P001",
+    "status": "fixed_locally",
+    "harm": "ImportError in deferred reporting dependencies prevents finalization or hides committed completion/failure/cancellation.",
+    "reproduction": "Five fault-injection cases fail before repair, existing OSError cases pass.",
+    "repair": "Handle ImportError at review-report and terminal-report boundaries, returning unavailable/retry-pending independently of run status.",
+    "tests": [
+      "test_finalize_preserves_reviewable_output_when_reporting_fails",
+      "test_local_report_failure_returns_committed_status_and_remains_recoverable"
+    ]
+  },
+  {
+    "id": "O002",
+    "status": "fixed_locally",
+    "harm": "Drive rollback trusted mutable journal source locations without binding them to the reviewed approved plan; altered journal data could move a file to an unrelated parent or name.",
+    "reproduction": "Three regressions modify source parent, source name or approved-plan digest after apply. All fail before repair.",
+    "repair": "Validate journal owner, storage root, approved digest, operation coverage and immutable file/source/target identities before loading a Drive gateway or mutating remote state.",
+    "test": "test_drive_rollback_rejects_journal_changes_before_remote_mutation"
+  },
+  {
+    "id": "O003",
+    "status": "fixed_locally",
+    "harm": "Completed Drive rollback replay claims remote changes and rewrites the journal although no move occurred.",
+    "reproduction": "Repeated rollback fails nonmutation/count/receipt-preservation assertions before repair.",
+    "repair": "Return a replay result with zero mutations for a fully rolled-back journal after approved-plan validation.",
+    "test": "test_completed_drive_rollback_replay_reports_no_remote_mutation"
+  },
+  {
+    "id": "O004",
+    "status": "fixed_locally",
+    "harm": "Rebuilding a review package or changing persisted decisions after apply appears able to overwrite the plan/decisions needed to validate rollback. Review writers also lack the client-wide mutation lock used by apply/rollback.",
+    "reproduction": "Prepare, save and compile calls after apply overwrite retained review evidence before repair. Three regressions now require unchanged output bytes and successful rollback of exact originals.",
+    "repair": "Review writers share the client-wide apply/rollback lock and retain existing review artifacts once an apply journal exists.",
+    "tests": [
+      "test_review_writes_after_apply_preserve_rollback_evidence",
+      "test_public_mutation_rejects_competing_operation"
+    ],
+    "followup_regression": "Expanded MCP suite caught unsupported language creating a lock before rejection; validate explicitly supplied language before lock creation. Existing no-write regression now passes."
+  },
+  {
+    "id": "D001",
+    "status": "fixed_locally",
+    "harm": "Drive list pagination has no repeated-token detection or total bound, and recursive snapshot folder traversal is not bounded by its file limit. Repeated pages or very large empty-folder trees can monopolize work.",
+    "reproduction": "Finite fake API test detects repeated request on same page token; 5000 empty child folders bypass file limit before repair. Both regressions fail before repair.",
+    "repair": "Reject repeated pagination tokens as incomplete and bound folder traversal to 5000 including root; preserve ordinary file limit and report oversized roots explicitly.",
+    "tests": [
+      "test_drive_listing_rejects_repeated_page_token_before_repeating_requests",
+      "test_drive_snapshot_bounds_empty_folder_traversal"
+    ]
+  },
+  {
+    "id": "H001",
+    "status": "fixed_locally",
+    "harm": "Archive page language rendering throws because model-data-link no longer exists.",
+    "reproduction": "Headless browser observed Cannot set properties of null (setting href) in all five languages before repair.",
+    "repair": "Remove the obsolete link assignment; the shared final model-data component owns its links.",
+    "verification": "html-browser.json: five language URLs, desktop/mobile overflow checks, zero script errors; screenshots inspected with remote assets deliberately blocked."
+  },
+  {
+    "id": "G001",
+    "status": "fixed_locally",
+    "harm": "Optional local Gmail query planner omitted the Bcc participant term required by the documented connected workflow.",
+    "reproduction": "Selected-client query regression fails before adding bcc for the same confirmed address.",
+    "repair": "Include Bcc in the bounded exact-participant query; no mailbox calls or routing relaxation.",
+    "test": "test_gmail_plan_is_bounded_to_selected_client_and_neutralizes_operators"
+  },
+  {
+    "id": "W001",
+    "status": "fixed_locally",
+    "harm": "A failed WhatsApp digit action reported composerEmpty=true without observing the state after that action; a lost reply could conceal a changed composer.",
+    "reproduction": "Executable Node guard test simulates a lost digit reply and fails before repair.",
+    "repair": "Stop with composerEmpty=null and cleanup=unverified; do not guess or erase unknown content.",
+    "test": "test_guard_does_not_claim_empty_composer_after_lost_digit_reply"
+  },
+  {
+    "id": "D002",
+    "status": "fixed_locally",
+    "harm": "Unique endless Drive page tokens cause unbounded API requests; child lists accumulate before tree limits apply.",
+    "reproduction": "Two regressions fail before repair after a fourth API request exceeds a configured three-request test boundary.",
+    "repair": "Bound each folder listing to 100 pages and 10000 children; report incomplete listing without returning partial results. Complete final pages at the exact bounds remain accepted.",
+    "tests": [
+      "test_drive_listing_bounds_unique_pages_and_accumulated_children",
+      "test_drive_listing_returns_complete_result_at_both_boundaries"
+    ]
+  },
+  {
+    "id": "S002",
+    "status": "fixed_locally",
+    "harm": "Malformed Office XML aborts the whole refresh, preventing healthy documents from being indexed.",
+    "reproduction": "Valid DOCX and XLSX containers with malformed document/workbook XML both raise uncaught XMLSyntaxError before repair.",
+    "repair": "Isolate XML syntax failures as per-document extraction errors, retain original bytes, and continue indexing healthy files.",
+    "test": "test_refresh_isolates_malformed_office_xml_and_indexes_healthy_documents"
+  },
+  {
+    "id": "L002",
+    "status": "fixed_locally",
+    "harm": "Process exit before run.json publication leaves an invalid run directory, preventing retries and allocation of other jobs in the engagement.",
+    "reproduction": "Actual subprocess os._exit(95) after context.json; retry fails with incomplete request identity before repair.",
+    "repair": "Build complete job inputs and manifests in engagement-local run-preparation-evidence, then rename the complete directory into runs under the engagement lock. Preserve interrupted staging; do not delete a published run if post-publication loading fails.",
+    "test": "test_process_exit_during_preparation_preserves_evidence_and_allows_retry"
+  },
+  {
+    "id": "P002",
+    "status": "fixed_locally",
+    "harm": "Missing selective_reporting dependency aborts finalization while importing the runtime, then again during metadata delivery even after sealing succeeds.",
+    "reproduction": "Actual import failure injected via sys.modules; regression fails at import first, then at metadata_result after initial repair.",
+    "repair": "Load routing lazily inside reporting operations, preserve its callable API for preview, and return the sealed outcome directly when reporting is unavailable.",
+    "test": "test_finalize_preserves_reviewable_output_when_reporting_fails[runtime_import-ImportError]"
+  },
+  {
+    "id": "L003",
+    "status": "fixed_locally",
+    "harm": "Nonfinite JSON numbers in one client manifest raise an uncaught canonicalization error and hide healthy clients during inventory.",
+    "reproduction": "NaN, Infinity and -Infinity each fail before repair.",
+    "repair": "Reject nonfinite values in the bounded JSON reader and translate invalid JSON into LedgerError for independent-record isolation.",
+    "test": "test_nonfinite_json_in_sibling_client_is_reported_without_hiding_healthy_client"
+  },
+  {
+    "id": "P003",
+    "status": "fixed_locally",
+    "harm": "Missing reporting imports block output declaration preview and make report verification throw even when saved options request local-only handling.",
+    "reproduction": "Preview and both local_only false/true verification cases fail with ModuleNotFoundError before repair.",
+    "repair": "Keep preview output with a separate unavailable report status; defer receipt imports until after local-only handling and catch import failures in verification.",
+    "tests": [
+      "test_output_preview_remains_available_when_reporting_router_cannot_import",
+      "test_report_verification_handles_missing_dependency_without_changing_run"
+    ]
+  },
+  {
+    "id": "M001",
+    "status": "fixed_locally",
+    "harm": "Archive Organization review MCP selects VIRTUAL_ENV or system Python directly, unlike Studio Archive managed worker routing. Installed launch without VIRTUAL_ENV may select an incompatible or dependency-incomplete interpreter.",
+    "evidence": "Read archive-organization/mcp/server.cjs pythonExecutable/callCli and vera/scripts/component_service.cjs; wrapper forwards environment without selecting Python. Existing MCP contract tests explicitly supply VIRTUAL_ENV.",
+    "next_step": "Reproduce product-layout launch with an available managed runtime and an unsuitable bootstrap interpreter; fix routing if failure confirmed.",
+    "reproduction": "Product-shaped test with managed Python available, no VIRTUAL_ENV and no Python on PATH failed with spawnSync python3 ENOENT.",
+    "repair": "Probe available managed/PYTHON/virtualenv/PATH interpreters; packaged components delegate commands to the product managed_python_runtime.py launcher. Standalone source components retain direct CLI routing.",
+    "test": "test_packaged_review_uses_managed_python_without_virtualenv_or_path_python",
+    "limitations": "Launcher response is a bounded test stub; this proves executable discovery and command delegation, not installed package or Windows acceptance."
+  },
+  {
+    "id": "X001",
+    "status": "fixed_locally",
+    "harm": "Exact reopening of a completed reconciliation re-admits original sources before checking the retained job, so missing originals prevent access to otherwise valid retained results.",
+    "reproduction": "Completed real synthetic producer run, deleted originals, forbid preflight/recalculation; retry failed in source preflight before repair.",
+    "repair": "Resolve exact request identity and compare the retained request before admission. Verify sealed outputs before reopening completed/review-ready work, and preserve changed-mapping rejection.",
+    "test": "test_completed_request_reopens_retained_result_after_original_sources_disappear"
+  },
+  {
+    "id": "P004",
+    "status": "fixed_locally",
+    "harm": "An incomplete report pair is rejected by shared professional-output closure, preventing downstream work solely because JSON or Markdown reporting output is missing.",
+    "reproduction": "Both partial-pair cases failed before repair in archive_reporting_paths; same guard exists in JavaScript consumer.",
+    "repair": "Keep surviving ordinary reserved sidecars separate from professional outputs using the owning run context, warn that reporting is incomplete, and retain foreign identity and unsafe-file rejection.",
+    "test": "test_partial_report_does_not_enter_professional_output_closure",
+    "validation_gaps": [
+      "Installed package, full release checks and fresh-chat acceptance remain pending."
+    ],
+    "validation": "12 focused boundary tests and 197 combined output-boundary/filesystem tests passed. Broader failures were corrected test fixtures: technical artifact was incorrectly treated as an accounting decision; missing measurements were expected without injecting a measurement failure."
+  },
+  {
+    "id": "R005",
+    "status": "fixed_locally",
+    "harm": "When publishing a review fails and restoration also fails, unconditional cleanup deletes both the reconstructed original and detached backup, losing the retained professional result.",
+    "reproduction": "Inject EACCES for both candidate-to-output and recovery-to-output renames. Public transaction reports rollback failure but before repair no original backup survives.",
+    "repair": "Remove recovery staging only after verified restoration; retain transaction and commit evidence when rollback fails.",
+    "test": "test_review_failed_commit_and_failed_rollback_retain_original_bytes",
+    "validation": "13 output-boundary tests and 42 existing Report Builder/Vouching review-transaction regressions passed; Node syntax, Isort and diff whitespace checks passed.",
+    "validation_gaps": [
+      "Automatic recovery after process termination and discoverable retry handling remain under review."
+    ]
+  },
+  {
+    "id": "R006",
+    "status": "fixed_locally",
+    "harm": "A process exit after detaching canonical outputs leaves the normal output directory absent, although trusted backup and validated candidate survive in the commit directory. Resume behavior is not yet verified.",
+    "reproduction": "Real Node process.exit(96) immediately after outputs-to-trusted-backup rename. Canonical output absent; original and candidate files retained. See outputs/studio-archive-hardening/review-process-exit.json.",
+    "repair": "Persist output, host, parent-directory and commit-directory identity plus original/candidate byte-mode digests before detach. Retry atomically claims an abandoned commit, verifies retained bytes, restores the original and retains crash evidence separately. A parent rename retains identity; moved evidence from another parent, active owners or changed evidence are preserved without overwrite. Consumer preflight and path-based review loading invoke recovery first.",
+    "validation_gaps": [
+      "Whole-transaction concurrent writers remain under review.",
+      "Package/release checks and fresh installed supported-host acceptance remain pending."
+    ],
+    "validation": "Three real commit-exit phases, exit during recovery, changed backup, independent canonical output, live-owner rejection, renamed-parent recovery and foreign-parent rejection. Native Report Builder retry succeeds. Stable combined batch: 74 passed; embedded consumers: 57 passed; final boundary/native batch after parent-identity correction: 23 passed."
+  },
+  {
+    "id": "P005",
+    "status": "fixed_locally",
+    "harm": "The reporting failure recorder imports its storage dependency before its exception boundary, and projection isolation omits ImportError. Missing reporting dependencies can therefore hide an already committed result or interrupt a producer.",
+    "reproduction": "Two regression cases failed with the injected ImportError: metadata delivery after collector failure with unavailable gap storage, and projection lookup with an unavailable collector binding.",
+    "repair": "Move optional storage import inside the failure boundary and include ImportError in the shared reporting-only error set. Preserve unavailable status, measurement gap and whether the gap was saved. Canonical helper synchronized across all three products.",
+    "test": "test_metadata_delivery_survives_missing_failure_recording_dependency; test_projection_dependency_failure_does_not_abort_producer",
+    "validation": "207 reporting/recovery/fault tests passed, followed by both targeted regressions after final synchronization."
+  },
+  {
+    "id": "P006",
+    "status": "fixed_locally",
+    "harm": "ImportError escapes uncached job lookup reporting retries, terminal recovery batches, receipt stamping and non-strict pending-proof retries. This can prevent saving valid work or stop healthy sibling retries.",
+    "reproduction": "Four new cases failed with ImportError before repair; existing OSError recovery case remained passing.",
+    "repair": "Handle missing reporting dependencies at the four specific boundaries, retain pending warnings/status, and continue independent work or retry entries without recalculation.",
+    "test": "test_uncached_job_save_survives_unavailable_report_retry; test_receipt_transport_dependency_failure_preserves_local_report; test_receipt_retry_dependency_failure_does_not_skip_next_run; test_failed_terminal_recovery_does_not_skip_healthy_sibling_or_receipts[ImportError]",
+    "validation": "211 combined reporting/recovery/fault tests passed. Original report and professional-result bytes preserved."
+  },
+  {
+    "id": "P007",
+    "status": "fixed_locally",
+    "harm": "read_selection checks the source hash before parsing but not afterwards, allowing changed values to be returned with the admitted earlier hash when a file changes during extraction.",
+    "reproduction": "Change a CSV between the admission hash and parser read; the new regression failed because no error was raised.",
+    "repair": "Recheck source hash and symlink state after extraction, before returning data and provenance. Reject a changed source without overwriting it.",
+    "test": "test_read_selection_rejects_source_changed_during_extraction",
+    "validation": "153 automatic-reporting, recovery and Agenzia delivery tests passed, including normal selected reads and changed-source rejection."
+  },
+  {
+    "id": "M002",
+    "status": "fixed_locally",
+    "harm": "The MCP reporting bridge cannot discover the managed Python interpreter when no PATH Python alias or active virtual environment exists; useful work is delivered with a measurement gap.",
+    "reproduction": "Product-shaped real Node bridge with empty PATH and managed interpreter failed before repair.",
+    "repair": "Discover the managed runtime and probe candidate interpreters before launching the recorder.",
+    "test": "test_mcp_reporting_uses_managed_python_without_path_alias",
+    "limitations": "Stub recorder routing test on macOS; not installed report completeness or Windows acceptance."
+  },
+  {
+    "id": "M003",
+    "status": "fixed_locally",
+    "harm": "A valid large output declaration exceeds the host argv limit and fails with E2BIG before the Archive worker starts.",
+    "reproduction": "10,000 artifact declarations through a real Node subprocess failed with E2BIG on macOS.",
+    "repair": "Send artifact JSON via standard input; retain run identity and command in argv, preserve direct CLI JSON option.",
+    "test": "test_mcp_large_artifact_declaration_reaches_worker_intact",
+    "limitations": "Transport regression checks all declarations intact; ordinary MCP lifecycle tests exercise the actual CLI and ledger. Not a 10,000-file finalization benchmark."
+  },
+  {
+    "id": "H002",
+    "status": "fixed_locally",
+    "harm": "Organization explanation page language application throws on an obsolete model-data-link element, before saving language and updating its URL.",
+    "reproduction": "Real Chromium pageerror: Cannot set properties of null (setting href).",
+    "repair": "Remove obsolete link assignment; shared function model-data component owns that section.",
+    "validation": "All five language buttons update document, stored preference and URL; zero pageerrors and no desktop/mobile overflow. External assets blocked."
+  },
+  {
+    "id": "R007",
+    "status": "fixed_locally",
+    "harm": "A process exit while writing a job execution-runtime.json binding leaves partial authoritative JSON and prevents the next calculation/review attempt from resuming.",
+    "reproduction": "Real subprocess exit 98 after writing one byte; retry failed with JSONDecodeError before repair.",
+    "repair": "Stage and fsync complete binding under the existing execution catalog lock, then atomically replace the authoritative record. Existing job work is preserved. Canonical source synchronized to Vera, Clara and Lucia.",
+    "test": "test_interrupted_run_code_binding_can_retry_without_losing_run_work",
+    "validation": "100 source/runtime/reconciliation cases passed; eight native-Windows cases skipped on macOS; one package test failed because vera-plugin.zip has not been built, and remains a release gate."
+  },
+  {
+    "id": "R008",
+    "status": "fixed_locally",
+    "harm": "Two overlapping review transactions can erase a successfully committed save: the older transaction detects a changed canonical tree and restores its stale image over the newer committed output.",
+    "reproduction": "Two real Node processes: inner save reports saved true, outer fails and restores original output; regression fails before repair.",
+    "repair": "Atomically publish unique per-output owner markers before capture or recovery. Any other live owner causes a retry response; terminated local owners permit recovery. No priority rule or mutable shared lock pathname permits overtaking. Claims cover recovery and the full transaction.",
+    "test": "test_overlapping_review_cannot_erase_another_successful_save",
+    "validation": "111 five-consumer transaction checks passed. Final 24-case boundary suite passed after root-path preflight and independent-output concurrency coverage. Earlier helper refresh omitted required insert_before argument; corrected before consumer checks.",
+    "limitations": "Host-local ordinary-filesystem evidence. Foreign-host ownership is retained and explicitly rejected; simultaneous cloud-sync/network-host acceptance remains unproved."
+  },
+  {
+    "id": "H003",
+    "status": "fixed_locally",
+    "harm": "Organization page and skill claim Drive moves preserve permissions, although moving to another parent re-evaluates inherited access.",
+    "evidence": "google_drive.py move_file updates addParents/removeParents; Google official manage-sharing guide states inherited permissions are re-evaluated on move.",
+    "source": "https://developers.google.com/workspace/drive/api/guides/manage-sharing",
+    "repair": "Correct all five page translations and Italian fallback; retain ID/link statement and explain destination-access boundary at the existing apply authorization.",
+    "limitations": "No live Drive permission acceptance performed; no automatic access-equivalence check added or claimed."
+  },
+  {
+    "id": "L004",
+    "status": "fixed_locally",
+    "harm": "Failed client registration recursively deleted the newly visible client folder, including professional files added by another process during registration.",
+    "reproduction": "Inject a registry write failure after adding a document to the visible destination; the document was missing after the failed operation.",
+    "repair": "Preserve the visible folder and portable manifest; return an explicit incomplete-registration error with the retained path and existing-folder recovery instruction.",
+    "test": "test_failed_client_registration_preserves_concurrently_added_document",
+    "validation": "103 creation, fault-isolation, adoption and concurrency cases passed. The regression verifies preserved document bytes and reopening by the retained portable client identity. Updated the older committed-run interruption fixture to exit after atomic publication rather than during staging."
+  },
+  {
+    "id": "S003",
+    "status": "fixed_locally",
+    "harm": "Local organization evidence could change during extraction yet be returned as revalidated against the earlier snapshot.",
+    "reproduction": "Change the selected text file inside extraction; before repair the public open call returned successfully instead of rejecting the stale citation.",
+    "repair": "Resolve the selected path again and compare its current SHA-256 with the snapshot after extraction, before returning text.",
+    "test": "test_local_organization_open_rejects_document_changed_during_extraction",
+    "validation": "38 customer-folder ledger tests passed, including ordinary local opening, changed local source rejection and simulated Drive revalidation."
+  },
+  {
+    "id": "R009",
+    "status": "fixed_locally",
+    "harm": "Unavailable checkpoint or navigation imports could obscure an already published prepared run. Missing input-repair code also rejected intact execution copies before ordinary receipt verification.",
+    "reproduction": "Inject ImportError for vera_assurance.recovery or readable_archive; preparation raised instead of returning the committed run. Broader checks exposed the earlier load_run import boundary too.",
+    "repair": "Return unavailable checkpoint/navigation outcomes, preserve ledger recovery results with navigation issues, and continue exact sealed-input verification when the optional repair module cannot load. Changed inputs still fail validation.",
+    "tests": [
+      "test_optional_dependency_failure_does_not_hide_prepared_run",
+      "test_missing_repair_dependency_never_accepts_changed_execution_input",
+      "test_ledger_recovery_reports_missing_navigation_dependency"
+    ],
+    "validation": "106 work-recovery, creation-recovery and fault-isolation cases passed. Initial narrower repair still failed at load_run; repaired that observed boundary and reran all three suites successfully."
+  },
+  {
+    "id": "S004",
+    "status": "fixed_locally",
+    "harm": "Local and Drive evidence reads could clip the final fragment without returning the open_text_truncated limitation. Separators were also outside the declared text budget.",
+    "reproduction": "Public local and simulated Drive opens with an eight-character budget returned clipped text with no truncation indication; both regressions failed before repair.",
+    "repair": "Use one bounded extraction projection for local and Drive evidence, include separators in its character budget, and compare full evidence length with returned length.",
+    "tests": [
+      "test_local_organization_open_reports_clipped_final_chunk",
+      "test_drive_open_reports_clipped_final_chunk"
+    ],
+    "validation": "42 customer-folder tests passed, including clipped and complete reads on both routes. Drive uses a simulated gateway; no live Drive acceptance claimed."
+  },
+  {
+    "id": "P008",
+    "status": "fixed_locally",
+    "harm": "Incident failure reporting itself crashed with AttributeError when retained state was valid JSON but not an object.",
+    "reproduction": "Twelve cases across Vera, Clara and Lucia: null, array, string and boolean state; all raised AttributeError before repair.",
+    "repair": "Validate the state object before migration; preserve damaged bytes and return the existing local-state-unavailable result. Canonical runtime synchronized to all three products.",
+    "test": "test_non_object_incident_state_is_preserved_without_blocking_failure_report",
+    "validation": "134 operational-incident and integrity-reporting tests passed. Synchronization check, Isort and three-module Mypy passed. This validates the reproduced top-level corruption case, not arbitrary nested-schema damage."
+  },
+  {
+    "id": "H004",
+    "status": "fixed_locally",
+    "harm": "Search explanation claimed exact phrases across full text and every supported file, although queries OR individual terms and extraction/discovery report format, access and size limits. Unused privacy translations duplicated the shared renderer source.",
+    "evidence": "archive_core._fts_query, bounded extractors and scan issue reporting; both HTML files have no model.* data-i18n consumers and function-model-data.js fetches its own governed contracts.",
+    "repair": "Clarify indexed-term search and extraction/discovery limits in all five languages and Italian fallback. Remove unused modelDataCopy blocks from both pages; keep the shared governed privacy renderer.",
+    "validation": "Twenty Chromium checks passed across both pages, five language buttons and desktop/mobile widths: no overflow or pageerrors; visible last privacy section, language state and URL verified. External resources blocked. Architecture suite has 28 passing cases and one pre-existing missing navigation mapping for an unrelated integration page; remains a release gate."
+  },
+  {
+    "id": "P009",
+    "status": "fixed_locally",
+    "harm": "A missing post-commit metadata delivery import raised after finalization or completion had already saved the professional state.",
+    "reproduction": "Both public finalization and completion regressions failed with ImportError after their durable state transition.",
+    "repair": "Centralize guarded metadata delivery; retain a separate pending-reporting sidecar and return committed lifecycle/output results.",
+    "test": "test_committed_result_survives_metadata_delivery_import_failure",
+    "validation": "77 automatic-reporting and reporting-recovery cases passed, including ready-for-review/completed outcomes, retained output bytes and visible reporting failure."
+  },
+  {
+    "id": "P010",
+    "status": "fixed_locally",
+    "harm": "Report verification unexpectedly retried reporting when its private run binding was absent, violating its read-only contract and potentially modifying report evidence before verification.",
+    "reproduction": "Network-failure, foreign-report and changed-report tests each failed when forced through portable-ID lookup because retry_reporting was invoked.",
+    "repair": "Disable reporting retry specifically for report verification; ordinary operation retry behavior remains.",
+    "test": "test_service_verification_failure_preserves_completed_pipeline",
+    "validation": "77 combined reporting cases passed; verification tests now cover both retained-binding and fallback lookup and assert unchanged files."
+  },
+  {
+    "id": "R010",
+    "status": "fixed_locally",
+    "harm": "Vouching private-file validation and rendering read canonical JSON before restoring an interrupted output transaction, hiding the retained review after a real process exit.",
+    "reproduction": "Four public MCP cases exited the writer with code 96 immediately after canonical output detach. Both tools returned missing-path errors for explicit intake/review paths and review-path-only input.",
+    "repair": "Invoke the existing verified output recovery before explicit private JSON reads, retaining its ownership, integrity and live-writer checks.",
+    "test": "test_private_review_recovers_after_output_detached_by_process_exit",
+    "validation": "All 38 selected Vouching tests passed, including all four real-process-exit/private-path regressions, read-only assurance replay, transaction faults and unsafe internal entries. Black/Isort across 50 changed Python files, changed JavaScript syntax and diff whitespace checks passed."
+  }
+]

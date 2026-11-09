@@ -34,6 +34,10 @@ DRIVE_SHORTCUT_MIME_TYPE = "application/vnd.google-apps.shortcut"
 DRIVE_SNAPSHOT_SCHEMA = "vera.google_drive_folder_snapshot.v1"
 DRIVE_SCOPE = "https://www.googleapis.com/auth/drive"
 MAX_FILES = 5_000
+MAX_FOLDERS = 5_000
+# Bound API work even when pages are empty or contain only skipped entries.
+MAX_LIST_PAGES = 100
+MAX_LIST_CHILDREN = MAX_FILES + MAX_FOLDERS
 MAX_TOTAL_BYTES = 2 * 1024 * 1024 * 1024
 MAX_EVIDENCE_BYTES = 100 * 1024 * 1024
 _ID_RE = re.compile(r"[A-Za-z0-9_-]{3,256}")
@@ -199,7 +203,9 @@ class GoogleApiDriveGateway:
     def list_children(self, parent_id: str) -> list[dict[str, Any]]:
         selected = _drive_id(parent_id, label="Drive parent ID")
         page_token: str | None = None
+        seen_tokens: set[str] = set()
         children: list[dict[str, Any]] = []
+        page_count = 0
         while True:
             request = self._service.files().list(
                 q=f"'{selected}' in parents and trashed = false",
@@ -213,6 +219,7 @@ class GoogleApiDriveGateway:
             response = self._execute(
                 request, label="Could not list Google Drive folder"
             )
+            page_count += 1
             if response.get("incompleteSearch") is True:
                 raise DriveError("Google Drive folder search was incomplete.")
             page = response.get("files", [])
@@ -220,12 +227,27 @@ class GoogleApiDriveGateway:
                 isinstance(item, dict) for item in page
             ):
                 raise DriveError("Google Drive returned a malformed child list.")
+            if len(children) + len(page) > MAX_LIST_CHILDREN:
+                raise DriveError(
+                    "Google Drive folder exceeds the child-list boundary; "
+                    "listing is incomplete. Select a smaller root."
+                )
             children.extend(page)
             page_token = response.get("nextPageToken")
             if page_token is None:
                 return children
             if not isinstance(page_token, str) or not page_token:
                 raise DriveError("Google Drive returned an invalid page token.")
+            if page_token in seen_tokens:
+                raise DriveError(
+                    "Google Drive returned a repeated page token; listing is incomplete."
+                )
+            seen_tokens.add(page_token)
+            if page_count >= MAX_LIST_PAGES:
+                raise DriveError(
+                    "Google Drive folder exceeds the pagination boundary; "
+                    "listing is incomplete. Retry or select a smaller root."
+                )
 
     def create_folder(self, parent_id: str, name: str) -> dict[str, Any]:
         body = {
@@ -420,6 +442,10 @@ def snapshot_google_drive_folder(
                     continue
                 visited.add(normalized["file_id"])
                 folder_count += 1
+                if folder_count > MAX_FOLDERS:
+                    raise DriveError(
+                        f"Google Drive tree exceeds the {MAX_FOLDERS}-folder boundary; select a smaller root."
+                    )
                 pending.append((normalized["file_id"], parent_path / component))
                 continue
             if normalized["mime_type"] == DRIVE_SHORTCUT_MIME_TYPE:

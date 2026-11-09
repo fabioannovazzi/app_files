@@ -10,6 +10,7 @@ import stat
 import subprocess
 import sys
 import venv
+import zipfile
 from email.message import EmailMessage
 from pathlib import Path
 from types import ModuleType, SimpleNamespace
@@ -96,13 +97,14 @@ def test_unrelated_scope_change_allows_import_without_content_refresh(
     status = archive_core.studio_archive_status(state_dir=indexed_archive.state)
     assert status["index_requires_refresh"] is True
     assert status["document_count"] == 3
-    # Search still requires an explicitly refreshed index; import does not.
-    with pytest.raises(archive_core.ArchiveError, match="Top-level archive scopes"):
-        archive_core.search_archive(
-            "cessione",
-            scope_id=indexed_archive.scopes["Rossi"],
-            state_dir=indexed_archive.state,
-        )
+    # Existing selected-scope results remain usable, with refresh status explicit.
+    search = archive_core.search_archive(
+        "cessione",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+    assert search["index_requires_refresh"] is True
+    assert search["scope_configuration_changed"] is True
     refreshed = archive_core.refresh_archive(state_dir=indexed_archive.state)
 
     assert refreshed["scope_configuration_changed"] is True
@@ -285,6 +287,55 @@ def indexed_archive(
         source=source,
         scopes=scopes,
     )
+
+
+def test_process_exit_during_rebuild_preserves_previous_searchable_index(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    before = archive_core.search_archive(
+        "cessione",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+    script = """
+import os
+import sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+import archive_core
+original = archive_core._replace_document
+def exit_after_write(*args, **kwargs):
+    original(*args, **kwargs)
+    os._exit(94)
+archive_core._replace_document = exit_after_write
+archive_core.refresh_archive(rebuild=True, state_dir=Path(sys.argv[2]))
+"""
+
+    interrupted = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            script,
+            str(COMPONENT_ROOT / "scripts"),
+            str(indexed_archive.state),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+
+    assert interrupted.returncode == 94, interrupted.stderr
+    after = archive_core.search_archive(
+        "cessione",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+    assert after["results"] == before["results"]
+    opened = archive_core.open_archive_source(
+        after["results"][0]["source_id"], state_dir=indexed_archive.state
+    )
+    assert opened["source_verified"] is True
 
 
 def _node_executable() -> str:
@@ -1507,6 +1558,94 @@ def test_open_rejects_source_changed_after_search(
         )
 
 
+def test_unrelated_new_client_does_not_block_verified_existing_source(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    before = archive_core.search_archive(
+        "cessione quote",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+    (indexed_archive.root / "New client").mkdir()
+
+    reopened = archive_core.open_archive_source(
+        before["results"][0]["source_id"], state_dir=indexed_archive.state
+    )
+
+    assert reopened["source_verified"] is True
+    assert reopened["relative_path"] == "Rossi/precedente.md"
+    assert reopened["index_requires_refresh"] is True
+
+
+def test_unrelated_new_client_does_not_block_selected_scope_search(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    (indexed_archive.root / "New client").mkdir()
+
+    result = archive_core.search_archive(
+        "cessione quote",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+
+    assert result["results"][0]["relative_path"] == "Rossi/precedente.md"
+    assert result["results"][0]["verification_required"] is True
+    assert result["index_requires_refresh"] is True
+
+
+def test_global_search_requires_refresh_after_new_client_is_added(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    (indexed_archive.root / "New client").mkdir()
+
+    with pytest.raises(archive_core.ArchiveError, match="refresh before searching"):
+        archive_core.search_archive(
+            "cessione quote", scope_id="all", state_dir=indexed_archive.state
+        )
+
+
+@pytest.mark.parametrize("operation", ["search", "open"])
+def test_selected_scope_rename_still_requires_refresh(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType, operation: str
+) -> None:
+    candidates = archive_core.search_archive(
+        "cessione quote",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+    (indexed_archive.root / "Rossi").rename(indexed_archive.root / "Renamed Rossi")
+    call, kwargs = {
+        "search": (
+            archive_core.search_archive,
+            {"query": "cessione quote", "scope_id": indexed_archive.scopes["Rossi"]},
+        ),
+        "open": (
+            archive_core.open_archive_source,
+            {"source_id": candidates["results"][0]["source_id"]},
+        ),
+    }[operation]
+
+    with pytest.raises(archive_core.ArchiveError, match="refresh before"):
+        call(**kwargs, state_dir=indexed_archive.state)
+
+
+def test_unrelated_scope_change_does_not_allow_stale_document_bytes(
+    indexed_archive: SimpleNamespace, archive_core: ModuleType
+) -> None:
+    candidates = archive_core.search_archive(
+        "cessione quote",
+        scope_id=indexed_archive.scopes["Rossi"],
+        state_dir=indexed_archive.state,
+    )
+    (indexed_archive.root / "New client").mkdir()
+    indexed_archive.source.write_text("Revised professional document")
+
+    with pytest.raises(archive_core.SourceChangedError, match="changed after indexing"):
+        archive_core.open_archive_source(
+            candidates["results"][0]["source_id"], state_dir=indexed_archive.state
+        )
+
+
 def test_status_search_and_open_leave_database_bytes_unchanged(
     indexed_archive: SimpleNamespace,
     archive_core: ModuleType,
@@ -1731,6 +1870,48 @@ def test_context_fragments_each_include_their_own_citation(
         "Rossi/long.txt, lines 1-120",
         "Rossi/long.txt, lines 121",
     ]
+
+
+@pytest.mark.parametrize("extension", ["docx", "xlsx"])
+def test_refresh_isolates_malformed_office_xml_and_indexes_healthy_documents(
+    tmp_path: Path, archive_core: ModuleType, extension: str
+) -> None:
+    from docx import Document
+    from openpyxl import Workbook
+
+    root = tmp_path / "Studio"
+    client = root / "Rossi"
+    client.mkdir(parents=True)
+    office = client / f"broken.{extension}"
+    if extension == "docx":
+        Document().save(office)
+        xml_member = "word/document.xml"
+    else:
+        workbook = Workbook()
+        workbook.save(office)
+        workbook.close()
+        xml_member = "xl/workbook.xml"
+    with zipfile.ZipFile(office) as original:
+        members = {name: original.read(name) for name in original.namelist()}
+    members[xml_member] = b"<broken"
+    with zipfile.ZipFile(office, "w") as corrupted:
+        for name, payload in members.items():
+            corrupted.writestr(name, payload)
+    retained_bytes = office.read_bytes()
+    (client / "healthy.txt").write_text("Uniquehealthy searchable professional record")
+    state = tmp_path / "state"
+    archive_core.configure_archive(root, state_dir=state)
+
+    result = archive_core.refresh_archive(state_dir=state)
+
+    assert result["failed_files"] == 1
+    assert result["document_count"] == 2
+    assert office.read_bytes() == retained_bytes
+    scope = result["scopes"][0]["scope_id"]
+    matches = archive_core.search_archive(
+        "Uniquehealthy", scope_id=scope, state_dir=state
+    )
+    assert len(matches["results"]) == 1
 
 
 def test_office_and_email_sources_keep_structural_locators(
@@ -2721,6 +2902,65 @@ def test_mcp_rejects_finalize_artifact_without_media_type(tmp_path: Path) -> Non
 
     assert result["isError"] is True
     assert "artifact media_type" in result["structuredContent"]["error"]["message"]
+
+
+def test_mcp_large_artifact_declaration_reaches_worker_intact(tmp_path: Path) -> None:
+    component = tmp_path / "studio-archive"
+    (component / "mcp").mkdir(parents=True)
+    (component / "scripts").mkdir()
+    (component / ".codex-plugin").mkdir()
+    shutil.copy2(
+        COMPONENT_ROOT / ".codex-plugin/plugin.json",
+        component / ".codex-plugin/plugin.json",
+    )
+    server = component / "mcp/server.cjs"
+    server.write_bytes(MCP_SERVER_PATH.read_bytes())
+    (component / "scripts/studio_archive.py").write_text(
+        "import json, sys\n"
+        "if '--artifacts-stdin' in sys.argv:\n"
+        "    artifacts = json.load(sys.stdin)\n"
+        "else:\n"
+        "    artifacts = json.loads(sys.argv[sys.argv.index('--artifacts-json') + 1])\n"
+        "print(json.dumps({'artifacts': artifacts}))\n"
+    )
+    artifacts = [
+        {
+            "artifact_id": f"document_{index}",
+            "path": f"document_{index}.pdf",
+            "purpose": "Retained professional output. " * 10,
+            "audience": "review",
+            "media_type": "application/pdf",
+        }
+        for index in range(10000)
+    ]
+    request = {
+        "jsonrpc": "2.0",
+        "id": 1,
+        "method": "tools/call",
+        "params": {
+            "name": "finalize_studio_client_workflow",
+            "arguments": {
+                "client_id": "client_" + "1" * 24,
+                "engagement_id": "eng_" + "2" * 24,
+                "run_id": "run_" + "3" * 24,
+                "artifacts": artifacts,
+            },
+        },
+    }
+
+    completed = subprocess.run(
+        [_node_executable(), str(server), "--stdio"],
+        env={**os.environ, "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable},
+        input=json.dumps(request) + "\n",
+        text=True,
+        capture_output=True,
+        check=True,
+        timeout=30,
+    )
+
+    result = json.loads(completed.stdout)["result"]
+    assert result.get("isError") is not True, result
+    assert result["structuredContent"]["artifacts"] == artifacts
 
 
 def test_mcp_rejects_non_object_json_request(tmp_path: Path) -> None:

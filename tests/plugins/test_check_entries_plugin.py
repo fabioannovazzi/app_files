@@ -10456,3 +10456,59 @@ def test_reviewed_amount_cannot_invent_value_or_locator(
 
     with pytest.raises(ValueError, match="Reviewed amount selection"):
         core.run_entry_checks(normalized, support, tmp_path / "out", recipe_path)
+
+
+@pytest.mark.parametrize("input_mode", ["explicit_paths", "review_path_only"])
+@pytest.mark.parametrize(
+    "tool_name", ["validate_check_entries_review", "render_check_entries_review"]
+)
+def test_private_review_recovers_after_output_detached_by_process_exit(
+    monkeypatch: Any, tmp_path: Path, input_mode: str, tool_name: str
+) -> None:
+    """A fresh MCP process can reopen the retained review after a real crash."""
+    _, output, _, _ = _supported_assurance_run(monkeypatch, tmp_path)
+    arguments = {"review_payload_path": str(output / "review_payload.json")}
+    if input_mode == "explicit_paths":
+        arguments["run_intake_path"] = str(output / "run_intake.json")
+    arguments = _managed_check_mcp_arguments(output, arguments)
+    before = _transaction_tree_state(output)
+    crash_script = r"""
+const fs = require('node:fs');
+const path = require('node:path');
+const runtime = require(process.argv[1]);
+const output = process.argv[2];
+const rename = fs.renameSync;
+fs.renameSync = function(source, destination) {
+  const result = rename.apply(fs, arguments);
+  if (source === output && path.basename(destination) === 'trusted-backup') process.exit(96);
+  return result;
+};
+runtime.withGeneratedReviewOutputTransaction(output, ({workingOutputDir}) => {
+  fs.writeFileSync(path.join(workingOutputDir, 'ui_decisions.json'), '{}');
+  return runtime.generatedReviewTransactionEnvelope({saved: true}, ['ui_decisions.json']);
+});
+"""
+    crashed = subprocess.run(
+        [
+            "node",
+            "-e",
+            crash_script,
+            str(
+                ROOT
+                / "plugins/_shared/vendor/modules/vera_assurance/review_output_transaction.cjs"
+            ),
+            str(output),
+        ],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=15,
+    )
+    assert crashed.returncode == 96, crashed.stderr
+    assert not output.exists()
+
+    response = _check_transaction_call(tool_name, arguments)
+
+    assert response["ok"] is True, response
+    assert response["review_reference"]["persistence_token"]
+    assert _transaction_tree_state(output) == before

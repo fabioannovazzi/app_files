@@ -444,15 +444,46 @@ function validateDecisions(inputArgs) {
 }
 
 function pythonExecutable() {
-  return process.env.VIRTUAL_ENV
-    ? path.join(process.env.VIRTUAL_ENV, process.platform === "win32" ? "Scripts/python.exe" : "bin/python")
-    : process.platform === "win32"
-      ? "python"
-      : "python3";
+  const interpreter = process.platform === "win32" ? "Scripts/python.exe" : "bin/python";
+  const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
+    : path.join(os.homedir(), ".local/share/mparanza/runtime"));
+  const candidates = [
+    path.join(runtimeRoot, "venv", interpreter),
+    process.env.PYTHON,
+    process.env.VIRTUAL_ENV
+      ? path.join(process.env.VIRTUAL_ENV, interpreter)
+      : "",
+    path.resolve(PLUGIN_ROOT, "..", "..", ".venv", interpreter),
+    ...(process.platform === "win32" ? ["python", "python3", "py"] : ["python3", "python"]),
+  ].filter(Boolean);
+  for (const candidate of new Set(candidates)) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    // Probe the actual interpreter, not the presence of a PATH alias. This
+    // avoids ENOENT/Store aliases hiding an already working managed Python.
+    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+      encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
+    });
+    if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
+  }
+  // Preserve the caller's actual spawn-error/reporting path if none can run.
+  return process.platform === "win32" ? "python" : "python3";
+}
+
+function workerArguments(args) {
+  const launcher = path.resolve(
+    PLUGIN_ROOT, "..", "..", "scripts", "managed_python_runtime.py",
+  );
+  if (fs.existsSync(launcher)) {
+    return [launcher, "--module", "archive-organization", "run",
+      "scripts/archive_organization.py", ...args];
+  }
+  // Standalone/source components retain their selected local interpreter.
+  return [CLI_PATH, ...args];
 }
 
 function callCli(args) {
-  const result = spawnSync(pythonExecutable(), [CLI_PATH, ...args], {
+  const result = spawnSync(pythonExecutable(), workerArguments(args), {
     cwd: PLUGIN_ROOT,
     env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
     encoding: "utf8",

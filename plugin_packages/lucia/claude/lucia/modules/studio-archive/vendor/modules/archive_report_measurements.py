@@ -257,6 +257,10 @@ def read_selection(
                     "Selected data exceeds the host output limit; select fewer units or columns"
                 )
             selected_rows.append(selected)
+    # The parser reopens the source after admission. Never attach its prior
+    # digest to values extracted while the selected file was changing.
+    if path.is_symlink() or _file_hash(path) != source["sha256"]:
+        raise ValueError("Read source changed during extraction")
     data: dict[str, Any] = {
         "columns": [header[index] for index in selected_columns],
         "rows": selected_rows,

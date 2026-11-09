@@ -174,7 +174,10 @@ ZIPs during a customer run.
       version, MIME type, available checksum, capability, Shared Drive, or
       occupied/duplicate target name. It creates needed folders beneath the
       bound root and updates the same file's parent and name through Drive v3,
-      preserving its ID, link, permissions, and revision history.
+      preserving its ID and link. Moving can change inherited access rights.
+      Before the existing apply authorization, identify the destination folder
+      and explain that its inherited permissions apply; do not claim unchanged
+      permissions or claim an access review that was not performed.
     Neither mode overwrites or automatically deletes a duplicate.
 11. Preserve `apply_journal.json`. If execution fails, the engine attempts an
     immediate rollback and reports whether manual recovery remains. The

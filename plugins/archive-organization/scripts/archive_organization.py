@@ -13,9 +13,10 @@ import stat
 import sys
 import tempfile
 from collections import defaultdict
-from collections.abc import Iterator, Mapping, Sequence
+from collections.abc import Callable, Iterator, Mapping, Sequence
 from contextlib import contextmanager
 from datetime import datetime, timezone
+from functools import wraps
 from pathlib import Path, PurePosixPath
 from typing import Any
 
@@ -750,6 +751,30 @@ def _review_words(language: str) -> dict[str, Any]:
     return translations[language]
 
 
+def _protect_review_evidence(
+    operation: Callable[..., dict[str, Any]],
+) -> Callable[..., dict[str, Any]]:
+    """Serialize review writes with moves and retain the evidence needed to undo them."""
+
+    @wraps(operation)
+    def protected(client_engagement: Path, *args: Any, **kwargs: Any) -> dict[str, Any]:
+        if "language" in kwargs:
+            # Reject unsupported presentation options before creating the lock.
+            _review_words(kwargs["language"])
+        context = _load_context(client_engagement)
+        with _archive_lock(context):
+            journal = Path(context["output_dir"]) / "apply_journal.json"
+            if journal.exists() or journal.is_symlink():
+                raise ArchiveOrganizationError(
+                    "This run has an apply journal; retain its review evidence for rollback. "
+                    "Use a new run for a changed organization proposal."
+                )
+            return operation(client_engagement, *args, **kwargs)
+
+    return protected
+
+
+@_protect_review_evidence
 def build_review_package(
     client_engagement: Path,
     proposals_path: Path,
@@ -1200,6 +1225,7 @@ def _validated_plan(path: Path, context: Mapping[str, Any]) -> dict[str, Any]:
     return plan
 
 
+@_protect_review_evidence
 def persist_review_decisions(
     client_engagement: Path,
     decisions_path: Path,
@@ -1286,6 +1312,7 @@ def persist_review_decisions(
     }
 
 
+@_protect_review_evidence
 def compile_approved_plan(
     client_engagement: Path, decisions_path: Path
 ) -> dict[str, Any]:
@@ -2178,6 +2205,61 @@ def _rollback_applied_plan_locked(
     ):
         raise ArchiveOrganizationError("Apply journal belongs to another run.")
     if journal.get("storage_kind") == "google_drive":
+        approved = _validated_approved(
+            journal_path.parent / "approved_plan.json", context
+        )
+        expected = [
+            {
+                "item_id": item["item_id"],
+                "file_id": item["drive_file_id"],
+                "source_relative_path": item["source_relative_path"],
+                "source_parent_id": item["drive_parent_id"],
+                "source_name": item["drive_name"],
+                "source_version": item["drive_version"],
+                "target_relative_path": item["approved_target_relative_path"],
+                "target_name": PurePosixPath(
+                    item["approved_target_relative_path"]
+                ).name,
+            }
+            for item in approved["items"]
+            if item["approved_action"] in CHANGE_ACTIONS
+        ]
+        operations = journal.get("operations")
+        if (
+            any(
+                journal.get(key) != approved.get(key)
+                for key in (
+                    "client_id",
+                    "engagement_id",
+                    "storage_kind",
+                    "drive_root_folder_id",
+                    "drive_id",
+                )
+            )
+            or journal.get("approved_plan_sha256") != approved["content_sha256"]
+            or not isinstance(operations, list)
+            or len(operations) != len(expected)
+            or any(
+                not isinstance(observed, dict)
+                or any(observed.get(key) != value for key, value in planned.items())
+                for observed, planned in zip(operations, expected)
+            )
+        ):
+            raise ArchiveOrganizationError(
+                "Recovery journal differs from the approved plan."
+            )
+        if journal["status"] in {"rolled_back", "rolled_back_after_failure"} and all(
+            operation["status"] == "rolled_back" for operation in operations
+        ):
+            return {
+                "status": "rolled_back",
+                "storage_kind": "google_drive",
+                "rolled_back_count": 0,
+                "journal_path": str(journal_path),
+                "remote_archive_mutated": False,
+                "created_folders_left_in_place": len(journal["created_folders"]),
+                "replayed": True,
+            }
         drive_module = _google_drive_module()
         selected_gateway = drive_gateway or drive_module.load_google_drive_gateway()
         if journal.get("status") not in {
@@ -2250,6 +2332,18 @@ def _rollback_applied_plan_locked(
         raise ArchiveOrganizationError(
             "Recovery journal differs from the approved plan."
         )
+    if journal["status"] in {"rolled_back", "rolled_back_after_failure"} and all(
+        operation["status"] == "rolled_back" for operation in journal["operations"]
+    ):
+        # A repeated completed request owns no later files at those paths.
+        # Hash equality alone cannot authorize deleting a new user's copy.
+        return {
+            "status": "rolled_back",
+            "rolled_back_count": 0,
+            "journal_path": str(journal_path),
+            "source_archive_mutated": False,
+            "replayed": True,
+        }
     _restore_local_operations(root, journal, journal_path)
     journal["status"] = "rolled_back"
     journal["completed_at"] = _now_iso()

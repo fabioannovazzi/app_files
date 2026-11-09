@@ -337,6 +337,65 @@ def test_retired_package_does_not_silently_recalculate_with_new_release(
         recovery.release_execution_root(newer)
 
 
+def test_interrupted_run_code_binding_can_retry_without_losing_run_work(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
+    source = package(tmp_path)
+    run = tmp_path / "run"
+    run.mkdir()
+    retained = run / "retained-work.txt"
+    retained.write_bytes(b"existing professional work")
+    program = """
+import json, os, runpy, sys
+from pathlib import Path
+m = runpy.run_path(sys.argv[1])
+current = m['prepare_execution_root'](Path(sys.argv[2]), None, shared=True)
+original_dump = json.dump
+def interrupted_dump(value, handle, *args, **kwargs):
+    if isinstance(value, dict) and 'package_sha256' in value:
+        handle.write('{')
+        handle.flush()
+        os.fsync(handle.fileno())
+        os._exit(98)
+    return original_dump(value, handle, *args, **kwargs)
+json.dump = interrupted_dump
+m['bind_execution_run'](Path(sys.argv[3]), current)
+"""
+    interrupted = subprocess.run(
+        [
+            sys.executable,
+            "-I",
+            "-B",
+            "-c",
+            program,
+            str(ROOT / "plugins/vera/scripts/verified_execution.py"),
+            str(source),
+            str(run),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        check=False,
+    )
+    assert interrupted.returncode == 98, interrupted.stderr
+    recovery = load_recovery()
+    current = recovery.prepare_execution_root(source, None, shared=True)
+
+    try:
+        bound = recovery.bind_execution_run(run, current)
+        try:
+            assert bound == current
+            assert json.loads((run / "execution-runtime.json").read_text())[
+                "package_sha256"
+            ] == recovery.execution_package_id(current)
+            assert retained.read_bytes() == b"existing professional work"
+        finally:
+            recovery.release_execution_root(bound)
+    finally:
+        recovery.release_execution_root(current)
+
+
 def test_concurrent_starts_publish_one_complete_copy(tmp_path, monkeypatch):
     monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(tmp_path / "runtime"))
     source = package(tmp_path)

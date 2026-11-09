@@ -34,9 +34,10 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+@pytest.mark.parametrize("retained_binding", [True, False])
 @pytest.mark.parametrize("problem", ["network", "foreign_report", "changed_report"])
 def test_service_verification_failure_preserves_completed_pipeline(
-    archive_core, client_case, monkeypatch, problem
+    archive_core, client_case, monkeypatch, problem, retained_binding
 ):
     import archive_report_receipt
     import operational_incidents
@@ -68,6 +69,8 @@ def test_service_verification_failure_preserves_completed_pipeline(
         "retry_reporting",
         lambda *args, **kwargs: pytest.fail("Verification must not retry reporting"),
     )
+    if not retained_binding:
+        monkeypatch.setattr(archive_core, "_retained_run_root", lambda *args: None)
 
     result = archive_core.verify_studio_run_report(
         client_case.client_id,
@@ -1740,3 +1743,27 @@ def test_archive_reads_selected_execution_log_lines(
     assert source["unit"] == "lines"
     assert source["quantity"] == 3
     assert source["measurement_error"] is None
+
+
+def test_read_selection_rejects_source_changed_during_extraction(tmp_path, monkeypatch):
+    from contextlib import contextmanager
+
+    import archive_report_measurements as measurements
+
+    path = tmp_path / "source.csv"
+    path.write_text("item,amount\noriginal,10\n", encoding="utf-8")
+    source = measurements.measure_source(path, source_id="selected-source")
+    original_table = measurements._table
+
+    @contextmanager
+    def changed_table(selected):
+        path.write_text("item,amount\nchanged,99\n", encoding="utf-8")
+        with original_table(selected) as table:
+            yield table
+
+    monkeypatch.setattr(measurements, "_table", changed_table)
+
+    with pytest.raises(ValueError, match="changed during"):
+        measurements.read_selection(source)
+
+    assert path.read_text(encoding="utf-8") == "item,amount\nchanged,99\n"

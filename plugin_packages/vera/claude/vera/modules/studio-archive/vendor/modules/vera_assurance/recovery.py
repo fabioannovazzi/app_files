@@ -61,11 +61,15 @@ def _json(path: Path) -> dict[str, Any]:
     return value
 
 
-def _write(path: Path, value: dict[str, Any]) -> None:
+def _write(
+    path: Path, value: dict[str, Any], *, staging_directory: Path | None = None
+) -> None:
     _private_directory(path.parent)
     if path.exists() or path.is_symlink():
         _ordinary(path)
-    descriptor, name = tempfile.mkstemp(prefix=".recovery-", dir=path.parent)
+    staging = path.parent if staging_directory is None else staging_directory
+    _private_directory(staging)
+    descriptor, name = tempfile.mkstemp(prefix=".recovery-", dir=staging)
     temporary = Path(name)
     try:
         with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
@@ -328,7 +332,8 @@ def _restore_run(
         _ordinary(destination, directory=True)
         if not marker.is_file():
             raise ValueError(
-                "Recovery destination already exists; preserve its contents"
+                "Recovery destination already exists without a restore receipt; "
+                "preserve its contents and choose a new destination for the same run"
             )
         progress = _json(marker)
         if any(progress.get(key) != value for key, value in restore_record.items()):
@@ -350,8 +355,17 @@ def _restore_run(
         ):
             raise ValueError("Retained recovery bytes no longer match the checkpoint")
     directories = [_relative(relative) for relative in snapshot["directories"]]
-    destination.mkdir(mode=0o700, exist_ok=True)
-    _write(marker, progress)
+    if prior is None:
+        try:
+            destination.mkdir(mode=0o700)
+        except FileExistsError as exc:
+            raise ValueError(
+                "Recovery destination appeared during preparation; preserve its "
+                "contents and choose a new destination for the same run"
+            ) from exc
+    # Keep abandoned metadata writes separate from the restored job too.
+    staging = destination / "work-restore-evidence"
+    _write(marker, progress, staging_directory=staging)
     for directory in directories:
         _private_directory(destination / directory)
     expected_paths = {_relative(relative) for relative in snapshot["files"]}
@@ -383,7 +397,11 @@ def _restore_run(
             evidence = destination / "work-restore-evidence" / uuid4().hex
             _private_directory(evidence)
             target.rename(evidence / "partial-copy")
-        descriptor, name = tempfile.mkstemp(prefix=".recovery-", dir=target.parent)
+        # A killed process cannot execute the temporary-file cleanup. Stage in
+        # the retained restore evidence area so its partial bytes cannot be
+        # mistaken for unrelated user work and block the next restore attempt.
+        _private_directory(staging)
+        descriptor, name = tempfile.mkstemp(prefix=".recovery-", dir=staging)
         temporary = Path(name)
         try:
             with (
@@ -410,7 +428,7 @@ def _restore_run(
                 "Recovery copy verification failed; retained checkpoint is intact"
             )
         progress["written"].append(relative)
-        _write(marker, progress)
+        _write(marker, progress, staging_directory=staging)
     context = destination / context_relative
     if _run_identity(_json(context.parent / "run.json")) != tuple(
         snapshot["run_identity"]
@@ -419,8 +437,9 @@ def _restore_run(
     _write(
         context.parent / _REFERENCE,
         {"schema_version": "vera.work_recovery.v1", "store": str(store)},
+        staging_directory=staging,
     )
-    _write(marker, {**progress, "status": "restored"})
+    _write(marker, {**progress, "status": "restored"}, staging_directory=staging)
     return context
 
 

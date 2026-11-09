@@ -227,6 +227,36 @@ def reconcile(
         raise archive.ArchiveError("A stable request_id is required for resumption.")
     if not request["sources"]:
         raise archive.ArchiveError("Select the reconciliation sources.")
+    root = Path(
+        archive.get_studio_client_folder(client_id, state_dir=state_dir)[
+            "client_folder"
+        ]["client_root"]
+    )
+    headers, _ = archive.ledger._inspect_run_headers(root, engagement_id)
+    key = archive.ledger._text(request_id, label="request_id", maximum=200)
+    retained = [row for row in headers if row["idempotency_key"] == key]
+    if len(retained) > 1:
+        raise archive.ArchiveError(
+            "Request identity is ambiguous; retain existing jobs."
+        )
+    if retained and retained[0]["status"] != "prepared":
+        run = retained[0]
+        if run["workflow_id"] != "open-item-reconciliation":
+            raise archive.ArchiveError("Request ID belongs to another workflow.")
+        loaded = archive.ledger._load_run_identity(root, engagement_id, run["run_id"])
+        if run["status"] in {"completed", "ready_for_review"}:
+            archive.ledger.validate_run_artifacts(root, engagement_id, run["run_id"])
+        saved_request = Path(loaded["output_dir"]) / "reconciliation-request.json"
+        archive.ledger._ordinary_file(
+            saved_request, label="retained reconciliation request"
+        )
+        if _json(saved_request) != request:
+            raise archive.ArchiveError(
+                "This request_id already has different mappings or settings; select a new request_id."
+            )
+        return finish_reconciliation(
+            client_id, engagement_id, run["run_id"], state_dir=state_dir
+        )
     check_sources(request)
     mappings = {}
     input_ids = []

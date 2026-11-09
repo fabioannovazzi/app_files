@@ -1,0 +1,15 @@
+{
+  "platform": "macOS-27.0-arm64-arm-64bit",
+  "python": "3.12.13",
+  "client_count": 100,
+  "documents": 5000,
+  "refresh_seconds": 1.3162276670336723,
+  "selected_query_seconds": 0.017486084019765258,
+  "selected_result_count": 20,
+  "foreign_result_count": 0,
+  "limits": "Synthetic text on this local host; not OCR, network storage, Windows or live connector acceptance.",
+  "source_verified": true,
+  "evidence_sha256": "f07a949d61684a1ec1f5bcccd6bd5144ad39f5da26a42893822b52e605b9c362",
+  "probe": "scale_probe.py",
+  "evidence_path": "outputs/studio-archive-hardening/scale/result.json"
+}

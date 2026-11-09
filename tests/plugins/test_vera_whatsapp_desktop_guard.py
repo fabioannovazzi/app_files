@@ -146,12 +146,14 @@ def _run_guard(
     phone: str = "+12 345 678",
     expected_name: str = "Client Alpha",
     reject_search_shortcut: bool = False,
+    fail_digit_reply: bool = False,
 ) -> dict[str, Any]:
     scenario = {
         "states": states,
         "phone": phone,
         "expectedName": expected_name,
         "rejectSearchShortcut": reject_search_shortcut,
+        "failDigitReply": fail_digit_reply,
     }
     source = f"""
 import {{ guardedPhoneSearch }} from {json.dumps(GUARD.as_uri())};
@@ -171,6 +173,7 @@ const sky = {{
   async click(args) {{ calls.push({{ method: "click", args }}); }},
   async press_key(args) {{
     calls.push({{ method: "press_key", args }});
+    if (scenario.failDigitReply && /^[0-9]$/.test(args.key)) throw new Error("Lost reply after key action");
     if (scenario.rejectSearchShortcut && args.key === "super+f") {{
       throw new Error("Computer Use rejected modifier chord");
     }}
@@ -244,6 +247,23 @@ console.log(JSON.stringify({{ search, opened, calls, remainingStates: states.len
         timeout=20,
     )
     return json.loads(completed.stdout)
+
+
+def test_guard_does_not_claim_empty_composer_after_lost_digit_reply() -> None:
+    observed = _run_guard(
+        [
+            _accessibility_state(),
+            _accessibility_state(search_focused=True),
+            _accessibility_state(search_focused=True),
+        ],
+        fail_digit_reply=True,
+    )
+
+    assert observed["result"]["status"] == "blocked"
+    assert observed["result"]["reason"] == "digit_key_failed"
+    assert observed["result"]["composerEmpty"] is None
+    assert observed["result"]["cleanup"] == "unverified"
+    assert not any(call["method"] == "set_value" for call in observed["calls"])
 
 
 def test_guard_enters_phone_one_digit_at_a_time_and_returns_one_target() -> None:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import builtins
 import json
 import os
 import shutil
@@ -24,6 +25,54 @@ def started(case):
     return core, studio, state, root, cid, eid, rid, prepared
 
 
+@pytest.mark.parametrize(
+    ("missing_module", "outcome_key"),
+    [("vera_assurance.recovery", "recovery"), ("readable_archive", "readable_archive")],
+)
+def test_optional_dependency_failure_does_not_hide_prepared_run(
+    case, monkeypatch, missing_module, outcome_key
+):
+    core, _, state, root, _, eid, input_id = case
+    original_import = builtins.__import__
+
+    def unavailable_import(name, *args, **kwargs):
+        if name == missing_module:
+            raise ImportError("Optional dependency unavailable")
+        return original_import(name, *args, **kwargs)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(builtins, "__import__", unavailable_import)
+        result = core.prepare_studio_client_workflow(
+            eid, "posizioni-negoziali", input_ids=[input_id], state_dir=state
+        )
+
+    assert result["run"]["status"] == "prepared"
+    assert result[outcome_key]["status"] == "unavailable"
+    loaded = core.ledger.load_run(root, eid, result["run"]["run_id"])
+    assert loaded["run"]["run_id"] == result["run"]["run_id"]
+
+
+def test_missing_repair_dependency_never_accepts_changed_execution_input(
+    case, monkeypatch
+):
+    core, _, _, root, _, eid, rid, prepared = started(case)
+    execution = Path(prepared["client_engagement"]["input_bindings"][0]["path"])
+    execution.write_bytes(b"Unadmitted replacement")
+    original_import = builtins.__import__
+
+    def unavailable_import(name, *args, **kwargs):
+        if name == "vera_assurance.recovery":
+            raise ImportError("Repair dependency unavailable")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", unavailable_import)
+
+    with pytest.raises(core.ledger.LedgerError, match="no longer matches"):
+        core.ledger.load_run(root, eid, rid)
+
+    assert execution.read_bytes() == b"Unadmitted replacement"
+
+
 def test_checkpoint_flushes_writable_copy_handles(case, monkeypatch):
     core, studio, state, root, cid, eid, rid, prepared = started(case)
     real_fsync = os.fsync
@@ -40,6 +89,26 @@ def test_checkpoint_flushes_writable_copy_handles(case, monkeypatch):
 
     assert result["recovery"]["status"] == "retained"
     assert result["run"]["run_id"] == rid
+
+
+def test_ledger_recovery_reports_missing_navigation_dependency(case, monkeypatch):
+    core, _, state, _, cid, _, _ = case
+    original_import = builtins.__import__
+
+    def unavailable_import(name, *args, **kwargs):
+        if name == "readable_archive":
+            raise ImportError("Navigation dependency unavailable")
+        return original_import(name, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "__import__", unavailable_import)
+    result = core.recover_studio_client_ledger(state_dir=state)
+
+    assert result["status"] == "recovered_with_issues"
+    assert result["engagement_count"] == 1
+    assert result["input_count"] == 1
+    assert result["navigation_issues"] == [
+        {"client_id": cid, "reason": "Navigation dependency unavailable"}
+    ]
 
 
 def test_restore_selected_run_retains_completed_work_after_archive_loss(case, tmp_path):
@@ -119,6 +188,120 @@ def test_restore_does_not_overwrite_an_existing_destination(case, tmp_path):
 
     assert existing.read_bytes() == b"Unrelated work"
     assert not (destination / "Vera").exists()
+
+
+def test_restore_does_not_claim_destination_created_after_preflight(
+    case, tmp_path, monkeypatch
+):
+    core, _, state, _, cid, eid, rid, _ = started(case)
+    destination = tmp_path / "Concurrent destination"
+    mkdir = Path.mkdir
+
+    def concurrent_mkdir(path, *args, **kwargs):
+        if path == destination and not path.exists():
+            mkdir(path, mode=0o700)
+            (path / "unrelated.txt").write_bytes(b"Concurrent user work")
+        return mkdir(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "mkdir", concurrent_mkdir)
+
+    with pytest.raises(core.ArchiveError, match="destination"):
+        core.restore_studio_client_workflow(cid, eid, rid, destination, state_dir=state)
+
+    assert (destination / "unrelated.txt").read_bytes() == b"Concurrent user work"
+    assert sorted(path.name for path in destination.iterdir()) == ["unrelated.txt"]
+
+
+@pytest.mark.parametrize(
+    "crash_point", ["initial_marker", "copy", "progress_update", "reference"]
+)
+def test_process_exit_during_restore_resumes_without_discarding_work(
+    case, tmp_path, crash_point
+):
+    core, studio, state, root, cid, eid, rid, prepared = started(case)
+    output = Path(prepared["client_engagement"]["output_dir"]) / "completed.txt"
+    output.write_bytes(b"Completed work retained across process exit")
+    checkpoint = core.checkpoint_studio_client_workflow(cid, eid, rid, state_dir=state)
+    destination = tmp_path / "Restored"
+    shutil.rmtree(studio)
+    vendor = Path(__file__).resolve().parents[2] / "plugins/_shared/vendor/modules"
+    crash = """
+import os, shutil, sys
+from pathlib import Path
+sys.path.insert(0, sys.argv[1])
+from vera_assurance.recovery import restore_run
+original = shutil.copyfileobj
+def exit_after_copy(source, target, *args, **kwargs):
+    original(source, target, *args, **kwargs)
+    target.flush()
+    if sys.argv[7] == 'copy':
+        os._exit(91)
+shutil.copyfileobj = exit_after_copy
+original_replace = Path.replace
+marker_writes = 0
+def exit_before_progress_commit(source, target):
+    global marker_writes
+    if Path(target).name == 'work-recovery.json' and sys.argv[7] == 'reference':
+        os._exit(91)
+    if Path(target) == Path(sys.argv[3]) / 'work-restore.json':
+        marker_writes += 1
+        if marker_writes == 1 and sys.argv[7] == 'initial_marker':
+            os._exit(91)
+        if marker_writes == 2 and sys.argv[7] == 'progress_update':
+            os._exit(91)
+    return original_replace(source, target)
+Path.replace = exit_before_progress_commit
+restore_run(Path(sys.argv[2]), Path(sys.argv[3]), tuple(sys.argv[4:7]))
+"""
+    interrupted = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            crash,
+            str(vendor),
+            checkpoint["recovery"]["store"],
+            str(destination),
+            cid,
+            eid,
+            rid,
+            crash_point,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+    assert interrupted.returncode == 91, interrupted.stderr
+
+    if crash_point == "initial_marker":
+        evidence = {
+            path.relative_to(destination): path.read_bytes()
+            for path in destination.rglob("*")
+            if path.is_file()
+        }
+        with pytest.raises(
+            core.ArchiveError, match="choose a new destination for the same run"
+        ):
+            core.restore_studio_client_workflow(
+                cid, eid, rid, destination, state_dir=state
+            )
+        assert {
+            path.relative_to(destination): path.read_bytes()
+            for path in destination.rglob("*")
+            if path.is_file()
+        } == evidence
+        destination = tmp_path / "Alternative after interrupted initialization"
+
+    result = core.restore_studio_client_workflow(
+        cid, eid, rid, destination, state_dir=state
+    )
+
+    assert result["run"]["run_id"] == rid
+    assert (
+        Path(result["client_engagement"]["output_dir"]) / output.name
+    ).read_bytes() == (b"Completed work retained across process exit")
+    assert Path(
+        result["client_engagement"]["input_bindings"][0]["path"]
+    ).read_text() == ("Synthetic retained source")
 
 
 def test_completed_helper_is_checkpointed_without_an_extra_agent_step(

@@ -2,19 +2,32 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const os = require("node:os");
 const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 
 function recorderPython(pluginRoot) {
+  const interpreter = process.platform === "win32" ? "Scripts/python.exe" : "bin/python";
+  const runtimeRoot = process.env.MPARANZA_RUNTIME_ROOT || (process.platform === "win32"
+    ? path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), "AppData/Local"), "mpr")
+    : path.join(os.homedir(), ".local/share/mparanza/runtime"));
   const candidates = [
     process.env.VERA_REPORTING_PYTHON,
+    path.join(runtimeRoot, "venv", interpreter),
     process.env.PYTHON,
-    process.env.VIRTUAL_ENV && path.join(process.env.VIRTUAL_ENV,
-      process.platform === "win32" ? "Scripts/python.exe" : "bin/python"),
-    path.resolve(pluginRoot, "../..", ".venv/bin/python"),
-    "python3",
+    process.env.VIRTUAL_ENV && path.join(process.env.VIRTUAL_ENV, interpreter),
+    path.resolve(pluginRoot, "../..", ".venv", interpreter),
+    ...(process.platform === "win32" ? ["python", "python3", "py"] : ["python3", "python"]),
   ].filter(Boolean);
-  return candidates.find((candidate) => !path.isAbsolute(candidate) || fs.existsSync(candidate));
+  for (const candidate of new Set(candidates)) {
+    if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
+    // Probe a usable interpreter; PATH aliases must not hide the managed runtime.
+    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+      encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
+    });
+    if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
+  }
+  return process.platform === "win32" ? "python" : "python3";
 }
 
 function bridge(child, component, pluginRoot, input = process.stdin, output = process.stdout) {

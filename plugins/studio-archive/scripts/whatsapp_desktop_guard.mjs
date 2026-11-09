@@ -372,7 +372,8 @@ export async function guardedPhoneSearch({
       return response("blocked", {
         reason: "digit_key_failed",
         digitsEntered: verifiedPrefix.length,
-        composerEmpty: true,
+        composerEmpty: null,
+        cleanup: "unverified",
       });
     }
     state = await readFullState(sky, app);

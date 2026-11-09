@@ -1596,7 +1596,7 @@ function commandForTool(name, rawArgs) {
       }
       requireString(artifact.media_type, "artifact media_type");
     }
-    command.push("--artifacts-json", JSON.stringify(args.artifacts));
+    command.push("--artifacts-stdin");
     return command;
   }
   if (name === TOOL_NAMES.completeWorkflow) {
@@ -1845,6 +1845,9 @@ function callTool(name, args) {
   // A transport deadline must not kill a worker that is committing that work.
   // Authored text is data, never an argv option or a Windows command-line payload.
   if (name === TOOL_NAMES.writeRunArtifact) spawnOptions.input = args.content;
+  if (name === TOOL_NAMES.finalizeWorkflow && args.artifacts !== undefined) {
+    spawnOptions.input = JSON.stringify(args.artifacts);
+  }
   const completed = spawnSync(
     pythonExecutable(),
     workerArguments(commandForTool(name, args), reportId),

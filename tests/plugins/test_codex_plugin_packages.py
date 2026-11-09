@@ -5053,15 +5053,26 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
         "Studio Archive run and connected-file search work in Codex and Cowork"
         in studio
     )
-    assert "To choose a client, the model receives every record’s label" in studio
+    privacy_pages = json.loads(
+        (ROOT / "static/shared/privacy-contracts/vera.json").read_text(encoding="utf-8")
+    )["pages"]
+    studio_privacy = "\n".join(privacy_pages["studio-archive"]["copy"]["en"])
+    organization_privacy = "\n".join(
+        privacy_pages["archive-organization"]["copy"]["en"]
+    )
+    for page in (studio, archive_organization):
+        assert "function-model-data.js" in page
+    assert "To choose a client, the model receives every record’s label" in (
+        studio_privacy
+    )
     assert "The same reduced sample in every mode" in journal
     assert "One index and the same limits in every mode" in check_entries
-    assert "The local-folder route scans" in archive_organization
+    assert "The local-folder route scans" in organization_privacy
     assert "Local-folder organization works in Codex and Cowork" in (
         archive_organization
     )
-    assert "With local MCP and a linked run" in (archive_organization)
-    assert "not enabled as a Cowork route" in archive_organization
+    assert "With local MCP and a linked run" in organization_privacy
+    assert "not enabled as a Cowork route" in organization_privacy
     assert "When MCP is available, the model uses this path" in concordato
     assert "Local-folder mode runs in Codex Desktop and Cowork" in (
         ROOT
@@ -5080,6 +5091,8 @@ def test_studio_archive_parity_copy_has_no_file_only_cowork_fallback() -> None:
             check_entries,
             archive_organization,
             concordato,
+            studio_privacy,
+            organization_privacy,
         )
     )
     for stale_copy in (

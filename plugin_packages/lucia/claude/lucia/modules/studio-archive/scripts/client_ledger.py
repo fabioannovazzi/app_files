@@ -414,9 +414,15 @@ def _read_json(path: Path, *, label: str) -> dict[str, Any]:
     observed = _ordinary_file(path, label=label)
     if observed.st_size > _MAX_JSON_BYTES:
         raise LedgerError(f"{label} exceeds its size limit.")
+
+    def reject_nonfinite(value: str) -> None:
+        raise ValueError(f"Nonfinite JSON number: {value}")
+
     try:
-        payload = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as exc:
+        payload = json.loads(
+            path.read_text(encoding="utf-8"), parse_constant=reject_nonfinite
+        )
+    except (OSError, ValueError, RecursionError) as exc:
         raise LedgerError(f"{label} is unreadable: {exc}") from exc
     if not isinstance(payload, dict):
         raise LedgerError(f"{label} must contain a JSON object.")
@@ -1162,7 +1168,22 @@ def _stable_copy(
             # Same-filesystem hard-link publication is atomic and refuses an
             # existing destination, unlike replace/rename. The temporary name
             # is then removed, leaving one ordinary destination file.
-            os.link(temporary, destination, follow_symlinks=False)
+            try:
+                os.link(temporary, destination, follow_symlinks=False)
+            except OSError as exc:
+                if exc.errno not in {
+                    errno.ENOTSUP,
+                    errno.EOPNOTSUPP,
+                    errno.EXDEV,
+                    errno.ENOSYS,
+                }:
+                    raise
+                # The intake caller retains a pending publication receipt so
+                # a killed exclusive copy can preserve partial bytes on retry.
+                with destination.open("xb") as target, temporary.open("rb") as saved:
+                    shutil.copyfileobj(saved, target)
+                    target.flush()
+                    os.fsync(target.fileno())
             temporary.unlink()
         else:
             os.replace(temporary, destination)
@@ -1898,10 +1919,17 @@ def load_run(
                 if str(module_root) not in sys.path:
                     sys.path.insert(0, str(module_root))
                 break
-        from vera_assurance.recovery import repair_run_inputs
-
         try:
+            from vera_assurance.recovery import repair_run_inputs
+
             repair_run_inputs(context_path)
+        except ImportError:
+            # A missing repair dependency must not reject already intact work.
+            # Every execution copy is still checked against its sealed receipt
+            # below; changed or missing inputs remain unavailable.
+            logging.getLogger(__name__).warning(
+                "Admitted input repair dependency is unavailable; verifying retained copies."
+            )
         except (OSError, ValueError) as exc:
             raise LedgerError(f"Admitted input recovery is unavailable: {exc}") from exc
     resolved_bindings: list[dict[str, Any]] = []
@@ -2420,9 +2448,19 @@ def prepare_run(
             _engagement_root(root, engagement_id) / "runs",
             label="workflow runs directory",
         )
+        preparation_root = _ordinary_directory(
+            _engagement_root(root, engagement_id) / "run-preparation-evidence",
+            label="run preparation evidence directory",
+            create=True,
+        )
         for _ in range(100):
             run_id = _new_id("run")
-            run_root = runs_root / run_id
+            published_root = runs_root / run_id
+            if published_root.exists() or published_root.is_symlink():
+                continue
+            # A process exit must not publish an incomplete request identity.
+            # Retain interrupted staging separately from published run records.
+            run_root = preparation_root / run_id
             try:
                 run_root.mkdir(mode=0o700)
                 break
@@ -2501,10 +2539,13 @@ def prepare_run(
             _write_json(run_root / "input_manifest.json", input_manifest)
             _write_json(run_root / "context.json", context)
             _write_json(run_root / "run.json", run)
-            loaded = load_run(root, engagement_id, run_id)
+            if published_root.exists() or published_root.is_symlink():
+                raise LedgerError("Run destination appeared during preparation.")
+            run_root.rename(published_root)
         except (LedgerError, OSError):
             shutil.rmtree(run_root, ignore_errors=True)
             raise
+        loaded = load_run(root, engagement_id, run_id)
         return {"status": "prepared", **loaded, "blocked_runs": header_issues}
 
 
@@ -2558,6 +2599,7 @@ def retry_reporting(
             ValueError,
             KeyError,
             TypeError,
+            ImportError,
             sqlite3.Error,
         ) as exc:
             logging.getLogger(__name__).warning(
@@ -2575,7 +2617,14 @@ def _finish_terminal_reporting(loaded: dict[str, Any]) -> dict[str, Any]:
     try:
         reporting = _reporting_runtime().finish_report(loaded)
         _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
-    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        ImportError,
+        sqlite3.Error,
+    ) as exc:
         logging.getLogger(__name__).warning(
             "Saved Archive run %s has unfinished reporting: %s",
             loaded["run"]["run_id"],
@@ -2623,7 +2672,14 @@ def _save_review_reporting(
     """A sidecar write cannot hide a committed review-ready artifact manifest."""
     try:
         _write_json(Path(loaded["run_root"]) / "model_data_reporting.json", reporting)
-    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as error:
+    except (
+        OSError,
+        ValueError,
+        KeyError,
+        TypeError,
+        ImportError,
+        sqlite3.Error,
+    ) as error:
         return _review_reporting_failure(loaded, error)
     return reporting
 
@@ -2694,12 +2750,9 @@ def verify_run_report(
 ) -> dict[str, Any]:
     """Verify the exact saved report without retrying, stamping or changing a run."""
     loaded = _load_run_identity(client_root, engagement_id, run_id)
-    if not _reporting_runtime().selective_reporting_enabled():
-        return {"status": "not_applicable", "run_id": run_id}
-    from archive_report_receipt import verify_report
-    from operational_incidents import reporting_credentials
-
     try:
+        if not _reporting_runtime().selective_reporting_enabled():
+            return {"status": "not_applicable", "run_id": run_id}
         output = _ordinary_directory(Path(loaded["output_dir"]), label="run outputs")
         options_path = output / "model_data_report_options.json"
         if options_path.exists() or options_path.is_symlink():
@@ -2723,6 +2776,9 @@ def verify_run_report(
         # Exact ownership prevents a valid foreign receipt being attributed to this run.
         if report.get("run_id") != run_id:
             raise LedgerError("The saved report belongs to another Archive run.")
+        from archive_report_receipt import verify_report
+        from operational_incidents import reporting_credentials
+
         receipt = verify_report(
             report_path, user_id=reporting_credentials()["installation_id"]
         )
@@ -2751,6 +2807,7 @@ def verify_run_report(
         KeyError,
         TypeError,
         sqlite3.Error,
+        ImportError,
     ) as exc:
         # Reporting failure is not a lifecycle transition or a failed calculation.
         return {
@@ -3092,7 +3149,14 @@ def _finalize_run_locked(
 
     try:
         reporting = runtime.finish_report(loaded)
-    except (ValueError, OSError, KeyError, TypeError, sqlite3.Error) as exc:
+    except (
+        ValueError,
+        OSError,
+        KeyError,
+        TypeError,
+        ImportError,
+        sqlite3.Error,
+    ) as exc:
         reporting = _review_reporting_failure(loaded, exc)
     reporting = {
         **reporting,

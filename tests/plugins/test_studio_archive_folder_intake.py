@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import errno
 import json
 import os
 import subprocess
@@ -239,3 +240,71 @@ a.copy_studio_client_source_folder(sys.argv[2],sys.argv[3],Path(sys.argv[4]),cop
     assert not (
         Path(recovered["destination_path"]) / ".vera-folder-intake-pending.json"
     ).exists()
+
+
+@pytest.mark.parametrize("crash", [False, True])
+@pytest.mark.parametrize("link_error", [errno.ENOTSUP, errno.EXDEV])
+def test_intake_without_hardlinks_preserves_partial_publication_and_retries(
+    tmp_path, crash, link_error
+):
+    cid, eid, source = case(tmp_path)
+    program = """
+import errno,json,os,sys
+from pathlib import Path
+sys.path.insert(0,sys.argv[1])
+import archive_core as core
+def unsupported(*args,**kwargs):
+    raise OSError(int(sys.argv[6]), 'Synthetic filesystem without hardlinks')
+os.link=unsupported
+original_open=Path.open
+def interrupted(path,mode='r',*args,**kwargs):
+    handle=original_open(path,mode,*args,**kwargs)
+    if mode=='xb' and sys.argv[5]=='crash':
+        handle.write(b'Partial publication evidence'); handle.flush(); os.fsync(handle.fileno())
+        os._exit(93)
+    return handle
+Path.open=interrupted
+result=core.copy_studio_client_source_folder(sys.argv[2],sys.argv[3],Path(sys.argv[4]),copy_authorized=True)
+print(json.dumps(result))
+"""
+    result = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            program,
+            str(CLI.parent),
+            cid,
+            eid,
+            str(source),
+            "crash" if crash else "copy",
+            str(link_error),
+        ],
+        env={
+            **os.environ,
+            "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "publish"),
+            "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str(tmp_path / "profile"),
+            "VERA_STUDIO_ARCHIVE_SESSION_ID": "publish",
+        },
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    assert result.returncode == (93 if crash else 0), result.stderr
+
+    recovered = command(tmp_path, "retry", *copy_args(cid, eid, source))
+
+    destination = Path(recovered["destination_path"])
+    assert {
+        p.relative_to(source): p.read_bytes() for p in source.rglob("*") if p.is_file()
+    } == {
+        p.relative_to(destination): p.read_bytes()
+        for p in destination.rglob("*")
+        if p.is_file()
+    }
+    assert recovered["status"] == ("copied" if crash else "already_copied")
+    if crash:
+        assert any(
+            path.read_bytes() == b"Partial publication evidence"
+            for path in Path(recovered["recovery_evidence_path"]).rglob("*")
+            if path.is_file()
+        )
