@@ -1,2 +1,2 @@
-Vera evaluation 001: synthetic March 2026 bank reconciliation.
-Open index.html in a browser. All fonts and ten evidence downloads are embedded; the assets directory also provides direct downloads. The workbook is unchanged native Vera output. The HTML is the evaluator presentation and reports delivery failures and privacy-reporting gaps.
+Valutazione Vera 001: riconciliazione bancaria sintetica di marzo 2026.
+Aprire index.html in un browser. La pagina è in italiano e collega la spiegazione della pipeline. I caratteri tipografici e dieci file scaricabili sono incorporati; la cartella assets contiene anche i file originali. Il file Excel è il risultato nativo di Vera, invariato. L’HTML presenta la valutazione, i difetti di consegna e le lacune del report privacy. La richiesta originale in inglese e le altre prove restano nella lingua e nei byte originali.
