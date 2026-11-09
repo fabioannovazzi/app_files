@@ -729,3 +729,69 @@ def test_receipt_retry_dependency_failure_does_not_skip_next_run(
     assert set(attempted) == {Path(first["run_root"]), Path(second["run_root"])}
     assert "An Archive proof remains pending: ImportError" in caplog.text
     assert Path(first["run_root"]) in Registry().pending_receipts()
+
+
+def _start_excluded_run(core, case):
+    prepared = core.prepare_studio_client_workflow(
+        case.engagement_id,
+        "client-file-preparation",
+        input_ids=[case.imported["input_id"]],
+        new_run=True,
+        state_dir=case.state_dir,
+    )
+    core.start_studio_client_workflow(
+        case.client_id,
+        case.engagement_id,
+        prepared["run"]["run_id"],
+        state_dir=case.state_dir,
+    )
+    return core.ledger.load_run(
+        case.client_root, case.engagement_id, prepared["run"]["run_id"]
+    )
+
+
+@pytest.mark.parametrize("artifact", ["input", "output"])
+def test_excluded_pipeline_reads_do_not_invent_reporting_failure(
+    archive_core, client_case, artifact
+):
+    loaded = _start_excluded_run(archive_core, client_case)
+    selected = Path(loaded["context"]["input_bindings"][0]["path"])
+    if artifact == "output":
+        selected = Path(loaded["output_dir"]) / "note.txt"
+        selected.write_text("Retained synthetic note\n")
+    original = selected.read_bytes()
+
+    result = archive_core.read_studio_run_artifact(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        selected,
+        state_dir=client_case.state_dir,
+    )
+
+    assert result["data"]
+    assert result["reporting"] == {
+        "status": "not_applicable",
+        "reason": "pipeline_not_selected",
+    }
+    assert selected.read_bytes() == original
+    assert not (Path(loaded["run_root"]) / "reporting/gaps").exists()
+
+
+def test_excluded_pipeline_without_saved_report_verifies_as_not_applicable(
+    archive_core, client_case
+):
+    loaded = _start_excluded_run(archive_core, client_case)
+
+    result = archive_core.verify_studio_run_report(
+        client_case.client_id,
+        client_case.engagement_id,
+        loaded["run"]["run_id"],
+        state_dir=client_case.state_dir,
+    )
+
+    assert result == {
+        "status": "not_applicable",
+        "reason": "pipeline_not_selected",
+        "run_id": loaded["run"]["run_id"],
+    }

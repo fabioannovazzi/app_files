@@ -18,7 +18,7 @@ All repairs remain local until the release record establishes otherwise.
 | Concurrent review writes | Second real process targets the same output during the first transaction | Reject overlap before mutation; first rollback cannot erase another successful save | R008 |
 | Optional recovery/navigation | Import unavailable after useful work committed | Return committed work, disclose unavailable checkpoint/navigation, still verify admitted input hashes | R009 |
 | Vouching private review | Real exit after canonical detach, then fresh MCP validation/display using saved paths | Recover verified backup before reading saved JSON | R010; post-repair validation recorded separately |
-| Reporting | Import/storage/network/receipt failure; malformed state; incomplete report pair | Preserve professional result and lifecycle state; retain separate visible reporting gaps/retries | P001–P009 |
+| Reporting | Import/storage/network/receipt failure; malformed state; incomplete report pair | Preserve professional result and lifecycle state; retain separate visible reporting gaps/retries | P001–P009, P011 |
 | Report verification | Portable lookup with missing retained binding | Verify evidence without retrying or mutating reporting | P010 |
 | Managed launch and transport | No PATH Python; large declaration causes E2BIG | Use discovered managed interpreter; send large declarations over stdin | M001–M003 |
 | Delivery adapters | Gmail Bcc; lost WhatsApp response | Include actual recipient scope; report unverified composer cleanup honestly | G001/W001; no external message sent |

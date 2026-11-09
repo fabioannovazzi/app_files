@@ -34,10 +34,11 @@ PIPELINES = (
 USER_ID = "397d2de9-0ec5-4db8-a01a-b91ae41d13b0"
 
 
+@pytest.mark.parametrize("excluded_policy", [True, False])
 @pytest.mark.parametrize("retained_binding", [True, False])
 @pytest.mark.parametrize("problem", ["network", "foreign_report", "changed_report"])
 def test_service_verification_failure_preserves_completed_pipeline(
-    archive_core, client_case, monkeypatch, problem, retained_binding
+    archive_core, client_case, monkeypatch, problem, retained_binding, excluded_policy
 ):
     import archive_report_receipt
     import operational_incidents
@@ -71,6 +72,10 @@ def test_service_verification_failure_preserves_completed_pipeline(
     )
     if not retained_binding:
         monkeypatch.setattr(archive_core, "_retained_run_root", lambda *args: None)
+    if excluded_policy:
+        import selective_reporting
+
+        monkeypatch.setattr(selective_reporting, "report_pipeline", lambda _: None)
 
     result = archive_core.verify_studio_run_report(
         client_case.client_id,

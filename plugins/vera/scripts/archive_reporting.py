@@ -241,34 +241,45 @@ def read_artifact(
     except REPORTING_ERRORS as error:
         # Recheck actual scope and bytes without relying on collector state. Data
         # and ownership faults still raise; only the reporting dependency is optional.
-        root = Path(loaded["run_root"])
-        path = path.expanduser()
-        path = (path if path.is_absolute() else root / path).absolute()
-        inputs = loaded["context"]["input_bindings"]
-        binding = next((item for item in inputs if item["path"] == str(path)), None)
-        if any(item.is_symlink() for item in (path, *path.parents)) or (
-            binding is None
-            and not path.resolve().is_relative_to(Path(loaded["output_dir"]).resolve())
-        ):
-            raise ValueError(
-                "Read must use a bound input or this run's output"
-            ) from error
-        source = measure_source(
-            path, source_id="selected_artifact", role="input" if binding else "output"
+        data = _read_without_collection(
+            loaded, path, offset=offset, limit=limit, columns=columns
         )
-        if binding and source["sha256"] != binding["sha256"]:
-            raise ValueError(
-                "The selected input no longer matches its admitted bytes"
-            ) from error
-        data, _ = read_selection(source, offset=offset, limit=limit, columns=columns)
         reporting = reporting_failure(
             loaded["run"]["workflow_id"],
             {},
             error,
             stage="artifact_delivery",
-            root=root,
+            root=Path(loaded["run_root"]),
         )
         return {"data": data, "reporting": reporting}
+
+
+def _read_without_collection(
+    loaded: Mapping[str, Any],
+    path: Path,
+    *,
+    offset: int,
+    limit: int | None,
+    columns: list[int] | None,
+) -> dict[str, Any]:
+    """Read admitted bytes without depending on a reporting record."""
+    root = Path(loaded["run_root"])
+    path = path.expanduser()
+    path = (path if path.is_absolute() else root / path).absolute()
+    inputs = loaded["context"]["input_bindings"]
+    binding = next((item for item in inputs if item["path"] == str(path)), None)
+    if any(item.is_symlink() for item in (path, *path.parents)) or (
+        binding is None
+        and not path.resolve().is_relative_to(Path(loaded["output_dir"]).resolve())
+    ):
+        raise ValueError("Read must use a bound input or this run's output")
+    source = measure_source(
+        path, source_id="selected_artifact", role="input" if binding else "output"
+    )
+    if binding and source["sha256"] != binding["sha256"]:
+        raise ValueError("The selected input no longer matches its admitted bytes")
+    data, _ = read_selection(source, offset=offset, limit=limit, columns=columns)
+    return data
 
 
 @serialized_run
@@ -284,6 +295,16 @@ def _read_artifact(
     store = RunStore(Path(loaded["run_root"]))
     state = store.state()
     if state is None:
+        if report_pipeline(loaded["run"]["workflow_id"]) is None:
+            return {
+                "data": _read_without_collection(
+                    loaded, path, offset=offset, limit=limit, columns=columns
+                ),
+                "reporting": {
+                    "status": "not_applicable",
+                    "reason": "pipeline_not_selected",
+                },
+            }
         raise ValueError(
             "Data reads require this Archive run's active reporting record"
         )

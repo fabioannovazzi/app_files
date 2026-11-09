@@ -2770,6 +2770,15 @@ def verify_run_report(
                     "run_id": run_id,
                 }
         report_path = output / "model_data_report.json"
+        if not report_path.exists() and not report_path.is_symlink():
+            from selective_reporting import report_pipeline
+
+            if report_pipeline(loaded["run"]["workflow_id"]) is None:
+                return {
+                    "status": "not_applicable",
+                    "reason": "pipeline_not_selected",
+                    "run_id": run_id,
+                }
         _ordinary_file(report_path, label="model-data report")
         identity = _stable_file_identity(report_path, label="model-data report")
         report = _read_json(report_path, label="model-data report")

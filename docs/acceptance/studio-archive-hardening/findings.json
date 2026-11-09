@@ -432,5 +432,18 @@
     "repair": "Atomically move the actual partial entry into private recovery evidence, then validate that retained file. Do not delete a separately verified source after copying it.",
     "test": "test_intake_retry_preserves_edit_arriving_during_partial_file_retirement",
     "validation": "25 intake/concurrency cases passed. Original source and concurrent edit bytes retained. Isort and Mypy passed."
+  },
+  {
+    "id": "P011",
+    "status": "fixed_locally",
+    "harm": "Excluded workflows generated false reporting-unavailable gaps during ordinary reads and a missing-report verification error despite the explicit pipeline_not_selected lifecycle outcome.",
+    "reproduction": "Observed in fresh installed Vera 0.1.604 acceptance, then three public API regressions reproduced input/output read errors and verification failure against committed source. The initial fixture used an incorrect argument shape; it was corrected before the authoritative reproduction.",
+    "repair": "Use the existing admitted-byte read validation without collection when an excluded run has no reporting record; return not_applicable. Verification skips absent reports for excluded pipelines but still verifies any existing historical report.",
+    "tests": [
+      "test_excluded_pipeline_reads_do_not_invent_reporting_failure",
+      "test_excluded_pipeline_without_saved_report_verifies_as_not_applicable",
+      "test_service_verification_failure_preserves_completed_pipeline"
+    ],
+    "validation": "158 reporting/recovery tests passed, including excluded-policy historical-report corruption/network cases. Black, Isort, Mypy and Bandit passed."
   }
 ]

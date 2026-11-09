@@ -664,7 +664,8 @@
         "L003",
         "P003",
         "P006",
-        "R009"
+        "R009",
+        "P011"
       ],
       "reviewed_ranges_at_baseline": [
         [
@@ -673,8 +674,8 @@
         ]
       ],
       "reviewed_sha256": "aa581761e865414ac840e1bf6ba165ff5447178ec094a52f0fa26bfbe06248fc",
-      "review_note": "Full first-pass review completed across turns. Findings remain local repairs. Remaining investigations: local snapshot directory-only resource bounds, optional dependency failures in declaration preview/report verification and retry wrappers, direct low-level client creation interruption. User-facing idempotent engagement creation uses ensure_engagement, not create_engagement.",
-      "reviewed_working_sha256": "f1164d5624bf2386627edf88c1960ecf02f5b44c5042d13a705561bd20aeaa96"
+      "review_note": "Full first-pass review completed across turns. Findings remain local repairs. Remaining investigations: local snapshot directory-only resource bounds, optional dependency failures in declaration preview/report verification and retry wrappers, direct low-level client creation interruption. User-facing idempotent engagement creation uses ensure_engagement, not create_engagement. P011 scoped delta reviewed: excluded reads retain existing byte/ownership validation; present historical reports remain verified.",
+      "reviewed_working_sha256": "c27a214461085b03450d25293be7259a84d93e6144971c5861f0cda472f9b2df"
     },
     {
       "path": "plugins/studio-archive/scripts/folder_intake.py",
