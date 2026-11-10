@@ -16,6 +16,16 @@ WhatsApp inspection uses one verified one-to-one chat in the local application.
 Local search uses a private index. Drive snapshots bind one client to an exact
 My Drive or Shared Drive folder.
 
+Archive infrastructure is not a prerequisite for otherwise possible professional
+work. `scripts/work_folder.py` provides independent preparation, delivery,
+reopening and exact-copy archival retries in an authorized local working folder.
+It retains the existing portable engine contracts and reports processing,
+archiving and privacy reporting separately. Failed indexing, registration,
+navigation, reporting or checkpoints must not withhold verified inputs and
+usable saved results. See Vera's `references/archive-failure.md` for this fallback.
+Missing required evidence or unavailable actual work storage remains a specific
+limitation of the affected task.
+
 Each installation configures an approved source folder separately.
 On first use, Vera opens the
 operating system's folder chooser, diagnoses the selected root, and saves the
