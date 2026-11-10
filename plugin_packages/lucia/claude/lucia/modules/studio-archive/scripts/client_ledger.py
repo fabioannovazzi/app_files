@@ -1923,15 +1923,13 @@ def load_run(
             from vera_assurance.recovery import repair_run_inputs
 
             repair_run_inputs(context_path)
-        except ImportError:
-            # A missing repair dependency must not reject already intact work.
-            # Every execution copy is still checked against its sealed receipt
-            # below; changed or missing inputs remain unavailable.
+        except (OSError, ValueError, ImportError) as exc:
+            # Recovery is optional when the execution copies still verify below.
+            # Missing or changed copies continue to fail their exact-byte checks.
             logging.getLogger(__name__).warning(
-                "Admitted input repair dependency is unavailable; verifying retained copies."
+                "Input recovery unavailable; verifying retained execution bytes: %s",
+                type(exc).__name__,
             )
-        except (OSError, ValueError) as exc:
-            raise LedgerError(f"Admitted input recovery is unavailable: {exc}") from exc
     resolved_bindings: list[dict[str, Any]] = []
     for binding in inputs["inputs"]:
         # The sealed run input manifest is the retained admission decision.
@@ -3149,7 +3147,7 @@ def _finalize_run_locked(
     if loaded["run"]["status"] not in {"running", "ready_for_review"}:
         raise LedgerError("Only a running or review-ready run can be finalized.")
     output_dir = Path(loaded["output_dir"])
-    runtime = _reporting_runtime()
+    runtime = None
     if expected_declaration_sha256 is not None and (
         not isinstance(expected_declaration_sha256, str)
         or _SHA256_RE.fullmatch(expected_declaration_sha256) is None
@@ -3157,6 +3155,7 @@ def _finalize_run_locked(
         raise LedgerError("Expected declaration digest must be a SHA-256 value.")
 
     try:
+        runtime = _reporting_runtime()
         reporting = runtime.finish_report(loaded)
     except (
         ValueError,
@@ -3167,6 +3166,12 @@ def _finalize_run_locked(
         sqlite3.Error,
     ) as exc:
         reporting = _review_reporting_failure(loaded, exc)
+    report_declarations = []
+    if runtime is not None:
+        try:
+            report_declarations = runtime.report_declarations(output_dir)
+        except (OSError, ValueError, KeyError, TypeError, ImportError) as exc:
+            reporting = _review_reporting_failure(loaded, exc)
     reporting = {
         **reporting,
         "run_id": run_id,
@@ -3201,11 +3206,7 @@ def _finalize_run_locked(
         paths = {item.get("path") for item in declarations if isinstance(item, Mapping)}
         declarations = [
             *declarations,
-            *(
-                item
-                for item in runtime.report_declarations(output_dir)
-                if item["path"] not in paths
-            ),
+            *(item for item in report_declarations if item["path"] not in paths),
         ]
     if not files:
         raise LedgerError("An empty workflow output cannot be finalized.")
@@ -3284,7 +3285,7 @@ def _finalize_run_locked(
         artifacts.append(record)
     if _output_files(output_dir) != files:
         raise LedgerError("Workflow outputs changed while they were being sealed.")
-    report_paths = {item["path"] for item in runtime.report_declarations(output_dir)}
+    report_paths = {item["path"] for item in report_declarations}
     if loaded["run"]["status"] == "ready_for_review":
         existing = validate_run_artifacts(client_root, engagement_id, run_id)
         requested = [
@@ -3320,7 +3321,8 @@ def _finalize_run_locked(
                     "Declaration corrections cannot change sealed artifact identities or bytes."
                 )
             try:
-                runtime.retain_artifact_manifest(Path(loaded["run_root"]), existing)
+                if runtime is not None:
+                    runtime.retain_artifact_manifest(Path(loaded["run_root"]), existing)
             except (ValueError, OSError) as exc:
                 raise LedgerError(
                     f"Artifact receipt history could not be retained: {exc}"

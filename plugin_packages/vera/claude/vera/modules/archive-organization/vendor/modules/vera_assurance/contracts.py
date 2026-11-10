@@ -1423,14 +1423,17 @@ def _hydrate_v2_client_workflow_context(
     raw_bindings = _sequence(input_manifest.get("inputs"), label="run inputs")
     if not raw_bindings:
         raise AssuranceContractError("run input manifest is empty")
-    from .recovery import repair_run_inputs
-
     try:
+        from .recovery import repair_run_inputs
+
         repair_run_inputs(context_path)
-    except (OSError, ValueError) as exc:
-        raise AssuranceContractError(
-            f"Admitted input recovery is unavailable: {exc}"
-        ) from exc
+    except (OSError, ValueError, ImportError) as exc:
+        # Verify current copies below even if the separate recovery store failed.
+        # This never accepts altered or unavailable bytes as the admitted input.
+        logging.getLogger(__name__).warning(
+            "Input recovery unavailable; verifying retained execution bytes: %s",
+            type(exc).__name__,
+        )
     bindings: list[dict[str, Any]] = []
     for index, raw_binding in enumerate(raw_bindings):
         item = _mapping(raw_binding, label=f"run inputs[{index}]")

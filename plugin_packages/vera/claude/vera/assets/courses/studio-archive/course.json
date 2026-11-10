@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "27d43183ca7b4b8603826e6c58d52082a9d6e3478051c17423a72102d67263bd"
+      "sha256": "af976dad726ef7bcb244fc29e23631e055ae0dcb1108d645a644b5bac23ff53e"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "c27a214461085b03450d25293be7259a84d93e6144971c5861f0cda472f9b2df"
+      "sha256": "cd72e3f0e4cda4b9ee651090b319f830376dd59eb68192562e103661e108bad0"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -90,6 +90,10 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "sha256": "848509b3c2a6671f6c287e7b8527082b1cdcf555007997d9517d2284d1b67021"
+    },
+    {
+      "path": "modules/studio-archive/scripts/work_folder.py",
+      "sha256": "38bd4bab70c10b8d875e7ede55345a276144e5fdff1df8e1a1b030ed86ec8d47"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
@@ -157,7 +161,7 @@
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+      "sha256": "6fc85e694058b98b89b015ba66710238bec6a017af58d02f10f8ee6e50b5bb6d"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -297,7 +301,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+      "sha256": "6fc85e694058b98b89b015ba66710238bec6a017af58d02f10f8ee6e50b5bb6d"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -702,5 +706,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "34c52c23ceb635b998697fc331668d39a288b39cab7b09dc209ab5046bc0450f"
+  "canonical_course_sha256": "f5ca90eeb1d4828af49b1a4d6485a0089b570894218deed276eb04564f2b0b81"
 }

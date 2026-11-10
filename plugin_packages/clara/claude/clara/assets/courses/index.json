@@ -120,7 +120,7 @@
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "991b6f966341bf04d9f5fff46a037cc9e4575be9a7e41b515c1192f93a45d92e",
+      "sha256": "39c5cacc36e4f765cebeb6bbf253153e5e78ee5d798cafd4ddd93f3238412cc1",
       "languages": [
         "it",
         "en"
@@ -136,7 +136,7 @@
         "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       },
-      "source_sha256": "f09d35d6ab9315595ace91ea8c3ca980a50005f32c5de1366bf44a3966a7d16d"
+      "source_sha256": "30f5456634467efde514f0103002277fef11d187b71869c048210d81b0026f69"
     },
     "html-deck": {
       "path": "html-deck/course.json",

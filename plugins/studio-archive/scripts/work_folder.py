@@ -255,6 +255,8 @@ def _finish_record(
     outputs = _outputs(loaded)
     if not outputs:
         raise ValueError("No saved result is available to deliver")
+    if record["archive"]["status"] == "saved" and outputs != record.get("outputs"):
+        record["archive"] = _pending("archive_revised_work")
     output_root = Path(loaded["output_dir"])
     declarations = [
         {
@@ -269,7 +271,11 @@ def _finish_record(
     ]
     finalization: dict[str, Any] = {"status": "completed"}
     try:
-        if loaded["run"]["status"] != "completed":
+        if loaded["run"]["status"] == "completed":
+            ledger.validate_run_artifacts(
+                root, record["engagement_id"], record["run_id"]
+            )
+        else:
             finalized = ledger.finalize_run(
                 root, record["engagement_id"], record["run_id"], declarations
             )
@@ -278,7 +284,7 @@ def _finish_record(
                 root, record["engagement_id"], record["run_id"]
             )
             record["privacy_reporting"] = completed["reporting"]
-    except _OPTIONAL_ERRORS as exc:
+    except (*_OPTIONAL_ERRORS, ledger.LedgerError) as exc:
         finalization = _pending("finalize_work", exc)
     # Read current bytes after automatic report generation, without making
     # finalization or a secondary status write a condition of delivery.
@@ -348,6 +354,81 @@ def deliver_work(context_path: Path, workflow_id: str) -> dict[str, Any]:
     return _finish_record(root, record, persist=False)
 
 
+def _archive_files(
+    root: Path, record: Mapping[str, Any], loaded: Mapping[str, Any]
+) -> list[Path]:
+    """Copy this job's retained evidence, never a sibling engagement or run."""
+    engagement = root / "Vera/engagements" / record["engagement_id"]
+    files = {root / "Vera/client.json", engagement / "engagement.json"}
+    directories = [Path(loaded["run_root"])]
+    directories.extend(engagement / "inputs" / item for item in record["imports"])
+    for directory in directories:
+        ledger._ordinary_directory(directory, label="selected work evidence")
+        for path in directory.rglob("*"):
+            if path.is_symlink():
+                raise ValueError("Selected work evidence contains a symbolic link")
+            if not path.is_dir():
+                files.add(path)
+    return sorted(files)
+
+
+def _publication_path(
+    journal: Path,
+    request_id: str,
+    selected: Mapping[str, tuple[Path, tuple[int, str]]],
+) -> str | None:
+    """Identify a verified incomplete publication belonging to this exact job."""
+    if not journal.exists():
+        return None
+    pending = ledger._validate_seal(
+        ledger._read_json(journal, label="archive publication"),
+        label="archive publication",
+    )
+    relative = pending.get("path")
+    if pending.get("request_id") != request_id or relative not in selected:
+        raise ValueError("Pending archival publication belongs to another request")
+    _, expected = selected[relative]
+    if (pending.get("byte_count"), pending.get("sha256")) != expected:
+        raise ValueError("Pending archival source changed; retained both versions")
+    return str(relative)
+
+
+def _recover_publication(
+    target: Path,
+    journal: Path,
+    request_id: str,
+    selected: Mapping[str, tuple[Path, tuple[int, str]]],
+) -> list[str]:
+    """Retain interrupted exclusive-copy bytes before retrying their owned path."""
+    relative = _publication_path(journal, request_id, selected)
+    if relative is None:
+        return []
+    _, expected = selected[relative]
+    path = _archive_path(target, Path(relative))
+    preserved = []
+    if path.exists() or path.is_symlink():
+        observed = ledger._stable_file_identity(path, label="pending archive copy")
+        if observed != expected:
+            # A rename preserves even a later edit to the partial inode. Never
+            # copy-then-delete a concurrently edited file or discard its bytes.
+            evidence = _archive_path(
+                target,
+                Path(".pending-work-evidence") / request_id / secrets.token_hex(12),
+            )
+            evidence.mkdir(parents=True, mode=0o700)
+            ledger._write_json(
+                evidence / "receipt.json",
+                {"original_path": relative, "expected_sha256": expected[1]},
+            )
+            path.rename(evidence / "retained-partial")
+            ledger._stable_file_identity(
+                evidence / "retained-partial", label="preserved partial copy"
+            )
+            preserved.append(str(evidence / "retained-partial"))
+    journal.unlink()
+    return preserved
+
+
 def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]:
     """Retry exact-byte archival without executing or changing professional work.
 
@@ -368,17 +449,20 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                 "Saved outputs changed; inspect and finish the revised result"
             )
         try:
+            if loaded["run"]["status"] in {"completed", "ready_for_review"}:
+                ledger.validate_run_artifacts(
+                    root, record["engagement_id"], record["run_id"]
+                )
+            selected_files = {
+                path.relative_to(root).as_posix(): (
+                    path,
+                    ledger._stable_file_identity(path, label="retained work"),
+                )
+                for path in _archive_files(root, record, loaded)
+            }
             target.mkdir(parents=True, exist_ok=True, mode=0o700)
             with exclusive_file_lock(target / ".pending-work.lock"):
                 client_manifest = _archive_path(target, Path("Vera/client.json"))
-                if client_manifest.exists():
-                    if (
-                        ledger.load_client_manifest(target)["client_id"]
-                        != record["client_id"]
-                    ):
-                        raise ValueError(
-                            "Archive destination belongs to another client"
-                        )
                 marker = target / ("pending-work-" + record["request_id"] + ".json")
                 if (
                     not client_manifest.exists()
@@ -398,16 +482,31 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                 if marker.exists():
                     if json.loads(marker.read_text(encoding="utf-8")) != identity:
                         raise ValueError("Archive retry belongs to another job")
-                else:
+                publication = target / (
+                    "pending-publication-" + record["request_id"] + ".json"
+                )
+                pending_path = _publication_path(
+                    publication, record["request_id"], selected_files
+                )
+                if client_manifest.exists():
+                    try:
+                        client = ledger.load_client_manifest(target)
+                    except (ValueError, ledger.LedgerError):
+                        if not marker.exists() or pending_path != "Vera/client.json":
+                            raise
+                    else:
+                        if client["client_id"] != record["client_id"]:
+                            raise ValueError(
+                                "Archive destination belongs to another client"
+                            )
+                if not marker.exists():
                     ledger._write_json(marker, identity)
-                for source in sorted((root / "Vera").rglob("*")):
-                    if source.is_dir() and not source.is_symlink():
-                        continue
-                    relative = source.relative_to(root)
+                preserved = _recover_publication(
+                    target, publication, record["request_id"], selected_files
+                )
+                for name, (source, expected) in selected_files.items():
+                    relative = Path(name)
                     path = _archive_path(target, relative)
-                    expected = ledger._stable_file_identity(
-                        source, label="retained work"
-                    )
                     if relative == Path("Vera/client.json") and path.exists():
                         # The selected client identity was verified above. Its
                         # original creation timestamp belongs to that archive.
@@ -424,8 +523,20 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                     ledger._ordinary_directory(
                         path.parent, label="archive destination", create=True
                     )
+                    ledger._write_json(
+                        publication,
+                        ledger._sealed(
+                            {
+                                "request_id": record["request_id"],
+                                "path": name,
+                                "byte_count": expected[0],
+                                "sha256": expected[1],
+                            }
+                        ),
+                    )
                     if ledger._stable_copy(source, path, exclusive=True) != expected:
                         raise ValueError("Archive copy changed during transfer")
+                    publication.unlink()
                 copied = _loaded(target, record)
                 if copied["run"]["static_sha256"] != loaded["run"]["static_sha256"]:
                     raise ValueError(
@@ -448,6 +559,7 @@ def archive_work(destination: Path, archive_destination: Path) -> dict[str, Any]
                     "destination": str(target),
                     "retry_pending": False,
                     "index_status": "not_refreshed",
+                    "preserved_partial_files": preserved,
                 }
         except (*_OPTIONAL_ERRORS, ledger.LedgerError) as exc:
             record["archive"] = {**_pending("archive_work", exc), "message": str(exc)}

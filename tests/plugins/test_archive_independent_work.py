@@ -4,12 +4,46 @@ from __future__ import annotations
 
 import importlib
 import json
+import re
+import shlex
+import subprocess
+import sys
 from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
+
+
+@pytest.mark.parametrize("command_index", [0, 1, 2])
+def test_documented_fallback_command_selects_archive_before_launching(
+    monkeypatch, command_index
+):
+    from tests.plugins.test_managed_plugin_python_runtime import _load_vera_manager
+
+    manager = _load_vera_manager(monkeypatch)
+    reference = ROOT / "plugins/vera/skills/vera/references/archive-failure.md"
+    commands = re.findall(r"```sh\n(.*?)\n```", reference.read_text(), re.DOTALL)
+    arguments = shlex.split(commands[command_index])[2:]
+    observed = []
+    monkeypatch.setattr(manager, "prepare_execution_root", lambda root, *a, **k: root)
+    monkeypatch.setattr(manager, "release_execution_root", lambda root: None)
+    monkeypatch.setattr(
+        manager,
+        "_independent_failure",
+        lambda *a, **k: pytest.fail("Invalid documented entrypoint"),
+    )
+    monkeypatch.setattr(
+        manager,
+        "run_verified_helper",
+        lambda root, args, module, report: observed.append(module) or 0,
+    )
+
+    result = manager.main(arguments)
+
+    assert result == 0
+    assert observed == ["studio-archive"]
 
 
 @pytest.fixture
@@ -271,3 +305,168 @@ def test_treasury_engine_calculates_and_delivers_while_archive_is_unavailable(
     assert delivered["processing"]["status"] == "result_ready"
     assert delivered["archive"]["status"] == "pending"
     assert (Path(context["output_dir"]) / "treasury_session.json").is_file()
+
+
+@pytest.mark.parametrize(
+    ("workflow", "script", "artifact"),
+    [
+        ("prompt-optimizer", "inspect_question.py", "question_inventory.json"),
+        ("deep-research-validator", "inspect_document.py", "document_inventory.json"),
+    ],
+)
+def test_legal_engine_inspects_and_delivers_with_archive_unavailable(
+    work, tmp_path, workflow, script, artifact
+):
+    prepared = prepare(work, tmp_path, workflow)
+    context = prepared["client_engagement"]
+
+    subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "plugins" / workflow / "scripts" / script),
+            context["input_bindings"][0]["path"],
+            "--client-engagement",
+            prepared["client_engagement_path"],
+            "--output-dir",
+            context["output_dir"],
+        ],
+        capture_output=True,
+        text=True,
+        check=True,
+    )
+    delivered = work.finish_work(Path(prepared["work_folder"]))
+
+    assert (Path(context["output_dir"]) / artifact).is_file()
+    assert delivered["processing"]["status"] == "result_ready"
+    assert delivered["archive"]["status"] == "pending"
+    assert delivered["run"]["run_id"] == prepared["run"]["run_id"]
+
+
+@pytest.mark.parametrize(
+    "command", ["prepare", "status", "finish", "archive", "resume", "deliver"]
+)
+def test_documented_cli_returns_same_job_and_separate_archive_status(
+    work, tmp_path, capsys, command
+):
+    prepared = completed(work, tmp_path)
+    if command == "prepare":
+        arguments = [
+            "prepare",
+            "--destination",
+            prepared["work_folder"],
+            "--workflow",
+            "financial-analysis",
+            "--source",
+            str(tmp_path / "selected.txt"),
+            "--label",
+            "Requested professional work",
+            "--purpose",
+            "Review the supplied evidence",
+        ]
+    elif command in {"resume", "deliver"}:
+        arguments = [
+            command,
+            "--context",
+            prepared["client_engagement_path"],
+            "--workflow",
+            "financial-analysis",
+        ]
+    else:
+        arguments = [command, "--destination", prepared["work_folder"]]
+        if command == "archive":
+            arguments += ["--archive-destination", str(tmp_path / "Archive copy")]
+
+    status = work.main(arguments)
+    response = json.loads(capsys.readouterr().out)
+
+    assert status == 0
+    assert response["run"]["run_id"] == prepared["run"]["run_id"]
+    assert response["archive"]["status"] == (
+        "saved" if command == "archive" else "pending"
+    )
+    assert response["outputs"]
+
+
+def test_failed_archive_copy_keeps_later_foreign_output_bytes(work, tmp_path):
+    prepared = completed(work, tmp_path)
+    root = Path(prepared["work_folder"])
+    target = tmp_path / "Archived work"
+    work.archive_work(root, target)
+    output = next(target.rglob("result.md"))
+    output.write_text("Later manually edited result")
+
+    retried = work.archive_work(root, target)
+
+    assert retried["archive"]["status"] == "pending"
+    assert output.read_text() == "Later manually edited result"
+    assert next(root.rglob("result.md")).read_text() == "Useful result"
+
+
+def test_archiving_one_job_does_not_copy_unselected_sibling_work(work, tmp_path):
+    prepared = completed(work, tmp_path)
+    root = Path(prepared["work_folder"])
+    sibling = work.ledger.create_engagement(
+        root, prepared["run"]["client_id"], "Unselected work"
+    )
+    secret = root / "Vera/engagements" / sibling["engagement_id"] / "unselected.txt"
+    secret.write_text("Outside this archival request")
+    target = tmp_path / "Selected archive copy"
+
+    archived = work.archive_work(root, target)
+
+    assert archived["archive"]["status"] == "saved"
+    assert not (target / "Vera/engagements" / sibling["engagement_id"]).exists()
+    assert secret.read_text() == "Outside this archival request"
+
+
+def test_changed_completed_result_is_deliverable_but_not_falsely_finalized(
+    work, tmp_path
+):
+    prepared = completed(work, tmp_path)
+    root = Path(prepared["work_folder"])
+    target = tmp_path / "Previously archived result"
+    work.archive_work(root, target)
+    output = next(root.rglob("result.md"))
+    output.write_text("Later edited draft; closure requires review")
+
+    result = work.finish_work(root)
+
+    assert result["processing"]["status"] == "result_ready"
+    assert result["processing"]["finalization"]["status"] == "pending"
+    assert result["archive"]["status"] == "pending"
+    assert output.read_text() == "Later edited draft; closure requires review"
+    assert next(target.rglob("result.md")).read_text() == "Useful result"
+
+
+@pytest.mark.parametrize(
+    "interrupted_name",
+    ["client.json", "engagement.json", "context.json", "run.json", "result.md"],
+)
+def test_retry_preserves_interrupted_copy_and_completes_without_rerunning(
+    work, tmp_path, monkeypatch, interrupted_name
+):
+    prepared = completed(work, tmp_path)
+    root = Path(prepared["work_folder"])
+    target = tmp_path / "Archive retry"
+    original_copy = work.ledger._stable_copy
+
+    def interrupted(source, destination, **kwargs):
+        if destination.name == interrupted_name:
+            destination.write_bytes(b"Partial bytes followed by a later user note")
+            raise OSError("Synthetic interrupted exclusive publication")
+        return original_copy(source, destination, **kwargs)
+
+    with monkeypatch.context() as scoped:
+        scoped.setattr(work.ledger, "_stable_copy", interrupted)
+        failed = work.archive_work(root, target)
+    retried = work.archive_work(root, target)
+
+    assert failed["processing"]["status"] == "result_ready"
+    assert failed["archive"]["status"] == "pending"
+    assert retried["archive"]["status"] == "saved"
+    assert (
+        Path(retried["archive"]["preserved_partial_files"][0]).read_bytes()
+        == b"Partial bytes followed by a later user note"
+    )
+    assert next(target.rglob("result.md")).read_text() == "Useful result"
+    assert len(list(target.rglob("run.json"))) == 1

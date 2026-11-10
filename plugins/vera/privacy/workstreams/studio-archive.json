@@ -357,14 +357,23 @@
           "openai-codex",
           "anthropic-cowork"
         ]
+      },
+      {
+        "id": "independent-working-folder",
+        "purpose": "Continue and deliver selected professional work while Archive infrastructure is unavailable",
+        "content": "The maintained work_folder helper returns the authorized working path; a software-managed general workspace or an explicitly supplied known client ID; engagement/run identity; labels and requested purpose; exact input bindings, receipt paths, filenames, hashes and byte counts; output paths and hashes; and separate processing, archiving and privacy-report status. The helper does not return source contents itself. The selected professional workflow may read its ordinary inputs and outputs through the host. Exact input copies, progress and results remain in the selected local folder until explicitly removed. A separately authorized Archive copy is verified without recalculating the result; no automatic external upload or new model call is introduced by copying. Existing run-report services retain their separate reviewed behavior, including pending or incomplete outcomes.",
+        "runtime_profiles": [
+          "openai-codex",
+          "anthropic-cowork"
+        ]
       }
     ]
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-10",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "32cc0f35ef38731822fad1f6b4e46d2426b64cbb29398b20f33ae266221db7c7"
+    "source_fingerprint": "395fb87219e260b76fa44c1e130adeb4ca804dd64171145f563cac405412d95a"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -488,6 +497,10 @@
     {
       "id": "unchanged-source-measurement-recovery",
       "control": "The local artifact reader retries a previously failed measurement against the same source SHA-256. An active run can replace only failed measurement fields, retaining the previous error and recovered counts in its local event ledger; source identity and bytes remain fixed. Reads after closure preserve the historical source record and sealed report, and create a separate local delivery receipt. No new source fields, model recipients or network destinations are added. UTF-8 execution logs use the existing bounded line reader, returning only the requested lines; files that cannot be decoded as UTF-8 remain rejected."
+    },
+    {
+      "id": "independent-work-and-archive-outcomes",
+      "control": "work_folder.py prepares a portable job independently of Archive configuration, index, private profile and discovery. Exact request replay reuses its job; selected source validation and output containment remain required. An unregistered general storage namespace does not assert a professional client. Finished result files remain deliverable when optional closure or status writes fail. Later copying requires an explicit destination, preserves foreign client identities and existing different bytes, verifies copied results, and returns archiving status separately. Optional recovery failure cannot reject unchanged execution copies; missing or altered copies still fail verification."
     }
   ],
   "workstream": "studio-archive",
@@ -509,7 +522,8 @@
           "Prima dell’importazione, il controllo restituisce al modello i percorsi selezionati, la loro disponibilità sul computer dell’importatore e le istruzioni di recupero. Se riceve le impronte SHA-256 degli allegati originali, legge localmente i byte delle copie e restituisce impronte, dimensioni ed esito del confronto, senza restituire il contenuto. Il trasferimento usa solo strumenti disponibili dell’host e una cartella autorizzata; il solo percorso della chat non trasferisce il file. Il controllo non crea clienti, incarichi o run. I percorsi possono contenere nomi e non sono anonimizzati. Gli ID già creati vengono conservati per riprendere lo stesso lavoro.",
           "Per conservare il lavoro, Archive mantiene copie locali private degli input ammessi, delle ricevute e degli output salvati, indipendenti dalla cartella di destinazione. Il recupero restituisce al modello stato, identificativi e percorsi necessari; non invia automaticamente il contenuto delle copie. Una cartella generale come Vari non richiede un’identità legale. Se la raccolta del report sui dati fallisce, il risultato disponibile resta consegnabile e la lacuna di misurazione viene segnalata separatamente. Le copie non vengono caricate su servizi esterni né eliminate automaticamente.",
           "Prima di importare, un controllo locale legge le celle selezionate e restituisce percorsi, impronte, ruoli e conteggi o errori tecnici, senza creare un run o chiamare un modello. Gli elenchi di fatture e pagamenti dichiarati conservano riferimenti, date e importi originali. Aprendo le bozze, il modello può ricevere gli importi dichiarati e i residui, con la mancanza di verifica bancaria esplicita. Le letture precedenti al run non hanno un report Archive.",
-          "Prima di chiudere una lavorazione, il modello può leggere i nomi e i percorsi relativi dei file prodotti per prepararne la dichiarazione. L’elenco non contiene il contenuto dei file."
+          "Prima di chiudere una lavorazione, il modello può leggere i nomi e i percorsi relativi dei file prodotti per prepararne la dichiarazione. L’elenco non contiene il contenuto dei file.",
+          "Se l’Archivio non è disponibile, il percorso di lavoro indipendente conserva copie degli input e risultati in una cartella locale autorizzata. Il modello riceve percorsi, identificativi, impronte e stati separati di elaborazione, archiviazione e rendicontazione privacy; il comando di archiviazione non restituisce il contenuto dei documenti. I file restano nella cartella finché non vengono rimossi. La successiva copia nell’Archivio richiede una destinazione autorizzata e non ripete l’analisi."
         ],
         "en": [
           "Local code indexes the whole supported population, within 50,000 files and 50 GB; the model does not receive the index or an automatic copy of the full archive. If the archive exceeds those limits, refresh stops before search.",
@@ -525,7 +539,8 @@
           "Before import, the check returns selected paths, their availability on the importer computer and recovery instructions to the model. When supplied with original attachment SHA-256 values, it reads copied bytes locally and returns hashes, sizes and comparison results without returning document contents. Transfer uses only available host tools and an authorized working folder; a chat path alone does not transfer a file. The check creates no clients, engagements or runs. Paths may contain names and are not anonymized. Existing IDs are retained to resume the same work.",
           "To retain work, Archive keeps private local copies of admitted inputs, receipts and saved outputs independently of the destination folder. Recovery returns status, identifiers and necessary paths to the model; it does not automatically send the contents of those copies. A general folder such as Vari does not require a legal identity. If data-report collection fails, the available result remains deliverable and the measurement gap is reported separately. Copies are neither uploaded to external services nor deleted automatically.",
           "Before import, a local check reads selected cells and returns paths, hashes, roles and counts or technical errors, without creating a run or calling a model. Invoice lists and declared payments retain original references, dates and amounts. Opening drafts can expose declared amounts and residuals to the model, with missing bank verification explicit. Reads before the run have no Archive report.",
-          "Before sealing a run, the model can list the relative names of its actual output files to prepare their declarations. The list contains no file contents."
+          "Before sealing a run, the model can list the relative names of its actual output files to prepare their declarations. The list contains no file contents.",
+          "If Archive is unavailable, the independent work route retains input copies and results in an authorized local folder. The model receives paths, identifiers, hashes and separate processing, archiving and privacy-report status; the archiving command does not return document contents. Files remain until removed. A later Archive copy requires an authorized destination and does not repeat the analysis."
         ],
         "fr": [
           "Le code local indexe toute la population prise en charge, dans la limite de 50 000 fichiers et 50 Go ; le modèle ne reçoit ni l’index ni une copie automatique de l’archive complète. Si l’archive dépasse ces limites, l’actualisation s’arrête avant la recherche.",
@@ -541,7 +556,8 @@
           "Avant l’importation, le contrôle transmet au modèle les chemins sélectionnés, leur disponibilité sur l’ordinateur de l’importateur et les instructions de reprise. Avec les empreintes SHA-256 des pièces jointes originales, il lit localement les octets copiés et restitue les empreintes, tailles et résultats de comparaison, sans contenu documentaire. Le transfert utilise uniquement les outils disponibles de l’hôte et un dossier autorisé ; le chemin de la conversation seul ne transfère pas le fichier. Le contrôle ne crée aucun client, dossier de mission ou traitement. Les chemins peuvent contenir des noms et ne sont pas anonymisés. Les identifiants existants sont conservés pour reprendre le même travail.",
           "Pour conserver le travail, Archive garde des copies locales privées des entrées admises, des reçus et des résultats enregistrés, indépendamment du dossier de destination. La récupération transmet au modèle un état, des identifiants et les chemins nécessaires, sans envoyer automatiquement le contenu des copies. Un dossier général comme Vari ne nécessite pas d’identité juridique. Si la collecte du rapport sur les données échoue, le résultat disponible reste livrable et la lacune de mesure est signalée séparément. Les copies ne sont ni téléversées vers des services externes ni supprimées automatiquement.",
           "Avant importation, un contrôle local lit les cellules sélectionnées et retourne chemins, empreintes, rôles et nombres de lignes ou erreurs techniques, sans créer de run ni appeler un modèle. Les listes de factures et paiements déclarés conservent références, dates et montants originaux. Les projets ouverts peuvent exposer au modèle les montants déclarés et soldes, avec vérification bancaire manquante explicite. Les lectures antérieures au run n’ont pas de rapport Archive.",
-          "Avant de clôturer un dossier de travail, le modèle peut consulter les noms et les chemins relatifs des fichiers produits pour préparer leur déclaration. La liste ne contient pas le contenu des fichiers."
+          "Avant de clôturer un dossier de travail, le modèle peut consulter les noms et les chemins relatifs des fichiers produits pour préparer leur déclaration. La liste ne contient pas le contenu des fichiers.",
+          "Si l’Archive est indisponible, le parcours de travail indépendant conserve les copies des entrées et les résultats dans un dossier local autorisé. Le modèle reçoit les chemins, identifiants, empreintes et états distincts du traitement, de l’archivage et du rapport de confidentialité ; la commande d’archivage ne renvoie pas le contenu des documents. Les fichiers restent jusqu’à leur suppression. Une copie ultérieure dans l’Archive nécessite une destination autorisée et ne relance pas l’analyse."
         ],
         "de": [
           "Lokaler Code indexiert den gesamten unterstützten Bestand bis zu 50.000 Dateien und 50 GB; das Modell erhält weder den Index noch automatisch eine Kopie des gesamten Archivs. Überschreitet das Archiv diese Grenzen, stoppt die Aktualisierung vor der Suche.",
@@ -557,7 +573,8 @@
           "Vor dem Import erhält das Modell die ausgewählten Pfade, ihre Verfügbarkeit auf dem Computer des Importwerkzeugs und Hinweise zur Fortsetzung. Bei angegebenen SHA-256-Werten der Originalanhänge liest die Prüfung die kopierten Bytes lokal und gibt Hashwerte, Größen und Vergleichsergebnisse ohne Dokumentinhalte zurück. Die Übertragung nutzt nur verfügbare Host-Werkzeuge und einen freigegebenen Arbeitsordner; ein Chat-Pfad allein überträgt keine Datei. Die Prüfung legt keine Mandanten, Aufträge oder Verarbeitungsläufe an. Pfade können Namen enthalten und sind nicht anonymisiert. Bestehende Kennungen bleiben für die Fortsetzung erhalten.",
           "Zur Erhaltung der Arbeit speichert Archive private lokale Kopien der zugelassenen Eingaben, Belege und gespeicherten Ergebnisse unabhängig vom Zielordner. Bei der Wiederherstellung erhält das Modell Status, Kennungen und erforderliche Pfade, jedoch nicht automatisch die Inhalte dieser Kopien. Ein allgemeiner Ordner wie Vari benötigt keine rechtliche Identität. Schlägt die Erfassung des Datenberichts fehl, bleibt das vorhandene Ergebnis auslieferbar; die Messlücke wird separat ausgewiesen. Die Kopien werden weder an externe Dienste übertragen noch automatisch gelöscht.",
           "Vor dem Import liest eine lokale Prüfung ausgewählte Zellen und liefert Pfade, Hashes, Rollen und Zeilenzahlen oder technische Fehler, ohne einen Lauf oder Modellaufruf anzulegen. Rechnungslisten und erklärte Zahlungen behalten ursprüngliche Referenzen, Daten und Beträge. Geöffnete Entwürfe können erklärte Beträge und Restbeträge an das Modell geben; fehlende Bankbestätigung bleibt ausdrücklich sichtbar. Lesezugriffe vor dem Lauf haben keinen Archive-Bericht.",
-          "Vor dem Abschluss eines Arbeitslaufs kann das Modell die Namen und relativen Pfade der erzeugten Dateien einsehen, um sie zu deklarieren. Die Liste enthält keine Dateiinhalte."
+          "Vor dem Abschluss eines Arbeitslaufs kann das Modell die Namen und relativen Pfade der erzeugten Dateien einsehen, um sie zu deklarieren. Die Liste enthält keine Dateiinhalte.",
+          "Ist das Archiv nicht verfügbar, bewahrt der unabhängige Arbeitsablauf Eingabekopien und Ergebnisse in einem autorisierten lokalen Ordner auf. Das Modell erhält Pfade, Kennungen, Prüfsummen und getrennte Statusangaben für Verarbeitung, Archivierung und Datenschutzbericht; der Archivierungsbefehl gibt keine Dokumentinhalte zurück. Dateien bleiben bis zu ihrer Entfernung erhalten. Eine spätere Archivkopie erfordert ein autorisiertes Ziel und wiederholt die Analyse nicht."
         ],
         "es": [
           "El código local indexa toda la población compatible, con un límite de 50.000 archivos y 50 GB; el modelo no recibe el índice ni una copia automática de todo el archivo. Si el archivo supera esos límites, la actualización se detiene antes de la búsqueda.",
@@ -572,7 +589,8 @@
           "En los procesos Vera con informe automático, las respuestas de error de Archive para el trabajo iniciado también se registran localmente. Pueden contener rutas o valores del caso: si no se puede establecer su cobertura por las fuentes, el informe indica una cobertura incompleta. Las lecturas mediante herramientas del chat ajenas a Vera no se miden en este informe.",
           "Para conservar el trabajo, Archive guarda copias locales privadas de las entradas admitidas, los comprobantes y los resultados guardados, independientes de la carpeta de destino. La recuperación devuelve al modelo el estado, los identificadores y las rutas necesarias, sin enviar automáticamente el contenido de las copias. Una carpeta general como Vari no requiere una identidad jurídica. Si falla la recopilación del informe de datos, el resultado disponible sigue siendo entregable y la falta de medición se indica por separado. Las copias no se cargan en servicios externos ni se eliminan automáticamente.",
           "Antes de importar, un control local lee las celdas seleccionadas y devuelve rutas, huellas, roles y recuentos o errores técnicos, sin crear una ejecución ni llamar a un modelo. Las listas de facturas y pagos declarados conservan referencias, fechas e importes originales. Al abrir borradores, el modelo puede recibir importes declarados y saldos, indicando la falta de verificación bancaria. Las lecturas anteriores a la ejecución no tienen informe Archive.",
-          "Antes de cerrar una ejecución, el modelo puede consultar los nombres y las rutas relativas de los archivos generados para preparar su declaración. La lista no contiene el contenido de los archivos."
+          "Antes de cerrar una ejecución, el modelo puede consultar los nombres y las rutas relativas de los archivos generados para preparar su declaración. La lista no contiene el contenido de los archivos.",
+          "Si el Archivo no está disponible, la ruta de trabajo independiente conserva copias de las entradas y los resultados en una carpeta local autorizada. El modelo recibe rutas, identificadores, huellas y estados separados del procesamiento, archivo e informe de privacidad; el comando de archivo no devuelve el contenido de los documentos. Los archivos permanecen hasta que se eliminen. Una copia posterior al Archivo requiere un destino autorizado y no repite el análisis."
         ]
       }
     }
