@@ -263,12 +263,7 @@ def input_requires_ocr(paths: Sequence[Path]) -> bool:
 def main(argv: list[str] | None = None) -> int:
     """Run the dependency check CLI."""
 
-    reentered = reenter_base(
-        Path(__file__), list(sys.argv[1:] if argv is None else argv)
-    )
-    if reentered is not None:
-        return reentered
-
+    arguments = list(sys.argv[1:] if argv is None else argv)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--module",
@@ -298,7 +293,16 @@ def main(argv: list[str] | None = None) -> int:
             "require the shared local OCR runtime."
         ),
     )
-    args, remaining = parser.parse_known_args(argv)
+    args, remaining = parser.parse_known_args(arguments)
+    verification_only = args.module is None and (
+        args.managed_verify or bool(os.environ.get("MPARANZA_MANAGED_RUNTIME_VERIFY"))
+    )
+    # A read-only dependency probe must inspect the managed interpreter itself.
+    # Launchers that can install still hand back before preparation or updates.
+    if not verification_only:
+        reentered = reenter_base(Path(__file__), arguments)
+        if reentered is not None:
+            return reentered
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     try:
         execution_root = prepare_execution_root(plugin_root(), args.module)

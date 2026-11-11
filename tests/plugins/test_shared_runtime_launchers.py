@@ -209,6 +209,45 @@ def test_identity_probe_does_not_take_reader_lease_or_load_site(tmp_path, monkey
     assert not (path / shared.RECEIPT).exists()
 
 
+@pytest.mark.parametrize("verification_mode", ["argument", "environment"])
+def test_core_verification_checks_the_managed_interpreter_without_relaunch(
+    tmp_path, monkeypatch, verification_mode
+):
+    root, _, api, shared, path = installed_fixture(tmp_path, "clara", monkeypatch)
+    site = path / (
+        "Lib/site-packages" if os.name == "nt" else "lib/python3.12/site-packages"
+    )
+    (site / "archive_managed_only_probe.py").write_text("READY = True\n")
+    (root / "requirements.txt").write_text("archive-managed-only-probe\n")
+    index = root / "execution-files.json"
+    inventory = json.loads(index.read_text())
+    inventory["files"]["requirements.txt"] = hashlib.sha256(
+        (root / "requirements.txt").read_bytes()
+    ).hexdigest()
+    index.write_text(json.dumps(inventory))
+    arguments = ["--managed-verify"] if verification_mode == "argument" else []
+    monkeypatch.delenv("MPARANZA_MANAGED_RUNTIME_VERIFY", raising=False)
+    if verification_mode == "environment":
+        monkeypatch.setenv("MPARANZA_MANAGED_RUNTIME_VERIFY", "1")
+    receipt = (path / shared.RECEIPT).read_bytes()
+
+    result = subprocess.run(
+        [
+            str(api.runtime_python(path)),
+            str(root / "scripts/check_dependencies.py"),
+            *arguments,
+        ],
+        capture_output=True,
+        text=True,
+        timeout=15,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "All Clara dependencies are available." in result.stderr
+    assert (path / shared.RECEIPT).read_bytes() == receipt
+
+
 def test_unavailable_interpreter_is_rejected_without_changing_metadata(
     tmp_path, monkeypatch
 ):

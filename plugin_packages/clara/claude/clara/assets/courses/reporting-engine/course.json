@@ -168,7 +168,7 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "2e1846ec95bc1700645ab827f857023e7aebf2d6f003148b3081ca6c5e833a90"
+      "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
     },
     {
       "path": "scripts/decision_narrative.py",
@@ -473,5 +473,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e37910a59ce9af04ff46b3b1e2fe54463b16b8bcf253b1f7b5925210c69bac07"
+  "canonical_course_sha256": "b51387e7427635871b788251791bf5c4d4042a9720b54999f2ed3f024e3cbdf8"
 }

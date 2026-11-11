@@ -72,7 +72,7 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "2e1846ec95bc1700645ab827f857023e7aebf2d6f003148b3081ca6c5e833a90"
+      "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
     },
     {
       "path": "scripts/diagnostic_context.py",
@@ -497,5 +497,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "ca4f37b54f22d707cefb299dbd5a68434ec2d71473eb78fc4c119e6df9b6e051"
+  "canonical_course_sha256": "d413862aeaa380909d4c2cdcbc6315d97dd30360ec0d933a4e2e18b736e1688b"
 }

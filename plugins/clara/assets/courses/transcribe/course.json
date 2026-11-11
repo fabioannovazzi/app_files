@@ -120,7 +120,7 @@
     {
       "path": "scripts/check_dependencies.py",
       "repository_path": "plugins/clara/scripts/check_dependencies.py",
-      "sha256": "2e1846ec95bc1700645ab827f857023e7aebf2d6f003148b3081ca6c5e833a90"
+      "sha256": "70235a8e11af5c9eedc531db44adc83d7d2e29efdb0c3481d9a4972fc2a2b96e"
     },
     {
       "path": "scripts/decision_narrative.py",
