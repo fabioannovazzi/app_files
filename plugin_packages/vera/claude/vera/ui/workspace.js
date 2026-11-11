@@ -4,6 +4,7 @@
   const pending = new Map();
   let requestId = 0, epoch = 0, host = {}, catalogue, state, bankWork, lipeWork, amlWork, salesWork, salesPick, crWork, crPage, busy = false, dirty = false;
   let fields = {}, submission, query = "", draftTimer, draftTask = Promise.resolve();
+  let postingEditVersion=0,postingHasDraft=false,postingDraftRevision="",postingRemoved=null,postingSearchText="",postingDecisionFilter="all";
   let bankDraftContext, bankDraftTimer, bankDraftTask = Promise.resolve();
   let amlDraftContext, amlDraftTimer, amlDraftTask = Promise.resolve();
   let closureContext, closureTimer, closureTask = Promise.resolve();
@@ -216,22 +217,38 @@
   }
 
   async function openWork(workRef, offset = 0, selected, revision, sourceRef, view, resume = false) {
-    leaveDraft(); await draftTask; const generation = ++epoch;
+    const previousPosting=state?.kind==="postings"?document.getElementById("detail"):null;
+    if(previousPosting)previousPosting.inert=true;
+    try {
+    await flushPostingDraft();leaveDraft(); await draftTask; const generation = ++epoch;
     if (!sourceRef && state?.work_ref === workRef && ["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) sourceRef = state.data.selection.source_ref;
     if (!view && state?.work_ref === workRef && (state.workflow === "client-file-preparation" || state.kind === "postings")) view = state.view;
     say("Lettura dello stato salvato…");
-    if (state?.work_ref !== workRef) query = "";
-    const next = await call("vera_workspace_view", { work_ref: workRef, offset, ...(resume ? { resume_review: true } : {}), ...(selected ? { item_id: selected } : {}), ...(revision ? { revision } : {}), ...(sourceRef ? { source_ref: sourceRef } : {}), ...(view ? { view } : {}) });
+    if (state?.work_ref !== workRef) {query = "";postingRemoved=null;}
+    const next = await call("vera_workspace_view", { work_ref: workRef, offset, ...(resume ? { resume_review: true } : {}), ...(selected ? { item_id: selected } : {}), ...(revision ? { revision } : {}), ...(sourceRef ? { source_ref: sourceRef } : {}), ...(view ? { view } : {}),...(state?.kind==="postings"&&state.work_ref===workRef?{search_text:postingSearchText,decision_filter:postingDecisionFilter}:{}) });
     if (generation !== epoch) return;
     // Every internal return link (including post-preparation) uses the same editor.
     if (next.total === 1 && !next.selection && next.items.length === 1 && !selected) {
       return openWork(workRef, offset, itemId(next.items[0]), next.revision, sourceRef, view);
     }
-    state = next; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; submission = null; renderWork(); say("");
+    postingHasDraft=false;state = next; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; submission = null;
+    if(state.kind==="postings"){
+      const draft=state.selection?await call("vera_workspace_draft_read",{work_ref:state.work_ref,item_id:state.selection.id}):{draft:null,draft_revision:""};
+      if(generation!==epoch)return;
+      postingHasDraft=Boolean(Object.keys(draft.draft?.fields||{}).length);postingDraftRevision=draft.draft_revision||"";postingSearchText=state.data.search_text||"";postingDecisionFilter=state.data.decision_filter||"all";
+      const restore=draft.draft?.fields?.posting_id===state.selection?.id&&draft.draft.revision===state.revision;
+      if(restore)fields=structuredClone(draft.draft.fields);
+      renderWork();say("");
+      if(restore){document.getElementById("posting-draft-status").textContent="Bozza conservata · decisione non salvata";}
+      else if(draft.draft)showDraft(draft.draft);
+      return;
+    }
+    renderWork(); say("");
     if (["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) { if (selected && window.innerWidth < 760) document.getElementById("detail").scrollIntoView({block:"start"}); return; }
     if (state.view === "ARCHIVE_EXECUTION" || (state.kind === "bilancio" && state.view?.startsWith("AREA_"))) return;
     const draft = await call("vera_workspace_draft_read", { work_ref: state.work_ref });
     if (generation === epoch && draft.draft) showDraft(draft.draft);
+    } finally {if(previousPosting?.isConnected)previousPosting.inert=false;}
   }
   function shell() {
     practicePanel?.dispose();
@@ -3248,7 +3265,7 @@
       filterSelect.addEventListener("change", () => run(async () => {
         const view=filterSelect.value;
         filterSelect.value=state.view || "REVIEW";
-        leaveDraft(); query="";
+        await flushPostingDraft();leaveDraft(); query="";
         await openWork(state.work_ref,0,undefined,undefined,undefined,view);
       }));
       main.append(filters, node("p", "I tipi descrivono le proposte originali, non certificano l’abbinamento e non cambiano le decisioni. Il filtro comprende tutti i movimenti, anche nelle pagine successive.", "caption"));
@@ -3312,20 +3329,24 @@
     const split = node("div", undefined, "split"), queue = node("section", undefined, "queue"), detail = node("section", undefined, "detail"); detail.id = "detail"; detail.setAttribute("aria-label", "Evidenza e decisione");
     queue.append(node("h2", state.kind === "treasury" ? "Eventi e date" : "Elementi da esaminare"));
     const list = node("div");
-    if (state.items.length > 1) search(queue, "Cerca nella pagina corrente", rows);
+    if(state.kind==="postings"){
+      const label=node("label",undefined,"field"),searchInput=node("input");searchInput.type="search";searchInput.maxLength=200;searchInput.value=state.data.search_text||"";label.append(node("span","Cerca in tutti i movimenti"),searchInput);queue.append(label);
+      const perform=async()=>{await flushPostingDraft();postingSearchText=searchInput.value;await openWork(state.work_ref,0);};queue.append(button("Cerca",perform));searchInput.addEventListener("keydown",event=>{if(event.key==="Enter"){event.preventDefault();run(perform);}});
+      const filter=node("label",undefined,"field"),select=node("select");filter.append(node("span","Stato decisione"),select);for(const[value,caption]of[["all","Tutte le decisioni"],["unsaved","Mai salvati"],["pending","Da rivedere · salvati"],["accepted","Accettati"],["rejected","Esclusi dal TXT"]]){const option=node("option",caption);option.value=value;select.append(option);}select.value=state.data.decision_filter||"all";select.addEventListener("change",()=>run(async()=>{await flushPostingDraft();postingDecisionFilter=select.value;await openWork(state.work_ref,0);}));queue.append(filter);query="";
+    }else if (state.items.length > 1) search(queue, "Cerca nella pagina corrente", rows);
     else query = "";
     queue.append(list); pagination(queue);
-    if (state.total > 1 && state.selection) {
+    if ((state.total > 1 || state.kind==="postings") && state.selection) {
       const chooser = supportingDetails("Scegli un elemento (" + state.total + ")");
       chooser.classList.add("queue-picker");
       chooser.open = !reviewNarrow.matches;
       chooser.append(queue); split.append(chooser);
-    } else if (state.total > 1) split.append(queue);
+    } else if (state.total > 1 || state.kind==="postings") split.append(queue);
     else split.classList.add("single-item");
     split.append(detail); main.append(split);
     function rows() {
       list.replaceChildren(); const selected = state.selection?.issue || state.selection;
-      const matches = state.items.filter(item => JSON.stringify(item).toLowerCase().includes(query.toLowerCase()));
+      const matches = state.kind==="postings"?state.items:state.items.filter(item => JSON.stringify(item).toLowerCase().includes(query.toLowerCase()));
       const files = supportingDetails("Documenti e file di supporto");
       for (const item of matches) {
         const b = button("", () => {
@@ -3510,57 +3531,150 @@
     parent.querySelector('[data-source-picker="true"]')?.remove();
     parent.append(group);
   }
-  function renderPostingEditor(parent, selected) {
-    parent.replaceChildren();
-    parent.append(node("h2",selected.title),node("p",selected.bank.description),node("p",selected.reason,"notice"));
-    if (selected.decision) parent.append(node("p", `Decisione salvata · ${{pending:"Da rivedere",accepted:"Accettato",rejected:"Escluso dal TXT"}[selected.decision.status]} · ${new Date(selected.decision.at).toLocaleString("it-IT")}`, "caption"));
-    else parent.append(node("p", "Nessuna decisione salvata. Per lasciare il movimento irrisolto e passare al successivo non occorre salvarlo.", "caption"));
-    const original = supportingDetails("Proposta originale ed evidenze");
-    original.append(readFields({proposta:selected.proposed_lines,evidenze:selected.evidence}));parent.append(original);
-    if (state.run_status !== "running") {parent.append(node("p","Questo lavoro è in sola lettura.","notice"));return;}
-    if (fields.posting_id !== selected.id) fields={posting_id:selected.id,status:selected.decision?.status || "accepted",lines:structuredClone(selected.decision?.lines || selected.proposed_lines),note:selected.decision?.note || ""};
-    const discard = button("Scarta modifiche", async () => {
-      clearTimeout(draftTimer); await draftTask;
-      await call("vera_workspace_draft_save", {...scope(), review_ticket:state.review_ticket, fields:{}});
-      dirty=false; fields={}; submission=null;
-      await openWork(state.work_ref,state.offset,selected.id);
-      say("Modifiche non salvate scartate. Le decisioni già salvate sono conservate; puoi cambiare riga.");
-    });
-    discard.dataset.discardReview="true"; discard.hidden=!dirty;
-    const statusGroup=node("fieldset");
-    statusGroup.append(node("legend","Decisione"));parent.append(statusGroup);
-    for(const [value,caption] of [["pending","Da rivedere"],["accepted","Accetta le righe corrette"],["rejected","Escludi dal TXT"]]){
-      const label=node("label",undefined,"check"),radio=node("input");
-      radio.type="radio";radio.name="posting-decision";radio.value=value;radio.checked=fields.status===value;
-      radio.addEventListener("change",()=>{if(radio.checked){fields.status=value;changed();}});
-      label.append(radio,node("span",caption));statusGroup.append(label);
-    }
-    const rows=node("div");parent.append(rows);
-    fields.lines.forEach((line,index)=>{
-      const group=node("fieldset");group.append(node("legend",`Contropartita ${index+1}`));
-      const grid=node("div");grid.style.cssText="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px";group.append(grid);
-      for(const [key,label] of [["account","Conto"],["side","Dare / Avere"],["amount","Importo EUR"],["partita","Partita"],["year","Anno"],["section","Sezionale"]]){
-        const wrapper=node("label",undefined,"field"),control=node(key==="side"?"select":"input");
-        if(key==="side")for(const value of ["D","A"]){const option=node("option",value==="D"?"Dare":"Avere");option.value=value;control.append(option);}
-        else {control.type="text";control.maxLength=key==="account"?12:20;if(key==="amount")control.inputMode="decimal";}
-        wrapper.style.minWidth="0";control.style.cssText="width:100%;min-width:0";
-        control.value=line[key] || "";wrapper.append(node("span",label),control);grid.append(wrapper);
-        control.addEventListener("input",()=>{line[key]=key==="amount"?control.value.replace(",","."):control.value;changed();});
-      }
-      group.append(node("p","Per indicare una partita, compila insieme Partita (1–6 cifre), Anno (4 cifre) e Sezionale (1–2 cifre). Lascia tutti e tre vuoti per registrare la contropartita solo sul conto. Se tutte le contropartite sono senza partita, il TXT esclude la gestione delle partite per il movimento.","caption"));
-      group.append(button("Rimuovi riga",()=>{fields.lines.splice(index,1);changed();renderPostingEditor(parent,selected);}));rows.append(group);
-    });
-    parent.append(button("Aggiungi contropartita",()=>{fields.lines.push({account:"",side:Number(selected.bank.amount)>0?"A":"D",amount:"",partita:"",year:"",section:""});changed();renderPostingEditor(parent,selected);}));
-    input(parent,"Nota o documento mancante","note",fields.note,"textarea");
-    parent.append(node("p",`Riga banca fissa: ${state.data.bank_account}, ${Number(selected.bank.amount)>0?"Dare":"Avere"} ${Math.abs(Number(selected.bank.amount)).toFixed(2)} EUR. Le contropartite accettate devono pareggiare.`,"caption"));
-    parent.append(button("Salva decisione e correzioni",async()=>{
+  function postingCents(value) {
+    const text=String(value).trim();
+    if(!/^-?\d+(?:\.\d{1,2})?$/.test(text))throw new Error("Indica un importo con al massimo due decimali.");
+    const negative=text.startsWith("-"),[whole,fraction=""]=text.replace("-","").split(".");
+    return (negative?-1n:1n)*(BigInt(whole)*100n+BigInt(fraction.padEnd(2,"0")));
+  }
+  function postingAmount(text) {
+    text=String(text).trim();
+    if(/^\d+(?:\.\d{1,2})?$/.test(text))return text;
+    if(/^(?:\d+|\d{1,3}(?:\.\d{3})+),\d{1,2}$/.test(text))return text.replaceAll(".","").replace(",",".");
+    if(/^\d{1,3}(?:\.\d{3})+$/.test(text))throw new Error("Importo ambiguo: indica anche i centesimi, per esempio 1.030,00.");
+    throw new Error("Usa 1.030,46 oppure 1030,46; sono ammessi al massimo due decimali.");
+  }
+  function postingMoney(cents) {
+    const negative=cents<0n,absolute=negative?-cents:cents;
+    return (negative?"−":"")+(absolute/100n).toString().replace(/\B(?=(\d{3})+(?!\d))/g,".")+","+(absolute%100n).toString().padStart(2,"0");
+  }
+  async function persistPostingDraft() {
+    const result=await call("vera_workspace_draft_save",{...scope(),review_ticket:state.review_ticket,expected_draft_revision:postingDraftRevision,fields:structuredClone(fields)});
+    postingDraftRevision=result.draft_revision;
+    const label=document.getElementById("posting-draft-status");if(label)label.textContent="Bozza conservata · decisione non salvata";
+  }
+  async function flushPostingDraft() {
+    if(state?.kind!=="postings"||!dirty)return;
+    while(dirty){
       clearTimeout(draftTimer);await draftTask;
-      await call("vera_workspace_save",{...scope(),item_id:selected.id,review_ticket:state.review_ticket,human_reviewed:true,idempotency_key:crypto.randomUUID(),review:structuredClone(fields)});
-      dirty=false;fields={};await openWork(state.work_ref,state.offset,selected.id);say("Decisione e correzioni conservate. Il TXT userà solo le righe accettate.");
-    },"primary"));
+      const version=postingEditVersion;
+      await persistPostingDraft();
+      if(version===postingEditVersion){dirty=false;return;}
+    }
+  }
+  function renderPostingEditor(parent, selected) {
+    parent.replaceChildren();parent.classList.add("posting-editor");
+    parent.append(node("h2",selected.title),node("p",selected.bank.description),node("p",selected.reason,"notice"));
+    if(selected.decision)parent.append(node("p",`Decisione salvata · ${{pending:"Da rivedere",accepted:"Accettato",rejected:"Escluso dal TXT"}[selected.decision.status]} · ${new Date(selected.decision.at).toLocaleString("it-IT")}`,"caption"));
+    else parent.append(node("p","Nessuna decisione salvata.","caption"));
+    const draftStatus=node("p",dirty?"Bozza in modifica · decisione non salvata":"", "caption");draftStatus.id="posting-draft-status";draftStatus.setAttribute("role","status");parent.append(draftStatus);
+    const original=supportingDetails("Proposta originale ed evidenze");original.append(readFields({proposta:selected.proposed_lines,evidenze:selected.evidence}));parent.append(original);
+    if(state.run_status!=="running"){parent.append(node("p","Questo lavoro è in sola lettura.","notice"));return;}
+    if(fields.posting_id!==selected.id)fields={posting_id:selected.id,status:selected.decision?.status||"accepted",lines:structuredClone(selected.decision?.lines||selected.proposed_lines),note:selected.decision?.note||""};
+    const statusGroup=node("fieldset",undefined,"posting-decisions");statusGroup.append(node("legend","Decisione"));parent.append(statusGroup);
+    for(const[value,caption]of[["pending","Da rivedere"],["accepted","Accetta le righe corrette"],["rejected","Escludi dal TXT"]]){
+      const label=node("label",undefined,"check"),radio=node("input");radio.type="radio";radio.name="posting-decision";radio.value=value;radio.checked=fields.status===value;
+      radio.addEventListener("change",()=>{if(radio.checked){fields.status=value;changed();}});label.append(radio,node("span",caption));statusGroup.append(label);
+    }
+    const accounting=node("section",undefined,"posting-accounting");accounting.setAttribute("aria-label","Confronto contabile");accounting.append(node("h3","Confronto contabile · EUR"));parent.append(accounting);
+    const bankCents=postingCents(selected.bank.amount),bank=node("div",undefined,"posting-bank");
+    const bankName=state.data.chart_of_accounts?.accounts.find(row=>row.code===state.data.bank_account)?.name;
+    bank.append(node("strong",`Banca · ${state.data.bank_account}${bankName?" · "+bankName:""}`),node("span",bankCents>0n?"Dare":"Avere"),node("strong",postingMoney(bankCents<0n?-bankCents:bankCents)));accounting.append(bank);
+    const rows=node("div"),totals=node("div",undefined,"posting-totals"),balance=node("p",undefined,"caption"),empty=node("p","Aggiungi almeno una contropartita per accettare il movimento.","caption");
+    empty.hidden=Boolean(fields.lines.length);totals.setAttribute("role","group");totals.setAttribute("aria-label","Totali contabili");balance.setAttribute("aria-live","polite");accounting.append(rows,empty,totals,balance);
+    const chart=state.data.chart_of_accounts,accounts=chart?.accounts||[],chartHelp=node("p",accounts.length?"Cerca per codice o denominazione nel piano dei conti acquisito per questo cliente.":"Piano dei conti verificato non disponibile: inserisci il codice manualmente. Il formato di 7 cifre non verifica l’appartenenza al piano.","caption");chartHelp.id="posting-account-help";accounting.append(chartHelp);
+    const controls=[];
+    function errorFor(control,message){control.error.textContent=message;control.input.setAttribute("aria-invalid",String(Boolean(message)));}
+    function validate(control){let message="";const line=fields.lines[control.index];
+      if(control.key==="account"){
+        const code=String(line.account||"").replaceAll("/","");
+        if(!/^\d{7}$/.test(code)||code==="0000000")message="Indica un conto di 7 cifre diverso da zero.";
+        else if(accounts.length&&!accounts.some(row=>row.code===code))message="Questo codice non è presente nel piano dei conti acquisito.";
+      }else if(control.key==="amount"){
+        try{const amount=postingCents(postingAmount(line.amount));if(amount<=0n||amount>=100000000000n)message="Indica un importo positivo inferiore a 1.000.000.000,00.";}catch(error){message=error.message;}
+      }else if(control.key==="side"&&!['D','A'].includes(line.side))message="Scegli Dare o Avere.";
+      else if(["partita","year","section"].includes(control.key)){
+        const any=["partita","year","section"].some(key=>String(line[key]||"").trim());
+        if(any&&!({partita:/^\d{1,6}$/,year:/^\d{4}$/,section:/^\d{1,2}$/}[control.key]).test(String(line[control.key]||"").trim()))message={partita:"Partita: da 1 a 6 cifre.",year:"Anno: 4 cifre.",section:"Sezionale: da 1 a 2 cifre."}[control.key]+" Compila tutti e tre i riferimenti o lasciali vuoti.";
+      }
+      errorFor(control,message);return !message;
+    }
+    function updateTotals(){let dare=bankCents>0n?bankCents:0n,avere=bankCents<0n?-bankCents:0n,valid=true;
+      for(const line of fields.lines){try{const cents=postingCents(postingAmount(line.amount));if(cents<=0n||!['D','A'].includes(line.side))throw new Error();if(line.side==="D")dare+=cents;else avere+=cents;}catch{valid=false;}}
+      totals.replaceChildren();for(const[label,value]of[["Totale Dare",dare],["Totale Avere",avere],["Differenza",dare-avere]]){const cell=node("div");cell.append(node("span",label),node("strong",valid?postingMoney(value):"Da completare"));totals.append(cell);}
+      balance.textContent=!valid?"Completa gli importi per verificare il pareggio.":dare===avere?"Dare e Avere coincidono.":"Dare e Avere non coincidono: correggi le contropartite prima di accettare.";
+      balance.classList.toggle("posting-error",!valid||dare!==avere);return valid&&dare===avere;
+    }
+    function focusRow(index,key="account"){parent.querySelector(`[data-posting-row="${index}"] [data-posting-field="${key}"]`)?.focus();}
+    fields.lines.forEach((line,index)=>{
+      const group=node("fieldset",undefined,"posting-counterpart");group.dataset.postingRow=index;group.append(node("legend",`Contropartita ${index+1}`));rows.append(group);
+      const grid=node("div",undefined,"posting-line"),refs=node("fieldset",undefined,"posting-references");refs.append(node("legend","Riferimenti facoltativi"));group.append(grid,refs);
+      const help=node("p","Partita, anno e sezionale: tutti e tre compilati oppure tutti vuoti (solo conto).","caption");help.id=`posting-refs-${index}`;refs.append(help);
+      const referenceGrid=node("div",undefined,"posting-reference-fields");refs.append(referenceGrid);
+      for(const[key,caption]of[["account","Conto"],["side","Dare / Avere"],["amount","Importo EUR"],["partita","Partita"],["year","Anno"],["section","Sezionale"]]){
+        const wrapper=node("label",undefined,"field"),control=node(key==="side"?"select":"input"),error=node("span",undefined,"posting-error");
+        error.id=`posting-error-${index}-${key}`;control.id=`posting-${index}-${key}`;control.dataset.postingField=key;control.setAttribute("aria-label",caption);
+        if(key==="side"){for(const[value,label]of[["D","Dare"],["A","Avere"]]){const option=node("option",label);option.value=value;control.append(option);}}
+        else {control.type="text";control.maxLength=key==="amount"?24:key==="account"?12:20;if(key!=="account")control.inputMode=key==="amount"?"decimal":"numeric";}
+        const extra=["partita","year","section"].includes(key)?help.id:key==="account"?chartHelp.id:key==="amount"?"posting-amount-help":"";
+        control.setAttribute("aria-describedby",[extra,error.id].filter(Boolean).join(" "));control.value=line[key]||"";
+        if(key==="amount"&&control.value){try{control.value=postingMoney(postingCents(postingAmount(control.value)));}catch{}}
+        wrapper.append(node("span",caption),control,error);(["partita","year","section"].includes(key)?referenceGrid:grid).append(wrapper);
+        const record={input:control,error,index,key};controls.push(record);
+        if(key==="account"){
+          const denomination=node("span",undefined,"caption");wrapper.append(denomination);
+          const showName=()=>{const found=accounts.find(row=>row.code===control.value.replaceAll("/",""));denomination.textContent=found?found.name:"";};showName();control.addEventListener("input",showName);
+          if(accounts.length){
+            const search=node("input"),choose=node("select");search.type="search";search.placeholder="Cerca codice o denominazione";search.setAttribute("aria-label",`Cerca codice o denominazione contropartita ${index+1}`);choose.setAttribute("aria-label",`Scegli conto contropartita ${index+1}`);
+            const populate=()=>{choose.replaceChildren();const blank=node("option","Scegli un conto");blank.value="";choose.append(blank);const query=search.value.trim().toLocaleLowerCase("it");for(const account of accounts.filter(row=>`${row.code} ${row.name}`.toLocaleLowerCase("it").includes(query))){const option=node("option",`${account.code} · ${account.name}`);option.value=account.code;choose.append(option);}};
+            populate();search.addEventListener("input",populate);choose.addEventListener("change",()=>{if(!choose.value)return;control.value=line.account=choose.value;showName();validate(record);changed();});wrapper.append(search,choose);
+          }
+        }
+        control.addEventListener("input",()=>{line[key]=control.value;if(key==="amount"){try{line.amount=postingAmount(control.value);}catch{}}validate(record);if(["partita","year","section"].includes(key))for(const other of controls.filter(row=>row.index===index&&["partita","year","section"].includes(row.key)))validate(other);updateTotals();changed();});
+        if(key==="amount")control.addEventListener("blur",()=>{try{control.value=postingMoney(postingCents(postingAmount(line.amount)));}catch{}});
+      }
+      const remove=button("Rimuovi riga",()=>{postingRemoved={id:selected.id,index,line:structuredClone(line)};fields.lines.splice(index,1);changed();renderPostingEditor(parent,selected);const undo=document.getElementById("posting-undo");undo?.focus();});remove.classList.add("posting-remove");remove.setAttribute("aria-label",`Rimuovi contropartita ${index+1}`);group.append(remove);
+    });
+    const amountHelp=node("p","Importi in euro: 1.030,46 oppure 1030,46; al massimo due decimali.","caption");amountHelp.id="posting-amount-help";accounting.append(amountHelp);
+    if(fields.lines.some(line=>line.partita||line.year||line.section))accounting.append(node("p","Il TXT mantiene i riferimenti partita compilati. Se tutte le contropartite sono senza partita, richiede la registrazione senza aggiornamento delle partite.","caption"));
+    const add=button("Aggiungi contropartita",()=>{fields.lines.push({account:"",side:bankCents>0n?"A":"D",amount:"",partita:"",year:"",section:""});changed();renderPostingEditor(parent,selected);focusRow(fields.lines.length-1);});add.id="posting-add";add.disabled=fields.lines.length>=79;accounting.append(add);
+    if(postingRemoved?.id===selected.id){const undo=button("Annulla rimozione",()=>{const saved=postingRemoved;fields.lines.splice(saved.index,0,saved.line);postingRemoved=null;changed();renderPostingEditor(parent,selected);focusRow(saved.index);});undo.id="posting-undo";accounting.append(undo);}
+    input(parent,"Nota o documento mancante","note",fields.note,"textarea");
+    const formError=node("p",undefined,"posting-error");formError.setAttribute("role","alert");parent.append(formError);
+    updateTotals();
+    async function savePosting(next){
+      formError.textContent="";
+      if(fields.status==="accepted"){
+        const invalid=controls.filter(control=>!validate(control));
+        if(!fields.lines.length){formError.textContent="Aggiungi almeno una contropartita prima di accettare.";add.focus();say(formError.textContent,true);return;}
+        if(invalid.length){formError.textContent="Correggi i campi indicati prima di salvare.";invalid[0].input.focus();say(formError.textContent,true);return;}
+        if(!updateTotals()){formError.textContent="Correggi gli importi: Dare e Avere devono coincidere.";controls.find(control=>control.key==="amount")?.input.focus();say(formError.textContent,true);return;}
+      }
+      const nextId=state.data.next_id,nextOffset=state.data.next_offset;
+      parent.inert=true;
+      try{
+        clearTimeout(draftTimer);await draftTask;
+        const review=structuredClone(fields);for(const line of review.lines){try{line.amount=postingAmount(line.amount);}catch{}}
+        await call("vera_workspace_save",{...scope(),review_ticket:state.review_ticket,human_reviewed:true,idempotency_key:crypto.randomUUID(),expected_draft_revision:postingDraftRevision,review});
+        dirty=false;fields={};postingRemoved=null;
+        await openWork(state.work_ref,next&&nextId?nextOffset:state.offset,next&&nextId?nextId:selected.id);
+        say(next&&!nextId?"Decisione salvata. È l’ultimo movimento della selezione.":"Decisione salvata. Il TXT userà solo le righe accettate.");
+        document.querySelector(".posting-editor h2")?.focus();
+      }catch(error){parent.inert=false;formError.textContent=error.message;say(error.message,true);controls[0]?.input.focus();}
+      finally{if(parent.isConnected)parent.inert=false;}
+    }
+    const actions=node("div",undefined,"actions");actions.append(button("Salva e successivo",()=>savePosting(true),"primary"),button("Salva decisione e correzioni",()=>savePosting(false)),button("Conserva bozza",async()=>{await flushPostingDraft();say("Bozza conservata, senza salvare la decisione.");}));parent.append(actions);
+    const discard=button("Scarta modifiche",async()=>{clearTimeout(draftTimer);await draftTask;const result=await call("vera_workspace_draft_save",{...scope(),review_ticket:state.review_ticket,expected_draft_revision:postingDraftRevision,fields:{}});postingDraftRevision=result.draft_revision;dirty=false;fields={};postingRemoved=null;await openWork(state.work_ref,state.offset,selected.id);say("Bozza scartata. La decisione salvata è conservata.");});discard.dataset.discardReview="true";discard.hidden=!dirty&&!postingHasDraft;
     parent.append(discard,button("Discuti con Vera",()=>discuss(parent)));
+    const heading=parent.querySelector("h2");heading.tabIndex=-1;
   }
   function changed() {
+    if(state?.kind==="postings"){
+      postingEditVersion++;dirty=true;submission=null;clearTimeout(draftTimer);
+      const label=document.getElementById("posting-draft-status");if(label)label.textContent="Bozza in modifica · decisione non salvata";
+      const discard=root.querySelector("[data-discard-review]");if(discard)discard.hidden=false;
+      draftTimer=setTimeout(()=>{draftTask=draftTask.then(persistPostingDraft).catch(error=>{say("Bozza non conservata: "+error.message,true);throw error;});draftTask.catch(()=>{});},500);return;
+    }
     dirty = true; submission = null; clearTimeout(draftTimer);
     const discardButton = root.querySelector("[data-discard-review]");
     if (discardButton) discardButton.hidden = false;

@@ -1265,6 +1265,30 @@ def draft_path(output: Path, actor: str, *, create: bool = True) -> Path:
     )
 
 
+def posting_draft(output: Path, actor: str, item_id: str) -> tuple[Path, dict | None]:
+    """Read per-movement draft; preserve the legacy run draft without migrating it."""
+    path = ui_state_directory(output) / (
+        "posting-draft-" + digest([actor, item_id]) + ".json"
+    )
+    if path.exists():
+        return path, read_json(path)
+    legacy = draft_path(output, actor, create=False)
+    previous = read_json(legacy) if legacy.exists() else None
+    return path, previous if previous and previous.get("item_id") == item_id else None
+
+
+def posting_draft_check(
+    output: Path, actor: str, args: dict
+) -> tuple[Path, dict | None]:
+    """Refuse stale tab writes instead of overwriting a newer movement draft."""
+    path, previous = posting_draft(output, actor, args["item_id"])
+    if args.get("expected_draft_revision") != (digest(previous) if previous else ""):
+        raise ValueError(
+            "La bozza di questo movimento è cambiata in un’altra finestra. Riapri e recupera la versione conservata prima di salvare."
+        )
+    return path, previous
+
+
 def atomic_json(path: Path, value: Any) -> None:
     """Persist recoverable UI drafts and submission receipts, never case state."""
     temporary = None
@@ -2486,6 +2510,12 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
             }
         return {"outputs": outputs(binding, loaded)}
     if tool == "vera_workspace_draft_read":
+        if (output / "posting_proposals.json").is_file() and args.get("item_id"):
+            current = snapshot(binding, loaded, args)
+            if not current["selection"]:
+                raise ValueError("Movimento non trovato")
+            _, draft = posting_draft(output, config["actor_id"], args["item_id"])
+            return {"draft": draft, "draft_revision": digest(draft) if draft else ""}
         path = draft_path(output, config["actor_id"], create=False)
         return {"draft": read_json(path) if path.exists() else None}
     if tool in {
@@ -2509,6 +2539,17 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                     "source_ref": args.get("source_ref"),
                     "fields": args["fields"],
                 }
+                if current["kind"] == "postings":
+                    if not current["selection"] or (
+                        args["fields"]
+                        and args["fields"].get("posting_id") != args["item_id"]
+                    ):
+                        raise ValueError(
+                            "La bozza deve riferirsi al movimento selezionato"
+                        )
+                    path, _ = posting_draft_check(output, config["actor_id"], args)
+                    atomic_json(path, draft)
+                    return {"draft_saved": True, "draft_revision": digest(draft)}
                 atomic_json(draft_path(output, config["actor_id"]), draft)
                 return {"draft_saved": True}
             if args.get("human_reviewed") is not True:
@@ -2536,6 +2577,7 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                         raise ValueError("Choose reviewed posting export")
                     result = export_reviewed(output)
                 elif tool == "vera_workspace_save":
+                    posting_draft_check(output, config["actor_id"], args)
                     result = save_decision(
                         output,
                         args["item_id"],
@@ -2733,7 +2775,21 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                     logging.getLogger(__name__).warning(
                         "Review saved, but its position could not be retained."
                     )
-            draft_path(output, config["actor_id"]).unlink(missing_ok=True)
+            if current["kind"] == "postings":
+                if tool == "vera_workspace_save":
+                    path, _ = posting_draft(output, config["actor_id"], args["item_id"])
+                    # A tombstone prevents an older legacy draft from resurfacing.
+                    atomic_json(
+                        path,
+                        {
+                            "work_ref": binding["work_ref"],
+                            "item_id": args["item_id"],
+                            "revision": result["revision"],
+                            "fields": {},
+                        },
+                    )
+            else:
+                draft_path(output, config["actor_id"]).unlink(missing_ok=True)
             return result
     current = snapshot(binding, loaded, args)
     if tool == "vera_workspace_explain":

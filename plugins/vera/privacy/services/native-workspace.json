@@ -918,6 +918,17 @@
         "scripts/native_workspace.py"
       ],
       "on_violation": "Keep the backend denial; return only currently authorized directory entries."
+    },
+    {
+      "id": "posting-draft-and-accounting-comparison",
+      "control": "The saved movement editor compares the fixed bank line and editable counterparts with exact cents. Exactly the existing pending/accepted/rejected radio choices remain; accepted is a UI default only for an undecided movement. Opening and navigation never save a domain decision. Unfinished fields remain actor/run/movement private drafts under a compare-and-set checkpoint; legacy drafts are preserved and stale domain revisions require explicit recovery. Explicit save, including save-and-next, retains the selected status under existing reviewer/run/selection authority and backend validation. Optional account names and membership checks use only a registered same-client chart JSON source with retained binding and byte hash; absent a chart, manual code format is not membership verification. Chart data and drafts stay in app metadata, not the selected-entry model evidence. No new recipient or external service is introduced. Source and synthetic browser checks are separate from installed-host acceptance.",
+      "implemented_by": [
+        "scripts/native_posting_review.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject stale draft replacement, changed charts, invalid accounts or amounts, incomplete references or unbalanced accepted entries; retain drafts without professional acceptance."
     }
   ],
   "governed_paths": [
@@ -1140,7 +1151,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "bf8c697b48c61665041c6928fa1eab80399c538abe740e206d8ee2e9388b760f",
+    "source_fingerprint": "08d59cd6f7c81bcd7f6373d40f8e3aa6e2c6baf7298c6fe0a5776a95b7aa9037",
     "reviewed_at": "2026-11-04"
   },
   "governed_repository_paths": [

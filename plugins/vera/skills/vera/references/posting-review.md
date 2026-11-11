@@ -39,6 +39,33 @@ account-only counterpart. There is no separate acknowledgement checkbox. Do not
 treat an internal document number as a verified partita just because the draft
 assumed equality.
 
+The accounting comparison shows the fixed bank line, editable counterparts and
+live Dare/Avere/difference totals using exact cents. Italian entry accepts
+`1.030,46` and `1030,46`, and an ungrouped decimal point with at most two decimals;
+dot grouping requires explicit comma cents to avoid ambiguity. Mixed, ambiguous
+or overprecision inputs get a linked
+field error. Stored accepted amounts use canonical exact decimal strings.
+
+Search and the decision-state filter cover the complete retained population,
+combined with the original proposal-type filter before paging. Navigation conserves
+unfinished fields as actor/run/movement drafts without saving a domain decision.
+Per-movement compare-and-set checkpoints reject stale tabs. Current drafts reopen
+automatically; a draft from an older domain revision requires explicit recovery.
+Old run-level drafts remain intact and are read for their original movement.
+“Salva e successivo” and the save-in-place action alone register the chosen status.
+“Conserva bozza” is separate. Removing even the sole counterpart makes the missing
+row visible immediately and offers undo; it does not accept an empty entry.
+
+An optional registered JSON chart source can be supplied at preparation with
+`--chart-input-id`. Its `client_id` must match the portable client context; its
+`accounts` contain unique seven-digit `code` and actual `name` values. The helper
+retains its binding and byte hash separately from immutable original proposals.
+Only this acquired chart supplies account denominations, search and membership
+validation. Without it, retain manual account entry and state that format checking
+does not establish chart membership. Do not fabricate names, infer a chart from
+proposal codes, replace an existing client's chart, or create a new run merely to
+upgrade an existing review.
+
 “Genera TXT dalle decisioni salvate” consumes accepted saved corrections only,
 withholds pending/rejected entries, and retains a receipt listing exclusions and
 the exact decision digest. A subsequent correction invalidates the current export
