@@ -3135,6 +3135,14 @@ def build_applied_review_authority(
         for record in prior_authority["records"]
         if isinstance(record, Mapping)
     }
+    if not metadata_by_id and predecessor_reconciliation.get("review_rows") == []:
+        # A sealed run may have no mandatory sample (bank-first queues carry
+        # its specific questions). Explicit subsequent decisions still refer
+        # to the source-bound population; absence never supplies acceptance.
+        metadata_by_id = {
+            record_id: {"record_id": record_id, "review_status": "UNRESOLVED"}
+            for record_id in expected_ids
+        }
     if not set(expected_ids).issubset(metadata_by_id):
         raise AssuranceRunError(
             "retained predecessor professional review population is stale"

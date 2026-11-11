@@ -258,14 +258,16 @@ def test_packaged_script_review_preserves_unpaid_balance_and_real_completion_gat
     finished = _run(
         command + ["--finish-run", draft["run_id"]], tmp_path / "finished", env
     )
-    assert finished["status"] == "completed"
-    assert finished["report_ready"] is True
+    # Accepting output artifacts does not accept an absent row-level review.
+    # The unpaid item remains unresolved and the completion gate stays closed.
+    assert finished["status"] == "review_required"
+    assert finished["report_ready"] is False
     canonical = json.loads(
         (output / "assurance_final_outputs/reconciliation_results.json").read_text()
     )
     assert canonical["reconciliation_rows"][0]["reconciliation_status"] == "unresolved"
     assert canonical["reconciliation_rows"][0]["amount"] == "1220"
-    assert canonical["review_rows"][0]["review_status"] == "PASS"
+    assert canonical["review_rows"][0]["review_status"] == "UNRESOLVED"
     assert "agent.codex.synthetic" in json.dumps(canonical["review_rows"])
     assert Path(request["sources"][0]["path"]).read_bytes() == original
     assert finished["artifacts"] and all(

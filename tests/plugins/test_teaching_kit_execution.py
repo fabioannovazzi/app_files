@@ -2593,7 +2593,7 @@ def test_bank_reconciliation_kit_runs_current_comparison(
 
 @pytest.mark.parametrize(
     "phase,closed,expected_status",
-    [("demo", 2, "written_pending_review"), ("practice", 3, "final_ready")],
+    [("demo", 2, "written_pending_review"), ("practice", 3, "written_pending_review")],
     ids=["demo-2", "practice-3"],
 )
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
@@ -2704,10 +2704,23 @@ runner.run_raw_input_reconciliation(
     if phase == "practice":
         third = next(row for row in rows if row["document_key"] == "3FF|2026")
         assert third["supporting_bank_date"] == "2026-04-04"
-    # Exact source-verified matches complete automatically; the demo retains
-    # its unresolved item and the corresponding review handoff.
+    # Source-derived ledger closures remain intact, but this PDF fixture does
+    # not establish the new explicit bank identity admission. No native model
+    # is available in this isolated test, so technical incompleteness must not
+    # become a fabricated completed model review.
     assert _read(output / "final_artifacts.json")["status"] == expected_status
-    assert _read(output / "professional_review.json")["origin"] == "automatic_checks"
+    professional_review = _read(output / "professional_review.json")
+    prepared = _read(output / "prepared_records.json")
+    if (
+        prepared["assumptions"].get("semantic_resolution", {}).get("schema_version")
+        == "vera.open_item_semantic_resolution.v2"
+    ):
+        # The diagnostic sample is not a second mandatory human review. The
+        # canonical post-Sol queues retain unresolved questions independently.
+        assert professional_review["records"] == []
+        assert professional_review["origin"] == "direct_persisted_review"
+    else:
+        assert professional_review["origin"] == "automatic_checks"
 
     # The first table is the learner's actual result, in the chosen language.
     from docx import Document

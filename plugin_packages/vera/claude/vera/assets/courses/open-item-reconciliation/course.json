@@ -64,11 +64,11 @@
     },
     {
       "path": "modules/open-item-reconciliation/requirements.txt",
-      "sha256": "1181ef14d96362fe3c0405072b3500a227e2d83f98ee1e6aca27e7fc5f74cbd5"
+      "sha256": "4ce8fccc4e714c8df185ae0417c76cc34506a407667359363ee1c1a8db36fa2e"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/audit_assurance.py",
-      "sha256": "d9b12dbcff226a192c812febc05fa02c6c6851e6e9483ce66a2b93a20c6d984c"
+      "sha256": "d6cb79e46d42b87f2296cf467518837a9544db717e6542550487e05cbd472682"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/build_missing_evidence_requests.py",
@@ -797,5 +797,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e594356f7a8987e6b1220fa0374ffe1d8c501ca5c4b37227ceb28f92bcf6a710"
+  "canonical_course_sha256": "8ebdef61eb25da5f73170e530cda2d0f91791bdf5a1bf6eecc9f2aa3667beaca"
 }
