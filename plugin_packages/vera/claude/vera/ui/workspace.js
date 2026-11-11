@@ -218,7 +218,7 @@
   async function openWork(workRef, offset = 0, selected, revision, sourceRef, view, resume = false) {
     leaveDraft(); await draftTask; const generation = ++epoch;
     if (!sourceRef && state?.work_ref === workRef && ["invoice", "lipe", "aml", "assetti", "scissione", "sales"].includes(state.kind)) sourceRef = state.data.selection.source_ref;
-    if (!view && state?.work_ref === workRef && state.workflow === "client-file-preparation") view = state.view;
+    if (!view && state?.work_ref === workRef && (state.workflow === "client-file-preparation" || state.kind === "postings")) view = state.view;
     say("Lettura dello stato salvato…");
     if (state?.work_ref !== workRef) query = "";
     const next = await call("vera_workspace_view", { work_ref: workRef, offset, ...(resume ? { resume_review: true } : {}), ...(selected ? { item_id: selected } : {}), ...(revision ? { revision } : {}), ...(sourceRef ? { source_ref: sourceRef } : {}), ...(view ? { view } : {}) });
@@ -3236,6 +3236,34 @@
     if (state.workflow === "archive-organization") nav.append(button("Esecuzione del piano", () => openWork(state.work_ref, 0, undefined, undefined, undefined, "ARCHIVE_EXECUTION")));
     const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", workTitle(state.label,state.workflow)));
     main.append(header);
+    if (state.kind === "postings") {
+      const c = state.data.counts;
+      main.append(node("p", `${state.data.population_total} movimenti · ${c.accepted} accettati · ${c.pending} da rivedere · ${c.rejected} esclusi`, "sub"), node("p", `${state.data.saved_count} decisioni salvate · ${state.data.population_total - state.data.saved_count} mai salvati`, "caption"), node("p", state.data.notice, "notice"));
+      const filters = node("label", undefined, "field"), filterSelect = node("select");
+      filterSelect.setAttribute("aria-label", "Tipo di proposta");
+      filters.append(node("span", "Tipo di proposta"), filterSelect);
+      for (const filter of state.data.filters) {
+        const option = node("option", `${filter.label} (${filter.count})`); option.value=filter.view; option.selected=(state.view || "REVIEW") === filter.view; filterSelect.append(option);
+      }
+      filterSelect.addEventListener("change", () => run(async () => {
+        const view=filterSelect.value;
+        filterSelect.value=state.view || "REVIEW";
+        leaveDraft(); query="";
+        await openWork(state.work_ref,0,undefined,undefined,undefined,view);
+      }));
+      main.append(filters, node("p", "I tipi descrivono le proposte originali, non certificano l’abbinamento e non cambiano le decisioni. Il filtro comprende tutti i movimenti, anche nelle pagine successive.", "caption"));
+      if (state.run_status === "running") {
+        const exportButton = button("Genera TXT dalle decisioni salvate", async () => {
+        if (dirty) throw new Error("Salva o scarta le correzioni prima di esportare.");
+        const result = await call("vera_workspace_apply", {...scope(), review_ticket:state.review_ticket, human_reviewed:true, idempotency_key:crypto.randomUUID(), review:{operation:"export"}});
+        await openWork(state.work_ref,state.offset,state.selection?.id);
+        say(`TXT generato: ${result.records} movimenti accettati; ${result.excluded.length} esclusi. Disponibile in File del lavoro. Nessuna importazione eseguita.`);
+        });
+        exportButton.disabled = !c.accepted;
+        main.append(exportButton, node("p", c.accepted ? `Il TXT include ${c.accepted} movimenti accettati nell’intero lavoro, indipendentemente dal filtro.` : "Nessun movimento accettato da esportare. Scegli «Accetta le righe corrette» e salva la decisione prima di generare il TXT.", "caption"));
+      }
+      if (state.data.export) main.append(node("p", `Ultimo TXT: ${state.data.export.records} movimenti. Importazione TeamSystem non collaudata.`, "caption"));
+    }
     if (state.workflow === "client-file-preparation") {
       const views = node("nav", undefined, "actions"); views.setAttribute("aria-label", "Viste della revisione documenti");
       for (const [view, label] of [["REVIEW", "Tutti gli elementi"], ["INTAKE_FISCAL", "Dati fiscali e copertura"], ["INTAKE_XML_INVOICES", "Fatture XML · corpi"], ["INTAKE_XML", "Anomalie XML e duplicati"], ["INTAKE_NOTICE_REFERENCES", "Avvisi · date e riferimenti"], ["INTAKE_NOTES", "Memo e documenti mancanti"]]) {
@@ -3311,8 +3339,10 @@
         b.dataset.reviewItem = itemId(item);
         b.setAttribute("aria-pressed", String(Boolean(selected) && itemId(selected) === itemId(item)));
         const saved = state.workflow === "journal-bank-reconciliation" && state.data.ui_decisions?.decisions?.find(row => row.item_id === itemId(item));
-        const badge = saved ? `Decisione salvata · ${statusLabels[saved.status] || actionLabels[saved.action] || saved.action}` : statusLabels[item.review_status || item.status || item.data?.status] || "Da esaminare";
+        const postingStatus = {pending:"Da rivedere",accepted:"Accettato",rejected:"Escluso dal TXT"};
+        const badge = state.kind === "postings" ? (item.decision ? `Decisione salvata · ${postingStatus[item.status]}` : "Mai salvato · Da esaminare") : saved ? `Decisione salvata · ${statusLabels[saved.status] || actionLabels[saved.action] || saved.action}` : statusLabels[item.review_status || item.status || item.data?.status] || "Da esaminare";
         b.append(node("strong", title(item)), node("small", badge));
+        if (state.kind === "postings") b.append(node("small", item.proposal_type_label));
         if (item.item_type?.endsWith("_artifact")) {
           files.append(b);
           if (query || b.getAttribute("aria-pressed") === "true") files.open = true;
@@ -3340,6 +3370,7 @@
   function renderSelection(parent) {
     const selected = state.selection?.issue || state.selection;
     if (!selected) { parent.append(node("p", "Seleziona un elemento per confrontare le fonti, discuterlo e registrare una decisione.", "empty")); return; }
+    if (state.kind === "postings") { renderPostingEditor(parent,selected); return; }
     parent.append(node("h2", title(selected)));
     const finding = state.workflow === "journal-bank-reconciliation" && {
       unmatched_bank: "Nessuna scrittura corrispondente nel giornale fornito.",
@@ -3478,6 +3509,55 @@
     group.append(previous, node("span", `${page.total ? offset + 1 : 0}–${Math.min(offset + page.limit, page.total)} di ${page.total}`), next);
     parent.querySelector('[data-source-picker="true"]')?.remove();
     parent.append(group);
+  }
+  function renderPostingEditor(parent, selected) {
+    parent.replaceChildren();
+    parent.append(node("h2",selected.title),node("p",selected.bank.description),node("p",selected.reason,"notice"));
+    if (selected.decision) parent.append(node("p", `Decisione salvata · ${{pending:"Da rivedere",accepted:"Accettato",rejected:"Escluso dal TXT"}[selected.decision.status]} · ${new Date(selected.decision.at).toLocaleString("it-IT")}`, "caption"));
+    else parent.append(node("p", "Nessuna decisione salvata. Per lasciare il movimento irrisolto e passare al successivo non occorre salvarlo.", "caption"));
+    const original = supportingDetails("Proposta originale ed evidenze");
+    original.append(readFields({proposta:selected.proposed_lines,evidenze:selected.evidence}));parent.append(original);
+    if (state.run_status !== "running") {parent.append(node("p","Questo lavoro è in sola lettura.","notice"));return;}
+    if (fields.posting_id !== selected.id) fields={posting_id:selected.id,status:selected.decision?.status || "pending",lines:structuredClone(selected.decision?.lines || selected.proposed_lines),partita_confirmed:selected.decision?.partita_confirmed || false,note:selected.decision?.note || ""};
+    const discard = button("Scarta modifiche", async () => {
+      clearTimeout(draftTimer); await draftTask;
+      await call("vera_workspace_draft_save", {...scope(), review_ticket:state.review_ticket, fields:{}});
+      dirty=false; fields={}; submission=null;
+      await openWork(state.work_ref,state.offset,selected.id);
+      say("Modifiche non salvate scartate. Le decisioni già salvate sono conservate; puoi cambiare riga.");
+    });
+    discard.dataset.discardReview="true"; discard.hidden=!dirty;
+    const statusLabel=node("label",undefined,"field"),status=node("select");
+    status.setAttribute("aria-label","Decisione");
+    statusLabel.append(node("span","Decisione"),status);parent.append(statusLabel);
+    for(const [value,label] of [["pending","Da rivedere"],["accepted","Accetta le righe corrette"],["rejected","Escludi dal TXT"]]){const option=node("option",label);option.value=value;option.selected=fields.status===value;status.append(option);}
+    status.addEventListener("change",()=>{fields.status=status.value;changed();});
+    const rows=node("div");parent.append(rows);
+    fields.lines.forEach((line,index)=>{
+      const group=node("fieldset");group.append(node("legend",`Contropartita ${index+1}`));
+      const grid=node("div");grid.style.cssText="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:10px";group.append(grid);
+      for(const [key,label] of [["account","Conto"],["side","Dare / Avere"],["amount","Importo EUR"],["partita","Partita"],["year","Anno"],["section","Sezionale"]]){
+        const wrapper=node("label",undefined,"field"),control=node(key==="side"?"select":"input");
+        if(key==="side")for(const value of ["D","A"]){const option=node("option",value==="D"?"Dare":"Avere");option.value=value;control.append(option);}
+        else {control.type="text";control.maxLength=key==="account"?12:20;if(key==="amount")control.inputMode="decimal";}
+        wrapper.style.minWidth="0";control.style.cssText="width:100%;min-width:0";
+        control.value=line[key] || "";wrapper.append(node("span",label),control);grid.append(wrapper);
+        control.addEventListener("input",()=>{line[key]=key==="amount"?control.value.replace(",","."):control.value;if(["account","partita","year","section"].includes(key)){fields.partita_confirmed=false;confirmed.checked=false;}changed();});
+      }
+      group.append(button("Rimuovi riga",()=>{fields.lines.splice(index,1);changed();renderPostingEditor(parent,selected);}));rows.append(group);
+    });
+    parent.append(button("Aggiungi contropartita",()=>{fields.lines.push({account:"",side:Number(selected.bank.amount)>0?"A":"D",amount:"",partita:"",year:"",section:""});changed();renderPostingEditor(parent,selected);}));
+    const confirmationLabel=node("label",undefined,"check"),confirmed=node("input");confirmed.type="checkbox";confirmed.checked=fields.partita_confirmed;
+    confirmationLabel.append(confirmed,node("span","Ho verificato i numeri partita, gli anni e i sezionali indicati. Lascio i campi vuoti per registrare solo sul conto."));parent.append(confirmationLabel);
+    confirmed.addEventListener("change",()=>{fields.partita_confirmed=confirmed.checked;changed();});
+    input(parent,"Nota o documento mancante","note",fields.note,"textarea");
+    parent.append(node("p",`Riga banca fissa: ${state.data.bank_account}, ${Number(selected.bank.amount)>0?"Dare":"Avere"} ${Math.abs(Number(selected.bank.amount)).toFixed(2)} EUR. Le contropartite accettate devono pareggiare.`,"caption"));
+    parent.append(button("Salva decisione e correzioni",async()=>{
+      clearTimeout(draftTimer);await draftTask;
+      await call("vera_workspace_save",{...scope(),item_id:selected.id,review_ticket:state.review_ticket,human_reviewed:true,idempotency_key:crypto.randomUUID(),review:structuredClone(fields)});
+      dirty=false;fields={};await openWork(state.work_ref,state.offset,selected.id);say("Decisione e correzioni conservate. Il TXT userà solo le righe accettate.");
+    },"primary"));
+    parent.append(discard,button("Discuti con Vera",()=>discuss(parent)));
   }
   function changed() {
     dirty = true; submission = null; clearTimeout(draftTimer);

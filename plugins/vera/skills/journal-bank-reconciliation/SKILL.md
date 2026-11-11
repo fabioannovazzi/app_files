@@ -64,6 +64,11 @@ Current user requests take precedence over saved preferences.
 
 # Journal-Bank Reconciliation
 
+For a user-requested review of proposed accounting entries and a TeamSystem
+TXT from the reviewer's decisions, read `../vera/references/posting-review.md`.
+This is a separate proposal-review mode in the same native panel. Do not label
+proposed entries as posted journal evidence or as verified invoice closures.
+
 Before inspecting supplied bank/journal files or creating any client, engagement
 or run, follow "Check supplied files before starting client work" in
 `../vera/SKILL.md`: call `check_studio_import_sources` for both sets of files on

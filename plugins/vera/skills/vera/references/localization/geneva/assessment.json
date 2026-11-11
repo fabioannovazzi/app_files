@@ -183,7 +183,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "c3f921f767207c300460b7926ff43757b1ff86652aa8744e2c175c910a7880db",
+  "catalogue_fingerprint": "860a808b7c8f7b90064fc9fff07f2805dc7ce479176b85a38a389ef0450b5b6a",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -2699,5 +2699,13 @@
     "version": "0.1.608",
     "changed_entrypoints": [],
     "scope": "Shared failure isolation and an independent working-folder fallback; all entrypoint bytes and existing jurisdiction dispositions retained. No new jurisdiction or installed-host acceptance. Source and failure-injection evidence: docs/audits/vera-archive-graceful-failure-plan.md."
+  },
+  "posting_review_ux_release_binding_20261111": {
+    "version": "0.1.611",
+    "previous_catalogue_fingerprint": "c3f921f767207c300460b7926ff43757b1ff86652aa8744e2c175c910a7880db",
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "scope": "Inspected the additive TeamSystem proposal-review routing paragraph. This is separate from bank/journal matching. Filters, unsaved-draft discard and saved-status presentation add no Geneva treatment or Swiss accounting export. Existing Geneva dispositions and acceptance limits are retained."
   }
 }

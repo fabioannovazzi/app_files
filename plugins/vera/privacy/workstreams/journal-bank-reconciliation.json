@@ -39,7 +39,9 @@
     "plugins/vera/mcp/workspace.cjs",
     "plugins/vera/scripts/native_workspace.py",
     "plugins/vera/ui/review-routes.json",
-    "plugins/vera/ui/workspace.js"
+    "plugins/vera/ui/workspace.js",
+    "plugins/vera/scripts/native_posting_review.py",
+    "plugins/vera/skills/vera/references/posting-review.md"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -111,6 +113,14 @@
           "anthropic-cowork",
           "google-antigravity"
         ]
+      },
+      {
+        "id": "selected-accounting-proposal-review",
+        "purpose": "Discuss one explicitly selected proposed accounting entry in the existing native panel",
+        "content": "Only the selected movement date, signed amount, description, proposed counterpart lines including exact account/partita/year/section values, actual saved decision, reasoning and source evidence. The human-facing application can display the whole saved batch in pages, but does not automatically send that batch or private unsent drafts to the model. Native actor labels are not authenticated professional identity. Proposal review, acceptance, local TXT export and actual TeamSystem import are separate; no imported entry or verified invoice closure is inferred. The original proposals remain unchanged; generated TXT uses only accepted saved corrections, binds their exact digest, and lists pending/rejected exclusions. Report measurement gaps remain explicit and do not withhold useful results.",
+        "runtime_profiles": [
+          "openai-codex"
+        ]
       }
     ]
   },
@@ -133,7 +143,8 @@
           "Nel recupero del PDF, la verifica locale della notazione degli importi negativi conserva tutte le anomalie e mostra al modello al massimo 50 segnalazioni per risposta, con pagina, riga, colonna e importo stampato. Il modello vede anche le scelte proposte per notazione e trattamento del segno; queste richiedono la revisione del professionista. Per strutture PDF non riconosciute, l’agente può leggere le parole originali con i riferimenti di pagina, il codice di un adattatore locale e le scritture parziali necessarie alla diagnosi. Il codice viene eseguito localmente e i controlli indipendenti restano obbligatori. Al servizio incidenti arrivano categorie tecniche fisse, esiti dei controlli e conteggi; non documenti, importi, percorsi, codice dell’adattatore o motivazioni libere. Una rilettura riuscita non chiude automaticamente il lavoro originale.",
           "Per gli estratti conto PDF non riconosciuti, il modello può esaminare parole, date, descrizioni, riferimenti e saldi o totali stampati necessari a rivedere il layout. L’adattatore locale propone riferimenti alla fonte; il codice verifica copertura e aritmetica bancaria. I risultati parziali restano leggibili con le anomalie esplicite, mentre la riconciliazione completa rimane bloccata. Ogni estratto conto conserva una cronologia di recupero separata dal giornale.",
           "Studio Archive delimita ogni esecuzione di questo processo e crea automaticamente un report dei dati inviati da Vera. Vera registra i propri invii; il report non ispeziona la chat o altri strumenti. Il report viene conservato sulla macchina anche quando tutti i dati sono stati inviati. I conteggi mancanti sono indicati come non determinabili. Il server riceve soltanto l’impronta del report e i riferimenti di verifica, associati al Vera userID della macchina, alla stessa esecuzione e alla revisione. Il contenuto del report e le evidenze restano locali.",
-          "In Cowork e Antigravity, lo stesso pacchetto delimitato entra nel contesto della chat principale e di un agente secondario nativo: la chat lo legge per avviare il lavoro. Vera conserva la chiamata e il risultato osservati dal coordinatore, senza cambiare il modello principale né chiamare API del fornitore. La verifica non certifica il modello del fornitore, non prova un isolamento del filesystem e non esclude le istruzioni aggiunte dall’host. Le trascrizioni degli agenti possono restare nell’host. Se mancano le capacità richieste o il risultato completo, le partite restano irrisolte."
+          "In Cowork e Antigravity, lo stesso pacchetto delimitato entra nel contesto della chat principale e di un agente secondario nativo: la chat lo legge per avviare il lavoro. Vera conserva la chiamata e il risultato osservati dal coordinatore, senza cambiare il modello principale né chiamare API del fornitore. La verifica non certifica il modello del fornitore, non prova un isolamento del filesystem e non esclude le istruzioni aggiunte dall’host. Le trascrizioni degli agenti possono restare nell’host. Se mancano le capacità richieste o il risultato completo, le partite restano irrisolte.",
+          "Nella revisione delle proposte contabili, il pannello mostra i movimenti e le contropartite proposte senza inviarli automaticamente al modello. Se scegli «Discuti con Vera», arrivano al modello il solo movimento selezionato, la descrizione, gli importi, i conti e gli eventuali riferimenti partita, la motivazione e la decisione salvata. Le bozze non inviate e gli altri movimenti restano esclusi da questa discussione. Il TXT è prodotto localmente dalle sole decisioni accettate e salvate; non viene importato nel gestionale."
         ],
         "en": [
           "The model understands the structure",
@@ -150,7 +161,8 @@
           "During PDF recovery, the local negative-amount notation check retains every issue and shows the model at most 50 issues per response, with page, row, column and printed amount. The model also sees the proposed notation and sign-treatment choices; these require professional review. For unfamiliar PDF structures, the agent may read original words with page references, run-local adapter code and partial entries needed for diagnosis. Code executes locally and independent checks remain mandatory. The incident service receives fixed technical categories, check results and counts, excluding documents, amounts, paths, adapter code and free-text rationales. A successful reread does not automatically close the original task.",
           "For unfamiliar bank statement PDFs, the model may inspect source words, dates, descriptions, references and printed balances or totals needed to review the layout. The local adapter proposes source references; code checks coverage and bank arithmetic. Partial results remain readable with explicit issues while complete reconciliation stays blocked. Each statement keeps a recovery history separate from the journal.",
           "Studio Archive delimits each run of this process and automatically creates a report of the data Vera sent. Vera records its own sends; the report does not inspect the chat or other tools. The report stays on the machine even when all data was sent. Missing counts are explicitly unknown. The server receives only the report hash and verification references, bound to the machine’s Vera userID, the same run and revision. Report contents and evidence remain local.",
-          "In Cowork and Antigravity, the same bounded packet enters both the main chat and a native child agent: the parent reads it to dispatch the work. Vera retains the invocation and result observed by the parent, without changing the main model or calling a provider API. This evidence does not attest provider model identity, prove filesystem isolation or exclude host-added instructions. Child transcripts may persist in the host. Missing capabilities or an incomplete result leave items unresolved."
+          "In Cowork and Antigravity, the same bounded packet enters both the main chat and a native child agent: the parent reads it to dispatch the work. Vera retains the invocation and result observed by the parent, without changing the main model or calling a provider API. This evidence does not attest provider model identity, prove filesystem isolation or exclude host-added instructions. Child transcripts may persist in the host. Missing capabilities or an incomplete result leave items unresolved.",
+          "In proposed-entry review, the panel displays bank movements and proposed counterpart lines without automatically sending the batch to the model. Discuss with Vera sends only the selected movement, description, amounts, accounts and any invoice-item references, reasoning and saved decision. Unsent drafts and other movements are excluded from that discussion. TXT export runs locally from accepted saved decisions only; no accounting-system import is performed."
         ],
         "fr": [
           "Le modèle comprend la structure",
@@ -210,7 +222,7 @@
     "reviewed_at": "2026-11-09",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "83dccd71a15de7c0f89ff26d6fe6019d97b459a5a0d0085e44653675f119cab3"
+    "source_fingerprint": "8bb6c2aa97dffac52a56270691179f9c323d97bbf9663e2a51b9de9ca0397a58"
   },
   "role": "workflow",
   "runtime_profiles": [
