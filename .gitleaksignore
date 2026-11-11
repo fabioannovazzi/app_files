@@ -4,3 +4,5 @@ bc746615bd5f8cdab212c8cc6a499c49321289a1:tests/scripts/test_build_retailer_categ
 c8089dc7a5d8bff2272ed59092ce04298d78140a:plugins/business-valuation/references/benchmark-acquisition.md:generic-api-key:94
 # Codex chat UUID returned by create_thread, not an authentication credential; exact historical finding only.
 1a9086ec440bac9da2161b370428582a0ca49875:docs/audits/studio-archive-architecture-2026-10-20.md:generic-api-key:69
+# Literal fictional idempotency key in TeamSystem review regression, not a credential.
+d564483e161f36355deb12c1c44b8bbe72fafc46:tests/plugins/test_vera_posting_review.py:generic-api-key:275

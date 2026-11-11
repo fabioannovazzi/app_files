@@ -30,6 +30,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MAX_BYTES = 2_000_000
 MAX_RECORD_BYTES = 8_000_000  # Archive's existing bounded 5,000-file contract.
 REVIEW_FILES = (
+    "posting_proposals.json",
+    "posting_decisions.json",
     "run_intake.json",
     "review_payload.json",
     "ui_decisions.json",
@@ -394,6 +396,33 @@ def file_preparation_selection(
 def outputs(binding: dict[str, Any], loaded: dict[str, Any]) -> list[dict[str, str]]:
     """Expose only declared regular artifacts inside the authoritative run."""
     output = Path(loaded["output_dir"])
+    if (
+        binding_component(binding) == "journal-bank-reconciliation"
+        and (output / "posting_proposals.json").is_file()
+    ):
+        from native_posting_review import fingerprint, load
+
+        _, state = load(output)
+        receipt = state.get("last_export")
+        if not receipt or receipt["decisions_sha256"] != fingerprint(
+            state["decisions"]
+        ):
+            return []
+        path = output / receipt["file"]
+        if (
+            path.parent != output
+            or path.is_symlink()
+            or hashlib.sha256(path.read_bytes()).hexdigest() != receipt["sha256"]
+        ):
+            raise ValueError("Reviewed export changed")
+        return [
+            {"name": path.name, "path": str(path), "work_ref": binding["work_ref"]},
+            {
+                "name": path.name + ".json",
+                "path": str(path) + ".json",
+                "work_ref": binding["work_ref"],
+            },
+        ]
     review = review_directory(output, binding_component(binding))
     manifest_path = review / "final_artifacts.json"
     if not manifest_path.exists():
@@ -732,7 +761,21 @@ def snapshot(
     offset = args.get("offset", 0)
     if not isinstance(offset, int) or isinstance(offset, bool) or offset < 0:
         raise ValueError("Invalid page offset")
-    if component == "bilancio-xbrl-it":
+    if (
+        component == "journal-bank-reconciliation"
+        and (output / "posting_proposals.json").is_file()
+    ):
+        from native_posting_review import projection
+
+        prepared = projection(output, args)
+        data, items, total, selected = (
+            prepared["data"],
+            prepared["items"],
+            prepared["total"],
+            prepared["selection"],
+        )
+        revision, kind = start_revision, "postings"
+    elif component == "bilancio-xbrl-it":
         data = bilancio_call(
             "xbrl_workspace_view",
             {
@@ -1574,6 +1617,7 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                                 review_directory(output, component)
                                 / "review_payload.json"
                             ).is_file()
+                            and not (output / "posting_proposals.json").is_file()
                         )
                     if component == "open-item-reconciliation":
                         row["setup_available"] = (
@@ -1657,6 +1701,11 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                             review_directory(output, component) / "review_payload.json"
                         ).is_file()
                     )
+                    if (
+                        component == "journal-bank-reconciliation"
+                        and (output / "posting_proposals.json").is_file()
+                    ):
+                        row["review_available"] = True
                     if component == "treasury-forecast" and row["review_available"]:
                         sys.path.insert(0, str(module_root(component) / "scripts"))
                         from treasury_core import TreasuryError
@@ -2479,7 +2528,24 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                     raise ValueError("Submission key was used for a different request")
                 return saved["result"]
             current = snapshot(binding, loaded, args)
-            if tool == "vera_workspace_open_items_regenerate":
+            if current["kind"] == "postings":
+                from native_posting_review import export_reviewed, save_decision
+
+                if tool == "vera_workspace_apply":
+                    if args.get("review", {}).get("operation") != "export":
+                        raise ValueError("Choose reviewed posting export")
+                    result = export_reviewed(output)
+                elif tool == "vera_workspace_save":
+                    result = save_decision(
+                        output,
+                        args["item_id"],
+                        args["review"],
+                        actor=config["actor_id"],
+                    )
+                else:
+                    raise ValueError("Unsupported posting review action")
+                result["revision"] = output_revision(output, current["workflow"])
+            elif tool == "vera_workspace_open_items_regenerate":
                 if current["workflow"] != "open-item-reconciliation":
                     raise ValueError("Regeneration requires an open-item run")
                 if not args.get("expected_predecessor_checkpoint"):
@@ -2724,7 +2790,15 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                 ),
                 "professional_boundary": current["data"]["verification"],
             }
-        if current["workflow"] in {
+        if current["kind"] == "postings":
+            evidence = {
+                "bank": evidence["bank"],
+                "proposed_lines": evidence["proposed_lines"],
+                "decision": evidence["decision"],
+                "reason": evidence["reason"],
+                "evidence": evidence["evidence"],
+            }
+        elif current["workflow"] in {
             "journal-sampling",
             "open-item-reconciliation",
             "check-entries",

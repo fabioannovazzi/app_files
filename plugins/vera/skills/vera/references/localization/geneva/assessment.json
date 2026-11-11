@@ -123,11 +123,6 @@
     "scope": "Learn-with-Vera now retries only the same tutorial binding. Archive routing and exact-operation progress are infrastructure changes; existing jurisdiction dispositions and professional acceptance limits are unchanged.",
     "version": "0.1.601"
   },
-  "archive_startup_privacy_release_binding_20261111": {
-    "previous_catalogue_fingerprint": "c3f921f767207c300460b7926ff43757b1ff86652aa8744e2c175c910a7880db",
-    "scope": "Runtime startup recovery and grouped-output privacy lineage. Skill entrypoints and jurisdiction judgments unchanged; no new professional acceptance asserted.",
-    "version": "0.1.609"
-  },
   "assessment_date": "2026-09-28",
   "assetti_construction_release_binding": {
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation.",
@@ -200,7 +195,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "34189012aa0ca96cc4e10f7f3bd9ddde1879efdce50f2d91e187da27931cd391",
+  "catalogue_fingerprint": "ee8b74c7db76b0dc846907c3908790f5d90c763d4bfcce0eeeb4a0b69cee3b4d",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -936,6 +931,14 @@
     "previous_catalogue_fingerprint": "55f633ef17112ff4fa3db60b488170bbdcfe564de62f464a22171bb75d76572c",
     "scope": "Only manifest provenance changes: all 55 skill IDs, paths and entrypoint hashes are unchanged. Portable diagnostic-context hydration and run-relative artifact reads add no jurisdiction judgments or professional acceptance.",
     "version": "0.1.443"
+  },
+  "posting_review_ux_release_binding_20261111": {
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "previous_catalogue_fingerprint": "c3f921f767207c300460b7926ff43757b1ff86652aa8744e2c175c910a7880db",
+    "scope": "Inspected the additive TeamSystem proposal-review routing paragraph. This is separate from bank/journal matching. Filters, unsaved-draft discard and saved-status presentation add no Geneva treatment or Swiss accounting export. Existing Geneva dispositions and acceptance limits are retained.",
+    "version": "0.1.611"
   },
   "private_permission_reuse_release_binding_20261020": {
     "previous_catalogue_fingerprint": "5a09df447a45e934b5f10b83443fe82a1a5276e03d68650c6a8eab79ab77a6b6",
@@ -2472,6 +2475,10 @@
     "prior_catalogue_fingerprint": "10c0391237aba07f656360ef7ad216edd4f41cf900bba233a91c7c4bb2e9cbed",
     "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
     "version": "0.1.374"
+  },
+  "teamsystem_release_613_binding": {
+    "scope": "Integrated main work-continuity entrypoints and retained TeamSystem review. Existing jurisdiction judgments unchanged; no new jurisdiction acceptance.",
+    "version": "0.1.613"
   },
   "technical_instruction_audit_binding": {
     "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",

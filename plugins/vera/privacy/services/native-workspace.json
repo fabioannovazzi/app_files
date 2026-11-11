@@ -29,10 +29,11 @@
     },
     {
       "id": "specialist-model-projection",
-      "control": "For Journal Sampling read only the exact item in the replay-verified persisted model context. For Open-item Reconciliation, Journal-Bank Reconciliation and Vouching obtain the exact selected case through their existing public model-context tools in one server process, with exact identifiers omitted by default. For New Client file preparation verify every persisted model-handoff page's hash, size, run, page identity and complete population, map only exact identities through the maintained producer, and return only selected file-preparation records. An explicitly selected complete memo/email draft uses the component's professional-selection exception and is labelled as such; it is not default synthesis context. Fixed workflow review subdirectories are server-owned and ambiguous locations are refused. For Concordato use only its exact persisted reference and existing public read-items projection for one selected item, retaining substantive facts while its producer omits technical identities, hashes and paths.",
+      "control": "For Journal Sampling read only the exact item in the replay-verified persisted model context. For Open-item Reconciliation, Journal-Bank Reconciliation and Vouching obtain the exact selected case through their existing public model-context tools in one server process, with exact identifiers omitted by default. For New Client file preparation verify every persisted model-handoff page's hash, size, run, page identity and complete population, map only exact identities through the maintained producer, and return only selected file-preparation records. An explicitly selected complete memo/email draft uses the component's professional-selection exception and is labelled as such; it is not default synthesis context. Fixed workflow review subdirectories are server-owned and ambiguous locations are refused. For Concordato use only its exact persisted reference and existing public read-items projection for one selected item, retaining substantive facts while its producer omits technical identities, hashes and paths. The separate proposed-accounting-entry mode exposes only an explicitly selected bank movement, proposed lines, saved decision, reasoning and evidence; never the batch or unsent drafts. This mode records no matcher assurance claim and does not invoke the journal match-note editor.",
       "implemented_by": [
         "scripts/native_workspace.py",
-        "mcp/selected-context.cjs"
+        "mcp/selected-context.cjs",
+        "scripts/native_posting_review.py"
       ],
       "on_violation": "Reject missing selected model items, changed or incomplete handoff pages, unknown or expired opaque case handles, engine replay failures and ambiguous review locations."
     },
@@ -1090,7 +1091,9 @@
     "scripts/selective_reporting.py",
     "mcp-services.json",
     "scripts/on_demand_mcp.cjs",
-    "scripts/mcp_service_client.cjs"
+    "scripts/mcp_service_client.cjs",
+    "scripts/native_posting_review.py",
+    "skills/vera/references/posting-review.md"
   ],
   "external_boundaries": [
     {
@@ -1137,7 +1140,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "a4d3c7dabd78038a816d4cee9e32d72e45b4049a4621b701d5ccc6c1b1c83014",
+    "source_fingerprint": "7a838bb630c35aa1a4a53b1ac3c6cab21ee0d224efb032cf2b1291805e5cbaaf",
     "reviewed_at": "2026-11-04"
   },
   "governed_repository_paths": [
