@@ -153,7 +153,7 @@ def installed_fixture(tmp_path, product, monkeypatch):
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
-@pytest.mark.parametrize("launcher", ["host", "apple39"])
+@pytest.mark.parametrize("launcher", ["host", "apple39", "managed"])
 @pytest.mark.parametrize("entrypoint", ["check", "status", "run"])
 def test_product_entrypoint_reuses_existing_python312(
     tmp_path, monkeypatch, product, launcher, entrypoint
@@ -164,6 +164,8 @@ def test_product_entrypoint_reuses_existing_python312(
         tmp_path, product, monkeypatch
     )
     interpreter = str(APPLE_PYTHON) if launcher == "apple39" else sys.executable
+    if launcher == "managed":
+        interpreter = str(api.runtime_python(path))
     receipt = (path / shared.RECEIPT).read_bytes()
     policy = (path.parent / shared.POLICY).read_bytes()
     args = (
@@ -328,3 +330,35 @@ def test_managed_helper_retains_code_and_cwd_after_installation_removed(
         if process.poll() is None:
             process.kill()
             process.wait(timeout=5)
+
+
+@pytest.mark.parametrize("exit_code", [0, 7])
+def test_managed_launcher_handoff_allows_real_writer_lock(
+    tmp_path, monkeypatch, exit_code
+):
+    root, _, api, shared, path = installed_fixture(tmp_path, "vera", monkeypatch)
+    script = root / "scripts/handoff_probe.py"
+    script.write_text(
+        """import sys
+from pathlib import Path
+import _shared_python_runtime as shared
+result = shared.reenter_base(Path(__file__), sys.argv[1:])
+if result is not None:
+    raise SystemExit(result)
+with shared._writer(shared.target(Path(__file__).parents[1]).parent / 'runtime.lock', timeout=2):
+    print('writer acquired')
+raise SystemExit(int(sys.argv[1]))
+"""
+    )
+
+    result = subprocess.run(
+        [str(api.runtime_python(path)), str(script), str(exit_code)],
+        capture_output=True,
+        text=True,
+        timeout=10,
+        check=False,
+    )
+
+    assert result.returncode == exit_code, result.stderr
+    assert result.stdout.strip() == "writer acquired"
+    assert (path / shared.RECEIPT).is_file()

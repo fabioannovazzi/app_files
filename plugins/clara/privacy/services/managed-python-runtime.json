@@ -47,7 +47,8 @@
         "Only published shared core and explicitly selected OCR recipes are installed; package names are never derived from client material or prompts.",
         "Host network denials stop package retrieval. Retry only the same declared setup after the host user or administrator authorizes registry access; never change host network settings or use an alternate installer to evade a denial.",
         "Readiness probes the managed CPython 3.12 interpreter locally with isolated Python and site loading disabled, checks completed installation metadata, then checks the selected declared package versions and component imports in that interpreter. Recipe revisions, backend bytes and historical platform labels do not block a compatible environment. Compatible reuse leaves installation receipts unchanged; actual missing or incompatible dependencies require serialized repair.",
-        "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters."
+        "All three products and their modules use the same environment. Optional OCR requires approval and is then retained in that environment. A shared environment is not a boundary between client matters.",
+        "A policy-file read denial does not force reinstallation when the completed receipt, installed inventory, requested features, package versions and component imports still verify. This reuse changes neither permissions nor metadata. Launchers entered through managed Python hand off to base Python before work, releasing only their own waiting-process lease; other running workflows keep their leases. Setup exceptions retain source-bound technical frames and OS error numbers, excluding dynamic exception values and local paths."
       ]
     },
     {
@@ -180,7 +181,7 @@
     "reviewed_at": "2026-11-06",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "efadc372d1d61ac520106289bc159056b3d4d600771d8d0b412f3ade8ac81059"
+    "source_fingerprint": "3e7acacced6ef19fbf13c3331130dad98eacadef236d43fb476f090621e2c214"
   },
   "governed_repository_paths": [
     "plugins/_shared/vendor/modules/vera_assurance/recovery.py"

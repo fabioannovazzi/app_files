@@ -7,11 +7,12 @@ import importlib.util
 import logging
 import os
 import re
+import sys
 from collections.abc import Sequence
 from pathlib import Path
 
 from managed_ocr_runtime import OCR_SETUP_PROMPT, activate_ocr_runtime
-from managed_python_runtime import ensure_runtime, run_verified_helper
+from managed_python_runtime import ensure_runtime, reenter_base, run_verified_helper
 from operational_incidents import report_failure
 from verified_execution import (
     prepare_execution_root,
@@ -261,6 +262,12 @@ def input_requires_ocr(paths: Sequence[Path]) -> bool:
 
 def main(argv: list[str] | None = None) -> int:
     """Run the dependency check CLI."""
+
+    reentered = reenter_base(
+        Path(__file__), list(sys.argv[1:] if argv is None else argv)
+    )
+    if reentered is not None:
+        return reentered
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(

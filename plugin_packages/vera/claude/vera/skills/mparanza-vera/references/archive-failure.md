@@ -14,6 +14,17 @@ Use this fallback only after an observed Archive infrastructure failure. Reuse
 selected inputs, scope and the authorized working location. Do not ask the user
 to repair Archive, invent internal IDs or repeat settled choices.
 
+If the managed launcher itself fails, do not repeatedly invoke it merely to
+deliver already-saved work. Deliver the known result files from the authorized
+working folder through the host's available file/artifact tools, retaining their
+existing identity and recording Archive/reporting as pending. Do not claim that
+an unavailable helper verified those files. Continue independent work with the
+selected inputs and available host capabilities. If the requested calculation
+actually needs the unavailable Python environment, identify that specific runtime
+failure; do not report the calculation as completed or replace its required
+engine with invented results. Installation access denials still require the
+host's authorized access route, not changes to permissions or integrity checks.
+
 ## Starting work
 
 If no run has been prepared, execute from Vera's root:

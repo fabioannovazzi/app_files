@@ -168,7 +168,7 @@
     },
     {
       "path": "scripts/check_dependencies.py",
-      "sha256": "d104fdd6c54e52f09e42f63fdbb6254a901cea1a79ef5f4ae65c467c990e514d"
+      "sha256": "2e1846ec95bc1700645ab827f857023e7aebf2d6f003148b3081ca6c5e833a90"
     },
     {
       "path": "scripts/decision_narrative.py",
@@ -188,7 +188,7 @@
     },
     {
       "path": "scripts/managed_python_runtime.py",
-      "sha256": "0f6bb7331551e626b498fce93f43951a325c10541a5b458e0c4144e8158ee3bf"
+      "sha256": "a5eede85d9f3211aba1c798b4675e6efc75b80d555fd125f59e301e6f1b0d43e"
     },
     {
       "path": "scripts/model_data_report.py",
@@ -473,5 +473,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "61a0b924afaa68e70775e892d9f8f6a2d18f14f009f4d4983ac8748f30ba2964"
+  "canonical_course_sha256": "e37910a59ce9af04ff46b3b1e2fe54463b16b8bcf253b1f7b5925210c69bac07"
 }

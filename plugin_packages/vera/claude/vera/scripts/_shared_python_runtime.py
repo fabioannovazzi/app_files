@@ -16,12 +16,12 @@ from contextlib import contextmanager
 from pathlib import Path
 from typing import Any, Iterator
 
-__all__ = ["enabled", "target", "ready", "ensure"]
+__all__ = ["enabled", "target", "ready", "ensure", "reenter_base"]
 RECEIPT = ".mparanza-shared-ready.json"
 POLICY = ".mparanza-shared-features.json"
 INSTALLING = "MPARANZA_RUNTIME_INSTALLING"
 # Bump together across products whenever recipes, constraints or this backend change.
-POLICY_REVISION = 17
+POLICY_REVISION = 18
 SETUP_WAIT_SECONDS = 1800
 # Every process in the managed interpreter holds a reader lease until exit.
 # The installer uses the same file exclusively. Never modify the interpreter
@@ -102,6 +102,33 @@ def _features(selection: Any) -> set[str]:
     )
 
 
+def reenter_base(script: Path, arguments: list[str]) -> int | None:
+    """Hand a launcher back to base Python before any work or installation starts.
+
+    A waiting managed launcher must release its own reader lease: otherwise its
+    base-Python child cannot acquire the writer lock needed for dependency repair.
+    Other workflow processes retain their leases. This parent only waits/exits.
+    """
+    root = script.resolve().parents[1]
+    if not enabled(root) or Path(sys.prefix).resolve() != target(root).resolve():
+        return None
+    base = Path(getattr(sys, "_base_executable", sys.executable)).absolute()
+    if not base.is_file() or base == Path(sys.executable).absolute():
+        raise OSError("Managed launcher cannot find its base Python interpreter")
+    guard = sys.modules.get("_mparanza_runtime_guard")
+    lease = getattr(guard, "_mpr_lease", None)
+    if lease is not None:
+        lease.close()
+    environment = dict(os.environ)
+    for name in ("PYTHONHOME", "PYTHONPATH", INSTALLING):
+        environment.pop(name, None)
+    return subprocess.run(
+        [str(base), "-s", str(script.absolute()), *arguments],
+        env=environment,
+        check=False,
+    ).returncode
+
+
 def _read(path: Path) -> dict[str, Any]:
     if path.is_symlink():
         raise OSError(f"Runtime metadata cannot be a symlink: {path}")
@@ -178,7 +205,19 @@ def ready(
     """Reuse completed installations that satisfy this workflow's dependencies."""
     try:
         receipt = _read(path / RECEIPT)
-        policy = _read(path.parent / POLICY)
+        try:
+            policy = _read(path.parent / POLICY)
+        except PermissionError:
+            # The completed receipt and live dependency checks establish reuse.
+            # Do not reinstall a working environment merely to read bookkeeping.
+            # Installation/feature changes still require the actual policy.
+            if (path.parent / POLICY).is_symlink():
+                return False
+            logging.getLogger(__name__).warning(
+                "Shared runtime feature policy is unreadable; checking the completed "
+                "installation and requested dependencies without modifying metadata."
+            )
+            policy = receipt
         features = set(receipt.get("features", []))
         if not (
             receipt
@@ -355,7 +394,14 @@ def _writer(path: Path, timeout: float = SETUP_WAIT_SECONDS) -> Iterator[None]:
         os.close(fd)
 
 
-def ensure(selection: Any, path: Path, api: Any, runner: Any) -> tuple[bool, Path, str]:
+def ensure(
+    selection: Any,
+    path: Path,
+    api: Any,
+    runner: Any,
+    *,
+    diagnostics: list[dict[str, Any]] | None = None,
+) -> tuple[bool, Path, str]:
     """Install the complete declared union, retaining OCR across later updates."""
     if ready(selection, path, api, runner):
         return True, path, f"Shared Mparanza runtime ready at {path}"
@@ -389,6 +435,15 @@ def ensure(selection: Any, path: Path, api: Any, runner: Any) -> tuple[bool, Pat
         TypeError,
         subprocess.SubprocessError,
     ) as error:
+        if diagnostics is not None:
+            try:
+                from technical_runner import exception_events
+
+                diagnostics.extend(exception_events(error, selection.plugin_root))
+            except (ImportError, OSError, ValueError):
+                logging.getLogger(__name__).warning(
+                    "Runtime setup failed; structured diagnostics are unavailable."
+                )
         return False, path, str(error)
 
 
