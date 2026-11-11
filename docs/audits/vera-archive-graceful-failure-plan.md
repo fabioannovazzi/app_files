@@ -148,3 +148,19 @@ when actually observed; source tests alone do not establish an installed fix.
   **89.07%** combined coverage. Final Vera host builds pass after the command
   correction. The installed final helper and reference were byte-compared with
   source. The active-session check correctly reports the obsolete exposed path.
+
+### CI follow-up (2026-11-11)
+
+PR #979 initially passed 102/106 checks. The three native-boundary OS jobs all
+rejected a symlink correctly but failed an assertion against the earlier recovery
+error wording. The test now asserts the execution validator's real-directory
+error and still verifies no run-state mutation. All 11 isolation tests pass.
+The remaining failure was a stale generated workflow registry: regeneration adds
+the new helper entrypoint. No production validation was weakened for CI.
+
+The final local package/update suite passes **416 tests, 2 skipped**. Source and
+generated package parity were checked; the registry change triggers a final Vera
+rebuild. The resumed host now exposes the actual 0.1.608 skill path, and the live
+installed-product check passes for exactly one enabled `vera@mp-vera` installation.
+This supersedes the earlier stale-catalog observation. The managed CLI acceptance
+remains the evidenced runtime boundary; it is not a claim about all 55 workflows.
