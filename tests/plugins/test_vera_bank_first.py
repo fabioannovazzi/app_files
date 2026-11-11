@@ -392,3 +392,63 @@ def test_resume_uses_validated_receipts_after_completion_marker_interruption(tmp
     calls = len(native.calls)
     assert run(tmp_path, native) == result
     assert len(native.calls) == calls
+
+
+@pytest.mark.parametrize("stage", ["luna", "sol"])
+@pytest.mark.parametrize("direction", ["absolute_amount", "opposite_sign"])
+def test_semantic_links_respect_reviewed_direction_policy(stage, direction):
+    bank = [row("b", amount="-80")]
+    journal = [row("j", amount="80")]
+    relationship = {**REL, "direction_policy": direction}
+    packet = bf.build_packet(
+        bank,
+        journal,
+        [{"bank_ids": ["b"], "question_scope": "bank"}],
+        stage=stage,
+        source_binding={},
+        relationship=relationship,
+        admission_result=bf.admission(bank, journal, relationship),
+        previous=[],
+        purpose="bank_open_items",
+        reserved={},
+    )
+    response = answer(packet, linked=True)
+    groups = bf.validate_response(packet, response)
+    assert groups[0]["bank_resolution"]["status"] == "resolved"
+    assert groups[0]["difference"] == "-160.00"  # Preserve the signed source totals.
+    packet["relationship_policy"]["direction_policy"] = "same_sign"
+    packet["packet_sha256"] = bf.digest(
+        {k: v for k, v in packet.items() if k != "packet_sha256"}
+    )
+    response["packet_sha256"] = packet["packet_sha256"]
+    with pytest.raises(ValueError, match="signed direction"):
+        bf.validate_response(packet, response)
+
+
+@pytest.mark.parametrize("stage", ["luna", "sol"])
+def test_semantic_links_cannot_override_required_party_identity(stage):
+    bank = [row("b", party_ref="party-a")]
+    journal = [row("j", party_ref="party-b")]
+    relationship = {**REL, "require_same_party": True}
+    packet = bf.build_packet(
+        bank,
+        journal,
+        [{"bank_ids": ["b"], "question_scope": "bank"}],
+        stage=stage,
+        source_binding={},
+        relationship=relationship,
+        admission_result=bf.admission(bank, journal, relationship),
+        previous=[],
+        purpose="bank_open_items",
+        reserved={},
+    )
+    with pytest.raises(ValueError, match="party perimeter"):
+        bf.validate_response(packet, answer(packet, linked=True))
+
+
+def test_exact_admission_cannot_bypass_reviewed_opposite_direction():
+    bank = [row("b", reference="F-1", party_ref="p")]
+    journal = [row("j", reference="F-1", party_ref="p")]
+    admitted = bf.admission(bank, journal, {**REL, "direction_policy": "opposite_sign"})
+    assert admitted["sure"] == []
+    assert admitted["unresolved_bank_ids"] == ["b"]

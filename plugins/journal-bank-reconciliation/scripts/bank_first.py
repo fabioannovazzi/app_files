@@ -152,8 +152,8 @@ def admission(
             if not reference or not party or not all(scope):
                 continue
             key = (
-                reference.casefold(),
-                party.casefold(),
+                reference,
+                party,
                 *scope,
                 str(cents(row["amount_signed"]) > 0),
             )
@@ -208,6 +208,9 @@ def admission(
             not in relationship["strong_pair_ids"]
         ):
             allowed_shape = False
+        direction_admitted = (
+            relationship.get("direction_policy", "same_sign") != "opposite_sign"
+        )
         exact = sum(cents(r["amount_signed"]) for r in left) == sum(
             cents(r["amount_signed"]) for r in right
         )
@@ -226,6 +229,7 @@ def admission(
                 if exact
                 and not duplicate
                 and allowed_shape
+                and direction_admitted
                 and date_valid
                 and all(cents(row["amount_signed"]) for row in [*left, *right])
                 else "probable"
@@ -235,6 +239,10 @@ def admission(
                 for failed, label in (
                     (not exact, "nonzero_cash_difference"),
                     (not date_valid, "date_scope_not_admitted"),
+                    (
+                        not direction_admitted,
+                        "reviewed_direction_not_admitted_by_exact_rule",
+                    ),
                     (duplicate, "duplicate_source_identity"),
                     (not allowed_shape, "relationship_shape_not_admitted"),
                 )
@@ -251,6 +259,7 @@ def admission(
             relationship.get("open_item_allocation_authorized")
             and exact
             and allowed_shape
+            and direction_admitted
             and date_valid
             and not duplicate
         ):
@@ -379,9 +388,9 @@ def output_schema() -> dict[str, Any]:
         "additionalProperties": False,
         "required": ["side", "transaction_id", "field", "quote"],
         "properties": {
-            "side": {"enum": ["bank", "journal"]},
+            "side": {"type": "string", "enum": ["bank", "journal"]},
             "transaction_id": text,
-            "field": {"enum": list(FIELDS)},
+            "field": {"type": "string", "enum": list(FIELDS)},
             "quote": text,
         },
     }
@@ -392,7 +401,7 @@ def output_schema() -> dict[str, Any]:
             "additionalProperties": False,
             "required": ["status", "scope", "explanation", "evidence", "questions"],
             "properties": {
-                "status": {"enum": statuses},
+                "status": {"type": "string", "enum": statuses},
                 "scope": text,
                 "explanation": text,
                 "evidence": {"type": "array", "items": citation},
@@ -421,12 +430,13 @@ def output_schema() -> dict[str, Any]:
             "proposed_account_codes": strings,
             "account_codes_are_alternatives": {"type": "boolean"},
             "change_basis": {
+                "type": "string",
                 "enum": [
                     "scope_clarification",
                     "additional_analysis_of_supplied_evidence",
                     "carried_forward",
                     "unresolved",
-                ]
+                ],
             },
             "allocations": {
                 "type": "array",
@@ -787,8 +797,37 @@ def validate_response(
                     raise ValueError(
                         "Cash link crosses unknown or inconsistent currency/unit/entity"
                     )
-            if len({cents(row["amount_signed"]) > 0 for row in scope_rows}) != 1:
-                raise ValueError("Cash link crosses signed direction")
+            direction = packet["relationship_policy"].get(
+                "direction_policy", "same_sign"
+            )
+            bank_signs = {
+                cents(records["bank"][i]["amount_signed"]) > 0 for i in bank_ids
+            }
+            journal_signs = {
+                cents(records["journal"][i]["amount_signed"]) > 0 for i in journal_ids
+            }
+            if direction == "same_sign" and len(bank_signs | journal_signs) != 1:
+                raise ValueError("Cash link crosses the reviewed signed direction")
+            if direction == "opposite_sign" and (
+                len(bank_signs) != 1
+                or len(journal_signs) != 1
+                or bank_signs == journal_signs
+            ):
+                raise ValueError(
+                    "Cash link contradicts the reviewed opposite signed direction"
+                )
+            if direction not in {"same_sign", "opposite_sign", "absolute_amount"}:
+                raise ValueError("Unsupported reviewed direction policy")
+            if packet["relationship_policy"].get("require_same_party"):
+                parties = {
+                    _text(
+                        row.get("party_ref")
+                        or packet["relationship_policy"].get("default_party_ref")
+                    )
+                    for row in scope_rows
+                }
+                if len(parties) != 1 or not all(parties):
+                    raise ValueError("Cash link crosses the reviewed party perimeter")
             used_journal.update(journal_ids)
         allocations = group["allocations"]
         if allocations and not packet.get("invoice_closure_authorized"):
