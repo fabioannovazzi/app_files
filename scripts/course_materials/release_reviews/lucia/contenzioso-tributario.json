@@ -64,7 +64,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "727a81d965d0c19161759e3ea94aff5a6b3dd0f9649ba3c0b117b1f56cb0528c",
+  "course_sha256": "2cd6724aa47ee0ad8413d83b9dbe91ab41edfe4990fd80979c3ac78c09349c7c",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "40701607f2c662f1731c37b590a180c3c063e32e9296ab9bb59e53b07bd5ba1a",
@@ -536,5 +536,16 @@
     "source_review": "Reviewed restored-case import boundary and missing input collection repairs, plus exact Archive retry association. No lesson content or model payload change.",
     "fresh_matching_junit_required": true,
     "limits": "No new learner, visual, professional or installed-host acceptance."
+  },
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "2be166a4815c0af1b062dbaac309387e1cd25853",
+    "previous_course_sha256": "727a81d965d0c19161759e3ea94aff5a6b3dd0f9649ba3c0b117b1f56cb0528c",
+    "current_course_sha256": "2cd6724aa47ee0ad8413d83b9dbe91ab41edfe4990fd80979c3ac78c09349c7c",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
   }
 }

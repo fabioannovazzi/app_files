@@ -179,10 +179,15 @@ def test_native_valuation_preserves_specialist_method_and_its_complete_basis(
     ],
     indirect=["valuation_run"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_valuation_preserves_all_public_outputs_status_and_retry(
-    valuation_run, expected
+    valuation_run, expected, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, _ = valuation_run
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         PREPARE

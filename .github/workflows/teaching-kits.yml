@@ -151,7 +151,25 @@ jobs:
           -r plugins/treasury-forecast/requirements.txt
           -r plugins/variance-analysis/requirements.txt
       - name: Install Chromium for the local browser teaching regression
-        run: python -m playwright install --with-deps chromium
+        shell: bash
+        run: |
+          python -m playwright install chromium
+          python - <<'PY_BROWSER'
+          import subprocess
+          import sys
+          from playwright.sync_api import Error, sync_playwright
+
+          with sync_playwright() as playwright:
+              try:
+                  browser = playwright.chromium.launch()
+              except Error:
+                  subprocess.run(
+                      [sys.executable, "-m", "playwright", "install-deps", "chromium"],
+                      check=True,
+                  )
+                  browser = playwright.chromium.launch()
+              browser.close()
+          PY_BROWSER
       - name: Build the checksum-verified official taxonomy for local OIC execution
         shell: bash
         run: |

@@ -276,9 +276,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-04",
+    "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "17a315161a30786b0aaea9afceac400cfe6a656cf0a7ad26e436c56b6aa8f623"
+    "source_fingerprint": "f55f1bc36b35156557afbe62dc86a07b57364e4ab4bb54ecaca7a5c59647612d"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -402,6 +402,10 @@
     {
       "id": "unchanged-source-measurement-recovery",
       "control": "The local artifact reader retries a previously failed measurement against the same source SHA-256. An active run can replace only failed measurement fields, retaining the previous error and recovered counts in its local event ledger; source identity and bytes remain fixed. Reads after closure preserve the historical source record and sealed report, and create a separate local delivery receipt. No new source fields, model recipients or network destinations are added. UTF-8 execution logs use the existing bounded line reader, returning only the requested lines; files that cannot be decoded as UTF-8 remain rejected."
+    },
+    {
+      "id": "archive-outage-delivery-and-private-bindings",
+      "control": "An exact admitted client/engagement/run pointer is retained in owner-private .vera-work-continuity/work-bindings beside the selected session storage, independently of Archive configuration. It stores the working root, identifiers and static context hash, not document contents; there is no upload or automatic deletion. Reopening verifies the sealed run identity, live folder and private pointer ownership. Unsafe pointers or ambiguous live copies do not authorize another folder. Unavailable Archive settings cannot prevent listing retained engagements, binding a verified portable run, or delivering existing owned output files. Optional reporting failures remain separately unavailable or unverified; malformed reporting payloads are never used to authorize the professional context and are preserved for inspection."
     }
   ],
   "workstream": "studio-archive",

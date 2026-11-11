@@ -515,7 +515,7 @@ def resolve_binding(root: Path, reference: str) -> dict[str, Any]:
     )
     core = archive_module(root)
     folder = core._selected_ledger_root(
-        client_id, engagement_id, state_dir=core._state_dir(None), run_id=run_id
+        client_id, engagement_id, state_dir=core._state_location(None), run_id=run_id
     )
     engagement = core.ledger.load_engagement_manifest(folder, engagement_id)
     if engagement["client_id"] != client_id:

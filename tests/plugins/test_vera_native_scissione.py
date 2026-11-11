@@ -64,10 +64,15 @@ const args={...authority(view,saved.draft_revision),human_reviewed:true,idempote
 
 
 @pytest.mark.parametrize("scissione_workspace", ["one", "unsupported"], indirect=True)
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_scissione_review_appends_exact_record_and_retains_history(
-    scissione_workspace,
+    scissione_workspace, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding, original, module, _ = scissione_workspace
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     original_bytes = (
         output / "scissione_versions" / original["revision_sha256"] / "revision.json"
     ).read_bytes()

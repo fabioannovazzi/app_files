@@ -8,6 +8,7 @@ from pathlib import Path
 
 import pytest
 
+from tests.plugins.archive_outage import unavailable_archive_environment
 from tests.plugins.test_lipe import case_data, prepare, quarterly
 from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
 from tests.plugins.test_vera_native_archive_lifecycle import rpc_program
@@ -105,10 +106,13 @@ const view = payload(call('vera_workspace_view', {work_ref:'initial-lipe', sourc
     [("monthly", 3), ("quarterly", 1)],
     indirect=["initial_lipe"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_lipe_persists_real_engine_workpapers_without_approval(
-    initial_lipe, modules
+    initial_lipe, modules, archive_unavailable, tmp_path
 ):
     env, output, _ = initial_lipe
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         CALCULATE

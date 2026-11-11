@@ -854,10 +854,17 @@ def test_pending_uni_mapping_rejects_claim_of_complete_coverage() -> None:
         validate_catalog(method)
 
 
-def test_cli_opens_form_inside_real_archive_run(vera_workflow_workspace) -> None:
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_cli_opens_form_inside_real_archive_run(
+    vera_workflow_workspace, monkeypatch, tmp_path, archive_unavailable
+) -> None:
     workspace = vera_workflow_workspace(
         "adeguati-assetti", input_files={"evidence.txt": "Synthetic evidence"}
     )
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     base = [
         sys.executable,
         "-B",

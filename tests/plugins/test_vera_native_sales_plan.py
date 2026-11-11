@@ -173,8 +173,15 @@ const view=payload(call('vera_workspace_view',{work_ref:'initial-plan',source_re
 )
 
 
-def test_native_plan_runs_complete_engine_and_reopens_without_approval(initial_plan):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_native_plan_runs_complete_engine_and_reopens_without_approval(
+    initial_plan, archive_unavailable, tmp_path
+):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding = initial_plan
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         CALCULATE

@@ -81,6 +81,46 @@ def test_tutorial_binding_does_not_authorize_another_client(prepared_case):
     assert not (Path(prepared["output_dir"]) / "authored" / "wrong.json").exists()
 
 
+@pytest.mark.parametrize("reporting_unavailable", [False, True])
+def test_selected_work_write_and_delivery_survive_unavailable_archive_storage(
+    prepared_case, tmp_path, monkeypatch, reporting_unavailable
+):
+    archive, prepared = prepared_case
+    run = prepared["run"]
+    state = tmp_path / "second-session"
+    state.write_text("Synthetic unavailable state")
+    profile = tmp_path / "profile"
+    if profile.exists():
+        profile.rename(tmp_path / "profile-before-outage")
+    profile.write_text("Synthetic unavailable profile")
+
+    written = archive.write_studio_run_artifact(
+        run["client_id"],
+        run["engagement_id"],
+        run["run_id"],
+        "result.md",
+        "Completed synthetic result",
+    )
+    if reporting_unavailable:
+
+        def unavailable():
+            raise ImportError("Synthetic unavailable reporting runtime")
+
+        monkeypatch.setattr(archive.ledger, "_reporting_runtime", unavailable)
+    result = archive.finalize_studio_client_workflow(
+        run["client_id"], run["engagement_id"], run["run_id"]
+    )
+
+    output = Path(prepared["output_dir"]) / "authored/result.md"
+    assert output.read_text() == "Completed synthetic result"
+    assert "authored/result.md" in result["output_paths"]
+    assert written["recovery"]["status"] == "unavailable"
+    assert state.is_file()
+    assert profile.is_file()
+    if reporting_unavailable:
+        assert result["reporting"]["status"] == "unavailable"
+
+
 def test_tutorial_binding_rejects_changed_context_hash(prepared_case):
     archive, prepared = prepared_case
     run = prepared["run"]
@@ -94,6 +134,58 @@ def test_tutorial_binding_rejects_changed_context_hash(prepared_case):
             run["client_id"], run["engagement_id"], run["run_id"], "wrong.json", "{}"
         )
     assert not (Path(prepared["output_dir"]) / "authored" / "wrong.json").exists()
+
+
+def test_saved_engagements_remain_listable_when_archive_state_is_unavailable(
+    prepared_case, tmp_path
+):
+    archive, prepared = prepared_case
+    run = prepared["run"]
+    (tmp_path / "second-session").write_text("Unavailable optional state")
+
+    result = archive.list_studio_client_engagements(run["client_id"])
+
+    assert result["engagements"][0]["engagement_id"] == run["engagement_id"]
+
+
+def test_portable_run_binding_survives_unavailable_archive_state(
+    prepared_case, tmp_path
+):
+    archive, prepared = prepared_case
+    run = prepared["run"]
+    Path(prepared["work_binding"]["path"]).unlink()
+    (tmp_path / "second-session").write_text("Unavailable optional state")
+
+    result = archive.retain_studio_run_binding(
+        Path(prepared["client_root"]), run["engagement_id"], run["run_id"]
+    )
+
+    assert result["status"] == "retained"
+    assert json.loads(Path(result["path"]).read_text())["run_id"] == run["run_id"]
+
+
+@pytest.mark.parametrize("unsafe_storage", ["symlink", "shared_permissions"])
+def test_work_continuity_pointer_cannot_authorize_through_unsafe_storage(
+    prepared_case, unsafe_storage
+):
+    if unsafe_storage == "shared_permissions" and os.name != "posix":
+        pytest.skip("POSIX owner-private directory permissions")
+    archive, prepared = prepared_case
+    run = prepared["run"]
+    directory = Path(prepared["work_binding"]["path"]).parent.parent
+    if unsafe_storage == "symlink":
+        moved = directory.with_name("relocated-continuity")
+        directory.rename(moved)
+        directory.symlink_to(moved, target_is_directory=True)
+    else:
+        directory.chmod(0o777)
+
+    with pytest.raises(archive.ArchiveError):
+        archive.write_studio_run_artifact(
+            run["client_id"], run["engagement_id"], run["run_id"], "wrong.json", "{}"
+        )
+
+    assert not (Path(prepared["output_dir"]) / "authored/wrong.json").exists()
 
 
 def test_engagement_import_and_reopen_use_retained_case(prepared_case, tmp_path):

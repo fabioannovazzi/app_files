@@ -151,10 +151,15 @@ const args={...authority(view,saved.draft_revision),human_reviewed:true,idempote
 @pytest.mark.parametrize(
     "aml_workspace", ["one", "empty", "long_id", "swiss"], indirect=True
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_aml_appends_exact_decision_without_clearing_findings_or_completing_run(
-    aml_workspace,
+    aml_workspace, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding, original, ref, module = aml_workspace
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     original_bytes = (output / (ref + ".json")).read_bytes()
     result = rpc_program(
         env,

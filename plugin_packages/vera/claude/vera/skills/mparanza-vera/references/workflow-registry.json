@@ -213,6 +213,7 @@
         "modules/journal-bank-reconciliation/scripts/check_dependencies.py",
         "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
         "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
+        "modules/journal-bank-reconciliation/scripts/prepare_posting_review.py",
         "modules/journal-bank-reconciliation/scripts/run_reconciliation.py",
         "modules/journal-bank-reconciliation/scripts/seal_review_receipts.py",
         "modules/journal-bank-reconciliation/scripts/semantic_review.py"

@@ -150,13 +150,19 @@ const result={saved,old,reopened,missing};
     assert public_files(fixture) == before
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_patent_box_synthetic_whole_proposal_review_and_calculation_use_public_engine(
-    owned_patent_box,
+    owned_patent_box, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     fixture = owned_patent_box()
+    env = fixture[0]
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, Path(fixture[1]["output"]), tmp_path)
     before = public_files(fixture)
     result = rpc_program(
-        fixture[0],
+        env,
         program(fixture)
         + f"const proposal={json.dumps(fixture[1]['proposal'])};\n"
         + """

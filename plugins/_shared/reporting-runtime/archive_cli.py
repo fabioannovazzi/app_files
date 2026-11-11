@@ -9,6 +9,7 @@ import subprocess
 import sys
 import tempfile
 from concurrent.futures import ThreadPoolExecutor
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 
@@ -65,7 +66,11 @@ def run_command(
     """Hand the code lease to the child before a launcher can be terminated."""
     from verified_execution import acquire_execution_lease
 
-    roots = _run_roots(arguments)
+    try:
+        roots = _run_roots(arguments)
+    except REPORTING_ERRORS as error:
+        reporting_failure(component, arguments, error, stage="checkpoint_discovery")
+        roots = set()
     contexts = [root / "context.json" for root in roots] if len(roots) == 1 else []
     lease = acquire_execution_lease(plugin_root)
     try:
@@ -158,7 +163,16 @@ def _run_command(
         ("open-item-reconciliation", "review_server.py"),
     }:
         return _stream_preview(command, root, binding, component, destination, options)
-    with tempfile.TemporaryFile() as stdout, tempfile.TemporaryFile() as stderr:
+    with ExitStack() as capture:
+        try:
+            stdout = capture.enter_context(tempfile.TemporaryFile())
+            stderr = capture.enter_context(tempfile.TemporaryFile())
+        except OSError as error:
+            # Capture is optional bookkeeping. Launch exactly once even when
+            # its temporary storage is unavailable, retaining the caller's sink.
+            capture.close()
+            reporting_failure(component, arguments, error, stage="capture", root=root)
+            return subprocess.run(command, stderr=destination, **options)
         completed = subprocess.run(command, stdout=stdout, stderr=stderr, **options)
         stdout.seek(0)
         stderr.seek(0)

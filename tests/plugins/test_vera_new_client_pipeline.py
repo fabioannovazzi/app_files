@@ -113,9 +113,17 @@ def _apply_phase_one_review(
     return response["result"]["structuredContent"]
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_new_client_pipeline_promotes_a_sealed_reviewed_phase_one_run(
     vera_workflow_workspace: Callable[..., dict[str, Any]],
+    tmp_path,
+    monkeypatch,
+    archive_unavailable,
 ) -> None:
+    from tests.plugins.archive_outage import disable_archive_configuration
+
+    if archive_unavailable:
+        disable_archive_configuration(monkeypatch, tmp_path)
     engagement_id = "new-client-e2e"
     phase_one = vera_workflow_workspace(
         "client-file-preparation",

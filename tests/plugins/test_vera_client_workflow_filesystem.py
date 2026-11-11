@@ -41,6 +41,7 @@ DIRECT_CLIENT_SKILLS = {
 }
 
 CLIENT_WORKFLOW_ENTRYPOINTS = (
+    ("journal-bank-reconciliation", "prepare_posting_review.py"),
     ("lipe", "lipe.py"),
     ("rating-legalita", "rating_case.py"),
     ("scissione-guidata", "run_scissione.py"),
@@ -1118,6 +1119,17 @@ def test_client_workflow_entrypoint_requires_managed_context(
         assert result.returncode == 2
         assert "required: --client-engagement" in result.stderr
         return
+    if script_name == "prepare_posting_review.py":
+        # The component shim executes the product's maintained review helper.
+        result = subprocess.run(
+            [sys.executable, str(script_path), "--batch-input-id", "synthetic-input"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        assert result.returncode == 2
+        assert "required: --client-engagement" in result.stderr
+        script_path = ROOT / "plugins/vera/scripts/native_posting_review.py"
     tree = ast.parse(script_path.read_text(encoding="utf-8"), filename=str(script_path))
     declarations = [
         node

@@ -166,9 +166,15 @@ const result={fields,saved,recovered,context,staleSave,initialDraftRevision:setu
     "action",
     ["accept", "reject", "edit", "mark_unclear", "request_more_documents", "skip"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_inps_actual_named_public_application_preserves_memo_and_review_ceiling(
-    inps_run, action
+    inps_run, action, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
+    env = os.environ.copy()
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, inps_run[2], tmp_path)
     memo_before = (inps_run[2] / "studio_memo.md").read_bytes()
     body = (
         program(inps_run)
@@ -183,7 +189,7 @@ const changed=call('vera_workspace_inps_commit',{...args,fields:{...fields,revie
 const result={first,retry,changed};
 """
     )
-    result = rpc_program(os.environ.copy(), body)
+    result = rpc_program(env, body)
     stored = json.loads((inps_run[2] / "ui_decisions.json").read_bytes())
     applied = json.loads((inps_run[2] / "applied_decisions.json").read_bytes())
     final = json.loads((inps_run[2] / "final_artifacts.json").read_bytes())

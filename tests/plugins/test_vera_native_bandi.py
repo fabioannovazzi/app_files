@@ -185,10 +185,18 @@ const result={validation,retry,current,refused};
     assert not (fixture[2] / "dossier_manifest.json").exists()
 
 
-def test_bandi_passing_public_audit_and_package_keep_actual_complete_html(owned_bandi):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_bandi_passing_public_audit_and_package_keep_actual_complete_html(
+    owned_bandi, archive_unavailable, tmp_path
+):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     fixture = owned_bandi()
+    env = fixture[0]
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, fixture[2], tmp_path)
     result = rpc_program(
-        fixture[0],
+        env,
         program(fixture)
         + """
 const args={...identity,revision:page.revision,source_ref:page.source_ref,review_ticket:page.review_ticket,idempotency_key:'fictional-validate'};

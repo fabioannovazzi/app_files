@@ -163,7 +163,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "14f1a58c26dbe9d837a7ab8a3a3e746e9e1e828b7d4b755756965421c3dbb731",
+  "course_sha256": "a68df1a456f2b48b45349a32e7c846feb4006b0e73db97d1f92c89a9db55c956",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "48e7c7227e442d48df8bc8725f57b9883b1ac6514ae57b014c7bd240f895908f",
@@ -495,5 +495,16 @@
     "reviewer": "Codex /root - source compatibility review",
     "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "workflow": "business-planning"
+  "workflow": "business-planning",
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "previous_course_sha256": "14f1a58c26dbe9d837a7ab8a3a3e746e9e1e828b7d4b755756965421c3dbb731",
+    "current_course_sha256": "a68df1a456f2b48b45349a32e7c846feb4006b0e73db97d1f92c89a9db55c956",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
+  }
 }
