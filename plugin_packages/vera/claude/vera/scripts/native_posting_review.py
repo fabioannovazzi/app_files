@@ -90,7 +90,7 @@ def cents(value: Any) -> int:
         raise ValueError("Invalid amount") from error
 
 
-def lines_checked(item: dict, lines: list[dict], confirmed: bool) -> list[dict]:
+def lines_checked(item: dict, lines: list[dict]) -> list[dict]:
     if not isinstance(lines, list) or not 1 <= len(lines) <= 79:
         raise ValueError("Supply between 1 and 79 counterpart lines")
     total = cents(item["bank"]["amount"])
@@ -113,13 +113,12 @@ def lines_checked(item: dict, lines: list[dict], confirmed: bool) -> list[dict]:
         section = str(line.get("section", "")).strip()
         if partita or year or section:
             if (
-                not confirmed
-                or not re.fullmatch(r"\d{1,6}", partita)
+                not re.fullmatch(r"\d{1,6}", partita)
                 or not re.fullmatch(r"\d{4}", year)
                 or not re.fullmatch(r"\d{1,2}", section)
             ):
                 raise ValueError(
-                    "Confirm the actual partita, year and section, or clear all three"
+                    "Supply a valid partita, year and section together, or clear all three"
                 )
         checked.append(
             {
@@ -262,16 +261,14 @@ def save_decision(directory: Path, item_id: str, review: dict, *, actor: str) ->
         )
     ):
         raise ValueError("Invalid posting draft lines")
-    confirmed = review.get("partita_confirmed") is True
     if status == "accepted":
-        lines = lines_checked(item, lines, confirmed)
+        lines = lines_checked(item, lines)
     note = str(review.get("note", ""))
     if len(note) > 4000 or len(json.dumps(lines)) > 100_000:
         raise ValueError("Posting correction is oversized")
     decision = {
         "status": status,
         "lines": lines,
-        "partita_confirmed": confirmed,
         "note": note,
         "actor": actor,
         "attribution": "configured operator; no authenticated professional identity claim",
@@ -344,7 +341,7 @@ def export_reviewed(directory: Path) -> dict:
                 }
             )
             continue
-        lines = lines_checked(item, decision["lines"], decision["partita_confirmed"])
+        lines = lines_checked(item, decision["lines"])
         rows.append(record(case["batch"], item, lines))
     if not rows:
         raise ValueError(

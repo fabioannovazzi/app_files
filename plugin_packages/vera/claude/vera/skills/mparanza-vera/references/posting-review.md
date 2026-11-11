@@ -20,7 +20,9 @@ Import the user's selected bank and ledger originals and one agent-authored
 `id`, a human-readable `title`, `bank` (date, exact decimal amount, description,
 source), `proposed_lines`, reason and evidence. Counterpart lines use `account`,
 `side` (D/A), exact decimal `amount`, optional `partita`, `year`, `section`.
-All decisions start pending. Empty counterpart lists retain unresolved movements.
+Movements have no saved decision initially. The editor preselects acceptance only
+when there is no saved choice or recovered draft; this does not save or accept
+anything. Empty counterpart lists retain unresolved movements.
 
 Prepare and start one bound `journal-bank-reconciliation` Archive work labelled
 as proposed accounting entries. Through `vera_execute`, component
@@ -42,8 +44,10 @@ are visibly distinct from never-saved movements. “Scarta modifiche” clears o
 the operator's unfinished draft and restores the saved decision or original
 proposal; an unchanged unresolved movement needs no save before navigation.
 Accepted entries must balance against their fixed bank movement. Partita fields
-require actual reviewer verification or must be cleared; do not treat an internal
-document number as a verified partita just because the draft assumed equality.
+must be supplied together in valid numeric formats or all left empty for an
+account-only counterpart. There is no separate acknowledgement checkbox. Do not
+treat an internal document number as a verified partita just because the draft
+assumed equality.
 
 “Genera TXT dalle decisioni salvate” consumes accepted saved corrections only,
 withholds pending/rejected entries, and retains a receipt listing exclusions and

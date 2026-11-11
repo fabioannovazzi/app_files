@@ -3518,7 +3518,7 @@
     const original = supportingDetails("Proposta originale ed evidenze");
     original.append(readFields({proposta:selected.proposed_lines,evidenze:selected.evidence}));parent.append(original);
     if (state.run_status !== "running") {parent.append(node("p","Questo lavoro è in sola lettura.","notice"));return;}
-    if (fields.posting_id !== selected.id) fields={posting_id:selected.id,status:selected.decision?.status || "pending",lines:structuredClone(selected.decision?.lines || selected.proposed_lines),partita_confirmed:selected.decision?.partita_confirmed || false,note:selected.decision?.note || ""};
+    if (fields.posting_id !== selected.id) fields={posting_id:selected.id,status:selected.decision?.status || "accepted",lines:structuredClone(selected.decision?.lines || selected.proposed_lines),note:selected.decision?.note || ""};
     const discard = button("Scarta modifiche", async () => {
       clearTimeout(draftTimer); await draftTask;
       await call("vera_workspace_draft_save", {...scope(), review_ticket:state.review_ticket, fields:{}});
@@ -3527,11 +3527,14 @@
       say("Modifiche non salvate scartate. Le decisioni già salvate sono conservate; puoi cambiare riga.");
     });
     discard.dataset.discardReview="true"; discard.hidden=!dirty;
-    const statusLabel=node("label",undefined,"field"),status=node("select");
-    status.setAttribute("aria-label","Decisione");
-    statusLabel.append(node("span","Decisione"),status);parent.append(statusLabel);
-    for(const [value,label] of [["pending","Da rivedere"],["accepted","Accetta le righe corrette"],["rejected","Escludi dal TXT"]]){const option=node("option",label);option.value=value;option.selected=fields.status===value;status.append(option);}
-    status.addEventListener("change",()=>{fields.status=status.value;changed();});
+    const statusGroup=node("fieldset");
+    statusGroup.append(node("legend","Decisione"));parent.append(statusGroup);
+    for(const [value,caption] of [["pending","Da rivedere"],["accepted","Accetta le righe corrette"],["rejected","Escludi dal TXT"]]){
+      const label=node("label",undefined,"check"),radio=node("input");
+      radio.type="radio";radio.name="posting-decision";radio.value=value;radio.checked=fields.status===value;
+      radio.addEventListener("change",()=>{if(radio.checked){fields.status=value;changed();}});
+      label.append(radio,node("span",caption));statusGroup.append(label);
+    }
     const rows=node("div");parent.append(rows);
     fields.lines.forEach((line,index)=>{
       const group=node("fieldset");group.append(node("legend",`Contropartita ${index+1}`));
@@ -3542,14 +3545,12 @@
         else {control.type="text";control.maxLength=key==="account"?12:20;if(key==="amount")control.inputMode="decimal";}
         wrapper.style.minWidth="0";control.style.cssText="width:100%;min-width:0";
         control.value=line[key] || "";wrapper.append(node("span",label),control);grid.append(wrapper);
-        control.addEventListener("input",()=>{line[key]=key==="amount"?control.value.replace(",","."):control.value;if(["account","partita","year","section"].includes(key)){fields.partita_confirmed=false;confirmed.checked=false;}changed();});
+        control.addEventListener("input",()=>{line[key]=key==="amount"?control.value.replace(",","."):control.value;changed();});
       }
+      group.append(node("p","Per indicare una partita, compila insieme Partita (1–6 cifre), Anno (4 cifre) e Sezionale (1–2 cifre). Lascia tutti e tre vuoti per registrare la contropartita solo sul conto. Se tutte le contropartite sono senza partita, il TXT esclude la gestione delle partite per il movimento.","caption"));
       group.append(button("Rimuovi riga",()=>{fields.lines.splice(index,1);changed();renderPostingEditor(parent,selected);}));rows.append(group);
     });
     parent.append(button("Aggiungi contropartita",()=>{fields.lines.push({account:"",side:Number(selected.bank.amount)>0?"A":"D",amount:"",partita:"",year:"",section:""});changed();renderPostingEditor(parent,selected);}));
-    const confirmationLabel=node("label",undefined,"check"),confirmed=node("input");confirmed.type="checkbox";confirmed.checked=fields.partita_confirmed;
-    confirmationLabel.append(confirmed,node("span","Ho verificato i numeri partita, gli anni e i sezionali indicati. Lascio i campi vuoti per registrare solo sul conto."));parent.append(confirmationLabel);
-    confirmed.addEventListener("change",()=>{fields.partita_confirmed=confirmed.checked;changed();});
     input(parent,"Nota o documento mancante","note",fields.note,"textarea");
     parent.append(node("p",`Riga banca fissa: ${state.data.bank_account}, ${Number(selected.bank.amount)>0?"Dare":"Avere"} ${Math.abs(Number(selected.bank.amount)).toFixed(2)} EUR. Le contropartite accettate devono pareggiare.`,"caption"));
     parent.append(button("Salva decisione e correzioni",async()=>{

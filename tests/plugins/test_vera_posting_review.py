@@ -133,12 +133,9 @@ def test_unbalanced_acceptance_is_refused_but_draft_can_be_saved(review):
     assert posting.load(review)[1]["decisions"]["B001"]["status"] == "pending"
 
 
-def test_partita_assumption_requires_actual_confirmation(review):
+def test_valid_partita_needs_no_extra_acknowledgement(review):
     data = decision()
     data["lines"][0].update(partita="350", year="2026", section="00")
-    with pytest.raises(ValueError, match="Confirm"):
-        posting.save_decision(review, "B001", data, actor="fictional-reviewer")
-    data["partita_confirmed"] = True
     posting.save_decision(review, "B001", data, actor="fictional-reviewer")
     result = posting.export_reviewed(review)
     raw = (review / result["file"]).read_bytes()
@@ -328,7 +325,23 @@ def test_browser_discard_saved_status_filters_and_txt(
     with review_host(env) as (page, mount, errors):
         page.set_viewport_size({"width": 1280, "height": 1000})
         panel = mount("vera_open_review", {"work_ref": binding["work_ref"]})
+        expect(panel.get_by_role("checkbox")).to_have_count(0)
         export = panel.get_by_role("button", name="Genera TXT dalle decisioni salvate")
+        expect(export).to_be_disabled()
+        choices = panel.get_by_role("group", name="Decisione", exact=True)
+        expect(choices.get_by_role("radio")).to_have_count(3)
+        expect(
+            choices.get_by_role("radio", name="Accetta le righe corrette", exact=True)
+        ).to_be_checked()
+        expect(
+            panel.get_by_role("combobox", name="Decisione", exact=True)
+        ).to_have_count(0)
+        # Rendering the default must not create a draft or a saved decision.
+        page.wait_for_timeout(700)
+        assert posting.load(output)[1]["decisions"] == {}
+        expect(
+            panel.get_by_role("button", name="Scarta modifiche", exact=True)
+        ).to_be_hidden()
         expect(export).to_be_disabled()
         note = panel.get_by_role("textbox", name="Nota o documento mancante")
         note.fill("Fictional unsaved note")
@@ -349,7 +362,11 @@ def test_browser_discard_saved_status_filters_and_txt(
         panel.get_by_role("combobox", name="Tipo di proposta").click()
         panel.get_by_role("option", name="Nessun abbinamento proposto (1)").click()
         expect(panel.get_by_role("button", name="Fictional payment")).to_have_count(0)
+        choices.get_by_role("radio", name="Da rivedere", exact=True).check()
         panel.get_by_role("button", name="Salva decisione e correzioni").click()
+        expect(
+            choices.get_by_role("radio", name="Da rivedere", exact=True)
+        ).to_be_checked()
         expect(
             panel.get_by_text("1 decisioni salvate · 1 mai salvati", exact=True)
         ).to_be_visible()
@@ -362,8 +379,9 @@ def test_browser_discard_saved_status_filters_and_txt(
             panel.get_by_role("heading", name="Fictional payment", exact=True)
         ).to_be_visible()
         panel.get_by_role("textbox", name="Conto", exact=True).fill("4000002")
-        panel.get_by_role("combobox", name="Decisione", exact=True).click()
-        panel.get_by_role("option", name="Accetta le righe corrette").click()
+        expect(
+            choices.get_by_role("radio", name="Accetta le righe corrette", exact=True)
+        ).to_be_checked()
         panel.get_by_role("button", name="Salva decisione e correzioni").click()
         expect(
             panel.get_by_text("Decisione salvata · Accettato", exact=False)
@@ -393,3 +411,81 @@ def test_browser_discard_saved_status_filters_and_txt(
     assert receipt["excluded"] == [{"id": "B002", "status": "pending"}]
     assert saved["decisions"]["B002"]["lines"] == []
     assert (output / posting.CASE).read_bytes() == original
+
+
+@pytest.mark.parametrize("saved_status", ["pending", "accepted", "rejected"])
+def test_browser_preserves_saved_choice_and_recovers_draft(
+    review, vera_workflow_workspace, monkeypatch, tmp_path, saved_status
+):
+    """The new default must never overwrite a saved choice or recovered draft."""
+    import os
+
+    from playwright.sync_api import expect
+
+    from tests.plugins.test_vera_native_workspace import configure
+    from tests.plugins.test_vera_review_browser import review_host
+
+    batch = posting.load(review)[0]["batch"]
+    work = vera_workflow_workspace(
+        "journal-bank-reconciliation", input_files={"batch.json": json.dumps(batch)}
+    )
+    output = work["output_dir"]
+    posting.prepare(output, batch, run_id=work["run_id"], source_sha256="a" * 64)
+    posting.save_decision(
+        output, "B001", decision(status=saved_status), actor="fictional"
+    )
+    saved_before = (output / posting.STATE).read_bytes()
+    binding = {
+        "work_ref": "posting-fictional-draft",
+        "client_root": str(work["client_root"]),
+        "client_id": work["client_id"],
+        "engagement_id": work["engagement_id"],
+        "run_id": work["run_id"],
+        "workflow_id": "journal-bank-reconciliation",
+    }
+    labels = {
+        "pending": "Da rivedere",
+        "accepted": "Accetta le righe corrette",
+        "rejected": "Escludi dal TXT",
+    }
+    draft_status = "rejected" if saved_status != "rejected" else "pending"
+    env = {**os.environ, **configure(monkeypatch, tmp_path, [binding])}
+    with review_host(env) as (page, mount, errors):
+        panel = mount("vera_open_review", {"work_ref": binding["work_ref"]})
+        expect(
+            panel.get_by_role("radio", name=labels[saved_status], exact=True)
+        ).to_be_checked()
+        panel.get_by_role("radio", name=labels[draft_status], exact=True).check()
+        panel.get_by_role("textbox", name="Nota o documento mancante").fill(
+            "Fictional draft retained"
+        )
+        page.wait_for_timeout(1200)
+        panel = mount("vera_open_review", {"work_ref": binding["work_ref"]})
+        panel.get_by_role("button", name="Recupera bozza", exact=True).click()
+        expect(
+            panel.get_by_role("radio", name=labels[draft_status], exact=True)
+        ).to_be_checked()
+        expect(
+            panel.get_by_role("textbox", name="Nota o documento mancante")
+        ).to_have_value("Fictional draft retained")
+        assert (output / posting.STATE).read_bytes() == saved_before
+        assert not errors
+
+
+@pytest.mark.parametrize(
+    "values",
+    [
+        {"partita": "350"},
+        {"year": "2026"},
+        {"section": "00"},
+        {"partita": "abc", "year": "2026", "section": "00"},
+        {"partita": "350", "year": "26", "section": "00"},
+        {"partita": "350", "year": "2026", "section": "000"},
+    ],
+)
+def test_partita_fields_still_require_complete_valid_values(review, values):
+    data = decision()
+    data["lines"][0].update(values)
+    data["partita_confirmed"] = True
+    with pytest.raises(ValueError, match="valid partita"):
+        posting.save_decision(review, "B001", data, actor="fictional")
