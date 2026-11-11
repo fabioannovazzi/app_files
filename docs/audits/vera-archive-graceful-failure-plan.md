@@ -13,6 +13,25 @@ with its saved result and unchanged inventory hash. Current exposed skills and
 the sole enabled installation both match 0.1.615. This resolves the earlier
 obsolete-skill mismatch; it does not establish rendered native-panel acceptance.
 
+The subsequent active-service acceptance prepared a new synthetic inspection,
+ran its actual producer, finalized outputs, attempted transfer to an ordinary
+file and then delivered the same saved run through `vera_execute`. Transfer
+returned `FileExistsError`/Archive pending while delivery returned result ready;
+both output hashes remained unchanged. After retaining the synthetic obstruction
+under a new name, retry saved exactly one archived run with both matching hashes,
+without recalculation. Privacy remained not-applicable/not-checked, not a verified
+receipt. A separate response-label defect reports an existing general workspace
+as identity-asserted; source inspection finds no consumer of this emitted flag
+in processing or ownership validation. No client identity was supplied in this test.
+
+The course-review correction invalidated Vera local-onboarding and Clara
+learn-with-clara privacy fingerprints because they govern the repository review
+directory. The delta consists only of reviewed digest/reference records and
+tests: no runtime payload, model-context selection, transport or recipient
+changed. Those two fingerprints and their generated contracts were refreshed
+after inspecting this boundary. Product rebuild and final-head checks remain
+separate from the preceding installed package's behavioral evidence.
+
 Three additional healthy/outage producer pairs now cover AML first record
 creation, Assetti first case/questionnaire, and Scissione first proposal/review
 from admitted inputs. All six cases and their three full test files pass.
