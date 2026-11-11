@@ -231,10 +231,11 @@
     if (next.total === 1 && !next.selection && next.items.length === 1 && !selected) {
       return openWork(workRef, offset, itemId(next.items[0]), next.revision, sourceRef, view);
     }
+    const postingDraft=next.kind==="postings"&&next.selection?await call("vera_workspace_draft_read",{work_ref:next.work_ref,item_id:next.selection.id}):{draft:null,draft_revision:""};
+    if(generation!==epoch)return;
     postingHasDraft=false;state = next; salesWork = null; bankWork = null; lipeWork = null; amlWork = null; amlDraftContext = null; invoiceContext = null; fields = {}; submission = null;
     if(state.kind==="postings"){
-      const draft=state.selection?await call("vera_workspace_draft_read",{work_ref:state.work_ref,item_id:state.selection.id}):{draft:null,draft_revision:""};
-      if(generation!==epoch)return;
+      const draft=postingDraft;
       postingHasDraft=Boolean(Object.keys(draft.draft?.fields||{}).length);postingDraftRevision=draft.draft_revision||"";postingSearchText=state.data.search_text||"";postingDecisionFilter=state.data.decision_filter||"all";
       const restore=draft.draft?.fields?.posting_id===state.selection?.id&&draft.draft.revision===state.revision;
       if(restore)fields=structuredClone(draft.draft.fields);

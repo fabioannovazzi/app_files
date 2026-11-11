@@ -844,3 +844,57 @@ def test_registered_chart_cli_requires_same_client_and_retains_source_receipt(
                 Path(bindings["chart.json"]["path"]).read_bytes()
             ).hexdigest()
         )
+
+
+def test_browser_failed_draft_read_keeps_visible_movement_and_write_scope(
+    review, vera_workflow_workspace, monkeypatch, tmp_path
+):
+    """A failed navigation read must not retarget the still-visible editor."""
+    from playwright.sync_api import expect
+
+    from tests.plugins.test_vera_review_browser import review_host
+
+    output, binding, env = browser_work(
+        review, vera_workflow_workspace, monkeypatch, tmp_path
+    )
+    with review_host(env) as (page, mount, errors):
+        page.set_viewport_size({"width": 1280, "height": 1000})
+        panel = mount("vera_open_review", {"work_ref": binding["work_ref"]})
+        detail = panel.locator("#detail")
+        expect(
+            detail.get_by_role("heading", name="Fictional payment", exact=True)
+        ).to_be_visible()
+        detail.get_by_role("textbox", name="Nota o documento mancante").fill(
+            "Retained before failed navigation"
+        )
+        page.evaluate(
+            """()=>{const original=window.mcpCall;window.mcpCall=async(params)=>{
+          if(params.name==='vera_workspace_draft_read'&&params.arguments.item_id==='B002')return {isError:true,content:[{type:'text',text:'Lettura bozza temporaneamente non disponibile'}]};
+          return original(params);
+        }}"""
+        )
+        panel.get_by_role("button", name="Unresolved").click()
+        expect(
+            panel.get_by_text(
+                "Lettura bozza temporaneamente non disponibile", exact=True
+            )
+        ).to_be_visible()
+        expect(
+            detail.get_by_role("heading", name="Fictional payment", exact=True)
+        ).to_be_visible()
+        expect(
+            detail.get_by_role("textbox", name="Nota o documento mancante")
+        ).to_have_value("Retained before failed navigation")
+        detail.get_by_role("radio", name="Da rivedere", exact=True).check()
+        detail.get_by_role(
+            "button", name="Salva decisione e correzioni", exact=True
+        ).click()
+        expect(
+            detail.get_by_text("Decisione salvata · Da rivedere", exact=False)
+        ).to_be_visible()
+        saved = posting.load(output)[1]["decisions"]
+        assert (
+            list(saved) == ["B001"]
+            and saved["B001"]["note"] == "Retained before failed navigation"
+        )
+        assert not errors
