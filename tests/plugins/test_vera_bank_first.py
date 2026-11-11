@@ -127,6 +127,7 @@ class NativeFixture:
     def __init__(self, outcomes):
         self.outcomes = outcomes
         self.calls = []
+        self.respond = answer
 
     def select(self, *, workflow_id, stage):
         return {
@@ -139,7 +140,7 @@ class NativeFixture:
         directory = kwargs["output_dir"]
         packet = json.loads((directory / "packet.json").read_text())
         self.calls.append(packet)
-        response = answer(packet, **self.outcomes.get(packet["stage"], {}))
+        response = self.respond(packet, **self.outcomes.get(packet["stage"], {}))
         serialized = lambda value: (
             json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
         ).encode()
@@ -177,8 +178,9 @@ class NativeFixture:
             },
         }
         receipt["content_sha256"] = bf.digest(receipt)
-        path = directory / "fixture-receipt.json"
+        path = directory / "luna_launch_receipt.json"
         path.write_bytes(serialized(receipt))
+        (directory / "luna_response.json").write_bytes(serialized(response))
         return {
             "launch_receipt": path,
             "response_payload": response,
@@ -452,3 +454,59 @@ def test_exact_admission_cannot_bypass_reviewed_opposite_direction():
     admitted = bf.admission(bank, journal, {**REL, "direction_policy": "opposite_sign"})
     assert admitted["sure"] == []
     assert admitted["unresolved_bank_ids"] == ["b"]
+
+
+def test_secondary_analysis_retains_established_partial_allocation():
+    bank = [row("b", amount="-80")]
+    journal = [row("j", amount="-100")]
+    relationship = {**REL, "open_item_allocation_authorized": True}
+    admitted = bf.admission(bank, journal, relationship)
+    packet = bf.build_packet(
+        bank,
+        journal,
+        [{"bank_ids": ["b"], "question_scope": "bank"}],
+        stage="luna",
+        source_binding={},
+        relationship=relationship,
+        admission_result=admitted,
+        previous=[],
+        purpose="bank_open_items",
+        reserved={},
+    )
+    response = answer(packet, linked=True, complete=False)
+    response["groups"][0]["allocations"] = [
+        {"source_id": "b", "target_id": "j", "amount": "40"}
+    ]
+    prior = bf.validate_response(packet, response)
+    sol = bf.build_packet(
+        bank,
+        journal,
+        [{"bank_ids": ["b"], "question_scope": "accounting"}],
+        stage="sol",
+        source_binding={},
+        relationship=relationship,
+        admission_result=admitted,
+        previous=prior,
+        purpose="bank_open_items",
+        reserved={"j": "b"},
+    )
+    reply = answer(sol, complete=False)
+    with pytest.raises(ValueError, match="established partial allocation"):
+        bf.validate_response(sol, reply)
+    reply["groups"][0]["allocations"] = [
+        {"source_id": "b", "target_id": "j", "amount": "40"}
+    ]
+    assert bf.validate_response(sol, reply)[0]["resolved_at"] == "luna"
+
+
+def test_saved_native_result_is_utf8_and_replays_accented_source_text(tmp_path):
+    native = NativeFixture({})
+    bank = [row("cash-1", description="Prova sintetica: società Città – €")]
+    result = run(tmp_path, native, bank=bank)
+    restored = json.loads((tmp_path / "bank_first_result.json").read_bytes())
+    assert (
+        restored["groups"][0]["bank_resolution"]["evidence"][0]["quote"]
+        == bank[0]["description"]
+    )
+    assert run(tmp_path, native, bank=bank) == result
+    assert len(native.calls) == 1

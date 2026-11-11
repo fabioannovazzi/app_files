@@ -793,11 +793,24 @@ def explanation_evidence(
         == "vera.open_item_semantic_resolution.v2"
     ):
         replayed = _replay(rows, evidence, assumptions)
+        origins = {}
+        for retained in assumptions[KEY]["bank_first"]["retained_native_evidence"]:
+            for group in retained["response"]["groups"]:
+                for target in group["journal_ids"]:
+                    if any(
+                        allocation["target_id"] == target
+                        for allocation in group["allocations"]
+                    ):
+                        origins[target] = {
+                            "packet_sha256": retained["packet"]["packet_sha256"],
+                            "response_sha256": retained["receipt"]["process"][
+                                "response_sha256"
+                            ],
+                        }
         return {
             decision["target_id"]: {
                 "text": decision["reason"],
-                "packet_sha256": assumptions[KEY]["bank_first"]["binding_sha256"],
-                "response_sha256": assumptions[KEY]["bank_first"]["content_sha256"],
+                **origins[decision["target_id"]],
             }
             for decisions, _ in replayed
             for decision in decisions
@@ -1157,6 +1170,13 @@ def prepare_resolution(rows, evidence, assumptions, output):
 
 def _replay_bank_first(receipt, rows, evidence, assumptions):
     bf = _bank_first_module()
+    # Generated closure/status annotations are not source facts. Rebuild the
+    # same mechanical baseline before replaying the sealed native decisions.
+    rows = _helpers().reconcile_open_items(
+        [dict(row) for row in rows],
+        evidence,
+        {key: value for key, value in assumptions.items() if key != KEY},
+    )
     sources, targets, bank, journal, relationship = _bank_sources(
         rows, evidence, assumptions
     )
@@ -1172,8 +1192,8 @@ def _replay_bank_first(receipt, rows, evidence, assumptions):
     results = []
     used = set()
     for group in groups:
-        if not group.get("allocations"):
-            continue
+        if not group.get("allocations") or group.get("resolved_at") == "deterministic":
+            continue  # Existing exact closures retain their original ledger/rule.
         packet = {
             "targets": [_project(target_by_id[i]) for i in group["journal_ids"]],
             "sources": [_project(source_by_id[i]) for i in group["bank_ids"]],

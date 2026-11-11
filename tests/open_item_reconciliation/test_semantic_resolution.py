@@ -1493,3 +1493,173 @@ def test_current_bank_source_keeps_cash_direction_separate_from_matching_magnitu
     assert sources[0]["amount_signed"] == "100"
     assert sources[0]["amount"] == "-100"
     assert relationship["comparison_basis"] == "settlement_magnitude"
+
+
+def test_current_supported_native_allocations_replay_after_rendered_closure(
+    runtime, monkeypatch, tmp_path
+):
+    from tests.plugins.test_vera_bank_first import NativeFixture
+
+    workflow, h, semantic = runtime
+    monkeypatch.syspath_prepend(
+        str(SCRIPTS.parents[1] / "journal-bank-reconciliation/scripts")
+    )
+    import bank_first
+
+    monkeypatch.setattr(semantic, "_bank_first_module", lambda: bank_first)
+    native = NativeFixture({})
+    items, bank = population()
+
+    def response(packet, **kwargs):
+        citations = [
+            {
+                "side": "bank",
+                "transaction_id": "bank-0",
+                "field": "description",
+                "quote": bank[0]["description"],
+            },
+            *[
+                {
+                    "side": "journal",
+                    "transaction_id": item["record_id"],
+                    "field": "document_no",
+                    "quote": item["document_no"],
+                }
+                for item in items
+            ],
+        ]
+        resolution = lambda status: {
+            "status": status,
+            "scope": "supplied_open_item_settlement",
+            "explanation": "Incasso cumulativo delle fatture indicate nella causale.",
+            "evidence": citations,
+            "questions": [],
+        }
+        return {
+            "packet_sha256": packet["packet_sha256"],
+            "groups": [
+                {
+                    "bank_ids": ["bank-0"],
+                    "journal_ids": [item["record_id"] for item in items],
+                    "bank_resolution": resolution("resolved"),
+                    "accounting_resolution": resolution("complete"),
+                    "proposed_account_codes": [],
+                    "account_codes_are_alternatives": False,
+                    "change_basis": "additional_analysis_of_supplied_evidence",
+                    "allocations": [
+                        {
+                            "source_id": "bank-0",
+                            "target_id": "invoice-0",
+                            "amount": "366",
+                        },
+                        {
+                            "source_id": "bank-0",
+                            "target_id": "invoice-1",
+                            "amount": "244",
+                        },
+                    ],
+                }
+            ],
+        }
+
+    native.respond = response
+    monkeypatch.setattr(
+        semantic,
+        "_capsule",
+        lambda: SimpleNamespace(
+            discover_worker_selection=native.select,
+            run_isolated_native_worker=native.invoke,
+        ),
+    )
+    assumptions = {"currency": "EUR", "assurance_run_date": "2026-11-11"}
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    assumptions[semantic.KEY] = semantic.prepare_resolution(
+        rows, bank, assumptions, tmp_path / "semantic-review"
+    )
+    assumptions = json.loads(json.dumps(assumptions, sort_keys=True))
+    updated = semantic.apply_resolution(rows, bank, assumptions)
+    assert all(row["reconciliation_status"] == "closed" for row in updated)
+    assert len(semantic.resolution_ledgers(updated, bank, assumptions)) == 1
+    origins = semantic.explanation_evidence(updated, bank, assumptions)
+    retained = assumptions[semantic.KEY]["bank_first"]["retained_native_evidence"][0]
+    assert origins["invoice-0"]["packet_sha256"] == retained["packet"]["packet_sha256"]
+    assert (
+        origins["invoice-0"]["response_sha256"]
+        == retained["receipt"]["process"]["response_sha256"]
+    )
+    delivered = workflow.build_reconciliation_artifacts(
+        output_dir=tmp_path,
+        open_items=items,
+        evidence_rows=bank,
+        assumptions=assumptions,
+        require_completed_review=False,
+    )
+    assert Path(delivered["excel_path"]).is_file()
+    assert Path(delivered["word_path"]).is_file()
+    from audit_assurance import validate_assurance_run
+
+    assert validate_assurance_run(tmp_path)["content_sha256"]
+    assert len(native.calls) == 1
+
+
+def test_current_exact_closed_bank_fact_needs_no_native_or_duplicate_semantic_adoption(
+    runtime, monkeypatch, tmp_path
+):
+    _, h, semantic = runtime
+    monkeypatch.syspath_prepend(
+        str(SCRIPTS.parents[1] / "journal-bank-reconciliation/scripts")
+    )
+    import bank_first
+
+    monkeypatch.setattr(semantic, "_bank_first_module", lambda: bank_first)
+
+    def unexpected(**kwargs):
+        raise AssertionError("An established exact fact must not call a model")
+
+    monkeypatch.setattr(
+        semantic,
+        "_capsule",
+        lambda: SimpleNamespace(
+            discover_worker_selection=unexpected, run_isolated_native_worker=unexpected
+        ),
+    )
+    common = {
+        "document_no": "FT-1",
+        "document_date": "2026-10-01",
+        "amount": "100",
+        "entity_ref": "entity-1",
+        "party_ref": "party-1",
+        "currency": "EUR",
+        "unit": "currency_amount",
+    }
+    items = [{**common, "record_id": "invoice-0"}]
+    bank = [
+        {
+            **common,
+            "record_id": "bank-0",
+            "posting_date": "2026-10-10",
+            "evidence_type": "external_bank",
+        }
+    ]
+    assumptions = {
+        "currency": "EUR",
+        "assurance_run_date": "2026-11-11",
+        "amount_tolerance": "0",
+        "scope_year": 2026,
+        "cutoff_date": "2026-10-31",
+    }
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    assert rows[0]["reconciliation_status"] == "closed"
+    assumptions[semantic.KEY] = semantic.prepare_resolution(
+        rows, bank, assumptions, tmp_path / "semantic-review"
+    )
+    assert (
+        assumptions[semantic.KEY]["bank_first"]["summary"]["primary_counts"][
+            "deterministic"
+        ]
+        == 1
+    )
+    updated = semantic.apply_resolution(rows, bank, assumptions)
+    assert updated[0]["rule_applied"] == rows[0]["rule_applied"]
+    assert updated[0]["reconciliation_status"] == "closed"
+    assert semantic.explanation_evidence(updated, bank, assumptions) == {}

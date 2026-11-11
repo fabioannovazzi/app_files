@@ -78,7 +78,9 @@ def digest(value: Any) -> str:
 
 
 def policy() -> dict[str, Any]:
-    return json.loads(Path(__file__).with_name("bank_first_policy.json").read_text())
+    return json.loads(
+        Path(__file__).with_name("bank_first_policy.json").read_text(encoding="utf-8")
+    )
 
 
 def cents(value: Any) -> int:
@@ -660,6 +662,7 @@ def validate_response(
             raise ValueError("Group does not address this stage's focus")
         used_bank.update(bank_ids)
         group = copy.deepcopy(item)
+        established_allocations = []
         bank_resolution = group["bank_resolution"]
         accounting = group["accounting_resolution"]
         for resolution, statuses in (
@@ -702,6 +705,7 @@ def validate_response(
                     "Accounting doubt cannot reopen or regroup an established bank conclusion"
                 )
             previous = prior[bank_ids[0]]
+            established_allocations = previous.get("allocations", [])
             group["bank_resolution"] = copy.deepcopy(previous["bank_resolution"])
             group["resolved_at"] = previous["resolved_at"]
             if journal_ids != previous["journal_ids"]:
@@ -863,6 +867,20 @@ def validate_response(
                 totals[i] > abs(cents(records[side][i]["amount_signed"])) for i in ids
             ):
                 raise ValueError("Allocation exceeds available cash or target amount")
+        current_edges = {
+            (allocation["source_id"], allocation["target_id"]): cents(
+                allocation["amount"]
+            )
+            for allocation in allocations
+        }
+        if any(
+            current_edges.get((allocation["source_id"], allocation["target_id"]), 0)
+            < cents(allocation["amount"])
+            for allocation in established_allocations
+        ):
+            raise ValueError(
+                "Secondary analysis cannot discard an established partial allocation"
+            )
         if allocations and not linked:
             raise ValueError("A doubtful relationship cannot commit an allocation")
         if domain_validator is not None:
@@ -893,14 +911,14 @@ def _write(path: Path, value: Any) -> None:
     temporary = path.with_name(path.name + ".new")
     if path.is_symlink() or temporary.is_symlink():
         raise ValueError("Review artifacts must be ordinary files")
-    temporary.write_text(data)
+    temporary.write_text(data, encoding="utf-8")
     temporary.replace(path)
 
 
 def _read(path: Path) -> Any:
     if path.is_symlink() or not path.is_file() or path.stat().st_nlink != 1:
         raise ValueError("Review artifacts must be ordinary files")
-    return json.loads(path.read_text())
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _save(path: Path, state: dict[str, Any]) -> None:
@@ -1224,7 +1242,7 @@ def run_bank_first(
             _read(directory / "receipt.json"),
             packet,
             response,
-            (directory / "prompt.md").read_text(),
+            (directory / "prompt.md").read_text(encoding="utf-8"),
             _read(directory / "schema.json"),
             attempt["selection"],
         )
@@ -1275,7 +1293,7 @@ def run_bank_first(
                 if pending is not None:
                     attempt = pending
                     directory = output / "bank-first-attempts" / attempt["directory"]
-                    text = (directory / "prompt.md").read_text()
+                    text = (directory / "prompt.md").read_text(encoding="utf-8")
                     schema = _read(directory / "schema.json")
                     if _read(directory / "packet.json") != packet:
                         raise ValueError("Pending native request source/stage changed")
@@ -1291,7 +1309,7 @@ def run_bank_first(
                     schema = output_schema()
                     _write(directory / "packet.json", packet)
                     _write(directory / "schema.json", schema)
-                    (directory / "prompt.md").write_text(text)
+                    (directory / "prompt.md").write_text(text, encoding="utf-8")
                     attempt = {
                         "stage": stage,
                         "format_attempt": retry + 1,
@@ -1435,8 +1453,12 @@ def run_bank_first(
             {
                 "packet": _read(directory / "packet.json"),
                 "response": _read(directory / "response.json"),
+                "response_json": (directory / "response.json").read_text(
+                    encoding="utf-8"
+                ),
+                "schema_json": (directory / "schema.json").read_text(encoding="utf-8"),
                 "receipt": _read(directory / "receipt.json"),
-                "prompt": (directory / "prompt.md").read_text(),
+                "prompt": (directory / "prompt.md").read_text(encoding="utf-8"),
                 "schema": _read(directory / "schema.json"),
                 "selection": attempt["selection"],
             }
@@ -1474,12 +1496,16 @@ def replay_retained(
             raise ValueError(
                 "Native bank-first evidence no longer matches sources or preceding conclusions"
             )
+        response = json.loads(evidence["response_json"])
+        schema = json.loads(evidence["schema_json"])
+        if response != evidence["response"] or schema != evidence["schema"]:
+            raise ValueError("Retained native serialization differs from its payload")
         validate_receipt(
             evidence["receipt"],
             packet,
-            evidence["response"],
+            response,
             evidence["prompt"],
-            evidence["schema"],
+            schema,
             evidence["selection"],
         )
         groups = _replace_groups(
