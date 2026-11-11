@@ -1018,3 +1018,31 @@ def test_native_bank_result_directory_link_cannot_escape_run(tmp_path):
     (output / "semantic-review").symlink_to(outside, target_is_directory=True)
     with pytest.raises(ValueError, match="symbolic links"):
         native_workspace.output_revision(output, "journal-bank-reconciliation")
+
+
+def test_open_item_bank_results_use_the_same_nested_review_location(tmp_path):
+    import native_workspace
+
+    output = tmp_path / "run"
+    output.mkdir()
+    review = output / "reconciliation"
+    review.mkdir()
+    (review / "review_payload.json").write_text("{}")
+    semantic = review / "semantic-review"
+    semantic.mkdir()
+    result = semantic / "bank_first_result.json"
+    result.write_text('{"population_count":1}')
+    assert (
+        native_workspace.bank_first_directory(output, "open-item-reconciliation")
+        == semantic
+    )
+    first = native_workspace.output_revision(output, "open-item-reconciliation")
+    result.write_text('{"population_count":2}')
+    assert native_workspace.output_revision(output, "open-item-reconciliation") != first
+    result.unlink()
+    semantic.rmdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    semantic.symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="symbolic links"):
+        native_workspace.output_revision(output, "open-item-reconciliation")

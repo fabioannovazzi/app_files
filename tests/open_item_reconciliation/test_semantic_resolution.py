@@ -1478,3 +1478,18 @@ def test_current_bank_first_domain_checks_cumulative_allocations_in_both_stages(
                     rows, bank, assumptions
                 ),
             )
+
+
+def test_current_bank_source_keeps_cash_direction_separate_from_matching_magnitude(
+    runtime,
+):
+    _, h, semantic = runtime
+    items, bank = population(amounts=("100",), payments=("-100",))
+    rows = h.reconcile_open_items(items, bank, {"currency": "EUR"})
+    _, _, sources, _, relationship = semantic._bank_sources(
+        rows, bank, {"currency": "EUR"}
+    )
+    assert sources[0]["source_cash_amount"] == "-100"
+    assert sources[0]["amount_signed"] == "100"
+    assert sources[0]["amount"] == "-100"
+    assert relationship["comparison_basis"] == "settlement_magnitude"

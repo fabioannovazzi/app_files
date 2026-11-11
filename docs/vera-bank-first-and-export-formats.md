@@ -37,6 +37,13 @@ identity are distinct; amount equality or an internal number cannot establish
 the latter facts. Source, direction, currency/entity, policy, partial-payment,
 non-reuse and residual controls apply equally to both semantic stages.
 
+Open-item packets explicitly declare `settlement_magnitude` as their comparison
+basis. Positive matching magnitudes never imply cash-in: original source amounts,
+debit/credit fields and `source_cash_amount` retain the bank direction for model
+review. The receiving domain still validates the supplied accounting side and
+allocation policy. Its native panel reads the producer’s existing nested review
+location, so it shows the same canonical questions as the workbook.
+
 Primary counters partition the same bank movements into deterministic, Luna,
 Sol, human, error and unprocessed. Accounting counts overlap and are never added
 to that total. Only actual residual questions after the stronger worker enter

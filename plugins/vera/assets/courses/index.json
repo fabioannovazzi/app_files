@@ -594,7 +594,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "9fd0e5888c107cad6763eab61f7d84ae1b1555dba4d402f6dfa789c49770a927",
+      "sha256": "b3b7b988cc5bd8a1e5671e7bfd6222a700ddbae8b9079311dffcecb22b2d0189",
       "languages": [
         "it",
         "en",
@@ -713,7 +713,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "ae2489d8df4ada4be9509575e38754cedad7f9333471c8676bf3bbb36d62008b",
+      "sha256": "2022e1ea5125a935e14f81fafcf50ceb25b747a2ba1ff99e58b94d676b9cdd85",
       "languages": [
         "it",
         "en",

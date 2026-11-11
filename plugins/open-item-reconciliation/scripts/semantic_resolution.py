@@ -999,6 +999,7 @@ def _bank_sources(rows, evidence, assumptions):
             "transaction_id": row["record_id"],
             "transaction_date": h.record_date(row),
             "amount_signed": h.decimal_text(abs(amount)),
+            **({"source_cash_amount": h.decimal_text(amount)} if bank else {}),
             "reference": h.clean_text(row.get("document_no")),
             "description": h.clean_text(row.get("description")),
             "party_ref": h.clean_text(row.get("party_ref")),
@@ -1006,6 +1007,7 @@ def _bank_sources(rows, evidence, assumptions):
 
     relationship = {
         "relationship_shape": "many_to_many",
+        "comparison_basis": "settlement_magnitude",
         "admission_relationship_shape": "one_to_one",
         "date_scope": "settlement_not_before_document",
         "open_item_allocation_authorized": True,

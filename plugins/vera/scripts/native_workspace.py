@@ -228,11 +228,23 @@ def review_directory(output: Path, component: str) -> Path:
     return available[0] if available else candidates[-1]
 
 
+def bank_first_directory(output: Path, component: str) -> Path:
+    """Use the existing producer's fixed run layout, never a UI-supplied path."""
+    owner = (
+        review_directory(output, component)
+        if component == "open-item-reconciliation"
+        else output
+    )
+    return owner / "semantic-review"
+
+
 def output_revision(output: Path, component: str = "") -> str:
     """Detect changes to review state without introducing a second review store."""
     values = {}
     review = review_directory(output, component)
-    for directory in dict.fromkeys((output, review, output / "semantic-review")):
+    for directory in dict.fromkeys(
+        (output, review, bank_first_directory(output, component))
+    ):
         if directory.is_symlink():
             raise ValueError("Review directories cannot use symbolic links")
         for name in REVIEW_FILES:
@@ -1100,7 +1112,9 @@ def snapshot(
             "This workflow's native adapter is not implemented yet; use its existing workflow"
         )
     if component in {"journal-bank-reconciliation", "open-item-reconciliation"}:
-        canonical_path = output / "semantic-review" / "bank_first_result.json"
+        canonical_path = (
+            bank_first_directory(output, component) / "bank_first_result.json"
+        )
         if canonical_path.exists():
             canonical = read_json(canonical_path)
             content = {
