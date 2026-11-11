@@ -439,7 +439,12 @@ def ensure(
             try:
                 from technical_runner import exception_events
 
-                diagnostics.extend(exception_events(error, selection.plugin_root))
+                # The launcher backend can live in the installed package while
+                # selection points at its verified execution snapshot. Trace the
+                # actual owned backend, not an unrelated selected helper root.
+                diagnostics.extend(
+                    exception_events(error, Path(__file__).resolve().parents[1])
+                )
             except (ImportError, OSError, ValueError):
                 logging.getLogger(__name__).warning(
                     "Runtime setup failed; structured diagnostics are unavailable."

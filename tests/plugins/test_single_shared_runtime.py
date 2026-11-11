@@ -199,9 +199,9 @@ def test_failed_runtime_repair_retains_source_frames_without_private_error_value
     module, selection, api, runner, _ = fixture_runtime(tmp_path)
     path = module.target(selection.plugin_root, tmp_path / "shared")
     assert module.ensure(selection, path, api, runner)[0]
-    selection.plugin_root = ROOT / "plugins/vera"
     api.dependencies_available = False
-    monkeypatch.syspath_prepend(str(selection.plugin_root / "scripts"))
+    # The selected execution copy and the launcher's loaded source differ.
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
     original = module._read
 
     def denied(selected):
