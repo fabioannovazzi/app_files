@@ -3631,7 +3631,7 @@
             populate();search.addEventListener("input",populate);choose.addEventListener("change",()=>{if(!choose.value)return;control.value=line.account=choose.value;showName();validate(record);changed();});wrapper.append(search,choose);
           }
         }
-        control.addEventListener("input",()=>{line[key]=control.value;if(key==="amount"){try{line.amount=postingAmount(control.value);}catch{}}validate(record);if(["partita","year","section"].includes(key))for(const other of controls.filter(row=>row.index===index&&["partita","year","section"].includes(row.key)))validate(other);updateTotals();changed();});
+        control.addEventListener(key==="side"?"change":"input",()=>{line[key]=control.value;if(key==="amount"){try{line.amount=postingAmount(control.value);}catch{}}validate(record);if(["partita","year","section"].includes(key))for(const other of controls.filter(row=>row.index===index&&["partita","year","section"].includes(row.key)))validate(other);updateTotals();changed();});
         if(key==="amount")control.addEventListener("blur",()=>{try{control.value=postingMoney(postingCents(postingAmount(line.amount)));}catch{}});
       }
       const remove=button("Rimuovi riga",()=>{postingRemoved={id:selected.id,index,line:structuredClone(line)};fields.lines.splice(index,1);changed();renderPostingEditor(parent,selected);const undo=document.getElementById("posting-undo");undo?.focus();});remove.classList.add("posting-remove");remove.setAttribute("aria-label",`Rimuovi contropartita ${index+1}`);group.append(remove);

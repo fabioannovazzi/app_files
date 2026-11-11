@@ -555,6 +555,17 @@ def test_browser_accounting_totals_italian_amounts_errors_undo_and_next(
         expect(detail.locator(".posting-totals")).to_contain_text(
             "Totale Dare1.030,46Totale Avere1.030,46Differenza0,00"
         )
+        side = detail.get_by_role("combobox", name="Dare / Avere", exact=True)
+        side.click()
+        detail.get_by_role("option", name="Avere", exact=True).click()
+        expect(detail.locator(".posting-totals")).to_contain_text(
+            "Totale Dare0,00Totale Avere2.060,92Differenza−2.060,92"
+        )
+        side.click()
+        detail.get_by_role("option", name="Dare", exact=True).click()
+        expect(detail.locator(".posting-totals")).to_contain_text(
+            "Totale Dare1.030,46Totale Avere1.030,46Differenza0,00"
+        )
         amount.fill("1.030,45")
         expect(detail.locator(".posting-totals")).to_contain_text("−0,01")
         detail.get_by_role("button", name="Salva e successivo", exact=True).click()
