@@ -684,6 +684,7 @@ def ensure_runtime(
     requirements: Sequence[str | Path] | None = None,
     data_dir: Path | None = None,
     runner: Runner = subprocess.run,
+    diagnostics: list[dict] | None = None,
 ) -> tuple[bool, Path, str]:
     """Install or reuse one persistent managed dependency target."""
 
@@ -691,7 +692,13 @@ def ensure_runtime(
     logical_target = dependency_target(selection, data_dir)
     shared = _shared_runtime()
     if shared.enabled(selection.plugin_root):
-        return shared.ensure(selection, logical_target, sys.modules[__name__], runner)
+        return shared.ensure(
+            selection,
+            logical_target,
+            sys.modules[__name__],
+            runner,
+            diagnostics=diagnostics,
+        )
     try:
         logical_target.parent.mkdir(parents=True, exist_ok=True)
         with _installation_lock(
@@ -939,13 +946,31 @@ def main(
         LOGGER.info("Managed Python runtime is ready at %s", target)
         return 0
 
+    setup_events: list[dict] = []
     ready, target, detail = ensure_runtime(
         plugin_root,
         args.module,
         requirements=args.requirements,
+        diagnostics=setup_events,
     )
     if not ready:
         LOGGER.error("Managed Python runtime setup failed: %s", detail)
+        if diagnostic_path is not None and setup_events:
+            try:
+                # Owned templates/frames and OS numbers only; no exception values,
+                # local paths, credentials or raw installer output enter this file.
+                with diagnostic_path.open("x", encoding="utf-8") as sink:
+                    json.dump(
+                        {
+                            "events": setup_events,
+                            "capture_complete": all(
+                                event["detail_available"] for event in setup_events
+                            ),
+                        },
+                        sink,
+                    )
+            except (OSError, ValueError):
+                LOGGER.warning("Runtime setup diagnostic retention remains pending.")
         return 1
     if args.command == "install":
         LOGGER.info("%s", detail)

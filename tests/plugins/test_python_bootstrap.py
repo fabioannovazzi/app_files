@@ -116,6 +116,36 @@ def test_bootstrap_ignores_host_environment_and_never_changes_global_python(
     assert commands[0][1]["UV_PYTHON_INSTALL_DIR"] == str(tmp_path / "python")
 
 
+@pytest.mark.parametrize("usable", [True, False])
+def test_bootstrap_minor_link_failure_requires_a_working_private_interpreter(
+    tmp_path, monkeypatch, caplog, usable
+):
+    module = bootstrap()
+    monkeypatch.setattr(module, "_uv", lambda base: base / "uv")
+    executable = tmp_path / "python/cpython-3.12.14-windows-x86_64-none/python.exe"
+    executable.parent.mkdir(parents=True)
+    executable.touch()
+    calls = []
+
+    def runner(command, **kwargs):
+        calls.append(command)
+        if "install" in command:
+            return subprocess.CompletedProcess(
+                command, 1, "", "Missing target directory for minor version link"
+            )
+        if "find" in command:
+            return subprocess.CompletedProcess(command, 0, str(executable), "")
+        return subprocess.CompletedProcess(command, 0 if usable else 1, "", "")
+
+    if usable:
+        assert module.provision(tmp_path, runner) == str(executable)
+        assert "passed the runtime capability probe" in caplog.text
+    else:
+        with pytest.raises(ValueError, match="incompatible interpreter"):
+            module.provision(tmp_path, runner)
+    assert "--no-python-downloads" in calls[1]
+
+
 @pytest.mark.parametrize("casing", ["upper", "lower", "title"])
 def test_bootstrap_allowlists_every_child_environment_preserving_casing(
     tmp_path, monkeypatch, casing

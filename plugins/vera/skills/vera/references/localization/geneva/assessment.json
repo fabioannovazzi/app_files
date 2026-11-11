@@ -74,11 +74,23 @@
     "review": "docs/releases/2026-10-17-archive-followup-preservation.json",
     "scope": "Mechanical source binding for follow-up preservation instructions, preserving all current official Geneva judgments and incident-release metadata. No new jurisdiction or professional acceptance."
   },
+  "archive_graceful_failure_release_binding_20261110": {
+    "changed_entrypoints": [],
+    "previous_catalogue_fingerprint": "9a64784eb1757adbf8f2db40ae4fcfefebcfdd20bf2f4f95700ecba1e956fe8d",
+    "scope": "Shared failure isolation and an independent working-folder fallback; all entrypoint bytes and existing jurisdiction dispositions retained. No new jurisdiction or installed-host acceptance. Source and failure-injection evidence: docs/audits/vera-archive-graceful-failure-plan.md.",
+    "version": "0.1.608"
+  },
   "archive_handled_error_release_binding": {
     "date": "2026-10-17",
     "previous_catalogue_fingerprint": "f6092ccdfe9d186ab17a91ff632e8fe192d9b3737ffe1984ab3b428a638d80d1",
     "scope": "Only the canonical product manifest/version changed in this catalogue identity; every skill entrypoint hash is unchanged. The handled Archive error and diagnostic delivery changes do not establish Geneva professional acceptance. Existing jurisdiction judgments and limitations are preserved.",
     "version": "0.1.396"
+  },
+  "archive_hardening_release_binding_20261109": {
+    "changed_entrypoints": [],
+    "previous_catalogue_fingerprint": "a1de497ee17e8c7be436096beca84edcbeec8b917612e7112e7f8e2c3eb8927a",
+    "scope": "Archive interruption recovery, original-file preservation, honest bounded search and Drive permission explanations. Existing jurisdiction dispositions retained; no new jurisdiction or installed-host acceptance. See docs/acceptance/studio-archive-hardening. Final intake retirement race repaired; entrypoint bytes and jurisdiction judgments unchanged. R011 temporary-directory path repair; all 55 entrypoints remain byte-identical. R012 native first-save directory permissions; all entrypoint bytes and jurisdiction judgments retained.",
+    "version": "0.1.607"
   },
   "archive_input_verification_main_integration": {
     "base_commit": "b8ed35121cc430584260321734f5cf0e91b400ea",
@@ -183,7 +195,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "860a808b7c8f7b90064fc9fff07f2805dc7ce479176b85a38a389ef0450b5b6a",
+  "catalogue_fingerprint": "ee8b74c7db76b0dc846907c3908790f5d90c763d4bfcce0eeeb4a0b69cee3b4d",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -919,6 +931,14 @@
     "previous_catalogue_fingerprint": "55f633ef17112ff4fa3db60b488170bbdcfe564de62f464a22171bb75d76572c",
     "scope": "Only manifest provenance changes: all 55 skill IDs, paths and entrypoint hashes are unchanged. Portable diagnostic-context hydration and run-relative artifact reads add no jurisdiction judgments or professional acceptance.",
     "version": "0.1.443"
+  },
+  "posting_review_ux_release_binding_20261111": {
+    "changed_entrypoints": [
+      "journal-bank-reconciliation"
+    ],
+    "previous_catalogue_fingerprint": "c3f921f767207c300460b7926ff43757b1ff86652aa8744e2c175c910a7880db",
+    "scope": "Inspected the additive TeamSystem proposal-review routing paragraph. This is separate from bank/journal matching. Filters, unsaved-draft discard and saved-status presentation add no Geneva treatment or Swiss accounting export. Existing Geneva dispositions and acceptance limits are retained.",
+    "version": "0.1.611"
   },
   "private_permission_reuse_release_binding_20261020": {
     "previous_catalogue_fingerprint": "5a09df447a45e934b5f10b83443fe82a1a5276e03d68650c6a8eab79ab77a6b6",
@@ -2456,6 +2476,10 @@
     "reason": "Refresh the release baseline for the Archive registration, evidence subdirectory and sealed-run resume guidance. Existing jurisdiction dispositions, Italy-only litigation scope and professional acceptance limits are unchanged.",
     "version": "0.1.374"
   },
+  "teamsystem_release_613_binding": {
+    "scope": "Integrated main work-continuity entrypoints and retained TeamSystem review. Existing jurisdiction judgments unchanged; no new jurisdiction acceptance.",
+    "version": "0.1.613"
+  },
   "technical_instruction_audit_binding": {
     "previous_catalogue_fingerprint": "3538bdec8b05585e790befc8f5dc03b322aca3f93aca7c76087c9e51018ea8c7",
     "review": "Clarifies the existing final-approval grants submission boundary in the router. Refreshes catalogue identity; existing Geneva dispositions and professional-fit limits are preserved. No new jurisdictional acceptance or execution authority is inferred. The merged Patent Box, Adeguati assetti and CNC courses, discovery routing and their separate recorded limits are preserved.",
@@ -2687,25 +2711,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "archive_hardening_release_binding_20261109": {
-    "previous_catalogue_fingerprint": "a1de497ee17e8c7be436096beca84edcbeec8b917612e7112e7f8e2c3eb8927a",
-    "version": "0.1.607",
-    "changed_entrypoints": [],
-    "scope": "Archive interruption recovery, original-file preservation, honest bounded search and Drive permission explanations. Existing jurisdiction dispositions retained; no new jurisdiction or installed-host acceptance. See docs/acceptance/studio-archive-hardening. Final intake retirement race repaired; entrypoint bytes and jurisdiction judgments unchanged. R011 temporary-directory path repair; all 55 entrypoints remain byte-identical. R012 native first-save directory permissions; all entrypoint bytes and jurisdiction judgments retained."
-  },
-  "archive_graceful_failure_release_binding_20261110": {
-    "previous_catalogue_fingerprint": "9a64784eb1757adbf8f2db40ae4fcfefebcfdd20bf2f4f95700ecba1e956fe8d",
-    "version": "0.1.608",
-    "changed_entrypoints": [],
-    "scope": "Shared failure isolation and an independent working-folder fallback; all entrypoint bytes and existing jurisdiction dispositions retained. No new jurisdiction or installed-host acceptance. Source and failure-injection evidence: docs/audits/vera-archive-graceful-failure-plan.md."
-  },
-  "posting_review_ux_release_binding_20261111": {
-    "version": "0.1.611",
-    "previous_catalogue_fingerprint": "c3f921f767207c300460b7926ff43757b1ff86652aa8744e2c175c910a7880db",
-    "changed_entrypoints": [
-      "journal-bank-reconciliation"
-    ],
-    "scope": "Inspected the additive TeamSystem proposal-review routing paragraph. This is separate from bank/journal matching. Filters, unsaved-draft discard and saved-status presentation add no Geneva treatment or Swiss accounting export. Existing Geneva dispositions and acceptance limits are retained."
   }
 }

@@ -1,64 +1,50 @@
 from __future__ import annotations
 
-import importlib.util
 import subprocess
-import sys
 from pathlib import Path
-from typing import Any
+from types import SimpleNamespace
 
 import pytest
 
-ROOT = Path(__file__).resolve().parents[2]
+from tests.plugins.test_single_shared_runtime import backend
 
 
 @pytest.mark.parametrize("exit_code", [0, 1])
-def test_dependency_check_reenters_base_interpreter_and_propagates_result(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    exit_code: int,
-) -> None:
-    scripts = ROOT / "plugins/vera/scripts"
-    monkeypatch.syspath_prepend(str(scripts))
-    spec = importlib.util.spec_from_file_location(
-        "vera_dependency_reentry", scripts / "check_dependencies.py"
-    )
-    assert spec and spec.loader
-    checker = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(checker)
-    root = tmp_path / "vera"
-    component = root / "modules/journal-sampling/scripts"
-    component.mkdir(parents=True)
-    (component / "check_dependencies.py").touch()
+def test_base_handoff_releases_only_the_launcher_lease_and_propagates_result(
+    tmp_path, monkeypatch, exit_code
+):
+    module = backend()
+    root = tmp_path / "product"
+    script = root / "scripts/check_dependencies.py"
+    script.parent.mkdir(parents=True)
+    script.touch()
+    (root / "requirements-shared-core.txt").touch()
+    target = tmp_path / "runtime/venv"
     base = tmp_path / "base-python"
     base.touch()
-    monkeypatch.setattr(checker, "PLUGIN_ROOT", root)
-    monkeypatch.setattr(checker, "COMPONENTS", ("journal-sampling",))
-    monkeypatch.setattr(checker, "prepare_execution_root", lambda *args: root)
+    lease = (tmp_path / "lease").open("w")
+    monkeypatch.setattr(module, "target", lambda root: target)
     monkeypatch.setattr(
-        checker,
-        "ensure_runtime",
-        lambda *args, **kwargs: (
-            False,
-            tmp_path,
-            "Shared runtime update requires the base Python interpreter. Exit this workflow",
+        module,
+        "sys",
+        SimpleNamespace(
+            prefix=str(target),
+            executable=str(target / "bin/python"),
+            _base_executable=str(base),
+            modules={"_mparanza_runtime_guard": SimpleNamespace(_mpr_lease=lease)},
         ),
     )
-    monkeypatch.setattr(checker.sys, "_base_executable", str(base))
-    calls: list[list[str]] = []
+    calls = []
 
-    def run(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+    def run(command, **kwargs):
+        assert lease.closed
+        assert module.INSTALLING not in kwargs["env"]
         calls.append(command)
         return subprocess.CompletedProcess(command, exit_code)
 
-    monkeypatch.setattr(checker.subprocess, "run", run)
-    result = checker.main(["--module", "journal-sampling"])
+    monkeypatch.setattr(module.subprocess, "run", run)
+
+    result = module.reenter_base(script, ["--module", "studio-archive"])
 
     assert result == exit_code
-    assert calls == [
-        [
-            str(base),
-            str(root / "scripts/check_dependencies.py"),
-            "--module",
-            "journal-sampling",
-        ]
-    ]
+    assert calls == [[str(base), "-s", str(script), "--module", "studio-archive"]]

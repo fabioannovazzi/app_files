@@ -3238,7 +3238,7 @@
     main.append(header);
     if (state.kind === "postings") {
       const c = state.data.counts;
-      main.append(node("p", `${state.data.population_total} movimenti · ${c.accepted} accettati · ${c.pending} da rivedere · ${c.rejected} esclusi`, "sub"), node("p", `${state.data.saved_count} decisioni salvate · ${state.data.population_total - state.data.saved_count} mai salvati`, "caption"), node("p", state.data.notice, "notice"));
+      main.append(node("p", `${state.data.population_total} movimenti · ${c.accepted} accettati · ${c.pending} da rivedere · ${c.rejected} esclusi`, "sub"), node("p", `${state.data.saved_count} decisioni salvate · ${state.data.population_total - state.data.saved_count} mai salvati`, "caption"));
       const filters = node("label", undefined, "field"), filterSelect = node("select");
       filterSelect.setAttribute("aria-label", "Tipo di proposta");
       filters.append(node("span", "Tipo di proposta"), filterSelect);

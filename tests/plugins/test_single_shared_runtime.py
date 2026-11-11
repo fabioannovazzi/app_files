@@ -156,6 +156,72 @@ def test_failed_package_update_invalidates_ready_receipt_and_keeps_features(tmp_
     assert module.ensure(selection, path, api, runner)[0]
 
 
+@pytest.mark.parametrize("failure", [None, "inventory", "dependency", "receipt", "ocr"])
+def test_unreadable_policy_reuses_only_a_complete_capable_runtime(
+    tmp_path, monkeypatch, caplog, failure
+):
+    module, selection, api, runner, calls = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    receipt = (path / module.RECEIPT).read_bytes()
+    policy = (path.parent / module.POLICY).read_bytes()
+    if failure == "inventory":
+        api._resolved_dependencies = lambda path: [{"name": "changed", "version": "1"}]
+    elif failure == "dependency":
+        api.dependencies_available = False
+    elif failure == "receipt":
+        (path / module.RECEIPT).unlink()
+    elif failure == "ocr":
+        selection.requirements_files = [selection.plugin_root / "requirements-ocr.txt"]
+    original_read = Path.read_text
+
+    def denied(selected, *args, **kwargs):
+        if selected == path.parent / module.POLICY:
+            raise PermissionError("policy read denied by host")
+        return original_read(selected, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", denied)
+    calls.clear()
+
+    ok, _, detail = module.ensure(selection, path, api, runner)
+
+    assert ok is (failure is None), detail
+    assert not any("install" in command for command in calls)
+    assert (path.parent / module.POLICY).read_bytes() == policy
+    if failure != "receipt":
+        assert (path / module.RECEIPT).read_bytes() == receipt
+    assert "feature policy is unreadable" in caplog.text
+
+
+def test_failed_runtime_repair_retains_source_frames_without_private_error_values(
+    tmp_path, monkeypatch
+):
+    module, selection, api, runner, _ = fixture_runtime(tmp_path)
+    path = module.target(selection.plugin_root, tmp_path / "shared")
+    assert module.ensure(selection, path, api, runner)[0]
+    api.dependencies_available = False
+    # The selected execution copy and the launcher's loaded source differ.
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
+    original = module._read
+
+    def denied(selected):
+        if selected.name == module.POLICY:
+            raise PermissionError(13, "secret customer name", "/private/customer/path")
+        return original(selected)
+
+    monkeypatch.setattr(module, "_read", denied)
+    events = []
+
+    ok, _, _ = module.ensure(selection, path, api, runner, diagnostics=events)
+
+    assert not ok
+    assert events[0]["error_type"] == "PermissionError"
+    assert events[0]["errno"] == 13
+    assert events[0]["technical_frames"][-1]["function"] == "_install"
+    assert "secret customer" not in json.dumps(events)
+    assert "/private/customer" not in json.dumps(events)
+
+
 @pytest.mark.parametrize(
     "error_number, windows_error", [(errno.EXDEV, None), (None, 17)]
 )

@@ -80,6 +80,46 @@ def execute(tmp_path, source, arguments=()):
     return completed, json.loads(event.read_text()) if event.exists() else None
 
 
+def test_setup_failure_records_evidence_before_any_helper_runs(tmp_path, monkeypatch):
+    spec = importlib.util.spec_from_file_location(
+        "startup_diagnostic_runtime", RUNNER.with_name("_managed_python_runtime.py")
+    )
+    runtime = importlib.util.module_from_spec(spec)
+    monkeypatch.setitem(sys.modules, spec.name, runtime)
+    spec.loader.exec_module(runtime)
+    event = tmp_path / "startup.technical.json"
+    diagnostic = {
+        "error_type": "PermissionError",
+        "message": "Exception at the recorded package source location; dynamic detail retained for review.",
+        "errno": 13,
+        "detail_available": True,
+        "technical_frames": [
+            {
+                "file": "scripts/_shared_python_runtime.py",
+                "line": 1,
+                "function": "_read",
+            }
+        ],
+    }
+
+    def failed(*args, diagnostics, **kwargs):
+        diagnostics.append(diagnostic)
+        return False, tmp_path, "private path stays only in stderr"
+
+    monkeypatch.setattr(runtime, "ensure_runtime", failed)
+
+    result = runtime.main(
+        tmp_path, ["run", "scripts/never_started.py"], diagnostic_path=event
+    )
+
+    assert result == 1
+    assert json.loads(event.read_text()) == {
+        "events": [diagnostic],
+        "capture_complete": True,
+    }
+    assert "private path" not in event.read_text()
+
+
 def test_required_argument_error_reaches_structured_event_with_missing_flag(tmp_path):
     completed, data = execute(
         tmp_path,
