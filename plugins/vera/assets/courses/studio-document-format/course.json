@@ -445,7 +445,7 @@
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+      "sha256": "6fc85e694058b98b89b015ba66710238bec6a017af58d02f10f8ee6e50b5bb6d"
     },
     {
       "path": "modules/report-builder/vendor/modules/vera_assurance/decisions.py",
@@ -500,7 +500,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "e88efa643680127222fc318c164107778979a3cea9e6d7e23bc21b2c977a250d"
+      "sha256": "c99de070b93746e643f665dcdff77b9a1200a304dbc935663b7fdad049d6afa6"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -525,7 +525,7 @@
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "c27a214461085b03450d25293be7259a84d93e6144971c5861f0cda472f9b2df"
+      "sha256": "cd72e3f0e4cda4b9ee651090b319f830376dd59eb68192562e103661e108bad0"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -571,6 +571,11 @@
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
       "repository_path": "plugins/studio-archive/scripts/whatsapp_desktop_guard.mjs",
       "sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5"
+    },
+    {
+      "path": "modules/studio-archive/scripts/work_folder.py",
+      "repository_path": "plugins/studio-archive/scripts/work_folder.py",
+      "sha256": "38bd4bab70c10b8d875e7ede55345a276144e5fdff1df8e1a1b030ed86ec8d47"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",
@@ -635,7 +640,7 @@
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+      "sha256": "6fc85e694058b98b89b015ba66710238bec6a017af58d02f10f8ee6e50b5bb6d"
     },
     {
       "path": "modules/studio-archive/vendor/modules/vera_assurance/decisions.py",
@@ -1050,7 +1055,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+      "sha256": "6fc85e694058b98b89b015ba66710238bec6a017af58d02f10f8ee6e50b5bb6d"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

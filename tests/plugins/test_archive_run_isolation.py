@@ -274,7 +274,8 @@ def test_linked_execution_parent_cannot_supply_run_execution_context(archive, tm
     run_manifest = Path(second["run_root"]) / "run.json"
     before = run_manifest.read_bytes()
 
-    with pytest.raises(core.ledger.LedgerError, match="symbolic links"):
+    # Recovery is optional; the execution-copy validator still rejects aliases.
+    with pytest.raises(core.ledger.LedgerError, match="must be a real directory"):
         core.ledger.load_run(client, eid, second["run"]["run_id"])
 
     assert core.ledger.load_engagement_manifest(client, eid)["status"] == "open"

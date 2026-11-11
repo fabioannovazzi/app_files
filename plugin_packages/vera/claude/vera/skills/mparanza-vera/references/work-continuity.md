@@ -15,6 +15,15 @@ invocation, studio-wide work, standalone work, Claude and Cowork. It governs
 prerequisites and operational recovery. It does not invent professional facts,
 approve conclusions, authorize external actions or change the requested scope.
 
+Archive indexing, discovery, registration, navigation, reporting and recovery
+storage are secondary services. Their failure must not block processing or
+delivery when selected inputs and an authorized writable working folder are
+available. This takes precedence over component instructions requiring Archive
+setup, a retained checkpoint or Archive-only output storage as a general
+prerequisite. Keep the engine's exact-input and output-ownership checks.
+Only after an Archive failure, read `archive-failure.md` and use its maintained
+working-folder route. Do not begin a repeated repair/setup conversation.
+
 ## Before substantive work
 
 Establish the actual requested result, available sources, required capabilities
@@ -41,11 +50,12 @@ dependency or mandatory-input requirement only after doing the dependent work.
 Retain the actual returned destination, IDs, context path, source receipts,
 output directory and native execution job IDs. Archive preparation also retains
 an owner-private exact run binding independently of session configuration.
-If this secondary binding cannot be saved, keep the returned context and resolve
-its durable retention before dependent work; do not recreate the prepared run.
+If this secondary binding cannot be saved, keep the returned context and continue
+the existing job. Record the missing pointer separately; do not recreate the run.
 Preparation and start return `recovery.status` for an independent owner-private
-checkpoint. Verify that it says `retained`; if unavailable, establish an available
-recovery location at intake while keeping the existing prepared job.
+checkpoint. If it is unavailable, report reduced recovery coverage and continue
+with the verified working copies. Retry checkpointing separately without blocking
+processing or claiming that the failed backup exists.
 
 Before each engagement creation or run preparation, generate a request key and
 save it with the exact requested operation in the task's durable working notes.
@@ -76,7 +86,8 @@ Keep completed stages, decisions, drafts, artifact versions and diagnostics.
 Managed commands checkpoint the same run before and after each helper. For direct
 file edits or specialist steps outside that launcher, call
 `checkpoint_studio_client_workflow` after saving a completed stage (CLI:
-`checkpoint-workflow`). Check its returned status. Checkpoints contain admitted
+`checkpoint-workflow`). Record its returned status; failure must not withhold the
+saved stage, pause processing or redo completed work. Checkpoints contain admitted
 inputs, receipt snapshots, completed outputs and run headers; they are additional
 private local copies, with no external upload or automatic deletion.
 An unfinished native command is still the same job: query its retained job ID.
@@ -93,6 +104,18 @@ failed command, unavailable panel, missing optional service or failed report
 with a failed professional task. A successful start remains acknowledged even
 if its separate privacy-report initialization fails. Keep reporting errors
 visible and retry reporting without recalculating the result.
+
+Index/search failure leaves explicitly selected files usable. Stop only the
+affected filing operation if tidying fails; retain its plan and operation journal
+and continue unrelated work. Failed restart/recovery must identify unavailable
+saved state; use healthy retained files without asserting missing state was
+recovered. Never convert altered evidence into a successful recovery.
+
+Deliver useful saved results even when Archive finalization/registration fails.
+Show processing and Archive outcomes separately (for example, "Result completed;
+archiving pending") and preserve the exact retry association. Archiving retries
+must not rerun calculation or drafting. Privacy reporting remains a separately
+visible outcome and never becomes a delivery gate.
 
 If a save destination becomes unavailable, preserve accessible work in a
 suitable already-authorized durable location. If none is established, ask only

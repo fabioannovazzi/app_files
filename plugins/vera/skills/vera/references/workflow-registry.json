@@ -574,7 +574,8 @@
         "modules/studio-archive/scripts/check_dependencies.py",
         "modules/studio-archive/scripts/open_items_source_preflight.py",
         "modules/studio-archive/scripts/reconcile_open_items.py",
-        "modules/studio-archive/scripts/studio_archive.py"
+        "modules/studio-archive/scripts/studio_archive.py",
+        "modules/studio-archive/scripts/work_folder.py"
       ]
     },
     {

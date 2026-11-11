@@ -4207,8 +4207,9 @@ def _checkpoint_work(state: Path, loaded: Mapping[str, Any]) -> dict[str, Any]:
         ValueError,
         KeyError,
         TypeError,
-        ImportError,
         sqlite3.Error,
+        ImportError,
+        ArchiveError,
     ) as exc:
         return {
             "status": "unavailable",

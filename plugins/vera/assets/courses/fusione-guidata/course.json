@@ -115,7 +115,7 @@
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
       "repository_path": "plugins/studio-archive/scripts/client_ledger.py",
-      "sha256": "c27a214461085b03450d25293be7259a84d93e6144971c5861f0cda472f9b2df"
+      "sha256": "cd72e3f0e4cda4b9ee651090b319f830376dd59eb68192562e103661e108bad0"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -390,7 +390,7 @@
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/contracts.py",
-      "sha256": "8203378c30262e1dfc568099a34a444cb33130343abf17d4a2eea8da107d7cb0"
+      "sha256": "6fc85e694058b98b89b015ba66710238bec6a017af58d02f10f8ee6e50b5bb6d"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",

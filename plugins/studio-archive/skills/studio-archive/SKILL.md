@@ -51,8 +51,13 @@ artifacts. An admitted run also has an owner-private independent recovery
 checkpoint containing exact inputs, retained receipts, run headers and saved
 outputs. These are additional local copies, not another client engagement.
 Check `recovery.status` at preparation and start. If checkpoint storage is
-unavailable, resolve a suitable recovery location at intake while retaining the
-same prepared job; do not claim protection that was not saved.
+unavailable, continue processing from verified working copies and report reduced
+recovery coverage; do not claim protection that was not saved. Checkpointing is
+not a prerequisite for calculation or delivery. In Vera, an unavailable Archive
+uses the shared `work-continuity.md` / `archive-failure.md` route and the maintained
+`scripts/work_folder.py` helper. Its independent local run is a valid output
+location and remains explicitly pending archiving. Do not make discovery,
+registration, indexing, navigation or report completion a general work gate.
 
 ## Continue the admitted job
 
