@@ -447,7 +447,14 @@ def test_negative_minimum_amount_is_rejected_before_sample_output(
     assert not sample_dir.exists()
 
 
-def test_plugin_workflow_normalizes_excel_and_samples(tmp_path: Path) -> None:
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_plugin_workflow_normalizes_excel_and_samples(
+    tmp_path: Path, monkeypatch, archive_unavailable
+) -> None:
+    from tests.plugins.archive_outage import disable_archive_configuration
+
+    if archive_unavailable:
+        disable_archive_configuration(monkeypatch, tmp_path)
     core = load_core()
     journal_path = tmp_path / "journal.xlsx"
     output_dir = tmp_path / "out"

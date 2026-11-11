@@ -14,6 +14,7 @@ import secrets
 import sqlite3
 import sys
 from collections.abc import Mapping, Sequence
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 
@@ -244,7 +245,27 @@ def _archive_path(target: Path, relative: Path) -> Path:
 def finish_work(destination: Path) -> dict[str, Any]:
     """Deliver saved results even when Archive/reporting finalization is pending."""
     root = _root(destination)
-    with exclusive_file_lock(root / ".pending-work.lock"):
+    with ExitStack() as stack:
+        try:
+            stack.enter_context(exclusive_file_lock(root / ".pending-work.lock"))
+        except OSError as exc:
+            # Delivery is a read, not a mutation of the archived job. A busy or
+            # read-only bookkeeping lock cannot withhold stable saved outputs.
+            record = _read(root)
+            result = _result(root, record)
+            outputs = _outputs(_loaded(root, record))
+            if not outputs:
+                raise ValueError("No saved result is available to deliver") from exc
+            return {
+                **result,
+                "outputs": outputs,
+                "processing": {
+                    "status": "result_ready",
+                    "finalization": _pending("finalize_work", exc),
+                },
+                "archive": _pending("verify_archive", exc),
+                "status_record": _pending("save_work_status", exc),
+            }
         return _finish_record(root, _read(root))
 
 

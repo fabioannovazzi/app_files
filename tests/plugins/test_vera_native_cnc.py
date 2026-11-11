@@ -130,9 +130,19 @@ const reviewAuthority=p=>({...nodeIdentity,revision:p.revision,review_ticket:p.r
     )
 
 
-def test_cnc_conserves_complete_public_snapshot_memo_and_exact_retry(cnc_run):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_cnc_conserves_complete_public_snapshot_memo_and_exact_retry(
+    cnc_run, archive_unavailable, tmp_path
+):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
+    env = os.environ.copy()
+    if archive_unavailable:
+        env = unavailable_archive_environment(
+            env, Path(cnc_run[0].run["output_dir"]), tmp_path
+        )
     result = rpc_program(
-        os.environ.copy(),
+        env,
         conserved(cnc_run)
         + "const result={published,current,node,retry:payload(call('vera_workspace_cnc_publish',publishArgs))};",
     )

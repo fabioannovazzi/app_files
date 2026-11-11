@@ -131,14 +131,21 @@ const calculateArgs={{...exact,source_ref:inspected.source_ref,revision:candidat
         ("facts", "calculated", "centrale_rischi_facts.md", "markdown"),
     ],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_cr_full_public_pipeline_preserves_outputs_and_draft_boundary(
     cr_run,
     preview_key,
     phase,
     filename,
     format_name,
+    archive_unavailable,
+    tmp_path,
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, _ = cr_run
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         proposal_script()

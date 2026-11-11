@@ -68,33 +68,92 @@ def test_professional_boundaries_recognize_only_same_run_archive_sidecars(
     assert set(json.loads(native.stdout)) == PAIR
 
 
-@pytest.mark.parametrize("fault", ["foreign_run", "foreign_workflow", "symlink"])
-def test_reporting_name_does_not_exempt_foreign_or_unsafe_output(
-    archive_core, client_case, tmp_path, fault
+def test_reporting_name_does_not_exempt_a_symbolic_link(
+    archive_core, client_case, tmp_path
 ):
     from vera_assurance.contracts import archive_reporting_paths
 
     loaded = start(archive_core, client_case, "report-builder")
     output = Path(loaded["output_dir"])
     report_path = output / "model_data_report.json"
-    report = json.loads(report_path.read_text(encoding="utf-8"))
-    if fault == "foreign_run":
-        report["run_id"] = "run_" + "0" * 24
-        report_path.write_text(json.dumps(report), encoding="utf-8")
-    elif fault == "foreign_workflow":
-        report["workflow_id"] = "variance-analysis"
-        report_path.write_text(json.dumps(report), encoding="utf-8")
-    else:
-        destination = tmp_path / "copied-report.json"
-        report_path.rename(destination)
-        try:
-            report_path.symlink_to(destination)
-        except OSError:
-            pytest.skip("Host does not grant symlink creation")
+    destination = tmp_path / "copied-report.json"
+    report_path.rename(destination)
+    try:
+        report_path.symlink_to(destination)
+    except OSError:
+        pytest.skip("Host does not grant symlink creation")
 
     with pytest.raises(ValueError):
         archive_reporting_paths(output, expected_workflow_ids=("report-builder",))
     assert node_paths(output, "report-builder").returncode != 0
+
+
+@pytest.mark.parametrize(
+    "workflow",
+    [
+        "open-item-reconciliation",
+        "check-entries",
+        "journal-sampling",
+        "report-builder",
+        "report-enti-locali",
+    ],
+)
+@pytest.mark.parametrize(
+    "fault", ["invalid_json", "foreign_run", "foreign_workflow", "wrong_product"]
+)
+def test_failed_report_validation_does_not_invalidate_professional_outputs(
+    archive_core, client_case, workflow, fault, caplog
+):
+    from vera_assurance.contracts import archive_reporting_paths
+
+    loaded = start(archive_core, client_case, workflow)
+    output = Path(loaded["output_dir"])
+    professional = output / "professional-result.txt"
+    professional.write_text("Verified professional result")
+    report_path = output / "model_data_report.json"
+    report = json.loads(report_path.read_text())
+    mutations = {
+        "foreign_run": ("run_id", "run_" + "0" * 24),
+        "foreign_workflow": ("workflow_id", "variance-analysis"),
+        "wrong_product": ("product", "unrelated-product"),
+    }
+    if fault == "invalid_json":
+        report_path.write_text("{interrupted report")
+    else:
+        key, value = mutations[fault]
+        report[key] = value
+        report_path.write_text(json.dumps(report))
+    retained = report_path.read_bytes()
+
+    expected_workflows = (
+        ("report-builder", "report-enti-locali")
+        if workflow == "report-enti-locali"
+        else (workflow,)
+    )
+    excluded = archive_reporting_paths(output, expected_workflow_ids=expected_workflows)
+
+    assert excluded == PAIR
+    assert "reporting remains unverified" in caplog.text
+    native = node_paths(output, workflow)
+    assert native.returncode == 0, native.stderr
+    assert set(json.loads(native.stdout)) == PAIR
+    assert "reporting remains unverified" in native.stderr
+    assert professional.read_text() == "Verified professional result"
+    assert report_path.read_bytes() == retained
+
+
+def test_invalid_report_does_not_authorize_another_professional_workflow(
+    archive_core, client_case
+):
+    from vera_assurance.contracts import archive_reporting_paths
+
+    loaded = start(archive_core, client_case, "report-builder")
+    output = Path(loaded["output_dir"])
+    (output / "model_data_report.json").write_text("{interrupted report")
+
+    with pytest.raises(ValueError):
+        archive_reporting_paths(output, expected_workflow_ids=("journal-sampling",))
+    assert node_paths(output, "journal-sampling").returncode != 0
 
 
 @pytest.mark.parametrize("changed", [False, True])

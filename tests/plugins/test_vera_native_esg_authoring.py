@@ -118,9 +118,14 @@ const result={initial,saved,reopened:setup(),stale:call('vera_workspace_esg_auth
 @pytest.mark.parametrize(
     "command", ["start_case", "bind_evidence", "register_source", "build_deliverables"]
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_esg_whole_proposal_previews_privately_then_actual_public_execute_and_exact_retry(
-    authoring, command
+    authoring, command, monkeypatch, tmp_path, archive_unavailable
 ):
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     fixture = authoring[0]
     proposal = body(authoring)
     expected_state_sha256 = fixture.result["state_sha256"]

@@ -121,10 +121,15 @@ RENDER = (
     ],
     indirect=["rating_run"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_rating_unchanged_engine_retains_public_status_and_exact_artifacts(
-    rating_run, status
+    rating_run, status, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, _ = rating_run
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         RENDER

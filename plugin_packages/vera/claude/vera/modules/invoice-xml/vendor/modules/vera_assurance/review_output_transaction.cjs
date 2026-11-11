@@ -1159,19 +1159,25 @@ function archiveReportingPaths(outputDir, expectedWorkflowIds) {
   generatedReviewValidateRealDirectoryAncestors(canonicalRoot);
   const context = JSON.parse(bytes(path.join(path.dirname(canonicalRoot), "context.json")));
   const run = JSON.parse(bytes(path.join(path.dirname(canonicalRoot), "run.json")));
-  const report = present.includes("model_data_report.json")
-    ? JSON.parse(bytes(path.join(root, "model_data_report.json"))) : null;
   if (
     context.schema_version !== "vera.client_workflow_context.v2" ||
     context.output_relative_path !== "outputs" || path.basename(canonicalRoot) !== "outputs" ||
     !expectedWorkflowIds.includes(context.workflow_id) ||
-    context.workflow_id !== run.workflow_id || context.run_id !== run.run_id ||
-    (present.includes("model_data_report.json") && (
-      !isPlainObject(report) || ![3, 4].includes(report.schema_version) || report.product !== "vera" ||
-      report.workflow_id !== context.workflow_id || report.run_id !== context.run_id
-    ))
+    context.workflow_id !== run.workflow_id || context.run_id !== run.run_id
   ) {
     throw new Error("Archive reporting sidecars belong to another run");
+  }
+  let report = null;
+  try {
+    if (present.includes("model_data_report.json")) {
+      report = JSON.parse(bytes(path.join(root, "model_data_report.json")));
+    }
+  } catch (error) {
+    if (!(error instanceof SyntaxError) && typeof error.code !== "string") throw error;
+  }
+  if (!isPlainObject(report) || ![3, 4].includes(report.schema_version) || report.product !== "vera" ||
+      report.workflow_id !== context.workflow_id || report.run_id !== context.run_id) {
+    process.stderr.write("Archive reporting remains unverified; its saved files are separate from professional outputs.\n");
   }
   return present;
 }

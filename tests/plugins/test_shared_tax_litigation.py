@@ -91,10 +91,20 @@ def _command(
 )
 @pytest.mark.parametrize("product_name", ["vera", "lucia"])
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_packaged_product_prepares_and_resumes_without_claiming_filing(
-    tmp_path: Path, suffix: str, product_name: str, language: str
+    tmp_path: Path,
+    suffix: str,
+    product_name: str,
+    language: str,
+    monkeypatch,
+    archive_unavailable,
 ) -> None:
     """Exercise the shipped dependencies, Vera report and unresolved external act."""
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     filename = _archive_path(product_name, suffix)
     helper_subdir = "vendor/modules/scripts" if product_name == "vera" else "scripts"
     with ZipFile(filename) as archive:

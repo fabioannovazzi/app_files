@@ -25,6 +25,102 @@ from tests.plugins.test_archive_automatic_reporting import (
 PRODUCT = Path(__file__).resolve().parents[2] / "plugins/vera"
 
 
+@pytest.mark.parametrize("failed_stream", [1, 2])
+@pytest.mark.parametrize("private_stderr", [True, False])
+def test_cli_delivers_when_reporting_capture_storage_is_unavailable(
+    archive_core,
+    client_case,
+    tmp_path,
+    monkeypatch,
+    capfd,
+    failed_stream,
+    private_stderr,
+):
+    import archive_cli
+
+    loaded = start(archive_core, client_case, "report-builder")
+    output = tmp_path / "result.txt"
+    original = archive_cli.tempfile.TemporaryFile
+    opened = []
+
+    def unavailable(*args, **kwargs):
+        if len(opened) + 1 == failed_stream:
+            raise OSError("Reporting capture storage is full")
+        handle = original(*args, **kwargs)
+        opened.append(handle)
+        return handle
+
+    monkeypatch.setattr(archive_cli.tempfile, "TemporaryFile", unavailable)
+    private = tmp_path / "private.stderr"
+    with private.open("w+") as handle:
+        result = archive_cli.run_command(
+            [
+                sys.executable,
+                "-c",
+                "import sys; from pathlib import Path; "
+                "Path(sys.argv[1]).write_text('saved result'); print('delivered result'); "
+                "sys.stderr.write('PRIVATE_DIAGNOSTIC')",
+                str(output),
+            ],
+            plugin_root=PRODUCT,
+            component="report-builder",
+            arguments=[loaded["context_path"]],
+            stderr=handle if private_stderr else None,
+            check=False,
+        )
+
+    streams = capfd.readouterr()
+    assert result.returncode == 0
+    assert output.read_text() == "saved result"
+    assert streams.out == "delivered result" + os.linesep
+    assert '"stage": "capture"' in streams.err
+    assert '"measurement_gap": true' in streams.err
+    assert ("PRIVATE_DIAGNOSTIC" in streams.err) is not private_stderr
+    assert private.read_text() == ("PRIVATE_DIAGNOSTIC" if private_stderr else "")
+    assert all(handle.closed for handle in opened)
+
+
+@pytest.mark.parametrize(
+    "component", json.loads((PRODUCT / "components.json").read_text())["plugins"]
+)
+@pytest.mark.parametrize("exit_code", [0, 7])
+def test_cli_runs_and_delivers_when_archive_discovery_fails(
+    reporting_runtime, tmp_path, monkeypatch, capfd, component, exit_code
+):
+    import archive_cli
+    import archive_emit
+
+    output = tmp_path / "result.txt"
+
+    def unavailable(*args, **kwargs):
+        raise PermissionError("Archive metadata is inaccessible")
+
+    monkeypatch.setattr(archive_cli, "_run_roots", unavailable)
+    monkeypatch.setattr(archive_emit, "_run_roots", unavailable)
+    result = archive_cli.run_command(
+        [
+            sys.executable,
+            "-c",
+            "import sys; from pathlib import Path; "
+            "Path(sys.argv[1]).write_text('saved result'); "
+            "print('delivered result'); sys.exit(int(sys.argv[2]))",
+            str(output),
+            str(exit_code),
+        ],
+        plugin_root=PRODUCT,
+        component=component,
+        arguments=["--client-engagement", str(tmp_path / "context.json")],
+        check=False,
+    )
+
+    streams = capfd.readouterr()
+    assert result.returncode == exit_code
+    assert output.read_text() == "saved result"
+    assert streams.out == "delivered result" + os.linesep
+    assert '"measurement_gap": true' in streams.err
+    assert '"gap_saved": false' in streams.err
+
+
 @pytest.mark.parametrize(
     ("child_env", "expected"),
     [

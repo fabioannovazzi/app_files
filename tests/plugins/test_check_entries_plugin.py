@@ -2248,9 +2248,14 @@ def _copy_check_entries_runtime(root: Path) -> tuple[Path, Path]:
     return plugin, shared
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_plugin_inspects_entries_and_runs_deterministic_checks(
-    monkeypatch: Any, tmp_path: Path
+    monkeypatch: Any, tmp_path: Path, archive_unavailable
 ) -> None:
+    from tests.plugins.archive_outage import disable_archive_configuration
+
+    if archive_unavailable:
+        disable_archive_configuration(monkeypatch, tmp_path)
     core = load_core()
     journal_path = _qualified_journal(
         tmp_path,

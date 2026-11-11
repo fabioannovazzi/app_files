@@ -4,6 +4,260 @@ Goal: an Archive infrastructure failure must not, by itself, stop otherwise
 possible processing or delivery. This applies across Vera, not only accounting.
 Professional source validation and real missing inputs remain separate.
 
+## Follow-up outage audit (2026-11-11, in progress)
+
+The follow-up starts from `450a84806`. The requirement above is unchanged;
+the earlier shared-route coverage did not establish every pipeline end to end.
+
+Reproduced blockers and repairs:
+
+| Failure injected | Observed effect before repair | Implemented recovery |
+| --- | --- | --- |
+| Busy or unwritable pending-work lock | `finish_work` raised before returning saved outputs | Validate and enumerate the existing outputs without writing the pending-work record; return finalization and archival as pending |
+| Inaccessible Archive metadata during shared CLI checkpoint discovery | Child command never started | Record a reporting gap and run the requested command, preserving its exit code |
+| Unavailable first or second temporary reporting capture file | Child command never started | Close any opened capture file, record a reporting gap, and launch once using the original output destinations |
+| Archive state/profile unavailable for an existing native job | Patent Box could not resolve its admitted job before calculation | Store exact run bindings in owner-private `.vera-work-continuity/work-bindings` beside session storage; resolve and verify the run without opening Archive configuration |
+| Archive state/profile unavailable for direct result writing/listing | Configuration wrapper rejected the request before reaching intact work storage | Use the state location for serialization; retained-job identity validation remains mandatory and configuration users still validate/lease actual Archive state |
+| Reporting runtime import fails while listing saved outputs | Declaration preview raised instead of returning existing result files | Enumerate owned outputs first; return a separate unavailable-reporting status |
+| Archive configuration fails after admitting an engagement | Start, completion, import, input verification and preparation rejected before reading intact job storage | Resolve the exact retained engagement/run first; keep source receipts, input membership and lifecycle validation in the portable ledger |
+| Archive configuration fails while recording failure/cancellation/closure or requesting a checkpoint | These operations raised an unrelated state-directory error | Retain the actual lifecycle outcome; return checkpoint unavailability separately |
+| Report JSON is malformed or carries another product/workflow/run identity | Python and Node professional output validators rejected valid work because of the reporting payload | Establish ownership from the execution context; keep reserved ordinary report files outside the professional output seal and emit an unverified-reporting warning without rewriting the report |
+
+Every repair has a regression that failed before the production change. The
+shared CLI implementation is synchronized into Vera, Clara and Lucia sources.
+No runtime integrity check or professional input check was removed.
+
+Coverage added:
+
+- All 38 registered workflows exercise portable preparation and ordinary context
+  validation with unavailable Archive configuration; all exercise finalization,
+  completion, status-record, busy-lock and permission-failure delivery paths.
+- All 39 bundled component names exercise shared launcher discovery failure with
+  a real child that saves and prints a result, including nonzero exit-code
+  preservation. This is launcher coverage, not 39 professional engine runs.
+- Capture-storage failures exercise both acquisition points and verify private
+  stderr stays in its original destination.
+- A real journal-bank engine run uses two synthetic spreadsheets imported into
+  the portable context. It calculates one reference match and one unmatched row
+  on each side, then delivers the saved workbook during finalization failure.
+  Output bytes are checked unchanged. The initial test used an invalid import
+  role (`bank`); the test was corrected to the supported `source` role, without
+  changing production validation.
+
+The bank fixture isolates external reporting: it does not establish a successful
+privacy report or server receipt. Launcher failure tests assert the reporting
+measurement gap remains visible. Package rebuilds, required repository gates,
+installed acceptance and complete per-engine outage coverage remain outstanding.
+No publication or installed-plugin change has been made by this follow-up.
+
+Current source/package checkpoint: both full Archive gates passed (483 reporting
+tests at 86.42% coverage; 519 recovery/continuity tests at 89.08%, plus three
+Windows-only skips on macOS). All host builds and exact source-to-package checks
+passed. The package/update group has 416 passes and the separately recorded
+pre-existing Clara public-notice failure below. Installed fresh-chat acceptance
+and remote CI are not yet established.
+
+Further retained-work regression: unavailable session settings still rejected
+`list_studio_client_engagements` and `retain_studio_run_binding` before accessing
+the independent pointer. Both new tests reproduced the error. These operations
+now resolve the state location without requiring optional configuration storage;
+the complete tutorial-binding suite passes (18 tests), including foreign-client,
+altered-context, unsafe-pointer and multiple-live-copy rejection.
+
+### Incremental privacy review of this change
+
+The changed launcher continues the same child command and original output sinks
+when checkpoint discovery or capture-file allocation fails. The existing
+reporting-failure helper records component, stage, exception class, measurement
+gap and persistence status; it does not record exception text or source content.
+Unavailable capture leaves measurement incomplete; it does not claim a successful
+report. The Python and Node output validators preserve malformed/foreign report
+bytes and warn without treating those bytes as professional ownership evidence.
+Source payload builders, external recipients and receipt request fields are not
+changed. Existing product-specific service declarations remain applicable.
+
+The new retained pointer stores only the working root, client/engagement/run IDs
+and static context hash in owner-private storage beside the session directory.
+It has no network path or automatic deletion. Reopening still validates the
+actual ledger and rejects unsafe or ambiguous bindings. Vera and Lucia Archive
+manifests now record this local persistence boundary. Shared source fingerprints
+also affect Clara's embedded assurance consumers; they do not establish that
+Clara gained an Archive workflow. This is a review of the changed paths, not a
+claim of fresh host-session or server-receipt acceptance.
+
+The incremental review refreshed 37 Vera, six Clara and seven Lucia source
+records; all three registers validated before versioning. Candidate versions are
+Vera 0.1.615, Clara 0.1.410, Lucia 0.1.233 and Studio Archive 0.1.78. GitHub's
+open PR inventory showed the separate Vera 0.1.614 candidate in PR #982; it is
+not included in this worktree. The fetched main remains `450a84806`.
+
+The first package attempts exposed stale generated catalogue/course records.
+The Vera catalogue comparison proved all 55 skill entrypoint IDs and bytes
+unchanged; only the canonical version binding changed. Its existing jurisdiction
+judgments were retained. Course regeneration covered 58 workflow kits and 258
+localized kits with no missing translations; the course source hashes changed
+with the shared assurance repair. The corresponding onboarding/prepared-course
+privacy fingerprints were refreshed. The subsequent build passed privacy,
+runtime-policy revision and 1,122 remote-course-attachment checks. All three
+Codex product ZIPs were built and their packaged launcher bytes compared exactly
+with source. Other host builds and the broad reporting/coverage test gate are
+still in progress at this checkpoint; no installation or release acceptance is
+claimed. Black/Isort passed for all 46 changed Python files; targeted Mypy and
+Bandit checks passed.
+
+The broad automatic-reporting CI command completed with 480 passed, three
+failed and 86.42% coverage. All three failures came from acquisition test
+fixtures monkeypatching `_state_dir` instead of selecting temporary state via
+the supported environment. The new location resolver bypassed that mock;
+fallback inspected a host profile, then the incomplete mock rejected the
+`create` keyword before configuration could be written. The tests now select
+both temporary state and profile paths; production code was not changed to
+accommodate the harness. Both affected test files subsequently passed all 38
+tests. A fresh execution of the complete CI reporting command is in progress.
+The component packaging command for Studio Archive correctly targets its Vera
+and Lucia containers; it does not create a standalone Archive package.
+
+The complete reporting CI command rerun passed: **483 tests, 86.42% coverage**.
+The Archive adoption/recovery CI command also passed: **519 tests, three skips,
+89.08% coverage**. The helper itself has 92% coverage in that gate. All product
+builds completed with the candidate versions aligned across Codex, ChatGPT
+upload, Cowork and Antigravity. Local MCP startup checks passed for the projected
+packages. These are package/runtime checks, not real-host conversation acceptance.
+Source-to-package checking and the package/update-notification test group are
+still running; five plugin-icon tests and the assurance Python/Node source
+quality checks passed. The shared vendor dependency inventory identifies only
+Vera, Clara and Lucia as downloadable targets affected by the assurance change.
+The three skips are Windows-only PowerShell launcher cases on this macOS host;
+the CI adoption matrix retains Windows, macOS and Linux execution. The latest
+remote fetch still reports main at `450a84806`. Product checking has verified
+all three Codex and ChatGPT-upload archives and continues through the remaining
+host checks. The full package/update-notification suite is still live; it has
+not yet produced a final result.
+
+Finished package verification: `build_product_release.py vera clara lucia --check`
+passed for every host and exact candidate version. Package/update tests finished
+with **416 passed, one skipped, one failed**. The only failure is the existing
+Clara public update notice (0.1.248) being behind the locally cached curated
+version (0.1.390). `static/shared/codex-plugin-versions.json` is identical to
+origin/main; this change has not modified Marketplace publication metadata.
+The skipped case is Vera's curated-cache check because that distribution is not
+installed locally. Do not treat this combined test group as wholly green or a
+cached version as independent proof of current Marketplace Published status.
+
+The final producer expansion passed **130 cases**: packaged Vera/Lucia
+tax-litigation preparation, document rendering and resumption across five
+languages and four host formats; negotiation HTML/CSV/XLSX plus immutable source
+and output receipts; Bilancio Alfa service calculation/review states and its
+comparison report; actual invoice-XML parser totals and anomaly artifacts; and
+ESG case creation, evidence binding, source registration and deliverable creation
+with exact retries. Healthy and unavailable-Archive controls run the existing
+professional assertions. These use fictional inputs and do not claim filing,
+live portal acquisition, professional approval or fresh host-chat acceptance.
+
+### Native outage scenarios
+
+`tests/plugins/archive_outage.py` makes optional configuration/profile/reporting
+locations unusable without changing the admitted input copies or output folder.
+For an explicitly configured location inside the synthetic test, it preserves
+the original directory under a test-only name and substitutes an ordinary file
+at the same path. It does not redirect an existing job to another Archive.
+Inherited locations outside the test directory are never modified.
+
+The existing public-engine assertions now run with and without this outage for:
+
+| Native route | Professional behavior checked |
+| --- | --- |
+| LIPE | Monthly and quarterly calculations, workbook/PDF and idempotent retry |
+| Sales plan | Scenario calculation, execution receipt, reopening and retry |
+| Variance analysis | Numeric totals, report/chart files, complete artifact list and retry |
+| Business valuation | Method results, report/workbook/PDF, ready/partial/blocked statuses and retry |
+| Business planning | Calculations and complete reports for ready/partial/blocked/idea cases |
+| Rating legalita | Public assessment status, exact dossier download and retry |
+| Adeguati assetti | Append reviewed decision, retain proposal/history and deliver files |
+| AML | Append exact decision, retain findings/history and deliver files |
+| ESG | Read complete version/dependency records and deliver exact existing draft bytes |
+| Patent Box | Public proposal/review/calculation, expected deductions, Word/PDF delivery and retry |
+| Scissione | Append exact reviewed record, retain prior version and deliver seven artifacts |
+| Financial analysis | All eight reviewed packs, exact copied case/source bytes and normal prepared outputs |
+| Management control | Reporting and costing calculations, ready/partial/blocked statuses and eight artifact hashes |
+| Treasury preparation | Selected source inspection, cash forecast, first version, reopening and retry |
+| Invoice XML | Six supported proposal variants, exact public XML/export artifacts, retry and no transmission |
+| Journal-bank native preparation | Input inspection, mapping review, real match and result view |
+| Purchase-invoice native supervisor | Fresh and existing jobs, real producer completion, same-key retry and exact population |
+| Open-item native intake | Five languages, complete workbook/assurance package and exact retry |
+| CNC | Retain complete public snapshot/memo and exact retry without professional approval |
+| Bandi | Public validation, complete HTML dossier, byte hash and exact retry |
+| INPS | Six explicit review choices, unchanged memo, persisted decisions and exact retry |
+| Registro Imprese SARI | Five language/jurisdiction combinations, actual source inventory and intake drafts, exact retry |
+
+ESG here verifies existing-result delivery; AML, Assetti and Scissione begin with
+prepared proposals and verify continuation. They are not claims of complete
+first-intake outage acceptance. These tests do not turn failed/missing privacy
+reporting into a successful receipt. Direct result-listing regressions separately
+assert the unavailable-reporting status and unavailable recovery checkpoint.
+
+The native Patent Box outage initially failed on Archive state validation. It
+passed after independent binding storage and lookup were implemented. The
+selected direct write/list test also failed before its fix. The first broader
+Scissione selection accidentally included two package tests; both correctly
+stopped on stale privacy fingerprints after the source changes. Those package
+checks remain pending the required semantic review and regeneration, not waived.
+
+Latest follow-up results: 58 native cases passed across the eleven routes above
+(including healthy controls); 371 shared delivery, independent-work, optional
+service and retained-binding cases passed; the earlier focused concurrency and
+fault-isolation run passed 101 cases. Black, selected Isort checks and
+`git diff --check` passed. These are source checks, not a released build.
+
+Remaining scope includes first-intake coverage for the other professional
+engines, auditing other direct bound-job lifecycle operations for premature
+Archive-state validation, missing-report acceptance evidence, the privacy
+source review/refresh, complete release gates, rebuilt host packages and actual
+installed-session acceptance. Do not mark the goal complete from this matrix.
+
+The next follow-up also added 76 shared lifecycle scenarios: each of the 38
+registered IDs both resumes a prepared job and imports/verifies new selected
+evidence into the retained engagement before preparing, starting, saving,
+finalizing and completing another job with Archive configuration unavailable.
+This is lifecycle coverage, not a claim of 76 professional calculations.
+Both start/completion and the new-source path failed before their respective
+repairs. Two test-harness assumptions were corrected from inspected public
+responses: import returns `input_id`, and checkpoint status is under `recovery`.
+No production response schema was changed to accommodate those tests.
+
+Additional native source checks passed 38 cases across financial analysis,
+management control, treasury preparation and invoice XML, followed by six bank
+and purchase-invoice cases. Another 36 outage/healthy-control cases passed for
+open-item intake, CNC continuation, Bandi packaging, INPS review application and
+SARI first intake. The final focused lifecycle/fault-isolation/concurrency/binding
+run passed 184 cases after the new-source verification fix.
+
+### Further producer and reporting-boundary checks
+
+Twelve healthy/outage cases passed for actual journal sampling, vouching,
+report building, concordato workpapers, archive organization and the two-stage
+client-file-preparation/new-client pipeline. These start the standalone or
+portable producers with configuration/profile/reporting service paths made
+unusable. Ten further healthy/outage cases passed for the complete Centrale
+Rischi producer, standalone transformation authoring/calculation/export and
+merger P1 workpaper export. The standalone case stores remain available.
+
+Inspection then found a distinct reporting-content dependency in shared Python
+and Node output closure. An interrupted report JSON or wrong reporting identity
+stopped validation of otherwise valid professional outputs. The regression
+failed before repair. Twenty cases now cover the four report faults across
+open-item reconciliation, vouching, journal sampling, report-builder and
+report-enti-locali. The damaged report bytes remain unchanged and both runtimes
+emit an explicit unverified-reporting warning. This does not verify or repair
+the report or its receipt. Wrong professional workflow context, symbolic links
+and changed transaction-owned report bytes remain rejected. The report-builder
+alias case also verifies that ownership does not depend on a usable report.
+
+The combined reporting-output-boundary, independent-work and optional-service
+run passed 390 cases after this repair. Source checks remain distinct from
+package/installed acceptance; the shared contract change adds privacy fingerprints
+and host packages to refresh before release.
+
 ## Inspected starting point
 
 - Reporting startup/finalization and checkpoint writes already have partial

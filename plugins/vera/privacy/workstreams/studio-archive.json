@@ -371,9 +371,9 @@
   },
   "review": {
     "basis": "external_boundary_review_of_workflow_source",
-    "reviewed_at": "2026-11-10",
+    "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "82e51e0f0535e5175d8d32cdd96dacd15352a2d858bbcc10c6e5a8786abb54d8"
+    "source_fingerprint": "a2421a6ebe0e1019e87eea5e083b42efadd161a721972a94b8780f35715435f0"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -501,6 +501,10 @@
     {
       "id": "independent-work-and-archive-outcomes",
       "control": "work_folder.py prepares a portable job independently of Archive configuration, index, private profile and discovery. Exact request replay reuses its job; selected source validation and output containment remain required. An unregistered general storage namespace does not assert a professional client. Finished result files remain deliverable when optional closure or status writes fail. Later copying requires an explicit destination, preserves foreign client identities and existing different bytes, verifies copied results, and returns archiving status separately. Optional recovery failure cannot reject unchanged execution copies; missing or altered copies still fail verification."
+    },
+    {
+      "id": "archive-outage-delivery-and-private-bindings",
+      "control": "An exact admitted client/engagement/run pointer is retained in owner-private .vera-work-continuity/work-bindings beside the selected session storage, independently of Archive configuration. It stores the working root, identifiers and static context hash, not document contents; there is no upload or automatic deletion. Reopening verifies the sealed run identity, live folder and private pointer ownership. Unsafe pointers or ambiguous live copies do not authorize another folder. Unavailable Archive settings cannot prevent listing retained engagements, binding a verified portable run, or delivering existing owned output files. Optional reporting failures remain separately unavailable or unverified; malformed reporting payloads are never used to authorize the professional context and are preserved for inspection."
     }
   ],
   "workstream": "studio-archive",

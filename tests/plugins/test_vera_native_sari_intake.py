@@ -88,11 +88,17 @@ const result={initial,initialCall,saved,reopenedCall,reopened:payload(reopenedCa
     ("language", "jurisdiction"),
     [("it", "IT"), ("en", "IT"), ("fr", "CH-GE"), ("de", "CH-GE"), ("es", "IT")],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_sari_initialization_reuses_public_producers_without_legal_decisions_and_retries_once(
-    sari_run, language, jurisdiction
+    sari_run, language, jurisdiction, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
+    env = os.environ.copy()
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, sari_run[2], tmp_path)
     result = rpc_program(
-        os.environ.copy(),
+        env,
         initial_program(sari_run, language, jurisdiction)
         + """
 const first=payload(call('vera_workspace_sari_prepare',prepare));

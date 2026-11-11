@@ -94,10 +94,15 @@ const executeArgs={{...exact,item_id:selected.selection.id,revision:selected.rev
 """
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_financial_registered_reviewed_case_executes_all_normal_outputs(
-    financial_intake,
+    financial_intake, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding, pack, case_id, bindings = financial_intake
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         execute_script(financial_intake)

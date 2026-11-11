@@ -246,9 +246,14 @@ def test_visual_pending_does_not_become_professional_approval_from_complete_coun
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
 @pytest.mark.parametrize("product", ["Vera", "Lucia"])
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_render_delivers_complete_ledger_and_safe_text_in_both_products(
-    tmp_path, language, product
+    tmp_path, language, product, monkeypatch, archive_unavailable
 ):
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     run, source, review, _ = review_case(tmp_path)
     original = source.read_bytes()
     review["context"]["language"] = language

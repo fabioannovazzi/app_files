@@ -148,8 +148,15 @@ const args={...exact,human_reviewed:true,idempotency_key:'fictional-treasury-pre
     )
 
 
-def test_native_treasury_prepares_without_a_registered_manifest(initial_treasury):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_native_treasury_prepares_without_a_registered_manifest(
+    initial_treasury, archive_unavailable, tmp_path
+):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding = initial_treasury
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         save_program()

@@ -548,17 +548,11 @@ def _new_private_id(prefix: str, existing: set[str]) -> str:
     raise ArchiveError(f"Could not allocate a unique {prefix} identifier.")
 
 
-def _state_dir(
-    explicit: Path | None = None,
-    *,
-    create: bool = False,
-) -> Path:
+def _state_location(explicit: Path | None = None) -> Path:
+    """Locate state without requiring optional Archive storage to be available."""
     selected = explicit
-    selection_explicit = explicit is not None
-    selection_environment = False
     if selected is None:
         environment_value = os.environ.get(STATE_ENV, "").strip()
-        selection_environment = bool(environment_value)
         selected = (
             Path(environment_value).expanduser()
             if environment_value
@@ -572,6 +566,19 @@ def _state_dir(
         raise ArchiveError("Studio Archive state directory must be absolute.")
     if selected.is_symlink():
         raise ArchiveError("Studio Archive state directory cannot be a symbolic link.")
+    return selected.resolve()
+
+
+def _state_dir(
+    explicit: Path | None = None,
+    *,
+    create: bool = False,
+) -> Path:
+    selected = _state_location(explicit)
+    selection_explicit = explicit is not None
+    selection_environment = not selection_explicit and bool(
+        os.environ.get(STATE_ENV, "").strip()
+    )
     if create:
         selected.mkdir(parents=True, exist_ok=True, mode=0o700)
         try:
@@ -3506,7 +3513,7 @@ def prepare_studio_client_workflow(
 
     if workflow_id not in CLIENT_WORKFLOW_IDS:
         raise ArchiveError("Workflow is not supported by the client engagement gate.")
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     client_root = _retained_scope_root(private_state, None, engagement_id)
     if client_root is not None:
         client_id = ledger.load_engagement_manifest(client_root, engagement_id)[
@@ -3937,7 +3944,7 @@ def import_studio_client_document(
         raise ArchiveError(
             "Engagement creation and document import are separate actions."
         )
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     client_root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state
     )
@@ -4025,7 +4032,7 @@ def verify_studio_client_inputs(
 ) -> dict[str, Any]:
     """Verify exact selected imports through the maintained portable readers."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
     try:
         return input_verification.verify_inputs(
@@ -4047,7 +4054,7 @@ def list_studio_client_engagements(
 ) -> dict[str, Any]:
     """List recoverable engagements, exact receipts, lifecycle, and artifacts."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     client_root = _retained_scope_root(private_state, client_id)
     if client_root is None:
         folder = get_studio_client_folder(client_id, state_dir=private_state)[
@@ -4179,7 +4186,17 @@ def list_studio_client_engagements(
 
 def _run_binding_path(state: Path, identities: Sequence[str]) -> Path:
     """Locate an owner-private binding without consulting archive discovery."""
-    owner = _archive_profile(state) or state
+    owner = state.parent.resolve() / ".vera-work-continuity"
+    for directory in (owner, owner / "work-bindings"):
+        if directory.is_symlink():
+            raise ArchiveError("Work continuity storage cannot be a symbolic link.")
+        if directory.exists():
+            info = directory.stat()
+            if not stat.S_ISDIR(info.st_mode) or (
+                os.name == "posix"
+                and (info.st_uid != os.geteuid() or stat.S_IMODE(info.st_mode) & 0o077)
+            ):
+                raise ArchiveError("Work continuity storage must be owner-private.")
     key = hashlib.sha256("\0".join(identities).encode("utf-8")).hexdigest()
     return owner / "work-bindings" / f"{key}.json"
 
@@ -4222,7 +4239,7 @@ def checkpoint_studio_client_workflow(
     client_id: str, engagement_id: str, run_id: str, *, state_dir: Path | None = None
 ) -> dict[str, Any]:
     """Retain exact admitted inputs and completed stages outside the destination."""
-    state = _state_dir(state_dir)
+    state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=state, run_id=run_id
     )
@@ -4286,7 +4303,7 @@ def retain_studio_run_binding(
     # Exact manifest identities and hashes are mechanical evidence of the run;
     # later native operations revalidate them before using this private pointer.
     loaded = ledger.load_run(client_root, engagement_id, run_id)
-    return _remember_run_binding(_state_dir(state_dir), client_root, loaded)
+    return _remember_run_binding(_state_location(state_dir), client_root, loaded)
 
 
 def _remember_run_binding(
@@ -4324,6 +4341,12 @@ def _retained_run_root(
     identities = (client_id, engagement_id, run_id)
     try:
         record = preferences.read_json(_run_binding_path(state, identities))
+        if record is None:
+            # Earlier installations kept the pointer inside Archive's profile.
+            # Reuse it when available; new jobs no longer depend on that store.
+            owner = _archive_profile(state) or state
+            key = hashlib.sha256("\0".join(identities).encode("utf-8")).hexdigest()
+            record = preferences.read_json(owner / "work-bindings" / f"{key}.json")
     except (OSError, ValueError, ArchiveError):
         return None
     if record is None or record.get("schema_version") != "vera.work_binding.v1":
@@ -4359,9 +4382,15 @@ def _retained_scope_root(
     Existing run bindings also cover engagement continuation and client reopen.
     Multiple live copies are ambiguous; choosing one could write to the wrong copy.
     """
-    owner = _archive_profile(state) or state
+    directories = {_run_binding_path(state, ()).parent}
+    try:
+        directories.add((_archive_profile(state) or state) / "work-bindings")
+    except (OSError, ValueError, ArchiveError):
+        pass  # Independent bindings still identify previously opened work.
     roots: set[Path] = set()
-    for path in (owner / "work-bindings").glob("*.json"):
+    for path in (
+        path for directory in directories for path in directory.glob("*.json")
+    ):
         try:
             record = preferences.read_json(path)
         except (OSError, ValueError, ArchiveError):
@@ -4478,7 +4507,7 @@ def start_studio_client_workflow(
 ) -> dict[str, Any]:
     """Mark one prepared run as running before executing helper scripts."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4520,7 +4549,7 @@ def write_studio_run_artifact(
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Write one agent-authored text artifact through the Archive owner."""
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4546,7 +4575,7 @@ def read_studio_run_artifact(
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Return selected source units with locally retained, exact read provenance."""
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4580,7 +4609,7 @@ def fail_studio_client_workflow(
 ) -> dict[str, Any]:
     """Record a failed run while retaining its evidence and diagnostics."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4601,7 +4630,7 @@ def cancel_studio_client_workflow(
 ) -> dict[str, Any]:
     """Cancel one abandoned run without deleting it."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4624,7 +4653,7 @@ def finalize_studio_client_workflow(
 ) -> dict[str, Any]:
     """List the selected run's output paths, or seal its explicit declarations."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4638,8 +4667,6 @@ def finalize_studio_client_workflow(
                     "Output declarations require a running or review-ready run."
                 )
             output = Path(loaded["output_dir"])
-            runtime = ledger._reporting_runtime()
-            automatic = {item["path"] for item in runtime.report_declarations(output)}
             paths = [
                 file.relative_to(output).as_posix()
                 for file in ledger._output_files(output)
@@ -4647,9 +4674,16 @@ def finalize_studio_client_workflow(
             result = {
                 "status": "declaration_preview",
                 "run_id": run_id,
-                "output_paths": [path for path in paths if path not in automatic],
+                "output_paths": paths,
             }
             try:
+                runtime = ledger._reporting_runtime()
+                automatic = {
+                    item["path"] for item in runtime.report_declarations(output)
+                }
+                result["output_paths"] = [
+                    path for path in paths if path not in automatic
+                ]
                 if runtime.selective_reporting_enabled() and runtime.report_pipeline(
                     loaded["run"]["workflow_id"]
                 ):
@@ -4673,7 +4707,14 @@ def finalize_studio_client_workflow(
                             stage="declaration_preview",
                             root=Path(loaded["run_root"]),
                         )
-            except ImportError as exc:
+            except (
+                OSError,
+                ValueError,
+                KeyError,
+                TypeError,
+                ImportError,
+                sqlite3.Error,
+            ) as exc:
                 result["reporting"] = ledger._review_reporting_failure(loaded, exc)
             return result
         loaded = ledger.finalize_run(
@@ -4709,7 +4750,7 @@ def complete_studio_client_workflow(
 ) -> dict[str, Any]:
     """Complete one review-ready run whose artifacts still validate."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(
         client_id, engagement_id, state_dir=private_state, run_id=run_id
     )
@@ -4729,7 +4770,7 @@ def close_studio_client_engagement(
 ) -> dict[str, Any]:
     """Close one engagement after every active run is resolved."""
 
-    private_state = _state_dir(state_dir)
+    private_state = _state_location(state_dir)
     root = _selected_ledger_root(client_id, engagement_id, state_dir=private_state)
     try:
         engagement = ledger.close_engagement(root, engagement_id)
@@ -7049,8 +7090,10 @@ def _verify_run_configuration(function: Callable[..., Any]) -> Callable[..., Any
 
     @wraps(function)
     def checked(*args: Any, **kwargs: Any) -> Any:
-        state = _state_dir(
-            args[0] if function.__name__ == "_load_config" else kwargs.get("state_dir")
+        state = (
+            _state_dir(args[0])
+            if function.__name__ == "_load_config"
+            else _state_location(kwargs.get("state_dir"))
         )
         with _STATE_MUTEX_GUARD:
             mutex = _STATE_MUTEXES.setdefault(state, RLock())

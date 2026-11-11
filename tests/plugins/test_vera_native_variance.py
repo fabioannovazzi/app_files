@@ -176,10 +176,15 @@ const exact={...work,revision:reopened.revision,source_ref:prepared.source_ref};
     ],
     indirect=["variance_run"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_variance_preserves_rich_public_outputs_and_accounting_state(
-    variance_run, expected
+    variance_run, expected, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding, _ = variance_run
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
 
     result = rpc_program(
         env,

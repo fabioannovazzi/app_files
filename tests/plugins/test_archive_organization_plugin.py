@@ -157,7 +157,14 @@ def test_packaged_review_uses_managed_python_without_virtualenv_or_path_python(
     )
 
 
-def test_generated_archive_organization_review_contract(tmp_path: Path) -> None:
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_generated_archive_organization_review_contract(
+    tmp_path: Path, monkeypatch, archive_unavailable
+) -> None:
+    from tests.plugins.archive_outage import disable_archive_configuration
+
+    if archive_unavailable:
+        disable_archive_configuration(monkeypatch, tmp_path)
     context_path, snapshot, _ = scenario._prepared_run(tmp_path)
 
     result = core.build_review_package(
