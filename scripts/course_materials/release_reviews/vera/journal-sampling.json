@@ -143,7 +143,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "cd705bd21c6a873f65dc98c64dbd2c7daf6ea85002d05c77d8f905c77a54b4a7",
+  "course_sha256": "4fd6c05956488885183088b7c08df3147cb741ad691d190d3d9fab6d72a0acf4",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "99f6a5e4fd510780a6c81c0a7d6cbd6848a7b69a2cdd79013825b34fb99e263c",
@@ -1048,5 +1048,16 @@
     "previous_course_sha256": "fd350c6a95a63a4cb62464ddb94c283d40f9871373a2579d1121c81a4f9926f9",
     "scope": "Canonical CSV/JSON unchanged; Excel monetary cells become numeric only when precision and decimal roundtrip are preserved; larger values stay exact text with explanatory comment. Shared recovery module added to existing mutation-test matrix.",
     "limits": "Historical editorial/model judgments preserved. Source/renderer regressions are not learner, voice, fresh installed UI or professional acceptance. Final-head localized replay remains required."
+  },
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "074ac220401b2d442a4d4f00edb594ead6c29c20",
+    "previous_course_sha256": "cd705bd21c6a873f65dc98c64dbd2c7daf6ea85002d05c77d8f905c77a54b4a7",
+    "current_course_sha256": "4fd6c05956488885183088b7c08df3147cb741ad691d190d3d9fab6d72a0acf4",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
   }
 }

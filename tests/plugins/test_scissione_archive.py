@@ -66,8 +66,15 @@ def prepared(workspace: dict) -> dict:
     return execute(Path(workspace["context_path"]), "prepare", workspace["request"])
 
 
-def test_real_archive_prepare_review_and_historical_replay(tmp_path):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_real_archive_prepare_review_and_historical_replay(
+    tmp_path, monkeypatch, archive_unavailable
+):
     work = workspace(tmp_path)
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     draft = prepared(work)
     output = Path(work["output_dir"])
     review = output / "review-request.json"

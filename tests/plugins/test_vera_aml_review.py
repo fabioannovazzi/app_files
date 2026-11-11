@@ -181,7 +181,10 @@ def test_save_preserves_previous_versions_and_idempotent_retry(tmp_path: Path) -
     assert path.read_bytes() == before
 
 
-def test_cli_runs_with_actual_archive_receipts(vera_workflow_workspace) -> None:
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_cli_runs_with_actual_archive_receipts(
+    vera_workflow_workspace, monkeypatch, tmp_path, archive_unavailable
+) -> None:
     workspace = vera_workflow_workspace(
         "aml-review", input_files={"loan.txt": "Lender A; payer B; EUR 200000."}
     )
@@ -189,6 +192,10 @@ def test_cli_runs_with_actual_archive_receipts(vera_workflow_workspace) -> None:
     review = review_for(source, Path(workspace["context"]["run_root"]) / "inputs")
     review_path = workspace["output_dir"] / "review_input.json"
     review_path.write_text(json.dumps(review))
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     result = subprocess.run(
         [
             sys.executable,

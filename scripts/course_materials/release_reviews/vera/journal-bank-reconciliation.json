@@ -184,7 +184,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280",
+  "course_sha256": "c581e265c0124ae9386d709eb584d88aeaa68a0b6aec90383ef51179bcdde553",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
@@ -1063,5 +1063,16 @@
     "reviewer": "Codex - bounded source integration review",
     "reviewed_at": "2026-11-07",
     "scope": "The complete compiled course excluding sources is identical to integrated main c61cd071. All journal-bank implementation files exactly match main; combined shared teaching runtime repairs retain their earlier reviewed scope. Historical editorial and artifact reviews preserved. Fresh localized execution on this exact digest remains mandatory; no new learner, live UI or professional acceptance."
+  },
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "5c94ebd1332c8e4fe2e68fa2758cfb361aa168b8",
+    "previous_course_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280",
+    "current_course_sha256": "c581e265c0124ae9386d709eb584d88aeaa68a0b6aec90383ef51179bcdde553",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
   }
 }

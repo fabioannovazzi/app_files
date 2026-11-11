@@ -6,6 +6,32 @@ Professional source validation and real missing inputs remain separate.
 
 ## Follow-up outage audit (2026-11-11, in progress)
 
+Latest verification supplement: the active installed Vera service reports the
+candidate package digest `f79a25e3fb0abde729baec9037f3ab14f90d830639914c040b341bc8622a892d`.
+Its maintained work-folder status operation reopened the exact synthetic run
+with its saved result and unchanged inventory hash. Current exposed skills and
+the sole enabled installation both match 0.1.615. This resolves the earlier
+obsolete-skill mismatch; it does not establish rendered native-panel acceptance.
+
+Three additional healthy/outage producer pairs now cover AML first record
+creation, Assetti first case/questionnaire, and Scissione first proposal/review
+from admitted inputs. All six cases and their three full test files pass.
+They supplement the earlier native continuation cases; professional judgments
+remain synthetic supplied inputs, not independently accepted advice.
+
+Teaching CI run `43063905137`, job `130679947033`, passed 1,752 tests with three
+explicit skips, then rejected stale editorial course digests. All 55 affected
+review digests were located in exact historical Git snapshots. Every compiled
+field except `sources` matches its own reviewed baseline. Historical editorial
+judgments, reviewer identities, dates and artifact hashes were preserved, with
+a separate agent-attributed compatibility record. Ten XML teaching test names
+also gained the healthy/outage parameter; their release references now select
+the actual successful healthy controls with matching kit/locale/phase/digest.
+The unchanged release verifier passes all 58 kits and 258 locales against the
+downloaded real CI JUnit. Release-review regressions pass. This is not new
+visual, learner, professional or native-panel acceptance. Fresh final-head CI
+remains required; no failing assertion or execution gate was removed.
+
 The follow-up starts from `450a84806`. The requirement above is unchanged;
 the earlier shared-route coverage did not establish every pipeline end to end.
 
