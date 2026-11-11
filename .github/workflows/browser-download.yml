@@ -122,7 +122,25 @@ jobs:
         with:
           node-version: '22'
       - run: python -m pip install pytest pytest-cov pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/browser-automation/requirements-agenzia.txt
-      - run: python -m playwright install --with-deps chromium
+      - name: Install Chromium and verify available host capabilities
+        run: |
+          python -m playwright install chromium
+          python - <<'PY_BROWSER'
+          import subprocess
+          import sys
+          from playwright.sync_api import Error, sync_playwright
+
+          with sync_playwright() as playwright:
+              try:
+                  browser = playwright.chromium.launch()
+              except Error:
+                  subprocess.run(
+                      [sys.executable, "-m", "playwright", "install-deps", "chromium"],
+                      check=True,
+                  )
+                  browser = playwright.chromium.launch()
+              browser.close()
+          PY_BROWSER
       - name: Verify single worker, real offline DOM, optional UI and course execution
         run: python -m pytest --noconftest -q -o addopts='' --tb=short tests/test_agenzia_acquisition.py tests/test_agenzia_ui.py tests/test_agenzia_portal.py tests/test_agenzia_panel.py tests/plugins/test_teaching_agenzia_execution.py tests/plugins/test_vera_selective_reporting.py::test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review tests/plugins/test_archive_automatic_reporting.py::test_acquisition_registers_only_verified_originals_in_its_archive_run tests/plugins/test_archive_agenzia_delivery.py --cov --cov-config=tests/agenzia_acquisition.coveragerc
       - name: Verify native metadata and Python projection

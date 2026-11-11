@@ -418,3 +418,29 @@ rebuild. The resumed host now exposes the actual 0.1.608 skill path, and the liv
 installed-product check passes for exactly one enabled `vera@mp-vera` installation.
 This supersedes the earlier stale-catalog observation. The managed CLI acceptance
 remains the evidenced runtime boundary; it is not a claim about all 55 workflows.
+
+### Follow-up CI browser setup repair (PR #983)
+
+At commit `baa35b1dd`, the Ubuntu `one-review` and `agenzia-acquisition`
+jobs failed twice before executing tests: Playwright's unconditional system
+package installation could not resolve Ubuntu mirrors. Logs confirmed Chromium's
+core shared libraries were already installed; the failed downloads were font/X11
+packages. The two jobs now install Chromium, attempt an actual headless launch,
+and install system dependencies only if that launch fails. A failed dependency
+installation or a second failed launch still fails the job. Test commands,
+assertions and coverage thresholds are unchanged.
+
+Both workflow blocks passed YAML/shell validation and four simulated cases:
+available browser, missing dependencies recovered by installation, failed
+installation, and persistent launch failure. The exact capability probe also
+launched and closed the locally installed Chromium successfully. Remote execution
+of the revised setup remains required; this local result does not prove Linux
+runner compatibility.
+
+The exact local browser review suite passed 26 tests. The offline acquisition
+suite passed 79 tests at 80.84% coverage. Initial restricted browser launches
+produced 22 UI failures and seven acquisition setup errors; unchanged suites
+passed after authorized browser access. No live tax portal or client data was
+used. The original follow-up CI had 90 passes, two setup failures and 27 pending
+jobs when the setup failures were diagnosed; those results do not establish a
+passing final candidate.
