@@ -123,6 +123,7 @@ jobs:
           node-version: '22'
       - run: python -m pip install pytest pytest-cov pypdf black==25.1.0 isort==6.0.1 mypy bandit -r plugins/browser-automation/requirements-agenzia.txt
       - name: Install Chromium and verify available host capabilities
+        shell: bash
         run: |
           python -m playwright install chromium
           python - <<'PY_BROWSER'

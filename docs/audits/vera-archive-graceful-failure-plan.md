@@ -444,3 +444,11 @@ passed after authorized browser access. No live tax portal or client data was
 used. The original follow-up CI had 90 passes, two setup failures and 27 pending
 jobs when the setup failures were diagnosed; those results do not establish a
 passing final candidate.
+
+The revised Ubuntu acquisition and browser-review jobs both passed remotely.
+The Windows acquisition job exposed a CI repair defect: the multiline Bash
+block inherited PowerShell and failed parsing the here-document before running.
+Both setup steps now explicitly select Bash. YAML inspection verifies that shell
+selection and Bash syntax validation passes for both blocks; the Windows rerun
+remains the authoritative cross-platform check. No product code or test assertion
+was changed for this correction.
