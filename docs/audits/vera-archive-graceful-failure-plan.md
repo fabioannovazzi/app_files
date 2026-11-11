@@ -452,3 +452,43 @@ Both setup steps now explicitly select Bash. YAML inspection verifies that shell
 selection and Bash syntax validation passes for both blocks; the Windows rerun
 remains the authoritative cross-platform check. No product code or test assertion
 was changed for this correction.
+
+### Clean-environment CI follow-up
+
+The macOS and Linux Archive recovery jobs on `d43c1513e` each passed 518 tests
+and Windows passed 520 tests, but all three failed the added real bank-engine
+outage test at import: the job installed
+Archive dependencies but omitted journal-bank-reconciliation requirements,
+including `fastexcel`. The workflow now installs that component's declared
+requirements. An isolated temporary environment installed the exact amended CI
+dependency command and passed the complete recovery suite: 519 passed, three
+Windows-only skips, 89.08% coverage. No production import, dependency validation
+or test assertion was weakened.
+
+The managed-runtime job separately found stale generated workflow metadata.
+Regeneration adds the existing `prepare_posting_review.py` command to the bank
+component inventory. This metadata correction does not change executable data
+paths, recipients or reporting payloads. The affected Vera workstream fingerprint
+was reviewed/refreshed and its generated contract projections regenerated.
+The local managed-runtime suite passed 358 tests (eight platform skips) at 81.95%
+coverage; Cowork session coverage passed nine tests (three Windows-only skips)
+at 94.87%; Mypy reported no issues in 30 source files. Vera host packages are
+rebuilt from the corrected registry before the next CI candidate.
+
+The teaching-kits job separately failed before tests on the same Ubuntu mirror
+DNS outage during unconditional Chromium system-dependency installation. Its
+setup now uses the exact capability probe already passed remotely by the UI and
+acquisition jobs, with explicit Bash. YAML inspection confirms byte-identical
+probe code and Bash syntax validation passes; all teaching assertions remain.
+
+Final local follow-up verification: all Vera host builds and source-to-package
+checks passed at 0.1.615. Package/update tests completed with 415 passed, one
+skipped and two failures. One is the pre-existing Clara public update notice
+(0.1.248 versus the now-observed local curated 0.1.407). The other is the
+working-tree version assertion comparing the corrected registry with `HEAD`,
+which already contains this unreleased 0.1.615 candidate. Inspection confirms
+origin/main remains Vera 0.1.613 and the only other open release PR is #982 at
+0.1.614; the candidate has not been installed or published. The release version
+increase is retained without changing production version metadata just to satisfy
+that intermediate working-tree comparison. Rerun that check on the committed
+candidate; preserve this failure record. No Marketplace metadata was changed.
