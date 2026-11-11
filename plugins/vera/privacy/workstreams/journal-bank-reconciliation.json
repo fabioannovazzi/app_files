@@ -225,7 +225,7 @@
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "cadec8e1cdf13b6d3a512a23724eb367a7719b082b405a56fc4e5305c946e452"
+    "source_fingerprint": "e09f986ed07037ff6ef28b2defcc6fcbae9439ed2946bc60bfb3179415d47294"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -334,6 +334,10 @@
     {
       "id": "retain-rejected-native-process-cost",
       "control": "The generic Codex launcher retains returned raw event and stderr bytes, their hashes, duration and terminal usage observation before response interpretation. These local diagnostics are unvalidated evidence, never accepted financial decisions. Only a complete otherwise verified tool-free turn with multiple assistant messages is classified as a retryable format rejection; all messages remain rejected. The grouped controller retains that attempt and retries within the same three-call packet budget after source replay. Forbidden tools, changed sources or executables and host denials stop. Missing terminal usage remains unknown. Reopening verifies retained diagnostic hashes and cost metadata. This adds no recipient or model-context fields."
+    },
+    {
+      "id": "bank-first-stage-and-directory-integrity",
+      "control": "The shared bank-first controller separates semantic stages from format retries, source/policy-binds retained native evidence and preserves completed work. Native result and attempt directories must be ordinary run-owned locations; symbolic-link redirects are rejected before model dispatch, reads or writes. Saved human decisions and private drafts remain separate from system conclusions."
     }
   ],
   "service_ids": [

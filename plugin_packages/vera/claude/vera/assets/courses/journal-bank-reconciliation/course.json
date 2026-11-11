@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/bank_first.py",
-      "sha256": "da5c6e86b3bb332fe7938af9085ad9ee346cad2d39831c1d3a491ac684ffc201"
+      "sha256": "75dfcf26e4f5bbda199fec7c8c5e84fe86085a1ffb40706589997b05d5beed95"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/bank_first_policy.json",
@@ -637,5 +637,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "e3e5229ff93634d3c2c67fdd28a62dbef8aa8193af8cb522fee0bf8457526c97"
+  "canonical_course_sha256": "bd378ef20f2c4a2087411e3013fcc71d03a9e382a0e271f38ec5f4a9ea6b7fe8"
 }

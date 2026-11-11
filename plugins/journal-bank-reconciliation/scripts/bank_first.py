@@ -689,7 +689,7 @@ def validate_response(
             if bank_resolution["status"] == "carry_forward":
                 raise ValueError("No established bank conclusion to carry forward")
             group["resolved_at"] = (
-                packet["stage"] if bank_resolution["status"] == "resolved" else "human"
+                packet["stage"] if bank_resolution["status"] == "resolved" else None
             )
         meaningful = _check_citations(group["bank_resolution"]["evidence"], records)
         if group["bank_resolution"]["status"] == "resolved" and any(
@@ -964,6 +964,11 @@ def _next_focus(
     for row in bank:
         identifier = row["transaction_id"]
         group = by_id.get(identifier)
+        if group and (
+            group.get("stage") == stage
+            or (stage == "luna" and group.get("stage") == "sol")
+        ):
+            continue  # Receipt-replayed work remains complete after a marker-write interruption.
         ids = group["bank_ids"] if group else [identifier]
         if set(ids) & (seen | completed):
             continue
@@ -1101,6 +1106,9 @@ def run_bank_first(
     output.mkdir(parents=True, exist_ok=True)
     if output.is_symlink():
         raise ValueError("Bank-first output must be ordinary")
+    attempts_root = output / "bank-first-attempts"
+    if attempts_root.is_symlink():
+        raise ValueError("Native attempt directories cannot use symbolic links")
     path = output / "bank_first_state.json"
     state = (
         _read(path)

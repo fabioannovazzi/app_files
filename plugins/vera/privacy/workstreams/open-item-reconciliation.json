@@ -192,7 +192,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "08984c4fbc7be020f9cb25ba2ac7ecf7bb3f76ca5466505cb378f31c58ca5dfc"
+    "source_fingerprint": "66419923ec4a3107e6ba7f2c5c00eb57fb4ad5b62ae39c3df3e48b8e31d34422"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -261,6 +261,10 @@
     {
       "id": "producer-owned-tabular-provenance",
       "control": "The reviewed CSV/XLSX reader records exact physical row and source-column dependencies with source byte hashes. The producer binds the complete private review digest. The outgoing recorder accepts index, selected-case and mutation-status projections only against that producer digest; edited or supplied review packets cannot inherit its provenance. Selected check metadata is limited to the known numeric pending-review count; arbitrary diagnostic prose is not certified. Operational-workbook provenance binds each output cell to explicit original record fields and the exact current path and bytes, including sealed copies after regeneration. Unknown cells retain unknown provenance without invalidating unrelated cells that were actually selected; a changed file cannot reuse a prior declaration. Literal producer text is identified by exact owned wording, never semantic or value matching against client data. Saved review files require the exact writer JSON, file hash and producer review digest. Metadata-only status revisions require a previously registered parent and preserve its original-cell references; unknown notes or changed parents cannot acquire a source-free declaration."
+    },
+    {
+      "id": "bank-first-stage-and-directory-integrity",
+      "control": "The shared bank-first controller separates semantic stages from format retries, source/policy-binds retained native evidence and preserves completed work. Native result and attempt directories must be ordinary run-owned locations; symbolic-link redirects are rejected before model dispatch, reads or writes. Saved human decisions and private drafts remain separate from system conclusions."
     }
   ],
   "workstream": "open-item-reconciliation",

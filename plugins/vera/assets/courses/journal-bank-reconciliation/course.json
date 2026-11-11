@@ -64,7 +64,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/bank_first.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/bank_first.py",
-      "sha256": "da5c6e86b3bb332fe7938af9085ad9ee346cad2d39831c1d3a491ac684ffc201"
+      "sha256": "75dfcf26e4f5bbda199fec7c8c5e84fe86085a1ffb40706589997b05d5beed95"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/bank_first_policy.json",

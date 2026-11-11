@@ -264,6 +264,7 @@ def test_all_luna_doubts_reach_sol_including_missing_documents(tmp_path):
     result = run(tmp_path, native)
     assert [p["stage"] for p in native.calls] == ["luna", "sol"]
     assert result["summary"]["primary_counts"]["human"] == 1
+    assert result["groups"][0]["resolved_at"] is None
     assert (
         len(result["questions"]["bank"]) == len(result["questions"]["accounting"]) == 1
     )
@@ -358,3 +359,36 @@ def test_native_parent_handoff_resumes_the_same_attempt(tmp_path):
     assert len(result["attempts"]) == 1
     assert directories[0].name == result["attempts"][0]["directory"]
     assert result["summary"]["primary_counts"]["luna"] == 1
+
+
+def test_attempt_directory_link_is_rejected_before_model_or_writes(tmp_path):
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    output = tmp_path / "review"
+    output.mkdir()
+    (output / "bank-first-attempts").symlink_to(outside, target_is_directory=True)
+    native = NativeFixture({})
+    with pytest.raises(ValueError, match="symbolic links"):
+        run(output, native)
+    assert not native.calls
+    assert list(outside.iterdir()) == []
+
+
+def test_resume_uses_validated_receipts_after_completion_marker_interruption(tmp_path):
+    native = NativeFixture(
+        {
+            "luna": {"resolved": False, "complete": False},
+            "sol": {"resolved": False, "complete": False},
+        }
+    )
+    result = run(tmp_path, native)
+    path = tmp_path / "bank_first_state.json"
+    state = json.loads(path.read_text())
+    state["stage_completed"] = {"luna": [], "sol": []}
+    state["content_sha256"] = bf.digest(
+        {k: v for k, v in state.items() if k != "content_sha256"}
+    )
+    path.write_text(json.dumps(state))
+    calls = len(native.calls)
+    assert run(tmp_path, native) == result
+    assert len(native.calls) == calls

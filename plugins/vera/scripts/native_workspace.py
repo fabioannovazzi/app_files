@@ -233,6 +233,8 @@ def output_revision(output: Path, component: str = "") -> str:
     values = {}
     review = review_directory(output, component)
     for directory in dict.fromkeys((output, review, output / "semantic-review")):
+        if directory.is_symlink():
+            raise ValueError("Review directories cannot use symbolic links")
         for name in REVIEW_FILES:
             path = directory / name
             if path.exists():

@@ -4,7 +4,7 @@
   "security_controls": [
     {
       "id": "trusted-scope",
-      "control": "Use exact operator allowlist bindings, or resolve stable client/engagement/run IDs through the maintained owner-private Studio Archive session and configured local root. Revalidate folder membership, portable identities and immutable source receipts before reads/writes and specialist chat handoff. Preserve session ownership; never accept browser/model filesystem paths or adopt another session. Ordinary local actor/tenant namespaces derive from OS-user home and archive session; local reviewer authority remains the operating computer user, with explicit viewer/empty-role overrides honored. This does not authenticate an OpenAI or studio account.",
+      "control": "Use exact operator allowlist bindings, or resolve stable client/engagement/run IDs through the maintained owner-private Studio Archive session and configured local root. Revalidate folder membership, portable identities and immutable source receipts before reads/writes and specialist chat handoff. Preserve session ownership; never accept browser/model filesystem paths or adopt another session. Ordinary local actor/tenant namespaces derive from OS-user home and archive session; local reviewer authority remains the operating computer user, with explicit viewer/empty-role overrides honored. This does not authenticate an OpenAI or studio account. Fixed semantic-review result directories reject symbolic-link redirects before native reads.",
       "implemented_by": [
         "scripts/native_workspace.py"
       ],
@@ -1152,7 +1152,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "fa4de42f3be7bc0578f2f52d8da67f50e3f593d96db8d310e795bcfef6a6a802",
+    "source_fingerprint": "226bf69eba0026880afb988b50e18d803e2ff38b3570841aafed39d5989d3f23",
     "reviewed_at": "2026-11-11"
   },
   "governed_repository_paths": [

@@ -1006,3 +1006,15 @@ def test_export_receipt_names_the_exact_adapter_and_keeps_unknown_references_emp
             decision()["lines"],
             decision_status="bank_resolved",
         )
+
+
+def test_native_bank_result_directory_link_cannot_escape_run(tmp_path):
+    import native_workspace
+
+    output = tmp_path / "run"
+    output.mkdir()
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    (output / "semantic-review").symlink_to(outside, target_is_directory=True)
+    with pytest.raises(ValueError, match="symbolic links"):
+        native_workspace.output_revision(output, "journal-bank-reconciliation")
