@@ -6,6 +6,24 @@ Professional source validation and real missing inputs remain separate.
 
 ## Follow-up outage audit (2026-11-11, in progress)
 
+Final-head CI on `e7ad4dd73` passed 118 checks. The remaining native open-item
+job passed 522 source/workpaper tests and ten regeneration cases, then failed
+one of 65 reporting/intake cases: an older assertion required a foreign-run
+privacy report to block intake. This contradicts the required separation of
+optional reporting from professional output ownership. The replacement runs
+actual preparation, exact retry and result access with both a foreign-run report
+and malformed JSON, verifies the workbook/assurance outputs, and preserves the
+original report bytes. Both cases pass. The full reporting test file and output
+boundary suite pass 51 tests, including visible unverified-reporting warnings
+and rejection of foreign professional ownership. No production code, package,
+integrity check or coverage threshold changed for this correction.
+
+On that same preceding head, Archive recovery passed on Windows (521 tests,
+one skip), Linux and macOS (519 tests, three skips each), all at 89.08% coverage;
+each separate portable-workspace check passed. Teaching passed 1,752 tests with
+three skips, and the unchanged release verifier validated 58 kits/258 locales.
+Final-head CI is required again for the corrected test expectation.
+
 Latest verification supplement: the active installed Vera service reports the
 candidate package digest `f79a25e3fb0abde729baec9037f3ab14f90d830639914c040b341bc8622a892d`.
 Its maintained work-folder status operation reopened the exact synthetic run
