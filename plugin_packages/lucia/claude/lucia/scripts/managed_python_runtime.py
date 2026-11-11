@@ -21,7 +21,7 @@ product_name = runpy.run_path(str(Path(__file__).with_name("reporting_product.py
     "product_name"
 ]
 
-__all__ = ["main", "run_verified_helper"]
+__all__ = ["main", "run_verified_helper", "reenter_base"]
 
 # Isolated Python omits the script directory. Restore only this owned directory,
 # never the caller's working directory, for the sibling diagnostic imports below.
@@ -63,6 +63,7 @@ runtime_environment = _IMPLEMENTATION.runtime_environment
 runtime_key = _IMPLEMENTATION.runtime_key
 runtime_python = _IMPLEMENTATION.runtime_python
 select_runtime = _IMPLEMENTATION.select_runtime
+reenter_base = _IMPLEMENTATION._shared_runtime().reenter_base
 
 
 def _report_forced_termination(
@@ -307,6 +308,9 @@ def main(argv: list[str] | None = None) -> int:
     """Run the installed product's managed runtime CLI."""
 
     arguments = list(sys.argv[1:] if argv is None else argv)
+    reentered = reenter_base(Path(__file__), arguments)
+    if reentered is not None:
+        return reentered
     # Only runtime options before its subcommand select the component. A helper
     # may itself have an unrelated --module option in its remaining arguments.
     prefix = arguments

@@ -5,6 +5,7 @@ from __future__ import annotations
 import errno
 import hashlib
 import io
+import logging
 import os
 import platform
 import shutil
@@ -176,11 +177,13 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
             "--no-project",
             "--system",
             "--managed-python",
+            "--no-python-downloads",
             "cpython@3.12",
         ],
     ]
     candidate = ""
-    for command in commands:
+    install_error = ""
+    for index, command in enumerate(commands):
         result = runner(
             command,
             env=environment,
@@ -190,9 +193,14 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
             check=False,
         )
         if result.returncode:
+            if index == 0:
+                # uv can finish extraction but fail creating its minor-version link.
+                # Reuse only a private interpreter which passes the capability probe.
+                install_error = result.stderr.strip()
+                continue
             raise ValueError(
                 "Automatic Python setup failed; retry after resolving download or storage access: "
-                + result.stderr.strip()
+                + "\n".join(filter(None, (install_error, result.stderr.strip())))
             )
         candidate = result.stdout.strip()
     executable = Path(candidate)
@@ -207,7 +215,7 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
             str(executable),
             "-I",
             "-c",
-            "import sys; assert sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 12)",
+            "import sys, ssl, venv, ensurepip; assert sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 12)",
         ],
         env=environment,
         capture_output=True,
@@ -217,4 +225,10 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
     )
     if probe.returncode:
         raise ValueError("Automatic Python setup returned an incompatible interpreter.")
+    if install_error:
+        logging.getLogger(__name__).warning(
+            "Python installation reported an error, but its private CPython 3.12 "
+            "passed the runtime capability probe; continuing: %s",
+            install_error,
+        )
     return str(executable)

@@ -7,11 +7,10 @@ import argparse
 import json
 import logging
 import os
-import subprocess
 import sys
 from pathlib import Path
 
-from managed_python_runtime import ensure_runtime, run_verified_helper
+from managed_python_runtime import ensure_runtime, reenter_base, run_verified_helper
 from verified_execution import (
     prepare_execution_root,
     release_execution_root,
@@ -52,6 +51,12 @@ def _component_root(name: str) -> Path:
 
 def main(argv: list[str] | None = None) -> int:
     """Validate all components or run one component dependency checker."""
+
+    reentered = reenter_base(
+        Path(__file__), list(sys.argv[1:] if argv is None else argv)
+    )
+    if reentered is not None:
+        return reentered
 
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--module", choices=COMPONENTS)
@@ -108,24 +113,6 @@ def main(argv: list[str] | None = None) -> int:
             args.module,
             requirements=args.requirements,
         )
-        if not ready and detail.startswith(
-            "Shared runtime update requires the base Python interpreter"
-        ):
-            # An activated host hook may put the managed venv first on PATH.
-            # Re-enter this same verified checker under its recorded base interpreter;
-            # keep the shared runtime's prohibition on self-updating intact.
-            base = Path(getattr(sys, "_base_executable", sys.executable))
-            if base.is_file() and base.absolute() != Path(sys.executable).absolute():
-                completed = subprocess.run(
-                    [
-                        str(base),
-                        str(execution_root / "scripts/check_dependencies.py"),
-                        *(sys.argv[1:] if argv is None else argv),
-                    ],
-                    cwd=execution_root,
-                    check=False,
-                )
-                return completed.returncode
         if not ready:
             from operational_incidents import report_failure
 

@@ -6,6 +6,24 @@ The target is `~/.local/share/mparanza/runtime/venv` on macOS/Linux and
 Client projects never own it. Separate OS hosts, including a Cowork VM, cannot
 share native binaries or this filesystem environment.
 
+Launchers invoked from the shared environment hand back to its base interpreter
+before preparing an execution or starting a helper. The waiting launcher releases
+only its own reader lease so dependency repair cannot deadlock behind that parent;
+other running workflows still protect the environment with their reader leases.
+The base child preserves the command arguments and exit status. The installer
+continues to reject in-process self-updates.
+
+If only the feature-policy read is denied, ordinary execution may reuse a complete
+installation receipt after checking the installed inventory, required features,
+package constraints and actual component imports. It does not change the policy,
+permissions or OCR selection. A missing receipt, altered inventory, missing
+dependency or requested new feature still requires successful managed repair.
+
+Cold provisioning checks for a usable private interpreter even if uv reports an
+installation error (including a Windows minor-version-link failure). It neither
+downloads during discovery nor uses an outside interpreter; CPython 3.12 and the
+standard-library capabilities needed for venv setup must pass the probe first.
+
 `requirements-shared-core.txt` is the union of the products and their non-OCR
 optional requirements. `requirements-shared-ocr.txt` enables OCR in the same
 interpreter after approval. Enabled OCR persists across subsequent updates.

@@ -163,9 +163,7 @@ def reconciled_case(archive_core, client_case, tmp_path, request):
     return loaded
 
 
-def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rerun(
-    reconciled_case, monkeypatch
-):
+def _complete_grouped_case(reconciled_case, monkeypatch):
     from tests.plugins.test_journal_bank_reconciliation_plugin import (
         load_core,
         load_semantic_review,
@@ -236,6 +234,14 @@ def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rer
         worker_selection={"host": "codex"},
     )
 
+    return result
+
+
+def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rerun(
+    reconciled_case, monkeypatch
+):
+    result = _complete_grouped_case(reconciled_case, monkeypatch)
+    loaded = reconciled_case
     assert result["exhaustive"] is True
     assert result["summary"]["bank_row_count"] == 3
     assert result["summary"]["journal_row_count"] == 2
@@ -792,3 +798,58 @@ def test_inspection_counts_mapped_preview_cells_only_after_delivery(
         unsent_cells if read_preview else source_measure["source_cells"]
     )
     assert report["sent_characters"] > 0
+
+
+@pytest.mark.parametrize("changed", [False, True])
+def test_grouped_result_reads_have_exact_source_lineage(
+    reconciled_case, monkeypatch, changed
+):
+    from archive_reporting import read_artifact, snapshot_run
+
+    result = _complete_grouped_case(reconciled_case, monkeypatch)
+    output = result["result"].parent
+    if changed:
+        payload = json.loads(result["result"].read_text())
+        payload["unregistered_edit"] = "new private evidence"
+        result["result"].write_text(json.dumps(payload))
+    read_artifact(reconciled_case, output / "grouped_review_status.json")
+    read_artifact(reconciled_case, result["result"])
+    report = json.loads(Path(snapshot_run(reconciled_case)["report_path"]).read_text())
+
+    assert result["workbook"].is_file()
+    assert report["collection_status"] == (
+        "incomplete" if changed else "complete"
+    ), report["errors"]
+    if not changed:
+        sources = {
+            item["label"]: item for item in report["sources"] if item["role"] == "input"
+        }
+        assert sources["bank.csv"]["sent_cells"] == 12
+        assert sources["journal.csv"]["sent_cells"] == 8
+        assert sources["bank.csv"]["not_sent_cells"] == 3
+        assert sources["journal.csv"]["not_sent_cells"] == 2
+
+
+def test_grouped_result_survives_unavailable_archive_lineage(
+    reconciled_case, monkeypatch
+):
+    from archive_reporting import snapshot_run
+    from vera_assurance import contracts
+
+    resolve = contracts.archive_projection_runtime
+
+    def unavailable(component):
+        if component.name == "grouped_review.py":
+            raise PermissionError("Archive reporting storage unavailable")
+        return resolve(component)
+
+    monkeypatch.setattr(contracts, "archive_projection_runtime", unavailable)
+
+    result = _complete_grouped_case(reconciled_case, monkeypatch)
+
+    assert result["exhaustive"] is True
+    assert result["workbook"].is_file()
+    assert result["result"].is_file()
+    report = json.loads(Path(snapshot_run(reconciled_case)["report_path"]).read_text())
+    assert report["collection_status"] == "incomplete"
+    assert list((Path(reconciled_case["run_root"]) / "reporting/gaps").glob("*.json"))

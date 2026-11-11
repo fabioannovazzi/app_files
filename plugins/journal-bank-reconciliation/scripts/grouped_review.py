@@ -10,7 +10,9 @@ from __future__ import annotations
 import csv
 import hashlib
 import json
+import logging
 import re
+import sqlite3
 import time
 from collections import Counter
 from decimal import Decimal
@@ -491,6 +493,70 @@ def _summary(
     }
 
 
+def _register_result_lineage(
+    output: Path,
+    bank: list[dict[str, Any]],
+    journal: list[dict[str, Any]],
+    source_evidence: Mapping[str, str],
+) -> None:
+    """Bind generated JSON bytes to the fields actually used in this review.
+
+    Producer coordinates are mechanical provenance, not a guess about matching.
+    Unmapped PDF evidence remains unknown; no private unused column is selected.
+    Reporting cannot cancel the workbook already saved by the calculation.
+    """
+    try:
+        from vera_assurance.contracts import archive_projection_runtime
+
+        recorder = archive_projection_runtime(Path(__file__))
+        if recorder is None:
+            return
+        records = [
+            {
+                "record_id": row["transaction_id"],
+                "fields": list(_project(row, source_evidence)),
+            }
+            for row in [*bank, *journal]
+        ]
+        for name in (
+            "grouped_review_status.json",
+            "grouped_reconciliation_result.json",
+        ):
+            path = output / name
+            content = path.read_bytes()
+            recorder.register_row_projection(
+                "journal-bank-reconciliation",
+                path,
+                json.loads(content),
+                records,
+                artifact_sha256=hashlib.sha256(content).hexdigest(),
+            )
+    except (
+        OSError,
+        ValueError,
+        ImportError,
+        KeyError,
+        TypeError,
+        sqlite3.Error,
+    ) as error:
+        # Resolver/import failures happen before isolated_projection can run.
+        # Retain its normal separate gap when that recorder is still available.
+        try:
+            from archive_reporting_failure import reporting_failure
+
+            reporting_failure(
+                "journal-bank-reconciliation",
+                {"output": str(output)},
+                error,
+                stage="grouped_result_lineage",
+            )
+        except (OSError, ImportError):
+            logging.getLogger(__name__).warning(
+                "Grouped result saved; Archive privacy lineage unavailable (%s)",
+                type(error).__name__,
+            )
+
+
 def complete_grouped_review(
     reconciliation_dir: Path,
     output_dir: Path,
@@ -906,6 +972,7 @@ def complete_grouped_review(
             > 0,
         },
     )
+    _register_result_lineage(output, all_bank, all_journal, source_evidence)
     return {
         "batch_count": sum(a["status"] == "validated" for a in state["attempts"]),
         "batches": state["attempts"],

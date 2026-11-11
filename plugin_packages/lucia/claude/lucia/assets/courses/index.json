@@ -62,7 +62,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "34cb1917e74df36c9e1db6d0a4dcdf864cce6927f9edc2429e2be245c053d395",
+      "sha256": "4bbcb469de17df964556e66afa117732f2a5f3ad168b4617e05a91adcf380141",
       "languages": [
         "it",
         "en",
@@ -87,7 +87,7 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "fccbded6ecc52a1e2d4ef1d39b6c097387d74b7343e2490e3e512613659a39ef"
+      "source_sha256": "c98b7b9bf5f150d934a97594b48150b6efe4287b24a738c690e42f391a790b75"
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",

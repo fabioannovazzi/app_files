@@ -214,6 +214,7 @@ def test_managed_launcher_loads_by_path_outside_its_script_directory(tmp_path):
     for name in (
         "managed_python_runtime.py",
         "_managed_python_runtime.py",
+        "_shared_python_runtime.py",
         "verified_execution.py",
         "reporting_product.py",
     ):

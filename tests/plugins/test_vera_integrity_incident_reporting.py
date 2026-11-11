@@ -31,6 +31,7 @@ def installed_copy(tmp_path, host="codex"):
         "reporting_product.py",
         "managed_python_runtime.py",
         "_managed_python_runtime.py",
+        "_shared_python_runtime.py",
         "check_dependencies.py",
     ):
         shutil.copyfile(ROOT / "plugins/vera/scripts" / name, root / "scripts" / name)
