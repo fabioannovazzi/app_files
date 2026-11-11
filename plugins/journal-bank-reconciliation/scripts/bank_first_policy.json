@@ -1,0 +1,12 @@
+{
+  "schema_version": "vera.bank_first_policy.v1",
+  "primary_scope": "Explain the real bank cash movement: exact amount, direction and supported nature, party or specific instrument; invoice/partita identity and current residual are separate.",
+  "admission_rule": "unique_explicit_reference_party_scope_exact_cash.v1",
+  "deterministic_evidence": "Explicit nonempty reference and party identity in both qualified source populations; same currency/unit/entity and signed direction; exact cents; complete unconflicted reference group; no duplicate source signatures. Amount/date alone never qualifies.",
+  "allocation_rule": "Candidate examination is not allocation. Only a supported exact cash relationship reserves its source rows; invoice closure requires its independent domain allocation controls.",
+  "stages": ["deterministic", "luna", "sol", "human"],
+  "secondary_scope": "Supported account-level explanation; never infer invoice closure, current residual or TeamSystem partita identity from an internal number or assumed key.",
+  "purposes": ["bank_open_items", "bookkeeping_check", "audit_reconciliation"],
+  "default_purpose": "bank_open_items",
+  "format_attempts_per_stage": 3
+}

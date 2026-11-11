@@ -283,3 +283,7 @@ nav[aria-label="Revisione del bilancio per area"] {
 
 .posting-line input[type=search]{padding:9px 12px;border:1px solid var(--line);margin:.4rem 0}
 .posting-bank>strong:first-child{overflow-wrap:anywhere}@media(max-width:420px){.posting-totals{grid-template-columns:repeat(2,minmax(0,1fr))}.posting-totals>div:last-child{grid-column:1/-1}}
+
+.bank-first-review { border-block: 1px solid #dce3eb; padding: 1rem 0; margin-bottom: 1.5rem; }
+.bank-first-review article { border-top: 1px solid #e6ebf0; padding: .75rem 0; overflow-wrap: anywhere; }
+.bank-first-review details { margin: .75rem 0; }

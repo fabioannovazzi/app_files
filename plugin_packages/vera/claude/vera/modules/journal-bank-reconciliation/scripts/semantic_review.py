@@ -3019,12 +3019,12 @@ def resolve_worker_selection(
 
 
 def discover_worker_selection(
-    workflow_id: str, reasoning_effort: str | None = None
+    workflow_id: str, reasoning_effort: str | None = None, *, stage: str = "luna"
 ) -> dict[str, Any]:
     """Discover a current low-cost native worker for unresolved reconciliation."""
     from worker_capabilities import select_worker
 
-    return select_worker(workflow_id, reasoning_effort)
+    return select_worker(workflow_id, reasoning_effort, stage=stage)
 
 
 def load_worker_selection(
@@ -5507,6 +5507,7 @@ def run_semantic_resolution_pipeline(
     codex_bin: Path | None = None,
     client_engagement: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
+    purpose: str = "bank_open_items",
 ) -> dict[str, Any]:
     """Complete the same grouped review and final workbook on every normal run.
 
@@ -5524,6 +5525,7 @@ def run_semantic_resolution_pipeline(
         client_engagement=client_engagement,
         worker_selection=worker_selection,
         codex_bin=codex_bin,
+        purpose=purpose,
     )
     result["required_resolution_level"] = required_resolution_level
     return result
@@ -5566,6 +5568,11 @@ def _parser() -> argparse.ArgumentParser:
     )
     run_all.add_argument("reconciliation_dir", type=Path)
     run_all.add_argument("--output-dir", type=Path, required=True)
+    run_all.add_argument(
+        "--purpose",
+        choices=("bank_open_items", "bookkeeping_check", "audit_reconciliation"),
+        default="bank_open_items",
+    )
     run_all.add_argument(
         "--required-level",
         choices=RESOLUTION_LEVELS[1:],
@@ -5710,6 +5717,7 @@ def main() -> int:
                 args.reconciliation_dir,
                 args.output_dir,
                 required_resolution_level=args.required_level,
+                purpose=args.purpose,
                 codex_bin=args.codex_bin,
                 client_engagement=client_engagement,
                 worker_selection=_load_cli_worker_selection(args),

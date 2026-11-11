@@ -151,7 +151,7 @@ def prepare(
         if classified_rows is not None
         else h.reconcile_open_items(items, bank, assumptions)
     )
-    assumptions[semantic.KEY] = semantic.prepare_resolution(
+    assumptions[semantic.KEY] = semantic._legacy_prepare_resolution(
         rows, bank, assumptions, tmp_path / "results" / "semantic-review"
     )
     return assumptions
@@ -863,7 +863,7 @@ def test_excluded_post_cutoff_receipt_never_launches_worker(
         semantic, "_capsule", lambda: pytest.fail("Excluded receipt sent")
     )
 
-    result = semantic.prepare_resolution(
+    result = semantic._legacy_prepare_resolution(
         rows, bank, assumptions, tmp_path / "semantic-review"
     )
 
@@ -1120,7 +1120,7 @@ def test_equivalent_tolerance_spelling_preserves_semantic_replay(
     items, bank = population(payments=())
     assumptions = {"amount_tolerance": input_tolerance}
     preliminary = h.reconcile_open_items(items, bank, assumptions)
-    assumptions[semantic.KEY] = semantic.prepare_resolution(
+    assumptions[semantic.KEY] = semantic._legacy_prepare_resolution(
         preliminary, bank, assumptions, tmp_path / "semantic-review"
     )
     assumptions["amount_tolerance"] = sealed_tolerance
@@ -1135,7 +1135,7 @@ def test_changed_tolerance_value_invalidates_semantic_replay(runtime, tmp_path):
     items, bank = population(payments=())
     assumptions = {"amount_tolerance": "0.00"}
     preliminary = h.reconcile_open_items(items, bank, assumptions)
-    assumptions[semantic.KEY] = semantic.prepare_resolution(
+    assumptions[semantic.KEY] = semantic._legacy_prepare_resolution(
         preliminary, bank, assumptions, tmp_path / "semantic-review"
     )
     assumptions["amount_tolerance"] = "0.01"
@@ -1215,7 +1215,9 @@ def test_incompatible_or_oversized_population_is_not_sent(
         lambda: pytest.fail("No compatible bounded packet may be sent"),
     )
     rows = h.reconcile_open_items(items, bank, {})
-    result = semantic.prepare_resolution(rows, bank, {}, tmp_path / "semantic-review")
+    result = semantic._legacy_prepare_resolution(
+        rows, bank, {}, tmp_path / "semantic-review"
+    )
     assert result["batches"] == []
     assert result["blocks"]
 
@@ -1306,7 +1308,7 @@ def test_native_handoff_resumes_same_population_and_closes_cumulative_payment(
     assumptions = {"currency": "EUR"}
     rows = helpers.reconcile_open_items(items, bank, assumptions)
     output = tmp_path / "results/semantic-review"
-    pending = semantic.prepare_resolution(rows, bank, assumptions, output)
+    pending = semantic._legacy_prepare_resolution(rows, bank, assumptions, output)
     request_path = output / "batch-0000/native_host_request.json"
     original_request = request_path.read_bytes()
     response = {
@@ -1319,7 +1321,7 @@ def test_native_handoff_resumes_same_population_and_closes_cumulative_payment(
         json.dumps(completed_record(json.loads(original_request), response))
     )
 
-    assumptions[semantic.KEY] = semantic.prepare_resolution(
+    assumptions[semantic.KEY] = semantic._legacy_prepare_resolution(
         rows, bank, assumptions, output
     )
     result = helpers.reconcile_open_items(items, bank, assumptions)
@@ -1339,3 +1341,140 @@ def test_native_handoff_resumes_same_population_and_closes_cumulative_payment(
     assert delivered["assurance"]["content_sha256"]
     assert Path(delivered["excel_path"]).is_file()
     assert Path(delivered["word_path"]).is_file()
+
+
+def test_current_route_uses_shared_bank_first_and_native_sol_for_all_doubts(
+    runtime, monkeypatch, tmp_path
+):
+    from tests.plugins.test_vera_bank_first import NativeFixture
+
+    _, h, semantic = runtime
+    monkeypatch.syspath_prepend(
+        str(SCRIPTS.parents[1] / "journal-bank-reconciliation/scripts")
+    )
+    import bank_first
+
+    monkeypatch.setattr(semantic, "_bank_first_module", lambda: bank_first)
+    native = NativeFixture(
+        {
+            "luna": {"resolved": False, "complete": False},
+            "sol": {"resolved": False, "complete": False},
+        }
+    )
+    monkeypatch.setattr(
+        semantic,
+        "_capsule",
+        lambda: SimpleNamespace(
+            discover_worker_selection=native.select,
+            run_isolated_native_worker=native.invoke,
+        ),
+    )
+    items, bank = population()
+    assumptions = {"currency": "EUR"}
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    result = semantic.prepare_resolution(
+        rows, bank, assumptions, tmp_path / "semantic-review"
+    )
+    assert result["schema_version"] == "vera.open_item_semantic_resolution.v2"
+    assert [packet["stage"] for packet in native.calls] == ["luna", "sol"]
+    assert all(
+        packet["workflow_id"] == "open-item-reconciliation" for packet in native.calls
+    )
+    assert result["bank_first"]["summary"]["primary_counts"]["human"] == 1
+    assert all(packet["invoice_closure_authorized"] for packet in native.calls)
+    assumptions[semantic.KEY] = result
+    assert semantic.resolution_ledgers(rows, bank, assumptions) == []
+    updated = semantic.apply_resolution(rows, bank, assumptions)
+    assert not any(row["reconciliation_status"] == "closed" for row in updated)
+    before = len(native.calls)
+    assert (
+        semantic.prepare_resolution(
+            rows, bank, {"currency": "EUR"}, tmp_path / "semantic-review"
+        )
+        == result
+    )
+    assert len(native.calls) == before
+
+
+def test_current_bank_first_domain_checks_cumulative_allocations_in_both_stages(
+    runtime, monkeypatch
+):
+    _, h, semantic = runtime
+    items, bank = population()
+    assumptions = {"currency": "EUR"}
+    rows = h.reconcile_open_items(items, bank, assumptions)
+    _, _, normalized_bank, normalized_journal, relationship = semantic._bank_sources(
+        rows, bank, assumptions
+    )
+    monkeypatch.syspath_prepend(
+        str(SCRIPTS.parents[1] / "journal-bank-reconciliation/scripts")
+    )
+    import bank_first
+
+    for stage in ("luna", "sol"):
+        packet = bank_first.build_packet(
+            normalized_bank,
+            normalized_journal,
+            [{"bank_ids": ["bank-0"], "question_scope": "bank"}],
+            stage=stage,
+            source_binding={"workflow": "open-item-reconciliation"},
+            relationship=relationship,
+            admission_result=bank_first.admission(
+                normalized_bank, normalized_journal, relationship
+            ),
+            previous=[],
+            purpose="bank_open_items",
+            reserved={},
+        )
+        citations = [
+            {
+                "side": "bank",
+                "transaction_id": "bank-0",
+                "field": "description",
+                "quote": bank[0]["description"],
+            },
+            *[
+                {
+                    "side": "journal",
+                    "transaction_id": item["record_id"],
+                    "field": "document_no",
+                    "quote": item["document_no"],
+                }
+                for item in items
+            ],
+        ]
+        resolution = lambda status: {
+            "status": status,
+            "scope": "supplied_open_item_settlement",
+            "explanation": "Riferimenti delle fatture presenti nella causale bancaria.",
+            "evidence": citations,
+            "questions": [],
+        }
+        group = {
+            "bank_ids": ["bank-0"],
+            "journal_ids": [item["record_id"] for item in items],
+            "bank_resolution": resolution("resolved"),
+            "accounting_resolution": resolution("complete"),
+            "proposed_account_codes": [],
+            "account_codes_are_alternatives": False,
+            "change_basis": "additional_analysis_of_supplied_evidence",
+            "allocations": [
+                {"source_id": "bank-0", "target_id": "invoice-0", "amount": "366"},
+                {"source_id": "bank-0", "target_id": "invoice-1", "amount": "244"},
+            ],
+        }
+        validated = bank_first.validate_response(
+            packet,
+            {"packet_sha256": packet["packet_sha256"], "groups": [group]},
+            domain_validator=semantic._domain_for_bank_first(rows, bank, assumptions),
+        )
+        assert len(validated[0]["allocations"]) == 2
+        group["allocations"][1]["amount"] = "245"
+        with pytest.raises(ValueError):
+            bank_first.validate_response(
+                packet,
+                {"packet_sha256": packet["packet_sha256"], "groups": [group]},
+                domain_validator=semantic._domain_for_bank_first(
+                    rows, bank, assumptions
+                ),
+            )

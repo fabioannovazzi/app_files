@@ -64,6 +64,17 @@ Current user requests take precedence over saved preferences.
 
 # Journal-Bank Reconciliation
 
+The normal final route is bank-first: versioned strong explicit source identities
+resolve locally; all probable and unresolved primary cases go to the actual
+native Luna stage, and ALL remaining bank/accounting doubts go to the actual
+stronger Sol stage before specific human questions. On other hosts retain the
+actual native model identity. Keep bank_resolution separate from
+accounting_resolution. Carry established bank facts unchanged into accounting
+analysis; generic RiBa/effects totals still need identified parties/titles.
+Opening saved work never reruns models. Use the same process for reconciliation,
+bookkeeping checks and auditor control, with the appropriate --purpose.
+
+
 For a user-requested review of proposed accounting entries and a TeamSystem
 TXT from the reviewer's decisions, read `../vera/references/posting-review.md`.
 This is a separate proposal-review mode in the same native panel. Do not label

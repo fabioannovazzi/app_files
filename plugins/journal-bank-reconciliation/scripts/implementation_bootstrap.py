@@ -47,6 +47,8 @@ IMPLEMENTATION_CONTRACT = (
     ("plugin", "scripts/seal_review_receipts.py"),
     ("plugin", "scripts/semantic_review.py"),
     ("plugin", "scripts/prepare_posting_review.py"),
+    ("plugin", "scripts/bank_first.py"),
+    ("plugin", "scripts/bank_first_policy.json"),
     ("plugin", "scripts/grouped_review.py"),
     ("plugin", "scripts/grouped_workbook.py"),
     ("plugin", "scripts/bank_working_copy.py"),

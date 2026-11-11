@@ -30,6 +30,8 @@ ROOT = Path(__file__).resolve().parents[1]
 MAX_BYTES = 2_000_000
 MAX_RECORD_BYTES = 8_000_000  # Archive's existing bounded 5,000-file contract.
 REVIEW_FILES = (
+    "bank_first_result.json",
+    "bank_first_state.json",
     "posting_proposals.json",
     "posting_decisions.json",
     "run_intake.json",
@@ -230,7 +232,7 @@ def output_revision(output: Path, component: str = "") -> str:
     """Detect changes to review state without introducing a second review store."""
     values = {}
     review = review_directory(output, component)
-    for directory in dict.fromkeys((output, review)):
+    for directory in dict.fromkeys((output, review, output / "semantic-review")):
         for name in REVIEW_FILES:
             path = directory / name
             if path.exists():
@@ -1095,6 +1097,50 @@ def snapshot(
         raise ValueError(
             "This workflow's native adapter is not implemented yet; use its existing workflow"
         )
+    if component in {"journal-bank-reconciliation", "open-item-reconciliation"}:
+        canonical_path = output / "semantic-review" / "bank_first_result.json"
+        if canonical_path.exists():
+            canonical = read_json(canonical_path)
+            content = {
+                key: value
+                for key, value in canonical.items()
+                if key != "content_sha256"
+            }
+            canonical_digest = hashlib.sha256(
+                json.dumps(
+                    content,
+                    sort_keys=True,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                    allow_nan=False,
+                ).encode()
+            ).hexdigest()
+            if (
+                canonical.get("schema_version") != "vera.bank_first.v1"
+                or canonical.get("content_sha256") != canonical_digest
+            ):
+                raise ValueError("Bank-first result is invalid")
+            data["bank_first"] = {
+                key: canonical[key] for key in ("summary", "questions", "errors")
+            }
+            data["bank_first"]["results"] = [
+                {
+                    key: group.get(key)
+                    for key in (
+                        "bank_ids",
+                        "journal_ids",
+                        "candidate_journal_ids",
+                        "bank_resolution",
+                        "accounting_resolution",
+                        "resolved_at",
+                        "stage",
+                        "allocation_state",
+                        "proposed_account_codes",
+                        "account_codes_are_alternatives",
+                    )
+                }
+                for group in canonical["groups"]
+            ]
     if args.get("item_id") and selected is None:
         raise ValueError("Unknown selection in this authorised run")
     if args.get("revision") and revision != args["revision"]:
@@ -2575,7 +2621,10 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
                 if tool == "vera_workspace_apply":
                     if args.get("review", {}).get("operation") != "export":
                         raise ValueError("Choose reviewed posting export")
-                    result = export_reviewed(output)
+                    result = export_reviewed(
+                        output,
+                        args.get("review", {}).get("format_id", "teamsystem_imppn_v1"),
+                    )
                 elif tool == "vera_workspace_save":
                     posting_draft_check(output, config["actor_id"], args)
                     result = save_decision(

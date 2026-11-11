@@ -114,7 +114,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/reconciliation_workflow.py",
-      "sha256": "7799829872483e24169d4940a0262aad26051e51645f917739090f3ea22ef1a1"
+      "sha256": "cff7c0d7b8b56b542f942d23e93f30a4715547d729fb6d4d5431d11edbad95a6"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
@@ -149,7 +149,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "776908808edbdd4de0f9c7a1ac9f2cbe015ab7a96db733e4645fcc353d1aa92e"
+      "sha256": "862df0ade666065c37fdd5331745368fe52fd396afbbdef18d98914dd0177339"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",
@@ -419,7 +419,7 @@
     {
       "path": "skills/open-item-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/open-item-reconciliation/SKILL.md",
-      "sha256": "2b18680e8f7e431e230a37b7a7fa3c3f133d79234dea83ba771e9908117097ce"
+      "sha256": "ac8cf5d6e45722746e1488c16be2fa386a11cd1c0610dd7ac2a30305bccd40de"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

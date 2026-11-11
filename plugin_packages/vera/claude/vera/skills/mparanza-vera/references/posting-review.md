@@ -76,7 +76,7 @@ does not establish chart membership. Do not fabricate names, infer a chart from
 proposal codes, replace an existing client's chart, or create a new run merely to
 upgrade an existing review.
 
-“Genera TXT dalle decisioni salvate” consumes accepted saved corrections only,
+“Genera TXT TeamSystem” consumes accepted saved corrections only,
 withholds pending/rejected entries, and retains a receipt listing exclusions and
 the exact decision digest. A subsequent correction invalidates the current export
 while preserving earlier file bytes and decision history. “File del lavoro” lists
@@ -98,3 +98,13 @@ saved decision, reasoning and evidence to the existing host model; not the whole
 batch or unsent drafts. Do not claim that local storage anonymizes these values.
 Keep any automatic model-data reporting gap visible separately from the useful
 review result. A package build or UI-ready response is not visible host acceptance.
+
+
+Export formats use the shared `vera.reviewed_journal_entry.v1` contract and a
+versioned adapter registry. TeamSystem IMPPN is the available encoder. DATEV
+Koinos / DATEV Italia and Zucchetti are registered targets requiring their
+verified receiving-product import profile; they must not fall back to IMPPN,
+German DATEV EXTF or an invented CSV. Unknown/unconfigured formats fail before
+writing a file or modifying decisions. Add format-specific validation and
+source-backed mapping to enable another encoder; never rerun reconciliation or
+infer accounts, invoice closure or external partita keys in a formatter.

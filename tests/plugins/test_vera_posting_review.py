@@ -16,6 +16,11 @@ posting = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(posting)
 
 
+@pytest.fixture(autouse=True)
+def export_imports(monkeypatch):
+    monkeypatch.syspath_prepend(str(ROOT / "plugins/vera/scripts"))
+
+
 @pytest.fixture
 def review(tmp_path):
     batch = {
@@ -313,6 +318,38 @@ def test_browser_discard_saved_status_filters_and_txt(
     )
     output = work["output_dir"]
     posting.prepare(output, batch, run_id=work["run_id"], source_sha256="a" * 64)
+    # Read-only outcome panel uses the same canonical counters/queues; it must
+    # not populate saved posting decisions, even with residual bank questions.
+    from tests.plugins.test_vera_bank_first import REL, NativeFixture, row
+
+    monkeypatch.syspath_prepend(
+        str(ROOT / "plugins/journal-bank-reconciliation/scripts")
+    )
+    import bank_first
+
+    native = NativeFixture(
+        {
+            "luna": {"resolved": False, "complete": False},
+            "sol": {"resolved": False, "complete": False},
+        }
+    )
+    canonical = bank_first.run_bank_first(
+        [
+            row(
+                item["id"],
+                description=item["bank"]["description"],
+                amount=item["bank"]["amount"],
+            )
+            for item in batch["items"]
+        ],
+        [],
+        output / "semantic-review",
+        source_binding={"fixture": "synthetic-browser"},
+        relationship=REL,
+        invoke=native.invoke,
+        select=native.select,
+    )
+    canonical_bytes = (output / "semantic-review/bank_first_result.json").read_bytes()
     original = (output / posting.CASE).read_bytes()
     binding = {
         "work_ref": "posting-fictional-browser",
@@ -326,8 +363,19 @@ def test_browser_discard_saved_status_filters_and_txt(
     with review_host(env) as (page, mount, errors):
         page.set_viewport_size({"width": 1280, "height": 1000})
         panel = mount("vera_open_review", {"work_ref": binding["work_ref"]})
+        expect(
+            panel.get_by_role("heading", name="Esito bancario", exact=True)
+        ).to_be_visible()
+        expect(
+            panel.get_by_role(
+                "heading", name="Dubbi bancari residui dopo Sol", exact=True
+            )
+        ).to_be_visible()
+        expect(
+            panel.get_by_text("Questioni contabili separate (2 movimenti)", exact=True)
+        ).to_be_visible()
         expect(panel.get_by_role("checkbox")).to_have_count(0)
-        export = panel.get_by_role("button", name="Genera TXT dalle decisioni salvate")
+        export = panel.get_by_role("button", name="Genera TXT TeamSystem")
         expect(export).to_be_disabled()
         choices = panel.get_by_role("group", name="Decisione", exact=True)
         expect(choices.get_by_role("radio")).to_have_count(3)
@@ -401,7 +449,7 @@ def test_browser_discard_saved_status_filters_and_txt(
         export.click()
         expect(
             panel.get_by_text(
-                "Ultimo TXT: 1 movimenti. Importazione TeamSystem non collaudata.",
+                "Ultimo TXT TeamSystem: 1 movimenti. Importazione TeamSystem non collaudata.",
                 exact=True,
             )
         ).to_be_visible()
@@ -414,6 +462,9 @@ def test_browser_discard_saved_status_filters_and_txt(
             ).first
         ).to_be_visible()
         assert not errors
+    assert (
+        output / "semantic-review/bank_first_result.json"
+    ).read_bytes() == canonical_bytes
     case, saved = posting.load(output)
     receipt = saved["last_export"]
     raw = (output / receipt["file"]).read_bytes()
@@ -909,3 +960,49 @@ def test_browser_failed_draft_read_keeps_visible_movement_and_write_scope(
             and saved["B001"]["note"] == "Retained before failed navigation"
         )
         assert not errors
+
+
+@pytest.mark.parametrize("format_id", ["datev_koinos", "zucchetti", "unknown"])
+def test_unconfigured_export_standard_never_writes_or_changes_choices(
+    review, format_id
+):
+    posting.save_decision(review, "B001", decision(), actor="fixture-reviewer")
+    before = {p.name: p.read_bytes() for p in review.iterdir()}
+    with pytest.raises(ValueError):
+        posting.export_reviewed(review, format_id)
+    assert {p.name: p.read_bytes() for p in review.iterdir()} == before
+
+
+def test_export_receipt_names_the_exact_adapter_and_keeps_unknown_references_empty(
+    review,
+):
+    import posting_export_formats as formats
+
+    posting.save_decision(review, "B001", decision(), actor="fixture-reviewer")
+    case, _ = posting.load(review)
+    entry = formats.reviewed_entry(
+        case["batch"],
+        case["batch"]["items"][0],
+        decision()["lines"],
+        decision_status="accepted_saved",
+    )
+    assert entry["currency"] is None
+    assert entry["lines"][1]["external_references"] == {}
+    assert {f["id"]: f["status"] for f in formats.formats()} == {
+        "teamsystem_imppn_v1": "available",
+        "datev_koinos": "requires_verified_profile",
+        "zucchetti": "requires_verified_profile",
+    }
+    receipt = posting.export_reviewed(review)
+    assert receipt["format_id"] == "teamsystem_imppn_v1"
+    assert receipt["label"] == "TXT TeamSystem"
+    assert receipt["standard"] == "IMPPN"
+    assert receipt["journal_contract"] == "vera.reviewed_journal_entry.v1"
+    assert not receipt["import_tested"]
+    with pytest.raises(ValueError, match="accepted saved"):
+        formats.reviewed_entry(
+            case["batch"],
+            case["batch"]["items"][0],
+            decision()["lines"],
+            decision_status="bank_resolved",
+        )

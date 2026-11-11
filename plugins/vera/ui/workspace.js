@@ -3247,6 +3247,19 @@
     const chooser = document.querySelector(".queue-picker");
     if (chooser) chooser.open = !reviewNarrow.matches;
   });
+  function renderBankFirst(parent, review) {
+    if (!review) return;
+    const section=node("section",undefined,"bank-first-review"), c=review.summary.primary_counts;
+    section.append(node("h2","Esito bancario"),node("p",`${review.summary.population_count} movimenti · ${c.deterministic} da regole certe · ${c.luna} risolti da Luna · ${c.sol} risolti da Sol · ${c.human} dubbi residui · ${c.error} errori · ${c.unprocessed} non elaborati`,"sub"));
+    const questions=(container,rows,empty)=>{
+      if(!rows.length)container.append(node("p",empty,"caption"));
+      for(const item of rows){const article=node("article");article.append(node("h3",item.bank_ids.join(", ")),node("p",item.reason));const list=node("ul");for(const question of item.questions)list.append(node("li",question));article.append(list);const evidence=node("details");evidence.append(node("summary","Evidenze esaminate"));for(const citation of item.evidence||[])evidence.append(node("p",`${citation.transaction_id} · ${citation.field}: ${citation.quote}`,"caption"));article.append(evidence);container.append(article);}
+    };
+    const primary=node("div");primary.append(node("h3","Dubbi bancari residui dopo Sol"));questions(primary,review.questions.bank,c.error||c.unprocessed?"Elaborazione incompleta: esamina gli errori prima di considerare conclusa la revisione.":"Nessun dubbio bancario residuo dopo Sol.");section.append(primary);
+    const secondary=node("details");secondary.append(node("summary",`Questioni contabili separate (${review.summary.secondary_open_count} movimenti)`),node("p","Questi conteggi si sovrappongono agli esiti bancari e non vanno sommati.","caption"));questions(secondary,review.questions.accounting,"Nessuna domanda contabile residua dopo Sol.");section.append(secondary);
+    if(review.errors.length){const errors=node("details");errors.append(node("summary","Errori di elaborazione"));for(const error of review.errors)errors.append(node("p",`${error.bank_ids.join(", ")} · ${error.stage}: ${error.reason}`));section.append(errors);}
+    const all=node("details");all.append(node("summary","Tutti gli esiti e le evidenze"));for(const item of review.results){const article=node("article");article.append(node("h3",item.bank_ids.join(", ")),node("p",`${item.bank_resolution.status} · ${item.resolved_at||item.stage||""}: ${item.bank_resolution.explanation}`),node("p",`Contabilità (${item.accounting_resolution.status}): ${item.accounting_resolution.explanation}`));for(const citation of [...item.bank_resolution.evidence,...item.accounting_resolution.evidence])article.append(node("p",`${citation.transaction_id} · ${citation.field}: ${citation.quote}`,"caption"));all.append(article);}section.append(all,node("p","Gli esiti del sistema restano distinti dalle decisioni e dalle bozze salvate. Nessuna registrazione eseguita.","caption"));parent.append(section);
+  }
   function renderWork() {
     const {nav, main} = shell();
     nav.append(button("← Lavori dello studio", refreshCatalogue), button("File del lavoro", showOutputs));
@@ -3254,6 +3267,7 @@
     if (state.workflow === "archive-organization") nav.append(button("Esecuzione del piano", () => openWork(state.work_ref, 0, undefined, undefined, undefined, "ARCHIVE_EXECUTION")));
     const header = node("header"); header.append(node("p", names[state.workflow] || state.workflow, "eyebrow"), node("h1", workTitle(state.label,state.workflow)));
     main.append(header);
+    renderBankFirst(main,state.data.bank_first);
     if (state.kind === "postings") {
       const c = state.data.counts;
       main.append(node("p", `${state.data.population_total} movimenti · ${c.accepted} accettati · ${c.pending} da rivedere · ${c.rejected} esclusi`, "sub"), node("p", `${state.data.saved_count} decisioni salvate · ${state.data.population_total - state.data.saved_count} mai salvati`, "caption"));
@@ -3271,16 +3285,16 @@
       }));
       main.append(filters, node("p", "I tipi descrivono le proposte originali, non certificano l’abbinamento e non cambiano le decisioni. Il filtro comprende tutti i movimenti, anche nelle pagine successive.", "caption"));
       if (state.run_status === "running") {
-        const exportButton = button("Genera TXT dalle decisioni salvate", async () => {
+        const exportButton = button("Genera TXT TeamSystem", async () => {
         if (dirty) throw new Error("Salva o scarta le correzioni prima di esportare.");
-        const result = await call("vera_workspace_apply", {...scope(), review_ticket:state.review_ticket, human_reviewed:true, idempotency_key:crypto.randomUUID(), review:{operation:"export"}});
+        const result = await call("vera_workspace_apply", {...scope(), review_ticket:state.review_ticket, human_reviewed:true, idempotency_key:crypto.randomUUID(), review:{operation:"export",format_id:"teamsystem_imppn_v1"}});
         await openWork(state.work_ref,state.offset,state.selection?.id);
-        say(`TXT generato: ${result.records} movimenti accettati; ${result.excluded.length} esclusi. Disponibile in File del lavoro. Nessuna importazione eseguita.`);
+        say(`TXT TeamSystem generato: ${result.records} movimenti accettati; ${result.excluded.length} esclusi. Disponibile in File del lavoro. Nessuna importazione eseguita.`);
         });
         exportButton.disabled = !c.accepted;
-        main.append(exportButton, node("p", c.accepted ? `Il TXT include ${c.accepted} movimenti accettati nell’intero lavoro, indipendentemente dal filtro.` : "Nessun movimento accettato da esportare. Scegli «Accetta le righe corrette» e salva la decisione prima di generare il TXT.", "caption"));
+        main.append(exportButton, node("p", "Formato IMPPN · Solo righe contabili accettate e salvate.", "caption"), node("p", c.accepted ? `Il TXT TeamSystem include ${c.accepted} movimenti accettati nell’intero lavoro, indipendentemente dal filtro.` : "Nessun movimento accettato da esportare. Scegli «Accetta le righe corrette» e salva la decisione prima di generare il TXT TeamSystem.", "caption"));
       }
-      if (state.data.export) main.append(node("p", `Ultimo TXT: ${state.data.export.records} movimenti. Importazione TeamSystem non collaudata.`, "caption"));
+      if (state.data.export) main.append(node("p", `Ultimo TXT TeamSystem: ${state.data.export.records} movimenti. Importazione TeamSystem non collaudata.`, "caption"));
     }
     if (state.workflow === "client-file-preparation") {
       const views = node("nav", undefined, "actions"); views.setAttribute("aria-label", "Viste della revisione documenti");

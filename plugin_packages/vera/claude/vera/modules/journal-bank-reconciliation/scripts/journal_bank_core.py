@@ -278,6 +278,16 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/prepare_posting_review.py",
     ),
     (
+        "implementation.plugin.scripts.bank_first_py",
+        "implementation",
+        "scripts/bank_first.py",
+    ),
+    (
+        "implementation.plugin.scripts.bank_first_policy_json",
+        "implementation",
+        "scripts/bank_first_policy.json",
+    ),
+    (
         "implementation.plugin.scripts.grouped_review_py",
         "implementation",
         "scripts/grouped_review.py",

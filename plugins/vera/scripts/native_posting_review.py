@@ -239,6 +239,8 @@ def prepare(
 
 
 def projection(directory: Path, args: dict) -> dict:
+    from posting_export_formats import formats
+
     case, state = load(directory)
     items = []
     for source in case["batch"]["items"]:
@@ -298,6 +300,7 @@ def projection(directory: Path, args: dict) -> dict:
         "selection": selected,
         "total": len(items),
         "data": {
+            "export_formats": formats(),
             "chart_of_accounts": case.get("chart_of_accounts"),
             "search_text": search_text,
             "decision_filter": decision_filter,
@@ -377,47 +380,18 @@ def save_decision(directory: Path, item_id: str, review: dict, *, actor: str) ->
 
 
 def record(batch: dict, item: dict, lines: list[dict]) -> bytes:
-    raw = list(" " * 6999)
+    from posting_export_formats import adapter, reviewed_entry
 
-    def put(position: int, width: int, value: str, numeric: bool = False) -> None:
-        if len(value) > width:
-            raise ValueError("IMPPN field exceeds its documented width")
-        raw[position - 1 : position - 1 + width] = (
-            value.rjust(width, "0") if numeric else value.ljust(width)
-        )
-
-    put(1, 5, str(batch["company"]), True)
-    put(6, 1, "3")
-    put(7, 1, "0")
-    put(268, 3, "027")
-    put(271, 15, "VERA REVISIONE")
-    put(286, 18, item["id"][:18])
-    put(372, 8, date.fromisoformat(item["bank"]["date"]).strftime("%d%m%Y"))
-    put(6814, 20, ("VERA-" + item["id"])[:20])
-    money = cents(item["bank"]["amount"])
-    all_lines = [
-        {
-            "account": batch["bank_account"],
-            "amount": f"{Decimal(abs(money))/100:.2f}",
-            "side": "D" if money > 0 else "A",
-        },
-        *lines,
-    ]
-    for index, line in enumerate(all_lines):
-        pos = 973 + 64 * index
-        put(pos, 7, line["account"].replace("/", ""), True)
-        put(pos + 7, 1, line["side"])
-        put(pos + 8, 12, str(cents(line["amount"])).zfill(11) + "+")
-        if line.get("partita"):
-            put(pos + 38, 6, line["partita"], True)
-            put(pos + 44, 4, line["year"], True)
-            put(6291 + 2 * index, 2, line["section"], True)
-    if not any(row.get("partita") for row in lines):
-        put(6964, 1, "N")
-    return "".join(raw).encode("cp1252", errors="strict") + b"\r\n"
+    entry = reviewed_entry(batch, item, lines, decision_status="accepted_saved")
+    selected = adapter()
+    assert selected.encode is not None
+    return selected.encode(entry)
 
 
-def export_reviewed(directory: Path) -> dict:
+def export_reviewed(directory: Path, format_id: str = "teamsystem_imppn_v1") -> dict:
+    from posting_export_formats import adapter, reviewed_entry
+
+    selected = adapter(format_id)
     case, state = load(directory)
     rows, excluded = [], []
     for item in case["batch"]["items"]:
@@ -431,13 +405,19 @@ def export_reviewed(directory: Path) -> dict:
             )
             continue
         lines = lines_checked(item, decision["lines"], case.get("chart_of_accounts"))
-        rows.append(record(case["batch"], item, lines))
+        entry = reviewed_entry(
+            case["batch"], item, lines, decision_status="accepted_saved"
+        )
+        assert selected.encode is not None
+        rows.append(selected.encode(entry))
     if not rows:
         raise ValueError(
             "No accepted entries to export: accetta e salva almeno un movimento"
         )
     decisions_sha256 = fingerprint(state["decisions"])
-    filename = "TRAF2000_REVISIONE_" + decisions_sha256[:16] + ".txt"
+    filename = (
+        str(selected.filename_prefix) + decisions_sha256[:16] + str(selected.extension)
+    )
     target = directory / filename
     payload = b"".join(rows)
     if target.exists() and target.read_bytes() != payload:
@@ -451,6 +431,11 @@ def export_reviewed(directory: Path) -> dict:
         "records": len(rows),
         "excluded": excluded,
         "decisions_sha256": decisions_sha256,
+        "format_id": selected.identifier,
+        "label": selected.label,
+        "standard": selected.standard,
+        "format_version": selected.version,
+        "journal_contract": "vera.reviewed_journal_entry.v1",
         "import_tested": False,
     }
     write(directory / (filename + ".json"), receipt)

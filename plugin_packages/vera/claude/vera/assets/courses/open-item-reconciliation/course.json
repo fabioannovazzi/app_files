@@ -92,7 +92,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/reconciliation_workflow.py",
-      "sha256": "e5a53198ca3da7a77975ab42014f6111cbb968828fb175d181e16bbb35249333"
+      "sha256": "31de7fe6cefefc99ddc7049bbe54c3c150d18738a76a50d99d086410ba497f05"
     },
     {
       "path": "modules/open-item-reconciliation/scripts/retained_sources/accountant_report.source",
@@ -120,7 +120,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "776908808edbdd4de0f9c7a1ac9f2cbe015ab7a96db733e4645fcc353d1aa92e"
+      "sha256": "862df0ade666065c37fdd5331745368fe52fd396afbbdef18d98914dd0177339"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
@@ -332,7 +332,7 @@
     },
     {
       "path": "skills/mparanza-open-item-reconciliation/SKILL.md",
-      "sha256": "2837c0c9ba55f29e85fabe750d2594b6da3c3f37bb960cc2bc6fd1f0463a9ae0"
+      "sha256": "51d4668d63c3973b998e270359cb9cf09148e5cc588204c7cf2e5d4135183faf"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -797,5 +797,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "a871ceb0dd3372e79bf973f249420ffab5ec06d18293d08fddab9adcb98daa86"
+  "canonical_course_sha256": "bf4d76ea7e5d53f38a61be590ed4078e74b894282f1003fc3cf4b2c76ff4ea63"
 }

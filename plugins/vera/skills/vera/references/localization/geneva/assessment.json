@@ -150,6 +150,11 @@
     "scope": "Register the direct computer-use bank download function as unresolved for Geneva. Preserve all existing function dispositions. The root router now selects this operation for acquisition; no Swiss portal or professional acceptance is established.",
     "version": "0.1.568"
   },
+  "bank_first_export_release_binding_20261111": {
+    "previous_catalogue_fingerprint": "bcc4cc9cdf1c99d3cc80361d676f3be9979876029f5ed277447e528b0f201d2d",
+    "scope": "Same existing reconciliation functions now use shared bank-first stages and separate accounting outcomes. Export registry prepares future destination-specific adapters. No new Geneva function, legal localization or professional acceptance is claimed; existing dispositions retained.",
+    "version": "0.1.614"
+  },
   "bank_pdf_recovery_source_review": {
     "changed_entrypoints": [
       "journal-bank-reconciliation"
@@ -195,7 +200,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "bcc4cc9cdf1c99d3cc80361d676f3be9979876029f5ed277447e528b0f201d2d",
+  "catalogue_fingerprint": "43ece6ab0c1ce87b5f84260df903f4e3c33986c1cc194b7d50cb0611b0c20fc6",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",

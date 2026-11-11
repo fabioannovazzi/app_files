@@ -94,6 +94,13 @@ jobs:
         env:
           VERA_REVIEW_SCREENSHOTS: /tmp/vera-review-screenshots
         run: python -m pytest -q -o addopts='' --confcutdir=tests tests/plugins/test_vera_posting_review.py tests/plugins/test_vera_one_review.py tests/plugins/test_vera_review_browser.py tests/plugins/test_clara_report_browser.py tests/plugins/test_lucia_method_browser.py tests/plugins/test_lucia_matter_browser.py tests/plugins/test_vera_management_results_browser.py tests/plugins/test_native_review_final_affordances_browser.py
+      - name: Check reviewed-entry export adapters
+        run: |
+          python -m pip install black==25.1.0 isort==6.0.1 mypy bandit
+          python -m black --check plugins/vera/scripts/native_posting_review.py plugins/vera/scripts/posting_export_formats.py tests/plugins/test_vera_posting_review.py
+          python -m isort --check-only plugins/vera/scripts/native_posting_review.py plugins/vera/scripts/posting_export_formats.py tests/plugins/test_vera_posting_review.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/vera/scripts/native_posting_review.py plugins/vera/scripts/posting_export_formats.py
+          python -m bandit -q -ll plugins/vera/scripts/native_posting_review.py plugins/vera/scripts/posting_export_formats.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:

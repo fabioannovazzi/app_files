@@ -143,18 +143,25 @@ def _catalog(executable: str) -> dict[str, Any]:
 
 
 def select_worker(
-    workflow_id: str, effort: str | None = None, *, host: str | None = None
+    workflow_id: str,
+    effort: str | None = None,
+    *,
+    host: str | None = None,
+    stage: str = "luna",
 ) -> dict[str, Any]:
     """Select a policy candidate actually advertised by this host's model API."""
     policy = json.loads(
         Path(__file__).with_name("semantic_worker_policy.json").read_text()
     )
+    if stage not in {"luna", "sol"}:
+        raise ValueError("Unknown reconciliation stage")
+    candidates = policy["candidates" if stage == "luna" else "strong_candidates"]
     selected_host = host or policy["host"]
     if selected_host in {"cowork", "antigravity"}:
         # Python cannot inspect the calling agent's tool schema. Prepare a
         # preference, then require current native capabilities and an actual
         # completion before accepting any semantic result.
-        candidate = policy["candidates"][selected_host][0]
+        candidate = candidates[selected_host][0]
         if effort not in {None, "host_default"}:
             raise UnsupportedWorkerCapability(
                 "Native subagent effort is controlled by its host"
@@ -184,7 +191,7 @@ def select_worker(
         raise UnsupportedWorkerCapability("codex: callable CLI is missing")
     catalog = _catalog(executable)
     available = {model["model"]: model for model in catalog["models"]}
-    for candidate in policy["candidates"][selected_host]:
+    for candidate in candidates[selected_host]:
         model = available.get(candidate["model"])
         selected_effort = effort or candidate["effort"]
         if model is None or selected_effort not in {
@@ -226,14 +233,26 @@ def validate_selection(
         or value.get("workflow_id") != workflow_id
     ):
         raise ValueError("Worker selection digest or workflow is inconsistent")
-    if (
-        value.get("host") not in {"codex", "cowork", "antigravity"}
-        or value.get("cost_class") != "low"
-    ):
+    if value.get("host") not in {"codex", "cowork", "antigravity"} or value.get(
+        "cost_class"
+    ) not in {"low", "escalation"}:
         raise UnsupportedWorkerCapability(
             "Worker selection has no supported low-cost host adapter"
         )
     model, selected_effort = value["model"], value["reasoning_effort"]
+    owned = json.loads(
+        Path(__file__).with_name("semantic_worker_policy.json").read_text()
+    )
+    configured = owned[
+        "strong_candidates" if value["cost_class"] == "escalation" else "candidates"
+    ][value["host"]]
+    if not any(
+        c["model"] == model and c["cost_class"] == value["cost_class"]
+        for c in configured
+    ):
+        raise UnsupportedWorkerCapability(
+            "Worker model does not belong to the owned stage policy"
+        )
     if (
         not isinstance(model, str)
         or re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.-]{0,79}", model) is None
