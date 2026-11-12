@@ -1,8 +1,8 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-teamsystem-radio-release/plugins/vera",
+  "root": "/private/tmp/vera-ctime-fix/plugins/vera",
   "version": "0.1.623",
-  "captured_at": "2026-11-12T16:19:13.909026+00:00",
+  "captured_at": "2026-11-12T16:35:15.575207+00:00",
   "catalogue_fingerprint": "28cae5b7f345239e1feb46bbedd6c2ab420522e4fe86d647fe39edd50abf558e",
   "manifest_sha256": "6f90d9badbd5f9aa0392e1795c0eddbaa245c02573dbaa1bdcb04026594226f6",
   "entries": [

@@ -73,9 +73,13 @@ def installation(tmp_path: Path, request) -> Path:
 
 
 class Session:
-    def __init__(self, root: Path):
+    def __init__(self, root: Path, *, preload: Path | None = None):
         self.process = subprocess.Popen(
-            ["node", str(root / "scripts/on_demand_mcp.cjs")],
+            [
+                "node",
+                *(["--require", str(preload)] if preload else []),
+                str(root / "scripts/on_demand_mcp.cjs"),
+            ],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -354,6 +358,54 @@ def test_catalogue_tampering_is_rejected_before_discovery(installation):
 
     assert result.returncode != 0
     assert "Installation content mismatch: mcp-catalog.json" in result.stderr
+    assert not (installation.parent / "starts").exists()
+
+
+@pytest.mark.parametrize("target", ["mcp-catalog.json", "execution-files.json"])
+@pytest.mark.parametrize("scenario", ["ctime-before-read", "ctime-during-read"])
+def test_metadata_only_change_allows_mcp_initialization_and_discovery(
+    installation, monkeypatch, target, scenario
+):
+    monkeypatch.setenv("VERIFIER_TEST_TARGET", str(installation / target))
+    monkeypatch.setenv("VERIFIER_TEST_SCENARIO", scenario)
+    preload = ROOT / "tests/plugins/fixtures/verifier_metadata.cjs"
+    active = Session(installation, preload=preload)
+    try:
+        tools = active.call("tools/list")["result"]["tools"]
+        assert [tool["name"] for tool in tools] == ["use_alpha", "use_beta"]
+        assert not (installation.parent / "starts").exists()
+    finally:
+        active.close()
+
+
+@pytest.mark.parametrize(
+    ("scenario", "error"),
+    [
+        ("changed-content", "Installation content mismatch: mcp-catalog.json"),
+        ("replaced-file", "Installation file changed before read"),
+        ("modified-file", "Installation file changed before read"),
+    ],
+)
+def test_changed_file_is_rejected_before_mcp_discovery(
+    installation, monkeypatch, scenario, error
+):
+    monkeypatch.setenv("VERIFIER_TEST_TARGET", str(installation / "mcp-catalog.json"))
+    monkeypatch.setenv("VERIFIER_TEST_SCENARIO", scenario)
+    result = subprocess.run(
+        [
+            "node",
+            "--require",
+            str(ROOT / "tests/plugins/fixtures/verifier_metadata.cjs"),
+            str(installation / "scripts/on_demand_mcp.cjs"),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=10,
+    )
+
+    assert result.returncode != 0
+    assert error in result.stderr
+    assert result.stdout == ""
     assert not (installation.parent / "starts").exists()
 
 

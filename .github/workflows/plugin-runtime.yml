@@ -29,6 +29,11 @@ jobs:
         with:
           node-version: "22"
       - run: python -m pip install pytest
+      - name: Verify metadata-only changes preserve MCP discovery on Windows
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_product_on_demand_mcp.py
+          -k 'metadata_only_change or changed_file_is_rejected'
       - name: Read and collect a verified snapshot beyond MAX_PATH
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

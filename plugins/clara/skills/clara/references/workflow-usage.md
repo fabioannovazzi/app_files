@@ -112,13 +112,14 @@ python scripts/workflow_usage.py build-report --run-id <uuid> --input <model_dat
 
 This calls the existing shared report builder unchanged and links its actual
 signed receipt without transmitting the report. Show its display_markdown and
-normal artifact links after the professional result. Inspect the same run on the
-server after final delivery: an acknowledged completed event, a verified Computer
+normal artifact links after the professional result. If usage sharing is enabled,
+inspect the same run on the server after final delivery: an acknowledged completed event, a verified Computer
 ID link and an actual linked signed receipt are separate facts. Follow any
 `reporting.next_steps` without rerunning the completed professional task. If stamping is pending,
 keep the local report and retry with `workflow_usage.py stamp-report --run-id
 <uuid> --report <model_data_report.json> --output-dir <receipt-output-directory>`.
-If local receipt delivery is unavailable, use the local `clara_workflow_stamp` tool for its own retained run, with the original run UUID and `receipt_request` copied exactly from the retained
+If local receipt delivery is unavailable and the run has reached the usage server,
+use the local `clara_workflow_stamp` tool for its own retained run, with the original run UUID and `receipt_request` copied exactly from the retained
 `model_data_receipt_request.json`. If the local tool is unavailable, use browser
 `workflow-stamp` with that same request/run and the original local capability
 only when applicable. Only this small allow-listed request is sent,

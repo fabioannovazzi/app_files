@@ -730,6 +730,10 @@
     "scope": "Mechanical manifest/version binding refresh for the manual function-trial legend and reviewed teaching-source evidence. All function IDs and skill-entrypoint hashes match the 0.1.401 snapshot. Existing Geneva dispositions and limits are unchanged; no new jurisdiction, host, learner or professional acceptance is claimed.",
     "version": "0.1.402"
   },
+  "mcp_ctime_release_binding_20261112": {
+    "previous_catalogue_fingerprint": "57d160af79a1c1ad5830ba66352efcf62c090af29368b2f03354ddec082f45f5",
+    "scope": "Manifest-only release binding for the ctimeNs verifier fix after integrating the bank-first release. All skill entrypoints and existing jurisdiction assessments are unchanged; no new professional acceptance is asserted."
+  },
   "mcp_historical_path_release_binding_20261029": {
     "previous_catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",
     "scope": "Version-only catalogue refresh; all skill entrypoints are unchanged. MCP historical replay lookup now supports version-named host caches. Existing Geneva dispositions and acceptance limits remain unchanged; no installed-host or professional acceptance is claimed.",
