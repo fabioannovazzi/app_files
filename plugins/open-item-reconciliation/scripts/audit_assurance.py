@@ -2647,6 +2647,7 @@ def _review_gate_status(
     reconciliation_rows: Sequence[Mapping[str, Any]],
     *,
     run_date: str,
+    assumptions: Mapping[str, Any] | None = None,
 ) -> str:
     """Require exact reviewed-record closure at one sealed run date."""
 
@@ -2658,6 +2659,22 @@ def _review_gate_status(
     if not reviewable_rows:
         return "not_applicable" if not review_rows else "failed"
     if not review_rows:
+        settings = assumptions or {}
+        resolution = settings.get("semantic_resolution", {})
+        if (
+            isinstance(resolution, Mapping)
+            and resolution.get("schema_version")
+            == "vera.open_item_semantic_resolution.v2"
+            and settings.get("manual_review_sample") is not True
+            and resolution.get("bank_first", {})
+            .get("summary", {})
+            .get("review_complete")
+            is True
+            and all(
+                row.get("reconciliation_status") == "closed" for row in reviewable_rows
+            )
+        ):
+            return "passed"
         return "withheld"
     expected_ids = [row.get("record_id") for row in reviewable_rows]
     if any(
@@ -7234,6 +7251,7 @@ def _finalize_assurance_run_in_place(
         professional_review["records"],
         reconciliation_rows,
         run_date=run_date,
+        assumptions=prepared["assumptions"],
     )
     reporting_status = (
         "passed"
@@ -7379,7 +7397,9 @@ def _finalize_assurance_run_in_place(
         elif not gates["report_ready"]:
             final_artifacts["status"] = "written_pending_review"
             final_artifacts["blockers"] = []
-        elif professional_review["origin"] == "automatic_checks":
+        elif professional_review["origin"] == "automatic_checks" or (
+            not professional_review["records"] and semantic_status == "passed"
+        ):
             final_artifacts["status"] = "final_ready"
             final_artifacts["blockers"] = []
             final_artifacts = completed_review_handoff(
@@ -7389,6 +7409,10 @@ def _finalize_assurance_run_in_place(
                 ),
                 automatic_checks=True,
             )
+            if professional_review["origin"] != "automatic_checks":
+                final_artifacts["review_handoff"][
+                    "status"
+                ] = "optional_bank_first_verified"
         elif professional_review["origin"] == "applied_decisions":
             final_artifacts["status"] = "final_ready"
             final_artifacts["blockers"] = []
@@ -8138,6 +8162,7 @@ def validate_assurance_run(
         professional_review["records"],
         result["reconciliation_rows"],
         run_date=run_date,
+        assumptions=prepared["assumptions"],
     )
     reporting_status = (
         "passed"

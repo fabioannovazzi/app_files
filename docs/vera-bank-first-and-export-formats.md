@@ -89,3 +89,16 @@ with a customer's TeamSystem, DATEV Koinos or Zucchetti installation. No private
 139-movement experiment or its counts are shipped or treated as a production rerun.
 No Marketplace publication, cache replacement, real-case export or import is part
 of this release.
+
+### Explicit manual samples and final delivery
+
+Normal bank-first runs retain the legacy sample as diagnostic data. A caller can
+explicitly request it with the boolean assumption `manual_review_sample: true`;
+this preserves the established source-bound manual-review, decision and
+regeneration path. It does not create completed decisions or professional
+approval. The option is declared run configuration in output lineage.
+
+A complete, replay-validated bank-first result with every in-scope item closed
+and no requested manual sample can pass the final review gate without creating
+human review records. Unresolved items, incomplete model review and explicit
+manual review remain gated. The run date is established before exact admission.

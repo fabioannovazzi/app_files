@@ -41,10 +41,11 @@ def request_for(case, tmp_path):
     bank = tmp_path / "bank.csv"
     invoice.write_text("InvoiceX;DateX;ValueX\nFT-2026-0102;01/07/2026;1220.00\n")
     bank.write_text(
-        "IdX;DescriptionX;PostedX;ValueX\nTX-010;Saldo FT-2026-0102;11/07/2026;1220.00\n"
+        "IdX;DescriptionX;PostedX;ValueX;InvoiceX\nTX-010;Saldo FT-2026-0102;11/07/2026;1220.00;FT-2026-0102\n"
     )
     invoices, payments = spec(invoice), spec(bank, "bank_statement")
     payments["tabular"]["columns"] = {
+        "document_no": "InvoiceX",
         "source_record_id": "IdX",
         "description": "DescriptionX",
         "posting_date": "PostedX",
@@ -227,6 +228,7 @@ def test_reviewed_draft_finishes_with_retained_checkpoint_without_recalculation(
 ):
     request = request_for(client_case, tmp_path)
     request["sources"] = request["sources"][:1]
+    request["assumptions"]["manual_review_sample"] = True
     draft = operation.reconcile(request, state_dir=client_case.state_dir)
     output = Path(draft["output_dir"])
     checkpoint = json.loads(

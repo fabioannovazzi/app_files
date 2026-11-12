@@ -451,8 +451,11 @@ def build_reconciliation_artifacts(
         assumptions.get("semantic_resolution", {}).get("schema_version")
         == "vera.open_item_semantic_resolution.v2"
     )
-    diagnostic_review_sample = review if bank_first and review_rows is None else []
-    if bank_first and review_rows is None:
+    manual_sample = (
+        review_rows is not None or assumptions.get("manual_review_sample") is True
+    )
+    diagnostic_review_sample = review if bank_first and not manual_sample else []
+    if bank_first and not manual_sample:
         # The canonical native queues carry specific post-Sol questions. The
         # legacy sample stays diagnostic, never a second acceptance requirement.
         review = []
@@ -476,7 +479,7 @@ def build_reconciliation_artifacts(
                 challenged_rows=challenged_rows,
                 priority_rows=review_signals,
             )
-            if not bank_first or review_rows is not None
+            if not bank_first or manual_sample
             else [
                 {
                     "check": "bank_first_population_partition",
