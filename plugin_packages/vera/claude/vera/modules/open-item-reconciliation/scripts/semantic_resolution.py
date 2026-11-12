@@ -103,6 +103,12 @@ def _capsule() -> Any:
     )
     if not source.is_file():
         raise ValueError("Shared isolated worker component is unavailable")
+    # A retained capsule can outlive a caller's temporary import path (e.g.
+    # another review transport). Its deferred worker imports still belong to
+    # this source-bound component directory, not the caller's environment.
+    scripts = str(source.parent)
+    if scripts not in sys.path:
+        sys.path.insert(0, scripts)
     name = "vera_reconciliation_worker_capsule"
     if name not in sys.modules:
         spec = importlib.util.spec_from_file_location(name, source)

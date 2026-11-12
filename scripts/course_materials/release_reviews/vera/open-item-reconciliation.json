@@ -182,7 +182,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
+  "course_sha256": "5cd653129ecaa664f46b01e5369883b4d5c2dad59d4e1d7440c5000709dc0610",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
@@ -1167,5 +1167,9 @@
     "previous_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
     "course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
     "scope": "Lesson text, translations and fixtures unchanged; reviewed source binding now includes shared bank-first routing, explicit manual-sample opt-in and complete validated delivery. Native CI execution passed; no installed-host, learner or professional acceptance inferred."
+  },
+  "capsule_source_binding_20261112": {
+    "previous_course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
+    "scope": "Restore the source-bound shared capsule import path after transport isolation; no lesson, translation, fixture or jurisdiction change. Two isolated partial-payment regressions pass."
   }
 }

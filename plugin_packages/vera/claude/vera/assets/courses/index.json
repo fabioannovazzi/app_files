@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "a74495cc90febf5e28d8f0941d1f3d64ccafcfb64d45cc46378410921efe522c",
+      "sha256": "60dd5890ddbd9f72724d944e1b001d054fea37f3f8d0c363eea219891a83ae23",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552"
+      "source_sha256": "5cd653129ecaa664f46b01e5369883b4d5c2dad59d4e1d7440c5000709dc0610"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
