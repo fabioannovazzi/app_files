@@ -62,6 +62,7 @@ def test_native_report_pending_retry_receipt_completion_and_reopen(
     # The opener routes every request to this in-process FastAPI test service.
     monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
     run_id = str(uuid4())
+    usage.consent("allow")
     usage.start(run_id, PIPELINES[product], sample_kind="agent_test", host="codex")
     retained_start = usage.pending()["events"][0]
     output = tmp_path / "output"

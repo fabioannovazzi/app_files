@@ -562,6 +562,7 @@ def installed_client(setup, tmp_path, monkeypatch):
         return response.json()
 
     monkeypatch.setattr(usage, "_send", transport)
+    usage.consent("allow")
     return usage
 
 

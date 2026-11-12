@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "clara",
-  "version": "0.1.413",
+  "version": "0.1.415",
   "services": [
     {
       "name": "claraIncidentHost",
@@ -71,13 +71,12 @@
         },
         {
           "name": "clara_workflow_usage",
-          "description": "Retain and deliver one task's usage events through this installed product's native service and existing userID/computer identity. Prefer this over a shell command that cannot write the user-scoped reporting database. Start requires pipeline, observed host and sample_kind; record requires an observed kind and its optional fields. Reuse the same UUID through retries. Status verifies the same task's server identity; flush retries only that task. No client documents, paths, shell commands, credentials or global queue operations are accepted. A reporting failure does not invalidate professional work.",
+          "description": "Retain and deliver one task's usage events through this installed product's native service and existing userID/computer identity. Prefer this over a shell command that cannot write the user-scoped reporting database. Start requires pipeline, observed host and sample_kind; record requires an observed kind and its optional fields. Reuse the same UUID through retries. Consent reads or sets the saved local telemetry preference; set it only from an explicit user choice. Start may return a one-time consent prompt. Status and flush contact Mparanza only with saved consent. No client documents, paths, shell commands, credentials or global queue operations are accepted. A reporting failure does not invalidate professional work.",
           "inputSchema": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "operation",
-              "run_id"
+              "operation"
             ],
             "properties": {
               "operation": {
@@ -86,12 +85,20 @@
                   "start",
                   "record",
                   "status",
-                  "flush"
+                  "flush",
+                  "consent"
                 ]
               },
               "run_id": {
                 "type": "string",
                 "format": "uuid"
+              },
+              "choice": {
+                "type": "string",
+                "enum": [
+                  "allow",
+                  "deny"
+                ]
               },
               "pipeline": {
                 "type": "string"
