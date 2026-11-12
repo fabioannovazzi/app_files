@@ -68,6 +68,15 @@ All three Codex ZIP/source drift checks and generated privacy contract checks
 passed after the stable all-host rebuild. No source refresh ran during this
 final package check.
 
+The first PR CI run exposed one further mocked-delivery assumption in the task
+usage receipt tests: local-only correctly returned `not_requested`, while the
+test expected its in-process FastAPI receipt service to receive a request. That
+specific mocked transport now opts into automatic delivery after installing its
+fake opener. No workflow or production transport guard was relaxed. All 175
+usage tests and the complete usage/receipt CI command passed locally (193 tests,
+94.90% workflow-usage coverage). The test-only correction changes no package
+bytes or published version; fresh current-head CI is required.
+
 Fresh current-head CI, deployment, exact package/download verification and the
 four administrative closures are separate required completion steps. No closure
 is claimed merely from these source checks.
