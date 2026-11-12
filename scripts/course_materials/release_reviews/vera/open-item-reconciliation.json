@@ -182,7 +182,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "5cd653129ecaa664f46b01e5369883b4d5c2dad59d4e1d7440c5000709dc0610",
+  "course_sha256": "def6cca468fd9cb061b26d1eaf03c0571cc6e1b99679d4ef110eca90401952e3",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
@@ -1171,5 +1171,19 @@
   "capsule_source_binding_20261112": {
     "previous_course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
     "scope": "Restore the source-bound shared capsule import path after transport isolation; no lesson, translation, fixture or jurisdiction change. Two isolated partial-payment regressions pass."
+  },
+  "archive_identity_source_review_20261112": {
+    "authored_content_unchanged": true,
+    "course_sha256": "6f8ad87d657489a429be1039099bbe2fb090aba12795253fdf8a422329f9cf68",
+    "limits": "Historical editorial reviews remain unchanged. This is not a new learner or rendered native-panel acceptance.",
+    "previous_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
+    "reviewed_at": "2026-11-12",
+    "reviewer": "Codex agent; source compatibility review",
+    "source_review": "Reopening preserves same-run identity provenance and privacy status; optional metadata cannot block delivery. Archive indexing excludes reserved work bookkeeping only inside verified ledgers. No new recipients or professional calculation changes.",
+    "validation": "710 continuity/reporting/recovery tests and nine search regressions passed; actual report stamping, verification and index reopening/rebuild passed."
+  },
+  "integration_621_source_binding": {
+    "previous_course_sha256": "5cd653129ecaa664f46b01e5369883b4d5c2dad59d4e1d7440c5000709dc0610",
+    "scope": "Refresh source binding for Archive identity and reporting integration. Lesson content and fixtures unchanged."
   }
 }

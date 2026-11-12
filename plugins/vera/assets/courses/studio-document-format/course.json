@@ -500,7 +500,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "fe3851169f2fe4f6a27551a6770320eed27c0bac8ddba642072e6ead0129c9a3"
+      "sha256": "f4a5b0ee1d33b3687ad47f4e5724327378df27a5cf5ec524b169580911b72ae6"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -575,7 +575,7 @@
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
       "repository_path": "plugins/studio-archive/scripts/work_folder.py",
-      "sha256": "f9dc52767a6f5d7d9607470936be78ee04e24ae6ee9b408a69900f34836851c2"
+      "sha256": "8bcbc39e524a9e11a93762f8ab3ff3498a7de4d9716690750ae95141d900f068"
     },
     {
       "path": "modules/studio-archive/vendor/modules/__init__.py",

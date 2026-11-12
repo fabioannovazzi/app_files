@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-teamsystem-radio-release/plugins/vera",
-  "version": "0.1.618",
-  "captured_at": "2026-11-12T12:17:48.702969+00:00",
-  "catalogue_fingerprint": "d1cb06b07d0c055a80ebffb540133d884263cd813d2714306c1137a8e1b70e15",
-  "manifest_sha256": "b7e65da6c6fea81c69ce11c83eb0c69300516d64480fdb876f56b9dc7c30b29d",
+  "version": "0.1.621",
+  "captured_at": "2026-11-12T14:01:06.993213+00:00",
+  "catalogue_fingerprint": "57d160af79a1c1ad5830ba66352efcf62c090af29368b2f03354ddec082f45f5",
+  "manifest_sha256": "6d33d8273d80d219b7f4f3574ab8ca43ef128c576962415d12b50ec207e34454",
   "entries": [
     {
       "function_id": "adeguati-assetti",

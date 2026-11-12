@@ -227,6 +227,59 @@ def test_existing_known_client_id_is_preserved_without_registration(work, tmp_pa
     assert prepared["archive"]["status"] == "pending"
 
 
+@pytest.mark.parametrize("operation", ["resume_work", "deliver_work"])
+@pytest.mark.parametrize("client_id", [None, "client_" + "b" * 24])
+def test_reopening_preserves_actual_identity_and_reporting(
+    work, tmp_path, operation, client_id
+):
+    prepared = prepare(work, tmp_path, client_id=client_id)
+    Path(prepared["client_engagement"]["output_dir"], "result.md").write_text(
+        "Saved result"
+    )
+    finished = work.finish_work(Path(prepared["work_folder"]))
+
+    result = getattr(work, operation)(
+        Path(prepared["client_engagement_path"]), "financial-analysis"
+    )
+
+    assert result["workspace_kind"] == ("client" if client_id else "general")
+    assert result["client_identity_asserted"] is (client_id is not None)
+    assert result["privacy_reporting"] == finished["privacy_reporting"]
+    assert result["run"]["run_id"] == prepared["run"]["run_id"]
+    assert result["outputs"] == finished["outputs"]
+
+
+@pytest.mark.parametrize("metadata", ["missing", "corrupt", "foreign_run"])
+def test_unavailable_identity_metadata_does_not_invent_identity_or_block_delivery(
+    work, tmp_path, metadata
+):
+    prepared = prepare(work, tmp_path)
+    Path(prepared["client_engagement"]["output_dir"], "result.md").write_text(
+        "Saved result"
+    )
+    root = Path(prepared["work_folder"])
+    record_path = root / "pending-archive-work.json"
+    if metadata == "missing":
+        record_path.unlink()
+    elif metadata == "corrupt":
+        record_path.write_text("{broken")
+    else:
+        record = json.loads(record_path.read_text())
+        record["run_id"] = "run_" + "c" * 24
+        record["request"]["client_id"] = prepared["client_engagement"]["client_id"]
+        record.pop("content_sha256")
+        work.ledger._write_json(record_path, work.ledger._sealed(record))
+
+    result = work.deliver_work(
+        Path(prepared["client_engagement_path"]), "financial-analysis"
+    )
+
+    assert result["client_identity_asserted"] is False
+    assert result["workspace_kind"] == "existing"
+    assert result["processing"]["status"] == "result_ready"
+    assert result["run"]["run_id"] == prepared["run"]["run_id"]
+
+
 @pytest.mark.parametrize("workflow", VERA_CLIENT_WORKFLOW_IDS)
 @pytest.mark.parametrize("failure_at", ["finalize", "complete", "status_record"])
 def test_saved_result_is_delivered_when_optional_closure_fails(

@@ -1406,6 +1406,55 @@ def test_folder_rename_after_refresh_preserves_portable_run_identity(
     )
 
 
+@pytest.mark.parametrize(
+    "name",
+    [
+        ".pending-work.lock",
+        "pending-archive-work.json",
+        "pending-work-" + "a" * 64 + ".json",
+        "pending-publication-" + "b" * 64 + ".json",
+    ],
+)
+def test_archive_search_excludes_owned_work_bookkeeping(
+    client_case, archive_core, name
+):
+    bookkeeping = client_case.client_root / name
+    bookkeeping.write_text('{"note":"SyntheticBookkeepingMarker"}')
+
+    refreshed = archive_core.refresh_archive(state_dir=client_case.state_dir)
+    result = archive_core.search_archive(
+        "SyntheticBookkeepingMarker",
+        scope_id=client_case.scope_id,
+        state_dir=client_case.state_dir,
+    )
+
+    assert result["result_count"] == 0
+    assert not any(
+        item["relative_path"].endswith(name) for item in refreshed["scan_issues"]
+    )
+    assert bookkeeping.read_text() == '{"note":"SyntheticBookkeepingMarker"}'
+
+
+def test_archive_search_keeps_similarly_named_user_source_outside_ledger(
+    tmp_path, archive_core
+):
+    root = tmp_path / "Source archive"
+    scope = root / "Ordinary documents"
+    scope.mkdir(parents=True)
+    source = scope / "pending-archive-work.json"
+    source.write_text('{"note":"ActualUserEvidenceMarker"}')
+    state = tmp_path / "private-state"
+    archive_core.configure_archive(root, state_dir=state)
+
+    archive_core.refresh_archive(state_dir=state)
+    result = archive_core.search_archive(
+        "ActualUserEvidenceMarker", scope_id="all", state_dir=state
+    )
+
+    assert result["result_count"] == 1
+    assert result["results"][0]["relative_path"].endswith(source.name)
+
+
 def test_archive_search_deduplicates_import_copy_and_excludes_run_files(
     client_case: SimpleNamespace,
     archive_core: ModuleType,
