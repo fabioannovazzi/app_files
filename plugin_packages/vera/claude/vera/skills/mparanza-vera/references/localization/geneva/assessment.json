@@ -195,7 +195,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "034174b0b42ece1a63e4fdde43580775437e3e65e177165708c91376d6925e0e",
+  "catalogue_fingerprint": "8e5dd693fa63e9b6afd2886d9f9f413a449e215793ed9b2323b52e905a4d260f",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",

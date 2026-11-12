@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.233",
+  "version": "0.1.235",
   "services": [
     {
       "name": "luciaDeepResearchValidator",
@@ -2403,7 +2403,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "lucia-studio-archive",
-          "version": "0.1.78"
+          "version": "0.1.79"
         },
         "capabilities": {
           "tools": {}
