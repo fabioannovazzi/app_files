@@ -513,6 +513,9 @@ def _run_review(
 
     invoke = invoke or semantic.run_isolated_native_worker
     select = select or semantic.discover_worker_selection
+    source_projections = {
+        record["record_id"]: record for record in (source_records or [])
+    }
     if purpose not in bf.policy()["purposes"]:
         raise ValueError("Unsupported shared reconciliation purpose")
     budget = _settings(retrieval_budget)
@@ -682,7 +685,10 @@ def _run_review(
                         worker_selection=selection,
                         codex_bin=codex_bin,
                         source_records=[
-                            {"record_id": r["transaction_id"], "fields": list(r)}
+                            source_projections.get(
+                                r["transaction_id"],
+                                {"record_id": r["transaction_id"], "fields": list(r)},
+                            )
                             for r in packet["bank_records"] + packet["journal_records"]
                         ],
                     )

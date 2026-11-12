@@ -184,6 +184,38 @@ def test_model_finds_initially_excluded_record_and_replays_without_calls(tmp_pat
     assert len(native.calls) == 2
 
 
+def test_source_projections_follow_each_submitted_page(tmp_path):
+    bank = [row("b1", reference="title-X")]
+    journal = [row(f"j{i}", reference="title-X") for i in range(20)]
+    projections = [
+        {"record_id": record["transaction_id"], "fields": ["original_amount"]}
+        for record in bank + journal
+    ]
+    submissions = []
+    native = NativeFixture({})
+    invoke = native.invoke
+
+    def capture(**kwargs):
+        submissions.append(kwargs["source_records"])
+        return invoke(**kwargs)
+
+    def respond(packet, **_):
+        page = packet["retrieval"]["pages"][0]
+        if page["next_cursor"]:
+            return request(packet, {**page["query"], "cursor": page["next_cursor"]})
+        return answer(packet, linked=True)
+
+    native.invoke = capture
+    native.respond = respond
+    result = execute(tmp_path, native, bank, journal, source_records=projections)
+
+    assert not result["errors"]
+    assert submissions == [
+        [projections[0], *sorted(projections[1:17], key=lambda r: r["record_id"])],
+        [projections[0], *projections[17:]],
+    ]
+
+
 def test_sol_can_search_outside_initial_context(tmp_path):
     native = NativeFixture({})
 
