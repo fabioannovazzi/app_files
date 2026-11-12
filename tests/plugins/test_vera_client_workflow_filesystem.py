@@ -152,8 +152,6 @@ CLIENT_WORKFLOW_OUTPUT_DISCOVERY_WRITERS = (
 
 # Maintenance, inspection and validated-report delivery do not start a workflow.
 CLIENT_WORKFLOW_CLI_ALLOWLIST = (
-    # Writes a proposal inside an already selected managed reconciliation run.
-    ("journal-bank-reconciliation", "prepare_posting_review.py"),
     # Model-selection evidence belongs to an already validated running context;
     # JSON CLI ownership/downgrade checks live in test_prompt_optimizer_plugin.
     ("prompt-optimizer", "model_policy.py"),
