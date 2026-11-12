@@ -75,6 +75,8 @@ def entrypoint(root, name, monkeypatch):
 
 
 def transport(tmp_path, monkeypatch, offline=False):
+    # The opener and reporter process are both replaced by in-process fixtures.
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
     state = tmp_path / "private-incidents"
     monkeypatch.setenv("MPARANZA_INCIDENT_STATE_DIR", str(state))
     monkeypatch.delenv("CLAUDE_PLUGIN_ROOT", raising=False)
@@ -293,7 +295,12 @@ def test_real_reporter_process_excludes_unindexed_stdlib_shadows(tmp_path, locat
     )
     state = tmp_path / "blocked-state"
     state.write_text("fixture denies state creation before any network call")
-    environment = {**os.environ, "MPARANZA_INCIDENT_STATE_DIR": str(state)}
+    environment = {
+        **os.environ,
+        "MPARANZA_INCIDENT_STATE_DIR": str(state),
+        # The regular-file state fixture prevents registration/network access.
+        "MPARANZA_INCIDENT_DELIVERY": "automatic",
+    }
     if location == "pythonpath":
         environment["PYTHONPATH"] = str(shadow)
 

@@ -9,6 +9,10 @@ on:
 permissions:
   contents: read
 
+# CI failures stay in retained test diagnostics, outside customer alerts.
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
+
 jobs:
   lipe:
     runs-on: ${{ matrix.os }}

@@ -514,6 +514,8 @@ def test_receipt_outage_keeps_completed_work_and_returns_pending(
     receipt_module.stamp_model_data_report = unavailable
     monkeypatch.setitem(sys.modules, "model_data_report", module)
     monkeypatch.setitem(sys.modules, "notarized_run_receipt", receipt_module)
+    # Exercise the outage branch through the explicit offline opener above.
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
 
     result = module.main(
         [
@@ -672,6 +674,9 @@ def test_onboarding_reports_and_direct_stamp_retries_stay_local(
         pytest.fail("No onboarding receipt may reach a server")
 
     monkeypatch.setattr(receipts, "_post_receipt_request", reject_transport)
+    # Test the onboarding exclusion independently of the CI delivery exclusion.
+    # The fixture fails immediately if any receipt transport is attempted.
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
     (tmp_path / ".vera-onboarding-local-only").write_text("Local tutorial")
     output = tmp_path / "lesson" / "outputs"
     output.mkdir(parents=True)

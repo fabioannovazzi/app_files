@@ -235,6 +235,9 @@ def test_cowork_tutorial_marker_suppresses_receipt_transport(installed, monkeypa
     def forbidden_transport(*args, **kwargs):
         pytest.fail("A lesson must not invoke receipt transport")
 
+    # Exercise the tutorial marker independently; any transport fails this test.
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
+
     result = module.stamp_model_data_report(
         report, output_dir=lesson, plugin_root=root, opener=forbidden_transport
     )
