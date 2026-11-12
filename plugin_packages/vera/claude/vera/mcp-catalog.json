@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.622",
+  "version": "0.1.623",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -7537,13 +7537,12 @@
         },
         {
           "name": "vera_workflow_usage",
-          "description": "Retain and deliver one task's usage events through this installed product's native service and existing userID/computer identity. Prefer this over a shell command that cannot write the user-scoped reporting database. Start requires pipeline, observed host and sample_kind; record requires an observed kind and its optional fields. Reuse the same UUID through retries. Status verifies the same task's server identity; flush retries only that task. No client documents, paths, shell commands, credentials or global queue operations are accepted. A reporting failure does not invalidate professional work.",
+          "description": "Retain and deliver one task's usage events through this installed product's native service and existing userID/computer identity. Prefer this over a shell command that cannot write the user-scoped reporting database. Start requires pipeline, observed host and sample_kind; record requires an observed kind and its optional fields. Reuse the same UUID through retries. Consent reads or sets the saved local telemetry preference; set it only from an explicit user choice. Start may return a one-time consent prompt. Status and flush contact Mparanza only with saved consent. No client documents, paths, shell commands, credentials or global queue operations are accepted. A reporting failure does not invalidate professional work.",
           "inputSchema": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "operation",
-              "run_id"
+              "operation"
             ],
             "properties": {
               "operation": {
@@ -7552,12 +7551,20 @@
                   "start",
                   "record",
                   "status",
-                  "flush"
+                  "flush",
+                  "consent"
                 ]
               },
               "run_id": {
                 "type": "string",
                 "format": "uuid"
+              },
+              "choice": {
+                "type": "string",
+                "enum": [
+                  "allow",
+                  "deny"
+                ]
               },
               "pipeline": {
                 "type": "string"
@@ -8569,7 +8576,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.622",
+          "version": "0.1.623",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",

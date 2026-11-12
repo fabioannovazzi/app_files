@@ -177,7 +177,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
+      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
     },
     {
       "path": "skills/mparanza-composizione-negoziata/SKILL.md",
@@ -909,5 +909,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "cd26cd26c73755e822f4341a70c4b8fedd587937c94157dad0911ef544d6b4d8"
+  "canonical_course_sha256": "5460d544190041d2922e0f170fe6e2e4dac9571df74028af94a3b67dade745b9"
 }

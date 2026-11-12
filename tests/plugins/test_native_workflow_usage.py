@@ -83,6 +83,81 @@ def queued_rows(tmp_path, run_id):
 
 
 @pytest.mark.parametrize("product", PIPELINES)
+@pytest.mark.parametrize("choice", ["allow", "deny"])
+def test_native_usage_asks_once_and_only_sends_after_saved_opt_in(
+    tmp_path, product, choice
+):
+    root = installed(tmp_path, product=product)
+    requests = tmp_path / "transport-operations"
+    relative = "scripts/operational_incidents.py"
+    script = root / relative
+    with script.open("a") as handle:
+        handle.write(
+            f"""
+def workflow_transport(operation, payload):
+    with Path({str(requests)!r}).open("a") as trace:
+        trace.write(operation + "\\n")
+    if operation == "workflow-status":
+        raise OSError("No remote status in this fixture")
+    event = payload["event"]
+    return {{
+        "recorded": True,
+        "installation_id": payload["credentials"]["installation_id"],
+        "event_id": event["event_id"],
+        "run_id": event["run_id"],
+        "sequence": event["sequence"],
+        "payload_sha256": hashlib.sha256(
+            json.dumps(event, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode()
+        ).hexdigest(),
+    }}
+"""
+        )
+    index_path = root / "execution-files.json"
+    index = json.loads(index_path.read_text())
+    index["files"][relative] = hashlib.sha256(script.read_bytes()).hexdigest()
+    index_path.write_text(json.dumps(index))
+    device = tmp_path / "native-host"
+    tool = f"{product}_workflow_usage"
+    run_id = str(uuid4())
+    start = {**start_arguments(run_id, product), "sample_kind": "user"}
+
+    first = call(root, device, tool, start)["structuredContent"]
+    second = call(root, device, tool, start)["structuredContent"]
+    assert "mparanza.com" in first["consent_prompt_it"]
+    assert product.title() in first["consent_prompt_it"]
+    assert "consent_prompt_it" not in second
+    call(root, device, tool, {"operation": "status", "run_id": run_id})
+    assert not requests.exists()
+
+    call(root, device, tool, {"operation": "consent", "choice": choice})
+    assert not requests.exists()
+    saved = call(root, device, tool, {"operation": "consent"})["structuredContent"]
+    assert saved["usage_consent"] == choice
+    completed = call(
+        root,
+        device,
+        tool,
+        {"operation": "record", "run_id": run_id, "kind": "completed"},
+    )["structuredContent"]
+    rows = queued_rows(tmp_path, run_id)
+    assert [json.loads(payload)["kind"] for payload, _ in rows] == [
+        "started",
+        "completed",
+    ]
+    if choice == "deny":
+        restarted = call(root, device, tool, {**start, "run_id": str(uuid4())})[
+            "structuredContent"
+        ]
+        call(root, device, tool, {"operation": "flush", "run_id": run_id})
+        assert "consent_prompt_it" not in restarted
+        assert completed["delivery"]["usage_consent"] == "deny"
+        assert not requests.exists()
+    else:
+        assert completed["delivery"]["queued"] == 0
+        assert requests.read_text().splitlines().count("workflow-record") == 2
+
+
+@pytest.mark.parametrize("product", PIPELINES)
 def test_native_task_start_retry_completion_and_status_preserve_owner_and_old_queue(
     native_service, tmp_path, product
 ):
@@ -90,6 +165,7 @@ def test_native_task_start_retry_completion_and_status_preserve_owner_and_old_qu
     root = installed(tmp_path, endpoint, product)
     device = tmp_path / "native-host"
     tool = f"{product}_workflow_usage"
+    call(root, device, tool, {"operation": "consent", "choice": "allow"})
     historical_run = str(uuid4())
     rejected_runs.add(historical_run)
     old = call(root, device, tool, start_arguments(historical_run, product))
@@ -152,6 +228,9 @@ def test_native_service_persists_when_chat_shell_cannot_write_global_state(
     _, endpoint, _, _ = native_service
     root = installed(tmp_path, endpoint)
     device = tmp_path / "native-host"
+    call(
+        root, device, "vera_workflow_usage", {"operation": "consent", "choice": "allow"}
+    )
     call(root, device, "vera_workflow_usage", start_arguments(str(uuid4())))
     run_id = str(uuid4())
     state = tmp_path / "unused-task-state"
@@ -251,6 +330,9 @@ def test_native_flush_delivers_the_retained_event_without_replacing_it(
     device = tmp_path / "native-host"
     run_id = str(uuid4())
     rejected_runs.add(run_id)
+    call(
+        root, device, "vera_workflow_usage", {"operation": "consent", "choice": "allow"}
+    )
     call(root, device, "vera_workflow_usage", start_arguments(run_id))
     original_payload, original_receipt = queued_rows(tmp_path, run_id)[0]
     rejected_runs.clear()

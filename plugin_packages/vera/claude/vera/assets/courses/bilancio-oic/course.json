@@ -354,7 +354,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
+      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
     },
     {
       "path": "skills/mparanza-bilancio-oic/SKILL.md",
@@ -700,5 +700,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "2a5348e30d5ad19e0c6774a0f6e40b7222dd039b8f46050530f33c3967d6bbda"
+  "canonical_course_sha256": "b9a42b939b574762204a2fb44c636c9171953775b9ae566f03b20513fcd2ba08"
 }

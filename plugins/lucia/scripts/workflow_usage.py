@@ -34,6 +34,7 @@ __all__ = [
     "pending",
     "acknowledge",
     "status",
+    "consent",
     "attach_receipt",
     "build_report",
     "stamp_report",
@@ -68,8 +69,57 @@ def _database() -> sqlite3.Connection:
     connection.execute(
         "CREATE TABLE IF NOT EXISTS remote_state (run_id TEXT PRIMARY KEY, payload TEXT NOT NULL)"
     )
+    connection.execute(
+        "CREATE TABLE IF NOT EXISTS usage_consent (product TEXT PRIMARY KEY, choice TEXT NOT NULL CHECK(choice IN ('offered','allow','deny')))"
+    )
     connection.commit()
     return connection
+
+
+def _consent_choice(connection: sqlite3.Connection) -> str:
+    row = connection.execute(
+        "SELECT choice FROM usage_consent WHERE product=?", (product_name(ROOT),)
+    ).fetchone()
+    return row["choice"] if row else "unset"
+
+
+def consent(choice: str | None = None) -> dict[str, str]:
+    """Read or explicitly change this product's local usage preference."""
+    if choice not in {None, "allow", "deny"}:
+        raise ValueError("Choose allow or deny for usage telemetry")
+    connection = _database()
+    try:
+        with connection:
+            if choice is not None:
+                connection.execute(
+                    "INSERT INTO usage_consent VALUES (?,?) "
+                    "ON CONFLICT(product) DO UPDATE SET choice=excluded.choice",
+                    (product_name(ROOT), choice),
+                )
+            return {"usage_consent": _consent_choice(connection)}
+    finally:
+        connection.close()
+
+
+def _consent_prompt(connection: sqlite3.Connection) -> str | None:
+    product = product_name(ROOT)
+    inserted = connection.execute(
+        "INSERT INTO usage_consent VALUES (?, 'offered') ON CONFLICT(product) DO NOTHING",
+        (product,),
+    )
+    if inserted.rowcount != 1:
+        return None
+    return (
+        f"Vuoi inviare a Mparanza (mparanza.com) le statistiche d’uso di {product.title()} "
+        "per misurare l’utilizzo e gli esiti delle funzioni? L’invio comprende la funzione usata, "
+        "l’esito e gli orari, il tipo di prova, le versioni tecniche, l’app e il sistema operativo, "
+        "identificativi casuali di installazione, dispositivo e attività, dati tecnici di "
+        "autenticazione e, se presenti, riferimenti a incidenti e ricevute. Può includere "
+        "eventi d’uso già salvati in locale e stelle o commenti che scegli di inviare come feedback. "
+        "Documenti, richieste e risultati del lavoro restano fuori dalla telemetria. "
+        "La scelta viene salvata su questo dispositivo. Se rifiuti, puoi continuare a lavorare. "
+        "Consenti l’invio o preferisci tenerlo disattivato?"
+    )
 
 
 def _version() -> str:
@@ -131,6 +181,13 @@ def pending(*, run_id: str | None = None) -> dict[str, Any]:
     """Expose exact events in the selected scope for authenticated delivery."""
     connection = _database()
     try:
+        choice = _consent_choice(connection)
+        if choice != "allow":
+            return {
+                "events": [],
+                "queued": _queued_count(connection, run_id),
+                "usage_consent": choice,
+            }
         credentials, _ = _owner()
         rows = _pending(connection, run_id)
         return {
@@ -173,8 +230,16 @@ def flush(*, run_id: str | None = None) -> dict[str, Any]:
     deadline = time.monotonic() + 20
     blocked: dict[str, str] = {}
     try:
+        choice = _consent_choice(connection)
+        if choice != "allow":
+            return {
+                "delivered": 0,
+                "queued": _queued_count(connection, run_id),
+                "blocked": {},
+                "usage_consent": choice,
+            }
         for row in _pending(connection, run_id):
-            if time.monotonic() >= deadline:
+            if time.monotonic() >= deadline or _consent_choice(connection) != "allow":
                 break
             if row["run_id"] in blocked:
                 continue
@@ -211,7 +276,8 @@ def status(run_id: str, *, remote: bool = True) -> dict[str, Any]:
     credentials, _ = _owner()
     connection = _database()
     try:
-        if remote:
+        choice = _consent_choice(connection)
+        if remote and choice == "allow":
             try:
                 result = _send(
                     "workflow-status", {"credentials": credentials, "run_id": run_id}
@@ -237,7 +303,10 @@ def status(run_id: str, *, remote: bool = True) -> dict[str, Any]:
         ).fetchall()
         return {
             "run_id": run_id,
-            "remote": json.loads(saved["payload"]) if saved else None,
+            "remote": (
+                json.loads(saved["payload"]) if saved and choice == "allow" else None
+            ),
+            "usage_consent": choice,
             "local_events": [
                 {
                     "event": json.loads(row["payload"]),
@@ -274,6 +343,7 @@ def start(
         raise ValueError("Choose the observed app or unknown")
     credentials, _ = _owner()
     connection = _database()
+    prompt = None
     try:
         with connection:
             connection.execute("BEGIN IMMEDIATE")
@@ -297,10 +367,15 @@ def start(
                     "started",
                     {"pipeline": pipeline, "host": host, "sample_kind": sample_kind},
                 )
+            if deliver and sample_kind == "user":
+                prompt = _consent_prompt(connection)
     finally:
         connection.close()
     delivery = flush(run_id=run_id) if deliver else {"queued": True}
-    return {"run_id": run_id, "delivery": delivery}
+    result = {"run_id": run_id, "delivery": delivery}
+    if prompt is not None:
+        result["consent_prompt_it"] = prompt
+    return result
 
 
 def _append(
@@ -408,7 +483,9 @@ def record(
                 )
             )
             if kind == "feedback_prompted" and (
-                already_prompted or run["sample_kind"] != "user"
+                already_prompted
+                or run["sample_kind"] != "user"
+                or _consent_choice(connection) != "allow"
             ):
                 return {"run_id": run_id, "ask": False}
             if kind in {"completed", "failed", "cancelled"}:
@@ -549,6 +626,9 @@ def startup_context() -> str:
             "infrastructure. Start/record saves and delivers only that task's events. "
             f"Prefer the installed {product_name(ROOT)}_workflow_usage native tool; "
             "it owns persistent state outside the chat's project sandbox. "
+            "If start returns consent_prompt_it, offer the optional choice once and "
+            "save only an explicit answer using operation=consent. Continue the task "
+            "while waiting or after refusal. Usage stays local without permission. "
             "Retry delivery with workflow_usage.py flush --run-id <retained-uuid>. "
             f"Pending events across retained tasks: {_queued_count(connection)}. "
             "Unrelated pending events are not a prerequisite for current work. "
@@ -561,6 +641,13 @@ def startup_context() -> str:
 def native_operation(arguments: dict[str, Any]) -> dict[str, Any]:
     """Run one fixed task operation; never accept paths, commands or global flush."""
     operation = arguments.get("operation")
+    if operation == "consent":
+        if arguments.keys() - {"operation", "choice"}:
+            raise ValueError("Unexpected usage consent arguments")
+        choice = arguments.get("choice")
+        if "choice" in arguments and not isinstance(choice, str):
+            raise ValueError("Usage consent choice must be a string")
+        return consent(choice)
     required = {
         "start": {"operation", "run_id", "pipeline", "host", "sample_kind"},
         "record": {"operation", "run_id", "kind"},
@@ -613,6 +700,8 @@ def native_operation(arguments: dict[str, Any]) -> dict[str, Any]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    preference = commands.add_parser("consent")
+    preference.add_argument("--choice", choices=("allow", "deny"))
     begin = commands.add_parser("start")
     begin.add_argument("--run-id", required=True)
     begin.add_argument("--pipeline", required=True)
@@ -657,7 +746,9 @@ def main(argv: list[str] | None = None) -> int:
     ack.add_argument("--receipt", type=Path, required=True)
     args = parser.parse_args(argv)
     try:
-        if args.command == "start":
+        if args.command == "consent":
+            result = consent(args.choice)
+        elif args.command == "start":
             result = start(
                 args.run_id, args.pipeline, sample_kind=args.sample_kind, host=args.host
             )

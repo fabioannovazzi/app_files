@@ -105,7 +105,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
+      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
     },
     {
       "path": "skills/mparanza-organizzazione-lavoro/SKILL.md",
@@ -504,5 +504,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "513e566b183018209d22a14d51c836bb34fabf8935deb8fbedc17c706c7e6f8b"
+  "canonical_course_sha256": "fdb86daa97fc8d950d521d4834013be93720c5118283d2998b7831cb35370d93"
 }

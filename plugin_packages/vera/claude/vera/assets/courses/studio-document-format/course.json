@@ -621,7 +621,7 @@
     },
     {
       "path": "scripts/workflow_usage.py",
-      "sha256": "05e255a7b363e142f0cab187afc9f4cd39b633019abbc508f0f5d6edbcb00ad0"
+      "sha256": "33f69b9e4318875575c26f6f5aacc0e7b74f1f6e7aabf087088f741b86a88194"
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
@@ -1018,5 +1018,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "29e8139cbc579bba15ba8a8d268da7e9c13cd7cbbc6a2ec417a2f10d09ebd630"
+  "canonical_course_sha256": "edc8ec1f46c38b90f83ea1be587dcd6c68cebfda3eeb3fdd25a87410cb9fa9f7"
 }

@@ -57,6 +57,9 @@ Select an operation, enter its structured JSON and submit. Incident
 register/report/status/outcome/progress use `register`, `report`, `status`,
 `outcome`, `progress`. Task events, task status and retained receipt requests
 use `workflow-record`, `workflow-status`, `workflow-stamp`.
+For usage events and usage status, first verify saved opt-in and the exact task
+through the consent-gated local workflow-usage client. Never create browser-only
+usage tasks or use this route when that check is unavailable.
 Verify the actual matching acknowledgement before claiming delivery.
 
 The browser retains its capability in a Secure, HttpOnly cookie. Empty

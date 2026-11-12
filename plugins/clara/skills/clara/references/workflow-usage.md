@@ -1,23 +1,28 @@
 # One task, one outcome, one rating
 
-Apply this contract to the user's requested Clara process, including AI-led
-research, advice and document work. Mparanza receives only the task lifecycle
-fields defined below: random run/event identifiers, sequence, pipeline, host,
-product version, timestamps, task state and existing incident/receipt links.
-Optional ratings contain only the score and comment deliberately supplied for
-the Clara team. Do not copy the assignment, contract, client files, prompts or
-professional outputs into events or feedback. Receipt stamping sends its minimal
-request, including the local report digest, never the report itself.
+## Optional usage telemetry
 
-Reuse the user's existing authorization for this same reporting scope and honor
-the host's permissions. Do not add a per-run consent question or ask the user to
-relay logs. This contract does not grant permission, override an action-time
-approval, expand access or authorize a new recipient or payload. Respect explicit
-restrictions and denied transmissions on every transport, including the browser
-fallback. Keep permitted local evidence, report delivery as unverified, and
-continue the professional task when external reporting is unavailable or denied.
-Task usage complements technical incidents and the local model-data report; it
-never substitutes for either.
+When `start` returns `consent_prompt_it`, offer that question once, in the user's
+language, preserving all disclosed data and the recipient. Present it alongside
+the ongoing work. Proceed with the requested work while the choice is unanswered
+or denied. Silence or an ambiguous answer leaves telemetry disabled.
+
+On an explicit answer, call the native tool with
+`{"operation":"consent","choice":"allow"}` for yes or
+`{"operation":"consent","choice":"deny"}` for no. The CLI equivalent is
+`workflow_usage.py consent --choice allow` or `--choice deny`. Neither saves any
+chat text nor sends data. A consent call without a choice reads the saved setting.
+Change a saved choice only at the user's explicit request. After opt-in, a
+task-scoped flush can send the exact queued events for that task. No approval
+from a different product, an earlier task or the host substitutes for the saved
+choice. Honor any additional host permission when transmitting.
+
+Use the native or CLI path for new usage tasks. If neither can read or save the
+local choice, leave usage reporting local or unavailable and continue the work.
+Use browser task usage only for an exact local task exposed by the consent-gated
+`pending` command and only when host permissions allow the same transmission.
+This preference concerns task-usage telemetry. Technical incident reporting and
+signed model-data receipts have their own delivery paths and permissions.
 
 ## Start before work
 
@@ -62,26 +67,6 @@ When Studio Archive is invoked directly only to save/reopen state, there is no
 separate survey or process. A document-review mandate that uses it belongs to
 its actual primary user-facing process.
 
-If the native tool and permitted local execution are unavailable, follow
-`incident-recovery.md` in this directory to use the independently hosted browser
-page at `https://mparanza.com/clara/incident-recovery`.
-Use browser `register` to inspect its retained identity and link the original
-local capability when available. Select `workflow-record` and send an `event`
-with schema_version 1, product clara, stable event_id and run_id UUIDs,
-sequence 1, kind started, actual timezone-aware occurred_at, observed
-product_version, pipeline, host and sample_kind. Include original local
-credentials alongside the event only when this is a local-owned run. An existing
-browser/OAuth-owned run keeps that owner; never start a replacement local task.
-
-Retain the exact event before sending and reuse its UUID and fields after an
-ambiguous response. Browser `workflow-status` with run_id returns the
-acknowledged sequence. Subsequent events increase sequence by one. Fields
-pipeline, host and sample_kind belong only to started; omit them from completed,
-receipt and other events. Preserve unacknowledged events in existing private
-durable context when available. If there is no durable storage or permitted
-browser route, report that precise limit, never claim persistence or delivery.
-Do not route around a denied host permission.
-
 ## Record the Computer ID for this task
 
 For a native-tool task, call `clara_workflow_usage` with `operation=status`
@@ -91,34 +76,6 @@ Native delivery attaches this computer's existing proof automatically; a verifie
 status needs no separate host-link call or credential handling in the chat.
 A queued or missing remote status is pending evidence, never a verified identity.
 
-For a guest/browser task that still needs its native link, discover
-`clara_incident_host_context` and `clara_incident_host_link`
-through the host's tool search/catalog, including deferred tools. Absence from
-the initial tool list is not evidence of unavailability. In Cowork, the plugin
-can expose these on the connected computer even while task scripts run in a
-Linux container. The fixed native tool needs no client folder or shell access.
-
-For a locally started run, use its existing local reporter capability. For a
-browser-owned run, read `reporting.host_link.credentials` from the actual
-browser `workflow-record` acknowledgement. This is a short-lived proof scoped
-only to this run's native-computer link; it is not a new reporter or the browser
-identity. If expired, inspect status and replay the latest acknowledged event
-unchanged to obtain a fresh proof, preserving its UUID, sequence and owner.
-Do not store this proof as installation credentials or use it for other tools.
-
-Call `clara_incident_host_link` with exactly
-`{credentials: {installation_id, installation_key}}` from that proof or the
-original local capability. Omit `capability` and `run_id`. The native helper adds
-its own private computer proof. Inspect browser `workflow-status` for this
-same run and confirm `reporting.computer_link` and `reporting.computer_id`.
-The public context tool alone is not proof of linkage. A saved browser identity may be
-used on multiple computers: only this run is bound, never all its other runs.
-Never copy a host key into task files, replace the original owner, or infer a
-computer from names, IPs, browser IDs or task IDs.
-
-If discovery or linking fails, retain that exact technical limitation and keep
-work/reporting running. Do not expand permissions, attach additional folders,
-claim a match, or turn a reporting failure into a professional-task failure.
 
 ## Outcome and receipt
 
@@ -155,21 +112,22 @@ python scripts/workflow_usage.py build-report --run-id <uuid> --input <model_dat
 
 This calls the existing shared report builder unchanged and links its actual
 signed receipt without transmitting the report. Show its display_markdown and
-normal artifact links after the professional result. Inspect the same run on the
-server after final delivery: an acknowledged completed event, a verified Computer
+normal artifact links after the professional result. If usage sharing is enabled,
+inspect the same run on the server after final delivery: an acknowledged completed event, a verified Computer
 ID link and an actual linked signed receipt are separate facts. Follow any
 `reporting.next_steps` without rerunning the completed professional task. If stamping is pending,
 keep the local report and retry with `workflow_usage.py stamp-report --run-id
 <uuid> --report <model_data_report.json> --output-dir <receipt-output-directory>`.
-If local receipt delivery is unavailable, use the local `clara_workflow_stamp` tool for its own retained run, with the original run UUID and `receipt_request` copied exactly from the retained
-`model_data_receipt_request.json`. If the local tool is unavailable or the run is browser-owned, use browser
+If local receipt delivery is unavailable and the run has reached the usage server,
+use the local `clara_workflow_stamp` tool for its own retained run, with the original run UUID and `receipt_request` copied exactly from the retained
+`model_data_receipt_request.json`. If the local tool is unavailable, use browser
 `workflow-stamp` with that same request/run and the original local capability
 only when applicable. Only this small allow-listed request is sent,
 never the report or its input. Save the exact returned JSON as
 `model_data_receipt.json` beside that request, then repeat `stamp-report` above.
 It validates the response against the unchanged report and request, renders the
-portable proof and queues the receipt link. Deliver that queued event through browser
-`workflow-record` and acknowledge it as described below. Do not replace a conflicting
+portable proof and queues the receipt link. Deliver that queued event only
+under the saved telemetry preference. Do not replace a conflicting
 request or a previously stored receipt. A denied permission is not network failure.
 
 A pre-existing valid receipt can be linked using:
@@ -178,10 +136,6 @@ A pre-existing valid receipt can be linked using:
 python scripts/workflow_usage.py receipt --run-id <uuid> --receipt <actual-model_data_receipt.json>
 ```
 
-For a browser-owned task, send kind receipt with the actual receipt_id, receipt_version and
-report_sha256. The service verifies its retained signature and version. Never
-invent a digest or claim a receipt when only an in-chat report exists. An absent
-receipt remains absent; a successful professional task can still lack one.
 `--local-only` on build-report and tutorial suppression also suppress automatic usage linking.
 
 ## Ask once after delivery
@@ -192,8 +146,7 @@ After delivering the result, reserve the one prompt with:
 python scripts/workflow_usage.py record --run-id <uuid> --kind feedback_prompted
 ```
 
-Ask only when `ask=true`. For browser delivery, inspect status and record
-feedback_prompted only if it was not already offered and sample_kind is user.
+Ask only when `ask=true`. The client suppresses this prompt when usage is local.
 Never ask during urgent recovery, before delivery, or for synthetic tests.
 Use a native host choice if available; otherwise ordinary chat is sufficient:
 
@@ -262,9 +215,3 @@ acknowledges only that item. Never manufacture an acknowledgement or replace a
 local installation ID with the browser owner ID. Do not use this fallback to
 bypass a denied host permission. User feedback comments in this queue are the
 user's chosen submission, not a request to inspect professional documents.
-
-If the task started through the browser without a local capability,
-continue its events through that original browser owner after local execution
-recovers. Build the report with the ordinary report command and send its actual
-receipt link through browser `workflow-record`. Do not start a second local task or infer
-that the new local installation ID owns the earlier browser task.

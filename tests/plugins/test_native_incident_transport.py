@@ -331,6 +331,13 @@ def test_native_workflow_stamp_retains_original_run_and_verifiable_product_recei
     root = installed(tmp_path, endpoint, product)
     device = tmp_path / "device"
     run_id = str(uuid4())
+    consent = call(
+        root,
+        device,
+        f"{product}_workflow_usage",
+        {"operation": "consent", "choice": "allow"},
+    )
+    assert consent["structuredContent"]["usage_consent"] == "allow"
     call(root, device, f"{product}_workflow_usage", start_arguments(run_id, product))
     original_request = {
         "schema_version": 2,

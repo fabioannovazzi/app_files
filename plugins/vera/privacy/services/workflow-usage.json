@@ -40,6 +40,7 @@
   "external_boundaries": [
     {
       "controls": [
+        "Task-usage transmission is off until explicit opt-in. The first real task offers a one-time choice saved in the private local usage database. Unanswered or declined usage stays local, including during browser recovery.",
         "Events are durably queued before transport and acknowledged by exact UUID, owner, sequence and hash. Interruptions stay outcome unknown; repeated submissions are idempotent.",
         "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
         "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery.",
@@ -59,12 +60,12 @@
         "openai-codex",
         "anthropic-cowork"
       ],
-      "requires_confirmation": false,
+      "requires_confirmation": true,
       "kind": "hosted_service",
       "retention": "Task events, optional feedback and receipt links remain in the service until administrative deletion; no automatic expiry is implemented. Local queued events and acknowledgements remain in the existing private per-installation state directory. Lifecycle events exclude client documents and professional output. Optional feedback stores only the comment deliberately supplied by the user; its contents are not automatically anonymized. Host-link tickets expire after 15 minutes; their hashes and established run-to-computer bindings remain until administrative deletion. The raw short-lived proof is returned only in an authenticated acknowledgement and not in status or operator projections. Browser capabilities expire after 90 days; a separate public identity marker cookie lasts one year and grants no access. Transfer codes expire after five minutes and can be consumed once. Token/code hashes, original reports and linked history have no automatic deletion job. The form retains an unsuccessful request in its current DOM and clears it on success; it does not provide a durable browser outbox. The agent retains exact pending envelopes in existing permitted private task storage when available. The native reporter persists exact requests and receipts before and after transmission. Definitive schema rejections can be corrected under the same UUID; superseded rejected payloads remain private audit evidence. An ambiguous prior attempt cannot be replaced.",
       "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Browser or legacy connector identity is not inferred to be a native computer. Native senders also present the existing anonymous native-computer capability and observed native app when available. The server retains the established computer binding; unlinked guests remain unlinked until an actual native proof is received. Browser-owned or legacy connector-owned runs can obtain the bounded per-run proof described above; run-specific computer bindings are used by counts and completion indicators. No personal account information or hardware identifier is collected. The replacement transport preserves the same closed reporting payloads. Browser cookies and optional original local credentials authenticate only; they are not diagnostic fields. Browser status and acknowledgements enter the selected host model context when the agent reads the rendered response. The schema view returns field definitions, not stored user data. The browser fallback sends no professional documents or raw model-data report.",
-      "optional": false,
-      "activation": "automatic_on_first_use",
+      "optional": true,
+      "activation": "explicit_user_choice",
       "destination": "Mparanza ordinary HTTPS operational-incidents API and product-owned browser recovery session at https://mparanza.com/vera/incident-recovery"
     },
     {
@@ -213,6 +214,6 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "6ad71c541eff9cfb402c89e737ba8cc77fedfa6813f1c8a8b3cb0a7f58ff7f7a"
+    "source_fingerprint": "24dbd9903eea91f5019cf0df52cc75a264687ebfc2e22945c95935f6c2b6cb4b"
   }
 }

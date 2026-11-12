@@ -52,10 +52,11 @@
       "destination": "Mparanza ordinary HTTPS operational-incidents API and product-owned browser recovery session at https://mparanza.com/clara/incident-recovery",
       "purpose": "Measure which user processes run and their observed outcome; link existing signed model-data receipts and technical reports without copying their professional content",
       "content": "The existing installation capability authenticates closed-schema events: random run and event UUIDs, sequence, catalog pipeline ID, host, observed product version, timestamps, explicit user/synthetic/agent-test classification and started/resumed/completed/failed/cancelled state. Optional links contain only an existing signed receipt UUID/report digest or an owned incident report UUID. Run ownership, single-run receipt binding and the retained signature are checked server-side. The original stamping service does not attest the identity of the author of a report. The service receives no task text, client identity, filenames, source data, prompt or professional output. Existing connection metadata and rate limiting apply. Browser or legacy connector identity is not inferred to be a native computer. Native senders also present the existing anonymous native-computer capability and observed native app when available. The server retains the established computer binding; unlinked guests remain unlinked until an actual native proof is received. Browser-owned or legacy connector-owned runs can obtain the bounded per-run proof described above; run-specific computer bindings are used by counts and completion indicators. No personal account information or hardware identifier is collected. The product field is explicit. Product, run owner and receipt product must match. Baselines and function catalogues are distinct per product. The replacement transport preserves the same closed reporting payloads. Browser cookies and optional original local credentials authenticate only; they are not diagnostic fields. Browser status and acknowledgements enter the selected host model context when the agent reads the rendered response. The schema view returns field definitions, not stored user data. The browser fallback sends no professional documents or raw model-data report.",
-      "activation": "automatic_on_first_use",
-      "optional": false,
-      "requires_confirmation": false,
+      "activation": "explicit_user_choice",
+      "optional": true,
+      "requires_confirmation": true,
       "controls": [
+        "Task-usage transmission is off until explicit opt-in. The first real task offers a one-time choice saved in the private local usage database. Unanswered or declined usage stays local, including during browser recovery.",
         "Events are durably queued before transport and acknowledged by exact UUID, owner, sequence and hash. Interruptions stay outcome unknown; repeated submissions are idempotent.",
         "Synthetic and agent-test runs are excluded from user metrics. Studio Archive is infrastructure and cannot be selected as a rated process.",
         "The host AI selects the primary process and observes actual task completion. Counters and hashes do not assert professional correctness or independent model delivery.",
@@ -201,7 +202,7 @@
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_at": "2026-11-07",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "dff5d70cde19f1c18732f3226e22277d7157ab8e90c7b89567b9e475742163dc"
+    "source_fingerprint": "28143a7f5e32ee729eef5b6a5e59571e8821f4312891e15160f7cc0c5c8bd66b"
   },
   "service_details": {
     "trigger": "Automatic technical reporting and per-primary-task events; one optional user rating after delivery. Local-only tutorials and nested infrastructure are not separate rated tasks.",
