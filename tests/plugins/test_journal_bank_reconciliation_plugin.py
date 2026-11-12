@@ -14726,7 +14726,25 @@ def test_windows_worker_uses_native_runtime_without_apple_prerequisites(
     assert runtime["host_profile"].platform == "Windows"
     assert runtime["host_profile"].sandbox_exec_path == tmp_path / "codex.exe"
     assert Path("/usr/bin/sandbox-exec") not in observed
-    assert semantic.inspect_execution_host()["worker_executed"] is False
+    status = semantic.inspect_execution_host()
+    assert status["worker_executed"] is False
+    assert status["canaries_executed"] is False
+    assert status["live_isolation_probes_required_before_submission"] is True
+
+
+def test_windows_host_status_missing_runtime_does_not_claim_canaries(monkeypatch):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic.platform, "system", lambda: "Windows")
+
+    def missing(_):
+        raise ValueError("Codex CLI is unavailable")
+
+    monkeypatch.setattr(semantic, "_qualified_executables", missing)
+    status = semantic.inspect_execution_host()
+    assert status["status"] == "unsupported"
+    assert status["worker_executed"] is False
+    assert status["canaries_executed"] is False
+    assert status["checks"][0]["check"] == "native_windows_runtime"
 
 
 @pytest.mark.parametrize("failure", [None, "read", "write", "cli"])

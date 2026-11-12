@@ -2604,6 +2604,7 @@ def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
             return {
                 "status": "unsupported",
                 "worker_executed": False,
+                "canaries_executed": False,
                 "checks": [
                     {
                         "check": "native_windows_runtime",
@@ -2617,6 +2618,7 @@ def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
             "qualification_profile": WINDOWS_WORKER_BOUNDARY_CONTRACT_ID,
             "status": "prerequisites_match",
             "worker_executed": False,
+            "canaries_executed": False,
             "live_isolation_probes_required_before_submission": True,
             "checks": [{"check": "native_windows_runtime", "status": "matched"}],
         }

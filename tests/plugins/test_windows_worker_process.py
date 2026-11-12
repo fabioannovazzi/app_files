@@ -95,7 +95,13 @@ def test_assignment_failure_never_executes_command(tmp_path, monkeypatch):
 def test_native_host_status_does_not_claim_worker_isolation(tmp_path):
     command = ROOT / "plugins/journal-bank-reconciliation/scripts/semantic_review.py"
     result = subprocess.run(
-        [sys.executable, str(command), "host-status"],
+        [
+            sys.executable,
+            str(command),
+            "host-status",
+            "--codex-bin",
+            str(tmp_path / "missing-codex.exe"),
+        ],
         cwd=tmp_path,
         capture_output=True,
         text=True,
@@ -110,6 +116,6 @@ def test_native_host_status_does_not_claim_worker_isolation(tmp_path):
     assert payload["worker_executed"] is False
     assert payload["canaries_executed"] is False
     assert any(
-        check["check"] == "os_build" and check["status"] == "unsupported"
+        check["check"] == "native_windows_runtime" and check["status"] == "unsupported"
         for check in payload["checks"]
     )
