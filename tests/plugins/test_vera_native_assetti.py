@@ -171,10 +171,15 @@ const args={...authority(view,saved.draft_revision),human_reviewed:true,idempote
 @pytest.mark.parametrize(
     "assetti_workspace", ["one", "historical", "swiss", "empty"], indirect=True
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_assetti_decision_retains_proposal_and_does_not_record_adoption(
-    assetti_workspace,
+    assetti_workspace, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding, original, ref, module = assetti_workspace
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     original_bytes = (output / (ref + ".json")).read_bytes()
     result = rpc_program(
         env,

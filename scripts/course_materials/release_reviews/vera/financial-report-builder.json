@@ -154,7 +154,7 @@
     "reviewer": "Codex /root - bounded report output source review",
     "source_review": "Inspected report-builder Markdown omission repair, compact-table pagination and continuous audit appendix; numeric review, source capture and integrity validation unchanged. The component version advances to0.1.47. Shared studio-format preview code calls the same renderer. Full compiled course comparison shows only source inventory changes; original editorial judgments and outputs remain historical. Fresh current-digest localized execution remains required."
   },
-  "course_sha256": "3e6e8ccce2876943cd1af50344e859060d0e018fa18b08d02236d772f88e2265",
+  "course_sha256": "94fbc90a2cb8cfa5a0dba2ac3e2cdace5589f8e1804b458dba8bb81cd7212f6c",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "16a53e01bc86e54ccb9643978e0813a01cc0bafcc26255d8129eb395d6fb6b8b",
@@ -856,5 +856,16 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "32552e9465e877273368971e92a2d35e452cfd5b",
+    "previous_course_sha256": "3e6e8ccce2876943cd1af50344e859060d0e018fa18b08d02236d772f88e2265",
+    "current_course_sha256": "94fbc90a2cb8cfa5a0dba2ac3e2cdace5589f8e1804b458dba8bb81cd7212f6c",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
   }
 }

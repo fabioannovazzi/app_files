@@ -102,10 +102,15 @@ const args={...intakeScope,expected_draft_revision:saved.draft_revision,human_re
 
 
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_initial_open_items_retains_full_package_and_replays_without_approval(
-    initial_open_items, language
+    initial_open_items, language, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding = initial_open_items
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         initial_program(language)

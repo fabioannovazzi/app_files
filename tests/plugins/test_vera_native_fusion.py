@@ -478,8 +478,15 @@ def test_fusion_whole_read_keeps_every_record_without_sampling(merger, api):
     assert "Fictional complete fact 70" not in json.dumps(result["content"])
 
 
-def test_fusion_p1_export_keeps_workpaper_outputs_and_canonical_report(p1_merger):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_fusion_p1_export_keeps_workpaper_outputs_and_canonical_report(
+    p1_merger, archive_unavailable, tmp_path
+):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, demo, _ = p1_merger
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, None, tmp_path)
     before = demo.store.report()["history"]
     result = rpc_program(
         env,

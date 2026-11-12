@@ -14,6 +14,11 @@ from types import SimpleNamespace
 import pytest
 
 ROOT = Path(__file__).resolve().parents[2]
+SHARED_MODULES = ROOT / "plugins/_shared/vendor/modules"
+if str(SHARED_MODULES) not in sys.path:
+    sys.path.insert(0, str(SHARED_MODULES))
+
+from vera_assurance import VERA_CLIENT_WORKFLOW_IDS  # noqa: E402
 
 
 @pytest.mark.parametrize("command_index", [0, 1, 2])
@@ -79,23 +84,7 @@ def prepare(work, tmp_path, workflow="financial-analysis", **options):
     )
 
 
-@pytest.mark.parametrize(
-    "workflow",
-    [
-        "financial-analysis",
-        "business-planning",
-        "treasury-forecast",
-        "journal-bank-reconciliation",
-        "journal-sampling",
-        "posizioni-negoziali",
-        "contenzioso-tributario",
-        "archive-organization",
-        "aml-review",
-        "esg-reporting-assurance",
-        "bilancio-xbrl-it",
-        "lipe",
-    ],
-)
+@pytest.mark.parametrize("workflow", VERA_CLIENT_WORKFLOW_IDS)
 def test_work_starts_without_archive_and_passes_ordinary_engine_contract(
     work, tmp_path, workflow
 ):
@@ -118,6 +107,92 @@ def test_work_starts_without_archive_and_passes_ordinary_engine_contract(
         Path(context["input_bindings"][0]["path"]).read_text()
         == "Selected evidence; preserve these bytes"
     )
+
+
+def test_bank_reconciliation_calculates_and_delivers_during_archive_outage(
+    work, tmp_path, monkeypatch
+):
+    from vera_assurance import load_client_engagement_context_file
+
+    from tests.plugins.test_journal_bank_reconciliation_plugin import (
+        _save_workbook,
+        _seal_relationship_recipe,
+        load_core,
+    )
+
+    bank = tmp_path / "bank.xlsx"
+    journal = tmp_path / "journal.xlsx"
+    _save_workbook(
+        bank,
+        [
+            ["Date", "Description", "Amount", "Reference", "Beneficiary"],
+            ["2025-01-02", "Payment invoice INV100 ACME", 123.45, "INV100", "ACME"],
+            ["2025-01-05", "Unmatched fee", 9.99, "FEE9", "Bank"],
+        ],
+    )
+    _save_workbook(
+        journal,
+        [
+            ["Data", "Descrizione", "Dare", "Avere", "Riferimento", "Beneficiario"],
+            ["2025-01-01", "Invoice INV100 ACME", 123.45, None, "INV100", "ACME"],
+            ["2025-01-07", "Unmatched supplier", 77.0, None, "SUP77", "Supplier"],
+        ],
+    )
+    prepared = work.prepare_work(
+        tmp_path / "Working result",
+        workflow_id="journal-bank-reconciliation",
+        sources=[(bank, "source"), (journal, "journal")],
+        label="Synthetic bank reconciliation",
+        purpose="Verify calculation and delivery during an Archive outage",
+    )
+    context = load_client_engagement_context_file(
+        prepared["client_engagement_path"],
+        expected_workflow_id="journal-bank-reconciliation",
+        output_dir=prepared["client_engagement"]["output_dir"],
+    )
+    inputs = {
+        Path(item["path"]).name: Path(item["path"])
+        for item in context["input_bindings"]
+    }
+    output = Path(context["output_dir"])
+    core = load_core()
+    core.inspect_inputs(
+        inputs["bank.xlsx"],
+        inputs["journal.xlsx"],
+        output,
+        language="it",
+        document_language="it",
+    )
+    recipe = _seal_relationship_recipe(
+        core, output / "suggested_recipe.json", output / "input_receipts.json"
+    )
+    result = core.run_reconciliation(
+        inputs["bank.xlsx"],
+        inputs["journal.xlsx"],
+        output / "reconciliation",
+        recipe,
+        language="it",
+        document_language="it",
+        client_run_id=context["run_id"],
+        client_run_root=Path(prepared["client_engagement_path"]).parent,
+    )
+    saved = {path: path.read_bytes() for path in output.rglob("*") if path.is_file()}
+
+    def unavailable(*args, **kwargs):
+        raise OSError("Archive finalization is unavailable")
+
+    monkeypatch.setattr(work.ledger, "finalize_run", unavailable)
+    delivered = work.finish_work(Path(prepared["work_folder"]))
+
+    assert result.matches.height == 1
+    assert result.matches.to_dicts()[0]["stage"] == "reference"
+    assert result.unmatched_bank.height == 1
+    assert result.unmatched_journal.height == 1
+    assert delivered["processing"]["status"] == "result_ready"
+    assert delivered["processing"]["finalization"]["status"] == "pending"
+    assert delivered["archive"]["status"] == "pending"
+    assert any(Path(item["path"]).suffix == ".xlsx" for item in delivered["outputs"])
+    assert {path: path.read_bytes() for path in saved} == saved
 
 
 def test_repeated_request_retains_job_and_progress_after_original_is_removed(
@@ -152,11 +227,12 @@ def test_existing_known_client_id_is_preserved_without_registration(work, tmp_pa
     assert prepared["archive"]["status"] == "pending"
 
 
+@pytest.mark.parametrize("workflow", VERA_CLIENT_WORKFLOW_IDS)
 @pytest.mark.parametrize("failure_at", ["finalize", "complete", "status_record"])
 def test_saved_result_is_delivered_when_optional_closure_fails(
-    work, tmp_path, monkeypatch, failure_at
+    work, tmp_path, monkeypatch, failure_at, workflow
 ):
-    prepared = prepare(work, tmp_path)
+    prepared = prepare(work, tmp_path, workflow)
     output = Path(prepared["client_engagement"]["output_dir"]) / "result.md"
     output.write_bytes(b"Completed professional result")
 
@@ -470,3 +546,30 @@ def test_retry_preserves_interrupted_copy_and_completes_without_rerunning(
     )
     assert next(target.rglob("result.md")).read_text() == "Useful result"
     assert len(list(target.rglob("run.json"))) == 1
+
+
+@pytest.mark.parametrize("workflow", VERA_CLIENT_WORKFLOW_IDS)
+@pytest.mark.parametrize("failure", [BlockingIOError, PermissionError])
+def test_saved_result_delivery_does_not_require_a_writable_bookkeeping_lock(
+    work, tmp_path, monkeypatch, workflow, failure
+):
+    prepared = prepare(work, tmp_path, workflow)
+    root = Path(prepared["work_folder"])
+    output = Path(prepared["client_engagement"]["output_dir"]) / "result.md"
+    output.write_bytes(b"Completed result awaiting archival")
+    before = (root / "pending-archive-work.json").read_bytes()
+
+    def unavailable_lock(*args, **kwargs):
+        raise failure("Archive bookkeeping is busy or read-only")
+
+    monkeypatch.setattr(work, "exclusive_file_lock", unavailable_lock)
+
+    delivered = work.finish_work(root)
+
+    assert delivered["processing"]["status"] == "result_ready"
+    assert delivered["processing"]["finalization"]["status"] == "pending"
+    assert delivered["archive"]["status"] == "pending"
+    assert delivered["status_record"]["status"] == "pending"
+    assert delivered["outputs"][0]["path"] == str(output)
+    assert output.read_bytes() == b"Completed result awaiting archival"
+    assert (root / "pending-archive-work.json").read_bytes() == before

@@ -132,10 +132,21 @@ def calculate(fixture):
     ],
     indirect=["management_run"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_management_native_service_preserves_both_public_paths_and_all_normal_outputs(
-    management_run, expected
+    management_run, expected, archive_unavailable, tmp_path, monkeypatch
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     call, output, _, choices, _ = management_run
+    if archive_unavailable:
+        env = unavailable_archive_environment(dict(os.environ), output, tmp_path)
+        for key in (
+            "VERA_STUDIO_ARCHIVE_STATE_DIR",
+            "VERA_STUDIO_ARCHIVE_PROFILE_DIR",
+            "VERA_REPORTING_STATE_DIR",
+        ):
+            monkeypatch.setenv(key, env[key])
     result, args = calculate(management_run)
     repeated = call("prepare", args)
     setup = call("setup")

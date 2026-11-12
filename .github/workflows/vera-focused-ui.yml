@@ -79,15 +79,24 @@ jobs:
         with:
           node-version: '22'
       - run: python -m pip install pytest pytest-cov playwright reportlab beautifulsoup4 pypdf -r plugins/journal-bank-reconciliation/requirements.txt -r plugins/client-file-preparation/requirements.txt -r plugins/report-builder/requirements.txt -r plugins/registro-imprese-sari/requirements.txt -r plugins/previdenza-inps/requirements.txt -r plugins/management-control-pack/requirements.txt -r plugins/variance-analysis/requirements.txt
-      - name: Install Chromium and verify runner capabilities
-        # Hosted runners already provide Chromium's shared libraries. The app
-        # embeds its fonts; optional apt font downloads must not prevent tests.
+      - name: Install Chromium and verify available host capabilities
+        shell: bash
         run: |
           python -m playwright install chromium
           python - <<'PY_BROWSER'
-          from playwright.sync_api import sync_playwright
-          with sync_playwright() as runtime:
-              browser = runtime.chromium.launch()
+          import subprocess
+          import sys
+          from playwright.sync_api import Error, sync_playwright
+
+          with sync_playwright() as playwright:
+              try:
+                  browser = playwright.chromium.launch()
+              except Error:
+                  subprocess.run(
+                      [sys.executable, "-m", "playwright", "install-deps", "chromium"],
+                      check=True,
+                  )
+                  browser = playwright.chromium.launch()
               browser.close()
           PY_BROWSER
       - name: Verify that exactly one review opens and only relevant controls are visible

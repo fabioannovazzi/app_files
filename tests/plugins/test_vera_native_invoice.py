@@ -90,10 +90,15 @@ const review={reviewer:'Fictional professional',reviewed_at:'2026-10-07T10:00:00
     ["TD01", "TD04", "TD17", "TD18", "TD19", "body-object"],
     indirect=True,
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_invoice_export_uses_exact_public_bytes_and_preserves_run(
-    invoice_workspace,
+    invoice_workspace, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, binding, module, _, proposal = invoice_workspace
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         PREPARE

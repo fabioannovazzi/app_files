@@ -9,6 +9,66 @@ from pathlib import Path
 import pytest
 
 from tests.plugins.test_archive_fault_isolation import case
+from tests.plugins.test_vera_client_workflow_filesystem import VERA_CLIENT_WORKFLOW_IDS
+
+
+@pytest.mark.parametrize("workflow", VERA_CLIENT_WORKFLOW_IDS)
+@pytest.mark.parametrize("continuation", ["prepared", "new_sources"])
+def test_prepared_work_starts_and_delivers_through_completion_without_archive_state(
+    case, workflow, continuation
+):
+    core, studio, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, workflow, input_ids=[input_id], state_dir=state
+    )
+    rid = prepared["run"]["run_id"]
+    state.rename(state.with_name(state.name + "-before-outage"))
+    state.write_text("Synthetic unavailable Archive configuration")
+    if continuation == "new_sources":
+        source = root / "new-source.txt"
+        source.write_text("New selected evidence during the outage")
+        imported = core.import_studio_client_document(
+            cid, source, "source", engagement_id=eid, state_dir=state
+        )
+        new_input = imported["input_id"]
+        verified = core.verify_studio_client_inputs(
+            cid, eid, [new_input], state_dir=state
+        )
+        assert verified["status"] == "verified"
+        prepared = core.prepare_studio_client_workflow(
+            eid, workflow, input_ids=[new_input], new_run=True, state_dir=state
+        )
+        rid = prepared["run"]["run_id"]
+
+    started = core.start_studio_client_workflow(cid, eid, rid, state_dir=state)
+    core.write_studio_run_artifact(
+        cid, eid, rid, "result.md", "Synthetic completed result", state_dir=state
+    )
+    finalized = core.finalize_studio_client_workflow(
+        cid,
+        eid,
+        rid,
+        [
+            {
+                "artifact_id": "result",
+                "path": "authored/result.md",
+                "purpose": "Review",
+                "audience": "review",
+                "media_type": "text/markdown",
+            }
+        ],
+        state_dir=state,
+    )
+    completed = core.complete_studio_client_workflow(cid, eid, rid, state_dir=state)
+
+    assert started["status"] == "running"
+    assert finalized["status"] == "ready_for_review"
+    assert completed["status"] == "completed"
+    assert completed["run"]["run_id"] == rid
+    assert (
+        Path(prepared["client_engagement"]["output_dir"]) / "authored/result.md"
+    ).read_text() == "Synthetic completed result"
+    assert state.is_file()
 
 
 def test_checkpoint_profile_failure_returns_prepared_work(case, monkeypatch):
@@ -26,6 +86,48 @@ def test_checkpoint_profile_failure_returns_prepared_work(case, monkeypatch):
     assert result["status"] == "prepared"
     assert result["recovery"]["status"] == "unavailable"
     assert Path(result["client_engagement_path"]).is_file()
+
+
+@pytest.mark.parametrize(
+    "operation,expected",
+    [
+        ("fail", "failed"),
+        ("cancel", "cancelled"),
+        ("checkpoint", "unavailable"),
+        ("close", "closed"),
+    ],
+)
+def test_bound_job_lifecycle_does_not_require_archive_configuration(
+    case, operation, expected
+):
+    core, studio, state, root, cid, eid, input_id = case
+    prepared = core.prepare_studio_client_workflow(
+        eid, "financial-analysis", input_ids=[input_id], state_dir=state
+    )
+    rid = prepared["run"]["run_id"]
+    core.start_studio_client_workflow(cid, eid, rid, state_dir=state)
+    if operation == "close":
+        core.cancel_studio_client_workflow(cid, eid, rid, state_dir=state)
+    state.rename(state.with_name(state.name + "-before-outage"))
+    state.write_text("Synthetic unavailable Archive configuration")
+    calls = {
+        "fail": lambda: core.fail_studio_client_workflow(
+            cid, eid, rid, "Synthetic calculation failure", state_dir=state
+        ),
+        "cancel": lambda: core.cancel_studio_client_workflow(
+            cid, eid, rid, state_dir=state
+        ),
+        "checkpoint": lambda: core.checkpoint_studio_client_workflow(
+            cid, eid, rid, state_dir=state
+        )["recovery"],
+        "close": lambda: core.close_studio_client_engagement(cid, eid, state_dir=state),
+    }
+
+    result = calls[operation]()
+
+    assert result["status"] == expected
+    assert Path(prepared["client_engagement_path"]).is_file()
+    assert state.is_file()
 
 
 def test_missing_recovery_module_does_not_hide_prepared_work(case, monkeypatch):

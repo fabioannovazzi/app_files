@@ -113,12 +113,8 @@ def test_acquisition_resume_uses_retained_binding_without_identity_rediscovery(
             "operations": ["ricevute"],
         }
     )
-    state_directory = archive_core._state_dir
-    monkeypatch.setattr(
-        archive_core,
-        "_state_dir",
-        lambda value=None: state_directory(value or client_case.state_dir),
-    )
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(client_case.state_dir))
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(tmp_path / "profile"))
 
     def unavailable(*args, **kwargs):
         raise archive_core.ArchiveError("Synthetic identity registry unavailable")
@@ -290,12 +286,8 @@ def test_agenzia_mcp_status_records_counts_without_app_only_clients(
     from ade_acquisition import archive_runs, contracts
 
     monkeypatch.setattr(archive_runs, "_archive", lambda: archive_core)
-    state_directory = archive_core._state_dir
-    monkeypatch.setattr(
-        archive_core,
-        "_state_dir",
-        lambda value=None: state_directory(value or client_case.state_dir),
-    )
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(client_case.state_dir))
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(tmp_path / "profile"))
     plan = contracts.Plan.parse(
         {
             "schema_version": "vera-agenzia-plan/v1",

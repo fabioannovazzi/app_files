@@ -108,10 +108,15 @@ def test_transformation_private_json_and_attribution_restore_without_consent(
     assert store.load() == before
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_transformation_end_to_end_public_authoring_separate_review_and_export(
-    transformation,
+    transformation, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, store, _, _ = transformation
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, None, tmp_path)
     result = rpc_program(
         env,
         PROGRAM

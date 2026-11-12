@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "2ceef765946979c95ec44e28f213a1064ed2bcce5cc36c78c3d351ece93c3edb",
+      "sha256": "7c18936c4f3c452df68541d9ad6acb920a4a1285b7bafc4305fc7666aaec4b91",
       "languages": [
         "it",
         "en",
@@ -29,11 +29,11 @@
         "de": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
         "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       },
-      "source_sha256": "fa7a9eaef24172dc4a77e2afd44f55033f5b69ca868f6c59445f7df5e87072d2"
+      "source_sha256": "e72715918b3b9cd73aa63c5b7e20e6d61c60b1230c87eb988e569ec3ceabb94d"
     },
     "agenzia-acquisition": {
       "path": "agenzia-acquisition/course.json",
-      "sha256": "fa5b6e13e2da8f512a8c5084579a3149ebbb7d781b65d9005e11a728cd31a789",
+      "sha256": "3507adddc060275793e15c5ec3da262e1f87315110d4a536dddde0f752a62317",
       "languages": [
         "it"
       ],
@@ -46,11 +46,11 @@
       "goals": {
         "it": "Preparare un’acquisizione per clienti e periodo, leggere originali ed eccezioni, riprendere un lavoro e distinguere i bolli rilevati dai residui da versare."
       },
-      "source_sha256": "b90118c7900fb09000329b32ec17303c7552d371d757e1e35c43675a885ef4aa"
+      "source_sha256": "0cf8eae3a653fadb65e3cfb7ff0c0e35ea55174f337e09b5bec388aff780479a"
     },
     "aml-review": {
       "path": "aml-review/course.json",
-      "sha256": "7de7a97434f7c7059916fec014b113f676b0ed3f97807feee9caea1b51e3f98a",
+      "sha256": "ed9031b1fbba1314c4d2f08a3b6f8f7e16fcf23bf9a0b008c9bea3d727d09367",
       "languages": [
         "it",
         "en",
@@ -75,11 +75,11 @@
         "de": "Lernen, eine Mandantenakte auswerten zu lassen, Fakten nachzuvollziehen und eine begründete Beurteilung mit Nachweisen und Prüffragen zu erhalten.",
         "es": "Aprender a revisar un expediente cliente, reconstruir hechos y obtener una evaluación razonada con pruebas y cuestiones para revisar."
       },
-      "source_sha256": "06d9bbfe2aace04a1d51ce29007fc6da5df8a8951d81b8c37e55670681389866"
+      "source_sha256": "5d5ba06764e54edece58db62f1f70930762d784dadaa1aeccea0e54566155222"
     },
     "archive-organization": {
       "path": "archive-organization/course.json",
-      "sha256": "c5770630cf7c4d861da48e800329621344715c11dd033642a2960b7627403493",
+      "sha256": "7635f883ba1b6917b19a3bfe3105acbaa87c0a9d1cb1f01920616bb018813cdd",
       "languages": [
         "it",
         "en",
@@ -104,11 +104,11 @@
         "de": "Lernen, einen Ordnungsplan zu erhalten, Zielorte zu prüfen und genehmigte Änderungen anzuwenden.",
         "es": "Aprender a obtener un plan de organización, revisar destinos y aplicar los cambios aprobados."
       },
-      "source_sha256": "f35312128479ff269d4acb05239b9d96074297ecc44824b10dea5f4d97fe18bc"
+      "source_sha256": "6ac9b104fc6981d68b1b6504ef1bfae0152dd88453847a4591c5047bad89df51"
     },
     "avviso-intake": {
       "path": "avviso-intake/course.json",
-      "sha256": "0139f92e8a07f141753db95d87635c73ad1baeff466cee0289998dc8d3f9dc14",
+      "sha256": "7048b2a07da63c997834fe751535c378af8e03b2b652343e8ea332dcdae59ea3",
       "languages": [
         "it",
         "en",
@@ -133,11 +133,11 @@
         "de": "Lernen, ein Steuerschreiben bereitzustellen und eine Arbeitsnotiz mit Referenzen, fehlenden Informationen und nächsten Prüfungen zu erhalten.",
         "es": "Aprender a aportar una comunicación fiscal y obtener una nota operativa con referencias, información pendiente y comprobaciones necesarias."
       },
-      "source_sha256": "5175d983f1de3d12f076bbfcf80b5de1370e6953335736ab7b2fb030a6685ef6"
+      "source_sha256": "180c59efb85dad400083f594d90055f9d8f2486d21f28138c9b0b92df716b6e3"
     },
     "bandi-agevolazioni": {
       "path": "bandi-agevolazioni/course.json",
-      "sha256": "dba3b4be36bb3b4060105a94a901689f75a9ada72d155c74beb210c766c80eb0",
+      "sha256": "8dad28caa4d99bce4ff2f309a597a9913be9fb4982614044b153378035f56651",
       "languages": [
         "it",
         "en",
@@ -162,11 +162,11 @@
         "de": "Lernen, mit einem ausgewählten Förderaufruf zu beginnen, Unternehmensunterlagen bereitzustellen und Veras Dossier zu prüfen.",
         "es": "Aprender a empezar con una convocatoria seleccionada, aportar documentos de la empresa y revisar el expediente preparado por Vera."
       },
-      "source_sha256": "af7910273039f3dd37a689cd8a36d2cb9617f15fc797cc7d1d6948e2d0549957"
+      "source_sha256": "31090212ffa1c3738fa83aa907e238b551a3c51b42cac90c9305588011c4567a"
     },
     "bilancio-oic": {
       "path": "bilancio-oic/course.json",
-      "sha256": "f2379b7fea2588cbb8c4607e1f038c87983f58668316cf29e27d2335d7ecc316",
+      "sha256": "a1e8a5472898a0baadfb18d541cdd94fd2157e5ca5f20c11c0dd9ce9d90b4e93",
       "languages": [
         "it",
         "en"
@@ -182,11 +182,11 @@
         "it": "Imparare a fornire i documenti, rivedere le proposte di Vera e leggere una bozza di bilancio con prospetti, informazioni di supporto e controlli.",
         "en": "Learn to supply the documents, review Vera’s proposals and read draft annual accounts with statements, supporting information and checks."
       },
-      "source_sha256": "1eda999cdda929936b57f8fba07018c9b83a10a77aa3fa48601f9452d8e3b5d0"
+      "source_sha256": "2ee6cd7d27f90cc47bccb1bdd1a733b6f58e863af23239151503a87a89d732dd"
     },
     "browser-automation": {
       "path": "browser-automation/course.json",
-      "sha256": "4f391b468305a76190639abe7fad09c1653e60419f0715ca481dcf6761938663",
+      "sha256": "8fa6d794c6963eeec9610f69b9ba9471bf8e66b3e824a0367847b682cf4fe97f",
       "languages": [
         "it",
         "en",
@@ -211,11 +211,11 @@
         "de": "Lernen, Vera eine wiederkehrende Browseraufgabe zu zeigen, den gespeicherten Ablauf zu prüfen und den Weg zur getesteten Automatisierung zu verstehen.",
         "es": "Aprender a mostrar a Vera una tarea repetitiva, revisar el procedimiento guardado y comprender cómo se convierte en una automatización comprobada."
       },
-      "source_sha256": "d6092d7fe18cc096dc634b5b42f8853dd87f522e51318f08453289cfcb98f0f6"
+      "source_sha256": "a494d154e640d7115fdc5c632d7673e5fa202d3fafd2afa0896d3bc092d9398d"
     },
     "business-planning": {
       "path": "business-planning/course.json",
-      "sha256": "c45165386249f915e34e0ba82d46689fa5eab365099b888c40b8225a122f125b",
+      "sha256": "7a89d0414bed09d2caa7472141bfccfc3adab6fb6ccbac4f23f7e946f38f9779",
       "languages": [
         "it",
         "en"
@@ -231,11 +231,11 @@
         "it": "Imparare a partire da una proposta, fornire i dati disponibili e ottenere un report che aiuti a decidere cosa provare, cambiare o approfondire.",
         "en": "Learn to start from a proposal, supply available information and obtain a report that helps decide what to test, change or investigate."
       },
-      "source_sha256": "d121d7b4d94e16c07d2a115b5583824ed2fc56f8ff60082c9e31f9eea151b472"
+      "source_sha256": "431257f1d9d76000683ef2f56039b52ca2f273a4fdded84126c1a4e3245d2afa"
     },
     "business-valuation": {
       "path": "business-valuation/course.json",
-      "sha256": "a81c226c012b01bcb186d51795a58cd5bd25db04cada21477df4ccc0d0d165a2",
+      "sha256": "50bae5cf7e561763913c7844811e6847d20311a91f430b2385df486c006bca15",
       "languages": [
         "it"
       ],
@@ -248,11 +248,11 @@
       "goals": {
         "it": "Aprire un incarico in Studio Archive, tracciare le fonti, riprodurre un DCF, rivedere Excel e report, cambiare il tasso e recuperare il lavoro salvato."
       },
-      "source_sha256": "996992065e8bcdefe26e60d2500058bbaf420b74d5626dff66cc680ba0c7b68c"
+      "source_sha256": "9b2bbc77fd763648085f9f27c3452336858fa99d2852c94a4a641c285411015f"
     },
     "centrale-rischi-review": {
       "path": "centrale-rischi-review/course.json",
-      "sha256": "39e3cd75141ca302dca7b4ee5df7e80aa26a090b00719d0287044bd72a87765a",
+      "sha256": "873766e57355b1451b2cab75b925d4ee752833bb721f34c7e784ff91adc6f95c",
       "languages": [
         "it"
       ],
@@ -265,11 +265,11 @@
       "goals": {
         "it": "Impara a partire da una Centrale Rischi, ottenere un’analisi verificabile e usarla per preparare il confronto con il cliente."
       },
-      "source_sha256": "6aeefa8ea93e7886759ba407bd714dbf1f20e313cd94316cc279c22c4f1082a1"
+      "source_sha256": "5b97f1adb253dc10e19f3468f097585a52eaf85940e0cf5c3b1cbcba159e9d21"
     },
     "composizione-negoziata": {
       "path": "composizione-negoziata/course.json",
-      "sha256": "75266f70ab393d5b727c325fa35d8472a19c336c397f66a103f2cd6adeeac0ab",
+      "sha256": "383367f51ff8a161473cea5409a22b24c01891a6d92ceea16dd6556f13fa5baf",
       "languages": [
         "it",
         "en",
@@ -294,11 +294,11 @@
         "de": "Einen fiktiven Fall ausführen, Unternehmensberater und unabhängigen Experten trennen und einen Entwurf bei gescheiterten Verhandlungen mit verbleibenden Aufgaben liefern.",
         "es": "Ejecutar un caso ficticio, distinguir asesor de la empresa y experto independiente, y entregar un borrador con negociación fallida y responsabilidades pendientes."
       },
-      "source_sha256": "2ff03e9f0d4ec231fce67bf31e67891b10403f5524ae6db740d075220818854e"
+      "source_sha256": "507416763f8b467aeb1c2ddb9a12790230fb163a1a6f67c857cb22a40c669032"
     },
     "comunicazione-professionale": {
       "path": "comunicazione-professionale/course.json",
-      "sha256": "cf1c0d09f660d41bbbd82cbc26d392aa9893586027e6b361e2eb1ea7efcffe8e",
+      "sha256": "02837fa2f37eb148b0a702a40430e167444e2a8f956c247a970adbf0217bdc34",
       "languages": [
         "it",
         "en",
@@ -323,11 +323,11 @@
         "de": "Lernen, aus einem Thema und ausgewählten Quellen eine Mitteilung für eine bestimmte Zielgruppe zu erstellen und das Paket vor der Verwendung zu prüfen.",
         "es": "Aprender a partir de un tema y fuentes seleccionadas, preparar una comunicación para un público concreto y revisar el paquete antes de utilizarlo."
       },
-      "source_sha256": "b29c234ed60d8969ade13b0221666816de0ffb2945c512deb73ccd423082fc0f"
+      "source_sha256": "e5f0da2dbb4ba682456dee4449b12cd0531d58526929e92541f5ddcf84b6ba48"
     },
     "concordato-plan-review": {
       "path": "concordato-plan-review/course.json",
-      "sha256": "e430237a7b1d69a4a675bc8f9f26be3cb215a51da3bd32100e538e41d4c610be",
+      "sha256": "3614e6c74ed2878467e8da62f41b2dbda9e1acc38f67b063fd87326b981be4cd",
       "languages": [
         "it",
         "en",
@@ -352,11 +352,11 @@
         "de": "Lernen Sie, die Prüfung von Vorschlag und Plan zu starten, Unterlagen bereitzustellen und die erzeugte Akte fachlich zu nutzen.",
         "es": "Aprender a iniciar la revisión de una propuesta y un plan, aportar documentos y usar el expediente producido en el trabajo profesional."
       },
-      "source_sha256": "5521a1fcfe555adb3f74cd8512b13e796f4925a397355d54a848974e15968c33"
+      "source_sha256": "947166374051dff3d7d394bb981ebcec5835fb7ed278f83275dd08a30077415e"
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "bc0be4b7516c83e2a79a314fe3865353a9ae3bb02e7b7fe4b974b48c8e1264e4",
+      "sha256": "5477d2f286b1651728480d869b1e75225d670be0daf7690bc33644c20fa66a0b",
       "languages": [
         "it",
         "en",
@@ -381,11 +381,11 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "a8ded5628c895798c51d3f2433b33d34872bb251cab6f09b9d58b92ce2b52710"
+      "source_sha256": "637ef83655a1edc3c0642dc07ff647d8768fe8149e3d5d2865bb500ea7730ba8"
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
-      "sha256": "0f64964cdb3ea455984c6b27b01499635d37cd9e802551eaf1b7add901b188fc",
+      "sha256": "fc304486baf9e5c1ff04b08f3439716ba83aad9f1666e4e35f1ba56af9239882",
       "languages": [
         "it",
         "en",
@@ -410,11 +410,11 @@
         "de": "Lernen, lesbare Steuerunterlagen in eine Feldliste zu überführen und die Werte anhand ihrer Quellen zu prüfen.",
         "es": "Aprender a convertir documentos fiscales legibles en una lista de campos verificables en las fuentes."
       },
-      "source_sha256": "c0c34629602612cb954bb3b466d58f1ce41a91e40136d45668af0489f8e457a9"
+      "source_sha256": "82584d21463a1eecafeefb9795b76dcc7e598a9b5802d3b077a372f3f4391a5d"
     },
     "email-cliente": {
       "path": "email-cliente/course.json",
-      "sha256": "184ead803c21d19aece0b71169b4ccdf3df59db3e2e838f49aaaf30ec07d5a9e",
+      "sha256": "7989efb1c0a5a254d6fa4b2ccdebdc79f9235408506204615e2ce17774b6a903",
       "languages": [
         "it",
         "en",
@@ -439,11 +439,11 @@
         "de": "Lernen, aus den Dokumentenanfragen einer Akte eine kurze, präzise E-Mail zur Prüfung durch die Kanzlei zu erstellen.",
         "es": "Aprender a convertir las peticiones documentales del expediente en un correo breve y preciso para revisión del despacho."
       },
-      "source_sha256": "370812d01fc5ce8405f665c9a9dfcfab63d29e01594ac92502d4b21a074df076"
+      "source_sha256": "ac54a36429e214482f215560aeae8084f0c7cade322c5142d09ff62d42393afc"
     },
     "esg-reporting-assurance": {
       "path": "esg-reporting-assurance/course.json",
-      "sha256": "f82da6d3c5bf9a7bcc9c0b748af153030c9b7fb1a7d209e130b686b7d64881df",
+      "sha256": "e05c6eaca4252030683634562857a2822729761185514838e7137a36c3d7f5ca",
       "languages": [
         "it",
         "en",
@@ -468,11 +468,11 @@
         "de": "Einen Wert zur Quelle zurückverfolgen, einen Teilentwurf erstellen und nach Änderungen den Prüfbedarf erkennen.",
         "es": "Relacionar un valor con su fuente, preparar un borrador parcial e identificar qué debe revisarse después de una actualización."
       },
-      "source_sha256": "b00cbdee7d4290dae324f919d206d17a13c619b29aef02053fee58d4514397c7"
+      "source_sha256": "bbc80a82c06ddd53f3f8237bdbc4abafc799681e6a606cebf9f11fb612179c74"
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
-      "sha256": "622cec9c69068617fa9ae39c0da93c690e137c32d76f7f8cd8a983fffb7610a1",
+      "sha256": "7f0febeeab72471542a9d2309e6f74633ee073f4c9321d58455fb1db6b24fe04",
       "languages": [
         "it",
         "en",
@@ -497,11 +497,11 @@
         "de": "Lernen Sie, einen Rechnungsordner bereitzustellen, die Übersicht zu lesen und offene Prüfpunkte zu bearbeiten.",
         "es": "Aprende a proporcionar una carpeta de facturas, leer el resumen y resolver los puntos que necesitan revisión."
       },
-      "source_sha256": "d86f8cb66e502376b218ccb22f364833a1c75097f2be41cf2c84165024c4f2d9"
+      "source_sha256": "da79aae339db57f366e3facb306f2615298dc0f63b4c13d73b2f8d270c7f26ba"
     },
     "financial-analysis": {
       "path": "financial-analysis/course.json",
-      "sha256": "2c67076ee08f89652e274197f997b2214f4117ca26c5955ca292cbf54f3e8642",
+      "sha256": "7245a618dd9e49f8a9d4cda9b3229c9bf3f8db6e45b958dc59045e7038888324",
       "languages": [
         "it",
         "en",
@@ -526,11 +526,11 @@
         "de": "Lernen, eine konkrete Analyse anzufordern, Daten bereitzustellen, Entscheidungen zu prüfen und nachvollziehbare Finanzergebnisse zu nutzen.",
         "es": "Aprender a solicitar un análisis concreto, aportar datos, revisar decisiones y utilizar resultados financieros comprobables."
       },
-      "source_sha256": "44ba7a68b04e9fdc703aeea59f6865eb7fd57fc7d81e615afb6e8ca93e09416e"
+      "source_sha256": "88e5ad7c68bf64f06d569097f47c4445abcbcf7d739ea20230cd1bd3acecbb93"
     },
     "financial-report-builder": {
       "path": "financial-report-builder/course.json",
-      "sha256": "8408e64c35500b68086f52c39cc01658bba4b0de0631a6041fda2ac529e6a2ee",
+      "sha256": "10dee8ab75ebea07a3cdf4856216d3c9b5996616a343da1d47f6c51a9a4d07c2",
       "languages": [
         "it",
         "en",
@@ -555,11 +555,11 @@
         "de": "Lernen, wie aus Buchhaltungsaufstellungen ein lesbarer Bericht mit Tabellen, Kommentaren und prüfbaren Quellenverweisen entsteht.",
         "es": "Aprender a convertir estados contables en un informe legible, con tablas, comentarios y referencias para comprobar cifras."
       },
-      "source_sha256": "aa8e3bbaa6dba0537788efd688b0f857bd4501b641a6cdd721b658999f197fe3"
+      "source_sha256": "94fbc90a2cb8cfa5a0dba2ac3e2cdace5589f8e1804b458dba8bb81cd7212f6c"
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "17a80023081d59943e5351189dc7170661efc547d3106e906f4d902b63344774",
+      "sha256": "55e331200e9b8e15188d9b6ef149b1bb6da4c183bdf6070c37fa2e89597b9c48",
       "languages": [
         "it",
         "en",
@@ -584,11 +584,11 @@
         "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
         "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
       },
-      "source_sha256": "ddc68d58cfa1074fe6f593ddeab0c5ae6cb1592a0af530ae3c9ae738878bb83f"
+      "source_sha256": "5e8d883b9adc600acfbb67b010bf5890e811dbae5f17d8b420e2b2b944450601"
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
-      "sha256": "b3eb1284455691674767b85e845cd61e7b673099415fbdeacee561939c9cf61f",
+      "sha256": "de5a3aec488feff0279afe147f6c05505f3a30f08616433558cd941eb61f1d00",
       "languages": [
         "it",
         "en",
@@ -613,11 +613,11 @@
         "de": "Lernen Sie, Rechnungsdaten bereitzustellen, den Entwurf zu prüfen und nach Freigabe der genauen Fassung eine lokale XML-Datei zu erhalten.",
         "es": "Aprender a proporcionar datos de una factura, revisar el borrador y obtener el XML local tras aprobar la versión exacta."
       },
-      "source_sha256": "4266485342d3d3d2b99290c81731704febd47c5c96c58d16de9fe4dce16dcfb4"
+      "source_sha256": "f2b5dfe29baf1e4ff1836dd204ed7472eeb0f8c07d151a4365913fcd88210898"
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "39faaa345414d5a4cf7c708b5bf5e3fc82339860ac9fae9121a7aefaf6ceb860",
+      "sha256": "73d22dc4bf82a9efb95605023d7a79de24283d7c83cd2ef9b4a039d5b0e40d08",
       "languages": [
         "it",
         "en",
@@ -642,11 +642,11 @@
         "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
         "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       },
-      "source_sha256": "a924e15b2407c2b8686834fe254580e410ef0b82f6f673c300938bbf5e8b0c76"
+      "source_sha256": "93742261751f446543aed549b84efe5d811949428f70f26a62be94c2650a5342"
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
-      "sha256": "873466207e1eba01afab5e878382b062b5ed631ef451901af98939fefc6f19bd",
+      "sha256": "46e45f95b6e6343531c5c04ef082906d6cb1528015764f4a109223bdc96327e7",
       "languages": [
         "it",
         "en",
@@ -671,11 +671,11 @@
         "de": "Lernen, ein Journal bereitzustellen, seine Einlesung zu prüfen und ausgewählte Zeilen für die weitere Prüfung zu erhalten.",
         "es": "Aprender a aportar un diario, comprobar su lectura y obtener líneas seleccionadas para el control posterior."
       },
-      "source_sha256": "f2f9ac844f6386013450fb68b130056e7da2ca526e205ccdf59574f1e70a8006"
+      "source_sha256": "4fd6c05956488885183088b7c08df3147cb741ad691d190d3d9fab6d72a0acf4"
     },
     "lipe": {
       "path": "lipe/course.json",
-      "sha256": "1ab857fb68c4270632ff4d29659530cfe4983ad0572e3452d1dc42485d5c05bc",
+      "sha256": "74f7fc473a889f1f274f5e4f99d35a55add0ea554678427c52630361a90952ff",
       "languages": [
         "it"
       ],
@@ -688,11 +688,11 @@
       "goals": {
         "it": "Controllare le fonti, leggere la carta di lavoro e aggiornare la bozza dopo una correzione, conservando la prima versione."
       },
-      "source_sha256": "3a96af3cb7f9db1b1a9e2d2f3076200402d1d90a755795a19838185abd0e2716"
+      "source_sha256": "3f35add2257b32778331b6a9afe0bff1bb841929461a597461ec3b361557fee2"
     },
     "management-control-pack": {
       "path": "management-control-pack/course.json",
-      "sha256": "a9e799186d9f103018cb5bdfb1c39cbcf7366f0796977bf00b8935b7c8789ddc",
+      "sha256": "4617b7dcccc6e6d6be9425b70dc0f1a36a5ac90f1a097fc2fa1041aba719469c",
       "languages": [
         "it",
         "en"
@@ -708,11 +708,11 @@
         "it": "Impara a confrontare consuntivo e budget, seguire la preparazione del report e usare le differenze per la revisione mensile.",
         "en": "Learn to compare actual performance with budget, follow report preparation and use the differences in a monthly review."
       },
-      "source_sha256": "74e2c56cbe321db2756955776b292bc66ca749e0b539b4463b151e8613395466"
+      "source_sha256": "a35fe87ac7fe5469693899abc0017c9b5b9c44c466990a55e8f424c2118dcad6"
     },
     "new-client": {
       "path": "new-client/course.json",
-      "sha256": "46da4df526c88d9acf265a149a269014f3e5cb7ffe06dd102761b6c1fb9e2815",
+      "sha256": "3a5ceea8f5c84a68f0a214dd3eff94ef2d8418e26eecc8cc5b85165d667de3e3",
       "languages": [
         "it",
         "en",
@@ -737,11 +737,11 @@
         "de": "Lernen, Erstkontaktinformationen in ein Mandatsdossier zu überführen, das die Kanzlei prüfen und vervollständigen kann.",
         "es": "Aprender a convertir la información del primer contacto en un expediente de incorporación que el despacho pueda revisar y completar."
       },
-      "source_sha256": "72ea19389f80c6ee6c87969044489dfc51ac134e7d466b75279a3cb3329dde87"
+      "source_sha256": "c7dbe68902ace70cee909be86011187fec243b517c63be1430adbb8ddf6afc88"
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "9c944324af0dff1746feb99a12c2e156f58666858603c5774050edcb8ad669d8",
+      "sha256": "8a4978796c83c8a8e0739f09397d35f04b01022213a287ea18c658d47ed74558",
       "languages": [
         "it",
         "en",
@@ -766,11 +766,11 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "b40bc7f703eaccdaaaffee8268703ceb4fe989866d95e90f1789a77afb6d274b"
+      "source_sha256": "d36e393ca5164604a0e76afefbf98e32dfb6cf740dca2711227cf0bbcf294689"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
-      "sha256": "f11b12e5800b0e6a97ea11fb7c69c078f11b1463ce360f580bd67ab370ec2ac6",
+      "sha256": "40465b695eaddb97e007d9d914224e46738f30230f87b4bfb74e3b8e4ef48929",
       "languages": [
         "it",
         "en",
@@ -795,11 +795,11 @@
         "de": "Eine Verpflichtung speichern, ändern, in einem neuen Chat wiederfinden und Besprechungsnotizen in Folgeaufgaben überführen.",
         "es": "Aprender a guardar un compromiso, modificarlo, recuperarlo en otra conversación y convertir notas de reunión en tareas posteriores."
       },
-      "source_sha256": "8f3c80bf48b49efd42e71d15368c7632b80ab6a0dfaf105e039b93ac68ed24cf"
+      "source_sha256": "e813dd2d430205e2c75ca961447e95ba65cded76de9f013d85e9b0a192ecc71e"
     },
     "patent-box-review": {
       "path": "patent-box-review/course.json",
-      "sha256": "f4ba3532edc3c833dedd2d2c90a28a850808ebdbad8bffceb0b14dcdd496b590",
+      "sha256": "658bafc5f663250cf54eca1d17d7cbca2c0a336e8a2c80378b331c263725b55c",
       "languages": [
         "it",
         "en",
@@ -824,11 +824,11 @@
         "de": "Softwarebelege bereitstellen, Kosten abstimmen, einbezogene, ausgeschlossene und ausgesetzte Teile unterscheiden und einen A/B-Entwurf lesen lernen.",
         "es": "Aprender a aportar pruebas del software, conciliar costes, distinguir inclusión, exclusión y suspensión y leer un borrador A/B."
       },
-      "source_sha256": "75db10c2d4c977c8d4680153b2b5e69ffd558a5ab9a403c9222decc02b05c53b"
+      "source_sha256": "5120a11fedd7b822b5890c4ed51de0aaffe87df0dc61c552f41d3820b3240893"
     },
     "presenza-digitale-studio": {
       "path": "presenza-digitale-studio/course.json",
-      "sha256": "6c91a22e97030d497fbc0c524733bc16a28d4cf6d1d213661e5dabc24458d040",
+      "sha256": "adcc0295ce696950a3453c66bde9763332fe053923924217652ee794bc28d5cb",
       "languages": [
         "it",
         "en",
@@ -853,11 +853,11 @@
         "de": "Lernen, aus Kanzleiinformationen eine funktionierende Website zu erstellen und sie vor der Veröffentlichungsentscheidung zu prüfen.",
         "es": "Aprender a partir de la información del despacho, obtener un sitio funcional y revisarlo antes de elegir su publicación."
       },
-      "source_sha256": "d977034269714439b51b1d18ed45ce7c38b2f783f73509da3a742085edac1aa8"
+      "source_sha256": "9511baca255d578a2159035dfd7997750c43111c74686090f1acf4d0ff940b80"
     },
     "previdenza-inps": {
       "path": "previdenza-inps/course.json",
-      "sha256": "febc8f16c759ded9490dc752952b7dbc3034a133dbbeb16e8cae68c5e7d4a85a",
+      "sha256": "54b0baba8c8e76990325ecc6ef6422ae26d2f981610d07bbc5a28afa019df30a",
       "languages": [
         "it",
         "en",
@@ -882,11 +882,11 @@
         "de": "Lernen Sie, eine sozialversicherungsrechtliche Frage und Unterlagen bereitzustellen, Belege zu prüfen und die erstellte Akte fachlich zu nutzen.",
         "es": "Aprender a aportar una pregunta de seguridad social y documentos, verificar evidencias y usar el expediente para revisión profesional."
       },
-      "source_sha256": "b71db95593683e73a53517e6501a93390327daece29c5408f8d19f1a61a1e60b"
+      "source_sha256": "78e617d08b8f3c785638ae29c78df08bf7a98697d7ffd9603bac4f94a1be3bf3"
     },
     "purchase-invoice-review": {
       "path": "purchase-invoice-review/course.json",
-      "sha256": "c5cdd413bda94836ce5f680bbbd91a433418017421f25230745b0c4c9ace17a5",
+      "sha256": "cf98e9c5bd6147841d3de98d6f1bae74341d85f61b5fc07995cb0c8f22a5c88a",
       "languages": [
         "it",
         "en",
@@ -911,11 +911,11 @@
         "de": "Lernen, Rechnungen mit vorhandenen Buchungen zu vergleichen und die Ausnahmeliste für die Prüfung zu nutzen.",
         "es": "Aprender a comparar un lote de facturas con asientos existentes y utilizar el libro de excepciones para revisarlos."
       },
-      "source_sha256": "20bf3fc8343a1e2c2906310dc22297119dd8a23603709a008d9f16eae5618261"
+      "source_sha256": "33f6ed6f23eb6af28fddd76991b63a01f688d0eaf871f72616c95b3747a7500a"
     },
     "quesito-legale-fiscale": {
       "path": "quesito-legale-fiscale/course.json",
-      "sha256": "73eda481bf17dcd55dc3424848190182bd402f74d2e3ae6b3af81cc6b64e427b",
+      "sha256": "49f2c18cf375ab5b7d6df1b9d5f3bd2278f4d8dfc32307959e248ed353a710a7",
       "languages": [
         "it",
         "en",
@@ -940,11 +940,11 @@
         "de": "Lernen, eine fachliche Frage zu stellen, Recherche und Prüfungen zu verfolgen und die Antwort mit Quellen und offenen Punkten zu verwenden.",
         "es": "Aprender a plantear una cuestión profesional, seguir la investigación y las comprobaciones y usar la respuesta con sus fuentes y puntos abiertos."
       },
-      "source_sha256": "48fb5d96154cb78d20e3ad8eb20a6a1bb284e78fa63c7a4016d428100aa8de92"
+      "source_sha256": "1ffae5bb3c86e3367dffad8b36ec247d3061183f6db155ee68926ed038c5252d"
     },
     "registro-imprese-sari": {
       "path": "registro-imprese-sari/course.json",
-      "sha256": "c8aa8f33bfd76b4ef6809ee9868bc57c6eb0bf2bbe92e72131e006b5fa6e928f",
+      "sha256": "33688a29e8dc5a81e50e2455a162b45de2cbc126b55c484fcfa05ce2c0c11dd3",
       "languages": [
         "it",
         "en",
@@ -969,11 +969,11 @@
         "de": "Lernen, den Fall bereitzustellen, die Quellenprüfung zu verfolgen und Bearbeitungsplan und Unterlagenliste zu prüfen.",
         "es": "Aprender a proporcionar el caso, seguir la comprobación de fuentes y usar el plan del trámite y la lista de documentos para revisión."
       },
-      "source_sha256": "44238cbc74c09ea57b49baa7a35b09302722b5db275038c8c20bad25e51f8687"
+      "source_sha256": "aedb6242ff90caf4e01965969ef8a573cf0f84480fc741b4fb33b4ab6fe28b76"
     },
     "sales-plan": {
       "path": "sales-plan/course.json",
-      "sha256": "e2cd1a08f4dc3e7e497c7c3df2cb6b8e9f33b0825d9cb1c8f2c57a55a8680f2c",
+      "sha256": "7eb51163771b1964b40e17bd24b2d07b30e8be38f0afc825d05dabab4e377a26",
       "languages": [
         "it",
         "en",
@@ -998,11 +998,11 @@
         "de": "Lernen, Istverkäufe und kommerzielle Annahmen in ein Zukunftsszenario umzusetzen und Änderungen nachzuvollziehen.",
         "es": "Aprender a convertir ventas realizadas e hipótesis comerciales en un escenario futuro y comprobar qué cambia y por qué."
       },
-      "source_sha256": "2f36aad3e67cc38295de3a38efe0475dbb3e4622efd347063b03755d93420ccc"
+      "source_sha256": "5c781af128b8bbf61c67a60cf543e42c43518b8dd13f9c4aab0332cc3a1782da"
     },
     "scissione-guidata": {
       "path": "scissione-guidata/course.json",
-      "sha256": "cbf51edafa2db7469ebad7571293b7c4fafef183001921952d7409318afc0e40",
+      "sha256": "28af165e9ddb5aed6dd1f67a1bcb8d5b3e0b2515fa4c7c938bea6a2270559648",
       "languages": [
         "it",
         "en",
@@ -1027,11 +1027,11 @@
         "de": "Eine versionierte Akte vorbereiten, Aufstellungen lesen und Entscheidungen nach Änderungen erneut prüfen.",
         "es": "Preparar un expediente versionado, leer cuadros y revisar decisiones tras un cambio."
       },
-      "source_sha256": "92646aa4ed4436fa0157b8cd7bcf1355fee986399cfd262ac40cda02af3bc220"
+      "source_sha256": "1ad58fbaf8b5f6ce77a6803ce210b01ef314224716d234897cac460a91b99e79"
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "4672784ad78202573255bcf428ee4e82ce99f634efde87b3371d38eb9854fbbc",
+      "sha256": "aa1a05c4c092bc3d83d850333452fb33251b10fc0104d0cf1f568eb30969f108",
       "languages": [
         "it",
         "en",
@@ -1056,11 +1056,11 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "4dde145ea8246dd798a266b96026f8f7c361fe9398a7cbae85cf1b24e5b37d0c"
+      "source_sha256": "0f63efc956f1ca1735f187955cb2af45cd927f6a735b1ead1794158a009f22e4"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "b481f6b979b1ebafcc1c0474837faa4c90e6031176455e405d98811b5b3f0590",
+      "sha256": "00895dd92279474cfcc852cf5658b3ce37dde933dc1bed0cbd68a31c0e53946b",
       "languages": [
         "it",
         "en",
@@ -1085,11 +1085,11 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "8be09321ed4473b286188304128eaf49e2d0f7fb6a01695a6ae56aebc791c6ae"
+      "source_sha256": "54b645d98bd53b11ec8c55843f0f4f8aca648ea1e7164cb264054e564b2691b4"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",
-      "sha256": "c7c8e4b5a94b749ded6e71e9965c63ebc6509c2785b02d42fa7f9f12438fddb9",
+      "sha256": "db9341337e2122ebc6eef90f3c09af8c26a868e716bb504c3ae9fcfee1d9809d",
       "languages": [
         "it",
         "en",
@@ -1114,11 +1114,11 @@
         "de": "Ein synthetisches Dossier erstellen und prüfen, Belege verfolgen und Entscheidungen nach geänderten Verbindlichkeiten neu prüfen.",
         "es": "Preparar y revisar un expediente sintético, seguir sus evidencias y reabrir decisiones cuando cambia un pasivo."
       },
-      "source_sha256": "342c819a67348026746d3bd8d8d250efce2f5f4a78259bf5e299d65594ed121c"
+      "source_sha256": "e0d22a67216d35dccd907da16e2dfc0b326a93de8a224dbfc76de39acd5e8d46"
     },
     "treasury-forecast": {
       "path": "treasury-forecast/course.json",
-      "sha256": "427648c0ff3a44d55ead0efaba1a3876862045d64d1efb198a85d43c94cdfb82",
+      "sha256": "e28848435d239131d60a0efa68d881ca43878e17e53beb88de8c505a79f0cd5d",
       "languages": [
         "it"
       ],
@@ -1131,11 +1131,11 @@
       "goals": {
         "it": "Impara a fornire saldi, partite e flussi previsti, rivedere le date e leggere quanta cassa rimane nelle prossime settimane."
       },
-      "source_sha256": "19ad2011bd27272c805dbf51f5b7ce78c50516f066188a091ec7b8d658b6c416"
+      "source_sha256": "6f71a237b1e6e6db252f6cfd318e77f450d8a8323aed8affd7936668a305b297"
     },
     "variance-analysis": {
       "path": "variance-analysis/course.json",
-      "sha256": "19029bdf354d8280067e9d20c567ab5c5fcc06591c201f38bc170931a68871c5",
+      "sha256": "ff1f15e78094e1326b2b0f5e5e0a2b16fea828898e00265e6487fdb2b4f0ee37",
       "languages": [
         "it",
         "en",
@@ -1160,11 +1160,11 @@
         "de": "Lernen, welche Daten benötigt werden, wie der Vergleich startet und wie ein Bericht Höhe und Zusammensetzung der Budgetabweichungen zeigt.",
         "es": "Aprender qué datos aportar, cómo iniciar la comparación y cómo leer un informe que muestra el importe y la composición de las desviaciones."
       },
-      "source_sha256": "92b3ad79711d509671b539cde2442e134d35d88cc983a69c95e38f70e00bc9ec"
+      "source_sha256": "002a41c88457f74f226c6f1bfc0d8f9ff42a70f23f6087333bf4aaf86b249e4c"
     },
     "vouching": {
       "path": "vouching/course.json",
-      "sha256": "afa8a80abd3bbf9c01bb3564c37fc796fc7992f7a248dc2edcd9e792c46889ab",
+      "sha256": "0f894b1b970fd57a4970bd9c1bf2136a0e5c736c7d1637740208bb15c00bf6ad",
       "languages": [
         "it",
         "en",
@@ -1189,7 +1189,7 @@
         "de": "Lernen, eine Stichprobe mit Rechnungen zu verbinden, Ergebnisse zu lesen und fachlich zu beurteilende Punkte zu prüfen.",
         "es": "Aprender a relacionar una muestra con sus facturas, leer resultados y revisar los puntos que requieren juicio profesional."
       },
-      "source_sha256": "0ea8f25bd81528876b407024624ddb27413972c2aba8cc92ddbd645041cc3d85"
+      "source_sha256": "3f2052959e0981cbc02aa4f527d32140e4318022c80a0e0f8694c09c704f76db"
     }
   }
 }

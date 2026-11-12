@@ -64,10 +64,15 @@ const qualified=payload(call('vera_workspace_passive_qualify',{...authority(fres
 
 
 @pytest.mark.parametrize("audit_workspace", ["fresh", "ordinary"], indirect=True)
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_passive_supervisor_launch_and_same_key_retry_preserve_actual_job(
-    passive_service,
+    passive_service, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     work, binding, env, fields, module = passive_service
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, work.output, tmp_path)
     result = rpc_program(
         env,
         prepare(fields)

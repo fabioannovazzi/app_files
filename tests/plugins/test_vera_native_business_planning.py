@@ -108,10 +108,15 @@ const exact={work_ref:setup.work_ref,revision:reopened.revision,generation:reope
     ],
     indirect=["planning_run"],
 )
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_native_planning_keeps_public_ready_partial_blocked_and_idea(
-    planning_run, expected
+    planning_run, expected, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, _ = planning_run
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         PREPARE

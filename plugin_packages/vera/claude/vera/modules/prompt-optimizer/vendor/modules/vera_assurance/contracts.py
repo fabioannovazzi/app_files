@@ -128,20 +128,6 @@ def archive_reporting_paths(
             )
     if not expected_workflow_ids:
         raise AssuranceContractError("Expected Archive workflows are required")
-    report = (
-        json.loads((root / "model_data_report.json").read_text(encoding="utf-8"))
-        if "model_data_report.json" in present
-        else None
-    )
-    if "model_data_report.json" in present and (
-        not isinstance(report, dict)
-        or report.get("schema_version") not in {3, 4}
-        or report.get("product") != "vera"
-        or report.get("workflow_id") not in expected_workflow_ids
-    ):
-        raise AssuranceContractError(
-            "Archive reporting sidecars have a foreign workflow"
-        )
     canonical_root = root
     if root.name == "working" and root.parent.name.startswith(
         (".generated-review-transaction-", ".audit-review-transaction-")
@@ -158,27 +144,51 @@ def archive_reporting_paths(
                 raise AssuranceContractError(
                     "Review transaction changed Archive reporting sidecars"
                 )
-    context = load_client_engagement_context_file(
-        canonical_root.parent / "context.json",
-        expected_workflow_id=(
-            report["workflow_id"] if report is not None else expected_workflow_ids[0]
-        ),
-        output_dir=canonical_root,
-        allowed_statuses=(
-            "running",
-            "ready_for_review",
-            "completed",
-            "failed",
-            "cancelled",
-        ),
-    )
+    # Ownership comes from the sealed execution context, never a report that
+    # may be incomplete, corrupt or associated with the wrong reporting run.
+    for index, workflow_id in enumerate(expected_workflow_ids):
+        try:
+            context = load_client_engagement_context_file(
+                canonical_root.parent / "context.json",
+                expected_workflow_id=workflow_id,
+                output_dir=canonical_root,
+                allowed_statuses=(
+                    "running",
+                    "ready_for_review",
+                    "completed",
+                    "failed",
+                    "cancelled",
+                ),
+            )
+        except AssuranceContractError:
+            if index + 1 == len(expected_workflow_ids):
+                raise
+        else:
+            break
     if (
         context["schema_version"] != "vera.client_workflow_context.v2"
         or Path(context["output_dir"]) != canonical_root.resolve()
         or context["workflow_id"] not in expected_workflow_ids
-        or (report is not None and report.get("run_id") != context["run_id"])
     ):
         raise AssuranceContractError("Archive reporting sidecars belong to another run")
+    try:
+        report = (
+            json.loads((root / "model_data_report.json").read_text(encoding="utf-8"))
+            if "model_data_report.json" in present
+            else None
+        )
+    except (OSError, ValueError):
+        report = None
+    if (
+        not isinstance(report, dict)
+        or report.get("schema_version") not in {3, 4}
+        or report.get("product") != "vera"
+        or report.get("workflow_id") != context["workflow_id"]
+        or report.get("run_id") != context["run_id"]
+    ):
+        logging.getLogger(__name__).warning(
+            "Archive reporting remains unverified; its saved files are separate from professional outputs."
+        )
     return present
 
 

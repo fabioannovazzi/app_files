@@ -52,13 +52,19 @@ const exact={{...identity,revision:page.revision}};
 """
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_esg_whole_versions_dependencies_original_drafts_and_explicit_model_context(
-    esg_run,
+    esg_run, archive_unavailable, tmp_path
 ):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     fixture = esg_run[0]
+    env = os.environ.copy()
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, fixture.output, tmp_path)
     before = {p.name: p.read_bytes() for p in fixture.output.iterdir()}
     result = rpc_program(
-        os.environ.copy(),
+        env,
         program(esg_run)
         + """
 const outputsCall=call('vera_workspace_esg_outputs',exact);

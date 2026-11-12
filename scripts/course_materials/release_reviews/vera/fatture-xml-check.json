@@ -135,7 +135,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "b4cdced983c6c2be9ee829f40e87c9ed0e1e82ad3d3025f1d0860fbe3c53ff81",
+  "course_sha256": "da79aae339db57f366e3facb306f2615298dc0f63b4c13d73b2f8d270c7f26ba",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "0f0886d3b234d98e2791a56c5c3780b66f91cbfa6d7a46a169b9f4ca3b5c63b5",
@@ -308,7 +308,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[de-demo-numbers0]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-de-demo-numbers0]"
       },
       "editorial": {
         "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
@@ -334,7 +334,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[de-practice-numbers1]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-de-practice-numbers1]"
       },
       "verdict": "accepted"
     },
@@ -355,7 +355,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[en-demo-numbers0]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-en-demo-numbers0]"
       },
       "editorial": {
         "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
@@ -381,7 +381,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[en-practice-numbers1]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-en-practice-numbers1]"
       },
       "verdict": "accepted"
     },
@@ -402,7 +402,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[es-demo-numbers0]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-es-demo-numbers0]"
       },
       "editorial": {
         "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
@@ -428,7 +428,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[es-practice-numbers1]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-es-practice-numbers1]"
       },
       "verdict": "accepted"
     },
@@ -449,7 +449,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[fr-demo-numbers0]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-fr-demo-numbers0]"
       },
       "editorial": {
         "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
@@ -475,7 +475,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[fr-practice-numbers1]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-fr-practice-numbers1]"
       },
       "verdict": "accepted"
     },
@@ -496,7 +496,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[it-demo-numbers0]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-it-demo-numbers0]"
       },
       "editorial": {
         "deliverable_and_next_action": "The normal CSV and anomaly memo are usable as source-backed workpapers. The learner checks invoice number, date, amount, batch coverage and where findings appear. Parser CSV keys remain stable and its anomaly memo is Italian; the five-language lesson/voice explains those native outputs, without claiming a translated parser report.",
@@ -522,7 +522,7 @@
             "sha256": "4cb569e2fa238a7b9422ede32ffd27b1d65e35057fbc9d4a4e5753c19f6609c8"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[it-practice-numbers1]"
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files[False-it-practice-numbers1]"
       },
       "verdict": "accepted"
     }
@@ -828,5 +828,20 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "9719afd9137dba069ecd47e20c8dcd1533611ae0",
+    "previous_course_sha256": "b4cdced983c6c2be9ee829f40e87c9ed0e1e82ad3d3025f1d0860fbe3c53ff81",
+    "current_course_sha256": "da79aae339db57f366e3facb306f2615298dc0f63b4c13d73b2f8d270c7f26ba",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
+  },
+  "archive_outage_test_identity_review_20261111": {
+    "reviewer": "Codex /root",
+    "basis": "Existing teaching test now parametrizes healthy and unavailable Archive. The release evidence selects the healthy False control with the exact same kit, locale, phase and course digest. Both controls passed in Actions run 43063905137. Historical artifact review remains unchanged."
   }
 }

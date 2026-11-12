@@ -1891,8 +1891,15 @@ def test_centrale_rischi_kit_runs_actual_inspection_analysis_and_delivery(
     ],
 )
 @pytest.mark.parametrize("language", ["it", "en", "fr", "de", "es"])
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files(
-    tmp_path, monkeypatch, phase, numbers, language, record_property
+    tmp_path,
+    monkeypatch,
+    phase,
+    numbers,
+    language,
+    record_property,
+    archive_unavailable,
 ):
     run = _bound_case(
         tmp_path,
@@ -1902,6 +1909,10 @@ def test_xml_kit_runs_actual_managed_parser_with_demo_and_practice_files(
         phase,
         language=language,
     )
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     output = Path(run["output_dir"]) / "invoices"
     _run(
         "plugins/client-file-preparation/scripts/parse_fatturapa_xml.py",

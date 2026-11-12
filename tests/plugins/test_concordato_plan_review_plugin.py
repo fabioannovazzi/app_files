@@ -1198,7 +1198,14 @@ def test_duplicate_basenames_keep_distinct_source_identities(
     )
 
 
-def test_run_concordato_review_writes_candidate_workpapers(tmp_path: Path) -> None:
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_run_concordato_review_writes_candidate_workpapers(
+    tmp_path: Path, monkeypatch, archive_unavailable
+) -> None:
+    from tests.plugins.archive_outage import disable_archive_configuration
+
+    if archive_unavailable:
+        disable_archive_configuration(monkeypatch, tmp_path)
     core = load_core()
     input_dir = tmp_path / "input"
     output_dir = tmp_path / "output"

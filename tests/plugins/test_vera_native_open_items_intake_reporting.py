@@ -151,17 +151,32 @@ const result={setup,saved};
     assert not (output / "reconciliation").exists()
 
 
-def test_native_intake_does_not_exempt_foreign_reporting_files(initial_open_items):
+@pytest.mark.parametrize("report_fault", ["foreign_run", "malformed_json"])
+def test_native_intake_delivers_outputs_despite_invalid_reporting(
+    initial_open_items, report_fault
+):
     env, output, _ = initial_open_items
     path = output / "model_data_report.json"
     report = json.loads(path.read_bytes())
     report["run_id"] = "run_" + "d8" * 12
-    path.write_text(json.dumps(report))
+    path.write_text(json.dumps(report) if report_fault == "foreign_run" else "{broken")
+    before = path.read_bytes()
 
     result = rpc_program(
         env,
-        "const result=call('vera_workspace_open_items_intake_setup',{work_ref:'initial-open-items'});",
+        initial_program()
+        + """
+const prepared=payload(call('vera_workspace_open_items_intake_prepare',args));
+const retry=payload(call('vera_workspace_open_items_intake_prepare',args));
+const view=payload(call('vera_workspace_view',{work_ref:setup.work_ref}));
+const result={setup,prepared,retry,view};
+""",
     )
 
-    assert result["isError"] is True
-    assert not (output / "reconciliation").exists()
+    assert result["setup"]["status"] == "ready"
+    assert result["prepared"] == result["retry"]
+    assert result["prepared"]["professional_approval"] is False
+    assert result["view"]["workflow"] == "open-item-reconciliation"
+    assert (output / "reconciliation/riconciliazione_audit.xlsx").is_file()
+    assert (output / "reconciliation/assurance_final_outputs").is_dir()
+    assert path.read_bytes() == before

@@ -364,12 +364,8 @@ def test_acquisition_worker_uses_a_client_bound_run_and_waits_for_model_review(
     from ade_acquisition import archive_runs, contracts, disclosure
 
     monkeypatch.setattr(archive_runs, "_archive", lambda: archive_core)
-    real_state_dir = archive_core._state_dir
-    monkeypatch.setattr(
-        archive_core,
-        "_state_dir",
-        lambda value=None: real_state_dir(value or client_case.state_dir),
-    )
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_STATE_DIR", str(client_case.state_dir))
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(tmp_path / "profile"))
     plan = contracts.Plan.parse(
         {
             "schema_version": "vera-agenzia-plan/v1",

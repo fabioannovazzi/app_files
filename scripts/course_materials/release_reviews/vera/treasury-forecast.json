@@ -173,7 +173,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "a0a19387659c27e2491ea897f129051ea7a0e5e0ec72cfc9eae691f1a1874f07",
+  "course_sha256": "6f71a237b1e6e6db252f6cfd318e77f450d8a8323aed8affd7936668a305b297",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "961cf40f543d0eee23ad34b501aafa376d24e6988070a24b3b3be2f3e577e3e6",
@@ -781,5 +781,16 @@
     "previous_course_sha256": "50291186c775d9458d1414bc0d5c2cddc854f49999a41c8bf09aec2256f62bf8",
     "scope": "Scenario gets separate hash-keyed hypothetical exports and explicit final artifact links. Baseline forecasts and review decisions preserved; exported scenario rederived from baseline dates. No forecast acceptance.",
     "limits": "Historical editorial/model judgments preserved. Source/renderer regressions are not learner, voice, fresh installed UI or professional acceptance. Final-head localized replay remains required."
+  },
+  "archive_continuity_source_binding_review_20261111": {
+    "reviewer": "Codex /root - source compatibility review",
+    "reviewed_at": "2026-11-11",
+    "baseline_commit": "074ac220401b2d442a4d4f00edb594ead6c29c20",
+    "previous_course_sha256": "a0a19387659c27e2491ea897f129051ea7a0e5e0ec72cfc9eae691f1a1874f07",
+    "current_course_sha256": "6f71a237b1e6e6db252f6cfd318e77f450d8a8323aed8affd7936668a305b297",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
   }
 }

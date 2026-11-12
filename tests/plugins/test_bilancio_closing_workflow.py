@@ -151,9 +151,16 @@ def _proposal(case: dict) -> dict:
     }
 
 
+@pytest.mark.parametrize("archive_unavailable", [False, True])
 def test_full_alfa_v3_service_acceptance_e1_e2_and_intermediate_states_pass(
     tmp_path: Path,
+    monkeypatch,
+    archive_unavailable,
 ) -> None:
+    if archive_unavailable:
+        from tests.plugins.archive_outage import disable_archive_configuration
+
+        disable_archive_configuration(monkeypatch, tmp_path)
     acceptance = runner.AlfaAcceptance(PLUGIN, FIXTURES, tmp_path / "acceptance")
 
     report = acceptance.run()

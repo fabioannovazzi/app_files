@@ -153,8 +153,15 @@ def test_initial_bank_existing_accounting_or_unknown_output_requires_recovery(
     assert {path.name: path.read_bytes() for path in output.iterdir()} == before
 
 
-def test_initial_bank_inspection_review_and_execution_keep_engine_gates(initial_bank):
+@pytest.mark.parametrize("archive_unavailable", [False, True])
+def test_initial_bank_inspection_review_and_execution_keep_engine_gates(
+    initial_bank, archive_unavailable, tmp_path
+):
+    from tests.plugins.archive_outage import unavailable_archive_environment
+
     env, output, _ = initial_bank
+    if archive_unavailable:
+        env = unavailable_archive_environment(env, output, tmp_path)
     result = rpc_program(
         env,
         INITIAL
