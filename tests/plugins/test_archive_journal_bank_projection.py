@@ -186,44 +186,20 @@ def _complete_grouped_case(reconciled_case, monkeypatch):
         expected_workflow_id="journal-bank-reconciliation",
     )
 
+    from tests.plugins.test_vera_bank_first import NativeFixture
+
+    native = NativeFixture({})
+
     def worker(**kwargs):
-        directory = kwargs["output_dir"]
-        packet = json.loads((directory / "packet.json").read_text())
         semantic._record_model_submission(
-            directory,
+            kwargs["output_dir"],
             prompt=kwargs["prompt"],
             output_schema=kwargs["output_schema"],
             model="unit-test",
             workflow_id="journal-bank-reconciliation",
             source_records=kwargs["source_records"],
         )
-        response = {
-            "packet_sha256": packet["packet_sha256"],
-            "groups": [
-                {
-                    "bank_ids": packet["focus_ids"],
-                    "journal_ids": [],
-                    "status": "unmatched",
-                    "title": "Commissione bancaria",
-                    "rationale": "Contropartita assente dal giornale fornito.",
-                    "required_documents": ["Giornale completo"],
-                    "evidence": [],
-                }
-            ],
-        }
-        (directory / "luna_response.json").write_text(json.dumps(response))
-        receipt = directory / "luna_launch_receipt.json"
-        receipt.write_text(
-            json.dumps(
-                {
-                    "process": {"duration_ms": 10},
-                    "jsonl_observation": {
-                        "usage": {"input_tokens": 10, "output_tokens": 5}
-                    },
-                }
-            )
-        )
-        return {"launch_receipt": receipt, "response_payload": response}
+        return native.invoke(**kwargs)
 
     monkeypatch.setattr(semantic, "run_isolated_native_worker", worker)
 
@@ -231,7 +207,9 @@ def _complete_grouped_case(reconciled_case, monkeypatch):
         output,
         output.parent / "semantic-review",
         client_engagement=context,
-        worker_selection={"host": "codex"},
+        worker_selection=native.select(
+            workflow_id="journal-bank-reconciliation", stage="luna"
+        ),
     )
 
     return result
@@ -245,8 +223,9 @@ def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rer
     assert result["exhaustive"] is True
     assert result["summary"]["bank_row_count"] == 3
     assert result["summary"]["journal_row_count"] == 2
-    assert result["summary"]["strict_match_count"] == 2
-    assert result["summary"]["bank_rows_requiring_documents"] == 1
+    assert result["summary"]["strict_match_count"] == 0
+    assert result["summary"]["bank_rows_requiring_documents"] == 0
+    assert result["summary"]["primary_counts"]["luna"] == 3
     assert result["workbook"].is_file()
     from archive_reporting import snapshot_run
 
@@ -254,8 +233,8 @@ def test_normal_grouped_completion_accepts_real_producer_tables_after_strict_rer
     bank_source = next(
         source for source in report["sources"] if source["label"] == "bank.csv"
     )
-    assert bank_source["sent_quantity"] == 1
-    assert bank_source["sent_cells"] == 4
+    assert bank_source["sent_quantity"] == 3
+    assert bank_source["sent_cells"] == 12
 
 
 def test_calculation_audit_and_status_have_complete_input_lineage(reconciled_case):

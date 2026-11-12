@@ -12,3 +12,7 @@ beautifulsoup4>=4.12
 lxml>=5.0
 Pillow>=10.0
 rapidfuzz>=3.0
+
+# Shared bank-first native worker capsule and its qualified source loader.
+polars>=1.37.1,<3
+fastexcel>=0.14

@@ -324,3 +324,11 @@ local model-data disclosure in the owning `outputs/` directory, outside the
 exact native assurance boundary. Declare both the nested package and disclosure
 when finalizing the Studio Archive run. Never add the disclosure to an already
 sealed native assurance directory or alter its receipt to make extra files pass.
+
+
+Raw preparation uses the common bank-first native stages: strong explicit exact
+identities locally, all other bank cases to Luna, every remaining bank/accounting
+doubt to Sol, and only genuine residual questions to the operator. Keep bank
+facts separate from accounting allocation, preserve established facts, and
+retain source-bound exact allocation/residual controls for both model stages.
+Do not repeat generic acceptance checks for already resolved bank facts.

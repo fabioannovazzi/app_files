@@ -62,6 +62,16 @@
       "sha256": "632b6e4aed5bbe36a4234e45641a5150bbe86ba4a75ce2cd1db12f7f0a8319ac"
     },
     {
+      "path": "modules/journal-bank-reconciliation/scripts/bank_first.py",
+      "repository_path": "plugins/journal-bank-reconciliation/scripts/bank_first.py",
+      "sha256": "a30852a8a6d39219e997cd9d76da8d9024cb29009b886585fbe448e491ad8791"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/bank_first_policy.json",
+      "repository_path": "plugins/journal-bank-reconciliation/scripts/bank_first_policy.json",
+      "sha256": "c6541fd760aae5a1b50554a5694c4e4471940220c2eb7b7595c2a53412f5e173"
+    },
+    {
       "path": "modules/journal-bank-reconciliation/scripts/bank_working_copy.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/bank_working_copy.py",
       "sha256": "c4a543a4f6ba50d7aece47f8efff75f8dfddaa50194a23a39fd370f2f8462b08"
@@ -79,17 +89,17 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/grouped_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/grouped_review.py",
-      "sha256": "4faaa53442214c32fa6bddf05fbfec89a4e4952d30e7a9d803a986bebd39af8e"
+      "sha256": "f3fecf9073ce6693e0ef81ca44f52cbcec89b418b110edaf3f417da1e436c178"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/grouped_workbook.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/grouped_workbook.py",
-      "sha256": "d7074c807f3c546e549e5be42e5f756e81d2fc605de52737f84a818545f287da"
+      "sha256": "229d82b5932c5d10045115558505df1ffb68329ea2b2cff096e5a681a56885f8"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "39e5ae7926c57b88dc6a2e9d46ab3164510fc78dbc530065a41779e65c8efcc2"
+      "sha256": "c6227a2376b9e588d1b6019630b208d6084e871c488167e0e4d9d16d70e78836"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
@@ -99,7 +109,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "52b6d1bfe4169f01bdc1bd0dc117ba324a227bd71b23362ce3ca058039221f46"
+      "sha256": "fc9cf59244249aab50f8d16f5edf2e178010aca2086a6da3b27f244a4352da72"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/native_host_worker.py",
@@ -129,12 +139,12 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "314cdd5ff406e3ec6e42a84a6074fafef10bafb20a79c5e5029dff8a30fe9b26"
+      "sha256": "f353dae54c67c5d0f35ea07b08e5dc730bd020dcc9ca17daca09f8796d4f57cc"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
-      "sha256": "4325d155bd333286920a6cedc1f762afb32ae73a84ee08b9b50cbc26893d25de"
+      "sha256": "37e19ecc06253d09d5c470c077030131d51ff346c806d0604b340b3b760518c5"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/windows_worker_process.py",
@@ -144,7 +154,7 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/worker_capabilities.py",
       "repository_path": "plugins/journal-bank-reconciliation/scripts/worker_capabilities.py",
-      "sha256": "e990031f5683136b2e8fd0d7b0a70d777ad5f92b3f3dfab862241898b501279e"
+      "sha256": "65326ff25c09b7fe55178be5fc384712a1a6df99be0b07aa8bf87172560f4224"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/journal-bank-reconciliation/SKILL.md",
@@ -244,7 +254,7 @@
     {
       "path": "skills/journal-bank-reconciliation/SKILL.md",
       "repository_path": "plugins/vera/skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "19d5b45dd548a6a05d612cd56ad309cdeee7cc43f0e225585f6175acc3ad3011"
+      "sha256": "669daeff1df919c22e49fa09c5ed3e9c658ef6ee017c59900920e6a2f3e6e574"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

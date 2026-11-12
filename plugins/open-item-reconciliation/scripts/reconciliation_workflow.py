@@ -7,6 +7,7 @@ items and evidence rows.
 
 from __future__ import annotations
 
+import json
 import sys as _bootstrap_sys
 
 _bootstrap_sys.dont_write_bytecode = True
@@ -446,6 +447,18 @@ def build_reconciliation_artifacts(
             priority_rows=review_signals,
         )
     )
+    bank_first = (
+        assumptions.get("semantic_resolution", {}).get("schema_version")
+        == "vera.open_item_semantic_resolution.v2"
+    )
+    manual_sample = (
+        review_rows is not None or assumptions.get("manual_review_sample") is True
+    )
+    diagnostic_review_sample = review if bank_first and not manual_sample else []
+    if bank_first and not manual_sample:
+        # The canonical native queues carry specific post-Sol questions. The
+        # legacy sample stays diagnostic, never a second acceptance requirement.
+        review = []
     if review_rows is None:
         review = automatically_review_exact_matches(
             review,
@@ -456,14 +469,42 @@ def build_reconciliation_artifacts(
     checks = [
         *source_qualification_checks(source_qualifications or []),
         *reconciliation_checks(open_items, reconciliation_rows),
-        *codex_review_checks(
-            reconciliation_rows,
-            review,
-            require_completed_review=require_completed_review,
-            high_value_count=review_high_value_count,
-            random_count=review_random_count,
-            challenged_rows=challenged_rows,
-            priority_rows=review_signals,
+        *(
+            codex_review_checks(
+                reconciliation_rows,
+                review,
+                require_completed_review=require_completed_review,
+                high_value_count=review_high_value_count,
+                random_count=review_random_count,
+                challenged_rows=challenged_rows,
+                priority_rows=review_signals,
+            )
+            if not bank_first or manual_sample
+            else [
+                {
+                    "check": "bank_first_population_partition",
+                    "status": (
+                        "PASS"
+                        if sum(
+                            assumptions["semantic_resolution"]["bank_first"]["summary"][
+                                "primary_counts"
+                            ].values()
+                        )
+                        == assumptions["semantic_resolution"]["bank_first"]["summary"][
+                            "population_count"
+                        ]
+                        else "FAIL"
+                    ),
+                    "actual": json.dumps(
+                        assumptions["semantic_resolution"]["bank_first"]["summary"][
+                            "primary_counts"
+                        ],
+                        sort_keys=True,
+                    ),
+                    "expected": "Every bank movement is counted once, including errors and unprocessed rows; residual bank/accounting questions remain separate",
+                    "note": "System conclusions are not human acceptance or financial clearance.",
+                }
+            ]
         ),
     ]
     if fail_on_check_errors and not checks_pass(checks):
@@ -603,6 +644,7 @@ def build_reconciliation_artifacts(
         },
         "word_path": str(word_path),
         "assumptions": assumptions,
+        "diagnostic_review_sample": diagnostic_review_sample,
         "semantic_resolution": assumptions.get(
             "semantic_resolution", {"status": "not_requested", "blocks": []}
         ),

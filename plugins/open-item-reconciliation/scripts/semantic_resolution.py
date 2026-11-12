@@ -103,6 +103,12 @@ def _capsule() -> Any:
     )
     if not source.is_file():
         raise ValueError("Shared isolated worker component is unavailable")
+    # A retained capsule can outlive a caller's temporary import path (e.g.
+    # another review transport). Its deferred worker imports still belong to
+    # this source-bound component directory, not the caller's environment.
+    scripts = str(source.parent)
+    if scripts not in sys.path:
+        sys.path.insert(0, scripts)
     name = "vera_reconciliation_worker_capsule"
     if name not in sys.modules:
         spec = importlib.util.spec_from_file_location(name, source)
@@ -230,7 +236,7 @@ def _prompt(packet: dict[str, Any]) -> str:
     )
 
 
-def prepare_resolution(
+def _legacy_prepare_resolution(
     rows: list[dict[str, Any]],
     evidence: list[dict[str, Any]],
     assumptions: dict[str, Any],
@@ -502,6 +508,12 @@ def _validate_batch(
         )
     ):
         raise ValueError("Semantic launch lacks verified isolation probes")
+    return _validate_domain(packet, response, rows, evidence, assumptions, used)
+
+
+def _validate_domain(packet, response, rows, evidence, assumptions, used):
+    """The same accounting controls apply to both native semantic stages."""
+    h = _helpers()
     target_by_id = {row["record_id"]: row for row in rows}
     partial_owners = {
         row["matched_evidence_id"]: row["record_id"]
@@ -742,6 +754,8 @@ def _replay(
         raise ValueError(
             "Semantic decisions are stale for the retained source population or scope"
         )
+    if receipt.get("schema_version") == "vera.open_item_semantic_resolution.v2":
+        return _replay_bank_first(receipt, rows, evidence, assumptions)
     used = {
         str(row.get("matched_evidence_id"))
         for row in rows
@@ -780,6 +794,33 @@ def explanation_evidence(
     assumptions: dict[str, Any],
 ) -> dict[str, dict[str, Any]]:
     """Attribute reasoning to its validated worker response, not a guessed amount."""
+    if (
+        assumptions.get(KEY, {}).get("schema_version")
+        == "vera.open_item_semantic_resolution.v2"
+    ):
+        replayed = _replay(rows, evidence, assumptions)
+        origins = {}
+        for retained in assumptions[KEY]["bank_first"]["retained_native_evidence"]:
+            for group in retained["response"]["groups"]:
+                for target in group["journal_ids"]:
+                    if any(
+                        allocation["target_id"] == target
+                        for allocation in group["allocations"]
+                    ):
+                        origins[target] = {
+                            "packet_sha256": retained["packet"]["packet_sha256"],
+                            "response_sha256": retained["receipt"]["process"][
+                                "response_sha256"
+                            ],
+                        }
+        return {
+            decision["target_id"]: {
+                "text": decision["reason"],
+                **origins[decision["target_id"]],
+            }
+            for decisions, _ in replayed
+            for decision in decisions
+        }
     replayed = _replay(rows, evidence, assumptions)
     batches = assumptions.get(KEY, {}).get("batches", [])
     return {
@@ -801,6 +842,38 @@ def apply_resolution(
     """Carry validated relationships and explicit residuals into native results."""
     h = _helpers()
     updated = {row["record_id"]: dict(row) for row in rows}
+    if (
+        assumptions.get(KEY, {}).get("schema_version")
+        == "vera.open_item_semantic_resolution.v2"
+    ):
+        automatic = h.automatically_review_exact_matches(
+            [
+                {"record_id": row["record_id"], "review_status": "PENDING"}
+                for row in rows
+            ],
+            rows,
+            evidence,
+            assumptions,
+        )
+        strong = {
+            row["record_id"]
+            for row in automatic
+            if row.get("reviewer_ref") == "system-exact-match"
+        }
+        for identifier, row in updated.items():
+            if (
+                row.get("reconciliation_status") == "closed"
+                and identifier not in strong
+                and row.get("rule_applied") in h.BANK_ALLOCATION_CLOSURE_RULES
+            ):
+                row.update(
+                    reconciliation_status="needs_evidence",
+                    rule_applied="bank_first_accounting_unresolved",
+                    allocated_amount="0.00",
+                    residual_amount=h.decimal_text(abs(h.amount_for_matching(row))),
+                    relationship_control_status="pending",
+                    missing_evidence="Il solo candidato bancario non prova l'allocazione a questa partita.",
+                )
     evidence_by_id = {row["record_id"]: row for row in evidence if row.get("record_id")}
     for decisions, ledger in _replay(rows, evidence, assumptions):
         for decision in decisions:
@@ -878,6 +951,11 @@ def semantic_artifact_paths(output: Path) -> set[str]:
                 relative,
             )
             is None
+            and re.fullmatch(
+                r"semantic-review/(?:bank_first_(?:state|admission|result)\.json|bank-first-attempts/[0-9]{5}-(?:luna|sol)/(?:packet\.json|schema\.json|prompt\.md|response\.json|receipt\.json|native_host_request\.json|native_host_record\.json|luna_(?:response\.json|events\.jsonl|stderr\.log|launch_receipt\.json|process_events\.jsonl|process_stderr\.log|process_receipt\.json)))",
+                relative,
+            )
+            is None
         ):
             raise ValueError("Unexpected semantic worker artifact path")
         path = output / relative
@@ -889,7 +967,251 @@ def semantic_artifact_paths(output: Path) -> set[str]:
             or hashlib.sha256(path.read_bytes()).hexdigest() != artifact["sha256"]
         ):
             raise ValueError("Retained semantic worker artifact changed")
+        paths.add(relative)
         paths.update(
-            (relative, "semantic-review", path.parent.relative_to(output).as_posix())
+            parent.as_posix()
+            for parent in Path(relative).parents
+            if parent.as_posix() != "."
         )
     return paths
+
+
+def _bank_first_module():
+    _capsule()
+    import bank_first
+    from bank_first import replay_retained, run_bank_first
+
+    return bank_first
+
+
+def _bank_sources(rows, evidence, assumptions):
+    h = _helpers()
+    active = h.merged_assumptions(assumptions)
+    sources = [
+        row
+        for row in evidence
+        if h.normalized_evidence_type(row)
+        in {"external_bank", "unallocated_external_bank"}
+        and not (
+            active["post_cutoff_events_excluded"] and h.is_after_cutoff(row, active)
+        )
+    ]
+    targets = [
+        row
+        for row in rows
+        if row.get("reconciliation_status") != "out_of_scope"
+        and not (
+            row.get("reconciliation_status") == "closed"
+            and row.get("rule_applied") not in h.BANK_ALLOCATION_CLOSURE_RULES
+        )
+    ]
+
+    def normalized(row, bank=False):
+        amount = h._external_cash_amount(row) if bank else h.amount_for_matching(row)
+        if amount is None:
+            raise ValueError("Bank-first sources require source-bound exact amounts")
+        projected = _project(row)
+        # Allocation uses positive magnitudes. Direction remains an explicit
+        # source field and the existing side/perimeter validator checks it.
+        return {
+            **projected,
+            "transaction_id": row["record_id"],
+            "transaction_date": h.record_date(row),
+            "amount_signed": h.decimal_text(abs(amount)),
+            **({"source_cash_amount": h.decimal_text(amount)} if bank else {}),
+            "reference": h.clean_text(row.get("document_no")),
+            "description": h.clean_text(row.get("description")),
+            "party_ref": h.clean_text(row.get("party_ref")),
+        }
+
+    relationship = {
+        "relationship_shape": "many_to_many",
+        "comparison_basis": "settlement_magnitude",
+        "admission_relationship_shape": "one_to_one",
+        "date_scope": "settlement_not_before_document",
+        "open_item_allocation_authorized": True,
+        "require_same_currency": True,
+        "require_same_unit": True,
+        "require_same_entity": False,
+        "default_currency": active.get("currency", ""),
+        "default_unit": "money",
+    }
+    automatic = h.automatically_review_exact_matches(
+        [{"record_id": row["record_id"], "review_status": "PENDING"} for row in rows],
+        rows,
+        evidence,
+        assumptions,
+    )
+    strong = {
+        row["record_id"]
+        for row in automatic
+        if row.get("reviewer_ref") == "system-exact-match"
+    }
+    relationship["strong_pair_ids"] = [
+        [row["matched_evidence_id"], row["record_id"]]
+        for row in rows
+        if row["record_id"] in strong
+    ]
+    return (
+        sources,
+        targets,
+        [normalized(row, True) for row in sources],
+        [normalized(row) for row in targets],
+        relationship,
+    )
+
+
+def _bank_decisions(group, packet):
+    decisions = []
+    citations = []
+    for citation in [
+        *group["bank_resolution"]["evidence"],
+        *group["accounting_resolution"]["evidence"],
+    ]:
+        field = {"reference": "document_no"}.get(citation["field"], citation["field"])
+        if field in FIELDS:
+            citations.append(
+                {
+                    "record_id": citation["transaction_id"],
+                    "field": field,
+                    "quote": citation["quote"],
+                }
+            )
+    for target in group["journal_ids"]:
+        allocations = [
+            {
+                **allocation,
+                "citations": [
+                    c
+                    for c in citations
+                    if c["record_id"] in {allocation["source_id"], target}
+                ],
+            }
+            for allocation in group["allocations"]
+            if allocation["target_id"] == target
+        ]
+        for allocation in allocations:
+            allocation.pop("target_id")
+        decisions.append(
+            {
+                "target_id": target,
+                "outcome": "supported" if allocations else "missing_evidence",
+                "reason": group["accounting_resolution"]["explanation"],
+                "allocations": allocations,
+            }
+        )
+    return decisions
+
+
+def _domain_for_bank_first(rows, evidence, assumptions):
+    def validate(group, packet):
+        if not group["allocations"]:
+            return
+        targets = {r["record_id"]: r for r in rows}
+        sources = {r["record_id"]: r for r in evidence}
+        legacy_packet = {
+            "targets": [_project(targets[i]) for i in group["journal_ids"]],
+            "sources": [_project(sources[i]) for i in group["bank_ids"]],
+        }
+        _validate_domain(
+            legacy_packet,
+            {"decisions": _bank_decisions(group, packet)},
+            rows,
+            evidence,
+            assumptions,
+            set(),
+        )
+
+    return validate
+
+
+def prepare_resolution(rows, evidence, assumptions, output):
+    """Use the same bank-first process for supplied open-item populations."""
+    bf = _bank_first_module()
+    sources, targets, bank, journal, relationship = _bank_sources(
+        rows, evidence, assumptions
+    )
+    population = _populations(rows, evidence, assumptions)
+    canonical = bf.run_bank_first(
+        bank,
+        journal,
+        output,
+        source_binding={
+            "population_sha256": canonical_json_sha256(population),
+            "workflow": "open-item-reconciliation",
+        },
+        relationship=relationship,
+        domain_validator=_domain_for_bank_first(rows, evidence, assumptions),
+        invoke=_capsule().run_isolated_native_worker,
+        select=_capsule().discover_worker_selection,
+        source_records=[
+            {"record_id": row["record_id"], "fields": list(_project(row))}
+            for row in [*sources, *targets]
+        ],
+    )
+    value = {
+        "schema_version": "vera.open_item_semantic_resolution.v2",
+        "population_sha256": canonical_json_sha256(population),
+        "bank_first": canonical,
+        "batches": [],
+        "blocks": [
+            {"target_ids": e["bank_ids"], "reason": e["reason"]}
+            for e in canonical["errors"]
+        ],
+        "status": (
+            "completed" if canonical["summary"]["review_complete"] else "incomplete"
+        ),
+        "artifacts": [],
+    }
+    for path in sorted(output.rglob("*")):
+        if path.is_file():
+            value["artifacts"].append(
+                {
+                    "path": path.relative_to(output.parent).as_posix(),
+                    "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                }
+            )
+    return _seal(value)
+
+
+def _replay_bank_first(receipt, rows, evidence, assumptions):
+    bf = _bank_first_module()
+    # Generated closure/status annotations are not source facts. Rebuild the
+    # same mechanical baseline before replaying the sealed native decisions.
+    rows = _helpers().reconcile_open_items(
+        [dict(row) for row in rows],
+        evidence,
+        {key: value for key, value in assumptions.items() if key != KEY},
+    )
+    sources, targets, bank, journal, relationship = _bank_sources(
+        rows, evidence, assumptions
+    )
+    groups = bf.replay_retained(
+        receipt["bank_first"],
+        bank,
+        journal,
+        relationship,
+        domain_validator=_domain_for_bank_first(rows, evidence, assumptions),
+    )
+    target_by_id = {r["record_id"]: r for r in rows}
+    source_by_id = {r["record_id"]: r for r in evidence}
+    results = []
+    used = set()
+    for group in groups:
+        if not group.get("allocations") or group.get("resolved_at") == "deterministic":
+            continue  # Existing exact closures retain their original ledger/rule.
+        packet = {
+            "targets": [_project(target_by_id[i]) for i in group["journal_ids"]],
+            "sources": [_project(source_by_id[i]) for i in group["bank_ids"]],
+        }
+        result = _validate_domain(
+            packet,
+            {"decisions": _bank_decisions(group, packet)},
+            rows,
+            evidence,
+            assumptions,
+            used,
+        )
+        results.append(result)
+        used.update(group["bank_ids"])
+    return results

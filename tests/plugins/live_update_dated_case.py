@@ -180,7 +180,14 @@ calculation = subprocess.run(
 )
 assert calculation.returncode == 0, calculation.stderr
 summary = json.loads(calculation.stdout)
-assert summary["semantic_resolution"]["status"] == "not_required", summary
+assert summary["semantic_resolution"]["status"] == "completed", summary
+bank_result = json.loads(
+    (output / "reconciliation/semantic-review/bank_first_result.json").read_text()
+)
+assert bank_result["summary"]["population_count"] == 1
+assert bank_result["summary"]["primary_counts"]["deterministic"] == 1
+assert bank_result["summary"]["review_complete"] is True
+assert bank_result["attempts"] == []
 assert summary["semantic_resolution"]["batch_count"] == 0, summary
 workbook = load_workbook(
     output / "reconciliation/riconciliazione_audit.xlsx", read_only=True, data_only=True

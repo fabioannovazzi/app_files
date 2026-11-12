@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/vera-ctime-fix/plugins/vera",
-  "version": "0.1.620",
-  "captured_at": "2026-11-12T12:40:17.770847+00:00",
-  "catalogue_fingerprint": "1a5a7bdec9fe000364033717c39adc6ea7894be6e671402eaa54c5724d0a51df",
-  "manifest_sha256": "2bf405dc550208c296d195d99285548944ac73b6ee03c7b69da74104662bcaf8",
+  "version": "0.1.622",
+  "captured_at": "2026-11-12T15:26:04.613462+00:00",
+  "catalogue_fingerprint": "d845e10cf4d00a792e8a904eb79598db5cb68d29fcad58cf30851b55bb8f9436",
+  "manifest_sha256": "69b226ae35dcd1ac52e1770e0d2c3c684f183467fc43379fb910985c53c3dc03",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -144,7 +144,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "19d5b45dd548a6a05d612cd56ad309cdeee7cc43f0e225585f6175acc3ad3011"
+      "sha256": "669daeff1df919c22e49fa09c5ed3e9c658ef6ee017c59900920e6a2f3e6e574"
     },
     {
       "function_id": "journal-sampling",
@@ -184,7 +184,7 @@
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "2b18680e8f7e431e230a37b7a7fa3c3f133d79234dea83ba771e9908117097ce"
+      "sha256": "ac8cf5d6e45722746e1488c16be2fa386a11cd1c0610dd7ac2a30305bccd40de"
     },
     {
       "function_id": "organizzazione-lavoro",

@@ -200,7 +200,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "1a5a7bdec9fe000364033717c39adc6ea7894be6e671402eaa54c5724d0a51df",
+  "catalogue_fingerprint": "d845e10cf4d00a792e8a904eb79598db5cb68d29fcad58cf30851b55bb8f9436",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -488,10 +488,6 @@
     "scope": "Quote the existing colon-bearing description as valid YAML; parsed wording and all function IDs, jurisdiction dispositions and acceptance limits are unchanged.",
     "version": "0.1.360"
   },
-  "ctime_metadata_release_binding": {
-    "scope": "Manifest version binding only. Skill bytes and jurisdiction judgments unchanged. MCP metadata-only verification repair does not establish Windows host recovery.",
-    "version": "0.1.620"
-  },
   "derived_output_provenance_release_binding_20261020": {
     "current_catalogue_fingerprint": "dfb13325270705e5ba78219138181027468ee106ddffa3bf8fad5141fe667bda",
     "note": "Manifest-only catalogue update for the derived-output reporting repair. All 55 wrapper entrypoints and all jurisdiction assessment rows remain unchanged; no new jurisdiction acceptance is claimed.",
@@ -733,6 +729,10 @@
     "previous_catalogue_fingerprint": "5ce99562f7d8545cfb29d496852b39f9bc2d6ddcd7c73850002d6345d1c4e6a6",
     "scope": "Mechanical manifest/version binding refresh for the manual function-trial legend and reviewed teaching-source evidence. All function IDs and skill-entrypoint hashes match the 0.1.401 snapshot. Existing Geneva dispositions and limits are unchanged; no new jurisdiction, host, learner or professional acceptance is claimed.",
     "version": "0.1.402"
+  },
+  "mcp_ctime_release_binding_20261112": {
+    "previous_catalogue_fingerprint": "57d160af79a1c1ad5830ba66352efcf62c090af29368b2f03354ddec082f45f5",
+    "scope": "Manifest-only release binding for the ctimeNs verifier fix after integrating the bank-first release. All skill entrypoints and existing jurisdiction assessments are unchanged; no new professional acceptance is asserted."
   },
   "mcp_historical_path_release_binding_20261029": {
     "previous_catalogue_fingerprint": "45415566e89ac1f5267e9bbd7918a9ccd83508324406e65854079eb6a3fa3175",

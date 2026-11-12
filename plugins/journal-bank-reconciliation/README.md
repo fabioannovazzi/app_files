@@ -145,7 +145,7 @@ standalone queue. They
 cannot change canonical perfect matches, ledgers, receipts, gates, or report
 readiness.
 
-The default worker remains Luna at max effort. `prepare` and `run-all` accept
+The normal bank-first route discovers a native Luna configuration, followed by a native Sol configuration for remaining doubts. The retained row-triage diagnostic has its separate legacy default. `prepare` and `run-all` accept
 `--worker-selection <receipt.json>` for an explicitly reviewed alternative.
 Use the shared `vera.reviewed_decision_receipt.v1` format with decision type
 `worker-model-selection`, adapter `vera-native-worker` version `1`, and reviewed
@@ -174,3 +174,9 @@ folder.
 
 If MCP rendering is unavailable, Codex should use the JSON payloads plus
 `review_notes.md`, CSVs, and workbook as the fallback review surface.
+
+
+The normal final route now uses the shared bank-first orchestrator; see
+`../../docs/vera-bank-first-and-export-formats.md`. Strict matcher files remain
+intermediate candidate evidence, not automatic semantic clearance. Existing
+row-only prepare/validate tools are retained diagnostics, not a final route.

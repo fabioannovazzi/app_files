@@ -12,6 +12,7 @@ import xlsxwriter
 __all__ = ["export_final_workbook"]
 
 LABELS = {
+    "bank_explained": "Banca spiegata · contabilità separata",
     "concordant": "Concorde",
     "proposed": "Proposta da confermare",
     "difference": "Scostamento",
@@ -107,6 +108,7 @@ def export_final_workbook(
                 {**base, "font_color": "#8A6315", "text_wrap": True}
             ),
         }
+        status_formats["bank_explained"] = status_formats["concordant"]
         sheets = {
             name: book.add_worksheet(name)
             for name in ("Sintesi", "Relazioni", "Banca", "Partitario")
@@ -289,7 +291,7 @@ def export_final_workbook(
         period = f"{dates[0]} – {dates[-1]}" if dates else "Nessun movimento bancario"
         sheet.merge_range(
             "A2:F2",
-            f"Periodo dei movimenti: {period}. Valuta {currency}. Revisione completata; verifiche documentali come indicate.",
+            f"Periodo dei movimenti: {period}. Valuta {currency}. Esito e questioni residue nelle sezioni seguenti.",
             note,
         )
         sheet.write_row(
@@ -355,8 +357,117 @@ def export_final_workbook(
             "Le proposte richiedono i documenti indicati. Non sono automaticamente promosse a corrispondenze confermate.",
             "I totali sono variazioni dei movimenti forniti. Per confermare il saldo finale servono estratti con saldi iniziale e finale datati.",
         ]
-        for index, line in enumerate(notes, 21):
+        for index, line in enumerate(notes, 22):
             sheet.merge_range(index, 0, index, 5, line, note)
             sheet.set_row(index, 34)
-        sheet.print_area("A1:F25")
+        if result.get("bank_first"):
+            canonical = result["bank_first"]
+            sheet.write_row(
+                28, 0, ["Esito primario dei movimenti bancari", "Numero"], header
+            )
+            primary_labels = {
+                "deterministic": "Regole certe",
+                "luna": "Risolti da Luna",
+                "sol": "Risolti da Sol",
+                "human": "Dubbi bancari residui dopo Sol",
+                "error": "Errori tecnici",
+                "unprocessed": "Non elaborati",
+            }
+            for index, (key, label) in enumerate(primary_labels.items(), 29):
+                sheet.write(index, 0, label, text)
+                sheet.write_number(
+                    index, 1, canonical["summary"]["primary_counts"][key], integer
+                )
+            sheet.write(35, 0, "Totale stessa popolazione bancaria", bold)
+            sheet.write_number(35, 1, canonical["summary"]["population_count"], integer)
+            sheet.merge_range(
+                37,
+                0,
+                37,
+                5,
+                "Contabilità: conteggi sovrapposti agli esiti bancari, da non sommare.",
+                note,
+            )
+            for index, key in enumerate(("complete", "partial", "unknown"), 38):
+                sheet.write(
+                    index,
+                    0,
+                    {
+                        "complete": "Contabilità completa nel perimetro dichiarato",
+                        "partial": "Contabilità parziale",
+                        "unknown": "Contabilità da definire",
+                    }[key],
+                    text,
+                )
+                sheet.write_number(
+                    index, 1, canonical["summary"]["secondary_counts"][key], integer
+                )
+            detail = sheets["Relazioni"]
+            detail.write_row(
+                4,
+                10,
+                [
+                    "Banca: esito",
+                    "Fase risolutiva banca",
+                    "Contabilità: esito",
+                    "Perimetro contabile",
+                    "Motivazione contabile",
+                    "Questioni contabili",
+                    "Conti proposti (alternative indicate)",
+                    "Assegnazione evidenza",
+                ],
+                header,
+            )
+            detail.set_column(10, 13, 24)
+            detail.set_column(14, 16, 60)
+            detail.set_column(17, 17, 20)
+            for index, group in enumerate(relations, 5):
+                if not group.get("bank_resolution"):
+                    continue
+                for column, value in enumerate(
+                    (
+                        group["bank_resolution"]["status"],
+                        group.get("resolved_at", ""),
+                        group["accounting_resolution"]["status"],
+                        group["accounting_resolution"]["scope"],
+                        group["accounting_resolution"]["explanation"],
+                        "\n".join(group["accounting_resolution"]["questions"]),
+                        "; ".join(group.get("proposed_account_codes", []))
+                        + (
+                            " · alternative"
+                            if group.get("account_codes_are_alternatives")
+                            else ""
+                        ),
+                        group.get("allocation_state", ""),
+                    ),
+                    10,
+                ):
+                    detail.write_string(index, column, str(value), text)
+            detail.autofilter(4, 0, max(4, len(relations) + 4), 17)
+            detail.print_area(0, 0, len(relations) + 4, 17)
+            row = 43
+            for scope, label in (
+                ("bank", "Dubbi bancari residui dopo Sol"),
+                ("accounting", "Questioni contabili residue dopo Sol"),
+            ):
+                sheet.write_row(
+                    row, 0, [label, "Movimenti", "Motivo", "Domande"], header
+                )
+                row += 1
+                for question in canonical["questions"][scope]:
+                    sheet.write_string(row, 0, label, text)
+                    sheet.write_string(
+                        row,
+                        1,
+                        ", ".join(bank_labels[i] for i in question["bank_ids"]),
+                        text,
+                    )
+                    sheet.write_string(row, 2, question["reason"], text)
+                    sheet.write_string(row, 3, "\n".join(question["questions"]), text)
+                    sheet.set_row(row, 72)
+                    row += 1
+                row += 1
+            sheet.print_area(0, 0, max(row, 41), 5)
+        else:
+            sheet.print_area("A1:F26")
         sheet.set_portrait()
