@@ -80,3 +80,9 @@ bytes or published version; fresh current-head CI is required.
 Fresh current-head CI, deployment, exact package/download verification and the
 four administrative closures are separate required completion steps. No closure
 is claimed merely from these source checks.
+
+The next CI pass exposed two receipt branch fixtures whose expected outage or
+onboarding reason was correctly preceded by the new CI delivery exclusion.
+Those two tests now opt into delivery only after installing an explicit offline
+opener or fail-on-network transport. All 70 privacy/receipt/file-identity tests
+pass locally. Production guards and package bytes are unchanged.
