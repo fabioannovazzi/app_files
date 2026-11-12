@@ -26,7 +26,10 @@ function verify(root) {
     }
   }
   function identity(info) {
-    return [info.dev, info.ino, info.mode, info.size, info.mtimeNs, info.ctimeNs, info.nlink].join(":");
+    // ctime is status metadata: Windows can change it on open without changing
+    // package bytes. Keep identity/read-stability checks and verify SHA-256 below;
+    // a ctime-only change must not prevent an intact package from initializing.
+    return [info.dev, info.ino, info.mode, info.size, info.mtimeNs, info.nlink].join(":");
   }
   function read(file) {
     realDirectories(path.dirname(file));
