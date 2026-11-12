@@ -606,17 +606,14 @@ def test_source_contracts_require_the_executable_guard_and_private_state() -> No
     controls = " ".join(boundary["controls"])
 
     for source in (reference, module_skill):
-        assert "guardedPhoneSearch" in source
-        assert "verifyAndOpenGuardedTarget" in source
+        assert "searchLocalChat" in source
+        assert "verifyOpenChat" in source
         assert "one digit at a time" in source
-        assert "Never use `type_text`" in source
-        assert "raw pre-verification accessibility state" in source.casefold()
-        assert "extractVerifiedChatTable" in source
-    assert "whatsapp_desktop_guard.mjs" in wrapper
-    assert "any other WhatsApp script" in wrapper
-    assert "one digit at a time" in controls
-    assert "Raw pre-verification accessibility snapshots" in boundary["content"]
-    assert evals["version"] == 2
+        assert "readVerifiedChat" in source
+    assert "whatsapp_local.mjs" in wrapper
+    assert "exclusive" in controls
+    assert "subsequent raw snapshots are suppressed" in boundary["content"]
+    assert evals["version"] == 3
     assert "await sky.type_text" not in guard_source
     assert 'key: "Return"' not in guard_source
     assert "await sky.set_value" in guard_source
@@ -639,4 +636,4 @@ def test_vera_package_contains_the_exact_guard_source() -> None:
         packaged_reference = archive.read(reference_entry).decode("utf-8")
 
     assert packaged_guard == GUARD.read_bytes()
-    assert "verifyAndOpenGuardedTarget" in packaged_reference
+    assert "verifyOpenChat" in packaged_reference

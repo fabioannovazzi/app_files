@@ -14,7 +14,9 @@
     "ui/studio-work.css",
     "ui/workspace.css",
     "ui/custom_select.js",
-    "ui/InstrumentSans-Regular.ttf"
+    "ui/InstrumentSans-Regular.ttf",
+    "scripts/whatsapp_requests.py",
+    "mcp/whatsapp.cjs"
   ],
   "runtime_profiles": [
     "openai-codex",
@@ -68,12 +70,21 @@
         "ui/studio-work.js"
       ],
       "on_violation": "Reject expired/mismatched tickets, changed owner/source/state and stale draft writes; retain interrupted local save for receipt recovery. Public engine calendar-linked edit and atomic meeting restrictions remain authoritative."
+    },
+    {
+      "id": "local-whatsapp-records",
+      "control": "WhatsApp tools persist confirmed account/client bindings, document requests, follow-up dates, selected file bytes and SHA-256 hashes, exact authorized outbound content and UI evidence in an owner-local SQLite/staging directory. They expose selected records and paged request context to the model, with no anonymization. A global durable UI lock, request revisions, immutable file checks and one-time dispatch claims prevent overlapping UI work and blind resend. Evidence is supplied by the host, not independently authenticated. Retained files survive Archive errors; local state has no automatic deletion or background messaging. Native WhatsApp reads/writes remain in the separately declared Codex Computer Use boundary.",
+      "implemented_by": [
+        "scripts/whatsapp_requests.py",
+        "mcp/whatsapp.cjs"
+      ],
+      "on_violation": "Reject changed recipient/account, staged bytes, conflicting revisions or duplicate dispatch; preserve uncertain outcomes for inspection."
     }
   ],
   "review": {
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "26984caf0ee9fd54a67e5d8ba321d2498e96ee9066a58eb5cf14ac9c5596ffb9"
+    "source_fingerprint": "c79219386d0db89a4dd2dd12ff593ca751c3c82827729dda4120a0ebea4c9ba7"
   }
 }

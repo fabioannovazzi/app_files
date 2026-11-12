@@ -209,13 +209,15 @@ copy, consolidate the selected client, engagement, sources and write permission
 into one concise confirmation; internal ledger steps remain separate.
 
 
-1. When the user asks to inspect WhatsApp messages, confirm that Computer Use
+1. When the user asks to inspect WhatsApp messages, collect its documents or send
+   an authorized one-to-one message, confirm that Computer Use
    can control the local WhatsApp Desktop application on the same computer.
    - If it is available, read `references/whatsapp-desktop.md` completely and
-     follow it. Do not resolve the local document module as a workflow or call
-     its MCP. Resolve only the bundled Studio Archive
-     `scripts/whatsapp_desktop_guard.mjs` named by that reference; do not call a
-     WhatsApp MCP server, use a browser, or run any other WhatsApp script.
+     follow it. The bundled `scripts/whatsapp_local.mjs` controls the observed
+     desktop UI through Computer Use. The local `vera_whatsapp_*` MCP tools
+     retain requests, selected files and send receipts; they do not access
+     WhatsApp. Use the normal Archive import route for selected downloaded files.
+     Do not use a browser or a remote WhatsApp service for this local mode.
    - If it is unavailable, explain that message inspection requires Codex
      Desktop, Computer Use, and the user's already-authenticated WhatsApp
      Desktop application. Complete any useful scope or question preparation in

@@ -9,7 +9,7 @@ const SEARCH_DESCRIPTIONS = new Set([
 ]);
 
 function stripDirectionalMarks(value) {
-  return value.replace(/[\u200e\u200f]/gu, "").trim();
+  return value.replace(/[\u200e\u200f\u2066-\u2069]/gu, "").trim();
 }
 
 function normalizedText(value) {
@@ -99,7 +99,7 @@ function parseAccessibilityState(text) {
   };
 }
 
-function selectTargetResult(parsed, expectedChatName, phoneDigits) {
+function selectTargetResult(parsed, expectedChatName, phoneDigits, allowUniqueChatCandidate = false) {
   const semanticResults = new Map();
   for (const element of parsed.elements) {
     const resultMatch = element.line.match(
@@ -135,6 +135,8 @@ function selectTargetResult(parsed, expectedChatName, phoneDigits) {
       ? { ...exactMatches[0], matchedBy: "exact_confirmed_identity" }
       : uniqueContacts.length === 1
         ? { ...uniqueContacts[0], matchedBy: "unique_contact_result" }
+        : allowUniqueChatCandidate && results.length === 1
+          ? { ...results[0], matchedBy: "unverified_unique_phone_search_candidate" }
         : null;
 
   return {
@@ -262,6 +264,7 @@ export async function guardedPhoneSearch({
   sky,
   confirmedPhone,
   expectedChatName = null,
+  allowUniqueChatCandidate = false,
   app = DEFAULT_APP,
 }) {
   const phoneDigits = normalizeConfirmedPhone(confirmedPhone);
@@ -457,7 +460,7 @@ export async function guardedPhoneSearch({
     });
   }
 
-  const target = selectTargetResult(parsed, expectedChatName, phoneDigits);
+  const target = selectTargetResult(parsed, expectedChatName, phoneDigits, allowUniqueChatCandidate);
   return response(target.targetResult ? "ready_to_open_target" : "blocked", {
     reason: target.targetResult ? null : "no_unique_target_result",
     digitsEntered: verifiedPrefix.length,
@@ -729,3 +732,5 @@ export function extractVerifiedChatTable(
   }
   return lines.slice(start, end).join("\n");
 }
+
+export { parseAccessibilityState, normalizeConfirmedPhone };

@@ -805,6 +805,14 @@ connector instead.
 
 ## Codex Desktop WhatsApp workflow
 
+In Vera, its `skills/studio-archive/references/whatsapp-desktop.md` owns the
+extended `whatsapp-local-v2` route and supersedes the legacy read-only route
+below. It uses this module's `whatsapp_local.mjs` (`searchLocalChat`,
+`verifyOpenChat`, `readVerifiedChat`) plus Vera's local request/receipt tools.
+Follow that reference for authorized sends, selected downloads and recovery;
+use this module's ordinary import route for retained attachments. Other products
+and standalone module use retain the read-only route below.
+
 Use the `whatsapp-desktop-computer-use-v1` adapter only when the user explicitly
 asks to inspect WhatsApp and Computer Use can control the already-authenticated
 local WhatsApp Desktop application on the same computer.

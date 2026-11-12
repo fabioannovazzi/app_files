@@ -1,4 +1,4 @@
-"""Contracts for Vera's local, read-only WhatsApp Desktop route."""
+"""Contracts for Vera's local WhatsApp Desktop request and communication route."""
 
 from __future__ import annotations
 
@@ -35,46 +35,47 @@ def test_vera_routes_local_whatsapp_desktop_before_other_archive_routes() -> Non
     assert "net.whatsapp.WhatsApp" in reference
 
 
-def test_whatsapp_desktop_route_is_one_client_read_only_and_fail_closed() -> None:
+def test_local_route_records_authorized_actions_and_preserves_drafts() -> None:
     reference = REFERENCE.read_text(encoding="utf-8")
     compact = " ".join(reference.split())
 
     for required in (
-        "whatsapp-desktop-computer-use-v1",
+        "whatsapp-local-v2",
         "one complete client phone number",
         "exact confirmed international phone number",
         "fresh accessibility snapshot before every action",
-        "Never type into the message composer",
+        "Preserve existing user drafts",
         "without pressing Return",
         "one-to-one",
-        "no Mparanza copy",
+        "No Mparanza copy",
     ):
         assert required in compact
     assert "mark messages as read" in compact.casefold()
     assert "background" in compact and "synchron" in compact
-    for prohibited in (
-        "press Return",
-        "reply",
-        "forward",
-        "react",
-        "delete",
-        "download",
-        "export a chat",
-        "save screenshots",
-        "change account",
+    for required in (
+        "execute=true",
+        "uncertain",
+        "retry_of",
+        "sha256",
+        "Windows",
+        "Archive failure",
+        "contact-info",
+        "specific user instruction",
     ):
-        assert prohibited in reference
+        assert required in reference
 
 
 def test_whatsapp_desktop_evals_cover_success_and_failure_paths() -> None:
     payload = json.loads(EVALS.read_text(encoding="utf-8"))
 
     assert payload["workflow"] == "studio-archive-whatsapp-desktop-computer-use"
-    assert payload["adapter"] == "whatsapp-desktop-computer-use-v1"
-    assert len(payload["positive_cases"]) == 5
-    assert len(payload["negative_cases"]) == 5
-    assert len({case["id"] for case in payload["positive_cases"]}) == 5
-    assert len({case["id"] for case in payload["negative_cases"]}) == 5
+    assert payload["adapter"] == "whatsapp-local-v2"
+    assert len({case["id"] for case in payload["positive_cases"]}) == len(
+        payload["positive_cases"]
+    )
+    assert len({case["id"] for case in payload["negative_cases"]}) == len(
+        payload["negative_cases"]
+    )
     serialized = json.dumps(payload, ensure_ascii=False)
     for required in (
         "chatgpt-lightweight-handoff",
@@ -82,6 +83,9 @@ def test_whatsapp_desktop_evals_cover_success_and_failure_paths() -> None:
         "write-request",
         "focus-or-identity-uncertain",
         "separate-professional-desktop",
+        "authorized-text-file-roundtrip",
+        "archive-failure-restart",
+        "uncertain-send",
     ):
         assert required in serialized
 
@@ -127,13 +131,13 @@ def test_whatsapp_desktop_is_a_workstream_boundary_not_a_hosted_service() -> Non
     assert "local WhatsApp Desktop" in boundary["destination"]
     assert "no WhatsApp copy is sent to a Mparanza service" in boundary["content"]
     assert "never fall back to WhatsApp Web" in controls
-    assert "never type in the composer" in controls
+    assert "Preserve existing drafts" in controls
+    assert "specific user authorization" in controls
     assert "creates no Mparanza WhatsApp connector" in controls
 
 
-def test_future_connector_replaces_only_the_access_adapter() -> None:
+def test_api_mode_does_not_share_dispatch_authority() -> None:
     reference = " ".join(REFERENCE.read_text(encoding="utf-8").split())
 
-    assert "If a trusted native WhatsApp connector becomes available later" in reference
-    assert "replace this adapter only" in reference
-    assert "one-client, read-only, fail-closed routing" in reference
+    assert "official API connection is a separate mode" in reference
+    assert "never give both modes authority over one request" in reference
