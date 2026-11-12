@@ -491,6 +491,9 @@ def test_resume_rejects_a_different_original_input_receipt(tmp_path, monkeypatch
 
 
 def client(tmp_path, monkeypatch, product="vera"):
+    # This fixture replaces _post with an in-process SQLite service below.
+    # Exercise delivery semantics without inheriting CI's real-network default.
+    monkeypatch.setenv("MPARANZA_INCIDENT_DELIVERY", "automatic")
     monkeypatch.syspath_prepend(str(ROOT / "plugins" / product / "scripts"))
     spec = importlib.util.spec_from_file_location(
         "isolated_incident_client",

@@ -62,6 +62,11 @@ def main() -> None:
     app = commands.add_parser("app")
     app.add_argument("app_installation_id")
     commands.add_parser("registry")
+    close_test = commands.add_parser("close-test")
+    close_test.add_argument("incident_id")
+    close_test.add_argument("--expected-evidence-sha256", required=True)
+    close_test.add_argument("--note", required=True)
+    close_test.add_argument("--evidence-ref", action="append", required=True)
     remedy = commands.add_parser("remedy")
     remedy.add_argument("incident_id")
     remedy.add_argument(
@@ -82,6 +87,13 @@ def main() -> None:
         result = store.app_installation(args.app_installation_id)
     elif args.command == "registry":
         result = store.registry()
+    elif args.command == "close-test":
+        result = store.close_test(
+            args.incident_id,
+            expected_evidence_sha256=args.expected_evidence_sha256,
+            note=args.note,
+            evidence_refs=args.evidence_ref,
+        )
     else:
         value = Remedy.model_validate_json(
             sys.stdin.read()

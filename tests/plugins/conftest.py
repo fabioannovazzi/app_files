@@ -1,10 +1,14 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
 
 __all__: list[str] = []
+
+# This conftest also runs with --confcutdir=tests/plugins, without the root one.
+os.environ["MPARANZA_INCIDENT_DELIVERY"] = "local-only"
 
 
 @pytest.fixture(autouse=True)

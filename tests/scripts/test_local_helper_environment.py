@@ -23,6 +23,7 @@ def test_child_environment_excludes_credentials_and_preserves_platform_paths(
         "VIRTUAL_ENV": "/venv",
         "MPARANZA_REVIEW_NODE": "/node",
         "MPARANZA_RUNTIME_ROOT": "/private-runtime",
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
         "LANG": "en_US.UTF-8",
         "GITHUB_TOKEN": "fake-token",
         "OPENAI_API_KEY": "fake-key",
@@ -46,6 +47,7 @@ def test_child_environment_excludes_credentials_and_preserves_platform_paths(
     assert actual["PYTHON"] == "chosen-python"
     assert actual["MPARANZA_REVIEW_NODE"] == "/node"
     assert actual["MPARANZA_RUNTIME_ROOT"] == "/private-runtime"
+    assert actual["MPARANZA_INCIDENT_DELIVERY"] == "local-only"
     if platform == "windows":
         assert actual["SystemRoot"] == "C:/Windows"
         assert actual["Path"] == "C:/bin"
@@ -57,6 +59,7 @@ def test_node_child_environment_matches_shared_allowlist() -> None:
         "SystemRoot": "C:/Windows",
         "PYTHON": sys.executable,
         "MPARANZA_RUNTIME_ROOT": "/private-runtime",
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
         "GITHUB_TOKEN": "fake-token",
         "OPENAI_API_KEY": "fake-key",
     }

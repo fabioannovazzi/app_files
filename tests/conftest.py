@@ -15,6 +15,8 @@ import pytest
 # collection or execution.
 sys.dont_write_bytecode = True
 os.environ["PYTHONDONTWRITEBYTECODE"] = "1"
+# Local pytest runs must retain failures without creating customer incidents too.
+os.environ["MPARANZA_INCIDENT_DELIVERY"] = "local-only"
 
 ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:

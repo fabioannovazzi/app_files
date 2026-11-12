@@ -244,6 +244,8 @@ class CheckRun:
             }
         }
         self.env.update(
+            # Candidate failures are test evidence, never customer incidents.
+            MPARANZA_INCIDENT_DELIVERY="local-only",
             PYTHONNOUSERSITE="1",
             PYTHONDONTWRITEBYTECODE="1",
             CLAUDE_PLUGIN_DATA=str(output / "managed"),

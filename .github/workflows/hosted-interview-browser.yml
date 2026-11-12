@@ -12,6 +12,10 @@ on:
       - 'static/js/hosted-interview.js'
       - 'tests/test_hosted_interview_retry.mjs'
       - '.github/workflows/hosted-interview-browser.yml'
+# CI failures stay in retained test diagnostics, outside customer alerts.
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
+
 jobs:
   conversation-and-retry:
     runs-on: ubuntu-latest
