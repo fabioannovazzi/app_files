@@ -780,7 +780,7 @@ def _codex_home_boundary_inputs() -> dict[str, Any]:
 
 
 def _worker_environment() -> dict[str, str]:
-    allowed_names = (
+    allowed_names: tuple[str, ...] = (
         "HOME",
         "USER",
         "LOGNAME",
