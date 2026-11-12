@@ -67,7 +67,7 @@
     "analyse-financière",
     "genève"
   ],
-  "version": "0.1.618",
+  "version": "0.1.619",
   "skills": "./skills/",
   "agents": [
     "./agents/vera.md",
