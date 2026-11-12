@@ -55,5 +55,16 @@
         "cost_class": "escalation"
       }
     ]
+  },
+  "workflow_candidates": {
+    "journal-bank-reconciliation": {
+      "codex": [
+        {
+          "model": "gpt-6.1-terra",
+          "effort": "high",
+          "cost_class": "standard"
+        }
+      ]
+    }
   }
 }

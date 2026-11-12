@@ -149,7 +149,7 @@
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
       "repository_path": "plugins/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "98eb29fc486c3fecbacb516fb87a957c88cfc036c3745ee9cb9d79c061225bbd"
+      "sha256": "f186e4423db14d7f0bc52ed568e81e85746fd8ebb5e43f825544360f152e0404"
     },
     {
       "path": "modules/open-item-reconciliation/skills/open-item-reconciliation/SKILL.md",

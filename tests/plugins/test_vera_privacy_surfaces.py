@@ -629,17 +629,16 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         assert "chat principale e di un agente secondario nativo" in model_block
         assert "non prova un isolamento del filesystem" in model_block
         assert "Le trascrizioni degli agenti possono restare nell’host" in model_block
-        # Both normal routes now declare the same bank-first processing and
-        # exposure contract; the legacy 120-row/48-KB limit is no longer current.
+        # Both routes disclose bounded, expandable evidence and incomplete coverage.
         for snippet in (
-            "Luna e poi Sol su Codex, se disponibili",
-            "tutti i dubbi bancari o contabili rimasti",
-            "il contesto completo fornito",
-            "25 movimenti, con gruppi interi, entro 256 KiB",
-            "2.400 caratteri per registrazione PDF",
-            "Errori e limiti tecnici restano distinti dai dubbi",
-            "Gli esiti bancari non certificano la contabilità o la chiusura delle partite",
-            "La ripresa riutilizza ricevute ed esiti salvati senza ripetere il lavoro completato",
+            "La popolazione resta indicizzata sul computer",
+            "piccoli sottoinsiemi di prove",
+            "candidati totali, righe restituite e copertura ancora incompleta",
+            "96 KiB per richiesta e schema",
+            "pagine di 16 righe",
+            "Tutti i dubbi residui passano al secondo modello",
+            "un limite tecnico resta un errore tecnico",
+            "senza ripetere le decisioni completate",
         ):
             assert snippet in model_block
         assert "Cowork non esegue questo passaggio" not in model_block

@@ -40,7 +40,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/references/workflow-reference.md",
-      "sha256": "1c7257cfaedfbf0ea5e5f41c4fdc0e304ad250dfe5774528ccd9974185b36bfb"
+      "sha256": "3fa8e003a20b4ff8a4957b074d62d45ab10a2c2f7c3daa260b90582ba57f5717"
     },
     {
       "path": "modules/journal-bank-reconciliation/requirements.txt",
@@ -52,7 +52,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/bank_first.py",
-      "sha256": "a30852a8a6d39219e997cd9d76da8d9024cb29009b886585fbe448e491ad8791"
+      "sha256": "5a03d9d82e5aac5c33ab7f94263834883b41e27768e1bb5b868c71af1dc6f135"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/bank_first_policy.json",
@@ -67,6 +67,10 @@
       "sha256": "8e0ca4683edd9e4b206680817215adf608987b51911351bbcdae84f6cf1a7831"
     },
     {
+      "path": "modules/journal-bank-reconciliation/scripts/evidence_retrieval.py",
+      "sha256": "40f539167f5d73f9b3a268c978161376573490ae53571fc94f42d0d462e2bdf7"
+    },
+    {
       "path": "modules/journal-bank-reconciliation/scripts/excel_sanitization.py",
       "sha256": "67225af917ab3da8183bef54e3707722a98639efc277317f6e63cb7c9f47cb72"
     },
@@ -76,11 +80,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/grouped_workbook.py",
-      "sha256": "229d82b5932c5d10045115558505df1ffb68329ea2b2cff096e5a681a56885f8"
+      "sha256": "100d8c3052485bf85a7fe32ea8e590d0b83a1b16ead59475e4f19b57808104a2"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/implementation_bootstrap.py",
-      "sha256": "61275be07b795c15a395a172759512f5138d27388fa1c88a3c3d94b83231e472"
+      "sha256": "fa6116fc9be2488ced73b6450781232e469e27244cabac9bec741f9b4f2531a8"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/inspect_inputs.py",
@@ -88,7 +92,7 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/journal_bank_core.py",
-      "sha256": "3ded9b6db660df3bcbfbb3c0cbdcd18bba9c954d2c2818f87052b2b93b4dbff7"
+      "sha256": "57070ef6d8af5f9457583dbe6860f6769592382b85847b0488a9c50bc6ab7916"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/native_host_worker.py",
@@ -97,6 +101,10 @@
     {
       "path": "modules/journal-bank-reconciliation/scripts/prepare_posting_review.py",
       "sha256": "3bac170a99ac4b5abfef1febd4179f978e1ab33937ec636f95dd9e284de62c7f"
+    },
+    {
+      "path": "modules/journal-bank-reconciliation/scripts/retrieval_review.py",
+      "sha256": "d98fb3d39ca7b62dbe0e7e3c5ee4e4301a1d355c77df38a8a75a6c4c6841a115"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/review_session.py",
@@ -112,11 +120,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_review.py",
-      "sha256": "07a8c655956709702010b2436d95de287c19912318349ddf590bbfde192f21a6"
+      "sha256": "801271e901a41725fd97d8b428e4593478d9791bb6b6b777b5bb3c8d18b0db0b"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/semantic_worker_policy.json",
-      "sha256": "b741ab4aac0da1d3964d5ef91004af4c5e5fc5cefc77f3bb598c82af1e73f474"
+      "sha256": "f9dbb175222ee7ea3283a6d88c4e32af069e4079979435815403b75a913fffb0"
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/windows_worker_process.py",
@@ -124,11 +132,11 @@
     },
     {
       "path": "modules/journal-bank-reconciliation/scripts/worker_capabilities.py",
-      "sha256": "2da15f9e2d9db782617d11272644e3c9b451d3aefbc3f47f7bf9271cbda6266c"
+      "sha256": "e544cd431a0e6383a202cbfc7a1327d55a47b72a9bc47560ed7510b2b85facd9"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/SKILL.md",
-      "sha256": "50e02e40765bd98c7569884b021179bd5fed0d106c42d67a06f2cfc5a86af18d"
+      "sha256": "d3cb2500892e0d43ab46b47815c6515375f4fd9b08d81fed6e63c359a24a9486"
     },
     {
       "path": "modules/journal-bank-reconciliation/skills/mparanza-journal-bank-reconciliation/references/geneva.md",
@@ -637,5 +645,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "afcd67dbb0336403a09b9325413b1c3647fd56af31c54bff34af008d9e24fe63"
+  "canonical_course_sha256": "8d525fee2edc5c2f3f8574240444bfe7a556e8c519b013852bff4bffe00e6f30"
 }

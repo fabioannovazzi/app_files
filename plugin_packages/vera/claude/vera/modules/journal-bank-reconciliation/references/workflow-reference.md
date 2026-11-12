@@ -355,7 +355,14 @@ separate ephemeral worker for the complete selected packet. The shared owned
 The graph retains that selection for replay; availability is not model-quality
 evidence. Never reconstruct or run the underlying `codex exec` command
 directly. The launcher checks actual isolation and required CLI capabilities on the
-current macOS and Claude, without fixed external version/build/hash gates.
+current Claude runtime on macOS or Windows, without fixed external version/build/hash gates.
+On Windows, use the native `codex sandbox` command with a capsule-specific
+restricted-read permission profile and managed requirements. Require successful
+exact-schema read, denied outside read/write and CLI argument probes before any
+model submission. An unsupported sandbox or managed-policy denial stays a
+technical error; never fall back to unrestricted execution. macOS retains its
+existing Seatbelt boundary. Windows acceptance requires exercising these probes
+and a complete workflow on the actual Windows machine.
 It records executable snapshots per run and rejects concurrent changes.
 The Vera-owned deny-default policy hash remains fixed. It uses a
 mode-`0700` capsule, prompt stdin, bounded parent capture, a read-only inner
@@ -574,3 +581,24 @@ use that exact recorded value in downstream review and the delivered explanation
 State whether it came from the professional, an established studio instruction,
 or a disclosed draft assumption. Matching within tolerance does not authorize a
 write-off or a new accounting entry: keep actual differences visible for review.
+
+
+### Indexed evidence and bounded context
+
+The complete qualified population stays local in a source-bound SQLite/FTS index.
+Each worker receives focus records, a small candidate page, relevant prior
+conclusions and explicit query coverage. Both the first stage and Sol can request
+read-only identifier, text, documented-alias, amount/date and linked-group searches.
+Use returned cursors to inspect later pages; a small subset never proves absence.
+Group members are searchable by reference/group/settlement ID, with exact local
+totals and paginated detail. Totals alone do not establish identity.
+
+Defaults are 16 rows per page and 96 KiB for prompt plus schema, configurable
+through the shared controller's retrieval budget. Focus remains at most 25 bank
+movements unless an indivisible group is larger. Oversized working contexts and
+exhausted query budgets are technical deferrals, never invented human questions.
+Models retain selected evidence and a compact fallible note between searches;
+full exchanges and receipts remain local. Global reservations, source checks,
+exact allocation controls and run-level concurrency locking apply across subsets
+and stages. Resume replays completed requests/decisions against the same index.
+Legacy saved decisions are not migrated or recalculated implicitly.

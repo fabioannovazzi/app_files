@@ -78,11 +78,12 @@ import shutil
 import signal
 import stat
 import subprocess
+import sys
 import tempfile
 import time
 import uuid
 from collections import Counter, deque
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from decimal import Decimal
 from pathlib import Path
 from types import MappingProxyType
@@ -648,7 +649,8 @@ def _stable_executable_binding(
     if (
         not stat.S_ISREG(entry.st_mode)
         or entry.st_nlink != 1
-        or not entry.st_mode & stat.S_IXUSR
+        or (platform.system() != "Windows" and not entry.st_mode & stat.S_IXUSR)
+        or (platform.system() == "Windows" and unresolved.suffix.lower() != ".exe")
     ):
         raise ValueError(f"{label} must be an executable ordinary single-link file")
     if entry.st_size > MAX_EXECUTABLE_BYTES:
@@ -748,7 +750,10 @@ def _codex_home_boundary_inputs() -> dict[str, Any]:
         uuid.UUID(installation_text)
     except (UnicodeDecodeError, ValueError) as exc:
         raise ValueError("Codex installation ID is not a UUID") from exc
-    if installation_path.stat().st_mode & 0o777 != 0o644:
+    if (
+        platform.system() != "Windows"
+        and installation_path.stat().st_mode & 0o777 != 0o644
+    ):
         raise ValueError("Codex installation ID must already have mode 0644")
     return {
         "codex_home": codex_home,
@@ -792,6 +797,19 @@ def _worker_environment() -> dict[str, str]:
         "all_proxy",
         "no_proxy",
     )
+    if platform.system() == "Windows":
+        # Windows loader, profile and temporary-file discovery; no inherited API keys.
+        allowed_names += (
+            "SystemRoot",
+            "SYSTEMROOT",
+            "WINDIR",
+            "USERPROFILE",
+            "LOCALAPPDATA",
+            "APPDATA",
+            "TEMP",
+            "TMP",
+            "COMSPEC",
+        )
     return {name: os.environ[name] for name in allowed_names if name in os.environ}
 
 
@@ -2579,6 +2597,29 @@ def _darwin_build_version(profile: _HostCapabilityProfile | None = None) -> str:
 def inspect_execution_host(codex_bin: Path | None = None) -> dict[str, Any]:
     """Inspect qualification prerequisites without credentials or a worker launch."""
 
+    if platform.system() == "Windows":
+        try:
+            executables = _qualified_executables(codex_bin)
+        except (OSError, ValueError) as exc:
+            return {
+                "status": "unsupported",
+                "worker_executed": False,
+                "checks": [
+                    {
+                        "check": "native_windows_runtime",
+                        "status": "unsupported",
+                        "reason": str(exc),
+                    }
+                ],
+            }
+        return {
+            "schema_version": 1,
+            "qualification_profile": WINDOWS_WORKER_BOUNDARY_CONTRACT_ID,
+            "status": "prerequisites_match",
+            "worker_executed": False,
+            "live_isolation_probes_required_before_submission": True,
+            "checks": [{"check": "native_windows_runtime", "status": "matched"}],
+        }
     profile = _resolve_host_profile()
     checks: list[dict[str, Any]] = []
     try:
@@ -2652,6 +2693,80 @@ def _resolved_codex_binary(codex_bin: Path | None) -> Path:
         raise ValueError("Codex CLI path cannot be resolved") from exc
 
 
+WINDOWS_WORKER_BOUNDARY_CONTRACT_ID = "vera.codex_windows_capsule.v1"
+WINDOWS_BOUNDARY_POLICY = "codex-sandbox:managed:root-deny:minimal-read:runtime-read:auth-read:capsule-read:state-log-write:v1"
+
+
+def _windows_permissions(
+    *,
+    executable: Path,
+    capsule: Path,
+    state_dir: Path,
+    log_dir: Path,
+    boundary_inputs: Mapping[str, Any],
+) -> dict[str, Any]:
+    """An explicit read allowlist, not a platform/version compatibility guess."""
+    filesystem = {":root": "deny", ":minimal": "read"}
+    for path in (
+        executable.parent,
+        Path(sys.executable).resolve().parent,
+        Path(sys.base_prefix).resolve(),
+        capsule,
+        boundary_inputs["auth_path"],
+        boundary_inputs["installation_id_path"],
+    ):
+        filesystem[str(path)] = "read"
+    filesystem[str(state_dir)] = "write"
+    filesystem[str(log_dir)] = "write"
+    return {"filesystem": filesystem, "network": {"enabled": True}}
+
+
+def _windows_sandbox_prefix(
+    *,
+    executable: Path,
+    codex: Path,
+    capsule: Path,
+    state_dir: Path,
+    log_dir: Path,
+    boundary_inputs: Mapping[str, Any],
+) -> list[str]:
+    permissions = _windows_permissions(
+        executable=codex,
+        capsule=capsule,
+        state_dir=state_dir,
+        log_dir=log_dir,
+        boundary_inputs=boundary_inputs,
+    )
+    # A fresh name cannot inherit user-config additions to a common profile name.
+    name = "vera_worker_" + hashlib.sha256(str(capsule).encode()).hexdigest()[:24]
+    filesystem = ",".join(
+        json.dumps(k) + "=" + json.dumps(v)
+        for k, v in permissions["filesystem"].items()
+    )
+    config = (
+        "permissions."
+        + name
+        + "={filesystem={"
+        + filesystem
+        + "},network={enabled=true}}"
+    )
+    return [
+        str(codex),
+        "-c",
+        config,
+        "-c",
+        "features.prefer_mxc=true",
+        "sandbox",
+        "--include-managed-config",
+        "--permission-profile",
+        name,
+        "--cd",
+        str(capsule),
+        "--",
+        str(executable),
+    ]
+
+
 def _seatbelt_prefix(
     *,
     executable: Path,
@@ -2664,6 +2779,23 @@ def _seatbelt_prefix(
     host_profile: _HostCapabilityProfile | None = None,
 ) -> list[str]:
     profile = host_profile or _resolve_host_profile()
+    if profile.platform == "Windows":
+        command = _windows_sandbox_prefix(
+            executable=executable,
+            codex=profile.sandbox_exec_path,
+            capsule=work_dir,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            boundary_inputs=boundary_inputs,
+        )
+        if executable == profile.canary_path:
+            command += [
+                "-I",
+                "-S",
+                "-c",
+                "import sys;sys.stdout.buffer.write(open(sys.argv[1], 'rb').read())",
+            ]
+        return command
     parameters = {
         "CODEX_BIN": executable,
         "CODEX_HOME_DIR": boundary_inputs["codex_home"],
@@ -2693,8 +2825,22 @@ def _qualified_executables(
             "Prepare a new worker generation with the current isolation policy"
         )
     profile = _resolve_host_profile(profile_id)
-    build = _darwin_build_version(profile)
     resolved_codex = _resolved_codex_binary(codex_bin)
+    if platform.system() == "Windows":
+        profile = replace(
+            profile,
+            contract_id=WINDOWS_WORKER_BOUNDARY_CONTRACT_ID,
+            platform="Windows",
+            sandbox_exec_path=resolved_codex,
+            canary_path=Path(sys.executable).resolve(),
+            seatbelt_sha256=hashlib.sha256(
+                WINDOWS_BOUNDARY_POLICY.encode()
+            ).hexdigest(),
+            qualification_basis="native_windows_sandbox_live_read_write_and_cli_probes",
+        )
+        build = platform.version()
+    else:
+        build = _darwin_build_version(profile)
     return {
         "host_profile": profile,
         "darwin_build": build,
@@ -2706,12 +2852,12 @@ def _qualified_executables(
         ),
         "sandbox_exec_binding": _stable_executable_binding(
             profile.sandbox_exec_path,
-            label="macOS sandbox-exec",
+            label="Native sandbox launcher",
             expected_sha256=profile.sandbox_exec_sha256,
         ),
         "canary_binding": _stable_executable_binding(
             profile.canary_path,
-            label="macOS sandbox canary reader",
+            label="Native sandbox canary reader",
             expected_sha256=profile.canary_sha256,
         ),
     }
@@ -2749,12 +2895,12 @@ def _qualification_canaries(
         timeout_seconds=CANARY_TIMEOUT_SECONDS,
     )
     if allowed["return_code"] != 0 or allowed["stdout"] != schema_bytes:
-        raise ValueError("Seatbelt did not permit the exact schema canary")
+        raise ValueError("Native sandbox did not permit the exact schema canary")
 
     sentinel_path = semantic_dir / f".luna-outside-canary.{secrets.token_hex(16)}"
     sentinel_bytes = secrets.token_bytes(48)
     if os.path.lexists(sentinel_path):
-        raise ValueError("Seatbelt outside-read canary path already exists")
+        raise ValueError("Native sandbox outside-read canary path already exists")
     try:
         with sentinel_path.open("xb") as handle:
             handle.write(sentinel_bytes)
@@ -2773,7 +2919,7 @@ def _qualification_canaries(
         or sentinel_bytes in denied["stdout"]
         or sentinel_bytes in denied["stderr"]
     ):
-        raise ValueError("Seatbelt did not deny the outside-read canary")
+        raise ValueError("Native sandbox did not deny the outside-read canary")
 
     codex_prefix = _seatbelt_prefix(
         executable=executables["codex_path"],
@@ -2821,7 +2967,49 @@ def _qualification_canaries(
         )
         if help_result["return_code"] != 0:
             raise ValueError("Codex CLI rejected required isolated-worker arguments")
+    windows_checks = {}
+    if profile.platform == "Windows":
+        write_target = semantic_dir / (".worker-write-canary." + secrets.token_hex(16))
+        prefix = _windows_sandbox_prefix(
+            executable=profile.canary_path,
+            codex=executables["codex_path"],
+            capsule=capsule,
+            state_dir=state_dir,
+            log_dir=log_dir,
+            boundary_inputs=boundary_inputs,
+        )
+        try:
+            denied_write = _run_captured_process(
+                [
+                    *prefix,
+                    "-I",
+                    "-S",
+                    "-c",
+                    "import sys;open(sys.argv[1], 'xb').write(b'forbidden')",
+                    str(write_target),
+                ],
+                cwd=capsule,
+                stdin_path=None,
+                stdout_limit=MAX_CANARY_OUTPUT_BYTES,
+                stderr_limit=MAX_CANARY_OUTPUT_BYTES,
+                timeout_seconds=CANARY_TIMEOUT_SECONDS,
+            )
+            if denied_write["return_code"] == 0 or write_target.exists():
+                raise ValueError("Native sandbox did not deny the outside-write canary")
+        finally:
+            write_target.unlink(missing_ok=True)
+        windows_checks = {
+            "outside_capsule_write_denied": True,
+            "permissions": _windows_permissions(
+                executable=executables["codex_path"],
+                capsule=capsule,
+                state_dir=state_dir,
+                log_dir=log_dir,
+                boundary_inputs=boundary_inputs,
+            ),
+        }
     return {
+        **windows_checks,
         "exact_schema_read_succeeded": True,
         "outside_capsule_read_denied": True,
         "codex_version_inside_boundary": version,
@@ -2921,6 +3109,22 @@ def _redacted_worker_argv(
             "-",
         ]
     )
+    if profile.platform == "Windows":
+        command = [
+            "codex",
+            "-c",
+            "<exact-capsule-permission-profile>",
+            "-c",
+            "features.prefer_mxc=true",
+            "sandbox",
+            "--include-managed-config",
+            "--permission-profile",
+            "<run-specific-profile>",
+            "--cd",
+            "<capsule>",
+            "--",
+            *command[2:],
+        ]
     return command
 
 
@@ -3227,7 +3431,10 @@ def run_isolated_native_worker(
     boundary_inputs = _codex_home_boundary_inputs()
     executables = _qualified_executables(codex_bin)
     profile = executables["host_profile"]
-    profile_sha256 = hashlib.sha256(SEATBELT_PROFILE.encode("utf-8")).hexdigest()
+    boundary_policy = (
+        WINDOWS_BOUNDARY_POLICY if profile.platform == "Windows" else SEATBELT_PROFILE
+    )
+    profile_sha256 = hashlib.sha256(boundary_policy.encode("utf-8")).hexdigest()
     if profile_sha256 != profile.seatbelt_sha256:
         raise ValueError("Seatbelt profile does not match the qualified boundary")
 
@@ -3246,7 +3453,7 @@ def run_isolated_native_worker(
         log_dir.mkdir(mode=0o700)
         capsule_schema.write_bytes(schema_bytes)
         capsule_prompt.write_bytes(prompt_bytes)
-        profile_path.write_text(SEATBELT_PROFILE, encoding="utf-8")
+        profile_path.write_text(boundary_policy, encoding="utf-8")
         for path in (capsule_schema, capsule_prompt, profile_path):
             path.chmod(0o600)
 
@@ -3657,7 +3864,10 @@ def run_semantic_worker(
         profile_id=graph["requested_worker_configuration"]["outer_filesystem_boundary"],
     )
     profile = executables["host_profile"]
-    profile_sha256 = hashlib.sha256(SEATBELT_PROFILE.encode("utf-8")).hexdigest()
+    boundary_policy = (
+        WINDOWS_BOUNDARY_POLICY if profile.platform == "Windows" else SEATBELT_PROFILE
+    )
+    profile_sha256 = hashlib.sha256(boundary_policy.encode("utf-8")).hexdigest()
     if profile_sha256 != profile.seatbelt_sha256:
         raise ValueError("Seatbelt profile does not match the qualified boundary")
 
@@ -3676,7 +3886,7 @@ def run_semantic_worker(
         log_dir.mkdir(mode=0o700)
         capsule_schema.write_bytes(schema_bytes)
         capsule_prompt.write_bytes(prompt_bytes)
-        profile_path.write_text(SEATBELT_PROFILE, encoding="utf-8")
+        profile_path.write_text(boundary_policy, encoding="utf-8")
         for path in (capsule_schema, capsule_prompt, profile_path):
             path.chmod(0o600)
 
@@ -3779,7 +3989,7 @@ def run_semantic_worker(
         if (
             _stable_executable_binding(
                 profile.sandbox_exec_path,
-                label="macOS sandbox-exec",
+                label="Native sandbox launcher",
                 expected_sha256=profile.sandbox_exec_sha256,
             )
             != executables["sandbox_exec_binding"]
@@ -3788,7 +3998,7 @@ def run_semantic_worker(
         if (
             _stable_executable_binding(
                 profile.canary_path,
-                label="macOS sandbox canary reader",
+                label="Native sandbox canary reader",
                 expected_sha256=profile.canary_sha256,
             )
             != executables["canary_binding"]
@@ -5739,9 +5949,14 @@ def main() -> int:
         for batch in result["batches"]:
             log_execution_status(
                 args.output_dir,
-                "validated worker evidence: %s",
+                "worker attempt evidence: %s",
                 json.dumps(
                     {
+                        "directory": batch["directory"],
+                        "status": batch["status"],
+                    }
+                    if "directory" in batch
+                    else {
                         "worker_run": str(batch["worker_run"]),
                         "launch_receipt": str(batch["launch_receipt"]),
                     }

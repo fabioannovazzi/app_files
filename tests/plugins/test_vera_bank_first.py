@@ -141,6 +141,15 @@ class NativeFixture:
         packet = json.loads((directory / "packet.json").read_text())
         self.calls.append(packet)
         response = self.respond(packet, **self.outcomes.get(packet["stage"], {}))
+        from bank_first import _translate, reference_map
+
+        response = _translate(
+            response,
+            {
+                side: {identifier: ref for ref, identifier in mapping.items()}
+                for side, mapping in reference_map(packet).items()
+            },
+        )
         serialized = lambda value: (
             json.dumps(value, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
         ).encode()
@@ -510,3 +519,142 @@ def test_saved_native_result_is_utf8_and_replays_accented_source_text(tmp_path):
     )
     assert run(tmp_path, native, bank=bank) == result
     assert len(native.calls) == 1
+
+
+def test_short_references_roundtrip_and_retained_map_tampering(tmp_path):
+    native = NativeFixture({"luna": {"linked": True}})
+    result = run(
+        tmp_path,
+        native,
+        bank=[row("bank:source:99")],
+        journal=[row("journal:PDF_page_2:39")],
+    )
+    directory = tmp_path / "bank-first-attempts/00001-luna"
+    wire = json.loads((directory / "worker_packet.json").read_text())
+    response = json.loads((directory / "response.json").read_text())
+    assert wire["bank_records"][0]["transaction_id"] == "B001"
+    assert wire["journal_records"][0]["transaction_id"] == "J001"
+    assert response["groups"][0]["journal_ids"] == ["J001"]
+    assert result["groups"][0]["journal_ids"] == ["journal:PDF_page_2:39"]
+    assert wire["journal_records"][0]["description"] == "Prelievo ATM"
+    (directory / "row_reference_map.json").write_text("{}")
+    with pytest.raises(ValueError, match="evidence changed"):
+        run(
+            tmp_path,
+            native,
+            bank=[row("bank:source:99")],
+            journal=[row("journal:PDF_page_2:39")],
+        )
+
+
+@pytest.mark.parametrize("bad", ["J999", "B001", "journal:PDF_page_3:39"])
+def test_unknown_cross_side_and_full_source_ids_rejected(tmp_path, bad):
+    import jsonschema
+
+    native = NativeFixture({"luna": {"linked": True}})
+    run(
+        tmp_path,
+        native,
+        bank=[row("bank:source:99")],
+        journal=[row("journal:PDF_page_2:39")],
+    )
+    directory = tmp_path / "bank-first-attempts/00001-luna"
+    packet = json.loads((directory / "packet.json").read_text())
+    response = json.loads((directory / "response.json").read_text())
+    response["groups"][0]["journal_ids"] = [bad]
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate(response, bf.output_schema(packet))
+    with pytest.raises(ValueError, match="Unknown journal row reference"):
+        bf.validate_worker_response(packet, response)
+
+
+def test_short_ids_do_not_weaken_exact_citation_check(tmp_path):
+    native = NativeFixture({})
+    run(tmp_path, native)
+    directory = tmp_path / "bank-first-attempts/00001-luna"
+    packet = json.loads((directory / "packet.json").read_text())
+    response = json.loads((directory / "response.json").read_text())
+    response["groups"][0]["bank_resolution"]["evidence"][0]["quote"] = "absent"
+    with pytest.raises(ValueError):
+        bf.validate_worker_response(packet, response)
+
+
+def test_focus_projection_bounds_history_without_dropping_sources_or_ownership(
+    tmp_path,
+):
+    run(tmp_path, NativeFixture({}))
+    packet = json.loads(
+        (tmp_path / "bank-first-attempts/00001-luna/packet.json").read_text()
+    )
+    first = answer(packet)["groups"][0]
+    packet["bank_records"] = [row(f"b{i}") for i in range(200)]
+    packet["focus"] = [{"bank_ids": ["b199"], "kind": "accounting"}]
+    packet["eligible_bank_ids"] = ["b199"]
+    packet["prior_conclusions"] = []
+    for i in range(200):
+        group = copy.deepcopy(first)
+        group["bank_ids"] = [f"b{i}"]
+        group["bank_resolution"]["evidence"][0]["transaction_id"] = f"b{i}"
+        group["history"] = [{"explanation": "retained audit history " * 1000}]
+        packet["prior_conclusions"].append(group)
+    before = copy.deepcopy(packet)
+    wire = bf.worker_packet(packet)
+    assert packet == before
+    assert len(wire["bank_records"]) == 200
+    assert len(wire["prior_conclusion_index"]) == 200
+    assert len(wire["prior_conclusions"]) == 1
+    assert wire["prior_conclusions"][0]["bank_ids"] == ["B200"]
+    assert "history" not in wire["prior_conclusions"][0]
+    assert len(bf.prompt(packet).encode()) < 262144
+    assert all(
+        a["description"] == b["description"]
+        for a, b in zip(packet["bank_records"], wire["bank_records"])
+    )
+
+
+def test_run_all_cli_reports_bank_first_attempts_without_legacy_fields(
+    monkeypatch, tmp_path, caplog
+):
+    """Successful exports must not crash, or label a rejected attempt validated."""
+    import semantic_review as semantic
+
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        [
+            "semantic_review",
+            "run-all",
+            str(tmp_path),
+            "--output-dir",
+            str(tmp_path / "semantic-review"),
+            "--client-engagement",
+            str(tmp_path / "context.json"),
+        ],
+    )
+    monkeypatch.setattr(semantic, "_load_cli_client_engagement", lambda args: {})
+    monkeypatch.setattr(semantic, "_load_cli_worker_selection", lambda args: None)
+    monkeypatch.setattr(
+        semantic,
+        "run_semantic_resolution_pipeline",
+        lambda *a, **kw: {
+            "batch_count": 1,
+            "reviewed_bank_count": 1,
+            "human_review_count": 0,
+            "exhaustive": True,
+            "batches": [
+                {"directory": "00001-sol", "status": "rejected_format"},
+                {"directory": "00002-sol", "status": "validated"},
+            ],
+            "workbook": tmp_path / "final.xlsx",
+            "model_tokens": {},
+        },
+    )
+    messages = []
+    monkeypatch.setattr(
+        semantic,
+        "log_execution_status",
+        lambda out, message, *args: messages.append(message % args),
+    )
+    assert semantic.main() == 0
+    assert any('"status": "rejected_format"' in message for message in messages)
+    assert any("final reconciliation workbook" in message for message in messages)

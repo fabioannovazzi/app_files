@@ -367,7 +367,7 @@ def export_final_workbook(
             )
             primary_labels = {
                 "deterministic": "Regole certe",
-                "luna": "Risolti da Luna",
+                "luna": "Risolti dal modello iniziale",
                 "sol": "Risolti da Sol",
                 "human": "Dubbi bancari residui dopo Sol",
                 "error": "Errori tecnici",

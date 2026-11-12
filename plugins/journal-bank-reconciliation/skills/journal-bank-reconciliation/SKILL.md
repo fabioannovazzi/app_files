@@ -319,6 +319,21 @@ Omit `--tolerance` and `--date-window-days` to use the sealed recipe policy. If 
 
 ## Complete grouped review and final workbook
 
+On Codex, this workflow selects GPT-6.1 Terra at high reasoning for its first
+semantic stage. Other workflows retain their own selection policy; Sol escalation
+and all source, citation, arithmetic, coverage and non-reuse checks remain.
+The internal stage key `luna` is retained for state compatibility; use the actual
+launch receipt to identify the model. Packet-local B/J references are resolved
+locally back to exact source IDs before downstream validation.
+
+The shared controller now supplies indexed evidence subsets to both stages.
+Models can request read-only searches and subsequent pages using the structured
+JSON evidence protocol; they receive candidate counts and incomplete coverage.
+Keep unresolved alternatives visible. Never infer absence from a page or budget.
+Global reservations and downstream domain checks remain mandatory. Technical
+limits retain technical state and do not invent a professional question.
+See `references/workflow-reference.md` for budgets, pagination and replay.
+
 Always use the same production sequence: source qualification, strict matching,
 complete grouped review, exact arithmetic/coverage/non-reuse checks, and the
 final client workbook. The initial `reconciliation/journal_bank_reconciliation.xlsx`

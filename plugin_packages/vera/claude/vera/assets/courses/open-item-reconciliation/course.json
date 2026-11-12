@@ -120,7 +120,7 @@
     },
     {
       "path": "modules/open-item-reconciliation/scripts/semantic_resolution.py",
-      "sha256": "98eb29fc486c3fecbacb516fb87a957c88cfc036c3745ee9cb9d79c061225bbd"
+      "sha256": "f186e4423db14d7f0bc52ed568e81e85746fd8ebb5e43f825544360f152e0404"
     },
     {
       "path": "modules/open-item-reconciliation/skills/mparanza-open-item-reconciliation/SKILL.md",
@@ -797,5 +797,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1ffdcc28afcdf816169eed872ae61d3cb16a2c504236aeeea7cc476a22700e1d"
+  "canonical_course_sha256": "32b555385d379b9f0ccbe35e398f1a54d199ad98909bf54d86db29db839e1240"
 }

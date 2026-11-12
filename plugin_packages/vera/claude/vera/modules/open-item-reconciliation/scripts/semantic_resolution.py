@@ -801,7 +801,12 @@ def explanation_evidence(
         replayed = _replay(rows, evidence, assumptions)
         origins = {}
         for retained in assumptions[KEY]["bank_first"]["retained_native_evidence"]:
-            for group in retained["response"]["groups"]:
+            response = retained["response"]
+            if retained["packet"].get("retrieval"):
+                response = _bank_first_module().decode_response(
+                    retained["packet"], {"groups": response["groups"]}
+                )
+            for group in response["groups"]:
                 for target in group["journal_ids"]:
                     if any(
                         allocation["target_id"] == target
@@ -952,7 +957,7 @@ def semantic_artifact_paths(output: Path) -> set[str]:
             )
             is None
             and re.fullmatch(
-                r"semantic-review/(?:bank_first_(?:state|admission|result)\.json|bank-first-attempts/[0-9]{5}-(?:luna|sol)/(?:packet\.json|schema\.json|prompt\.md|response\.json|receipt\.json|native_host_request\.json|native_host_record\.json|luna_(?:response\.json|events\.jsonl|stderr\.log|launch_receipt\.json|process_events\.jsonl|process_stderr\.log|process_receipt\.json)))",
+                r"semantic-review/(?:\.retrieval\.lock|bank_first_(?:state|admission|result)\.json|bank-first-attempts/[0-9]{5}-(?:luna|sol)/(?:packet\.json|worker_packet\.json|row_reference_map\.json|schema\.json|prompt\.md|response\.json|receipt\.json|native_host_request\.json|native_host_record\.json|luna_(?:response\.json|events\.jsonl|stderr\.log|launch_receipt\.json|process_events\.jsonl|process_stderr\.log|process_receipt\.json)))",
                 relative,
             )
             is None

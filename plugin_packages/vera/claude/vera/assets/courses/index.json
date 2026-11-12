@@ -617,7 +617,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "73d22dc4bf82a9efb95605023d7a79de24283d7c83cd2ef9b4a039d5b0e40d08",
+      "sha256": "b955360b8add77f6ea1464f25bbd241e418eeb825a4f932dc6a77a2b06eab0e4",
       "languages": [
         "it",
         "en",
@@ -642,7 +642,7 @@
         "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
         "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       },
-      "source_sha256": "93742261751f446543aed549b84efe5d811949428f70f26a62be94c2650a5342"
+      "source_sha256": "cd76dac4a648681024366341c9d634f81baeef92d33e0b23ecd03601554d9dc0"
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "c1067bc1e683484330618276286e68ea93fda2c9a4a47168105f95283fb9e54e",
+      "sha256": "f98e18e46675c8d63e0f05c3d9ee8ff032c88355fe91457a0195848d586b74b6",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "def6cca468fd9cb061b26d1eaf03c0571cc6e1b99679d4ef110eca90401952e3"
+      "source_sha256": "d36a962314d499f0700719229a18ea99ee3842c1f71d5a86761b8cfb8fdc8fdd"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",

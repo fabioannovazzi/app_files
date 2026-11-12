@@ -222,3 +222,34 @@ for line in sys.stdin:
     selected = capabilities.select_worker("open-item-reconciliation")
 
     assert selected["model"] == catalog()["models"][0]["model"]
+
+
+def test_bank_reconciliation_uses_terra_without_changing_open_items(
+    capabilities, monkeypatch
+):
+    monkeypatch.setattr(
+        capabilities,
+        "_catalog",
+        lambda _: {
+            "runtime": "fixture",
+            "models": catalog()["models"] + catalog("gpt-6.1-terra")["models"],
+        },
+    )
+    selected = capabilities.select_worker("journal-bank-reconciliation")
+    assert selected["model"] == "gpt-6.1-terra"
+    assert selected["cost_class"] == "standard"
+    assert (
+        capabilities.validate_selection(selected, "journal-bank-reconciliation", None)[
+            0
+        ]
+        == "gpt-6.1-terra"
+    )
+    assert (
+        capabilities.select_worker("open-item-reconciliation")["model"] == "gpt-6-luna"
+    )
+
+
+def test_bank_reconciliation_does_not_fall_back_to_luna(capabilities, monkeypatch):
+    monkeypatch.setattr(capabilities, "_catalog", lambda _: catalog())
+    with pytest.raises(capabilities.UnsupportedWorkerCapability):
+        capabilities.select_worker("journal-bank-reconciliation")
