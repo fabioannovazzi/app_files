@@ -109,7 +109,7 @@ jobs:
       - name: Verify complete grouped review, replay and final workbook
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins
-          tests/plugins/test_grouped_reconciliation.py
+          tests/plugins/test_grouped_reconciliation.py tests/plugins/test_vera_bank_first.py
           --cov --cov-config=tests/plugins/grouped_reconciliation.coverage.ini
           --cov-report=term-missing --cov-fail-under=80
       - name: Verify rejected worker cost and diagnostic evidence retention
@@ -119,10 +119,10 @@ jobs:
           -k 'native_worker_retains_protocol or abstention or rejected_worker_response'
       - name: Check grouped reconciliation quality
         run: |
-          python -m black --check plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py tests/plugins/test_grouped_reconciliation.py
-          python -m isort --check-only plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py tests/plugins/test_grouped_reconciliation.py
-          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py
-          python -m bandit -q -ll plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py
+          python -m black --check plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py plugins/journal-bank-reconciliation/scripts/bank_first.py tests/plugins/test_vera_bank_first.py tests/plugins/test_grouped_reconciliation.py
+          python -m isort --check-only plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py plugins/journal-bank-reconciliation/scripts/bank_first.py tests/plugins/test_vera_bank_first.py tests/plugins/test_grouped_reconciliation.py
+          python -m mypy --follow-imports=skip --ignore-missing-imports plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py plugins/journal-bank-reconciliation/scripts/bank_first.py
+          python -m bandit -q -ll plugins/journal-bank-reconciliation/scripts/grouped_review.py plugins/journal-bank-reconciliation/scripts/grouped_workbook.py plugins/journal-bank-reconciliation/scripts/bank_working_copy.py plugins/journal-bank-reconciliation/scripts/bank_first.py
       - name: Verify zero-value journal retention and sample exclusion
         run: >-
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins

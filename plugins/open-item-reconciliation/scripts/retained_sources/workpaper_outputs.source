@@ -2710,6 +2710,7 @@ def _audit_cell_origin(
             "factoring_pro_soluto_closes_item",
             "compensation_requires_bank",
             "require_completed_review",
+            "manual_review_sample",
             "report_language",
             "document_language",
             "currency",

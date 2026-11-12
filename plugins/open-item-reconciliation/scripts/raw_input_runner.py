@@ -3143,6 +3143,7 @@ def run_raw_input_reconciliation(
     ).get("currency"):
         raise ValueError("Geneva reconciliation requires an explicit reviewed currency")
     active = {
+        "assurance_run_date": datetime.now().date().isoformat(),
         "scope_year": None,
         "cutoff_date": None,
         "report_language": requested_language,

@@ -629,23 +629,21 @@ def test_reconciliation_pages_explain_their_concrete_model_data_flow() -> None:
         assert "chat principale e di un agente secondario nativo" in model_block
         assert "non prova un isolamento del filesystem" in model_block
         assert "Le trascrizioni degli agenti possono restare nell’host" in model_block
-        if path.parent.name == "journal-bank-reconciliation":
-            assert "In Codex, Cowork e Antigravity" in model_block
-            assert "Cowork non esegue questo passaggio" not in model_block
-            assert "tutte le scritture contabili residue" in model_block
-            assert "un massimo di 25 movimenti" in model_block
-            assert "conservando il contesto delle contropartite" in model_block
-            assert "tenendo insieme i gruppi finanziari" in model_block
-            assert "2.400 caratteri del testo originale" in model_block
-            assert "produce il prospetto finale" in model_block
-            assert "i token osservati e gli errori di convalida" in model_block
-            assert "Gli abbinamenti rigorosi non vengono riscritti" in model_block
-        else:
-            assert "Su Codex" in model_block
-            assert "120 righe e 48.000 byte" in model_block
-            assert "La chat principale non cambia modello" in model_block
-            assert "Cowork e Antigravity non è ancora verificato" not in model_block
-            assert "nomi delle controparti" in model_block
+        # Both normal routes now declare the same bank-first processing and
+        # exposure contract; the legacy 120-row/48-KB limit is no longer current.
+        for snippet in (
+            "Luna e poi Sol su Codex, se disponibili",
+            "tutti i dubbi bancari o contabili rimasti",
+            "il contesto completo fornito",
+            "25 movimenti, con gruppi interi, entro 256 KiB",
+            "2.400 caratteri per registrazione PDF",
+            "Errori e limiti tecnici restano distinti dai dubbi",
+            "Gli esiti bancari non certificano la contabilità o la chiusura delle partite",
+            "La ripresa riutilizza ricevute ed esiti salvati senza ripetere il lavoro completato",
+        ):
+            assert snippet in model_block
+        assert "Cowork non esegue questo passaggio" not in model_block
+        assert "Cowork e Antigravity non è ancora verificato" not in model_block
 
     check_entries = (
         ROOT / "static" / "shared" / "check-entries" / "index.html"

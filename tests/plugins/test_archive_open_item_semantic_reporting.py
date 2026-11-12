@@ -82,7 +82,15 @@ def test_semantic_submission_has_coordinates_before_document_production(
         choices[str(path)] = choice
 
     capsule = semantic_resolution._capsule()
-    monkeypatch.setattr(capsule, "discover_worker_selection", lambda *_: {})
+    monkeypatch.setattr(
+        capsule,
+        "discover_worker_selection",
+        lambda *_, **kwargs: {
+            "model": "fixture-luna",
+            "reasoning_effort": "high",
+            "cost_class": "low",
+        },
+    )
 
     def worker(**kwargs):
         capsule._record_model_submission(

@@ -105,6 +105,7 @@ def reconciled_case(archive_core, client_case, tmp_path, request, monkeypatch):
         json.dumps(
             {
                 "assurance_run_date": "2026-10-20",
+                "manual_review_sample": True,
                 "scope_year": 2026,
                 "cutoff_date": "2026-09-30",
                 "amount_tolerance": "0.00",

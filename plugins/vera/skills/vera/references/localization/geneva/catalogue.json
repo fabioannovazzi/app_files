@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/archive-identity-reporting/plugins/vera",
-  "version": "0.1.619",
-  "captured_at": "2026-11-12T12:17:15.139994+00:00",
-  "catalogue_fingerprint": "f35856561291c145232401ae503e2fc033bfa82d005a9a472155bfd68c6517d3",
-  "manifest_sha256": "a4a1991f60174a254c0dbc63f28ea4588702fd51ed2fb4c5a8db9f51adcb90b1",
+  "root": "/private/tmp/vera-teamsystem-radio-release/plugins/vera",
+  "version": "0.1.621",
+  "captured_at": "2026-11-12T14:01:06.993213+00:00",
+  "catalogue_fingerprint": "57d160af79a1c1ad5830ba66352efcf62c090af29368b2f03354ddec082f45f5",
+  "manifest_sha256": "6d33d8273d80d219b7f4f3574ab8ca43ef128c576962415d12b50ec207e34454",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -144,7 +144,7 @@
     {
       "function_id": "journal-bank-reconciliation",
       "skill_path": "skills/journal-bank-reconciliation/SKILL.md",
-      "sha256": "19d5b45dd548a6a05d612cd56ad309cdeee7cc43f0e225585f6175acc3ad3011"
+      "sha256": "669daeff1df919c22e49fa09c5ed3e9c658ef6ee017c59900920e6a2f3e6e574"
     },
     {
       "function_id": "journal-sampling",
@@ -184,7 +184,7 @@
     {
       "function_id": "open-item-reconciliation",
       "skill_path": "skills/open-item-reconciliation/SKILL.md",
-      "sha256": "2b18680e8f7e431e230a37b7a7fa3c3f133d79234dea83ba771e9908117097ce"
+      "sha256": "ac8cf5d6e45722746e1488c16be2fa386a11cd1c0610dd7ac2a30305bccd40de"
     },
     {
       "function_id": "organizzazione-lavoro",

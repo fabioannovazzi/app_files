@@ -80,46 +80,58 @@ def write(path: Path, value: Any) -> None:
 
 def cents(value: Any) -> int:
     if isinstance(value, (float, bool)):
-        raise ValueError("Use an exact decimal amount")
+        raise ValueError(
+            "Importo: usa un valore decimale esatto, non un numero approssimato"
+        )
     try:
         number = Decimal(str(value))
         if not number.is_finite() or number * 100 != (number * 100).to_integral_value():
-            raise ValueError("Amounts require exact cents")
+            raise ValueError("Importo: sono ammessi al massimo due decimali esatti")
         return int(number * 100)
     except InvalidOperation as error:
-        raise ValueError("Invalid amount") from error
+        raise ValueError("Importo non valido") from error
 
 
-def lines_checked(item: dict, lines: list[dict], confirmed: bool) -> list[dict]:
+def lines_checked(
+    item: dict, lines: list[dict], chart: dict | None = None
+) -> list[dict]:
     if not isinstance(lines, list) or not 1 <= len(lines) <= 79:
-        raise ValueError("Supply between 1 and 79 counterpart lines")
+        raise ValueError("Inserisci da 1 a 79 contropartite")
     total = cents(item["bank"]["amount"])
     checked = []
-    for line in lines:
-        account = str(line["account"]).replace("/", "")
-        amount = cents(line["amount"])
-        side = line["side"]
-        if (
-            not re.fullmatch(r"\d{7}", account)
-            or account == "0000000"
-            or side not in {"D", "A"}
-            or amount <= 0
-            or amount >= 10**11
-        ):
-            raise ValueError("Invalid account, side or positive amount")
+    for index, line in enumerate(lines, 1):
+        account = str(line.get("account", "")).replace("/", "")
+        if not re.fullmatch(r"\d{7}", account) or account == "0000000":
+            raise ValueError(
+                f"Contropartita {index} · Conto: indica 7 cifre diverse da zero"
+            )
+        side = line.get("side")
+        if side not in {"D", "A"}:
+            raise ValueError(f"Contropartita {index} · scegli Dare o Avere")
+        try:
+            amount = cents(line.get("amount", ""))
+        except ValueError as error:
+            raise ValueError(f"Contropartita {index} · {error}") from error
+        if amount <= 0 or amount >= 10**11:
+            raise ValueError(
+                f"Contropartita {index} · Importo: indica un valore positivo inferiore a 1.000.000.000,00"
+            )
+        if chart and not any(row["code"] == account for row in chart["accounts"]):
+            raise ValueError(
+                f"Contropartita {index} · Conto non presente nel piano dei conti acquisito per questo cliente"
+            )
         total += amount if side == "D" else -amount
         partita = str(line.get("partita", "")).strip()
         year = str(line.get("year", "")).strip()
         section = str(line.get("section", "")).strip()
         if partita or year or section:
             if (
-                not confirmed
-                or not re.fullmatch(r"\d{1,6}", partita)
+                not re.fullmatch(r"\d{1,6}", partita)
                 or not re.fullmatch(r"\d{4}", year)
                 or not re.fullmatch(r"\d{1,2}", section)
             ):
                 raise ValueError(
-                    "Confirm the actual partita, year and section, or clear all three"
+                    f"Contropartita {index} · Partita, anno e sezionale: compila tutti e tre con 1–6, 4 e 1–2 cifre, oppure lasciali tutti vuoti"
                 )
         checked.append(
             {
@@ -132,7 +144,9 @@ def lines_checked(item: dict, lines: list[dict], confirmed: bool) -> list[dict]:
             }
         )
     if total:
-        raise ValueError("Dare and Avere do not balance against the bank movement")
+        raise ValueError(
+            "Totale Dare e Totale Avere non coincidono con il movimento bancario"
+        )
     return checked
 
 
@@ -142,6 +156,10 @@ def load(directory: Path) -> tuple[dict, dict]:
         raise ValueError("Unsupported posting proposal schema")
     if fingerprint(case["batch"]) != case["batch_sha256"]:
         raise ValueError("The original proposals changed")
+    if case.get("chart_of_accounts") and fingerprint(
+        case["chart_of_accounts"]
+    ) != case.get("chart_sha256"):
+        raise ValueError("Il piano dei conti acquisito è cambiato")
     state = read(directory / STATE)
     if state["batch_sha256"] != case["batch_sha256"]:
         raise ValueError("Decisions belong to another proposal batch")
@@ -153,7 +171,14 @@ def revision(directory: Path) -> str:
     return fingerprint([case, state])
 
 
-def prepare(directory: Path, batch: dict, *, run_id: str, source_sha256: str) -> dict:
+def prepare(
+    directory: Path,
+    batch: dict,
+    *,
+    run_id: str,
+    source_sha256: str,
+    chart: dict | None = None,
+) -> dict:
     items = batch["items"]
     ids = [row["id"] for row in items]
     if not 1 <= len(items) <= 5000 or len(ids) != len(set(ids)):
@@ -173,6 +198,26 @@ def prepare(directory: Path, batch: dict, *, run_id: str, source_sha256: str) ->
         "batch_sha256": fingerprint(batch),
         "batch": batch,
     }
+    if chart is not None:
+        accounts = chart.get("accounts", [])
+        if (
+            not re.fullmatch(r"[a-f0-9]{64}", chart.get("source_sha256", ""))
+            or not chart.get("source_binding_id")
+            or not chart.get("client_id")
+            or not isinstance(accounts, list)
+            or not 1 <= len(accounts) <= 10000
+            or len({row.get("code") for row in accounts}) != len(accounts)
+            or any(
+                not re.fullmatch(r"\d{7}", row.get("code", ""))
+                or row["code"] == "0000000"
+                or not isinstance(row.get("name"), str)
+                or not 1 <= len(row["name"].strip()) <= 300
+                for row in accounts
+            )
+        ):
+            raise ValueError("Piano dei conti acquisito non valido")
+        case["chart_of_accounts"] = copy.deepcopy(chart)
+        case["chart_sha256"] = fingerprint(chart)
     if (directory / CASE).exists():
         old, _ = load(directory)
         if old != case:
@@ -194,10 +239,18 @@ def prepare(directory: Path, batch: dict, *, run_id: str, source_sha256: str) ->
 
 
 def projection(directory: Path, args: dict) -> dict:
+    from posting_export_formats import formats
+
     case, state = load(directory)
     items = []
     for source in case["batch"]["items"]:
         row = copy.deepcopy(source)
+        row["bank"]["amount"] = f"{Decimal(cents(row['bank']['amount']))/100:.2f}"
+        for line in row["proposed_lines"]:
+            try:
+                line["amount"] = f"{Decimal(cents(line['amount']))/100:.2f}"
+            except (ValueError, KeyError):
+                pass  # Retain invalid original proposals for correction, never accept them.
         decision = state["decisions"].get(row["id"])
         row["status"] = decision["status"] if decision else "pending"
         row["decision"] = decision
@@ -216,6 +269,24 @@ def projection(directory: Path, args: dict) -> dict:
         if not view.startswith("POSTING_") or key not in PROPOSAL_TYPES:
             raise ValueError("Unknown posting proposal filter")
         items = [row for row in items if row["proposal_type"] == key]
+    search_text = args.get("search_text", "").strip()
+    decision_filter = args.get("decision_filter", "all")
+    if decision_filter not in {"all", "unsaved", "pending", "accepted", "rejected"}:
+        raise ValueError("Filtro decisioni non valido")
+    if len(search_text) > 200:
+        raise ValueError("Ricerca troppo lunga")
+    if decision_filter == "unsaved":
+        items = [row for row in items if row["decision"] is None]
+    elif decision_filter != "all":
+        items = [
+            row for row in items if row["decision"] and row["status"] == decision_filter
+        ]
+    if search_text:
+        items = [
+            row
+            for row in items
+            if search_text.casefold() in json.dumps(row, ensure_ascii=False).casefold()
+        ]
     offset = args.get("offset", 0)
     selected = next((x for x in items if x["id"] == args.get("item_id")), None)
     if selected is None and not args.get("item_id"):
@@ -229,6 +300,26 @@ def projection(directory: Path, args: dict) -> dict:
         "selection": selected,
         "total": len(items),
         "data": {
+            "export_formats": formats(),
+            "chart_of_accounts": case.get("chart_of_accounts"),
+            "search_text": search_text,
+            "decision_filter": decision_filter,
+            "next_id": next(
+                (
+                    row["id"]
+                    for i, row in enumerate(items)
+                    if selected and i > 0 and items[i - 1]["id"] == selected["id"]
+                ),
+                None,
+            ),
+            "next_offset": next(
+                (
+                    (i // 30) * 30
+                    for i, row in enumerate(items)
+                    if selected and i > 0 and items[i - 1]["id"] == selected["id"]
+                ),
+                offset,
+            ),
             "counts": counts,
             "population_total": len(all_items),
             "saved_count": sum(row["decision"] is not None for row in all_items),
@@ -262,16 +353,14 @@ def save_decision(directory: Path, item_id: str, review: dict, *, actor: str) ->
         )
     ):
         raise ValueError("Invalid posting draft lines")
-    confirmed = review.get("partita_confirmed") is True
     if status == "accepted":
-        lines = lines_checked(item, lines, confirmed)
+        lines = lines_checked(item, lines, case.get("chart_of_accounts"))
     note = str(review.get("note", ""))
     if len(note) > 4000 or len(json.dumps(lines)) > 100_000:
         raise ValueError("Posting correction is oversized")
     decision = {
         "status": status,
         "lines": lines,
-        "partita_confirmed": confirmed,
         "note": note,
         "actor": actor,
         "attribution": "configured operator; no authenticated professional identity claim",
@@ -291,47 +380,18 @@ def save_decision(directory: Path, item_id: str, review: dict, *, actor: str) ->
 
 
 def record(batch: dict, item: dict, lines: list[dict]) -> bytes:
-    raw = list(" " * 6999)
+    from posting_export_formats import adapter, reviewed_entry
 
-    def put(position: int, width: int, value: str, numeric: bool = False) -> None:
-        if len(value) > width:
-            raise ValueError("IMPPN field exceeds its documented width")
-        raw[position - 1 : position - 1 + width] = (
-            value.rjust(width, "0") if numeric else value.ljust(width)
-        )
-
-    put(1, 5, str(batch["company"]), True)
-    put(6, 1, "3")
-    put(7, 1, "0")
-    put(268, 3, "027")
-    put(271, 15, "VERA REVISIONE")
-    put(286, 18, item["id"][:18])
-    put(372, 8, date.fromisoformat(item["bank"]["date"]).strftime("%d%m%Y"))
-    put(6814, 20, ("VERA-" + item["id"])[:20])
-    money = cents(item["bank"]["amount"])
-    all_lines = [
-        {
-            "account": batch["bank_account"],
-            "amount": f"{Decimal(abs(money))/100:.2f}",
-            "side": "D" if money > 0 else "A",
-        },
-        *lines,
-    ]
-    for index, line in enumerate(all_lines):
-        pos = 973 + 64 * index
-        put(pos, 7, line["account"].replace("/", ""), True)
-        put(pos + 7, 1, line["side"])
-        put(pos + 8, 12, str(cents(line["amount"])).zfill(11) + "+")
-        if line.get("partita"):
-            put(pos + 38, 6, line["partita"], True)
-            put(pos + 44, 4, line["year"], True)
-            put(6291 + 2 * index, 2, line["section"], True)
-    if not any(row.get("partita") for row in lines):
-        put(6964, 1, "N")
-    return "".join(raw).encode("cp1252", errors="strict") + b"\r\n"
+    entry = reviewed_entry(batch, item, lines, decision_status="accepted_saved")
+    selected = adapter()
+    assert selected.encode is not None
+    return selected.encode(entry)
 
 
-def export_reviewed(directory: Path) -> dict:
+def export_reviewed(directory: Path, format_id: str = "teamsystem_imppn_v1") -> dict:
+    from posting_export_formats import adapter, reviewed_entry
+
+    selected = adapter(format_id)
     case, state = load(directory)
     rows, excluded = [], []
     for item in case["batch"]["items"]:
@@ -344,14 +404,20 @@ def export_reviewed(directory: Path) -> dict:
                 }
             )
             continue
-        lines = lines_checked(item, decision["lines"], decision["partita_confirmed"])
-        rows.append(record(case["batch"], item, lines))
+        lines = lines_checked(item, decision["lines"], case.get("chart_of_accounts"))
+        entry = reviewed_entry(
+            case["batch"], item, lines, decision_status="accepted_saved"
+        )
+        assert selected.encode is not None
+        rows.append(selected.encode(entry))
     if not rows:
         raise ValueError(
             "No accepted entries to export: accetta e salva almeno un movimento"
         )
     decisions_sha256 = fingerprint(state["decisions"])
-    filename = "TRAF2000_REVISIONE_" + decisions_sha256[:16] + ".txt"
+    filename = (
+        str(selected.filename_prefix) + decisions_sha256[:16] + str(selected.extension)
+    )
     target = directory / filename
     payload = b"".join(rows)
     if target.exists() and target.read_bytes() != payload:
@@ -365,6 +431,11 @@ def export_reviewed(directory: Path) -> dict:
         "records": len(rows),
         "excluded": excluded,
         "decisions_sha256": decisions_sha256,
+        "format_id": selected.identifier,
+        "label": selected.label,
+        "standard": selected.standard,
+        "format_version": selected.version,
+        "journal_contract": "vera.reviewed_journal_entry.v1",
         "import_tested": False,
     }
     write(directory / (filename + ".json"), receipt)
@@ -377,6 +448,10 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--client-engagement", required=True)
     parser.add_argument("--batch-input-id", required=True)
+    parser.add_argument(
+        "--chart-input-id",
+        help="Registered client chart JSON: client_id and accounts [{code,name}]",
+    )
     args = parser.parse_args()
     import sys
 
@@ -398,11 +473,29 @@ def main() -> None:
     )
     source = Path(binding["path"])
     batch = read(source)
+    chart = None
+    if args.chart_input_id:
+        chart_binding = next(
+            row
+            for row in context["input_bindings"]
+            if row["binding_id"] == args.chart_input_id
+        )
+        chart_path = Path(chart_binding["path"])
+        chart_source = read(chart_path)
+        if chart_source.get("client_id") != context["client_id"]:
+            raise ValueError("Il piano dei conti appartiene a un altro cliente")
+        chart = {
+            "client_id": context["client_id"],
+            "accounts": chart_source["accounts"],
+            "source_binding_id": args.chart_input_id,
+            "source_sha256": hashlib.sha256(chart_path.read_bytes()).hexdigest(),
+        }
     result = prepare(
         Path(context["output_dir"]),
         batch,
         run_id=context["run_id"],
         source_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
+        chart=chart,
     )
     import logging
 

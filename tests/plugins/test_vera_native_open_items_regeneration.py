@@ -99,6 +99,7 @@ def prepared_raw_case(
         title="Titolo della revisione fittizia",
         narrative="Testo professionale fittizio da conservare.",
         assumptions={
+            "manual_review_sample": True,
             "scope_year": "2026",
             "cutoff_date": "2026-03-31",
             "assurance_run_date": "2026-09-14",

@@ -564,423 +564,225 @@ def complete_grouped_review(
     client_engagement: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
     codex_bin: Path | None = None,
+    purpose: str = "bank_open_items",
 ) -> dict[str, Any]:
-    """The single normal post-matching route: grouped review, checks, final workbook."""
+    """The normal route uses the shared bank-first state, including strict rows."""
+    import bank_first
     import semantic_review as semantic
     from grouped_workbook import export_final_workbook
 
-    started = time.time()
     reconciliation = semantic._resolved_reconciliation_dir(reconciliation_dir)
     output = semantic._semantic_output_dir(reconciliation, output_dir)
     replay = semantic._validated_source_replay(
         reconciliation, client_engagement=client_engagement
     )
-    source_binding = replay["source_binding"]
-    fingerprint = _digest(source_binding)
-    state_path = output / "grouped_review_state.json"
-    state = (
-        _read(state_path)
-        if state_path.exists()
-        else {
-            "schema_version": PROTOCOL,
-            "source_binding_sha256": fingerprint,
-            "groups": [],
-            "attempts": [],
-        }
-    )
-    if (
-        state["schema_version"] != PROTOCOL
-        or state["source_binding_sha256"] != fingerprint
-    ):
-        raise ValueError(
-            "Grouped review state belongs to different source or implementation bytes"
-        )
+    binding = replay["source_binding"]
     roots = semantic._artifact_roots_from_intake(
         reconciliation,
         _read(reconciliation / "run_intake.json"),
         client_engagement=client_engagement,
     )
-    bank = replay["bank"].to_dicts()
-    journal = replay["journal"].to_dicts()
-    source_evidence = extract_grouped_source_evidence(journal, roots)
-    if state_path.exists():
-        if state.get("content_sha256") != _digest(
-            {k: v for k, v in state.items() if k != "content_sha256"}
-        ):
-            raise ValueError("Grouped state digest changed")
-        restored_groups: list[dict[str, Any]] = []
-        for saved in state["attempts"]:
-            parent = Path(saved["launch_receipt"]).parent
-            if parent.parent != output / "grouped-attempts":
-                raise ValueError("Grouped receipt escapes this run")
-            receipt = _read(Path(saved["launch_receipt"]))
-            if saved["status"] == "rejected_protocol":
-                if (
-                    receipt["content_sha256"]
-                    != _digest(
-                        {k: v for k, v in receipt.items() if k != "content_sha256"}
-                    )
-                    or receipt["packet_sha256"] != saved["packet_sha256"]
-                ):
-                    raise ValueError("Retained protocol receipt changed")
-                for name, key in (
-                    (semantic.PROCESS_EVENTS_NAME, "events_sha256"),
-                    (semantic.PROCESS_STDERR_NAME, "stderr_sha256"),
-                ):
-                    if (
-                        hashlib.sha256((parent / name).read_bytes()).hexdigest()
-                        != receipt["process"][key]
-                    ):
-                        raise ValueError("Retained protocol evidence changed")
-                if (
-                    saved["usage"] != receipt["jsonl_observation"]["usage"]
-                    or saved["duration_ms"] != receipt["process"]["duration_ms"]
-                ):
-                    raise ValueError("Retained protocol cost changed")
-                continue
-            response_path = parent / "luna_response.json"
-            response = _read(response_path)
-            if (
-                hashlib.sha256(response_path.read_bytes()).hexdigest()
-                != receipt["process"]["response_sha256"]
-            ):
-                raise ValueError("Retained grouped response changed")
-            if receipt["content_sha256"] != _digest(
-                {k: v for k, v in receipt.items() if k != "content_sha256"}
-            ):
-                raise ValueError("Retained grouped launch receipt changed")
-            if saved["status"] != "validated":
-                continue
-            b_used = {i for g in restored_groups for i in g["bank_ids"]}
-            j_used = {i for g in restored_groups for i in g["journal_ids"]}
-            expected = build_grouped_packet(
-                [r for r in bank if r["transaction_id"] not in b_used],
-                [r for r in journal if r["transaction_id"] not in j_used],
-                source_binding=source_binding,
-                policy=replay["relationship_policy"],
-                source_evidence=source_evidence,
-            )
-            if _read(parent / "packet.json") != expected:
-                raise ValueError(
-                    "Retained grouped packet differs from current source replay"
-                )
-            restored_groups.extend(validate_grouped_response(expected, response))
-        if restored_groups != state["groups"]:
-            raise ValueError(
-                "Saved grouped decisions differ from retained model responses"
-            )
-    attempts_dir = output / "grouped-attempts"
-    attempts_dir.mkdir(exist_ok=True)
-    if attempts_dir.is_symlink():
-        raise ValueError("Grouped attempt directory must be ordinary")
-    while True:
-        used_bank = {i for g in state["groups"] for i in g["bank_ids"]}
-        used_journal = {i for g in state["groups"] for i in g["journal_ids"]}
-        remaining_bank = [r for r in bank if r["transaction_id"] not in used_bank]
-        remaining_journal = [
-            r for r in journal if r["transaction_id"] not in used_journal
-        ]
-        if not remaining_bank and not remaining_journal:
-            break
-        packet = build_grouped_packet(
-            remaining_bank,
-            remaining_journal,
-            source_binding=source_binding,
-            policy=replay["relationship_policy"],
-            source_evidence=source_evidence,
-        )
-        previous_error = None
-        accepted = False
-        for retry in range(MAX_ATTEMPTS):
-            # Accepted state advances only after complete validation. A failed
-            # response keeps its generic launcher receipt, including token usage.
-            number = len(state["attempts"]) + 1
-            directory = attempts_dir / f"attempt.{number:04d}"
-            directory.mkdir(exist_ok=True)
-            packet_path = directory / "packet.json"
-            if packet_path.exists() and _read(packet_path) != packet:
-                raise ValueError("Pending grouped packet changed")
-            _write(packet_path, packet)
-            prompt = _prompt(packet, previous_error)
-            (directory / "prompt.md").write_text(prompt)
-            schema = grouped_output_schema()
-            if len(prompt.encode()) > semantic.MAX_PROMPT_BYTES:
-                _write(
-                    output / "grouped_review_status.json",
-                    {
-                        "status": "incomplete",
-                        "reason": "complete_residual_context_exceeds_native_packet_bytes",
-                        "accepted_group_count": len(state["groups"]),
-                    },
-                )
-                raise ValueError(
-                    "Complete residual context exceeds native packet bytes; no final workbook was produced"
-                )
-            selection = worker_selection or semantic.discover_worker_selection(
-                workflow_id="journal-bank-reconciliation"
-            )
-            try:
-                call = semantic.run_isolated_native_worker(
-                    prompt=prompt,
-                    output_schema=schema,
-                    output_dir=directory,
-                    workflow_id="journal-bank-reconciliation",
-                    packet_sha256=packet["packet_sha256"],
-                    worker_selection=selection,
-                    codex_bin=codex_bin,
-                    source_records=[
-                        {"record_id": row["transaction_id"], "fields": list(row)}
-                        for row in [*packet["bank_records"], *packet["journal_records"]]
-                    ],
-                )
-            except semantic.WorkerResponseFormatError as exc:
-                if exc.process_receipt != directory / semantic.PROCESS_RECEIPT_NAME:
-                    raise ValueError(
-                        "Protocol rejection lacks its retained process receipt"
-                    ) from exc
-                receipt = _read(exc.process_receipt)
-                previous_error = str(exc)
-                attempt = {
-                    "attempt": number,
-                    "packet_sha256": packet["packet_sha256"],
-                    "worker_run": str(directory / "grouped_worker_run.json"),
-                    "launch_receipt": str(exc.process_receipt),
-                    "usage": receipt["jsonl_observation"]["usage"],
-                    "duration_ms": receipt["process"]["duration_ms"],
-                    "status": "rejected_protocol",
-                    "validation_error": previous_error,
-                }
-                state["attempts"].append(attempt)
-                _write(directory / "grouped_worker_run.json", attempt)
-                _save_state(state_path, state)
-                after = semantic._validated_source_replay(
-                    reconciliation, client_engagement=client_engagement
-                )
-                if after["source_binding"] != source_binding:
-                    raise ValueError(
-                        "Source bindings changed during grouped review"
-                    ) from exc
-                continue
-            receipt = _read(Path(call["launch_receipt"]))
-            usage = call.get("usage") or receipt.get("jsonl_observation", {}).get(
-                "usage"
-            )
-            attempt = {
-                "attempt": number,
-                "packet_sha256": packet["packet_sha256"],
-                "worker_run": str(directory / "grouped_worker_run.json"),
-                "launch_receipt": str(call["launch_receipt"]),
-                "usage": usage,
-                "duration_ms": receipt["process"].get("duration_ms"),
-                "status": "returned",
-            }
-            response = call["response_payload"]
-            state["attempts"].append(attempt)
-            _write(directory / "grouped_worker_run.json", attempt)
-            _save_state(state_path, state)
-            try:
-                groups = validate_grouped_response(packet, response)
-            except ValueError as exc:
-                previous_error = str(exc)
-                attempt.update(status="rejected", validation_error=previous_error)
-                _write(directory / "grouped_worker_run.json", attempt)
-                _save_state(state_path, state)
-                continue
-            # A changed source is not a model-format retry. Stop, keeping the
-            # returned receipt and its tokens without accepting stale evidence.
-            after = semantic._validated_source_replay(
-                reconciliation, client_engagement=client_engagement
-            )
-            if after["source_binding"] != source_binding:
-                attempt.update(status="source_changed")
-                _write(directory / "grouped_worker_run.json", attempt)
-                _save_state(state_path, state)
-                raise ValueError("Source bindings changed during grouped review")
-            attempt.update(
-                status="validated",
-                group_count=len(groups),
-                reviewed_bank_count=sum(len(g["bank_ids"]) for g in groups),
-            )
-            state["groups"].extend(groups)
-            _write(directory / "grouped_worker_run.json", attempt)
-            _write(directory / "validated_groups.json", groups)
-            _save_state(state_path, state)
-            accepted = True
-            break
-        if not accepted:
-            _write(
-                output / "grouped_review_status.json",
-                {
-                    "status": "incomplete",
-                    "reason": previous_error,
-                    "accepted_group_count": len(state["groups"]),
-                },
-            )
-            raise ValueError(
-                f"Grouped response failed validation after {MAX_ATTEMPTS} retained attempts: {previous_error}"
-            )
+    bank, journal = _csv(reconciliation / "normalized_bank.csv"), _csv(
+        reconciliation / "normalized_journal.csv"
+    )
+    evidence = extract_grouped_source_evidence(journal, roots)
+    for row in journal:
+        if row["transaction_id"] in evidence:
+            row["original_posting_text"] = evidence[row["transaction_id"]]
 
-    all_bank = _csv(reconciliation / "normalized_bank.csv")
-    all_journal = _csv(reconciliation / "normalized_journal.csv")
-    bank_by_id = {r["transaction_id"]: r for r in all_bank}
-    journal_by_id = {r["transaction_id"]: r for r in all_journal}
-    relations = list(state["groups"])
-    strict_pairs = _csv(reconciliation / "reconciliation_matches.csv")
-    # Connected components reproduce the strict matcher's already accepted
-    # reference groups. They do not discover semantic relationships by amount.
-    components: list[tuple[set[str], set[str]]] = []
-    for row in strict_pairs:
-        bank_ids = {row["bank_transaction_id"]}
-        journal_ids = {row["journal_transaction_id"]}
-        remaining = []
-        for left, right in components:
-            if bank_ids & left or journal_ids & right:
-                bank_ids |= left
-                journal_ids |= right
-            else:
-                remaining.append((left, right))
-        components = [*remaining, (bank_ids, journal_ids)]
-    for bank_ids, journal_ids in components:
-        b_ids = [
-            r["transaction_id"] for r in all_bank if r["transaction_id"] in bank_ids
-        ]
-        j_ids = [
-            r["transaction_id"]
-            for r in all_journal
-            if r["transaction_id"] in journal_ids
-        ]
-        bank_sum = sum(
-            (Decimal(bank_by_id[i]["amount_signed"]) for i in b_ids), Decimal(0)
-        )
-        journal_sum = sum(
-            (Decimal(journal_by_id[i]["amount_signed"]) for i in j_ids), Decimal(0)
-        )
-        delta = bank_sum - journal_sum
-        relations.append(
+    def source_check() -> None:
+        if (
+            semantic._validated_source_replay(
+                reconciliation, client_engagement=client_engagement
+            )["source_binding"]
+            != binding
+        ):
+            raise ValueError("Source bindings changed during native bank review")
+
+    canonical = bank_first.run_bank_first(
+        bank,
+        journal,
+        output,
+        source_binding=binding,
+        relationship=replay["relationship_policy"],
+        worker_selection=worker_selection,
+        codex_bin=codex_bin,
+        source_check=source_check,
+        purpose=purpose,
+    )
+    if canonical["errors"]:
+        _write(
+            output / "grouped_review_status.json",
             {
-                "bank_ids": b_ids,
-                "journal_ids": j_ids,
-                "status": "concordant" if delta == 0 else "difference",
-                "title": bank_by_id[b_ids[0]]["description"],
-                "rationale": "Relazione rigorosa conservata secondo riferimenti, importi e date del criterio registrato.",
-                "required_documents": (
-                    []
-                    if delta == 0
-                    else [
-                        "Verificare lo scarto monetario ammesso dal criterio rigoroso."
-                    ]
-                ),
-                "evidence": [],
-                "method": "strict",
-                "bank_sum": str(bank_sum),
-                "journal_sum": str(journal_sum),
-                "difference": str(delta),
-            }
+                "status": "incomplete",
+                "review_complete": False,
+                "primary_counts": canonical["summary"]["primary_counts"],
+                "secondary_counts": canonical["summary"]["secondary_counts"],
+                "errors": canonical["errors"],
+            },
         )
-    for number, group in enumerate(relations, 1):
-        group["id"] = f"R{number:03d}"
-    currencies = {
-        r.get("currency") or replay["relationship_policy"].get("default_currency")
-        for r in [*all_bank, *all_journal]
-    }
-    units = {
-        r.get("unit") or replay["relationship_policy"].get("default_unit")
-        for r in [*all_bank, *all_journal]
-    }
-    if len(currencies) != 1 or None in currencies or len(units) != 1 or None in units:
         raise ValueError(
-            "A scalar final bank-account workbook cannot sum mixed or unknown currencies/units"
+            "Native bank review incomplete: "
+            + "; ".join(
+                error["reason"] or "unknown error" for error in canonical["errors"]
+            )
         )
-    summary = _summary(relations, all_bank, all_journal)
-    summary["currency"] = next(iter(currencies))
-    summary["unit"] = next(iter(units))
-    summary["strict_match_count"] = len(
-        {row["bank_transaction_id"] for row in strict_pairs}
-    )
-    summary["strict_pair_count"] = replay["audit"]["matched_count"]
-    usage_known = all(
-        isinstance(a["usage"], dict)
-        and "input_tokens" in a["usage"]
-        and "output_tokens" in a["usage"]
-        for a in state["attempts"]
-    )
+    usages = [a.get("usage") for a in canonical["attempts"]]
     tokens = (
         {
-            key: sum(a["usage"].get(key, 0) for a in state["attempts"])
+            key: sum(usage.get(key, 0) for usage in usages)
             for key in ("input_tokens", "output_tokens")
         }
-        if usage_known
+        if all(
+            isinstance(usage, dict)
+            and "input_tokens" in usage
+            and "output_tokens" in usage
+            for usage in usages
+        )
         else None
     )
     if tokens is not None:
         tokens["total_tokens"] = tokens["input_tokens"] + tokens["output_tokens"]
+    relations = []
+    for group in canonical["groups"]:
+        item = dict(group)
+        resolved = group["bank_resolution"]["status"] == "resolved"
+        item.update(
+            status=(
+                (
+                    "difference"
+                    if group.get("confirmed_discrepancy")
+                    else "concordant" if group["journal_ids"] else "bank_explained"
+                )
+                if resolved
+                else "needs_review"
+            ),
+            title=group["bank_resolution"]["scope"],
+            rationale=group["bank_resolution"]["explanation"],
+            required_documents=group["bank_resolution"]["questions"],
+            evidence=group["bank_resolution"]["evidence"],
+            method=group.get("resolved_at", group.get("stage", "deterministic")),
+        )
+        for side, rows in (("bank", bank), ("journal", journal)):
+            item[side + "_sum"] = str(
+                sum(
+                    (
+                        Decimal(row["amount_signed"])
+                        for row in rows
+                        if row["transaction_id"] in item[side + "_ids"]
+                    ),
+                    Decimal(0),
+                )
+            )
+        item["difference"] = str(
+            Decimal(item["bank_sum"]) - Decimal(item["journal_sum"])
+        )
+        relations.append(item)
+    used_bank = {i for g in relations for i in g["bank_ids"]}
+    used_journal = {i for g in relations for i in g["journal_ids"]}
+    for side, rows, used in (
+        ("bank", bank, used_bank),
+        ("journal", journal, used_journal),
+    ):
+        for row in rows:
+            if row["transaction_id"] in used:
+                continue
+            amount = Decimal(row["amount_signed"])
+            relations.append(
+                {
+                    "bank_ids": [row["transaction_id"]] if side == "bank" else [],
+                    "journal_ids": [row["transaction_id"]] if side == "journal" else [],
+                    "status": "needs_review" if side == "bank" else "unmatched",
+                    "title": (
+                        "Elaborazione non conclusa"
+                        if side == "bank"
+                        else "Fonte contabile non riservata"
+                    ),
+                    "rationale": (
+                        "Consultare gli errori tecnici"
+                        if side == "bank"
+                        else "Nessun collegamento bancario accertato; eventuali candidati restano contesto."
+                    ),
+                    "required_documents": [],
+                    "evidence": [],
+                    "bank_sum": str(amount if side == "bank" else 0),
+                    "journal_sum": str(amount if side == "journal" else 0),
+                    "difference": str(amount if side == "bank" else -amount),
+                    "method": "unprocessed" if side == "bank" else "source_only",
+                }
+            )
+    for index, group in enumerate(relations, 1):
+        group["id"] = f"R{index:03d}"
+    totals = _summary(relations, bank, journal)
+    totals.update(canonical["summary"])
+    totals["bank_rows_requiring_documents"] = canonical["summary"]["primary_counts"][
+        "human"
+    ]
+    for field in ("currency", "unit"):
+        values = {
+            row.get(field) or replay["relationship_policy"].get("default_" + field)
+            for row in [*bank, *journal]
+        }
+        if len(values) != 1 or not all(values):
+            raise ValueError("Final scalar workbook requires one known currency/unit")
+        totals[field] = next(iter(values))
+    totals.update(
+        strict_match_count=sum(
+            len(g["bank_ids"])
+            for g in canonical["groups"]
+            if g.get("resolved_at") == "deterministic"
+        ),
+        strict_pair_count=replay["audit"]["matched_count"],
+    )
     result = {
-        "schema_version": PROTOCOL,
-        "source_binding": source_binding,
-        "summary": summary,
+        "schema_version": bank_first.PROTOCOL,
+        "source_binding": binding,
+        "summary": totals,
         "relations": relations,
-        "model_attempts": state["attempts"],
+        "bank_first": canonical,
+        "model_attempts": canonical["attempts"],
         "model_tokens": tokens,
-        "elapsed_seconds": time.time() - started,
         "strict_reconciliation_unchanged": True,
-        "professional_adoption": "pending",
+        "entries_posted": False,
     }
     workbook = output / "Riconciliazione_banca_partitario.xlsx"
     status_path = output / "grouped_review_status.json"
-    reuse_workbook = False
     if workbook.exists():
         previous = _read(status_path)
         if (
             previous.get("workbook_sha256")
             != hashlib.sha256(workbook.read_bytes()).hexdigest()
         ):
-            raise ValueError(
-                "Existing final workbook changed; preserve its reviewed bytes"
-            )
-        reuse_workbook = True
-    candidate = output / ".final-workbook.candidate.xlsx"
-    if not reuse_workbook:
+            raise ValueError("Existing final workbook changed; preserve reviewed bytes")
+        if _read(output / "grouped_reconciliation_result.json") != result:
+            raise ValueError("Existing final result differs; use a new output revision")
+    else:
         export_final_workbook(
-            candidate,
-            result,
-            all_bank,
-            all_journal,
-            source_evidence=source_evidence,
-            client_label=(
-                Path(client_engagement["studio_client_folder"]["client_root"]).name
-                if client_engagement
-                else ""
-            ),
+            workbook, result, bank, journal, source_evidence=evidence, client_label=""
         )
-        candidate.replace(workbook)
-    result["elapsed_seconds"] = time.time() - started
-    if reuse_workbook:
-        previous_result = _read(output / "grouped_reconciliation_result.json")
-        result["last_replay_elapsed_seconds"] = result["elapsed_seconds"]
-        result["elapsed_seconds"] = previous_result["elapsed_seconds"]
     _write(output / "grouped_reconciliation_result.json", result)
     _write(
         status_path,
         {
-            "status": "completed",
-            "review_complete": True,
+            "status": "completed" if totals["review_complete"] else "incomplete",
+            "review_complete": totals["review_complete"],
             "workbook": str(workbook),
             "workbook_sha256": hashlib.sha256(workbook.read_bytes()).hexdigest(),
-            "financial_reconciliation_has_open_items": summary[
-                "bank_rows_requiring_documents"
-            ]
+            "financial_reconciliation_has_open_items": totals["primary_counts"]["human"]
             > 0,
+            "primary_counts": totals["primary_counts"],
+            "secondary_counts": totals["secondary_counts"],
         },
     )
-    _register_result_lineage(output, all_bank, all_journal, source_evidence)
+    _register_result_lineage(output, bank, journal, evidence)
     return {
-        "batch_count": sum(a["status"] == "validated" for a in state["attempts"]),
-        "batches": state["attempts"],
-        "exhaustive": True,
+        "batch_count": sum(a["status"] == "validated" for a in canonical["attempts"]),
+        "batches": canonical["attempts"],
+        "exhaustive": totals["review_complete"],
         "reviewed_bank_count": len(bank),
-        "human_review_count": summary["bank_rows_requiring_documents"],
+        "human_review_count": totals["primary_counts"]["human"],
         "workbook": workbook,
         "result": output / "grouped_reconciliation_result.json",
         "model_tokens": tokens,
-        "summary": summary,
+        "summary": totals,
     }

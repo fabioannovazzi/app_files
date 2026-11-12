@@ -24,6 +24,7 @@ assert SPEC and SPEC.loader
 grouped = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(grouped)
 POLICY = {
+    "relationship_shape": "many_to_many",
     "default_currency": "EUR",
     "default_unit": "currency",
     "default_entity_ref": "case",
@@ -271,13 +272,40 @@ def _environment(
             exc = FormatError("Worker emitted multiple completed messages")
             exc.process_receipt = path
             raise exc
-        if p["journal_records"]:
+        if {r["transaction_id"] for r in p["journal_records"]} == {"j1", "j2", "j3"}:
             groups = [
                 decision(["b1"], ["j1", "j2"]),
                 decision(["b2"], ["j3"], name="Beta"),
             ]
+        elif p["journal_records"]:
+            groups = [
+                decision(
+                    [entry["bank_ids"][0]],
+                    [
+                        next(
+                            (
+                                record["transaction_id"]
+                                for record in p["journal_records"]
+                                if record.get("reference")
+                                and record.get("reference")
+                                == next(
+                                    row.get("reference")
+                                    for row in p["bank_records"]
+                                    if row["transaction_id"] == entry["bank_ids"][0]
+                                )
+                            ),
+                            p["journal_records"][index]["transaction_id"],
+                        )
+                    ],
+                )
+                for index, entry in enumerate(p["focus"])
+            ]
         else:
-            groups = [decision([i], [], status="unmatched") for i in p["focus_ids"]]
+            groups = [
+                decision([i], [], status="unmatched")
+                for entry in p["focus"]
+                for i in entry["bank_ids"]
+            ]
         for item in groups:
             for citation in item["evidence"]:
                 record = next(
@@ -286,8 +314,72 @@ def _environment(
                     if r["transaction_id"] == citation["transaction_id"]
                 )
                 citation["quote"] = record["description"]
+        if p["focus"] and all(
+            entry["question_scope"] == "accounting" for entry in p["focus"]
+        ):
+            groups = [
+                decision(previous["bank_ids"], previous["journal_ids"])
+                for previous in p["prior_conclusions"]
+                if any(
+                    set(previous["bank_ids"]) == set(entry["bank_ids"])
+                    for entry in p["focus"]
+                )
+            ]
+            for item in groups:
+                for citation in item["evidence"]:
+                    citation["quote"] = next(
+                        r["description"]
+                        for r in p[citation["side"] + "_records"]
+                        if r["transaction_id"] == citation["transaction_id"]
+                    )
+        # The normal producer now has separate bank/accounting conclusions.
+        typed = []
+        for item in groups:
+            citations = item["evidence"] or [
+                {
+                    "side": "bank",
+                    "transaction_id": i,
+                    "field": "description",
+                    "quote": next(
+                        r["description"]
+                        for r in p["bank_records"]
+                        if r["transaction_id"] == i
+                    ),
+                }
+                for i in item["bank_ids"]
+            ]
+            resolution = lambda status, scope: {
+                "status": status,
+                "scope": scope,
+                "explanation": item["rationale"],
+                "evidence": citations,
+                "questions": [],
+            }
+            typed.append(
+                {
+                    "bank_ids": item["bank_ids"],
+                    "journal_ids": item["journal_ids"],
+                    "bank_resolution": resolution(
+                        (
+                            "carry_forward"
+                            if all(
+                                entry["question_scope"] == "accounting"
+                                for entry in p["focus"]
+                            )
+                            else "resolved"
+                        ),
+                        "bank_cash",
+                    ),
+                    "accounting_resolution": resolution("complete", "account_level"),
+                    "proposed_account_codes": [],
+                    "account_codes_are_alternatives": True,
+                    "allocations": [],
+                    "change_basis": "additional_analysis_of_supplied_evidence",
+                }
+            )
+        groups = typed
         if reject_first and len(calls) == 1:
-            groups[0]["evidence"][0]["quote"] = "invented evidence"
+            groups[0]["bank_resolution"]["evidence"][0]["quote"] = "invented evidence"
         response = {"packet_sha256": p["packet_sha256"], "groups": groups}
         response_bytes = (
             json.dumps(response, indent=2, ensure_ascii=False) + "\n"
@@ -295,7 +387,37 @@ def _environment(
         response_path = directory / "luna_response.json"
         response_path.write_bytes(response_bytes)
         receipt_content = {
+            "schema_version": "vera.luna_launch_receipt.v1",
+            "workflow_id": kwargs["workflow_id"],
+            "packet_sha256": p["packet_sha256"],
+            "packet": {
+                "prompt_sha256": hashlib.sha256(kwargs["prompt"].encode()).hexdigest(),
+                "output_schema_sha256": hashlib.sha256(
+                    (
+                        json.dumps(
+                            kwargs["output_schema"], ensure_ascii=False, indent=2
+                        )
+                        + "\n"
+                    ).encode()
+                ).hexdigest(),
+            },
+            "requested_worker_configuration": {
+                **kwargs["worker_selection"],
+                "direct_model_api": False,
+                "ephemeral": True,
+            },
+            "boundary": {
+                "canaries": {
+                    key: True
+                    for key in (
+                        "exact_schema_read_succeeded",
+                        "outside_capsule_read_denied",
+                        "required_cli_capabilities_available",
+                    )
+                }
+            },
             "process": {
+                "return_code": 0,
                 "duration_ms": 100,
                 "response_sha256": hashlib.sha256(response_bytes).hexdigest(),
             },
@@ -312,7 +434,12 @@ def _environment(
         receipt = {**receipt_content, "content_sha256": digest}
         receipt_path = directory / "luna_launch_receipt.json"
         receipt_path.write_text(json.dumps(receipt))
-        return {"launch_receipt": receipt_path, "response_payload": response}
+        return {
+            "launch_receipt": receipt_path,
+            "response_payload": response,
+            "usage": {"input_tokens": 10, "output_tokens": 4},
+            "duration_ms": 100,
+        }
 
     monkeypatch.setitem(
         sys.modules,
@@ -328,7 +455,14 @@ def _environment(
                 "audit": {"matched_count": 0},
             },
             _artifact_roots_from_intake=lambda *args, **kwargs: {},
-            discover_worker_selection=lambda **kwargs: {"host": "codex"},
+            discover_worker_selection=lambda **kwargs: {
+                "host": "codex",
+                "model": (
+                    "fixture-luna" if kwargs.get("stage") == "luna" else "fixture-sol"
+                ),
+                "reasoning_effort": "high",
+                "cost_class": "low" if kwargs.get("stage") == "luna" else "escalation",
+            },
             run_isolated_native_worker=worker,
             WorkerResponseFormatError=FormatError,
             PROCESS_RECEIPT_NAME="luna_process_receipt.json",
@@ -357,8 +491,8 @@ def test_complete_review_retains_rejected_call_tokens_then_exports_same_four_she
         "output_tokens": 8,
         "total_tokens": 28,
     }
-    assert [a["status"] for a in result["batches"]] == ["rejected", "validated"]
-    assert (output / "grouped-attempts/attempt.0001/luna_response.json").exists()
+    assert [a["status"] for a in result["batches"]] == ["rejected_format", "validated"]
+    assert (output / "bank-first-attempts/00001-luna/luna_response.json").exists()
     assert result["summary"]["concordant_bank_count"] == 2
     assert (reconciliation / "normalized_bank.csv").read_bytes() == baseline
     book = openpyxl.load_workbook(result["workbook"], data_only=True)
@@ -370,7 +504,7 @@ def test_complete_review_retains_rejected_call_tokens_then_exports_same_four_she
     assert book["Relazioni"]["C6"].value == "C001\nC002"
     assert book["Banca"]["A6"].value == "B001"
     assert book["Partitario"]["A6"].value == "C001"
-    assert book["Sintesi"]["B15"].value == 2
+    assert book["Sintesi"]["B16"].value == 2
     assert book["Banca"].max_row == 7
     assert book["Partitario"].max_row == 8
 
@@ -381,10 +515,16 @@ def test_final_workbook_preserves_strict_split_reference_group_without_reusing_r
     reconciliation, output, calls = _environment(
         tmp_path, monkeypatch, bank=[], journal=[]
     )
-    _write_csv(reconciliation / "normalized_bank.csv", [row("b", "-100")])
+    _write_csv(
+        reconciliation / "normalized_bank.csv",
+        [{**row("b", "-100"), "reference": "settlement-1", "party_ref": "party-1"}],
+    )
     _write_csv(
         reconciliation / "normalized_journal.csv",
-        [row("j1", "-99"), row("j2", "-1")],
+        [
+            {**row("j1", "-99"), "reference": "settlement-1", "party_ref": "party-1"},
+            {**row("j2", "-1"), "reference": "settlement-1", "party_ref": "party-1"},
+        ],
     )
     _write_csv(
         reconciliation / "reconciliation_matches.csv",
@@ -396,13 +536,14 @@ def test_final_workbook_preserves_strict_split_reference_group_without_reusing_r
 
     result = grouped.complete_grouped_review(reconciliation, output)
 
-    assert calls == []
+    assert len(calls) == 1
+    assert calls[0]["focus"][0]["question_scope"] == "accounting"
     assert result["summary"]["strict_match_count"] == 1
     retained = json.loads(result["result"].read_text())
     assert len(retained["relations"]) == 1
     assert retained["relations"][0]["journal_ids"] == ["j1", "j2"]
     assert retained["relations"][0]["difference"] == "0"
-    assert result["model_tokens"]["total_tokens"] == 0
+    assert result["model_tokens"]["total_tokens"] == 14
 
 
 def test_complete_review_batches_35_rows_without_dropping_context_or_reusing_evidence(
@@ -414,11 +555,15 @@ def test_complete_review_batches_35_rows_without_dropping_context_or_reusing_evi
 
     result = grouped.complete_grouped_review(reconciliation, output)
 
-    assert [len(p["focus_ids"]) for p in calls] == [25, 10]
+    assert [
+        len([i for entry in p["focus"] for i in entry["bank_ids"]]) for p in calls
+    ] == [25, 10]
     assert len(calls[0]["bank_records"]) == 35
-    assert not set(calls[0]["focus_ids"]) & set(calls[1]["focus_ids"])
+    assert not {i for entry in calls[0]["focus"] for i in entry["bank_ids"]} & {
+        i for entry in calls[1]["focus"] for i in entry["bank_ids"]
+    }
     assert result["exhaustive"] is True
-    assert result["summary"]["bank_status_counts"] == {"unmatched": 35}
+    assert result["summary"]["bank_status_counts"] == {"bank_explained": 35}
 
 
 def test_final_workbook_keeps_source_references_and_counterparties_for_equal_amounts(
@@ -483,13 +628,13 @@ def test_final_workbook_keeps_source_references_and_counterparties_for_equal_amo
     assert book["Relazioni"]["E6"].value == -610
     assert book["Sintesi"]["B8"].value == -1220
     assert book["Sintesi"]["D8"].value == 0
-    assert book["Sintesi"]["B15"].value == 2
+    assert book["Sintesi"]["B16"].value == 2
     formulas = openpyxl.load_workbook(result["workbook"], data_only=False)
     assert (
         formulas["Relazioni"]["D6"].value
         == "=SUMIF(Banca!$B$6:$B$7,A6,Banca!$G$6:$G$7)"
     )
-    assert formulas["Sintesi"]["B15"].value == '=COUNTIF(Banca!$H$6:$H$7,"Concorde")'
+    assert formulas["Sintesi"]["B16"].value == '=COUNTIF(Banca!$H$6:$H$7,"Concorde")'
 
 
 def test_complete_review_resumes_from_validated_decisions_without_another_model_call(
@@ -497,16 +642,14 @@ def test_complete_review_resumes_from_validated_decisions_without_another_model_
 ) -> None:
     reconciliation, output, calls = _environment(tmp_path, monkeypatch)
     first = grouped.complete_grouped_review(reconciliation, output)
-    original_duration = json.loads(first["result"].read_text())["elapsed_seconds"]
+    original_bytes = first["result"].read_bytes()
 
     second = grouped.complete_grouped_review(reconciliation, output)
 
     assert len(calls) == 1
     assert second["summary"] == first["summary"]
     assert second["model_tokens"] == first["model_tokens"]
-    assert (
-        json.loads(second["result"].read_text())["elapsed_seconds"] == original_duration
-    )
+    assert second["result"].read_bytes() == original_bytes
 
 
 def test_complete_review_does_not_deliver_intermediate_workbook_after_host_denial(
@@ -514,7 +657,7 @@ def test_complete_review_does_not_deliver_intermediate_workbook_after_host_denia
 ) -> None:
     reconciliation, output, calls = _environment(tmp_path, monkeypatch, denied=True)
 
-    with pytest.raises(OSError, match="host denied"):
+    with pytest.raises(ValueError, match="host denied"):
         grouped.complete_grouped_review(reconciliation, output)
 
     assert calls == []
@@ -527,11 +670,11 @@ def test_native_packet_byte_overflow_retains_full_context_without_a_false_final_
     reconciliation, output, calls = _environment(tmp_path, monkeypatch)
     monkeypatch.setattr(sys.modules["semantic_review"], "MAX_PROMPT_BYTES", 1)
 
-    with pytest.raises(ValueError, match="Complete residual context exceeds"):
+    with pytest.raises(ValueError, match="Complete bank context exceeds"):
         grouped.complete_grouped_review(reconciliation, output)
 
     retained = json.loads(
-        (output / "grouped-attempts/attempt.0001/packet.json").read_text()
+        (output / "bank-first-attempts/00001-luna/packet.json").read_text()
     )
     assert len(retained["bank_records"]) == 2
     assert len(retained["journal_records"]) == 3
@@ -721,10 +864,10 @@ def test_source_change_after_a_returned_call_stops_without_retry_and_keeps_its_t
         grouped.complete_grouped_review(reconciliation, output)
 
     assert len(calls) == 1
-    state = json.loads((output / "grouped_review_state.json").read_text())
+    state = json.loads((output / "bank_first_state.json").read_text())
     assert state["attempts"][0]["usage"] == {"input_tokens": 10, "output_tokens": 4}
-    assert state["attempts"][0]["status"] == "source_changed"
-    assert state["groups"] == []
+    assert state["attempts"][0]["status"] == "validated"
+    assert len(state["groups"]) == 2
     assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
 
 
@@ -754,7 +897,7 @@ def test_grouped_review_retries_tool_free_protocol_rejection_retains_cost_and_re
 
     assert len(calls) == 2
     assert [a["status"] for a in result["batches"]] == [
-        "rejected_protocol",
+        "rejected_format",
         "validated",
     ]
     assert result["model_tokens"] == {
@@ -774,11 +917,11 @@ def test_grouped_review_rejects_changed_retained_protocol_events(
         tmp_path, monkeypatch, protocol_first=True
     )
     grouped.complete_grouped_review(reconciliation, output)
-    (output / "grouped-attempts/attempt.0001/luna_process_events.jsonl").write_text(
+    (output / "bank-first-attempts/00001-luna/luna_process_events.jsonl").write_text(
         "changed"
     )
 
-    with pytest.raises(ValueError, match="protocol evidence changed"):
+    with pytest.raises(ValueError, match="attempt evidence changed"):
         grouped.complete_grouped_review(reconciliation, output)
 
     assert len(calls) == 2
