@@ -86,3 +86,10 @@ onboarding reason was correctly preceded by the new CI delivery exclusion.
 Those two tests now opt into delivery only after installing an explicit offline
 opener or fail-on-network transport. All 70 privacy/receipt/file-identity tests
 pass locally. Production guards and package bytes are unchanged.
+
+A final receipt-fixture sweep reproduced the same branch-precedence issue in
+the installed Cowork tutorial marker test. Its supplied opener fails on every
+network attempt; that test now explicitly selects automatic delivery so it can
+exercise the separate onboarding exclusion. The focused test passes (one Vera
+case; two explicit non-Vera skips). This changes only the test and no product
+archive or production/CI guard. Fresh exact-head CI remains required.
