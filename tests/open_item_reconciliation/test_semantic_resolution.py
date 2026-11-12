@@ -1511,6 +1511,14 @@ def test_current_supported_native_allocations_replay_after_rendered_closure(
     items, bank = population()
 
     def response(packet, **kwargs):
+        if not packet["journal_records"]:
+            return {
+                "packet_sha256": packet["packet_sha256"],
+                "groups": [],
+                "evidence_requests": [{"side": "journal", "text": "FT 2026"}],
+                "retain": {"bank": [], "journal": []},
+                "working_note": "Retrieve invoice evidence.",
+            }
         citations = [
             {
                 "side": "bank",
@@ -1581,7 +1589,7 @@ def test_current_supported_native_allocations_replay_after_rendered_closure(
     assert all(row["reconciliation_status"] == "closed" for row in updated)
     assert len(semantic.resolution_ledgers(updated, bank, assumptions)) == 1
     origins = semantic.explanation_evidence(updated, bank, assumptions)
-    retained = assumptions[semantic.KEY]["bank_first"]["retained_native_evidence"][0]
+    retained = assumptions[semantic.KEY]["bank_first"]["retained_native_evidence"][-1]
     assert origins["invoice-0"]["packet_sha256"] == retained["packet"]["packet_sha256"]
     assert (
         origins["invoice-0"]["response_sha256"]
@@ -1599,7 +1607,7 @@ def test_current_supported_native_allocations_replay_after_rendered_closure(
     from audit_assurance import validate_assurance_run
 
     assert validate_assurance_run(tmp_path)["content_sha256"]
-    assert len(native.calls) == 1
+    assert len(native.calls) == 2
 
 
 def test_current_exact_closed_bank_fact_needs_no_native_or_duplicate_semantic_adoption(

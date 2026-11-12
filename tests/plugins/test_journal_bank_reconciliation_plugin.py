@@ -485,12 +485,13 @@ def isolated_worker_catalog(monkeypatch: pytest.MonkeyPatch) -> None:
             "runtime": "unit-test Codex harness",
             "models": [
                 {
-                    "model": "gpt-6-luna",
+                    "model": model,
                     "supportedReasoningEfforts": [
                         {"reasoningEffort": effort}
                         for effort in ("low", "medium", "high", "xhigh", "max")
                     ],
                 }
+                for model in ("gpt-6-luna", "gpt-6.1-terra")
             ],
         },
     )
@@ -505,7 +506,7 @@ def _semantic_cli_fixture_command() -> list[str]:
         "import sys,runpy;"
         f"sys.path.insert(0,{str(SCRIPT_DIR)!r});"
         "import worker_capabilities as w;"
-        "w._catalog=lambda _: {'runtime':'unit-test harness','models':[{'model':'gpt-6-luna','supportedReasoningEfforts':[{'reasoningEffort':'high'}]}]};"
+        "w._catalog=lambda _: {'runtime':'unit-test harness','models':[{'model':m,'supportedReasoningEfforts':[{'reasoningEffort':'high'}]} for m in ('gpt-6-luna','gpt-6.1-terra')]};"
         "from types import SimpleNamespace; w.shutil=SimpleNamespace(which=lambda _:'/test/codex');"
         f"runpy.run_path({str(SEMANTIC_REVIEW_PATH)!r},run_name='__main__')"
     )
@@ -8934,7 +8935,7 @@ def test_semantic_prepare_builds_bounded_hash_bound_advisory_graph(
     )
     assert graph["requested_worker_configuration"] == {
         "execution": "separate_pinned_codex_exec",
-        "model": "gpt-6-luna",
+        "model": "gpt-6.1-terra",
         "reasoning_effort": "high",
         "selection_review": graph["requested_worker_configuration"]["selection_review"],
         "ephemeral": True,
@@ -9471,7 +9472,7 @@ def test_semantic_validate_applies_certainty_funnel_without_changing_strict_ledg
         "perfect_match": 0,
     }
     assert review_queue["items"] == []
-    assert worker_run["requested_worker_configuration"]["model"] == "gpt-6-luna"
+    assert worker_run["requested_worker_configuration"]["model"] == "gpt-6.1-terra"
     assert worker_run["requested_worker_configuration"]["reasoning_effort"] == "high"
     assert worker_run["runtime_attestation"] == {
         "separate_thread_and_usage_observed": True,
@@ -10702,7 +10703,7 @@ def test_semantic_run_worker_launches_separate_pinned_luna_capsule(
         (semantic_dir / "semantic_review_status.json").read_text(encoding="utf-8")
     )
     assert command[0] == "/usr/bin/sandbox-exec"
-    assert command[command.index("--model") + 1] == "gpt-6-luna"
+    assert command[command.index("--model") + 1] == "gpt-6.1-terra"
     assert 'model_reasoning_effort="high"' in command
     assert "--disable" in command
     assert "shell_tool" in command
@@ -10719,11 +10720,13 @@ def test_semantic_run_worker_launches_separate_pinned_luna_capsule(
     assert _tree_snapshot(reconciliation_dir) == authoritative_before
 
 
+@pytest.mark.parametrize("platform_name", ["Linux", "Windows"])
 def test_semantic_run_worker_fails_closed_on_unqualified_platform(
     monkeypatch: pytest.MonkeyPatch,
+    platform_name: str,
 ) -> None:
     semantic_review = load_semantic_review()
-    monkeypatch.setattr(semantic_review.platform, "system", lambda: "Linux")
+    monkeypatch.setattr(semantic_review.platform, "system", lambda: platform_name)
 
     with pytest.raises(ValueError, match="only on macOS"):
         semantic_review._darwin_build_version()
@@ -14696,3 +14699,160 @@ def test_rejected_worker_response_retains_usage_without_accepting_suggestions(
     assert not (output / semantic.VALIDATED_SUGGESTIONS_NAME).exists()
     assert not (output / semantic.WORKER_RUN_NAME).exists()
     assert _tree_snapshot(reconciliation) == original
+
+
+def test_windows_worker_uses_native_runtime_without_apple_prerequisites(
+    monkeypatch, tmp_path
+):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic.platform, "system", lambda: "Windows")
+    monkeypatch.setattr(semantic.platform, "version", lambda: "future-windows-build")
+    monkeypatch.setattr(
+        semantic, "_resolved_codex_binary", lambda _: tmp_path / "codex.exe"
+    )
+    observed = []
+    monkeypatch.setattr(
+        semantic,
+        "_stable_executable_binding",
+        lambda path, **kwargs: observed.append(path)
+        or {"sha256": "a" * 64, "byte_count": 12},
+    )
+    monkeypatch.setattr(
+        semantic,
+        "_observed_darwin_build",
+        lambda: pytest.fail("Apple prerequisite on Windows"),
+    )
+    runtime = semantic._qualified_executables(None)
+    assert runtime["host_profile"].platform == "Windows"
+    assert runtime["host_profile"].sandbox_exec_path == tmp_path / "codex.exe"
+    assert Path("/usr/bin/sandbox-exec") not in observed
+    status = semantic.inspect_execution_host()
+    assert status["worker_executed"] is False
+    assert status["canaries_executed"] is False
+    assert status["live_isolation_probes_required_before_submission"] is True
+
+
+def test_windows_host_status_missing_runtime_does_not_claim_canaries(monkeypatch):
+    semantic = load_semantic_review()
+    monkeypatch.setattr(semantic.platform, "system", lambda: "Windows")
+
+    def missing(_):
+        raise ValueError("Codex CLI is unavailable")
+
+    monkeypatch.setattr(semantic, "_qualified_executables", missing)
+    status = semantic.inspect_execution_host()
+    assert status["status"] == "unsupported"
+    assert status["worker_executed"] is False
+    assert status["canaries_executed"] is False
+    assert status["checks"][0]["check"] == "native_windows_runtime"
+
+
+@pytest.mark.parametrize("failure", [None, "read", "write", "cli"])
+def test_windows_sandbox_probes_enforce_boundaries_before_dispatch(
+    monkeypatch, tmp_path, failure
+):
+    import dataclasses
+    import tomllib
+
+    semantic = load_semantic_review()
+    capsule = tmp_path / "capsule"
+    capsule.mkdir()
+    schema = capsule / "schema.json"
+    schema.write_bytes(b"{}")
+    profile = dataclasses.replace(
+        semantic._resolve_host_profile(),
+        platform="Windows",
+        contract_id=semantic.WINDOWS_WORKER_BOUNDARY_CONTRACT_ID,
+        sandbox_exec_path=tmp_path / "codex.exe",
+        canary_path=tmp_path / "python.exe",
+    )
+    commands = []
+
+    def capture(command, **kwargs):
+        commands.append(command)
+        config = tomllib.loads(command[command.index("-c") + 1])
+        policy = next(iter(config["permissions"].values()))
+        assert policy["filesystem"][":root"] == "deny"
+        assert policy["filesystem"][str(capsule)] == "read"
+        assert "--include-managed-config" in command
+        assert "--permission-profile" in command
+        if command[-1] == str(schema):
+            return {"return_code": 0, "stdout": b"{}", "stderr": b""}
+        if command[-1] == "--version":
+            return {"return_code": 0, "stdout": b"codex-cli future", "stderr": b""}
+        if command[-1] == "--help":
+            return {"return_code": int(failure == "cli"), "stdout": b"", "stderr": b""}
+        writing = any("forbidden" in arg for arg in command)
+        return {
+            "return_code": int(failure != ("write" if writing else "read")),
+            "stdout": b"",
+            "stderr": b"denied",
+        }
+
+    monkeypatch.setattr(semantic, "_run_captured_process", capture)
+    args = dict(
+        semantic_dir=tmp_path,
+        profile_path=capsule / "policy",
+        schema_path=schema,
+        schema_bytes=b"{}",
+        capsule=capsule,
+        state_dir=capsule / "state",
+        log_dir=capsule / "log",
+        boundary_inputs={
+            "auth_path": tmp_path / "auth.json",
+            "installation_id_path": tmp_path / "installation_id",
+        },
+        executables={"host_profile": profile, "codex_path": profile.sandbox_exec_path},
+    )
+    if failure:
+        with pytest.raises(ValueError):
+            semantic._qualification_canaries(**args)
+    else:
+        checks = semantic._qualification_canaries(**args)
+        assert checks["outside_capsule_read_denied"]
+        assert checks["outside_capsule_write_denied"]
+        assert checks["required_cli_capabilities_available"]
+        assert len(commands) == 5
+
+
+def test_windows_receipt_records_native_command_instead_of_apple_launcher():
+    import dataclasses
+
+    semantic = load_semantic_review()
+    profile = dataclasses.replace(semantic._resolve_host_profile(), platform="Windows")
+    command = semantic._redacted_worker_argv(
+        host_profile=profile, model="gpt-6.1-terra", reasoning_effort="high"
+    )
+    assert command[0] == "codex"
+    assert "sandbox-exec" not in command
+    assert "--include-managed-config" in command
+    assert command[command.index("--model") + 1] == "gpt-6.1-terra"
+    assert "--ignore-user-config" in command
+
+
+def test_windows_capsule_profile_preserves_drive_paths_spaces_and_unicode():
+    import tomllib
+    from pathlib import PureWindowsPath
+
+    semantic = load_semantic_review()
+    root = PureWindowsPath(r"C:\Users\Studio è\Case files")
+    codex = PureWindowsPath(r"C:\Program Files\Codex\codex.exe")
+    capsule = root / "capsule"
+    command = semantic._windows_sandbox_prefix(
+        executable=codex,
+        codex=codex,
+        capsule=capsule,
+        state_dir=capsule / "state",
+        log_dir=capsule / "log",
+        boundary_inputs={
+            "auth_path": root / "auth.json",
+            "installation_id_path": root / "installation_id",
+        },
+    )
+    profile = next(
+        iter(tomllib.loads(command[command.index("-c") + 1])["permissions"].values())
+    )
+    assert profile["filesystem"][str(root / "auth.json")] == "read"
+    assert profile["filesystem"][str(capsule / "state")] == "write"
+    assert profile["filesystem"][":root"] == "deny"
+    assert command[-1] == str(codex)

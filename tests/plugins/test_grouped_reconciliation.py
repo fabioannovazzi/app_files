@@ -237,6 +237,7 @@ def _environment(
     )
     (reconciliation / "run_intake.json").write_text("{}")
     calls = []
+    rejection_sent = [False]
 
     class FormatError(ValueError):
         pass
@@ -272,6 +273,26 @@ def _environment(
             exc = FormatError("Worker emitted multiple completed messages")
             exc.process_receipt = path
             raise exc
+        # Simulated worker follows the read-only protocol for missing evidence.
+        # Broad search is intentional in this tiny exporter fixture.
+        if p.get("retrieval") and p["retrieval"]["not_in_context"]["journal"]:
+            from bank_first import reference_map
+
+            pages = p["retrieval"]["pages"]
+            last = pages[-1] if pages else {}
+            query = {"side": "journal"}
+            if last.get("query", {}) == {"side": "journal"} or last.get(
+                "query", {}
+            ).get("cursor"):
+                query["cursor"] = last.get("next_cursor")
+            response = {
+                "packet_sha256": p["packet_sha256"],
+                "groups": [],
+                "evidence_requests": [query],
+                "retain": {side: list(refs) for side, refs in reference_map(p).items()},
+                "working_note": "Retrieve remaining fixture evidence before deciding.",
+            }
+            return finish(response, kwargs, p, directory)
         if {r["transaction_id"] for r in p["journal_records"]} == {"j1", "j2", "j3"}:
             groups = [
                 decision(["b1"], ["j1", "j2"]),
@@ -378,9 +399,22 @@ def _environment(
                 }
             )
         groups = typed
-        if reject_first and len(calls) == 1:
+        if reject_first and not rejection_sent[0]:
+            rejection_sent[0] = True
             groups[0]["bank_resolution"]["evidence"][0]["quote"] = "invented evidence"
         response = {"packet_sha256": p["packet_sha256"], "groups": groups}
+        return finish(response, kwargs, p, directory)
+
+    def finish(response, kwargs, p, directory):
+        from bank_first import _translate, reference_map
+
+        response = _translate(
+            response,
+            {
+                side: {identifier: ref for ref, identifier in mapping.items()}
+                for side, mapping in reference_map(p).items()
+            },
+        )
         response_bytes = (
             json.dumps(response, indent=2, ensure_ascii=False) + "\n"
         ).encode()
@@ -485,13 +519,17 @@ def test_complete_review_retains_rejected_call_tokens_then_exports_same_four_she
 
     result = grouped.complete_grouped_review(reconciliation, output)
 
-    assert len(calls) == 2
+    assert len(calls) == 3
     assert result["model_tokens"] == {
-        "input_tokens": 20,
-        "output_tokens": 8,
-        "total_tokens": 28,
+        "input_tokens": 30,
+        "output_tokens": 12,
+        "total_tokens": 42,
     }
-    assert [a["status"] for a in result["batches"]] == ["rejected_format", "validated"]
+    assert [a["status"] for a in result["batches"]] == [
+        "evidence_requested",
+        "rejected_format",
+        "validated",
+    ]
     assert (output / "bank-first-attempts/00001-luna/luna_response.json").exists()
     assert result["summary"]["concordant_bank_count"] == 2
     assert (reconciliation / "normalized_bank.csv").read_bytes() == baseline
@@ -558,7 +596,8 @@ def test_complete_review_batches_35_rows_without_dropping_context_or_reusing_evi
     assert [
         len([i for entry in p["focus"] for i in entry["bank_ids"]]) for p in calls
     ] == [25, 10]
-    assert len(calls[0]["bank_records"]) == 35
+    assert len(calls[0]["bank_records"]) == 25
+    assert calls[0]["retrieval"]["not_in_context"]["bank"] == 10
     assert not {i for entry in calls[0]["focus"] for i in entry["bank_ids"]} & {
         i for entry in calls[1]["focus"] for i in entry["bank_ids"]
     }
@@ -646,7 +685,7 @@ def test_complete_review_resumes_from_validated_decisions_without_another_model_
 
     second = grouped.complete_grouped_review(reconciliation, output)
 
-    assert len(calls) == 1
+    assert len(calls) == 2
     assert second["summary"] == first["summary"]
     assert second["model_tokens"] == first["model_tokens"]
     assert second["result"].read_bytes() == original_bytes
@@ -670,14 +709,15 @@ def test_native_packet_byte_overflow_retains_full_context_without_a_false_final_
     reconciliation, output, calls = _environment(tmp_path, monkeypatch)
     monkeypatch.setattr(sys.modules["semantic_review"], "MAX_PROMPT_BYTES", 1)
 
-    with pytest.raises(ValueError, match="Complete bank context exceeds"):
+    with pytest.raises(ValueError, match="Working context"):
         grouped.complete_grouped_review(reconciliation, output)
 
     retained = json.loads(
         (output / "bank-first-attempts/00001-luna/packet.json").read_text()
     )
     assert len(retained["bank_records"]) == 2
-    assert len(retained["journal_records"]) == 3
+    assert len(retained["journal_records"]) == 1
+    assert retained["retrieval"]["not_in_context"]["journal"] == 2
     assert calls == []
     assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
     assert (
@@ -854,7 +894,7 @@ def test_source_change_after_a_returned_call_stops_without_retry_and_keeps_its_t
         nonlocal replay_count
         replay_count += 1
         result = original(*args, **kwargs)
-        if replay_count > 1:
+        if replay_count > 2:
             result["source_binding"] = {"hash": "changed"}
         return result
 
@@ -866,8 +906,8 @@ def test_source_change_after_a_returned_call_stops_without_retry_and_keeps_its_t
     assert len(calls) == 1
     state = json.loads((output / "bank_first_state.json").read_text())
     assert state["attempts"][0]["usage"] == {"input_tokens": 10, "output_tokens": 4}
-    assert state["attempts"][0]["status"] == "validated"
-    assert len(state["groups"]) == 2
+    assert state["attempts"][0]["status"] == "technical_error"
+    assert state["groups"] == []
     assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
 
 
@@ -882,7 +922,7 @@ def test_resume_preserves_user_changed_final_workbook_instead_of_overwriting_it(
         grouped.complete_grouped_review(reconciliation, output)
 
     assert first["workbook"].read_bytes() == b"user changed workbook"
-    assert len(calls) == 1
+    assert len(calls) == 2
 
 
 def test_grouped_review_retries_tool_free_protocol_rejection_retains_cost_and_replays_without_call(
@@ -895,15 +935,16 @@ def test_grouped_review_retries_tool_free_protocol_rejection_retains_cost_and_re
     result = grouped.complete_grouped_review(reconciliation, output)
     replayed = grouped.complete_grouped_review(reconciliation, output)
 
-    assert len(calls) == 2
+    assert len(calls) == 3
     assert [a["status"] for a in result["batches"]] == [
         "rejected_format",
+        "evidence_requested",
         "validated",
     ]
     assert result["model_tokens"] == {
-        "input_tokens": 17,
-        "output_tokens": 7,
-        "total_tokens": 24,
+        "input_tokens": 27,
+        "output_tokens": 11,
+        "total_tokens": 38,
     }
     assert replayed["model_tokens"] == result["model_tokens"]
     assert result["batches"][0]["duration_ms"] == 50
@@ -924,4 +965,4 @@ def test_grouped_review_rejects_changed_retained_protocol_events(
     with pytest.raises(ValueError, match="attempt evidence changed"):
         grouped.complete_grouped_review(reconciliation, output)
 
-    assert len(calls) == 2
+    assert len(calls) == 3

@@ -156,6 +156,11 @@ def select_worker(
     if stage not in {"luna", "sol"}:
         raise ValueError("Unknown reconciliation stage")
     candidates = policy["candidates" if stage == "luna" else "strong_candidates"]
+    candidates = (
+        {**candidates, **policy.get("workflow_candidates", {}).get(workflow_id, {})}
+        if stage == "luna"
+        else candidates
+    )
     selected_host = host or policy["host"]
     if selected_host in {"cowork", "antigravity"}:
         # Python cannot inspect the calling agent's tool schema. Prepare a
@@ -235,7 +240,7 @@ def validate_selection(
         raise ValueError("Worker selection digest or workflow is inconsistent")
     if value.get("host") not in {"codex", "cowork", "antigravity"} or value.get(
         "cost_class"
-    ) not in {"low", "escalation"}:
+    ) not in {"low", "standard", "escalation"}:
         raise UnsupportedWorkerCapability(
             "Worker selection has no supported low-cost host adapter"
         )
@@ -246,6 +251,12 @@ def validate_selection(
     configured = owned[
         "strong_candidates" if value["cost_class"] == "escalation" else "candidates"
     ][value["host"]]
+    if value["cost_class"] != "escalation":
+        configured = (
+            owned.get("workflow_candidates", {})
+            .get(workflow_id, {})
+            .get(value["host"], configured)
+        )
     if not any(
         c["model"] == model and c["cost_class"] == value["cost_class"]
         for c in configured

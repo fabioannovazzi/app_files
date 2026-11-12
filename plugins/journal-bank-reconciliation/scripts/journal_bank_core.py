@@ -288,6 +288,16 @@ IMPLEMENTATION_ARTIFACT_SPECS = (
         "scripts/bank_first.py",
     ),
     (
+        "implementation.plugin.scripts.evidence_retrieval_py",
+        "implementation",
+        "scripts/evidence_retrieval.py",
+    ),
+    (
+        "implementation.plugin.scripts.retrieval_review_py",
+        "implementation",
+        "scripts/retrieval_review.py",
+    ),
+    (
         "implementation.plugin.scripts.bank_first_policy_json",
         "implementation",
         "scripts/bank_first_policy.json",
