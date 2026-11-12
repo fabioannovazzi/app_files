@@ -153,7 +153,9 @@
     "plugins/vera/ui/workspace.css",
     "plugins/vera/skills/studio-archive/SKILL.md",
     "plugins/vera/skills/vera/references/native-workspace.md",
-    "plugins/vera/scripts/native_archive_imports.py"
+    "plugins/vera/scripts/native_archive_imports.py",
+    "plugins/vera/scripts/whatsapp_requests.py",
+    "plugins/vera/mcp/whatsapp.cjs"
   ],
   "governed_shared_paths": [
     "vendor/modules/vera_assurance",
@@ -218,8 +220,8 @@
       },
       {
         "id": "whatsapp-client-evidence",
-        "purpose": "Inspect and interpret visible messages in one verified local WhatsApp Desktop chat for an explicitly selected studio client",
-        "content": "The selected client name or identifier and complete international phone supplied or confirmed in the current task; sanitized guarded-search status and a fresh target result index; verified one-to-one chat identity; the exact target ChatMessagesTableView subtree only after phone verification; visible sender or profile name; visible message text or captions, timestamps and on-screen locators; unreadable media, read-state, history and coverage limitations; focus or identity failures; and Vera's source-backed synthesis. Raw pre-verification accessibility snapshots remain inside the local Computer Use JavaScript call so unrelated sidebar previews are not returned to model context",
+        "purpose": "Interpret selected local WhatsApp evidence, collect selected documents, track requests and carry out specifically authorized one-to-one communications",
+        "content": "Confirmed account/client phones and aliases; selected visible messages, captions, timestamps and source locators; selected file contents when reviewed; request items, owners, dates, status/review evidence; retained file paths, hashes and Archive receipts; exact authorized outbound body and attachment selections; dispatch/outcome evidence and coverage limits. The local MCP returns selected records and paged request context without anonymization. Initial host app or file-picker state may expose unrelated previews or filenames. Later snapshots are suppressed and selected chat evidence isolated. Native screenshots may be necessary when accessibility omits an attachment. Host Computer Use exposure is not comprehensively measured.",
         "runtime_profiles": [
           "openai-codex"
         ]
@@ -372,7 +374,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "eeb8457b920048dfe8c15bcdb96d9a90f2658ed80771ab11fbfa572456cacd17"
+    "source_fingerprint": "e54c524208223690d5d444e259135569026aa1aa152752497d74a9e1a3ed9e1c"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -443,7 +445,7 @@
     },
     {
       "id": "fail-closed-whatsapp-client-routing",
-      "control": "The local WhatsApp route starts only from empty unique Search and composer controls, attempts Search with Command-F, and if Computer Use rejects that modifier chord continues only after a fresh full snapshot proves those controls remain uniquely exposed and empty with no send control. It then clicks the exact fresh Search index, rejects contradictory focus metadata, enters the confirmed phone one digit at a time, and checks the exact Search prefix and empty composer after every digit. Any mismatch stops; only one proven newly misdirected digit may be removed. Raw pre-verification state stays local, the exact result's More Info contact card must contain one confirmed-name heading and exact phone before the contact is opened, and only the verified target chat-table subtree may be returned."
+      "control": "Require a user-confirmed binding and exact contact-info phone in the selected account; display aliases alone never verify identity. Mac guarded search types digits only into freshly checked empty Search while preserving an empty composer. Verify current contact-sheet controls, including self aliases and delayed return to the chat. A pending phone proof cannot enable reads or writes until the chat is visible again. On other supported surfaces use observed screenshots and controls. Preserve existing drafts and exclusive UI ownership. Persist exact authorized content, selected staged hashes and a one-time claim before composition or Send. Unknown outcomes require inspection; initial host app/file-picker state may expose unrelated previews, and no comprehensive host measurement is claimed."
     },
     {
       "id": "local-model-data-report-finalization",

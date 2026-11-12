@@ -30,7 +30,7 @@ function normalizeConfirmedPhone(value) {
 }
 
 function parseElementLine(line) {
-  const match = line.match(/^\s*(\d+)\s+(.+?)\s+Description:\s*(.*)$/u);
+  const match = line.match(/^\s*(\d+)\s+(.+?)\s+Description:\s*(.*)$/su);
   if (!match) {
     return null;
   }
@@ -38,7 +38,7 @@ function parseElementLine(line) {
   const description = attributes
     .split(/,\s+(?=(?:Help|ID|Secondary Actions|Value|Role|Enabled|Selected|Title):)/u, 1)[0];
   const valueMatch = line.match(
-    /,\s+Value:\s*(.*?)(?=,\s+(?:Help|ID|Secondary Actions|Role|Enabled|Selected|Title):|$)/u,
+    /,\s+Value:\s*(.*?)(?=,\s+(?:Help|ID|Secondary Actions|Role|Enabled|Selected|Title):|$)/su,
   );
   return {
     index: Number(match[1]),
@@ -55,7 +55,16 @@ function isKnownSearchDescription(description) {
 
 function parseAccessibilityState(text) {
   const lines = String(text ?? "").split("\n");
-  const elements = lines.map(parseElementLine).filter(Boolean);
+  // Native text values can span lines. Preserve the whole node so a multiline
+  // user draft never looks empty and an exact multiline send can be verified.
+  const nodes = [];
+  for (const line of lines) {
+    if (line.startsWith("The focused UI element is")) break;
+    if (/^\s*\d+\s/u.test(line)) nodes.push(line);
+    else if (nodes.length && line.trim()) nodes[nodes.length - 1] += `\n${line}`;
+    else if (nodes.length && line === "") nodes[nodes.length - 1] += "\n";
+  }
+  const elements = nodes.map(parseElementLine).filter(Boolean);
   const searchByIndex = new Map();
   for (const element of elements) {
     if (

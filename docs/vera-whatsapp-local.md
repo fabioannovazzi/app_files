@@ -77,6 +77,7 @@ independent client-number chat and professional document review remain acceptanc
 work. Actual Archive import was not exercised; retention through Archive failure
 and matching-hash receipts are covered synthetically.
 
+The operator explicitly deferred live Windows testing to a Windows PC later.
 Windows code/bridge tests run in the `whatsapp-local` CI matrix. The screenshot
 route discovers the actual Windows window and controls without Mac selectors.
 CI does not establish authenticated Windows UI compatibility. Run the same

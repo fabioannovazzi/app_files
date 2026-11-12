@@ -41,7 +41,9 @@ Do not claim comprehensive measurement of host Computer Use reads.
 
 Reuse a retained explicitly confirmed binding or obtain one complete client
 phone number in international format. Never infer it from names, partial numbers
-or messages. Verify the selected account phone in its profile.
+or messages. Acquire the UI before verifying the selected account phone in its
+profile; on first setup omit account from `acquire`, then `bind` associates the
+same lock with the actually observed account.
 Discover `vera_whatsapp_*` through Vera's on-demand MCP. `context` resumes the
 account's durable requests. `acquire` reserves the local UI across Vera chats.
 Keep its token until UI activity ends. Locks do not expire into concurrent

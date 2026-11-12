@@ -129,6 +129,33 @@ def test_concurrent_store_cannot_take_over_ui(service):
         other.close()
 
 
+def test_first_setup_reserves_ui_before_account_profile_read(service):
+    lock = service.call("acquire", {"request_key": "bootstrap", "owner": "first setup"})
+    assert lock["account"] is None
+    binding = service.call(
+        "bind",
+        {
+            "request_key": "first-binding",
+            "token": lock["token"],
+            "account": ACCOUNT,
+            "phone": PHONE,
+            "observed_phone": PHONE,
+            "client": "Synthetic",
+            "alias": "Alias",
+            "evidence": "Synthetic profile and contact card",
+            "confirmation": "Synthetic instruction",
+            "platform": "mac",
+        },
+    )
+    assert binding["account"] == ACCOUNT
+    resumed = service.call(
+        "acquire", {"request_key": "bootstrap", "owner": "first setup"}
+    )
+    assert resumed["token"] == lock["token"] and resumed["account"] == ACCOUNT
+    context = service.call("context", {"account": ACCOUNT, "day": "2026-11-12"})
+    assert context["ui_session"]["token"] == lock["token"]
+
+
 @pytest.mark.parametrize(
     "changes",
     [
@@ -199,6 +226,17 @@ def test_uncertain_send_requires_matching_evidence_and_blocks_new_content(servic
         },
     )
     assert result["status"] == "accepted" and result["delivery"] == "sent"
+    read_back = service.call(
+        "resolve",
+        {
+            "request_key": "later-read",
+            "id": operation["id"],
+            "outcome": "accepted",
+            "evidence": {**evidence, "delivery": "read"},
+        },
+    )
+    assert read_back["delivery"] == "read"
+    assert claim(service, lock, operation, request_key="after-read")["execute"] is False
     assert prepare(service, request, request_key="new-key")["id"] == operation["id"]
     with pytest.raises(ValueError, match="new specific instruction"):
         prepare(

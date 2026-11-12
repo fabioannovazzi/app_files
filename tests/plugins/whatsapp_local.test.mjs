@@ -15,7 +15,7 @@ function state(draft = "", alias = "Nickname") {
 ${draft ? "  8 button Description: Send, ID: ChatBar_SendButton\n" : ""}The focused UI element is 7 text entry area Description: Compose message`;
 }
 function card(number) {
-  return `${state()}
+  return `${state().split("The focused UI element is")[0]}
   9 sheet
     10 button Description: close, ID: ContactInfo_CloseButton
     11 heading Description: \u200e\u2068Nickname\u2069 (You)
@@ -49,6 +49,13 @@ test("preserves existing user composer drafts without a click", async () => {
   const app = appFixture(phone, state("Existing user draft"));
   await assert.rejects(composeClaimedText({app, verification, claim:claim()}), /existing draft/);
   assert.deepEqual(app.clicks, []);
+});
+test("multiline messages retain their exact text and multiline drafts remain protected", async () => {
+  const app = appFixture(); const dispatch=claim();
+  dispatch.operation.body="Synthetic first line\n\nSecond line";
+  assert.equal((await composeClaimedText({app,verification,claim:dispatch})).status,"composed");
+  await assert.rejects(composeClaimedText({app,verification,claim:claim()}), /existing draft/);
+  assert.equal((await sendClaimedText({app,verification,claim:dispatch})).composerEmpty,true);
 });
 test("changed chat cannot receive a prepared message", async () => {
   const app = appFixture(phone, state("", "Someone else"));

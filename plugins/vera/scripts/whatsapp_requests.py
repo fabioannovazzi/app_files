@@ -230,7 +230,7 @@ class WhatsAppRequests:
                         "operation": self.get(args["id"], "operation"),
                     }
                 if action == "acquire":
-                    self.locked(result["token"], result["account"])
+                    result = self.locked(result["token"])
                 self.db.execute("COMMIT")
                 return result
             result = method(args)
@@ -254,7 +254,7 @@ class WhatsAppRequests:
             )
         value = {
             "token": str(uuid.uuid4()),
-            "account": phone(args["account"]),
+            "account": phone(args["account"]) if args.get("account") else None,
             "owner": text(args.get("owner"), "session owner"),
         }
         self.db.execute("INSERT INTO ui_lock VALUES (1,?)", (encode(value),))
@@ -275,7 +275,14 @@ class WhatsAppRequests:
 
     def do_bind(self, args: dict[str, Any]) -> dict[str, Any]:
         account, recipient = phone(args["account"]), phone(args["phone"])
-        self.locked(args["token"], account)
+        lock = self.locked(args["token"])
+        if lock["account"] is None:
+            lock["account"] = account
+            self.db.execute(
+                "UPDATE ui_lock SET body=? WHERE singleton=1", (encode(lock),)
+            )
+        else:
+            self.locked(args["token"], account)
         if phone(args["observed_phone"]) != recipient:
             raise ValueError(
                 "Contact-info phone differs from the confirmed client phone"
@@ -491,7 +498,11 @@ class WhatsAppRequests:
         if outcome == "cancelled" and operation["status"] == "prepared":
             operation.update(status=outcome, evidence=evidence)
             return self.put("operation", operation)
-        if operation["status"] not in {"submitting", "uncertain"} or outcome not in {
+        updating_delivery = operation["status"] == "accepted" and outcome == "accepted"
+        if (
+            operation["status"] not in {"submitting", "uncertain"}
+            and not updating_delivery
+        ) or outcome not in {
             "accepted",
             "failed",
             "uncertain",
@@ -518,6 +529,13 @@ class WhatsAppRequests:
                 "read",
             }:
                 raise ValueError("Invalid delivery observation")
+            delivery_order = ["unknown", "sent", "delivered", "read"]
+            if delivery_order.index(
+                evidence.get("delivery", "unknown")
+            ) < delivery_order.index(operation["delivery"]):
+                raise ValueError(
+                    "Delivery evidence cannot regress a recorded observation"
+                )
             operation["delivery"] = evidence.get("delivery", "unknown")
         if outcome == "failed" and evidence.get("definitive_no_send") is not True:
             raise ValueError(
