@@ -95,7 +95,7 @@
     {
       "path": "modules/check-entries/scripts/local_helper_environment.json",
       "repository_path": "plugins/check-entries/scripts/local_helper_environment.json",
-      "sha256": "211b9d29c8085fdcebd89ee6f6ef4ea92e368adf07b35058a8aa67b503c70a01"
+      "sha256": "0e1a8b2d79149b56c3b0046f44b5528da29510d74931d34a69f323657a589559"
     },
     {
       "path": "modules/check-entries/scripts/local_helper_environment.py",

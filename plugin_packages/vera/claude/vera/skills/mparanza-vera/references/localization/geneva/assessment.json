@@ -108,6 +108,11 @@
     "scope": "The 55 function IDs and existing Geneva dispositions remain unchanged. The changed entrypoints require maintained local receipt and byte verification for saved inputs and continuations. This adds no jurisdiction-specific accounting or legal judgment and establishes no new Geneva client or professional acceptance.",
     "version": "0.1.410"
   },
+  "archive_outage_release_binding_20261111": {
+    "previous_catalogue_fingerprint": "ee8b74c7db76b0dc846907c3908790f5d90c763d4bfcce0eeeb4a0b69cee3b4d",
+    "scope": "Canonical version changed. Exact skill entrypoint identities and contents are unchanged; existing jurisdiction judgments retained. Archive outage recovery adds no jurisdiction capability.",
+    "version": "0.1.615"
+  },
   "archive_profile_bootstrap_source_refresh": {
     "scope": "Only canonical product version changed in the captured catalogue; function IDs and all skill bytes match the 0.1.354 snapshot. Existing Geneva dispositions remain unchanged. Secure legacy profile bootstrap preserves existing approval and source isolation; no additional legal adaptation or Geneva acceptance claimed.",
     "version": "0.1.355"
@@ -200,6 +205,11 @@
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
     "source_version": "0.1.286"
+  },
+  "ci_incident_isolation_binding_20261112": {
+    "previous_catalogue_fingerprint": "034174b0b42ece1a63e4fdde43580775437e3e65e177165708c91376d6925e0e",
+    "scope": "Exact skill IDs and entrypoint bytes unchanged; release-manifest rebinding only, preserving all jurisdiction judgments.",
+    "version": "0.1.617"
   },
   "clara_lucia_neutral_ui_release_binding_20261029": {
     "previous_catalogue_fingerprint": "6cae1a26d1376c53b7b0a7892194ea95a710008264798daea4090d2c08d9008d",
@@ -2711,10 +2721,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "archive_outage_release_binding_20261111": {
-    "version": "0.1.615",
-    "previous_catalogue_fingerprint": "ee8b74c7db76b0dc846907c3908790f5d90c763d4bfcce0eeeb4a0b69cee3b4d",
-    "scope": "Canonical version changed. Exact skill entrypoint identities and contents are unchanged; existing jurisdiction judgments retained. Archive outage recovery adds no jurisdiction capability."
   }
 }

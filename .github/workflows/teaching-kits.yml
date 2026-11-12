@@ -55,6 +55,10 @@ concurrency:
   group: teaching-kits-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# CI failures stay in retained test diagnostics, outside customer alerts.
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
+
 jobs:
   product-archives:
     uses: ./.github/workflows/build-product-archives.yml

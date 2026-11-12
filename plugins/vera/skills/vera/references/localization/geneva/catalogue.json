@@ -2,7 +2,7 @@
   "schema": "vera.localization.catalogue.v1",
   "root": "/private/tmp/archive-identity-reporting/plugins/vera",
   "version": "0.1.618",
-  "captured_at": "2026-11-12T08:42:51.591146+00:00",
+  "captured_at": "2026-11-12T11:51:04.029042+00:00",
   "catalogue_fingerprint": "8e5dd693fa63e9b6afd2886d9f9f413a449e215793ed9b2323b52e905a4d260f",
   "manifest_sha256": "b7e65da6c6fea81c69ce11c83eb0c69300516d64480fdb876f56b9dc7c30b29d",
   "entries": [
