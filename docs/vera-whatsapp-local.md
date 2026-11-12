@@ -82,6 +82,11 @@ Windows code/bridge tests run in the `whatsapp-local` CI matrix. The screenshot
 route discovers the actual Windows window and controls without Mac selectors.
 CI does not establish authenticated Windows UI compatibility. Run the same
 controlled native tests on a real Windows installation before declaring support.
+The first Windows CI run exposed locale-dependent decoding in the test harness.
+A follow-up reproduction also showed that non-UTF-8 Python pipes could reject
+Italian text and typographic quotes. The bridge now explicitly uses UTF-8; the
+cross-process regression preserves accented text, quotes and emoji even when
+the host environment requests Windows CP1252.
 
 A dispatch claim is persisted before UI composition or attachment selection.
 Only its first response permits execution. Timeouts/crashes retain uncertainty;

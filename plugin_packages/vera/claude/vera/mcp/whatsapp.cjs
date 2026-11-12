@@ -41,14 +41,16 @@ function call(name, args) {
     if (rule.type === "array" && (!Array.isArray(value) || value.some(x => typeof x !== "string" || !x))) throw new Error("Invalid " + field);
   }
   const root = path.resolve(__dirname, "..");
+  // JSON pipes must keep Italian text and emoji intact on non-UTF-8 Windows hosts.
+  const env = { ...process.env, PYTHONIOENCODING: "utf-8" };
   let python = process.env.VERA_STUDIO_WORK_PYTHON;
   if (!python) {
-    const probe = spawnSync(process.platform === "win32" ? "python" : "python3", [path.join(root, "scripts/studio_work_runtime.py")], { encoding: "utf8", timeout: 30000 });
+    const probe = spawnSync(process.platform === "win32" ? "python" : "python3", [path.join(root, "scripts/studio_work_runtime.py")], { env, encoding: "utf8", timeout: 30000 });
     if (probe.error) throw probe.error;
     if (probe.status !== 0) throw new Error("Complete Vera's managed Python setup before using WhatsApp requests");
     python = probe.stdout.trim();
   }
-  const result = spawnSync(python, [path.join(root, "scripts/whatsapp_requests.py")], { input: JSON.stringify({ action: name.slice(PREFIX.length), arguments: args }), encoding: "utf8", timeout: 30000, maxBuffer: 4 * 1024 * 1024 });
+  const result = spawnSync(python, [path.join(root, "scripts/whatsapp_requests.py")], { env, input: JSON.stringify({ action: name.slice(PREFIX.length), arguments: args }), encoding: "utf8", timeout: 30000, maxBuffer: 4 * 1024 * 1024 });
   if (result.error) throw result.error;
   if (result.status !== 0) throw new Error(result.stderr.trim().split("\n").at(-1) || "WhatsApp request failed");
   return JSON.parse(result.stdout);

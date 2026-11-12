@@ -448,6 +448,7 @@ def test_mcp_service_exposes_local_tools_and_persists_across_processes(tmp_path)
         **os.environ,
         "VERA_STUDIO_WORK_DATA": str(tmp_path),
         "VERA_STUDIO_WORK_PYTHON": sys.executable,
+        "PYTHONIOENCODING": "cp1252",
     }
 
     def run(request):
@@ -456,6 +457,7 @@ def test_mcp_service_exposes_local_tools_and_persists_across_processes(tmp_path)
                 ["node", "-e", script, str(module), json.dumps(request)],
                 env=env,
                 text=True,
+                encoding="utf-8",
             )
         )
 
@@ -469,7 +471,7 @@ def test_mcp_service_exposes_local_tools_and_persists_across_processes(tmp_path)
                 "arguments": {
                     "request_key": "one",
                     "account": ACCOUNT,
-                    "owner": "Test",
+                    "owner": "Operatore: \u201c\u00c8 pronto\u201d \u2705",
                 },
             },
         }
@@ -485,6 +487,10 @@ def test_mcp_service_exposes_local_tools_and_persists_across_processes(tmp_path)
         }
     )
     assert context["structuredContent"]["ui_busy"] is True
+    assert (
+        context["structuredContent"]["ui_session"]["owner"]
+        == "Operatore: \u201c\u00c8 pronto\u201d \u2705"
+    )
     invalid = run(
         {
             "method": "tools/call",
@@ -502,6 +508,7 @@ def test_current_native_adapter_regressions():
         ["node", "--test", str(ROOT / "tests/plugins/whatsapp_local.test.mjs")],
         capture_output=True,
         text=True,
+        encoding="utf-8",
         check=False,
     )
     assert result.returncode == 0, result.stdout + result.stderr
