@@ -87,6 +87,7 @@ _SCHEMA = (
     "CREATE TABLE IF NOT EXISTS operational_reports (report_id TEXT PRIMARY KEY, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_hash TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
     "CREATE TABLE IF NOT EXISTS operational_deliveries (installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, status TEXT NOT NULL, updated_at TEXT NOT NULL, PRIMARY KEY (installation_id, incident_id))",
     "CREATE TABLE IF NOT EXISTS operational_outcomes (outcome_id TEXT PRIMARY KEY, installation_id TEXT NOT NULL, incident_id TEXT NOT NULL, payload_json TEXT NOT NULL, created_at TEXT NOT NULL)",
+    "CREATE TABLE IF NOT EXISTS operational_test_closures (incident_id TEXT NOT NULL, evidence_sha256 TEXT NOT NULL, note TEXT NOT NULL, evidence_refs_json TEXT NOT NULL, closed_at TEXT NOT NULL, PRIMARY KEY (incident_id,evidence_sha256))",
 )
 
 
@@ -968,6 +969,18 @@ class IncidentStore:
                         _now(),
                     ),
                 )
+                connection.execute(
+                    self._sql(
+                        "UPDATE operational_incidents SET status='open',updated_at=? WHERE incident_id=? AND status='closed-test'"
+                    ),
+                    (_now(), original["incident_id"]),
+                )
+                connection.execute(
+                    self._sql(
+                        "UPDATE operational_deliveries SET status='open',updated_at=? WHERE incident_id=? AND installation_id=? AND status='closed-test'"
+                    ),
+                    (_now(), original["incident_id"], str(credentials.installation_id)),
+                )
         return {
             "incident_id": original["incident_id"],
             "installation_id": str(credentials.installation_id),
@@ -1511,7 +1524,7 @@ class IncidentStore:
             )
             remaining = connection.execute(
                 self._sql(
-                    "SELECT COUNT(*) AS count FROM operational_deliveries WHERE incident_id=? AND status!='recovered'"
+                    "SELECT COUNT(*) AS count FROM operational_deliveries WHERE incident_id=? AND status NOT IN ('recovered','closed-test')"
                 ),
                 (str(outcome.incident_id),),
             ).fetchone()["count"]
@@ -1541,11 +1554,70 @@ class IncidentStore:
             self._schema(connection)
             rows = connection.execute(
                 self._sql(
-                    "SELECT * FROM operational_incidents WHERE status!='recovered' ORDER BY updated_at LIMIT ?"
+                    "SELECT * FROM operational_incidents WHERE status NOT IN ('recovered','closed-test') ORDER BY updated_at LIMIT ?"
                 ),
                 (max(1, min(limit, 1000)),),
             ).fetchall()
             return [self._details(connection, dict(row)) for row in rows]
+
+    def close_test(
+        self,
+        incident_id: str,
+        *,
+        expected_evidence_sha256: str,
+        note: str,
+        evidence_refs: list[str],
+    ) -> dict[str, Any]:
+        """Operator-reviewed test closure; retain evidence without claiming recovery."""
+        from scripts.summarize_incident_monitor import evidence_hash
+
+        if (
+            not note.strip()
+            or not evidence_refs
+            or not all(reference.strip() for reference in evidence_refs)
+        ):
+            raise ValueError(
+                "Test closure requires a review note and evidence references"
+            )
+        with self._connection() as connection:
+            self._schema(connection)
+            row = connection.execute(
+                self._sql("SELECT * FROM operational_incidents WHERE incident_id=?"),
+                (incident_id,),
+            ).fetchone()
+            if row is None:
+                raise IncidentNotFound("Incident is unavailable")
+            incident = self._details(connection, dict(row))
+            # Exact evidence comparison prevents a test review closing a newer
+            # customer report, supplement or recovery event in the same group.
+            if evidence_hash(incident) != expected_evidence_sha256:
+                raise IncidentConflict("Incident evidence changed; inspect it again")
+            if incident["status"] != "open":
+                raise IncidentConflict("Only an open incident can be closed as a test")
+            now = _now()
+            connection.execute(
+                self._sql("INSERT INTO operational_test_closures VALUES (?,?,?,?,?)"),
+                (
+                    incident_id,
+                    expected_evidence_sha256,
+                    note,
+                    _json(evidence_refs),
+                    now,
+                ),
+            )
+            connection.execute(
+                self._sql(
+                    "UPDATE operational_incidents SET status='closed-test',updated_at=? WHERE incident_id=?"
+                ),
+                (now, incident_id),
+            )
+            connection.execute(
+                self._sql(
+                    "UPDATE operational_deliveries SET status='closed-test',updated_at=? WHERE incident_id=? AND status!='recovered'"
+                ),
+                (now, incident_id),
+            )
+        return {"incident_id": incident_id, "status": "closed-test", "closed_at": now}
 
     def observe_reporter(
         self, credentials: Credentials | ConnectionActor, status: ReporterStatus
@@ -1691,12 +1763,12 @@ class IncidentStore:
             "linked_host_devices": "SELECT COUNT(DISTINCT device_id) AS n FROM operational_device_links",
             "reports_received": "SELECT COUNT(*) AS n FROM operational_reports",
             "reporting_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_reports",
-            "unresolved_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_deliveries WHERE status!='recovered'",
-            "unresolved_linked_host_devices": "SELECT COUNT(DISTINCT h.device_id) AS n FROM operational_device_links h JOIN operational_deliveries d ON d.installation_id=h.installation_id WHERE d.status!='recovered'",
-            "unresolved_unlinked_installations": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_device_links h ON h.installation_id=d.installation_id WHERE d.status!='recovered' AND h.device_id IS NULL",
+            "unresolved_installations": "SELECT COUNT(DISTINCT installation_id) AS n FROM operational_deliveries WHERE status NOT IN ('recovered','closed-test')",
+            "unresolved_linked_host_devices": "SELECT COUNT(DISTINCT h.device_id) AS n FROM operational_device_links h JOIN operational_deliveries d ON d.installation_id=h.installation_id WHERE d.status NOT IN ('recovered','closed-test')",
+            "unresolved_unlinked_installations": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_device_links h ON h.installation_id=d.installation_id WHERE d.status NOT IN ('recovered','closed-test') AND h.device_id IS NULL",
             "linked_app_installations": "SELECT COUNT(DISTINCT app_installation_id) AS n FROM operational_app_links",
-            "unresolved_linked_app_installations": "SELECT COUNT(DISTINCT a.app_installation_id) AS n FROM operational_app_links a JOIN operational_deliveries d ON d.installation_id=a.installation_id WHERE d.status!='recovered'",
-            "unresolved_app_unlinked_instances": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_app_links a ON a.installation_id=d.installation_id WHERE d.status!='recovered' AND a.installation_id IS NULL",
+            "unresolved_linked_app_installations": "SELECT COUNT(DISTINCT a.app_installation_id) AS n FROM operational_app_links a JOIN operational_deliveries d ON d.installation_id=a.installation_id WHERE d.status NOT IN ('recovered','closed-test')",
+            "unresolved_app_unlinked_instances": "SELECT COUNT(DISTINCT d.installation_id) AS n FROM operational_deliveries d LEFT JOIN operational_app_links a ON a.installation_id=d.installation_id WHERE d.status NOT IN ('recovered','closed-test') AND a.installation_id IS NULL",
         }
         with self._connection() as connection:
             self._schema(connection)
@@ -1725,6 +1797,14 @@ class IncidentStore:
             return self._details(connection, dict(row))
 
     def _details(self, connection: Any, incident: dict[str, Any]) -> dict[str, Any]:
+        closures = connection.execute(
+            self._sql(
+                "SELECT * FROM operational_test_closures WHERE incident_id=? ORDER BY closed_at"
+            ),
+            (incident["incident_id"],),
+        ).fetchall()
+        if closures:
+            incident["test_closures"] = [dict(closure) for closure in closures]
         incident["remedy"] = json.loads(incident.pop("remedy_json"))
         incident["remedy_revisions"] = [
             {

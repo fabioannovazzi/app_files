@@ -89,6 +89,18 @@ def test_similar_exit_code_and_old_free_text_disposition_do_not_exclude_case():
     assert result["effective_open_incidents"] == 1
 
 
+def test_administratively_closed_test_can_leave_queue_without_claiming_recovery():
+    row = incident()
+    row["status"] = "closed-test"
+    current = {"queue_limit": 1000, "queue": [], "incidents": [row]}
+    ledger = {"last_monitor_check": {"queue_ids": [row["incident_id"]]}}
+
+    result = summarize(current, ledger)
+
+    assert result["raw_open_incidents"] == 0
+    assert row["outcomes"] == []
+
+
 @pytest.mark.parametrize(
     "change",
     ["new-report", "report-payload", "supplement", "remedy", "owner", "failed-retry"],

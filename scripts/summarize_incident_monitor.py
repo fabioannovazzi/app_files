@@ -62,7 +62,7 @@ def summarize(snapshot: dict[str, Any], ledger: dict[str, Any]) -> dict[str, Any
     if not (set(queued) | previous) <= set(inspected):
         raise ValueError("Missing show evidence; retain the last complete count")
     for incident_id in previous - set(queued):
-        if inspected[incident_id]["status"] != "recovered":
+        if inspected[incident_id]["status"] not in {"recovered", "closed-test"}:
             raise ValueError("An unresolved incident disappeared; refresh the queue")
 
     groups: dict[str, list[str]] = {

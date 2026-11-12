@@ -79,6 +79,12 @@ def call(
         "NO_PROXY": "127.0.0.1,localhost",
         "no_proxy": "127.0.0.1,localhost",
     }
+    if (
+        'SERVER = "http://127.0.0.1:'
+        in (root / "scripts/operational_incidents.py").read_text()
+    ):
+        # Only the fixture-owned loopback service exercises remote delivery.
+        environment["MPARANZA_INCIDENT_DELIVERY"] = "automatic"
     result = subprocess.run(
         ["node", str(root / "scripts/incident_host_mcp.cjs")],
         input=json.dumps(
