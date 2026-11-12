@@ -5570,6 +5570,17 @@ def _excluded_ledger_search_path(path: Path, scope_root: Path) -> bool:
         parts = path.relative_to(scope_root).parts
     except ValueError:
         return False
+    if len(parts) == 1 and (
+        parts[0] in {".pending-work.lock", "pending-archive-work.json"}
+        or re.fullmatch(r"pending-(?:work|publication)-[0-9a-f]{64}\.json", parts[0])
+    ):
+        # These are reserved work-folder records, not client source evidence.
+        # Outside an actual ledger, identically named user files stay searchable.
+        try:
+            ledger.load_client_manifest(scope_root)
+        except (OSError, ValueError, ledger.LedgerError):
+            return False
+        return True
     if not parts or parts[0] != ledger.LEDGER_DIRECTORY:
         return False
     if (

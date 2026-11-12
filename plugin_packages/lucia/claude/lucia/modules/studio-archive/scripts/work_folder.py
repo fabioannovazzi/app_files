@@ -347,14 +347,36 @@ def _existing_work(context_path: Path, workflow_id: str) -> tuple[Path, dict[str
         allowed_statuses=("prepared", "running", "ready_for_review", "completed"),
     )
     root = Path(context["studio_client_folder"]["client_root"])
-    return root, {
+    record: dict[str, Any] = {
         "workspace_kind": "existing",
         "client_id": context["client_id"],
         "engagement_id": context["engagement_id"],
         "run_id": context["run_id"],
-        "request": {"client_id": context["client_id"], "purpose": context["purpose"]},
+        # A ledger ID identifies storage, not an asserted professional identity.
+        "request": {"client_id": None, "purpose": context["purpose"]},
         "archive": {**_pending("archive_services"), "working_files_available": True},
     }
+    try:
+        retained = _read(root)
+    except (*_OPTIONAL_ERRORS, ledger.LedgerError) as exc:
+        logging.getLogger(__name__).warning("Work metadata unavailable: %s", exc)
+    else:
+        request = retained.get("request")
+        if (
+            all(
+                retained.get(key) == context[key]
+                for key in ("client_id", "engagement_id", "run_id")
+            )
+            and isinstance(request, dict)
+            and request.get("workflow_id") == workflow_id
+            and "client_id" in request
+            and request["client_id"] in (None, context["client_id"])
+        ):
+            record["request"]["client_id"] = request["client_id"]
+            record["workspace_kind"] = "client" if request["client_id"] else "general"
+            if "privacy_reporting" in retained:
+                record["privacy_reporting"] = retained["privacy_reporting"]
+    return root, record
 
 
 def resume_work(context_path: Path, workflow_id: str) -> dict[str, Any]:
