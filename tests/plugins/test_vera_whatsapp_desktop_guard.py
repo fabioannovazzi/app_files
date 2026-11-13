@@ -147,6 +147,7 @@ def _run_guard(
     expected_name: str = "Client Alpha",
     reject_search_shortcut: bool = False,
     fail_digit_reply: bool = False,
+    allow_alias_candidate: bool = False,
 ) -> dict[str, Any]:
     scenario = {
         "states": states,
@@ -154,6 +155,7 @@ def _run_guard(
         "expectedName": expected_name,
         "rejectSearchShortcut": reject_search_shortcut,
         "failDigitReply": fail_digit_reply,
+        "allowAliasCandidate": allow_alias_candidate,
     }
     source = f"""
 import {{ guardedPhoneSearch }} from {json.dumps(GUARD.as_uri())};
@@ -185,6 +187,7 @@ const result = await guardedPhoneSearch({{
   sky,
   confirmedPhone: scenario.phone,
   expectedChatName: scenario.expectedName,
+  allowUniqueChatCandidate: scenario.allowAliasCandidate,
 }});
 console.log(JSON.stringify({{ result, calls, remainingStates: states.length }}));
 """
@@ -264,6 +267,36 @@ def test_guard_does_not_claim_empty_composer_after_lost_digit_reply() -> None:
     assert observed["result"]["composerEmpty"] is None
     assert observed["result"]["cleanup"] == "unverified"
     assert not any(call["method"] == "set_value" for call in observed["calls"])
+
+
+@pytest.mark.parametrize("allow_alias_candidate", [False, True])
+def test_unique_saved_alias_is_only_an_unverified_candidate(
+    allow_alias_candidate,
+) -> None:
+    digits = "12345678"
+    states = [
+        _accessibility_state(),
+        _accessibility_state(search_focused=True),
+        _accessibility_state(search_focused=True),
+    ]
+    states.extend(
+        _accessibility_state(search_value=digits[:length], search_focused=True)
+        for length in range(1, len(digits) + 1)
+    )
+    states[-1] = states[-1].replace(
+        "The focused UI element is",
+        "  23 container Description: Different saved nickname, ID: ChatListSearchView_ChatResult\nThe focused UI element is",
+    )
+    result = _run_guard(states, allow_alias_candidate=allow_alias_candidate)["result"]
+    if allow_alias_candidate:
+        assert (
+            result["targetResult"]["matchedBy"]
+            == "unverified_unique_phone_search_candidate"
+        )
+        assert result["status"] == "ready_to_open_target"
+    else:
+        assert result["status"] == "blocked"
+    assert "phoneVerified" not in result
 
 
 def test_guard_enters_phone_one_digit_at_a_time_and_returns_one_target() -> None:
@@ -606,17 +639,14 @@ def test_source_contracts_require_the_executable_guard_and_private_state() -> No
     controls = " ".join(boundary["controls"])
 
     for source in (reference, module_skill):
-        assert "guardedPhoneSearch" in source
-        assert "verifyAndOpenGuardedTarget" in source
+        assert "searchLocalChat" in source
+        assert "verifyOpenChat" in source
         assert "one digit at a time" in source
-        assert "Never use `type_text`" in source
-        assert "raw pre-verification accessibility state" in source.casefold()
-        assert "extractVerifiedChatTable" in source
-    assert "whatsapp_desktop_guard.mjs" in wrapper
-    assert "any other WhatsApp script" in wrapper
-    assert "one digit at a time" in controls
-    assert "Raw pre-verification accessibility snapshots" in boundary["content"]
-    assert evals["version"] == 2
+        assert "readVerifiedChat" in source
+    assert "whatsapp_local.mjs" in wrapper
+    assert "exclusive" in controls
+    assert "subsequent raw snapshots are suppressed" in boundary["content"]
+    assert evals["version"] == 3
     assert "await sky.type_text" not in guard_source
     assert 'key: "Return"' not in guard_source
     assert "await sky.set_value" in guard_source
@@ -637,6 +667,20 @@ def test_vera_package_contains_the_exact_guard_source() -> None:
     with ZipFile(VERA_ZIP) as archive:
         packaged_guard = archive.read(guard_entry)
         packaged_reference = archive.read(reference_entry).decode("utf-8")
+        for relative in ("scripts/whatsapp_requests.py", "mcp/whatsapp.cjs"):
+            assert (
+                archive.read("vera-codex-plugin/plugins/vera/" + relative)
+                == (ROOT / "plugins/vera" / relative).read_bytes()
+            )
+        assert (
+            archive.read(
+                guard_entry.replace("whatsapp_desktop_guard.mjs", "whatsapp_local.mjs")
+            )
+            == (GUARD.parent / "whatsapp_local.mjs").read_bytes()
+        )
+        assert b"vera_whatsapp_claim" in archive.read(
+            "vera-codex-plugin/plugins/vera/mcp-catalog.json"
+        )
 
     assert packaged_guard == GUARD.read_bytes()
-    assert "verifyAndOpenGuardedTarget" in packaged_reference
+    assert "verifyOpenChat" in packaged_reference

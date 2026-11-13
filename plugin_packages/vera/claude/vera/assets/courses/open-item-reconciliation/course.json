@@ -239,6 +239,10 @@
       "sha256": "848509b3c2a6671f6c287e7b8527082b1cdcf555007997d9517d2284d1b67021"
     },
     {
+      "path": "modules/studio-archive/scripts/whatsapp_local.mjs",
+      "sha256": "f5bf4366ae2830c2bade925a04684715ac2bdcd52c8f7bfe6de1a38b6c8071d2"
+    },
+    {
       "path": "modules/studio-archive/scripts/work_folder.py",
       "sha256": "8bcbc39e524a9e11a93762f8ab3ff3498a7de4d9716690750ae95141d900f068"
     },
@@ -797,5 +801,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "32b555385d379b9f0ccbe35e398f1a54d199ad98909bf54d86db29db839e1240"
+  "canonical_course_sha256": "65252aefccc86f14373b19d2978981ad15998b93280f8330e32cc206edf8e54b"
 }

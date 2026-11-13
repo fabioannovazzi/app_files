@@ -698,7 +698,10 @@ them without changing the capability catalog:
   bounded reads, and explicit exclusion of ambiguous correspondence. WhatsApp
   is capability-gated and excluded from Cowork v1; on another supported local
   runtime it requires one confirmed complete phone number and a verified
-  one-to-one chat. Browser-process teaching and automation are routed through
+  one-to-one chat. Its local request register retains selected documents,
+  follow-ups and send receipts. Selected downloads and specifically authorized
+  messages use the maintained WhatsApp reference and one-time dispatch claims.
+  Browser-process teaching and automation are routed through
   the separate generic `browser-automation` workflow rather than this archive
   route. Each professional may additionally keep a private SQLite
   search index, configuration, and optional private contact metadata for one
@@ -1030,8 +1033,11 @@ validated on the basis of structural inspection alone.
   expressly provides compatible computer control, use it only on the same
   local computer and only after the user confirms one complete client phone.
   Verify one one-to-one chat before reading. Never use WhatsApp Web, a server
-  connector, background capture, global multi-chat search, the message
-  composer, send/reply controls, media downloads, exports, or settings changes.
+  connector, background capture, global multi-chat search, exports or settings
+  changes. Follow `../studio-archive/references/whatsapp-desktop.md` for local
+  requests, selected downloads and specifically authorized sends. Preserve
+  existing drafts, claim dispatch once, and recover uncertain outcomes before
+  any retry. Drafting a message does not authorize sending it.
   If focus or identity is uncertain, stop without sending anything.
 - Never request, store, or replay SPID/CIE/CNS credentials, cookies, tokens, or
   one-time codes. An INPS browser capture requires a user-authenticated tab and

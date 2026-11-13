@@ -110,7 +110,12 @@
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
       "repository_path": "plugins/studio-archive/scripts/whatsapp_desktop_guard.mjs",
-      "sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5"
+      "sha256": "4a92ee5ac1fa345e7f884f21ea3775022c773f4cafcfea9efed8f4385af5f7c1"
+    },
+    {
+      "path": "modules/studio-archive/scripts/whatsapp_local.mjs",
+      "repository_path": "plugins/studio-archive/scripts/whatsapp_local.mjs",
+      "sha256": "f5bf4366ae2830c2bade925a04684715ac2bdcd52c8f7bfe6de1a38b6c8071d2"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
@@ -120,7 +125,7 @@
     {
       "path": "modules/studio-archive/skills/studio-archive/SKILL.md",
       "repository_path": "plugins/studio-archive/skills/studio-archive/SKILL.md",
-      "sha256": "81cee0351e4d5a94e92539b83a2f80858ce96421b493d0ca9dd8d8f7a9df70d0"
+      "sha256": "e73a0424868161cfe20d0d3bb5c732c5adbe1225558a093ad11c83de14868031"
     },
     {
       "path": "modules/studio-archive/skills/studio-archive/agents/openai.yaml",
@@ -250,7 +255,7 @@
     {
       "path": "skills/studio-archive/SKILL.md",
       "repository_path": "plugins/vera/skills/studio-archive/SKILL.md",
-      "sha256": "bc6e9c7fb239cb6829d2517ec8dcc2535800b4c24d2cc15a2eff090dc1f198bb"
+      "sha256": "27e97b0756b2077237051a5f839013a7df411e6ca8195a58e484f8226606863f"
     },
     {
       "path": "skills/studio-archive/references/marketplace-gmail.md",
@@ -260,7 +265,7 @@
     {
       "path": "skills/studio-archive/references/whatsapp-desktop.md",
       "repository_path": "plugins/vera/skills/studio-archive/references/whatsapp-desktop.md",
-      "sha256": "4d91c200a6af11294d90b004fcadb1eb38adbf999f1f026bcaf064976904e704"
+      "sha256": "a28a1483565cd12b7e34afffa15c06ecc8c87489870d5d4e4cde2e99b836cfc8"
     },
     {
       "path": "skills/vera/references/connected-studio-knowledge.md",

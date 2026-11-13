@@ -7020,6 +7020,471 @@
               ]
             }
           }
+        },
+        {
+          "name": "vera_whatsapp_context",
+          "description": "Resume this account's local WhatsApp requests, due follow-ups, uncertain sends and pending Archive copies. Page all requests for a complete briefing. No background scheduler or WhatsApp reads.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "account": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "day": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "include_closed": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "account",
+              "day"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_read",
+          "description": "Read an exact local binding, request, attachment or send receipt. This does not refresh WhatsApp.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "required": [
+              "id"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_acquire",
+          "description": "Claim exclusive local WhatsApp UI ownership before any search/read/download/send. On first setup omit account, inspect its profile, then bind the verified account while retaining this token. A stale owner must be reconciled; locks never expire into a duplicate send.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "account": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "owner": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "required": [
+              "request_key",
+              "owner"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_release",
+          "description": "Release a completed or recovered UI session using its token and real evidence that UI work ended. Resolve a dispatch as accepted, failed or uncertain first.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "required": [
+              "request_key",
+              "token",
+              "evidence"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_bind",
+          "description": "Retain a user-confirmed client/phone mapping after verifying the selected account and exact phone in the one-to-one contact information UI. Alias can differ from client name. Never invent observation or confirmation.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "account": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "phone": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "observed_phone": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "client": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "alias": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "confirmation": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "platform": {
+                "enum": [
+                  "mac",
+                  "windows"
+                ]
+              }
+            },
+            "required": [
+              "request_key",
+              "token",
+              "account",
+              "phone",
+              "observed_phone",
+              "client",
+              "alias",
+              "evidence",
+              "confirmation",
+              "platform"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_capture",
+          "description": "Save a document request with title, owner, source, items (id, description, status) and optional engagement/due_date/follow_up_date. Requires an existing verified contact binding. Receiving is distinct from professional checking/completion.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "binding_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "request": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request_key",
+              "binding_id",
+              "request"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_change",
+          "description": "Revise request items, dates, owner or status using the current revision. Received/checked/complete/correction_requested items require source or review evidence. No WhatsApp write.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "patch": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request_key",
+              "id",
+              "expected_revision",
+              "patch"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_stage",
+          "description": "Copy an explicitly selected local attachment into durable private staging; hash the retained bytes and preserve its message/source locator. Does not download or upload. direction is incoming or outgoing.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "direction": {
+                "enum": [
+                  "incoming",
+                  "outgoing"
+                ]
+              }
+            },
+            "required": [
+              "request_key",
+              "id",
+              "path",
+              "source",
+              "direction"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_archive",
+          "description": "Record actual Archive import receipt (matching sha256) or its failure. Retains staged source and recovery metadata even if Archive fails. Does not import by itself.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "status": {
+                "enum": [
+                  "pending",
+                  "failed",
+                  "archived"
+                ]
+              },
+              "sha256": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "evidence": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "required": [
+              "request_key",
+              "id",
+              "status",
+              "evidence"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_prepare",
+          "description": "Persist exact recipient, message body, selected staged attachments and specific user send authorization. No UI write; draft in chat first unless that exact send is already authorized. Repeated content returns its existing operation. retry_of permits only a cancelled or definitively unsent operation; repeat_of permits a deliberate repeat of an accepted message. Both require a new specific user instruction.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "expected_revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "body": {
+                "type": "string",
+                "maxLength": 20000
+              },
+              "attachment_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 20000
+                }
+              },
+              "authorization": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "retry_of": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "repeat_of": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "required": [
+              "request_key",
+              "id",
+              "expected_revision",
+              "body",
+              "authorization"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_claim",
+          "description": "Record dispatch BEFORE composing or clicking Send, after rechecking the account, exact phone and empty composer in the UI. Execute only when execute=true. Replays return false; interrupted claims require evidence-based recovery, never blind resend.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "token": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "observed_phone": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "observed_account": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "required": [
+              "request_key",
+              "id",
+              "token",
+              "observed_phone",
+              "observed_account"
+            ]
+          }
+        },
+        {
+          "name": "vera_whatsapp_resolve",
+          "description": "Record real UI evidence after dispatch: accepted (exact phone/body/attachment_names and locator), failed (definitive_no_send=true), uncertain, or cancelled before dispatch. UI acceptance is separate from delivery/read. Never fabricate evidence.",
+          "inputSchema": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "request_key": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              },
+              "outcome": {
+                "enum": [
+                  "accepted",
+                  "failed",
+                  "uncertain",
+                  "cancelled"
+                ]
+              },
+              "evidence": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request_key",
+              "id",
+              "outcome",
+              "evidence"
+            ]
+          }
         }
       ],
       "resources": [
@@ -35311,7 +35776,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "vera-studio-archive",
-          "version": "0.1.79"
+          "version": "0.1.80"
         },
         "capabilities": {
           "tools": {}
