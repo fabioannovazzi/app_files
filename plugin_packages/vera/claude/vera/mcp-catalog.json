@@ -31648,6 +31648,13 @@
                 "minLength": 1,
                 "maxLength": 200
               },
+              "view": {
+                "enum": [
+                  "active",
+                  "history",
+                  "hidden"
+                ]
+              },
               "offset": {
                 "type": "integer",
                 "minimum": 0
@@ -31698,6 +31705,58 @@
               "theme": "dark"
             }
           ]
+        },
+        {
+          "name": "vera_workspace_archive_work_visibility",
+          "title": "Mostra o nascondi un lavoro",
+          "description": "Hide or restore one exact saved Studio Archive work at the user's request. Resolve the exact client, engagement and run first. Hiding moves the work to Nascosti and preserves documents, status and history.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "engagement_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "run_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "hidden": {
+                "enum": [
+                  "yes",
+                  "no"
+                ]
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "run_id",
+              "hidden"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ]
+            }
+          }
         },
         {
           "name": "vera_workspace_archive_setup",

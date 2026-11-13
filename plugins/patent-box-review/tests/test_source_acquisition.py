@@ -496,7 +496,7 @@ def stub_connection(
         # TLS destination and response fixtures remain self-contained.
         stream = io.StringIO()
         with monkeypatch.context() as worker_context, redirect_stdout(stream):
-            worker_context.setattr(sys, "argv", [arguments[2], arguments[3]])
+            worker_context.setattr(sys, "argv", [arguments[-2], arguments[-1]])
             code = transport._worker()
         return subprocess.CompletedProcess(
             arguments, code, stream.getvalue().encode(), b""

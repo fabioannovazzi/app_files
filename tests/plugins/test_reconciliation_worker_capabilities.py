@@ -62,7 +62,9 @@ def test_configured_non_luna_model_is_supported_when_harness_advertises_it(
         },
     }
     fake_path = SimpleNamespace(
-        with_name=lambda _: SimpleNamespace(read_text=lambda: json.dumps(policy))
+        with_name=lambda _: SimpleNamespace(
+            read_text=lambda **kwargs: json.dumps(policy)
+        )
     )
     monkeypatch.setattr(capabilities, "Path", lambda _: fake_path)
     monkeypatch.setattr(

@@ -3,6 +3,16 @@
   "display_name": "Vera native workspace",
   "security_controls": [
     {
+      "id": "archive-work-visibility",
+      "control": "An explicit hide or restore request stores only the selected run visibility in the local actor and archive profile. The request uses exact client, engagement and run IDs; its response contains only status and run ID. The work lists remain in app metadata. No documents, ledger records or network destinations are changed.",
+      "implemented_by": [
+        "scripts/native_archive_navigation.py",
+        "scripts/native_workspace.py",
+        "mcp/workspace.cjs"
+      ],
+      "on_violation": "Reject unknown runs and actors without reviewer authority."
+    },
+    {
       "id": "trusted-scope",
       "control": "Use exact operator allowlist bindings, or resolve stable client/engagement/run IDs through the maintained owner-private Studio Archive session and configured local root. Revalidate folder membership, portable identities and immutable source receipts before reads/writes and specialist chat handoff. Preserve session ownership; never accept browser/model filesystem paths or adopt another session. Ordinary local actor/tenant namespaces derive from OS-user home and archive session; local reviewer authority remains the operating computer user, with explicit viewer/empty-role overrides honored. This does not authenticate an OpenAI or studio account.",
       "implemented_by": [
@@ -1140,7 +1150,7 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "0ac1f827242ddad74f878cce530b3aee75e1c63ae2c2f99d4a521404e4098763",
+    "source_fingerprint": "29e0fbc8838dd32b8933b85aae22df22e0ca0dcd383053ea1a3edda874512957",
     "reviewed_at": "2026-11-04"
   },
   "governed_repository_paths": [

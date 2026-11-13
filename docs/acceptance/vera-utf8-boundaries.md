@@ -123,7 +123,7 @@ run. The entire PR's required CI remains separate from this focused result.
 Native runner: Windows Server 2025 (`windows-2025-vs2026`, image
 `20261103.298.1`), Python 3.12.10.
 
-Final Vera archive SHA-256 values:
+Pre-integration Vera archive SHA-256 values (superseded by the rebuild after main #994/#996):
 
 - `vera-chatgpt-upload.zip`: `6bb1e2c864bc513c79f20645e45dc4b292c8f29c47032527ee47752b02741756`
 - `vera-claude-plugin.zip`: `cb9861dbfd37556199d04e719dc00370775e7af68237cdcd70ea5691e838de05`
@@ -137,3 +137,19 @@ and the review-adapter generator’s Python command templates.
 Final `python scripts/build_product_release.py vera clara lucia --check`
 passed after the last source formatting change, including all product/host ZIP
 parity, retained privacy projections, MCP startup checks and version alignment.
+
+## Deployment preparation after main integration
+
+Integrated main `44c821d65` (Archive active/history views and current public
+download rebuilding). Preserved its production changes and refreshed the
+combined privacy fingerprints and release artifacts.
+
+The first full PR CI exposed test harnesses that assumed Python argument
+positions before the added `-X utf8` options, and a mock `read_text` without
+keyword support. Updated the tests to assert/accept the explicit encoding
+arguments while retaining the underlying transaction, isolation and incident
+checks. Added the required workflow-level local-only incident setting.
+
+Repaired runtime, incident, Archive, course and Concordato tests: 290 passed,
+3 skipped. Patent-box source transport and CI isolation: 34 passed.
+Full remote CI and deployment still require verification on the integrated head.

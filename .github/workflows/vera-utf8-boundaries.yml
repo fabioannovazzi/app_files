@@ -2,6 +2,8 @@ name: Vera UTF-8 process and file boundaries
 on:
   pull_request:
   workflow_dispatch:
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
 permissions:
   contents: read
 jobs:

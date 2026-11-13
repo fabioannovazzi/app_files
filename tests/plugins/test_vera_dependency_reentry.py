@@ -47,4 +47,6 @@ def test_base_handoff_releases_only_the_launcher_lease_and_propagates_result(
     result = module.reenter_base(script, ["--module", "studio-archive"])
 
     assert result == exit_code
-    assert calls == [[str(base), "-s", str(script), "--module", "studio-archive"]]
+    assert calls == [
+        [str(base), "-X", "utf8", "-s", str(script), "--module", "studio-archive"]
+    ]
