@@ -429,6 +429,19 @@ def _read_json(path: Path, *, label: str) -> dict[str, Any]:
     return payload
 
 
+def _temporary_file(parent: Path, *, prefix: str, suffix: str) -> tuple[int, str]:
+    """Retain the OS cause and location facts when staging cannot create a file."""
+    try:
+        return tempfile.mkstemp(prefix=prefix, suffix=suffix, dir=parent)
+    except OSError as exc:
+        raise LedgerError(
+            "Temporary file creation failed "
+            f"(errno={exc.errno}, winerror={getattr(exc, 'winerror', None)}, "
+            f"parent_characters={len(str(parent))}, parent_exists={parent.exists()}, "
+            f"name_prefix={prefix!r}): {exc}"
+        ) from exc
+
+
 def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
     parent = _ordinary_directory(path.parent, label="manifest directory")
     encoded = (
@@ -437,8 +450,8 @@ def _write_json(path: Path, payload: Mapping[str, Any]) -> None:
         )
         + "\n"
     ).encode("utf-8")
-    descriptor, temporary_name = tempfile.mkstemp(
-        prefix=f".{path.name}.", suffix=".tmp", dir=parent
+    descriptor, temporary_name = _temporary_file(
+        parent, prefix=f".{path.name}.", suffix=".tmp"
     )
     temporary = Path(temporary_name)
     try:
@@ -1138,10 +1151,10 @@ def _stable_copy(
         cross_api_ctime = os.name != "nt"
         if not _same_file_stat(before, before_path, check_ctime=cross_api_ctime):
             raise LedgerError("Imported document changed before it was opened.")
-        descriptor, temporary_name = tempfile.mkstemp(
+        descriptor, temporary_name = _temporary_file(
+            temporary_directory or destination.parent,
             prefix=".vera-input-",
             suffix=".tmp",
-            dir=temporary_directory or destination.parent,
         )
         temporary = Path(temporary_name)
         digest = hashlib.sha256()
@@ -1429,10 +1442,10 @@ def snapshot_client_folder(
     }
     snapshot = {**content, "content_sha256": _canonical_json_sha256(content)}
     engagement_root = _engagement_root(root, engagement_id)
-    descriptor, temporary_name = tempfile.mkstemp(
+    descriptor, temporary_name = _temporary_file(
+        engagement_root,
         prefix=".vera-folder-snapshot-",
         suffix=".json",
-        dir=engagement_root,
     )
     temporary = Path(temporary_name)
     try:

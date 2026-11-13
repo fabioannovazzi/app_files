@@ -2013,6 +2013,13 @@ def _date_parse_result(
     token = _clean_text(value)
     if not token:
         return "blank", None
+    # Spreadsheet readers may expose the same typed date as timestamp text.
+    # Parse only explicit year-first local timestamps; no locale or timezone guess.
+    if re.fullmatch(r"\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?", token):
+        try:
+            return "parsed", datetime.fromisoformat(token).date()
+        except ValueError:
+            return "invalid", None
     compact_match = COMPACT_ISO_DATE_RE.fullmatch(token)
     if compact_match is not None:
         parsed = _calendar_date(
@@ -3059,6 +3066,7 @@ def _date_contract_evidence(
     """Describe date syntax only for populated monetary candidate rows."""
 
     counts: Counter[str] = Counter()
+    values: list[dict[str, Any]] = []
     rows: dict[str, list[int]] = {
         "parsed": [],
         "blank": [],
@@ -3079,14 +3087,29 @@ def _date_contract_evidence(
             non_movement_summary_labels,
         ):
             continue
-        status, _ = _date_parse_result(
-            _mapped(row, mapping, "date"),
+        source_value = _mapped(row, mapping, "date")
+        status, parsed = _date_parse_result(
+            source_value,
             date_convention=date_convention,
             date_locale=date_locale,
             allow_excel_serial=allow_excel_serial,
         )
         counts[status] += 1
         rows.setdefault(status, []).append(int(row[SOURCE_ROW_COLUMN]))
+        values.append(
+            {
+                "source_row": int(row[SOURCE_ROW_COLUMN]),
+                "source_column": mapping.get("date"),
+                "source_value": (
+                    source_value.isoformat()
+                    if isinstance(source_value, (date, datetime))
+                    else str(source_value) if source_value is not None else None
+                ),
+                "source_type": type(source_value).__name__,
+                "status": status,
+                "normalized_date": parsed.isoformat() if parsed is not None else None,
+            }
+        )
     evidence = {
         "date_convention": date_convention,
         "excel_serial_allowed": allow_excel_serial,
@@ -3095,6 +3118,7 @@ def _date_contract_evidence(
             for status in ("parsed", "blank", "ambiguous", "invalid")
         },
         "source_rows": rows,
+        "source_values": values,
     }
     if counts["locale_required"]:
         evidence["status_counts"]["locale_required"] = int(counts["locale_required"])
@@ -6941,6 +6965,8 @@ def _retained_implementation_roots(roots: dict[str, Path]) -> dict[str, Path]:
     else:
         runtime = Path.home() / ".local/share/mparanza/runtime"
     package = runtime / "code" / digest
+    if not package.exists():
+        package = runtime / "journal-bank-reconciliation-replay" / digest
     index = _ordinary_single_link_implementation_file(package, "execution-files.json")
     if hashlib.sha256(index.read_bytes()).hexdigest() != digest:
         raise ValueError("Historical execution index changed")

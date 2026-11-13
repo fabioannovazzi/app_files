@@ -120,7 +120,20 @@ def _loaded(root: Path, record: Mapping[str, Any]) -> dict[str, Any]:
 
 def _result(root: Path, record: dict[str, Any]) -> dict[str, Any]:
     loaded = _loaded(root, record)
+    try:
+        from archive_core import retain_studio_run_binding
+
+        binding = retain_studio_run_binding(
+            root, record["engagement_id"], record["run_id"]
+        )
+    except (*_OPTIONAL_ERRORS, ledger.LedgerError) as exc:
+        binding = {"status": "unavailable", "reason": type(exc).__name__}
     return {
+        "work_binding": binding,
+        "continuation": {
+            "context_path": loaded["context_path"],
+            "registration_pending": binding["status"] != "retained",
+        },
         "work_folder": str(root),
         "workspace_kind": record["workspace_kind"],
         "client_identity_asserted": record["request"]["client_id"] is not None,
@@ -657,7 +670,7 @@ def main(argv: list[str] | None = None) -> int:
         result = {"finish": finish_work, "status": inspect_work}[args.command](
             args.destination
         )
-    sys.stdout.write(json.dumps(result, ensure_ascii=False) + "\n")
+    sys.stdout.write(json.dumps(result, ensure_ascii=True) + "\n")
     return 0
 
 

@@ -186,26 +186,47 @@ def test_shared_snapshot_reads_reported_file_beyond_legacy_windows_path_limit(
     assert not prepared.exists()
 
 
+@pytest.mark.parametrize(
+    "component", ["journal-sampling", "journal-bank-reconciliation"]
+)
 def test_collection_keeps_replay_source_when_archive_storage_is_unavailable(
-    tmp_path, monkeypatch, caplog
+    tmp_path, monkeypatch, caplog, component
 ):
     recovery = load_recovery()
-    root = installation(tmp_path, "journal-sampling")
+    root = installation(tmp_path, component)
     prepared = recovery.prepare_execution_root(root, None, snapshot=True, shared=True)
     recovery.release_execution_root(prepared)
-    archive = tmp_path / "runtime/journal-sampling-replay"
+    archive = tmp_path / "runtime" / f"{component}-replay"
     archive.write_text("Synthetic unavailable archive destination")
-    original = (
-        prepared / "modules/journal-sampling/scripts/journal_sampling_core.py"
-    ).read_bytes()
+    relative = f"modules/{component}/.codex-plugin/plugin.json"
+    original = (prepared / relative).read_bytes()
 
     recovery.collect_execution_store(keep_idle=0)
 
     assert prepared.is_dir()
+    assert (prepared / relative).read_bytes() == original
+    assert "Historical implementation preservation pending" in caplog.text
+
+
+def test_collection_preserves_reconciliation_receipt_bytes_without_launcher(tmp_path):
+    recovery = load_recovery()
+    root = installation(tmp_path, "journal-bank-reconciliation")
+    prepared = recovery.prepare_execution_root(root, None, snapshot=True, shared=True)
+    relative = "modules/journal-bank-reconciliation/scripts/journal_bank_core.py"
+    original = (prepared / relative).read_bytes()
+    digest = prepared.name
+    recovery.release_execution_root(prepared)
+
+    recovery.collect_execution_store(keep_idle=0)
+
+    archived = tmp_path / "runtime/journal-bank-reconciliation-replay" / digest
+    assert not prepared.exists()
+    assert (archived / relative).read_bytes() == original
     assert (
-        prepared / "modules/journal-sampling/scripts/journal_sampling_core.py"
-    ).read_bytes() == original
-    assert "Historical sampling preservation pending" in caplog.text
+        hashlib.sha256((archived / "execution-files.json").read_bytes()).hexdigest()
+        == digest
+    )
+    assert not (archived / "scripts/managed_python_runtime.py").exists()
 
 
 def test_managed_launcher_loads_by_path_outside_its_script_directory(tmp_path):

@@ -16,6 +16,49 @@
     "reviewer": "Codex agent",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
   },
+  "archive_continuity_source_binding_review_20261111": {
+    "baseline_commit": "2be166a4815c0af1b062dbaac309387e1cd25853",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "current_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "previous_course_sha256": "1be60d1269c4c0a1d3e7575fb97e7713e345a1e9cbcad41659a3ddb2ce34566f",
+    "reviewed_at": "2026-11-11",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately."
+  },
+  "archive_followup_source_binding_20261108": {
+    "baseline_commit": "3521585f1c44a7d3c3e9e6e39ca35dd33f311e4a",
+    "content_review": "Every compiled field except sources equals the reviewed baseline. Authored content and historical editorial judgments remain unchanged.",
+    "current_course_sha256": "1be60d1269c4c0a1d3e7575fb97e7713e345a1e9cbcad41659a3ddb2ce34566f",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, professional or installed-host acceptance.",
+    "previous_course_sha256": "bed23032ee19e8885c14f09c7a5b512cd1dec4cc5e17c3e9dbd42ee5e8344c2c",
+    "reviewed_at": "2026-11-08",
+    "reviewer": "Codex agent - bounded source compatibility review",
+    "source_review": "Reviewed restored-case import boundary and missing input collection repairs, plus exact Archive retry association. No lesson content or model payload change."
+  },
+  "archive_identity_source_review_20261112": {
+    "authored_content_unchanged": true,
+    "course_sha256": "6f8ad87d657489a429be1039099bbe2fb090aba12795253fdf8a422329f9cf68",
+    "limits": "Historical editorial reviews remain unchanged. This is not a new learner or rendered native-panel acceptance.",
+    "previous_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
+    "reviewed_at": "2026-11-12",
+    "reviewer": "Codex agent; source compatibility review",
+    "source_review": "Reopening preserves same-run identity provenance and privacy status; optional metadata cannot block delivery. Archive indexing excludes reserved work bookkeeping only inside verified ledgers. No new recipients or professional calculation changes.",
+    "validation": "710 continuity/reporting/recovery tests and nine search regressions passed; actual report stamping, verification and index reopening/rebuild passed."
+  },
+  "archive_repair_source_binding_20261108": {
+    "baseline_commit": "e304fa4529556e110ef6fd0516d59b3f4d8dab4c",
+    "content_review": "Compared complete compiled course JSON against origin/main: every field except sources is identical, including authored languages, inputs, checkpoints, practice, timing and execution definitions. Historical editorial judgments and output-artifact reviews are retained.",
+    "current_course_sha256": "bed23032ee19e8885c14f09c7a5b512cd1dec4cc5e17c3e9dbd42ee5e8344c2c",
+    "limits": "Source-binding review only. No new learner, visual, professional or installed-chat acceptance is asserted.",
+    "native_evidence": "GitHub Actions run 42470659436, job 128704016817, head 08439c4e164b7e2f26136169f963d16a52c5b083: native teaching stage passed 1742 tests, skipped 3, with 85.05% coverage. The subsequent stale editorial fingerprint check failed. Downloaded JUnit must match these exact course hashes; final-head CI remains required.",
+    "previous_course_sha256": "34fc78ee11305b2133a9563f936fdf9759938e05f905dd96a4ca185cbfb17966",
+    "reviewed_at": "2026-11-08",
+    "reviewer": "Codex agent - bounded source compatibility review",
+    "source_review": "Changed source records are limited to the reviewed Archive exact retained-case routing, privacy-error routing, and shared incident retry-progress repairs documented in docs/acceptance/studio-archive-repair-20261108.md."
+  },
   "auxiliary_display_source_binding_review_20261103": {
     "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
     "changed_source_paths": [
@@ -28,6 +71,11 @@
     "previous_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
+  "bank_first_release_source_review_20261112": {
+    "course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
+    "previous_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
+    "scope": "Lesson text, translations and fixtures unchanged; reviewed source binding now includes shared bank-first routing, explicit manual-sample opt-in and complete validated delivery. Native CI execution passed; no installed-host, learner or professional acceptance inferred."
   },
   "browser_preview_refresh": {
     "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
@@ -51,6 +99,10 @@
       }
     ],
     "source_review": "Reviewed the shared CLI serve dispatch and loopback helper. Listing, loading and rendering retain their original implementation. Browser preview serves the complete rendered kit on an OS-selected loopback port and rejects resolved paths outside the kit and directory lists. Teaching instructions now require a browser target, preserve relative assets and distinguish queued/opened actions from learner-confirmed visibility."
+  },
+  "capsule_source_binding_20261112": {
+    "previous_course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
+    "scope": "Restore the source-bound shared capsule import path after transport isolation; no lesson, translation, fixture or jurisdiction change. Two isolated partial-payment regressions pass."
   },
   "cnc_integration_freshness": {
     "comparison_commit": "d728392e712b82049b9fc8f196aa44df51cbbaed",
@@ -151,6 +203,11 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
+  "course_main965_source_binding_20261106": {
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "previous_course_sha256": "984c27e06525b1afc0b3ee8200527558bc14bf86d80397c7b1916a2b61e5ece6",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  },
   "course_privacy_source_review_20261105": {
     "authored_content_unchanged": true,
     "baseline_commit": "d7c18f2de90fc84db2f8bdbd9d00d9d200d8217c",
@@ -182,7 +239,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "def6cca468fd9cb061b26d1eaf03c0571cc6e1b99679d4ef110eca90401952e3",
+  "course_sha256": "ae2db4c83f20354646ae1b07f2dc9f2102428c7e725466baee4207839c44ca13",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "a7c5c3fce891ca11c69b50d929a02c09252c608d41f1b2f6170d815918d6796a",
@@ -334,18 +391,22 @@
     "scope": "Every compiled lesson field apart from source identities is identical to current main. Preserve main and branch historical editorial and artifact judgments. Source changes provide shared native UI, translated owned labels, receipt-bound native controls and read-only affordances. Main incident, Archive, Windows and course-completion changes are retained. No new live learner or professional acceptance claimed. Fresh exact-digest native teaching CI remains required."
   },
   "integrated_tutorial_archive_20261106": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-11-06",
-    "integrated_main_commit": "0a73afa8c213eeea728f296b7df6cd5d2a366871",
-    "previous_course_sha256": "dcc38be985d65970167701fc4e4df5933f985f8f394ee5e3a2643d7250b468cc",
-    "current_course_sha256": "2b1bd2d5db6cd7c84bd5c0ad77f06d6f1045e4e15057267e036fc4c41989d198",
     "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "scope": "Integrated the merged tutorial-to-Archive identity binding with same-byte measurement recovery, log reads and reconciliation evidence repairs. Compared every non-source course field with both previously reviewed heads. Historical editorial and output judgments are preserved; fresh native CI must bind to these exact combined source identities.",
+    "current_course_sha256": "2b1bd2d5db6cd7c84bd5c0ad77f06d6f1045e4e15057267e036fc4c41989d198",
     "fresh_matching_junit_required": true,
-    "installed_host_acceptance": false
+    "installed_host_acceptance": false,
+    "integrated_main_commit": "0a73afa8c213eeea728f296b7df6cd5d2a366871",
+    "previous_course_sha256": "dcc38be985d65970167701fc4e4df5933f985f8f394ee5e3a2643d7250b468cc",
+    "reviewed_at": "2026-11-06",
+    "reviewer": "Codex /root",
+    "scope": "Integrated the merged tutorial-to-Archive identity binding with same-byte measurement recovery, log reads and reconciliation evidence repairs. Compared every non-source course field with both previously reviewed heads. Historical editorial and output judgments are preserved; fresh native CI must bind to these exact combined source identities."
+  },
+  "integration_621_source_binding": {
+    "previous_course_sha256": "5cd653129ecaa664f46b01e5369883b4d5c2dad59d4e1d7440c5000709dc0610",
+    "scope": "Refresh source binding for Archive identity and reporting integration. Lesson content and fixtures unchanged."
   },
   "integration_refresh": {
     "date": "2026-10-02",
@@ -408,6 +469,7 @@
   "languages": {
     "de": {
       "demo": {
+        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains two closed items and one unresolved item at the March cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -423,8 +485,7 @@
             "sha256": "3b87827fdf5cdd7928a64d4d6f4ac95d82a25897e240ac0f78a61a2ea6265044"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[de-demo-2]",
-        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[de-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
@@ -435,6 +496,7 @@
         "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains three source-derived closed items at the April cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -450,13 +512,13 @@
             "sha256": "56e15e2311d73f729dbded2d8595975da2d11c6fd95b32572ddf373178459e75"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[de-practice-3]",
-        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[de-practice-3]"
       },
       "verdict": "accepted"
     },
     "en": {
       "demo": {
+        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains two closed items and one unresolved item at the March cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -472,8 +534,7 @@
             "sha256": "427cd2dd599608f867513797f1dc91ff0b3230c9c13810a5660c1f8ec6ae2678"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[en-demo-2]",
-        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[en-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
@@ -484,6 +545,7 @@
         "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains three source-derived closed items at the April cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -499,13 +561,13 @@
             "sha256": "bfd4ce22f5a191d57ba21ea68d0d9df875786c1adbfeb987f8913df3a77a79c7"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[en-practice-3]",
-        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[en-practice-3]"
       },
       "verdict": "accepted"
     },
     "es": {
       "demo": {
+        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains two closed items and one unresolved item at the March cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -521,8 +583,7 @@
             "sha256": "7be388996afd857e339faf58b5b28a740f88b238a4714f00a1fa8f8886ed3aaf"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[es-demo-2]",
-        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[es-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
@@ -533,6 +594,7 @@
         "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains three source-derived closed items at the April cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -548,13 +610,13 @@
             "sha256": "a879fbbd56d7ac34c92db64cf1d1bb3df52bdf1d094c3f9c9ae6dc90f5d457fa"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[es-practice-3]",
-        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[es-practice-3]"
       },
       "verdict": "accepted"
     },
     "fr": {
       "demo": {
+        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains two closed items and one unresolved item at the March cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -570,8 +632,7 @@
             "sha256": "a0e33858d2526dea8dfe9b38a61201443e3f25597084e30848e521f9594fe93f"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[fr-demo-2]",
-        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[fr-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
@@ -582,6 +643,7 @@
         "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains three source-derived closed items at the April cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -597,13 +659,13 @@
             "sha256": "bcda9ae2bb533808c1bbaf57fa9efe9841923ae0840d6b0e4b81176e42d0244b"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[fr-practice-3]",
-        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[fr-practice-3]"
       },
       "verdict": "accepted"
     },
     "it": {
       "demo": {
+        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains two closed items and one unresolved item at the March cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -619,8 +681,7 @@
             "sha256": "145ed8b05b9ad11ffaac069c091580f9453b8efff51273d43eddce21d8d0a420"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[it-demo-2]",
-        "historical_result_review_before_bank_first": "At 31 March, two invoices are closed against the EUR 1,220 and EUR 732 bank payments, totalling EUR 1,952; the EUR 488 invoice has no linked payment evidence and remains unresolved. The request workbook asks for its specific invoice/subledger reference or closing evidence. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[it-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The native Word report begins with the amount/status summary and next action. Readable source references, split wide schedules and localized report captions retain the actual calculations. The 34 current summary/request worksheet views cover all ten exercises; the requested action for the remaining invoice is specific and supported. Operational workbook headers largely retain Italian, and audit fields retain canonical English; these are not claimed fully translated. Blank allocation/residual columns are not taught as calculated results. Native report assurance passes while the row-review-completion check correctly remains pending.",
@@ -631,6 +692,7 @@
         "purpose_and_first_use": "The plain title teaches checking a reported supplier open-item list at a cut-off. The learner supplies the population and bank payment evidence, reviews source roles, runs the current comparison and reads proposed item statuses. The course stays on that complete first-use task."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata.",
         "result_review": "Current source-binding review: the native fixture retains three source-derived closed items at the April cut-off. The isolated test has no native semantic worker; the bank-first technical review remains incomplete and final delivery stays pending. No mandatory legacy sample or human decisions are fabricated. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -646,8 +708,7 @@
             "sha256": "bac83b313b8f3e2c57a145946cf83d035ea5a7217b1b156b3c3e1f1d8dcdc7b7"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[it-practice-3]",
-        "historical_result_review_before_bank_first": "At 30 April, the cumulative statement adds the EUR 488 payment dated 4 April. All three invoices, totalling EUR 2,440, now have closure evidence; the unresolved-request sheet has no data rows. Native source/value assurance passes. All three professional review rows remain pending and the package is not final_ready. The final-outline rerun preserves the inspected report and workbook content/style, apart from exact managed-source bindings and run metadata."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_open_item_kit_runs_current_pdf_ingestion_and_workpapers[it-practice-3]"
       },
       "verdict": "accepted"
     }
@@ -865,6 +926,15 @@
     "reviewer": "Codex - exact two-parent source compatibility comparison",
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
+  "portable_intake_source_review_20261113": {
+    "baseline_commit": "424aff636a51ebc8cf8ff2703a733e8fd43473ff",
+    "current_course_sha256": "ae2db4c83f20354646ae1b07f2dc9f2102428c7e725466baee4207839c44ca13",
+    "execution_requirement": "Fresh native demo and practice CI must verify this current course digest; this comparison does not claim installed-host, learner, visual or professional acceptance.",
+    "judgment": "Complete course comparison with the baseline differs only in sources. Authored lessons, localized text, fixtures, checkpoints and expected professional outputs are unchanged. Source changes standardize helper Unicode transport, preserve selected Archive locations, normalize explicit timestamp dates with source evidence and preserve historical reconciliation receipt bytes. Existing editorial and artifact judgments remain historical.",
+    "previous_course_sha256": "def6cca468fd9cb061b26d1eaf03c0571cc6e1b99679d4ef110eca90401952e3",
+    "reviewed_at": "2026-11-13",
+    "reviewer": "Codex /root - source compatibility review"
+  },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
@@ -882,18 +952,18 @@
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
   "reconciliation_archive_source_review_20261106": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-11-06",
-    "previous_course_sha256": "c8bf0d5ecbfdbbb9345d1a8a6f29d38cd119fb284cdf20a3dfe969cfcbb1a008",
-    "reviewed_baseline_course_sha256": "50f82d8cd327158c6d515b131622935de6bc0bea60d1b7578cfdb9883b4d4647",
-    "current_course_sha256": "dcc38be985d65970167701fc4e4df5933f985f8f394ee5e3a2643d7250b468cc",
     "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "current_course_sha256": "dcc38be985d65970167701fc4e4df5933f985f8f394ee5e3a2643d7250b468cc",
     "fresh_matching_junit_required": true,
-    "installed_host_acceptance": false
+    "installed_host_acceptance": false,
+    "previous_course_sha256": "c8bf0d5ecbfdbbb9345d1a8a6f29d38cd119fb284cdf20a3dfe969cfcbb1a008",
+    "reviewed_at": "2026-11-06",
+    "reviewed_baseline_course_sha256": "50f82d8cd327158c6d515b131622935de6bc0bea60d1b7578cfdb9883b4d4647",
+    "reviewer": "Codex /root",
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required."
   },
   "reconciliation_repair_source_review_20261026": {
     "baseline_commit": "4cb1c20db5206ad2f1cbd23650eb01481b7900b6",
@@ -1124,66 +1194,5 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
-  },
-  "course_main965_source_binding_20261106": {
-    "previous_course_sha256": "984c27e06525b1afc0b3ee8200527558bc14bf86d80397c7b1916a2b61e5ece6",
-    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
-    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
-  },
-  "archive_repair_source_binding_20261108": {
-    "reviewer": "Codex agent - bounded source compatibility review",
-    "reviewed_at": "2026-11-08",
-    "baseline_commit": "e304fa4529556e110ef6fd0516d59b3f4d8dab4c",
-    "previous_course_sha256": "34fc78ee11305b2133a9563f936fdf9759938e05f905dd96a4ca185cbfb17966",
-    "current_course_sha256": "bed23032ee19e8885c14f09c7a5b512cd1dec4cc5e17c3e9dbd42ee5e8344c2c",
-    "content_review": "Compared complete compiled course JSON against origin/main: every field except sources is identical, including authored languages, inputs, checkpoints, practice, timing and execution definitions. Historical editorial judgments and output-artifact reviews are retained.",
-    "source_review": "Changed source records are limited to the reviewed Archive exact retained-case routing, privacy-error routing, and shared incident retry-progress repairs documented in docs/acceptance/studio-archive-repair-20261108.md.",
-    "native_evidence": "GitHub Actions run 42470659436, job 128704016817, head 08439c4e164b7e2f26136169f963d16a52c5b083: native teaching stage passed 1742 tests, skipped 3, with 85.05% coverage. The subsequent stale editorial fingerprint check failed. Downloaded JUnit must match these exact course hashes; final-head CI remains required.",
-    "limits": "Source-binding review only. No new learner, visual, professional or installed-chat acceptance is asserted."
-  },
-  "archive_followup_source_binding_20261108": {
-    "reviewer": "Codex agent - bounded source compatibility review",
-    "reviewed_at": "2026-11-08",
-    "baseline_commit": "3521585f1c44a7d3c3e9e6e39ca35dd33f311e4a",
-    "previous_course_sha256": "bed23032ee19e8885c14f09c7a5b512cd1dec4cc5e17c3e9dbd42ee5e8344c2c",
-    "current_course_sha256": "1be60d1269c4c0a1d3e7575fb97e7713e345a1e9cbcad41659a3ddb2ce34566f",
-    "content_review": "Every compiled field except sources equals the reviewed baseline. Authored content and historical editorial judgments remain unchanged.",
-    "source_review": "Reviewed restored-case import boundary and missing input collection repairs, plus exact Archive retry association. No lesson content or model payload change.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new learner, visual, professional or installed-host acceptance."
-  },
-  "archive_continuity_source_binding_review_20261111": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-11-11",
-    "baseline_commit": "2be166a4815c0af1b062dbaac309387e1cd25853",
-    "previous_course_sha256": "1be60d1269c4c0a1d3e7575fb97e7713e345a1e9cbcad41659a3ddb2ce34566f",
-    "current_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
-    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
-    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
-    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
-    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
-  },
-  "bank_first_release_source_review_20261112": {
-    "previous_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
-    "course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
-    "scope": "Lesson text, translations and fixtures unchanged; reviewed source binding now includes shared bank-first routing, explicit manual-sample opt-in and complete validated delivery. Native CI execution passed; no installed-host, learner or professional acceptance inferred."
-  },
-  "capsule_source_binding_20261112": {
-    "previous_course_sha256": "c016d5aeaf4c0007304ab52e59ebb82cdf650b9f707c29785991613b28983552",
-    "scope": "Restore the source-bound shared capsule import path after transport isolation; no lesson, translation, fixture or jurisdiction change. Two isolated partial-payment regressions pass."
-  },
-  "archive_identity_source_review_20261112": {
-    "authored_content_unchanged": true,
-    "course_sha256": "6f8ad87d657489a429be1039099bbe2fb090aba12795253fdf8a422329f9cf68",
-    "limits": "Historical editorial reviews remain unchanged. This is not a new learner or rendered native-panel acceptance.",
-    "previous_course_sha256": "980fe6c6a5d1d3892c4b09552e23a870989daf3db401db7bf5f2c38b77fec5e6",
-    "reviewed_at": "2026-11-12",
-    "reviewer": "Codex agent; source compatibility review",
-    "source_review": "Reopening preserves same-run identity provenance and privacy status; optional metadata cannot block delivery. Archive indexing excludes reserved work bookkeeping only inside verified ledgers. No new recipients or professional calculation changes.",
-    "validation": "710 continuity/reporting/recovery tests and nine search regressions passed; actual report stamping, verification and index reopening/rebuild passed."
-  },
-  "integration_621_source_binding": {
-    "previous_course_sha256": "5cd653129ecaa664f46b01e5369883b4d5c2dad59d4e1d7440c5000709dc0610",
-    "scope": "Refresh source binding for Archive identity and reporting integration. Lesson content and fixtures unchanged."
   }
 }

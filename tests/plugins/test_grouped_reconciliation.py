@@ -246,7 +246,7 @@ def _environment(
         if denied:
             raise OSError("host denied execution")
         directory = kwargs["output_dir"]
-        p = json.loads((directory / "packet.json").read_text())
+        p = json.loads((directory / "packet.json").read_text(encoding="utf-8"))
         assert kwargs["source_records"] == [
             {"record_id": record["transaction_id"], "fields": list(record)}
             for record in [*p["bank_records"], *p["journal_records"]]

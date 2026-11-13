@@ -170,7 +170,9 @@ def prepare_reviewed_bank_copies(
             }
         )
     evidence_path = output_dir / "bank-preparation-evidence.json"
-    evidence_path.write_text(json.dumps(evidence, indent=2, ensure_ascii=False) + "\n")
+    evidence_path.write_text(
+        json.dumps(evidence, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
     decision_bytes = (
         json.dumps(decisions, indent=2, ensure_ascii=False) + "\n"
     ).encode()

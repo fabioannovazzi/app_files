@@ -3520,6 +3520,8 @@ def test_reviewed_mapping_accepts_compact_iso_date_for_amount_date_match(
     [
         (date(2026, 5, 8), "2026-05-08"),
         (datetime(2026, 5, 8, 14, 30), "2026-05-08"),
+        ("2026-10-01 00:00:00", "2026-10-01"),
+        ("2026-05-08T14:30:00.123456", "2026-05-08"),
         (46150, "2026-05-08"),
         ("20260508", "2026-05-08"),
         ("2026/05/08", "2026-05-08"),
@@ -3560,6 +3562,36 @@ def test_native_serial_compact_and_year_first_dates_are_mechanical(
     assert journal_diagnostic["preview"][0]["transaction_date"] == expected_date
     assert bank_diagnostic["date_convention"] is None
     assert bank_diagnostic["mapping_decision"] is None
+    original = bank_diagnostic["date_interpretation_evidence"]["source_values"][0]
+    assert original["source_row"] == 2
+    assert original["normalized_date"] == expected_date
+    assert original["source_value"] is not None
+
+
+def test_timestamp_intake_preserves_original_source_value(tmp_path: Path) -> None:
+    core = load_core()
+    bank = tmp_path / "bank.xlsx"
+    journal = tmp_path / "journal.xlsx"
+    source_value = "2026-10-01 00:00:00"
+    _save_workbook(bank, [["Date", "Amount", "Reference"], [source_value, 80, "TX100"]])
+    _save_workbook(
+        journal, [["Date", "Amount", "Reference"], [datetime(2026, 10, 1), 80, "TX100"]]
+    )
+    original = bank.read_bytes()
+
+    inspection = core.inspect_inputs(bank, journal, tmp_path / "inspection")
+
+    evidence = inspection.bank["files"][0]["date_interpretation_evidence"][
+        "source_values"
+    ][0]
+    assert evidence["source_value"] == source_value
+    assert evidence["source_type"] == "str"
+    assert evidence["normalized_date"] == "2026-10-01"
+    assert (
+        inspection.bank["files"][0]["preview"][0]["transaction_date"]
+        == inspection.journal["files"][0]["preview"][0]["transaction_date"]
+    )
+    assert bank.read_bytes() == original
 
 
 def test_ambiguous_day_month_dates_require_current_reviewed_convention(
@@ -4252,8 +4284,12 @@ def test_date_convention_mutation_or_stale_v5_receipt_emits_zero_rows(
     assert diagnostic["mapping_decision"] is None
 
 
+@pytest.mark.parametrize(
+    "source_date", ["31/02/2026", "2026-10-01 25:00:00", "2026-02-30 00:00:00"]
+)
 def test_invalid_populated_date_with_stable_reference_fails_source(
     tmp_path: Path,
+    source_date: str,
 ) -> None:
     # Arrange
     core = load_core()
@@ -4263,7 +4299,7 @@ def test_invalid_populated_date_with_stable_reference_fails_source(
         bank_path,
         [
             ["Date", "Amount", "Reference"],
-            ["31/02/2026", "80.00", "TX100"],
+            [source_date, "80.00", "TX100"],
         ],
     )
     _save_csv(
@@ -14858,14 +14894,54 @@ def test_windows_capsule_profile_preserves_drive_paths_spaces_and_unicode():
     assert command[-1] == str(codex)
 
 
+@pytest.mark.parametrize("storage", ["code", "journal-bank-reconciliation-replay"])
 def test_semantic_replay_validates_historical_code_before_envelope(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, storage: str
 ) -> None:
     """A new installation must verify source receipts against their original code."""
     output, *_ = _prepare_closed_mcp_review_run(tmp_path / "case")
     core = load_core()
     semantic = load_semantic_review()
     historical = core.implementation_artifact_roots()
+    package = tmp_path / "historical-package"
+    component = package / "modules/journal-bank-reconciliation"
+    shutil.copytree(
+        historical["implementation"],
+        component,
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+    )
+    shutil.copytree(
+        historical["shared_implementation"],
+        component / "vendor/modules/vera_assurance",
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+    )
+    shutil.copytree(
+        historical["pdf_implementation"],
+        component / "vendor/modules/vera_journal_pdf",
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", "*.pyo"),
+    )
+    index = json.dumps(
+        {
+            "schema_version": 1,
+            "files": {
+                p.relative_to(package)
+                .as_posix(): hashlib.sha256(p.read_bytes())
+                .hexdigest()
+                for p in package.rglob("*")
+                if p.is_file()
+            },
+        }
+    ).encode()
+    (package / "execution-files.json").write_bytes(index)
+    digest = hashlib.sha256(index).hexdigest()
+    runtime = tmp_path / "runtime"
+    destination = runtime / storage / digest
+    destination.parent.mkdir(parents=True)
+    package.rename(destination)
+    monkeypatch.setenv("MPARANZA_RUNTIME_ROOT", str(runtime))
+    (_customer_context_path(output).parent / "execution-runtime.json").write_text(
+        json.dumps({"package_sha256": digest})
+    )
     copied, shared = _copy_journal_bank_implementation(tmp_path)
     changed = copied / "scripts/retrieval_review.py"
     changed.write_text(changed.read_text() + "\n# Synthetic next implementation.\n")
@@ -14875,9 +14951,6 @@ def test_semantic_replay_validates_historical_code_before_envelope(
         "pdf_implementation": shared.parent / "vera_journal_pdf",
     }
     monkeypatch.setattr(core, "implementation_artifact_roots", lambda: current.copy())
-    monkeypatch.setattr(
-        core, "_retained_implementation_roots", lambda roots: historical
-    )
     before = (output / "assurance_envelope.json").read_bytes()
 
     replay = semantic._validated_source_replay(output)

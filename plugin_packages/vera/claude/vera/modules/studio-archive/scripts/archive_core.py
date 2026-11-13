@@ -21,7 +21,8 @@ import sys
 import tempfile
 import warnings
 import zipfile
-from contextlib import nullcontext
+from contextlib import contextmanager, nullcontext
+from contextvars import ContextVar
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from email import policy
@@ -104,6 +105,7 @@ __all__ = [
     "plan_gmail_client_search",
     "prepare_studio_client_workflow",
     "retain_studio_run_binding",
+    "use_studio_run_context",
     "recover_studio_client_ledger",
     "refresh_archive",
     "report_studio_client_retention",
@@ -4292,6 +4294,36 @@ def restore_studio_client_workflow(
     }
 
 
+_EXPLICIT_RUN: ContextVar[dict[str, Any] | None] = ContextVar(
+    "archive_run_context", default=None
+)
+
+
+@contextmanager
+def use_studio_run_context(context_path: Path | None) -> Iterator[None]:
+    """Continue an exact saved job even when secondary pointers cannot be written."""
+    if context_path is None:
+        yield
+        return
+    if (
+        not context_path.is_absolute()
+        or context_path.name != "context.json"
+        or len(context_path.parents) < 6
+    ):
+        raise ArchiveError("Select an absolute canonical saved run context.")
+    root = context_path.parents[5]
+    loaded = ledger._load_run_identity(
+        root, context_path.parents[2].name, context_path.parent.name
+    )
+    if Path(loaded["context_path"]) != context_path:
+        raise ArchiveError("Context must be the canonical saved run context.")
+    token = _EXPLICIT_RUN.set({**loaded["run"], "root": root})
+    try:
+        yield
+    finally:
+        _EXPLICIT_RUN.reset(token)
+
+
 def retain_studio_run_binding(
     client_root: Path,
     engagement_id: str,
@@ -4338,6 +4370,14 @@ def _retained_run_root(
     state: Path, client_id: str, engagement_id: str, run_id: str
 ) -> Path | None:
     """Use the established job, verifying its identity without relisting clients."""
+    explicit = _EXPLICIT_RUN.get()
+    if explicit is not None:
+        if (client_id, engagement_id, run_id) != tuple(
+            explicit[key] for key in ("client_id", "engagement_id", "run_id")
+        ):
+            raise ArchiveError("Saved context belongs to a different selected run.")
+        ledger._load_run_identity(explicit["root"], engagement_id, run_id)
+        return explicit["root"]
     identities = (client_id, engagement_id, run_id)
     try:
         record = preferences.read_json(_run_binding_path(state, identities))
@@ -4382,6 +4422,18 @@ def _retained_scope_root(
     Existing run bindings also cover engagement continuation and client reopen.
     Multiple live copies are ambiguous; choosing one could write to the wrong copy.
     """
+    explicit = _EXPLICIT_RUN.get()
+    if explicit is not None:
+        if (client_id is not None and client_id != explicit["client_id"]) or (
+            engagement_id is not None and engagement_id != explicit["engagement_id"]
+        ):
+            raise ArchiveError(
+                "Saved context belongs to a different selected engagement."
+            )
+        ledger._load_run_identity(
+            explicit["root"], explicit["engagement_id"], explicit["run_id"]
+        )
+        return explicit["root"]
     directories = {_run_binding_path(state, ()).parent}
     try:
         directories.add((_archive_profile(state) or state) / "work-bindings")

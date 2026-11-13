@@ -16,6 +16,17 @@
     "reviewer": "Codex agent",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
   },
+  "archive_continuity_source_binding_review_20261111": {
+    "baseline_commit": "55f8ff788a98a7364655c5a9340b88a18e3c99dc",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "current_course_sha256": "5e8d883b9adc600acfbb67b010bf5890e811dbae5f17d8b420e2b2b944450601",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "previous_course_sha256": "9a519274f96f94d3865c986a3f960efb9767a6827c878361c61e21b519252c32",
+    "reviewed_at": "2026-11-11",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately."
+  },
   "auxiliary_display_source_binding_review_20261103": {
     "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
     "changed_source_paths": [
@@ -130,7 +141,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "5e8d883b9adc600acfbb67b010bf5890e811dbae5f17d8b420e2b2b944450601",
+  "course_sha256": "a9e064f11596259c036da01755732547e0694e0b17eb3039b54add9722b2b3a7",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "2677056ff83b44e177ca90a94a1248f1f4f55eb94f144e05447e8bffab28119f",
@@ -554,6 +565,15 @@
     "reviewer": "Codex - exact two-parent source compatibility comparison",
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
+  "portable_intake_source_review_20261113": {
+    "baseline_commit": "424aff636a51ebc8cf8ff2703a733e8fd43473ff",
+    "current_course_sha256": "a9e064f11596259c036da01755732547e0694e0b17eb3039b54add9722b2b3a7",
+    "execution_requirement": "Fresh native demo and practice CI must verify this current course digest; this comparison does not claim installed-host, learner, visual or professional acceptance.",
+    "judgment": "Complete course comparison with the baseline differs only in sources. Authored lessons, localized text, fixtures, checkpoints and expected professional outputs are unchanged. Source changes standardize helper Unicode transport, preserve selected Archive locations, normalize explicit timestamp dates with source evidence and preserve historical reconciliation receipt bytes. Existing editorial and artifact judgments remain historical.",
+    "previous_course_sha256": "5e8d883b9adc600acfbb67b010bf5890e811dbae5f17d8b420e2b2b944450601",
+    "reviewed_at": "2026-11-13",
+    "reviewer": "Codex /root - source compatibility review"
+  },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
@@ -725,16 +745,5 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
-  },
-  "archive_continuity_source_binding_review_20261111": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-11-11",
-    "baseline_commit": "55f8ff788a98a7364655c5a9340b88a18e3c99dc",
-    "previous_course_sha256": "9a519274f96f94d3865c986a3f960efb9767a6827c878361c61e21b519252c32",
-    "current_course_sha256": "5e8d883b9adc600acfbb67b010bf5890e811dbae5f17d8b420e2b2b944450601",
-    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
-    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
-    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
-    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
   }
 }

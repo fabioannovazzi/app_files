@@ -16,6 +16,17 @@
     "reviewer": "Codex agent",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
   },
+  "archive_continuity_source_binding_review_20261111": {
+    "baseline_commit": "5c94ebd1332c8e4fe2e68fa2758cfb361aa168b8",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "current_course_sha256": "c581e265c0124ae9386d709eb584d88aeaa68a0b6aec90383ef51179bcdde553",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "previous_course_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280",
+    "reviewed_at": "2026-11-11",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately."
+  },
   "auxiliary_display_source_binding_review_20261103": {
     "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
     "changed_source_paths": [
@@ -28,6 +39,11 @@
     "previous_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
     "reviewed_at": "2026-11-03T17:16:31.368301+00:00",
     "reviewer": "Codex /root - bounded auxiliary display source-binding review"
+  },
+  "bank_first_release_source_review_20261112": {
+    "course_sha256": "93742261751f446543aed549b84efe5d811949428f70f26a62be94c2650a5342",
+    "previous_course_sha256": "c581e265c0124ae9386d709eb584d88aeaa68a0b6aec90383ef51179bcdde553",
+    "scope": "Lesson text, translations and fixtures unchanged; reviewed source binding now includes shared bank-first routing, explicit manual-sample opt-in and complete validated delivery. Native CI execution passed; no installed-host, learner or professional acceptance inferred."
   },
   "browser_preview_refresh": {
     "content_review": "Compared the complete course object with the reviewed main baseline: localized teaching content, input definitions, requests, checkpoints, exercises and timing are byte-equivalent as JSON values. Existing editorial judgments and artifact reviews remain preserved. This refresh does not assert a new independent editorial or learner review.",
@@ -101,6 +117,13 @@
     "reviewer": "Codex /root",
     "source_review": "Integrated additive Geneva jurisdiction/currency adapters and French presentation from PR #692; course QA source/result readers, saved-review controls, parser hardening and teacher/working roles are preserved. Generated assets and packages are rebuilt from this combined source."
   },
+  "combined_main964_source_binding_20261107": {
+    "current_course_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280",
+    "previous_course_sha256": "b0b7d85ba055c2cfb1f5b05d12cb7ceb1d53ccd78030e11ffae4d1ded1209535",
+    "reviewed_at": "2026-11-07",
+    "reviewer": "Codex - bounded source integration review",
+    "scope": "The complete compiled course excluding sources is identical to integrated main c61cd071. All journal-bank implementation files exactly match main; combined shared teaching runtime repairs retain their earlier reviewed scope. Historical editorial and artifact reviews preserved. Fresh localized execution on this exact digest remains mandatory; no new learner, live UI or professional acceptance."
+  },
   "committed_shared_contract_integration_20261008": {
     "comparison": "Complete course payload excluding source inventory is identical to all three inspected committed parents, including every localized lesson, input, checkpoint and expectation.",
     "course_sha256": "230fe84ee677cd3736742c8339c729f10211a21850d4f0b5654722d48c8ac234",
@@ -151,6 +174,11 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
+  "course_main965_source_binding_20261106": {
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "previous_course_sha256": "ef7f439e1f760cc8f9f31f706ef1a944078d3de8bd0cba65223581e9078efa7e",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  },
   "course_privacy_source_review_20261105": {
     "authored_content_unchanged": true,
     "baseline_commit": "6bbf346bbf4e35ae9fe6c291acffeb4c6f5dedf2",
@@ -184,7 +212,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "93742261751f446543aed549b84efe5d811949428f70f26a62be94c2650a5342",
+  "course_sha256": "dddcf8ea409c502c6ceb7e51742d792ce349012d59ca8ccf0a0e7cacfabe428b",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
@@ -418,6 +446,7 @@
   "languages": {
     "de": {
       "demo": {
+        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -429,8 +458,7 @@
             "sha256": "26591b823d78f191ad76c042be4e2c12fe563a65baea0a930f0f60a288240b6c"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[de-demo-2]",
-        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[de-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
@@ -441,6 +469,7 @@
         "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -452,13 +481,13 @@
             "sha256": "0e0055f1b38433be11be6beb23c408a53fd62f4aeff96766c80a0f43e805c413"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[de-practice-3]",
-        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[de-practice-3]"
       },
       "verdict": "accepted"
     },
     "en": {
       "demo": {
+        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -470,8 +499,7 @@
             "sha256": "ef43a7f76a2311cff3ec8ba0feed5969dbce763dcf45eb215f0840f3bfadc177"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[en-demo-2]",
-        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[en-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
@@ -482,6 +510,7 @@
         "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -493,13 +522,13 @@
             "sha256": "e2cb53f1727c49eee854e89d6417044f9c4153020457005eeeacd454b474fe0e"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[en-practice-3]",
-        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[en-practice-3]"
       },
       "verdict": "accepted"
     },
     "es": {
       "demo": {
+        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -511,8 +540,7 @@
             "sha256": "d167a1df9eba8fa7760eb6ae6ddd1b07eaf6ce77562c324ed6e66aedf191e1fe"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[es-demo-2]",
-        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[es-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
@@ -523,6 +551,7 @@
         "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -534,13 +563,13 @@
             "sha256": "e1c5b773e247a2885b2dd6317562961b7ae89652a6571309f9d5adf0dacd5605"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[es-practice-3]",
-        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[es-practice-3]"
       },
       "verdict": "accepted"
     },
     "fr": {
       "demo": {
+        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -552,8 +581,7 @@
             "sha256": "c08af70275e38729afa7185cd81a5b2a8fe093f1bf47e886e464f1fcbea8fc69"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[fr-demo-2]",
-        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[fr-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
@@ -564,6 +592,7 @@
         "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -575,13 +604,13 @@
             "sha256": "435c4dedc0063a843277228a65e7284a500cd13050b1fb50dd14908478352aaf"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[fr-practice-3]",
-        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[fr-practice-3]"
       },
       "verdict": "accepted"
     },
     "it": {
       "demo": {
+        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -593,8 +622,7 @@
             "sha256": "d9dfd680c30bae7ee7d0d9ee1698ae5d635650c17d74e931ed79ebdd162e1a70"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[it-demo-2]",
-        "historical_result_review_before_bank_first": "March produces two exact-reference matches of EUR 1,220 and EUR 732, with no unmatched movements. The selected workbook row shows matching bank/journal dates and amounts and a zero difference. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[it-demo-2]"
       },
       "editorial": {
         "deliverable_and_next_action": "The workbook makes the bank and journal dates, amounts, zero difference and shared reference readable. Header shading, fitted widths, wrapped text and frozen identifiers preserve the actual tables. All seven worksheet views were inspected for both unique phase files; no reviewed field is clipped. Localized review notes state counts and tell the reader to check scope, trace a match and investigate any unmatched items. Canonical worksheet/field names and the reference stage identifier remain English technical labels.",
@@ -605,6 +633,7 @@
         "purpose_and_first_use": "The plain title introduces a normal month-end bank reconciliation: supply the bank statement and bank ledger, name the account and period, review the proposed interpretation and use the resulting workpapers. The lesson explains the complete first-use task without turning an allocation feature into the subject."
       },
       "practice": {
+        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created.",
         "result_review": "Current source-binding review: native execution verifies qualified source ingestion, source/value assurance and the expected fictional reconciliation population. The final route uses strong explicit admission and shared bank-first accounting separation; native fixture tests do not establish live model accuracy or installed-host acceptance. Historical layout artifact hashes are retained below; they are not fresh visual acceptance.",
         "reviewed_artifacts": [
           {
@@ -616,8 +645,7 @@
             "sha256": "2eea0d54e8818c2e53ea739d60753afd3bbada3f0562f92df6a4e161687d8c91"
           }
         ],
-        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[it-practice-3]",
-        "historical_result_review_before_bank_first": "The cumulative April comparison adds the EUR 488 payment dated 4 April and produces three matches with no unmatched movements. The new payment date, amount, reference and physical source row were checked in the native inspection preview. The current workbook and review-note bytes match the inspected render/notes. Full native material-value replay passes. Professional reporting readiness remains separate from completing this execution; no approval or lesson-completion marker is created."
+        "test_case": "tests.plugins.test_teaching_kit_execution::test_bank_reconciliation_kit_runs_current_comparison[it-practice-3]"
       },
       "verdict": "accepted"
     }
@@ -811,6 +839,15 @@
     "reviewer": "Codex - exact two-parent source compatibility comparison",
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
   },
+  "portable_intake_source_review_20261113": {
+    "baseline_commit": "424aff636a51ebc8cf8ff2703a733e8fd43473ff",
+    "current_course_sha256": "0fa54528b2bd8ef28e55123ec85868e186874291f3e82a845288982da2f5b1c3",
+    "execution_requirement": "Fresh native demo and practice CI must verify this current course digest; this comparison does not claim installed-host, learner, visual or professional acceptance.",
+    "judgment": "Complete course comparison with the baseline differs only in sources. Authored lessons, localized text, fixtures, checkpoints and expected professional outputs are unchanged. Source changes standardize helper Unicode transport, preserve selected Archive locations, normalize explicit timestamp dates with source evidence and preserve historical reconciliation receipt bytes. Existing editorial and artifact judgments remain historical.",
+    "previous_course_sha256": "93742261751f446543aed549b84efe5d811949428f70f26a62be94c2650a5342",
+    "reviewed_at": "2026-11-13",
+    "reviewer": "Codex /root - source compatibility review"
+  },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {
     "baseline_commit": "eacd4a71b3bf5095f985dc9825933a49aa3f4ea9",
@@ -828,18 +865,18 @@
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
   "reconciliation_archive_source_review_20261106": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-11-06",
-    "previous_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
-    "reviewed_baseline_course_sha256": "321a14940c890c37886f76b1acc817c152cc22d542f45b257c82948d3605b120",
-    "current_course_sha256": "190f84ffe895f482dcc07b37a56e101460dfe6e482a8f28caae71213a3cb84c0",
     "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "current_course_sha256": "190f84ffe895f482dcc07b37a56e101460dfe6e482a8f28caae71213a3cb84c0",
     "fresh_matching_junit_required": true,
-    "installed_host_acceptance": false
+    "installed_host_acceptance": false,
+    "previous_course_sha256": "631395707e7ad2e4c5405609b03c1c61197998c26ae07136be23e5debb9a717c",
+    "reviewed_at": "2026-11-06",
+    "reviewed_baseline_course_sha256": "321a14940c890c37886f76b1acc817c152cc22d542f45b257c82948d3605b120",
+    "reviewer": "Codex /root",
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required."
   },
   "release_freshness_20260928": {
     "changed_compiled_fields": [
@@ -1062,32 +1099,10 @@
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
   },
-  "course_main965_source_binding_20261106": {
-    "previous_course_sha256": "ef7f439e1f760cc8f9f31f706ef1a944078d3de8bd0cba65223581e9078efa7e",
-    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
-    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
-  },
-  "combined_main964_source_binding_20261107": {
-    "previous_course_sha256": "b0b7d85ba055c2cfb1f5b05d12cb7ceb1d53ccd78030e11ffae4d1ded1209535",
-    "current_course_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280",
-    "reviewer": "Codex - bounded source integration review",
-    "reviewed_at": "2026-11-07",
-    "scope": "The complete compiled course excluding sources is identical to integrated main c61cd071. All journal-bank implementation files exactly match main; combined shared teaching runtime repairs retain their earlier reviewed scope. Historical editorial and artifact reviews preserved. Fresh localized execution on this exact digest remains mandatory; no new learner, live UI or professional acceptance."
-  },
-  "archive_continuity_source_binding_review_20261111": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-11-11",
-    "baseline_commit": "5c94ebd1332c8e4fe2e68fa2758cfb361aa168b8",
-    "previous_course_sha256": "a864810fbee80703a94bbb5afaff00e6cc95a85ecea2cf93ef65a2c17cd70280",
-    "current_course_sha256": "c581e265c0124ae9386d709eb584d88aeaa68a0b6aec90383ef51179bcdde553",
-    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
-    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
-    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
-    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
-  },
-  "bank_first_release_source_review_20261112": {
-    "previous_course_sha256": "c581e265c0124ae9386d709eb584d88aeaa68a0b6aec90383ef51179bcdde553",
-    "course_sha256": "93742261751f446543aed549b84efe5d811949428f70f26a62be94c2650a5342",
-    "scope": "Lesson text, translations and fixtures unchanged; reviewed source binding now includes shared bank-first routing, explicit manual-sample opt-in and complete validated delivery. Native CI execution passed; no installed-host, learner or professional acceptance inferred."
+  "windows_bank_evidence_source_review_20261113": {
+    "reviewer": "AI agent",
+    "previous_course_sha256": "0fa54528b2bd8ef28e55123ec85868e186874291f3e82a845288982da2f5b1c3",
+    "course_sha256": "dddcf8ea409c502c6ceb7e51742d792ce349012d59ca8ccf0a0e7cacfabe428b",
+    "scope": "Source binding only: explicit UTF-8 evidence and prompt persistence, verified historical checkpoint replay. Lesson, locales, inputs and expected outputs unchanged; full course JSON comparison excluding sources is equal. Unicode workflow regression covers original path, hash and retained evidence."
   }
 }

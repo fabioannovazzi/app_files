@@ -24,6 +24,9 @@ PROTOCOL = "vera.retrieval.v1"
 LEGACY_IMPLEMENTATION = (
     "fc9378ac0488ab133bf470d32f0b5242b55c6f7187e0170c97a4e6bec9255f1b"
 )
+# Owned 0.1.627 checkpoint implementation; UTF-8 persistence preserves its protocol.
+UTF8_PREDECESSOR = "6f5e92fba434fe34a5cdb7d241c26d8f3de73ff29b3acdc1d70d496820948f3a"
+REPLAY_IMPLEMENTATIONS = (LEGACY_IMPLEMENTATION, UTF8_PREDECESSOR)
 PACKET_PROJECTION = 2
 
 
@@ -475,7 +478,7 @@ def _reconstruct(
             bf._read(directory / "receipt.json"),
             packet,
             response,
-            (directory / "prompt.md").read_text(),
+            (directory / "prompt.md").read_text(encoding="utf-8"),
             bf._read(directory / "schema.json"),
             attempt["selection"],
         )
@@ -598,9 +601,12 @@ def _run_review(
     binding = bf.digest(
         {**binding_inputs, "implementation_sha256": _implementation_digest()}
     )
-    legacy_binding = bf.digest(
-        {**binding_inputs, "implementation_sha256": LEGACY_IMPLEMENTATION}
-    )
+    historical_bindings = {
+        bf.digest(
+            {**binding_inputs, "implementation_sha256": implementation}
+        ): implementation
+        for implementation in REPLAY_IMPLEMENTATIONS
+    }
     index = EvidenceIndex(
         bank, journal, source_binding, relationship, budget["page_rows"]
     )
@@ -636,7 +642,7 @@ def _run_review(
     )
     migrating = state["binding_sha256"] != binding
     if migrating and not (
-        resume_checkpoint and state["binding_sha256"] == legacy_binding
+        resume_checkpoint and state["binding_sha256"] in historical_bindings
     ):
         raise ValueError(
             "Bank-first state belongs to different source/policy/purpose or retrieval budget; "
@@ -668,7 +674,9 @@ def _run_review(
             {
                 "from_binding_sha256": state["binding_sha256"],
                 "to_binding_sha256": binding,
-                "from_implementation_sha256": LEGACY_IMPLEMENTATION,
+                "from_implementation_sha256": historical_bindings[
+                    state["binding_sha256"]
+                ],
                 "to_implementation_sha256": _implementation_digest(),
                 "retained_attempt_count": len(state["attempts"]),
             }
@@ -733,7 +741,7 @@ def _run_review(
                     if bf._read(directory / "packet.json") != packet:
                         raise ValueError("Pending request changed")
                     attempt = existing
-                    text = (directory / "prompt.md").read_text()
+                    text = (directory / "prompt.md").read_text(encoding="utf-8")
                 else:
                     attempt = {
                         "directory": directory.name,
@@ -752,7 +760,7 @@ def _run_review(
                         directory / "row_reference_map.json", bf.reference_map(packet)
                     )
                     bf._write(directory / "schema.json", schema)
-                    (directory / "prompt.md").write_text(text)
+                    (directory / "prompt.md").write_text(text, encoding="utf-8")
                 bf._save(path, state)
                 received_response = False
                 try:
@@ -920,10 +928,10 @@ def _run_review(
                     for k in ("packet", "schema", "response", "receipt")
                 },
                 "selection": attempt["selection"],
-                "prompt": (d / "prompt.md").read_text(),
-                "packet_json": (d / "packet.json").read_text(),
-                "response_json": (d / "response.json").read_text(),
-                "schema_json": (d / "schema.json").read_text(),
+                "prompt": (d / "prompt.md").read_text(encoding="utf-8"),
+                "packet_json": (d / "packet.json").read_text(encoding="utf-8"),
+                "response_json": (d / "response.json").read_text(encoding="utf-8"),
+                "schema_json": (d / "schema.json").read_text(encoding="utf-8"),
             }
         )
     result["content_sha256"] = bf.digest(result)
@@ -942,7 +950,7 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
         raise ValueError("Retained result changed")
     if result.get("implementation_sha256") not in {
         _implementation_digest(),
-        LEGACY_IMPLEMENTATION,
+        *REPLAY_IMPLEMENTATIONS,
     }:
         raise ValueError(
             "Retrieval implementation changed; use original execution source for replay"
@@ -969,7 +977,7 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
                     if raw is not None:
                         if json.loads(raw) != evidence[key]:
                             raise ValueError("Retained serialization changed")
-                        (d / (key + ".json")).write_text(raw)
+                        (d / (key + ".json")).write_text(raw, encoding="utf-8")
                     else:
                         bf._write(d / (key + ".json"), evidence[key])
                 if (
@@ -977,7 +985,7 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
                     or json.loads(evidence["schema_json"]) != evidence["schema"]
                 ):
                     raise ValueError("Retained serialization changed")
-                (d / "prompt.md").write_text(evidence["prompt"])
+                (d / "prompt.md").write_text(evidence["prompt"], encoding="utf-8")
                 attempts.append(
                     {k: v for k, v in attempt.items() if k != "artifact_sha256"}
                 )

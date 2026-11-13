@@ -11,7 +11,14 @@ delivery when selected inputs and an authorized writable working folder are
 available. This takes precedence over component instructions requiring Archive
 setup, a retained checkpoint or Archive-only output storage as a general
 prerequisite. Keep the engine's exact-input and output-ownership checks.
-Only after an Archive failure, read `archive-failure.md` and use its maintained
+Use Archive normally for Archive-backed workflows. `configured:false`,
+`setup_required:true` or `archive_not_configured` at first intake means setup is
+missing, not an infrastructure outage. Reuse an already authorized absolute
+Archive path; otherwise ask once where to save (including where to create an
+already authorized general folder such as Vari), configure that location and
+retain it for every stage. Do not ask again whether Archive is permitted, silently
+choose a fallback, or postpone this missing location until calculation is underway.
+Only after an actual Archive infrastructure failure, read `archive-failure.md` and use its maintained
 working-folder route. Do not begin a repeated repair/setup conversation.
 
 ## Before substantive work
@@ -41,7 +48,13 @@ Retain the actual returned destination, IDs, context path, source receipts,
 output directory and native execution job IDs. Archive preparation also retains
 an owner-private exact run binding independently of session configuration.
 If this secondary binding cannot be saved, keep the returned context and continue
-the existing job. Record the missing pointer separately; do not recreate the run.
+the existing job. Use the exact `context_path` on supported Archive native tools,
+or `studio_archive.py --context <saved-context> <command> ...` (before the
+command). This verifies the same saved run directly without writing a pointer.
+For a new calculation stage, pass the preparation context to `prepare-workflow`
+and retain the newly returned calculation context for all subsequent operations.
+Record “saved locally, Archive registration pending” with that working reopen
+route if the secondary pointer is unavailable; do not recreate the run.
 Preparation and start return `recovery.status` for an independent owner-private
 checkpoint. If it is unavailable, report reduced recovery coverage and continue
 with the verified working copies. Retry checkpointing separately without blocking

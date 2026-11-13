@@ -1,6 +1,9 @@
 # Continue professional work when Archive is unavailable
 
-Use this fallback only after an observed Archive infrastructure failure. Reuse
+Use this fallback only after an observed Archive infrastructure failure.
+Missing first-time configuration is setup, not an outage: use Archive normally,
+reuse an authorized destination or ask once where to save, then configure it.
+Do not silently choose a different persistence route. Reuse
 selected inputs, scope and the authorized working location. Do not ask the user
 to repair Archive, invent internal IDs or repeat settled choices.
 
@@ -80,3 +83,15 @@ If the actual work location disappears, use existing `restore-workflow` with ret
 an authorized alternate destination, then continue from its returned context.
 A missing or damaged sole copy remains a specific input/recovery failure; never
 claim unsaved progress was recovered.
+
+## Continue across preparation and calculation
+
+Preparation and resume return `work_binding` and the exact context path. Native
+Archive tools can use that retained location without global configuration. If the
+pointer is unavailable or lost, supply `context_path` to the supported native
+operation, or use `studio_archive.py --context <saved-context> <command> ...`.
+Seal actual preparation outputs through `finalize-workflow`, then pass those
+sealed artifacts to `prepare-workflow` as same-engagement upstream inputs. Keep
+the returned new calculation context. Never add CSVs to input_bindings by hand,
+reuse a preparation context as a calculation context, or weaken receipt checks.
+A source-preparation result is not a completed professional reconciliation.

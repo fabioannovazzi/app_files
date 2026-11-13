@@ -32,6 +32,30 @@ def scoped_imports(monkeypatch):
     )
 
 
+def test_retrieval_preserves_unicode_in_native_prompt_and_saved_replay(
+    tmp_path, monkeypatch
+):
+    import io
+
+    original_text_encoding = io.text_encoding
+    monkeypatch.setattr(
+        io,
+        "text_encoding",
+        lambda encoding, stacklevel=2: original_text_encoding(encoding or "cp1252"),
+    )
+    bank = [row("b1", "Caffè 東京 ↳")]
+    native = NativeFixture({})
+
+    result = execute(tmp_path, native, bank=bank)
+
+    assert result["errors"] == []
+    assert native.calls[0]["bank_records"][0]["description"] == "Caffè 東京 ↳"
+    assert bf.replay_retained(result, bank, [], REL) == result["groups"]
+    assert "Caffè 東京 ↳" in (
+        tmp_path / "bank-first-attempts/00001-luna/prompt.md"
+    ).read_text(encoding="utf-8")
+
+
 def test_index_pages_keep_alternatives_and_delayed_records():
     rows = [
         row(f"j{i}", reference="invoice-7", transaction_date="2024-01-01")
@@ -453,6 +477,34 @@ def test_historical_checkpoint_retains_citation_outside_group_and_resumes_only_s
     assert native.calls == []
 
 
+def test_utf8_upgrade_keeps_completed_0627_checkpoint_without_model_replay(
+    tmp_path, monkeypatch
+):
+    import retrieval_review as rr
+
+    native = NativeFixture({})
+    with monkeypatch.context() as old:
+        old.setattr(rr, "_implementation_digest", lambda: rr.UTF8_PREDECESSOR)
+        previous = execute(tmp_path, native)
+    retained = {
+        p: p.read_bytes()
+        for p in (tmp_path / "bank-first-attempts").rglob("*")
+        if p.is_file()
+    }
+    assert bf.replay_retained(previous, [row("b1")], [], REL) == previous["groups"]
+    native.calls.clear()
+
+    resumed = execute(tmp_path, native, resume_checkpoint=True)
+
+    assert native.calls == []
+    assert resumed["groups"] == previous["groups"]
+    assert {p: p.read_bytes() for p in retained} == retained
+    assert (
+        resumed["implementation_transitions"][0]["from_implementation_sha256"]
+        == rr.UTF8_PREDECESSOR
+    )
+
+
 def test_reference_closure_visits_nested_allocations_and_citations():
     assert bf.referenced_rows(
         {
@@ -466,16 +518,19 @@ def test_reference_closure_visits_nested_allocations_and_citations():
     ) == {"bank": {"b1", "b2"}, "journal": {"j-evidence", "j-allocation"}}
 
 
+@pytest.mark.parametrize(
+    "implementation", ["LEGACY_IMPLEMENTATION", "UTF8_PREDECESSOR"]
+)
 @pytest.mark.parametrize("damage", ["source", "binding", "receipt"])
 def test_checkpoint_upgrade_rejects_changed_evidence_without_launch(
-    tmp_path, monkeypatch, damage
+    tmp_path, monkeypatch, damage, implementation
 ):
     import retrieval_review as rr
 
     native = NativeFixture({})
     original_packet = rr._packet
     with monkeypatch.context() as old:
-        old.setattr(rr, "_implementation_digest", lambda: rr.LEGACY_IMPLEMENTATION)
+        old.setattr(rr, "_implementation_digest", lambda: getattr(rr, implementation))
         old.setattr(
             rr,
             "_packet",
