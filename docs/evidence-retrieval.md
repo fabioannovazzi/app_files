@@ -47,3 +47,51 @@ approval semantics are changed. The previous candidate's Terra selection,
 short references and portable isolation implementation are carried forward;
 Windows device acceptance remains unverified. Only synthetic inputs are used
 in this change's verification.
+
+## Explicit recovery of a 0.1.625 checkpoint
+
+Vera 0.1.626 closes the current packet over every source-row reference in its
+retained prior conclusions, including accounting citations outside group
+membership. This does not allocate those cited rows or relax global non-reuse.
+Before a new investigation, the controller measures the exact prompt plus schema
+size and reduces the focus to a prefix of whole groups when needed. Remaining
+groups stay in the work queue; an indivisible group still exceeding the budget
+remains an explicit technical deferral. Packet projection 2 is recorded on new packets. Existing packets without that
+field replay with projection 1, with their original hashes, local B/J references,
+source binding, prompt, response and native receipt. Historical code is evidence,
+never imported or launched by this recovery path.
+
+For a failed Archive run, use `start_studio_client_workflow` with the existing
+client, engagement and run IDs (CLI: `studio_archive.py start-workflow`). This
+supported transition retains the previous artifact manifest and reporting history.
+Do not prepare another run, rewrite `execution-runtime.json`, remove a state
+file, or edit any receipt. Keep the original indexed execution package available:
+the assurance envelope still validates against its original bytes.
+
+Then use the **new installed product's managed CLI** explicitly:
+
+```sh
+python "$VERA_PLUGIN/scripts/managed_python_runtime.py" \
+  --module journal-bank-reconciliation run scripts/semantic_review.py \
+  run-all "$RUN_ROOT/outputs/reconciliation" \
+  --output-dir "$RUN_ROOT/outputs/semantic-review" \
+  --client-engagement "$RUN_ROOT/context.json" --resume-checkpoint
+```
+
+Set the reconciliation directory to the existing run's actual `run_intake.json`
+parent, not a newly created directory. Preserve the original purpose and worker
+selection arguments when they were specified. The managed CLI verifies and
+executes the currently selected installation. `vera_execute` retains a run's
+original package and is therefore not the upgrade route for this recovery.
+
+The explicit option accepts only the audited 0.1.625 implementation fingerprint
+and matching source/admission/purpose/relationship/budget binding. It reconstructs
+all saved decisions before writing a transition record into the state. Changed
+sources, altered retained artifacts and an unfinished native worker reject
+recovery without launching another worker. New calls continue only outstanding
+work. The original attempt files remain byte-identical; no old receipt is resealed.
+Use ordinary `run-all` for subsequent continuations on the recovered version.
+
+Verify the final workbook, native review and privacy-report outcome separately.
+A successful synthetic recovery or package installation does not establish that
+a customer run has completed or that the host's already-open chat refreshed.

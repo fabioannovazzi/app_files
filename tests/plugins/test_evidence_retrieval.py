@@ -383,3 +383,183 @@ def test_search_handoff_is_bounded_and_marks_omitted_history():
     assert len(packet["retrieval"]["recent_searches"]) == 8
     assert packet["retrieval"]["omitted_search_count"] == 5
     assert all("records" not in item for item in packet["retrieval"]["recent_searches"])
+
+
+def test_historical_checkpoint_retains_citation_outside_group_and_resumes_only_sol(
+    tmp_path, monkeypatch
+):
+    """The 0.1.625 packet drops cited rows after a retrieval page is replaced."""
+    import retrieval_review as rr
+
+    bank = [row("bank", reference="initial")]
+    journal = [
+        row("initial-row", reference="initial"),
+        row("cited-only", "Supporting posting", reference="other"),
+    ]
+    native = NativeFixture({})
+
+    def respond(packet, **_):
+        if packet["stage"] == "luna" and packet["retrieval"]["round"] == 0:
+            return request(
+                packet,
+                {"side": "journal", "field": "transaction_id", "value": "cited-only"},
+            )
+        response = answer(packet, complete=packet["stage"] == "sol")
+        if packet["stage"] == "luna":
+            response["groups"][0]["accounting_resolution"]["evidence"].append(
+                {
+                    "side": "journal",
+                    "transaction_id": "cited-only",
+                    "field": "description",
+                    "quote": "Supporting posting",
+                }
+            )
+        return response
+
+    native.respond = respond
+    original_packet = rr._packet
+
+    def legacy_packet(*args, **kwargs):
+        return original_packet(*args, **{**kwargs, "projection": 1})
+
+    with monkeypatch.context() as old:
+        old.setattr(rr, "_packet", legacy_packet)
+        old.setattr(rr, "_implementation_digest", lambda: rr.LEGACY_IMPLEMENTATION)
+        with pytest.raises(ValueError, match="Unknown journal row reference"):
+            execute(tmp_path, native, bank, journal)
+    retained = {
+        p: p.read_bytes()
+        for p in (tmp_path / "bank-first-attempts").rglob("*")
+        if p.is_file()
+    }
+    with pytest.raises(ValueError, match="explicit resume_checkpoint"):
+        execute(tmp_path, native, bank, journal)
+    native.calls.clear()
+
+    result = execute(tmp_path, native, bank, journal, resume_checkpoint=True)
+
+    assert [call["stage"] for call in native.calls] == ["sol"]
+    assert [r["transaction_id"] for r in native.calls[0]["journal_records"]] == [
+        "cited-only",
+        "initial-row",
+    ]
+    assert result["groups"][0]["journal_ids"] == []
+    assert not result["errors"]
+    assert result["implementation_transitions"][0]["retained_attempt_count"] == 2
+    assert {p: p.read_bytes() for p in retained} == retained
+    assert bf.replay_retained(result, bank, journal, REL) == result["groups"]
+    native.calls.clear()
+    assert execute(tmp_path, native, bank, journal)["groups"] == result["groups"]
+    assert native.calls == []
+
+
+def test_reference_closure_visits_nested_allocations_and_citations():
+    assert bf.referenced_rows(
+        {
+            "bank_ids": ["b1"],
+            "journal_ids": [],
+            "accounting_resolution": {
+                "evidence": [{"side": "journal", "transaction_id": "j-evidence"}]
+            },
+            "allocations": [{"source_id": "b2", "target_id": "j-allocation"}],
+        }
+    ) == {"bank": {"b1", "b2"}, "journal": {"j-evidence", "j-allocation"}}
+
+
+@pytest.mark.parametrize("damage", ["source", "binding", "receipt"])
+def test_checkpoint_upgrade_rejects_changed_evidence_without_launch(
+    tmp_path, monkeypatch, damage
+):
+    import retrieval_review as rr
+
+    native = NativeFixture({})
+    original_packet = rr._packet
+    with monkeypatch.context() as old:
+        old.setattr(rr, "_implementation_digest", lambda: rr.LEGACY_IMPLEMENTATION)
+        old.setattr(
+            rr,
+            "_packet",
+            lambda *a, **kw: original_packet(*a, **{**kw, "projection": 1}),
+        )
+        result = execute(tmp_path, native)
+    assert bf.replay_retained(result, [row("b1")], [], REL) == result["groups"]
+    if damage == "binding":
+        state_path = tmp_path / "bank_first_state.json"
+        state = json.loads(state_path.read_text())
+        state["binding_sha256"] = "0" * 64
+        bf._save(state_path, state)
+    elif damage == "receipt":
+        (tmp_path / "bank-first-attempts/00001-luna/receipt.json").write_text("{}")
+    native.calls.clear()
+    before = (tmp_path / "bank_first_state.json").read_bytes()
+
+    with pytest.raises(ValueError, match="different source|evidence changed"):
+        execute(
+            tmp_path,
+            native,
+            bank=[row("b1", "changed")] if damage == "source" else None,
+            resume_checkpoint=True,
+        )
+
+    assert native.calls == []
+    assert (tmp_path / "bank_first_state.json").read_bytes() == before
+
+
+def test_explicit_recovery_cannot_start_an_empty_run(tmp_path):
+    native = NativeFixture({})
+
+    with pytest.raises(ValueError, match="existing saved state"):
+        execute(tmp_path, native, resume_checkpoint=True)
+
+    assert native.calls == []
+    assert not (tmp_path / "bank_first_state.json").exists()
+
+
+def test_checkpoint_upgrade_keeps_pending_native_request_without_duplicate_launch(
+    tmp_path, monkeypatch
+):
+    import retrieval_review as rr
+    from native_host_worker import NativeWorkerPending
+
+    native = NativeFixture({})
+
+    def pending(**kwargs):
+        raise NativeWorkerPending("Synthetic native worker remains pending")
+
+    native.invoke = pending
+    with monkeypatch.context() as old:
+        old.setattr(rr, "_implementation_digest", lambda: rr.LEGACY_IMPLEMENTATION)
+        with pytest.raises(NativeWorkerPending):
+            execute(tmp_path, native)
+    before = (tmp_path / "bank_first_state.json").read_bytes()
+
+    with pytest.raises(ValueError, match="pending native worker"):
+        execute(tmp_path, native, resume_checkpoint=True)
+
+    assert native.calls == []
+    assert (tmp_path / "bank_first_state.json").read_bytes() == before
+
+
+def test_context_budget_batches_whole_focus_without_dropping_bank_work(tmp_path):
+    bank = [row(f"b{i:02d}", "Causale documentata " + "x" * 700) for i in range(25)]
+    native = NativeFixture({"luna": {"complete": False}})
+    budget = {"context_bytes": 24000}
+
+    result = execute(tmp_path, native, bank=bank, retrieval_budget=budget)
+
+    assert not result["errors"]
+    assert result["summary"]["secondary_counts"]["complete"] == 25
+    assert len([p for p in native.calls if p["stage"] == "sol"]) > 1
+    assert all(
+        a["context_bytes"] <= budget["context_bytes"] for a in result["attempts"]
+    )
+    assert sorted(i for g in result["groups"] for i in g["bank_ids"]) == [
+        f"b{i:02d}" for i in range(25)
+    ]
+    assert bf.replay_retained(result, bank, [], REL) == result["groups"]
+    native.calls.clear()
+    assert (
+        execute(tmp_path, native, bank=bank, retrieval_budget=budget)["groups"]
+        == result["groups"]
+    )
+    assert native.calls == []

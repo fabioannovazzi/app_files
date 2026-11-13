@@ -14856,3 +14856,31 @@ def test_windows_capsule_profile_preserves_drive_paths_spaces_and_unicode():
     assert profile["filesystem"][str(capsule / "state")] == "write"
     assert profile["filesystem"][":root"] == "deny"
     assert command[-1] == str(codex)
+
+
+def test_semantic_replay_validates_historical_code_before_envelope(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A new installation must verify source receipts against their original code."""
+    output, *_ = _prepare_closed_mcp_review_run(tmp_path / "case")
+    core = load_core()
+    semantic = load_semantic_review()
+    historical = core.implementation_artifact_roots()
+    copied, shared = _copy_journal_bank_implementation(tmp_path)
+    changed = copied / "scripts/retrieval_review.py"
+    changed.write_text(changed.read_text() + "\n# Synthetic next implementation.\n")
+    current = {
+        "implementation": copied,
+        "shared_implementation": shared,
+        "pdf_implementation": shared.parent / "vera_journal_pdf",
+    }
+    monkeypatch.setattr(core, "implementation_artifact_roots", lambda: current.copy())
+    monkeypatch.setattr(
+        core, "_retained_implementation_roots", lambda roots: historical
+    )
+    before = (output / "assurance_envelope.json").read_bytes()
+
+    replay = semantic._validated_source_replay(output)
+
+    assert replay["source_binding"]["run_id"]
+    assert (output / "assurance_envelope.json").read_bytes() == before
