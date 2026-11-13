@@ -128,3 +128,12 @@ Final Vera archive SHA-256 values:
 - `vera-chatgpt-upload.zip`: `6bb1e2c864bc513c79f20645e45dc4b292c8f29c47032527ee47752b02741756`
 - `vera-claude-plugin.zip`: `cb9861dbfd37556199d04e719dc00370775e7af68237cdcd70ea5691e838de05`
 - `vera-plugin.zip`: `1fe4f0c282b5b71b160c224a0204c5cb897cd472a62546bc434b913454538a83`
+
+A normalized AST comparison of 117 changed Python source files found only
+UTF-8 keyword arguments, interpreter UTF-8 options and policy-revision metadata;
+the two additional expected changes were the owned PowerShell output encoding
+and the review-adapter generator’s Python command templates.
+
+Final `python scripts/build_product_release.py vera clara lucia --check`
+passed after the last source formatting change, including all product/host ZIP
+parity, retained privacy projections, MCP startup checks and version alignment.
