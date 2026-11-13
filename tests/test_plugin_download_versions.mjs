@@ -25,7 +25,7 @@ async function render(product, response) {
 for (const product of ["vera", "clara", "lucia"]) {
   test(`${product}: show the current ZIP version on the product page and guide`, async () => {
     const { labels, requests } = await render(product);
-    assert.deepEqual(requests, [`https://raw.githubusercontent.com/fabioannovazzi/app_files/main/plugins/${product}/.codex-plugin/plugin.json`]);
+    assert.deepEqual(requests, [`/api/plugin-downloads/${product}/codex`]);
     assert.equal(labels[0].textContent, "ZIP · v0.1.999");
     assert.equal(labels[1].textContent, " · v0.1.999");
     assert.equal(labels[0].hidden, false);

@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import json
 import logging
 import threading
 import time
 import uuid
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any, Dict, List, Literal, Optional, Sequence
+from zipfile import BadZipFile, ZipFile
 
 from fastapi import (
     APIRouter,
@@ -1595,12 +1597,46 @@ def create_app() -> FastAPI:
         allowed_hosts=list(get_auth_config().trusted_hosts),
     )
 
+    plugin_downloads = {
+        f"/static/shared/{product}/downloads/{product}{suffix}-plugin.zip"
+        for product in ("vera", "clara", "lucia")
+        for suffix in ("", "-cowork")
+    }
+
     @app.middleware("http")
     async def _attach_session_context(request: Request, call_next):
         session_ctx = build_session_context(request)
         with use_session_context(session_ctx):
             response = await call_next(request)
+        if request.url.path in plugin_downloads:
+            response.headers["Cache-Control"] = "no-cache"
         return response
+
+    @app.get("/api/plugin-downloads/{product}/{host}", include_in_schema=False)
+    def plugin_download_version(
+        product: Literal["vera", "clara", "lucia"], host: Literal["codex", "cowork"]
+    ) -> JSONResponse:
+        """Report the manifest inside the ZIP served by this deployment."""
+        if host == "codex":
+            filename = f"{product}-plugin.zip"
+            manifest_path = (
+                f"{product}-codex-plugin/plugins/{product}/.codex-plugin/plugin.json"
+            )
+        else:
+            filename = f"{product}-cowork-plugin.zip"
+            manifest_path = ".claude-plugin/plugin.json"
+        path = Path("static/shared") / product / "downloads" / filename
+        headers = {"Cache-Control": "no-store"}
+        try:
+            with ZipFile(path) as archive:
+                manifest = json.loads(archive.read(manifest_path))
+            if manifest["name"] != product or not isinstance(manifest["version"], str):
+                raise ValueError("Invalid plugin identity or version")
+        except (BadZipFile, KeyError, OSError, TypeError, ValueError):
+            return JSONResponse({"detail": "ZIP unavailable"}, 503, headers=headers)
+        return JSONResponse(
+            {"name": product, "version": manifest["version"]}, headers=headers
+        )
 
     app.mount(
         "/static/shared/courses",

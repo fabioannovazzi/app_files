@@ -3,6 +3,8 @@ from __future__ import annotations
 import asyncio
 import logging
 from collections.abc import Awaitable, Callable
+from pathlib import Path
+from zipfile import ZipFile
 
 import pytest
 from fastapi.testclient import TestClient
@@ -151,3 +153,41 @@ def test_retired_fastapi_surfaces_return_json_404(method: str, path: str) -> Non
 
     assert response.status_code == 404
     assert response.json() == {"detail": "Not Found"}
+
+
+@pytest.mark.parametrize(
+    ("host", "filename", "manifest"),
+    [
+        (
+            "codex",
+            "vera-plugin.zip",
+            "vera-codex-plugin/plugins/vera/.codex-plugin/plugin.json",
+        ),
+        ("cowork", "vera-cowork-plugin.zip", ".claude-plugin/plugin.json"),
+    ],
+)
+def test_plugin_download_version_reads_public_zip(
+    host: str,
+    filename: str,
+    manifest: str,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.chdir(tmp_path)
+    directory = tmp_path / "static/shared/vera/downloads"
+    directory.mkdir(parents=True)
+    (tmp_path / "static/shared/courses").mkdir()
+    client = TestClient(pdp_api.create_app())
+    url = f"/api/plugin-downloads/vera/{host}"
+
+    assert client.get(url).status_code == 503
+    with ZipFile(directory / filename, "w") as archive:
+        archive.writestr(manifest, '{"name": "vera", "version": "0.1.622"}')
+
+    response = client.get(url)
+    assert response.json() == {"name": "vera", "version": "0.1.622"}
+    assert response.headers["cache-control"] == "no-store"
+
+    download = client.head(f"/static/shared/vera/downloads/{filename}")
+    assert download.status_code == 200
+    assert download.headers["cache-control"] == "no-cache"
