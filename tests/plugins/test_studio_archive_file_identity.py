@@ -35,6 +35,24 @@ def perform(ledger, path, operation):
     return ledger._stable_file_identity(path, label="input")
 
 
+def test_staging_failure_preserves_os_cause_and_directory_evidence(ledger, tmp_path):
+    source = tmp_path / "input.bin"
+    source.write_bytes(b"original evidence")
+    missing = tmp_path / "unavailable destination"
+
+    with pytest.raises(
+        ledger.LedgerError, match="Temporary file creation failed"
+    ) as raised:
+        ledger._stable_copy(source, missing / "copied.bin")
+
+    assert isinstance(raised.value.__cause__, FileNotFoundError)
+    assert raised.value.__cause__.errno == 2
+    assert "parent_exists=False" in str(raised.value)
+    assert f"parent_characters={len(str(missing))}" in str(raised.value)
+    assert "winerror=" in str(raised.value)
+    assert source.read_bytes() == b"original evidence"
+
+
 @pytest.mark.parametrize("operation", ["hash", "copy"])
 def test_hashes_exact_binary_bytes_after_metadata_change(ledger, tmp_path, operation):
     path = tmp_path / "input.bin"

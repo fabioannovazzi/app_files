@@ -30,6 +30,31 @@ def load_runtime() -> Any:
     return module
 
 
+@pytest.mark.parametrize("host_encoding", ["cp1252", "utf-8"])
+def test_managed_helper_json_round_trips_unicode_independent_of_host_encoding(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, host_encoding: str
+) -> None:
+    runtime = load_runtime()
+    monkeypatch.setenv("PYTHONIOENCODING", host_encoding)
+    monkeypatch.setenv("PYTHONUTF8", "0")
+    monkeypatch.setattr(runtime, "runtime_python", lambda target: Path(sys.executable))
+    payload = {"client": "Caffè 東京 ↳", "path": str(tmp_path / "Données 東京")}
+    helper = (
+        "import json,sys; json.dump(json.load(sys.stdin),sys.stdout,ensure_ascii=False)"
+    )
+
+    result = subprocess.run(
+        [sys.executable, "-c", helper],
+        input=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
+        capture_output=True,
+        env=runtime.runtime_environment(tmp_path),
+        check=True,
+        timeout=30,
+    )
+
+    assert json.loads(result.stdout.decode("utf-8")) == payload
+
+
 @pytest.mark.parametrize("product", ["clara", "lucia"])
 def test_products_share_the_same_runtime_policy_outside_product_cli(
     product: str,

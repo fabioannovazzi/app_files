@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.239",
+  "version": "0.1.240",
   "services": [
     {
       "name": "luciaDeepResearchValidator",
@@ -2410,7 +2410,7 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "lucia-studio-archive",
-          "version": "0.1.80"
+          "version": "0.1.81"
         },
         "capabilities": {
           "tools": {}
@@ -2436,6 +2436,10 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",
@@ -2598,6 +2602,10 @@
                 "pattern": "^client_[0-9a-f]{24}$",
                 "description": "Stable client_id returned by Studio Archive."
               },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
+              },
               "incident_report_id": {
                 "type": "string",
                 "format": "uuid",
@@ -2751,6 +2759,10 @@
                 "type": "string",
                 "pattern": "^eng_[0-9a-f]{24}$",
                 "description": "Exact engagement selected or created before this separate import action."
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",
@@ -3084,6 +3096,10 @@
                 "type": "string",
                 "pattern": "^client_[0-9a-f]{24}$"
               },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
+              },
               "incident_report_id": {
                 "type": "string",
                 "format": "uuid",
@@ -3154,6 +3170,10 @@
               "require_exact_input_set": {
                 "type": "boolean",
                 "default": false
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",
@@ -3254,6 +3274,10 @@
                 "type": "boolean",
                 "description": "True only when the user explicitly requests a separate run. Reuse the same idempotency_key for safe retries and choose a new key for another distinct run."
               },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
+              },
               "incident_report_id": {
                 "type": "string",
                 "format": "uuid",
@@ -3299,6 +3323,10 @@
               "content": {
                 "type": "string",
                 "maxLength": 65536
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",
@@ -3363,6 +3391,10 @@
                   "minimum": 0
                 }
               },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
+              },
               "incident_report_id": {
                 "type": "string",
                 "format": "uuid",
@@ -3402,6 +3434,10 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",
@@ -3447,6 +3483,10 @@
                 "minLength": 1,
                 "maxLength": 1000
               },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
+              },
               "incident_report_id": {
                 "type": "string",
                 "format": "uuid",
@@ -3486,6 +3526,10 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",
@@ -3580,6 +3624,10 @@
                   "additionalProperties": false
                 }
               },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
+              },
               "incident_report_id": {
                 "type": "string",
                 "format": "uuid",
@@ -3618,6 +3666,10 @@
               "run_id": {
                 "type": "string",
                 "pattern": "^run_[0-9a-f]{24}$"
+              },
+              "context_path": {
+                "type": "string",
+                "description": "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."
               },
               "incident_report_id": {
                 "type": "string",

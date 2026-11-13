@@ -8,6 +8,28 @@
     "reviewer": "Codex agent",
     "source_review": "Additive managed decision-JSON persistence before sealing, an Archive-owned authored-text writer, explicit portable-context hydration guidance and bounded schema-error diagnostics. Existing callers and professional lesson outcomes retain their contracts."
   },
+  "archive_continuity_source_binding_review_20261111": {
+    "baseline_commit": "2be166a4815c0af1b062dbaac309387e1cd25853",
+    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
+    "current_course_sha256": "facd2c78d3fbc11fa35c50fd07779bdcdd43d2641b8c61c8c9da85bde9147f54",
+    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance.",
+    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
+    "previous_course_sha256": "536c2a56f11300b71ee5f695d3b12b41733b14bbd9d2c7827863e0ade8c6dac2",
+    "reviewed_at": "2026-11-11",
+    "reviewer": "Codex /root - source compatibility review",
+    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately."
+  },
+  "archive_followup_source_binding_20261108": {
+    "baseline_commit": "3521585f1c44a7d3c3e9e6e39ca35dd33f311e4a",
+    "content_review": "Every compiled field except sources equals the reviewed baseline. Authored content and historical editorial judgments remain unchanged.",
+    "current_course_sha256": "536c2a56f11300b71ee5f695d3b12b41733b14bbd9d2c7827863e0ade8c6dac2",
+    "fresh_matching_junit_required": true,
+    "limits": "No new learner, visual, professional or installed-host acceptance.",
+    "previous_course_sha256": "f71d10b8d47f5dcbba67623f82e6f07831c43490029e10b429f5b23d29c65370",
+    "reviewed_at": "2026-11-08",
+    "reviewer": "Codex agent - bounded source compatibility review",
+    "source_review": "Reviewed restored-case import boundary and missing input collection repairs, plus exact Archive retry association. No lesson content or model payload change."
+  },
   "archive_release_shared_runtime_compatibility_20261018": {
     "authored_content_unchanged": true,
     "changed_fields": [
@@ -18,6 +40,17 @@
     "reviewed_at": "2026-10-18",
     "reviewer": "Codex /root - bounded complete-course comparison",
     "scope": "Complete authored course content is unchanged from the integrated candidate. Tested Vera isolated-launcher imports and explicitly selected local-only incident delivery are retained in the new canonical shared reporting runtime and synchronized with the repository tool. Ordinary automatic delivery and product-bound authorization remain unchanged when the test setting is unset. Existing editorial judgments and historical artifact reviews remain preserved; current native teaching CI against exact new digests is required. No new learner, native visual or professional acceptance is asserted."
+  },
+  "archive_repair_source_binding_20261108": {
+    "baseline_commit": "e304fa4529556e110ef6fd0516d59b3f4d8dab4c",
+    "content_review": "Compared complete compiled course JSON against origin/main: every field except sources is identical, including authored languages, inputs, checkpoints, practice, timing and execution definitions. Historical editorial judgments and output-artifact reviews are retained.",
+    "current_course_sha256": "f71d10b8d47f5dcbba67623f82e6f07831c43490029e10b429f5b23d29c65370",
+    "limits": "Source-binding review only. No new learner, visual, professional or installed-chat acceptance is asserted.",
+    "native_evidence": "GitHub Actions run 42470659436, job 128704016817, head 08439c4e164b7e2f26136169f963d16a52c5b083: native teaching stage passed 1742 tests, skipped 3, with 85.05% coverage. The subsequent stale editorial fingerprint check failed. Downloaded JUnit must match these exact course hashes; final-head CI remains required.",
+    "previous_course_sha256": "64bbd3f7a6ce9daccb8782b47cb291a4c71d321da7bcdda96c7c47062870ca8f",
+    "reviewed_at": "2026-11-08",
+    "reviewer": "Codex agent - bounded source compatibility review",
+    "source_review": "Changed source records are limited to the reviewed Archive exact retained-case routing, privacy-error routing, and shared incident retry-progress repairs documented in docs/acceptance/studio-archive-repair-20261108.md."
   },
   "auxiliary_display_source_binding_review_20261103": {
     "baseline_commit": "47d74a85ea5bd4ec77f395ee658af78a7dc3ba17",
@@ -123,6 +156,19 @@
     "reviewer": "Codex /root - source compatibility review",
     "scope": "Complete course comparison against origin/main is identical except source identities. Retain the authored lesson, fictional inputs, demonstration/practice definitions, localized instructions and historical editorial/artifact judgments. Changes concern local UI controls, display labels/fonts, plugin-root launch paths and hash-locked Intel macOS dependency compatibility. Fresh native teaching CI must execute these exact new source identities. The corrected course handshake preserves the deployed inline/fullscreen capability contract."
   },
+  "course_main965_source_binding_20261106": {
+    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
+    "previous_course_sha256": "5baa7d511c4c7df5476c4d5df9bd80647e5ef9524a00367ff7cc62a9b923ba72",
+    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
+  },
+  "course_main968_source_binding_20261107": {
+    "current_course_sha256": "64bbd3f7a6ce9daccb8782b47cb291a4c71d321da7bcdda96c7c47062870ca8f",
+    "limits": "Historical editorial judgments retained; fresh combined-head CI required. No learner, professional or Desktop acceptance inferred.",
+    "previous_course_sha256": "a95d81d2695fc8428b5b45754fa49230011d8170de8f93079bb03d6e3a2147f7",
+    "reviewed_at": "2026-11-07",
+    "reviewer": "Codex /root - bounded source integration",
+    "source_review": "Main968 preserves explicit local-only suppression before receipt request creation or network use. Lucia packaging excludes developer tests and Vera-only reconciliation drivers; full edition remains default. Compiled course fields excluding sources are unchanged from tested .596."
+  },
   "course_repair_source_binding_20261106": {
     "authored_content_unchanged": true,
     "changed_fields": [
@@ -143,7 +189,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "facd2c78d3fbc11fa35c50fd07779bdcdd43d2641b8c61c8c9da85bde9147f54",
+  "course_sha256": "947af3363e8f2b2817bc47cd94fd220353f3c82dcd0fe69f7debf2bf3f593b7f",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "c7632fa4b9aa3700a39a89778539dfabd4e7794e6f1c418b2a25eddb88d6d774",
@@ -638,6 +684,15 @@
       }
     ]
   },
+  "portable_intake_source_review_20261113": {
+    "baseline_commit": "424aff636a51ebc8cf8ff2703a733e8fd43473ff",
+    "current_course_sha256": "947af3363e8f2b2817bc47cd94fd220353f3c82dcd0fe69f7debf2bf3f593b7f",
+    "execution_requirement": "Fresh native demo and practice CI must verify this current course digest; this comparison does not claim installed-host, learner, visual or professional acceptance.",
+    "judgment": "Complete course comparison with the baseline differs only in sources. Authored lessons, localized text, fixtures, checkpoints and expected professional outputs are unchanged. Source changes standardize helper Unicode transport, preserve selected Archive locations, normalize explicit timestamp dates with source evidence and preserve historical reconciliation receipt bytes. Existing editorial and artifact judgments remain historical.",
+    "previous_course_sha256": "facd2c78d3fbc11fa35c50fd07779bdcdd43d2641b8c61c8c9da85bde9147f54",
+    "reviewed_at": "2026-11-13",
+    "reviewer": "Codex /root - source compatibility review"
+  },
   "product": "clara",
   "product_reporting_source_binding_20261018": {
     "authored_content_unchanged": true,
@@ -665,18 +720,18 @@
     "source_review": "Inspected the two canonical shared source diffs and verified every changed module copy has the exact old and new shared-source hashes. courseware/policy.py explicitly excludes the new rating-legalita workflow from prepared lessons until a teaching kit is authored and reviewed; behavior for all existing lessons is unchanged. vera_assurance/contracts.py adds rating-legalita to VERA_CLIENT_WORKFLOW_IDS without changing existing identifiers or run transitions. No existing lesson gains a new legal judgment, input, calculation, model request or output requirement."
   },
   "reconciliation_archive_source_review_20261106": {
-    "reviewer": "Codex /root",
-    "reviewed_at": "2026-11-06",
-    "previous_course_sha256": "e9c140a7dbb195271e7ccb67434b3111b71dcc380d0864caf16584bfb5a595e4",
-    "reviewed_baseline_course_sha256": "603fce9567c7b28c36546a514839e2bea4cdf0e40afdf86aecc7ab472cf7635c",
-    "current_course_sha256": "7431900a5078145c9635e608bf1107d1124708166673b9e3e14a9530b7e03bab",
     "authored_content_unchanged": true,
     "changed_fields": [
       "sources"
     ],
-    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required.",
+    "current_course_sha256": "7431900a5078145c9635e608bf1107d1124708166673b9e3e14a9530b7e03bab",
     "fresh_matching_junit_required": true,
-    "installed_host_acceptance": false
+    "installed_host_acceptance": false,
+    "previous_course_sha256": "e9c140a7dbb195271e7ccb67434b3111b71dcc380d0864caf16584bfb5a595e4",
+    "reviewed_at": "2026-11-06",
+    "reviewed_baseline_course_sha256": "603fce9567c7b28c36546a514839e2bea4cdf0e40afdf86aecc7ab472cf7635c",
+    "reviewer": "Codex /root",
+    "scope": "Compared every non-source field against the independently reviewed Archive repair candidate and current main. This task changes only semantic evidence eligibility, rejected execution retention and same-byte measurement recovery. Historical editorial and output judgments are retained; fresh native execution remains required."
   },
   "release_freshness_20260928": {
     "changed_compiled_fields": [
@@ -786,51 +841,5 @@
     "reviewer": "Codex /root - source compatibility review",
     "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "workflow": "advisory-brief-planner",
-  "course_main965_source_binding_20261106": {
-    "previous_course_sha256": "5baa7d511c4c7df5476c4d5df9bd80647e5ef9524a00367ff7cc62a9b923ba72",
-    "integrated_main": "39841a28bbf7d927761ad41e2f596146623acef4",
-    "scope": "Source inventory refresh only. Every non-source course field is identical to the reviewed course-repair head. Both branches historical editorial/output reviews are retained; fresh combined-head native CI remains required."
-  },
-  "course_main968_source_binding_20261107": {
-    "reviewer": "Codex /root - bounded source integration",
-    "reviewed_at": "2026-11-07",
-    "previous_course_sha256": "a95d81d2695fc8428b5b45754fa49230011d8170de8f93079bb03d6e3a2147f7",
-    "current_course_sha256": "64bbd3f7a6ce9daccb8782b47cb291a4c71d321da7bcdda96c7c47062870ca8f",
-    "source_review": "Main968 preserves explicit local-only suppression before receipt request creation or network use. Lucia packaging excludes developer tests and Vera-only reconciliation drivers; full edition remains default. Compiled course fields excluding sources are unchanged from tested .596.",
-    "limits": "Historical editorial judgments retained; fresh combined-head CI required. No learner, professional or Desktop acceptance inferred."
-  },
-  "archive_repair_source_binding_20261108": {
-    "reviewer": "Codex agent - bounded source compatibility review",
-    "reviewed_at": "2026-11-08",
-    "baseline_commit": "e304fa4529556e110ef6fd0516d59b3f4d8dab4c",
-    "previous_course_sha256": "64bbd3f7a6ce9daccb8782b47cb291a4c71d321da7bcdda96c7c47062870ca8f",
-    "current_course_sha256": "f71d10b8d47f5dcbba67623f82e6f07831c43490029e10b429f5b23d29c65370",
-    "content_review": "Compared complete compiled course JSON against origin/main: every field except sources is identical, including authored languages, inputs, checkpoints, practice, timing and execution definitions. Historical editorial judgments and output-artifact reviews are retained.",
-    "source_review": "Changed source records are limited to the reviewed Archive exact retained-case routing, privacy-error routing, and shared incident retry-progress repairs documented in docs/acceptance/studio-archive-repair-20261108.md.",
-    "native_evidence": "GitHub Actions run 42470659436, job 128704016817, head 08439c4e164b7e2f26136169f963d16a52c5b083: native teaching stage passed 1742 tests, skipped 3, with 85.05% coverage. The subsequent stale editorial fingerprint check failed. Downloaded JUnit must match these exact course hashes; final-head CI remains required.",
-    "limits": "Source-binding review only. No new learner, visual, professional or installed-chat acceptance is asserted."
-  },
-  "archive_followup_source_binding_20261108": {
-    "reviewer": "Codex agent - bounded source compatibility review",
-    "reviewed_at": "2026-11-08",
-    "baseline_commit": "3521585f1c44a7d3c3e9e6e39ca35dd33f311e4a",
-    "previous_course_sha256": "f71d10b8d47f5dcbba67623f82e6f07831c43490029e10b429f5b23d29c65370",
-    "current_course_sha256": "536c2a56f11300b71ee5f695d3b12b41733b14bbd9d2c7827863e0ade8c6dac2",
-    "content_review": "Every compiled field except sources equals the reviewed baseline. Authored content and historical editorial judgments remain unchanged.",
-    "source_review": "Reviewed restored-case import boundary and missing input collection repairs, plus exact Archive retry association. No lesson content or model payload change.",
-    "fresh_matching_junit_required": true,
-    "limits": "No new learner, visual, professional or installed-host acceptance."
-  },
-  "archive_continuity_source_binding_review_20261111": {
-    "reviewer": "Codex /root - source compatibility review",
-    "reviewed_at": "2026-11-11",
-    "baseline_commit": "2be166a4815c0af1b062dbaac309387e1cd25853",
-    "previous_course_sha256": "536c2a56f11300b71ee5f695d3b12b41733b14bbd9d2c7827863e0ade8c6dac2",
-    "current_course_sha256": "facd2c78d3fbc11fa35c50fd07779bdcdd43d2641b8c61c8c9da85bde9147f54",
-    "comparison": "Every course field except sources exactly matches the historical snapshot identified by the previous review digest. Localized lesson text, inputs, exercises, checkpoints, execution contracts and timing are unchanged.",
-    "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
-    "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
-    "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
-  }
+  "workflow": "advisory-brief-planner"
 }

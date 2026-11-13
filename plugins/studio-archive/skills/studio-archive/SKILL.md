@@ -67,6 +67,16 @@ valid: create or register it with `general_workspace: true` (`--general-workspac
 in the CLI). Vera maintains its internal identifiers; this does not require a
 real client's legal identity or start the New Client workflow.
 
+Missing first-time configuration is not an Archive outage. Resolve it once
+using the guided setup below, or reuse the already authorized absolute root.
+Do not silently select fallback storage because no root has been configured.
+Carry the returned destination and context through preparation, calculation,
+review, delivery and reopening. If private lookup storage later fails, pass the
+exact saved `context_path` to supported run tools, or use
+`studio_archive.py --context <saved-context> <command> ...`. For a new stage,
+seal the previous outputs, admit the selected upstream artifacts in the same
+engagement, then retain the new stage context. Never hand-edit input bindings.
+
 Reuse the established client, engagement, run and any native job identifiers
 throughout the task. Passed source admission uses the exact prepared copies and
 retained receipts; loss of an original does not invalidate unchanged copies.

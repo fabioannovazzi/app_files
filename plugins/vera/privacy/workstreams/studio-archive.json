@@ -374,7 +374,7 @@
     "basis": "external_boundary_review_of_workflow_source",
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "b595b6843250d0648175d759fc4fb1ced70e96fae486b4d8cd7007147adc5197"
+    "source_fingerprint": "32f20d01eec3bc209263b438f4386c3b780101cd863f803c1e43717460941dbe"
   },
   "role": "internal_engine",
   "runtime_profiles": [
@@ -505,7 +505,7 @@
     },
     {
       "id": "archive-outage-delivery-and-private-bindings",
-      "control": "An exact admitted client/engagement/run pointer is retained in owner-private .vera-work-continuity/work-bindings beside the selected session storage, independently of Archive configuration. It stores the working root, identifiers and static context hash, not document contents; there is no upload or automatic deletion. Reopening verifies the sealed run identity, live folder and private pointer ownership. Unsafe pointers or ambiguous live copies do not authorize another folder. Unavailable Archive settings cannot prevent listing retained engagements, binding a verified portable run, or delivering existing owned output files. Optional reporting failures remain separately unavailable or unverified; malformed reporting payloads are never used to authorize the professional context and are preserved for inspection."
+      "control": "An exact admitted client/engagement/run pointer is retained in owner-private .vera-work-continuity/work-bindings beside the selected session storage, independently of Archive configuration. It stores the working root, identifiers and static context hash, not document contents; there is no upload or automatic deletion. Reopening verifies the sealed run identity, live folder and private pointer ownership. Unsafe pointers or ambiguous live copies do not authorize another folder. Unavailable Archive settings cannot prevent listing retained engagements, binding a verified portable run, or delivering existing owned output files. Optional reporting failures remain separately unavailable or unverified; malformed reporting payloads are never used to authorize the professional context and are preserved for inspection. Independent work preparation and resume retain the same pointer. If this secondary storage is unavailable, supported native tools accept the exact canonical saved context path; local sealed run identity is checked before selection and execution retains its own input validation. The context path is local routing metadata, not an upload; saved-result delivery does not require revalidating calculation inputs."
     }
   ],
   "workstream": "studio-archive",

@@ -9,6 +9,7 @@ import logging
 import os
 import sqlite3
 import sys
+from contextlib import ExitStack
 from pathlib import Path
 from typing import Any
 
@@ -78,6 +79,7 @@ from archive_core import (
     start_studio_client_workflow,
     studio_archive_status,
     studio_google_drive_status,
+    use_studio_run_context,
     verify_studio_client_inputs,
     verify_studio_run_report,
     write_studio_run_artifact,
@@ -94,6 +96,11 @@ def _emit(payload: dict[str, Any]) -> None:
 
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--context",
+        type=Path,
+        help="Verified saved context; use before the command when Archive lookup is unavailable",
+    )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     subparsers.add_parser("record-error", help=argparse.SUPPRESS)
@@ -349,7 +356,13 @@ def main(argv: list[str] | None = None) -> int:
     """Execute one Studio Archive operation and emit structured JSON."""
 
     args = _parser().parse_args(argv)
+    with ExitStack() as stack:
+        return _execute(args, stack)
+
+
+def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
     try:
+        stack.enter_context(use_studio_run_context(args.context))
         if args.command == "record-error":
             envelope = json.load(sys.stdin)
             result = {

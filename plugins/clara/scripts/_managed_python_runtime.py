@@ -489,6 +489,10 @@ def runtime_environment(target: Path) -> dict[str, str]:
     environment.pop("PYTHONHOME", None)
     environment.pop("PYTHONPATH", None)
     environment["PYTHONNOUSERSITE"] = "1"
+    # Helpers exchange Unicode JSON/text with hosts that decode UTF-8. A Windows
+    # console code page must not reject or alter ordinary client names and paths.
+    environment["PYTHONIOENCODING"] = "utf-8"
+    environment["PYTHONUTF8"] = "1"
     environment["MPARANZA_MANAGED_RUNTIME_VERIFY"] = "1"
     return environment
 
@@ -569,6 +573,7 @@ def _dependencies_ready(
             timeout=120,
             check=False,
             text=True,
+            encoding="utf-8",
         )
     except (OSError, subprocess.SubprocessError, ValueError) as error:
         if diagnostics is not None:

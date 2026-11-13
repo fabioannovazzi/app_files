@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "30bcf8ae35effc00cb980b97a6c98a002e2e7d2ec04d4392ba9b088eec1285cb"
+      "sha256": "3a9ca780243756b0ceddd2cb21d85c81f8f34adbd1d9b8c64cacdfecb6eac5c3"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -57,7 +57,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/client_ledger.py",
-      "sha256": "cd72e3f0e4cda4b9ee651090b319f830376dd59eb68192562e103661e108bad0"
+      "sha256": "62cbd13a02eacd379e7688086c446064b158ae118b95db43df8b020a4d72698c"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -89,7 +89,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "848509b3c2a6671f6c287e7b8527082b1cdcf555007997d9517d2284d1b67021"
+      "sha256": "85727a39979495ead9291bf770e5cba5bb0ab60d889c7377eb112877a1bee317"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_local.mjs",
@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
-      "sha256": "8bcbc39e524a9e11a93762f8ab3ff3498a7de4d9716690750ae95141d900f068"
+      "sha256": "9c185704179d1738326521ced58802020350ea63a2fd9ab29a5397fd08ea7b7d"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
@@ -710,5 +710,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "57707a45f053ea3262c0ce7905ab2bc1819d01e69326fe4050ce1d39371e954d"
+  "canonical_course_sha256": "1c53f1488e424c8fe120f08bab6d453e66365d3503b865684b39a4502e6f2fb6"
 }

@@ -95,3 +95,11 @@ Use ordinary `run-all` for subsequent continuations on the recovered version.
 Verify the final workbook, native review and privacy-report outcome separately.
 A successful synthetic recovery or package installation does not establish that
 a customer run has completed or that the host's already-open chat refreshed.
+# Historical code retention
+
+Runtime collection preserves indexed journal-bank implementation bytes in
+`journal-bank-reconciliation-replay/<package-sha256>` before removing an idle
+execution release. Historical receipt validation can read that archive when the
+original execution directory is absent. It verifies the saved index and exact
+implementation receipts; it never launches the archived release. If preservation
+fails, collection retains the original directory and current work can continue.

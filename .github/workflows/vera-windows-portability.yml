@@ -1,0 +1,59 @@
+name: Vera portable intake and saved work
+
+on:
+  pull_request:
+    paths:
+      - 'plugins/studio-archive/**'
+      - 'plugins/journal-bank-reconciliation/**'
+      - 'plugins/_shared/**'
+      - 'tests/plugins/test_archive_location_continuity.py'
+      - 'tests/plugins/test_journal_bank_reconciliation_plugin.py'
+      - '.github/workflows/vera-windows-portability.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  portable-workflow:
+    name: Saved reconciliation (${{ matrix.os }}, ${{ matrix.encoding }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        encoding: [cp1252, utf-8]
+    env:
+      PYTHONIOENCODING: ${{ matrix.encoding }}
+      MPARANZA_INCIDENT_DELIVERY: local-only
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install declared test dependencies
+        run: >-
+          python -m pip install pytest pymupdf
+          -r plugins/studio-archive/requirements.txt
+          -r plugins/journal-bank-reconciliation/requirements.txt
+      - name: Complete and reopen saved work across valid locations
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_archive_location_continuity.py
+          tests/plugins/test_evidence_retrieval.py
+          tests/plugins/test_studio_archive_file_identity.py
+          tests/plugins/test_vera_verified_execution.py
+      - name: Verify equivalent dates and reviewed ambiguities at intake
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_journal_bank_reconciliation_plugin.py
+          -k 'native_serial_compact or timestamp_intake or ambiguous_day_month or reviewed_day_month or invalid_populated_date or semantic_replay_validates_historical_code'
+      - name: Verify shared helper Unicode transport
+        run: >-
+          python -m pytest -q -o addopts='' --confcutdir=tests/plugins
+          tests/plugins/test_managed_plugin_python_runtime.py
+          -k managed_helper_json_round_trips

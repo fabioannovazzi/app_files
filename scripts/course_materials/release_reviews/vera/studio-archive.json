@@ -378,7 +378,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "a8bfca53c56ccd705d9cd8e42dcc74e374f442351c5c0cdd84296483dcb125e7",
+  "course_sha256": "ade7c1136e4000d25c2b7bf5b277e67ae5ca11a7a826dad88b57bc1ea215eeb8",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "5a4df060961e211259f272a9c309f1b2b4f3cda9d161b25b2e7f6a2a734aea2d",
@@ -934,6 +934,15 @@
     "reviewed_at": "2026-10-18",
     "reviewer": "Codex - exact two-parent source compatibility comparison",
     "scope": "Compared the complete authored course JSON against both parent commits. Inputs, locales, checkpoints, execution contracts and teaching judgments are unchanged. Both parents source compatibility records and historical editorial/output reviews are retained. Combined source includes the bounded PDF recovery and main reporting/host-link fixes; final matching native CI execution remains required."
+  },
+  "portable_intake_source_review_20261113": {
+    "baseline_commit": "424aff636a51ebc8cf8ff2703a733e8fd43473ff",
+    "current_course_sha256": "ade7c1136e4000d25c2b7bf5b277e67ae5ca11a7a826dad88b57bc1ea215eeb8",
+    "execution_requirement": "Fresh native demo and practice CI must verify this current course digest; this comparison does not claim installed-host, learner, visual or professional acceptance.",
+    "judgment": "Complete course comparison with the baseline differs only in sources. Authored lessons, localized text, fixtures, checkpoints and expected professional outputs are unchanged. Source changes standardize helper Unicode transport, preserve selected Archive locations, normalize explicit timestamp dates with source evidence and preserve historical reconciliation receipt bytes. Existing editorial and artifact judgments remain historical.",
+    "previous_course_sha256": "a8bfca53c56ccd705d9cd8e42dcc74e374f442351c5c0cdd84296483dcb125e7",
+    "reviewed_at": "2026-11-13",
+    "reviewer": "Codex /root - source compatibility review"
   },
   "product": "vera",
   "rating_legalita_source_binding_20261002": {

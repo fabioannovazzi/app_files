@@ -227,7 +227,7 @@
     "reviewed_at": "2026-11-11",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_workflow_source",
-    "source_fingerprint": "3f015bfd994353bdac027eed51592cccd1757cb48321efcecd4f5e06776789e4"
+    "source_fingerprint": "f94e995dc6e231c751458db33bde31db7174419b811701bcace23a7259775544"
   },
   "role": "workflow",
   "runtime_profiles": [
@@ -340,6 +340,10 @@
     {
       "id": "bank-first-stage-and-directory-integrity",
       "control": "The shared bank-first controller separates semantic stages from format retries, source/policy-binds retained native evidence and preserves completed work. Native result and attempt directories must be ordinary run-owned locations; symbolic-link redirects are rejected before model dispatch, reads or writes. Saved human decisions and private drafts remain separate from system conclusions."
+    },
+    {
+      "id": "source-date-representation-evidence",
+      "control": "Spreadsheet intake records the interpreted source cell value, Python type, column and physical row alongside its normalized date. Explicit year-first local timestamp text and typed dates produce the same calendar date. Original admitted files and hashes remain unchanged; ambiguous day/month values retain the source-bound reviewed convention. These diagnostics can enter the selected host model context for intake review and do not add an external recipient."
     }
   ],
   "service_ids": [

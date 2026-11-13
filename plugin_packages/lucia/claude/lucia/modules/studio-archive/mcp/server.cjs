@@ -17,6 +17,22 @@ const SERVER_NAME = "vera-studio-archive";
 const SERVER_VERSION = MANIFEST.version || "0.1.0";
 const CLI_PATH = path.join(PLUGIN_ROOT, "scripts", "studio_archive.py");
 const MAX_OUTPUT_BYTES = 8_000_000;
+const CONTEXT_TOOLS = new Set([
+  "get_studio_client_folder",
+  "list_studio_client_engagements",
+  "import_studio_client_document",
+  "verify_studio_client_inputs",
+  "prepare_studio_client_workflow",
+  "start_studio_client_workflow",
+  "read_studio_run_artifact",
+  "write_studio_run_artifact",
+  "finalize_studio_client_workflow",
+  "complete_studio_client_workflow",
+  "fail_studio_client_workflow",
+  "cancel_studio_client_workflow",
+  "verify_studio_run_report",
+  "checkpoint_studio_client_workflow",
+]);
 const TOOL_NAMES = {
   status: "studio_archive_status",
   clients: "list_studio_archive_clients",
@@ -922,6 +938,7 @@ function toolDefinitions() {
     ...definition,
     inputSchema: {...definition.inputSchema, properties: {
       ...definition.inputSchema.properties,
+      ...(CONTEXT_TOOLS.has(definition.name) ? {context_path: {type: "string", description: "Exact returned saved context path. Continues the same work without global Archive setup or writable private lookup storage."}} : {}),
       incident_report_id: {type: "string", format: "uuid", description:
         "Only for a retry of the original failed operation: its retained local incident report UUID. Preserve original case and source identity. This records retry progress; it does not claim task recovery."},
     }},
@@ -1080,6 +1097,11 @@ function runIdentityCommand(args, commandName, extraKeys = []) {
 
 function commandForTool(name, rawArgs) {
   const args = requirePlainObject(rawArgs);
+  if (CONTEXT_TOOLS.has(name) && args.context_path !== undefined) {
+    const {context_path, ...remaining} = args;
+    if (typeof context_path !== "string" || !path.isAbsolute(context_path)) throw new Error("context_path must be an absolute saved context path");
+    return ["--context", context_path, ...commandForTool(name, remaining)];
+  }
   if (name === TOOL_NAMES.checkImportSources) {
     assertOnlyKeys(args, new Set(["source_paths", "expected_sha256"]));
     const sources = optionalStringArray(args.source_paths, "source_paths", 100, 4096);
