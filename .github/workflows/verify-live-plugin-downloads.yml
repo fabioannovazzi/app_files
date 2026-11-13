@@ -1,0 +1,67 @@
+name: Verify live plugin downloads
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'plugins/*/.codex-plugin/plugin.json'
+      - 'static/shared/*/downloads/*-cowork-plugin.zip'
+      - 'scripts/build_public_codex_downloads.sh'
+      - '.github/workflows/verify-live-plugin-downloads.yml'
+
+permissions:
+  contents: read
+
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
+
+concurrency:
+  group: verify-live-plugin-downloads
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify live Codex and Cowork ZIP versions
+        run: |
+          downloaded="$(mktemp)"
+          trap 'rm -f "$downloaded"' EXIT
+          for attempt in {1..12}; do
+            mismatch=0
+            for product in vera clara lucia; do
+              expected="$(jq -er .version "plugins/$product/.codex-plugin/plugin.json")"
+              for host in codex cowork; do
+                if [ "$host" = codex ]; then
+                  file="$product-plugin.zip"
+                  manifest="$product-codex-plugin/plugins/$product/.codex-plugin/plugin.json"
+                else
+                  file="$product-cowork-plugin.zip"
+                  manifest=".claude-plugin/plugin.json"
+                fi
+                path="static/shared/$product/downloads/$file"
+                actual=unavailable
+                if curl --fail --silent --show-error --max-time 15 \
+                    --output "$downloaded" "https://mparanza.com/$path"; then
+                  actual="$(unzip -p "$downloaded" "$manifest" | jq -er .version)" || actual=invalid
+                fi
+                if [ "$actual" != "$expected" ]; then
+                  echo "$product $host public ZIP: expected $expected, got $actual"
+                  mismatch=1
+                elif [ "$host" = cowork ] && ! cmp -s "$path" "$downloaded"; then
+                  echo "$product $host public ZIP differs from the release bytes"
+                  mismatch=1
+                else
+                  echo "$product $host public ZIP matches version $expected"
+                fi
+              done
+            done
+            if [ "$mismatch" -eq 0 ]; then exit 0; fi
+            if [ "$attempt" -lt 12 ]; then sleep 45; fi
+          done
+          exit 1
