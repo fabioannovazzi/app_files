@@ -1593,7 +1593,11 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
             catalogue,
             lifecycle_action,
             resolve_binding,
+            set_work_visibility,
         )
+
+        if tool == "vera_workspace_archive_work_visibility":
+            return set_work_visibility(module_root("studio-archive"), args, atomic_json)
 
         if tool.startswith("vera_workspace_archive_import_"):
             from types import SimpleNamespace
@@ -1821,6 +1825,7 @@ def dispatch(tool: str, args: dict[str, Any]) -> dict[str, Any]:
     else:
         if tool in {
             "vera_workspace_archive_setup",
+            "vera_workspace_archive_work_visibility",
             "vera_workspace_archive_closure",
             "vera_workspace_archive_declare",
             "vera_workspace_archive_discard",
