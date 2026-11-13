@@ -319,6 +319,14 @@ When the user asks for **Lavori dello studio**, open the Studio Archive
 directory with `vera_workspace_open` and no arguments. The agenda is for
 appointments and commitments; it does not list saved client work.
 
+Within an engagement, **In corso** is the default work list, **Storico**
+shows completed and cancelled work, and **Nascosti** shows hidden work.
+For an explicit request to hide or restore work, identify the exact client,
+engagement and run using `list_studio_client_engagements`. If multiple runs
+match, ask which one. Call `vera_workspace_archive_work_visibility` with
+those three IDs and `hidden: "yes"` to hide or `hidden: "no"` to restore.
+Confirm the result. This changes a local list preference only.
+
 Deliver the result in this chat with its ordinary files. Use a panel only for a
 review that needs interaction or when the user asks to open it. In Claude call
 `vera_open_review` with the exact Archive client, engagement and run identifiers
