@@ -53,7 +53,9 @@ def _native_checkpoint(directory: Path) -> dict[str, Any]:
 def start(directory: Path) -> dict[str, Any]:
     """Create initial progress with the shipped procedure, never a fake example."""
     _private(directory)
-    manifest = json.loads((ROOT / ".codex-plugin/plugin.json").read_text())
+    manifest = json.loads(
+        (ROOT / ".codex-plugin/plugin.json").read_text(encoding="utf-8")
+    )
     procedure = PROCEDURE.read_text(encoding="utf-8")
     payload = {
         "schema_version": checkpoint.SCHEMA,

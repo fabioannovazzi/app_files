@@ -196,6 +196,8 @@ def validate_instance(
             cache_dir.mkdir()
         command = [
             sys.executable,
+            "-X",
+            "utf8",
             "-m",
             "arelle.CntlrCmdLine",
             "--disablePersistentConfig",
@@ -221,6 +223,7 @@ def validate_instance(
             check=False,
             text=True,
             timeout=120,
+            encoding="utf-8",
         )
         messages, has_validation_error = _parse_log(log_file)
         messages = [*preflight_messages, *messages]

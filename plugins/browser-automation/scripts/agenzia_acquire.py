@@ -143,6 +143,8 @@ def _start(
             raise AcquisitionError("archive-run-preparation-failed") from exc
         command = [
             sys.executable,
+            "-X",
+            "utf8",
             str(Path(__file__).resolve()),
             "worker",
             "--output",
@@ -252,11 +254,12 @@ def _archive(store: Store, run: Path, plan: Plan) -> dict[str, Any]:
 
     def call(arguments: list[str]) -> dict[str, Any]:
         response = subprocess.run(
-            [sys.executable, str(script), *arguments],
+            [sys.executable, "-X", "utf8", str(script), *arguments],
             capture_output=True,
             text=True,
             check=False,
             timeout=120,
+            encoding="utf-8",
         )
         if response.returncode:
             raise AcquisitionError("studio-archive-import-failed")

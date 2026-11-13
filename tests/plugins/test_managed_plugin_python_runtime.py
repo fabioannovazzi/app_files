@@ -18,6 +18,11 @@ RUNTIME_SOURCE = ROOT / "plugins" / "vera" / "scripts" / "_managed_python_runtim
 VERA_MANAGER = ROOT / "plugins" / "vera" / "scripts" / "managed_python_runtime.py"
 
 
+def python_operation(command: list[str]) -> list[str]:
+    """Keep installer mocks focused on operations, allowing interpreter options."""
+    return [command[0], *command[3:]] if command[1:3] == ["-X", "utf8"] else command
+
+
 def load_runtime() -> Any:
     spec = importlib.util.spec_from_file_location(
         "managed_plugin_python_runtime_test",
@@ -97,6 +102,7 @@ def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> 
     make_packaged_component(plugin_root)
 
     def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         raise subprocess.TimeoutExpired(command, kwargs["timeout"])
 
     ready, target, detail = runtime.ensure_runtime(
@@ -129,6 +135,7 @@ def test_runtime_install_timeout_does_not_publish_generation(tmp_path: Path) -> 
     make_packaged_component(plugin_root)
 
     def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         raise subprocess.TimeoutExpired(command, kwargs["timeout"])
 
     ready, target, detail = runtime.ensure_runtime(
@@ -215,6 +222,7 @@ def test_missing_target_is_installed_before_dependency_validation(
     def fake_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
@@ -266,6 +274,7 @@ def test_selected_optional_requirements_are_installed_before_validation(
     def fake_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
@@ -361,9 +370,9 @@ def test_first_setup_prevents_nested_google_probe_from_crashing(
     def install_then_run(
         command: list[str], **kwargs: object
     ) -> subprocess.CompletedProcess[str]:
-        if command[1:3] == ["-m", "venv"]:
+        if python_operation(command)[1:3] == ["-m", "venv"]:
             return subprocess.run(command, **kwargs)
-        if command[1:3] == ["-m", "pip"]:
+        if python_operation(command)[1:3] == ["-m", "pip"]:
             if "install" not in command:
                 return subprocess.CompletedProcess(command, 0, "pip ready", "")
             target_python = Path(command[command.index("--python") + 1])
@@ -422,6 +431,7 @@ def test_windows_runtime_avoids_ensurepip_when_base_pip_is_available(
     def windows_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]), windows=True)
@@ -462,6 +472,7 @@ def test_base_pip_unavailable_falls_back_to_direct_ensurepip(tmp_path: Path) -> 
     def fallback_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]), windows=True)
@@ -500,6 +511,7 @@ def test_base_pip_with_broken_target_metadata_uses_target_ensurepip(
     def incompatible_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
@@ -532,6 +544,7 @@ def test_ensurepip_failure_returns_complete_windows_diagnostics(
     def blocked_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]), windows=True)
             return subprocess.CompletedProcess(command, 0, "", "")
@@ -667,6 +680,7 @@ def test_network_resolution_failure_requests_codex_host_approval(
     def network_blocked_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
             return subprocess.CompletedProcess(command, 0, "", "")
@@ -702,6 +716,7 @@ def test_invalid_distribution_is_not_mislabeled_as_network_denial(
     def invalid_distribution_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
             return subprocess.CompletedProcess(command, 0, "", "")
@@ -731,6 +746,7 @@ def test_ready_target_is_reused_without_reinstalling(tmp_path: Path) -> None:
     def fake_runner(
         command: list[str], **_: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
@@ -886,6 +902,7 @@ def test_simultaneous_runtime_launches_install_one_generation(tmp_path: Path) ->
     created = []
 
     def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             created.append(command[-1])
             time.sleep(0.05)
@@ -925,6 +942,7 @@ def test_ready_receipt_records_resolved_version_from_same_requirement_range(
     (component / "requirements.txt").write_text("demo-dependency>=1.0,<2\n")
 
     def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             target = Path(command[-1])
             create_fake_virtualenv(target)
@@ -964,6 +982,7 @@ from pathlib import Path
 helpers = runpy.run_path(sys.argv[1])
 runtime = helpers['load_runtime']()
 def runner(command, **kwargs):
+    command = helpers["python_operation"](command)
     if command[1:3] == ['-m', 'venv']:
         time.sleep(0.1)
         helpers['create_fake_virtualenv'](Path(command[-1]))
@@ -1048,6 +1067,7 @@ runtime.ensure_runtime(Path(sys.argv[2]), 'studio-archive',
     assert len(abandoned) == 1
 
     def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
         return subprocess.CompletedProcess(command, 0, "", "")
@@ -1070,6 +1090,7 @@ def test_failed_runtime_replacement_preserves_published_generation(
     make_packaged_component(plugin_root)
 
     def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
         return subprocess.CompletedProcess(command, 0, "", "")
@@ -1089,6 +1110,7 @@ def test_failed_runtime_replacement_preserves_published_generation(
     def failure(
         command: list[str], **kwargs: object
     ) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if "install" in command:
             return subprocess.CompletedProcess(
                 command, 1, "", "simulated installation failure"
@@ -1214,6 +1236,7 @@ def test_failed_dependency_checker_preserves_runtime_rejection(tmp_path: Path) -
     make_packaged_component(plugin_root)
 
     def runner(command: list[str], **_: object) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]))
         if command[1].endswith("check_dependencies.py"):
@@ -1279,6 +1302,7 @@ def test_setup_uses_only_python312_from_other_host_versions(
     commands: list[list[str]] = []
 
     def runner(command: list[str], **_: Any) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if "-c" in command:
             return subprocess.CompletedProcess(
@@ -1375,6 +1399,7 @@ def test_windows_short_generation_installs_and_is_reused(
     commands = []
 
     def runner(command: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        command = python_operation(command)
         commands.append(command)
         if command[1:3] == ["-m", "venv"]:
             create_fake_virtualenv(Path(command[-1]), windows=True)
@@ -1420,6 +1445,7 @@ def test_selected_interpreter_identity_rejects_wrong_or_malformed_response(paylo
     runtime = load_runtime()
 
     def runner(command, **kwargs):
+        command = python_operation(command)
         return subprocess.CompletedProcess(command, 0, json.dumps(payload), "")
 
     with pytest.raises(ValueError):
@@ -1430,6 +1456,7 @@ def test_selected_interpreter_identity_reports_process_failure():
     runtime = load_runtime()
 
     def runner(command, **kwargs):
+        command = python_operation(command)
         return subprocess.CompletedProcess(command, 1, "", "failed")
 
     with pytest.raises(ValueError, match="Cannot verify"):
@@ -1822,6 +1849,7 @@ def test_uv_alias_failure_uses_only_a_verified_installed_interpreter(
     creations = []
 
     def runner(command, **kwargs):
+        command = python_operation(command)
         if command[1:3] == ["python", "install"]:
             return subprocess.CompletedProcess(
                 command,

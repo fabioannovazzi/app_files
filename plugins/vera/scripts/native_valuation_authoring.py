@@ -200,6 +200,8 @@ def preflight(root: Path, loaded: dict, grant: dict, proposal: dict, api: Any) -
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_valuation_author_bridge.py")),
@@ -218,6 +220,7 @@ def preflight(root: Path, loaded: dict, grant: dict, proposal: dict, api: Any) -
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(

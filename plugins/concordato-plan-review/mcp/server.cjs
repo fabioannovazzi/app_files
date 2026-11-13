@@ -2755,7 +2755,7 @@ function runConcordatoChild(args, phase) {
   if (!python) throw new Error(messages.start);
   let completed;
   try {
-    completed = spawnSync(python.executable, ["-I", "-B", ...args], {
+    completed = spawnSync(python.executable, ["-X", "utf8", "-I", "-B", ...args], {
       cwd: PLUGIN_ROOT,
       encoding: "utf8",
       env: python.environment,
@@ -4846,7 +4846,7 @@ function concordatoChildPython() {
   }
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       "-I",
       "-B",
       "-c",
@@ -4936,7 +4936,7 @@ function preflightClientWorkflowRun(outputDir, expectedRunId) {
   if (!outputDir) return null;
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       "-I",
       "-B",
       "-c",

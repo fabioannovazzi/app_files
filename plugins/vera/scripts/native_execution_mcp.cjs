@@ -64,7 +64,7 @@ try {
   // The transport parent must release the replaceable installation directory
   // too: Windows prevents its removal while any process keeps it as cwd.
   process.chdir(os.tmpdir());
-  const child = spawn(python, ["-I", "-B", "-c", program, bootstrap, root],
+  const child = spawn(python, ["-X", "utf8", "-I", "-B", "-c", program, bootstrap, root],
     { cwd: bootstrap, env: process.env, stdio: "inherit" });
   // A host stop closes this transport, not the detached professional jobs.
   // Keep the owner alive until its workers release the leased code.

@@ -119,7 +119,7 @@ except Exception as error:
     sys.stdout.write(json.dumps({"native_error": {"events": events, "http_status": code if isinstance(code, int) else None, "errno": getattr(error, "errno", None), "sqlite_errorname": getattr(error, "sqlite_errorname", None), "capture_state": "pending" if events else "unavailable", "unavailable": ["This native bridge does not collect raw diagnostic values."]}}))
     raise SystemExit(1)
 `;
-    const result = spawnSync(python, ["-I", "-B", "-c", program, snapshot, command], {
+    const result = spawnSync(python, ["-X", "utf8", "-I", "-B", "-c", program, snapshot, command], {
       cwd: snapshot, encoding: "utf8", input: JSON.stringify(args), timeout: command === "workflow-usage" ? 60000 : 20000, maxBuffer: 1000000,
       env: { ...process.env, MPARANZA_INCIDENT_HOST_SESSION: SESSION },
     });

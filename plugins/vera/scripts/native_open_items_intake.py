@@ -79,6 +79,8 @@ def engine_call(root: Path, request: dict[str, Any]) -> dict[str, Any]:
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_open_items_intake_bridge.py")),
@@ -89,6 +91,7 @@ def engine_call(root: Path, request: dict[str, Any]) -> dict[str, Any]:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(completed.stderr.strip() or "Open-item intake refused")

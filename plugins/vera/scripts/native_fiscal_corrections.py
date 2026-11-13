@@ -211,6 +211,8 @@ def prepare_correction(binding: dict, loaded: dict, args: dict, api: Any) -> dic
         intake = api.read_json(directory / "run_intake.json")
         command = [
             sys.executable,
+            "-X",
+            "utf8",
             str(scripts / "build_file_preparation_outputs.py"),
             context["input_dir"],
             "--client-engagement",
@@ -242,7 +244,12 @@ def prepare_correction(binding: dict, loaded: dict, args: dict, api: Any) -> dic
         if year is not None:
             command += ["--year", str(year)]
         completed = subprocess.run(
-            command, capture_output=True, text=True, timeout=120, check=False
+            command,
+            capture_output=True,
+            text=True,
+            timeout=120,
+            check=False,
+            encoding="utf-8",
         )
         if completed.returncode:
             raise ValueError(

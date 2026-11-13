@@ -52,7 +52,9 @@ def _specification(args: dict[str, Any], root: Path = ROOT) -> dict[str, Any]:
     """Resolve only shipped Python helpers; never accept a shell or caller code."""
     from _managed_python_runtime import resolve_helper_root
 
-    components = json.loads((root / "components.json").read_text())["plugins"]
+    components = json.loads((root / "components.json").read_text(encoding="utf-8"))[
+        "plugins"
+    ]
     component = args.get("component")
     if not isinstance(component, str) or component not in components:
         raise ValueError("Select a component in this installed Vera package")
@@ -235,7 +237,10 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
             fingerprint = hashlib.sha256(
                 json.dumps(spec, sort_keys=True).encode()
             ).hexdigest()
-            if json.loads(retained.read_text())["fingerprint"] != fingerprint:
+            if (
+                json.loads(retained.read_text(encoding="utf-8"))["fingerprint"]
+                != fingerprint
+            ):
                 raise ValueError("This job ID already belongs to a different execution")
             return execute(
                 {"operation": "status", "job_id": job_id, "wait_seconds": wait}
@@ -274,7 +279,7 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         try:
             job.mkdir(mode=0o700)
         except FileExistsError:
-            previous = json.loads((job / "request.json").read_text())
+            previous = json.loads((job / "request.json").read_text(encoding="utf-8"))
             if previous["fingerprint"] != fingerprint:
                 raise ValueError("This job ID already belongs to a different execution")
         else:
@@ -303,6 +308,8 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
                 worker = subprocess.Popen(
                     [
                         sys.executable,
+                        "-X",
+                        "utf8",
                         "-I",
                         "-B",
                         str(execution_root / "scripts/native_execution.py"),
@@ -333,7 +340,7 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
         raise ValueError(
             "Status/cancel take only the retained job ID and optional wait"
         )
-    request = json.loads((job / "request.json").read_text())
+    request = json.loads((job / "request.json").read_text(encoding="utf-8"))
     if operation == "cancel" and not (job / "result.json").exists():
         (job / "cancel").touch()
     deadline = time.monotonic() + wait
@@ -350,7 +357,7 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
     }
     if (job / "cancellation_error.json").exists():
         value["cancellation_error"] = json.loads(
-            (job / "cancellation_error.json").read_text()
+            (job / "cancellation_error.json").read_text(encoding="utf-8")
         )
     metadata = {
         key: item for key, item in value.items() if key not in {"stdout", "stderr"}
@@ -432,7 +439,7 @@ def execute(args: dict[str, Any]) -> dict[str, Any]:
 
 
 def _run(job: Path) -> int:
-    request = json.loads((job / "request.json").read_text())
+    request = json.loads((job / "request.json").read_text(encoding="utf-8"))
     stopped = threading.Event()
 
     def heartbeat() -> None:
@@ -453,6 +460,8 @@ def _run(job: Path) -> int:
                 child = subprocess.Popen(
                     [
                         sys.executable,
+                        "-X",
+                        "utf8",
                         "-I",
                         "-B",
                         str(ROOT / "scripts/managed_python_runtime.py"),
@@ -534,6 +543,7 @@ def _stop(child: subprocess.Popen, stderr: Any) -> None:
             text=True,
             check=True,
             timeout=5,
+            encoding="utf-8",
         )
         parents = {
             int(pid): int(parent)

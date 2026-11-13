@@ -39,6 +39,8 @@ def run_entrypoint(main: Any, component_file: Path) -> int | None:
     return run_command(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             "-c",
@@ -139,7 +141,7 @@ def _run_command(
     if (
         os.environ.get("VERA_REPORTING_INTERNAL") == "1"
         or manifest is None
-        or json.loads(manifest.read_text())["name"] != "vera"
+        or json.loads(manifest.read_text(encoding="utf-8"))["name"] != "vera"
     ):
         return subprocess.run(command, **options)
     environment = options.get("env")

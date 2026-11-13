@@ -1770,6 +1770,8 @@ def _run_journal_sampling_replay(
             completed = subprocess.run(  # nosec B603
                 [
                     sys.executable,
+                    "-X",
+                    "utf8",
                     "-I",
                     "-B",
                     str(replay_script),
@@ -1792,6 +1794,7 @@ def _run_journal_sampling_replay(
                     "PYTHONDONTWRITEBYTECODE": "1",
                     "PYTHONPYCACHEPREFIX": str(temporary_root / "pycache"),
                 },
+                encoding="utf-8",
             )
         except subprocess.TimeoutExpired as exc:
             raise ValueError(

@@ -30,7 +30,7 @@
     {
       "path": "scripts/archive_cli.py",
       "repository_path": "plugins/vera/scripts/archive_cli.py",
-      "sha256": "d1dd63d6abe4f082c3137b09ded5bfeb2d153eb6d6fdeb759a4a82feabe14679"
+      "sha256": "786c6d01451706127c39b93f986482e157dfa0d5076f651372c33b9e7e180298"
     },
     {
       "path": "scripts/archive_emit.py",
@@ -95,7 +95,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/vera/scripts/model_data_report.py",
-      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
+      "sha256": "84cb12e93024f327414e13118c55904344b04040b4ffb08e14805e3edccade65"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -105,7 +105,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/vera/scripts/operational_incidents.py",
-      "sha256": "686ed0140b970aff8b4314a3e53a13e202b1c80af91a95f949613f33f36342d1"
+      "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -120,7 +120,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/vera/scripts/verified_execution.py",
-      "sha256": "da54353fdefe68a5ad934eba31372cfe8d67fe71171a9899e40384d1b9414548"
+      "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -205,7 +205,7 @@
     {
       "path": "vendor/modules/courseware/deck_view.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
-      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+      "sha256": "e83928d4f7726eba1477427ad76fd4297b69f559d0906eb7c5b5bdc0ede05052"
     },
     {
       "path": "vendor/modules/courseware/document_view.py",
@@ -235,7 +235,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
+      "sha256": "8ae5ff520e576cd5d11db16e5a84e336adb07da8b88d6119d2d55360972b0919"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -245,7 +245,7 @@
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+      "sha256": "12256f4534ed8fc25d5bda4cd8cd81d9611bcfe6b8fe3de3c9fbe199b6fa4ea7"
     },
     {
       "path": "vendor/modules/courseware/recovery.py",
@@ -325,7 +325,7 @@
     {
       "path": "vendor/modules/scripts/legal_documents.py",
       "repository_path": "plugins/lucia/scripts/legal_documents.py",
-      "sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+      "sha256": "3c2b4d6592521987f8561f9ae39a1b0aa1c96df140059c21a71e36b866036bab"
     },
     {
       "path": "vendor/modules/scripts/legal_documents_labels.json",
@@ -360,7 +360,7 @@
     {
       "path": "vendor/modules/scripts/legal_negotiation.py",
       "repository_path": "plugins/lucia/scripts/legal_negotiation.py",
-      "sha256": "9dac089491f64475736b43c50be8209ec65ccf1aaf841e1e079a3ac042e4358c"
+      "sha256": "3caf6f3780c5bd70ac4c8e823b63c7ec3f7fd41908f350b3dd653cedeba3a382"
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.schema.json",
@@ -395,7 +395,7 @@
     {
       "path": "vendor/modules/vera_assurance/jurisdiction.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_assurance/jurisdiction.py",
-      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+      "sha256": "b7a04292ca9abe78c3871c03ea889bf543005fe0bec67a9c08005fe4204eb640"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -450,7 +450,7 @@
     {
       "path": "vendor/modules/vera_journal_pdf/adapter.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+      "sha256": "05cb587d2d4bca8478ac602dd63d7da296bc3e67be9e6dfceee3fc2ad0fb8c25"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/bank.py",
@@ -460,7 +460,7 @@
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
       "repository_path": "plugins/_shared/vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
+      "sha256": "9abdaad96cc5a2fb76bf4d0810128bb2f9c460738301a5ebe2d8b0f2e27d7d58"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",

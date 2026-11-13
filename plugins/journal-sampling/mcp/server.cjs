@@ -2237,7 +2237,7 @@ function journalAssuranceChildPython() {
   // Resolve an already prepared runtime. MCP review never installs dependencies.
   const completed = childProcess.spawnSync(
     journalAssurancePythonExecutable(),
-    ["-I", "-B", "-c", JOURNAL_MANAGED_PYTHON_RESOLVER, launcher],
+    ["-X", "utf8", "-I", "-B", "-c", JOURNAL_MANAGED_PYTHON_RESOLVER, launcher],
     { cwd: PLUGIN_ROOT, encoding: "utf8", timeout: 60_000, maxBuffer: 64 * 1024, env: process.env },
   );
   if (completed.error || completed.status !== 0) {
@@ -2324,7 +2324,7 @@ function runJournalAssuranceBridge(command, outputDir, kind = null) {
   const python = journalAssuranceChildPython();
   const completed = childProcess.spawnSync(
     python.executable,
-    ["-I", "-B", ...args],
+    ["-X", "utf8", "-I", "-B", ...args],
     {
       cwd: PLUGIN_ROOT,
       encoding: "utf8",

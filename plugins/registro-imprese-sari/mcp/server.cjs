@@ -155,7 +155,7 @@ function preflightClientWorkflowRun(outputDir, expectedRunId, readOnly = false) 
   // persistence boundary reuses the shared v2 validator immediately before write.
   const completed = spawnSync(
     pythonExecutable(),
-    ["-I", "-B", "-c", CLIENT_WORKFLOW_PREFLIGHT, PLUGIN_ROOT, outputDir, PLUGIN_NAME, readOnly ? "read-only" : "write"],
+    ["-X", "utf8", "-I", "-B", "-c", CLIENT_WORKFLOW_PREFLIGHT, PLUGIN_ROOT, outputDir, PLUGIN_NAME, readOnly ? "read-only" : "write"],
     { cwd: PLUGIN_ROOT, encoding: "utf8", maxBuffer: 64 * 1024 },
   );
   if (completed.error || completed.status !== 0) {

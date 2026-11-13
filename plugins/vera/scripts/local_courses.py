@@ -39,6 +39,8 @@ def main(argv: list[str] | None = None) -> int:
         return subprocess.run(
             [
                 sys.executable,
+                "-X",
+                "utf8",
                 str(PLUGIN_ROOT / "scripts/managed_python_runtime.py"),
                 "run",
                 "scripts/local_courses.py",

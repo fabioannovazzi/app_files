@@ -169,6 +169,8 @@ def run_captured(
         process = subprocess.Popen(  # nosec B603: argv is passed without a shell
             [
                 sys.executable,
+                "-X",
+                "utf8",
                 "-I",
                 "-c",
                 _GATE,

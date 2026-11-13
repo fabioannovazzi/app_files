@@ -964,7 +964,7 @@ function pythonExecutable() {
     if (path.isAbsolute(candidate) && !fs.existsSync(candidate)) continue;
     // Probe the actual interpreter, not the presence of a PATH alias. This
     // avoids ENOENT/Store aliases hiding an already working managed Python.
-    const probe = spawnSync(candidate, ["-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
+    const probe = spawnSync(candidate, ["-X", "utf8", "-I", "-B", "-c", "import sys; sys.stdout.write(sys.executable)"], {
       encoding: "utf8", windowsHide: true, timeout: 10000, maxBuffer: 8192,
     });
     if (!probe.error && probe.status === 0 && String(probe.stdout || "").trim()) return candidate;
@@ -1871,8 +1871,7 @@ function callTool(name, args) {
     spawnOptions.input = JSON.stringify(args.artifacts);
   }
   const completed = spawnSync(
-    pythonExecutable(),
-    workerArguments(commandForTool(name, args), reportId),
+    pythonExecutable(), ["-X", "utf8", ...workerArguments(commandForTool(name, args), reportId)],
     spawnOptions,
   );
   if (completed.error) throw completed.error;
@@ -1960,7 +1959,7 @@ function recordToolError(args, payload) {
     return payload;
   }
   // Save the exact MCP envelope, including errors raised before the worker runs.
-  const recorded = spawnSync(pythonExecutable(), workerArguments(["record-error"]), {
+  const recorded = spawnSync(pythonExecutable(), ["-X", "utf8", ...workerArguments(["record-error"])], {
     cwd: PLUGIN_ROOT,
     env: { ...process.env, VERA_STUDIO_ARCHIVE_SESSION_ID: archiveSessionId, VERA_STUDIO_ARCHIVE_MCP: "1" },
     input: JSON.stringify({ arguments: args, payload }),

@@ -259,6 +259,8 @@ class Store:
             "required_access": "read_write",
             "setup_argv": [
                 sys.executable,
+                "-X",
+                "utf8",
                 str(self.plugin_root / "scripts/local_onboarding.py"),
                 "setup",
                 "--state-root",
@@ -340,7 +342,8 @@ class Store:
                 {"onboarding_id": state["onboarding_id"], "product": self.product},
             )
             (self.root / MARKER).write_text(
-                f"{self.product.title()} onboarding: local-only tutorial artifacts.\n"
+                f"{self.product.title()} onboarding: local-only tutorial artifacts.\n",
+                encoding="utf-8",
             )
             (self.root / ".mparanza-teaching-local-only").write_text(
                 "Local tutorial; no transmission.\n", encoding="utf-8"

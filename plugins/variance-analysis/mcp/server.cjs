@@ -1740,7 +1740,7 @@ function preflightClientRun(inputArgs, expectedRunId) {
   const scriptPath = path.join(PLUGIN_ROOT, "scripts", "review_preflight.py");
   const completed = spawnSync(
     pythonExecutable(),
-    [scriptPath, "--output-dir", outputDir, "--client-run-preflight-only"],
+    ["-X", "utf8", scriptPath, "--output-dir", outputDir, "--client-run-preflight-only"],
     { cwd: PLUGIN_ROOT, encoding: "utf8" },
   );
   if (completed.error) throw completed.error;

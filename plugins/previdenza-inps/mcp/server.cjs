@@ -244,7 +244,7 @@ function preflightClientWorkflowRun(outputDir, expectedRunId) {
   // persistence boundary reuses the shared v2 validator immediately before write.
   const completed = spawnSync(
     pythonExecutable(),
-    [
+    ["-X", "utf8",
       "-I",
       "-B",
       "-c",

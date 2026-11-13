@@ -190,7 +190,7 @@
     {
       "path": "scripts/archive_cli.py",
       "repository_path": "plugins/clara/scripts/archive_cli.py",
-      "sha256": "d1dd63d6abe4f082c3137b09ded5bfeb2d153eb6d6fdeb759a4a82feabe14679"
+      "sha256": "786c6d01451706127c39b93f986482e157dfa0d5076f651372c33b9e7e180298"
     },
     {
       "path": "scripts/archive_emit.py",
@@ -260,7 +260,7 @@
     {
       "path": "scripts/model_data_report.py",
       "repository_path": "plugins/clara/scripts/model_data_report.py",
-      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
+      "sha256": "84cb12e93024f327414e13118c55904344b04040b4ffb08e14805e3edccade65"
     },
     {
       "path": "scripts/notarized_run_receipt.py",
@@ -270,7 +270,7 @@
     {
       "path": "scripts/operational_incidents.py",
       "repository_path": "plugins/clara/scripts/operational_incidents.py",
-      "sha256": "686ed0140b970aff8b4314a3e53a13e202b1c80af91a95f949613f33f36342d1"
+      "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -280,7 +280,7 @@
     {
       "path": "scripts/verified_execution.py",
       "repository_path": "plugins/clara/scripts/verified_execution.py",
-      "sha256": "da54353fdefe68a5ad934eba31372cfe8d67fe71171a9899e40384d1b9414548"
+      "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -360,7 +360,7 @@
     {
       "path": "vendor/modules/courseware/deck_view.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/deck_view.py",
-      "sha256": "96f75ea3078c9e0c6e509cdefb0beeb876677e2e7884777d213d9b03c6c27b80"
+      "sha256": "e83928d4f7726eba1477427ad76fd4297b69f559d0906eb7c5b5bdc0ede05052"
     },
     {
       "path": "vendor/modules/courseware/document_view.py",
@@ -390,7 +390,7 @@
     {
       "path": "vendor/modules/courseware/native.cjs",
       "repository_path": "plugins/_shared/vendor/modules/courseware/native.cjs",
-      "sha256": "b33eb8ee25d94871d220eb22664ab746f8ee30a187212fd7072761cfd15bfe73"
+      "sha256": "8ae5ff520e576cd5d11db16e5a84e336adb07da8b88d6119d2d55360972b0919"
     },
     {
       "path": "vendor/modules/courseware/policy.py",
@@ -400,7 +400,7 @@
     {
       "path": "vendor/modules/courseware/preview.py",
       "repository_path": "plugins/_shared/vendor/modules/courseware/preview.py",
-      "sha256": "1a6e56141cdd554a6510100f47745f7b31472c9d22f45407f4f86ac7981aee10"
+      "sha256": "12256f4534ed8fc25d5bda4cd8cd81d9611bcfe6b8fe3de3c9fbe199b6fa4ea7"
     },
     {
       "path": "vendor/modules/courseware/recovery.py",
@@ -435,7 +435,7 @@
     {
       "path": "vendor/modules/desktop_teaching/onboarding.py",
       "repository_path": "plugins/_shared/vendor/modules/desktop_teaching/onboarding.py",
-      "sha256": "065c7b3f8d3376d433fd74d4d0db8d316adb1e20720c1d88e7af7ecb85eecf61"
+      "sha256": "5da05bdd4d2536e241c53a4bc0bc15144ae77be7a99e2ea718c8205097aa6790"
     },
     {
       "path": "vendor/modules/desktop_teaching/teaching.py",

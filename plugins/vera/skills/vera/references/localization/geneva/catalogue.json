@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-whatsapp-cowork/plugins/vera",
-  "version": "0.1.629",
-  "captured_at": "2026-11-13T10:30:04.172067+00:00",
-  "catalogue_fingerprint": "761d058e6e94254b9c12f9c6f52649fc922c1bad4b8ac91c79035f730d09e604",
-  "manifest_sha256": "edb2ab9061827495390092bbb24bb0cd1cdfc97fa25a6aa9f3a180a716188e7a",
+  "root": "/private/tmp/vera-utf8/plugins/vera",
+  "version": "0.1.631",
+  "captured_at": "2026-11-13T16:23:38.393732+00:00",
+  "catalogue_fingerprint": "a1f52c8b004cd2c74f62229dbf2e35f25fe0982ea56f257fbe91a41cdbd83638",
+  "manifest_sha256": "8712786eb74dc637b3bfb005a6b6053eb003cb43edca0d4d65ccd4488488ce50",
   "entries": [
     {
       "function_id": "adeguati-assetti",

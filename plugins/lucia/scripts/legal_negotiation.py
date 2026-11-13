@@ -285,7 +285,12 @@ def scaffold(
 def _read_inventory(run_dir: Path) -> dict[str, Any]:
     path = run_dir / "negotiation-inventory.json"
     digest = _hash(path.read_bytes())
-    if digest != (run_dir / "negotiation-inventory.sha256").read_text().strip():
+    if (
+        digest
+        != (run_dir / "negotiation-inventory.sha256")
+        .read_text(encoding="utf-8")
+        .strip()
+    ):
         raise ValueError("Negotiation inventory changed; prepare a new evidence run.")
     inventory = _load(path)
     current = inventory_changes(run_dir, inventory["source_id"])
