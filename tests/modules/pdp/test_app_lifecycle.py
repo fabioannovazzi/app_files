@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from modules.hosted_services import api as pdp_api
+from modules.hosted_services.plugin_downloads import register_plugin_downloads
 
 
 def test_fastapi_entrypoint_reexports_single_app_instance() -> None:
@@ -178,7 +179,9 @@ def test_plugin_download_version_reads_public_zip(
     directory.mkdir(parents=True)
     (tmp_path / "static/shared/courses").mkdir()
     (tmp_path / "static/shared/courses/file-aliases.json").write_text('{"aliases": {}}')
-    client = TestClient(pdp_api.create_app())
+    app = pdp_api.create_app()
+    register_plugin_downloads(app)
+    client = TestClient(app)
     url = f"/api/plugin-downloads/vera/{host}"
 
     assert client.get(url).status_code == 503
