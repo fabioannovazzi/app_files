@@ -20,6 +20,11 @@ from evidence_retrieval import (
 
 __all__ = ["run_review", "replay_result", "extend_schema"]
 PROTOCOL = "vera.retrieval.v1"
+# Owned 0.1.625 implementation, supported for evidence replay only. Never launch it.
+LEGACY_IMPLEMENTATION = (
+    "fc9378ac0488ab133bf470d32f0b5242b55c6f7187e0170c97a4e6bec9255f1b"
+)
+PACKET_PROJECTION = 2
 
 
 def extend_schema(schema: dict) -> dict:
@@ -105,7 +110,11 @@ def _packet(
     stage,
     purpose,
     budget,
+    *,
+    projection=PACKET_PROJECTION,
 ):
+    if projection not in {1, PACKET_PROJECTION}:
+        raise ValueError("Unsupported retained packet projection")
     selected = {
         s: set(session["anchors"][s]) | set(session["retain"][s])
         for s in ("bank", "journal")
@@ -119,13 +128,18 @@ def _packet(
     for g in relevant:
         selected["bank"].update(g["bank_ids"])
         selected["journal"].update(g["journal_ids"])
-    rows = {
-        s: [bf._project(r) for r in index.get(s, sorted(selected[s]))] for s in selected
-    }
     prior = [
         {k: v for k, v in g.items() if k not in {"history", "retrieval_context"}}
         for g in relevant
     ]
+    if projection >= 2:
+        # Citation membership is exact, not a semantic relevance decision.
+        references = bf.referenced_rows(prior)
+        for side in selected:
+            selected[side].update(references[side])
+    rows = {
+        s: [bf._project(r) for r in index.get(s, sorted(selected[s]))] for s in selected
+    }
     processed = {i for g in groups for i in g["bank_ids"]}
     eligible = {i for i in selected["bank"] if i not in processed} | focus_ids
     if stage == "sol":
@@ -225,7 +239,41 @@ def _packet(
             "instructions": "Use evidence_requests to search by identifiers, names, documented aliases, exact amounts/ranges, dates or full-text. All filters are optional. field=group_id/settlement_id/reference retrieves linked members; use next_cursor for further pages. field=transaction_id retrieves a known source ID from page records. retain uses current B/J references; retain only useful records. Requests replace previous page context, with anchors and retained records preserved. working_note is your compact fallible investigation summary, not source evidence. Send groups=[] when asking for evidence; send evidence_requests=[] for a decision. Never infer absence from an unread page or technical budget. The local log retains every search. Complete groups must be kept intact; ask for their other members. No arbitrary tools.",
         },
     }
+    if projection >= 2:
+        content["retrieval"]["packet_projection"] = projection
     return {**content, "packet_sha256": bf.digest(content)}
+
+
+def _initial_focus(
+    index, focus, groups, admitted, binding, relationship, stage, purpose, budget
+):
+    """Fit a prefix of whole groups by exact bytes; the rest stays in the queue."""
+    import semantic_review as semantic
+
+    while True:
+        session = _initial(index, focus, groups)
+        packet = _packet(
+            index,
+            session,
+            focus,
+            groups,
+            admitted,
+            binding,
+            relationship,
+            stage,
+            purpose,
+            budget,
+        )
+        prompt_bytes = len(bf.prompt(packet).encode())
+        context_bytes = prompt_bytes + len(
+            json.dumps(bf.output_schema(packet), ensure_ascii=False).encode()
+        )
+        if (
+            context_bytes <= budget["context_bytes"]
+            and prompt_bytes <= semantic.MAX_PROMPT_BYTES
+        ) or len(focus) <= 1:
+            return focus, session
+        focus = focus[:-1]
 
 
 def _advance(index, session, packet, response):
@@ -386,9 +434,22 @@ def _reconstruct(
             expected_focus = bf._next_focus(
                 list(index.rows["bank"].values()), groups, stage, completed[stage]
             )
+            if packet["retrieval"].get("packet_projection", 1) >= 2:
+                expected_focus, session = _initial_focus(
+                    index,
+                    expected_focus,
+                    groups,
+                    admitted,
+                    binding,
+                    relationship,
+                    stage,
+                    purpose,
+                    budget,
+                )
+            else:
+                session = _initial(index, expected_focus, groups)
             if expected_focus != focus:
                 raise ValueError("Retained focus changed")
-            session = _initial(index, focus, groups)
             active_focus = focus
         if focus != active_focus:
             raise ValueError("Retrieval chain changed focus")
@@ -403,6 +464,7 @@ def _reconstruct(
             stage,
             purpose,
             budget,
+            projection=packet["retrieval"].get("packet_projection", 1),
         )
         if packet != expected:
             raise ValueError(
@@ -429,7 +491,11 @@ def _reconstruct(
                 ]
             )
             session = None
-    return groups, completed, session
+    return (
+        groups,
+        completed,
+        ({**session, "focus": active_focus} if session is not None else None),
+    )
 
 
 @contextmanager
@@ -506,6 +572,7 @@ def _run_review(
     codex_bin=None,
     source_records=None,
     retrieval_budget=None,
+    resume_checkpoint=False,
 ):
     """Persist every evidence exchange; resume completed work without model replay."""
     import semantic_review as semantic
@@ -520,16 +587,19 @@ def _run_review(
         raise ValueError("Unsupported shared reconciliation purpose")
     budget = _settings(retrieval_budget)
     admitted = bf.admission(bank, journal, relationship)
+    binding_inputs = {
+        "source": source_binding,
+        "admission": admitted,
+        "purpose": purpose,
+        "relationship": relationship,
+        "retrieval": PROTOCOL,
+        "budget": budget,
+    }
     binding = bf.digest(
-        {
-            "source": source_binding,
-            "admission": admitted,
-            "purpose": purpose,
-            "relationship": relationship,
-            "retrieval": PROTOCOL,
-            "budget": budget,
-            "implementation_sha256": _implementation_digest(),
-        }
+        {**binding_inputs, "implementation_sha256": _implementation_digest()}
+    )
+    legacy_binding = bf.digest(
+        {**binding_inputs, "implementation_sha256": LEGACY_IMPLEMENTATION}
     )
     index = EvidenceIndex(
         bank, journal, source_binding, relationship, budget["page_rows"]
@@ -550,6 +620,8 @@ def _run_review(
         if (output / name).is_symlink():
             raise ValueError("Run artifacts cannot use symbolic links")
     path = output / "bank_first_state.json"
+    if resume_checkpoint and not path.is_file():
+        raise ValueError("Checkpoint recovery requires an existing saved state")
     state: dict[str, Any] = (
         bf._read(path)
         if path.exists()
@@ -562,14 +634,22 @@ def _run_review(
             "errors": [],
         }
     )
-    if state["binding_sha256"] != binding:
+    migrating = state["binding_sha256"] != binding
+    if migrating and not (
+        resume_checkpoint and state["binding_sha256"] == legacy_binding
+    ):
         raise ValueError(
-            "Bank-first state belongs to different source/policy/purpose or retrieval budget"
+            "Bank-first state belongs to different source/policy/purpose or retrieval budget; "
+            "a supported historical checkpoint requires explicit resume_checkpoint"
         )
     if path.exists() and state.get("content_sha256") != bf.digest(
         {k: v for k, v in state.items() if k != "content_sha256"}
     ):
         raise ValueError("Retained state changed")
+    if migrating and any(
+        a["status"] == "awaiting_native_host" for a in state["attempts"]
+    ):
+        raise ValueError("Finish the pending native worker before checkpoint recovery")
     groups, completed, pending_session = _reconstruct(
         index,
         state["attempts"],
@@ -583,14 +663,40 @@ def _run_review(
     )
     if path.exists() and groups != state["groups"]:
         raise ValueError("Stored conclusions differ from verified replay")
+    if migrating:
+        state.setdefault("implementation_transitions", []).append(
+            {
+                "from_binding_sha256": state["binding_sha256"],
+                "to_binding_sha256": binding,
+                "from_implementation_sha256": LEGACY_IMPLEMENTATION,
+                "to_implementation_sha256": _implementation_digest(),
+                "retained_attempt_count": len(state["attempts"]),
+            }
+        )
+        state["binding_sha256"] = binding
     state["groups"], state["errors"] = groups, []
+    bf._save(path, state)
     bf._write(output / "bank_first_admission.json", admitted)
     stopped = False
     for stage in ("luna", "sol"):
         if stopped:
             break
         while focus := bf._next_focus(bank, groups, stage, completed[stage]):
-            session = pending_session or _initial(index, focus, groups)
+            if pending_session is not None:
+                session = pending_session
+                focus = session["focus"]
+            else:
+                focus, session = _initial_focus(
+                    index,
+                    focus,
+                    groups,
+                    admitted,
+                    source_binding,
+                    relationship,
+                    stage,
+                    purpose,
+                    budget,
+                )
             pending_session = None
             failures = 0
             last_error = None
@@ -790,6 +896,7 @@ def _run_review(
         "retrieval_budget": budget,
         "source_binding": dict(source_binding),
         "binding_sha256": binding,
+        "implementation_transitions": state.get("implementation_transitions", []),
         "policy": bf.policy(),
         "admission_sha256": admitted["content_sha256"],
         "groups": groups,
@@ -833,7 +940,10 @@ def replay_result(result, bank, journal, relationship, *, domain_validator=None)
         {k: v for k, v in result.items() if k != "content_sha256"}
     ):
         raise ValueError("Retained result changed")
-    if result.get("implementation_sha256") != _implementation_digest():
+    if result.get("implementation_sha256") not in {
+        _implementation_digest(),
+        LEGACY_IMPLEMENTATION,
+    }:
         raise ValueError(
             "Retrieval implementation changed; use original execution source for replay"
         )

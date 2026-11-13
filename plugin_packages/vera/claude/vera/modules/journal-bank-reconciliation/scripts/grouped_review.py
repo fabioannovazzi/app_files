@@ -565,6 +565,7 @@ def complete_grouped_review(
     worker_selection: Mapping[str, Any] | None = None,
     codex_bin: Path | None = None,
     purpose: str = "bank_open_items",
+    resume_checkpoint: bool = False,
 ) -> dict[str, Any]:
     """The normal route uses the shared bank-first state, including strict rows."""
     import bank_first
@@ -609,6 +610,7 @@ def complete_grouped_review(
         codex_bin=codex_bin,
         source_check=source_check,
         purpose=purpose,
+        resume_checkpoint=resume_checkpoint,
     )
     if canonical["errors"]:
         _write(

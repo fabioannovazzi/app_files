@@ -1540,8 +1540,8 @@ def _validated_source_replay(
     )
 
     validate_material_value_ledger(output_dir)
+    validate_exact_implementation_receipts(envelope, artifact_roots=roots)
     validated_envelope = validate_assurance_envelope(envelope, artifact_roots=roots)
-    validate_exact_implementation_receipts(validated_envelope, artifact_roots=roots)
     if validated_envelope != envelope:
         raise ValueError("Assurance envelope does not replay exactly")
     run_id = intake.get("run_id")
@@ -5720,6 +5720,7 @@ def run_semantic_resolution_pipeline(
     client_engagement: Mapping[str, Any] | None = None,
     worker_selection: Mapping[str, Any] | None = None,
     purpose: str = "bank_open_items",
+    resume_checkpoint: bool = False,
 ) -> dict[str, Any]:
     """Complete the same grouped review and final workbook on every normal run.
 
@@ -5738,6 +5739,7 @@ def run_semantic_resolution_pipeline(
         worker_selection=worker_selection,
         codex_bin=codex_bin,
         purpose=purpose,
+        resume_checkpoint=resume_checkpoint,
     )
     result["required_resolution_level"] = required_resolution_level
     return result
@@ -5777,6 +5779,11 @@ def _parser() -> argparse.ArgumentParser:
     run_all = subparsers.add_parser(
         "run-all",
         help="Complete grouped review, validate coverage and export the final four-sheet workbook.",
+    )
+    run_all.add_argument(
+        "--resume-checkpoint",
+        action="store_true",
+        help="Validate and continue a supported historical checkpoint with this installed implementation.",
     )
     run_all.add_argument("reconciliation_dir", type=Path)
     run_all.add_argument("--output-dir", type=Path, required=True)
@@ -5930,6 +5937,7 @@ def main() -> int:
                 args.output_dir,
                 required_resolution_level=args.required_level,
                 purpose=args.purpose,
+                resume_checkpoint=args.resume_checkpoint,
                 codex_bin=args.codex_bin,
                 client_engagement=client_engagement,
                 worker_selection=_load_cli_worker_selection(args),

@@ -703,7 +703,7 @@ def test_complete_review_does_not_deliver_intermediate_workbook_after_host_denia
     assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
 
 
-def test_native_packet_byte_overflow_retains_full_context_without_a_false_final_workbook(
+def test_native_packet_byte_overflow_retains_indivisible_focus_without_a_false_final_workbook(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
     reconciliation, output, calls = _environment(tmp_path, monkeypatch)
@@ -715,9 +715,10 @@ def test_native_packet_byte_overflow_retains_full_context_without_a_false_final_
     retained = json.loads(
         (output / "bank-first-attempts/00001-luna/packet.json").read_text()
     )
-    assert len(retained["bank_records"]) == 2
-    assert len(retained["journal_records"]) == 1
-    assert retained["retrieval"]["not_in_context"]["journal"] == 2
+    assert retained["focus"] == [{"bank_ids": ["b1"], "question_scope": "bank"}]
+    assert len(retained["bank_records"]) == 1
+    assert retained["journal_records"] == []
+    assert retained["retrieval"]["not_in_context"] == {"bank": 1, "journal": 3}
     assert calls == []
     assert not (output / "Riconciliazione_banca_partitario.xlsx").exists()
     assert (
