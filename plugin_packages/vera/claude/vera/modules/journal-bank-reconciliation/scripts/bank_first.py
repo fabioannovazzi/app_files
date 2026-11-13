@@ -25,6 +25,7 @@ __all__ = [
     "summary",
     "validate_response",
     "question_items",
+    "referenced_rows",
 ]
 PROTOCOL = "vera.bank_first.v1"
 FOCUS_ROWS = 25
@@ -404,14 +405,10 @@ def reference_map(packet: Mapping[str, Any]) -> dict[str, dict[str, str]]:
     return result
 
 
-def _translate(value: Any, maps: Mapping[str, Mapping[str, str]]) -> Any:
-    def resolve(side: str, identifier: Any) -> str:
-        if not isinstance(identifier, str) or identifier not in maps[side]:
-            raise ValueError(f"Unknown {side} row reference: {identifier!r}")
-        return maps[side][identifier]
-
+def _map_references(value: Any, resolve: Callable[[str, Any], str]) -> Any:
+    """Visit the exact ID positions used by the packet projection contract."""
     if isinstance(value, list):
-        return [_translate(item, maps) for item in value]
+        return [_map_references(item, resolve) for item in value]
     if not isinstance(value, dict):
         return value
     result: dict[str, Any] = {}
@@ -423,7 +420,7 @@ def _translate(value: Any, maps: Mapping[str, Mapping[str, str]]) -> Any:
             result[key] = [resolve(side, identifier) for identifier in item]
         elif key in {"source_id", "target_id"}:
             result[key] = resolve("bank" if key == "source_id" else "journal", item)
-        elif key == "transaction_id" and value.get("side") in maps:
+        elif key == "transaction_id" and value.get("side") in {"bank", "journal"}:
             result[key] = resolve(value["side"], item)
         elif key == "reserved_journal_owners":
             result[key] = {
@@ -436,7 +433,30 @@ def _translate(value: Any, maps: Mapping[str, Mapping[str, str]]) -> Any:
                 for bank, journal in item
             ]
         else:
-            result[key] = _translate(item, maps)
+            result[key] = _map_references(item, resolve)
+    return result
+
+
+def _translate(value: Any, maps: Mapping[str, Mapping[str, str]]) -> Any:
+    def resolve(side: str, identifier: Any) -> str:
+        if not isinstance(identifier, str) or identifier not in maps[side]:
+            raise ValueError(f"Unknown {side} row reference: {identifier!r}")
+        return maps[side][identifier]
+
+    return _map_references(value, resolve)
+
+
+def referenced_rows(value: Any) -> dict[str, set[str]]:
+    """Collect every mechanically referenced row, including nested citations."""
+    result: dict[str, set[str]] = {"bank": set(), "journal": set()}
+
+    def collect(side: str, identifier: Any) -> str:
+        if not isinstance(identifier, str):
+            raise ValueError("Row references must be strings")
+        result[side].add(identifier)
+        return identifier
+
+    _map_references(value, collect)
     return result
 
 
