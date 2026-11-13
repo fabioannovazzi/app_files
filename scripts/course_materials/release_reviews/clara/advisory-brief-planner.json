@@ -189,7 +189,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "947af3363e8f2b2817bc47cd94fd220353f3c82dcd0fe69f7debf2bf3f593b7f",
+  "course_sha256": "747ef6992138676f4fb366bce223c7dd8ab983d5f8d8c649c60a813b3197a09c",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "c7632fa4b9aa3700a39a89778539dfabd4e7794e6f1c418b2a25eddb88d6d774",
@@ -841,5 +841,25 @@
     "reviewer": "Codex /root - source compatibility review",
     "source_review": "Reviewed the shared work-continuity repair recorded in docs/audits/vera-work-continuity-2026-10-27.md: retained admitted inputs and decisions, exact run binding, recoverable storage and reporting failures, resumable requests, general Archive destinations and honest routine agent review. Existing professional methods and authored teaching content are unchanged by this repair."
   },
-  "workflow": "advisory-brief-planner"
+  "workflow": "advisory-brief-planner",
+  "utf8_source_binding_review_20261114": {
+    "baseline_commit": "44c821d65091e803b3582172b07b1a136cd34509",
+    "changed_source_paths": [
+      "scripts/archive_cli.py",
+      "scripts/model_data_report.py",
+      "scripts/operational_incidents.py",
+      "scripts/verified_execution.py",
+      "vendor/modules/courseware/deck_view.py",
+      "vendor/modules/courseware/native.cjs",
+      "vendor/modules/courseware/preview.py",
+      "vendor/modules/desktop_teaching/onboarding.py"
+    ],
+    "current_course_sha256": "747ef6992138676f4fb366bce223c7dd8ab983d5f8d8c649c60a813b3197a09c",
+    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
+    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved.",
+    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
+    "previous_course_sha256": "947af3363e8f2b2817bc47cd94fd220353f3c82dcd0fe69f7debf2bf3f593b7f",
+    "reviewed_at": "2026-11-13T23:11:25.972563+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
+  }
 }

@@ -208,7 +208,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "78e617d08b8f3c785638ae29c78df08bf7a98697d7ffd9603bac4f94a1be3bf3",
+  "course_sha256": "bd5763077c9c00a88f26f9a416aa32a01489ff05e2f02cf0b949315ba114fe72",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "f6771f12a9d271ce09c95fc1c20f47a21a3e81f0c04cc7ca56a3fb8f3a1ca33b",
@@ -901,5 +901,26 @@
     "source_review": "Archive failure isolation and its privacy boundaries are recorded in docs/audits/vera-archive-graceful-failure-plan.md. The changed shared runtime preserves usable professional inputs and outputs while reporting Archive and reporting failures separately.",
     "native_evidence": "GitHub Actions run 43063905137, job 130679947033: 1752 tests passed with three explicit skips. The unmodified release verifier must match its actual demo/practice JUnit identities and course digests.",
     "limits": "Historical editorial judgments, reviewer identities, dates and output-artifact hashes remain unchanged. This comparison is not new visual, learner, installed-panel or professional acceptance."
+  },
+  "utf8_source_binding_review_20261114": {
+    "baseline_commit": "44c821d65091e803b3582172b07b1a136cd34509",
+    "changed_source_paths": [
+      "modules/previdenza-inps/vendor/modules/vera_assurance/jurisdiction.py",
+      "vendor/modules/courseware/deck_view.py",
+      "vendor/modules/courseware/native.cjs",
+      "vendor/modules/courseware/preview.py",
+      "vendor/modules/scripts/legal_documents.py",
+      "vendor/modules/scripts/legal_negotiation.py",
+      "vendor/modules/vera_assurance/jurisdiction.py",
+      "vendor/modules/vera_journal_pdf/adapter.py",
+      "vendor/modules/vera_journal_pdf/recovery.py"
+    ],
+    "current_course_sha256": "bd5763077c9c00a88f26f9a416aa32a01489ff05e2f02cf0b949315ba114fe72",
+    "execution_evidence": "Job 132214858474 at 0f0b006d5: 1752 passed, 3 skipped, 85.05% coverage; retained teaching-native.xml binds localized demo and practice cases to current course hashes. Release verifier is rerun after this binding refresh.",
+    "judgment": "Compared complete course payloads against the retained reviewed baseline. All localized lesson text, requests, inputs, checkpoints, practice and expected results are identical; only source bindings changed. Reviewed UTF-8 source changes select explicit text encoding and Python interpreter mode. Existing named editorial and historical output-artifact judgments remain preserved.",
+    "limits": "No new editorial, human learner, installed-host, live privacy-report delivery or professional acceptance is asserted.",
+    "previous_course_sha256": "78e617d08b8f3c785638ae29c78df08bf7a98697d7ffd9603bac4f94a1be3bf3",
+    "reviewed_at": "2026-11-13T23:11:25.954974+00:00",
+    "reviewer": "Codex /root - bounded source compatibility review"
   }
 }

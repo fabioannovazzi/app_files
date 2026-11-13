@@ -153,3 +153,16 @@ checks. Added the required workflow-level local-only incident setting.
 Repaired runtime, incident, Archive, course and Concordato tests: 290 passed,
 3 skipped. Patent-box source transport and CI isolation: 34 passed.
 Full remote CI and deployment still require verification on the integrated head.
+
+The integrated-head teaching suite passed 1,752 tests (3 skipped), coverage
+85.05%, but the subsequent release verifier rejected stale editorial source
+bindings. Compared all 58 complete lesson payloads against the retained reviewed
+baselines: only source inventories changed. Refreshed bounded agent source
+reviews while preserving historical editorial, learner and artifact judgments.
+For Studio Archive, the retained baseline also predates main's WhatsApp Cowork
+reference addition; reviewed that reference separately without claiming its live
+host acceptance. The unmodified release verifier passed all 58 kits / 258 locales
+against job 132214858474's retained teaching-native.xml evidence.
+
+The integrated package build and full release consistency check both passed for
+all three products and host formats before this metadata-only correction.
