@@ -191,6 +191,7 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
             text=True,
             timeout=600,
             check=False,
+            encoding="utf-8",
         )
         if result.returncode:
             if index == 0:
@@ -213,6 +214,8 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
     probe = runner(
         [
             str(executable),
+            "-X",
+            "utf8",
             "-I",
             "-c",
             "import sys, ssl, venv, ensurepip; assert sys.implementation.name == 'cpython' and sys.version_info[:2] == (3, 12)",
@@ -222,6 +225,7 @@ def provision(base: Path, runner: Any = subprocess.run) -> str:
         text=True,
         timeout=30,
         check=False,
+        encoding="utf-8",
     )
     if probe.returncode:
         raise ValueError("Automatic Python setup returned an incompatible interpreter.")

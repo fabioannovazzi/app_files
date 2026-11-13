@@ -149,7 +149,7 @@ def save(record: dict[str, Any], memo: str, output: Path) -> Path:
         (path.with_suffix(".md"), memo),
     ):
         if target.exists():
-            if target.is_symlink() or target.read_text() != content:
+            if target.is_symlink() or target.read_text(encoding="utf-8") != content:
                 raise ValueError("Existing artifact differs from the bound record")
         else:
             with target.open("x", encoding="utf-8") as handle:
@@ -179,7 +179,7 @@ def run(
     )
     if context["schema_version"] != "vera.client_workflow_context.v2":
         raise ValueError("A portable v2 Studio Archive run is required")
-    payload = json.loads(args.review.read_text())
+    payload = json.loads(args.review.read_text(encoding="utf-8"))
     input_root = Path(context["run_root"]) / "inputs"
     validate_envelope(payload, input_root)
     load_client_engagement_context_file(

@@ -32,6 +32,8 @@ def evaluate(root: Path, loaded: dict, reference: str, operation: str) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_passive_review_bridge.py")),
@@ -48,6 +50,7 @@ def evaluate(root: Path, loaded: dict, reference: str, operation: str) -> dict:
         capture_output=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

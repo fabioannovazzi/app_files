@@ -89,7 +89,7 @@
     },
     {
       "path": "scripts/archive_cli.py",
-      "sha256": "d1dd63d6abe4f082c3137b09ded5bfeb2d153eb6d6fdeb759a4a82feabe14679"
+      "sha256": "786c6d01451706127c39b93f986482e157dfa0d5076f651372c33b9e7e180298"
     },
     {
       "path": "scripts/archive_emit.py",
@@ -133,19 +133,19 @@
     },
     {
       "path": "scripts/model_data_report.py",
-      "sha256": "7a0fae4f7981674d31e34bb5cb94a8aa86830f495f554393b5fd151c13a81f14"
+      "sha256": "84cb12e93024f327414e13118c55904344b04040b4ffb08e14805e3edccade65"
     },
     {
       "path": "scripts/native_bank_preparation.py",
-      "sha256": "0446693596c9264017e5842bf6c2f0517d5ee3e8acc547e4ed745c908c1d6894"
+      "sha256": "6122d05af9e24ee00a6783bcab2e73d2dcf5089e8b3c905e55161b314ad9db2f"
     },
     {
       "path": "scripts/native_cnc.py",
-      "sha256": "ff6d195c3d114173bbbb7d78d2fd9ec48a5f4279c1f41786fa8a4aed44f245c1"
+      "sha256": "a0287f50b394392f89262ba9fcbbfbf94f2e6bf49adfb445f7ac1bd7c9d27f83"
     },
     {
       "path": "scripts/native_cnc_authenticated.py",
-      "sha256": "00835dc3eec4913b4c41518e0509a9e83646ec30ddb640b905dcbe22a74709b9"
+      "sha256": "574438750dc2fc8109d85366633a24994f36c128a54dde2c9e1a769a9a25b883"
     },
     {
       "path": "scripts/native_cnc_authenticated_bridge.py",
@@ -153,7 +153,7 @@
     },
     {
       "path": "scripts/native_cnc_bridge.py",
-      "sha256": "da4796b1e484886b55771875af46fc81c936bdf91e46df08f82963de88a981a1"
+      "sha256": "46edbc42230df29f26b0663ee8e8c4790277ec484be3d1582ba8e7a262fa17ce"
     },
     {
       "path": "scripts/native_cnc_history.py",
@@ -165,7 +165,7 @@
     },
     {
       "path": "scripts/operational_incidents.py",
-      "sha256": "686ed0140b970aff8b4314a3e53a13e202b1c80af91a95f949613f33f36342d1"
+      "sha256": "63fad66f8acaf9643e48e3240d0bde3ef82b84a2e1ebbb5c1d4c4e248dc141c9"
     },
     {
       "path": "scripts/selective_reporting.py",
@@ -173,7 +173,7 @@
     },
     {
       "path": "scripts/verified_execution.py",
-      "sha256": "da54353fdefe68a5ad934eba31372cfe8d67fe71171a9899e40384d1b9414548"
+      "sha256": "eb8e1b428665ec1c8bf4418388c31c32cdf3edc0cc09e7503a4933dd1bc7d362"
     },
     {
       "path": "scripts/workflow_usage.py",
@@ -237,7 +237,7 @@
     },
     {
       "path": "vendor/modules/scripts/legal_documents.py",
-      "sha256": "68a0ca60a6d1f6bc232c36737662d1848b48593621dac8316aaf78c8e0746129"
+      "sha256": "3c2b4d6592521987f8561f9ae39a1b0aa1c96df140059c21a71e36b866036bab"
     },
     {
       "path": "vendor/modules/scripts/legal_documents_labels.json",
@@ -265,7 +265,7 @@
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.py",
-      "sha256": "9dac089491f64475736b43c50be8209ec65ccf1aaf841e1e079a3ac042e4358c"
+      "sha256": "3caf6f3780c5bd70ac4c8e823b63c7ec3f7fd41908f350b3dd653cedeba3a382"
     },
     {
       "path": "vendor/modules/scripts/legal_negotiation.schema.json",
@@ -293,7 +293,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/jurisdiction.py",
-      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+      "sha256": "b7a04292ca9abe78c3871c03ea889bf543005fe0bec67a9c08005fe4204eb640"
     },
     {
       "path": "vendor/modules/vera_assurance/money.py",
@@ -337,7 +337,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/adapter.py",
-      "sha256": "4a0dc8920918c0614f5ad259a61c70774874f3e366e73c02523ba94a02b9a819"
+      "sha256": "05cb587d2d4bca8478ac602dd63d7da296bc3e67be9e6dfceee3fc2ad0fb8c25"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/bank.py",
@@ -345,7 +345,7 @@
     },
     {
       "path": "vendor/modules/vera_journal_pdf/recovery.py",
-      "sha256": "ae0a6862f8e391e6976de8984054635c2630b1df37bb86a0f06594963837abe3"
+      "sha256": "9abdaad96cc5a2fb76bf4d0810128bb2f9c460738301a5ebe2d8b0f2e27d7d58"
     },
     {
       "path": "vendor/modules/vera_journal_pdf/rules.py",
@@ -909,5 +909,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6416b41735f96285281577e585dfd1df7969e5871a2aa66b9a5cce86dd342dbd"
+  "canonical_course_sha256": "d7279607938c412807155c5b26edd27764c865a1e10d5f30621b3732383eac1d"
 }

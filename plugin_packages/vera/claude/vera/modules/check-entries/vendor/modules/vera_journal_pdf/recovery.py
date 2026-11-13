@@ -223,7 +223,7 @@ def recover_pdf(
     }
     if manifest_path.exists():
         _file_digest(manifest_path)
-        if json.loads(manifest_path.read_text()) != manifest:
+        if json.loads(manifest_path.read_text(encoding="utf-8")) != manifest:
             raise ValueError(
                 "Recovery source, currency or implementation changed; session is stale"
             )
@@ -237,7 +237,7 @@ def recover_pdf(
     )
     for number, path in enumerate(history, 1):
         _file_digest(path)
-        event = json.loads(path.read_text())
+        event = json.loads(path.read_text(encoding="utf-8"))
         if (
             path.name != f"attempt-{number:02}.json"
             or event["previous_sha256"] != previous
@@ -348,10 +348,15 @@ def recover_pdf(
     frozen = root / "frozen_layout.json"
     if frozen.exists():
         _file_digest(frozen)
-        if action == "freeze" and json.loads(frozen.read_text()) == layout:
+        if (
+            action == "freeze"
+            and json.loads(frozen.read_text(encoding="utf-8")) == layout
+        ):
             receipt_path = root / "freeze_receipt.json"
             _file_digest(receipt_path)
-            receipt: dict[str, Any] = json.loads(receipt_path.read_text())
+            receipt: dict[str, Any] = json.loads(
+                receipt_path.read_text(encoding="utf-8")
+            )
             if (
                 receipt["layout_sha256"] == layout_digest
                 and receipt["previous_sha256"] == previous

@@ -32,16 +32,16 @@ function python() {
   if(process.env.VERA_AGENZIA_PYTHON) interpreter = process.env.VERA_AGENZIA_PYTHON;
   else {
     const bootstrap = process.env.PYTHON || (process.platform === "win32" ? "python" : "python3");
-    const result = spawnSync(bootstrap,[path.join(ROOT,"scripts/agenzia_runtime.py")],{encoding:"utf8",timeout:30000});
+    const result = spawnSync(bootstrap,["-X", "utf8", path.join(ROOT,"scripts/agenzia_runtime.py")],{encoding:"utf8",timeout:30000});
     if(result.status!==0) throw new Error("managed-runtime-setup-required");
     interpreter=result.stdout.trim();
   }
-  const check=spawnSync(interpreter,[path.join(ROOT,"scripts/check_dependencies.py"),"--requirements","requirements-agenzia.txt"],{encoding:"utf8",timeout:30000});
+  const check=spawnSync(interpreter,["-X", "utf8", path.join(ROOT,"scripts/check_dependencies.py"),"--requirements","requirements-agenzia.txt"],{encoding:"utf8",timeout:30000});
   if(check.status!==0){interpreter=undefined;throw new Error("managed-runtime-dependencies-unavailable");}
   return interpreter;
 }
 function bridge(binding,action,args={}) {
-  const result=spawnSync(python(),[path.join(ROOT,"scripts/agenzia_ui.py")],{
+  const result=spawnSync(python(),["-X", "utf8", path.join(ROOT,"scripts/agenzia_ui.py")],{
     input:JSON.stringify({...binding,action,args}),encoding:"utf8",timeout:150000,maxBuffer:25_000_000});
   if(result.error || !result.stdout) throw new Error("acquisition-service-unavailable");
   let value;try{value=JSON.parse(result.stdout);}catch{throw new Error("acquisition-service-response-invalid");}

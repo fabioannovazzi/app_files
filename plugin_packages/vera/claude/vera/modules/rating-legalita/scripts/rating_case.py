@@ -114,7 +114,7 @@ def evidence_path(root: Path, uri: str) -> Path:
 
 def assess_case(case: dict, source_root: Path, previous: dict | None = None) -> dict:
     """Validate submitted judgments and derive a bounded documentary status."""
-    schema = json.loads((ROOT / "schemas/case.schema.json").read_text())
+    schema = json.loads((ROOT / "schemas/case.schema.json").read_text(encoding="utf-8"))
     jsonschema.Draft202012Validator(
         schema, format_checker=jsonschema.FormatChecker()
     ).validate(case)
@@ -144,7 +144,7 @@ def assess_case(case: dict, source_root: Path, previous: dict | None = None) -> 
     practice = practice_summary(
         case, source_root, previous["case"] if previous else None
     )
-    catalog = json.loads(CATALOG.read_text())
+    catalog = json.loads(CATALOG.read_text(encoding="utf-8"))
     source_ids = {row["id"] for row in catalog["sources"]}
     subjects = unique(case["subjects"], "subject_id")
     events = unique(case["events"], "event_id")
@@ -438,7 +438,7 @@ def save_dossier(record: dict, output: Path) -> Path:
         if path.is_symlink():
             raise ValueError("Output must not be a symlink")
         if path.exists():
-            if path.read_text() != content:
+            if path.read_text(encoding="utf-8") != content:
                 raise ValueError("Existing dossier was modified")
         else:
             with path.open("x", encoding="utf-8") as handle:
@@ -469,8 +469,10 @@ def main() -> int:
             args.output.chmod(0o600)
             handle.write(json.dumps(case, ensure_ascii=False, indent=2) + "\n")
         return 0
-    case = json.loads(args.case.read_text())
-    previous = json.loads(args.previous.read_text()) if args.previous else None
+    case = json.loads(args.case.read_text(encoding="utf-8"))
+    previous = (
+        json.loads(args.previous.read_text(encoding="utf-8")) if args.previous else None
+    )
     if (
         previous
         and digest(

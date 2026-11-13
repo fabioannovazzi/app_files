@@ -706,13 +706,13 @@ function bridge(name, args) {
   let python = process.env.VERA_WORKSPACE_PYTHON || process.env.PYTHON;
   if (!python) {
     const resolved = spawnSync(process.platform === "win32" ? "python" : "python3",
-      [path.join(ROOT, "scripts/native_workspace_runtime.py")], { encoding: "utf8", timeout: 30000 });
+      ["-X", "utf8", path.join(ROOT, "scripts/native_workspace_runtime.py")], { encoding: "utf8", timeout: 30000 });
     if (resolved.error) throw resolved.error;
     if (resolved.status !== 0) throw new Error(resolved.stderr.trim().split("\n").at(-1) || "Vera managed Python setup is required");
     python = resolved.stdout.trim();
   }
   const result = spawnSync(python,
-    [path.join(ROOT, "scripts/native_workspace.py")], { input: JSON.stringify({ tool: name, arguments: args }),
+    ["-X", "utf8", path.join(ROOT, "scripts/native_workspace.py")], { input: JSON.stringify({ tool: name, arguments: args }),
       env: { ...process.env, VERA_REPORTING_INTERNAL: "1" },
       encoding: "utf8", maxBuffer: 8 * 1024 * 1024, timeout: 120000 });
   if (result.error) throw result.error;

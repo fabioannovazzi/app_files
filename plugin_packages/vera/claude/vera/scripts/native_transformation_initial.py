@@ -90,6 +90,8 @@ def producer(module: Path, root: Path, row: dict, action: str, **args: Any) -> d
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_transformation_initial_bridge.py")),
@@ -99,6 +101,7 @@ def producer(module: Path, root: Path, row: dict, action: str, **args: Any) -> d
         capture_output=True,
         timeout=120,
         check=False,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(

@@ -65,7 +65,7 @@ def main(argv: list[str] | None = None) -> int:
             args.command,
         ]
     completed = subprocess.run(
-        [sys.executable, *command, *args.arguments],
+        [sys.executable, "-X", "utf8", *command, *args.arguments],
         cwd=ROOT,
         env=environment,
         check=False,

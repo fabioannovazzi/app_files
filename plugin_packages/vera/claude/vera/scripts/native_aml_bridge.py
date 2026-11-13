@@ -65,9 +65,9 @@ def main() -> None:
             client_id=request["client_id"],
             engagement_id=request["engagement_id"],
         )
-        if produced != record or Path(request["record"]).with_suffix(
-            ".md"
-        ).read_text() != render_memo(produced):
+        if produced != record or Path(request["record"]).with_suffix(".md").read_text(
+            encoding="utf-8"
+        ) != render_memo(produced):
             raise ValueError(
                 "AML record or memo cannot be replayed with the maintained engine"
             )

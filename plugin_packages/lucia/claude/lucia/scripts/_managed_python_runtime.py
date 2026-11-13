@@ -208,6 +208,8 @@ def runtime_key(
         result = runner(
             [
                 str(interpreter),
+                "-X",
+                "utf8",
                 "-I",
                 "-S",
                 "-c",
@@ -219,6 +221,7 @@ def runtime_key(
             text=True,
             check=False,
             timeout=30,
+            encoding="utf-8",
         )
         if result.returncode:
             raise ValueError("Cannot verify the shared Python interpreter.")
@@ -371,6 +374,8 @@ def _bootstrap_pip(
     base_environment = _pip_environment(dict(os.environ))
     base_pip = [
         sys.executable,
+        "-X",
+        "utf8",
         "-m",
         "pip",
         "--python",
@@ -386,6 +391,7 @@ def _bootstrap_pip(
         timeout=120,
         check=False,
         text=True,
+        encoding="utf-8",
     )
     if probe.returncode == 0:
         return base_pip, base_environment, ""
@@ -394,6 +400,8 @@ def _bootstrap_pip(
     ensured = runner(
         [
             str(target_python),
+            "-X",
+            "utf8",
             "-m",
             "ensurepip",
             "--upgrade",
@@ -405,9 +413,10 @@ def _bootstrap_pip(
         timeout=120,
         check=False,
         text=True,
+        encoding="utf-8",
     )
     if ensured.returncode == 0:
-        return [str(target_python), "-m", "pip"], target_environment, ""
+        return [str(target_python), "-X", "utf8", "-m", "pip"], target_environment, ""
 
     probe_detail = _process_detail(probe) or "no captured output"
     ensurepip_detail = _process_detail(ensured) or "no captured output"
@@ -535,7 +544,7 @@ def _validation_command(selection: RuntimeSelection, target: Path) -> list[str]:
     checker = selection.requirement_root / "scripts" / "check_dependencies.py"
     if not checker.is_file():
         raise ValueError(f"Dependency checker not found: {checker}")
-    command = [str(runtime_python(target)), str(checker)]
+    command = [str(runtime_python(target)), "-X", "utf8", str(checker)]
     if selection.scope == "core":
         command.append("--managed-verify")
     relative_requirements = [
@@ -736,11 +745,12 @@ def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
     )
     for candidate in candidates:
         result = runner(
-            [*candidate, "-c", probe],
+            [*candidate, "-X", "utf8", "-c", probe],
             capture_output=True,
             text=True,
             timeout=30,
             check=False,
+            encoding="utf-8",
         )
         if result.returncode == 0 and result.stdout.strip():
             return result.stdout.strip()
@@ -752,6 +762,7 @@ def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
             text=True,
             timeout=600,
             check=False,
+            encoding="utf-8",
         )
         # uv can finish installing CPython but fail while creating a minor-version
         # alias on Windows. A verified managed interpreter can still be used.
@@ -761,15 +772,17 @@ def _python312_executable(runner: Runner, *, allow_uv: bool = True) -> str:
             text=True,
             timeout=30,
             check=False,
+            encoding="utf-8",
         )
         if found.returncode == 0 and found.stdout.strip():
             candidate_path = found.stdout.strip()
             verified = runner(
-                [candidate_path, "-c", probe],
+                [candidate_path, "-X", "utf8", "-c", probe],
                 capture_output=True,
                 text=True,
                 timeout=30,
                 check=False,
+                encoding="utf-8",
             )
             if verified.returncode == 0 and verified.stdout.strip():
                 return verified.stdout.strip()
@@ -808,12 +821,13 @@ def _install_generation(
     try:
         base_python = _python312_executable(runner)
         created = runner(
-            [base_python, "-m", "venv", "--without-pip", str(target)],
+            [base_python, "-X", "utf8", "-m", "venv", "--without-pip", str(target)],
             cwd=selection.requirement_root,
             capture_output=True,
             timeout=120,
             check=False,
             text=True,
+            encoding="utf-8",
         )
         if created.returncode != 0:
             detail = _process_detail(created)
@@ -842,6 +856,7 @@ def _install_generation(
             timeout=900,
             check=False,
             text=True,
+            encoding="utf-8",
         )
         if installed.returncode != 0:
             detail = _process_detail(installed)
@@ -989,10 +1004,12 @@ def main(
     if not script.is_relative_to(script_root) or not script.is_file():
         LOGGER.error("Managed runtime script not found: %s", script)
         return 2
-    command = [str(runtime_python(target)), str(script), *args.arguments]
+    command = [str(runtime_python(target)), "-X", "utf8", str(script), *args.arguments]
     if diagnostic_path is not None:
         command = [
             str(runtime_python(target)),
+            "-X",
+            "utf8",
             str(plugin_root / "scripts/technical_runner.py"),
             str(script_root),
             str(diagnostic_path),

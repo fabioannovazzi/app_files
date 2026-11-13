@@ -63,6 +63,8 @@ def run_conformance(
     log = root / "arelle-log.txt"
     command = [
         sys.executable,
+        "-X",
+        "utf8",
         "-m",
         "arelle.CntlrCmdLine",
         "--disablePersistentConfig",
@@ -87,6 +89,7 @@ def run_conformance(
         check=False,
         text=True,
         timeout=300,
+        encoding="utf-8",
     )
     if not report.is_file() or not log.is_file():
         raise RuntimeError("Arelle did not produce conformance report artifacts")

@@ -38,6 +38,8 @@ def bridge(root: Path, request: dict) -> dict:
     completed = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_management_bridge.py")),
@@ -48,6 +50,7 @@ def bridge(root: Path, request: dict) -> dict:
         text=True,
         timeout=90,
         check=False,
+        encoding="utf-8",
     )
     if completed.returncode:
         raise ValueError(

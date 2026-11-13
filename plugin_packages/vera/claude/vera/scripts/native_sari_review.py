@@ -32,6 +32,8 @@ def engine(root: Path, request: dict, api: Any) -> dict:
     result = subprocess.run(
         [
             sys.executable,
+            "-X",
+            "utf8",
             "-I",
             "-B",
             str(Path(__file__).with_name("native_sari_review_bridge.py")),
@@ -44,6 +46,7 @@ def engine(root: Path, request: dict, api: Any) -> dict:
         capture_output=True,
         check=False,
         timeout=90,
+        encoding="utf-8",
     )
     if result.returncode:
         raise ValueError(
@@ -307,7 +310,7 @@ def dispatch(
                     {
                         "name": name,
                         "sha256": current["files"][name],
-                        "content": file.read_text(),
+                        "content": file.read_text(encoding="utf-8"),
                         "byte_count": file.stat().st_size,
                     }
                 )

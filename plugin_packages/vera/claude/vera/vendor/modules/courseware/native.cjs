@@ -42,7 +42,7 @@ function server(root) {
     const managed = path.join(runtimeRoot, "venv", process.platform === "win32" ? "Scripts/python.exe" : "bin/python");
     // Reuse the existing shared runtime; this stdlib bridge installs nothing.
     const python = process.env.MPARANZA_COURSE_PYTHON || (fs.existsSync(managed) ? managed : (process.platform === "win32" ? "python" : "python3"));
-    const result = spawnSync(python, [path.join(root, "scripts/course_chat_bridge.py")], { cwd: root, input: JSON.stringify({ operation, arguments: args }), encoding: "utf8", timeout: 30000, maxBuffer: 1000000 });
+    const result = spawnSync(python, ["-X", "utf8", path.join(root, "scripts/course_chat_bridge.py")], { cwd: root, input: JSON.stringify({ operation, arguments: args }), encoding: "utf8", timeout: 30000, maxBuffer: 1000000 });
     if (result.error) throw new Error(`Course runtime unavailable: ${result.error.message}. Run the product's documented Python setup, then retry.`);
     let data;
     try { data = JSON.parse(result.stdout); } catch { throw new Error("Course runtime did not return a valid result; inspect local setup before continuing"); }

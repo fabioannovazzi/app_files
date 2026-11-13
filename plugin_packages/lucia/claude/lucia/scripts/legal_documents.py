@@ -265,7 +265,7 @@ def read_pack(run_dir: Path) -> dict[str, Any]:
     evidence = run_dir / "evidence.json"
     if (
         _hash(evidence.read_bytes())
-        != (run_dir / "evidence.sha256").read_text().strip()
+        != (run_dir / "evidence.sha256").read_text(encoding="utf-8").strip()
     ):
         raise ValueError("Extracted evidence changed; prepare a new run.")
     pack = _load(evidence)

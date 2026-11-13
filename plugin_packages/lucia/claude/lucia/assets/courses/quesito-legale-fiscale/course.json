@@ -81,7 +81,7 @@
     },
     {
       "path": "modules/deep-research-validator/scripts/research_record.py",
-      "sha256": "b55877176b07eabb789fe5294eed6a8b61cdda13f1a152128d17f271b07acc98"
+      "sha256": "082aef59ad61e672ad3839df15356fca11a1426f491f7236ef181fd06d23fdfc"
     },
     {
       "path": "modules/deep-research-validator/scripts/review_session.py",
@@ -141,7 +141,7 @@
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/jurisdiction.py",
-      "sha256": "9bbf63c917cad41f2d2f516c7400b092d1a5a020e8e6e83831fbacc31968ebf1"
+      "sha256": "b7a04292ca9abe78c3871c03ea889bf543005fe0bec67a9c08005fe4204eb640"
     },
     {
       "path": "modules/deep-research-validator/vendor/modules/vera_assurance/money.py",
@@ -722,5 +722,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "851901b2b5c5d1cc60b7077c9ceda5cd44d582de39b3502eda520303c60a5c8d"
+  "canonical_course_sha256": "12db5c973c74b0b0d6b006e0b93211707f3aaf16701b42580fccef66a6794b72"
 }

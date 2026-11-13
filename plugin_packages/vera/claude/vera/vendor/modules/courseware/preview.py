@@ -35,7 +35,10 @@ class _KitHandler(SimpleHTTPRequestHandler):
         ):
             from .deck_view import deck_csp
 
-            self.send_header("Content-Security-Policy", deck_csp(requested.read_text()))
+            self.send_header(
+                "Content-Security-Policy",
+                deck_csp(requested.read_text(encoding="utf-8")),
+            )
             self.send_header("X-Content-Type-Options", "nosniff")
         if (
             requested.suffix.lower() in {".xlsx", ".docx", ".pdf", ".xml"}

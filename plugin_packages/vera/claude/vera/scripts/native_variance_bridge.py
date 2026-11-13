@@ -146,6 +146,7 @@ def main() -> None:
             timeout=35,
             env=local_helper_environment(python=sys.executable),
             check=False,
+            encoding="utf-8",
         )
         if checked.returncode:
             raise ValueError(

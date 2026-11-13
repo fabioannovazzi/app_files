@@ -365,7 +365,7 @@ class CaseStore:
     def _current(self) -> tuple[dict[str, Any], str]:
         state = self.load()
         path = self.root / "history" / f"{state['revision']:08d}.json"
-        return state, json.loads(path.read_text())["digest"]
+        return state, json.loads(path.read_text(encoding="utf-8"))["digest"]
 
     def _bindings(
         self, state: dict[str, Any], refs: list[str]
@@ -643,7 +643,9 @@ class CaseStore:
             expected = _bytes(state)
             if (directory / "case.json").read_bytes() != expected:
                 raise ValueError("Existing export integrity mismatch")
-            manifest = json.loads((directory / "manifest.json").read_text())
+            manifest = json.loads(
+                (directory / "manifest.json").read_text(encoding="utf-8")
+            )
             if set(manifest["files"]) != {"case.json", "dossier.md"}:
                 raise ValueError("Existing export integrity mismatch")
             for name, digest in manifest["files"].items():
@@ -936,9 +938,13 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "init":
             result = store.initialize(args.id, args.owner, args.purpose)
         elif args.command == "put":
-            result = store.put(args.kind, json.loads(args.json.read_text()), args.actor)
+            result = store.put(
+                args.kind, json.loads(args.json.read_text(encoding="utf-8")), args.actor
+            )
         elif args.command == "update-case":
-            result = store.update_case(json.loads(args.json.read_text()), args.actor)
+            result = store.update_case(
+                json.loads(args.json.read_text(encoding="utf-8")), args.actor
+            )
         elif args.command == "import-evidence":
             result = store.import_evidence(
                 args.id, args.file, args.origin, args.locator, args.actor

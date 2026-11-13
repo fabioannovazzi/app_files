@@ -223,7 +223,7 @@ def export_manual(state: dict, manual_id: str, output: Path) -> Path:
     target = output / f"manuale-{export_id}"
     require(not target.is_symlink(), "Manual output must not be a symlink")
     if target.exists():
-        manifest = json.loads((target / "manifest.json").read_text())
+        manifest = json.loads((target / "manifest.json").read_text(encoding="utf-8"))
         require(manifest["export_id"] == export_id, "Export identity mismatch")
         for name, expected in manifest["files"].items():
             file = target / name

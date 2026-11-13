@@ -15,7 +15,9 @@ def local_helper_environment(
 ) -> dict[str, str]:
     """Copy runtime names and identify a private child, preserving Windows casing."""
     source = os.environ if environ is None else environ
-    names = set(json.loads(Path(__file__).with_suffix(".json").read_text(encoding="utf-8")))
+    names = set(
+        json.loads(Path(__file__).with_suffix(".json").read_text(encoding="utf-8"))
+    )
     result = {key: value for key, value in source.items() if key.upper() in names}
     if python is not None:
         result = {

@@ -1147,7 +1147,10 @@ def _selective_report_policy():
     root = _installed_product_root()
     if (
         root is None
-        or json.loads((root / "privacy/registry.json").read_text())["product"] != "vera"
+        or json.loads((root / "privacy/registry.json").read_text(encoding="utf-8"))[
+            "product"
+        ]
+        != "vera"
     ):
         return None
     for candidate in (root / "vendor/modules", root.parent / "_shared/vendor/modules"):

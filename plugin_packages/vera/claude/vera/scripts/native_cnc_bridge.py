@@ -99,7 +99,8 @@ def main() -> None:
             snapshot = output / f"workflow-revision-{record['revision']:06d}.json"
             memo = output / f"cnc-revision-{record['revision']:06d}.md"
             if memo.is_symlink() or (
-                memo.exists() and memo.read_text() != cnc.render_record(record)
+                memo.exists()
+                and memo.read_text(encoding="utf-8") != cnc.render_record(record)
             ):
                 raise ValueError("CNC memo differs from the maintained renderer")
             recovery |= not memo.is_file()
@@ -160,7 +161,7 @@ def main() -> None:
                 memo = output / f"cnc-revision-{record['revision']:06d}.md"
                 rendered = cnc.render_record(record)
                 if memo.is_symlink() or (
-                    memo.exists() and memo.read_text() != rendered
+                    memo.exists() and memo.read_text(encoding="utf-8") != rendered
                 ):
                     raise ValueError("Existing CNC memo changed")
                 if not memo.exists():
