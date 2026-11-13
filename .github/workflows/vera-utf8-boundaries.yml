@@ -27,14 +27,15 @@ jobs:
           node-version: '22'
       - name: Install declared dependencies
         run: >-
-          python -m pip install pytest
+          python -m pip install pytest python-docx
           -r scripts/requirements-plugin-build.txt
           -r plugins/studio-archive/requirements.txt
           -r plugins/bandi-agevolazioni/requirements.txt
           -r plugins/passive-invoice-audit/requirements.txt
+          -r plugins/deep-research-validator/requirements.txt
       - name: Exercise real Unicode pipes, retained records and service restart
         run: >-
-          python -X utf8=0 -m pytest -v -o addopts='' --confcutdir=tests/plugins
+          python -X utf8=0 -m pytest -v -o addopts='' -o junit_family=xunit1 --confcutdir=tests/plugins
           tests/plugins/test_vera_utf8_boundaries.py
           --junitxml=utf8-results.xml
       - uses: actions/upload-artifact@v4
