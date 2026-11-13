@@ -417,7 +417,7 @@
     searchExample: { it: "Esempio di ricerca", en: "Search example", fr: "Exemple de recherche", de: "Suchbeispiel", es: "Ejemplo de búsqueda" },
     sharedUse: { it: "Uso condiviso", en: "Shared use", fr: "Utilisation partagée", de: "Gemeinsame Nutzung", es: "Uso compartido" },
     dataHandling: { it: "Trattamento dei dati", en: "Data handling", fr: "Traitement des données", de: "Datenverarbeitung", es: "Tratamiento de datos" },
-    openCodex: { it: "Apertura in Codex Desktop", en: "Open in Codex Desktop", fr: "Ouverture dans Codex Desktop", de: "In Codex Desktop öffnen", es: "Abrir en Codex Desktop" },
+    openWorkspace: { it: "Apertura in Codex o Cowork", en: "Open in Codex or Cowork", fr: "Ouverture dans Codex ou Cowork", de: "In Codex oder Cowork öffnen", es: "Abrir en Codex o Cowork" },
     originalFileLocation: { it: "Posizione dei file originali", en: "Location of original files", fr: "Emplacement des fichiers originaux", de: "Speicherort der Originaldateien", es: "Ubicación de los archivos originales" },
     privateLocalIndex: { it: "Indice locale privato", en: "Private local index", fr: "Index local privé", de: "Privater lokaler Index", es: "Índice local privado" },
     reviewMethod: { it: "Metodo di revisione", en: "Review method", fr: "Méthode de revue", de: "Prüfmethode", es: "Método de revisión" },
@@ -451,7 +451,7 @@
     "prompt-optimizer": { proof: "inputsResult", next: "relatedFunction", starter: "startingPrompt", details: "technicalDetails" },
     "registro-imprese-sari": { journey: "inputsResult", workflow: "steps", result: "video", next: "relatedFunction", prompt: "startingPrompt", technical: "technicalDetails" },
     "sales-plan": { method: "sourcesAssumptions", assumptions: "assumptions", controls: "calculationAndReconciliation", outputs: "outputs", boundary: "professionalReview", prompt: "startingPrompt" },
-    "studio-archive": { archive: "setup", method: "searchMethod", sources: "searchedSources", example: "searchExample", people: "sharedUse", video: "video", data: "dataHandling", setup: "openCodex" },
+    "studio-archive": { archive: "setup", method: "searchMethod", sources: "searchedSources", example: "searchExample", people: "sharedUse", video: "video", data: "dataHandling", setup: "openWorkspace" },
   };
 
   const factualCopy = {

@@ -1351,7 +1351,7 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
         "Email stays in Gmail and does not enter the document index.",
         "Connect the read-only Gmail connector available in the selected runtime separately.",
         "Vera searches the required messages at that moment.",
-        "Computer Use",
+        "When local WhatsApp access is available in Codex or Cowork",
         "Indexed documents; Gmail and WhatsApp on request.",
         "The Studio Archive run and connected-file search work in Codex and Cowork.",
         "Gmail uses the connector for the selected account",
