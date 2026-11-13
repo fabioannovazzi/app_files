@@ -13,6 +13,9 @@ on:
 permissions:
   contents: read
 
+env:
+  MPARANZA_INCIDENT_DELIVERY: local-only
+
 concurrency:
   group: verify-live-plugin-downloads
   cancel-in-progress: true
