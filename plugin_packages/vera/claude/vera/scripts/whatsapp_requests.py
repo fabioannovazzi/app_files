@@ -11,6 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 import logging
+import platform
 import re
 import sqlite3
 import sys
@@ -169,6 +170,20 @@ class WhatsAppRequests:
         return value
 
     def call(self, action: str, args: dict[str, Any]) -> dict[str, Any]:
+        if action == "runtime":
+            # Host provenance prevents a cloud/VM ledger from pretending to lock
+            # the user's native app. The agent must also match the selected device.
+            native_platform = {"Darwin": "mac", "Windows": "windows"}.get(
+                platform.system()
+            )
+            return {
+                "platform": native_platform or "unsupported",
+                "device_name": platform.node(),
+                "storage_root": str(self.root.resolve()),
+                "native_host": native_platform is not None,
+                "ui_control": False,
+                "device_match_required": True,
+            }
         if action == "read":
             return self.get(text(args.get("id"), "id"))
         if action == "context":

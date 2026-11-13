@@ -1,6 +1,6 @@
 ---
 name: mparanza-studio-archive
-description: Use when Vera must create or resume one client's durable connected-folder engagement, import sources, prepare and close workflow runs, search a callable local archive, or search one client's read-only Gmail connector without mixing clients.
+description: Use when Vera must review a local WhatsApp chat, collect its documents or send an explicitly authorized one-to-one message or controlled self-chat test, create or resume a connected-folder engagement, import sources, manage runs, or search a local archive or read-only Gmail connector.
 ---
 
 ## Cowork execution contract
@@ -156,7 +156,15 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
+Vera's local WhatsApp workflow is available through Studio Archive when the
+current host exposes native computer control and the device-local WhatsApp
+register. Read its `whatsapp-cowork.md` reference before using it. This includes
+specifically requested one-to-one messages and controlled self-chat tests; it
+does not require a tax question or client-folder setup. Missing native controls
+or a register on the same computer leaves sending pending; a draft is not a send.
+Do not import another host's `cua` helpers or substitute a cloud ledger for the local one.
+
+Do not use live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract. When invoked through Vera, Clara or Lucia, task
 usage, signed receipts, technical recovery and 1–5-star feedback through the
@@ -192,11 +200,15 @@ run, lifecycle, or artifact records under `Vera/`.
   separate explicit apply approval, verification journal, and rollback checks.
 - **Gmail:** available when a read-only Anthropic Gmail connector exposes
   mailbox confirmation, search, and bounded message reading.
-- **Guarded WhatsApp Desktop review and native Google Drive OAuth:** not enabled
-  as Cowork routes. Do
-  not substitute an unguarded screen-control flow, browser login, copied token,
-  or generic Drive access. Continue with the portable ledger and connected
-  files.
+- **Local WhatsApp:** use native Cowork computer control with the device-local
+  `vera_whatsapp_*` register. Read the complete
+  `skills/mparanza-studio-archive/references/whatsapp-cowork.md` under the
+  installed Vera root before acting. Resolve the installed root from this skill,
+  including when invoked through the bundled module. Select this route before
+  the client-folder setup below: a message or controlled self-chat test needs no
+  registered client, engagement, archive root or tax question.
+- **Native Google Drive OAuth:** unavailable. Do not substitute browser login,
+  copied tokens or generic Drive access for that route.
 
 Do not redirect the user to another product. Do not claim a route ran when its
 capability was unavailable.

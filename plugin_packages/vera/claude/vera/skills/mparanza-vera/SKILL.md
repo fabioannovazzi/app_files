@@ -170,7 +170,15 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
+Vera's local WhatsApp workflow is available through Studio Archive when the
+current host exposes native computer control and the device-local WhatsApp
+register. Read its `whatsapp-cowork.md` reference before using it. This includes
+specifically requested one-to-one messages and controlled self-chat tests; it
+does not require a tax question or client-folder setup. Missing native controls
+or a register on the same computer leaves sending pending; a draft is not a send.
+Do not import another host's `cua` helpers or substitute a cloud ledger for the local one.
+
+Do not use live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract. When invoked through Vera, task
 usage, signed receipts, technical recovery and 1–5-star feedback through the
@@ -295,7 +303,9 @@ For Cowork v1:
 
 - use connected files and callable read-only connectors where supported;
 - treat local MCP review interfaces as optional enhancements;
-- do not offer or execute WhatsApp Desktop inspection;
+- route local WhatsApp review, selected documents and specifically authorized
+  one-to-one sends to Studio Archive's `whatsapp-cowork.md` reference; require
+  callable native computer control and the WhatsApp register on the same device;
 - use user-supplied, hash-bound INPS exports as evidence and do not capture a
   live INPS browser session;
 - do not invoke Vera's hosted feedback, voice-interview, or custom update
@@ -378,6 +388,12 @@ evidence of authenticated acceptance. Reconciliation of supplied bank files
 still belongs to `journal-bank-reconciliation` or `open-item-reconciliation`.
 
 ## Invocation and scope contract
+
+Local WhatsApp review, document collection and explicitly requested one-to-one
+messages, including a controlled self-chat test, route to
+`../mparanza-studio-archive/SKILL.md`. These supported operations need no legal or tax
+question, tutorial, registered client folder or new engagement. Select the
+host-specific WhatsApp reference and retain its identity and dispatch checks.
 
 A request to teach Vera a real browser procedure, develop it, retest a correction,
 or use that procedure for professional work routes to
@@ -701,7 +717,7 @@ them without changing the capability catalog:
   calendars and versioned review dossiers. Its prepared fictional course includes
   changed-input review. Advanced branches, signatures and filings are unsupported;
   synthetic software checks do not establish real-client professional validation.
-- `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector. The current guarded WhatsApp and native Google Drive OAuth routes remain unavailable;
+- `studio-archive`: the portable client, engagement, input, run, lifecycle, and artifact ledger in the connected studio folder; optional local indexing when its declared dependencies are already callable; and one client's callable, read-only Anthropic Gmail connector; local WhatsApp review, selected documents and specifically authorized one-to-one messages through native Cowork computer control and the device-local register. Native Google Drive OAuth remains unavailable;
 - `open-item-reconciliation`: test a population reported as open at a cut-off
   and determine which items are closed, partly closed, or still open from the
   available accounting evidence. Route direct bank-statement-to-journal or
@@ -871,7 +887,7 @@ Then resolve the module root in this order:
 
 Read the selected module's relevant `skills/<skill>/SKILL.md` completely and
 follow it. Treat the resolved module root as the working directory for every
-module command, script, requirement file, and local review server. The Gmail route of `studio-archive` is handled directly by its Cowork
+module command, script, requirement file, and local review server. The Gmail and local WhatsApp routes of `studio-archive` are handled directly by its Cowork
 wrapper. Its portable connected-folder ledger and optional local index
 resolve the packaged Studio Archive module and use its callable CLI or
 optional MCP interface.

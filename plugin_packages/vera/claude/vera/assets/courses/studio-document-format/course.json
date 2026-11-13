@@ -221,7 +221,7 @@
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/SKILL.md",
-      "sha256": "e42ab58966b528408692556f2bcd346ee434749a030d5deec079fee2a13b6b76"
+      "sha256": "e91906a5b8bab43110b3096d4031eb8d6c7f67e904a8a14c52262f7b8f42b116"
     },
     {
       "path": "modules/comunicazione-professionale/skills/mparanza-comunicazione-professionale/agents/openai.yaml",
@@ -345,7 +345,7 @@
     },
     {
       "path": "modules/report-builder/skills/mparanza-financial-report-builder/SKILL.md",
-      "sha256": "8b7bdad3a0f0d5a2d146b15c2d63743ae73e6c09a9f4f309a8596848b1a44f12"
+      "sha256": "2a33321352c5b8d4615fe9b0c18eba7f6e9bb4834f8fba0d1216f72141ab3f73"
     },
     {
       "path": "modules/report-builder/vendor/modules/__init__.py",
@@ -454,10 +454,6 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "sha256": "85727a39979495ead9291bf770e5cba5bb0ab60d889c7377eb112877a1bee317"
-    },
-    {
-      "path": "modules/studio-archive/scripts/whatsapp_local.mjs",
-      "sha256": "f5bf4366ae2830c2bade925a04684715ac2bdcd52c8f7bfe6de1a38b6c8071d2"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
@@ -629,7 +625,7 @@
     },
     {
       "path": "skills/mparanza-studio-document-format/SKILL.md",
-      "sha256": "15481c7d6ea7d9ae954f5661e141487d80f849a1d618187ffd3cc80efcd232d9"
+      "sha256": "4d3fffd5ae035596a2641ea14679ed1201bcd8be9a02e0e18220152dc69918b4"
     },
     {
       "path": "skills/mparanza-studio-document-format/references/procedure.md",

@@ -73,7 +73,7 @@
     },
     {
       "id": "local-whatsapp-records",
-      "control": "WhatsApp tools persist confirmed account/client bindings, document requests, follow-up dates, selected file bytes and SHA-256 hashes, exact authorized outbound content and UI evidence in an owner-local SQLite/staging directory. They expose selected records and paged request context to the model, with no anonymization. A global durable UI lock, request revisions, immutable file checks and one-time dispatch claims prevent overlapping UI work and blind resend. Evidence is supplied by the host, not independently authenticated. Retained files survive Archive errors; local state has no automatic deletion or background messaging. Native WhatsApp reads/writes remain in the separately declared Codex Computer Use boundary.",
+      "control": "WhatsApp tools persist confirmed account/client bindings, document requests, follow-up dates, selected file bytes and SHA-256 hashes, exact authorized outbound content and UI evidence in an owner-local SQLite/staging directory. They expose selected records and paged request context to the model, with no anonymization. A global durable UI lock, request revisions, immutable file checks and one-time dispatch claims prevent overlapping UI work and blind resend. Evidence is supplied by the host, not independently authenticated. Retained files survive Archive errors; local state has no automatic deletion or background messaging. Native WhatsApp reads/writes remain in the separately declared host Computer Use boundaries. Runtime diagnostics return process platform, device name and register location; the host must match these to its controlled device before native UI work.",
       "implemented_by": [
         "scripts/whatsapp_requests.py",
         "mcp/whatsapp.cjs"
@@ -85,6 +85,6 @@
     "reviewed_at": "2026-11-04",
     "reviewed_by": "privacy-surface-review",
     "basis": "external_boundary_review_of_shared_service_source",
-    "source_fingerprint": "a173cb1199fb909b84e7bc5ecd1321677008d17ffdfc7b5bd7d6de07b2f7e2ea"
+    "source_fingerprint": "965e3be6ed543bc337e8759515a542e0fbc454f1ca389b20197485c5409bab43"
   }
 }

@@ -1355,7 +1355,7 @@ def test_studio_archive_page_explains_documents_and_live_sources() -> None:
         "Indexed documents; Gmail and WhatsApp on request.",
         "The Studio Archive run and connected-file search work in Codex and Cowork.",
         "Gmail uses the connector for the selected account",
-        "WhatsApp Desktop remains a Codex-specific route.",
+        "WhatsApp Desktop uses native controls and the local register on the same computer, including Cowork when available.",
         "On-screen inspection only when requested",
         "Opening it may mark messages as read",
         "The chat stays in WhatsApp.",

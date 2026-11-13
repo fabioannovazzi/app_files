@@ -886,6 +886,7 @@ def test_cowork_studio_work_privacy_governs_the_packaged_local_register(
         "revision-and-retry",
         "storage-scope",
         "native-panel-revisions-and-private-response",
+        "local-whatsapp-records",
     }
 
 
@@ -1021,7 +1022,8 @@ def test_projected_cowork_skills_remove_promotion_feedback_and_codex_wording(
         assert "do not claim owner-only delivery" in content, name
         assert "Never claim" in content, name
         assert "`applied` or `final_ready`" in content, name
-        assert "Do not use WhatsApp" in content, name
+        assert "Do not use WhatsApp" not in content, name
+        assert "device-local WhatsApp" in content, name
         assert "live INPS browser capture" in content, name
         assert "hosted suggestion or voice" in content, name
         assert "When invoked through Vera, task usage, signed receipts" in (
@@ -1266,12 +1268,13 @@ def test_cowork_keeps_negative_boundaries_and_file_first_fallbacks(
         "modules/registro-imprese-sari/skills/mparanza-registro-imprese-sari/SKILL.md"
     ]
 
-    assert "- WhatsApp Desktop inspection;" in readme
+    assert "Local WhatsApp review" in readme
     assert "- live INPS browser capture;" in readme
-    assert "do not offer or execute WhatsApp Desktop inspection" in main
+    assert "specifically authorized" in main
+    assert "do not offer or execute WhatsApp Desktop inspection" not in main
     assert "do not capture a live INPS browser session" in " ".join(main.split())
-    assert "Guarded WhatsApp Desktop review" in studio
-    assert "not enabled as Cowork routes" in " ".join(studio.split())
+    assert "**Local WhatsApp:**" in studio
+    assert "whatsapp-cowork.md" in studio
     assert "Studio Archive is available in Cowork" in studio
     assert "Local-folder mode runs in Claude Desktop and Cowork" in archive_organization
     assert "explicitly approved" in archive_organization
@@ -2088,3 +2091,26 @@ def test_lucia_cowork_distribution_keeps_canonical_lesson_theme_and_report_style
         assert archive.read("ui/theme.css") == theme
         assert archive.read("vendor/modules/courseware/assets/course.css") == report_css
         assert b"theme_lesson" in archive.read("vendor/modules/courseware/library.py")
+
+
+def test_cowork_whatsapp_has_native_route_and_persistent_dispatch(vera_entries):
+    reference = vera_entries[
+        "skills/mparanza-studio-archive/references/whatsapp-cowork.md"
+    ].decode()
+    main = vera_entries["skills/mparanza-vera/SKILL.md"].decode()
+    archive = vera_entries["skills/mparanza-studio-archive/SKILL.md"].decode()
+    assert "controlled self-chat test" in main
+    assert "whatsapp-cowork.md" in archive
+    assert "vera_whatsapp_runtime" in reference
+    assert "same device" in reference
+    assert "execute=true" in reference
+    assert "never resend blindly" in reference
+    assert "empty composer is not proof" in reference
+    assert "Linux/cloud/VM process" in reference
+    assert "leave the real prompt for the user" in reference
+    assert "whatsapp_local.mjs" not in {Path(name).name for name in vera_entries}
+    assert b"vera_whatsapp_" in vera_entries["mcp/whatsapp.cjs"]
+    assert (
+        b'"device_match_required": True' in vera_entries["scripts/whatsapp_requests.py"]
+    )
+    assert "Do not use WhatsApp" not in main + archive

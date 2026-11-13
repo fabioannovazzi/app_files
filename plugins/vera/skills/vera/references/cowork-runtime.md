@@ -16,7 +16,9 @@ For Cowork v1:
 
 - use connected files and callable read-only connectors where supported;
 - treat local MCP review interfaces as optional enhancements;
-- do not offer or execute WhatsApp Desktop inspection;
+- route local WhatsApp review, selected documents and specifically authorized
+  one-to-one sends to Studio Archive's `whatsapp-cowork.md` reference; require
+  callable native computer control and the WhatsApp register on the same device;
 - use user-supplied, hash-bound INPS exports as evidence and do not capture a
   live INPS browser session;
 - do not invoke Vera's hosted feedback, voice-interview, or custom update

@@ -77,7 +77,7 @@
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/SKILL.md",
-      "sha256": "5b4cfa8b747270a074af70a96a93129e683de7cfcdc4cfafef3e09f8b77d0092"
+      "sha256": "0318328127f18b288b8f1a9a488007edbaff83019ec2c2adbe2de2fcbbc19bab"
     },
     {
       "path": "modules/fusione-guidata/skills/mparanza-fusione-guidata/agents/openai.yaml",
@@ -117,7 +117,7 @@
     },
     {
       "path": "skills/mparanza-fusione-guidata/SKILL.md",
-      "sha256": "6fcbf16b4963f678811b2ddcb3ce204af236c28eb735aba166990f1531d1fc0d"
+      "sha256": "03ef8df8f6f99d4409b9549f9bedd7c4c60367ca45ab4f74e248652b9bc00c84"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",

@@ -68,6 +68,34 @@ def setup(service):
     return lock, request
 
 
+@pytest.mark.parametrize(
+    ("system", "expected", "native"),
+    [
+        ("Darwin", "mac", True),
+        ("Windows", "windows", True),
+        ("Linux", "unsupported", False),
+    ],
+)
+def test_runtime_identifies_register_host_without_claiming_ui_access(
+    service, monkeypatch, system, expected, native
+):
+    host = service.call.__globals__["platform"]
+    monkeypatch.setattr(host, "system", lambda: system)
+    monkeypatch.setattr(host, "node", lambda: "synthetic-device")
+
+    result = service.call("runtime", {})
+
+    assert result == {
+        "platform": expected,
+        "device_name": "synthetic-device",
+        "storage_root": str(service.root.resolve()),
+        "native_host": native,
+        "ui_control": False,
+        "device_match_required": True,
+    }
+    assert service.rows("operation") == []
+
+
 def prepare(service, request, **extra):
     return service.call(
         "prepare",
@@ -463,6 +491,13 @@ def test_mcp_service_exposes_local_tools_and_persists_across_processes(tmp_path)
 
     listed = run({"method": "tools/list"})
     assert "vera_whatsapp_claim" in {t["name"] for t in listed["tools"]}
+    runtime = run(
+        {
+            "method": "tools/call",
+            "params": {"name": "vera_whatsapp_runtime", "arguments": {}},
+        }
+    )
+    assert json.loads(runtime["content"][0]["text"])["ui_control"] is False
     result = run(
         {
             "method": "tools/call",

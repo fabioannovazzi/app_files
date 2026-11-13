@@ -14,6 +14,7 @@ function definition(action, description, properties, required) {
   return { name: PREFIX + action, description, inputSchema: { type: "object", additionalProperties: false, properties, required } };
 }
 const TOOLS = [
+  definition("runtime", "Inspect the actual process host and local register location. Before Cowork UI work, match this device to the computer controlled by the host. A Linux/cloud/VM ledger does not lock the native WhatsApp app. This tool does not inspect WhatsApp or grant computer permissions.", {}, []),
   definition("context", "Resume this account's local WhatsApp requests, due follow-ups, uncertain sends and pending Archive copies. Page all requests for a complete briefing. No background scheduler or WhatsApp reads.", { account: string, day: string, offset: { type: "integer", minimum: 0 }, include_closed: { type: "boolean" } }, ["account", "day"]),
   definition("read", "Read an exact local binding, request, attachment or send receipt. This does not refresh WhatsApp.", id, ["id"]),
   definition("acquire", "Claim exclusive local WhatsApp UI ownership before any search/read/download/send. On first setup omit account, inspect its profile, then bind the verified account while retaining this token. A stale owner must be reconciled; locks never expire into a duplicate send.", { ...key, account: string, owner: string }, ["request_key", "owner"]),
