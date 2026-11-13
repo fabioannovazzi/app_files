@@ -271,6 +271,38 @@ def test_native_registry_reads_clients_engagements_runs_without_private_contacts
     assert "email_addresses" not in json.dumps(clients)
 
 
+def test_work_visibility_is_reversible_and_keeps_the_saved_run(registry_workspace):
+    env, _, binding, output, _, _ = registry_workspace
+    ids = {key: binding[key] for key in ("client_id", "engagement_id", "run_id")}
+    scope = {key: ids[key] for key in ("client_id", "engagement_id")}
+    before = (output.parent / "run.json").read_bytes()
+
+    active = native_call(env, "vera_workspace_open", scope)
+    assert active["view"] == "active"
+    assert [row["run_id"] for row in active["works"]] == [ids["run_id"]]
+    assert not native_call(
+        env, "vera_workspace_open", {**scope, "view": "history"}
+    )["works"]
+
+    tool = "vera_workspace_archive_work_visibility"
+    assert native_call(env, tool, {**ids, "hidden": "yes"})["status"] == "hidden"
+    assert not native_call(env, "vera_workspace_open", scope)["works"]
+    hidden = native_call(env, "vera_workspace_open", {**scope, "view": "hidden"})
+    assert [row["run_id"] for row in hidden["works"]] == [ids["run_id"]]
+
+    assert native_call(env, tool, {**ids, "hidden": "no"})["status"] == "visible"
+    assert selected_run(env, binding)["run_id"] == ids["run_id"]
+    assert (output.parent / "run.json").read_bytes() == before
+
+    ledger = _load_customer_ledger()
+    ledger.cancel_run(Path(binding["client_root"]), ids["engagement_id"], ids["run_id"])
+    assert not native_call(env, "vera_workspace_open", scope)["works"]
+    history = native_call(env, "vera_workspace_open", {**scope, "view": "history"})
+    assert [(row["run_id"], row["status"]) for row in history["works"]] == [
+        (ids["run_id"], "cancelled")
+    ]
+
+
 def test_native_registry_reopens_treasury_from_authoritative_run(registry_workspace):
     env, _, binding, _, _, _ = registry_workspace
     run = selected_run(env, binding)

@@ -172,6 +172,47 @@ def preparation_catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+WORK_VIEWS = {"active", "history", "hidden"}
+HISTORY_STATUSES = {"completed", "cancelled"}
+
+
+def visibility_directory(core: Any) -> Path:
+    state = core._state_dir()
+    profile = core._profile_registry_directory(state) or state
+    actor = os.environ.get("VERA_WORKSPACE_ACTOR_ID", "")
+    return profile / "work-visibility" / fingerprint(actor)
+
+
+def set_work_visibility(
+    root: Path, args: dict[str, Any], atomic_json: Any
+) -> dict[str, Any]:
+    """Persist one actor's list preference for an exact, owned run."""
+    if not reviewer():
+        raise PermissionError("Reviewer authority is required")
+    if args["hidden"] not in {"yes", "no"}:
+        raise ValueError("Choose hide or restore")
+    core = archive_module(root)
+    core.list_studio_clients()
+    keys = ("client_id", "engagement_id", "run_id")
+    ids = [args[key] for key in keys]
+    if not all(
+        re.fullmatch(prefix + r"_[a-f0-9]{24}", value)
+        for prefix, value in zip(("client", "eng", "run"), ids, strict=True)
+    ):
+        raise ValueError("Supply exact saved work identifiers")
+    reference = work_ref(*ids)
+    binding = resolve_binding(root, reference)
+    if any(binding[key] != args[key] for key in keys):
+        raise PermissionError("Supply exact saved work identifiers")
+    directory = visibility_directory(core)
+    marker = directory / f"{reference}.json"
+    core.preferences.read_json(marker)
+    directory.mkdir(parents=True, mode=0o700, exist_ok=True)
+    hidden = args["hidden"] == "yes"
+    atomic_json(marker, {"hidden": hidden})
+    return {"status": "hidden" if hidden else "visible", "run_id": args["run_id"]}
+
+
 def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     """Project directory labels and lifecycle; private contacts stay in the engine."""
     core = archive_module(root)
@@ -294,7 +335,23 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
                 ),
             }
         )
-    result = page(rows, args)
+    view = args.get("view", "active")
+    if view not in WORK_VIEWS:
+        raise ValueError("Unknown saved work view")
+    visibility = visibility_directory(core)
+    visible_rows = []
+    for row in rows:
+        marker = core.preferences.read_json(visibility / f"{row['work_ref']}.json")
+        hidden = marker is not None and marker.get("hidden") is True
+        row_view = "active"
+        if hidden:
+            row_view = "hidden"
+        elif row["status"] in HISTORY_STATUSES:
+            row_view = "history"
+        if row_view == view:
+            visible_rows.append(row)
+    visible_rows.sort(key=lambda row: row["created_at"], reverse=True)
+    result = page(visible_rows, args)
     for row in result["rows"]:
         try:
             core.ledger.load_run(folder, selected_engagement, row["run_id"])
@@ -316,6 +373,7 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         **base,
         **result,
         "level": "runs",
+        "view": view,
         "works": result["rows"],
         "engagement_id": selected_engagement,
         "engagement_label": engagement["label"],
