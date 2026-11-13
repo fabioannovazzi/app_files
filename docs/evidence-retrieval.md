@@ -50,7 +50,7 @@ in this change's verification.
 
 ## Explicit recovery of a 0.1.625 checkpoint
 
-Vera 0.1.626 closes the current packet over every source-row reference in its
+Vera 0.1.627 closes the current packet over every source-row reference in its
 retained prior conclusions, including accounting citations outside group
 membership. This does not allocate those cited rows or relax global non-reuse.
 Before a new investigation, the controller measures the exact prompt plus schema
