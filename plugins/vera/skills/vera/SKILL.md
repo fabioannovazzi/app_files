@@ -249,6 +249,12 @@ still belongs to `journal-bank-reconciliation` or `open-item-reconciliation`.
 
 ## Invocation and scope contract
 
+Local WhatsApp review, document collection and explicitly requested one-to-one
+messages, including a controlled self-chat test, route to
+`../studio-archive/SKILL.md`. These supported operations need no legal or tax
+question, tutorial, registered client folder or new engagement. Select the
+host-specific WhatsApp reference and retain its identity and dispatch checks.
+
 A request to teach Vera a real browser procedure, develop it, retest a correction,
 or use that procedure for professional work routes to
 `../browser-automation/SKILL.md`. Bank CSV acquisition uses the dedicated route
@@ -1029,8 +1035,8 @@ validated on the basis of structural inspection alone.
   registry between professionals. Use `scope_id: "all"` only after explicit
   studio-wide intent for local documents; studio-wide Gmail search is
   unsupported. Open each local result before citing it.
-- WhatsApp Desktop is outside the Cowork v1 contract. On another runtime that
-  expressly provides compatible computer control, use it only on the same
+- WhatsApp Desktop uses the host-specific Studio Archive route. When the runtime
+  provides compatible native computer control, use it only on the same
   local computer and only after the user confirms one complete client phone.
   Verify one one-to-one chat before reading. Never use WhatsApp Web, a server
   connector, background capture, global multi-chat search, exports or settings

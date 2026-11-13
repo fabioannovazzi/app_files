@@ -263,6 +263,11 @@
       "sha256": "71d087b6554ee73a088a14be0a6de32d5a8b7e79b683741792bb3477831369d4"
     },
     {
+      "path": "skills/studio-archive/references/whatsapp-cowork.md",
+      "repository_path": "plugins/vera/skills/studio-archive/references/whatsapp-cowork.md",
+      "sha256": "bc7f6e26f780527fdea50f280631bb9a71d6bc365c56882b7181029399e9e3e1"
+    },
+    {
       "path": "skills/studio-archive/references/whatsapp-desktop.md",
       "repository_path": "plugins/vera/skills/studio-archive/references/whatsapp-desktop.md",
       "sha256": "a28a1483565cd12b7e34afffa15c06ecc8c87489870d5d4e4cde2e99b836cfc8"

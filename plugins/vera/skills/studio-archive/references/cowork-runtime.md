@@ -1,6 +1,6 @@
 ---
 name: studio-archive
-description: Use when Vera must create or resume one client's durable connected-folder engagement, import sources, prepare and close workflow runs, search a callable local archive, or search one client's read-only Gmail connector without mixing clients.
+description: Use when Vera must review a local WhatsApp chat, collect its documents or send an explicitly authorized one-to-one message or controlled self-chat test, create or resume a connected-folder engagement, import sources, manage runs, or search a local archive or read-only Gmail connector.
 ---
 
 # Archivio dello Studio
@@ -31,11 +31,15 @@ run, lifecycle, or artifact records under `Vera/`.
   separate explicit apply approval, verification journal, and rollback checks.
 - **Gmail:** available when a read-only Anthropic Gmail connector exposes
   mailbox confirmation, search, and bounded message reading.
-- **Guarded WhatsApp Desktop review and native Google Drive OAuth:** not enabled
-  as Cowork routes. Do
-  not substitute an unguarded screen-control flow, browser login, copied token,
-  or generic Drive access. Continue with the portable ledger and connected
-  files.
+- **Local WhatsApp:** use native Cowork computer control with the device-local
+  `vera_whatsapp_*` register. Read the complete
+  `skills/mparanza-studio-archive/references/whatsapp-cowork.md` under the
+  installed Vera root before acting. Resolve the installed root from this skill,
+  including when invoked through the bundled module. Select this route before
+  the client-folder setup below: a message or controlled self-chat test needs no
+  registered client, engagement, archive root or tax question.
+- **Native Google Drive OAuth:** unavailable. Do not substitute browser login,
+  copied tokens or generic Drive access for that route.
 
 Do not redirect the user to another product. Do not claim a route ran when its
 capability was unavailable.

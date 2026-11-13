@@ -109,7 +109,6 @@ write ran when it did not.
 
 The Cowork package does not claim or execute:
 
-- WhatsApp Desktop inspection;
 - live INPS browser capture;
 - hosted feedback or voice-interview submission; or
 - Vera's custom update checker.
@@ -119,6 +118,13 @@ the connected studio folder for durable client, engagement, input, run,
 lifecycle, and artifact records. Local indexing is available when its declared
 dependencies are already callable. A read-only Anthropic Gmail connector may
 add evidence for one confirmed client; Vera does not send or modify mail.
+
+Local WhatsApp review, selected document collection and authorized one-to-one
+messages use Cowork's native computer control with the WhatsApp register on the
+same Mac or Windows computer. Controlled self-chat tests are supported. The
+installed `whatsapp-cowork.md` reference checks actual capabilities, recipient
+identity, draft preservation and one-time dispatch; unavailable device access
+leaves the send pending. This does not require a WhatsApp Business API account.
 
 ## Shared implementation
 

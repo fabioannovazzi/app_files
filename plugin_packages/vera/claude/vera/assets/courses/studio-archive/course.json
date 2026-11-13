@@ -92,16 +92,12 @@
       "sha256": "85727a39979495ead9291bf770e5cba5bb0ab60d889c7377eb112877a1bee317"
     },
     {
-      "path": "modules/studio-archive/scripts/whatsapp_local.mjs",
-      "sha256": "f5bf4366ae2830c2bade925a04684715ac2bdcd52c8f7bfe6de1a38b6c8071d2"
-    },
-    {
       "path": "modules/studio-archive/scripts/work_folder.py",
       "sha256": "9c185704179d1738326521ced58802020350ea63a2fd9ab29a5397fd08ea7b7d"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
-      "sha256": "3c1af567ce039e84607fd52758f27e89d67883479593bc2edc04799a1f424217"
+      "sha256": "9e38c3ba2c1fbc4c30848410489f150bb823067d40b5d98ad4bd26204d91af8b"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/agents/openai.yaml",
@@ -205,7 +201,11 @@
     },
     {
       "path": "skills/mparanza-studio-archive/SKILL.md",
-      "sha256": "7c413de193f093195dee2ff71a01cd51f2b88d0a62fbb35d46315a15ed444e26"
+      "sha256": "350adb8ea9f46c1a241b8ce1a096927710df8d05bbd5b4d75f731819ce3068f8"
+    },
+    {
+      "path": "skills/mparanza-studio-archive/references/whatsapp-cowork.md",
+      "sha256": "858e2e42e9931a5ee4b58d00e3bf4007b391466d513036d5941abcaa634b1587"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -710,5 +710,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "1c53f1488e424c8fe120f08bab6d453e66365d3503b865684b39a4502e6f2fb6"
+  "canonical_course_sha256": "25ec4709a3582e24d9a4c4269ec9d8b3f5a628e110f10ec1a24e478529490da6"
 }

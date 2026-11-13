@@ -178,7 +178,15 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
+Vera's local WhatsApp workflow is available through Studio Archive when the
+current host exposes native computer control and the device-local WhatsApp
+register. Read its `whatsapp-cowork.md` reference before using it. This includes
+specifically requested one-to-one messages and controlled self-chat tests; it
+does not require a tax question or client-folder setup. Missing native controls
+or a register on the same computer leaves sending pending; a draft is not a send.
+Do not import another host's `cua` helpers or substitute a cloud ledger for the local one.
+
+Do not use live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract. When invoked through Vera, task
 usage, signed receipts, technical recovery and 1–5-star feedback through the

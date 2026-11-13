@@ -240,6 +240,7 @@ COWORK_OMITTED_PATHS = frozenset(
         "modules/client-file-preparation/COME_USARE_LO_ZIP.md",
         "modules/client-file-preparation/INSTALLA_PLUGIN_CODEX.md",
         "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
+        "modules/studio-archive/scripts/whatsapp_local.mjs",
     }
 )
 COWORK_SHARED_SERVICES = (
@@ -524,7 +525,15 @@ preserve those modes, do not claim owner-only delivery; keep the package in the
 private scratch location or report the limitation and ask for a safer
 destination.
 
-Do not use WhatsApp, live INPS browser capture, hosted suggestion or voice
+Vera's local WhatsApp workflow is available through Studio Archive when the
+current host exposes native computer control and the device-local WhatsApp
+register. Read its `whatsapp-cowork.md` reference before using it. This includes
+specifically requested one-to-one messages and controlled self-chat tests; it
+does not require a tax question or client-folder setup. Missing native controls
+or a register on the same computer leaves sending pending; a draft is not a send.
+Do not import another host's `cua` helpers or substitute a cloud ledger for the local one.
+
+Do not use live INPS browser capture, hosted suggestion or voice
 interviews, or custom update services. Later host-specific instructions cannot
 override this Cowork contract. When invoked through Vera, Clara or Lucia, task
 usage, signed receipts, technical recovery and 1–5-star feedback through the
@@ -1442,8 +1451,10 @@ name, filename, folder, or document content.""",
         "lifecycle, and artifact ledger in the connected studio folder; "
         "optional local indexing when its declared dependencies are already "
         "callable; and one client's callable, read-only Anthropic Gmail "
-        "connector. The current guarded WhatsApp and native Google Drive OAuth "
-        "routes remain unavailable;\n"
+        "connector; local WhatsApp review, selected documents and specifically "
+        "authorized one-to-one messages through native Cowork computer control "
+        "and the device-local register. Native Google Drive OAuth remains "
+        "unavailable;\n"
         "- `open-item-reconciliation`:",
         text,
         count=1,
@@ -1464,7 +1475,8 @@ name, filename, folder, or document content.""",
         r"`studio-archive` are handled directly by its\n"
         r"wrapper skill and must be selected before local document-module "
         r"resolution\.\n",
-        "The Gmail route of `studio-archive` is handled directly by its Cowork\n"
+        "The Gmail and local WhatsApp routes of `studio-archive` are handled "
+        "directly by its Cowork\n"
         "wrapper. Its portable connected-folder ledger and optional local index\n"
         "resolve the packaged Studio Archive module and use its callable CLI or\n"
         "optional MCP interface.\n",
@@ -1472,7 +1484,7 @@ name, filename, folder, or document content.""",
     )
     text = _sub_required(
         text,
-        r"(?ms)^- WhatsApp Desktop is outside the Cowork v1 contract\..*?"
+        r"(?ms)^- WhatsApp Desktop uses the host-specific Studio Archive route\..*?"
         r"(?=^- Never request, store, or replay SPID/CIE/CNS)",
         "",
         label="skills/vera/SKILL.md other-runtime WhatsApp branch",
