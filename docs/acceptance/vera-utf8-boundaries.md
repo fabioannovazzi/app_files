@@ -166,3 +166,11 @@ against job 132214858474's retained teaching-native.xml evidence.
 
 The integrated package build and full release consistency check both passed for
 all three products and host formats before this metadata-only correction.
+
+The review-metadata correction itself is governed by the onboarding privacy
+source register. The next CI package build correctly exposed its stale
+local-onboarding binding. Refreshed that service review after inspecting the
+metadata-only change and rebuilt all product artifacts. The course release
+verifier still passed all 58 kits / 258 locales against retained native JUnit;
+mixed-course regressions passed 19 tests with one skip. Superseded CI runs were
+cancelled while preparing this complete source/metadata/package candidate.
