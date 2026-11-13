@@ -425,7 +425,9 @@ def test_native_mcp_reads_same_saved_context_when_pointer_storage_fails(
 
     _, _, saved = prepared_case(tmp_path, monkeypatch, blocked=True)
     output = Path(saved["client_engagement"]["output_dir"])
-    (output / "result.txt").write_text("Delivered result ↳ from saved context")
+    (output / "result.txt").write_text(
+        "Delivered result ↳ from saved context", encoding="utf-8"
+    )
     run = saved["run"]
     result = _mcp_tool(
         "read_studio_run_artifact",
@@ -439,7 +441,9 @@ def test_native_mcp_reads_same_saved_context_when_pointer_storage_fails(
         state_dir=tmp_path / "state",
     )
     assert result.get("isError") is not True, result
-    assert "Delivered result" in json.dumps(result)
+    assert "Delivered result ↳ from saved context" in json.dumps(
+        result, ensure_ascii=False
+    )
 
 
 @pytest.mark.parametrize("encoding", ["cp1252", "utf-8"])

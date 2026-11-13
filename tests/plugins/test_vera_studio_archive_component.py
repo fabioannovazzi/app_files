@@ -786,6 +786,7 @@ def _mcp_request(
         env=environment,
         input=json.dumps(payload) + "\n",
         text=True,
+        encoding="utf-8",
         capture_output=True,
         check=True,
         timeout=30,
