@@ -212,7 +212,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "0fa54528b2bd8ef28e55123ec85868e186874291f3e82a845288982da2f5b1c3",
+  "course_sha256": "dddcf8ea409c502c6ceb7e51742d792ce349012d59ca8ccf0a0e7cacfabe428b",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "377cee7710f53b3ebf29318f3480379fecee7cbeafcde820af7970ca2d581532",
@@ -1098,5 +1098,11 @@
     "reviewer": "Codex bounded task-usage and helper-environment source compatibility review",
     "scope": "Exact authored lesson fields, locales, inputs, timing and execution contracts match the reviewed baseline. Source identities incorporate task usage instructions, their explicit tutorial exclusion, and the integrated shared helper environment changes. Historical editorial and output-artifact judgments are retained; no new visual, learner, installed-host or professional acceptance is asserted.",
     "source_review": "docs/releases/2026-10-17-vera-workflow-usage-source-review.json"
+  },
+  "windows_bank_evidence_source_review_20261113": {
+    "reviewer": "AI agent",
+    "previous_course_sha256": "0fa54528b2bd8ef28e55123ec85868e186874291f3e82a845288982da2f5b1c3",
+    "course_sha256": "dddcf8ea409c502c6ceb7e51742d792ce349012d59ca8ccf0a0e7cacfabe428b",
+    "scope": "Source binding only: explicit UTF-8 evidence and prompt persistence, verified historical checkpoint replay. Lesson, locales, inputs and expected outputs unchanged; full course JSON comparison excluding sources is equal. Unicode workflow regression covers original path, hash and retained evidence."
   }
 }

@@ -152,7 +152,9 @@ def main() -> int:
             parser.error("--pdf-currency is required for recovery")
         from vera_journal_pdf.recovery import recover_pdf
 
-        recipe = json.loads(args.recipe.read_text()) if args.recipe else {}
+        recipe = (
+            json.loads(args.recipe.read_text(encoding="utf-8")) if args.recipe else {}
+        )
         selected_root = args.bank if args.pdf_side == "bank" else args.journal
         selected = args.pdf_source or selected_root
         if selected_root.is_dir():

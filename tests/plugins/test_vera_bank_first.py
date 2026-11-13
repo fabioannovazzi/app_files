@@ -138,7 +138,7 @@ class NativeFixture:
 
     def invoke(self, **kwargs):
         directory = kwargs["output_dir"]
-        packet = json.loads((directory / "packet.json").read_text())
+        packet = json.loads((directory / "packet.json").read_text(encoding="utf-8"))
         self.calls.append(packet)
         response = self.respond(packet, **self.outcomes.get(packet["stage"], {}))
         from bank_first import _translate, reference_map

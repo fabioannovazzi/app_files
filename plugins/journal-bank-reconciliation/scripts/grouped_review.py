@@ -62,7 +62,8 @@ def _digest(value: Any) -> str:
 
 def _write(path: Path, value: Any) -> None:
     path.write_text(
-        json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n"
+        json.dumps(value, indent=2, ensure_ascii=False, allow_nan=False) + "\n",
+        encoding="utf-8",
     )
 
 
@@ -75,7 +76,7 @@ def _save_state(path: Path, state: dict[str, Any]) -> None:
 def _read(path: Path) -> Any:
     if path.is_symlink() or not path.is_file() or path.stat().st_nlink != 1:
         raise ValueError(f"Expected ordinary review artifact: {path.name}")
-    return json.loads(path.read_text())
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _csv(path: Path) -> list[dict[str, str]]:

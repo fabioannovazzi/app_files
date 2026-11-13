@@ -137,7 +137,7 @@ def declare_outputs(output, selected, artifact_id):
     return [
         {
             "artifact_id": artifact_id if path == selected else f"evidence-{index}",
-            "path": str(path.relative_to(output)),
+            "path": path.relative_to(output).as_posix(),
             "purpose": "Synthetic workflow evidence",
             "audience": "internal",
             "media_type": "application/octet-stream",
@@ -276,6 +276,11 @@ def test_bank_preparation_calculation_review_delivery_and_reopen(
         context=context,
     )
     assert prepared_bank["movement_count"] == 1
+    preparation_evidence = json.loads(
+        prepared_bank["evidence"].read_text(encoding="utf-8")
+    )
+    assert preparation_evidence[0]["source_path"] == inputs["source"]["path"]
+    assert preparation_evidence[0]["source_sha256"] == inputs["source"]["sha256"]
     csv = next((output / "bank-prepared").glob("*.csv"))
     with (
         archive.use_studio_run_context(context_path)
@@ -405,7 +410,7 @@ def test_bank_preparation_calculation_review_delivery_and_reopen(
             run["client_id"],
             run["engagement_id"],
             run["run_id"],
-            "outputs/" + str(workbook.relative_to(output)),
+            "outputs/" + workbook.relative_to(output).as_posix(),
         )
     assert final["status"] == "ready_for_review"
     assert completed["status"] == "completed"

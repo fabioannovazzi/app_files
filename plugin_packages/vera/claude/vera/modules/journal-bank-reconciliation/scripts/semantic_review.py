@@ -3360,7 +3360,7 @@ def run_isolated_native_worker(
             packet_sha256=packet_sha256,
             worker_selection=worker_selection,
         )
-        receipt = json.loads(result["launch_receipt"].read_text())
+        receipt = json.loads(result["launch_receipt"].read_text(encoding="utf-8"))
         request = receipt["request"]
         completion = receipt["native_record"]["completion"]
         event_identity = request["content_sha256"] + completion["invocation_id"]
