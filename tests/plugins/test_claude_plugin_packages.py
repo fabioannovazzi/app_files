@@ -2093,7 +2093,9 @@ def test_lucia_cowork_distribution_keeps_canonical_lesson_theme_and_report_style
         assert b"theme_lesson" in archive.read("vendor/modules/courseware/library.py")
 
 
-def test_cowork_whatsapp_has_native_route_and_persistent_dispatch(vera_entries):
+def test_audit_instructions_cowork_whatsapp_has_native_route_and_persistent_dispatch(
+    vera_entries,
+):
     reference = vera_entries[
         "skills/mparanza-studio-archive/references/whatsapp-cowork.md"
     ].decode()
