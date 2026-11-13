@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import importlib.util
 import json
@@ -66,7 +67,9 @@ def scenario(kind: str, directory: Path) -> None:
         assert result["records"]["case_intake"]["professional_question"] == TEXT
         assert target.read_bytes() == before
     elif kind == "research":
-        from tests.plugins.test_legal_tax_research_record import SCRIPT, _bind, _run
+        # Fixture imports may emit dependency notices; keep the driver JSON clean.
+        with contextlib.redirect_stdout(sys.stderr):
+            from tests.plugins.test_legal_tax_research_record import SCRIPT, _bind, _run
 
         folder = _run(directory)
         path = folder / "research_review.json"
