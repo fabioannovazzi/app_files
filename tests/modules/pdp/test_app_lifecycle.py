@@ -177,6 +177,7 @@ def test_plugin_download_version_reads_public_zip(
     directory = tmp_path / "static/shared/vera/downloads"
     directory.mkdir(parents=True)
     (tmp_path / "static/shared/courses").mkdir()
+    (tmp_path / "static/shared/courses/file-aliases.json").write_text('{"aliases": {}}')
     client = TestClient(pdp_api.create_app())
     url = f"/api/plugin-downloads/vera/{host}"
 
