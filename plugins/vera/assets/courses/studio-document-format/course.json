@@ -570,7 +570,12 @@
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",
       "repository_path": "plugins/studio-archive/scripts/whatsapp_desktop_guard.mjs",
-      "sha256": "a6a8c536515452a718aae057c6fcb6210753b8c0e8e7f920316fd44944fdc9b5"
+      "sha256": "4a92ee5ac1fa345e7f884f21ea3775022c773f4cafcfea9efed8f4385af5f7c1"
+    },
+    {
+      "path": "modules/studio-archive/scripts/whatsapp_local.mjs",
+      "repository_path": "plugins/studio-archive/scripts/whatsapp_local.mjs",
+      "sha256": "f5bf4366ae2830c2bade925a04684715ac2bdcd52c8f7bfe6de1a38b6c8071d2"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",

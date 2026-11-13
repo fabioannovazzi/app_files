@@ -7,6 +7,7 @@ const readline = require("node:readline");
 const { spawnSync } = require("node:child_process");
 const ROOT = path.resolve(__dirname, "..");
 const panel = require("./studio-work-panel.cjs");
+const whatsapp = require("./whatsapp.cjs");
 const string = { type: "string", minLength: 1, maxLength: 20000 };
 const object = { type: "object" };
 const revision = { type: "integer", minimum: 0 };
@@ -31,6 +32,7 @@ const TOOLS = [
   definition("resolve", "Record real connector read-back evidence, definitive no-write failure or uncertainty. Verification checks exact event fields and identity. This is not independent Google verification: supply actual tool evidence, never fabricate it.", { ...key, operation_id: string, outcome: { enum: ["verified", "failed", "uncertain"] }, evidence: object }, ["request_key", "operation_id", "outcome", "evidence"]),
   definition("abandon", "Cancel an undispatched prepared operation at the user's instruction. Dispatched/uncertain operations require connector recovery.", { ...key, operation_id: string, authorization: string }, ["request_key", "operation_id", "authorization"]),
   ...panel.TOOLS,
+  ...whatsapp.TOOLS,
 ];
 
 function bridge(action, args) {
@@ -53,6 +55,7 @@ function bridge(action, args) {
 }
 
 function call(name, args) {
+  if (name.startsWith(whatsapp.PREFIX)) return whatsapp.call(name, args);
   if (name.startsWith(panel.PREFIX)) return panel.call(name, args);
   const tool = TOOLS.find(candidate => candidate.name === name);
   if (!tool) throw new Error("Unknown studio work tool");

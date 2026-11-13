@@ -1,0 +1,5 @@
+[run]
+include = */whatsapp_requests.py
+
+[report]
+fail_under = 80

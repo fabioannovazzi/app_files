@@ -527,7 +527,16 @@ def test_shared_model_data_copy_names_the_model_not_the_runtime_pair() -> None:
         for runtime_pair in runtime_pairs:
             assert runtime_pair not in model_copy, (workflow, runtime_pair)
 
-    assert "Only in Codex" in pages["studio-archive"]
+    assert "With local WhatsApp" in pages["studio-archive"]
+    archive_manifest = json.loads(
+        (VERA_ROOT / "privacy/workstreams/studio-archive.json").read_text()
+    )
+    whatsapp = next(
+        boundary
+        for boundary in archive_manifest["external_boundaries"]
+        if boundary["id"] == "codex-whatsapp-desktop-client-review"
+    )
+    assert whatsapp["runtime_profiles"] == ["openai-codex"]
     assert "not enabled as a Cowork route" in pages["archive-organization"]
 
     function_copy = (

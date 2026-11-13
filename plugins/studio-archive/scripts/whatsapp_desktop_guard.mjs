@@ -9,7 +9,7 @@ const SEARCH_DESCRIPTIONS = new Set([
 ]);
 
 function stripDirectionalMarks(value) {
-  return value.replace(/[\u200e\u200f]/gu, "").trim();
+  return value.replace(/[\u200e\u200f\u2066-\u2069]/gu, "").trim();
 }
 
 function normalizedText(value) {
@@ -30,7 +30,7 @@ function normalizeConfirmedPhone(value) {
 }
 
 function parseElementLine(line) {
-  const match = line.match(/^\s*(\d+)\s+(.+?)\s+Description:\s*(.*)$/u);
+  const match = line.match(/^\s*(\d+)\s+(.+?)\s+Description:\s*(.*)$/su);
   if (!match) {
     return null;
   }
@@ -38,7 +38,7 @@ function parseElementLine(line) {
   const description = attributes
     .split(/,\s+(?=(?:Help|ID|Secondary Actions|Value|Role|Enabled|Selected|Title):)/u, 1)[0];
   const valueMatch = line.match(
-    /,\s+Value:\s*(.*?)(?=,\s+(?:Help|ID|Secondary Actions|Role|Enabled|Selected|Title):|$)/u,
+    /,\s+Value:\s*(.*?)(?=,\s+(?:Help|ID|Secondary Actions|Role|Enabled|Selected|Title):|$)/su,
   );
   return {
     index: Number(match[1]),
@@ -55,7 +55,16 @@ function isKnownSearchDescription(description) {
 
 function parseAccessibilityState(text) {
   const lines = String(text ?? "").split("\n");
-  const elements = lines.map(parseElementLine).filter(Boolean);
+  // Native text values can span lines. Preserve the whole node so a multiline
+  // user draft never looks empty and an exact multiline send can be verified.
+  const nodes = [];
+  for (const line of lines) {
+    if (line.startsWith("The focused UI element is")) break;
+    if (/^\s*\d+\s/u.test(line)) nodes.push(line);
+    else if (nodes.length && line.trim()) nodes[nodes.length - 1] += `\n${line}`;
+    else if (nodes.length && line === "") nodes[nodes.length - 1] += "\n";
+  }
+  const elements = nodes.map(parseElementLine).filter(Boolean);
   const searchByIndex = new Map();
   for (const element of elements) {
     if (
@@ -99,7 +108,7 @@ function parseAccessibilityState(text) {
   };
 }
 
-function selectTargetResult(parsed, expectedChatName, phoneDigits) {
+function selectTargetResult(parsed, expectedChatName, phoneDigits, allowUniqueChatCandidate = false) {
   const semanticResults = new Map();
   for (const element of parsed.elements) {
     const resultMatch = element.line.match(
@@ -135,6 +144,8 @@ function selectTargetResult(parsed, expectedChatName, phoneDigits) {
       ? { ...exactMatches[0], matchedBy: "exact_confirmed_identity" }
       : uniqueContacts.length === 1
         ? { ...uniqueContacts[0], matchedBy: "unique_contact_result" }
+        : allowUniqueChatCandidate && results.length === 1
+          ? { ...results[0], matchedBy: "unverified_unique_phone_search_candidate" }
         : null;
 
   return {
@@ -262,6 +273,7 @@ export async function guardedPhoneSearch({
   sky,
   confirmedPhone,
   expectedChatName = null,
+  allowUniqueChatCandidate = false,
   app = DEFAULT_APP,
 }) {
   const phoneDigits = normalizeConfirmedPhone(confirmedPhone);
@@ -457,7 +469,7 @@ export async function guardedPhoneSearch({
     });
   }
 
-  const target = selectTargetResult(parsed, expectedChatName, phoneDigits);
+  const target = selectTargetResult(parsed, expectedChatName, phoneDigits, allowUniqueChatCandidate);
   return response(target.targetResult ? "ready_to_open_target" : "blocked", {
     reason: target.targetResult ? null : "no_unique_target_result",
     digitsEntered: verifiedPrefix.length,
@@ -729,3 +741,5 @@ export function extractVerifiedChatTable(
   }
   return lines.slice(start, end).join("\n");
 }
+
+export { parseAccessibilityState, normalizeConfirmedPhone };
