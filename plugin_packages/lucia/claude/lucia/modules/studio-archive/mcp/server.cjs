@@ -15,6 +15,7 @@ const MANIFEST = JSON.parse(
 );
 const SERVER_NAME = "vera-studio-archive";
 const SERVER_VERSION = MANIFEST.version || "0.1.0";
+const incaricoApi = require("./incarico-api.cjs");
 const CLI_PATH = path.join(PLUGIN_ROOT, "scripts", "studio_archive.py");
 const MAX_OUTPUT_BYTES = 8_000_000;
 const CONTEXT_TOOLS = new Set([
@@ -157,6 +158,7 @@ function annotations(readOnly, idempotent = true, openWorld = false) {
 
 function toolDefinitions() {
   return [
+    ...incaricoApi.definitions(),
     {
       name: TOOL_NAMES.checkpointWorkflow,
       title: "Retain this Archive run's completed stages",
@@ -510,6 +512,7 @@ function toolDefinitions() {
             maxItems: 10000,
             items: objectSchema(
               {
+                engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$", description: "Originating incarico in the same client/project; omit for the receiving incarico." },
                 run_id: { type: "string", pattern: "^run_[0-9a-f]{24}$" },
                 artifact_id: { type: "string", minLength: 1, maxLength: 120, pattern: "^[a-z0-9][a-z0-9._-]{0,119}$", description: "Lowercase stable ID, e.g. prep01. Independent of the filename, which may contain uppercase letters." },
                 role: { type: "string", minLength: 1, maxLength: 80 },
@@ -579,6 +582,7 @@ function toolDefinitions() {
           client_id: { type: "string", pattern: "^client_[0-9a-f]{24}$" },
           engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
           sample_run_id: { type: "string", pattern: "^run_[0-9a-f]{24}$" },
+          source_engagement_id: { type: "string", pattern: "^eng_[0-9a-f]{24}$" },
           support_input_ids: {
             type: "array",
             minItems: 1,
@@ -1462,7 +1466,7 @@ function commandForTool(name, rawArgs) {
     }
     for (const reference of upstream) {
       const value = requirePlainObject(reference);
-      assertOnlyKeys(value, new Set(["run_id", "artifact_id", "role"]));
+      assertOnlyKeys(value, new Set(["engagement_id", "run_id", "artifact_id", "role"]));
       const runId = requireString(value.run_id, "upstream run_id");
       const artifactId = requireString(value.artifact_id, "artifact_id");
       const role = requireString(value.role, "upstream role");
@@ -1472,7 +1476,9 @@ function commandForTool(name, rawArgs) {
       if (artifactId.includes(":") || role.includes(":")) {
         throw new Error("artifact_id and role cannot contain a colon.");
       }
-      command.push("--upstream-artifact", `${runId}:${artifactId}:${role}`);
+      const origin = value.engagement_id;
+      if (origin !== undefined && (typeof origin !== "string" || !/^eng_[0-9a-f]{24}$/.test(origin))) throw new Error("Invalid originating engagement.");
+      command.push("--upstream-artifact", `${origin ? origin + "/" : ""}${runId}:${artifactId}:${role}`);
     }
     for (const [key, flag, maximum] of [
       ["label", "--label", 160],
@@ -1520,6 +1526,8 @@ function commandForTool(name, rawArgs) {
     if (typeof args.destination !== "string" || !path.isAbsolute(args.destination)) throw new Error("Recovery destination must be an authorized absolute folder path");
     return [...command, "--destination", args.destination];
   }
+  const incaricoCommand = incaricoApi.command(name, args);
+  if (incaricoCommand) return incaricoCommand;
   if (name === TOOL_NAMES.startCheckEntriesFromSample) {
     assertOnlyKeys(
       args,
@@ -1527,6 +1535,7 @@ function commandForTool(name, rawArgs) {
         "client_id",
         "engagement_id",
         "sample_run_id",
+        "source_engagement_id",
         "support_input_ids",
         "label",
         "purpose",
@@ -1564,6 +1573,11 @@ function commandForTool(name, rawArgs) {
       "--sample-run-id",
       sampleRunId,
     ];
+    if (args.source_engagement_id !== undefined) {
+      const source = requireString(args.source_engagement_id, "source_engagement_id");
+      if (!/^eng_[0-9a-f]{24}$/.test(source)) throw new Error("source_engagement_id is invalid.");
+      command.push("--source-engagement-id", source);
+    }
     for (const inputId of supportInputIds) {
       if (!/^input_[0-9a-f]{24}$/.test(inputId)) {
         throw new Error("support_input_ids contains an invalid input ID.");

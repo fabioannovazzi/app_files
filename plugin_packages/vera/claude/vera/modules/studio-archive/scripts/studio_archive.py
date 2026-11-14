@@ -41,6 +41,7 @@ from archive_core import (
     VERA_CLIENT_WORKFLOW_IDS,
     ArchiveError,
     authorize_studio_google_drive,
+    begin_studio_incarico,
     bind_studio_client_google_drive,
     cancel_studio_client_workflow,
     check_studio_import_sources,
@@ -56,20 +57,25 @@ from archive_core import (
     finalize_studio_client_workflow,
     get_studio_archive_organization_inventory,
     get_studio_client_folder,
+    get_studio_incarico,
     import_studio_client_document,
     list_studio_client_engagements,
     list_studio_clients,
+    map_studio_legacy_incarichi,
     match_studio_email_client,
     open_archive_source,
     open_studio_archive_organization_item,
     plan_gmail_client_search,
     prepare_studio_client_workflow,
+    publish_studio_incarico_result,
+    read_studio_incarico_document,
     read_studio_run_artifact,
     recover_studio_client_ledger,
     refresh_archive,
     report_studio_client_retention,
     resolve_studio_client_identity,
     restore_studio_client_workflow,
+    reuse_studio_incarico_result,
     search_archive,
     set_studio_client_identity,
     setup_archive_with_folder_picker,
@@ -79,6 +85,7 @@ from archive_core import (
     start_studio_client_workflow,
     studio_archive_status,
     studio_google_drive_status,
+    update_studio_incarico,
     use_studio_run_context,
     verify_studio_client_inputs,
     verify_studio_run_report,
@@ -209,6 +216,40 @@ def _parser() -> argparse.ArgumentParser:
     open_item.add_argument("--snapshot-input-id", required=True)
     open_item.add_argument("--item-ref", required=True)
 
+    incarico = subparsers.add_parser("incarico")
+    incarico.add_argument("--client-id", required=True)
+    incarico.add_argument("--engagement-id", required=True)
+    incarico.add_argument(
+        "--fields-json", help="Complete assignment fields; omit for read-only"
+    )
+    incarico.add_argument("--expected-revision", default="")
+    map_legacy = subparsers.add_parser("map-legacy-incarichi")
+    for flag in ("client-id", "engagement-id", "targets-json"):
+        map_legacy.add_argument("--" + flag, required=True)
+    open_incarico = subparsers.add_parser("open-incarico-document")
+    for flag in ("client-id", "engagement-id", "reference-json"):
+        open_incarico.add_argument("--" + flag, required=True)
+    begin_incarico = subparsers.add_parser("begin-incarico")
+    for flag in ("client-id", "engagement-id", "workflow-id", "purpose"):
+        begin_incarico.add_argument("--" + flag, required=True)
+    publish_result = subparsers.add_parser("publish-incarico-result")
+    for flag in (
+        "client-id",
+        "engagement-id",
+        "entry-key",
+        "label",
+        "files-json",
+        "idempotency-key",
+    ):
+        publish_result.add_argument("--" + flag, required=True)
+    publish_result.add_argument("--expected-revision", type=int, required=True)
+    reuse_result = subparsers.add_parser("reuse-incarico-result")
+    for flag in ("client-id", "engagement-id", "origin-json"):
+        reuse_result.add_argument("--" + flag, required=True)
+    reuse_result.add_argument(
+        "--role", choices=["source", "support", "journal"], required=True
+    )
+
     prepare_workflow = subparsers.add_parser("prepare-workflow")
     prepare_workflow.add_argument("--engagement-id", required=True)
     prepare_workflow.add_argument(
@@ -225,6 +266,7 @@ def _parser() -> argparse.ArgumentParser:
     check_entries_handoff.add_argument("--client-id", required=True)
     check_entries_handoff.add_argument("--engagement-id", required=True)
     check_entries_handoff.add_argument("--sample-run-id", required=True)
+    check_entries_handoff.add_argument("--source-engagement-id")
     check_entries_handoff.add_argument(
         "--support-input-id", action="append", default=[]
     )
@@ -474,6 +516,45 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
                 args.snapshot_input_id,
                 args.item_ref,
             )
+        elif args.command == "map-legacy-incarichi":
+            result = map_studio_legacy_incarichi(
+                args.client_id, args.engagement_id, json.loads(args.targets_json)
+            )
+        elif args.command == "open-incarico-document":
+            result = read_studio_incarico_document(
+                args.client_id, args.engagement_id, json.loads(args.reference_json)
+            )
+        elif args.command == "begin-incarico":
+            result = begin_studio_incarico(
+                args.client_id, args.engagement_id, args.workflow_id, args.purpose
+            )
+        elif args.command == "publish-incarico-result":
+            result = publish_studio_incarico_result(
+                args.client_id,
+                args.engagement_id,
+                args.entry_key,
+                args.label,
+                json.loads(args.files_json),
+                args.expected_revision,
+                args.idempotency_key,
+            )
+        elif args.command == "reuse-incarico-result":
+            result = reuse_studio_incarico_result(
+                args.client_id,
+                args.engagement_id,
+                json.loads(args.origin_json),
+                args.role,
+            )
+        elif args.command == "incarico":
+            if args.fields_json is None:
+                result = get_studio_incarico(args.client_id, args.engagement_id)
+            else:
+                fields = json.loads(args.fields_json)
+                if not isinstance(fields, dict):
+                    raise ArchiveError("Assignment fields must be an object")
+                result = update_studio_incarico(
+                    args.client_id, args.engagement_id, fields, args.expected_revision
+                )
         elif args.command == "prepare-workflow":
             upstream_artifacts = []
             for raw_reference in args.upstream_artifact:
@@ -482,8 +563,14 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
                     raise ArchiveError(
                         "Upstream artifact must be run_id:artifact_id:role."
                     )
+                origin = parts[0].split("/", maxsplit=1)
                 upstream_artifacts.append(
-                    {"run_id": parts[0], "artifact_id": parts[1], "role": parts[2]}
+                    {
+                        **({"engagement_id": origin[0]} if len(origin) == 2 else {}),
+                        "run_id": origin[-1],
+                        "artifact_id": parts[1],
+                        "role": parts[2],
+                    }
                 )
             result = prepare_studio_client_workflow(
                 args.engagement_id,
@@ -532,6 +619,7 @@ def _execute(args: argparse.Namespace, stack: ExitStack) -> int:
                 args.engagement_id,
                 args.sample_run_id,
                 support_input_ids=args.support_input_id,
+                source_engagement_id=args.source_engagement_id,
                 label=args.label,
                 purpose=args.purpose,
                 idempotency_key=args.idempotency_key,

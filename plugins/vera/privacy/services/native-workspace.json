@@ -928,6 +928,16 @@
         "scripts/native_workspace.py"
       ],
       "on_violation": "Keep the backend denial; return only currently authorized directory entries."
+    },
+    {
+      "id": "incarico-context-and-publication",
+      "control": "Selected incarico client/project and engagement IDs, purpose, saved continuation text, owning pipeline, source and result names, paths, receipt hashes, numbered revisions, publication dates, file availability, exact source-version provenance, and actual host-provided chat IDs, titles and links may enter the selected host model context. The native continuation projection returns at most 30 source records, 20 run records, 20 current result entries and 20 chat associations; the general Archive read returns the selected assignment's complete saved metadata and issued history. Explicit document opening returns the complete UTF-8 content of one selected MD, TXT, JSON or CSV file up to 256 KiB, plus its verified local path and hash; other formats return a verified local path for the host to open. Grouped publication copies selected bytes locally and returns revision/file receipts. Explicit reuse copies the chosen issued revision into the selected receiving assignment, including across registered clients, retaining exact origin and digest. Drafts and older issued versions remain local. Full chat transcripts are not copied or read by these helpers. The optional native panel sends an editable request and exact references to the existing host only after the user's action and when its message capability is advertised; opening a stored link uses the host's navigation. No new model provider, network recipient, automatic message send or external publication is introduced. Local assignment mutations resolve the registered client and exact engagement and require the configured reviewer, metadata revision or publication revision. Saving a result is not professional adoption, signing, filing or sending. Public model-visible incarico operations intentionally return the selected saved metadata; do not treat those payloads as app-only summaries.",
+      "implemented_by": [
+        "scripts/native_incarichi.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject mismatched identifiers, digests or concurrent revision changes while preserving prior saved work."
     }
   ],
   "governed_paths": [
@@ -1103,7 +1113,9 @@
     "scripts/on_demand_mcp.cjs",
     "scripts/mcp_service_client.cjs",
     "scripts/native_posting_review.py",
-    "skills/vera/references/posting-review.md"
+    "skills/vera/references/posting-review.md",
+    "scripts/native_incarichi.py",
+    "skills/vera/references/work-continuity.md"
   ],
   "external_boundaries": [
     {
@@ -1150,8 +1162,8 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "900eefd2f76c10cb1456ce8b370993b2766cf38edf771ac7c77185e3d4c5581b",
-    "reviewed_at": "2026-11-04"
+    "source_fingerprint": "084616fe90d8eb26c938d6ffb5c9c435829ca945b44b5efc238937327809850e",
+    "reviewed_at": "2026-11-14"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",

@@ -101,10 +101,16 @@ result or erase its lifecycle state. Retry reporting separately. An uncertain
 mutation requires inspecting the saved outcome before retrying; a disconnected
 tool response is not evidence that the operation failed.
 
-An engagement can exist without a specialist workflow run. Its generated
-follow-up documents use the controlled document-import route described below;
-do not invent a `studio-archive` run or treat a chat-workspace file as a saved
-engagement result.
+An incarico can exist without a specialist execution. Bind it with
+`begin-incarico` before model generation. Publish each named deliverable with
+`publish-incarico-result`: stable entry key, complete grouped formats, verified
+digests, expected current revision and retry key. This shared contract applies
+to every pipeline. Corrections advance the same entry; dated previous revisions
+remain in Storico. Drafts stay in the working area. Never save generated outputs
+through document import, which is for sources. Do not invent an execution just
+to retain a deliverable. Native Vera exposes the same operations as
+`vera_incarico_begin` and `vera_incarico_publish_result`. See Vera's shared
+`work-continuity.md` for continuation, chat links and cross-incarico result reuse.
 
 # Vera · Archivio dello Studio
 

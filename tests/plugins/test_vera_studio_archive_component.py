@@ -48,7 +48,7 @@ def isolated_mcp_launcher(tmp_path_factory):
     (component / "mcp").mkdir(parents=True)
     (component / ".codex-plugin").mkdir()
     server = component / "mcp" / "server.cjs"
-    shutil.copy2(MCP_SERVER_PATH, server)
+    shutil.copytree(COMPONENT_ROOT / "mcp", component / "mcp", dirs_exist_ok=True)
     shutil.copy2(
         COMPONENT_ROOT / ".codex-plugin" / "plugin.json",
         component / ".codex-plugin" / "plugin.json",
@@ -2209,7 +2209,9 @@ def test_mcp_verifies_same_name_imports_retry_and_continuation_in_fresh_session(
     archive.mkdir()
     state = tmp_path / "first-session"
     _mcp_tool(
-        "configure_studio_archive", {"archive_root": str(archive)}, state_dir=state
+        "configure_studio_archive",
+        {"archive_root": str(archive), "make_studio_default": True},
+        state_dir=state,
     )
     created = _mcp_tool(
         "create_studio_archive_client",
@@ -2272,7 +2274,7 @@ def test_mcp_verifies_same_name_imports_retry_and_continuation_in_fresh_session(
     )
 
     result = response["structuredContent"]
-    assert response["isError"] is False
+    assert response["isError"] is False, response
     assert result["schema_version"] == "vera.input_verification.v1"
     assert result["verified"] is True
     assert result["input_set_matches"] is True
@@ -2713,6 +2715,13 @@ def test_mcp_lists_strict_local_tools(tmp_path: Path) -> None:
 
     tools = response["result"]["tools"]
     assert {tool["name"] for tool in tools} == {
+        "get_studio_incarico",
+        "begin_studio_incarico",
+        "update_studio_incarico",
+        "read_studio_incarico_document",
+        "publish_studio_incarico_result",
+        "reuse_studio_incarico_result",
+        "map_studio_legacy_incarichi",
         "studio_archive_status",
         "list_studio_archive_clients",
         "resolve_studio_archive_client",
@@ -2838,6 +2847,89 @@ def test_mcp_client_list_returns_guided_setup_when_archive_is_not_configured(
     assert not state_dir.exists()
 
 
+def test_public_mcp_publishes_retries_opens_and_reuses_a_named_result(tmp_path):
+    studio = tmp_path / "Studio"
+    (studio / "Project").mkdir(parents=True)
+    state_dir = tmp_path / "state"
+
+    def call(name, arguments):
+        response = _mcp_tool(name, arguments, state_dir=state_dir)
+        assert not response["isError"], response
+        return response["structuredContent"]
+
+    configured = call("configure_studio_archive", {"archive_root": str(studio)})
+    cid = call(
+        "configure_studio_archive_client",
+        {
+            "scope_id": configured["scopes"][0]["scope_id"],
+            "legal_names": ["Synthetic project"],
+        },
+    )["client"]["client_id"]
+    eid = call(
+        "create_studio_client_engagement",
+        {
+            "client_id": cid,
+            "engagement_label": "Original assignment",
+        },
+    )["engagement"]["engagement_id"]
+    scope = {"client_id": cid, "engagement_id": eid}
+    bound = call(
+        "begin_studio_incarico",
+        {
+            **scope,
+            "workflow_id": "trasformazione",
+            "purpose": "Prepare the requested work",
+        },
+    )
+    source = Path(bound["working_directory"]) / "Result.md"
+    source.write_text("Issued synthetic result", encoding="utf-8")
+    digest = hashlib.sha256(source.read_bytes()).hexdigest()
+    request = {
+        **scope,
+        "entry_key": "report",
+        "label": "Report",
+        "files": [{"format": "md", "source_path": str(source), "sha256": digest}],
+        "expected_revision": 0,
+        "idempotency_key": "original-publication",
+    }
+
+    issued = call("publish_studio_incarico_result", request)
+    repeated = call("publish_studio_incarico_result", request)
+    overview = call("get_studio_incarico", scope)
+    reference = {"entry_key": "report", "revision": 1, "format": "md"}
+    opened = call("read_studio_incarico_document", {**scope, "reference": reference})
+    destination = call(
+        "create_studio_client_engagement",
+        {
+            "client_id": cid,
+            "engagement_label": "Different assignment",
+        },
+    )["engagement"]["engagement_id"]
+    origin = {
+        **scope,
+        "revision": issued["issued"]["content_sha256"],
+        "reference": reference,
+        "label": "Report",
+        "sha256": digest,
+    }
+    received = call(
+        "reuse_studio_incarico_result",
+        {
+            "client_id": cid,
+            "engagement_id": destination,
+            "origin": origin,
+            "role": "source",
+        },
+    )
+
+    assert repeated["reused"] and repeated["current_revision"] == 1
+    assert overview["documents"] == []
+    assert len(overview["deliverables"]) == 1
+    assert opened["preview"] == "Issued synthetic result"
+    assert received["receipt"]["origin"] == origin
+    assert Path(received["receipt"]["path"]).read_bytes() == source.read_bytes()
+
+
 def test_mcp_diagnoses_archive_access_without_returning_private_path(
     tmp_path: Path,
 ) -> None:
@@ -2915,7 +3007,7 @@ def test_mcp_large_artifact_declaration_reaches_worker_intact(tmp_path: Path) ->
         component / ".codex-plugin/plugin.json",
     )
     server = component / "mcp/server.cjs"
-    server.write_bytes(MCP_SERVER_PATH.read_bytes())
+    shutil.copytree(COMPONENT_ROOT / "mcp", component / "mcp", dirs_exist_ok=True)
     (component / "scripts/studio_archive.py").write_text(
         "import json, sys\n"
         "if '--artifacts-stdin' in sys.argv:\n"
@@ -3195,6 +3287,16 @@ def test_mcp_starts_check_entries_from_a_completed_sample_without_internal_refer
         state_dir=state_dir,
     )
     engagement_id = created["structuredContent"]["engagement"]["engagement_id"]
+    _mcp_tool(
+        "begin_studio_incarico",
+        {
+            "client_id": client_id,
+            "engagement_id": engagement_id,
+            "workflow_id": "check-entries",
+            "purpose": "Check the selected journal sample",
+        },
+        state_dir=state_dir,
+    )
     journal_source = tmp_path / "journal.csv"
     journal_source.write_text("date,amount\n2026-01-01,100\n", encoding="utf-8")
     journal_import = _mcp_tool(
@@ -3792,8 +3894,9 @@ def test_negotiation_round_retains_delivery_and_starts_a_separate_successor(
     assert original.read_bytes() == Path(imported["imported_path"]).read_bytes()
 
 
+@pytest.mark.parametrize("separate_incarico", [False, True])
 def test_tax_litigation_reuses_sealed_intake_in_a_distinct_resumable_archive_run(
-    indexed_archive: SimpleNamespace, archive_core: ModuleType
+    indexed_archive: SimpleNamespace, archive_core: ModuleType, separate_incarico: bool
 ) -> None:
     """Exercise Archive, real evidence helpers, open filing proof and finalization."""
     registered = archive_core.set_studio_client_identity(
@@ -3808,6 +3911,14 @@ def test_tax_litigation_reuses_sealed_intake_in_a_distinct_resumable_archive_run
         state_dir=indexed_archive.state,
     )["engagement"]
     engagement_id = engagement["engagement_id"]
+    if not separate_incarico:
+        archive_core.begin_studio_incarico(
+            client_id,
+            engagement_id,
+            "contenzioso-tributario",
+            "Requested tax litigation work",
+            state_dir=indexed_archive.state,
+        )
     imported = archive_core.import_studio_client_document(
         client_id,
         indexed_archive.source,
@@ -3860,12 +3971,25 @@ def test_tax_litigation_reuses_sealed_intake_in_a_distinct_resumable_archive_run
         if p.is_file()
     }
 
+    intake_engagement_id = engagement_id
+    if separate_incarico:
+        engagement_id = archive_core.create_studio_client_engagement(
+            client_id, "New tax litigation incarico", state_dir=indexed_archive.state
+        )["engagement"]["engagement_id"]
+        imported = archive_core.import_studio_client_document(
+            client_id,
+            indexed_archive.source,
+            "source",
+            engagement_id=engagement_id,
+            state_dir=indexed_archive.state,
+        )
     tax = archive_core.prepare_studio_client_workflow(
         engagement_id,
         "contenzioso-tributario",
         input_ids=[imported["input_id"]],
         upstream_artifacts=[
             {
+                "engagement_id": intake_engagement_id,
                 "role": "intake",
                 "run_id": intake_id,
                 "artifact_id": "intake.memo",

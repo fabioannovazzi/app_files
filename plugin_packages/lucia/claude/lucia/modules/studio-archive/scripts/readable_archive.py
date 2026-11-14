@@ -7,6 +7,7 @@ import os
 import re
 import tempfile
 import unicodedata
+from datetime import datetime
 from pathlib import Path
 from types import ModuleType
 from typing import Any
@@ -215,14 +216,120 @@ def refresh_readable_archive(root: Path, ledger: ModuleType) -> dict[str, Any]:
                     "<section><h2>Documenti acquisiti nella pratica</h2>"
                 )
                 input_inventory = ledger.inspect_inputs(root, eid)
-                detail += _input_table(page, input_inventory["inputs"], root)
+                try:
+                    assignment = ledger.incarichi().overview(root, eid)
+                    legacy_outputs = set(assignment["legacy_output_inputs"])
+                except (ledger.LedgerError, OSError):
+                    assignment = None
+                    legacy_outputs = set()
+                detail += _input_table(
+                    page,
+                    [
+                        item
+                        for item in input_inventory["inputs"]
+                        if item["input_id"] not in legacy_outputs
+                    ],
+                    root,
+                )
                 for issue in input_inventory["blocked_inputs"]:
                     detail += (
                         '<p class="warning">Documento non disponibile: <code>'
                         + html.escape(issue["entry_name"])
                         + "</code>. Originale e ricevuta conservati.</p>"
                     )
-                detail += "</section><section><h2>Attività ed esecuzioni</h2><ul>"
+                detail += "</section>"
+                try:
+                    assignment = ledger.incarichi().overview(root, eid)
+                    for category, title in (
+                        ("legacy_assignments", "Incarichi organizzati"),
+                        ("historical_assignments", "Attività precedenti"),
+                    ):
+                        if assignment[category]:
+                            detail += "<section><h2>" + title + "</h2><ul>"
+                            for item in assignment[category]:
+                                target = ledger.load_engagement_manifest(
+                                    root, item["engagement_id"]
+                                )
+                                target_page = (
+                                    view
+                                    / (
+                                        target["created_at"][:10]
+                                        + "--"
+                                        + _slug(target["label"])
+                                        + "--"
+                                        + target["engagement_id"]
+                                    )
+                                    / "Indice.html"
+                                )
+                                detail += (
+                                    "<li>"
+                                    + _link(page, target_page, target["label"])
+                                    + "</li>"
+                                )
+                            detail += "</ul></section>"
+                    if assignment["purpose"]:
+                        detail += "<p>" + html.escape(assignment["purpose"]) + "</p>"
+                    if assignment["continuation"]:
+                        detail += (
+                            "<p>" + html.escape(assignment["continuation"]) + "</p>"
+                        )
+                    detail += "<section><h2>Risultati salvati</h2><ul>"
+                    for result in assignment["results"]:
+                        label = html.escape(result["label"])
+                        if result["available"]:
+                            document = ledger.incarichi().document(
+                                root, eid, result["reference"]
+                            )
+                            label = _link(page, Path(document["path"]), result["label"])
+                        else:
+                            label += " — versione da verificare"
+                        detail += "<li>" + label + "</li>"
+                    detail += "</ul>"
+                    for entry in assignment["deliverables"]:
+                        detail += "<h3>" + html.escape(entry["label"]) + "</h3>"
+                        for version_index, version in enumerate(
+                            reversed(entry["versions"])
+                        ):
+                            if version_index == 1:
+                                detail += "<details><summary>Storico</summary>"
+                            detail += (
+                                "<section><p>Revisione "
+                                + str(version["revision"])
+                                + " · "
+                                + html.escape(
+                                    datetime.fromisoformat(version["issued_at"])
+                                    .astimezone()
+                                    .strftime("%d/%m/%Y %H:%M")
+                                )
+                                + "</p><ul>"
+                            )
+                            for item in version["formats"]:
+                                label = html.escape(item["format"].upper())
+                                if item["available"]:
+                                    document = ledger.incarichi().document(
+                                        root, eid, item["reference"]
+                                    )
+                                    label = _link(
+                                        page,
+                                        Path(document["path"]),
+                                        item["format"].upper(),
+                                    )
+                                else:
+                                    label += " — file da verificare"
+                                detail += "<li>" + label + "</li>"
+                            detail += "</ul></section>"
+                        if len(entry["versions"]) > 1:
+                            detail += "</details>"
+                    detail += "</section><section><h2>Conversazioni</h2><ul>"
+                    for conversation in assignment["conversations"]:
+                        label = html.escape(conversation["title"])
+                        if conversation["url"]:
+                            label = f'<a href="{html.escape(conversation["url"], quote=True)}">{label}</a>'
+                        detail += "<li>" + label + "</li>"
+                    detail += "</ul></section>"
+                except (ledger.LedgerError, OSError):
+                    detail += '<p class="warning">Stato dell’incarico da verificare. Documenti e registri conservati.</p>'
+                detail += "<section><h2>Attività ed esecuzioni</h2><ul>"
                 inventory = ledger.inspect_runs(root, eid)
                 for issue in inventory["collection_issues"]:
                     detail += (

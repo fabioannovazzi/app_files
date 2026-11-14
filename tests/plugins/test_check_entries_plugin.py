@@ -1055,6 +1055,13 @@ def _v2_client_bound_check_inputs(
         state_dir=state_dir,
     )["engagement"]["engagement_id"]
 
+    archive_core.begin_studio_incarico(
+        client_id,
+        engagement_id,
+        "check-entries",
+        "Verify the selected journal sample",
+        state_dir=state_dir,
+    )
     received = tmp_path / "received"
     received.mkdir()
     journal_source = received / "journal.xlsx"
@@ -4720,8 +4727,10 @@ def test_check_entries_run_is_bound_to_journal_sampling_client_engagement(
         assert payload["run_id"] == check_context["run_id"]
 
 
+@pytest.mark.parametrize("separate_incarico", [False, True])
 def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
     tmp_path: Path,
+    separate_incarico: bool,
 ) -> None:
     # Arrange: one explicit client engagement and one sealed Journal Sampling run.
     check_core = load_core()
@@ -4746,6 +4755,14 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
         "2025 journal sample checks",
         state_dir=state_dir,
     )["engagement"]["engagement_id"]
+    if not separate_incarico:
+        archive_core.begin_studio_incarico(
+            client_id,
+            engagement_id,
+            "check-entries",
+            "Check the requested journal sample",
+            state_dir=state_dir,
+        )
     received = tmp_path / "received"
     received.mkdir()
     original_journal = received / "zecca-journal.xlsx"
@@ -4895,6 +4912,11 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
         journal_run_id,
         state_dir=state_dir,
     )
+    source_engagement_id = engagement_id
+    if separate_incarico:
+        engagement_id = archive_core.create_studio_client_engagement(
+            client_id, "Separate vouching incarico", state_dir=state_dir
+        )["engagement"]["engagement_id"]
     wrong_role_source = received / "not-support.pdf"
     wrong_role_source.write_bytes(_text_pdf_bytes(["Not a support receipt"]))
     wrong_role_input = archive_core.import_studio_client_document(
@@ -4909,6 +4931,7 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
             client_id,
             engagement_id,
             journal_run_id,
+            source_engagement_id=source_engagement_id,
             support_input_ids=[wrong_role_input["input_id"]],
             idempotency_key="wrong-support-role",
             state_dir=state_dir,
@@ -4928,6 +4951,7 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
             client_id,
             engagement_id,
             journal_run_id,
+            source_engagement_id=source_engagement_id,
             support_input_ids=[imported["input_id"]],
             idempotency_key=f"check-support-{name}",
             state_dir=state_dir,
@@ -4950,6 +4974,7 @@ def test_customer_folder_handoff_separates_support_batches_and_uses_sample_only(
         client_id,
         engagement_id,
         journal_run_id,
+        source_engagement_id=source_engagement_id,
         support_input_ids=[support_a_id],
         idempotency_key="check-support-a",
         state_dir=state_dir,

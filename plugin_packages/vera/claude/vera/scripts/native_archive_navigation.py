@@ -162,7 +162,9 @@ def preparation_catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         "ledger_complete": input_inventory["complete"] and inventory["complete"],
         # Only exact ledger receipts can become run inputs. An interrupted
         # transport for other bytes cannot invalidate those verified sources.
-        "can_prepare": reviewer() and engagement["status"] == "open",
+        "can_prepare": reviewer()
+        and engagement["status"] == "open"
+        and core.ledger.incarichi().mapping(folder, args["engagement_id"]) is None,
         "import_recovery_required": imports["recovery_required"],
         "blocked_import_count": len(imports["blocked_uploads"])
         + len(imports["collection_issues"]),
@@ -213,6 +215,18 @@ def set_work_visibility(
     return {"status": "hidden" if hidden else "visible", "run_id": args["run_id"]}
 
 
+def _incarico_page(core: Any, folder: Path, engagement_id: str) -> dict[str, Any]:
+    view = core.ledger.incarichi().overview(folder, engagement_id)
+    documents = view["documents"]
+    return {
+        **view,
+        "documents": documents[:PAGE_SIZE],
+        "total": len(documents),
+        "offset": 0,
+        "has_more": len(documents) > PAGE_SIZE,
+    }
+
+
 def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     """Project directory labels and lifecycle; private contacts stay in the engine."""
     core = archive_module(root)
@@ -221,7 +235,11 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     except core.ArchiveAccessError as error:
         if args.get("client_id") or args.get("engagement_id"):
             raise
-        if error.details["stage"] not in {"path_resolution", "root_metadata", "root_listing"}:
+        if error.details["stage"] not in {
+            "path_resolution",
+            "root_metadata",
+            "root_listing",
+        }:
             raise
         clients = {
             "configured": False,
@@ -382,10 +400,12 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
             and row["status"] in {"running", "ready_for_review", "completed"}
             and row["workflow"] in core.VERA_CLIENT_WORKFLOW_IDS
         )
+    saved_incarico = _incarico_page(core, folder, selected_engagement)
     return {
         **base,
         **result,
         "level": "runs",
+        "incarico": saved_incarico,
         "view": view,
         "works": result["rows"],
         "engagement_id": selected_engagement,
@@ -393,7 +413,9 @@ def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
         "engagement_status": engagement["status"],
         "collection_issues": inventory["collection_issues"],
         "ledger_complete": inventory["complete"],
-        "can_prepare": reviewer() and engagement["status"] == "open",
+        "can_prepare": reviewer()
+        and engagement["status"] == "open"
+        and not saved_incarico["legacy_assignments"],
     }
 
 
@@ -520,7 +542,8 @@ def lifecycle_action(root: Path, tool: str, args: dict[str, Any]) -> dict[str, A
         for reference in upstream:
             if (
                 not isinstance(reference, dict)
-                or set(reference) != {"run_id", "artifact_id", "role"}
+                or set(reference) - {"engagement_id"}
+                != {"run_id", "artifact_id", "role"}
                 or not isinstance(reference["role"], str)
                 or not reference["role"].strip()
                 or len(reference["role"]) > 80
