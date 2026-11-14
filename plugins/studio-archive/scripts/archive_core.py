@@ -128,7 +128,6 @@ SCHEMA_VERSION = "2"
 CONFIG_SCHEMA_VERSION = 1
 CLIENT_IDENTITIES_SCHEMA_VERSION = 2
 STATE_ENV = "VERA_STUDIO_ARCHIVE_STATE_DIR"
-DEFAULT_STATE_SUBDIR = Path(".mparanza") / "vera-studio-archive"
 CONFIG_FILENAME = "config.json"
 SESSION_ENV = "VERA_STUDIO_ARCHIVE_SESSION_ID"
 _PROCESS_SESSION = f"{os.getpid()}-{secrets.token_hex(16)}"
@@ -558,8 +557,7 @@ def _state_location(explicit: Path | None = None) -> Path:
         selected = (
             Path(environment_value).expanduser()
             if environment_value
-            else Path.home()
-            / DEFAULT_STATE_SUBDIR
+            else preferences.default_state_directory()
             / "sessions"
             / hashlib.sha256(_session_id().encode("utf-8")).hexdigest()[:32]
         )
@@ -723,7 +721,9 @@ def _remember_approved_root(state: Path, root: Path) -> None:
         profile.chmod(0o700)
     path = profile / "approved-archive.json"
     payload = {"schema_version": 2, "archive_root": str(root)}
-    with preferences.file_lock(profile / ".approved-archive.lock", label="default archive"):
+    with preferences.file_lock(
+        profile / ".approved-archive.lock", label="default archive"
+    ):
         if preferences.read_json(path) != payload:
             _write_private_json(path, payload)
 

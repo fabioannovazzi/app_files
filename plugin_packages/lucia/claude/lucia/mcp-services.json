@@ -1,5 +1,15 @@
 {
   "mcpServers": {
+    "luciaArchivePanel": {
+      "command": "node",
+      "args": [
+        "${CLAUDE_PLUGIN_ROOT}/scripts/studio_archive_mcp.cjs"
+      ],
+      "env": {
+        "LUCIA_ARCHIVE_PANEL_ONLY": "1",
+        "LUCIA_ASSURANCE_HOST": "1"
+      }
+    },
     "luciaDeepResearchValidator": {
       "command": "node",
       "args": [

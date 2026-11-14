@@ -3354,7 +3354,14 @@ def _lucia_package_entries(
     entries["README.md"] = LUCIA_COWORK_README.encode("utf-8")
     if "assets/icon.svg" in source_entries:
         entries["assets/icon.svg"] = source_entries["assets/icon.svg"]
-    for asset in ("assets/playbook-editor.html", "assets/playbook-nda.json"):
+    for asset in (
+        "assets/playbook-editor.html",
+        "assets/playbook-nda.json",
+        "assets/studio-archive.html",
+        "assets/InstrumentSans-Regular.ttf",
+        "assets/InstrumentSans-SemiBold.ttf",
+        "assets/OFL.txt",
+    ):
         entries[asset] = source_entries[asset]
     entries[".claude-plugin/plugin.json"] = project_claude_manifest(
         source_manifest,

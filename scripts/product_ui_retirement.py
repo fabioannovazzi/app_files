@@ -125,6 +125,7 @@ def retire_product_interfaces(
                 if product == "clara"
                 else {
                     "assets/playbook-editor.html",
+                    "assets/studio-archive.html",
                     "modules/apertura-pratica/assets/apertura-pratica-review-widget.html",
                 }
             )
