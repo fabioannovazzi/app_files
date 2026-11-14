@@ -50,7 +50,7 @@
     {
       "path": "modules/esg-reporting-assurance/scripts/demo_esg.py",
       "repository_path": "plugins/esg-reporting-assurance/scripts/demo_esg.py",
-      "sha256": "05c515fe20f84c9df59a04d856b186afd1f9c0fc3098be00e1abf5aa1c79a500"
+      "sha256": "e75cccd02b6d707070d311a15bf5b644c2d8a326e71fefafe8239909854aa319"
     },
     {
       "path": "modules/esg-reporting-assurance/scripts/esg_case.py",

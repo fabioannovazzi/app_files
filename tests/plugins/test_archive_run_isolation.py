@@ -138,15 +138,16 @@ def test_native_navigation_keeps_blocked_record_non_actionable(archive, monkeypa
         input=json.dumps(result),
         encoding="utf-8",
         capture_output=True,
-        check=True,
+        check=False,
         timeout=20,
     )
+    assert rendered.returncode == 0, rendered.stderr
     visible = json.loads(rendered.stdout)
     assert len(visible) == 2
     blocked = next(row for row in visible if "Unavailable run" in row["text"])
     healthy = next(row for row in visible if "Analysis" in row["text"])
     assert blocked["buttons"] == []
-    assert "Avvia lavorazione" in healthy["buttons"]
+    assert "Riprendi nella chat" in healthy["buttons"]
 
 
 def test_same_request_cannot_replace_invalid_run_but_unrelated_preparation_works(

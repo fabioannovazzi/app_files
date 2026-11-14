@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
   "root": "/Users/fabio/Documents/Codex/2026-11-14/independently-investigate-the-logic-of-vera/work/vera-incarico/plugins/vera",
-  "version": "0.1.634",
-  "captured_at": "2026-11-14T12:38:52.709666+00:00",
-  "catalogue_fingerprint": "548d9ab14e619a59468f0da1459feeecb1cb874e36241de1ee1a0a8434882379",
-  "manifest_sha256": "d3bf4285e8c9193ca27ed09c0a6daa615b8474f05ba4d32382e6ca64e9609413",
+  "version": "0.1.635",
+  "captured_at": "2026-11-14T13:13:24.343418+00:00",
+  "catalogue_fingerprint": "6abf48f74a46a4c6639feaaf1a6358c615985cfed6565345d3e7ca15edbd0ce8",
+  "manifest_sha256": "985bb5b6655bc4cc476b86baf10bb2d314449313816b23d3a08c98971001c33a",
   "entries": [
     {
       "function_id": "adeguati-assetti",

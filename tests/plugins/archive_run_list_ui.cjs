@@ -12,7 +12,23 @@ class Element {
     for (const item of items) item.parentElement = this;
     this.children.push(...items);
   }
-  insertBefore(item, before) { this.children.splice(this.children.indexOf(before), 0, item); }
+  insertBefore(item, before) {
+    if (before === null) { this.append(item); return; }
+    const index = this.children.indexOf(before);
+    if (index < 0) throw new Error("Reference node is not a child");
+    item.parentElement = this;
+    this.children.splice(index, 0, item);
+  }
+  querySelector(selector) {
+    for (const child of this.children) {
+      if (selector.startsWith(".")
+        ? child.className.split(/\s+/).includes(selector.slice(1))
+        : child.tagName.toLowerCase() === selector.toLowerCase()) return child;
+      const nested = child.querySelector(selector);
+      if (nested) return nested;
+    }
+    return null;
+  }
   replaceChildren(...items) { this.children = items; }
   setAttribute(key, value) { this.attributes[key] = value; }
   addEventListener(key, callback) { this.listeners[key] = callback; }
@@ -106,7 +122,7 @@ const collect = element => [element, ...element.children.flatMap(collect)];
     }));
   } else if (importMode) {
     await new Promise(resolve => setImmediate(resolve));
-    const open = collect(elements.app).find(element => element.tagName === "BUTTON" && element.textContent === "Importa documenti");
+    const open = collect(elements.app).find(element => element.tagName === "BUTTON" && element.textContent === "Aggiungi documenti");
     await open.listeners.click();
     const nodes = collect(elements.app);
     process.stdout.write(JSON.stringify({

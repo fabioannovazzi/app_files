@@ -45,7 +45,7 @@
     },
     {
       "path": "modules/esg-reporting-assurance/scripts/demo_esg.py",
-      "sha256": "05c515fe20f84c9df59a04d856b186afd1f9c0fc3098be00e1abf5aa1c79a500"
+      "sha256": "e75cccd02b6d707070d311a15bf5b644c2d8a326e71fefafe8239909854aa319"
     },
     {
       "path": "modules/esg-reporting-assurance/scripts/esg_case.py",
@@ -490,5 +490,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "9f153c015ade0fe2b27cbae3ca7aa56a2739305eb2d5e7550f5c58cbde248f49"
+  "canonical_course_sha256": "b836e863a6f99dc0c060c55cd0092628b9351d9e587058b41a3ded0e77b32b26"
 }

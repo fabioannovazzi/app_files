@@ -443,7 +443,7 @@
     },
     "esg-reporting-assurance": {
       "path": "esg-reporting-assurance/course.json",
-      "sha256": "281378647cdee76f37c50f4c2c5e0ddc4ebcbb114bc74119d72fdbe8bf8fb437",
+      "sha256": "c678d064a00924ac9844743c370c59c47a4e6ad14dd8751baa646a42398f97f2",
       "languages": [
         "it",
         "en",
@@ -468,7 +468,7 @@
         "de": "Einen Wert zur Quelle zurückverfolgen, einen Teilentwurf erstellen und nach Änderungen den Prüfbedarf erkennen.",
         "es": "Relacionar un valor con su fuente, preparar un borrador parcial e identificar qué debe revisarse después de una actualización."
       },
-      "source_sha256": "dd298061462c5a4f983d33f8d3f0aabf4369f57f2e6cc180ec0d3b440d438669"
+      "source_sha256": "2fd0bf753b4827785fa9e2dc3a6684d23eb6c152df9486df98aa4453922f7e05"
     },
     "fatture-xml-check": {
       "path": "fatture-xml-check/course.json",
