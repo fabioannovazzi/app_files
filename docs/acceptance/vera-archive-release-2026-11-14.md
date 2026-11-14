@@ -77,3 +77,7 @@ CI fixture corrections retain production validation: the synthetic reporting
 session now uses a valid UUID for automatic chat association, and Lucia's panel
 fixture reads its Italian text explicitly as UTF-8 on Windows. Neither correction
 changes the validated package contents or accepted interface.
+
+The readable Archive CI suite now exercises two issued revisions and their chat
+link after a client-folder move, including a missing historical format. All 14
+cases pass with 85.02% coverage; the required 80% threshold is unchanged.
