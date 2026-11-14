@@ -15,6 +15,7 @@ from typing import Any, Iterator
 
 __all__ = [
     "PROFILE_ENV",
+    "default_state_directory",
     "file_lock",
     "profile_directory",
     "read_json",
@@ -25,10 +26,16 @@ _LOCK = RLock()
 _HELD = local()
 
 
+def default_state_directory() -> Path:
+    """Keep each product's default and chat configuration in its own namespace."""
+    product = "lucia" if os.environ.get("LUCIA_ASSURANCE_HOST") == "1" else "vera"
+    return Path.home() / ".mparanza" / f"{product}-studio-archive"
+
+
 def profile_directory(state: Path) -> Path | None:
     """Explicit test/operator state stays isolated unless a profile is selected."""
     selected = os.environ.get(PROFILE_ENV, "").strip()
-    default = Path.home() / ".mparanza" / "vera-studio-archive"
+    default = default_state_directory()
     if selected:
         profile = Path(selected).expanduser()
     elif state.parent == default / "sessions":

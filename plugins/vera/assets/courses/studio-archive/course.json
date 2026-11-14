@@ -40,7 +40,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "b70418a2f7853951df89b9cf06bd32f328d2ad58fac31414da37b497007a8c06"
+      "sha256": "3da49773135604f2dc7b7f02ea8c031fc80482e20325aadc875493d53f1e316d"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -50,7 +50,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-      "sha256": "5a5d03f3192e5c6c29b6084b426461e10e560b7914dc6b856181e1fe25c1b742"
+      "sha256": "4644e7ada5603f49ec2a29107d98dce4e6b0f88e9eb2309cff12cb89b6e090dd"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",

@@ -1302,6 +1302,8 @@ jobs:
           tests/plugins/test_archive_work_recovery.py
           tests/plugins/test_archive_independent_work.py
           tests/plugins/test_archive_optional_services.py
+          tests/plugins/test_archive_product_defaults.py
+          tests/plugins/test_lucia_archive_panel.py
           tests/plugins/test_studio_archive_creation_recovery.py
           tests/plugins/test_studio_archive_mcp_continuity.py
           tests/plugins/test_vera_studio_archive_gmail_routing.py
