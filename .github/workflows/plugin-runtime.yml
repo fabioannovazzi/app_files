@@ -1314,6 +1314,7 @@ jobs:
         with:
           node-version: "22"
       - name: Verify Clara engagement binding and same-case resumption
+        shell: bash
         run: |
           python -m pytest -q -o addopts='' --confcutdir=tests/plugins tests/plugins/test_clara_studio_archive.py --cov=clara_studio_archive --cov-report=term-missing --cov-fail-under=80
           python -m black --check plugins/clara/scripts/clara_studio_archive.py tests/plugins/test_clara_studio_archive.py

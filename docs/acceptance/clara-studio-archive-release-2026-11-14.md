@@ -88,6 +88,10 @@ conflicting identities rather than creating a replacement case.
   tests pass with inherited host IDs removed, at the same 80.85% coverage.
   The extracted 0.1.421 package also passes this distinct-session/state-directory
   resumption and preserves the saved manifest bytes.
+- Windows initially reported the new multi-command CI step as successful despite
+  pytest failing: its default PowerShell step returned the last command's exit
+  code. The step now explicitly uses Bash's stop-on-error behavior on every
+  platform, preventing a later syntax check from masking a failed regression.
 
 Marketplace publication is excluded. Source, server deployment and packaged
 protocol tests do not claim an automatic update of the local 0.1.419 installation.
