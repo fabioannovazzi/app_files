@@ -216,9 +216,22 @@ def set_work_visibility(
 def catalogue(root: Path, args: dict[str, Any]) -> dict[str, Any]:
     """Project directory labels and lifecycle; private contacts stay in the engine."""
     core = archive_module(root)
-    clients = core.list_studio_clients()
+    try:
+        clients = core.list_studio_clients(include_location=True)
+    except core.ArchiveAccessError as error:
+        if args.get("client_id") or args.get("engagement_id"):
+            raise
+        if error.details["stage"] not in {"path_resolution", "root_metadata", "root_listing"}:
+            raise
+        clients = {
+            "configured": False,
+            "scope_configuration_changed": False,
+            "archive_unavailable": True,
+        }
     base = {
         "mode": "studio-archive",
+        "archive_location": clients.get("archive_location"),
+        "archive_unavailable": clients.get("archive_unavailable", False),
         "works": [],
         "configured": clients["configured"],
         "setup_required": not clients["configured"],

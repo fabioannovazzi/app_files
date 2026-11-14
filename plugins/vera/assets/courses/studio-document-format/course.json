@@ -500,7 +500,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
       "repository_path": "plugins/studio-archive/scripts/archive_core.py",
-      "sha256": "fbd7208a770d1c8312cc146c6fb78f87e4b096dd991812a572a20c93074b2dfd"
+      "sha256": "b70418a2f7853951df89b9cf06bd32f328d2ad58fac31414da37b497007a8c06"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -510,7 +510,7 @@
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
       "repository_path": "plugins/studio-archive/scripts/archive_preferences.py",
-      "sha256": "a08576733bf4f19fbfe65d0a274c73747800bb6fa41cabd396c3a3916eb7e086"
+      "sha256": "5a5d03f3192e5c6c29b6084b426461e10e560b7914dc6b856181e1fe25c1b742"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",
@@ -565,7 +565,7 @@
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
       "repository_path": "plugins/studio-archive/scripts/studio_archive.py",
-      "sha256": "85727a39979495ead9291bf770e5cba5bb0ab60d889c7377eb112877a1bee317"
+      "sha256": "e9291d5a4fd21fe8817d596f460a93fb10a4beadf7ca721fddfe1e0e3aede431"
     },
     {
       "path": "modules/studio-archive/scripts/whatsapp_desktop_guard.mjs",

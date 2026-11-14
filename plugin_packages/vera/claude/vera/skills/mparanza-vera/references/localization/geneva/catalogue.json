@@ -1,10 +1,10 @@
 {
   "schema": "vera.localization.catalogue.v1",
-  "root": "/private/tmp/vera-utf8/plugins/vera",
-  "version": "0.1.631",
-  "captured_at": "2026-11-13T22:20:54.961113+00:00",
-  "catalogue_fingerprint": "dc8a5b18c452932f87690eb5c3e4ac408f1bd2ea747374647a94ee87aaf3a9f3",
-  "manifest_sha256": "8712786eb74dc637b3bfb005a6b6053eb003cb43edca0d4d65ccd4488488ce50",
+  "root": "/Users/fabio/Documents/Codex/2026-11-13/verify-in-this-fresh-codex-chat/work/app_files/plugins/vera",
+  "version": "0.1.633",
+  "captured_at": "2026-11-14T09:40:07.252828+00:00",
+  "catalogue_fingerprint": "82f4d42dbd89816d678dae2ac481e118995a0a6c1698397c841a4b12bcff3880",
+  "manifest_sha256": "be23d81b0bb87624c86f6d72ff87c957faa749e542c4185eb738f1fd99c07931",
   "entries": [
     {
       "function_id": "adeguati-assetti",
@@ -274,7 +274,7 @@
     {
       "function_id": "vera",
       "skill_path": "skills/vera/SKILL.md",
-      "sha256": "6b82a54901e2d6076a2f6665a9dce9a9a251e09fe2ef94d3f3bb843aef3ec019"
+      "sha256": "7416bf850fd614f8fc381d21eaea554b337e0ceb9b1fdb0e1daf080bd7500fa0"
     },
     {
       "function_id": "vouching",

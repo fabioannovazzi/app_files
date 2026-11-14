@@ -160,6 +160,7 @@ def registry_lock(
         for parent in (directory, directory.parent):
             if parent.is_symlink():
                 raise ValueError("Archive identity storage cannot be a symbolic link.")
+        profile.mkdir(parents=True, exist_ok=True, mode=0o700)
         directory.mkdir(parents=True, exist_ok=True, mode=0o700)
         if os.name == "posix":
             for private in (directory.parent, directory):

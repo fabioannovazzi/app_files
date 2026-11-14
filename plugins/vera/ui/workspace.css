@@ -289,3 +289,5 @@ nav[aria-label="Revisione del bilancio per area"] {
   margin-block: var(--space-md);
 }
 /* VERA_SHARED_THEME_END */
+
+.archive-location { overflow-wrap: anywhere; }

@@ -19,8 +19,8 @@ sys.path.insert(0,sys.argv[1])
 import archive_core as a
 state,root=Path(sys.argv[2]),Path(sys.argv[3])
 action=sys.argv[4]
-if action=='configure':
-    result=a.configure_archive(root,state_dir=state)
+if action in {'configure', 'temporary'}:
+    result=a.configure_archive(root,state_dir=state,make_studio_default=action=='configure')
 elif action=='create':
     result=a.create_studio_client('Synthetic Contract Client',email_addresses=['private-alias@example.com'],state_dir=state)
     cid=result['client']['client_id']
@@ -214,7 +214,7 @@ def test_concurrent_sessions_retain_both_confirmed_identity_profiles(
     assert "Private Beta Alias" not in json.dumps(directory)
 
 
-def test_existing_approved_session_bootstraps_private_profile_and_legacy_aliases(
+def test_explicit_studio_choice_preserves_legacy_aliases(
     tmp_path: Path,
 ) -> None:
     root = tmp_path / "Studio"
@@ -222,6 +222,7 @@ def test_existing_approved_session_bootstraps_private_profile_and_legacy_aliases
     _run(tmp_path, "old", "configure", root, profile=False)
     created = _run(tmp_path, "old", "create", root, profile=False)
 
+    _run(tmp_path, "old", "configure", root)
     current = _run(tmp_path, "old", "clients", root)
     fresh = _run(tmp_path, "fresh", "resolve", root)
 
@@ -266,3 +267,31 @@ def test_legacy_session_refuses_profile_inside_sources_before_creating_it(
     assert result.returncode != 0
     assert "outside the source archive" in result.stderr
     assert not profile.exists()
+
+
+def test_temporary_archive_cannot_replace_default(tmp_path: Path) -> None:
+    studio = tmp_path / "Studio"
+    test = tmp_path / "Test"
+    studio.mkdir()
+    test.mkdir()
+    preference = tmp_path / "profile" / "approved-archive.json"
+    assert _run(tmp_path, "test-session", "temporary", test)["archive_root"] == str(test)
+    _run(tmp_path, "test-session", "create", test)
+    assert not preference.exists()
+
+    _run(tmp_path, "studio-session", "configure", studio)
+    original = preference.read_bytes()
+    _run(tmp_path, "test-session", "temporary", test)
+    assert preference.read_bytes() == original
+    assert _run(tmp_path, "fresh", "clients", studio)["registered_client_count"] == 0
+    assert json.loads((tmp_path / "fresh/config.json").read_text())["archive_root"] == str(studio)
+
+
+def test_legacy_default_requires_explicit_studio_choice(tmp_path: Path) -> None:
+    root = tmp_path / "Legacy test"
+    root.mkdir()
+    _run(tmp_path, "old", "configure", root)
+    preference = tmp_path / "profile" / "approved-archive.json"
+    preference.write_text(json.dumps({"schema_version": 1, "archive_root": str(root)}))
+    assert _run(tmp_path, "fresh", "clients", root)["setup_required"] is True
+    assert _run(tmp_path, "old", "clients", root)["configured"] is True

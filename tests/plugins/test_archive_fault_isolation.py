@@ -725,7 +725,7 @@ def test_fresh_session_uses_known_folders_when_root_listing_is_unavailable(
 ):
     core, studio, state, root, cid, eid, input_id = case
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(state.parent / "profile"))
-    core.configure_archive(studio, state_dir=state)
+    core.configure_archive(studio, state_dir=state, make_studio_default=True)
     retained = (root / "Vera/client.json").read_bytes()
     original = Path.iterdir
 
@@ -751,7 +751,7 @@ def test_saved_folder_location_cannot_authorize_a_changed_client_identity(
 ):
     core, studio, state, root, cid, eid, input_id = case
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(state.parent / "profile"))
-    core.configure_archive(studio, state_dir=state)
+    core.configure_archive(studio, state_dir=state, make_studio_default=True)
     replacement = tmp_path / "Replacement"
     replacement.mkdir()
     core.ledger.create_client_manifest(replacement, "client_" + "f" * 24)
@@ -780,7 +780,7 @@ def test_invalid_saved_location_is_preserved_and_cannot_escape_selected_archive(
 ):
     core, studio, state, root, cid, eid, input_id = case
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(state.parent / "profile"))
-    core.configure_archive(studio, state_dir=state)
+    core.configure_archive(studio, state_dir=state, make_studio_default=True)
     cache = core._profile_registry_directory(state) / "known-scopes.json"
     payload = json.loads(cache.read_text())
     payload["scopes"][0]["relative_dir"] = "../outside"
@@ -885,7 +885,7 @@ def test_fresh_session_recovers_healthy_client_despite_unreadable_sibling(
 ):
     core, studio, state, root, cid, eid, input_id = case
     monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(state.parent / "profile"))
-    core.configure_archive(studio, state_dir=state)
+    core.configure_archive(studio, state_dir=state, make_studio_default=True)
     other = studio / "Unavailable sibling"
     other.mkdir()
     original = Path.lstat
@@ -1115,7 +1115,7 @@ def test_native_client_and_engagement_navigation_survives_folder_changes(
     )
     rows = json.loads(rendered.stdout)
     healthy = next(row for row in rows if "Synthetic healthy client" in row["text"])
-    assert healthy["buttons"] == ["Apri incarichi →"]
+    assert healthy["buttons"] == ["Apri fascicoli →"]
     engagements = navigation.catalogue(
         ROOT / "plugins/studio-archive", {"client_id": cid}
     )

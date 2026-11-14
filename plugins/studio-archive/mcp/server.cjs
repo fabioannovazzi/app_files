@@ -702,7 +702,7 @@ function toolDefinitions() {
       name: TOOL_NAMES.setup,
       title: "Set up Vera Studio Archive",
       description:
-        "Open the operating system's native folder chooser, diagnose the selected shared archive folder, and save this user's private local configuration. Use this guided action before asking the user to type an absolute path.",
+        "Open the native folder chooser to set the permanent Archivio dello studio for fresh chats. Use only when the user is choosing or replacing their studio archive. For a test or temporary folder, use configure_studio_archive without make_studio_default.",
       inputSchema: objectSchema({}),
       annotations: annotations(false, false),
     },
@@ -729,9 +729,10 @@ function toolDefinitions() {
       name: TOOL_NAMES.configure,
       title: "Configure Vera Studio Archive",
       description:
-        "Set one absolute shared archive folder for this user. This writes only a private local configuration and discovers exact top-level search scopes.",
+        "Use a selected folder in this chat. Set make_studio_default only when the user explicitly chooses the permanent Archivio dello studio. Leave it off for tests and temporary work.",
       inputSchema: objectSchema(
         {
+          make_studio_default: { type: "boolean" },
           archive_root: {
             type: "string",
             minLength: 1,
@@ -1667,11 +1668,12 @@ function commandForTool(name, rawArgs) {
     return ["setup"];
   }
   if (name === TOOL_NAMES.configure) {
-    assertOnlyKeys(args, new Set(["archive_root"]));
+    assertOnlyKeys(args, new Set(["archive_root", "make_studio_default"]));
     return [
       "configure",
       "--archive-root",
       requireString(args.archive_root, "archive_root"),
+      ...(args.make_studio_default === true ? ["--make-studio-default"] : []),
     ];
   }
   if (name === TOOL_NAMES.diagnoseAccess) {

@@ -682,10 +682,6 @@ def _identity_transaction(function: Callable[..., Any]) -> Callable[..., Any]:
                     raise ArchiveError(
                         "Private archive profile must be outside the source archive."
                     )
-                approved = profile / "approved-archive.json"
-                if not approved.exists() and not approved.is_symlink():
-                    # This session's validated configuration already carries approval.
-                    _remember_approved_root(state, config.archive_root)
             guard = (
                 preferences.registry_lock(profile, config.archive_root)
                 if profile is not None and config is not None
@@ -726,9 +722,10 @@ def _remember_approved_root(state: Path, root: Path) -> None:
     if os.name == "posix" and stat.S_IMODE(profile.stat().st_mode) != 0o700:
         profile.chmod(0o700)
     path = profile / "approved-archive.json"
-    payload = {"schema_version": 1, "archive_root": str(root)}
-    if preferences.read_json(path) != payload:
-        _write_private_json(path, payload)
+    payload = {"schema_version": 2, "archive_root": str(root)}
+    with preferences.file_lock(profile / ".approved-archive.lock", label="default archive"):
+        if preferences.read_json(path) != payload:
+            _write_private_json(path, payload)
 
 
 def _restore_approved_root(state: Path) -> None:
@@ -745,10 +742,13 @@ def _restore_approved_root(state: Path) -> None:
         return
     if (
         set(saved) != {"schema_version", "archive_root"}
-        or saved["schema_version"] != 1
+        or saved["schema_version"] not in {1, 2}
         or not isinstance(saved["archive_root"], str)
     ):
         raise ArchiveError("Approved archive preference is malformed.")
+    if saved["schema_version"] == 1:
+        # Older versions also saved temporary roots here. Require a studio choice.
+        return
     # Revalidate access and derive fresh scopes; never copy an old session config.
     configure_archive(Path(saved["archive_root"]), state_dir=state)
 
@@ -1158,6 +1158,7 @@ def configure_archive(
     *,
     state_dir: Path | None = None,
     host_access_approved: bool = False,
+    make_studio_default: bool = False,
 ) -> dict[str, Any]:
     """Configure one local archive and mechanically discover its top-level scopes."""
 
@@ -1202,7 +1203,8 @@ def configure_archive(
     ):
         if os.name == "posix" and stat.S_IMODE(config_path.stat().st_mode) != 0o600:
             config_path.chmod(0o600)
-        _remember_approved_root(private_state, root)
+        if make_studio_default:
+            _remember_approved_root(private_state, root)
         status = studio_archive_status(state_dir=private_state)
         status["scope_cache"] = _remember_known_scopes(
             private_state,
@@ -1217,7 +1219,8 @@ def configure_archive(
         directory_issue=directory_issue,
     )
     _write_private_json(config_path, config.as_json())
-    _remember_approved_root(private_state, root)
+    if make_studio_default:
+        _remember_approved_root(private_state, root)
     scope_cache = _remember_known_scopes(private_state, config)
     status = studio_archive_status(state_dir=private_state)
     status["scope_cache"] = scope_cache
@@ -1343,7 +1346,9 @@ def setup_archive_with_folder_picker(
             **_studio_archive_setup_contract(),
         }
     diagnostic = diagnose_archive_access(selected_root, state_dir=state_dir)
-    result = configure_archive(selected_root, state_dir=state_dir)
+    result = configure_archive(
+        selected_root, state_dir=state_dir, make_studio_default=True
+    )
     result.pop("archive_root", None)
     result.update(
         {
@@ -1990,6 +1995,7 @@ def _client_directory_record(
 def list_studio_clients(
     *,
     state_dir: Path | None = None,
+    include_location: bool = False,
 ) -> dict[str, Any]:
     """List client scopes without exposing the private identity registry."""
 
@@ -2041,6 +2047,7 @@ def list_studio_clients(
     ]
     return {
         "configured": True,
+        **({"archive_location": str(config.archive_root)} if include_location else {}),
         "scope_configuration_changed": scopes_changed,
         "registered_client_count": sum(
             client["registration_status"] == "registered" for client in clients
