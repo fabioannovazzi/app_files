@@ -4,6 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 const readline = require("node:readline");
+const { randomUUID } = require("node:crypto");
 const { ServiceClient } = require("./mcp_service_client.cjs");
 
 function main(root = path.resolve(__dirname, "..")) {
@@ -12,6 +13,13 @@ function main(root = path.resolve(__dirname, "..")) {
   const configurations = JSON.parse(fs.readFileSync(path.join(root, "mcp-services.json"), "utf8")).mcpServers;
   if (catalog.schema_version !== 1) throw new Error("Unsupported service catalogue");
   const product = catalog.product;
+  // One connection owns one Archive session, including when the host supplies
+  // no chat ID. Sibling services must not invent independent fallback owners.
+  const serviceEnvironment = {
+    ...process.env,
+    VERA_STUDIO_ARCHIVE_SESSION_ID: process.env.VERA_STUDIO_ARCHIVE_SESSION_ID?.trim()
+      || process.env.CODEX_THREAD_ID?.trim() || `${product}-${randomUUID()}`,
+  };
   const services = new Map();
   const active = new Map();
   const serverRequests = new Map();
@@ -44,6 +52,7 @@ function main(root = path.resolve(__dirname, "..")) {
       const config = configurations[name];
       if (!config) throw new Error(`Missing ${product} service: ${name}`);
       const client = new ServiceClient(root, name, config, {
+        env: serviceEnvironment,
         notification: output,
         request: message => {
           const id = `${product}-service-${++serverSequence}`;

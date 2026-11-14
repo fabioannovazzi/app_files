@@ -922,12 +922,22 @@
     },
     {
       "id": "failed-reopen-recovery",
-      "control": "A refused saved-card reopen offers an explicit return to the current connection’s authorized directory. The directory reuses unchanged server-side actor/tenant bindings; no missing work reference is guessed, substituted or authorized by the UI. Unsaved local changes retain the existing navigation guard.",
+      "control": "A refused saved-card reopen offers an explicit return to the current connection’s authorized directory. The directory reuses unchanged server-side actor/tenant bindings; no missing work reference is guessed, substituted or authorized by the UI. Unsaved local changes retain the existing navigation guard. Every new directory opening receives a fresh transient navigation ID in app-only metadata. The panel accepts the newly requested directory while ignoring replayed results already displayed; unsaved review changes prevent switching. The ID contains no client, chat or filesystem identity, grants no access, is not persisted and is excluded from model-visible summaries.",
       "implemented_by": [
         "ui/workspace.js",
         "scripts/native_workspace.py"
       ],
       "on_violation": "Keep the backend denial; return only currently authorized directory entries."
+    },
+    {
+      "id": "incarico-context-and-publication",
+      "control": "Selected incarico client/project and engagement IDs, purpose, saved continuation text, owning pipeline, source and result names, paths, receipt hashes, numbered revisions, publication dates, file availability, exact source-version provenance, and actual host-provided chat IDs, titles and links may enter the selected host model context. The native continuation projection returns at most 30 source records, 20 run records, 20 current result entries and 20 chat associations; the general Archive read returns the selected assignment's complete saved metadata and issued history. Explicit document opening returns the complete UTF-8 content of one selected MD, TXT, JSON or CSV file up to 256 KiB, plus its verified local path and hash; other formats return a verified local path for the host to open. Grouped publication copies selected bytes locally and returns revision/file receipts. Explicit reuse copies the chosen issued revision into the selected receiving assignment, including across registered clients, retaining exact origin and digest. Drafts and older issued versions remain local. Full chat transcripts are not copied or read by these helpers. Archive document titles open the exact saved file through the host's file-opening capability, with a text/path fallback on unsupported hosts. Conversation titles open the stored host link. The Archive view does not compose or send messages. Output publication can retain an explicit primary_format identifying which file that document title opens; old receipts without that field remain unchanged. Other files of the selected revision remain available from its document view. No new model provider, network recipient, automatic message send or external publication is introduced. Local assignment mutations resolve the registered client and exact engagement and require the configured reviewer, metadata revision or publication revision. Saving a result is not professional adoption, signing, filing or sending. Public model-visible incarico operations intentionally return the selected saved metadata; do not treat those payloads as app-only summaries. Independently bound specialist links add their workflow, label, opaque work reference and stable case-identity digest to selected assignment metadata and at most 20 links to continuation context. Binding source paths are hashed locally, not added to this link payload. Link and reopen resolve the current operator-owned binding; changed underlying case identity and a browser batch owned by another incarico are refused. Case output revisions and mutable proposal lists do not change identity. Existing specialist setup still enforces its own case access and domain checks. The native link helper only writes assignment metadata; it neither executes a workflow nor creates an Archive run. Other hosts retain stored metadata without claiming access to an unavailable Vera native editor. Begin captures originating conversation metadata from CODEX_THREAD_ID or explicit verified host identity, with an explicit parent origin taking precedence over a worker session. The link is saved before delegation, merged by host/thread ID and never inferred from the Archive session identifier. Tax and document-format work links retain their distinct binding kinds. Directory view counts are app-only metadata; empty selected views retain navigation. No extra network recipient is introduced.",
+      "implemented_by": [
+        "scripts/native_incarichi.py",
+        "mcp/workspace.cjs",
+        "ui/workspace.js"
+      ],
+      "on_violation": "Reject mismatched identifiers, digests or concurrent revision changes while preserving prior saved work."
     }
   ],
   "governed_paths": [
@@ -1103,7 +1113,9 @@
     "scripts/on_demand_mcp.cjs",
     "scripts/mcp_service_client.cjs",
     "scripts/native_posting_review.py",
-    "skills/vera/references/posting-review.md"
+    "skills/vera/references/posting-review.md",
+    "scripts/native_incarichi.py",
+    "skills/vera/references/work-continuity.md"
   ],
   "external_boundaries": [
     {
@@ -1150,8 +1162,8 @@
   "review": {
     "basis": "external_boundary_review_of_shared_service_source",
     "reviewed_by": "privacy-surface-review",
-    "source_fingerprint": "4760a63738a1a11a3244117c5e19a69b36e2ba8861ce1d4f86aef173fd95f81e",
-    "reviewed_at": "2026-11-04"
+    "source_fingerprint": "36ff75135e0a4afd5c08fe02e52956d6168e9842cfa5f418aad842dd2b14c8b8",
+    "reviewed_at": "2026-11-14"
   },
   "governed_repository_paths": [
     "scripts/serve_review_workbench.py",

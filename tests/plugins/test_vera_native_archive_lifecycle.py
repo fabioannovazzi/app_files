@@ -12,9 +12,22 @@ import pytest
 
 from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
 from tests.plugins.test_vera_native_archive_navigation import (  # noqa: F401
-    registry_workspace,
+    registry_workspace as original_registry_workspace,
 )
 from tests.plugins.test_vera_native_workspace import NODE, ROOT, SERVER
+
+
+@pytest.fixture
+def registry_workspace(original_registry_workspace, tmp_path):
+    """New work uses a separate incarico from the fixture's existing CNC job."""
+    env, root, binding, output, cid, _ = original_registry_workspace
+    ledger = _load_customer_ledger()
+    folder = root / "Cliente Beta"
+    eid = ledger.create_engagement(folder, cid, "Nuovo incarico di prova")[
+        "engagement_id"
+    ]
+    ledger.import_document(folder, cid, eid, tmp_path / "received.txt", "source")
+    return env, root, binding, output, cid, eid
 
 
 def rpc_program(env: dict[str, str], body: str, *, server: Path = SERVER) -> dict:
@@ -118,9 +131,13 @@ const result = {first, retry, row, started, after, publicSummary:call('vera_work
     assert result["started"]["workflow_executed"] is False
     assert loaded["run"]["status"] == "running"
     assert len(loaded["input_manifest"]["inputs"]) == 1
-    assert list(Path(loaded["output_dir"]).iterdir()) == []
+    assert {path.name for path in Path(loaded["output_dir"]).iterdir()} <= {
+        "model_data_report.md",
+        "model_data_report.json",
+    }
     assert "received.txt" not in json.dumps(result["publicSummary"])
-    assert str(root) not in json.dumps(result)
+    # The app deliberately displays archive_location; model-visible summaries stay bounded.
+    assert str(root) not in json.dumps(result["publicSummary"])
 
 
 @pytest.mark.parametrize(
@@ -439,7 +456,10 @@ const result = payload(call('vera_workspace_archive_prepare', {{...args, workflo
     ).read_bytes() == (
         root / "Cliente Beta" / item["source_relative_path"]
     ).read_bytes()
-    assert list(Path(loaded["output_dir"]).iterdir()) == []
+    assert {path.name for path in Path(loaded["output_dir"]).iterdir()} <= {
+        "model_data_report.md",
+        "model_data_report.json",
+    }
 
 
 @pytest.mark.parametrize(
@@ -546,7 +566,10 @@ const result = {prepared, started};
         == imported["receipt"]["input_id"]
     )
     assert result["started"]["workflow_executed"] is False
-    assert list(Path(loaded["output_dir"]).iterdir()) == []
+    assert {path.name for path in Path(loaded["output_dir"]).iterdir()} <= {
+        "model_data_report.md",
+        "model_data_report.json",
+    }
     assert (target / "scripts/native_archive_navigation.py").read_bytes() == (
         ROOT / "plugins/vera/scripts/native_archive_navigation.py"
     ).read_bytes()

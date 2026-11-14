@@ -275,3 +275,33 @@ def test_practice_mcp_forgery_is_refused_before_public_write(tax_case, action, p
     assert response["isError"] is True
     assert "Invalid review ticket" in result.stdout
     assert (run / "matter.json").read_bytes() == before
+
+
+@pytest.mark.parametrize(
+    ("fixture_name", "workflow", "work_ref", "wrong_workflow"),
+    [
+        ("tax_case", "contenzioso-tributario", "tax-one", "studio-document-format"),
+        (
+            "format_case",
+            "studio-document-format",
+            "format-one",
+            "contenzioso-tributario",
+        ),
+    ],
+)
+def test_exact_practice_route_preserves_type_and_owner(
+    request, fixture_name, workflow, work_ref, wrong_workflow, monkeypatch
+):
+    service = request.getfixturevalue(fixture_name)[0]
+    args = {"workflow": workflow, "work_ref": work_ref}
+    assert service.dispatch("vera_open_review", args) == {
+        "kind": "review_route",
+        "workflow": workflow,
+        "view": "task",
+        "work_ref": work_ref,
+    }
+    with pytest.raises(ValueError, match="different workflow"):
+        service.dispatch("vera_open_review", {**args, "workflow": wrong_workflow})
+    monkeypatch.setenv("VERA_WORKSPACE_ACTOR_ID", "another-operator")
+    with pytest.raises(PermissionError):
+        service.dispatch("vera_open_review", args)

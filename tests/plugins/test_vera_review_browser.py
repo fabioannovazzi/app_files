@@ -323,6 +323,7 @@ def test_each_registered_work_opens_only_its_own_reader(tmp_path):
         "centrale-rischi-review": "cr",
         "composizione-negoziata": "cnc",
         "comunicazione-professionale": "communication",
+        "contenzioso-tributario": "practice",
         "esg-reporting-assurance": "esg",
         "financial-analysis": "financial",
         "fusione-guidata": "fusion",
@@ -337,6 +338,7 @@ def test_each_registered_work_opens_only_its_own_reader(tmp_path):
         "registro-imprese-sari": "sari_review",
         "sales-plan": "sales_plan",
         "scissione-guidata": "scissione",
+        "studio-document-format": "practice",
         "trasformazione": "transformation",
         "variance-analysis": "variance",
     }
@@ -424,7 +426,8 @@ def test_host_body_font_preserves_the_workflow_typeface(tmp_path, monkeypatch, w
     with review_host(env) as (page, mount, errors):
         page.set_viewport_size({"width": width, "height": 900})
         panel = mount("vera_workspace_open", {})
-        expect(panel.locator("main .sub")).to_be_visible()
+        heading = panel.get_by_role("heading", name="Clienti e progetti", exact=True)
+        expect(heading).to_be_visible()
         # Codex sets this after mounting the app. App content must still use
         # the shared typeface without replacing the host's body declaration.
         page.frames[-1].add_style_tag(
@@ -432,9 +435,7 @@ def test_host_body_font_preserves_the_workflow_typeface(tmp_path, monkeypatch, w
         )
 
         expect(panel.locator("body")).to_have_css("font-family", "system-ui")
-        expect(panel.locator("main .sub")).to_have_css(
-            "font-family", re.compile("Instrument Sans")
-        )
+        expect(heading).to_have_css("font-family", re.compile("Instrument Sans"))
         expect(panel.locator("#status")).to_have_css(
             "font-family", re.compile("Instrument Sans")
         )

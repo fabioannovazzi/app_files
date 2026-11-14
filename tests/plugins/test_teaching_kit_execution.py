@@ -64,6 +64,7 @@ def _bound_case(
         "kit_execution_ledger", ROOT / "plugins/studio-archive/scripts/client_ledger.py"
     )
     ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
     spec.loader.exec_module(ledger)
     (tmp_path / ".vera-onboarding-local-only").write_text(
         "Mechanical teaching-kit verification; no user profile or telemetry.\n",
@@ -143,6 +144,7 @@ def _complete_teaching_case(run, client_root, *, artifact_ids=None):
         ROOT / "plugins/studio-archive/scripts/client_ledger.py",
     )
     ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
     spec.loader.exec_module(ledger)
     output = Path(run["output_dir"])
     context = run["context"]

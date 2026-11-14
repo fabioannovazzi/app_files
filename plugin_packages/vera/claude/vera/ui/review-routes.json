@@ -13,6 +13,7 @@
   "composizione-negoziata": "task",
   "comunicazione-professionale": "task",
   "concordato-plan-review": "items",
+  "contenzioso-tributario": "task",
   "deep-research-validator": null,
   "esg-reporting-assurance": "task",
   "financial-analysis": "task",
@@ -35,6 +36,7 @@
   "sales-plan": "task",
   "scissione-guidata": "task",
   "studio-archive": null,
+  "studio-document-format": "task",
   "trasformazione": "task",
   "treasury-forecast": "items",
   "variance-analysis": "task"

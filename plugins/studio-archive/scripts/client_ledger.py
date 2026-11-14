@@ -58,6 +58,7 @@ __all__ = [
     "inspect_engagements",
     "inspect_inputs",
     "import_document",
+    "incarichi",
     "inspect_runs",
     "list_engagements",
     "list_inputs",
@@ -128,6 +129,31 @@ _ENGAGEMENT_THREAD_LOCKS: dict[str, Any] = {}
 
 class LedgerError(RuntimeError):
     """Raised when a customer-folder ledger invariant is violated."""
+
+
+@cache
+def deliverables() -> Any:
+    """Use one result publication contract for every pipeline."""
+    spec = importlib.util.spec_from_file_location(
+        "vera_deliverables", Path(__file__).with_name("deliverables.py")
+    )
+    if spec is None or spec.loader is None:
+        raise LedgerError("Deliverable service is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.Deliverables(sys.modules[__name__])
+
+
+@cache
+def incarichi() -> Any:
+    """Load assignment state with this exact ledger's identity and lock rules."""
+    path = Path(__file__).with_name("incarico.py")
+    spec = importlib.util.spec_from_file_location("vera_incarico", path)
+    if spec is None or spec.loader is None:
+        raise LedgerError("Incarico service is unavailable")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.Incarichi(sys.modules[__name__])
 
 
 def _now_iso() -> str:
@@ -967,10 +993,14 @@ def _validate_input_receipt(
         "content_sha256",
     }
     if (
-        set(normalized) != required
+        set(normalized) - {"origin"} != required
         or normalized["schema_version"] != INPUT_RECEIPT_SCHEMA
     ):
         raise LedgerError("Input receipt shape is invalid.")
+    if "origin" in normalized:
+        incarichi().validate_origin(normalized["origin"])
+        if normalized["origin"]["sha256"] != normalized["sha256"]:
+            raise LedgerError("Input bytes differ from their saved result origin")
     client_id = _identifier(
         normalized["client_id"], label="client_id", pattern=_CLIENT_ID_RE
     )
@@ -1216,6 +1246,7 @@ def import_document(
     role: str,
     *,
     expected_sha256: str | None = None,
+    origin: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Create or reuse one immutable, content-addressed input snapshot."""
 
@@ -1228,6 +1259,10 @@ def import_document(
         raise LedgerError("Documents cannot be imported into a closed engagement.")
     if role not in IMPORT_ROLES:
         raise LedgerError("Import role must be journal, source, or support.")
+    if origin is not None:
+        incarichi().validate_origin(origin)
+        if expected_sha256 != origin["sha256"]:
+            raise LedgerError("Imported result must retain its selected digest")
     selected_source = source_path.expanduser()
     if not selected_source.is_absolute():
         raise LedgerError("Imported document must use an absolute path.")
@@ -1256,7 +1291,11 @@ def import_document(
         inventory = inspect_inputs(root, engagement_id)
         for receipt in inventory["inputs"]:
             input_dir = inputs_root / receipt["input_id"]
-            if receipt["role"] == role and receipt["sha256"] == source_sha256:
+            if (
+                receipt["role"] == role
+                and receipt["sha256"] == source_sha256
+                and receipt.get("origin") == origin
+            ):
                 if receipt["byte_count"] != source_stat.st_size:
                     raise LedgerError(
                         "Matching input digest has a conflicting byte count."
@@ -1315,6 +1354,7 @@ def import_document(
                 "byte_count": byte_count,
                 "sha256": digest,
                 "imported_at": _now_iso(),
+                **({"origin": origin} if origin is not None else {}),
             }
             _write_json(target / "receipt.json", _sealed(content))
             receipt = load_input_receipt(root, engagement_id, input_id)
@@ -1519,24 +1559,29 @@ def _load_artifact_binding(
     engagement_id: str,
     reference: Mapping[str, Any],
 ) -> dict[str, Any]:
-    if set(reference) != {"run_id", "artifact_id", "role"}:
+    if set(reference) - {"engagement_id"} != {"run_id", "artifact_id", "role"}:
         raise LedgerError("Upstream artifact reference shape is invalid.")
     run_id = _identifier(reference["run_id"], label="run_id", pattern=_RUN_ID_RE)
     artifact_id = _text(reference["artifact_id"], label="artifact_id", maximum=120)
     role = _text(reference["role"], label="upstream artifact role", maximum=80)
     # The next job selects a sealed output. Its exact artifact and provenance
     # remain verifiable without reopening the completed producer's input gate.
-    upstream = _load_run_identity(client_root, engagement_id, run_id)
+    origin_engagement = _identifier(
+        reference.get("engagement_id", engagement_id),
+        label="upstream engagement_id",
+        pattern=_ENGAGEMENT_ID_RE,
+    )
+    upstream = _load_run_identity(client_root, origin_engagement, run_id)
     if upstream["run"]["status"] not in {"ready_for_review", "completed"}:
         raise LedgerError("Upstream run is not available for handoff.")
-    artifacts = validate_run_artifacts(client_root, engagement_id, run_id)
+    artifacts = validate_run_artifacts(client_root, origin_engagement, run_id)
     artifact = next(
         (item for item in artifacts["artifacts"] if item["artifact_id"] == artifact_id),
         None,
     )
     if artifact is None:
         raise LedgerError("Upstream artifact was not found in its manifest.")
-    run_root = _run_root(client_root.resolve(), engagement_id, run_id)
+    run_root = _run_root(client_root.resolve(), origin_engagement, run_id)
     source = run_root / "outputs" / artifact["path"]
     return {
         "binding_id": f"artifact:{run_id}:{artifact_id}",
@@ -1552,6 +1597,11 @@ def _load_artifact_binding(
         "receipt_sha256": artifacts["content_sha256"],
         "sha256": artifact["sha256"],
         "byte_count": artifact["byte_count"],
+        **(
+            {"upstream_engagement_id": origin_engagement}
+            if origin_engagement != engagement_id
+            else {}
+        ),
         "upstream_workflow_id": upstream["run"]["workflow_id"],
         "upstream_run_id": run_id,
         "upstream_artifact_id": artifact_id,
@@ -1560,6 +1610,7 @@ def _load_artifact_binding(
 
 def _input_binding(receipt: Mapping[str, Any]) -> dict[str, Any]:
     return {
+        **({"origin": receipt["origin"]} if "origin" in receipt else {}),
         "imported_names": receipt["imported_names"],
         "binding_id": receipt["input_id"],
         "kind": "import",
@@ -1624,13 +1675,28 @@ def _validate_input_manifest(payload: Mapping[str, Any]) -> dict[str, Any]:
     for item in inputs:
         if (
             not isinstance(item, dict)
-            or set(item) - {"imported_names"} != required_input
+            or set(item) - {"imported_names", "upstream_engagement_id", "origin"}
+            != required_input
         ):
             raise LedgerError("Run input binding shape is invalid.")
+        if "origin" in item:
+            incarichi().validate_origin(item["origin"])
+            if item["kind"] != "import" or item["origin"]["sha256"] != item["sha256"]:
+                raise LedgerError("Run input differs from its saved result origin")
         if "imported_names" in item:
             _validate_imported_names(item["imported_names"])
             if item["kind"] != "import":
                 raise LedgerError("Only imports carry imported filenames.")
+        if "upstream_engagement_id" in item:
+            _identifier(
+                item["upstream_engagement_id"],
+                label="upstream engagement_id",
+                pattern=_ENGAGEMENT_ID_RE,
+            )
+            if item["kind"] != "upstream_artifact":
+                raise LedgerError(
+                    "Only an upstream artifact carries an originating engagement"
+                )
         binding_id = _text(item["binding_id"], label="binding_id", maximum=260)
         if binding_id in seen_ids:
             raise LedgerError("Run input bindings must be unique.")
@@ -2268,10 +2334,15 @@ def _replay_prepared_request(
         key = "new:" + hashlib.sha256(key.encode("utf-8")).hexdigest()
     normalized_upstream = []
     for reference in upstream_artifacts:
-        if set(reference) != {"run_id", "artifact_id", "role"}:
+        if set(reference) - {"engagement_id"} != {"run_id", "artifact_id", "role"}:
             raise LedgerError("Upstream artifact reference shape is invalid.")
         normalized_upstream.append(
             {
+                **(
+                    {"engagement_id": reference["engagement_id"]}
+                    if reference.get("engagement_id", engagement_id) != engagement_id
+                    else {}
+                ),
                 "run_id": reference["run_id"],
                 "artifact_id": _text(
                     reference["artifact_id"], label="artifact_id", maximum=120
@@ -2298,6 +2369,11 @@ def _replay_prepared_request(
         ]
         expected_upstream = [
             {
+                **(
+                    {"engagement_id": row["upstream_engagement_id"]}
+                    if "upstream_engagement_id" in row
+                    else {}
+                ),
                 "run_id": row["upstream_run_id"],
                 "artifact_id": row["upstream_artifact_id"],
                 "role": row["role"],
@@ -2351,6 +2427,7 @@ def prepare_run(
     if client["client_id"] != client_id or engagement["client_id"] != client_id:
         raise LedgerError("Selected client and engagement do not match.")
     workflow_id = _text(workflow_id, label="workflow_id", maximum=80)
+    incarichi().check_workflow(root, engagement_id, workflow_id)
     if idempotency_key is not None:
         replay = _replay_prepared_request(
             root,
@@ -2420,6 +2497,7 @@ def prepare_run(
         engagement = load_engagement_manifest(root, engagement_id)
         if engagement["client_id"] != client_id:
             raise LedgerError("Selected client and engagement do not match.")
+        incarichi().check_workflow(root, engagement_id, workflow_id)
         if engagement["status"] != "open":
             raise LedgerError("A workflow cannot be prepared in a closed engagement.")
         headers, header_issues = _inspect_run_headers(root, engagement_id)

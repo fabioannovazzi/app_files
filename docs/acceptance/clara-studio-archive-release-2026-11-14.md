@@ -1,6 +1,6 @@
 # Clara Studio Archive release acceptance — 2026-11-14
 
-Release 0.1.420 adds Clara's client and engagement directory panel and binds each
+Release 0.1.421 adds Clara's client and engagement directory panel and binds each
 selected engagement to its existing advisory case. Legacy case folders retain
 their location. Resumption uses the saved binding and refuses missing or
 conflicting identities rather than creating a replacement case.
@@ -20,12 +20,12 @@ conflicting identities rather than creating a replacement case.
 - The old curated 0.1.407 installation was removed with explicit user approval.
   Subsequent plugin inventory contained only the selected local 0.1.419 Clara
   installation. That inventory does not prove an already-open chat refreshed.
-- Release 0.1.420 incorporates current main, regenerated course/privacy metadata,
-  the Archive catalog entry and packaging fixes. Its extracted ZIP passed actual
+- Release 0.1.421 incorporates main after PR #998, regenerated course/privacy metadata,
+  the Archive catalog entry and packaging fixes. Its extracted 0.1.421 ZIP passed actual
   MCP initialization, directory creation, engagement creation, case creation,
   process restart, exact-case resumption with unchanged manifest bytes, and
   panel resource/font retrieval. This is packaged protocol acceptance, not a
-  second native-host acceptance of 0.1.420.
+  second native-host acceptance of 0.1.421.
 - The adapter regressions pass at 80.85% coverage. Formatting, import order,
   focused type checks, Bandit and Node syntax checks pass. Final package checks,
   CI and production verification are recorded in the release PR.
@@ -71,7 +71,16 @@ conflicting identities rather than creating a replacement case.
 - CI's cross-host service check initially required Clara's Codex-only Archive
   bridges in Cowork. Its expectation now reflects the documented projection
   and explicitly checks that the Archive/case CLI helpers and instructions ship.
+- Main advanced during CI when PR #998 merged. Its new Archive session-isolation
+  controls and tests are preserved. Conflicting generated artifacts are rebuilt
+  from the combined source, and Clara advances to 0.1.421 because main already
+  uses 0.1.420. The Archive regressions pass again on that shared runtime.
+- The inherited packaged Vera chat-isolation tests initially could not acquire
+  the shared runtime's `catalog.lock` under the restricted shell. This was a
+  host filesystem denial during installation preparation, before case creation;
+  both exact synthetic tests passed with authorized runtime-cache access. The
+  other 15 discovery/package checks passed under the original restricted run.
 
 Marketplace publication is excluded. Source, server deployment and packaged
 protocol tests do not claim an automatic update of the local 0.1.419 installation.
-The unrelated primary-checkout changes and Vera release branch are preserved.
+The unrelated primary-checkout changes are preserved.

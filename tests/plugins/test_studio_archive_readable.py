@@ -20,6 +20,13 @@ from readable_archive import refresh_readable_archive
 from tests.model_data_helpers import write_no_model_report
 
 
+@pytest.fixture(autouse=True)
+def archive_imports(monkeypatch):
+    """Restore the real ledger after repository-wide import isolation."""
+    monkeypatch.syspath_prepend(str(SCRIPTS))
+    monkeypatch.setitem(sys.modules, ledger.__name__, ledger)
+
+
 class Links(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
@@ -177,6 +184,86 @@ def test_view_is_rebuildable_without_touching_outputs(tmp_path: Path) -> None:
     refresh_readable_archive(root, ledger)
     assert (root / "Vera/APRI ARCHIVIO.html").read_bytes() == old
     assert ledger.validate_run_artifacts(root, eid, run["run"]["run_id"])
+
+
+@pytest.mark.parametrize("missing_history", [False, True])
+def test_published_versions_and_chat_remain_recoverable_after_folder_move(
+    tmp_path: Path, missing_history: bool
+) -> None:
+    root, cid, eid, _ = case(tmp_path)
+    store = ledger.incarichi()
+    thread_id = "00000000-0000-4000-8000-000000000001"
+    store.begin(
+        root,
+        eid,
+        "treasury-forecast",
+        "Aggiornare la previsione",
+        {
+            "host": "codex",
+            "thread_id": thread_id,
+            "title": "Chat di origine",
+            "url": "",
+        },
+    )
+    for revision, label in ((1, "Previsione iniziale"), (2, "Previsione aggiornata")):
+        files = []
+        for extension in ("md", "csv"):
+            source = tmp_path / f"Previsione.{extension}"
+            source.write_text(f"amount\n{revision * 100}.00\n", encoding="utf-8")
+            files.append(
+                {
+                    "format": extension,
+                    "source_path": str(source),
+                    "sha256": hashlib.sha256(source.read_bytes()).hexdigest(),
+                }
+            )
+        ledger.deliverables().publish(
+            root,
+            eid,
+            "forecast",
+            label,
+            files,
+            revision - 1,
+            f"save-{revision}",
+            primary_format="md",
+        )
+    old = store.document(
+        root, eid, {"entry_key": "forecast", "revision": 1, "format": "md"}
+    )
+    if missing_history:
+        Path(old["path"]).unlink()
+    before = {
+        path.relative_to(root): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in (root / "Vera/engagements").rglob("*")
+        if path.is_file()
+    }
+    refresh_readable_archive(root, ledger)
+    moved = tmp_path / "Cliente rinominato"
+    root.rename(moved)
+    refresh_readable_archive(moved, ledger)
+    page = next((moved / "Vera/Pratiche").glob("*/Indice.html"))
+    text = page.read_text(encoding="utf-8")
+    assert text.index("Previsione aggiornata") < text.index(
+        "<summary>Storico</summary>"
+    )
+    assert text.index("<summary>Storico</summary>") < text.index("Previsione iniziale")
+    assert "Revisione 2" in text and "Revisione 1" in text
+    assert "Vai alla chat" in text and "Chat di origine" not in text
+    assert ("file non disponibile" in text) is missing_history
+    parser = Links()
+    parser.feed(text)
+    assert f"codex://threads/{thread_id}" in parser.links
+    files = [page.parent / unquote(link) for link in parser.links if "://" not in link]
+    assert all(path.is_file() for path in files)
+    current = store.document(
+        moved, eid, {"entry_key": "forecast", "revision": 2, "format": "md"}
+    )
+    assert Path(current["path"]).resolve() in {path.resolve() for path in files}
+    assert before == {
+        path.relative_to(moved): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in (moved / "Vera/engagements").rglob("*")
+        if path.is_file()
+    }
 
 
 @pytest.mark.parametrize("stdout_encoding", ["utf-8", "cp1252", "ascii"])

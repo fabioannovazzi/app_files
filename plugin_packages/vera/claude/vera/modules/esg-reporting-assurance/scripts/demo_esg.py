@@ -6,6 +6,7 @@ import argparse
 import importlib.util
 import json
 import logging
+import sys
 from pathlib import Path
 
 from esg_case import WORKFLOW, ESGError, execute, resume_case
@@ -28,6 +29,7 @@ def run_demo(destination: Path) -> dict:
         module_root.parent / "studio-archive/scripts/client_ledger.py",
     )
     ledger = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = ledger
     spec.loader.exec_module(ledger)
     destination.mkdir(parents=True)
     root = destination / "synthetic-client"

@@ -14,6 +14,9 @@ import pytest
 
 from tests.plugins.test_fusione_guidata import api, case, fact_data  # noqa: F401
 from tests.plugins.test_vera_native_archive_lifecycle import rpc_program
+from tests.plugins.test_vera_native_archive_navigation import (  # noqa: F401
+    registry_workspace,
+)
 from tests.plugins.test_vera_native_workspace import workspace_module
 
 __all__ = []
@@ -94,6 +97,64 @@ const inspect=(p,f)=>payload(call('vera_workspace_fusion_preview',{work_ref:p.wo
 const prepare=(p,f,key)=>{const draft=save(p,f),preview=inspect(p,f);return {...authority(p),expected_draft_revision:draft.draft_revision,fields:f,preview_ref:preview.preview_ref,confirmed:true,idempotency_key:key};};
 const execute=args=>payload(call('vera_workspace_fusion_execute',args));
 """
+
+
+def test_merger_reopens_from_incarico_without_an_archive_run_and_refuses_rebinding(
+    merger,
+    registry_workspace,
+):
+    merger_env, store, _, config = merger
+    archive_env, root, _, _, client_id, _ = registry_workspace
+    from tests.plugins.test_vera_client_workflow_filesystem import _load_customer_ledger
+
+    ledger = _load_customer_ledger()
+    folder = root / "Cliente Beta"
+    eid = ledger.create_engagement(folder, client_id, "Fusione collegata")[
+        "engagement_id"
+    ]
+    env = {**archive_env, **merger_env}
+    selected = {"client_id": client_id, "engagement_id": eid}
+    before = store.report()["history"]
+    result = rpc_program(
+        env,
+        f"""
+const selected={json.dumps(selected)};
+const started=payload(call('vera_incarico_begin',{{...selected,workflow_id:'fusione-guidata',purpose:'Fusione sintetica richiesta'}}));
+const args={{...selected,workflow_id:'fusione-guidata',work_ref:'fictional-merger',label:'Fusione selezionata',expected_revision:started.revision}};
+const linked=payload(call('vera_incarico_link_work',args));
+const retry=payload(call('vera_incarico_link_work',args));
+const page=payload(call('vera_workspace_open',selected));
+const opened=payload(call('vera_incarico_open_work',{{...selected,workflow_id:'fusione-guidata',work_ref:'fictional-merger'}}));
+const review=payload(call('vera_workspace_fusion_setup',{{work_ref:opened.work_ref}}));
+const result={{linked,retry,page,opened,review}};
+""",
+    )
+    assert result["linked"]["revision"] == result["retry"]["revision"]
+    assert result["page"]["works"] == []
+    assert result["page"]["incarico"]["work_links"][0]["label"] == "Fusione selezionata"
+    assert result["opened"] == {
+        "kind": "review_route",
+        "workflow": "fusione-guidata",
+        "view": "task",
+        "work_ref": "fictional-merger",
+    }
+    assert result["review"]["work_ref"] == "fictional-merger"
+    assert store.report()["history"] == before
+    assert ledger.list_runs(folder, eid) == ()
+    index = next((folder / "Vera/Pratiche").glob("*Fusione*/Indice.html")).read_text()
+    assert "Fusione selezionata" in index and "Lavori salvati" in index
+    changed = json.loads(config.read_text())
+    changed["bindings"][0]["operation_id"] = "op_" + "f" * 32
+    config.write_text(json.dumps(changed))
+    refused = rpc_program(
+        env,
+        f"""
+const result=call('vera_incarico_open_work',{{...{json.dumps(selected)},workflow_id:'fusione-guidata',work_ref:'fictional-merger'}});
+""",
+    )
+    assert refused["isError"] is True
+    assert "saved work binding changed" in refused["content"][0]["text"]
+    assert store.report()["history"] == before
 
 
 def test_fusion_initial_draft_restores_literal_fields_without_consent(merger):

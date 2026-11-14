@@ -41,7 +41,7 @@
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_archive.py",
-      "sha256": "58ea9e573c63cd6ab01a9c28f1d544372fb278d06c976ea3a78de20f65507169"
+      "sha256": "fef0d1133c14aecff80b35939948b21f0066a6eec7769d8f00c8278f1fa79651"
     },
     {
       "path": "modules/fusione-guidata/scripts/fusione_case.py",
@@ -97,7 +97,15 @@
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/client_ledger.py",
-      "sha256": "62cbd13a02eacd379e7688086c446064b158ae118b95db43df8b020a4d72698c"
+      "sha256": "0fd54f286371f65c64be7bbab7967c59e169bc888e5932bf30e3c5be4a6ed1d0"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/deliverables.py",
+      "sha256": "d419ec257f7322da55253f862b0498f707c9f8755628358123d1c1a4478e4675"
+    },
+    {
+      "path": "modules/fusione-guidata/vendor/modules/incarico.py",
+      "sha256": "db27089559c6527ee9dab7ae77a7d9d0713e1f19903c0c6b0c137ec2f8ab4f50"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -217,7 +225,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/contracts.py",
-      "sha256": "baa65740b1bf6879547540ffe1d4733539b60d6b1f8b0db6acde2cc86785e64e"
+      "sha256": "dc69488cbb4d9a577911582aa12d149fa2dee608ed1656842d9101cc96a457fe"
     },
     {
       "path": "vendor/modules/vera_assurance/decisions.py",
@@ -237,7 +245,7 @@
     },
     {
       "path": "vendor/modules/vera_assurance/recovery.py",
-      "sha256": "fbc5402144b405057deb92005580923f7b2ab67cfd439fe2af977a49f96f1715"
+      "sha256": "40177c6cbfdfb7a732b2a91c20f01e00074476535235540010e4a335b89905f4"
     },
     {
       "path": "vendor/modules/vera_assurance/relationships.py",
@@ -518,5 +526,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "fee41d734da6c3378100ff0476ac41b6537c9e06a798eae2f8849ebbcf2e6de1"
+  "canonical_course_sha256": "a3217a59dd26cc67081500eb9caebde7100ce5424ed3f754e68388fb95f879c1"
 }

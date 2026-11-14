@@ -653,7 +653,7 @@ def _validate_v2_input_binding(value: object) -> dict[str, Any]:
             "path",
             "source_path",
         },
-        optional={"imported_names"},
+        optional={"imported_names", "upstream_engagement_id", "origin"},
         label="client workflow input binding",
     )
     binding_id = _text(binding["binding_id"], label="binding_id")
@@ -661,6 +661,69 @@ def _validate_v2_input_binding(value: object) -> dict[str, Any]:
     if kind not in {"import", "upstream_artifact"}:
         raise AssuranceContractError("input kind is unsupported")
     imported_names: dict[str, Any] = {}
+    if "origin" in binding:
+        origin = _mapping(binding["origin"], label="saved result origin")
+        _exact_fields(
+            origin,
+            required={
+                "client_id",
+                "engagement_id",
+                "revision",
+                "reference",
+                "sha256",
+                "label",
+            },
+            optional=set(),
+            label="saved result origin",
+        )
+        if kind != "import" or origin["sha256"] != binding["sha256"]:
+            raise AssuranceContractError("Input differs from its saved result origin")
+        for key, pattern in (
+            ("client_id", r"client_[0-9a-f]{24}"),
+            ("engagement_id", r"eng_[0-9a-f]{24}"),
+            ("revision", r"[0-9a-f]{64}"),
+            ("sha256", r"[0-9a-f]{64}"),
+        ):
+            if re.fullmatch(pattern, _text(origin[key], label=key)) is None:
+                raise AssuranceContractError("Invalid saved result origin identity")
+        _text(origin["label"], label="origin label")
+        reference = _mapping(origin["reference"], label="origin reference")
+        if set(reference) == {"input_id"}:
+            valid = re.fullmatch(
+                r"input_[0-9a-f]{24}", _text(reference["input_id"], label="input_id")
+            )
+        elif set(reference) == {"entry_key", "revision", "format"}:
+            valid = (
+                type(reference["revision"]) is int
+                and reference["revision"] >= 1
+                and all(
+                    re.fullmatch(
+                        r"[a-z][a-z0-9-]{0,79}", _text(reference[key], label=key)
+                    )
+                    for key in ("entry_key", "format")
+                )
+            )
+        elif set(reference) == {"run_id", "artifact_id"}:
+            valid = re.fullmatch(
+                r"run_[0-9a-f]{24}", _text(reference["run_id"], label="run_id")
+            ) and _text(reference["artifact_id"], label="artifact_id")
+        else:
+            valid = None
+        if not valid:
+            raise AssuranceContractError("Invalid saved result origin reference")
+        imported_names["origin"] = dict(origin)
+    if "upstream_engagement_id" in binding:
+        origin = _bounded_identifier(
+            binding["upstream_engagement_id"], label="upstream_engagement_id"
+        )
+        if (
+            kind != "upstream_artifact"
+            or re.fullmatch(r"eng_[0-9a-f]{24}", origin) is None
+        ):
+            raise AssuranceContractError(
+                "Invalid originating engagement for upstream artifact"
+            )
+        imported_names["upstream_engagement_id"] = origin
     if "imported_names" in binding:
         names = binding["imported_names"]
         if (
@@ -916,7 +979,7 @@ def _validate_v2_client_engagement_context(value: object) -> dict[str, Any]:
             len(source_parts) < 5
             or source_parts[0] != "Vera"
             or source_parts[1] != "engagements"
-            or source_parts[2] != engagement_id
+            or source_parts[2] != binding.get("upstream_engagement_id", engagement_id)
         ):
             raise AssuranceContractError("input belongs to another engagement")
     normalized.update(

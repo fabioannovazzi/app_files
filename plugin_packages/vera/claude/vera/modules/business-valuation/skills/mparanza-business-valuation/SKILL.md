@@ -369,7 +369,9 @@ New vintages create new inputs and revisions; frozen reports remain unchanged.
 
 ## Business plan reuse
 
-Reuse an exact finalized `business-planning` v3 artifact of the same engagement,
+Reuse an exact finalized `business-planning` v3 artifact from its originating
+incarico in the same client. Keep valuation in its own incarico and include
+the source `engagement_id` in the upstream selector,
 binding it as an upstream artifact rather than importing an arbitrary JSON file.
 Import the plan's original supporting sources as exact receipts and map their IDs.
 The existing compiler replays the whole plan before the valuation bridge runs.

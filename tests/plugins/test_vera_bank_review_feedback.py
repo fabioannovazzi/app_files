@@ -406,10 +406,10 @@ def test_failed_saved_card_can_return_to_authorized_directory(message: str) -> N
         timeout=20,
     )
     result = json.loads(completed.stdout)
-    assert result["before"]["buttons"] == ["Torna ai lavori autorizzati"]
+    assert result["before"]["buttons"] == ["Torna ai lavori dello studio"]
     assert result["calls"] == [{"name": "vera_workspace_open", "arguments": {}}]
     assert "Authorized synthetic work" in result["text"]
-    assert result["status"] == "Scegli un lavoro collegato a Studio Archive."
+    assert result["status"] == ""
     if "PermissionError" in message:
         assert "PermissionError" not in result["before"]["status"]
-        assert "connessione corrente" in result["before"]["status"]
+        assert "seleziona l’incarico" in result["before"]["status"]

@@ -20,7 +20,9 @@ only the Studio Archive run path described below.
 ## Client engagement gate
 
 Every New Client run is attached to the Studio Archive client created or
-selected during intake and to one explicit engagement. Import incoming files
+selected during intake and to one explicit engagement. In Vera, bind the owning
+incarico as `new-client` with `vera_incarico_begin` before the first stage;
+`client-file-preparation` is an internal stage of this requested job. Import incoming files
 there, run `client-file-preparation` in its own run under that engagement, then
 call `prepare_studio_client_workflow` with workflow ID `new-client`. Pass the
 returned `client_engagement_path` as `--client-engagement` to initialization,

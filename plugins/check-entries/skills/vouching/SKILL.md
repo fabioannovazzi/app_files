@@ -82,7 +82,10 @@ The user should not interact directly with CLI scripts. Treat scripts as interna
 Required:
 
 - an exact, closed artifact handoff from one review-ready or completed Journal
-  Sampling run in the same client and engagement. Its three semantic IDs are
+  Sampling run in the same client. If sampling belongs to a different incarico,
+  select its `source_engagement_id` in `start_check_entries_from_sample` and keep
+  Vouching in its own incarico. When sampling is an internal stage of the original
+  Vouching request, bind `check-entries` as the owner before sampling. Its three semantic IDs are
   `prepared.normalized_journal`, `internal.normalization_diagnostics`, and
   `prepared.journal_sample_csv`; it must also bind the six normalization
   companions named above so assurance replay uses only this run's input view;
