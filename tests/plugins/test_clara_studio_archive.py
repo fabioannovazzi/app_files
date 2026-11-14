@@ -17,7 +17,9 @@ def setup_case(tmp_path, monkeypatch):
     state = tmp_path / "state"
     root = tmp_path / "archive"
     root.mkdir()
-    module.archive.configure_archive(root, state_dir=state)
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_PROFILE_DIR", str(tmp_path / "profile"))
+    monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", "case-creation-session")
+    module.archive.configure_archive(root, state_dir=state, make_studio_default=True)
     client = module.archive.create_studio_client("Synthetic Équipe", state_dir=state)
     cid = client["client"]["client_id"]
     engagement = module.archive.create_studio_client_engagement(
@@ -118,14 +120,15 @@ def test_mcp_process_restart_resumes_bound_case(setup_case, monkeypatch):
         timeout=30,
         env={
             **os.environ,
-            "VERA_STUDIO_ARCHIVE_STATE_DIR": str(state),
+            "VERA_STUDIO_ARCHIVE_STATE_DIR": str(state.parent / "fresh-chat-state"),
+            "VERA_STUDIO_ARCHIVE_SESSION_ID": "fresh-resumption-session",
             "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
             "MPARANZA_INCIDENT_DELIVERY": "local-only",
         },
         check=True,
     )
     result = json.loads(completed.stdout)["result"]
-    assert result["isError"] is False
+    assert result["isError"] is False, result
     assert result["structuredContent"]["status"] == "resumed"
     assert result["structuredContent"]["case_dir"] == created["case_dir"]
 

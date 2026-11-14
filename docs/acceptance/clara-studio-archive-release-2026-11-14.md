@@ -80,6 +80,14 @@ conflicting identities rather than creating a replacement case.
   host filesystem denial during installation preparation, before case creation;
   both exact synthetic tests passed with authorized runtime-cache access. The
   other 15 discovery/package checks passed under the original restricted run.
+- Cross-platform CI exposed a fixture that reused a private state directory
+  across different chat sessions. The new main correctly rejects that ownership
+  mismatch; the local host's inherited chat ID had concealed the test defect.
+  The fixture now explicitly saves an isolated permanent Archive selection and
+  resumes with a different session ID and fresh state directory. All 22 Archive
+  tests pass with inherited host IDs removed, at the same 80.85% coverage.
+  The extracted 0.1.421 package also passes this distinct-session/state-directory
+  resumption and preserves the saved manifest bytes.
 
 Marketplace publication is excluded. Source, server deployment and packaged
 protocol tests do not claim an automatic update of the local 0.1.419 installation.
