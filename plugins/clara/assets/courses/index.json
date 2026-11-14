@@ -32,7 +32,7 @@
     },
     "advisory-case-director": {
       "path": "advisory-case-director/course.json",
-      "sha256": "2b9b3ac8e8e78cf360dead9cc5fef82e93f97082f469216c837341e4b993fd79",
+      "sha256": "b627b17a3ccd01f0d547cbddcd602583c7515a73934d6fc8071a179a09b37513",
       "languages": [
         "it",
         "en",

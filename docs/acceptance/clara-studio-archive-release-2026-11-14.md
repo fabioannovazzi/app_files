@@ -1,0 +1,70 @@
+# Clara Studio Archive release acceptance — 2026-11-14
+
+Release 0.1.420 adds Clara's client and engagement directory panel and binds each
+selected engagement to its existing advisory case. Legacy case folders retain
+their location. Resumption uses the saved binding and refuses missing or
+conflicting identities rather than creating a replacement case.
+
+## Observed acceptance
+
+- Fabio confirmed that the synthetic client and engagement were visible and
+  selectable in the installed 0.1.419 panel.
+- A separate fresh chat resolved the same client and engagement IDs to the same
+  case, reopened its workpaper and readable model-data report, and delivered the
+  original signed receipt. All seven original artifact hashes matched; no
+  analysis rerun or new receipt was needed.
+- Receipt verification returned valid for the retained report digest. The report
+  honestly marks model exposure measurements as unavailable, with host-attested
+  observations. Usage-event delivery and Computer ID server verification remain
+  unverified separately from successful report delivery.
+- The old curated 0.1.407 installation was removed with explicit user approval.
+  Subsequent plugin inventory contained only the selected local 0.1.419 Clara
+  installation. That inventory does not prove an already-open chat refreshed.
+- Release 0.1.420 incorporates current main, regenerated course/privacy metadata,
+  the Archive catalog entry and packaging fixes. Its extracted ZIP passed actual
+  MCP initialization, directory creation, engagement creation, case creation,
+  process restart, exact-case resumption with unchanged manifest bytes, and
+  panel resource/font retrieval. This is packaged protocol acceptance, not a
+  second native-host acceptance of 0.1.420.
+- The adapter regressions pass at 80.85% coverage. Formatting, import order,
+  focused type checks, Bandit and Node syntax checks pass. Final package checks,
+  CI and production verification are recorded in the release PR.
+
+## Blocks encountered and recovery
+
+- Restricted filesystem/network calls initially prevented Git setup, case-lock
+  writes, plugin inventory and receipt verification. Narrow authorized retries
+  succeeded. Native Codex control was denied and the host did not expose the
+  panel to Computer Use; Fabio's explicit observation supplies visual evidence.
+- Local disabling of curated Clara did not remove it from the host catalog.
+  The explicitly authorized uninstall removed the duplicate registration.
+- Synthetic usage start initially omitted its run ID; retry retained events.
+  Consent remained unset, so transmission and server identity verification are
+  still open reporting limitations, not successful delivery claims.
+- The synthetic case request supplied a null question ID; the accepted empty
+  string allowed the workpaper commit and lineage validation to succeed.
+- The report builder required an existing output directory. Creating it allowed
+  report delivery. The report MCP was a budget-dashboard opener and rejected the
+  privacy report; the installed report helper reopened it successfully instead.
+- Package checks initially rejected unclassified panel HTML, an unregistered
+  privacy owner, missing skill metadata and a missing reduced-edition omission.
+  Explicit source registrations resolved these checks.
+- Cowork's projection omitted the shared MCP server. Its package now includes
+  the Archive Python helpers and documented CLI fallback without registering
+  the Codex-only bridges. Native Cowork execution remains untested.
+- Integrating current main produced conflicts limited to generated privacy
+  fingerprints. Automatic approval review rejected a combined take-ours refresh
+  command. Field-by-field inspection and narrow regeneration preserved current
+  source controls and resolved the conflicts without discarding main's changes.
+- Shared packaging edits and the new catalog entry stale reviewed source hashes;
+  maintained generators refreshed the affected metadata. Course assets required
+  regeneration. This refresh records changed bytes, not professional approval.
+- Wider tests exposed an obsolete privacy field/path expectation, an omitted
+  Archive catalog entry and the old HTML-shell count. The harness now uses the
+  current contract; the product catalog includes Archive; the projection test
+  explicitly requires the retained panel. A package-directory check run during
+  generation required rerunning after the build completed.
+
+Marketplace publication is excluded. Source, server deployment and packaged
+protocol tests do not claim an automatic update of the local 0.1.419 installation.
+The unrelated primary-checkout changes and Vera release branch are preserved.

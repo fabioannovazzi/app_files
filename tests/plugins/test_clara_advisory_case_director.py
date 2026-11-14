@@ -124,7 +124,7 @@ def test_case_director_routing_and_privacy_contract_are_registered() -> None:
     }
     privacy = json.loads(
         (
-            CLARA_ROOT / "privacy" / "workflows" / "advisory-case-director.json"
+            CLARA_ROOT / "privacy" / "workstreams" / "advisory-case-director.json"
         ).read_text(encoding="utf-8")
     )
 
@@ -137,8 +137,8 @@ def test_case_director_routing_and_privacy_contract_are_registered() -> None:
     assert routes["advisory-case-semantic-deck-feedback"] == (
         "clara:advisory-case-director"
     )
-    assert privacy["workflow"] == "advisory-case-director"
-    boundary = privacy["boundaries_beyond_codex"][0]
+    assert privacy["workstream"] == "advisory-case-director"
+    boundary = privacy["external_boundaries"][0]
     assert boundary["kind"] == "public_research"
     assert boundary["requires_confirmation"] is True
     assert "explicit authorization" in " ".join(boundary["controls"])

@@ -28,6 +28,7 @@ EXPECTED_ROOT_SKILLS = {
     "html-deck",
     "reporting-engine",
     "research-video",
+    "studio-archive",
 }
 
 
@@ -123,6 +124,9 @@ def test_clara_cowork_retains_specialist_runtime_files(clara_entries) -> None:
         "skills/mparanza-html-deck/scripts/build_html_deck.py",
         "skills/mparanza-html-deck/scripts/validate_html_deck.py",
         "skills/mparanza-research-video/scripts/research_video.py",
+        "scripts/clara_studio_archive.py",
+        "modules/studio-archive/scripts/archive_core.py",
+        "modules/studio-archive/scripts/client_ledger.py",
     }
 
     assert required_runtime_files <= set(clara_entries)

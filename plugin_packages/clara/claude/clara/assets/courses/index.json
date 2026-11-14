@@ -33,7 +33,7 @@
     },
     "advisory-case-director": {
       "path": "advisory-case-director/course.json",
-      "sha256": "d888b58bcfcf6231066f348a36e55b28f374ca5197fac028fdfacf08089bed6d",
+      "sha256": "eb533c3a8efd064178ec54b5216201bcc90051a72112c3a15b5a31c27dd9c5ac",
       "languages": [
         "it",
         "en",
@@ -58,7 +58,7 @@
         "de": "Lernen, eine quellenbasierte Arbeitseinschätzung zu pflegen und nächste Schritte bei neuen Informationen anzupassen.",
         "es": "Aprender a mantener una valoración basada en fuentes y actualizar las próximas acciones cuando llega nueva información."
       },
-      "source_sha256": "2b9b3ac8e8e78cf360dead9cc5fef82e93f97082f469216c837341e4b993fd79"
+      "source_sha256": "b627b17a3ccd01f0d547cbddcd602583c7515a73934d6fc8071a179a09b37513"
     },
     "advisory-deliverable-validator": {
       "path": "advisory-deliverable-validator/course.json",

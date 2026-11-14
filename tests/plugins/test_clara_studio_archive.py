@@ -114,6 +114,7 @@ def test_mcp_process_restart_resumes_bound_case(setup_case, monkeypatch):
         input=wire,
         capture_output=True,
         text=True,
+        encoding="utf-8",
         timeout=30,
         env={
             **os.environ,
