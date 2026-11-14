@@ -66,9 +66,10 @@ def navigate(action: str, *, bank: bool = False, fail_save: bool = False) -> dic
         input=json.dumps(fixture),
         text=True,
         capture_output=True,
-        check=True,
+        check=False,
         timeout=20,
     )
+    assert completed.returncode == 0, completed.stderr
     return json.loads(completed.stdout)
 
 
@@ -103,7 +104,7 @@ def test_bank_failed_save_keeps_preparation_visible_without_navigation():
     [
         ("refresh", {"client_id": CLIENT, "engagement_id": ENGAGEMENT, "offset": 30}),
         ("← Clienti", {}),
-        ("← Incarichi del cliente", {"client_id": CLIENT}),
+        ("← Incarichi", {"client_id": CLIENT}),
     ],
 )
 def test_directory_refresh_preserves_scope_and_explicit_back_changes_it(
