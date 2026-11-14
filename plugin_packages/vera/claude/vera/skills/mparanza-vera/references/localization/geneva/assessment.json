@@ -128,6 +128,11 @@
     "scope": "Learn-with-Vera now retries only the same tutorial binding. Archive routing and exact-operation progress are infrastructure changes; existing jurisdiction dispositions and professional acceptance limits are unchanged.",
     "version": "0.1.601"
   },
+  "archive_session_release_binding": {
+    "previous_catalogue_fingerprint": "6abf48f74a46a4c6639feaaf1a6358c615985cfed6565345d3e7ca15edbd0ce8",
+    "scope": "Shared local Archive identity across services in one product connection. Skill entrypoint bytes and existing jurisdiction judgments are unchanged; no additional professional or host acceptance is asserted.",
+    "version": "0.1.636"
+  },
   "assessment_date": "2026-09-28",
   "assetti_construction_release_binding": {
     "review": "Refreshes the product manifest/version binding; all 41 recorded skill entrypoints are unchanged. Prior target judgments are preserved. New assetti construction-mode acceptance for CH-GE has not been established; the previous assessment-mode scope does not qualify construction-mode operation.",
@@ -200,7 +205,7 @@
     "scope": "Canonical version only; all skill entrypoint hashes and existing jurisdiction judgments unchanged. No new jurisdiction acceptance.",
     "version": "0.1.520"
   },
-  "catalogue_fingerprint": "6abf48f74a46a4c6639feaaf1a6358c615985cfed6565345d3e7ca15edbd0ce8",
+  "catalogue_fingerprint": "20dcbb5ed4ea2f1208036681cddc6b5ac6372855a2c0640e43312b0dad764ad6",
   "catalogue_update": {
     "date": "2026-09-30",
     "scope": "Integrated upstream main f09267a16fc906f813de80675b2b8328f33c979d including the synthetic-only transformation prototype and assetti construction source. Existing Geneva dispositions and evidence limits are retained; business-valuation and transformation remain Unresolved. This is catalogue coverage, not new Swiss professional qualification.",
@@ -606,6 +611,12 @@
     "previous_catalogue_fingerprint": "ab994c23afafb7a29af12c61e1bd774719ca24bfbf5d14b9c26392bb033558b7",
     "scope": "Public usage cutoff correction only; all 55 skill entrypoint bytes and existing jurisdiction judgments are unchanged.",
     "version": "0.1.599"
+  },
+  "incarico_continuity_release_binding": {
+    "date": "2026-11-14",
+    "previous_catalogue_fingerprint": "82f4d42dbd89816d678dae2ac481e118995a0a6c1698397c841a4b12bcff3880",
+    "scope": "Shared assignment identity, chat references, result revisions and source provenance. No pipeline or jurisdiction is added by the Archive storage layer. Existing Geneva professional judgments and unverified installed-host acceptance remain unchanged.",
+    "version": "0.1.635"
   },
   "incident_agent_recovery_release_binding": {
     "date": "2026-10-15",
@@ -2734,11 +2745,5 @@
     "reviewed_at": "2026-10-17",
     "scope": "Adds the same task-level usage, outcome and optional 1-5-star reporting contract to existing user processes. Function identities and prior Geneva professional dispositions are unchanged. Usage, technical receipts and satisfaction do not establish professional testing or Geneva acceptance.",
     "version": "0.1.404"
-  },
-  "incarico_continuity_release_binding": {
-    "date": "2026-11-14",
-    "version": "0.1.635",
-    "previous_catalogue_fingerprint": "82f4d42dbd89816d678dae2ac481e118995a0a6c1698397c841a4b12bcff3880",
-    "scope": "Shared assignment identity, chat references, result revisions and source provenance. No pipeline or jurisdiction is added by the Archive storage layer. Existing Geneva professional judgments and unverified installed-host acceptance remain unchanged."
   }
 }

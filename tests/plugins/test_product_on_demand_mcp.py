@@ -330,6 +330,54 @@ def test_chat_sessions_do_not_share_worker_state(session, installation):
         other.close()
 
 
+@pytest.mark.parametrize("identity", ["fallback", "host", "explicit"])
+def test_archive_pin_reaches_sibling_service_without_cross_chat_adoption(
+    installation, monkeypatch, identity
+):
+    """A chat-only Archive pin survives routing to another local service."""
+    monkeypatch.delenv("CODEX_THREAD_ID", raising=False)
+    monkeypatch.delenv("VERA_STUDIO_ARCHIVE_SESSION_ID", raising=False)
+    if identity in {"host", "explicit"}:
+        monkeypatch.setenv("CODEX_THREAD_ID", "first-host-chat")
+    if identity == "explicit":
+        monkeypatch.setenv("VERA_STUDIO_ARCHIVE_SESSION_ID", "first-explicit-session")
+    active = Session(installation)
+    try:
+        configured = active.call(
+            "tools/call",
+            {
+                "name": "use_alpha",
+                "arguments": {
+                    "action": "archive-configure",
+                    "value": "synthetic-studio",
+                },
+            },
+        )["result"]["structuredContent"]
+        opened = active.call(
+            "tools/call", {"name": "use_beta", "arguments": {"action": "archive-read"}}
+        )["result"]["structuredContent"]
+        assert (
+            opened == configured == {"configured": True, "archive": "synthetic-studio"}
+        )
+        if identity in {"host", "explicit"}:
+            monkeypatch.setenv("CODEX_THREAD_ID", "second-host-chat")
+        if identity == "explicit":
+            monkeypatch.setenv(
+                "VERA_STUDIO_ARCHIVE_SESSION_ID", "second-explicit-session"
+            )
+        other = Session(installation)
+        try:
+            separate = other.call(
+                "tools/call",
+                {"name": "use_beta", "arguments": {"action": "archive-read"}},
+            )["result"]["structuredContent"]
+            assert separate == {"configured": False, "archive": None}
+        finally:
+            other.close()
+    finally:
+        active.close()
+
+
 def test_cancellation_during_startup_does_not_execute_tool(session, installation):
     session.send(
         {

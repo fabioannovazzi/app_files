@@ -3,12 +3,14 @@
 from __future__ import annotations
 
 import json
+import sys
 from pathlib import Path
 
 import pytest
 
 from scripts import build_claude_plugin_zip as cowork
 from scripts import build_codex_plugin_zip as codex
+from tests.plugins.test_product_on_demand_mcp import Session
 
 __all__: list[str] = []
 ROOT = Path(__file__).resolve().parents[2]
@@ -30,6 +32,104 @@ def _package_entries(product, host):
         package = next(p for p in packages if p.plugin == product)
         entries = cowork.claude_package_entries(package)
     return entries
+
+
+@pytest.mark.parametrize("host", ["codex", "cowork"])
+def test_chat_only_archive_pin_opens_native_incarico_and_preserves_default(
+    tmp_path, monkeypatch, host
+):
+    """The packaged front door shares one pin without leaking it to another chat."""
+    plugin = tmp_path / "plugin"
+    for relative, content in _package_entries("vera", host).items():
+        path = plugin / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+    for name in (
+        "CODEX_THREAD_ID",
+        "VERA_STUDIO_ARCHIVE_SESSION_ID",
+        "VERA_WORKSPACE_BINDINGS",
+        "VERA_WORKSPACE_ACTOR_ID",
+        "VERA_WORKSPACE_TENANT_ID",
+    ):
+        monkeypatch.delenv(name, raising=False)
+    for name, value in {
+        "VERA_STUDIO_ARCHIVE_STATE_DIR": str(tmp_path / "first-chat-state"),
+        "VERA_STUDIO_ARCHIVE_PROFILE_DIR": str(tmp_path / "profile"),
+        "VERA_STUDIO_ARCHIVE_PYTHON": sys.executable,
+        "VERA_WORKSPACE_PYTHON": sys.executable,
+        "VERA_REPORTING_STATE_DIR": str(tmp_path / "reporting"),
+        "MPARANZA_INCIDENT_STATE_DIR": str(tmp_path / "incidents"),
+        "MPARANZA_INCIDENT_DEVICE_DIR": str(tmp_path / "device"),
+        "MPARANZA_INCIDENT_DELIVERY": "local-only",
+    }.items():
+        monkeypatch.setenv(name, value)
+
+    def call(session, name, arguments):
+        reply = session.call(
+            "tools/call", {"name": name, "arguments": arguments}, timeout=90
+        )
+        assert "error" not in reply, reply
+        result = reply["result"]
+        assert not result.get("isError"), result
+        return result
+
+    permanent, temporary = tmp_path / "Permanent", tmp_path / "Temporary"
+    permanent.mkdir()
+    temporary.mkdir()
+    active = Session(plugin)
+    try:
+        call(
+            active,
+            "configure_studio_archive",
+            {"archive_root": str(permanent), "make_studio_default": True},
+        )
+        original = call(
+            active,
+            "create_studio_archive_client",
+            {"legal_name": "Permanent synthetic client"},
+        )
+        original_id = original["structuredContent"]["client"]["client_id"]
+        defaults = {
+            p: p.read_bytes()
+            for p in (tmp_path / "profile").rglob("approved-archive.json")
+        }
+        assert defaults
+        call(
+            active,
+            "configure_studio_archive",
+            {"archive_root": str(temporary), "make_studio_default": False},
+        )
+        created = call(
+            active,
+            "create_studio_archive_client",
+            {"legal_name": "Temporary synthetic client"},
+        )
+        cid = created["structuredContent"]["client"]["client_id"]
+        created = call(
+            active,
+            "create_studio_client_engagement",
+            {"client_id": cid, "engagement_label": "Document-only assignment"},
+        )
+        eid = created["structuredContent"]["engagement"]["engagement_id"]
+        native = call(
+            active, "vera_workspace_open", {"client_id": cid, "engagement_id": eid}
+        )
+        assert native["_meta"]["workspace"]["incarico"]["engagement_id"] == eid
+        assert native["_meta"]["workspace"]["client_id"] == cid
+        assert {p: p.read_bytes() for p in defaults} == defaults
+        monkeypatch.setenv(
+            "VERA_STUDIO_ARCHIVE_STATE_DIR", str(tmp_path / "second-chat-state")
+        )
+        other = Session(plugin)
+        try:
+            visible = call(other, "list_studio_archive_clients", {})[
+                "structuredContent"
+            ]["clients"]
+            assert {row["client_id"] for row in visible} == {original_id}
+        finally:
+            other.close()
+    finally:
+        active.close()
 
 
 @pytest.mark.parametrize("product", ["vera", "clara", "lucia"])
