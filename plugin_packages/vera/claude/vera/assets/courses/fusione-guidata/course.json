@@ -101,11 +101,11 @@
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/deliverables.py",
-      "sha256": "70b2c4bf19deecdc74b4e21de40d9a5ebfbddab0b06ad6b5b174995edce44a67"
+      "sha256": "d419ec257f7322da55253f862b0498f707c9f8755628358123d1c1a4478e4675"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/incarico.py",
-      "sha256": "d21a383fd6262a938719ccba6e6881b1b3feb5eecc0b78e7706f1f5bc257dc46"
+      "sha256": "db27089559c6527ee9dab7ae77a7d9d0713e1f19903c0c6b0c137ec2f8ab4f50"
     },
     {
       "path": "modules/fusione-guidata/vendor/modules/model_data_report.py",
@@ -526,5 +526,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "4823e3d774e9c2e7dc4d09b3ecda70afd112580682e8974b13ea072f58026376"
+  "canonical_course_sha256": "fedba52c0d35f77ada30f43de3fc52327614af704b3084ad30937188961c273c"
 }

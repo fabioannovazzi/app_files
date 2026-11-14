@@ -4,7 +4,7 @@
   "courses": {
     "adeguati-assetti": {
       "path": "adeguati-assetti/course.json",
-      "sha256": "42428060fe420ffb07fc847e62b4b9e6a9b386c3ea87b448869a59bdca136c11",
+      "sha256": "6df6702c94a53a55e69b76434b0cb73bf9e5f19843e5862a4b7e4b3a83f38090",
       "languages": [
         "it",
         "en",
@@ -29,7 +29,7 @@
         "de": "Von der Beurteilung zu Verfahren: Antworten erfassen, eine angemessene Kontrolle entwerfen, das Handbuch prüfen sowie Einführung und Betrieb getrennt bewerten.",
         "es": "Pasar de evaluación a procedimientos: recoger respuestas, diseñar un control proporcionado, revisar el manual y comprobar adopción y funcionamiento por separado."
       },
-      "source_sha256": "4865be6338d7debe648bfb68ae6bf0a95bcf58141a04ae4f82292c72d66e188d"
+      "source_sha256": "4d0b94d66d66f8d08b92f52d1cbbce0d8a67bddee8cd1a12c6bcadefbf3c5b4b"
     },
     "agenzia-acquisition": {
       "path": "agenzia-acquisition/course.json",
@@ -356,7 +356,7 @@
     },
     "contenzioso-tributario": {
       "path": "contenzioso-tributario/course.json",
-      "sha256": "61341fc8c92cb379163b96f2d7367a8a9117f1f14935182fa19198ca1f1f232e",
+      "sha256": "dde80c0f95d263304c762aac6b21a40c7da17096dafe90b7ac9dc29304a6162c",
       "languages": [
         "it",
         "en",
@@ -381,7 +381,7 @@
         "de": "Mit den Akten beginnen, Schritte und Fristen prüfen, einen Entwurf vorbereiten und denselben Vorgang bei neuen Belegen aktualisieren lernen.",
         "es": "Aprender a partir de los documentos, verificar pasos y plazos, preparar un borrador y actualizar el mismo expediente al recibir nuevas pruebas."
       },
-      "source_sha256": "ae79fbf4f29f49ec42b5005b6334050e8e5fd0901974d63feacd97abb36760c6"
+      "source_sha256": "27e4be09b91b56b1482eca95966dfd8310c41a174ae5f4ffef3be6bd9279c4c6"
     },
     "dati-fiscali-strutturati": {
       "path": "dati-fiscali-strutturati/course.json",
@@ -559,7 +559,7 @@
     },
     "fusione-guidata": {
       "path": "fusione-guidata/course.json",
-      "sha256": "dd46ae198c8d80cbdf4c8c84385c774a022c997e05a0f8bea120879a35b22f01",
+      "sha256": "aefced62b1836e8b68cd0a7a8b16125f079c124bd8913d20be4384e15c84aa5e",
       "languages": [
         "it",
         "en",
@@ -584,7 +584,7 @@
         "de": "Zwei OIC-Gesellschaften von den Belegen bis zum Prüfungsdossier begleiten und abhängige Arbeiten nach einer Saldenänderung erneut prüfen.",
         "es": "Seguir dos sociedades OIC desde los documentos hasta el expediente de revisión y reabrir trabajos dependientes al cambiar un saldo."
       },
-      "source_sha256": "f8c8385d285d143db9a531830282d7ecadcc23c81367f82fc2c3c3b0a8bebf0e"
+      "source_sha256": "ccf6f88c0c3ca2f5ac74a9f68872631c660a5e80f5891844f270b7719e0c7442"
     },
     "invoice-xml": {
       "path": "invoice-xml/course.json",
@@ -617,7 +617,7 @@
     },
     "journal-bank-reconciliation": {
       "path": "journal-bank-reconciliation/course.json",
-      "sha256": "9b7b665558788e14d2d6b10cab7fa17daac44a0a7d5b1fa66c1a1190e4d9098d",
+      "sha256": "f0fa42d4ea263f3cfd38468d029093c45108e3457c3a05d260082e6100014ed2",
       "languages": [
         "it",
         "en",
@@ -642,7 +642,7 @@
         "de": "Lernen, Bankbewegungen mit dem Bankkonto der Buchhaltung zu vergleichen und die Abstimmung beim Monatsabschluss zu nutzen.",
         "es": "Aprender a comparar los movimientos bancarios con la cuenta contable del banco y utilizar la conciliación en el cierre mensual."
       },
-      "source_sha256": "a283d4d51e88678fe70fccaa18e08687e0736a32649beb61c1585bd06f50bdfe"
+      "source_sha256": "c0a7b83e26a3074a94397017081413e0ae5dbe25f22ab3dd0002175a346c78e2"
     },
     "journal-sampling": {
       "path": "journal-sampling/course.json",
@@ -741,7 +741,7 @@
     },
     "open-item-reconciliation": {
       "path": "open-item-reconciliation/course.json",
-      "sha256": "87339a750a8c2cc4296af140e09e797eddb1ff5d81748c77da603b828c58e4b7",
+      "sha256": "ed2d32b0dd7e97fd1195f2f53a68cdc11c104055e28f647b3c933440c16c6f33",
       "languages": [
         "it",
         "en",
@@ -766,7 +766,7 @@
         "de": "Lernen, eine Liste gemeldeter offener Posten zu prüfen und Rechnungen mit Zahlungsnachweis von noch zu klärenden Rechnungen zum Stichtag zu unterscheiden.",
         "es": "Aprender a comprobar una lista de impagados y distinguir las facturas con prueba de pago de las que siguen pendientes de aclaración en una fecha concreta."
       },
-      "source_sha256": "e7ee5d3ec831df68924920e9b8843050ec58c31e0bbdc58f5fbbef9a8fecac00"
+      "source_sha256": "da37881d41d43d01d51058026bfe195ee6e7fc075e91349e47ef315b05f1b7a6"
     },
     "organizzazione-lavoro": {
       "path": "organizzazione-lavoro/course.json",
@@ -1031,7 +1031,7 @@
     },
     "studio-archive": {
       "path": "studio-archive/course.json",
-      "sha256": "e66f9fa9986d0e5dba4fcb79d03e0117085f730e0a9169b5ecfb7a76d70d8b1b",
+      "sha256": "b1249cdee7b6e0472377ccdd07c16d61f6f2aebe4891e273ee4891696aef2688",
       "languages": [
         "it",
         "en",
@@ -1056,11 +1056,11 @@
         "de": "Lernen, einen Kanzleiordner anzubinden, beim richtigen Kunden zu suchen und eine Antwort mit Quellenverweisen zu erhalten.",
         "es": "Aprender a conectar una carpeta del despacho, buscar en el cliente correcto y obtener una respuesta vinculada a sus documentos."
       },
-      "source_sha256": "96b9c1b30e6a7f2ab3e44d063f8f3eb13c4a9c2f43bbce78f02bb0f07e3ebd70"
+      "source_sha256": "2d8b9c7395d4ffbb18b728c952a0b5dd356756892a6c5fbc988a1b8d6508a0c0"
     },
     "studio-document-format": {
       "path": "studio-document-format/course.json",
-      "sha256": "9dc1d332c2af013fdf4c1baf6d95ec0657b71462c71a1b4fcd9853024046313e",
+      "sha256": "22d778a07ffada7327f10bb951ffc137f53aacdf9eb11b047d74c489414ccbc2",
       "languages": [
         "it",
         "en",
@@ -1085,7 +1085,7 @@
         "de": "Aus ausgewählten Beispielen einen geprüften, wiederverwendbaren Word-Standard erstellen.",
         "es": "Convertir ejemplos seleccionados en un estándar Word revisado y reutilizable."
       },
-      "source_sha256": "b48673e917cf39d655e134703dc906f9fd5667f2be720c0505e9d5e16f8b96a2"
+      "source_sha256": "e908106f0f053cf8b1bd4df122decafeb311feefdba4a88cafb2c0e968c3cf69"
     },
     "trasformazione": {
       "path": "trasformazione/course.json",

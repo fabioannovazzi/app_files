@@ -105,7 +105,7 @@
     },
     {
       "path": "skills/mparanza-contenzioso-tributario/SKILL.md",
-      "sha256": "6517d0e171d91af1516dc176935cb2513670ed1d85f969f3b0f44d40995471b4"
+      "sha256": "8fa80c13eddcd8cc3723236f748dc8f76bc607382ff7625b16ff0ebeb8aa883e"
     },
     {
       "path": "skills/mparanza-vera/references/connected-studio-knowledge.md",
@@ -594,5 +594,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "7fdccc624121f3d3a7bafa6e5d14cb03b4b8053df3642e7d0da8130bf26f3e12"
+  "canonical_course_sha256": "d82074a7ffd1de41fa74c45eb37fe355595780f94a9a3e2c82b5ce8c0f818999"
 }

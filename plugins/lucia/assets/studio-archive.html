@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lucia · Archivio dello studio</title>
+<style>
+@font-face{font-family:Instrument Sans;src:url(data:font/ttf;base64,__FONT__) format('truetype');font-weight:400;font-display:swap}
+@font-face{font-family:Instrument Sans;src:url(data:font/ttf;base64,__FONT_BOLD__) format('truetype');font-weight:600 800;font-display:swap}
+:root{color-scheme:light;font:16px "Instrument Sans",sans-serif;color:#1f2421;background:#fff;--accent:#194b70;--line:#e8eae7;--muted:#596671}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{padding:9px 13px;min-height:40px;border:1px solid var(--line);background:#fff;color:var(--accent);cursor:pointer}button:hover{border-color:var(--accent);background:#eff5f9}button:disabled{opacity:.5;cursor:default}button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.top{display:flex;align-items:center;gap:20px;padding:14px clamp(18px,3vw,40px);border-bottom:1px solid var(--line)}.brand{font-size:32px;font-weight:600;letter-spacing:-2px;color:var(--accent)}.top button{margin-left:auto}.shell{display:grid;grid-template-columns:200px minmax(0,1fr);min-height:70vh}.rail{padding:24px 18px;border-right:1px solid var(--line)}.rail nav{display:grid;gap:8px;margin-top:22px}.rail button{text-align:left;border-color:transparent}.main{padding:25px clamp(18px,3vw,40px);min-width:0}h1{font-size:clamp(25px,3vw,37px);line-height:1.15;letter-spacing:-.8px;margin:10px 0 16px}h2{font-size:22px;line-height:1.25;margin:10px 0 18px}.eyebrow{font-size:12px;text-transform:uppercase;letter-spacing:1.2px;color:var(--accent);margin:0}p{line-height:1.5}.caption,.empty{color:var(--muted);max-width:65ch}.works{max-width:1000px}.work-row{border-top:1px solid var(--line);padding:20px 0}.archive-link{display:block;border:0;border-radius:0;background:none;padding:.15rem 0;margin:0;color:var(--accent);font-size:1rem;text-align:left;overflow-wrap:anywhere}.archive-link:hover{background:none;text-decoration:underline}.search{display:grid;gap:7px;max-width:470px;font-size:14px;margin:18px 0}.search input{width:100%;padding:10px 12px;border:1px solid var(--line)}.actions{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.primary{background:var(--accent);border-color:var(--accent);color:#fff}.primary:hover{background:#123650;color:#fff}#status{margin:0;padding:12px clamp(18px,3vw,40px);max-width:1100px;color:var(--muted);font-size:14px}#status:empty,[hidden]{display:none!important}
+@media(max-width:900px){.shell{grid-template-columns:1fr}.rail{border-right:0;border-bottom:1px solid var(--line);padding:12px 18px}.rail>.eyebrow,.rail>h2{display:none}.rail nav{display:flex;flex-wrap:wrap;margin:0}.main{padding-top:20px}.top{gap:13px}.top>span:nth-child(2){font-size:14px}}
+</style>
+</head>
+<body>
+<header class="top"><span class="brand">Lucia</span><span>Archivio dello studio</span><button id="refresh" disabled>Aggiorna</button></header>
+<p id="status" role="status">Connessione all’archivio locale…</p>
+<div class="shell"><aside class="rail"><p class="eyebrow">Archivio dello studio</p><h2>Lavori dello studio</h2><nav aria-label="Navigazione dell’archivio" id="nav"></nav></aside><main class="main" id="main"></main></div>
+<script>
+"use strict";
+const main = document.getElementById("main"), nav = document.getElementById("nav"), status = document.getElementById("status"), refresh = document.getElementById("refresh");
+const pending = new Map();
+let sequence = 0, generation = 0, host, sending = false, loading = false;
+let clients = [], matters = [], selectedClient = null, selectedMatter = null, configured = false;
+function node(tag, text, className) { const element = document.createElement(tag); if (text !== undefined) element.textContent = text; if (className) element.className = className; return element; }
+function button(text, action, className) { const element = node("button", text, className); element.addEventListener("click", action); return element; }
+function request(method, params) {
+  const id = ++sequence;
+  return new Promise((resolve, reject) => {
+    const timer = setTimeout(() => { pending.delete(id); reject(new Error("Codex non ha confermato la richiesta. Verifica prima di riprovare.")); }, method === "ui/message" ? 300000 : 120000);
+    pending.set(id, {resolve, reject, timer});
+    window.parent.postMessage({jsonrpc:"2.0", id, method, params}, "*");
+  });
+}
+async function archive(name, args = {}) {
+  const reply = await request("tools/call", {name, arguments:args});
+  const data = reply?._meta?.archive;
+  if (reply?.isError || !data || data.error) throw new Error("Archivio non disponibile. Riprova con Aggiorna o verifica la configurazione dalla chat di Lucia.");
+  return data;
+}
+function render() {
+  nav.replaceChildren(); main.replaceChildren();
+  if (selectedMatter) nav.append(button("← Pratiche", () => { selectedMatter = null; render(); }));
+  else if (selectedClient) nav.append(button("← Clienti", () => loadClients()));
+  main.append(node("p", selectedClient?.display_name || "Lucia", "eyebrow"), node("h1", selectedMatter?.label || selectedClient?.display_name || "Clienti e progetti"));
+  if (!configured) { main.append(node("p", "Configura l’Archivio dello studio dalla chat di Lucia.", "caption")); }
+  else if (selectedMatter) { main.append(node("p", "Apri la pratica in una nuova chat per consultarne i documenti o proseguire il lavoro.", "caption")); }
+  else {
+    const rows = selectedClient ? matters : clients;
+    const list = node("div", undefined, "works");
+    function show(query = "") {
+      list.replaceChildren();
+      const visible = rows.filter(row => (row.display_name || row.label || "").toLowerCase().includes(query.toLowerCase()));
+      for (const row of visible) {
+        const section = node("section", undefined, "work-row"), title = row.display_name || row.label;
+        const blocked = selectedClient ? row.status === "blocked" : row.registration_status !== "registered" || !row.client_id;
+        if (blocked) section.append(node("h2", title), node("p", "Record non disponibile. Verifica la registrazione nella chat di Lucia; i documenti sono conservati.", "caption"));
+        else section.append(button(title, () => selectedClient ? (selectedMatter = row, render()) : loadMatters(row), "archive-link"));
+        list.append(section);
+      }
+      if (!visible.length) list.append(node("p", rows.length ? "Nessun risultato in questa pagina." : selectedClient ? "Nessuna pratica per questo cliente." : "Nessun cliente registrato.", "empty"));
+    }
+    if (rows.length > 1) { const label = node("label", undefined, "search"), input = node("input"); input.type = "search"; label.append(node("span", "Cerca nella pagina corrente"), input); input.addEventListener("input", () => show(input.value)); main.append(label); }
+    show(); main.append(list);
+  }
+  const actions = node("div", undefined, "actions");
+  const start = button(selectedMatter ? "Apri la pratica in una nuova chat" : selectedClient ? "Lavora con questo cliente in una nuova chat" : "Apri una nuova chat con Lucia", openChat, "primary");
+  start.disabled = loading || sending || !host?.hostCapabilities?.experimental?.["openai/message"];
+  if (!host?.hostCapabilities?.experimental?.["openai/message"]) start.title = "Questo host non consente di aprire nuove chat dal pannello.";
+  actions.append(start); main.append(actions);
+}
+async function loadClients(initial) {
+  const current = ++generation;
+  loading = true; selectedClient = null; selectedMatter = null; clients = []; matters = []; render();
+  status.textContent = "Caricamento clienti…";
+  try {
+    const result = initial ?? await archive("lucia_archive_open");
+    if (current !== generation) return;
+    if (result.error) throw new Error("Archivio non disponibile. Riprova con Aggiorna o verifica la configurazione dalla chat di Lucia.");
+    configured = result.configured === true; clients = result.clients ?? []; status.textContent = "";
+  } catch (error) { if (current === generation) status.textContent = error.message; }
+  finally { if (current === generation) { loading = false; render(); } }
+}
+async function loadMatters(client) {
+  const current = ++generation;
+  loading = true; selectedClient = client; selectedMatter = null; matters = []; render(); status.textContent = "Caricamento pratiche…";
+  try {
+    const result = await archive("lucia_archive_list_matters", {client_id:client.client_id});
+    if (current !== generation) return;
+    matters = result.engagements ?? []; status.textContent = "";
+  } catch (error) { if (current === generation) status.textContent = error.message; }
+  finally { if (current === generation) { loading = false; render(); } }
+}
+async function openChat() {
+  if (sending || loading) return;
+  const selection = selectedClient ? {client_id:selectedClient.client_id, ...(selectedMatter ? {engagement_id:selectedMatter.engagement_id} : {})} : null;
+  const text = selection
+    ? "Usa Lucia per lavorare nell’Archivio dello studio. Verifica la selezione con gli strumenti locali di Lucia prima di usare le fonti. Chiedimi cosa voglio fare con la selezione. Riferimenti: " + JSON.stringify(selection)
+    : "Usa Lucia. Vorrei iniziare a lavorare con l’Archivio dello studio. Mostrami come selezionare un cliente o una pratica.";
+  sending = true; render(); status.textContent = "Apertura della nuova chat…";
+  try {
+    const result = await request("ui/message", {role:"user", content:[{type:"text", text}], _meta:{"openai/message":{target:"new"}}});
+    if (result?.isError) throw new Error("Codex non ha aperto la chat. Verifica le chat aperte prima di riprovare.");
+    status.textContent = "Richiesta di apertura consegnata a Codex.";
+  } catch (error) { status.textContent = error.message; }
+  finally { sending = false; render(); }
+}
+refresh.addEventListener("click", () => selectedClient ? loadMatters(selectedClient) : loadClients());
+window.addEventListener("message", event => {
+  if (event.source !== window.parent || event.data?.jsonrpc !== "2.0") return;
+  const message = event.data, entry = pending.get(message.id);
+  if (entry && !message.method) { clearTimeout(entry.timer); pending.delete(message.id); if (message.error) entry.reject(new Error(message.error.message)); else entry.resolve(message.result); }
+  if (message.method === "ui/notifications/tool-result" && generation === 0 && message.params?._meta?.archive) loadClients(message.params._meta.archive);
+  if (message.method === "ui/resource-teardown") window.parent.postMessage({jsonrpc:"2.0", id:message.id, result:{}}, "*");
+});
+request("ui/initialize", {protocolVersion:"2026-01-26", appInfo:{name:"Lucia Studio Archive", version:"1.1.0"}, appCapabilities:{availableDisplayModes:["fullscreen"]}}).then(result => {
+  host = result; refresh.disabled = false;
+  window.parent.postMessage({jsonrpc:"2.0", method:"ui/notifications/initialized"}, "*");
+  if (generation === 0) loadClients(); else render();
+}).catch(error => { status.textContent = error.message; });
+</script>
+</body>
+</html>

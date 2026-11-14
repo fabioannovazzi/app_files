@@ -37,7 +37,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_core.py",
-      "sha256": "b84a75548c21023075fff04f870f3103a551e96b4c9911bf72ac38391727909c"
+      "sha256": "2e0c66a0c9687b980b829b82fc17bc525ea41f1cdf85e1d1e45682341aab8c31"
     },
     {
       "path": "modules/studio-archive/scripts/archive_error_reporting.py",
@@ -45,7 +45,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/archive_preferences.py",
-      "sha256": "5a5d03f3192e5c6c29b6084b426461e10e560b7914dc6b856181e1fe25c1b742"
+      "sha256": "4644e7ada5603f49ec2a29107d98dce4e6b0f88e9eb2309cff12cb89b6e090dd"
     },
     {
       "path": "modules/studio-archive/scripts/build_model_data_report.py",
@@ -61,7 +61,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/deliverables.py",
-      "sha256": "70b2c4bf19deecdc74b4e21de40d9a5ebfbddab0b06ad6b5b174995edce44a67"
+      "sha256": "d419ec257f7322da55253f862b0498f707c9f8755628358123d1c1a4478e4675"
     },
     {
       "path": "modules/studio-archive/scripts/folder_intake.py",
@@ -73,7 +73,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/incarico.py",
-      "sha256": "d21a383fd6262a938719ccba6e6881b1b3feb5eecc0b78e7706f1f5bc257dc46"
+      "sha256": "db27089559c6527ee9dab7ae77a7d9d0713e1f19903c0c6b0c137ec2f8ab4f50"
     },
     {
       "path": "modules/studio-archive/scripts/input_verification.py",
@@ -85,7 +85,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/readable_archive.py",
-      "sha256": "172cd2c5f4acf3b20f8f0a122cc54f3be4b1b25eda0a3c1550c535ba2af75fd8"
+      "sha256": "ba8e7aeb3543b0843b812f814b660b231487c1299928253d11e331ce938a38b3"
     },
     {
       "path": "modules/studio-archive/scripts/reconcile_open_items.py",
@@ -97,7 +97,7 @@
     },
     {
       "path": "modules/studio-archive/scripts/studio_archive.py",
-      "sha256": "ceda6ccb87b85e9cd2bd844b2fc5fb37bc4bb2fb4cbbb214de3001a9674a4bbe"
+      "sha256": "7912ae22158105396883a73cda747b2055e245365e9942b0802cc11202fab993"
     },
     {
       "path": "modules/studio-archive/scripts/work_folder.py",
@@ -105,7 +105,7 @@
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/SKILL.md",
-      "sha256": "9e38c3ba2c1fbc4c30848410489f150bb823067d40b5d98ad4bd26204d91af8b"
+      "sha256": "94bd386ae8a83956b1a34da628a1b888629c8dfb4401dec221c01cea731b8d7e"
     },
     {
       "path": "modules/studio-archive/skills/mparanza-studio-archive/agents/openai.yaml",
@@ -209,7 +209,7 @@
     },
     {
       "path": "skills/mparanza-studio-archive/SKILL.md",
-      "sha256": "350adb8ea9f46c1a241b8ce1a096927710df8d05bbd5b4d75f731819ce3068f8"
+      "sha256": "1f030629f600c77875c378ada34dd691431940f3c35c34275544a5f877bf4ea2"
     },
     {
       "path": "skills/mparanza-studio-archive/references/whatsapp-cowork.md",
@@ -718,5 +718,5 @@
     }
   },
   "host": "cowork-written-single-conversation",
-  "canonical_course_sha256": "6926c6260123b677b765dada1e693f961c30cf7290ec9c26b2c1fdacfc1008d4"
+  "canonical_course_sha256": "37adfbcf7866032e8f5c106d3eea52dae5c6a0fd9021dfd5ebad0db42bbbff33"
 }

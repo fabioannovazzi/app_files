@@ -135,7 +135,6 @@ SCHEMA_VERSION = "2"
 CONFIG_SCHEMA_VERSION = 1
 CLIENT_IDENTITIES_SCHEMA_VERSION = 2
 STATE_ENV = "VERA_STUDIO_ARCHIVE_STATE_DIR"
-DEFAULT_STATE_SUBDIR = Path(".mparanza") / "vera-studio-archive"
 CONFIG_FILENAME = "config.json"
 SESSION_ENV = "VERA_STUDIO_ARCHIVE_SESSION_ID"
 _PROCESS_SESSION = f"{os.getpid()}-{secrets.token_hex(16)}"
@@ -565,8 +564,7 @@ def _state_location(explicit: Path | None = None) -> Path:
         selected = (
             Path(environment_value).expanduser()
             if environment_value
-            else Path.home()
-            / DEFAULT_STATE_SUBDIR
+            else preferences.default_state_directory()
             / "sessions"
             / hashlib.sha256(_session_id().encode("utf-8")).hexdigest()[:32]
         )
@@ -2566,6 +2564,7 @@ def begin_studio_incarico(
     workflow_id: str,
     purpose: str,
     *,
+    originating_conversation: dict[str, str] | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Bind one job and its draft area before model or engine work begins."""
@@ -2574,8 +2573,17 @@ def begin_studio_incarico(
             "client_root"
         ]
     )
+    if originating_conversation is None and os.environ.get("CODEX_THREAD_ID"):
+        originating_conversation = {
+            "host": "codex",
+            "thread_id": os.environ["CODEX_THREAD_ID"],
+            "title": "Vai alla chat",
+            "url": "",
+        }
     try:
-        result = ledger.incarichi().begin(folder, engagement_id, workflow_id, purpose)
+        result = ledger.incarichi().begin(
+            folder, engagement_id, workflow_id, purpose, originating_conversation
+        )
     except ledger.LedgerError as exc:
         raise ArchiveError(str(exc)) from exc
     return {"client_id": client_id, "engagement_id": engagement_id, **result}
@@ -2663,6 +2671,7 @@ def publish_studio_incarico_result(
     expected_revision: int,
     idempotency_key: str,
     *,
+    primary_format: str | None = None,
     state_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Publish one named result revision, with all its formats, through the shared ledger."""
@@ -2680,6 +2689,7 @@ def publish_studio_incarico_result(
             files,
             expected_revision,
             idempotency_key,
+            primary_format=primary_format,
         )
     except ledger.LedgerError as exc:
         raise ArchiveError(str(exc)) from exc

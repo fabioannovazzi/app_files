@@ -146,7 +146,7 @@
     "reviewer": "Codex /root - bounded source compatibility review",
     "source_review": "docs/course-repairs/2026-11-06-clara-lucia.md"
   },
-  "course_sha256": "76bbc1139fce85de9d0f7ecf08cbbe8523398934a47b2ffdb76f18ad114237b1",
+  "course_sha256": "48a0cebb9f217732a4ee378fe3dd7c0ad102110c27d6f810b3c5d8ef3dc40768",
   "course_startup_source_binding_review_20261103": {
     "comparison": "Every complete compiled field except the source inventory is identical to the exact ancestor matching the historical accepted course digest. This includes all localized lessons, inputs, requests, checkpoints, practice and expected outputs.",
     "current_course_sha256": "973867fcaffe0b6ded7186a31a55de07d50d34a342f90db25f3d795710f43aea",
@@ -998,5 +998,12 @@
     "previous_course_sha256": "c7dbe68902ace70cee909be86011187fec243b517c63be1430adbb8ddf6afc88",
     "reviewed_at": "2026-11-13T23:11:25.958549+00:00",
     "reviewer": "Codex /root - bounded source compatibility review"
+  },
+  "combined_archive_release_source_binding_20261114": {
+    "date": "2026-11-14",
+    "previous_course_sha256": "76bbc1139fce85de9d0f7ecf08cbbe8523398934a47b2ffdb76f18ad114237b1",
+    "course_sha256": "48a0cebb9f217732a4ee378fe3dd7c0ad102110c27d6f810b3c5d8ef3dc40768",
+    "authored_content_unchanged": true,
+    "scope": "Source bindings updated after combining the accepted Vera Archive UI, shared assignment/recovery/session helpers, current main reconciliation budget fix and Lucia sidebar. Existing lesson text, fixtures, language reviews and output evidence are preserved. This is source compatibility review, not new learner or professional acceptance. Fresh teaching CI must verify the current source digests."
   }
 }

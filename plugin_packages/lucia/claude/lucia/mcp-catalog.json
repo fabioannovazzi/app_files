@@ -1,8 +1,111 @@
 {
   "schema_version": 1,
   "product": "lucia",
-  "version": "0.1.243",
+  "version": "0.1.252",
   "services": [
+    {
+      "name": "luciaArchivePanel",
+      "initialize": {
+        "protocolVersion": "2024-11-05",
+        "serverInfo": {
+          "name": "lucia-studio-archive",
+          "version": "0.1.81",
+          "icons": [
+            {
+              "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJMdWNpYSIgZGF0YS10aGVtZT0ibXBhcmFuemEtcGx1Z2luLWljb24tdjEiPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMDAyMDYwIi8+CiAgPHBhdGggZD0iTTQ5IDBoMWwxNCAxNHYxSDQ5eiIgZmlsbD0iIzAwNzBDMCIvPgogIDxjaXJjbGUgY3g9IjUxIiBjeT0iNTAiIHI9IjciIGZpbGw9IiMwMDcwQzAiLz4KICA8Y2lyY2xlIGN4PSI1MSIgY3k9IjUwIiByPSIzIiBmaWxsPSIjMDAyMDYwIi8+CgogIDxwYXRoIGQ9Ik0yMiAyMGMwLTcgNC40LTExIDEwLTExczEwIDQgMTAgMTF2OGgtNWwtMS05aC04bC0xIDloLTV6IiBmaWxsPSIjMDBCMEYwIi8+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyMSIgcj0iNy41IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE1IDUxYzEuOC0xMS41IDguMi0xNyAxNy0xN3MxNS4yIDUuNSAxNyAxN3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJtMjMgMzUgOSAxMCA5LTEwTTMyIDQ1djYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMjA2MCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Im0yOSAzNiAzIDQgMy00IiBmaWxsPSIjMDBCMEYwIi8+Cjwvc3ZnPgo=",
+              "mimeType": "image/svg+xml",
+              "sizes": [
+                "24x24"
+              ]
+            }
+          ]
+        },
+        "capabilities": {
+          "tools": {},
+          "resources": {}
+        },
+        "instructions": "For archived client work, list the safe registered-client directory first. Fresh default sessions reconnect the approved root and retain private aliases; configured=false means location not connected, not an unregistered client. Reuse established choices and confirm unresolved client/source/copy scope together. If it returns configured=false and setup_required=true, tell the user that the native folder chooser will open and call setup_studio_archive before requesting an absolute path manually. Use the manual diagnose/configure fallback only when the guided tool reports archive_folder_picker_unavailable. Ask the user to choose Existing or New when no exact client is established. Resolve a user-supplied identity through the exact local resolver; never infer identity from a filename. Register a confirmed existing scope or create a new client, obtain its stable client ID, and import files only after the user authorizes the copy. Inspect client folders using the complete projected inventory and opaque item references; raw hashes, storage IDs, capabilities, and absolute paths remain local. Search one exact archive scope and open every file result used as evidence. For Gmail, use the connected Gmail read tools and fail closed on ambiguous routing."
+      },
+      "tools": [
+        {
+          "name": "lucia_archive_open",
+          "title": "Lucia · Archivio dello studio",
+          "icons": [
+            {
+              "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJMdWNpYSIgZGF0YS10aGVtZT0ibXBhcmFuemEtcGx1Z2luLWljb24tdjEiPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMDAyMDYwIi8+CiAgPHBhdGggZD0iTTQ5IDBoMWwxNCAxNHYxSDQ5eiIgZmlsbD0iIzAwNzBDMCIvPgogIDxjaXJjbGUgY3g9IjUxIiBjeT0iNTAiIHI9IjciIGZpbGw9IiMwMDcwQzAiLz4KICA8Y2lyY2xlIGN4PSI1MSIgY3k9IjUwIiByPSIzIiBmaWxsPSIjMDAyMDYwIi8+CgogIDxwYXRoIGQ9Ik0yMiAyMGMwLTcgNC40LTExIDEwLTExczEwIDQgMTAgMTF2OGgtNWwtMS05aC04bC0xIDloLTV6IiBmaWxsPSIjMDBCMEYwIi8+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyMSIgcj0iNy41IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE1IDUxYzEuOC0xMS41IDguMi0xNyAxNy0xN3MxNS4yIDUuNSAxNyAxN3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJtMjMgMzUgOSAxMCA5LTEwTTMyIDQ1djYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMjA2MCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Im0yOSAzNiAzIDQgMy00IiBmaWxsPSIjMDBCMEYwIi8+Cjwvc3ZnPgo=",
+              "mimeType": "image/svg+xml",
+              "sizes": [
+                "24x24"
+              ]
+            }
+          ],
+          "description": "Open Lucia’s local Studio Archive directory in Codex.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://lucia/studio-archive-d9b3cabe959ab1d8.html",
+              "visibility": [
+                "app",
+                "model"
+              ]
+            },
+            "openai/ui": {
+              "entrypoints": [
+                {
+                  "type": "global"
+                },
+                {
+                  "type": "thread"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "lucia_archive_list_matters",
+          "description": "List the matter labels for one selected registered client inside the Archive panel.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "client_id"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app"
+              ]
+            }
+          }
+        }
+      ],
+      "resources": [
+        {
+          "uri": "ui://lucia/studio-archive-d9b3cabe959ab1d8.html",
+          "name": "Lucia · Archivio dello studio",
+          "mimeType": "text/html;profile=mcp-app"
+        }
+      ],
+      "resourceTemplates": [],
+      "prompts": []
+    },
     {
       "name": "luciaDeepResearchValidator",
       "initialize": {
@@ -2410,7 +2513,16 @@
         "protocolVersion": "2024-11-05",
         "serverInfo": {
           "name": "lucia-studio-archive",
-          "version": "0.1.81"
+          "version": "0.1.81",
+          "icons": [
+            {
+              "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2NCA2NCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJMdWNpYSIgZGF0YS10aGVtZT0ibXBhcmFuemEtcGx1Z2luLWljb24tdjEiPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgcng9IjE0IiBmaWxsPSIjMDAyMDYwIi8+CiAgPHBhdGggZD0iTTQ5IDBoMWwxNCAxNHYxSDQ5eiIgZmlsbD0iIzAwNzBDMCIvPgogIDxjaXJjbGUgY3g9IjUxIiBjeT0iNTAiIHI9IjciIGZpbGw9IiMwMDcwQzAiLz4KICA8Y2lyY2xlIGN4PSI1MSIgY3k9IjUwIiByPSIzIiBmaWxsPSIjMDAyMDYwIi8+CgogIDxwYXRoIGQ9Ik0yMiAyMGMwLTcgNC40LTExIDEwLTExczEwIDQgMTAgMTF2OGgtNWwtMS05aC04bC0xIDloLTV6IiBmaWxsPSIjMDBCMEYwIi8+CiAgPGNpcmNsZSBjeD0iMzIiIGN5PSIyMSIgcj0iNy41IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE1IDUxYzEuOC0xMS41IDguMi0xNyAxNy0xN3MxNS4yIDUuNSAxNyAxN3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJtMjMgMzUgOSAxMCA5LTEwTTMyIDQ1djYiIGZpbGw9Im5vbmUiIHN0cm9rZT0iIzAwMjA2MCIgc3Ryb2tlLXdpZHRoPSIzLjUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Im0yOSAzNiAzIDQgMy00IiBmaWxsPSIjMDBCMEYwIi8+Cjwvc3ZnPgo=",
+              "mimeType": "image/svg+xml",
+              "sizes": [
+                "24x24"
+              ]
+            }
+          ]
         },
         "capabilities": {
           "tools": {}
@@ -2611,7 +2723,7 @@
         {
           "name": "begin_studio_incarico",
           "title": "Bind work before execution",
-          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Return its durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
+          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Supply originating_conversation from the actual host chat, carrying the parent user-visible identity through delegation; CODEX_THREAD_ID is used automatically when present and no explicit origin is given. Save that link before work starts, merge existing chats idempotently, and return the durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -2631,6 +2743,34 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 2000
+              },
+              "originating_conversation": {
+                "type": "object",
+                "properties": {
+                  "host": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "thread_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "url": {
+                    "type": "string",
+                    "maxLength": 2048
+                  }
+                },
+                "required": [
+                  "host",
+                  "thread_id",
+                  "title",
+                  "url"
+                ],
+                "additionalProperties": false
               },
               "incident_report_id": {
                 "type": "string",
@@ -2671,6 +2811,38 @@
               "fields": {
                 "type": "object",
                 "properties": {
+                  "work_links": {
+                    "type": "array",
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "workflow_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "work_ref": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "binding_identity": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "workflow_id",
+                        "work_ref",
+                        "binding_identity",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
                   "purpose": {
                     "type": "string",
                     "minLength": 1,
@@ -2837,7 +3009,7 @@
         {
           "name": "publish_studio_incarico_result",
           "title": "Publish a named result revision",
-          "description": "Shared publication for every pipeline: keep a stable entry_key per logical deliverable and issue all formats of one revision together. Drafts stay in the working area. Use current_revision (zero initially), verified hashes and a retained retry key. Corrections advance the same entry; earlier issued revisions remain dated in history. legacy_input_id is only for explicitly identified old outputs wrongly imported as inputs; original receipts remain unchanged. This does not sign, send or professionally adopt work.",
+          "description": "Shared publication for every pipeline: keep a stable entry_key per logical deliverable and issue all formats of one revision together. Supply a meaningful document title as label and primary_format to identify the file opened by that title, without a type-specific UI rule. Drafts stay in the working area. Use current_revision (zero initially), verified hashes and a retained retry key. Corrections advance the same entry; earlier issued revisions remain dated in history. legacy_input_id is only for explicitly identified old outputs wrongly imported as inputs; original receipts remain unchanged. This does not sign, send or professionally adopt work.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -2854,6 +3026,10 @@
                 "minLength": 1
               },
               "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "primary_format": {
                 "type": "string",
                 "minLength": 1
               },

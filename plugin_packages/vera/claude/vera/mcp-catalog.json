@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "product": "vera",
-  "version": "0.1.636",
+  "version": "0.1.643",
   "services": [
     {
       "name": "agenziaAcquisition",
@@ -9051,7 +9051,7 @@
         },
         "serverInfo": {
           "name": "vera-workspace",
-          "version": "0.1.636",
+          "version": "0.1.643",
           "icons": [
             {
               "src": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjUgNyA1MCA1MCIgcm9sZT0iaW1nIiBhcmlhLWxhYmVsPSJWZXJhIj4KICA8ZGVmcz4KICAgIDxtYXNrIGlkPSJ2ZXJhLWZpZ3VyZSIgbWFza1VuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeD0iMCIgeT0iMCIgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0Ij4KICAgICAgPHBhdGggZD0iTTIxIDIwYzAtNi40IDQuNy0xMCAxMC4yLTEwIDQuMiAwIDcuNiAyLjEgOS4xIDUuNi00LjgtLjUtOS43IDEuMS0xMy41IDUuM3oiIGZpbGw9IiNGRkZGRkYiLz4KICA8Y2lyY2xlIGN4PSIzMCIgY3k9IjIxIiByPSI4IiBmaWxsPSIjRkZGRkZGIi8+CiAgPHBhdGggZD0iTTE0IDUxYzEuOC0xMS44IDcuOS0xOCAxNi0xOHMxNC4yIDYuMiAxNiAxOHoiIGZpbGw9IiNGRkZGRkYiLz4KICA8cGF0aCBkPSJNMjMgMzVsNyAxMiA3LTEyIiBmaWxsPSJub25lIiBzdHJva2U9IiMwMDAwMDAiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTE5IDUxaDIyIiBzdHJva2U9IiNGRkZGRkYiIHN0cm9rZS13aWR0aD0iNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgICA8L21hc2s+CiAgPC9kZWZzPgogIDxyZWN0IHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCIgZmlsbD0iIzRCNEI0QiIgbWFzaz0idXJsKCN2ZXJhLWZpZ3VyZSkiLz4KPC9zdmc+Cg==",
@@ -9074,9 +9074,133 @@
       },
       "tools": [
         {
+          "name": "vera_incarico_link_work",
+          "title": "Collega lavoro salvato",
+          "description": "Link an exact existing operator-bound specialist case to this incarico after its normal setup. Uses the owning service to retain its stable case identity; does not grant access, create a run, execute work or move files. Read the incarico revision first. A changed case behind a reused work_ref is refused.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "engagement_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "workflow_id": {
+                "enum": [
+                  "browser-automation",
+                  "comunicazione-professionale",
+                  "contenzioso-tributario",
+                  "fusione-guidata",
+                  "presenza-digitale-studio",
+                  "studio-document-format",
+                  "trasformazione"
+                ]
+              },
+              "work_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "expected_revision": {
+                "type": "string",
+                "maxLength": 64
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "workflow_id",
+              "work_ref",
+              "label",
+              "expected_revision"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": false,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ]
+            }
+          }
+        },
+        {
+          "name": "vera_incarico_open_work",
+          "title": "Riapri lavoro dell’incarico",
+          "description": "Resolve an explicitly linked specialist workspace through its current operator permissions and retained case identity. Refuse unavailable or rebound references; preserve the incarico and use its chat/context to recover. This does not execute the workflow.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "client_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "engagement_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "workflow_id": {
+                "enum": [
+                  "browser-automation",
+                  "comunicazione-professionale",
+                  "contenzioso-tributario",
+                  "fusione-guidata",
+                  "presenza-digitale-studio",
+                  "studio-document-format",
+                  "trasformazione"
+                ]
+              },
+              "work_ref": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "client_id",
+              "engagement_id",
+              "workflow_id",
+              "work_ref"
+            ],
+            "additionalProperties": false
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "openWorldHint": false
+          },
+          "_meta": {
+            "ui": {
+              "visibility": [
+                "app",
+                "model"
+              ]
+            }
+          }
+        },
+        {
           "name": "vera_incarico_publish_result",
           "title": "Pubblica una versione del risultato",
-          "description": "Publish one complete issued revision of a named deliverable for any pipeline. Keep the same entry_key when correcting it; include all formats of that revision together. Read current_revision first (zero for a new entry). Reuse idempotency_key on a retry. Previous issued revisions remain in history. Drafts stay in their working area. Only for an explicitly identified legacy output wrongly imported as a source, supply its legacy_input_id; this preserves its receipt and removes that output from the source list. Never classify by filename. This internal publication does not imply professional adoption, signature or external delivery.",
+          "description": "Publish one complete issued revision of a named deliverable for any pipeline. Keep the same entry_key when correcting it; include all formats of that revision together. Use a meaningful document title as label and primary_format to select the file opened by that title. Read current_revision first (zero for a new entry). Reuse idempotency_key on a retry. Previous issued revisions remain in history. Drafts stay in their working area. Only for an explicitly identified legacy output wrongly imported as a source, supply its legacy_input_id; this preserves its receipt and removes that output from the source list. Never classify by filename. This internal publication does not imply professional adoption, signature or external delivery.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -9100,6 +9224,11 @@
                 "minLength": 1,
                 "maxLength": 200
               },
+              "primary_format": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
               "files": {
                 "type": "array",
                 "minItems": 1,
@@ -9115,7 +9244,7 @@
                     "source_path": {
                       "type": "string",
                       "minLength": 1,
-                      "maxLength": 200
+                      "maxLength": 4096
                     },
                     "sha256": {
                       "type": "string",
@@ -9322,7 +9451,7 @@
         {
           "name": "vera_incarico_begin",
           "title": "Avvia il lavoro dell'incarico",
-          "description": "Before any engine execution or model/delegated generation, bind this exact assignment to its purpose and one owning pipeline resolved from the user request. Returns a durable working directory for drafts. Reuses an existing matching binding, preserves results and conversations, and refuses unrelated pipelines. This does not execute the work or publish draft files.",
+          "description": "Before any engine execution or delegation, bind this assignment to its purpose and owning pipeline. Supply originating_conversation from the actual host chat identity and title; for delegated work pass the parent user-visible chat, never an ephemeral worker. The code saves this link during begin and preserves existing chats on retry. When the host supplies CODEX_THREAD_ID directly it is used automatically if no explicit origin is supplied. Returns a durable working directory for drafts. Reuses an existing matching binding, preserves results and conversations, and refuses unrelated pipelines. This does not execute the work or publish draft files.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -9345,6 +9474,37 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 2000
+              },
+              "originating_conversation": {
+                "type": "object",
+                "properties": {
+                  "host": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "thread_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 300
+                  },
+                  "url": {
+                    "type": "string",
+                    "maxLength": 2048
+                  }
+                },
+                "required": [
+                  "host",
+                  "thread_id",
+                  "title",
+                  "url"
+                ],
+                "additionalProperties": false
               }
             },
             "required": [
@@ -9646,6 +9806,41 @@
               "fields": {
                 "type": "object",
                 "properties": {
+                  "work_links": {
+                    "type": "array",
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "workflow_id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "work_ref": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "binding_identity": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        }
+                      },
+                      "required": [
+                        "workflow_id",
+                        "work_ref",
+                        "binding_identity",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
                   "purpose": {
                     "type": "string",
                     "minLength": 1,
@@ -9833,8 +10028,10 @@
                 "enum": [
                   "browser-automation",
                   "comunicazione-professionale",
+                  "contenzioso-tributario",
                   "fusione-guidata",
                   "presenza-digitale-studio",
+                  "studio-document-format",
                   "trasformazione"
                 ]
               },
@@ -36794,7 +36991,7 @@
         {
           "name": "begin_studio_incarico",
           "title": "Bind work before execution",
-          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Return its durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
+          "description": "Bind the selected incarico to the user's purpose and one resolved owning workflow before engine execution, model generation or delegation. Supply originating_conversation from the actual host chat, carrying the parent user-visible identity through delegation; CODEX_THREAD_ID is used automatically when present and no explicit origin is given. Save that link before work starts, merge existing chats idempotently, and return the durable draft working directory. Preserve existing results; refuse a silent change to unrelated work.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -36814,6 +37011,34 @@
                 "type": "string",
                 "minLength": 1,
                 "maxLength": 2000
+              },
+              "originating_conversation": {
+                "type": "object",
+                "properties": {
+                  "host": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "thread_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "title": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "url": {
+                    "type": "string",
+                    "maxLength": 2048
+                  }
+                },
+                "required": [
+                  "host",
+                  "thread_id",
+                  "title",
+                  "url"
+                ],
+                "additionalProperties": false
               },
               "incident_report_id": {
                 "type": "string",
@@ -36854,6 +37079,38 @@
               "fields": {
                 "type": "object",
                 "properties": {
+                  "work_links": {
+                    "type": "array",
+                    "maxItems": 1000,
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "workflow_id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "work_ref": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "binding_identity": {
+                          "type": "string",
+                          "pattern": "^[0-9a-f]{64}$"
+                        },
+                        "label": {
+                          "type": "string",
+                          "minLength": 1
+                        }
+                      },
+                      "required": [
+                        "workflow_id",
+                        "work_ref",
+                        "binding_identity",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
                   "purpose": {
                     "type": "string",
                     "minLength": 1,
@@ -37020,7 +37277,7 @@
         {
           "name": "publish_studio_incarico_result",
           "title": "Publish a named result revision",
-          "description": "Shared publication for every pipeline: keep a stable entry_key per logical deliverable and issue all formats of one revision together. Drafts stay in the working area. Use current_revision (zero initially), verified hashes and a retained retry key. Corrections advance the same entry; earlier issued revisions remain dated in history. legacy_input_id is only for explicitly identified old outputs wrongly imported as inputs; original receipts remain unchanged. This does not sign, send or professionally adopt work.",
+          "description": "Shared publication for every pipeline: keep a stable entry_key per logical deliverable and issue all formats of one revision together. Supply a meaningful document title as label and primary_format to identify the file opened by that title, without a type-specific UI rule. Drafts stay in the working area. Use current_revision (zero initially), verified hashes and a retained retry key. Corrections advance the same entry; earlier issued revisions remain dated in history. legacy_input_id is only for explicitly identified old outputs wrongly imported as inputs; original receipts remain unchanged. This does not sign, send or professionally adopt work.",
           "inputSchema": {
             "type": "object",
             "properties": {
@@ -37037,6 +37294,10 @@
                 "minLength": 1
               },
               "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "primary_format": {
                 "type": "string",
                 "minLength": 1
               },

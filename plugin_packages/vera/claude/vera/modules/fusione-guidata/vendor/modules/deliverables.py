@@ -65,7 +65,7 @@ class Deliverables:
                     "content_sha256",
                 }
                 if (
-                    set(value) != required
+                    set(value) - {"primary_format"} != required
                     or value["schema_version"] != "vera.deliverable.v1"
                     or value["client_id"]
                     != self.ledger.load_client_manifest(root)["client_id"]
@@ -130,6 +130,12 @@ class Deliverables:
                         folder / item["name"], label="issued format"
                     ) != (item["byte_count"], item["sha256"]):
                         raise self.ledger.LedgerError("Issued result bytes changed")
+                if "primary_format" in value:
+                    self.key(value["primary_format"])
+                    if value["primary_format"] not in formats:
+                        raise self.ledger.LedgerError(
+                            "Primary document is not in this revision"
+                        )
                 previous = value["content_sha256"]
                 versions.append(value)
         return {
@@ -148,6 +154,8 @@ class Deliverables:
         files: list[dict[str, str]],
         expected_revision: int,
         request_key: str,
+        *,
+        primary_format: str | None = None,
     ) -> dict[str, Any]:
         """Commit all formats together; retries cannot duplicate or roll back a version."""
         self.key(key)
@@ -206,6 +214,14 @@ class Deliverables:
                     ),
                 }
             )
+        primary = {}
+        if primary_format is not None:
+            self.key(primary_format)
+            if primary_format not in formats:
+                raise self.ledger.LedgerError(
+                    "Primary document must be one of the issued formats"
+                )
+            primary = {"primary_format": primary_format}
         selected.sort(key=lambda item: item["format"])
         # The source's temporary location is not part of the issued byte identity.
         request_sha = self.ledger._canonical_json_sha256(
@@ -217,6 +233,7 @@ class Deliverables:
                     for item in selected
                 ],
                 "expected_revision": expected_revision,
+                **primary,
             }
         )
         with self.ledger._engagement_lock(root, eid):
@@ -299,6 +316,7 @@ class Deliverables:
                         "label": label,
                         "issued_at": self.ledger._now_iso(),
                         "formats": issued_formats,
+                        **primary,
                         "previous_revision": (
                             current["versions"][-1]["content_sha256"]
                             if current["versions"]

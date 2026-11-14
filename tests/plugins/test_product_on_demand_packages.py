@@ -70,7 +70,7 @@ def test_chat_only_archive_pin_opens_native_incarico_and_preserves_default(
         )
         assert "error" not in reply, reply
         result = reply["result"]
-        assert not result.get("isError"), result
+        assert not result.get("isError"), json.dumps(result, ensure_ascii=False)
         return result
 
     permanent, temporary = tmp_path / "Permanent", tmp_path / "Temporary"

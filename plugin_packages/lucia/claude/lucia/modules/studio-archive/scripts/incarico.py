@@ -16,8 +16,9 @@ from uuid import UUID
 
 __all__ = ["Incarichi"]
 
-SCHEMA = "vera.incarico.v1"
+SCHEMA = "vera.incarico.v2"
 _FIELDS = {"purpose", "workflow_id", "continuation", "results", "conversations"}
+_ALL_FIELDS = _FIELDS | {"work_links"}
 # Public pipeline names and their documented internal engine stages.
 _STAGES = {
     "quesito-legale-fiscale": {"prompt-optimizer", "deep-research-validator"},
@@ -61,6 +62,7 @@ class Incarichi:
                 "continuation": "",
                 "results": [],
                 "conversations": [],
+                "work_links": [],
             }
         value = self.ledger._validate_seal(
             self.ledger._read_json(path, label="incarico"), label="incarico"
@@ -73,7 +75,12 @@ class Incarichi:
             "updated_at",
             "content_sha256",
         }
-        if set(value) != required or value["schema_version"] != SCHEMA:
+        if value.get("schema_version") == SCHEMA:
+            required.add("work_links")
+        if set(value) != required or value["schema_version"] not in {
+            SCHEMA,
+            "vera.incarico.v1",
+        }:
             raise self.ledger.LedgerError("Incarico schema is invalid")
         client = self.ledger.load_client_manifest(root)
         if (value["client_id"], value["engagement_id"]) != (
@@ -102,6 +109,35 @@ class Incarichi:
         for field in ("results", "conversations"):
             if not isinstance(fields[field], list) or len(fields[field]) > 1000:
                 raise self.ledger.LedgerError(f"Invalid incarico {field}")
+        links = fields.get("work_links", [])
+        if not isinstance(links, list) or len(links) > 1000:
+            raise self.ledger.LedgerError("Invalid incarico work links")
+        seen_links = set()
+        for link in links:
+            if not isinstance(link, dict) or set(link) != {
+                "workflow_id",
+                "work_ref",
+                "binding_identity",
+                "label",
+            }:
+                raise self.ledger.LedgerError("Invalid saved work link")
+            if not isinstance(link["workflow_id"], str) or link["workflow_id"] not in {
+                fields["workflow_id"],
+                *_STAGES.get(fields["workflow_id"], set()),
+            }:
+                raise self.ledger.LedgerError("Work link must use the owning workflow")
+            text(link["label"], label="work label", maximum=200)
+            if (
+                not isinstance(link["work_ref"], str)
+                or not re.fullmatch(r"[A-Za-z0-9_-]{1,120}", link["work_ref"])
+                or not isinstance(link["binding_identity"], str)
+                or not re.fullmatch(r"[a-f0-9]{64}", link["binding_identity"])
+            ):
+                raise self.ledger.LedgerError("Use the exact verified work identity")
+            key = (link["workflow_id"], link["work_ref"])
+            if key in seen_links:
+                raise self.ledger.LedgerError("Duplicate work link")
+            seen_links.add(key)
         seen = set()
         for result in fields["results"]:
             if not isinstance(result, dict) or set(result) != {
@@ -568,7 +604,12 @@ class Incarichi:
         }
 
     def begin(
-        self, root: Path, engagement_id: str, workflow_id: str, purpose: str
+        self,
+        root: Path,
+        engagement_id: str,
+        workflow_id: str,
+        purpose: str,
+        originating_conversation: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         """Bind durable work before an engine or a model starts producing drafts."""
         # Owning pipeline IDs also cover work without an Archive engine. This
@@ -578,15 +619,36 @@ class Incarichi:
                 "Continue one of the explicitly mapped incarichi"
             )
         current = self.read(root, engagement_id)
+        if current["workflow_id"]:
+            self.check_workflow(root, engagement_id, workflow_id)
+        fields = {key: current[key] for key in _ALL_FIELDS}
         if not current["workflow_id"]:
+            fields.update(
+                workflow_id=workflow_id, purpose=current["purpose"] or purpose
+            )
+        if originating_conversation is not None:
+            # Validate before any mutation. A worker carries the originating
+            # user-visible chat, never substitutes its own execution session.
+            self._validate_fields(
+                {**fields, "conversations": [originating_conversation]}
+            )
+            identity = (
+                originating_conversation["host"],
+                originating_conversation["thread_id"],
+            )
+            if not any(
+                (item["host"], item["thread_id"]) == identity
+                for item in current["conversations"]
+            ):
+                fields["conversations"] = [
+                    *current["conversations"],
+                    originating_conversation,
+                ]
+        if any(current[key] != fields[key] for key in _ALL_FIELDS):
             current = self.update(
                 root,
                 engagement_id,
-                {
-                    **{key: current[key] for key in _FIELDS},
-                    "workflow_id": workflow_id,
-                    "purpose": current["purpose"] or purpose,
-                },
+                fields,
                 current["revision"],
             )
         self.check_workflow(root, engagement_id, workflow_id)
@@ -599,6 +661,7 @@ class Incarichi:
             **current,
             "working_directory": str(directory),
             "drafts_are_issued": False,
+            "conversation_linked": bool(current["conversations"]),
         }
 
     def update(
@@ -609,14 +672,18 @@ class Incarichi:
         expected_revision: str,
     ) -> dict[str, Any]:
         """Commit one exact revision, retaining preceding revisions and all files."""
-        if not isinstance(fields, dict) or set(fields) != _FIELDS:
+        if not isinstance(fields, dict) or set(fields) not in (_FIELDS, _ALL_FIELDS):
             raise self.ledger.LedgerError("Supply the complete incarico fields")
-        self._validate_fields(fields)
         directory = self._directory(root, engagement_id)
         with self.ledger._engagement_lock(root, engagement_id):
             current = self.read(root, engagement_id)
+            fields = {
+                **fields,
+                "work_links": fields.get("work_links", current.get("work_links", [])),
+            }
+            self._validate_fields(fields)
             # Exact lost-reply retries do not manufacture another revision.
-            if all(current[key] == fields[key] for key in _FIELDS):
+            if all(current.get(key, []) == fields[key] for key in _ALL_FIELDS):
                 return current
             if current["revision"] != expected_revision:
                 raise self.ledger.LedgerError(
@@ -704,7 +771,8 @@ class Incarichi:
             results.append({**result, "available": available})
         return {
             **current,
-            "fields": {key: current[key] for key in _FIELDS},
+            "fields": {key: current.get(key, []) for key in _ALL_FIELDS},
+            "work_links": current.get("work_links", []),
             "label": engagement["label"],
             "status": engagement["status"],
             "client_id": engagement["client_id"],
